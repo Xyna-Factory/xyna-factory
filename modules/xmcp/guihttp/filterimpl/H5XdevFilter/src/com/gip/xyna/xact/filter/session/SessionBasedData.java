@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -179,6 +179,7 @@ import xmcp.processmodeller.datatypes.response.FactoryItem;
 import xmcp.processmodeller.datatypes.response.GetClipboardResponse;
 import xmcp.processmodeller.datatypes.response.GetDataflowResponse;
 import xmcp.processmodeller.datatypes.response.GetIssuesResponse;
+import xmcp.processmodeller.datatypes.response.GetModelledExpressionsResponse;
 import xmcp.processmodeller.datatypes.response.GetObjectXMLResponse;
 import xmcp.processmodeller.datatypes.response.GetOrderInputSourcesResponse;
 import xmcp.processmodeller.datatypes.response.GetRelationsResponse;
@@ -390,6 +391,8 @@ public class SessionBasedData {
         return copyXml(request);
       case Warnings:
          return getWarnings(request);
+      case ModelledExpressions:
+        return getModelledExpressions(request);
       default:
         if( request.getOperation().isModification() ) {
           return objectModification(request);
@@ -412,6 +415,16 @@ public class SessionBasedData {
     }
   }
 
+
+  private XMOMGuiReply getModelledExpressions(XMOMGuiRequest request) {
+    FQName fqn = request.getFQName();
+    GenerationBaseObject gbo = gbos.get(fqn);
+    XMOMGuiReply reply = new XMOMGuiReply();
+    ModelledExpressionConverter converter = new ModelledExpressionConverter();
+    GetModelledExpressionsResponse response = converter.convert(gbo, request.getObjectId());
+    reply.setXynaObject(response);
+    return reply;
+  }
 
   private XMOMGuiReply getWarnings(XMOMGuiRequest request) {
     FQName fqn = request.getFQName();
