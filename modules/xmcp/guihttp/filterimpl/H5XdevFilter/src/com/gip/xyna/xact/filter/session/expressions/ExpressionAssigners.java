@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 
@@ -58,7 +59,7 @@ public class ExpressionAssigners {
     map.put(FunctionExpression.class, (x) -> new FunctionExpressionAssigner((FunctionExpression) x));
     map.put(ExpressionVariable.class, (x) -> new VariableExpressionAssigner((ExpressionVariable) x));
     map.put(VariableAccessPart.class, (x) -> new VariableAccessPathExpressionAssigner((VariableAccessPart) x));
-    map.put(VariableInstanceFunctionIncovation.class, (x) -> new VariableInstanceFunctionInvocationExpressionAssigner((VariableInstanceFunctionIncovation) x));
+    map.put(VariableInstanceFunctionIncovation.class, (x) -> new VariableAccessPathExpressionAssigner((VariableAccessPart) x));
     return Collections.unmodifiableMap(map);
   }
 
@@ -119,37 +120,6 @@ public class ExpressionAssigners {
 
   }
 
-  public static class VariableInstanceFunctionInvocationExpressionAssigner implements ExpressionAssigner {
-
-    VariableInstanceFunctionIncovation invocation;
-    boolean assigningParameters;
-
-
-    public VariableInstanceFunctionInvocationExpressionAssigner(VariableInstanceFunctionIncovation invocation) {
-      this.invocation = invocation;
-      this.assigningParameters = true;
-    }
-
-
-    @Override
-    public void assign(Expression exp) {
-      if (assigningParameters) {
-        List<? extends Expression> oldParts = invocation.getFunctionParameter();
-        List<Expression> parts = oldParts == null ? new ArrayList<>() : new ArrayList<>(oldParts);
-        parts.add(exp);
-        invocation.unversionedSetFunctionParameter(parts);
-      } else {
-        invocation.setIndexDef(exp);
-      }
-    }
-
-
-    public void endAssigningParameters() {
-      assigningParameters = false;
-    }
-
-  }
-
   public static class VariableAccessPathExpressionAssigner extends ConsumerExpressionAssigner {
 
 
@@ -161,7 +131,6 @@ public class ExpressionAssigners {
 
   public static class FunctionExpressionAssigner extends ConsumerExpressionAssigner {
 
-    //only assigns index definition.
     public FunctionExpressionAssigner(FunctionExpression functionExpression) {
       super(x -> functionExpression.setIndexDef(x));
 
@@ -169,23 +138,43 @@ public class ExpressionAssigners {
 
   }
 
-  public static class FunctionSubExpressionAssigner implements ExpressionAssigner {
 
-    private FunctionExpression functionExpression;
+  public static class ExpressionListAssigner implements ExpressionAssigner {
+
+    private Supplier<List<? extends Expression>> getter;
+    private Consumer<List<Expression>> setter;
 
 
-    public FunctionSubExpressionAssigner(FunctionExpression functionExpression) {
-      this.functionExpression = functionExpression;
-
+    public ExpressionListAssigner(Supplier<List<? extends Expression>> getter, Consumer<List<Expression>> setter) {
+      this.getter = getter;
+      this.setter = setter;
     }
 
 
     @Override
     public void assign(Expression exp) {
-      List<? extends Expression> oldParts = functionExpression.getSubExpressions();
+      List<? extends Expression> oldParts = getter.get();
       List<Expression> parts = oldParts == null ? new ArrayList<>() : new ArrayList<>(oldParts);
       parts.add(exp);
-      functionExpression.setSubExpressions(parts);
+      setter.accept(parts);
     }
+
+  }
+
+
+  public static class InstanceFunctionSubExpressionAssigner extends ExpressionListAssigner {
+
+    public InstanceFunctionSubExpressionAssigner(VariableInstanceFunctionIncovation invocation) {
+      super(() -> invocation.getFunctionParameter(), (exp) -> invocation.unversionedSetFunctionParameter(exp));
+    }
+
+  }
+
+  public static class FunctionSubExpressionAssigner extends ExpressionListAssigner {
+
+    public FunctionSubExpressionAssigner(FunctionExpression funExp) {
+      super(() -> funExp.getSubExpressions(), (exp) -> funExp.unversionedSetSubExpressions(exp));
+    }
+
   }
 }

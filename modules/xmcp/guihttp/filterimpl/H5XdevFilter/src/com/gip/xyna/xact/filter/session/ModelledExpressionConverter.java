@@ -29,8 +29,9 @@ import com.gip.xyna.xact.filter.session.exceptions.UnknownObjectIdException;
 import com.gip.xyna.xact.filter.session.expressions.ExpressionAssigners.ExpressionAssigner;
 import com.gip.xyna.xact.filter.session.expressions.ExpressionAssigners;
 import com.gip.xyna.xact.filter.session.expressions.ExpressionAssigners.FunctionSubExpressionAssigner;
-import com.gip.xyna.xact.filter.session.expressions.ExpressionAssigners.VariableInstanceFunctionInvocationExpressionAssigner;
 import com.gip.xyna.xact.filter.session.expressions.ExpressionAssigners.ConsumerExpressionAssigner;
+import com.gip.xyna.xact.filter.session.expressions.ExpressionAssigners.InstanceFunctionSubExpressionAssigner;
+import com.gip.xyna.xact.filter.session.expressions.ExpressionAssigners.VariableAccessPathExpressionAssigner;
 import com.gip.xyna.xact.filter.session.gb.ObjectId;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xprc.xfractwfe.formula.Expression;
@@ -171,15 +172,17 @@ public class ModelledExpressionConverter {
     @Override
     public void instanceFunctionStarts(VariableInstanceFunctionIncovation vifi) {
       logger.debug("instanceFunctionStarts");
+      
+      Object obj = context.peek();
+      GeneralXynaObject xo = objects.get(obj);
+      InstanceFunctionSubExpressionAssigner cur = new InstanceFunctionSubExpressionAssigner((xmcp.processmodeller.datatypes.expression.VariableInstanceFunctionIncovation)xo);
+      context.push(cur); 
     }
 
     @Override
     public void instanceFunctionEnds(VariableInstanceFunctionIncovation vifi) {
       logger.debug("instanceFunctionEnds");
-      Object obj = context.peek();
-      if(obj instanceof VariableInstanceFunctionInvocationExpressionAssigner) {
-        ((VariableInstanceFunctionInvocationExpressionAssigner)obj).endAssigningParameters();
-      }
+      context.pop();
     }
 
     @Override
@@ -271,11 +274,12 @@ public class ModelledExpressionConverter {
       Object toPush = null;
       if(part instanceof VariableInstanceFunctionIncovation) { 
         cur = new xmcp.processmodeller.datatypes.expression.VariableInstanceFunctionIncovation();
-        toPush = ExpressionAssigners.assignerCreatorMap.get(cur.getClass()).apply(cur);
+        toPush = new VariableAccessPathExpressionAssigner(cur);
       } else {
         cur = new xmcp.processmodeller.datatypes.expression.VariableAccessPart();
         toPush = part;
       }
+      
       cur.unversionedSetName(part.getName());
       if(xo instanceof ExpressionVariable) {
         List<? extends xmcp.processmodeller.datatypes.expression.VariableAccessPart> oldParts = ((ExpressionVariable)xo).getParts();
