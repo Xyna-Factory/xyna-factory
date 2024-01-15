@@ -32,6 +32,7 @@
         <buildModule target="build"     dir="soap"        target.dir="${target.dir}/xact" />
         <buildModule target="build"     dir="snmp"        target.dir="${target.dir}/xact" />
         <buildModule target="build-all" dir="ssh"         target.dir="${target.dir}/xact" />
+        <buildModule target="build"     dir="velocity"    target.dir="${target.dir}/xact" />
     </target>
     
 </project>
