@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -170,7 +170,7 @@ public class SSHShellConnectionInstanceOperationImpl extends SSHShellConnectionS
           } else if (lineSeperator.equals("\\r\\n")) {
             lineSeperator = "\r\n";
           } else if (lineSeperator == null || lineSeperator.length() == 0) {
-            lineSeperator = ""; //dafÃ¼r verwendet, dass man z.b. ctrl-c drÃ¼ckt. das wird nicht mit enter bestÃ¤tigt.
+            lineSeperator = ""; //dafür verwendet, dass man z.b. ctrl-c drückt. das wird nicht mit enter bestätigt.
           }
         }
       }

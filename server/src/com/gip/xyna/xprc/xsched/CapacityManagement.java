@@ -164,7 +164,7 @@ public class CapacityManagement extends FunctionGroup
   
   private class FactoryShutdownClusterStateChangeHandler implements ClusterStateChangeHandler {
 
-    private volatile Timer shutdownTimer = new Timer();
+    private volatile Timer shutdownTimer = new Timer("CapacityManagement - FactoryShutdownClusterStateChangeHandler - shutdown timer");
     private volatile boolean shutDownInitialized = false;
     private ClusterState state;
     

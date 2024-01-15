@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Filter and Trigger Manager Services" TypeName="FilterAndTriggerManagerServices" TypePath="xmcp.factorymanager" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>FilterAndTriggerManagerServicesImpl.jar</Libraries>
+  <Service Label="Filter and Trigger Manager Services" TypeName="FilterAndTriggerManagerServices">
+    <Operation IsStatic="true" Label="Get Filter Instance Detail" Name="getFilterInstanceDetail">
+      <Input>
+        <Data ID="22" Label="Filter Instance" ReferenceName="FilterInstance" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="filterInstance22"/>
+      </Input>
+      <Output>
+        <Data ID="6" Label="Filter Instance Details" ReferenceName="FilterInstanceDetails" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="filterInstanceDetails6"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.getFilterInstanceDetail(filterInstance22);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Filter Detail" Name="getFilterDetail">
+      <Input>
+        <Data ID="25" Label="Get Filter Detail Request" ReferenceName="GetFilterDetailRequest" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="getFilterDetailRequest25"/>
+      </Input>
+      <Output>
+        <Data ID="5" Label="Filter Details" ReferenceName="FilterDetails" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="filterDetails5"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.getFilterDetail(getFilterDetailRequest25);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Deploy Filter Instance" Name="deployFilterInstance">
+      <Input>
+        <Data ID="10" Label="Deploy Filter Request" ReferenceName="DeployFilterRequest" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="deployFilterRequest10"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.deployFilterInstance(deployFilterRequest10);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Enable Filter Instance" Name="enableFilterInstance">
+      <Input>
+        <Data ID="7" Label="Filter Instance" ReferenceName="FilterInstance" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="filterInstance7"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.enableFilterInstance(filterInstance7);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Disable Filter Instance" Name="disableFilterInstance">
+      <Input>
+        <Data ID="8" Label="Filter Instance" ReferenceName="FilterInstance" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="filterInstance8"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.disableFilterInstance(filterInstance8);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Undeploy Filter Instance" Name="undeployFilterInstance">
+      <Input>
+        <Data ID="9" Label="Filter Instance" ReferenceName="FilterInstance" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="filterInstance9"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.undeployFilterInstance(filterInstance9);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Filter Overview" Name="getFilterOverview">
+      <Input/>
+      <Output>
+        <Data ID="11" IsList="true" Label="Filter" ReferenceName="Filter" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="filter11"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.getFilterOverview();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Trigger Overview" Name="getTriggerOverview">
+      <Input/>
+      <Output>
+        <Data ID="14" IsList="true" Label="Trigger" ReferenceName="Trigger" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="trigger14"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.getTriggerOverview();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Trigger Details" Name="getTriggerDetails">
+      <Input>
+        <Data ID="26" Label="Get Trigger Request" ReferenceName="GetTriggerRequest" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="getTriggerRequest26"/>
+      </Input>
+      <Output>
+        <Data ID="24" Label="Trigger Detail" ReferenceName="TriggerDetail" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="triggerDetail24"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.getTriggerDetails(getTriggerRequest26);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Trigger Instance Detail" Name="getTriggerInstanceDetail">
+      <Input>
+        <Data ID="20" Label="Trigger Instance" ReferenceName="TriggerInstance" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="triggerInstance20"/>
+      </Input>
+      <Output>
+        <Data ID="21" Label="Trigger Instance Detail" ReferenceName="TriggerInstanceDetail" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="triggerInstanceDetail21"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.getTriggerInstanceDetail(triggerInstance20);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Enable Trigger Instance" Name="enableTriggerInstance">
+      <Input>
+        <Data ID="13" Label="Trigger Instance" ReferenceName="TriggerInstance" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="triggerInstance13"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.enableTriggerInstance(triggerInstance13);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Disable Trigger Instance" Name="disableTriggerInstance">
+      <Input>
+        <Data ID="12" Label="Trigger Instance" ReferenceName="TriggerInstance" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="triggerInstance12"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.disableTriggerInstance(triggerInstance12);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Deploy Trigger Instance" Name="deployTriggerInstance">
+      <Input>
+        <Data ID="16" Label="Deploy Trigger Request" ReferenceName="DeployTriggerRequest" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="deployTriggerRequest16"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.deployTriggerInstance(deployTriggerRequest16);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Undeploy Trigger Instance" Name="undeployTriggerInstance">
+      <Input>
+        <Data ID="15" Label="Trigger Instance" ReferenceName="TriggerInstance" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="triggerInstance15"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.undeployTriggerInstance(triggerInstance15);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Possible RTC for Filter Deployment" Name="getPossibleRTCForFilterDeployment0">
+      <Input>
+        <Data ID="31" Label="Filter" ReferenceName="Filter" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="filter31"/>
+      </Input>
+      <Output>
+        <Data ID="34" IsList="true" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeContext34"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.getPossibleRTCForFilterDeployment0(filter31);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Possible RTC for Trigger Deployment" Name="getPossibleRTCForTriggerDeployment0">
+      <Input>
+        <Data ID="32" Label="Trigger" ReferenceName="Trigger" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="trigger32"/>
+      </Input>
+      <Output>
+        <Data ID="33" IsList="true" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeContext33"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.getPossibleRTCForTriggerDeployment0(trigger32);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Possible Trigger Instance for Filter Deployment" Name="getPossibleTriggerInstanceForFilterDeployment">
+      <Input>
+        <Data ID="37" Label="Filter" ReferenceName="Filter" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="filter37"/>
+        <Data ID="36" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp.factorymanager.rtcmanager" VariableName="runtimeContext36"/>
+      </Input>
+      <Output>
+        <Data ID="35" IsList="true" Label="Trigger Instance" ReferenceName="TriggerInstance" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="triggerInstance35"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.getPossibleTriggerInstanceForFilterDeployment(filter37, runtimeContext36);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

@@ -708,15 +708,7 @@ public class XMOMDatabase extends FunctionGroup {
       registerServiceGroup(dom, serviceName);
       List<Operation> operations = entry.getValue();
       if (operations != null) {
-        List<JavaOperation> javaOps = new ArrayList<JavaOperation>();
-        for (Operation op : operations) {
-          if (op instanceof JavaOperation) { // we're missing out on WorkflowCallInService
-            javaOps.add((JavaOperation)op);
-          }
-        }
-        if (javaOps.size() > 0) {
-          registerOperations(dom, serviceName, javaOps, previousOperations, xmomObjectsToFinishLater);
-        }
+        registerOperations(dom, serviceName, operations, previousOperations, xmomObjectsToFinishLater);
       }
     }
     return returnvalue;
@@ -927,7 +919,7 @@ public class XMOMDatabase extends FunctionGroup {
   }
 
 
-  private void registerOperations(DOM dom, String serviceName, Collection<JavaOperation> operations, Map<String, XMOMOperationDatabaseEntry> previousEntries, XMOMObjectSet xmomObjectsToFinishLater)
+  private void registerOperations(DOM dom, String serviceName, Collection<Operation> operations, Map<String, XMOMOperationDatabaseEntry> previousEntries, XMOMObjectSet xmomObjectsToFinishLater)
                   throws PersistenceLayerException, AssumedDeadlockException {
     if (logger.isDebugEnabled()) {
       logger.debug("registerOperations: " + dom.getOriginalFqName());
@@ -941,7 +933,7 @@ public class XMOMDatabase extends FunctionGroup {
           if (logger.isDebugEnabled()) {
             logger.debug("operation: " + operation.getName());
           }
-          XMOMOperationDatabaseEntry entry = new XMOMOperationDatabaseEntry(dom, serviceName, (JavaOperation) operation);
+          XMOMOperationDatabaseEntry entry = new XMOMOperationDatabaseEntry(dom, serviceName, operation);
           
           StorageAction action = examineExistingEntry(con, entry);
           if (action == StorageAction.discard) {

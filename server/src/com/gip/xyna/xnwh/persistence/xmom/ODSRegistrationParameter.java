@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -290,10 +290,12 @@ public class ODSRegistrationParameter {
     if (ssi.getFqClassNameForDatatype().equals(type)) {
       return ssi;
     } else {
-      for (StorableStructureIdentifier subType : ssi.getSubEntries()) {
-        StorableStructureInformation result = findTypeInHierarchy(subType.getInfo(), type);
-        if (result != null) {
-          return result;
+      if (ssi.getSubEntries() != null) {
+        for (StorableStructureIdentifier subType : ssi.getSubEntries()) {
+          StorableStructureInformation result = findTypeInHierarchy(subType.getInfo(), type);
+          if (result != null) {
+            return result;
+          }
         }
       }
       return null;

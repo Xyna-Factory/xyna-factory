@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -735,8 +735,10 @@ public class PersistenceExpressionVisitors {
     private List<String> collectSubTypesRecursivly(StorableStructureInformation type) {
       List<String> types = new ArrayList<>();
       types.add(type.getFqXmlName());
-      for (StorableStructureIdentifier subEntry : type.getSubEntries()) {
-        types.addAll(collectSubTypesRecursivly(subEntry.getInfo()));
+      if (type.getSubEntries() != null) {
+        for (StorableStructureIdentifier subEntry : type.getSubEntries()) {
+          types.addAll(collectSubTypesRecursivly(subEntry.getInfo()));
+        }
       }
       return types;
     }

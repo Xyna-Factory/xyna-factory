@@ -35,7 +35,7 @@
     
     <!-- modeller -->
     <exec executable="git" failonerror="true">
-      <arg line="clone --recurse-submodules ${repository-url}/${modeller.git} ${modeller.dir}" />
+      <arg line="clone --recurse-submodules ${repository-url}/${modeller.git} --branch ${modeller.tag} ${modeller.dir}" />
     </exec>
   </target>
 
