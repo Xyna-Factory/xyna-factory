@@ -22,12 +22,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
-import java.util.function.Function;
-
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xact.filter.session.exceptions.UnknownObjectIdException;
+import com.gip.xyna.xact.filter.session.expressions.ExpressionAssigners.ExpressionAssigner;
+import com.gip.xyna.xact.filter.session.expressions.ExpressionAssigners;
+import com.gip.xyna.xact.filter.session.expressions.ExpressionAssigners.FunctionSubExpressionAssigner;
+import com.gip.xyna.xact.filter.session.expressions.ExpressionAssigners.VariableInstanceFunctionInvocationExpressionAssigner;
+import com.gip.xyna.xact.filter.session.expressions.ExpressionAssigners.ConsumerExpressionAssigner;
 import com.gip.xyna.xact.filter.session.gb.ObjectId;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xprc.xfractwfe.formula.Expression;
@@ -48,7 +51,6 @@ import com.gip.xyna.xprc.xfractwfe.generation.StepFunction;
 import com.gip.xyna.xprc.xfractwfe.generation.StepMapping;
 
 import xmcp.processmodeller.datatypes.expression.ExpressionVariable;
-import xmcp.processmodeller.datatypes.expression.NotExpression;
 import xmcp.processmodeller.datatypes.response.GetModelledExpressionsResponse;
 
 public class ModelledExpressionConverter {
@@ -96,174 +98,15 @@ public class ModelledExpressionConverter {
   }
   
   
-  private static interface ExpressionAssigner {
-    public void assign(xmcp.processmodeller.datatypes.expression.Expression exp);
-  }
-  
-  private static class RootExpressionAssigner implements ExpressionAssigner {
-    
-    private ConverterVisitor visitor;
-    
-    public RootExpressionAssigner(ConverterVisitor visitor) {
-      this.visitor = visitor;
-    }
-    
 
-    @Override
-    public void assign(xmcp.processmodeller.datatypes.expression.Expression exp) {
-      visitor.result = exp;
-    }
-    
-  }
   
-  private static class VariableExpressionAssigner implements ExpressionAssigner {
-
-    private ExpressionVariable variable;
-    
-    public VariableExpressionAssigner(ExpressionVariable var) {
-      variable = var;
-    }
-    
-    @Override
-    public void assign(xmcp.processmodeller.datatypes.expression.Expression exp) {
-      variable.unversionedSetIndexDef(exp);
-    }
-  }
-  
-  private static class Expression2ArgsExpressionAssigner implements ExpressionAssigner {
-
-    private xmcp.processmodeller.datatypes.expression.Expression2Args toAssign;
-    private boolean assignedFirstAlready;
-    
-    public Expression2ArgsExpressionAssigner(xmcp.processmodeller.datatypes.expression.Expression2Args toAssign) {
-      this.toAssign = toAssign;
-      assignedFirstAlready = false;
-    }
-    
-    @Override
-    public void assign(xmcp.processmodeller.datatypes.expression.Expression exp) {
-      if(!assignedFirstAlready) {
-        toAssign.unversionedSetVar1(exp);
-        assignedFirstAlready = true;
-      } else {
-        toAssign.unversionedSetVar2(exp);
-      }
-    }
-    
-  }
-  
-  private static class NotExpressionAssigner implements ExpressionAssigner {
-
-    private NotExpression toAssign;
-    
-    public NotExpressionAssigner(NotExpression toAssign) {
-      this.toAssign = toAssign;
-    }
-    
-    @Override
-    public void assign(xmcp.processmodeller.datatypes.expression.Expression exp) {
-      toAssign.unversionedSetExpression(exp);
-    }
-    
-  }
-  
-  private static class VariableInstanceFunctionInvocationExpressionAssigner implements ExpressionAssigner {
-
-    xmcp.processmodeller.datatypes.expression.VariableInstanceFunctionIncovation invocation;
-    boolean assigningParameters;
-    
-    
-    public VariableInstanceFunctionInvocationExpressionAssigner(xmcp.processmodeller.datatypes.expression.VariableInstanceFunctionIncovation invocation) {
-      this.invocation = invocation;
-      this.assigningParameters = true;
-    }
-    
-    @Override
-    public void assign(xmcp.processmodeller.datatypes.expression.Expression exp) {
-      if(assigningParameters) {
-        List<? extends xmcp.processmodeller.datatypes.expression.Expression> oldParts = invocation.getFunctionParameter();
-        List<xmcp.processmodeller.datatypes.expression.Expression> parts = oldParts == null ? new ArrayList<>() : new ArrayList<>(oldParts);
-        parts.add(exp);
-        invocation.unversionedSetFunctionParameter(parts);
-      } else {
-        invocation.setIndexDef(exp);
-      }
-    }
-    
-    public void endAssigningParameters() {
-      assigningParameters = false;
-    }
-    
-  }
-  
-  private static class VariableAccessPathExpressionAssigner implements ExpressionAssigner {
-
-    private xmcp.processmodeller.datatypes.expression.VariableAccessPart vap;
-    
-    
-    public VariableAccessPathExpressionAssigner(xmcp.processmodeller.datatypes.expression.VariableAccessPart vap) {
-      this.vap = vap;
-    }
-    
-    @Override
-    public void assign(xmcp.processmodeller.datatypes.expression.Expression exp) {
-      vap.unversionedSetIndexDef(exp);
-    }
-    
-  }
-  
-  private static class FunctionExpressionAssigner implements ExpressionAssigner {
-    //only assigns index definition.
-    private xmcp.processmodeller.datatypes.expression.FunctionExpression functionExpression;
-    
-    
-    public FunctionExpressionAssigner(xmcp.processmodeller.datatypes.expression.FunctionExpression functionExpression) {
-      this.functionExpression = functionExpression;
-
-    }
-    
-    @Override
-    public void assign(xmcp.processmodeller.datatypes.expression.Expression exp) {
-        functionExpression.setIndexDef(exp);
-    }
-  }
-  
-  private static class FunctionSubExpressionAssigner implements ExpressionAssigner {
-    private xmcp.processmodeller.datatypes.expression.FunctionExpression functionExpression;
-    
-    public FunctionSubExpressionAssigner(xmcp.processmodeller.datatypes.expression.FunctionExpression functionExpression) {
-      this.functionExpression = functionExpression;
-
-    }
-    
-    @Override
-    public void assign(xmcp.processmodeller.datatypes.expression.Expression exp) {
-      List<? extends xmcp.processmodeller.datatypes.expression.Expression> oldParts = functionExpression.getSubExpressions();
-      List<xmcp.processmodeller.datatypes.expression.Expression> parts = oldParts == null ? new ArrayList<>() : new ArrayList<>(oldParts);
-      parts.add(exp);
-      functionExpression.setSubExpressions(parts);
-    }
-    
-  }
+ 
   
   private static class ConverterVisitor implements Visitor {
     
     private xmcp.processmodeller.datatypes.expression.Expression result;
     private Stack<Object> context;
     private Map<Object, GeneralXynaObject> objects;
-    private static Map<Class<? extends GeneralXynaObject>, Function<GeneralXynaObject, ExpressionAssigner>> assignerCreatorMap = createAssignerCreatorMap();
-    
-    
-    private static Map<Class<? extends GeneralXynaObject>, Function<GeneralXynaObject, ExpressionAssigner>> createAssignerCreatorMap() {
-      Map<Class<? extends GeneralXynaObject>, Function<GeneralXynaObject, ExpressionAssigner>> map = new HashMap<>();
-      map.put(ExpressionVariable.class,  (x) -> new VariableExpressionAssigner((ExpressionVariable)x));
-      map.put(xmcp.processmodeller.datatypes.expression.Expression2Args.class, (x) -> new Expression2ArgsExpressionAssigner((xmcp.processmodeller.datatypes.expression.Expression2Args)x));
-      map.put(NotExpression.class, (x) -> new NotExpressionAssigner((NotExpression)x));
-      map.put(xmcp.processmodeller.datatypes.expression.VariableInstanceFunctionIncovation.class, (x) -> new VariableInstanceFunctionInvocationExpressionAssigner((xmcp.processmodeller.datatypes.expression.VariableInstanceFunctionIncovation)x));
-      map.put(xmcp.processmodeller.datatypes.expression.VariableAccessPart.class, (x) -> new VariableAccessPathExpressionAssigner((xmcp.processmodeller.datatypes.expression.VariableAccessPart)x));
-      map.put(xmcp.processmodeller.datatypes.expression.FunctionExpression.class, (x) -> new FunctionExpressionAssigner((xmcp.processmodeller.datatypes.expression.FunctionExpression)x));
-      return map;
-    }
     
     
     public ConverterVisitor() {
@@ -274,7 +117,7 @@ public class ModelledExpressionConverter {
       result = null;
       context = new Stack<Object>();
       objects = new HashMap<Object, GeneralXynaObject>();
-      context.push(new RootExpressionAssigner(this));
+      context.push(new ConsumerExpressionAssigner(x -> this.result = x));
     }
     
     public xmcp.processmodeller.datatypes.expression.Expression getAndReset() {
@@ -288,7 +131,7 @@ public class ModelledExpressionConverter {
       logger.debug("expression2ArgsStarts");
       xmcp.processmodeller.datatypes.expression.Expression2Args exp = new xmcp.processmodeller.datatypes.expression.Expression2Args();
       assignExpression(exp);
-      ExpressionAssigner assigner = assignerCreatorMap.get(exp.getClass()).apply(exp);
+      ExpressionAssigner assigner = ExpressionAssigners.assignerCreatorMap.get(exp.getClass()).apply(exp);
       context.push(assigner);
       objects.put(assigner, exp);
     }
@@ -320,7 +163,7 @@ public class ModelledExpressionConverter {
       xmcp.processmodeller.datatypes.expression.FunctionExpression exp = new xmcp.processmodeller.datatypes.expression.FunctionExpression();
       exp.unversionedSetFunction(fe.getFunction().getName());
       assignExpression(exp);
-      ExpressionAssigner assigner = assignerCreatorMap.get(exp.getClass()).apply(exp);
+      ExpressionAssigner assigner = ExpressionAssigners.assignerCreatorMap.get(exp.getClass()).apply(exp);
       context.push(assigner);
       objects.put(assigner, exp);
     }
@@ -336,8 +179,6 @@ public class ModelledExpressionConverter {
       Object obj = context.peek();
       if(obj instanceof VariableInstanceFunctionInvocationExpressionAssigner) {
         ((VariableInstanceFunctionInvocationExpressionAssigner)obj).endAssigningParameters();
-      } else {
-        logger.error("Cound not stop assigning parameters. " + obj);
       }
     }
 
@@ -379,7 +220,7 @@ public class ModelledExpressionConverter {
       logger.debug("notStarts");
       xmcp.processmodeller.datatypes.expression.NotExpression exp = new xmcp.processmodeller.datatypes.expression.NotExpression();
       assignExpression(exp);
-      ExpressionAssigner assigner = assignerCreatorMap.get(exp.getClass()).apply(exp);
+      ExpressionAssigner assigner = ExpressionAssigners.assignerCreatorMap.get(exp.getClass()).apply(exp);
       context.push(assigner);
       objects.put(assigner, exp);
     }
@@ -393,11 +234,11 @@ public class ModelledExpressionConverter {
     @Override
     public void operator(Operator operator) {
       logger.debug("operator");
-      //we are visiting an expression2Args
       Object obj = context.peek();
       GeneralXynaObject xo = objects.get(obj);
-      ((xmcp.processmodeller.datatypes.expression.Expression2Args)xo).unversionedSetOperator(operator.getOperatorAsString());
-      
+      if (xo instanceof xmcp.processmodeller.datatypes.expression.Expression2Args) {
+        ((xmcp.processmodeller.datatypes.expression.Expression2Args) xo).unversionedSetOperator(operator.getOperatorAsString());
+      }
     }
 
     @Override
@@ -412,8 +253,6 @@ public class ModelledExpressionConverter {
       
       if(xo instanceof xmcp.processmodeller.datatypes.expression.SingleVarExpression) {
         ((xmcp.processmodeller.datatypes.expression.SingleVarExpression)xo).setVariable(cur);
-      } else {
-        throw new RuntimeException("Unexpected variableStarts Context: " + obj + "/"+ xo + " - expected: SingleVarExpression");
       }
     }
 
@@ -432,13 +271,11 @@ public class ModelledExpressionConverter {
       Object toPush = null;
       if(part instanceof VariableInstanceFunctionIncovation) { 
         cur = new xmcp.processmodeller.datatypes.expression.VariableInstanceFunctionIncovation();
-        toPush = assignerCreatorMap.get(cur.getClass()).apply(cur);
+        toPush = ExpressionAssigners.assignerCreatorMap.get(cur.getClass()).apply(cur);
       } else {
         cur = new xmcp.processmodeller.datatypes.expression.VariableAccessPart();
         toPush = part;
       }
-      context.push(toPush);
-      objects.put(toPush, cur);
       cur.unversionedSetName(part.getName());
       if(xo instanceof ExpressionVariable) {
         List<? extends xmcp.processmodeller.datatypes.expression.VariableAccessPart> oldParts = ((ExpressionVariable)xo).getParts();
@@ -450,10 +287,9 @@ public class ModelledExpressionConverter {
         List<xmcp.processmodeller.datatypes.expression.VariableAccessPart> parts = oldParts == null ? new ArrayList<>() : new ArrayList<>(oldParts);
         parts.add(cur);
         ((xmcp.processmodeller.datatypes.expression.FunctionExpression)xo).unversionedSetParts(parts);
-      } else {
-        throw new RuntimeException("Unexpected vairablePart Context: " + currentContext + "/"+ xo + " - expected: ExpressionVariable");
       }
-      
+      context.push(toPush);
+      objects.put(toPush, cur);
     }
 
     @Override
@@ -477,7 +313,7 @@ public class ModelledExpressionConverter {
       logger.debug("indexDefStarts");
       Object obj = context.peek();
       GeneralXynaObject xo = objects.get(obj);
-      ExpressionAssigner assigner = assignerCreatorMap.get(xo.getClass()).apply(xo);
+      ExpressionAssigner assigner = ExpressionAssigners.assignerCreatorMap.get(xo.getClass()).apply(xo);
       context.push(assigner);
     }
 
@@ -507,8 +343,6 @@ public class ModelledExpressionConverter {
       Object obj = context.peek();
       if(obj instanceof ExpressionAssigner) {
         ((ExpressionAssigner)obj).assign(exp);
-      } else {
-        logger.error("Could not assign expression. " + obj + " is not an ExpressionAssigner");
       }
     }
   }
