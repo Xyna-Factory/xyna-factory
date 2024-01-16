@@ -44,11 +44,15 @@ public class ExpressionAssigners {
 
   public interface ExpressionAssigner {
 
-    public void assign(xmcp.processmodeller.datatypes.expression.Expression exp);
+    public void assign(Expression exp);
   }
 
+  
+  public static ExpressionAssigner createAssigner(GeneralXynaObject assignTo) {
+    return assignerCreatorMap.get(assignTo.getClass()).apply(assignTo);
+  }
 
-  public final static Map<Class<? extends GeneralXynaObject>, Function<GeneralXynaObject, ExpressionAssigner>> assignerCreatorMap =
+  private final static Map<Class<? extends GeneralXynaObject>, Function<GeneralXynaObject, ExpressionAssigner>> assignerCreatorMap =
       createAssignerCreatorMap();
 
 

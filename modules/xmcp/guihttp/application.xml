@@ -2580,10 +2580,6 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.processmodeller.datatypes.expression.LocalExpressionVariable</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.processmodeller.datatypes.expression.NotExpression</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
