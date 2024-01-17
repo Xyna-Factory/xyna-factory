@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Copyright 2022 Xyna GmbH, Germany
+# Copyright 2024 Xyna GmbH, Germany
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ ALL_DATAMODELTYPES=("mib","tr069","xsd");
 #ACHTUNG: Version auch bei addRequirement zu default workspace berücksichtigen
 ALL_APPLICATIONS="Base Processing"; #Default-Applications, die immer installiert sein sollten
 APPMGMTVERSION=1.0.10
-GUIHTTPVERSION=1.1.373
+GUIHTTPVERSION=1.1.374
 SNMPSTATVERSION=1.0.3
 PROCESSINGVERSION=1.0.18
 ALL_REPOSITORYACCESSES=("svn");
