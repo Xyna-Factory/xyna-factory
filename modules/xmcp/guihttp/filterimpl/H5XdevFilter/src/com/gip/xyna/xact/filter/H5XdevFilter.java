@@ -66,6 +66,7 @@ import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.UserType;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBuilds;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyDuration;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyInt;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyString;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
@@ -112,11 +113,20 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
       .setDefaultDocumentation(DocumentationLanguage.EN, "compress response of requests using gzip, if supported by caller")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Komprimiere Antworten mit gzip, wenn es vom Aufrufer unterstützt wird");
   
+  public static final XynaPropertyBoolean STRICT_TRANSPORT_SECURITY = new XynaPropertyBoolean("xmcp.guihttp.sts", false)
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Send Session Cookie as __Secure- and add Strict-Transport-Security header")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Sende Session Cookie als __Secure- und füge Strict-Transport-Security header ein");
+
+  public static final XynaPropertyDuration STRICT_TRANSPORT_SECURITY_MAX_AGE = new XynaPropertyDuration("xmcp.guihttp.sts.maxage", "730 d" )
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Max-age of Strict-Transport-Security header.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Max-age des Strict-Transport-Security header.");
+
   public static final XynaPropertyString VALIDATION_WORKFLOW = new XynaPropertyString("xmcp.guihttp.startorder.preprocess_workflow", "")
       .setDefaultDocumentation(DocumentationLanguage.EN,
                                "If set, all startorder Requests outside of guihttp are first processed by the given workflow. Inputs are Document and OrderType, output is Document. Format: <fqn>@<rtc>. <rtc> is either workspaceName or applicationName/versionName.")
       .setDefaultDocumentation(DocumentationLanguage.DE,
                                "Wenn gesetzt, werden alle startorder Requests außerhalb von guihttp zuerst vom angegebenen Workflow verarbeitet. Inputs sind Document und Ordertype, Output ist Document. Format: <fqn>@<rtc>. <rtc> ist entweder workspaceName oder applicationName/versionName");
+
 
 
   private static class WorkspaceRevisionBuilder implements XynaPropertyBuilds.Builder<Long> {
@@ -376,6 +386,8 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     GENERATION_BASE_CACHE_SIZE.registerDependency(UserType.Filter, NAME);
     USE_CACHE.registerDependency(UserType.Filter, NAME);
     AVARCONSTANTS.registerDependency(UserType.Filter, NAME);
+    STRICT_TRANSPORT_SECURITY.registerDependency(UserType.Filter, NAME);
+    STRICT_TRANSPORT_SECURITY_MAX_AGE.registerDependency(UserType.Filter, NAME);
     
     super.onDeployment(triggerInstance);
   }
@@ -404,6 +416,8 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     GENERATION_BASE_CACHE_SIZE.unregister();
     USE_CACHE.unregister();
     AVARCONSTANTS.unregister();
+    STRICT_TRANSPORT_SECURITY.unregister();
+    STRICT_TRANSPORT_SECURITY_MAX_AGE.unregister();
   }
 
 

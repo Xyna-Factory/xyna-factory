@@ -30,6 +30,7 @@ import com.gip.xyna.utils.misc.JsonParser.UnexpectedJSONContentException;
 import com.gip.xyna.xact.filter.json.FQNameJson;
 import com.gip.xyna.xact.filter.session.Clipboard;
 import com.gip.xyna.xact.filter.session.Dataflow;
+import com.gip.xyna.xact.filter.session.FQName;
 import com.gip.xyna.xact.filter.session.Clipboard.ClipboardCopyDirection;
 import com.gip.xyna.xact.filter.session.exceptions.MergeConflictException;
 import com.gip.xyna.xact.filter.session.exceptions.MissingObjectException;
@@ -49,6 +50,7 @@ import com.gip.xyna.xact.filter.session.gb.StepMap;
 import com.gip.xyna.xact.filter.session.gb.vars.IdentifiedVariablesStepChoice;
 import com.gip.xyna.xact.filter.session.modify.Insertion;
 import com.gip.xyna.xact.filter.session.modify.Insertion.QueryInsertStep;
+import com.gip.xyna.xact.filter.session.workflowwarnings.ReferenceInvalidatedNotification;
 import com.gip.xyna.xact.filter.util.AVariableIdentification.VarUsageType;
 import com.gip.xyna.xact.filter.util.AVariableIdentification;
 import com.gip.xyna.xact.filter.util.DirectVarIdentification;
@@ -365,6 +367,10 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
   @Override
   protected void modifyStep(Step step) throws XynaException, UnknownObjectIdException, MissingObjectException, UnsupportedOperationException, MergeConflictException {
     move(object);
+    
+    FQName fqName = modification.getObject().getFQName();
+    ReferenceInvalidatedNotification notification = new ReferenceInvalidatedNotification(fqName, object.getRoot().getWorkflow());
+    modification.getSession().getWFWarningsHandler(fqName).handleChange(object.getId(), notification);
   }
 
 
@@ -378,6 +384,10 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
       }
     }
     move(object);
+    
+    FQName fqName = modification.getObject().getFQName();
+    ReferenceInvalidatedNotification notification = new ReferenceInvalidatedNotification(fqName, object.getRoot().getWorkflow());
+    modification.getSession().getWFWarningsHandler(fqName).handleChange(object.getId(), notification);
   }
 
   @Override

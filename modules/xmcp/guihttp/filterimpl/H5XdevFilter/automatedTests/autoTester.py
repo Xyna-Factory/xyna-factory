@@ -333,7 +333,7 @@ class RequestTester:
     factoryIndexTranslated = self.factoryIndexMap[factoryIndex]
     self.urlExtension = "/upload"
     rdyUrl = self.formatUrl(factoryIndexTranslated)
-    result = ['curl', "-F", "file=@" + filepath, rdyUrl]
+    result = ['curl', "-k", "-F", "file=@" + filepath, rdyUrl]
 
     self.addCookiesToArguments(result, factoryIndexTranslated, False)
 
@@ -348,7 +348,7 @@ class RequestTester:
     if self.debug:
       print("upload:\n" + str(error))
 
-    return result
+    return result.decode('utf-8')
 
 
   #replaces all occurences of !<parameter>! in value

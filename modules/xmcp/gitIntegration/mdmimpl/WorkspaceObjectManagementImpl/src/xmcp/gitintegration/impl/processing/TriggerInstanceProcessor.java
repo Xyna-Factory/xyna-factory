@@ -23,15 +23,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.collections.lists.StringSerializableList;
 import com.gip.xyna.xact.XynaActivationPortal;
 import com.gip.xyna.xact.trigger.TriggerInformation;
+import com.gip.xyna.xact.trigger.XynaActivationTrigger;
 import com.gip.xyna.xact.trigger.TriggerInformation.TriggerInstanceInformation;
+import com.gip.xyna.xfmg.xfctrl.cmdctrl.CommandControl;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 
@@ -49,8 +53,18 @@ public class TriggerInstanceProcessor implements WorkspaceContentProcessor<Trigg
   private static final String TAG_TRIGGERINSTANCENAME = "triggerinstancename";
   private static final String TAG_TRIGGERNAME = "triggername";
   private static final String TAG_STARTPARAMETER = "startparameter";
+  private static final String TAG_MAXRECEIVES = "maxreceives";
+  private static final String TAG_REJECTAFTERMAXRECEIVES = "rejectaftermaxreceives";
 
-  private static final XynaActivationPortal xynaActivationPortal = XynaFactory.getInstance().getActivationPortal();
+  private static XynaActivationPortal xynaActivationPortal;
+  
+  private static XynaActivationPortal getXynaActivationPortal() {
+    if(xynaActivationPortal == null) {
+      xynaActivationPortal = XynaFactory.getInstance().getActivationPortal();
+    }
+    return xynaActivationPortal;
+  }
+
 
   @Override
   public List<WorkspaceContentDifference> compare(Collection<? extends TriggerInstance> from, Collection<? extends TriggerInstance> to) {
@@ -74,16 +88,12 @@ public class TriggerInstanceProcessor implements WorkspaceContentProcessor<Trigg
         wcd.setContentType(TAG_TRIGGERINSTANCE);
         wcd.setExistingItem(fromEntry);
         if (toEntry != null) {
-          String fromStartParameter = fromEntry.getStartParameter();
-          if (fromStartParameter == null) {
-            fromStartParameter = "";
-          }
-          String toStartParameter = toEntry.getStartParameter();
-          if (toStartParameter == null) {
-            toStartParameter = "";
-          }
+          
+          boolean sameStartParameter = Objects.equals(fromEntry.getStartParameter(), toEntry.getStartParameter());
+          boolean sameRejectPolicy = Objects.equals(fromEntry.getRejectAfterMaxReceives(), toEntry.getRejectAfterMaxReceives());
+          boolean sameMaxRecieves = Objects.equals(fromEntry.getMaxReceives(), toEntry.getMaxReceives());
 
-          if (!fromStartParameter.equals(toStartParameter) || !fromEntry.getTriggerName().equals(toEntry.getTriggerName())) {
+          if (!sameStartParameter || !sameMaxRecieves || !sameRejectPolicy) {
             wcd.setDifferenceType(new MODIFY());
             wcd.setNewItem(toEntry);
             toWorkingList.remove(toEntry); // remove entry from to-list
@@ -122,6 +132,10 @@ public class TriggerInstanceProcessor implements WorkspaceContentProcessor<Trigg
         ti.setTriggerName(childNode.getTextContent());
       } else if (childNode.getNodeName().equals(TAG_STARTPARAMETER)) {
         ti.setStartParameter(childNode.getTextContent());
+      } else if (childNode.getNodeName().equals(TAG_MAXRECEIVES)) {
+        ti.setMaxReceives(Long.valueOf(childNode.getTextContent()));
+      } else if (childNode.getNodeName().equals(TAG_REJECTAFTERMAXRECEIVES)) {
+        ti.setRejectAfterMaxReceives(Boolean.parseBoolean(childNode.getTextContent()));
       }
     }
     return ti;
@@ -135,6 +149,12 @@ public class TriggerInstanceProcessor implements WorkspaceContentProcessor<Trigg
     builder.element(TAG_TRIGGERNAME, item.getTriggerName());
     if (item.getStartParameter() != null) {
       builder.element(TAG_STARTPARAMETER, XmlBuilder.encode(item.getStartParameter()));
+    }
+    if (item.getMaxReceives() != null) {
+      builder.element(TAG_MAXRECEIVES, String.valueOf(item.getMaxReceives()));
+    }
+    if (item.getRejectAfterMaxReceives() != null) {
+      builder.element(TAG_REJECTAFTERMAXRECEIVES, String.valueOf(item.getRejectAfterMaxReceives()));
     }
     builder.endElement(TAG_TRIGGERINSTANCE);
   }
@@ -173,6 +193,16 @@ public class TriggerInstanceProcessor implements WorkspaceContentProcessor<Trigg
       ds.append("    " + TAG_STARTPARAMETER + " ");
       ds.append(MODIFY.class.getSimpleName() + " \"" + fromStartParameter + "\"=>\"" + toStartParameter + "\"");
     }
+    if (!Objects.equals(from.getMaxReceives(), to.getMaxReceives())) {
+      ds.append("\n");
+      ds.append("    " + TAG_MAXRECEIVES + " "); 
+      ds.append(MODIFY.class.getSimpleName() + " \"" + from.getMaxReceives() + "\"=>\"" + to.getMaxReceives() + "\"");
+    }
+    if (!Objects.equals(from.getRejectAfterMaxReceives(), to.getRejectAfterMaxReceives())) {
+      ds.append("\n");
+      ds.append("    " + TAG_REJECTAFTERMAXRECEIVES + " "); 
+      ds.append(MODIFY.class.getSimpleName() + " \"" + from.getRejectAfterMaxReceives() + "\"=>\"" + to.getRejectAfterMaxReceives() + "\"");
+    }
     return ds.toString();
   }
 
@@ -180,15 +210,21 @@ public class TriggerInstanceProcessor implements WorkspaceContentProcessor<Trigg
   @Override
   public List<TriggerInstance> createItems(Long revision) {
     List<TriggerInstance> tiList = new ArrayList<TriggerInstance>();
+    XynaActivationTrigger xat = XynaFactory.getInstance().getActivation().getActivationTrigger();
     try {
       List<TriggerInstanceInformation> tiiList = getTriggerInstanceInformationList(revision);
       for (TriggerInstanceInformation tii : tiiList) {
         TriggerInstance ti = new TriggerInstance();
         ti.setTriggerInstanceName(tii.getTriggerInstanceName());
         ti.setTriggerName(tii.getTriggerName());
-        StringSerializableList<String> ssl = StringSerializableList.autoSeparator(String.class, ":|/;\\@-_.+#=[]?ยง$%&!", ':');
+        StringSerializableList<String> ssl = StringSerializableList.autoSeparator(String.class, ":|/;\\@-_.+#=[]?ง$%&!", ':');
         ssl.setValues(tii.getStartParameter());
         ti.setStartParameter(ssl.serializeToString());
+        Pair<Long, Boolean> tc = xat.getTriggerConfiguration(tii);
+        if (tc != null && (tc.getFirst() != null || tc.getSecond() != null)) {
+          ti.setMaxReceives(tc.getFirst());
+          ti.setRejectAfterMaxReceives(tc.getSecond());
+        }
         tiList.add(ti);
       }
     } catch (Exception e) {
@@ -200,7 +236,7 @@ public class TriggerInstanceProcessor implements WorkspaceContentProcessor<Trigg
 
   private List<TriggerInstanceInformation> getTriggerInstanceInformationList(Long revision) throws PersistenceLayerException {
     List<TriggerInstanceInformation> resultList = new ArrayList<TriggerInstanceInformation>();
-    List<TriggerInformation> triggerInfoList = xynaActivationPortal.listTriggerInformation();
+    List<TriggerInformation> triggerInfoList = getXynaActivationPortal().listTriggerInformation();
     for (TriggerInformation triggerInfo : triggerInfoList) {
       List<TriggerInstanceInformation> triggerInstInfoList = triggerInfo.getTriggerInstances();
       for (TriggerInstanceInformation triggerInstInfo : triggerInstInfoList) {
@@ -215,20 +251,53 @@ public class TriggerInstanceProcessor implements WorkspaceContentProcessor<Trigg
 
   @Override
   public void create(TriggerInstance item, long revision) {
-    //TODO: write interface
+    XynaActivationTrigger xat = XynaFactory.getInstance().getActivation().getActivationTrigger();
+    CommandControl.tryLock(CommandControl.Operation.TRIGGER_DEPLOY, revision);
+    try {
+      StringSerializableList<String> ssl = StringSerializableList.autoSeparator(String.class, ":|/;\\@-_.+#=[]?ง$%&!", ':');
+      String[] startParameters = ssl.deserializeFromString(item.getStartParameter()).toArray(new String[0]);
+      xat.deployTrigger(item.getTriggerName(), item.getTriggerInstanceName(), startParameters, "", revision, true);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      CommandControl.unlock(CommandControl.Operation.TRIGGER_DEPLOY, revision);
+    }
+    
+    if(item.getMaxReceives() != null || item.getRejectAfterMaxReceives() != null) {
+      CommandControl.tryLock(CommandControl.Operation.TRIGGER_MODIFY, revision);
+      long maxEvents = item.getMaxReceives() != null ? item.getMaxReceives() : -1l;
+      boolean autoReject = item.getRejectAfterMaxReceives() != null ? item.getRejectAfterMaxReceives() : false;
+      try {
+        xat.configureTriggerMaxEvents(item.getTriggerInstanceName(), maxEvents, autoReject, revision);
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      } finally {
+        CommandControl.unlock(CommandControl.Operation.TRIGGER_MODIFY, revision);
+      }
+    }
   }
 
 
   @Override
   public void modify(TriggerInstance from, TriggerInstance to, long revision) {
-    //TODO: write interface
+    this.delete(from, revision);
+    this.create(to, revision);
   }
 
 
   @Override
   public void delete(TriggerInstance item, long revision) {
-    //TODO: write interface
+    CommandControl.tryLock(CommandControl.Operation.TRIGGER_UNDEPLOY, revision);
+    try {
+      XynaFactory.getInstance().getActivation().getActivationTrigger().undeployTrigger(
+        item.getTriggerName(),
+        item.getTriggerInstanceName(),
+        revision
+      );
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } finally {
+      CommandControl.unlock(CommandControl.Operation.TRIGGER_UNDEPLOY, revision);
+    }
   }
-
-
 }

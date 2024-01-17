@@ -100,14 +100,14 @@ import com.gip.xyna.xact.filter.session.repair.XMOMRepair;
 import com.gip.xyna.xact.filter.session.save.Persistence;
 import com.gip.xyna.xact.filter.session.workflowissues.WorkflowIssuesRequestProcessor;
 import com.gip.xyna.xact.filter.session.workflowwarnings.DefaultWorkflowWarningsHandler;
+import com.gip.xyna.xact.filter.session.workflowwarnings.ReferenceInvalidatedNotification;
 import com.gip.xyna.xact.filter.session.workflowwarnings.WorkflowWarningsHandler;
 import com.gip.xyna.xact.filter.util.ReadonlyUtil;
 import com.gip.xyna.xact.filter.xmom.session.json.GboJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.DataflowJson;
-import com.gip.xyna.xact.filter.xmom.workflows.json.LabelJson;
+import com.gip.xyna.xact.filter.xmom.workflows.json.LabelInputOutputJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.VariableJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.WorkflowStepVisitor;
-import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmomlocks.LockManagement;
 import com.gip.xyna.xdev.xfractmod.xmomlocks.LockManagement.Path;
 import com.gip.xyna.xfmg.exceptions.XFMG_ACCESS_VIOLATION;
@@ -201,14 +201,14 @@ import xmcp.yggdrasil.SubscribeProjectPollEventsResponse;
 public class SessionBasedData {
 
   public static final XynaPropertyInt UNDO_LIMIT = new XynaPropertyInt("xyna.processmodeller.undo.limit", 50).
-      setDefaultDocumentation(DocumentationLanguage.DE, "Die maximale Anzahl an Eintr√§gen der Undo-Historie.").
+      setDefaultDocumentation(DocumentationLanguage.DE, "Die maximale Anzahl an Eintr‰gen der Undo-Historie.").
       setDefaultDocumentation(DocumentationLanguage.EN, "The maximum number of entries in the undo history.");
   public static final XynaPropertyInt REDO_LIMIT = new XynaPropertyInt("xyna.processmodeller.redo.limit", 50).
-      setDefaultDocumentation(DocumentationLanguage.DE, "Die maximale Anzahl an Eintr√§gen der Redo-Historie.").
+      setDefaultDocumentation(DocumentationLanguage.DE, "Die maximale Anzahl an Eintr‰gen der Redo-Historie.").
       setDefaultDocumentation(DocumentationLanguage.EN, "The maximum number of entries in the redo history.");
 
   public static final XynaPropertyInt CLIENT_POLLING_TIMEOUT_FACTOR = new XynaPropertyInt("xyna.messagebus.modeller.clientpollingtimeoutfactor", 10).
-      setDefaultDocumentation(DocumentationLanguage.DE, "Faktor, der mit xyna.messagebus.request.timeout.millis multipliziert die Zeit ergibt, nach der sp√§testens ein neuer Polling-Request eines GUI-Tabs folgen muss, um nicht als verwaist gel√∂scht zu werden.").
+      setDefaultDocumentation(DocumentationLanguage.DE, "Faktor, der mit xyna.messagebus.request.timeout.millis multipliziert die Zeit ergibt, nach der sp‰testens ein neuer Polling-Request eines GUI-Tabs folgen muss, um nicht als verwaist gelˆscht zu werden.").
       setDefaultDocumentation(DocumentationLanguage.EN, "Factor that gives, multiplied by xyna.messagebus.request.timeout.millis, the maximum amount of time allowed between two polling requests for a GUI tab. Exceeding the limit leads to the tab being treated as orphaned.");
 
   public static final long MESSAGE_BUS_UPDATE_SLEEP_TIME = 100;
@@ -289,8 +289,6 @@ public class SessionBasedData {
             break;
           }
         }
-
-        terminateOrphanCleaner = false;
       }
     };
 
@@ -1195,6 +1193,11 @@ public class SessionBasedData {
 
     if (view.getGenerationBaseObject().getType() == XMOMType.WORKFLOW) {
       view.getGenerationBaseObject().createDataflow(getOrCreateWFWarningsHandler(view.getGenerationBaseObject().getFQName()));
+
+      FQName fqName = request.getFQName();
+      ObjectId objectId = new ObjectId(ObjectType.workflow, null);
+      ReferenceInvalidatedNotification notification = new ReferenceInvalidatedNotification(fqName, view.getGenerationBaseObject().getWorkflow());
+      getWFWarningsHandler(fqName).handleChange(objectId, notification);
     }
 
     reply.setXynaObject(view.viewAll(request));
@@ -1673,7 +1676,7 @@ public class SessionBasedData {
     }
     
     JsonParser jp = new JsonParser();
-    LabelJson label = jp.parse(request.getJson(), LabelJson.getJsonVisitor());
+    LabelInputOutputJson label = jp.parse(request.getJson(), LabelInputOutputJson.getJsonVisitor());
     
     ObjectIdentifierJson object = new ObjectIdentifierJson();
     object.setRuntimeContext( new RuntimeContextJson( request.getRuntimeContext() ));
@@ -1682,7 +1685,17 @@ public class SessionBasedData {
     object.setFQName( new FQNameJson( "new_"+System.currentTimeMillis(), Utils.labelToJavaName(label.getLabel(), true ) ) );
     
     GenerationBaseObject gbo = createNewObject(object);
-    
+    if (request.getType().equals(Type.workflow)) {
+      label.parseInputOutput();
+      WF generationBase = (WF) gbo.getGenerationBase();
+      for (VariableJson json: label.getInputJson()) {
+        generationBase.getInputVars().add(json.toAVariable(generationBase, gbo.getFQName().getRevision()));
+      }
+      for (VariableJson json: label.getOutputJson()) {
+        generationBase.getOutputVars().add(json.toAVariable(generationBase, gbo.getFQName().getRevision()));
+      }
+      generationBase.getWfAsStep().refreshVars(generationBase.getInputVars(), generationBase.getOutputVars());
+    }
     XMOMGuiReply reply = new XMOMGuiReply();
     reply.setStatus(Status.success);
     reply.setXynaObject(gbo.getView().viewAll(request));

@@ -29,7 +29,7 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>ZetaFramework</ApplicationName>
-        <VersionName>0.6.47</VersionName>
+        <VersionName>0.6.48</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>XynaPropertyMgmt</ApplicationName>
@@ -1093,8 +1093,132 @@
     </XMOMEntry>
 
     <!-- // RtcManager -->
+    <!-- TriggerAndFilterManager -->
+
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.FilterAndTriggerManagerServices</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.DeployFilterInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.DeployFilterRequest</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.DeployTriggerInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.DeployTriggerRequest</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.DisableFilterInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.DisableTriggerInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.EnableFilterInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.EnableTriggerInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.Filter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.FilterDetails</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.FilterInstance</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.FilterInstanceDetails</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetFilterDetail</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetFilterDetailRequest</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetFilterInstanceDetail</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetFilterOverview</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetTriggerDetails</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetTriggerInstanceDetail</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetTriggerOverview</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetTriggerRequest</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.Trigger</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.TriggerDetail</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.TriggerInstance</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.TriggerInstanceDetail</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.UndeployFilterInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.UndeployTriggerInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetPossibleRTCForFilterDeployment</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetPossibleRTCForTriggerDeployment</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetPossibleTriggerInstanceForFilterDeployment</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
     
-        <!-- TimeControlledOrders -->
+    <!-- // TriggerAndFilterManager -->
+    
+    <!-- TimeControlledOrders -->
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.factorymanager.TimeControlledOrdersServices</FqName>
       <Type>DATATYPE</Type>

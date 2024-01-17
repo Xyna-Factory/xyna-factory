@@ -40,6 +40,31 @@
       <Type>Integer</Type>
     </Meta>
   </Data>
+  <Data Label="PrivateKey" VariableName="privateKey">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="PublicKey" VariableName="publicKey">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="PassPhrase" VariableName="passPhrase">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="PrivateKeyFile" VariableName="privateKeyFile">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="KnownHostFile" VariableName="knownHostFile">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
   <Data Label="Bandwidth" VariableName="bandwidth">
     <Meta>
       <Documentation>Limit Bandwidth;  kbit/s</Documentation>
