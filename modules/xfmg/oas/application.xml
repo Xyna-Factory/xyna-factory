@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!----><Application applicationName="OAS_Base" comment="" factoryVersion="9.0.4.0" versionName="0.3.0" xmlVersion="1.1">
+<!----><Application applicationName="OAS_Base" factoryVersion="9.0.4.0" versionName="1.0.0" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -15,6 +15,10 @@
         <VersionName>1.2.0</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
+        <ApplicationName>Runtime Context Support</ApplicationName>
+        <VersionName>1.0</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
         <ApplicationName>XynaPropertyMgmt</ApplicationName>
         <VersionName>1.0.1</VersionName>
       </RuntimeContextRequirement>
@@ -24,35 +28,6 @@
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
-  <Capacities>
-    <Capacity implicitDependency="true">
-      <Name>ImportOASApp</Name>
-      <Cardinality>1</Cardinality>
-      <State>ACTIVE</State>
-    </Capacity>
-  </Capacities>
-  <CapacityRequirements>
-    <CapacityRequirement>
-      <OrdertypeName>xmcp.oas.fman.ImportClientApplication</OrdertypeName>
-      <CapacityName>ImportOASApp</CapacityName>
-      <Cardinality>1</Cardinality>
-    </CapacityRequirement>
-    <CapacityRequirement>
-      <OrdertypeName>xmcp.oas.fman.ImportDatamodelApplication</OrdertypeName>
-      <CapacityName>ImportOASApp</CapacityName>
-      <Cardinality>1</Cardinality>
-    </CapacityRequirement>
-    <CapacityRequirement>
-      <OrdertypeName>xmcp.oas.fman.ImportOASApplications</OrdertypeName>
-      <CapacityName>ImportOASApp</CapacityName>
-      <Cardinality>1</Cardinality>
-    </CapacityRequirement>
-    <CapacityRequirement>
-      <OrdertypeName>xmcp.oas.fman.ImportProviderApplication</OrdertypeName>
-      <CapacityName>ImportOASApp</CapacityName>
-      <Cardinality>1</Cardinality>
-    </CapacityRequirement>
-  </CapacityRequirements>
   <Ordertypes>
     <Ordertype implicitDependency="true">
       <DestinationKey>xmcp.oas.fman.GetOASImportDetailsDefinition</DestinationKey>
@@ -60,22 +35,6 @@
     </Ordertype>
     <Ordertype implicitDependency="true">
       <DestinationKey>xmcp.oas.fman.GetOASImportHistoryDefinition</DestinationKey>
-      <OrderContextMapping>false</OrderContextMapping>
-    </Ordertype>
-    <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.oas.fman.ImportClientApplication</DestinationKey>
-      <OrderContextMapping>false</OrderContextMapping>
-    </Ordertype>
-    <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.oas.fman.ImportDatamodelApplication</DestinationKey>
-      <OrderContextMapping>false</OrderContextMapping>
-    </Ordertype>
-    <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.oas.fman.ImportOASApplications</DestinationKey>
-      <OrderContextMapping>false</OrderContextMapping>
-    </Ordertype>
-    <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.oas.fman.ImportProviderApplication</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -159,22 +118,6 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.fman.GetOASImportHistoryDefinition</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.oas.fman.ImportClientApplication</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.oas.fman.ImportDatamodelApplication</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.oas.fman.ImportOASApplications</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.oas.fman.ImportProviderApplication</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
