@@ -30,6 +30,10 @@
   </ApplicationInfo>
   <Ordertypes>
     <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.oas.fman.ApplicationImport</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
       <DestinationKey>xmcp.oas.fman.GetOASImportDetailsDefinition</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
@@ -111,6 +115,10 @@
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.exception.ValidationException</FqName>
       <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.ApplicationImport</FqName>
+      <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.fman.GetOASImportDetailsDefinition</FqName>
