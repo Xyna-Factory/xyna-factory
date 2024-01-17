@@ -652,6 +652,9 @@ public interface XynaProperty {
                                           "Anzahl der Wiederholungsversuchen eines Statusübergangs."
                                        + " Sollte passend zur erwarteten Menge an konkurrierenden Zugriffen angepasst werden. (< 0 für unbeschränkte Wiederholungen)");
 
+  public static final XynaPropertyString S4E_TMP_DIR = new XynaPropertyString("com.gip.xyna.xdev.xlibdev.supp4eclipse.temp_dir", "./").
+      setDefaultDocumentation(DocumentationLanguage.EN, "Directory for temparary files from SupportForEcplipse").
+      setDefaultDocumentation(DocumentationLanguage.DE, "Verzeichnis, in dem SupportForEclipse temporäre Dateien und Verzeichnisse ablegt.");
  
   /*
    * Properties für ListFurtherInformationFromStartup
