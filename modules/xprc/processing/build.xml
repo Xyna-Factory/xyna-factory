@@ -35,6 +35,9 @@
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/DatatypeInspectorImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/RuntimeContextServiceImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
 
         <antcall target="build-application" />
     </target>
@@ -43,6 +46,7 @@
         <antcall target="create-mdm-jar" />
         <supply-mdm-jar type="mdmimpl" name="DatatypeInspectorImpl" />
         <supply-mdm-jar type="mdmimpl" name="OrderControlServiceImpl" />
+        <supply-mdm-jar type="mdmimpl" name="RuntimeContextServiceImpl" />
         <delete file="${basedir}/mdm.jar" />
     </target>
 
