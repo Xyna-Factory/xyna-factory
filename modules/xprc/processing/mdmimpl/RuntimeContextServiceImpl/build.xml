@@ -28,7 +28,7 @@
     <property file="${application.dir}/workspace.properties" />
 
     <property name="project.name" value="RuntimeContextServiceImpl" />
-    <property name="fqclassname" value="xfmg.xfctrl.appmgmt.RuntimeContextServiceImpl" />
+    <property name="fqclassname" value="xfmg.xfctrl.appmgmt.RuntimeContextService" />
     <property name="mdm.xml.path" value="xfmg/xfctrl/appmgmt" />
     <property name="mdm.xml.filename" value="RuntimeContextService.xml" />
     <property name="mdm.service.path" value="xfmg.xfctrl.appmgmt.RuntimeContextService" />
