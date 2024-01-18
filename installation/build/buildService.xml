@@ -132,10 +132,18 @@
     </target>
 
     <!-- ================================= 
+         target: mkdir-lib             
+         ================================= -->
+    <!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
+    <target name="mkdir-lib">
+        <mkdir dir="${base.lib.dir}/xyna" />
+    </target>
+
+    <!-- ================================= 
          target: build-src             
          ================================= -->
     <!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
-    <target name="build-src" depends="cleanup, create-servicedefinition-jar-if-missing, resolve, prepareLibs, genExceptionClass, genCliClass">
+    <target name="build-src" depends="cleanup, mkdir-lib, create-servicedefinition-jar-if-missing, resolve, prepareLibs, genExceptionClass, genCliClass">
         <mkdir dir="${basedir}/classes" />
         <javaCompile>
             <classpath path="${basedir}/classes" />
