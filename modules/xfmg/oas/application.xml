@@ -15,10 +15,6 @@
         <VersionName>1.2.0</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
-        <ApplicationName>Runtime Context Support</ApplicationName>
-        <VersionName>1.0</VersionName>
-      </RuntimeContextRequirement>
-      <RuntimeContextRequirement>
         <ApplicationName>XynaPropertyMgmt</ApplicationName>
         <VersionName>1.0.1</VersionName>
       </RuntimeContextRequirement>
