@@ -1,6 +1,25 @@
+/*
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ */
 package com.gip.xyna.openapi.codegen;
 
 import org.openapitools.codegen.*;
+
+import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 
 import java.util.*;
@@ -36,17 +55,23 @@ public class XmomDataModelGenerator extends DefaultCodegen {
   }
 
   /**
-   * changes to the internal data for the supporting files
+   * any special handling of the entire OpenAPI spec document 
    */
   @Override
-  public Map<String, Object> postProcessSupportingFileData(Map<String, Object> objs) {
-    super.postProcessSupportingFileData(objs);
-    
+  public void preprocessOpenAPI(OpenAPI openAPI) {
+    super.preprocessOpenAPI(openAPI);
+
     Info info = openAPI.getInfo();
+    Map<String, Object> vendorExtentions = info.getExtensions();
+    
     // replace spaces, "-", "." with underscores in info.title
     info.setTitle(sanitizeName(info.getTitle()));
 
-    return objs;
+    // change the path of the generated XMOMs
+    String xModelPath = (String)vendorExtentions.get("x-model-path");
+    if (xModelPath != null && !xModelPath.trim().isEmpty()) {
+      modelPackage = xModelPath.replace('-', '_').replace(' ', '_').toLowerCase();
+    }
   }
 
   /**
@@ -83,7 +108,8 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     templateDir = "xmom-data-model";
 
     /**
-     * Model Package.  Optional, if needed, this can be used in templates
+     * path of the XMOM objects, 
+     * can be changed via "x-model-path" in the info section of the spec file
      */
     modelPackage = "model.generated";
 

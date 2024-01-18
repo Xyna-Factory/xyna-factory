@@ -1,3 +1,20 @@
+/*
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ */
 package com.gip.xyna.openapi.codegen;
 
 import org.openapitools.codegen.*;
@@ -8,6 +25,7 @@ import com.gip.xyna.openapi.codegen.templating.mustache.StatusCodeLambda;
 import com.google.common.collect.ImmutableMap;
 import com.samskivert.mustache.Mustache.Lambda;
 
+import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 
 import java.util.*;
@@ -43,17 +61,28 @@ public class XmomClientGenerator extends DefaultCodegen {
   }
 
   /**
-   * changes to the internal data for the supporting files
+   * any special handling of the entire OpenAPI spec document 
    */
   @Override
-  public Map<String, Object> postProcessSupportingFileData(Map<String, Object> objs) {
-    objs = super.postProcessSupportingFileData(objs);
+  public void preprocessOpenAPI(OpenAPI openAPI) {
+    super.preprocessOpenAPI(openAPI);
 
     Info info = openAPI.getInfo();
+    Map<String, Object> vendorExtentions = info.getExtensions();
+    
     // replace spaces, "-", "." with underscores in info.title
     info.setTitle(sanitizeName(info.getTitle()));
-    
-    return objs;
+
+    // change the path of the generated XMOMs
+    String xModelPath = (String)vendorExtentions.get("x-model-path");
+    if (xModelPath != null && !xModelPath.trim().isEmpty()) {
+      modelPackage = xModelPath.replace('-', '_').replace(' ', '_').toLowerCase();
+    }
+
+    String xClientPath = (String)vendorExtentions.get("x-client-path");
+    if (xModelPath != null && !xModelPath.trim().isEmpty()) {
+      apiPackage = xClientPath.replace('-', '_').replace(' ', '_').toLowerCase();
+    }
   }
 
   /**
@@ -81,10 +110,15 @@ public class XmomClientGenerator extends DefaultCodegen {
     apiTemplateFiles.put("responseDataType.mustache", "_responseDataTypes_toSplit.xml");
     apiTemplateFiles.put("parseResponseService.mustache", "_parseResponseServices_toSplit.xml");
     apiTemplateFiles.put("requestWorkflow.mustache", "_requestWorkflows_toSplit.xml");
+    
     templateDir = "xmom-client";
 
-    apiPackage = "xmcp.oas.client";
+    /**
+     * path of the XMOM objects, 
+     * can be changed via "x-model-path" and "x-client-path" in the info section of the spec file
+     */
     modelPackage = "model.generated";
+    apiPackage = "xmcp.oas.client";
 
     /**
      * Reserved words.  Override this with reserved words specific to your language
