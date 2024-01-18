@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="RuntimeContextService" TypeName="RuntimeContextService" TypePath="xfmg.xfctrl.appmgmt" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>RuntimeContextServiceImpl.jar</Libraries>
+  <Service Label="RuntimeContextService" TypeName="RuntimeContextService">
+    <Operation IsStatic="true" Label="get Own RuntimeContext" Name="getOwnRuntimeContext" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.appmgmt.RuntimeContextServiceImpl.getOwnRuntimeContext(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="get RuntimeContext Dependencies Recursively" Name="getRuntimeContextDependenciesRecursively">
+      <Input>
+        <Data ID="2" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext2"/>
+      </Input>
+      <Output>
+        <Data ID="3" IsList="true" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext3"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.appmgmt.RuntimeContextServiceImpl.getRuntimeContextDependenciesRecursively(runtimeContext2);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="filter RuntimeContexts by contains" Name="filterRuntimeContextsByContains">
+      <Input>
+        <Data ID="6" IsList="true" Label="filter" ReferenceName="Text" ReferencePath="base" VariableName="text6"/>
+        <Data ID="4" IsList="true" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext4"/>
+      </Input>
+      <Output>
+        <Data ID="5" IsList="true" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext5"/>
+      </Output>
+      <Meta>
+        <Documentation>Gibt alle RuntimeContexte zurück, die im Namen mindestens einen der Filter-Strings enthalten. Sortiere lexikographisch</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.appmgmt.RuntimeContextServiceImpl.filterRuntimeContextsByContains(text6, runtimeContext4);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="filter RuntimeContexts for latest version" Name="filterRuntimeContextsForLatestVersion">
+      <Input>
+        <Data ID="7" IsList="true" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext7"/>
+      </Input>
+      <Output>
+        <Data ID="8" IsList="true" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext8"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.appmgmt.RuntimeContextServiceImpl.filterRuntimeContextsForLatestVersion(runtimeContext7);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
