@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- -->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get OAS Import History Definition" TypeName="GetOASImportHistoryDefinition" TypePath="xmcp.oas.fman" Version="1.8">
+ --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get OAS Import History Definition" TypeName="GetOASImportHistoryDefinition" TypePath="xmcp.oas.fman" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Get OAS Import History Definition" Name="GetOASImportHistoryDefinition">
     <Input/>
     <Output>
@@ -114,7 +113,7 @@
           </Output>
           <Mapping>%1%=%0%</Mapping>
           <Mapping>%1%.dataPath="%0%, %1%.0"</Mapping>
-          <Mapping>%1%.label="Import Application"</Mapping>
+          <Mapping>%1%.label="Import OAS Applications"</Mapping>
           <Mapping>%1%.serviceFQN="xmcp.oas.fman.ApplicationImport"</Mapping>
           <Mapping>%1%.synchronously="true"</Mapping>
         </Mappings>

@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="OAS Import TableInfo" TypeName="OASImportTableInfo" TypePath="xmcp.oas.fman" Version="1.8">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="OAS Import TableInfo" TypeName="OASImportTableInfo" TypePath="xmcp.oas.fman" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="OAS Import TableInfo" Name="OASImportTableInfo">
     <Input>
       <Data ID="5540" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo5540"/>

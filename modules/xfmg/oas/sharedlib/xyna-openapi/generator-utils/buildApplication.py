@@ -29,7 +29,7 @@ scriptDir = getcwd()
 
 parser = argparse.ArgumentParser(
     prog='buildApplication',
-    description='build application .zip-file from generated output (WIP)')
+    description='build application .zip-file from generated output')
 parser.add_argument(
     '--app-dir', metavar='', required=True,
     help='path to the application directory that contains the application.xml')

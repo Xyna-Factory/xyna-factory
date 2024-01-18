@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- -->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Set Runtime Context" TypeName="SetRuntimeContext" TypePath="xmcp.oas.fman" Version="1.8">
+ --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Set Runtime Context" TypeName="SetRuntimeContext" TypePath="xmcp.oas.fman" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Set Runtime Context" Name="SetRuntimeContext">
     <Input>
       <Data ID="4608" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext4608"/>

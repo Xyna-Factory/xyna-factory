@@ -39,7 +39,7 @@ public class XmomDataModelGeneratorTest {
   @Test
   public void launchCodeGenerator() {
 
-    String specFile = "TMF-621.yaml";
+    String specFile = "";
 
     // to understand how the 'openapi-generator-cli' module is using 'CodegenConfigurator', have a look at the 'Generate' class:
     // https://github.com/OpenAPITools/openapi-generator/blob/master/modules/openapi-generator-cli/src/main/java/org/openapitools/codegen/cmd/Generate.java

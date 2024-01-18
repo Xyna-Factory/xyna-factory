@@ -36,7 +36,7 @@ public class XmomClientGenerator extends DefaultCodegen {
   // source folder where to write the files
   protected String sourceFolder = "XMOM";
   protected String apiVersion = "1.0.0";
-  protected String xynaFactoryVersion = "9.0.2.3";
+  protected String xynaFactoryVersion = "";
 
   public static final String XYNA_FACTORY_VERSION = "xynaFactoryVersion";
 
@@ -80,7 +80,7 @@ public class XmomClientGenerator extends DefaultCodegen {
     }
 
     String xClientPath = (String)vendorExtentions.get("x-client-path");
-    if (xModelPath != null && !xModelPath.trim().isEmpty()) {
+    if (xClientPath != null && !xClientPath.trim().isEmpty()) {
       apiPackage = xClientPath.replace('-', '_').replace(' ', '_').toLowerCase();
     }
   }
@@ -193,30 +193,6 @@ public class XmomClientGenerator extends DefaultCodegen {
   @Override
   public String apiFileFolder() {
     return outputFolder + "/" + sourceFolder + "/" + apiPackage().replace('.', File.separatorChar);
-  }
-
-  /**
-   * override with any special text escaping logic to handle unsafe
-   * characters so as to avoid code injection
-   *
-   * @param input String to be cleaned up
-   * @return string with unsafe characters removed or escaped
-   */
-  @Override
-  public String escapeUnsafeCharacters(String input) {
-    //TODO: check that this logic is safe to escape unsafe characters to avoid code injection
-    return input;
-  }
-
-  /**
-   * Escape single and/or double quote to avoid code injection
-   *
-   * @param input String to be cleaned up
-   * @return string with quotation mark removed or escaped
-   */
-  public String escapeQuotationMark(String input) {
-    //TODO: check that this logic is safe to escape quotation mark to avoid code injection
-    return input.replace("\"", "\\\"");
   }
 
   @Override

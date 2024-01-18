@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="OAS Type Validation" TypeName="OASTypeValidation" TypePath="xmcp.oas.wf" Version="1.8">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="OAS Type Validation" TypeName="OASTypeValidation" TypePath="xmcp.oas.wf" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="OAS Type Validation" Name="OASTypeValidation">
     <Input>
       <Data ID="10" Label="OAS Base Type" ReferenceName="OASBaseType" ReferencePath="xmcp.oas.datatype" VariableName="oASBaseType10"/>
