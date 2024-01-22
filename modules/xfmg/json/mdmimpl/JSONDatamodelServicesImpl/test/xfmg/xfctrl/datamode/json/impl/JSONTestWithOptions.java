@@ -30,6 +30,7 @@ import xfmg.xfctrl.datamodel.json.impl.InvalidJSONException;
 import xfmg.xfctrl.datamodel.json.impl.JSONDatamodelServicesServiceOperationImpl;
 import xfmg.xfctrl.datamodel.json.impl.JSONParser;
 import xfmg.xfctrl.datamodel.json.impl.JSONTokenizer;
+import xfmg.xfctrl.datamodel.json.impl.JSONDatamodelServicesServiceOperationImpl.OASScope;
 import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONObject;
 import xfmg.xfctrl.datamodel.json.impl.JSONTokenizer.JSONToken;
 
@@ -38,7 +39,6 @@ import com.gip.xyna.utils.misc.DataRangeCollection;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
-import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject.XMLReferenceCache;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 
 import junit.framework.TestCase;
@@ -62,7 +62,7 @@ public class JSONTestWithOptions extends TestCase {
       Map<String, String> trans = new HashMap<String, String>();
       trans.put("roles", "name");
       trans.put("roles[].roles", "name");
-      impl.fillXynaObjectRecursivly(user, job, "", trans, Collections.<String, String>emptyMap());
+      impl.fillXynaObjectRecursivly(user, job, "", trans, Collections.<String, String>emptyMap(), false);
       ObjectStringRepresentation.createStringRepOfObject(sb, job);
       sb.append("\n=========================================\n\n");
       ObjectStringRepresentation.createStringRepOfObject(sb, user);
@@ -109,7 +109,7 @@ public class JSONTestWithOptions extends TestCase {
       trans.put("roles[].roles", "name");
       Map<String, String> subs = new HashMap<String, String>();
       subs.put("tenant", "roles[].name");
-      impl.fillXynaObjectRecursivly(user, job, "", trans, subs);
+      impl.fillXynaObjectRecursivly(user, job, "", trans, subs, false);
       ObjectStringRepresentation.createStringRepOfObject(sb, job);
       sb.append("\n=========================================\n\n");
       ObjectStringRepresentation.createStringRepOfObject(sb, user);
@@ -141,7 +141,7 @@ public class JSONTestWithOptions extends TestCase {
     Map<String, String> trans = new HashMap<String, String>();
     trans.put("roles", "name");
     trans.put("roles[].roles", "name");
-    JSONObject obj = impl.createFromXynaObjectRecursivly(user, "", trans, Collections.<String, String>emptyMap());
+    JSONObject obj = impl.createFromXynaObjectRecursivly(user, "", trans, Collections.<String, String>emptyMap(), false, OASScope.none);
     System.out.println(obj.toJSON(""));
   }
   
@@ -167,13 +167,14 @@ public class JSONTestWithOptions extends TestCase {
     trans.put("roles[].roles", "name");
     Map<String, String> subs = new HashMap<String, String>();
     subs.put("roles[].name", "tenant");
-    JSONObject obj = impl.createFromXynaObjectRecursivly(user, "", trans, subs);
+    JSONObject obj = impl.createFromXynaObjectRecursivly(user, "", trans, subs, false, OASScope.none);
     System.out.println(obj.toJSON(""));
   }
   
   
   public static class UserXO extends BaseTestXO {
 
+    private static final long serialVersionUID = 1L;
     private String mail;
     private String telephoneNumber;
     private String gotoUrl;
@@ -202,6 +203,7 @@ public class JSONTestWithOptions extends TestCase {
       }
     }
 
+    @SuppressWarnings("unchecked")
     public void set(String path, Object value) throws XDEV_PARAMETER_NAME_NOT_FOUND {
       if (path.equals("mail")) {
         mail = (String) value;
@@ -220,6 +222,7 @@ public class JSONTestWithOptions extends TestCase {
   
 public static class AuthorizationXO extends BaseTestXO {
     
+    private static final long serialVersionUID = 1L;
     private String name;
     private List<RoleXO> roles;
     
@@ -240,6 +243,7 @@ public static class AuthorizationXO extends BaseTestXO {
       }
     }
 
+    @SuppressWarnings("unchecked")
     public void set(String path, Object value) throws XDEV_PARAMETER_NAME_NOT_FOUND {
       if (path.equals("name")) {
         name = (String) value;
@@ -254,6 +258,7 @@ public static class AuthorizationXO extends BaseTestXO {
   
   public static class RoleXO extends BaseTestXO {
     
+    private static final long serialVersionUID = 1L;
     private String name;
     
     public Set<String> getVariableNames() {
@@ -283,6 +288,8 @@ public static class AuthorizationXO extends BaseTestXO {
   
   
   public static class BaseTestXO extends XynaObject {
+
+    private static final long serialVersionUID = 1L;
 
     public void collectChanges(long arg0, long arg1, IdentityHashMap<GeneralXynaObject, DataRangeCollection> arg2,
                                Set<Long> arg3) {

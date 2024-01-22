@@ -1,0 +1,104 @@
+{{!
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+}}
+{{#operations}}{{#operation}}<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
+TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter" TypePath="{{apiPackage}}.{{pathPrefix}}.request" Label="{{httpMethod}} {{path}} Parameter"
+BaseTypeName="RequestParameter" BaseTypePath="xmcp.oas.datatype.provider">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation></Documentation>
+  </Meta>{{#allParams}}
+    <Data Label="{{paramName}}" VariableName="{{#lambda.camelcase}}{{paramName}}{{/lambda.camelcase}}" {{#isContainer}}IsList="true"{{/isContainer}}{{^isPrimitiveType}}{{^isEnumRef}}
+     ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isEnumRef}}{{/isPrimitiveType}}>
+        <Meta>{{#isPrimitiveType}}{{^isEnumRef}}
+            <Type>{{#isContainer}}{{items.dataType}}{{/isContainer}}{{^isContainer}}{{dataType}}{{/isContainer}}</Type>{{/isEnumRef}}{{/isPrimitiveType}}{{#isEnumRef}}
+            <Type>String</Type>{{/isEnumRef}}
+            <Documentation>{{#description}}{{description}}{{/description}}{{#isEnumRef}}
+Enum of Type: {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}.{{complexType}}
+values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}
+{{/isEnumRef}}{{#format}}
+format: {{format}}{{/format}}
+required: {{required}}
+            </Documentation>
+        </Meta>
+    </Data>{{/allParams}}
+  <Service Label="{{httpMethod}} {{path}} Parameter" TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter">
+    <Operation Label="Validate" Name="validate" IsStatic="false">
+      <Input>
+      </Input>
+      <Output>
+        <Data ID="3" Label="OASValidationResult" VariableName="oASValidationResult3" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+
+{{#allParams}}{{>validation}}{{/allParams}}
+return result.getResult();
+</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="parse Parameter" Name="parseParameter" IsStatic="false">
+      <Input>
+        <Data ID="1" Label="Http Request" VariableName="httpRequest1" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype"/>
+      </Input>
+      <Output>
+        <Data ID="2" Label="{{httpMethod}} {{path}} Parameter" VariableName="{{#lambda.camelcase}}{{httpMethod}}{{path}}{{/lambda.camelcase}}Parameter2" 
+        ReferenceName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter" ReferencePath="{{apiPackage}}.{{pathPrefix}}.request"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter ret = new {{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter();
+
+{{#hasPathParams}}
+for (xmcp.oas.datatype.URLPathParameter pathPara: httpRequest1.getURLPathParameter()) {
+    {{#pathParams}}
+    {{#-first}}if{{/-first}}{{^-first}}else if{{/-first}} (pathPara.getAttribute().equals("{{paramName}}")) {
+        ret.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}({{dataType}}.valueOf(pathPara.getValue()));
+    }
+    {{/pathParams}}
+}
+{{/hasPathParams}}{{#hasQueryParams}}
+for (xact.http.URLPathQuery query: httpRequest1.getURLQueries()) {
+    {{#queryParams}}
+    {{#-first}}if{{/-first}}{{^-first}}else if{{/-first}} (query.getAttribute().equals("{{paramName}}")) {
+        ret.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}({{dataType}}.valueOf(query.getValue()));
+    }
+    {{/queryParams}}
+}
+{{/hasQueryParams}}{{#hasHeaderParams}}
+for (xact.http.HeaderField headerField: httpRequest1.getHeader().getHeaderField()) {
+    {{#headerParams}}
+    {{#-first}}if{{/-first}}{{^-first}}else if{{/-first}} (headerField.getName().equals("{{paramName}}")) {
+        ret.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}({{dataType}}.valueOf(headerField.getValue()));
+    }
+    {{/headerParams}}
+}
+{{/hasHeaderParams}}{{#hasBodyParam}}xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
+jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
+jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
+jsonOptions.setUseLabels(true);{{#bodyParams}}{{#isModel}}
+
+xact.templates.Document body = httpRequest1.getBody();
+{{dataType}} {{#lambda.lowercase}}{{paramName}}{{/lambda.lowercase}} = ({{dataType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(body, new {{dataType}}(), jsonOptions);
+ret.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}({{#lambda.lowercase}}{{paramName}}{{/lambda.lowercase}});
+{{/isModel}}{{/bodyParams}}{{/hasBodyParam}}
+return ret;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
+{{/operation}}{{/operations}}

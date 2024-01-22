@@ -27,7 +27,7 @@ jobs:
        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
        run: |
-          gh pr diff ${{ github.event.pull_request.number }} --name-only | grep '^modules/' | cut -f 2-3 -d/ | sort | uniq | tee changed-modules.txt
+          gh pr diff ${{ github.event.pull_request.number }} --name-only | xargs -I {} dirname {} | grep '^modules/' | cut -f 2-3 -d/ | sort | uniq | tee changed-modules.txt
 
      - name: build basic factory
        run: |

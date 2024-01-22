@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="OAS Import TableInfo" TypeName="OASImportTableInfo" TypePath="xmcp.oas.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="OAS Import TableInfo" Name="OASImportTableInfo">
+    <Input>
+      <Data ID="5540" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo5540"/>
+    </Input>
+    <Output>
+      <Data ID="4366" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo4366"/>
+      <Data ID="5644" IsList="true" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory5644"/>
+    </Output>
+    <ServiceReference ID="12592" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="12591"/>
+      <Target RefID="12591"/>
+    </ServiceReference>
+    <ServiceReference ID="13812" Label="Query" ReferenceName="Query" ReferencePath="xnwh.persistence">
+      <Source RefID="13811"/>
+      <Target RefID="13811"/>
+    </ServiceReference>
+    <ServiceReference ID="14178" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="14177"/>
+      <Target RefID="14177"/>
+    </ServiceReference>
+    <Choice ID="5918" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="5540"/>
+      <Target RefID="25549"/>
+      <Input>
+        <Data ID="5965" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo5965">
+          <Source RefID="5918"/>
+        </Data>
+        <Source RefID="5540"/>
+      </Input>
+      <Case ID="5919" Label="true" Premise="%0%.bootstrap==&quot;true&quot;">
+        <Function ID="14177" Label="Build TableInfo and Select Columns">
+          <Source RefID="14178"/>
+          <Source RefID="5540"/>
+          <Source RefID="14314"/>
+          <Source RefID="25711"/>
+          <Target RefID="14178"/>
+          <Target RefID="14404"/>
+          <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="14178">
+            <Source RefID="5540"/>
+            <Source RefID="14314">
+              <Meta>
+                <LinkType>Constant</LinkType>
+                <ExpectedType>xmcp.oas.fman.storables.OAS_ImportHistory</ExpectedType>
+              </Meta>
+            </Source>
+            <Source RefID="25711">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="14178">
+            <Target RefID="14404"/>
+          </Receive>
+        </Function>
+        <Assign ID="5922">
+          <Source RefID="14404"/>
+          <Target RefID="25549"/>
+          <Copy>
+            <Source RefID="14404"/>
+            <Target RefID="25549"/>
+          </Copy>
+        </Assign>
+        <Data ID="14404" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo14404">
+          <Source RefID="14177"/>
+        </Data>
+      </Case>
+      <Case ID="5920" Label="false">
+        <Mappings ID="6289" Label="Mapping">
+          <Input>
+            <Data ID="6414" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo6414">
+              <Source RefID="6289"/>
+            </Data>
+            <Source RefID="5540"/>
+          </Input>
+          <Output>
+            <Data ID="6290" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo6290"/>
+            <Target RefID="6291"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign ID="5924">
+          <Source RefID="6291"/>
+          <Target RefID="25549"/>
+          <Copy>
+            <Source RefID="6291"/>
+            <Target RefID="25549"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Function ID="12591" Label="Build Query Parameters from TableInfo">
+      <Source RefID="12592"/>
+      <Source RefID="25549"/>
+      <Source RefID="19637"/>
+      <Target RefID="12592"/>
+      <Target RefID="12594"/>
+      <Target RefID="12595"/>
+      <Target RefID="12596"/>
+      <Invoke Operation="buildQueryParametersFromTableInfo" ServiceID="12592">
+        <Source RefID="25549">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="19637">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="12592">
+        <Target RefID="12594"/>
+        <Target RefID="12595"/>
+        <Target RefID="12596"/>
+      </Receive>
+    </Function>
+    <Function ID="13811" Label="Query">
+      <Source RefID="13812"/>
+      <Source RefID="12594"/>
+      <Source RefID="12595"/>
+      <Source RefID="12596"/>
+      <Target RefID="13812"/>
+      <Target RefID="13814"/>
+      <Invoke Operation="Query" ServiceID="13812">
+        <Source RefID="12594"/>
+        <Source RefID="12595"/>
+        <Source RefID="12596"/>
+      </Invoke>
+      <Receive ServiceID="13812">
+        <Target RefID="13814">
+          <Meta>
+            <ExpectedType>xmcp.oas.fman.storables.OAS_ImportHistory</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
+    <Data ID="6291" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo6291"/>
+    <Data ID="12594" Label="Selection mask" ReferenceName="SelectionMask" ReferencePath="xnwh.persistence" VariableName="selectionMask12594">
+      <Source RefID="12591"/>
+    </Data>
+    <Data ID="12595" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition12595">
+      <Source RefID="12591"/>
+    </Data>
+    <Data ID="12596" Label="Query parameter" ReferenceName="QueryParameter" ReferencePath="xnwh.persistence" VariableName="queryParameter12596">
+      <Source RefID="12591"/>
+    </Data>
+    <Data ID="13814" IsList="true" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory13814"/>
+    <Data ID="14314" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="const_OAS_ImportHistory14314"/>
+    <Data ID="19637" Label="Query All Columns" ReferenceName="QueryAllColumns" ReferencePath="xmcp.tables.datatypes.query" VariableName="const_QueryAllColumns19637"/>
+    <Data ID="25549" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo25549">
+      <Source RefID="5918"/>
+    </Data>
+    <Data ID="25711" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="const_TableColumn25711">
+      <Value>
+        <Data ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
+          <Data VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>fileName</Value>
+          </Data>
+          <Data VariableName="break0">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="pre">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="shrink">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>FileName</Value>
+          </Data>
+          <Data VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
+          <Data VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>type</Value>
+          </Data>
+          <Data VariableName="break0">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="pre">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="shrink">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>Application</Value>
+          </Data>
+          <Data VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
+          <Data VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>date</Value>
+          </Data>
+          <Data VariableName="break0">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="pre">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="shrink">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>Time</Value>
+          </Data>
+          <Data VariableName="sort">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>dsc</Value>
+          </Data>
+          <Data VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
+          <Data VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="break0">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>importStatus</Value>
+          </Data>
+          <Data VariableName="pre">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="shrink">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>State</Value>
+          </Data>
+          <Data VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="25549"/>
+      <Source RefID="13814"/>
+      <Target RefID="4366"/>
+      <Target RefID="5644"/>
+      <Copy>
+        <Source RefID="25549">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="4366"/>
+      </Copy>
+      <Copy>
+        <Source RefID="13814"/>
+        <Target RefID="5644"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

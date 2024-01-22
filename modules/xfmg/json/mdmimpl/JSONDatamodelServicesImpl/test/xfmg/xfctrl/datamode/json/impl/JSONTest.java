@@ -332,7 +332,7 @@ public class JSONTest extends TestCase {
     JSONObject job = new JSONObject();
     jp.fillObject(tokens, 0, job);
     assertEquals("{\n" + 
-        "  \"asdâ‚¬h@\" : 3e-12,\n" + 
+        "  \"asd€h@\" : 3e-12,\n" + 
         "  \"basdasd\" : [\n" + 
         "    \"\\\"\\\\a,]}[{s\",\n" + 
         "    \"a2\",\n" + 

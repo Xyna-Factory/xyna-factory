@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="Json" comment="" factoryVersion="" versionName="1.2.0" xmlVersion="1.1">
+<Application applicationName="Json" comment="" factoryVersion="" versionName="1.2.1" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
