@@ -367,7 +367,6 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
       xynaActivation.getActivationTrigger().addFilter(item.getFilterName(), jarFilesList.toArray(new File[jarFilesList.size()]),
                                                       item.getFQFilterClassName(), item.getTriggerName(), sharedLibs, null, revision);
     } catch (Exception e) {
-      e.printStackTrace();
       throw new RuntimeException(e);
     }
   }
