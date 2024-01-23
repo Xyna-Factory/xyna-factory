@@ -330,8 +330,8 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
     }
     File[] jarFilesArray = new File[jarFiles.length];
     int idx = 0;
+    List<Reference> references = new ArrayList<>(item.getReferences());
     for (String jarFile : jarFiles) {
-      List<Reference> references = new ArrayList<>(item.getReferences());
       base.File file = ReferenceManagement.findReferencedJar(references, new File(jarFile).getName(), revision);
       jarFilesArray[idx++] = new File(file.getPath());
     }
@@ -347,7 +347,7 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
 
   @Override
   public void create(Trigger item, long revision) {
-    String workspaceName = getWorkspaceName(revision);
+    String workspaceName = ReferenceUpdater.getWorkspaceName(revision);
     for (Reference reference : item.getReferences() != null ? item.getReferences() : new ArrayList<Reference>()) {
       ReferenceData.Builder builder = new ReferenceData.Builder();
       builder.objectName(item.getTriggerName()).objectType(ReferenceObjectType.TRIGGER.toString()).path(reference.getPath())
@@ -356,16 +356,6 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
     }
 
     createTrigger(item, revision);
-  }
-  
-  
-  private String getWorkspaceName(long revision) {
-    RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
-    try {
-      return revMgmt.getWorkspace(revision).getName();
-    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-      throw new RuntimeException(e);
-    }
   }
 
 
@@ -384,7 +374,6 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
     try {
       getXynaActivation().removeTrigger(item.getTriggerName(), revision);
     } catch (Exception e) {
-      e.printStackTrace();
       throw new RuntimeException(e);
     }
     ReferenceStorage storage = new ReferenceStorage();
