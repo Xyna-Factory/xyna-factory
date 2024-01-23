@@ -67,6 +67,7 @@ import com.gip.xyna.xact.filter.session.modify.Insertion.PossibleContent;
 import com.gip.xyna.xact.filter.session.modify.Insertion.QueryInsertStep;
 import com.gip.xyna.xact.filter.session.modify.operations.copy.StepCopier;
 import com.gip.xyna.xact.filter.session.repair.XMOMRepair;
+import com.gip.xyna.xact.filter.session.workflowwarnings.ReferenceInvalidatedNotification;
 import com.gip.xyna.xact.filter.util.AVariableIdentification;
 import com.gip.xyna.xact.filter.util.AVariableIdentification.StepVariableIdProvider;
 import com.gip.xyna.xact.filter.util.AVariableIdentification.VarUsageType;
@@ -118,7 +119,6 @@ import xnwh.persistence.Storable;
 
 public class CopyOperation extends ModifyOperationBase<CopyJson> {
   
-  @SuppressWarnings("unused")
   private static final Logger logger = CentralFactoryLogging.getLogger(CopyOperation.class);
 
   private CopyJson copy;
@@ -156,11 +156,21 @@ public class CopyOperation extends ModifyOperationBase<CopyJson> {
   @Override
   protected void modifyStep(Step step) throws Exception {
     copy();
+    
+    FQName fqName = modification.getObject().getFQName();
+    ReferenceInvalidatedNotification notification = new ReferenceInvalidatedNotification(fqName, object.getRoot().getWorkflow());
+    modification.getSession().getWFWarningsHandler(fqName).handleChange(object.getId(), notification);
   }
 
   @Override
   protected void modifyVariable(Variable variable) throws Exception {
     copy();
+    
+    if (object.getRoot().getGenerationBase() instanceof WF) {
+      FQName fqName = modification.getObject().getFQName();
+      ReferenceInvalidatedNotification notification = new ReferenceInvalidatedNotification(fqName, object.getRoot().getWorkflow());
+      modification.getSession().getWFWarningsHandler(fqName).handleChange(object.getId(), notification);
+    }
   }
 
   @Override
@@ -930,7 +940,7 @@ public class CopyOperation extends ModifyOperationBase<CopyJson> {
         newVar = opt.get();
       }
       variableCloneMap.put(input, newVar);
-      sourceMappingGBSubObject.getRoot().getDataflow().copyConnection(input, newVar, variableCloneMap, null);
+      sourceMappingGBSubObject.getRoot().getDataflow().copyConnection(input, newVar, variableCloneMap, targetMappingGBBaseObject);
       idx++;
     }
     

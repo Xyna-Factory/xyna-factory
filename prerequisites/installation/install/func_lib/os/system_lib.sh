@@ -198,7 +198,7 @@ set_platform_dependent_properties () {
       if [[ -f "${TARGET_FILE}" ]]; then
         STR_FQDN="${STR_FQDN}$(${VOLATILE_AWK} '$1 == "domain" {printf ".%s", $2}' "${TARGET_FILE}")"
       fi
-      #Dummy fÃ¼r besseres Syntax-Highlighting"
+      #Dummy für besseres Syntax-Highlighting"
       ;;
     *) f_exit_with_message ${EX_UNSUPPORTED} "set_platform_dependent_properties: Platform '${INSTALLATION_PLATFORM}' is not supported.";;
   esac
@@ -214,7 +214,7 @@ set_platform_dependent_properties () {
 
 
 #  Der volle Pfad zu einem Executable wird ermittelt.
-#Gesucht wird dabei nur in den Ã¼bergebenen Pfaden, nicht in $PATH.
+#Gesucht wird dabei nur in den übergebenen Pfaden, nicht in $PATH.
 #  Eingabeparameter:
 #o   1 = Name des Executables, z.B. 'ant'
 #o   2-n Pfade, z.B ${ANT_HOME}/bin
@@ -248,10 +248,10 @@ print_full_path_to_executable () {
       echo "!! Unable to locate executables '${EXECUTABLES}'. Abort!" >&2
       echo "XXX_command_${EXECUTABLES// /_}_not_found_XXX" 
     fi; 
-    #mÃ¶glich fÃ¼r Bug 22964:   kill -s TERM $$
+    #möglich für Bug 22964:   kill -s TERM $$
     exit 99
   else
-    # TODO warum wird hier ein readlink benÃ¶tigt?
+    # TODO warum wird hier ein readlink benötigt?
     echo "$(__readlink ${FULL_PATH_TO_EXECUTABLE})"
   fi
 }

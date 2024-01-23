@@ -229,7 +229,7 @@ f_etc_respawn () {
   local DEMON="${4:-/etc/init.d/${NAME}_${PRODUCT_INSTANCE} demon}";
   echo -e "\n* Installing and starting respawn of ${NAME}"
   #TODO eigentlich ist alles noch viel komplizierter, da alle Systeme auf systemd wechseln werden
-  #-> Versionen mÃ¼ssten geprÃ¼ft werden.
+  #-> Versionen müssten geprüft werden.
   case ${INSTALLATION_PLATFORM} in
     sles)
       f_etc_respawn_inittab ${PREFIX} "${DEMON}" ${RUNLEVEL}

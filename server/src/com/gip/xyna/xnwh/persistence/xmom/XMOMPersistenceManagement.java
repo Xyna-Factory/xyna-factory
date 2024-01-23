@@ -37,7 +37,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
@@ -796,52 +795,57 @@ public class XMOMPersistenceManagement extends FunctionGroup implements XMOMPers
 
 
     public void finish() throws XPRC_UnDeploymentHandlerException {
-      Set<Long> relevantRevisions = new HashSet<>();
-      RuntimeContextDependencyManagement rcdm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
-      
-      for (GenerationBase gb : gbs) {
-        rcdm.getDependenciesRecursivly(gb.getRevision(), relevantRevisions);
-        relevantRevisions.add(gb.getRevision());
-      }
-      
-      Set<XMOMStorableStructureInformation> affectedRoots = new HashSet<>(); 
-      for (Long relevantRevision : relevantRevisions) {
-        XMOMStorableStructureCache xssc = XMOMStorableStructureCache.getInstance(relevantRevision);
-        Collection<XMOMStorableStructureInformation> structures = xssc.getAllStorableStructureInformation();
-        for (XMOMStorableStructureInformation structure : structures) {
-          TypeCollectionVisitor typeCollector = new TypeCollectionVisitor();
-          structure.traverse(typeCollector);
-          Map<String, Collection<StorableStructureInformation>> collected = typeCollector.getTypes();
-          for (GenerationBase gb : gbs) {
-            if (collected.keySet().contains(gb.getFqClassName())) {
-              affectedRoots.add(structure);
-              break;
+      try {
+        Set<Long> relevantRevisions = new HashSet<>();
+        RuntimeContextDependencyManagement rcdm =
+            XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
+
+        for (GenerationBase gb : gbs) {
+          rcdm.getDependenciesRecursivly(gb.getRevision(), relevantRevisions);
+          relevantRevisions.add(gb.getRevision());
+        }
+
+        Set<XMOMStorableStructureInformation> affectedRoots = new HashSet<>();
+        for (Long relevantRevision : relevantRevisions) {
+          XMOMStorableStructureCache xssc = XMOMStorableStructureCache.getInstance(relevantRevision);
+          Collection<XMOMStorableStructureInformation> structures = xssc.getAllStorableStructureInformation();
+          for (XMOMStorableStructureInformation structure : structures) {
+            TypeCollectionVisitor typeCollector = new TypeCollectionVisitor();
+            structure.traverse(typeCollector);
+            Set<String> collected = typeCollector.getTypes();
+            for (GenerationBase gb : gbs) {
+              if (collected.contains(gb.getFqClassName())) {
+                affectedRoots.add(structure);
+                break;
+              }
             }
           }
         }
-      }
-      
-      Iterator<XMOMStorableStructureInformation> affectedRootIter = affectedRoots.iterator();
-      outer: while (affectedRootIter.hasNext()) {
-        XMOMStorableStructureInformation current = affectedRootIter.next();
-        if (current.hasSuper()) {
-          affectedRootIter.remove();
-          continue;
-        }
-        for (GenerationBase gb : gbs) {
-          if (current.getFqClassNameForDatatype().equals(gb.getFqClassName())) { // remove types that are currently removed
-            affectedRootIter.remove();
-            continue outer;
+
+        Iterator<XMOMStorableStructureInformation> affectedRootIter = affectedRoots.iterator();
+        outer : while (affectedRootIter.hasNext()) {
+          XMOMStorableStructureInformation current = affectedRootIter.next();
+          if (current.hasSuper()) {
+            affectedRootIter.remove(); //cleanupSubReferences does recursion and encounters this type anyway
+            continue;
+          }
+          for (GenerationBase gb : gbs) {
+            if (current.getFqClassNameForDatatype().equals(gb.getFqClassName())) { // remove types that are currently being removed
+              affectedRootIter.remove();
+              continue outer;
+            }
           }
         }
-      }
-      
-      for (XMOMStorableStructureInformation affectedRoot : affectedRoots) {
-        cleanSubReferences(affectedRoot);
-      }
-      
-      for (GenerationBase gb : gbs) {
-        XMOMStorableStructureCache.getInstance(gb.getRevision()).unregister((DOM) gb);
+
+        for (XMOMStorableStructureInformation affectedRoot : affectedRoots) {
+          cleanSubReferences(affectedRoot);
+        }
+
+        for (GenerationBase gb : gbs) {
+          XMOMStorableStructureCache.getInstance(gb.getRevision()).unregister((DOM) gb);
+        }
+      } finally {
+        gbs.clear();
       }
     }
     
@@ -858,8 +862,8 @@ public class XMOMPersistenceManagement extends FunctionGroup implements XMOMPers
           }
         }
       }
-
-      Collection<StorableColumnInformation> columns = current.getAllComplexColumns();
+      
+      Collection<StorableColumnInformation> columns = current.getAllComplexColumns(); //also look for subtypes of complex members that are not storables themselves
       for (StorableColumnInformation column : columns) {
         cleanSubReferences(column.getStorableVariableInformation());
       }

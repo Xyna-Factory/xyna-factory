@@ -33,7 +33,7 @@ import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
 public class CallStatistics {
 
   private RingbufferBlockingQueue<StatisticsEntry> allRingBuffer; //alle Requests
-  private RingbufferBlockingQueue<StatisticsEntry> orderRingBuffer; //nur Requests, die zu XynaOrder fÃ¼hrten
+  private RingbufferBlockingQueue<StatisticsEntry> orderRingBuffer; //nur Requests, die zu XynaOrder führten
   
   
   private int allCounter;

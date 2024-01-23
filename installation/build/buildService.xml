@@ -27,7 +27,7 @@
 
     <property name="exception.xml.dir" value="${root.dir}/server" />
     <property name="base.lib.dir" value="${basedir}/lib" />
-    <property name="mdm.lib.dir" value="${basedir}/../../lib" />
+    <property name="mdm.lib.dir" value="${base.lib.dir}" />
     <!--<property name="additional.lib.dir" /> (nur zum Kompilieren nötig) kann gesetzt werden, muss aber nicht -->
     <!--<property name="unfree.lib.dir" /> (unfreie Libs, die zum Kompilieren und Ausführen nötig sind) kann gesetzt werden, muss aber nicht -->
     <property name="target.dir" value="${basedir}/deploy" />
@@ -53,12 +53,7 @@
 
     <property name="third_parties.pom" value="${basedir}/third_parties.pom.xml" />
 
-    <checkJavaVersion />
     <checkServerProperties />
-
-    <condition property="service.definition.available">
-        <available file="${base.lib.dir}/xyna/serviceDefinition.jar" />
-    </condition>
 
     <condition property="cli.commands.available">
         <isset property="cli.command.java.path" />
@@ -137,10 +132,18 @@
     </target>
 
     <!-- ================================= 
+         target: mkdir-lib             
+         ================================= -->
+    <!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
+    <target name="mkdir-lib">
+        <mkdir dir="${base.lib.dir}/xyna" />
+    </target>
+
+    <!-- ================================= 
          target: build-src             
          ================================= -->
     <!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
-    <target name="build-src" depends="cleanup, resolve, prepareLibs, genExceptionClass, genCliClass">
+    <target name="build-src" depends="cleanup, mkdir-lib, create-servicedefinition-jar-if-missing, resolve, prepareLibs, genExceptionClass, genCliClass">
         <mkdir dir="${basedir}/classes" />
         <javaCompile>
             <classpath path="${basedir}/classes" />
@@ -166,18 +169,13 @@
             </classpath>
         </javaCompile>
         <mkdir dir="${target.dir}" />
-        <if>
-            <equals arg1="${service.definition.available}" arg2="true" />
-            <then>
-                <unzip src="${base.lib.dir}/xyna/serviceDefinition.jar" dest="${basedir}/tmp" />
-                <copy todir="${basedir}/classes">
-                    <fileset dir="${basedir}/tmp">
-                        <include name="**/*.class" />
-                    </fileset>
-                </copy>
-                <delete dir="${basedir}/tmp" />
-            </then>
-        </if>
+        <unzip src="${base.lib.dir}/xyna/serviceDefinition.jar" dest="${basedir}/tmp" />
+        <copy todir="${basedir}/classes">
+            <fileset dir="${basedir}/tmp">
+                <include name="**/*.class" />
+            </fileset>
+        </copy>
+        <delete dir="${basedir}/tmp" />
         <jar destfile="${target.dir}/${project.name}.jar">
             <manifest>
                 <attribute name="Vendor" value="${vendor.name}" />
@@ -303,14 +301,15 @@
     <target name="create-servicedefinition-jar" description="Create servicedefinition.jar locally">
 	    <xmlproperty file="${basedir}/../../application.xml" collapseAttributes="true" />
 	
-        <property name="java.compile.version" value="Java6" />
+        <property name="java.compile.version" value="Java11" />
         <property name="output.dir" value="${base.lib.dir}/xyna" />
         <property name="xprc.xfractwfe.generation.storable.xmom.interfaces" value="" />
         <property name="apps.paths" value="${root.dir}" />
         <property name="recursive" value="true" />
         <property name="single.file" value="true" />
         <property name="types" value="DATATYPE,EXCEPTION" />
-        <property name="printclasspath" value="true" />
+        <property name="printclasspath" value="false" />
+        <property name="exceptiononmissingappentry" value="true" />
 
         <java classname="com.gip.xyna.xmcp.xfcli.scriptentry.XMOMCompiler" fork="true" failonerror="true">
             <arg value="app:${Application.applicationName}/${Application.versionName}" />
@@ -320,21 +319,45 @@
             <arg value="singleFile:${single.file}" />
             <arg value="recursive:${recursive}" />
             <arg value="types:${types}" />
-			<arg value="servicefqname:${mdm.service.path}" />
+            <arg value="servicefqname:${mdm.service.path}" />
+            <arg value="exceptiononmissingappentry:${exceptiononmissingappentry}" />
+            <arg value="printclasspath:${printclasspath}" />
             <env key="mdmjarjavaversion" value="${java.compile.version}" />
-			<jvmarg value="-Dexceptions.storage=${exception.xml.dir}/Exceptions.xml" />
+            <jvmarg value="-Dexceptions.storage=${exception.xml.dir}/Exceptions.xml" />
             <classpath>
                 <fileset dir="${common.lib.dir}"> <!-- jars from xyna server -->
-                    <include name="*.jar" />
+                    <include name="**/*.jar" />
                 </fileset>
                 <fileset dir="${base.lib.dir}"> <!-- jars specific to the service -->
-                    <include name="*.jar" />
+                    <include name="**/*.jar" />
                 </fileset>
                 <fileset dir="${mdm.lib.dir}">
-                    <include name="*.jar" />
+                    <include name="**/*.jar" />
                 </fileset>
             </classpath>
         </java>
+    </target>
+
+    <!-- ================================= 
+         target: create-servicedefinition-jar-if-missing
+         ================================= -->
+    <target name="create-servicedefinition-jar-if-missing" description="Create servicedefinition.jar locally, if there is no servicedefinition.jar present">
+        <condition property="servicedefinitionJarExists" value="true" else="false">
+            <resourcecount when="greater" count="0">
+                <fileset dir="${basedir}">
+                    <include name="**/serviceDefinition.jar" />
+                </fileset>
+            </resourcecount>
+        </condition>
+        <if>
+            <equals arg1="${servicedefinitionJarExists}" arg2="false" />
+            <then>
+                <antcall target="create-servicedefinition-jar" />
+            </then>
+            <else>
+                <echo message="servicedefinition jar exists already." />
+            </else>
+        </if>
     </target>
 
 </project>

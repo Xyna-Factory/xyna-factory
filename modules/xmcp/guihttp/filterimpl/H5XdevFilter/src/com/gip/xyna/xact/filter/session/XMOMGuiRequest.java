@@ -53,6 +53,7 @@ public class XMOMGuiRequest {
     Session,
     Move(true),
     Refactor(true),
+    Replace(true),
     Type(true),
     Upload,
     Close,
@@ -67,8 +68,12 @@ public class XMOMGuiRequest {
     ShowClipboard,
     ClearClipboard,
     GetPollEvents,
+    GetProjectPollEvents,
+    SubscribeProjectPollEvents,
+    UnsubscribeProjectPollEvents,
     CopyXml,
-    Warnings
+    Warnings,
+    ModelledExpressions
     ;
     
     private boolean isModification;

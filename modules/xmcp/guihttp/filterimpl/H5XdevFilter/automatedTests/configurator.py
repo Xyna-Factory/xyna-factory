@@ -17,16 +17,25 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 import json
 import sys
-import os
-import traceback
-try:
-    import StringIO
-except ImportError:
-    from io import StringIO
+import argparse
 
 
 class Configurator:
 
+  globalSecttings = {
+    "debug": bool,
+    "functions": str
+  }
+
+  factorySettings = {
+    "ip": str,
+    "port": int,
+    "username": str,
+    "password": str,
+    "https": bool,
+    "cookieFile": str,
+    "prefix": str
+  }
 
   def readConfig(self, configFile):
     try:
@@ -52,7 +61,7 @@ class Configurator:
     configFile["factories"].append({})
 
 
-  def ensureEnoughFactories(self, config):
+  def ensureEnoughFactories(self, config, factoryId):
    if "factories" not in config:
       config["factories"] = []
 
@@ -66,9 +75,9 @@ class Configurator:
 
   def configureTag(self, configFile, factoryId, key, value):
     config = self.readConfig(configFile)
-    self.ensureEnoughFactories(config)
+    self.ensureEnoughFactories(config, factoryId)
 
-    tags = config["factories"][factoryId]["tags"]
+    tags = config["factories"][factoryId].get("tags")
     if tags == None or not isinstance(tags, dict):
       tags = {}
       config["factories"][factoryId]["tags"] = tags
@@ -80,17 +89,38 @@ class Configurator:
     self.writeConfig(configFile, config)
 
 
-  def configureFactory(self, configFile, factoryId, field, value):
+  def configureFactory(self, configFile, factoryId, field, value, strict):
+    value = self.validate("factory setting", field, value, Configurator.factorySettings, strict)
+
     config = self.readConfig(configFile)
-    self.ensureEnoughFactories(config)
+    self.ensureEnoughFactories(config, factoryId)
 
     config["factories"][factoryId][field] = value
     self.writeConfig(configFile, config)
 
 
-  def configureGlobalSetting(self, configFile, globalSetting, value):
-    if globalSetting != "cookieFile" and globalSetting != "functions":
-      raise Exception("unknown global setting: " + globalSetting)
+  def validate(self, settingType, key, value, values, strict):
+    if key not in values:
+      message = f"Unknown {settingType} key: {key}. Options: {values}"
+      if strict:
+        raise Exception(message)
+      print(message)
+      return value
+
+    try:
+      if values[key] == bool:
+        return value.lower() == "true"
+      else:
+        return values[key](value)
+    except Exception:
+      message = f"Unexpected value type for {settingType} key: {key}. Got {type(value)} expected {values[key]}"
+      if strict:
+        raise Exception(message)
+      print(message)
+      return value
+
+  def configureGlobalSetting(self, configFile, globalSetting, value, strict):
+    value = self.validate("global setting", globalSetting, value, Configurator.globalSecttings, strict)
 
     config = self.readConfig(configFile)
     config[globalSetting] = value
@@ -102,41 +132,60 @@ class Configurator:
     with open(configFile, "w") as f:
       f.write("{}")
 
+  def createExample(self, configFile):
+    config = {
+      "debug": False,
+      "functions": "functions/allfunctions.json",
+      "factories": [
+        {
+          "ip": "127.0.0.1",
+          "prefix": "modeller-api",
+          "port": 443,
+          "https": True,
+          "password": "secret",
+          "username": "user",
+          "cookieFile": "cookies.txt"
+        }
+      ]
+    }
+    with open(configFile, "w") as f:
+      f.write(json.dumps(config, indent=2, sort_keys=True))
+
+def create_argparser():
+  parser = argparse.ArgumentParser()
+  parser.add_argument("-file", required=True)
+  parser.add_argument("-factoryId", type=int)
+  parser.add_argument("-key")
+  parser.add_argument("-value")
+  parser.add_argument("-strict", action='store_true')
+  parser.add_argument("-reset", action='store_true')
+  parser.add_argument("-example", action='store_true')
+  parser.add_argument("-tagName")
+  parser.add_argument("-tagValue")
+  return parser
 
 
-#main
-configurator = Configurator()
+if __name__ == "__main__":
+  configurator = Configurator()
+  parser = create_argparser()
+  args = parser.parse_args()
 
-if len(sys.argv) < 2:
-  print("use: " + str(sys.argv[0]) + " configFile factoryId field value OR " + str(sys.argv[0]) + " configFile globalSetting value OR " + str(sys.argv[0]) + " reset")
-  sys.exit()
+  if args.reset:
+    configurator.resetConfig(args.file)
+    sys.exit()
 
-configFile = sys.argv[1]
+  if args.example:
+    configurator.createExample(args.file)
+    sys.exit()
+
+  if args.factoryId is None:
+    configurator.configureGlobalSetting(args.file, args.key, args.value, args.strict)
+    sys.exit()
+
+  if args.key is not None and args.value is not None:
+    configurator.configureFactory(args.file, args.factoryId,  args.key, args.value, args.strict)
+
+  if args.tagName is not None and args.tagValue is not None:
+    configurator.configureTag(args.file, args.factoryId, args.tagName, args.tagValue)
 
 
-if sys.argv[2] == "reset":
-  configurator.resetConfig(configFile)
-  sys.exit()
-
-isConfigFactory = True
-factoryId = -1
-
-try:
-  factoryId = int(sys.argv[2])
-except Exception as e:
-  isConfigFactory = False
-
-if isConfigFactory:
-  field = sys.argv[3]
-
-  if field == "tags":
-    key = sys.argv[4]
-    value = sys.argv[5] if len(sys.argv) == 6 else None # None => remove
-    configurator.configureTag(configFile, factoryId, key, value)
-  else:
-    value = sys.argv[4]
-    configurator.configureFactory(configFile, factoryId, field, value)
-else:
-  globalSetting = sys.argv[2]
-  value = sys.argv[3]
-  configurator.configureGlobalSetting(configFile, globalSetting, value)

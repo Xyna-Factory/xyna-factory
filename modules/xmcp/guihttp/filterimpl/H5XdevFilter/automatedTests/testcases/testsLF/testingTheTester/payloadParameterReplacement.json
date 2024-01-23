@@ -10,7 +10,7 @@
 	  "operation": "invoke",
 	  "functionName": "createNewWorkflow",
 	  "mapInput": {},
-	  "mapOutput": 
+	  "mapOutput":
 	  {
 	    "!url!": "!url!"
 	  }

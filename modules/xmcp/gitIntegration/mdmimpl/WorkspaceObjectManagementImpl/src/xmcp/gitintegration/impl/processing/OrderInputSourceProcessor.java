@@ -44,6 +44,7 @@ import xmcp.gitintegration.MODIFY;
 import xmcp.gitintegration.OrderInputSource;
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.impl.ItemDifference;
+import xmcp.gitintegration.impl.XynaContentDifferenceType;
 
 
 
@@ -210,13 +211,13 @@ public class OrderInputSourceProcessor implements WorkspaceContentProcessor<Orde
       for (ItemDifference<InputSourceSpecific> issDiff : issDiffList) {
         StringBuffer refEntry = new StringBuffer();
         refEntry.append("\n");
-        refEntry.append("      " + issDiff.getType().getSimpleName() + " ");
-        if (issDiff.getType().getSimpleName().equals((CREATE.class.getSimpleName()))) {
+        refEntry.append("      " + issDiff.getType() + " ");
+        if (issDiff.getType() == XynaContentDifferenceType.CREATE) {
           refEntry.append(issDiff.getTo().getKey() + ":" + abbreviate(issDiff.getTo().getValue()));
-        } else if (issDiff.getType().getSimpleName().equals((MODIFY.class.getSimpleName()))) {
+        } else if (issDiff.getType() == XynaContentDifferenceType.MODIFY) {
           refEntry.append(issDiff.getFrom().getKey() + ":" + abbreviate(issDiff.getFrom().getValue()) + "=>" + issDiff.getTo().getKey()
               + ":" + abbreviate(issDiff.getTo().getValue()));
-        } else if (issDiff.getType().getSimpleName().equals((DELETE.class.getSimpleName()))) {
+        } else if (issDiff.getType() == XynaContentDifferenceType.DELETE) {
           refEntry.append(issDiff.getFrom().getKey() + ":" + abbreviate(issDiff.getFrom().getValue()));
         }
         ds.append(refEntry.toString());

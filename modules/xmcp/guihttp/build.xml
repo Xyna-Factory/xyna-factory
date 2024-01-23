@@ -25,7 +25,9 @@
     <property name="target.dir" value="${basedir}/deploy/" />
 
     <target name="build">
-    	<ant antfile="build.xml" target="build-app" inheritAll="false" dir="filterimpl/GUIHTTPFilter">
+        <antcall target="prepare-mdm-jar-if-missing" />
+
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="filterimpl/GUIHTTPFilter">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="filterimpl/H5XdevFilter">
@@ -76,11 +78,39 @@
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/TimeControlledOrdersServicesImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/MessageBusUtilsImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/FilterAndTriggerManagerServicesImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="${root.dir}/modules/xmcp/zetaFramework/sharedlib/ZetaTools">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
-    	
+
         <antcall target="build-application" />
+    </target>
+
+    <target name="prepare-mdm-jar">
+        <antcall target="create-mdm-jar" />
+        <supply-mdm-jar type="filterimpl" name="H5XdevFilter" />
+        <supply-mdm-jar type="mdmimpl" name="AdministrativeVetoServicesImpl" />
+        <supply-mdm-jar type="mdmimpl" name="CapacityServicesImpl" />
+        <supply-mdm-jar type="mdmimpl" name="CronLikeOrderServicesImpl" />
+        <supply-mdm-jar type="mdmimpl" name="DeploymentItemsImpl" />
+        <supply-mdm-jar type="mdmimpl" name="MessageBusUtilsImpl" />
+        <supply-mdm-jar type="mdmimpl" name="OrderInputSourcesServicesImpl" />
+        <supply-mdm-jar type="mdmimpl" name="OrderTypeServicesImpl" />
+        <supply-mdm-jar type="mdmimpl" name="ProcessMonitorServicesImpl" />
+        <supply-mdm-jar type="mdmimpl" name="RightManagementImpl" />
+        <supply-mdm-jar type="mdmimpl" name="RoleManagementImpl" />
+        <supply-mdm-jar type="mdmimpl" name="RtcManagerServicesImpl" />
+        <supply-mdm-jar type="mdmimpl" name="SharedServicesImpl" />
+        <supply-mdm-jar type="mdmimpl" name="TimeControlledOrdersServicesImpl" />
+        <supply-mdm-jar type="mdmimpl" name="UserManagementImpl" />
+        <supply-mdm-jar type="mdmimpl" name="XynaPropertiesServicesImpl" />
+        <supply-mdm-jar type="mdmimpl" name="FilterAndTriggerManagerServicesImpl" />
+        <delete file="${basedir}/mdm.jar" />
     </target>
 
     <import file="${root.dir}/installation/build/buildApplication.xml" />

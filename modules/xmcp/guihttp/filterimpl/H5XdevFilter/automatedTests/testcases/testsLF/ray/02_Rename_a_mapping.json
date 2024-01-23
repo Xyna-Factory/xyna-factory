@@ -2,7 +2,7 @@
   "meta":
   {
     "name": "rename a mapping",
-	"descritpion": "Fügt einem Workflow ein Mapping hinzu und ändert dessen Namen",
+	"descritpion": "Adds a mapping to a workflow and changes name of mapping",
 	"created": "12.11.2019",
 	"updated": "12.11.2019"
   },
@@ -16,7 +16,7 @@
 	  "operation": "invoke",
 	  "functionName": "createNewWorkflow",
 	  "mapInput": {},
-	  "mapOutput": 
+	  "mapOutput":
 	  {
 	    "!url!": "!url!"
 	  }
@@ -41,7 +41,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "operation": "call",

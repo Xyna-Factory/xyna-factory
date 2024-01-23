@@ -2,7 +2,6 @@
   "meta":
   {
     "name": "ConditionalBranchingWithVariableMemberEqualsAndValuesInTheBranches",
-	"description": "Erzeugt zwei Datentypen und erstellt einen Workflow. Der Workflow enthält ein conditionalBranching mit dem ersten erzeugten Datentypen in der Expression. Alle Zweige des ConditionalBranchings geben den zweiten Member zurück.",
 	"created": "11.11.2019",
 	"updated": "12.11.2019"
   },
@@ -49,17 +48,17 @@
 	  "operation": "invoke",
 	  "functionName": "createNewWorkflow",
 	  "mapInput": {},
-	  "mapOutput": 
+	  "mapOutput":
 	  {
 	    "!url!": "!url!"
 	  }
 	},
-	
+
 	{
 	  "meta": "create first Datatype",
 	  "operation": "invoke",
 	  "functionName": "createDatatype",
-	  "mapInput": 
+	  "mapInput":
 	  {
 	    "!workspace!": "!workspace!",
 		"!path!": "!firstDatatypePath!",
@@ -70,7 +69,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "operation": "invoke",
@@ -88,12 +88,12 @@
 	    "!insertName!": "!firstDatatypeMemberName!"
 	  }
 	},
-	
+
 	{
 	  "meta": "create second datatype",
 	  "operation": "invoke",
 	  "functionName": "createDatatype",
-	  "mapInput": 
+	  "mapInput":
 	  {
 	    "!workspace!": "!workspace!",
 		"!path!": "!secondDatatypePath!",
@@ -104,10 +104,11 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 
-	
+
 	{
 	  "meta": "prepare workflow - add Conditional Branching, add branch, add mappings in branches",
 	  "operation": "call",
@@ -118,7 +119,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "operation": "read",
@@ -141,7 +143,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "meta": "right list index (0) could be modelled better -> id is branch[id of parentStep]-0. Complete result is Something like step16",
@@ -171,7 +174,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "operation": "call",
@@ -182,7 +186,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "operation": "call",
@@ -193,7 +198,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "operation": "read",
@@ -210,7 +216,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "operation": "read",
@@ -227,7 +234,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "operation": "call",

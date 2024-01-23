@@ -27,8 +27,11 @@ import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.WorkspaceContentDifferences;
+import xmcp.gitintegration.WorkspaceContentItem;
 import xmcp.gitintegration.cli.generated.Listworkspacegitdiffs;
 import xmcp.gitintegration.impl.OutputCreator;
+import xmcp.gitintegration.impl.WorkspaceContentItemDifferenceSelector;
+import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
 import xmcp.gitintegration.storage.WorkspaceDifferenceListStorage;
 
 
@@ -37,6 +40,7 @@ public class ListworkspacegitdiffsImpl extends XynaCommandImplementation<Listwor
 
   public void execute(OutputStream statusOutputStream, Listworkspacegitdiffs payload) throws XynaException {
     WorkspaceDifferenceListStorage storage = new WorkspaceDifferenceListStorage();
+    WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
     StringBuilder sb = new StringBuilder();
     if (payload.getId() != null && !payload.getId().isEmpty()) {
       //specific list
@@ -61,8 +65,8 @@ public class ListworkspacegitdiffsImpl extends XynaCommandImplementation<Listwor
       writeToCommandLine(statusOutputStream, sb.toString());
       List<? extends WorkspaceContentDifference> differences = entry.getDifferences();
       differences.sort((x, y) -> (int) (x.getId() - y.getId()));
-      OutputCreator creator = new OutputCreator();
-      String output = creator.createOutput(differences);
+      OutputCreator<WorkspaceContentItem, WorkspaceContentDifference, WorkspaceContentItemDifferenceSelector> creator = new OutputCreator<WorkspaceContentItem, WorkspaceContentDifference, WorkspaceContentItemDifferenceSelector>(new WorkspaceContentItemDifferenceSelector());
+      String output = creator.createOutput(differences, portal);
       writeToCommandLine(statusOutputStream, output);
     } else {
       //all lists

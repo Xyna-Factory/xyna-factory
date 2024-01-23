@@ -44,6 +44,7 @@ import com.gip.xyna.xact.filter.session.gb.GBBaseObject.Variable;
 import com.gip.xyna.xact.filter.session.gb.GBSubObject;
 import com.gip.xyna.xact.filter.session.gb.ObjectId;
 import com.gip.xyna.xact.filter.session.gb.vars.IdentifiedVariables;
+import com.gip.xyna.xact.filter.session.workflowwarnings.ReferenceInvalidatedNotification;
 import com.gip.xyna.xact.filter.util.AVariableIdentification;
 import com.gip.xyna.xact.filter.util.AVariableIdentification.VarUsageType;
 import com.gip.xyna.xact.filter.util.QueryUtils;
@@ -62,6 +63,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.StepParallel;
 import com.gip.xyna.xprc.xfractwfe.generation.StepRetry;
 import com.gip.xyna.xprc.xfractwfe.generation.StepSerial;
 import com.gip.xyna.xprc.xfractwfe.generation.WF;
+import com.gip.xyna.xprc.xfractwfe.generation.WF.WFStep;
 
 import xnwh.persistence.QueryParameter;
 import xnwh.persistence.SelectionMask;
@@ -94,11 +96,16 @@ public class DeleteOperation extends ModifyOperationBase<DeleteJson> {
   protected void modifyStep(Step step) {
     if (clipboard != null) {
       deleteFromClipboard();
+      return;
     } else if (isQuery(object)) {
       deleteQuery(step);
     } else {
       deleteStep(step, object.getParent());
     }
+
+    FQName fqName = modification.getObject().getFQName();
+    ReferenceInvalidatedNotification notification = new ReferenceInvalidatedNotification(fqName, object.getRoot().getWorkflow());
+    modification.getSession().getWFWarningsHandler(fqName).handleChange(object.getId(), notification);
   }
   
   private void deleteFromClipboard() {
@@ -171,6 +178,13 @@ public class DeleteOperation extends ModifyOperationBase<DeleteJson> {
     }
     
     parent.getVariableListAdapter().remove(variable);
+    
+    if(step instanceof WFStep) {
+      FQName fqName = modification.getObject().getFQName();
+      ReferenceInvalidatedNotification notification = new ReferenceInvalidatedNotification(fqName, object.getRoot().getWorkflow());
+      modification.getSession().getWFWarningsHandler(fqName).handleChange(object.getId(), notification);
+    }
+    
     setFocusCandidateId(parent.getObjectId());
   }
 
@@ -191,6 +205,12 @@ public class DeleteOperation extends ModifyOperationBase<DeleteJson> {
     GBSubObject parent = object.getParent();
     parent.getCaseListAdapter().remove(caseInfo.getIndex());
     setFocusCandidateId( parent.getObjectId() );
+    
+    if (parent.getWorkflow() != null) {
+      FQName fqName = modification.getObject().getFQName();
+      ReferenceInvalidatedNotification notification = new ReferenceInvalidatedNotification(fqName, object.getRoot().getWorkflow());
+      modification.getSession().getWFWarningsHandler(fqName).handleChange(object.getId(), notification);
+    }
   }
 
   @Override
@@ -273,6 +293,8 @@ public class DeleteOperation extends ModifyOperationBase<DeleteJson> {
     if (index != -1) {
       dom.removeOperation(index);
     }
+
+    object.getRoot().resetVariableMap();
 
     // data type might become abstract in case the method was overriding one from a super class
     updateAbstractness(object.getDtOrException());

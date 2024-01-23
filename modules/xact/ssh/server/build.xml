@@ -26,6 +26,7 @@
     <property name="target.dir" value="${basedir}/deploy" />
     
     <target name="build">
+        <antcall target="prepare-mdm-jar-if-missing" />
 
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="sharedlib/SSHServer">
             <property name="target.dir" value="${target.dir}/app" />
@@ -48,6 +49,15 @@
 
         
         <antcall target="build-application" />
+    </target>
+
+    <target name="prepare-mdm-jar">
+        <antcall target="create-mdm-jar" />
+        <supply-mdm-jar type="filterimpl" name="SSHFilter" />
+        <supply-mdm-jar type="mdmimpl" name="SSHServerConnectionImpl" />
+        <supply-mdm-jar type="mdmimpl" name="SSHSessionImpl" />
+        <supply-mdm-jar type="triggerimpl" name="SSHTrigger" />
+        <delete file="${basedir}/mdm.jar" />
     </target>
 
     <import file="${root.dir}/installation/build/buildApplication.xml" />

@@ -2722,7 +2722,7 @@ Button.XFMDFormulaCancelButton
   downSkin: Embed(source="/objects/iconBtn_cancel_down.png");
 }
 
-/*mehrzeiliges Texteingabefeld fÃ¼r Templates*/
+/*mehrzeiliges Texteingabefeld für Templates*/
 TokenizedTextArea
 {
   paddingTop: 1;
@@ -3063,7 +3063,7 @@ Label.MapModFormulaCounterLabel
   fontFamily: "Courier New", "_typewriter";
 }
 
-/*Icons fÃ¼r die AutovervollstÃ¤ndigungsliste*/
+/*Icons für die Autovervollständigungsliste*/
 Button.autoCompletionIconVariable
 {
   upSkin: Embed(source="/processmodeller/icon_variable.png");

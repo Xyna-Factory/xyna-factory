@@ -1,0 +1,139 @@
+{{!
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+}}
+{{#operations}}{{#operation}}<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="true"
+TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" TypePath="{{apiPackage}}.{{pathPrefix}}.response" Label="{{httpMethod}} {{path}} Response"
+BaseTypeName="ResponseParameter" BaseTypePath="xmcp.oas.datatype.provider">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Specified Responses:{{#responses}}
+- {{code}} {{message}}{{/responses}}
+</Documentation>
+  </Meta>
+  <Service Label="{{httpMethod}} {{path}} Response" TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response">
+    <Operation Label="get Status Code" Name="getStatusCode" IsStatic="false" IsAbstract="true">
+      <Input>
+      </Input>
+      <Output>
+        <Data Label="Http Status" VariableName="Http Status">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Output>
+    </Operation>
+    <Operation Label="get Payload" Name="getPayload" IsStatic="false" IsAbstract="true">
+      <Input>
+      </Input>
+      <Output>
+        <Data ID="1" Label="Document" VariableName="document1" ReferenceName="Document" ReferencePath="xact.templates"/>
+      </Output>
+    </Operation>
+  </Service>
+</DataType>
+{{#responses}}
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false" Label="{{httpMethod}} {{path}} Response {{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}"
+ BaseTypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" BaseTypePath="{{apiPackage}}.{{pathPrefix}}.response"
+ TypeName="{{#lambda.pascalcase}}{{httpMethod}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}}" TypePath="{{apiPackage}}.{{pathPrefix}}.response">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>{{#message}}Response message: {{message}}{{/message}}</Documentation>
+  </Meta>{{#dataType}}
+  <Data Label="{{complexType}}" VariableName="{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}" {{#isArray}}IsList="true"{{/isArray}}{{^isPrimitiveType}}{{^isEnumRef}}
+     ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isEnumRef}}{{/isPrimitiveType}}>
+        <Meta>{{#isPrimitiveType}}{{^isEnumRef}}
+            <Type>{{#isArray}}{{items.dataType}}{{/isArray}}{{^isArray}}{{dataType}}{{/isArray}}</Type>{{/isEnumRef}}{{/isPrimitiveType}}{{#isEnumRef}}
+            <Type>String</Type>{{/isEnumRef}}
+            <Documentation>{{#description}}{{description}}{{/description}}{{#isEnumRef}}
+Enum of Type: {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}.{{complexType}}
+values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}
+{{/isEnumRef}}{{#format}}
+format: {{format}}{{/format}}
+required: {{required}}
+            </Documentation>
+        </Meta>
+    </Data>{{/dataType}}{{#responseHeaders}}{{#isPrimitiveType}}
+  <Data Label="{{baseName}}" VariableName="{{paramName}}" {{#isArray}}IsList="true"{{/isArray}}>
+        <Meta>
+          <Type>{{#isArray}}{{items.dataType}}{{/isArray}}{{^isArray}}{{dataType}}{{/isArray}}</Type>
+          <Documentation>{{#description}}{{description}}{{/description}}{{#isEnum}}
+Enum with values: {{_enum}}{{/isEnum}}{{#format}}
+format: {{format}}{{/format}}
+
+{{#required}}required{{/required}}
+{{#isNullable}}nullable{{/isNullable}}
+            </Documentation>
+        </Meta>
+    </Data>{{/isPrimitiveType}}{{/responseHeaders}}
+  <Service Label="{{httpMethod}} {{path}} Response {{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}" 
+   TypeName="{{#lambda.pascalcase}}{{httpMethod}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}}">
+    <Operation Label="get Status Code" Name="getStatusCode" IsStatic="false">
+      <Input>
+      </Input>
+      <Output>
+        <Data Label="Http Status" VariableName="Http Status">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return "{{code}} {{message}}";</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="get Payload" Name="getPayload" IsStatic="false">
+      <Input>
+      </Input>
+      <Output>
+        <Data ID="1" Label="Document" VariableName="document1" ReferenceName="Document" ReferencePath="xact.templates"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">{{^dataType}}return new xact.templates.Document();{{/dataType}}{{#dataType}}xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
+jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
+jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
+jsonOptions.setUseLabels(true);
+
+xact.templates.Document body;{{^isArray}}{{#isModel}}
+body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(this.get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}(), jsonOptions);{{/isModel}}{{/isArray}}{{#isArray}}{{#items.isModel}}
+List&lt;GeneralXynaObject&gt; list = new ArrayList&lt;&gt;(get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}());
+body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONListWithOptions(list, jsonOptions);{{/items.isModel}}{{/isArray}}{{^isModel}}{{#primitiveType}}
+body = new xact.templates.Document();
+body.setText(get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}().toString());{{/primitiveType}}{{/isModel}}
+
+return body;{{/dataType}}
+</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="Validate" Name="validate" IsStatic="false">
+      <Input>
+      </Input>
+      <Output>
+        <Data ID="2" Label="OAS Validation Result" VariableName="oASValidationResult2" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+
+{{#dataType}}{{^isArray}}{{#isModel}}{{>validation}}{{/isModel}}{{/isArray}}{{#isArray}}{{#items.isModel}}{{>validation}}{{/items.isModel}}{{/isArray}}{{/dataType}}{{#responseHeaders}}
+{{>validation}}{{/responseHeaders}}
+return result.getResult();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
+{{/responses}}
+{{/operation}}{{/operations}}

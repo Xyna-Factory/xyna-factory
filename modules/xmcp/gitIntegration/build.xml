@@ -26,8 +26,25 @@
     <property name="target.dir" value="${basedir}/deploy" />
     
     <target name="build">
+        <antcall target="prepare-mdm-jar-if-missing" />
 
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/WorkspaceObjectManagementImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+    
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/FactoryObjectManagementImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/RepositoryManagementImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/ReferenceManagementImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="sharedlib/XynaObjectGitIntegrationManagement">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
 
@@ -35,17 +52,11 @@
     </target>
     
     <target name="prepare-mdm-jar">
-        <!-- create mdm.jar -->
         <antcall target="create-mdm-jar" />
-        
-        <!-- copy mdm.jar to service groups -->
-        <copy todir="${basedir}/mdmimpl/WorkspaceObjectManagementImpl/lib/xyna" >
-          <fileset dir="${basedir}">
-            <include name="mdm.jar" />
-          </fileset>
-        </copy>	
-        
-        <!-- delete mdm.jar -->
+        <supply-mdm-jar type="mdmimpl" name="WorkspaceObjectManagementImpl" />
+        <supply-mdm-jar type="mdmimpl" name="FactoryObjectManagementImpl" />
+        <supply-mdm-jar type="mdmimpl" name="RepositoryManagementImpl" />
+        <supply-mdm-jar type="mdmimpl" name="ReferenceManagementImpl" />
         <delete file="${basedir}/mdm.jar" />
     </target>
 

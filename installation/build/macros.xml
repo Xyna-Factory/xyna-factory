@@ -88,28 +88,6 @@
         </sequential>
     </macrodef>
 
-
-    <!-- ================================= 
-         macro: checkJavaVersion
-         ================================= -->
-    <macrodef name="checkJavaVersion">
-        <sequential>
-            <fail message="Unsupported Java version: ${java.version}. Expected 1.5.0, 1.6.0, 1.7.0 or 1.8.0">
-                <condition>
-                    <not>
-                        <or>
-                            <contains string="${java.version}" substring="1.5.0" />
-                            <contains string="${java.version}" substring="1.6.0" />
-                            <contains string="${java.version}" substring="1.7.0" />
-                            <contains string="${java.version}" substring="1.8.0" />
-                            <contains string="${java.version}" substring="11" />
-                        </or>
-                    </not>
-                </condition>
-            </fail>
-        </sequential>
-    </macrodef>
-
     <!-- ================================= 
           macro: checkServerProperties
           ================================= -->
@@ -225,6 +203,23 @@
                     <scp todir="@{todir}" file="@{fromFile}" trust="true" verbose="false" password="${server.password}" />
                 </else>
             </if>
+        </sequential>
+    </macrodef>
+
+    <!-- ================================= 
+        macro: supply-mdm-jar        
+        ================================= -->
+    <macrodef name="supply-mdm-jar">
+        <attribute name="type" /> <!-- mdmimpl/trigger/filter -->
+        <attribute name="name" /> <!-- name of ServiceGroup/trigger/filter -->
+        <attribute name="libDir" default="lib/xyna"/>
+        <attribute name="mdmLocation" default="mdm.jar" />
+        <sequential>
+        <copy todir="${basedir}/@{type}/@{name}/@{libDir}" >
+          <fileset dir="${basedir}">
+            <include name="@{mdmLocation}" />
+          </fileset>
+        </copy>
         </sequential>
     </macrodef>
 

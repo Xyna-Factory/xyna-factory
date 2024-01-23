@@ -18,6 +18,7 @@
 package xact.ssh.impl;
 
 
+
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
@@ -36,10 +37,8 @@ import com.gip.xyna.xprc.exceptions.XPRC_MDMDeploymentException;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventHandling;
 import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventSource;
-import com.jcraft.jsch.HostKey;
-import com.jcraft.jsch.Identity;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
+
+import base.Text;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -56,10 +55,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.apache.log4j.Logger;
-
-
 import xact.connection.ManagedConnection;
 import xact.ssh.EncryptionAlgorithmType;
 import xact.ssh.EncryptionType;
@@ -78,9 +74,12 @@ import xact.templates.DocumentType;
 import xact.templates.NETCONF;
 
 
+
 public class SSHConnectionManagementServiceOperationImpl implements ExtendedDeploymentTask, SSHConnectionManagementServiceOperation {
 
-  
+  private final static Logger logger = CentralFactoryLogging.getLogger(SSHConnectionManagementServiceOperationImpl.class);
+
+
   public void onDeployment() throws XynaException {
     SSHConnectionManagementRepositoryAccess.init();
     List<Class<? extends AXynaCommand>> commands;
@@ -94,9 +93,11 @@ public class SSHConnectionManagementServiceOperationImpl implements ExtendedDepl
     }
   }
 
+
   public void onUndeployment() throws XynaException {
     SSHConnectionManagementRepositoryAccess.shutdown();
   }
+
 
   public Long getOnUnDeploymentTimeout() {
     // The (un)deployment runs in its own thread. The service may define a timeout
@@ -104,6 +105,7 @@ public class SSHConnectionManagementServiceOperationImpl implements ExtendedDepl
     // If null is returned, the default timeout (defined by XynaProperty xyna.xdev.xfractmod.xmdm.deploymenthandler.timeout) will be used.;
     return null;
   }
+
 
   public BehaviorAfterOnUnDeploymentTimeout getBehaviorAfterOnUnDeploymentTimeout() {
     // Defines the behavior of the (un)deployment after reaching the timeout and if this service ignores a Thread.interrupt.
@@ -114,8 +116,7 @@ public class SSHConnectionManagementServiceOperationImpl implements ExtendedDepl
     // If null is returned, the factory default <IGNORE> will be used.
     return null;
   }
-  
-  
+
 
   public void addKnownHost(KnownHost knownHost) {
     EncryptionType type = null;
@@ -125,20 +126,25 @@ public class SSHConnectionManagementServiceOperationImpl implements ExtendedDepl
     SSHConnectionManagementRepositoryAccess.addKnownHost(knownHost.getName(), type, knownHost.getKey(), knownHost.getComment());
   }
 
-  
+
   public void exportKnownHost(KnownHost knownHost, KeyFileName keyFileName) {
-    SSHConnectionManagementRepositoryAccess.exportKnownHost(knownHost.getName(), EncryptionType.getByXynaFqClassNamen(knownHost.getType().getClass().getName()), keyFileName.getName());
+    SSHConnectionManagementRepositoryAccess.exportKnownHost(knownHost.getName(),
+                                                            EncryptionType.getByXynaFqClassNamen(knownHost.getType().getClass().getName()),
+                                                            keyFileName.getName());
   }
-  
-  
+
+
   public void generateKeyPair(KeyPairGenerationParameter kpgp) {
     EncryptionType type = EncryptionType.getByXynaFqClassNamen(kpgp.getType().getClass().getName());
-    SSHConnectionManagementRepositoryAccess.generateKeyPair(type, kpgp.getKeySize(), kpgp.getPassPhrase().getContent(), kpgp.getOverwriteExisting());
+    SSHConnectionManagementRepositoryAccess.generateKeyPair(type, kpgp.getKeySize(), kpgp.getPassPhrase().getContent(),
+                                                            kpgp.getOverwriteExisting());
   }
-  
-  
+
+
   @Deprecated
   public ManagedConnection getConnection(SSHConnectionParameter sSHConnectionParameter, DocumentType type) {
+      //Preservation of the Connection-App
+      //throws GenericConnectionException {
     //wird genauso auch in SSHConnectionParameter.connect(..) aufgerufen
     ManagedConnection connection;
     if (type instanceof CommandLineInterface) {
@@ -148,11 +154,18 @@ public class SSHConnectionManagementServiceOperationImpl implements ExtendedDepl
     } else {
       throw new RuntimeException("Unexpected DocumentType: " + type);
     }
-    connection.connect();
+    
+    try {
+      connection.connect();
+    } catch (Exception sshE) {
+      logger.warn("Error (SSHException) in getConnection",sshE);
+      throw new RuntimeException(sshE);
+    }
+    
     return connection;
   }
-  
-  
+
+
   public List<? extends KeyPair> getPublicKey(EncryptionAlgorithmType encryptionAlgorithmType) {
     EncryptionType type = null;
     if (encryptionAlgorithmType != null) {
@@ -166,12 +179,12 @@ public class SSHConnectionManagementServiceOperationImpl implements ExtendedDepl
     return keys;
   }
 
-  
+
   public void importKnownHosts(KeyFileName keyFileName) {
     SSHConnectionManagementRepositoryAccess.importKnownHosts(keyFileName.getName());
   }
-  
-  
+
+
   public void removeKnownHost(KnownHost knownHost) {
     EncryptionType type = null;
     if (knownHost.getType() != null) {
@@ -180,16 +193,20 @@ public class SSHConnectionManagementServiceOperationImpl implements ExtendedDepl
     SSHConnectionManagementRepositoryAccess.removeKnownHost(knownHost.getName(), knownHost.getKey(), type);
   }
 
-  
-  public void returnConnection(ManagedConnection connection) {
+
+  public void returnConnection(ManagedConnection connection) { //throws GenericConnectionException {
     connection.disconnect();
   }
+
 
   public void addKeyFiles(KeyFileName publicKeyFileName, KeyFileName privateKeyFileName, PassPhrase passPhrase) {
     SSHConnectionManagementRepositoryAccess.addKeyFiles(publicKeyFileName.getName(), privateKeyFileName.getName(), passPhrase.getContent());
   }
+
+
   public void addKeyPair(KeyPair keyPair) {
-    SSHConnectionManagementRepositoryAccess.addKeyPair(keyPair.getPrivateKey(), keyPair.getPublicKey(), keyPair.getPassPhrase().getContent());
+    SSHConnectionManagementRepositoryAccess.addKeyPair(keyPair.getPrivateKey(), keyPair.getPublicKey(),
+                                                       keyPair.getPassPhrase().getContent());
   }
-  
+
 }

@@ -18,13 +18,15 @@
 package xact.ssh.impl;
 
 
+
 public class ProtocolMessageHandlerIgnore extends ProtocolMessageHandler {
 
   private static final long serialVersionUID = 1L;
 
+
   @Override
-  public void handleProtocol(SSHConnectionInstanceOperationImpl sshConnectionInstanceOperationImpl, 
-                             String content, String type, boolean commandSent, long recieveTime) {
+  public void handleProtocol(SSHConnectionInstanceOperationImpl sshConnectionInstanceOperationImpl, String content, String type,
+                             boolean commandSent, long recieveTime) {
     //nichts zu tun
   }
 

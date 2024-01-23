@@ -2,7 +2,6 @@
   "meta":
   {
     "name": "dragExceptionIntoWorkflow",
-	"description": "Öffnet einen neuen Workflow und fügt eine Exception ein. Überprüft, dass im Workflow genau ein Schritt ist und der Type zu der Exception passt.",
 	"created": "08.11.2019",
 	"updated": "12.11.2019"
   },
@@ -12,7 +11,7 @@
 	  "operation": "invoke",
 	  "functionName": "createNewWorkflow",
 	  "mapInput": {},
-	  "mapOutput": 
+	  "mapOutput":
 	  {
 	    "!url!": "!url!"
 	  }

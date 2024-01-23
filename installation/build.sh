@@ -16,6 +16,7 @@
 # limitations under the License.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+set -e
 
 print_help() {
   echo "$0: build some or all parts of xyna."
@@ -29,8 +30,10 @@ check_dependencies() {
   ant -version
   git --version
   zip --version
-  nvm --version
-  
+}
+
+check_dependencies_frontend() {
+  node --version
 }
 
 checkout_factory() {
@@ -46,7 +49,7 @@ build_xynautils_exceptions() {
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
   ant -Doracle.home=/tmp integration
   mv ../releases/xynautils-exceptions/xynautils-exceptions-I*[0-9].jar ../releases/xynautils-exceptions/xynautils-exceptions.jar
-  mvn install:install-file -Dfile=../releases/xynautils-exceptions/xynautils-exceptions.jar -DpomFile=./pom.xml -Dversion=I20210705_1332
+  mvn install:install-file -Dfile=../releases/xynautils-exceptions/xynautils-exceptions.jar -DpomFile=./pom.xml
 }
 
 build_xynautils_logging() {
@@ -57,8 +60,7 @@ build_xynautils_logging() {
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
   ant -Doracle.home=/tmp integration
   mv ../releases/xynautils-logging/xynautils-logging-I*[0-9].jar ../releases/xynautils-logging/xynautils-logging.jar
-  mvn install:install-file -Dfile=../releases/xynautils-logging/xynautils-logging.jar -DpomFile=./pom.xml -Dversion=I20181114_1211
-  mvn install:install-file -Dfile=../releases/xynautils-logging/xynautils-logging.jar -DpomFile=./pom.xml -Dversion=3.0.0.0
+  mvn install:install-file -Dfile=../releases/xynautils-logging/xynautils-logging.jar -DpomFile=./pom.xml
 }
 
 build_xynautils_database() {
@@ -69,10 +71,7 @@ build_xynautils_database() {
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
   ant -Doracle.home=/tmp integration
   mv ../releases/xynautils-database/xynautils-database-I*[0-9].jar ../releases/xynautils-database/xynautils-database.jar
-  mvn install:install-file -Dfile=../releases/xynautils-database/xynautils-database.jar -DpomFile=./pom.xml -Dversion=I20211207_0946
-  mvn install:install-file -Dfile=../releases/xynautils-database/xynautils-database.jar -DpomFile=./pom.xml -Dversion=I20190829_1328
-  mvn install:install-file -Dfile=../releases/xynautils-database/xynautils-database.jar -DpomFile=./pom.xml -Dversion=2.4.0.1
-  mvn install:install-file -Dfile=../releases/xynautils-database/xynautils-database.jar -DpomFile=./pom.xml -Dversion=3.0.0
+  mvn install:install-file -Dfile=../releases/xynautils-database/xynautils-database.jar -DpomFile=./pom.xml
 }
 
 build_xynautils_snmp() {
@@ -83,9 +82,7 @@ build_xynautils_snmp() {
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
   ant -Doracle.home=/tmp integration
   mv ../releases/xynautils-snmp/xynautils-snmp-I*[0-9].jar ../releases/xynautils-snmp/xynautils-snmp.jar
-  mvn install:install-file -Dfile=../releases/xynautils-snmp/xynautils-snmp.jar -DpomFile=./pom.xml -Dversion=I20190729_1044
-  mvn install:install-file -Dfile=../releases/xynautils-snmp/xynautils-snmp.jar -DpomFile=./pom.xml -Dversion=4.0.0
-  mvn install:install-file -Dfile=../releases/xynautils-snmp/xynautils-snmp.jar -DpomFile=./pom.xml -Dversion=I20181112_0943
+  mvn install:install-file -Dfile=../releases/xynautils-snmp/xynautils-snmp.jar -DpomFile=./pom.xml
 }
 
 build_xynautils_ldap() {
@@ -107,8 +104,7 @@ build_xynautils_misc() {
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
   ant -Doracle.home=/tmp integration
   mv ../releases/xynautils-misc/xynautils-misc-I*[0-9].jar ../releases/xynautils-misc/xynautils-misc.jar
-  mvn install:install-file -Dfile=../releases/xynautils-misc/xynautils-misc.jar -DpomFile=./pom.xml -Dversion=2.3.0.0
-  mvn install:install-file -Dfile=../releases/xynautils-misc/xynautils-misc.jar -DpomFile=./pom.xml -Dversion=3.0.1
+  mvn install:install-file -Dfile=../releases/xynautils-misc/xynautils-misc.jar -DpomFile=./pom.xml
 }
 
 build_misc() {
@@ -142,8 +138,7 @@ build_xynafactory_jar() {
   mvn install:install-file -Dfile=./deploy/xynafactoryCLIGenerator.jar -DpomFile=./pom.xml -Dversion=1.0.0 -DartifactId=xynafactoryCLIGenerator -DgroudId="com.gip.xyna"
   cp ./deploy/xynafactoryCLIGenerator.jar lib/xynafactoryCLIGenerator-1.0.0.jar
   ant -Doracle.home=/tmp build
-  mvn install:install-file -Dfile=./deploy/xynafactory.jar -DpomFile=./pom.xml -Dversion=9.0.0
-  mvn install:install-file -Dfile=./deploy/xynafactory.jar -DpomFile=./pom.xml -Dversion=9.0.0.0
+  mvn install:install-file -Dfile=./deploy/xynafactory.jar -DpomFile=./pom.xml
   cp lib/xynafactoryCLIGenerator-1.0.0.jar .
   
   
@@ -289,10 +284,10 @@ build_prerequisites() {
 }
 
 build_modeller() {
-  echo "building Modeller GUI"
+  MODELLER_TAG=$(cat ${SCRIPT_DIR}/delivery/delivery.properties | grep ^xynamodeller.release.tag | cut -d'=' -f2) #e.g. 9.0.0.0
+  echo "building Modeller GUI from tag ${MODELLER_TAG}"
   cd $SCRIPT_DIR/build
-  nvm use 16
-  ant -f build-gui.xml
+  ant -f build-gui.xml -Dmodeller.tag=${MODELLER_TAG}
 }
 
 build_xyna_factory() {
@@ -606,13 +601,14 @@ build_xynautils() {
   build_xynautils_misc
 }
 
+fill_lib() {
+  echo "fill lib..."
+  cd $SCRIPT_DIR/build/lib
+  ant resolve
+}
+
 build_all() {
-  build_xynautils
-  build_misc
-  build_xynafactory_jar
-  build_conpooltypes
-  build_persistencelayers
-  prepare_modules
+  build
   build_oracle_aq_tools
   build_modules
   build_plugins
@@ -630,6 +626,8 @@ build() {
   build_xynafactory_jar
   build_conpooltypes
   build_persistencelayers
+  fill_lib
+  prepare_modules
   build_oracle_aq_tools
 }
 
@@ -653,6 +651,7 @@ case $1 in
     build
     ;;
   "all")
+    check_dependencies_frontend
     build_all
     ;;
   "compose")

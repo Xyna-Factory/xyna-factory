@@ -33,9 +33,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.utils.collections.lists.StringSerializableList;
-import com.gip.xyna.xact.XynaActivationPortal;
+import com.gip.xyna.xact.XynaActivationBase;
 import com.gip.xyna.xact.trigger.TriggerInformation;
+import com.gip.xyna.xact.trigger.XynaActivationTrigger;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
@@ -44,11 +46,19 @@ import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 import xmcp.gitintegration.CREATE;
 import xmcp.gitintegration.DELETE;
 import xmcp.gitintegration.MODIFY;
-import xmcp.gitintegration.Reference;
 import xmcp.gitintegration.Trigger;
+import xmcp.gitintegration.Reference;
+import xmcp.gitintegration.ReferenceData;
+import xmcp.gitintegration.ReferenceManagement;
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.impl.ItemDifference;
+import xmcp.gitintegration.impl.ReferenceComparator;
+import xmcp.gitintegration.impl.ReferenceUpdater;
+import xmcp.gitintegration.impl.XynaContentDifferenceType;
+import xmcp.gitintegration.impl.references.ReferenceObjectType;
+import xmcp.gitintegration.impl.xml.ReferenceXmlConverter;
 import xmcp.gitintegration.storage.ReferenceStorable;
+import xmcp.gitintegration.storage.ReferenceStorage;
 
 
 
@@ -60,9 +70,18 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
   private static final String TAG_JARFILES = "jarfiles";
   private static final String TAG_SHAREDLIBS = "sharedlibs";
 
-  private static final XynaActivationPortal xynaActivationPortal = XynaFactory.getInstance().getActivationPortal();
+  private static final ReferenceXmlConverter converter = new ReferenceXmlConverter();
+  private static XynaActivationBase xynaActivation;
   private static RevisionManagement revisionManagement;
-  private RevisionManagement getRevisionManagement() {
+
+  private static XynaActivationBase getXynaActivation() {
+    if(xynaActivation == null) {
+      xynaActivation = XynaFactory.getInstance().getActivation();
+    }
+    return xynaActivation;
+  }
+
+  private static RevisionManagement getRevisionManagement() {
     if(revisionManagement == null) {
       revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     }
@@ -126,7 +145,6 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
   public Trigger parseItem(Node node) {
     Trigger trig = new Trigger();
     NodeList childNodes = node.getChildNodes();
-    ReferenceSupport rs = new ReferenceSupport();
     for (int i = 0; i < childNodes.getLength(); i++) {
       Node childNode = childNodes.item(i);
       if (childNode.getNodeName().equals(TAG_TRIGGERNAME)) {
@@ -137,8 +155,8 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
         trig.setJarfiles(childNode.getTextContent());
       } else if (childNode.getNodeName().equals(TAG_SHAREDLIBS)) {
         trig.setSharedlibs(childNode.getTextContent());
-      } else if (childNode.getNodeName().equals(rs.getTagName())) {
-        trig.setReferences(rs.parseTags(childNode));
+      } else if (childNode.getNodeName().equals(converter.getTagName())) {
+        trig.setReferences(converter.parseTags(childNode));
       }
     }
     return trig;
@@ -159,8 +177,7 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
       builder.element(TAG_SHAREDLIBS, item.getSharedlibs());
     }
     if ((item.getReferences() != null) && (!item.getReferences().isEmpty())) {
-      ReferenceSupport rs = new ReferenceSupport();
-      rs.appendReferences(item.getReferences(), builder);
+      converter.appendReferences(item.getReferences(), builder);
     }
     builder.endElement(TAG_TRIGGER);
   }
@@ -199,19 +216,18 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
 
     List<ItemDifference<Reference>> idrList = getReferenceDifferenceList(from, to);
     if (!idrList.isEmpty()) {
-      ReferenceSupport rs = new ReferenceSupport();
       ds.append("\n");
-      ds.append("    " + rs.getTagName());
+      ds.append("    " + converter.getTagName());
       for (ItemDifference<Reference> idr : idrList) {
         StringBuffer refEntry = new StringBuffer();
         refEntry.append("\n");
-        refEntry.append("      " + idr.getType().getSimpleName() + " ");
-        if (idr.getType().getSimpleName().equals((CREATE.class.getSimpleName()))) {
+        refEntry.append("      " + idr.getType() + " ");
+        if (idr.getType() == XynaContentDifferenceType.CREATE) {
           refEntry.append(idr.getTo().getPath() + ":" + idr.getTo().getType());
-        } else if (idr.getType().getSimpleName().equals((MODIFY.class.getSimpleName()))) {
+        } else if (idr.getType() == XynaContentDifferenceType.MODIFY) {
           refEntry
               .append(idr.getFrom().getPath() + ":" + idr.getFrom().getType() + "=>" + idr.getTo().getPath() + ":" + idr.getTo().getType());
-        } else if (idr.getType().getSimpleName().equals((DELETE.class.getSimpleName()))) {
+        } else if (idr.getType() == XynaContentDifferenceType.DELETE) {
           refEntry.append(idr.getFrom().getPath() + ":" + idr.getFrom().getType());
         }
         ds.append(refEntry.toString());
@@ -222,8 +238,8 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
 
 
   private List<ItemDifference<Reference>> getReferenceDifferenceList(Trigger from, Trigger to) {
-    ReferenceSupport rs = new ReferenceSupport();
-    return rs.compare(from.getReferences(), to.getReferences());
+    ReferenceComparator comparator = new ReferenceComparator();
+    return comparator.compare(from.getReferences(), to.getReferences());
   }
 
 
@@ -241,10 +257,10 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
         ssl.setValues(getJarfileList(trig.getTriggerName(), revision));
         trig.setJarfiles(ssl.serializeToString());
 
-        ReferenceSupport rs = new ReferenceSupport();
         List<Reference> refList = new ArrayList<Reference>();
-        for (ReferenceStorable storable : rs.getReferencetorableList(revision, trig.getTriggerName())) {
-          refList.add(rs.convertToTag(storable));
+        ReferenceStorage storage = new ReferenceStorage();
+        for (ReferenceStorable storable : storage.getReferencetorableList(revision, trig.getTriggerName(), ReferenceObjectType.TRIGGER)) {
+          refList.add(new Reference(storable.getPath(), storable.getReftype()));
         }
         trig.setReferences(refList);
 
@@ -264,7 +280,7 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
   private List<TriggerInformation> getTriggerInformationList(Long revision)
       throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
     List<TriggerInformation> resultList = new ArrayList<TriggerInformation>();
-    List<TriggerInformation> triggerInfoList = xynaActivationPortal.listTriggerInformation();
+    List<TriggerInformation> triggerInfoList = getXynaActivation().listTriggerInformation();
 
     for (TriggerInformation triggerInfo : triggerInfoList) {
       if (revision == getRevisionManagement().getRevision(triggerInfo.getRuntimeContext())) {
@@ -297,25 +313,72 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
   }
 
 
+  private List<File> copyToSavedIfNecessary(File[] jarFiles, String fqClassName, Long revision) throws Ex_FileAccessException {
+    String targetDirPath = XynaActivationTrigger.getTriggerSavedFolderByTriggerFqClassName(fqClassName, revision);
+    return XynaActivationTrigger.copyFilesToTargetFolder(targetDirPath, jarFiles);
+  }
+
+
+  private void createTrigger(Trigger item, long revision) {
+    StringSerializableList<String> ssl;
+    ssl = StringSerializableList.autoSeparator(String.class, ":|/;\\@-_.+#=[]?§$%&!", ':');
+    String[] jarFiles = ssl.deserializeFromString(item.getJarfiles()).toArray(new String[]{});
+    ssl = StringSerializableList.autoSeparator(String.class, ":|/;\\@-_.+#=[]?§$%&!", ':');
+    String[] sharedLibs = ssl.deserializeFromString(item.getSharedlibs()).toArray(new String[]{});
+    if (jarFiles.length > 0 && item.getReferences() == null) {
+      throw new RuntimeException("No references found (trigger: " + item.getTriggerName() + ")");
+    }
+    File[] jarFilesArray = new File[jarFiles.length];
+    int idx = 0;
+    List<Reference> references = new ArrayList<>(item.getReferences());
+    for (String jarFile : jarFiles) {
+      base.File file = ReferenceManagement.findReferencedJar(references, new File(jarFile).getName(), revision);
+      jarFilesArray[idx++] = new File(file.getPath());
+    }
+    try {
+      List<File> jarFilesList = copyToSavedIfNecessary(jarFilesArray, item.getFQTriggerClassName(), revision);
+      getXynaActivation().addTrigger(item.getTriggerName(), jarFilesList.toArray(new File[jarFilesList.size()]), item.getFQTriggerClassName(), sharedLibs, revision);
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+
+
   @Override
   public void create(Trigger item, long revision) {
-    // TODO Auto-generated method stub
+    String workspaceName = ReferenceUpdater.getWorkspaceName(revision);
+    for (Reference reference : item.getReferences() != null ? item.getReferences() : new ArrayList<Reference>()) {
+      ReferenceData.Builder builder = new ReferenceData.Builder();
+      builder.objectName(item.getTriggerName()).objectType(ReferenceObjectType.TRIGGER.toString()).path(reference.getPath())
+      .referenceType(reference.getType()).workspaceName(workspaceName);
+      ReferenceManagement.addReference(builder.instance());
+    }
 
+    createTrigger(item, revision);
   }
 
 
   @Override
   public void modify(Trigger from, Trigger to, long revision) {
-    // TODO Auto-generated method stub
-
+    createTrigger(to, revision);
+    ReferenceComparator comparator = new ReferenceComparator();
+    ReferenceUpdater updater = new ReferenceUpdater();
+    List<ItemDifference<Reference>> idrList = comparator.compare(from.getReferences(), to.getReferences());
+    updater.update(idrList,revision, ReferenceObjectType.TRIGGER, from.getFQTriggerClassName(), to.getFQTriggerClassName());
   }
 
 
   @Override
   public void delete(Trigger item, long revision) {
-    // TODO Auto-generated method stub
-
+    try {
+      getXynaActivation().removeTrigger(item.getTriggerName(), revision);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    ReferenceStorage storage = new ReferenceStorage();
+    for (Reference reference : item.getReferences() != null ? item.getReferences() : new ArrayList<Reference>()) {
+      storage.deleteReference(reference.getPath(), revision, item.getTriggerName());
+    }
   }
-
-
 }

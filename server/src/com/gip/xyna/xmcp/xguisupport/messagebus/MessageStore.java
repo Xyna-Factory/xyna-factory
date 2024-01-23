@@ -72,6 +72,7 @@ public class MessageStore {
         }
       }
     });
+    thread.setName("MessageStore");
     thread.setDaemon(true);
     thread.start();
   }

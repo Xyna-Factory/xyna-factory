@@ -2,7 +2,7 @@
   "meta":
   {
     "name": "dragExceptionIntoMappingInputOutput",
-	"description": "Erstellt einen Exceptiontypen und fügt ihn einem Mapping als Input und Output hinzu",
+	"description": "Ceates an Exception and adds it to the input and output of a mapping",
 	"created": "12.11.2019",
 	"updated": "12.11.2019"
   },
@@ -44,10 +44,10 @@
     {
 	  "operation": "invoke",
 	  "functionName": "createException",
-	  "mapInput": 
+	  "mapInput":
 	  {
-	  "!path!" : "!exceptionPath!", 
-	  "!label!" : "!exceptionLabel!", 
+	  "!path!" : "!exceptionPath!",
+	  "!label!" : "!exceptionLabel!",
 	  "!workspace!" : "!workspaceName!"
 	  },
 	  "mapOutput": {"!name!" : "!exceptionName!"}
@@ -73,7 +73,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "operation": "call",
@@ -84,7 +85,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "operation": "call",
@@ -95,7 +97,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "operation": "call",

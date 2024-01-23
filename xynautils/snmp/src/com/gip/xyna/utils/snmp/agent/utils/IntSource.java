@@ -18,7 +18,7 @@
 package com.gip.xyna.utils.snmp.agent.utils;
 
 /**
- * Interface, Ã¼ber das eine beliebige Klasse einen Int herausgeben kann.
+ * Interface, über das eine beliebige Klasse einen Int herausgeben kann.
  *
  */
 public interface IntSource {

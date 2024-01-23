@@ -22,15 +22,18 @@ package xmcp.gitintegration.impl;
 import base.File;
 import base.Text;
 
+import java.util.List;
+
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
+
+import xmcp.gitintegration.Flag;
 import xmcp.gitintegration.WorkspaceContent;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xprc.xpce.Workspace;
 import xmcp.gitintegration.WorkspaceObjectManagementServiceOperation;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
-import xmcp.gitintegration.storage.ReferenceStorage;
 import xmcp.gitintegration.storage.WorkspaceDifferenceListStorage;
 
 
@@ -41,7 +44,6 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
     //TODO: register @ GuiHttp => new entry in factory manager
     // make sure calling it multiple times behaves well
     WorkspaceDifferenceListStorage.init();
-    ReferenceStorage.init();
     OverallInformationProvider.onDeployment();
   }
 
@@ -98,6 +100,13 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
   public WorkspaceContent createWorkspaceContentFromText(Text text9) {
     // Implemented as code snippet!
     return null;
+  }
+
+
+  @Override
+  public List<? extends WorkspaceContentDifferences> listOpenWorkspaceDifferencesLists(Workspace arg0, Flag arg1) {
+    WorkspaceDifferenceListStorage storage = new WorkspaceDifferenceListStorage();
+    return storage.loadDifferencesLists(arg0.getName(), arg1.getValue());
   }
 
 }

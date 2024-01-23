@@ -81,6 +81,7 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.UserType;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
 import com.gip.xyna.xmcp.xfcli.CommandLineWriter;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
@@ -158,8 +159,9 @@ public class Support4Eclipse extends FunctionGroup {
 
 
   public void init() throws XynaException {
-    XynaProperty.BUILDMDJAR_JAVA_VERSION.registerDependency(DEFAULT_NAME);
-    XYNAPROPERTY_INCLUDE_WFS_IN_MDM_JARS.registerDependency(DEFAULT_NAME);
+    XynaProperty.BUILDMDJAR_JAVA_VERSION.registerDependency(UserType.XynaFactory, DEFAULT_NAME);
+    XYNAPROPERTY_INCLUDE_WFS_IN_MDM_JARS.registerDependency(UserType.XynaFactory, DEFAULT_NAME);
+    XynaProperty.S4E_TMP_DIR.registerDependency(UserType.XynaFactory, DEFAULT_NAME);
   }
   
 
@@ -676,7 +678,7 @@ public class Support4Eclipse extends FunctionGroup {
     RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     File tmpDir;
     while (true) {
-      tmpDir = new File("tmpmdmjar_" + cnt.getAndIncrement());
+      tmpDir = new File(XynaProperty.S4E_TMP_DIR.get() + "tmpmdmjar_" + cnt.getAndIncrement());
       if (!tmpDir.exists()) {
         break;
       }

@@ -181,7 +181,6 @@ import xmcp.factorymanager.rtcmanager.DeleteRTARequest;
 import xmcp.factorymanager.rtcmanager.DeleteWorkspaceRequest;
 import xmcp.factorymanager.rtcmanager.Dependency;
 import xmcp.factorymanager.rtcmanager.Documentation;
-import xmcp.factorymanager.rtcmanager.GetApplicationContent;
 import xmcp.factorymanager.rtcmanager.GetApplicationContentRequest;
 import xmcp.factorymanager.rtcmanager.GetDependentRTCsRequest;
 import xmcp.factorymanager.rtcmanager.GetWorkspaceContentRequest;

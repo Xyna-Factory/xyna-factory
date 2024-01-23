@@ -20,4 +20,5 @@
   <Argument Name="workspaceName" Description="Workspace to create workspace.xml for" />
   <BoolOption Name="p" LongName="printResult" Description="Instead of writing to file, only display content" Optional="true"/>
   <BoolOption Name="s" LongName="splitResult" Description="Instead of writing to a file, create a folder containing a file for each type of workspace content" Optional="true"/>
+  <BoolOption Name="f" LongName="force" Description="Force switch from/to splitResult" Optional="true"/>
 </XynaCommandLineCommand>

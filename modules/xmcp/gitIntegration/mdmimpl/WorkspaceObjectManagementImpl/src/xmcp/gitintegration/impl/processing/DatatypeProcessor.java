@@ -35,9 +35,15 @@ import xmcp.gitintegration.DELETE;
 import xmcp.gitintegration.Datatype;
 import xmcp.gitintegration.MODIFY;
 import xmcp.gitintegration.Reference;
+import xmcp.gitintegration.ReferenceData;
+import xmcp.gitintegration.ReferenceManagement;
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.impl.ItemDifference;
+import xmcp.gitintegration.impl.ReferenceComparator;
+import xmcp.gitintegration.impl.ReferenceUpdater;
+import xmcp.gitintegration.impl.XynaContentDifferenceType;
 import xmcp.gitintegration.impl.references.ReferenceObjectType;
+import xmcp.gitintegration.impl.xml.ReferenceXmlConverter;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
 
@@ -100,15 +106,14 @@ public class DatatypeProcessor implements WorkspaceContentProcessor<Datatype> {
   @Override
   public Datatype parseItem(Node node) {
     Datatype dt = new Datatype();
-    ReferenceSupport rs = new ReferenceSupport();
+    ReferenceXmlConverter converter = new ReferenceXmlConverter();
     NodeList childNodes = node.getChildNodes();
     for (int i = 0; i < childNodes.getLength(); i++) {
       Node childNode = childNodes.item(i);
       if (childNode.getNodeName().equals(TAG_FQNAME)) {
         dt.setFQName(childNode.getTextContent());
-      } else if (childNode.getNodeName().equals(rs.getTagName())) {
-        ReferenceSupport support = new ReferenceSupport();
-        dt.setReferences(support.parseTags(childNode));
+      } else if (childNode.getNodeName().equals(converter.getTagName())) {
+        dt.setReferences(converter.parseTags(childNode));
       }
     }
     return dt;
@@ -119,8 +124,8 @@ public class DatatypeProcessor implements WorkspaceContentProcessor<Datatype> {
   public void writeItem(XmlBuilder builder, Datatype item) {
     builder.startElement(TAG_DATATYPE);
     builder.element(TAG_FQNAME, item.getFQName());
-    ReferenceSupport rs = new ReferenceSupport();
-    rs.appendReferences(item.getReferences(), builder);
+    ReferenceXmlConverter converter = new ReferenceXmlConverter();
+    converter.appendReferences(item.getReferences(), builder);
     builder.endElement(TAG_DATATYPE);
   }
 
@@ -140,23 +145,23 @@ public class DatatypeProcessor implements WorkspaceContentProcessor<Datatype> {
   @Override
   public String createDifferencesString(Datatype from, Datatype to) {
     StringBuffer ds = new StringBuffer();
-    ReferenceSupport rs = new ReferenceSupport();
+    ReferenceXmlConverter converter = new ReferenceXmlConverter();
 
     // Block TAG_REFERENCES
     List<ItemDifference<Reference>> idrList = getReferenceDifferenceList(from, to);
     if (idrList.size() > 0) {
       ds.append("\n");
-      ds.append("    " + rs.getTagName());
+      ds.append("    " + converter.getTagName());
       for (ItemDifference<Reference> idr : idrList) {
         StringBuffer refEntry = new StringBuffer();
         refEntry.append("\n");
-        refEntry.append("      " + idr.getType().getSimpleName() + " ");
-        if (idr.getType().getSimpleName().equals((CREATE.class.getSimpleName()))) {
+        refEntry.append("      " + idr.getType() + " ");
+        if (idr.getType() == XynaContentDifferenceType.CREATE) {
           refEntry.append(idr.getTo().getPath() + ":" + idr.getTo().getType());
-        } else if (idr.getType().getSimpleName().equals((MODIFY.class.getSimpleName()))) {
+        } else if (idr.getType() == XynaContentDifferenceType.MODIFY) {
           refEntry
               .append(idr.getFrom().getPath() + ":" + idr.getFrom().getType() + "=>" + idr.getTo().getPath() + ":" + idr.getTo().getType());
-        } else if (idr.getType().getSimpleName().equals((DELETE.class.getSimpleName()))) {
+        } else if (idr.getType() == XynaContentDifferenceType.DELETE) {
           refEntry.append(idr.getFrom().getPath() + ":" + idr.getFrom().getType());
         }
         ds.append(refEntry.toString());
@@ -167,8 +172,8 @@ public class DatatypeProcessor implements WorkspaceContentProcessor<Datatype> {
 
 
   private List<ItemDifference<Reference>> getReferenceDifferenceList(Datatype from, Datatype to) {
-    ReferenceSupport rs = new ReferenceSupport();
-    return rs.compare(from.getReferences(), to.getReferences());
+    ReferenceComparator rc = new ReferenceComparator();
+    return rc.compare(from.getReferences(), to.getReferences());
   }
 
 
@@ -183,8 +188,7 @@ public class DatatypeProcessor implements WorkspaceContentProcessor<Datatype> {
         List<Reference> refList = new ArrayList<Reference>();
         dd.setReferences(refList);
         for (ReferenceStorable refStorable : entry.getValue()) {
-          ReferenceSupport rs = new ReferenceSupport();
-          refList.add(rs.convertToTag(refStorable));
+          refList.add(new Reference(refStorable.getPath(), refStorable.getReftype()));
         }
         dtList.add(dd);
       }
@@ -211,35 +215,30 @@ public class DatatypeProcessor implements WorkspaceContentProcessor<Datatype> {
 
   @Override
   public void create(Datatype item, long revision) {
-    ReferenceSupport rs = new ReferenceSupport();
+    String workspaceName = ReferenceUpdater.getWorkspaceName(revision);
     for (Reference ref : item.getReferences()) {
-      rs.create(ref, revision, item.getFQName(), ReferenceObjectType.DATATYPE.toString());
+      ReferenceData.Builder builder = new ReferenceData.Builder();
+      builder.objectName(item.getFQName()).objectType(ReferenceObjectType.DATATYPE.toString()).path(ref.getPath())
+          .referenceType(ref.getType()).workspaceName(workspaceName);
+      ReferenceManagement.addReference(builder.instance());
     }
   }
 
 
   @Override
   public void modify(Datatype from, Datatype to, long revision) {
-    ReferenceSupport rs = new ReferenceSupport();
-    List<ItemDifference<Reference>> idrList = rs.compare(from.getReferences(), to.getReferences());
-    for (ItemDifference<Reference> idr : idrList) {
-      String typeName = idr.getType().getSimpleName();
-      if (typeName.equals((CREATE.class.getSimpleName()))) {
-        rs.create(idr.getTo(), revision, to.getFQName(), ReferenceObjectType.DATATYPE.toString());
-      } else if (typeName.equals((MODIFY.class.getSimpleName()))) {
-        rs.modify(idr.getFrom(), idr.getTo(), revision, to.getFQName(), ReferenceObjectType.DATATYPE);
-      } else if (typeName.equals((DELETE.class.getSimpleName()))) {
-        rs.delete(idr.getFrom().getPath(), revision, from.getFQName());
-      }
-    }
+    ReferenceComparator rc = new ReferenceComparator();
+    ReferenceUpdater updater = new ReferenceUpdater();
+    List<ItemDifference<Reference>> idrList = rc.compare(from.getReferences(), to.getReferences());
+    updater.update(idrList, revision, ReferenceObjectType.DATATYPE, from.getFQName(), to.getFQName());
   }
 
 
   @Override
   public void delete(Datatype item, long revision) {
-    ReferenceSupport rs = new ReferenceSupport();
-    for (Reference ref : item.getReferences()) {
-      rs.delete(ref.getPath(), revision, item.getFQName());
+    ReferenceStorage storage = new ReferenceStorage();
+    for (Reference reference : item.getReferences() != null ? item.getReferences() : new ArrayList<Reference>()) {
+      storage.deleteReference(reference.getPath(), revision, item.getFQName());
     }
   }
 

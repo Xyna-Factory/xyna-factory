@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.collections.WrappedMap;
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -36,7 +37,6 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObjectDeploymentListenerManagement.XynaObjectDeploymentListener;
 import com.gip.xyna.xfmg.exceptions.XFMG_NoSuchDataModelException;
 import com.gip.xyna.xfmg.xfctrl.datamodel.xsd.InformationUtils;
-import com.gip.xyna.xfmg.xfctrl.datamodel.xsd.generation.XercesUtils;
 import com.gip.xyna.xfmg.xfctrl.datamodel.xsd.mapping.TypeMapperCache.FactoryXynaObjectClassLoader;
 import com.gip.xyna.xfmg.xfctrl.datamodel.xsd.mapping.XMLParserWriterCache.XMLParserWriter;
 import com.gip.xyna.xfmg.xfctrl.datamodel.xsd.mapping.exceptions.TypeMapperCreationException;
@@ -51,6 +51,7 @@ import com.gip.xyna.xfmg.xfctrl.datamodelmgmt.xynaobjects.XmomType;
 import com.gip.xyna.xprc.exceptions.XPRC_XmlParsingException;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
+import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 
 /**
@@ -174,7 +175,12 @@ public class XMLParserWriterCache extends WrappedMap<Pair<String, String>,XMLPar
     }
 
     public XynaObject parseDataModel(Map<String, Object> paramMap, String data) throws XynaObjectCreationException, XPRC_XmlParsingException {
-      Document doc = XercesUtils.parseXml(data);
+      Document doc = null;
+      try {
+        doc = XMLUtils.parseString(data, true);
+      } catch (Exception e) {
+        throw new XPRC_XmlParsingException("string", e);
+      }
       Element element = doc.getDocumentElement();
       return tmc.createXynaObjectForRootElement(element);
     }

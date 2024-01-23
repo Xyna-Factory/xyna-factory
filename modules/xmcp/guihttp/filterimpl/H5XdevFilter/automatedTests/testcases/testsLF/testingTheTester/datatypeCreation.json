@@ -13,7 +13,7 @@
     {
 	  "operation": "invoke",
 	  "functionName": "createDatatype",
-	  "mapInput": 
+	  "mapInput":
 	  {
 	    "!workspace!" : "default workspace",
 		"!path!": "lf.automatedTests.generated",

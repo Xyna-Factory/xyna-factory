@@ -30,6 +30,7 @@ import com.gip.xyna.utils.misc.JsonParser.UnexpectedJSONContentException;
 import com.gip.xyna.xact.filter.json.FQNameJson;
 import com.gip.xyna.xact.filter.session.Clipboard;
 import com.gip.xyna.xact.filter.session.Dataflow;
+import com.gip.xyna.xact.filter.session.FQName;
 import com.gip.xyna.xact.filter.session.Clipboard.ClipboardCopyDirection;
 import com.gip.xyna.xact.filter.session.exceptions.MergeConflictException;
 import com.gip.xyna.xact.filter.session.exceptions.MissingObjectException;
@@ -49,7 +50,10 @@ import com.gip.xyna.xact.filter.session.gb.StepMap;
 import com.gip.xyna.xact.filter.session.gb.vars.IdentifiedVariablesStepChoice;
 import com.gip.xyna.xact.filter.session.modify.Insertion;
 import com.gip.xyna.xact.filter.session.modify.Insertion.QueryInsertStep;
+import com.gip.xyna.xact.filter.session.workflowwarnings.ReferenceInvalidatedNotification;
 import com.gip.xyna.xact.filter.util.AVariableIdentification.VarUsageType;
+import com.gip.xyna.xact.filter.util.AVariableIdentification;
+import com.gip.xyna.xact.filter.util.DirectVarIdentification;
 import com.gip.xyna.xact.filter.util.HintGeneration;
 import com.gip.xyna.xact.filter.util.QueryUtils;
 import com.gip.xyna.xact.filter.util.Utils;
@@ -66,6 +70,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.JavaOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
+import com.gip.xyna.xprc.xfractwfe.generation.ServiceVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.Step;
 import com.gip.xyna.xprc.xfractwfe.generation.Step.DistinctionType;
 import com.gip.xyna.xprc.xfractwfe.generation.StepAssign;
@@ -362,6 +367,10 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
   @Override
   protected void modifyStep(Step step) throws XynaException, UnknownObjectIdException, MissingObjectException, UnsupportedOperationException, MergeConflictException {
     move(object);
+    
+    FQName fqName = modification.getObject().getFQName();
+    ReferenceInvalidatedNotification notification = new ReferenceInvalidatedNotification(fqName, object.getRoot().getWorkflow());
+    modification.getSession().getWFWarningsHandler(fqName).handleChange(object.getId(), notification);
   }
 
 
@@ -375,6 +384,10 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
       }
     }
     move(object);
+    
+    FQName fqName = modification.getObject().getFQName();
+    ReferenceInvalidatedNotification notification = new ReferenceInvalidatedNotification(fqName, object.getRoot().getWorkflow());
+    modification.getSession().getWFWarningsHandler(fqName).handleChange(object.getId(), notification);
   }
 
   @Override
@@ -441,15 +454,21 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
   }
   
   private void copyVar(AVariable var, VarUsageType varUsageType, GBSubObject gbsNewMethod) throws XynaException {
-    String type = Tags.VARIABLE;
-    if(var.getDomOrExceptionObject() instanceof ExceptionGeneration) {
-      type = Tags.EXCEPTION;
+    AVariableIdentification varIdent = null;
+    DomOrExceptionGenerationBase doe = var.getDomOrExceptionObject();
+    if (doe == null && var instanceof ServiceVariable && var.getJavaTypeEnum() != null) {
+      AVariable clone = new ServiceVariable((ServiceVariable)var);
+      clone.setId(String.valueOf(clone.getCreator().getNextXmlId()));
+      clone.setVarName(var.getJavaTypeEnum().toString().toLowerCase() + clone.getId());
+      varIdent = DirectVarIdentification.of(clone);
+    } else {
+      String type = doe instanceof ExceptionGeneration ? Tags.EXCEPTION : Tags.VARIABLE;
+      VariableJson variableJson = new VariableJson(type, var.getLabel(), FQNameJson.ofPathAndName(var.getFQClassName()));
+      variableJson.setList(var.isList()); 
+      GBBaseObject newVariable = createParameter(gbsNewMethod, variableJson);
+      varIdent = newVariable.getVariable().getVariable();
     }
-    VariableJson variableJson = new VariableJson(type, var.getLabel(), FQNameJson.ofPathAndName(var.getFQClassName()));
-//    VariableJson variableJson = new VariableJson(type, var.getLabel(), FQNameJson.ofAVariable(var)); TODO: PMOD-1193 
-    GBBaseObject newVariable = createParameter(gbsNewMethod, variableJson);
-
-    gbsNewMethod.getIdentifiedVariables().getListAdapter(varUsageType).add(newVariable.getVariable().getVariable());
+    gbsNewMethod.getIdentifiedVariables().getListAdapter(varUsageType).add(varIdent);
   }
 
 }

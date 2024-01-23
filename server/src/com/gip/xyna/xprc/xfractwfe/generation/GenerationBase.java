@@ -284,24 +284,6 @@ public abstract class GenerationBase {
   public static final String MAC_ADDRESS_VALIDATION_EXCEPTION = "base.net.exception.MACAddressValidationException";
   public static final String VLAN_ID_VALIDATION_EXCEPTION = "base.net.exception.VLANIDValidationException";
 
-  public static final String COPYRIGHT_HEADER = "<!--\n" + 
-      " * - - - - - - - - - - - - - - - - - - - - - - - - - -\n" + 
-      " * Copyright 2022 Xyna GmbH, Germany\n" + 
-      " *\n" +
-      " * Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
-      " * you may not use this file except in compliance with the License.\n" +
-      " * You may obtain a copy of the License at\n" +
-      " *\n" +
-      " * http://www.apache.org/licenses/LICENSE-2.0\n" +
-      " *\n" +
-      " * distributed under the License is distributed on an \"AS IS\" BASIS,\n" +
-      " * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
-      " * See the License for the specific language governing permissions and\n" +
-      " * limitations under the License.\n" +
-      " * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n" +
-      " -->";
-
-  
   private static final String pathSeparator = Constants.PATH_SEPARATOR;
   
   /**
@@ -5446,10 +5428,7 @@ public abstract class GenerationBase {
 
   WF getCachedWFInstanceOrCreate(String originalWFInputName, long useRevision) throws XPRC_InvalidPackageNameException {
     String fqClassName = GenerationBase.transformNameForJava(originalWFInputName);
-
-    long rev =
-        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
-            .getRevisionDefiningXMOMObjectOrParent(originalWFInputName, useRevision);
+    long rev = xmlInputSource.getRevisionDefiningXMOMObjectOrParent(originalWFInputName, useRevision);
     
     GenerationBase o;
     WF.cacheLockWF.lock();

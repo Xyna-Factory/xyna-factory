@@ -1,0 +1,55 @@
+{{!
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+}}
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
+ TypeName="{{classname}}" TypePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}" Label="{{name}}"
+ BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
+    <Meta>
+        <IsServiceGroupOnly>false</IsServiceGroupOnly>
+        <Documentation>{{#description}}{{description}}{{/description}}
+{{#allOf}}{{#-first}}This data type is "allOf": {{.}}{{/-first}}{{^-first}}, {{.}}{{/-first}}{{/allOf}}{{#oneOf}}{{#-first}}This data type is "oneOf": {{.}}{{/-first}}{{^-first}}, {{.}}{{/-first}}{{/oneOf}}{{#anyOf}}{{#-first}}This data type is "anyOf": {{.}}{{/-first}}{{^-first}}, {{.}}{{/-first}}{{/anyOf}}
+</Documentation>
+    </Meta>
+{{#vars}}
+    <Data Label="{{baseName}}" VariableName="{{name}}" {{#isContainer}}IsList="true"{{/isContainer}}{{^isPrimitiveType}}{{^isEnumRef}}
+     ReferenceName="{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isEnumRef}}{{/isPrimitiveType}}>
+        <Meta>{{#isPrimitiveType}}{{^isEnumRef}}
+            <Type>{{#isContainer}}{{items.dataType}}{{/isContainer}}{{^isContainer}}{{dataType}}{{/isContainer}}</Type>{{/isEnumRef}}{{/isPrimitiveType}}{{#isEnumRef}}
+            <Type>String</Type>{{/isEnumRef}}
+            <Documentation>{{#description}}{{description}}{{/description}}{{#isEnumRef}}
+Enum of Type: {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}.{{complexType}}
+values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}
+{{/isEnumRef}}{{#format}}
+format: {{format}}{{/format}}
+required: {{required}}
+            </Documentation>
+        </Meta>
+    </Data>
+{{/vars}}
+    <Service Label="{{name}}" TypeName="{{classname}}">
+        <Operation Label="Validate" Name="validate" IsStatic="false">
+            <Input>
+            </Input>
+            <Output>
+                <Data ID="1" Label="OAS Validation Result" VariableName="oASValidationResult1" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype"/>
+            </Output>
+            <SourceCode>
+                <CodeSnippet Type="Java">{{>validation}}</CodeSnippet>
+            </SourceCode>
+        </Operation>
+    </Service>
+</DataType>

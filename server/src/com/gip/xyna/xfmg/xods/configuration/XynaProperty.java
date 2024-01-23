@@ -561,7 +561,7 @@ public interface XynaProperty {
   public static final XynaPropertyDuration DEPLOYMENTHANDLER_TIMEOUT = 
       new XynaPropertyDuration("xyna.xdev.xfractmod.xmdm.deploymenthandler.timeout", "5 min", TimeUnit.MILLISECONDS );
 
-  public static XynaPropertyString BUILDMDJAR_JAVA_VERSION = new XynaPropertyString("xyna.target.mdm.jar.javaversion", "Java6");
+  public static XynaPropertyString BUILDMDJAR_JAVA_VERSION = new XynaPropertyString("xyna.target.mdm.jar.javaversion", "Java11");
   
   public static XynaPropertyBoolean TRY_PROCEED_ON_COMPILE_ERROR = new XynaPropertyBoolean("xyna.java.compile.tryproceedonerror", true);
   public static XynaPropertyBoolean NO_SINGLE_COMPILE = new XynaPropertyBoolean("xyna.java.compile.nosinglecompile", false).setHidden(true);
@@ -652,6 +652,9 @@ public interface XynaProperty {
                                           "Anzahl der Wiederholungsversuchen eines Statusübergangs."
                                        + " Sollte passend zur erwarteten Menge an konkurrierenden Zugriffen angepasst werden. (< 0 für unbeschränkte Wiederholungen)");
 
+  public static final XynaPropertyString S4E_TMP_DIR = new XynaPropertyString("com.gip.xyna.xdev.xlibdev.supp4eclipse.temp_dir", "./").
+      setDefaultDocumentation(DocumentationLanguage.EN, "Directory for temparary files from SupportForEcplipse").
+      setDefaultDocumentation(DocumentationLanguage.DE, "Verzeichnis, in dem SupportForEclipse temporäre Dateien und Verzeichnisse ablegt.");
  
   /*
    * Properties für ListFurtherInformationFromStartup
@@ -764,4 +767,10 @@ public interface XynaProperty {
       new XynaPropertyBoolean("xyna.xprc.xfracfwe.generation.exceptionOnDeployNoClassFileUpdate", true).
       setDefaultDocumentation(DocumentationLanguage.DE, "Soll eine Exception geworfen werden, wenn erfolgreiches Deployment das .class-File nicht updated?").
       setDefaultDocumentation(DocumentationLanguage.EN, "Should an exception be thrown in case a successful deployment does not update the .class file?");
+
+  
+  public static final XynaPropertyString XML_HEADER_COMMENT = new XynaPropertyString("xyna.generation.xml.headercomment", "")
+      .setDefaultDocumentation(DocumentationLanguage.EN, "This is put into application.xmls and XMOM files as header comment. Changes take effect immediately. Old files are not updated.");
+
+
 }

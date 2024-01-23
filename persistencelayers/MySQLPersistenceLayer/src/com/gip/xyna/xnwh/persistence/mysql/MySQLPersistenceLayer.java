@@ -335,9 +335,12 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
     } else {
       String poolname = handleParams(args);
       regularPoolDefinition = poolMgmt.getConnectionPoolDefinition(poolname);
-      if (!regularPoolDefinition.getType().equals(MySQLPoolType.POOLTYPE_IDENTIFIER)) {
+      if (regularPoolDefinition == null) {
+        throw new XNWH_GeneralPersistenceLayerException("Pool '" + poolname + "' for pliID " + String.valueOf(this.pliID) + " does not exist!");
+      }
+      if (!MySQLPoolType.POOLTYPE_IDENTIFIER.equals(regularPoolDefinition.getType())) {
         // only warn as it might be a custom poolType made for MySQL-PL usage
-        logger.warn("PoolType does not match the expected identifier!");
+        logger.warn("PoolType '" + regularPoolDefinition.getType() + "' for pool '" + poolname + "' does not match the expected identifier '" + MySQLPoolType.POOLTYPE_IDENTIFIER + "'!");
       }
       TypedConnectionPoolParameter tcpp = regularPoolDefinition.toCreationParameter();
       tcpp.size(0).name(tcpp.getName() + "_dedicated");
@@ -345,13 +348,13 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
         poolMgmt.startAndAddConnectionPool(tcpp);
       } catch (NoConnectionAvailableException e) {
         // mimics behavior of @deprecated getInstance call
-        throw new RuntimeException(e);
+        throw new RuntimeException("No connection for pool '" + poolname + "' available.", e);
       }
       dedicatedPoolDefinition = poolMgmt.getConnectionPoolDefinition(tcpp.getName());
     }
     
     if (regularPoolDefinition == null) {
-      throw new XNWH_GeneralPersistenceLayerException("Pool does not exist!");
+      throw new XNWH_GeneralPersistenceLayerException("Pool for pliID " + String.valueOf(this.pliID) + " does not exist!");
     }
     
     
@@ -362,7 +365,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
     // TODO echtes Pattern für den connect string benutzen
     int i = url.lastIndexOf("/");
     if (i < 0 || i + 1 == url.length()) {
-      throw new XNWH_GeneralPersistenceLayerException("Connect string must contain a schema name.");
+      throw new XNWH_GeneralPersistenceLayerException("Connect string '" + url + "' for pliID " + String.valueOf(this.pliID) + " must contain a schema name.");
     }
     schemaName = url.substring(i + 1);
     if (schemaName.contains("?")) {
@@ -951,8 +954,8 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
 
 
     private <T extends Storable> boolean isView(String tableName) {
-      Boolean queryResult = sqlUtils.queryOneRow("SELECT TABLE_TYPE FROM information_schema.TABLES WHERE TABLE_NAME = ?",
-                                                 new com.gip.xyna.utils.db.Parameter(tableName), new ResultSetReader<Boolean>() {
+      Boolean queryResult = sqlUtils.queryOneRow("SELECT TABLE_TYPE FROM information_schema.TABLES WHERE TABLE_NAME = ? AND TABLE_SCHEMA = ?",
+                                                 new com.gip.xyna.utils.db.Parameter(tableName, schemaName), new ResultSetReader<Boolean>() {
 
                                                    public Boolean read(ResultSet rs) throws SQLException {
                                                      String tableType = rs.getString("TABLE_TYPE");

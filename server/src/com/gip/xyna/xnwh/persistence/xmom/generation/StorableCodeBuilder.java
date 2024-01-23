@@ -203,7 +203,7 @@ public class StorableCodeBuilder {
     
     if (!currentStructure.hasSuper()) {
       //getprimarykey methode
-      cb.addLine("public Object getPrimaryKey() {");
+      cb.addLine("public java.lang.Object getPrimaryKey() {");
       cb.addLine("return ", currentStructure.getPrimaryKeyName());
       cb.addLine("}").addLB(2);
     }

@@ -48,7 +48,7 @@ public class XynaProperties {
    }
 
    /**
-    * Liefert alle Properties zurÃ¼ck
+    * Liefert alle Properties zurück
     * 
     * @return
     */

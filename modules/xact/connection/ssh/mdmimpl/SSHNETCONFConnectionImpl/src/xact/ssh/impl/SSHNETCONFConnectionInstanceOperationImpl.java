@@ -18,6 +18,7 @@
 package xact.ssh.impl;
 
 
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -31,8 +32,6 @@ import org.w3c.dom.Element;
 import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xprc.exceptions.XPRC_XmlParsingException;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
-import com.jcraft.jsch.ChannelSubsystem;
-import com.jcraft.jsch.JSchException;
 
 import xact.connection.Command;
 import xact.connection.CommandResponseTuple;
@@ -41,6 +40,7 @@ import xact.connection.DeviceType;
 import xact.connection.ManagedConnection;
 import xact.connection.ReadTimeout;
 import xact.connection.SendParameter;
+import xact.ssh.SSHMessagePayload;
 import xact.ssh.SSHNETCONFConnection;
 import xact.ssh.SSHNETCONFConnectionInstanceOperation;
 import xact.ssh.SSHNETCONFConnectionSuperProxy;
@@ -52,53 +52,51 @@ import xact.templates.NETCONF;
 import xfmg.xfmon.protocolmsg.ProtocolMessage;
 
 
-public class SSHNETCONFConnectionInstanceOperationImpl extends SSHNETCONFConnectionSuperProxy implements SSHNETCONFConnectionInstanceOperation {
+import net.schmizz.sshj.connection.channel.direct.Session;
+
+
+
+public class SSHNETCONFConnectionInstanceOperationImpl extends SSHNETCONFConnectionSuperProxy
+    implements
+      SSHNETCONFConnectionInstanceOperation {
 
   private static final long serialVersionUID = 1L;
-  
+
   private static final String NETCONF_BASE_1_0_MESSAGE_SEPERATOR = "]]>]]>";
-  
-  private String localHello =  "<hello xmlns=\"urn:ietf:params:xml:ns:netconf:base:1.0\">" + 
-                                 "<capabilities>" +
-                                   "<capability>urn:ietf:params:netconf:base:1.0</capability>" +
-                                 "</capabilities>" +
-                               "</hello>";
+
+  private String localHello = "<hello xmlns=\"urn:ietf:params:xml:ns:netconf:base:1.0\">" + "<capabilities>"
+      + "<capability>urn:ietf:params:netconf:base:1.0</capability>" + "</capabilities>" + "</hello>";
   private final Map<String, String> capabilities = new HashMap<>();
   private String remoteHello;
+
 
   public SSHNETCONFConnectionInstanceOperationImpl(SSHNETCONFConnection instanceVar) {
     super(instanceVar);
   }
-  
-  
+
+
   protected void initChannelAndStreams(SendParameter sendParameter, DocumentType documentType, DeviceType deviceType, Command cmd) {
     try {
-      ChannelSubsystem netconfChannel = (ChannelSubsystem) getSession().openChannel("subsystem");
-      netconfChannel.setSubsystem("netconf");
-      netconfChannel.setWantReply(true);
+
       String netconfHello = // TODO add a list of additional capapilites to connectionParams?
-        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-        localHello + NETCONF_BASE_1_0_MESSAGE_SEPERATOR;// TODO line seperator necessary ?
-      
-      setChannelAndStreams(netconfChannel);
-      
+          "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + localHello + NETCONF_BASE_1_0_MESSAGE_SEPERATOR;// TODO line seperator necessary ?
+
       SSHSendParameter sp;
       if (sendParameter == null) {
-        sp = new SSHSendParameter.Builder().connectionTimeoutInMilliseconds(5000).readTimeoutInMilliseconds(2000).reconnectAfterRestart(true).throwExceptionOnReadTimeout(true).instance();
+        sp = new SSHSendParameter.Builder().connectionTimeoutInMilliseconds(5000).readTimeoutInMilliseconds(2000)
+            .reconnectAfterRestart(true).throwExceptionOnReadTimeout(true).instance();
       } else {
-        sp = (SSHSendParameter) sendParameter;  
+        sp = (SSHSendParameter) sendParameter;
       }
-      netconfChannel.connect((int)Math.min(sp.getConnectionTimeoutInMilliseconds(), Integer.MAX_VALUE));
-      
+      Session.Subsystem netconfChannel = getSession().startSubsystem("netconf");
+      setChannelAndStreams(netconfChannel);
+
       getOutputStream().write(netconfHello.getBytes(Constants.DEFAULT_ENCODING));
 
-      remoteHello =
-          readFromInputStream(getInputStream(), netconfChannel, documentType, deviceType, sp.getReadTimeoutInMilliseconds(), cmd,
-                              getThrowReadTimeoutException(sp.getThrowExceptionOnReadTimeout()));
-      
+      remoteHello = readFromInputStream(getInputStream(), netconfChannel, documentType, deviceType, sp.getReadTimeoutInMilliseconds(), cmd,
+                                        getThrowReadTimeoutException(sp.getThrowExceptionOnReadTimeout()));
+
       parseCapabilities();
-    } catch (JSchException e) {
-      throw new RuntimeException(e);
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException(e);
     } catch (IOException e) {
@@ -109,7 +107,7 @@ public class SSHNETCONFConnectionInstanceOperationImpl extends SSHNETCONFConnect
       throw new RuntimeException(e);
     }
   }
-  
+
 
   private void parseCapabilities() throws XPRC_XmlParsingException {
     /*
@@ -149,27 +147,38 @@ public class SSHNETCONFConnectionInstanceOperationImpl extends SSHNETCONFConnect
   public String getLocalHello() {
     return localHello;
   }
-  
-  
+
+
   public String getRemoteHello() {
     return remoteHello;
   }
+
 
   private void writeObject(java.io.ObjectOutputStream s) throws java.io.IOException {
     //change if needed to store instance context
     s.defaultWriteObject();
   }
 
+
   private void readObject(java.io.ObjectInputStream s) throws java.io.IOException, ClassNotFoundException {
     //change if needed to restore instance-context during deserialization of order
     s.defaultReadObject();
   }
 
-
+  @Override
   protected ProtocolMessage createPartialProtocolMessage(String content) {
-    return null;
+    ProtocolMessage msg = new ProtocolMessage();
+    msg.setPayload(new SSHMessagePayload(content));
+    msg.setProtocolAdapterName("SSHNETCONFConnection");
+    msg.setProtocolName("NETCONF");
+    return msg;
   }
 
+  @Override
+  protected void write(byte[] bytes) throws IOException {
+      getOutputStream().write(bytes);
+      getOutputStream().flush();
+  }
 
   @Override
   public List<? extends Capability> getAllCapabilities() {
@@ -188,39 +197,46 @@ public class SSHNETCONFConnectionInstanceOperationImpl extends SSHNETCONFConnect
           return false;
         }
 
+
         @Override
         public void cleanupAfterError(CommandResponseTuple arg0, DocumentType arg1, ManagedConnection arg2) {
         }
+
 
         @Override
         public DeviceType clone() {
           throw new RuntimeException();
         }
 
+
         @Override
         public DeviceType clone(boolean arg0) {
           throw new RuntimeException();
         }
 
+
         @Override
         public void detectCriticalError(CommandResponseTuple arg0, DocumentType arg1) throws DetectedError {
         }
+
 
         @Override
         public Command enrichCommand(Command c) {
           return c;
         }
 
+
         @Override
         public Boolean isResponseComplete(String response, DocumentType docType, ManagedConnection con, Command cmd) {
           return response.endsWith(NETCONF_BASE_1_0_MESSAGE_SEPERATOR);
         }
 
+
         @Override
         public CommandResponseTuple removeDeviceSpecifics(CommandResponseTuple c) {
           return c;
         }
-        
+
       }, new Command(""));
       prepared = true;
     }

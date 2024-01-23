@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="DeEncoder" TypeName="DeEncoder" TypePath="xmcp" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="DeEncoder" TypeName="DeEncoder">
+    <Operation IsStatic="true" Label="Decode" Name="decode">
+      <Input>
+        <Data ID="10" Label="ToDecode" VariableName="toDecode">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="19" Label="SessionId" VariableName="sessionId">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="35" Label="Token" VariableName="token">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="14" Label="Decoded" VariableName="decoded">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">try {
+String base64 = toDecode.replace("~", "=").replace("-", "+").replace("_", "/");
+return com.gip.xyna.xnwh.securestorage.SecureStorage.staticDecrypt(
+    sessionId + token,
+    base64);
+} catch(Exception e) {
+  throw new RuntimeException(e);
+}</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Encode" Name="encode">
+      <Input>
+        <Data ID="22" Label="ToEncode" VariableName="toEncode">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="26" Label="SessionId" VariableName="sessionId">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="29" Label="Token" VariableName="token">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="32" Label="Encoded" VariableName="encoded">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">try {
+String base64 = 
+com.gip.xyna.xnwh.securestorage.SecureStorage.staticEncrypt(
+    sessionId + token,
+    toEncode);
+return base64.replace("/", "_").replace("+", "-").replace("=", "~");
+} catch(Exception e) {
+  throw new RuntimeException(e);
+}</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
