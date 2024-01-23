@@ -17,7 +17,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <!--                                               ################# Version auch in blackedition_lib.sh updaten ########### -->
-<Application applicationName="GuiHttp" comment="" factoryVersion="" versionName="1.1.373" xmlVersion="1.1">
+<Application applicationName="GuiHttp" comment="" factoryVersion="" versionName="1.1.374" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">GuiHTTPFilter</Description>
     <Description Lang="EN">GuiHTTPFilter</Description>
@@ -2541,6 +2541,57 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <!-- // xact.startorder -->
+	
+	<!-- // modelled expression -->
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.response.GetModelledExpressionsResponse</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.ModelledExpression</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.Expression</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.VariableAccessPart</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.Expression1Arg</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.Expression2Args</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.ExpressionVariable</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.FunctionExpression</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.LiteralExpression</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.NotExpression</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.SingleVarExpression</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.VariableInstanceFunctionIncovation</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+	<!-- // modelled expression -->
     
   </XMOMEntries>
   <Filters>

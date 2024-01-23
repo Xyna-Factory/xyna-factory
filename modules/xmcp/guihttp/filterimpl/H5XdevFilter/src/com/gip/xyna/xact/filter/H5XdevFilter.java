@@ -338,6 +338,9 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add(new WorkflowsPathNameObjectsIdConstant(xmomGui));
     allFilterActions.add(new WorkflowsPathNameObjectsIdConstantDelete(xmomGui));
     
+
+    allFilterActions.add(new WorkflowsPathNameObjectsIdModelledExpressions(xmomGui));
+    
     allFilterActions.add(new ClipboardAction(xmomGui));
     allFilterActions.add(new ClipboardClearAction(xmomGui));
 
