@@ -27,7 +27,7 @@ ALL_TRIGGERS=("nsnhix5600" "dhcp_v4" "radius")
 ALL_SERVICES=("nsnhix5600" "templatemechanism" "sipuseragent" "jmsforwarding" "dhcp_v4")
 ALL_DEPLOY_TARGETS=("geronimo" "tomcat" "oracle")
 ALL_DATAMODELTYPES=("mib","tr069","xsd");
-#ACHTUNG: Version auch bei addRequirement zu default workspace berï¿½cksichtigen
+#ACHTUNG: Version auch bei addRequirement zu default workspace berücksichtigen
 ALL_APPLICATIONS="Base Processing"; #Default-Applications, die immer installiert sein sollten
 APPMGMTVERSION=1.0.10
 GUIHTTPVERSION=1.1.375
@@ -386,7 +386,7 @@ f_indent () {
   local INDENT=${1};
   shift 1
   local OUTPUT="$@"
-  echo "${OUTPUT}" | sed "s+^+${INDENT}+" #Einrï¿½cken
+  echo "${OUTPUT}" | sed "s+^+${INDENT}+" #Einrücken
 }
 
 
@@ -861,7 +861,7 @@ install_xynafactory () {
   #Anpassen des RMI-Ports, damit Factory korrekt starten kann
   set_rmi_port
   
-  #Schreibschutz fï¿½r xynafactory.sh
+  #Schreibschutz für xynafactory.sh
   ${VOLATILE_CHMOD} 550 "${INSTALL_PREFIX}/server/xynafactory.sh"
 
   #Bash-Completion auf jeden Fall einrichten
@@ -880,7 +880,7 @@ update_xynafactory () {
   exit_if_dir_not_found revisions
   exit_if_dir_not_found server
 
-  #hier schon Berechtigung ï¿½ndern, damit schreibbar im Backup
+  #hier schon Berechtigung ändern, damit schreibbar im Backup
   ${VOLATILE_CHMOD} 750 ${INSTALL_PREFIX}/server/xynafactory.sh
 
   echo -e "\n  + Backup."
@@ -898,7 +898,7 @@ update_xynafactory () {
   ${VOLATILE_MKDIR} -p ${INSTALL_PREFIX}/revisions/rev_workingset/saved/{services,sharedLibs,XMOM}
   ${VOLATILE_CP} -rp "./func_lib/" ${INSTALL_PREFIX}/server/.
   
-  #alles im server-Verzeichnis kopieren auï¿½er log4j2.xml, server.policy, xynafactory.sh
+  #alles im server-Verzeichnis kopieren außer log4j2.xml, server.policy, xynafactory.sh
   ${VOLATILE_CP} -rp server ${INSTALL_PREFIX}/.
   
   #log4j2.xml, server.policy, xynafactory.sh aus backup wiederherstellen
@@ -933,10 +933,10 @@ update_xynafactory () {
   fi
 
   
-  #fï¿½r Umstieg auf log4j2 muss die Property 'jvm.option.log4j" angepasst werden
+  #für Umstieg auf log4j2 muss die Property 'jvm.option.log4j" angepasst werden
   update_log4j_property
   
-  #Schreibschutz fï¿½r xynafactory.sh
+  #Schreibschutz für xynafactory.sh
   ${VOLATILE_CHMOD} 550 ${INSTALL_PREFIX}/server/xynafactory.sh
 
   echo -e "\n  Updating server directory finished.\n"
@@ -1091,7 +1091,7 @@ install_xyna_cluster () {
 }
 
 check_install_oracle_cluster () {
-  #Suche nach Pattern, daher kein  if [ -e ojdbc*.jar ]; mï¿½glich!
+  #Suche nach Pattern, daher kein  if [ -e ojdbc*.jar ]; möglich!
   local OJDBC_JAR_FOUND="false";
   if [[ -d ${INSTALL_PREFIX}/server/userlib/ ]] ; then
     for f in ${INSTALL_PREFIX}/server/userlib/ojdbc*.jar; do 
@@ -1127,7 +1127,7 @@ create_bashcompletion () {
   #direkter Aufruf, um keine modifizierte Ausgabe zu erhalten #TODO auch xynafactory.sh umgehen?
   ${INSTALL_PREFIX}/server/xynafactory.sh bashcompletion > ${TMP_FILE}
   
-  #Prï¿½fung
+  #Prüfung
   local FIRST=$(${VOLATILE_HEAD} -n 1 ${TMP_FILE});
   if [[ ${FIRST} != "# This configuration file is auto-generated." ]] ; then
     attention_msg "Could not configure bash-completion: Unexpected content \"${FIRST}\" in generated code"; 
@@ -1215,7 +1215,7 @@ import_applications () {
   INDENTATION="    ";
   local IMPORTED_APP_LIST="";  #importierte Apps
   local FAILED_APP_LIST="";    #Apps mit Fehler: nicht gefunden; fehlgeschlagener Import 
-  local SKIPPED_APP_LIST="";   #Apps die bereits vorhanden sind und deshalb ï¿½bersprungen werden
+  local SKIPPED_APP_LIST="";   #Apps die bereits vorhanden sind und deshalb übersprungen werden
   local REQUIRING_APP_LIST=""; #Apps, die andere Apps als Voraussetzung haben
   
   #Sollen Applications global installiert werden? "" oder "--global"
@@ -1224,7 +1224,7 @@ import_applications () {
     IMPORT_APPLICATIONS_GLOBALLY="--global"
   fi
   
-  #mit Versionen ergï¿½nzte lokale Liste
+  #mit Versionen ergänzte lokale Liste
   local APP_LIST="";
   local APP;
   for APP in ${ALL_APPLICATIONS} ; do
@@ -1376,10 +1376,10 @@ filter_copy () {
 }
 
 #
-# Merge zweier Dateien auf Basis des gemeinsamen Vorlï¿½ufers
+# Merge zweier Dateien auf Basis des gemeinsamen Vorläufers
 # Parameter sind <dir> <filename> <srcdir> <newFileName>
 # Zu mergende Dateien sind <dir>/<filename> und <srcdir>/<newFileName> mit
-# Vorlï¿½ufer <dir>/installDefaults/<filename>
+# Vorläufer <dir>/installDefaults/<filename>
 #
 # Falls der Merge scheitert, wir die Installation angehalten, der
 # Benutzer kann den Konflikt manuell beseitigen und die Installation 
@@ -1414,11 +1414,11 @@ merge_files () {
     exit 11;
   fi;
   
-  #temporï¿½re Kopien, die im Konfliktfall interessant sind 
+  #temporäre Kopien, die im Konfliktfall interessant sind 
   ${VOLATILE_CP} ${CUSTOMIZED_FILE} ${TMP_CUSTOMIZED_FILE}
   ${VOLATILE_CP} ${NEW_FILE} ${TMP_NEW_FILE}
   
-  #Common Base ist nï¿½tig, evtl. versuchen anzulegen
+  #Common Base ist nötig, evtl. versuchen anzulegen
   if [ -e ${COMMON_BASE_FILE} ] ; then
     ${VOLATILE_CP} ${COMMON_BASE_FILE} ${TMP_COMMON_BASE_FILE}
   else
@@ -1517,8 +1517,8 @@ merge_files () {
 }
 
 #
-# Trï¿½gt die ï¿½bergebenen Zeilen in server.policy ein, falls die erste Zeile noch nicht eingetragen ist.
-# Falls die Datei server.policy geï¿½ndert wurde, wird XYNAFACTORY_NEEDS_RESTART auf true gesetzt
+# Trägt die übergebenen Zeilen in server.policy ein, falls die erste Zeile noch nicht eingetragen ist.
+# Falls die Datei server.policy geändert wurde, wird XYNAFACTORY_NEEDS_RESTART auf true gesetzt
 # Aufruf : add_to_server_policy "Zeile 1" "Zeile 2" ...
 add_to_server_policy () {
   FILE_TO_EDIT="${INSTALL_PREFIX}/server/server.policy"
@@ -1530,7 +1530,7 @@ add_to_server_policy () {
                    END {print matchStr;}' \
                   ${FILE_TO_EDIT});
   if [[ ${MATCH} = "none" ]] ; then
-    #server.policy ergï¿½nzen
+    #server.policy ergänzen
     backup_file ${FILE_TO_EDIT}
     local LINES;
     for line in "$@"; do 
@@ -1777,7 +1777,7 @@ f_check_license () {
   local CHECK_LICENSE="true";
   local VENDOR;
     
-  #Jar-Name prï¿½fen
+  #Jar-Name prüfen
   case ${JAR_FILE} in
     serviceDefinition.jar)
       CHECK_LICENSE="false";
@@ -1793,7 +1793,7 @@ f_check_license () {
       ;;
   esac;
     
-  #Lizenz prï¿½fen
+  #Lizenz prüfen
   if f_is_true ${CHECK_LICENSE} ; then
     local NAME=${JAR_FILE%.jar}
     if f_files_exist ${THIRD_PARTY_DIR}/${NAME}-* ; then
@@ -1804,7 +1804,7 @@ f_check_license () {
     fi;
   fi;
     
-  #Vendor prï¿½fen
+  #Vendor prüfen
   if f_is_true ${CHECK_LICENSE} ; then
     VENDOR=$(f_extract_vendor_from_jar ${JAR});
     #echo "Vendor ${VENDOR} for ${JAR}"
