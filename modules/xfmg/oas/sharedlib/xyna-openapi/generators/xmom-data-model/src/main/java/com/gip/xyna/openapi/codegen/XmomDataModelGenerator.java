@@ -30,7 +30,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
   // source folder where to write the files
   protected String sourceFolder = "XMOM";
   protected String apiVersion = "1.0.0";
-  protected String xynaFactoryVersion = "";
+  protected String xynaFactoryVersion = "CURRENT_VERSION";
   
   public static final String XYNA_FACTORY_VERSION = "xynaFactoryVersion";
 
