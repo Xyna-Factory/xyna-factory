@@ -84,6 +84,9 @@ public class ModelledExpressionConverter {
     }
 
     for (ModelledExpression backendExpression : backendExpressions) {
+      if(backendExpression == null) {
+        continue;
+      }
       xmcp.processmodeller.datatypes.expression.ModelledExpression expression = convert(backendExpression);
       expressions.add(expression);
     }
@@ -94,7 +97,6 @@ public class ModelledExpressionConverter {
 
 
   public xmcp.processmodeller.datatypes.expression.ModelledExpression convert(ModelledExpression backendExpression) {
-    logger.debug("convert: " + backendExpression.getExpression());
     xmcp.processmodeller.datatypes.expression.ModelledExpression result = new xmcp.processmodeller.datatypes.expression.ModelledExpression();
     ConverterVisitor visitor = new ConverterVisitor();
     backendExpression.visitSourceExpression(visitor);
@@ -134,7 +136,6 @@ public class ModelledExpressionConverter {
 
     @Override
     public void expression2ArgsStarts(Expression2Args expression) {
-      logger.debug("expression2ArgsStarts");
       xmcp.processmodeller.datatypes.expression.Expression2Args exp = new xmcp.processmodeller.datatypes.expression.Expression2Args();
       assignExpression(exp);
       ExpressionAssigner assigner = ExpressionAssigners.createAssigner(exp);
@@ -145,20 +146,17 @@ public class ModelledExpressionConverter {
 
     @Override
     public void functionEnds(FunctionExpression fe) {
-      logger.debug("functionEnds");
     }
 
 
     @Override
     public void functionSubExpressionEnds(FunctionExpression fe, int parameterCnt) {
-      logger.debug("functionSubExpressionEnds");
       context.pop();
     }
 
 
     @Override
     public void functionSubExpressionStarts(FunctionExpression fe, int parameterCnt) {
-      logger.debug("functionSubExpressionStarts");
       Object obj = context.peek();
       GeneralXynaObject xo = objects.get(obj);
       FunctionSubExpressionAssigner cur = new FunctionSubExpressionAssigner((xmcp.processmodeller.datatypes.expression.FunctionExpression) xo);
@@ -168,7 +166,6 @@ public class ModelledExpressionConverter {
 
     @Override
     public void functionStarts(FunctionExpression fe) {
-      logger.debug("functionStarts");
       xmcp.processmodeller.datatypes.expression.FunctionExpression exp = new xmcp.processmodeller.datatypes.expression.FunctionExpression(null, null, null, null);
       exp.unversionedSetFunction(fe.getFunction().getName());
       assignExpression(exp);
@@ -180,7 +177,6 @@ public class ModelledExpressionConverter {
 
     @Override
     public void instanceFunctionStarts(VariableInstanceFunctionIncovation vifi) {
-      logger.debug("instanceFunctionStarts");
       Object obj = context.peek();
       GeneralXynaObject xo = objects.get(obj);
       InstanceFunctionSubExpressionAssigner cur = new InstanceFunctionSubExpressionAssigner((xmcp.processmodeller.datatypes.expression.VariableInstanceFunctionIncovation) xo);
@@ -190,40 +186,34 @@ public class ModelledExpressionConverter {
 
     @Override
     public void instanceFunctionEnds(VariableInstanceFunctionIncovation vifi) {
-      logger.debug("instanceFunctionEnds");
       context.pop();
     }
 
 
     @Override
     public void instanceFunctionSubExpressionEnds(Expression fe, int parameterCnt) {
-      logger.debug("instanceFunctionSubExpressionEnds");
     }
 
 
     @Override
     public void instanceFunctionSubExpressionStarts(Expression fe, int parameterCnt) {
-      logger.debug("instanceFunctionSubExpressionStarts");
     }
 
 
     @Override
     public void allPartsOfVariableFinished(Variable variable) {
-      logger.debug("allPartsOfVariableFinished");
       context.pop();
     }
 
 
     @Override
     public void expression2ArgsEnds(Expression2Args expression) {
-      logger.debug("expression2ArgsEnds");
       context.pop();
     }
 
 
     @Override
     public void literalExpression(LiteralExpression expression) {
-      logger.debug("literalExpression - " + expression.getValue());
       xmcp.processmodeller.datatypes.expression.LiteralExpression exp = new xmcp.processmodeller.datatypes.expression.LiteralExpression();
       exp.unversionedSetValue(expression.getValue());
       assignExpression(exp);
@@ -232,7 +222,6 @@ public class ModelledExpressionConverter {
 
     @Override
     public void notStarts(Not not) {
-      logger.debug("notStarts");
       xmcp.processmodeller.datatypes.expression.NotExpression exp = new xmcp.processmodeller.datatypes.expression.NotExpression();
       assignExpression(exp);
       ExpressionAssigner assigner = ExpressionAssigners.createAssigner(exp);
@@ -243,14 +232,12 @@ public class ModelledExpressionConverter {
 
     @Override
     public void notEnds(Not not) {
-      logger.debug("notEnds");
       context.pop();
     }
 
 
     @Override
     public void operator(Operator operator) {
-      logger.debug("operator");
       Object obj = context.peek();
       GeneralXynaObject xo = objects.get(obj);
       ((xmcp.processmodeller.datatypes.expression.Expression2Args) xo).unversionedSetOperator(operator.getOperatorAsString());
@@ -259,7 +246,6 @@ public class ModelledExpressionConverter {
 
     @Override
     public void variableStarts(Variable variable) {
-      logger.debug("variableStarts");
       Object obj = context.peek();
       GeneralXynaObject xo = objects.get(obj);
       context.push(variable);
@@ -271,13 +257,11 @@ public class ModelledExpressionConverter {
 
     @Override
     public void variableEnds(Variable variable) {
-      logger.debug("variableEnds");
     }
 
 
     @Override
     public void variablePartStarts(VariableAccessPart part) {
-      logger.debug("variablePartStarts");
       Object currentContext = context.peek();
       GeneralXynaObject xo = objects.get(currentContext);
       xmcp.processmodeller.datatypes.expression.VariableAccessPart cur = null;
@@ -299,26 +283,22 @@ public class ModelledExpressionConverter {
 
     @Override
     public void variablePartEnds(VariableAccessPart part) {
-      logger.debug("variablePartEnds");
       context.pop();
     }
 
 
     @Override
     public void variablePartSubContextEnds(VariableAccessPart p) {
-      logger.debug("variablePartSubContextEnds");
     }
 
 
     @Override
     public void allPartsOfFunctionFinished(FunctionExpression fe) {
-      logger.debug("allPartsOfFunctionFinished");
     }
 
 
     @Override
     public void indexDefStarts() {
-      logger.debug("indexDefStarts");
       Object obj = context.peek();
       GeneralXynaObject xo = objects.get(obj);
       ExpressionAssigner assigner = ExpressionAssigners.createAssigner(xo);
@@ -328,14 +308,12 @@ public class ModelledExpressionConverter {
 
     @Override
     public void indexDefEnds() {
-      logger.debug("indexDefEnds");
       context.pop();
     }
 
 
     @Override
     public void singleVarExpressionStarts(SingleVarExpression expression) {
-      logger.debug("singleVarExpressionStarts");
       xmcp.processmodeller.datatypes.expression.SingleVarExpression exp = new xmcp.processmodeller.datatypes.expression.SingleVarExpression();
       assignExpression(exp);
       context.push(expression);
@@ -345,7 +323,6 @@ public class ModelledExpressionConverter {
 
     @Override
     public void singleVarExpressionEnds(SingleVarExpression expression) {
-      logger.debug("singleVarExpressionEnds");
       context.pop();
     }
 
