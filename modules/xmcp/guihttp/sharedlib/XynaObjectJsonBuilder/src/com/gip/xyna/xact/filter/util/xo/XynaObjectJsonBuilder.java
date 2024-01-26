@@ -23,12 +23,12 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Set;
+
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.misc.JsonBuilder;
 import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObjectList;
-import com.gip.xyna.xdev.xfractmod.xmdm.XynaExceptionBase;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderDispatcher;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderType;
@@ -251,6 +251,9 @@ public class XynaObjectJsonBuilder {
                 break;
             }
           }
+          if(!List.class.isAssignableFrom(fieldType) && !GeneralXynaObject.class.isAssignableFrom(fieldType)) {
+            continue; //skip member
+          }
           builder.nextObjectAsAttribute(variableName);
           if (List.class.isAssignableFrom(fieldType)) {
             Class<?> typeOfList = getGenericTypeOfList(field); 
@@ -259,12 +262,10 @@ public class XynaObjectJsonBuilder {
             } else {
               buildPrimitiveListJson(field, (List<?>)value);
             }
-          } else if (GeneralXynaObject.class.isAssignableFrom(fieldType) || XynaExceptionBase.class.isAssignableFrom(value.getClass())) {
+          } else if (GeneralXynaObject.class.isAssignableFrom(fieldType)) {
             buildXynaObjectJson((GeneralXynaObject) value);
-          } else {
-            throw new IllegalArgumentException("Unexpected field type " + fieldType);
           }
-        } // else skip it?
+        }
       } catch (InvalidObjectPathException e) {
         // should not be possible
         throw new RuntimeException(e);
