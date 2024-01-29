@@ -157,15 +157,17 @@ public class Tags {
   public static final String EXCEPTION_TYPE_MESSAGE_LANGUAGE = "messageLanguage";
   public static final String EXCEPTION_TYPE_MESSAGE_TEXT = "messageText";
   
-  // member vars
-  public static final String DATA_TYPE_MEMBER_VAR_DOCUMENTATION = "documentation";
-
   // member methods
   public static final String DATA_TYPE_MEMBER_METHOD = "memberMethod";
   public static final String DATA_TYPE_IMPLEMENTATION_TYPE = "implementationType";
   public static final String DATA_TYPE_IMPLEMENTATION = "implementation";
   public static final String DATA_TYPE_REFERENCE = "reference";
   public static final String DATA_TYPE_IS_ABORTABLE = "isAbortable";
+  public static final String DATA_TYPE_DOCUMENTATION = "documentation";
+  public static final String DATA_TYPE_INPUT = "input";
+  public static final String DATA_TYPE_OUTPUT = "output";
+  public static final String DATA_TYPE_THROWS = "throws";
+
 
   // ServiceGroups
   public static final String SERVICE_GROUP_TYPE_LABEL_AREA_ID = "typeInfoArea";
