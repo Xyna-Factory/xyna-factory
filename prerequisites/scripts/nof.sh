@@ -21,8 +21,8 @@
 # und loescht alte dateien
 
 # target directory sollte man so waehlen, dass in der partition
-# genug platz für die dateien ist. die dateien koennen je nach
-# anzahl threads in xyna bis zum mehrere megabyte groß werden.
+# genug platz fÃ¼r die dateien ist. die dateien koennen je nach
+# anzahl threads in xyna bis zum mehrere megabyte groÃŸ werden.
 # (ein einzelner thread verbraucht ca 1kb)
 # idealerweise liegt das verzeichnis nicht in einer partition, in
 # der es negative auswirkungen auf andere komponenten hat, wenn die
