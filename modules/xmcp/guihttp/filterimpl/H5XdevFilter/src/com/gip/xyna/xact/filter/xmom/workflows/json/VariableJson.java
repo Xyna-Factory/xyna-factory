@@ -268,7 +268,7 @@ public class VariableJson extends XMOMGuiJson implements HasXoRepresentation {
     public void attribute(String label, String value, Type type) throws UnexpectedJSONContentException {
       if( label.equals("type") ) {
         if ( !Tags.VARIABLE.equals(value) && !Tags.EXCEPTION.equals(value) ) {
-          throw new UnexpectedJSONContentException(label + ": " + value + ", expected: " + Tags.VARIABLE + " or " + Tags.EXPRESSION);
+          throw new UnexpectedJSONContentException(label + ": " + value + ", expected: " + Tags.VARIABLE + " or " + Tags.EXCEPTION);
         }
         vj.type = value;
         return;
