@@ -6914,6 +6914,10 @@ public abstract class GenerationBase {
         revisions.put(rtx, revision++);
       }
     }
+    
+    public Collection<Long> getRevisions() {
+      return revisions.values();
+    }
 
     public Set<Long> getDependenciesRecursivly(Long revision) {
       Set<Long> dependencies = new HashSet<>();
@@ -6929,6 +6933,9 @@ public abstract class GenerationBase {
         Set<RuntimeContext> deps = rtcDependencies.get(rtc);
         for (RuntimeContext dep : deps) {
           Long depRev = revisions.get(dep);
+          if(depRev == null) {
+            throw new RuntimeException("Missing dependent RTC: " + dep + ".");
+          }
           if (depenedencies.add(depRev)) {
             getDependenciesRecursivlyInternally(depRev, depenedencies);
           }
