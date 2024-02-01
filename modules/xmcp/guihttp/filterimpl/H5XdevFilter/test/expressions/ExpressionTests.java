@@ -26,16 +26,17 @@ import com.gip.xyna.xact.filter.session.ModelledExpressionConverter;
 import com.gip.xyna.xprc.exceptions.XPRC_InvalidVariableIdException;
 import com.gip.xyna.xprc.exceptions.XPRC_InvalidVariableMemberNameException;
 import com.gip.xyna.xprc.exceptions.XPRC_ParsingModelledExpressionException;
+import com.gip.xyna.xprc.xfractwfe.formula.Functions;
 import com.gip.xyna.xprc.xfractwfe.formula.TypeInfo;
 import com.gip.xyna.xprc.xfractwfe.formula.Variable;
 import com.gip.xyna.xprc.xfractwfe.generation.VariableContextIdentification;
 
 import junit.framework.TestCase;
+import xmcp.processmodeller.datatypes.expression.CastExpression;
 import xmcp.processmodeller.datatypes.expression.Expression;
 import xmcp.processmodeller.datatypes.expression.ExpressionVariable;
 import xmcp.processmodeller.datatypes.expression.FunctionExpression;
 import xmcp.processmodeller.datatypes.expression.LiteralExpression;
-import xmcp.processmodeller.datatypes.expression.LocalExpressionVariable;
 import xmcp.processmodeller.datatypes.expression.ModelledExpression;
 import xmcp.processmodeller.datatypes.expression.NotExpression;
 import xmcp.processmodeller.datatypes.expression.SingleVarExpression;
@@ -285,10 +286,10 @@ public class ExpressionTests extends TestCase {
   }
   
   public void testDynamicResultTypeFunction() {
-    ModelledExpression exp = convert("%1%=new(\"lf.tests.DTWithBoolean\").test");
+    ModelledExpression exp = convert("%1%=new(\"some.tests.DTWithBoolean\").test");
     ModelledExpression expectedResult = new ModelledExpression(
         new FunctionExpression(
-            Arrays.asList(new Expression[] {new LiteralExpression("lf.tests.DTWithBoolean")}),
+            Arrays.asList(new Expression[] {new LiteralExpression("some.tests.DTWithBoolean")}),
             "new",
             null,
             Arrays.asList(new VariableAccessPart[] {new VariableAccessPart("test", null)})
@@ -334,6 +335,20 @@ public class ExpressionTests extends TestCase {
           new ExpressionVariable(2, 
              Arrays.asList(new VariableAccessPart[] { new VariableAccessPart("text", null) }), 
              null))
+        );
+    
+
+    assertTrue(compare(exp, expectedResult));
+  }
+  
+  public void testCastExpression() {
+    ModelledExpression exp = convert("%0%#cast(\"some.Dt\")=%2%");
+    ModelledExpression expectedResult = new ModelledExpression(
+        new SingleVarExpression(new ExpressionVariable(2, null, null)),
+        new CastExpression(Arrays.asList(new Expression[] {    
+            new LiteralExpression("some.Dt"), 
+            new SingleVarExpression(new ExpressionVariable(0,null, null))}
+            ), Functions.CAST_FUNCTION_NAME, null, null)
         );
     
 
@@ -386,9 +401,9 @@ public class ExpressionTests extends TestCase {
         || (obj1.getClass().equals(FunctionExpression.class) && compare((FunctionExpression)obj1, (FunctionExpression)obj2))
         || (obj1.getClass().equals(Expression2Args.class) && compare((Expression2Args)obj1, (Expression2Args)obj2))
         || (obj1.getClass().equals(LiteralExpression.class) && compare((LiteralExpression)obj1, (LiteralExpression)obj2))
-        || (obj1.getClass().equals(LocalExpressionVariable.class) && compare((LocalExpressionVariable)obj1, (LocalExpressionVariable)obj2))
         || (obj1.getClass().equals(NotExpression.class) && compare((NotExpression)obj1, (NotExpression)obj2))
         || (obj1.getClass().equals(SingleVarExpression.class) && compare((SingleVarExpression)obj1, (SingleVarExpression)obj2))
+        || (obj1.getClass().equals(CastExpression.class) && compare((FunctionExpression)obj1, (FunctionExpression)obj2))
         
         ) ;
   }
@@ -446,9 +461,7 @@ public class ExpressionTests extends TestCase {
   private boolean compare(LiteralExpression obj1, LiteralExpression obj2) {
     return objCmp(obj1, obj2) && Objects.isNull(obj1) || Objects.equals(obj1.getValue(), obj2.getValue());
   }
-  private boolean compare(LocalExpressionVariable obj1, LocalExpressionVariable obj2) {
-    return objCmp(obj1, obj2) && Objects.isNull(obj1) || compare(obj1.getExpression(), obj2.getExpression());
-  }
+
   private boolean compare(NotExpression obj1, NotExpression obj2) {
     return objCmp(obj1, obj2) && Objects.isNull(obj1) || compare(obj1.getExpression(), obj2.getExpression());
   }

@@ -2591,7 +2591,11 @@
       <FqName>xmcp.processmodeller.datatypes.expression.VariableInstanceFunctionIncovation</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
-	<!-- // modelled expression -->
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.CastExpression</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <!-- // modelled expression -->
     
   </XMOMEntries>
   <Filters>
