@@ -33,6 +33,7 @@
         <buildModule target="build" dir="json"          target.dir="${target.dir}/xfmg" />
         <buildModule target="build" dir="csv"           target.dir="${target.dir}/xfmg" />
         <buildModule target="build" dir="filemgmt"      target.dir="${target.dir}/xfmg" />
+        <buildModule target="build" dir="oas"           target.dir="${target.dir}/xfmg" />
     </target>
     
 </project>
