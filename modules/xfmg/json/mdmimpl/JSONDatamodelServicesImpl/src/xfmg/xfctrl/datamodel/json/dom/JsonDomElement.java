@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,17 @@
 
 package xfmg.xfctrl.datamodel.json.dom;
 
-import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONObject;
-import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONValue;
-import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONValueType;
+import xfmg.xfctrl.datamodel.json.JSONKeyValue;
+import xfmg.xfctrl.datamodel.json.JSONObject;
+import xfmg.xfctrl.datamodel.json.JSONValue;
+import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONVALTYPES;
+import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONValueWriter;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Deprecated
 public class JsonDomElement {
@@ -39,7 +43,7 @@ public class JsonDomElement {
   public JsonDomElement(JSONValue val) {
     if (val == null) {
       _value = new JSONValue();
-      _value.type = JSONValueType.NULL;
+      _value.unversionedSetType(JSONVALTYPES.NULL);
       _exists = false;
     } else {
       _value = val;
@@ -51,84 +55,84 @@ public class JsonDomElement {
     return _exists;
   }
 
-  public JSONValueType getValueType() {
-    return _value.type;
+  public String getValueType() {
+    return _value.getType();
   }
 
   public boolean isJsonNull() {
-    return (getValueType() == JSONValueType.NULL);
+    return JSONVALTYPES.NULL.equals(getValueType());
   }
   public boolean isJsonObject() {
-    return (getValueType() == JSONValueType.OBJECT);
+    return JSONVALTYPES.OBJECT.equals(getValueType());
   }
   public boolean isJsonArray() {
-    return (getValueType() == JSONValueType.ARRAY);
+    return JSONVALTYPES.ARRAY.equals(getValueType());
   }
   public boolean isJsonString() {
-    return (getValueType() == JSONValueType.STRING);
+    return JSONVALTYPES.STRING.equals(getValueType());
   }
   public boolean isJsonNumber() {
-    return (getValueType() == JSONValueType.NUMBER);
+    return JSONVALTYPES.NUMBER.equals(getValueType());
   }
   public boolean isJsonBoolean() {
-    return (getValueType() == JSONValueType.BOOLEAN);
+    return JSONVALTYPES.BOOLEAN.equals(getValueType());
   }
 
   public JsonDomElement getInObject(String field) {
     if (!isJsonObject()) {
       return new JsonDomElement();
     }
-    JSONObject obj = _value.objectValue;
+    JSONObject obj = _value.getObjectValue();
     if (obj == null) {
       return new JsonDomElement();
     }
-    return new JsonDomElement(obj.objects.get(field));
+    return new JsonDomElement(obj.getMembers().stream().filter(x -> x.getKey().equals(field)).map(x -> x.getValue()).findFirst().get());
   }
 
   public JsonDomElement getInArray(int index) {
     if (!isJsonArray()) {
       return new JsonDomElement();
     }
-    if ((_value.arrayValue == null) || (index >= _value.arrayValue.size())) {
+    if ((_value.getArrayValue() == null) || (index >= _value.getArrayValue().size())) {
       return new JsonDomElement();
     }
-    return new JsonDomElement(_value.arrayValue.get(index));
+    return new JsonDomElement(_value.getArrayValue().get(index));
   }
 
   public int getArraySize() {
     if (!isJsonArray()) {
       return -1;
     }
-    if (_value.arrayValue == null) {
+    if (_value.getArrayValue() == null) {
       return -1;
     }
-    return _value.arrayValue.size();
+    return _value.getArrayValue().size();
   }
 
   public Set<String> getFieldNames() {
     if (!isJsonObject()) {
       return new HashSet<String>();
     }
-    return _value.objectValue.objects.keySet();
+    return _value.getObjectValue().getMembers().stream().map(x -> x.getKey()).collect(Collectors.toSet());
   }
 
   public String asString() {
     if (isJsonNumber() || isJsonString()) {
-      return _value.stringOrNumberValue;
+      return _value.getStringOrNumberValue();
     }
     else if (isJsonNull()) {
       return null;
     }
     else if (isJsonBoolean()) {
-      return "" + _value.booleanValue;
+      return "" + _value.getBooleanValue();
     }
-    return _value.toJSON("  ");
+    return JSONValueWriter.toJSON("  ", _value);
   }
 
   public double asDouble() {
     if (isJsonNumber() || isJsonString()) {
       try {
-        return Double.parseDouble(_value.stringOrNumberValue);
+        return Double.parseDouble(_value.getStringOrNumberValue());
       } catch (Exception e) {
         return 0;
       }
@@ -140,13 +144,13 @@ public class JsonDomElement {
     if (!isJsonBoolean()) {
       return false;
     }
-    return _value.booleanValue;
+    return _value.getBooleanValue();
   }
 
   public int asInt() {
     if (isJsonNumber() || isJsonString()) {
       try {
-        return Integer.parseInt(_value.stringOrNumberValue);
+        return Integer.parseInt(_value.getStringOrNumberValue());
       } catch (Exception e) {
         return 0;
       }
@@ -162,16 +166,16 @@ public class JsonDomElement {
 
   public JsonDomElement addObjectToArray() {
     JSONValue next = new JSONValue();
-    next.type = JSONValueType.OBJECT;
-    next.objectValue = new JSONObject();
+    next.unversionedSetType(JSONVALTYPES.OBJECT);
+    next.unversionedSetObjectValue(new JSONObject());
     addToArray(next);
     return new JsonDomElement(next);
   }
 
   public JsonDomElement addArrayToArray() {
     JSONValue next = new JSONValue();
-    next.type = JSONValueType.ARRAY;
-    next.arrayValue = new ArrayList<JSONValue>();
+    next.unversionedSetType(JSONVALTYPES.ARRAY);
+    next.unversionedSetArrayValue(new ArrayList<JSONValue>());
     addToArray(next);
     return new JsonDomElement(next);
   }
@@ -182,8 +186,8 @@ public class JsonDomElement {
       return;
     }
     JSONValue next = new JSONValue();
-    next.type = JSONValueType.STRING;
-    next.stringOrNumberValue = val;
+    next.unversionedSetType(JSONVALTYPES.STRING);
+    next.unversionedSetStringOrNumberValue(val);
     addToArray(next);
   }
 
@@ -193,8 +197,8 @@ public class JsonDomElement {
       return;
     }
     JSONValue next = new JSONValue();
-    next.type = JSONValueType.NUMBER;
-    next.stringOrNumberValue = val.toString();
+    next.unversionedSetType(JSONVALTYPES.NUMBER);
+    next.unversionedSetStringOrNumberValue(val.toString());
     addToArray(next);
   }
 
@@ -204,56 +208,55 @@ public class JsonDomElement {
       return;
     }
     JSONValue next = new JSONValue();
-    next.type = JSONValueType.NUMBER;
-    next.stringOrNumberValue = val.toString();
+    next.unversionedSetType(JSONVALTYPES.STRING);
+    next.unversionedSetStringOrNumberValue(val.toString());
     addToArray(next);
   }
 
   public void addBooleanToArray(boolean val) {
     JSONValue next = new JSONValue();
-    next.type = JSONValueType.BOOLEAN;
-    next.booleanValue = val;
+    next.unversionedSetType(JSONVALTYPES.BOOLEAN);
+    next.unversionedSetBooleanValue(val);
     addToArray(next);
   }
 
   public void addNullToArray() {
     JSONValue next = new JSONValue();
-    next.type = JSONValueType.NULL;
+    next.unversionedSetType(JSONVALTYPES.NULL);
     addToArray(next);
   }
 
 
   private void addToArray(JSONValue next) {
-    if ((this._value == null) || (this._value.type != JSONValueType.ARRAY)) {
+    if ((this._value == null) || (JSONVALTYPES.ARRAY.equals(this._value.getType()))) {
       throw new RuntimeException("JsonDomElement does not contain a json array.");
     }
-    if (this._value.arrayValue == null) {
-      this._value.arrayValue = new ArrayList<JSONValue>();
-    }
-    this._value.arrayValue.add(next);
+    List<? extends JSONValue> oldList = this._value.getArrayValue();
+    List<JSONValue> list = oldList == null ? new ArrayList<>() : new ArrayList<>(oldList);
+    list.add(next);
+    this._value.unversionedSetArrayValue(list);
   }
 
 
   public JsonDomElement createArrayField(String name) {
     JSONValue child = new JSONValue();
-    child.type = JSONValueType.ARRAY;
-    child.arrayValue = new ArrayList<JSONValue>();
+    child.unversionedSetType(JSONVALTYPES.ARRAY);
+    child.unversionedSetArrayValue(new ArrayList<JSONValue>());
     addToObject(name, child);
     return new JsonDomElement(child);
   }
 
   public JsonDomElement createObjectField(String name) {
     JSONValue child = new JSONValue();
-    child.type = JSONValueType.OBJECT;
-    child.objectValue = new JSONObject();
+    child.unversionedSetType(JSONVALTYPES.OBJECT);
+    child.unversionedSetObjectValue(new JSONObject());
     addToObject(name, child);
     return new JsonDomElement(child);
   }
 
   public void createNullField(String name) {
     JSONValue child = new JSONValue();
-    child.type = JSONValueType.NULL;
-    child.stringOrNumberValue = null;
+    child.unversionedSetType(JSONVALTYPES.NULL);
     addToObject(name, child);
   }
 
@@ -263,8 +266,8 @@ public class JsonDomElement {
       return;
     }
     JSONValue child = new JSONValue();
-    child.type = JSONValueType.STRING;
-    child.stringOrNumberValue = val;
+    child.unversionedSetType(JSONVALTYPES.STRING);
+    child.unversionedSetStringOrNumberValue(val);
     addToObject(name, child);
   }
 
@@ -274,8 +277,8 @@ public class JsonDomElement {
       return;
     }
     JSONValue child = new JSONValue();
-    child.type = JSONValueType.NUMBER;
-    child.stringOrNumberValue = val.toString();
+    child.unversionedSetType(JSONVALTYPES.NUMBER);
+    child.unversionedSetStringOrNumberValue(val.toString());
     addToObject(name, child);
   }
 
@@ -285,26 +288,29 @@ public class JsonDomElement {
       return;
     }
     JSONValue child = new JSONValue();
-    child.type = JSONValueType.NUMBER;
-    child.stringOrNumberValue = val.toString();
+    child.unversionedSetType(JSONVALTYPES.NUMBER);
+    child.unversionedSetStringOrNumberValue(val.toString());
     addToObject(name, child);
   }
 
   public void createBooleanField(String name, boolean val) {
     JSONValue child = new JSONValue();
-    child.type = JSONValueType.BOOLEAN;
-    child.booleanValue = val;
+    child.unversionedSetType(JSONVALTYPES.BOOLEAN);
+    child.unversionedSetBooleanValue(val);
     addToObject(name, child);
   }
 
   private void addToObject(String name, JSONValue child) {
-    if ((this._value == null) || (this._value.type != JSONValueType.OBJECT)) {
+    if ((this._value == null) || (JSONVALTYPES.OBJECT.equals(this._value.getType()))) {
       throw new RuntimeException("JsonDomElement does not contain a json object.");
     }
-    if (this._value.objectValue == null) {
-      this._value.objectValue = new JSONObject();
+    if (this._value.getObjectValue() == null) {
+      this._value.unversionedSetObjectValue(new JSONObject());
     }
-    this._value.objectValue.objects.put(name, child);
+    List<? extends JSONKeyValue> oldList = this._value.getObjectValue().getMembers();
+    List<JSONKeyValue> list = oldList == null ? new ArrayList<>() : new ArrayList<>(oldList);
+    list.add(new JSONKeyValue(name, child));
+    this._value.getObjectValue().unversionedSetMembers(list);
   }
 
 }

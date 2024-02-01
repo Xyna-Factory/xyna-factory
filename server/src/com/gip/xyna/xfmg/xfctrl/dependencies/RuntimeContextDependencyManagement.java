@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -95,14 +96,15 @@ import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyEnum;
 import com.gip.xyna.xmcp.xguisupport.messagebus.Publisher;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.ODSImpl.PersistenceLayerInstances;
-import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache;
+import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMPersistenceManagement.StructureCacheRegistrator;
+import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache.StorableColumnInformation;
+import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache.StorableStructureIdentifier;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache.StorableStructureInformation;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache.StorableStructureRecursionFilter;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache.StorableStructureVisitor;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache.XMOMStorableStructureInformation;
-import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xprc.exceptions.XFMG_CouldNotModifyRuntimeContextDependenciesException;
 import com.gip.xyna.xprc.exceptions.XFMG_DependencyStillUsedByApplicationDefinitionException;
 import com.gip.xyna.xprc.exceptions.XPRC_DESTINATION_NOT_FOUND;
@@ -1440,22 +1442,26 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
     if (removedRevisions.size() <= 0) {
       return;
     }
-
+    Map<Long, Set<Long>> unreachableRevs = collectRevisionsNotReachableAnyMoreDetailed(ownerRev, removedRevisions);
+    
     // for all storables from ownerRev & parentRevs
     //   check for usage of removedRevisions
     //   if found, add root object for storableStructureCache rebuild
-    
+       
+    // we also have to fix the storablestructurecache of objects that are not reachable any more: they can 
+    // contain references to the objects in ownerRev & parentRevs in the form of subtypeentries.
+ 
     Set<Long> allRevisions = getParentRevisionsRecursivly(ownerRev);
     allRevisions.add(ownerRev);
-    Collection<XMOMStorableStructureInformation> allRoots = new ArrayList<>();
+    Collection<XMOMStorableStructureInformation> allRootsToRebuild = new ArrayList<>();
     for (Long aRevision : allRevisions) {
       XMOMStorableStructureCache xssc = XMOMStorableStructureCache.getInstance(aRevision);
       Collection<XMOMStorableStructureInformation> infos = xssc.getAllStorableStructureInformation();
       for (XMOMStorableStructureInformation xssi : infos) {
-        RevisionUsingCollector ruc = new RevisionUsingCollector(removedRevisions);
-        xssi.traverse(ruc);
-        if (ruc.atLeastOneHit()) {
-          allRoots.add(xssi);
+        StructureCacheHandlerForUnreachableRevisions ruc = new StructureCacheHandlerForUnreachableRevisions(unreachableRevs);
+        xssi.traverse(ruc); //also removes obsolete subtypeentries
+        if (ruc.storableRefersToUnreachableRevisions()) {
+          allRootsToRebuild.add(xssi);
         }
       }
     }
@@ -1463,7 +1469,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
     try {
       StructureCacheRegistrator scr = new StructureCacheRegistrator();
       scr.begin();
-      for (XMOMStorableStructureInformation aRoot : allRoots) {
+      for (XMOMStorableStructureInformation aRoot : allRootsToRebuild) {
         DOM dom = DOM.generateUncachedInstance(aRoot.getFqXmlName(), true, aRoot.getDefiningRevision());
         scr.exec(dom, DeploymentMode.codeChanged);
       }
@@ -1472,23 +1478,33 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
              XPRC_MDMDeploymentException | XPRC_DeploymentHandlerException e) {
       throw new RuntimeException("Error while trying to update StorableStructureCache", e);
     }
+    
+ 
+    
   }
   
-  
-  private static class RevisionUsingCollector implements StorableStructureVisitor {
+  private static class StructureCacheHandlerForUnreachableRevisions implements StorableStructureVisitor {
     
     private boolean atLeastOneHit = false;
-    private Set<Long> relevantRevisions;
+    private final Map<Long, Set<Long>> unreachableRevisions;
     
-    
-    RevisionUsingCollector(Set<Long> relevantRevisions) {
-      this.relevantRevisions = relevantRevisions;
+    StructureCacheHandlerForUnreachableRevisions(Map<Long, Set<Long>> unreachableRevisions) {
+      this.unreachableRevisions = unreachableRevisions;
     }
 
     public void enter(StorableColumnInformation columnLink, StorableStructureInformation current) {
-      if (!atLeastOneHit && // else no need to check set
-          relevantRevisions.contains(current.getRevision())) {
+      Set<Long> unreachableFrom = unreachableRevisions.get(current.getRevision());
+      if (unreachableFrom != null) {
         atLeastOneHit = true;
+        if (current.getSubEntries() != null) {
+          Iterator<StorableStructureIdentifier> it = current.getSubEntries().iterator();
+          while (it.hasNext()) {
+            StorableStructureIdentifier subentry = it.next();
+            if (unreachableFrom.contains(subentry.getInfo().getRevision())) {
+              it.remove(); //remove subentry that is not reachable any more
+            }
+          }
+        }
       }
     }
 
@@ -1499,7 +1515,7 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
       return XMOMStorableStructureCache.ALL_RECURSIONS_AND_FULL_HIERARCHY;
     }
     
-    public boolean atLeastOneHit() {
+    public boolean storableRefersToUnreachableRevisions() {
       return atLeastOneHit;
     }
     
@@ -1544,6 +1560,58 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
     return result;
   }
 
+
+  /**
+   * returns map with entries of sets of revisions (=value) that do not reach the unreachable revision (=key) any more
+   *  
+   * example:
+   *  parentrev1 parentrev2
+   *       \        /     \
+   *           v            \
+   *        ownerRev          \
+   *       /          \         \
+   *       v           v        |
+   *  removedrev1  removedrev2  /
+   *       |             \     /
+   *       v               \  /
+   *    removed2             v
+   *                      childrev
+   *                      
+   * so in the above example the entries would look like this:
+   *  removedrev1   -> {ownerRev, parentrev1, parentrev2}
+   *  removed2      -> {ownerRev, parentrev1, parentrev2}
+   *  removedrev2   -> {ownerRev, parentrev1, parentrev2}
+   *  childrev      -> {ownerRev, parentrev1}
+   */
+  private Map<Long, Set<Long>> collectRevisionsNotReachableAnyMoreDetailed(Long parentRev, Set<Long> removedRevisions) {
+    Set<Long> unreachables = new HashSet<>(removedRevisions);
+    for (Long removed : removedRevisions) {
+      getDependenciesRecursivly(removed, unreachables); //added deps  
+    }
+    Set<Long> parentRevs = new HashSet<>();
+    getParentRevisionsRecursivly(parentRev, parentRevs);
+    parentRevs.add(parentRev);
+    Map<Long, Set<Long>> depsOfParents = new HashMap<>(); //cache to not calculate that repeatedly below
+    for (Long pr : parentRevs) {
+      Set<Long> deps = new HashSet<>();
+      getDependenciesRecursivly(pr, deps);
+      //deps.add(pr) not needed
+      depsOfParents.put(pr, deps);
+    }
+    
+    Map<Long, Set<Long>> map = new HashMap<>();
+    for (Long unreachable : unreachables) {
+      Set<Long> unreachableFrom = new HashSet<>();
+      for (Entry<Long, Set<Long>> e : depsOfParents.entrySet()) {
+        if (!e.getValue().contains(unreachable)) {
+          unreachableFrom.add(e.getKey());
+        }
+      }
+      map.put(unreachable, unreachableFrom);
+    }
+    return map;
+  }
+  
   private Map<XMOMType, Collection<String>> getAllObjects(Long rev) {
     DeploymentItemStateManagementImpl dism =
         (DeploymentItemStateManagementImpl) XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl()

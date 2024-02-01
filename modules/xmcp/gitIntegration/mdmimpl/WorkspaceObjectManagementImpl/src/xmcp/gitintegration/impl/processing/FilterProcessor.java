@@ -33,10 +33,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.utils.collections.lists.StringSerializableList;
+import com.gip.xyna.xact.XynaActivationBase;
 import com.gip.xyna.xact.XynaActivationPortal;
 import com.gip.xyna.xact.exceptions.XACT_FilterNotFound;
 import com.gip.xyna.xact.trigger.FilterInformation;
+import com.gip.xyna.xact.trigger.XynaActivationTrigger;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
@@ -46,10 +49,13 @@ import xmcp.gitintegration.CREATE;
 import xmcp.gitintegration.DELETE;
 import xmcp.gitintegration.MODIFY;
 import xmcp.gitintegration.Reference;
+import xmcp.gitintegration.ReferenceData;
+import xmcp.gitintegration.ReferenceManagement;
 import xmcp.gitintegration.Filter;
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.impl.ItemDifference;
 import xmcp.gitintegration.impl.ReferenceComparator;
+import xmcp.gitintegration.impl.ReferenceUpdater;
 import xmcp.gitintegration.impl.XynaContentDifferenceType;
 import xmcp.gitintegration.impl.references.ReferenceObjectType;
 import xmcp.gitintegration.impl.xml.ReferenceXmlConverter;
@@ -69,12 +75,21 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
 
   private static final XynaActivationPortal xynaActivationPortal = XynaFactory.getInstance().getActivationPortal();
   private static RevisionManagement revisionManagement;
+  private static XynaActivationBase xynaActivation;
   private RevisionManagement getRevisionManagement() {
     if(revisionManagement == null) {
       revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     }
     return revisionManagement;
   }
+  
+  private static XynaActivationBase getXynaActivation() {
+    if(xynaActivation == null) {
+      xynaActivation = XynaFactory.getInstance().getActivation();
+    }
+    return xynaActivation;
+  }
+
 
   @Override
   public List<WorkspaceContentDifference> compare(Collection<? extends Filter> from, Collection<? extends Filter> to) {
@@ -317,21 +332,73 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
 
   @Override
   public void create(Filter item, long revision) {
-    // TODO Auto-generated method stub
+    // create references
+    String workspaceName = ReferenceUpdater.getWorkspaceName(revision);
+    for (Reference reference : item.getReferences() != null ? item.getReferences() : new ArrayList<Reference>()) {
+      ReferenceData.Builder builder = new ReferenceData.Builder();
+      builder.objectName(item.getTriggerName()).objectType(ReferenceObjectType.FILTER.toString()).path(reference.getPath())
+      .referenceType(reference.getType()).workspaceName(workspaceName);
+      ReferenceManagement.addReference(builder.instance());
+    }
+    // create filter
+    createFilter(item, revision);
 
+  }
+
+
+  private void createFilter(Filter item, long revision) {
+    StringSerializableList<String> ssl;
+    ssl = StringSerializableList.autoSeparator(String.class, ":|/;\\@-_.+#=[]?§$%&!", ':');
+    String[] jarFiles = ssl.deserializeFromString(item.getJarfiles()).toArray(new String[] {});
+    ssl = StringSerializableList.autoSeparator(String.class, ":|/;\\@-_.+#=[]?§$%&!", ':');
+    String[] sharedLibs = ssl.deserializeFromString(item.getSharedlibs()).toArray(new String[] {});
+    if (jarFiles.length > 0 && item.getReferences() == null) {
+      throw new RuntimeException("No references found (filter: " + item.getFilterName() + ")");
+    }
+    File[] jarFilesArray = new File[jarFiles.length];
+    int idx = 0;
+    List<Reference> references = new ArrayList<>(item.getReferences());
+    for (String jarFile : jarFiles) {
+      base.File file = ReferenceManagement.findReferencedJar(references, new File(jarFile).getName(), revision);
+      jarFilesArray[idx++] = new File(file.getPath());
+    }
+    try {
+      List<File> jarFilesList = copyToSavedIfNecessary(jarFilesArray, item.getFQFilterClassName(), revision);
+      xynaActivation.getActivationTrigger().addFilter(item.getFilterName(), jarFilesList.toArray(new File[jarFilesList.size()]),
+                                                      item.getFQFilterClassName(), item.getTriggerName(), sharedLibs, null, revision);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
+  private List<File> copyToSavedIfNecessary(File[] jarFiles, String fqClassName, Long revision) throws Ex_FileAccessException {
+    String targetDirPath = XynaActivationTrigger.getFilterSavedFolderByFilterFqClassName(fqClassName, revision);
+    return XynaActivationTrigger.copyFilesToTargetFolder(targetDirPath, jarFiles);
   }
 
 
   @Override
   public void modify(Filter from, Filter to, long revision) {
-    // TODO Auto-generated method stub
-
+    createFilter(to, revision);
+    ReferenceComparator comparator = new ReferenceComparator();
+    ReferenceUpdater updater = new ReferenceUpdater();
+    List<ItemDifference<Reference>> idrList = comparator.compare(from.getReferences(), to.getReferences());
+    updater.update(idrList,revision, ReferenceObjectType.TRIGGER, from.getFQFilterClassName(), to.getFQFilterClassName());
   }
 
 
   @Override
   public void delete(Filter item, long revision) {
-    // TODO Auto-generated method stub
+    try {
+      getXynaActivation().removeFilter(item.getFilterName(), revision);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    ReferenceStorage storage = new ReferenceStorage();
+    for (Reference reference : item.getReferences() != null ? item.getReferences() : new ArrayList<Reference>()) {
+      storage.deleteReference(reference.getPath(), revision, item.getTriggerName());
+    }
 
   }
 

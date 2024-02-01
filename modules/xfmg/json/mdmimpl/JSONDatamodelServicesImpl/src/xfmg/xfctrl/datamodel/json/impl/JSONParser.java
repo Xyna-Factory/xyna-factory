@@ -22,13 +22,12 @@ package xfmg.xfctrl.datamodel.json.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.gip.xyna.utils.ByteUtils;
 
+import xfmg.xfctrl.datamodel.json.JSONKeyValue;
+import xfmg.xfctrl.datamodel.json.JSONObject;
+import xfmg.xfctrl.datamodel.json.JSONValue;
 import xfmg.xfctrl.datamodel.json.impl.JSONTokenizer.JSONToken;
 import xfmg.xfctrl.datamodel.json.impl.JSONTokenizer.JSONTokenType;
 
@@ -37,10 +36,7 @@ import xfmg.xfctrl.datamodel.json.impl.JSONTokenizer.JSONTokenType;
 public class JSONParser {
 
 
-  public static class JSONObject {
-
-    public Map<String, JSONValue> objects = new HashMap<String, JSONValue>();
-
+  public static class JSONObjectWriter {
 
     /** 
      * führende indentation wird nicht geschrieben
@@ -56,29 +52,29 @@ public class JSONParser {
      *          }
      *        }
      */
-    public String toJSON(String indentation) {
+    public static String toJSON(String indentation, JSONObject obj) {
       StringBuilder sb = new StringBuilder();
       sb.append("{");
-      if (objects.size() > 0) {
+      if (obj.getMembers().size() > 0) {
         sb.append("\n");
         String subindentation = indentation + "  ";
         int cnt = 0;
-        List<Entry<String, JSONValue>> l = new ArrayList<Map.Entry<String,JSONValue>>(objects.entrySet());
-        Collections.sort(l, new Comparator<Entry<String, JSONValue>>() {
+         List<? extends JSONKeyValue> l = new ArrayList<>(obj.getMembers());
+        Collections.sort(l, new Comparator<JSONKeyValue>() {
 
-          public int compare(Entry<String, JSONValue> o1, Entry<String, JSONValue> o2) {
+          public int compare(JSONKeyValue o1, JSONKeyValue o2) {
             return o1.getKey().compareTo(o2.getKey());
           }
           
         });
-        for (Entry<String, JSONValue> e : l) {
+        for (JSONKeyValue e : l) {
           sb.append(subindentation);
           sb.append("\"");
           sb.append(encodeString(e.getKey()));
           sb.append("\"");
           sb.append(" : ");
-          sb.append(e.getValue().toJSON(subindentation));
-          if (objects.size() > ++cnt) {
+          sb.append(JSONValueWriter.toJSON(subindentation, e.getValue()));
+          if (obj.getMembers().size() > ++cnt) {
             sb.append(",");
           }
           sb.append("\n");
@@ -94,8 +90,17 @@ public class JSONParser {
   public enum JSONValueType {
     STRING, NUMBER, OBJECT, ARRAY, BOOLEAN, NULL;
   }
+  
+  public static class JSONVALTYPES {
+    public static final String STRING = "STRING";
+    public static final String NUMBER = "NUMBER";
+    public static final String OBJECT = "OBJECT";
+    public static final String ARRAY = "ARRAY";
+    public static final String BOOLEAN = "BOOLEAN";
+    public static final String NULL = "NULL";
+  }
 
-  public static class JSONValue {
+  public static class JSONValueWriter {
 
     public JSONValueType type;
     public String stringOrNumberValue;
@@ -111,19 +116,19 @@ public class JSONParser {
      *               val2
      *             ] 
      */
-    public String toJSON(String indentation) {
+    public static String toJSON(String indentation, JSONValue value) {
       StringBuilder sb = new StringBuilder();
-      switch (type) {
-        case ARRAY :
+      switch (value.getType()) {
+        case JSONVALTYPES.ARRAY :
           sb.append("[");
-          if (arrayValue.size() > 0) {
+          if (value.getArrayValue().size() > 0) {
             sb.append("\n");
             String subindentation = indentation + "  ";
             int cnt = 0;
-            for (JSONValue v : arrayValue) {
+            for (JSONValue v : value.getArrayValue()) {
               sb.append(subindentation);
-              sb.append(v.toJSON(subindentation));
-              if (arrayValue.size() > ++cnt) {
+              sb.append(toJSON(subindentation, v));
+              if (value.getArrayValue().size() > ++cnt) {
                 sb.append(",");
               }
               sb.append("\n");
@@ -132,22 +137,22 @@ public class JSONParser {
           }
           sb.append("]");
           break;
-        case BOOLEAN :
-          sb.append(booleanValue);
+        case JSONVALTYPES.BOOLEAN :
+          sb.append(value.getBooleanValue());
           break;
-        case NULL :
+        case JSONVALTYPES.NULL :
           sb.append("null");
           break;
-        case NUMBER :
-          sb.append(stringOrNumberValue);
+        case JSONVALTYPES.NUMBER :
+          sb.append(value.getStringOrNumberValue());
           break;
-        case STRING :
+        case JSONVALTYPES.STRING :
           sb.append("\"");
-          sb.append(encodeString(stringOrNumberValue));
+          sb.append(encodeString(value.getStringOrNumberValue()));
           sb.append("\"");
           break;
-        case OBJECT :
-          sb.append(objectValue.toJSON(indentation + "  "));
+        case JSONVALTYPES.OBJECT :
+          sb.append(JSONObjectWriter.toJSON(indentation + "  ", value.getObjectValue()));
           break;
 
       }
@@ -180,6 +185,7 @@ public class JSONParser {
         throw new InvalidJSONException(tokens.get(pos).start, "Expected the start of a new object ('{').");
       }
     }
+    List<JSONKeyValue> memberList = new ArrayList<>();
     while (true) {
       //lese nächstes key-value paar
       pos++;
@@ -202,6 +208,7 @@ public class JSONParser {
         }
       }
       if (next.type == JSONTokenType.curleyBraceClose) {
+        job.unversionedSetMembers(memberList);
         return pos;
       }
       if (validate) {
@@ -240,7 +247,7 @@ public class JSONParser {
         throw new InvalidJSONException(next.start, "Missing value.");
       }
       JSONValue value = new JSONValue();
-      job.objects.put(key, value);
+      memberList.add(new JSONKeyValue(key, value));
       pos = fillValue(tokens, pos, value);
     }
   }
@@ -252,33 +259,33 @@ public class JSONParser {
       case curleyBraceOpen :
         JSONObject o = new JSONObject();
         pos = fillObject(tokens, pos, o);
-        value.objectValue = o;
-        value.type = JSONValueType.OBJECT;
+        value.unversionedSetObjectValue(o);
+        value.unversionedSetType(JSONVALTYPES.OBJECT);
         break;
       case jsonfalse :
-        value.booleanValue = false;
-        value.type = JSONValueType.BOOLEAN;
+        value.unversionedSetBooleanValue(false);
+        value.unversionedSetType(JSONVALTYPES.BOOLEAN);
         break;
       case jsontrue :
-        value.booleanValue = true;
-        value.type = JSONValueType.BOOLEAN;
+        value.unversionedSetBooleanValue(true);
+        value.unversionedSetType(JSONVALTYPES.BOOLEAN);
         break;
       case jsonnull :
-        value.type = JSONValueType.NULL;
+        value.unversionedSetType(JSONVALTYPES.NULL);
         break;
       case text :
-        value.type = JSONValueType.STRING;
-        value.stringOrNumberValue = getValueAsString(next);
+        value.unversionedSetType(JSONVALTYPES.STRING);
+        value.unversionedSetStringOrNumberValue(getValueAsString(next));
         break;
       case squareBraceOpen :
-        value.type = JSONValueType.ARRAY;
+        value.unversionedSetType(JSONVALTYPES.ARRAY);
         List<JSONValue> arr = new ArrayList<JSONValue>();
         pos = fillArray(tokens, pos, arr);
-        value.arrayValue = arr;
+        value.unversionedSetArrayValue(arr);
         break;
       case number :
-        value.type = JSONValueType.NUMBER;
-        value.stringOrNumberValue = getNumberValueAsString(next);
+        value.unversionedSetType(JSONVALTYPES.NUMBER);
+        value.unversionedSetStringOrNumberValue(getNumberValueAsString(next));
         break;
       default :
         throw new InvalidJSONException(next.start, "Expected the start of a JSON value.");

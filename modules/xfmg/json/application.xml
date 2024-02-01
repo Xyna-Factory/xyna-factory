@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="Json" comment="" factoryVersion="" versionName="1.2.0" xmlVersion="1.1">
+<Application applicationName="Json" comment="" factoryVersion="" versionName="1.2.2" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -52,6 +52,22 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
       <FqName>xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.datamodel.json.JSONKeyValue</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.datamodel.json.JSONObject</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.datamodel.json.JSONValue</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xfctrl.datamodel.json.parameter.XynaObjectDecider</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
   </XMOMEntries>

@@ -21,7 +21,7 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Processing</ApplicationName>
-        <VersionName>1.0.17</VersionName>
+        <VersionName>1.0.18</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
@@ -189,6 +189,10 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
         <FqName>xmcp.forms.datatypes.TreePanelDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.UploadButtonDefinition</FqName>
         <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">

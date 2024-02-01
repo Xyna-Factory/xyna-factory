@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,6 +100,7 @@ import com.gip.xyna.xact.filter.session.repair.XMOMRepair;
 import com.gip.xyna.xact.filter.session.save.Persistence;
 import com.gip.xyna.xact.filter.session.workflowissues.WorkflowIssuesRequestProcessor;
 import com.gip.xyna.xact.filter.session.workflowwarnings.DefaultWorkflowWarningsHandler;
+import com.gip.xyna.xact.filter.session.workflowwarnings.ReferenceInvalidatedNotification;
 import com.gip.xyna.xact.filter.session.workflowwarnings.WorkflowWarningsHandler;
 import com.gip.xyna.xact.filter.util.ReadonlyUtil;
 import com.gip.xyna.xact.filter.xmom.session.json.GboJson;
@@ -178,6 +179,7 @@ import xmcp.processmodeller.datatypes.response.FactoryItem;
 import xmcp.processmodeller.datatypes.response.GetClipboardResponse;
 import xmcp.processmodeller.datatypes.response.GetDataflowResponse;
 import xmcp.processmodeller.datatypes.response.GetIssuesResponse;
+import xmcp.processmodeller.datatypes.response.GetModelledExpressionsResponse;
 import xmcp.processmodeller.datatypes.response.GetObjectXMLResponse;
 import xmcp.processmodeller.datatypes.response.GetOrderInputSourcesResponse;
 import xmcp.processmodeller.datatypes.response.GetRelationsResponse;
@@ -288,8 +290,6 @@ public class SessionBasedData {
             break;
           }
         }
-
-        terminateOrphanCleaner = false;
       }
     };
 
@@ -391,6 +391,8 @@ public class SessionBasedData {
         return copyXml(request);
       case Warnings:
          return getWarnings(request);
+      case ModelledExpressions:
+        return getModelledExpressions(request);
       default:
         if( request.getOperation().isModification() ) {
           return objectModification(request);
@@ -413,6 +415,16 @@ public class SessionBasedData {
     }
   }
 
+
+  private XMOMGuiReply getModelledExpressions(XMOMGuiRequest request) {
+    FQName fqn = request.getFQName();
+    GenerationBaseObject gbo = gbos.get(fqn);
+    XMOMGuiReply reply = new XMOMGuiReply();
+    ModelledExpressionConverter converter = new ModelledExpressionConverter();
+    GetModelledExpressionsResponse response = converter.convert(gbo, request.getObjectId());
+    reply.setXynaObject(response);
+    return reply;
+  }
 
   private XMOMGuiReply getWarnings(XMOMGuiRequest request) {
     FQName fqn = request.getFQName();
@@ -1194,6 +1206,11 @@ public class SessionBasedData {
 
     if (view.getGenerationBaseObject().getType() == XMOMType.WORKFLOW) {
       view.getGenerationBaseObject().createDataflow(getOrCreateWFWarningsHandler(view.getGenerationBaseObject().getFQName()));
+
+      FQName fqName = request.getFQName();
+      ObjectId objectId = new ObjectId(ObjectType.workflow, null);
+      ReferenceInvalidatedNotification notification = new ReferenceInvalidatedNotification(fqName, view.getGenerationBaseObject().getWorkflow());
+      getWFWarningsHandler(fqName).handleChange(objectId, notification);
     }
 
     reply.setXynaObject(view.viewAll(request));

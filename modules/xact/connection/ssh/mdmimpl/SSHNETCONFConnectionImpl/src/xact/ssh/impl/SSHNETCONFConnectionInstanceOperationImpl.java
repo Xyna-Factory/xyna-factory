@@ -40,6 +40,7 @@ import xact.connection.DeviceType;
 import xact.connection.ManagedConnection;
 import xact.connection.ReadTimeout;
 import xact.connection.SendParameter;
+import xact.ssh.SSHMessagePayload;
 import xact.ssh.SSHNETCONFConnection;
 import xact.ssh.SSHNETCONFConnectionInstanceOperation;
 import xact.ssh.SSHNETCONFConnectionSuperProxy;
@@ -164,11 +165,20 @@ public class SSHNETCONFConnectionInstanceOperationImpl extends SSHNETCONFConnect
     s.defaultReadObject();
   }
 
-
+  @Override
   protected ProtocolMessage createPartialProtocolMessage(String content) {
-    return null;
+    ProtocolMessage msg = new ProtocolMessage();
+    msg.setPayload(new SSHMessagePayload(content));
+    msg.setProtocolAdapterName("SSHNETCONFConnection");
+    msg.setProtocolName("NETCONF");
+    return msg;
   }
 
+  @Override
+  protected void write(byte[] bytes) throws IOException {
+      getOutputStream().write(bytes);
+      getOutputStream().flush();
+  }
 
   @Override
   public List<? extends Capability> getAllCapabilities() {

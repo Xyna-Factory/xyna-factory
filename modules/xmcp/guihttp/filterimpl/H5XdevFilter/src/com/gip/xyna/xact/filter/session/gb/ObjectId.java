@@ -287,6 +287,11 @@ public class ObjectId {
       return new ObjectId(ObjectType.warning, baseId);
     }
 
+    if (ObjectIdPrefix.reference.match(id)) {
+      String baseId = ObjectIdPrefix.reference.getBaseId(id);
+      return new ObjectId(ObjectType.reference, baseId);
+    }
+
     throw new UnknownObjectIdException(objectId);
   }
 
@@ -304,6 +309,10 @@ public class ObjectId {
 
   public static ObjectId createWarningId(int uniqueId) {
     return new ObjectId(ObjectType.warning, "" + uniqueId);
+  }
+  
+  public static ObjectId createReferenceId(String reference) {
+    return new ObjectId(ObjectType.reference, reference);
   }
 
   public static ObjectId createStepId(Step step, ObjectPart part) {
@@ -897,6 +906,14 @@ public class ObjectId {
       public String getBaseId(String id) {
         return id.substring(prefix.length());
       }
+    },
+    reference("reference"){
+      public boolean match(String objectId) {
+        return objectId.startsWith(prefix);
+      }
+      public String getBaseId(String id) {
+        return id.substring(prefix.length());
+      }
     }
     ;
 
@@ -998,6 +1015,8 @@ public class ObjectId {
         return clipboardEntry;
       case warning:
         return warning;
+      case reference:
+        return reference;
       default:
         return null;
       }

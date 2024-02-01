@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -67,15 +68,19 @@ import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 import xact.templates.Document;
 import xact.templates.JSON;
 import xfmg.xfctrl.datamodel.json.JSONDatamodelServicesServiceOperation;
-import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONObject;
-import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONValue;
-import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONValueType;
+import xfmg.xfctrl.datamodel.json.JSONKeyValue;
+import xfmg.xfctrl.datamodel.json.JSONObject;
+import xfmg.xfctrl.datamodel.json.JSONValue;
+import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONObjectWriter;
+import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONVALTYPES;
+import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONValueWriter;
 import xfmg.xfctrl.datamodel.json.impl.JSONTokenizer.JSONToken;
 import xfmg.xfctrl.datamodel.json.impl.JSONTokenizer.JSONTokenType;
 import xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions;
 import xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions;
 import xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation;
 import xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution;
+import xfmg.xfctrl.datamodel.json.parameter.XynaObjectDecider;
 
 
 
@@ -116,9 +121,9 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     return null;
   }
 
-  
+  @Override
   public GeneralXynaObject parseObjectFromJSON(Document document, GeneralXynaObject jSONBaseModel) {
-    return parseObjectFromJSON(document, jSONBaseModel, Collections.<ListToMapTransformation>emptyList(), Collections.<MemberSubstitution>emptyList(),false);
+    return parseObjectFromJSON(document, jSONBaseModel, Collections.<ListToMapTransformation>emptyList(), Collections.<MemberSubstitution>emptyList(),false, null);
   }
 
   @Override
@@ -133,16 +138,16 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
   @Override
   public Document encodeValue(Document doc) {
     JSONValue value = new JSONValue();
-    value.stringOrNumberValue = doc.getText();
-    value.type = JSONValueType.STRING;
-    String jsonString = value.toJSON("");
+    value.unversionedSetStringOrNumberValue(doc.getText());
+    value.unversionedSetType(JSONVALTYPES.STRING);
+    String jsonString = JSONValueWriter.toJSON("", value);
     return new Document(doc.getDocumentType(), jsonString.substring(1, jsonString.length() - 1));
   }
 
   
-  public GeneralXynaObject parseObjectFromJSON(Document document, GeneralXynaObject jSONBaseModel, List<? extends ListToMapTransformation> transformations, List<? extends MemberSubstitution> substitutions, boolean useLabels) {
+  public GeneralXynaObject parseObjectFromJSON(Document document, GeneralXynaObject jSONBaseModel, List<? extends ListToMapTransformation> transformations, List<? extends MemberSubstitution> substitutions, boolean useLabels, XynaObjectDecider decider) {
     String json = document.getText();
-    if (json == null) {
+    if (json == null || json.isBlank()) {
       return null;
     }
     JSONTokenizer jt = new JSONTokenizer();
@@ -151,7 +156,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     JSONObject job = new JSONObject();
     jp.fillObject(tokens, 0, job);
 
-    fillXynaObject(jSONBaseModel, job, transformations, substitutions, useLabels);
+    fillXynaObject(jSONBaseModel, job, transformations, substitutions, useLabels, decider);
     return jSONBaseModel;
   }
 
@@ -164,7 +169,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
    * - parametrisierbarkeit dieser konfigurationsmöglichkeiten 
    */
   //TODO reflection cachen
-  public void fillXynaObject(GeneralXynaObject xo, JSONObject job, List<? extends ListToMapTransformation> transformations, List<? extends MemberSubstitution> substitutions, boolean useLabels) {
+  public void fillXynaObject(GeneralXynaObject xo, JSONObject job, List<? extends ListToMapTransformation> transformations, List<? extends MemberSubstitution> substitutions, boolean useLabels, XynaObjectDecider decider) {
     Map<String, String> mapTransformations = new HashMap<String, String>();
     if (transformations != null) {
       for (ListToMapTransformation listToMapTransformation : transformations) {
@@ -177,15 +182,16 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
         mapSubstitutions.put(memberSubstitution.getJsonName(), memberSubstitution.getPathToMemberInDataType());
       }
     }
-    fillXynaObjectRecursivly(xo, job, "", mapTransformations, mapSubstitutions, useLabels);
+    fillXynaObjectRecursivly(xo, job, "", mapTransformations, mapSubstitutions, useLabels, decider);
   }
   
-  public void fillXynaObjectRecursivly(GeneralXynaObject xo, JSONObject job, String currentPath, Map<String, String> transformations, Map<String, String> substitutions, boolean useLabels) {
+  @SuppressWarnings("unchecked")
+  public void fillXynaObjectRecursivly(GeneralXynaObject xo, JSONObject job, String currentPath, Map<String, String> transformations, Map<String, String> substitutions, boolean useLabels, XynaObjectDecider decider) {
     if (xo == null) {
       return;
     }
     Map<String,String> varNamesOfXynaObject = getVarNames(xo, useLabels);
-    for (Entry<String, JSONValue> e : job.objects.entrySet()) {
+    for (JSONKeyValue e : job.getMembers()) {
       String varName = e.getKey();
       JSONValue value = e.getValue();
 
@@ -220,7 +226,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
       Class<?> typeOfField = null;
       Type genericType = null;
       boolean searchingClass = true;
-      Class currentClass = xo.getClass();
+      Class<?> currentClass = xo.getClass();
       while (searchingClass) {
         try {
           Field f = currentClass.getDeclaredField(varNameInXyna);
@@ -235,7 +241,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
             searchingClass = false;
           } else {
             searchingClass = true;
-          }          
+          }
         }
       }
       if ((typeOfField == null) || (genericType == null)) {
@@ -246,41 +252,41 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
       String newPath = currentPath.isEmpty() ? varNameInXyna : (currentPath + "." + varNameInXyna);
 
       try {
-        switch (value.type) {
-          case BOOLEAN :
+        switch (value.getType()) {
+          case JSONVALTYPES.BOOLEAN :
             if (typeOfField == boolean.class || typeOfField == Boolean.class) {
-              xo.set(varNameInXyna, value.booleanValue);
+              xo.set(varNameInXyna, value.getBooleanValue());
             } else if (typeOfField == String.class) {
-              xo.set(varNameInXyna, String.valueOf(value.booleanValue));
+              xo.set(varNameInXyna, String.valueOf(value.getBooleanValue()));
             } else {
               logger.debug("parameter " + varName + " has type " + typeOfField + " in " + xo + ", but is of type boolean in JSON.");
             }
             break;
-          case NULL :
+          case JSONVALTYPES.NULL :
             if (typeOfField.isPrimitive()) {
               logger.debug("parameter " + varName + " is of primitive type (" + typeOfField + "), but null in JSON");
             } else {
               xo.set(varNameInXyna, null);
             }
             break;
-          case STRING :
+          case JSONVALTYPES.STRING :
             if (typeOfField == Boolean.class || typeOfField == boolean.class) {
-              if (value.stringOrNumberValue.equalsIgnoreCase("true")) {
+              if (value.getStringOrNumberValue().equalsIgnoreCase("true")) {
                 xo.set(varNameInXyna, true);
-              } else if (value.stringOrNumberValue.equalsIgnoreCase("false")) {
+              } else if (value.getStringOrNumberValue().equalsIgnoreCase("false")) {
                 xo.set(varNameInXyna, false);
               } else {
                 logger.debug("parameter " + varName + " can not be converted to field of type " + typeOfField + " in " + xo);
                 continue;
               }
             }
-          case NUMBER :
+          case JSONVALTYPES.NUMBER :
             if (typeOfField == String.class) {
-              xo.set(varNameInXyna, value.stringOrNumberValue);
+              xo.set(varNameInXyna, value.getStringOrNumberValue());
             } else if (Number.class.isAssignableFrom(typeOfField) || typeOfField.isPrimitive()) {
               double d;
               try {
-                d = Double.parseDouble(value.stringOrNumberValue);
+                d = Double.parseDouble(value.getStringOrNumberValue());
               } catch (NumberFormatException e1) {
                 logger.debug("parameter " + varName + " can not be converted to field of type " + typeOfField + " in " + xo);
                 continue;
@@ -300,7 +306,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
               logger.debug("parameter " + varName + " is of type " + typeOfField + " in " + xo + ", but of type number in JSON");
             }
             break;
-          case ARRAY :
+          case JSONVALTYPES.ARRAY :
             //TODO support für vorinstanziierte listenelemente
             if (typeOfField == List.class) {
               if (genericType instanceof ParameterizedType) {
@@ -309,16 +315,16 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
                 if (genType instanceof Class) {
                   Class<?> genTypeClass = (Class<?>) genType;
                   if (XynaObject.class.isAssignableFrom(genTypeClass)) {
-                    List<?> l = createList((Class<? extends XynaObject>) genTypeClass, value.arrayValue, newPath, transformations, substitutions, useLabels);
+                    List<?> l = createList((Class<? extends XynaObject>) genTypeClass, value.getArrayValue(), newPath, transformations, substitutions, useLabels, decider);
                     xo.set(varNameInXyna, l);
                   } else if (genTypeClass == String.class) {
                     List<String> l = new ArrayList<String>();
-                    for (JSONValue jv : value.arrayValue) {
-                      if (jv.type == JSONValueType.STRING || jv.type == JSONValueType.NUMBER) {
-                        l.add(jv.stringOrNumberValue);
-                      } else if (jv.type == JSONValueType.BOOLEAN) {
-                        l.add(String.valueOf(jv.booleanValue));
-                      } else if (jv.type == JSONValueType.NULL) {
+                    for (JSONValue jv : value.getArrayValue()) {
+                      if (JSONVALTYPES.STRING.equals(jv.getType()) || JSONVALTYPES.NUMBER.equals(jv.getType())) {
+                        l.add(jv.getStringOrNumberValue());
+                      } else if (JSONVALTYPES.BOOLEAN.equals(jv.getType())) {
+                        l.add(String.valueOf(jv.getBooleanValue()));
+                      } else if (JSONVALTYPES.NULL.equals(jv.getType())) {
                         l.add(null);
                       } else {
                         logger.debug("array element " + jv + " is not of string-compatible type, but parameter " + varName
@@ -328,12 +334,12 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
                     xo.set(varNameInXyna, l);
                   } else if (genTypeClass == Boolean.class) {
                     List<Boolean> l = new ArrayList<Boolean>();
-                    for (JSONValue jv : value.arrayValue) {
-                      if (jv.type == JSONValueType.STRING) {
-                        l.add(Boolean.valueOf(jv.stringOrNumberValue));
-                      } else if (jv.type == JSONValueType.BOOLEAN) {
-                        l.add(jv.booleanValue);
-                      } else if (jv.type == JSONValueType.NULL) {
+                    for (JSONValue jv : value.getArrayValue()) {
+                      if (JSONVALTYPES.STRING.equals(jv.getType())) {
+                        l.add(Boolean.valueOf(jv.getStringOrNumberValue()));
+                      } else if (JSONVALTYPES.BOOLEAN.equals(jv.getType())) {
+                        l.add(jv.getBooleanValue());
+                      } else if (JSONVALTYPES.NULL.equals(jv.getType())) {
                         l.add(null);
                       } else {
                         logger.debug("array element " + jv + " is not of boolean-compatible type, but parameter " + varName
@@ -343,15 +349,15 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
                     xo.set(varNameInXyna, l);
                   } else if (genTypeClass == Integer.class) {
                     List<Integer> l = new ArrayList<Integer>();
-                    for (JSONValue jv : value.arrayValue) {
-                      if (jv.type == JSONValueType.STRING || jv.type == JSONValueType.NUMBER) {
+                    for (JSONValue jv : value.getArrayValue()) {
+                      if (JSONVALTYPES.STRING.equals(jv.getType()) || JSONVALTYPES.NUMBER.equals(jv.getType())) {
                         try {
-                          l.add(Integer.valueOf(jv.stringOrNumberValue));
+                          l.add(Integer.valueOf(jv.getStringOrNumberValue()));
                         } catch (NumberFormatException ex) {
-                          logger.warn("Skipped array element " + jv.stringOrNumberValue + ", because it is not a " + genTypeClass
+                          logger.warn("Skipped array element " + jv.getStringOrNumberValue() + ", because it is not a " + genTypeClass
                               + ", that is expected for parameter " + varNameInXyna + " in " + xo);
                         }
-                      } else if (jv.type == JSONValueType.NULL) {
+                      } else if (JSONVALTYPES.NULL.equals(jv.getType())) {
                         l.add(null);
                       } else {
                         logger.debug("array element " + jv + " is not of number-compatible type, but parameter " + varName
@@ -361,15 +367,15 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
                     xo.set(varNameInXyna, l);
                   } else if (genTypeClass == Long.class) {
                     List<Long> l = new ArrayList<Long>();
-                    for (JSONValue jv : value.arrayValue) {
-                      if (jv.type == JSONValueType.STRING || jv.type == JSONValueType.NUMBER) {
+                    for (JSONValue jv : value.getArrayValue()) {
+                      if (JSONVALTYPES.STRING.equals(jv.getType()) || JSONVALTYPES.NUMBER.equals(jv.getType())) {
                         try {
-                          l.add(Long.valueOf(jv.stringOrNumberValue));
+                          l.add(Long.valueOf(jv.getStringOrNumberValue()));
                         } catch (NumberFormatException ex) {
-                          logger.warn("Skipped array element " + jv.stringOrNumberValue + ", because it is not a " + genTypeClass
+                          logger.warn("Skipped array element " + jv.getStringOrNumberValue() + ", because it is not a " + genTypeClass
                               + ", that is expected for parameter " + varNameInXyna + " in " + xo);
                         }
-                      } else if (jv.type == JSONValueType.NULL) {
+                      } else if (JSONVALTYPES.NULL.equals(jv.getType())) {
                         l.add(null);
                       } else {
                         logger.debug("array element " + jv + " is not of number-compatible type, but parameter " + varName
@@ -379,15 +385,15 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
                     xo.set(varNameInXyna, l);
                   } else if (genTypeClass == Double.class) {
                     List<Double> l = new ArrayList<Double>();
-                    for (JSONValue jv : value.arrayValue) {
-                      if (jv.type == JSONValueType.STRING || jv.type == JSONValueType.NUMBER) {
+                    for (JSONValue jv : value.getArrayValue()) {
+                      if (JSONVALTYPES.STRING.equals(jv.getType()) || JSONVALTYPES.NUMBER.equals(jv.getType())) {
                         try {
-                          l.add(Double.valueOf(jv.stringOrNumberValue));
+                          l.add(Double.valueOf(jv.getStringOrNumberValue()));
                         } catch (NumberFormatException ex) {
-                          logger.warn("Skipped array element " + jv.stringOrNumberValue + ", because it is not a " + genTypeClass
+                          logger.warn("Skipped array element " + jv.getStringOrNumberValue() + ", because it is not a " + genTypeClass
                               + ", that is expected for parameter " + varNameInXyna + " in " + xo);
                         }
-                      } else if (jv.type == JSONValueType.NULL) {
+                      } else if (JSONVALTYPES.NULL.equals(jv.getType())) {
                         l.add(null);
                       } else {
                         logger.debug("array element " + jv + " is not of number-compatible type, but parameter " + varName
@@ -397,15 +403,15 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
                     xo.set(varNameInXyna, l);
                   } else if (genTypeClass == Float.class) {
                     List<Float> l = new ArrayList<Float>();
-                    for (JSONValue jv : value.arrayValue) {
-                      if (jv.type == JSONValueType.STRING || jv.type == JSONValueType.NUMBER) {
+                    for (JSONValue jv : value.getArrayValue()) {
+                      if (JSONVALTYPES.STRING.equals(jv.getType()) || JSONVALTYPES.NUMBER.equals(jv.getType())) {
                         try {
-                          l.add(Float.valueOf(jv.stringOrNumberValue));
+                          l.add(Float.valueOf(jv.getStringOrNumberValue()));
                         } catch (NumberFormatException ex) {
-                          logger.warn("Skipped array element " + jv.stringOrNumberValue + ", because it is not a " + genTypeClass
+                          logger.warn("Skipped array element " + jv.getStringOrNumberValue() + ", because it is not a " + genTypeClass
                               + ", that is expected for parameter " + varNameInXyna + " in " + xo);
                         }
-                      } else if (jv.type == JSONValueType.NULL) {
+                      } else if (JSONVALTYPES.NULL.equals(jv.getType())) {
                         l.add(null);
                       } else {
                         logger.debug("array element " + jv + " is not of number-compatible type, but parameter " + varName
@@ -426,7 +432,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
               logger.debug("parameter " + varName + " is of type " + typeOfField + " in " + xo + ", but of type array in JSON");
             }
             break;
-          case OBJECT :
+          case JSONVALTYPES.OBJECT :
             Object o;
             try {
               o = xo.get(varNameInXyna);
@@ -442,8 +448,8 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
                 Class<?> genTypeClass = (Class<?>) genType;
                 if (XynaObject.class.isAssignableFrom(genTypeClass)) {
                   List<JSONValue> list = new ArrayList<JSONValue>();
-                  list.addAll(value.objectValue.objects.values());
-                  List<?> l = createList((Class<? extends XynaObject>) genTypeClass, list, newPath, transformations, substitutions, useLabels);
+                  list.addAll(value.getObjectValue().getMembers().stream().map(x -> x.getValue()).collect(Collectors.toList()));
+                  List<?> l = createList((Class<? extends XynaObject>) genTypeClass, list, newPath, transformations, substitutions, useLabels, decider);
                   xo.set(varNameInXyna, l);
                 } else {
                   throw new RuntimeException("unexpected xynaobject type " + genTypeClass + " of parameter " + varName + " in " + xo);
@@ -456,32 +462,18 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
                 if (Modifier.isAbstract(typeOfField.getModifiers())) {
                   throw new RuntimeException("Can not instantiate abstract member type " + typeOfField + " for member " + varNameInXyna + ".");
                 }
-                try {
-                  o = typeOfField.getConstructor().newInstance();
-                  xo.set(varNameInXyna, o);
-                } catch (InstantiationException e1) {
-                  throw new RuntimeException("Could not instantiate " + typeOfField.getName(), e1);
-                } catch (IllegalAccessException e1) {
-                  throw new RuntimeException(e1);
-                } catch (IllegalArgumentException e1) {
-                  throw new RuntimeException(e1);
-                } catch (InvocationTargetException e1) {
-                  throw new RuntimeException(e1);
-                } catch (SecurityException e1) {
-                  throw new RuntimeException(e1);
-                } catch (NoSuchMethodException e1) {
-                  throw new RuntimeException(e1);
-                }
+                o = createXynaObject((Class<GeneralXynaObject>) typeOfField, job, decider);
+                xo.set(varNameInXyna, o);
               }
               if (o instanceof XynaObject) {
-                fillXynaObjectRecursivly((XynaObject) o, value.objectValue, newPath, transformations, substitutions, useLabels);
+                fillXynaObjectRecursivly((XynaObject) o, value.getObjectValue(), newPath, transformations, substitutions, useLabels, decider);
               } else {
                 logger.debug("skipping member " + varName + " in " + xo + ", because it is not of complex type");
               }
             }
             break;
           default :
-            throw new RuntimeException("unexpected type : " + value.type);
+            throw new RuntimeException("unexpected type : " + value.getType());
         }
       } catch (XDEV_PARAMETER_NAME_NOT_FOUND ex) {
         logger.debug("parameter " + varName + " not found in " + xo);
@@ -490,8 +482,27 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     }
   }
 
+  
+  @SuppressWarnings("unchecked")
+  private <A extends GeneralXynaObject> A createXynaObject(Class<A> genTypeClass, JSONObject obj, XynaObjectDecider decider) {
+    try {
+      return decider == null ? genTypeClass.getConstructor().newInstance() : (A) decider.decide(genTypeClass.getCanonicalName(), obj);
+    } catch (InstantiationException e1) {
+      throw new RuntimeException("Could not instantiate " + genTypeClass.getName(), e1);
+    } catch (IllegalAccessException e1) {
+      throw new RuntimeException(e1);
+    } catch (IllegalArgumentException e1) {
+      throw new RuntimeException(e1);
+    } catch (InvocationTargetException e1) {
+      throw new RuntimeException(e1);
+    } catch (SecurityException e1) {
+      throw new RuntimeException(e1);
+    } catch (NoSuchMethodException e1) {
+      throw new RuntimeException(e1);
+    }
+  }
 
-  private <A extends GeneralXynaObject> List<A> createList(Class<A> genTypeClass, List<JSONValue> array, String currentPath, Map<String, String> mapTransformations, Map<String, String> substitutions, boolean useLabels) {
+  private <A extends GeneralXynaObject> List<A> createList(Class<A> genTypeClass, List<? extends JSONValue> array, String currentPath, Map<String, String> mapTransformations, Map<String, String> substitutions, boolean useLabels, XynaObjectDecider decider) {
     if (Modifier.isAbstract(genTypeClass.getModifiers())) {
       throw new RuntimeException("Can not instantiate list elements of abstract type " + genTypeClass + ".");
     }
@@ -500,14 +511,14 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     String newPath = currentPath.isEmpty() ? currentPath : currentPath+"[]";
     
     for (JSONValue jv : array) {
-      if (jv.type == JSONValueType.OBJECT) {
+      if (JSONVALTYPES.OBJECT.equals(jv.getType())) {
         A listElement;
         try {
           listElement = (A) genTypeClass.getConstructor().newInstance();
         } catch (Exception ex) {
           throw new RuntimeException(ex);
         }
-        fillXynaObjectRecursivly(listElement, jv.objectValue, newPath, mapTransformations, substitutions, useLabels);
+        fillXynaObjectRecursivly(listElement, jv.getObjectValue(), newPath, mapTransformations, substitutions, useLabels, decider);
         l.add(listElement);
       } else {
         logger.debug("array element " + jv + " is not of object type");
@@ -517,6 +528,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
   }
   
   
+  @SuppressWarnings("unchecked")
   private HashMap<String,String> getVarNames(GeneralXynaObject xo, boolean useLabels) {
     try {
       Method methodGetVarNames = xo.getClass().getMethod("getVariableNames");
@@ -546,7 +558,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     d.setDocumentType(new JSON());
     JSONObject job = createFromXynaObject(jSONBaseModel, transformations, substitutions, useLabels, scope);
     if (job != null) {
-      d.setText(job.toJSON(""));
+      d.setText(JSONObjectWriter.toJSON("", job));
     } else {
       d.setText("");
     }
@@ -577,7 +589,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     return createFromXynaObjectRecursivly(xo, "", mapTransformations, mapSubstitutions, useLabels, scope);
   }
   
-  private enum OASScope {
+  public enum OASScope {
     request, response, none;
     
     public static OASScope valueOfOrNone(String val) {
@@ -593,6 +605,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
       return null;
     }
     JSONObject job = new JSONObject();
+    List<JSONKeyValue> members = new ArrayList<JSONKeyValue>();
     HashMap<String,String> varNamesOfXynaObject = getVarNames(xo, useLabels);
     for (String varNameInXyna : varNamesOfXynaObject.keySet()) {
       switch (scope) {
@@ -619,73 +632,78 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
         JSONValue value = new JSONValue();
         if (val == null) {
           if (includeNulls.get()) {
-            value.type = JSONValueType.NULL;
+            value.unversionedSetType(JSONVALTYPES.NULL);
           } else {
             continue;
           }
         } else if (val instanceof XynaObject) {
-          value.type = JSONValueType.OBJECT;
-          value.objectValue = createFromXynaObjectRecursivly((XynaObject) val, newPath, transformations, substitutions, useLabels, scope);
+          value.unversionedSetType(JSONVALTYPES.OBJECT);
+          JSONObject obj = createFromXynaObjectRecursivly((XynaObject) val, newPath, transformations, substitutions, useLabels, scope);
+          value.unversionedSetObjectValue(obj);
         } else if (val instanceof String) {
-          value.type = JSONValueType.STRING;
-          value.stringOrNumberValue = (String) val;
+          value.unversionedSetType(JSONVALTYPES.STRING);
+          value.unversionedSetStringOrNumberValue((String) val);
         } else if (val instanceof Boolean) {
-          value.type = JSONValueType.BOOLEAN;
-          value.booleanValue = (Boolean) val;
+          value.unversionedSetType(JSONVALTYPES.BOOLEAN);
+          value.unversionedSetBooleanValue((Boolean) val);
         } else if (val instanceof List) {
           if (transformations.containsKey(newPath)) {
             String keyName = transformations.get(newPath);
-            value.type = JSONValueType.OBJECT;
+            value.unversionedSetType(JSONVALTYPES.OBJECT);
             JSONObject map = new JSONObject();
+            List<JSONKeyValue> list = new ArrayList<>();
+            @SuppressWarnings("unchecked")
             List<? extends XynaObject> l = (List<? extends XynaObject>) val;
             for (XynaObject xoe: l) {
               JSONValue childValue = new JSONValue();
               JSONObject childJob = createFromXynaObjectRecursivly(xoe, newPath+"[]", transformations, substitutions, useLabels, scope);
-              childValue.objectValue = childJob;
-              childValue.type = JSONValueType.OBJECT;
-              map.objects.put(xoe.get(keyName).toString(), childValue);
+              childValue.unversionedSetObjectValue(childJob);
+              childValue.unversionedSetType(JSONVALTYPES.OBJECT);
+              list.add(new JSONKeyValue(xoe.get(keyName).toString(), childValue));
             }
-            value.objectValue = map;
+            map.unversionedSetMembers(list);
+            value.unversionedSetObjectValue(map);
           } else {
             List<JSONValue> arr = new ArrayList<JSONValue>();
             List<?> l = (List<?>) val;
             for (Object o : l) {
               JSONValue jval = new JSONValue();
               if (o == null) {
-                jval.type = JSONValueType.NULL;
+                jval.unversionedSetType(JSONVALTYPES.NULL);
               } else if (o instanceof XynaObject) {
                 JSONObject childJob = createFromXynaObjectRecursivly((XynaObject) o, newPath+"[]", transformations, substitutions, useLabels, scope);
-                jval.objectValue = childJob;
-                jval.type = JSONValueType.OBJECT;
+                jval.unversionedSetObjectValue(childJob);
+                jval.unversionedSetType(JSONVALTYPES.OBJECT);
               } else if (o instanceof String) {
-                jval.type = JSONValueType.STRING;
-                jval.stringOrNumberValue = (String) o;
+                jval.unversionedSetType(JSONVALTYPES.STRING);
+                jval.unversionedSetStringOrNumberValue((String) o);
               } else if (o instanceof Boolean) {
-                jval.type = JSONValueType.BOOLEAN;
-                jval.booleanValue = (Boolean) o;
+                jval.unversionedSetType(JSONVALTYPES.BOOLEAN);
+                jval.unversionedSetBooleanValue((Boolean) o);
               } else if (o instanceof Number) {
-                jval.type = JSONValueType.NUMBER;
-                jval.stringOrNumberValue = o.toString();
+                jval.unversionedSetType(JSONVALTYPES.NUMBER);
+                jval.unversionedSetStringOrNumberValue( o.toString());
               } else {
                 logger.debug("Unsupported list element type: " + o);
               }
               arr.add(jval);
             }
-            value.arrayValue = arr;
-            value.type = JSONValueType.ARRAY;
+            value.unversionedSetArrayValue(arr);
+            value.unversionedSetType(JSONVALTYPES.ARRAY);
           }
         } else if (val instanceof Number) {
-          value.type = JSONValueType.NUMBER;
-          value.stringOrNumberValue = val.toString();
+          value.unversionedSetType(JSONVALTYPES.NUMBER);
+          value.unversionedSetStringOrNumberValue(val.toString());
         } else {
           logger.debug("Unsupported parameter type: " + val);
           continue;
         }
-        job.objects.put(varNamesOfXynaObject.get(varName), value);
+        members.add(new JSONKeyValue(varName, value));
       } catch (InvalidObjectPathException e) {
         throw new RuntimeException(e);
       }
     }
+    job.unversionedSetMembers(members);
     return job;
   }
 
@@ -800,7 +818,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
   @SuppressWarnings("unchecked")
   @Override
   public List<GeneralXynaObject> parseListFromJSON(Document document, GeneralXynaObject xo) {
-    return (List<GeneralXynaObject>) parseListFromJSONWithOptions(document, xo, Collections.<ListToMapTransformation>emptyList(), Collections.<MemberSubstitution>emptyList(), false);
+    return (List<GeneralXynaObject>) parseListFromJSONWithOptions(document, xo, Collections.<ListToMapTransformation>emptyList(), Collections.<MemberSubstitution>emptyList(), false, null);
   }
 
 
@@ -819,7 +837,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
       for (GeneralXynaObject xo : list) {
         sb.append("  ");
         JSONObject job = createFromXynaObject(xo, transformations, substitutions, useLabels, scope);
-        sb.append(job.toJSON("  "));
+        sb.append(JSONObjectWriter.toJSON("  ", job));
         if (++cnt < list.size()) {
           sb.append(",");
         }
@@ -833,10 +851,10 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
 
 
   public List<? extends GeneralXynaObject> parseListFromJSONWithOptions(Document document, GeneralXynaObject xo,
-                                                                    List<? extends ListToMapTransformation> transformations, List<? extends MemberSubstitution> substitutions, boolean useLabels) {
+                                                                    List<? extends ListToMapTransformation> transformations, List<? extends MemberSubstitution> substitutions, boolean useLabels, XynaObjectDecider decider) {
     
     String json = document.getText();
-    if (json == null) {
+    if (json == null || json.isBlank()) {
       return new ArrayList<GeneralXynaObject>();
     }
     JSONTokenizer jt = new JSONTokenizer();
@@ -854,18 +872,20 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
       mapSubstitutions.put(memberSubstitution.getJsonName(), memberSubstitution.getPathToMemberInDataType());
     }
     
-    return createList(xo.getClass(), arr, "", mapTransformations, mapSubstitutions, useLabels);
+    return createList(xo.getClass(), arr, "", mapTransformations, mapSubstitutions, useLabels, decider);
   }
   
   
+  @SuppressWarnings("unchecked")
+  @Override
   public List<GeneralXynaObject> parseListFromJSONWithOptions(Document document, GeneralXynaObject xo,
                                                                     JSONParsingOptions jSONParsingOptions) {
-    return (List<GeneralXynaObject>) parseListFromJSONWithOptions(document, xo, jSONParsingOptions.getListToMapTransformation(), jSONParsingOptions.getMemberSubstitution(), jSONParsingOptions.getUseLabels());
+    return (List<GeneralXynaObject>) parseListFromJSONWithOptions(document, xo, jSONParsingOptions.getListToMapTransformation(), jSONParsingOptions.getMemberSubstitution(), jSONParsingOptions.getUseLabels(), jSONParsingOptions.getObjectDecider());
   }
 
-
+  @Override
   public GeneralXynaObject parseObjectFromJSONWithOptions(Document document, GeneralXynaObject jSONBaseModel, JSONParsingOptions jSONParsingOptions) {
-    return parseObjectFromJSON(document, jSONBaseModel, jSONParsingOptions.getListToMapTransformation(), jSONParsingOptions.getMemberSubstitution(), jSONParsingOptions.getUseLabels());
+    return parseObjectFromJSON(document, jSONBaseModel, jSONParsingOptions.getListToMapTransformation(), jSONParsingOptions.getMemberSubstitution(), jSONParsingOptions.getUseLabels(), jSONParsingOptions.getObjectDecider());
   }
 
   @Override
@@ -874,6 +894,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
   }
 
 
+  @Override
   public Document writeJSONWithOptions(GeneralXynaObject jSONBaseModel, JSONWritingOptions jSONWritingOptions) {
     return writeJSON(jSONBaseModel, jSONWritingOptions.getListToMapTransformation(), jSONWritingOptions.getMemberSubstitution(), jSONWritingOptions.getUseLabels(), OASScope.valueOfOrNone(jSONWritingOptions.getOASMessageType()));
   }

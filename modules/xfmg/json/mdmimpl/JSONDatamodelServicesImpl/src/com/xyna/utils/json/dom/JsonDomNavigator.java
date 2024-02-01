@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +22,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import xfmg.xfctrl.datamodel.json.impl.JSONParser;
 import xfmg.xfctrl.datamodel.json.impl.JSONTokenizer;
-import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONObject;
-import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONValue;
-import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONValueType;
+import xfmg.xfctrl.datamodel.json.JSONObject;
+import xfmg.xfctrl.datamodel.json.JSONValue;
+import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONVALTYPES;
+import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONValueWriter;
 
 
 /**
@@ -42,8 +44,8 @@ public class JsonDomNavigator {
   public JsonDomNavigator() {
     JSONValue value = new JSONValue();
     JSONObject obj = new JSONObject();
-    value.objectValue = obj;
-    value.type = JSONValueType.OBJECT;
+    value.unversionedSetObjectValue(obj);
+    value.unversionedSetType(JSONVALTYPES.OBJECT);
     this._root = value;
   }
 
@@ -71,8 +73,8 @@ public class JsonDomNavigator {
     JSONObject obj = new JSONObject();
     parser.fillObject(new JSONTokenizer().tokenize(json), 0, obj);
     JSONValue value = new JSONValue();
-    value.objectValue = obj;
-    value.type = JSONValueType.OBJECT;
+    value.unversionedSetObjectValue(obj);
+    value.unversionedSetType(JSONVALTYPES.OBJECT);
     return new JsonDomNavigator(value);
   }
 
@@ -100,9 +102,9 @@ public class JsonDomNavigator {
     return new JsonBuildValue(val);
   }
 
-  public JSONValueType getValueType() {
+  public String getValueType() {
     if (isNavigatorPositionUndefined()) { return null; }
-    return getCurrent().type;
+    return getCurrent().getType();
   }
 
   public JsonDomNavigator gotoRoot() {
@@ -124,32 +126,32 @@ public class JsonDomNavigator {
 
   public boolean isJsonNull() {
     if (isNavigatorPositionUndefined()) { return false; }
-    return (getValueType() == JSONValueType.NULL);
+    return JSONVALTYPES.NULL.equals(getValueType());
   }
 
   public boolean isJsonObject() {
     if (isNavigatorPositionUndefined()) { return false; }
-    return (getValueType() == JSONValueType.OBJECT);
+    return JSONVALTYPES.OBJECT.equals(getValueType());
   }
 
   public boolean isJsonArray() {
     if (isNavigatorPositionUndefined()) { return false; }
-    return (getValueType() == JSONValueType.ARRAY);
+    return JSONVALTYPES.ARRAY.equals(getValueType());
   }
 
   public boolean isJsonString() {
     if (isNavigatorPositionUndefined()) { return false; }
-    return (getValueType() == JSONValueType.STRING);
+    return JSONVALTYPES.STRING.equals(getValueType());
   }
 
   public boolean isJsonNumber() {
     if (isNavigatorPositionUndefined()) { return false; }
-    return (getValueType() == JSONValueType.NUMBER);
+    return JSONVALTYPES.NUMBER.equals(getValueType());
   }
 
   public boolean isJsonBoolean() {
     if (isNavigatorPositionUndefined()) { return false; }
-    return (getValueType() == JSONValueType.BOOLEAN);
+    return JSONVALTYPES.BOOLEAN.equals(getValueType());
   }
 
   public boolean isJsonPrimitive() {
@@ -158,11 +160,11 @@ public class JsonDomNavigator {
 
 
   protected boolean isJsonObject(JSONValue val) {
-    return (val.type == JSONValueType.OBJECT);
+    return JSONVALTYPES.OBJECT.equals(val.getType());
   }
 
   protected boolean isJsonArray(JSONValue val) {
-    return (val.type == JSONValueType.ARRAY);
+    return JSONVALTYPES.ARRAY.equals(val.getType());
   }
 
 
@@ -171,12 +173,12 @@ public class JsonDomNavigator {
     if (!isJsonObject()) {
       setUndefined();
     }
-    JSONObject obj = getCurrent().objectValue;
+    JSONObject obj = getCurrent().getObjectValue();
     if (obj == null) {
       setUndefined();
       return this;
     }
-    JSONValue next = obj.objects.get(field);
+    JSONValue next = obj.getMembers().stream().filter(x -> x.getKey().equals(field)).map(x -> x.getValue()).findFirst().get();
     if (next == null) {
       setUndefined();
     }
@@ -192,11 +194,11 @@ public class JsonDomNavigator {
       setUndefined();
       return this;
     }
-    if ((getCurrent().arrayValue == null) || (index >= getCurrent().arrayValue.size())) {
+    if ((getCurrent().getArrayValue() == null) || (index >= getCurrent().getArrayValue().size())) {
       setUndefined();
       return this;
     }
-    JSONValue next = getCurrent().arrayValue.get(index);
+    JSONValue next = getCurrent().getArrayValue().get(index);
     if (next == null) {
       setUndefined();
     }
@@ -229,10 +231,10 @@ public class JsonDomNavigator {
     if (!isJsonArray()) {
       return -1;
     }
-    if (getCurrent().arrayValue == null) {
+    if (getCurrent().getArrayValue() == null) {
       return -1;
     }
-    return getCurrent().arrayValue.size();
+    return getCurrent().getArrayValue().size();
   }
 
 
@@ -240,7 +242,7 @@ public class JsonDomNavigator {
     if (!isJsonObject()) {
       return new HashSet<String>();
     }
-    return getCurrent().objectValue.objects.keySet();
+    return getCurrent().getObjectValue().getMembers().stream().map(x -> x.getKey()).collect(Collectors.toSet());
   }
 
 
@@ -249,21 +251,21 @@ public class JsonDomNavigator {
       return "UNDEFINED";
     }
     if (isJsonNumber() || isJsonString()) {
-      return getCurrent().stringOrNumberValue;
+      return getCurrent().getStringOrNumberValue();
     }
     else if (isJsonNull()) {
       return null;
     }
     else if (isJsonBoolean()) {
-      return "" + getCurrent().booleanValue;
+      return "" + getCurrent().getBooleanValue();
     }
-    return getCurrent().toJSON("  ");
+    return JSONValueWriter.toJSON("  ", getCurrent());
   }
 
   public double asDouble() {
     if (isJsonNumber() || isJsonString()) {
       try {
-        return Double.parseDouble(getCurrent().stringOrNumberValue);
+        return Double.parseDouble(getCurrent().getStringOrNumberValue());
       } catch (Exception e) {
         return 0;
       }
@@ -275,13 +277,13 @@ public class JsonDomNavigator {
     if (!isJsonBoolean()) {
       return false;
     }
-    return getCurrent().booleanValue;
+    return getCurrent().getBooleanValue();
   }
 
   public int asInt() {
     if (isJsonNumber() || isJsonString()) {
       try {
-        return Integer.parseInt(getCurrent().stringOrNumberValue);
+        return Integer.parseInt(getCurrent().getStringOrNumberValue());
       } catch (Exception e) {
         return 0;
       }
@@ -292,7 +294,7 @@ public class JsonDomNavigator {
   public long asLong() {
     if (isJsonNumber() || isJsonString()) {
       try {
-        return Long.parseLong(getCurrent().stringOrNumberValue);
+        return Long.parseLong(getCurrent().getStringOrNumberValue());
       } catch (Exception e) {
         return 0L;
       }

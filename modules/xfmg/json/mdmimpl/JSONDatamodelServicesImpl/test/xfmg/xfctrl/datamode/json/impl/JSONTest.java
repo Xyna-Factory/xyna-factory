@@ -19,12 +19,17 @@ package xfmg.xfctrl.datamode.json.impl;
 
 import java.util.List;
 
+import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
+
 import xfmg.xfctrl.datamodel.json.impl.InvalidJSONException;
 import xfmg.xfctrl.datamodel.json.impl.JSONParser;
 import xfmg.xfctrl.datamodel.json.impl.JSONTokenizer;
-import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONObject;
+import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONObjectWriter;
+import xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl;
+import xfmg.xfctrl.datamodel.json.JSONObject;
 import xfmg.xfctrl.datamodel.json.impl.JSONTokenizer.JSONToken;
 import junit.framework.TestCase;
+import xact.templates.Document;
 
 
 public class JSONTest extends TestCase {
@@ -41,7 +46,7 @@ public class JSONTest extends TestCase {
         "  \"Payload\" : {\n" + 
         "      \"panelID\" : \"pagetopper\"\n" + 
         "    }\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
   
   public void testExample2() {
@@ -58,7 +63,7 @@ public class JSONTest extends TestCase {
         "  \"user\" : {\n" + 
         "      \"userID\" : \"1\"\n" + 
         "    }\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
   
   public void testExample3() {
@@ -78,7 +83,7 @@ public class JSONTest extends TestCase {
         "          \"userID\" : \"6\"\n" + 
         "        }\n" + 
         "    }\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
   
   public void testExample4() {
@@ -99,7 +104,7 @@ public class JSONTest extends TestCase {
         "          \"userID\" : \"6\"\n" + 
         "        }\n" + 
         "    }\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
   
   public void testExample5() {
@@ -114,7 +119,7 @@ public class JSONTest extends TestCase {
         "    \"TestGroup\"\n" + 
         "  ],\n" + 
         "  \"b\" : \"Bla\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
   
   
@@ -128,7 +133,7 @@ public class JSONTest extends TestCase {
     assertEquals("{\n" + 
         "  \"a\" : [],\n" + 
         "  \"b\" : \"Bla\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
   
 
@@ -143,7 +148,7 @@ public class JSONTest extends TestCase {
         "  \"candidate\" : \"a=candidate:802777727 2 tcp 1509957375 10.0.13.94 0 typ host generation 0\\\\r\\\\n\",\n" + 
         "  \"sdpMLineIndex\" : \"1\",\n" + 
         "  \"type\" : \"candidate\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
   
 
@@ -158,7 +163,7 @@ public class JSONTest extends TestCase {
         "  \"candidate\" : \"a=candidate:802777727 2 tcp 1509957375 10.0.13.94 0 typ host generation 0\\r\\n\",\n" + 
         "  \"sdpMLineIndex\" : \"1\",\n" + 
         "  \"type\" : \"candidate\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
 
   public void testExample9() {
@@ -170,7 +175,7 @@ public class JSONTest extends TestCase {
     jp.fillObject(tokens, 0, job);
     assertEquals("{\n" + 
         "  \"type\" : \"Bla\\r\\nBlup\\\"Hallo\\\" We\\\\lt. Ende gut, \\\\\\\"Alles gut\\\\\\\"\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
   
 
@@ -183,7 +188,7 @@ public class JSONTest extends TestCase {
     jp.fillObject(tokens, 0, job);
     assertEquals("{\n" + 
         "  \"type\" : \"Bla\\r\\nBlup\\\"Hallo\\\" We\\\\lt. Ende gut, \\\\\\\"Alles gut\\\\\\\"\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
 
   public void testExample11() {
@@ -195,7 +200,7 @@ public class JSONTest extends TestCase {
     jp.fillObject(tokens, 0, job);
     assertEquals("{\n" + 
         "  \"type\" : \"Bla\\r\\nBlup\\\"Hallo\\\" We\\\\lt. Ende gut, \\\\\\\"Alles gut\\\\\\\"\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
 
   public void testExample12() {
@@ -207,7 +212,7 @@ public class JSONTest extends TestCase {
     jp.fillObject(tokens, 0, job);
     assertEquals("{\n" + 
         "  \"type\" : \"Bla\\r\\nBlup\\\"Hallo\\\" We\\\\lt. Ende gut, \\\\\\\"Alles gut\\\\\\\"\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
 
   public void testExample13() {
@@ -232,7 +237,7 @@ public class JSONTest extends TestCase {
         "      ],\n" + 
         "      \"b\" : \"Bla\"\n" + 
         "    }\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
 
   public void testExample14() {
@@ -254,7 +259,7 @@ public class JSONTest extends TestCase {
         "    -3333\n" + 
         "  ],\n" + 
         "  \"b\" : \"Bla\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
 
   public void testExample15() {
@@ -277,7 +282,7 @@ public class JSONTest extends TestCase {
         "    \"a\\f\"\n" + 
         "  ],\n" + 
         "  \"b\" : \"Bla\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
 
   public void testExample16() {
@@ -299,7 +304,7 @@ public class JSONTest extends TestCase {
         "    -3333\n" + 
         "  ],\n" + 
         "  \"b\" : \"Bla\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
   
   public void testExample17() {
@@ -321,7 +326,7 @@ public class JSONTest extends TestCase {
         "    -3333\n" + 
         "  ],\n" + 
         "  \"b\" : \"Bla\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
 
   public void testExample18() {
@@ -332,7 +337,7 @@ public class JSONTest extends TestCase {
     JSONObject job = new JSONObject();
     jp.fillObject(tokens, 0, job);
     assertEquals("{\n" + 
-        "  \"asdâ‚¬h@\" : 3e-12,\n" + 
+        "  \"asd€h@\" : 3e-12,\n" + 
         "  \"basdasd\" : [\n" + 
         "    \"\\\"\\\\a,]}[{s\",\n" + 
         "    \"a2\",\n" + 
@@ -341,7 +346,15 @@ public class JSONTest extends TestCase {
         "        \"x\" : null\n" + 
         "      }\n" + 
         "  ]\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
+  }
+  
+  public void testExample19() {
+    Document doc = new Document(null, "  ");
+    GeneralXynaObject obj = JSONDatamodelServicesImpl.parseObjectFromJSON(doc, null);
+    assertEquals(null, obj);
+    List<GeneralXynaObject> lst = JSONDatamodelServicesImpl.parseListFromJSON(doc, null);
+    assertEquals(lst.size(),0);
   }
 
   
