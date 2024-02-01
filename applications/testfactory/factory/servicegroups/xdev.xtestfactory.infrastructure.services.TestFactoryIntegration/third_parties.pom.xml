@@ -23,40 +23,21 @@
         <version>1.0.0</version>
         <relativePath>../../../../../installation/build/pom.xml</relativePath>
     </parent>
-    
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gip.xyna.xdev.xtestfactory</groupId>
-    <artifactId>TestFactoryIntegration</artifactId>
+    <artifactId>TestFactoryIntegration_third_parties</artifactId>
     <version>1.0.0</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>com.gip.xyna</groupId>
-            <artifactId>TestFactoryIntegration_third_parties</artifactId>
-            <version>1.0.0</version>
-            <type>pom</type>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-1.2-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gip.xyna</groupId>
-            <artifactId>xynafactory</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gip.xyna</groupId>
-            <artifactId>xynautils-database</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gip.xyna</groupId>
-            <artifactId>xynautils-exceptions</artifactId>
-        </dependency>
+    <dependency>
+        <groupId>org.apache.poi</groupId>
+        <artifactId>poi</artifactId>
+        <version>5.2.5</version>
+    </dependency>
     </dependencies>
 </project>
