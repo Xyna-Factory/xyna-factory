@@ -30,6 +30,12 @@
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="servicegroups/xdev.xtestfactory.infrastructure.services.TestFactoryIntegration">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="servicegroups/xdev.xtestfactory.infrastructure.gui.Utils">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="servicegroups/xdev.xtestfactory.util.persistence.PersistenceUtils">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
 
         <antcall target="build-application" />
     </target>
@@ -37,6 +43,8 @@
     <target name="prepare-mdm-jar">
         <antcall target="create-mdm-jar" />	
         <supply-mdm-jar type="servicegroups" name="xdev.xtestfactory.infrastructure.services.TestFactoryIntegration" />
+        <supply-mdm-jar type="servicegroups" name="xdev.xtestfactory.infrastructure.gui.Utils" />
+        <supply-mdm-jar type="servicegroups" name="xdev.xtestfactory.util.persistence.PersistenceUtils" />
         <delete file="${basedir}/mdm.jar" />
     </target>
 
