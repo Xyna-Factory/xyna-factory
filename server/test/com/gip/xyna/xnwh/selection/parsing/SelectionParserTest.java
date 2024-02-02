@@ -27,13 +27,13 @@ import com.gip.xyna.xnwh.exceptions.XNWH_InvalidSelectStatementException;
 import com.gip.xyna.xnwh.exceptions.XNWH_NoSelectGivenException;
 import com.gip.xyna.xnwh.exceptions.XNWH_SelectParserException;
 import com.gip.xyna.xnwh.exceptions.XNWH_WhereClauseBuildException;
-import com.gip.xyna.xnwh.selection.parsing.SelectionParser.EscapeParams;
+import com.gip.xyna.xnwh.selection.parsing.SelectionParser.EscapeParameters;
 import com.gip.xyna.xprc.xsched.selectvetos.VetoSelectImpl;
 
 
 public class SelectionParserTest extends TestCase {
 
-  private static class EscapeForMemory implements EscapeParams {
+  private static class EscapeForMemory implements EscapeParameters {
 
     public String escapeForLike(String toEscape) {
       if (toEscape == null || toEscape.length() == 0) {
@@ -42,13 +42,19 @@ public class SelectionParserTest extends TestCase {
       return Pattern.quote(toEscape);
     }
 
-    public String getWildcard() {
+    @Override
+    public String getMultiCharacterWildcard() {
       return ".*";
+    }
+
+    @Override
+    public String getSingleCharacterWildcard() {
+      return ".";
     }
     
   }
   
-  private static class EscapeForOracle implements EscapeParams {
+  private static class EscapeForOracle implements EscapeParameters {
 
     public String escapeForLike(String toEscape) {
       toEscape = toEscape.replaceAll("%", "\\\\%");
@@ -56,8 +62,14 @@ public class SelectionParserTest extends TestCase {
       return toEscape;
     }
 
-    public String getWildcard() {
+    @Override
+    public String getMultiCharacterWildcard() {
       return "%";
+    }
+
+    @Override
+    public String getSingleCharacterWildcard() {
+      return "_";
     }
     
   }
@@ -239,7 +251,7 @@ public class SelectionParserTest extends TestCase {
    * escapeParams does not change EQUALS queries
    */
   public void testEscapeEqualParamsForMemory() {
-    EscapeParams escape = new EscapeForMemory();
+    EscapeParameters escape = new EscapeForMemory();
     boolean like = false;
     assertEquals("x", SelectionParser.escapeParams("x", like, escape));
     assertEquals("\"x\"", SelectionParser.escapeParams("\"x\"", like, escape));
@@ -255,7 +267,7 @@ public class SelectionParserTest extends TestCase {
   }
 
   public void testEscapeEqualParamsForOracle() {
-    EscapeParams escape = new EscapeForOracle();
+    EscapeParameters escape = new EscapeForOracle();
     boolean like = false;
     assertEquals("x", SelectionParser.escapeParams("x", like, escape));
     assertEquals("\"x\"", SelectionParser.escapeParams("\"x\"", like, escape));
@@ -271,7 +283,7 @@ public class SelectionParserTest extends TestCase {
   }
   
   public void testEscapeLikeParamsForMemory() {
-    EscapeParams escape = new EscapeForMemory();
+    EscapeParameters escape = new EscapeForMemory();
     boolean like = true;
     assertEquals("\\Qx\\E", SelectionParser.escapeParams("x", like, escape));
     assertEquals("\\Qx\\E", SelectionParser.escapeParams("\"x\"", like, escape));
@@ -289,7 +301,7 @@ public class SelectionParserTest extends TestCase {
   }
 
   public void testEscapeLikeParamsForOracle() {
-    EscapeParams escape = new EscapeForOracle();
+    EscapeParameters escape = new EscapeForOracle();
     boolean like = true;
     assertEquals("x", SelectionParser.escapeParams("x", like, escape));
     assertEquals("x", SelectionParser.escapeParams("\"x\"", like, escape));
