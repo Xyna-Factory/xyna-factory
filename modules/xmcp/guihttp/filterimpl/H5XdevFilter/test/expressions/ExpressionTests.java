@@ -355,6 +355,27 @@ public class ExpressionTests extends TestCase {
     assertTrue(compare(exp, expectedResult));
   }
   
+
+  public void testCastExpression2() {
+    ModelledExpression exp = convert("%1%#cast(\"some.Sub\").parentInSub=%0%#cast(\"some.Sub\").parent#cast(\"some.Sub\").parentInSub");
+    ModelledExpression expectedResult = new ModelledExpression(
+         new CastExpression(Arrays.asList(new Expression[] {
+             new LiteralExpression("some.Sub"),
+             new CastExpression(Arrays.asList(new Expression[] {
+                 new LiteralExpression("some.Sub"),
+                 new SingleVarExpression(new ExpressionVariable(0, null, null))
+             }), "cast", null, Arrays.asList(new VariableAccessPart[] { new VariableAccessPart("parent", null) } ))
+         }), "cast", null, Arrays.asList(new VariableAccessPart[] { new VariableAccessPart("parentInSub", null) } )),
+        new CastExpression(Arrays.asList(new Expression[] {
+            new LiteralExpression("some.Sub"),
+            new SingleVarExpression(new ExpressionVariable(1, null, null))
+        }), "cast", null, Arrays.asList(new VariableAccessPart[] { new VariableAccessPart("parentInSub", null) } ))
+      );
+    
+
+    assertTrue(compare(exp, expectedResult));
+  }
+  
   private static ModelledExpression convert(String expression) {
     com.gip.xyna.xprc.xfractwfe.generation.ModelledExpression me;
     try {

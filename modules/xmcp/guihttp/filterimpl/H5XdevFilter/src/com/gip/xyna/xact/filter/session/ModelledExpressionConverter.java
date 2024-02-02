@@ -159,6 +159,7 @@ public class ModelledExpressionConverter {
       GeneralXynaObject xo = objects.get(obj);
       FunctionSubExpressionAssigner cur = new FunctionSubExpressionAssigner((xmcp.processmodeller.datatypes.expression.FunctionExpression) xo);
       context.push(cur);
+      objects.put(cur, xo);
     }
 
 
