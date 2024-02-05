@@ -292,7 +292,8 @@ public class SelectionParserTest extends TestCase {
     assertEquals(".*\\Qx\\E", SelectionParser.escapeParams("%x", like, escape));
     assertEquals("\\Q%x\\E", SelectionParser.escapeParams("\"%x\"", like, escape));
     assertEquals("\\Q%x\\E.*\\Qyz%\\E.*", SelectionParser.escapeParams("\"%x\"%y\"\"z\"%\"\"\"%", like, escape));
-    assertEquals("\\Qx_y\\E", SelectionParser.escapeParams("x_y", like, escape));
+    assertEquals("\\Qx\\E.\\Qy\\E", SelectionParser.escapeParams("x_y", like, escape));
+    assertEquals("\\Qx_y\\E", SelectionParser.escapeParams("x\\_y", like, escape));
     assertEquals("\\Qx_y\\E", SelectionParser.escapeParams("x\"_\"y", like, escape));
     assertEquals("\\Qx\\y\\E", SelectionParser.escapeParams("x\\\\y", like, escape));
     assertEquals("\\Qx\\y\"z\\E", SelectionParser.escapeParams("x\\\\y\\\"z", like, escape));
@@ -310,8 +311,9 @@ public class SelectionParserTest extends TestCase {
     assertEquals("%x", SelectionParser.escapeParams("%x", like, escape));
     assertEquals("\\%x", SelectionParser.escapeParams("\"%x\"", like, escape));
     assertEquals("\\%x%yz\\%%", SelectionParser.escapeParams("\"%x\"%y\"\"z\"%\"\"\"%", like, escape));
-    assertEquals("x\\_y", SelectionParser.escapeParams("x_y", like, escape));
-    assertEquals("x\\_y", SelectionParser.escapeParams("x\"_\"y", like, escape));
+    assertEquals("x\\_y", SelectionParser.escapeParams("x\\_y", like, escape));
+    assertEquals("x_y", SelectionParser.escapeParams("x_y", like, escape));
+    assertEquals("x\\_y", SelectionParser.escapeParams("x\"\\_\"y", like, escape));
     assertEquals("x\\y", SelectionParser.escapeParams("x\\\\y", like, escape));
     assertEquals("x\\_y\\%%z\\%", SelectionParser.escapeParams("\"x_y%\"%z\\%", like, escape));
 
