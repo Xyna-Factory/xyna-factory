@@ -994,7 +994,7 @@ public abstract class SelectionParser<P extends WhereClausesContainerBase<P>> {
       if (ep.getState() == EscapeState.UNESCAPED) {
         //replace % and _ in unescaped-parts with PersistenceLayer-specific wildcards
         if (isLike) {
-          StringSplitter splitter = XynaProperty.BC_SINGLE_CHARACTER_WILDCARD.get() ?SPLITTER_WILDCARD : DEPRECATED_WILCARD_SPLITTER;
+          StringSplitter splitter = XynaProperty.BC_SINGLE_CHARACTER_WILDCARD.get() ? SPLITTER_WILDCARD : DEPRECATED_WILCARD_SPLITTER;
           List<String> parts =  splitter.split(ep.getValue(), true);
           for (String p : parts) {
             if (splitter.isSeparator(p)) {
