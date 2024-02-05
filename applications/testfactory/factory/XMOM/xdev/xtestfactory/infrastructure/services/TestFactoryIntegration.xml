@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="TestFactoryIntegration" TypeName="TestFactoryIntegration" TypePath="xdev.xtestfactory.infrastructure.services" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>TestFactoryIntegrationImpl.jar</Libraries>
+  <Libraries>SparseBitSet-1.3.jar</Libraries>
+  <Libraries>commons-codec-1.16.0.jar</Libraries>
+  <Libraries>commons-io-2.15.0.jar</Libraries>
+  <Libraries>commons-math3-3.6.1.jar</Libraries>
+  <Libraries>commons-collections4-4.4.jar</Libraries>
+  <Libraries>poi-5.2.5.jar</Libraries>
+  <Service Label="TestFactoryIntegration" TypeName="TestFactoryIntegration">
+    <Meta>
+      <AdditionalDependencies>
+        <ExceptionType>xdev.xtestfactory.infrastructure.exceptions.InvalidCSV</ExceptionType>
+        <Datatype>xdev.xtestfactory.infrastructure.datatypes.ManagedFileID</Datatype>
+        <Datatype>xdev.xtestfactory.infrastructure.datatypes.TestCaseID</Datatype>
+        <Datatype>xdev.xtestfactory.infrastructure.datatypes.TestDataGenerationID</Datatype>
+        <Datatype>xdev.xtestfactory.infrastructure.datatypes.TestProjectCreationParameter</Datatype>
+        <Datatype>xdev.xtestfactory.infrastructure.datatypes.Workspacename</Datatype>
+        <Datatype>xdev.xtestfactory.infrastructure.storables.Feature</Datatype>
+        <Datatype>xdev.xtestfactory.infrastructure.storables.Interface</Datatype>
+        <Datatype>xdev.xtestfactory.infrastructure.storables.SystemUnderTest</Datatype>
+        <Datatype>xdev.xtestfactory.infrastructure.storables.TestCase</Datatype>
+        <Datatype>xdev.xtestfactory.infrastructure.storables.TestData</Datatype>
+        <Datatype>xdev.xtestfactory.infrastructure.storables.TestDataMetaData</Datatype>
+        <Datatype>xdev.xtestfactory.infrastructure.storables.TestDataUsageInfo</Datatype>
+        <Datatype>xdev.xtestfactory.infrastructure.storables.TestProject</Datatype>
+        <Datatype>xdev.xtestfactory.infrastructure.storables.TestReport</Datatype>
+        <Datatype>xdev.xtestfactory.infrastructure.storables.TestReportEntryFeature</Datatype>
+        <Datatype>xdev.xtestfactory.infrastructure.storables.TestReportEntryTestCase</Datatype>
+        <Datatype>xdev.xtestfactory.infrastructure.storables.TestReportEntryTestCaseInstance</Datatype>
+      </AdditionalDependencies>
+    </Meta>
+    <Operation IsStatic="true" Label="Build Empty Order Input Source" Name="buildEmptyOrderInputSource">
+      <Meta>
+        <Abstract.UID>53BA0B8B-B45F-9F6E-823F-4C78A0044B11</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase163"/>
+        <Data Label="Workspacename" ReferenceName="Workspacename" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="workspacename"/>
+      </Input>
+      <Output>
+        <Data Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return TestFactoryIntegrationImpl.buildEmptyOrderInputSource(testCase163, workspacename);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Check Interfaces" Name="checkInterfaces">
+      <Input>
+        <Data IsList="true" Label="Interface" ReferenceName="Interface" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="interface23"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">TestFactoryIntegrationImpl.checkInterfaces(interface23);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Check Test Project Uniqueness" Name="checkTestProjectUniqueness" RequiresXynaOrder="true">
+      <Meta>
+        <Abstract.UID>8B95B4E3-C4A2-0465-73AB-43830E064D7C</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject367"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="Test Project Not Unique" ReferenceName="TestProjectNotUnique" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="testProjectNotUnique"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">TestFactoryIntegrationImpl.checkTestProjectUniqueness(correlatedXynaOrder, testProject367);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Clone Referenced Order Input Source" Name="cloneReferencedOrderInputSource">
+      <Input>
+        <Data Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase"/>
+        <Data Label="Source Workspacename" ReferenceName="Workspacename" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="workspacename"/>
+        <Data Label="Target Workspacename" ReferenceName="Workspacename" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="workspacename66"/>
+        <Data Label="Test Project Creation Parameter" ReferenceName="TestProjectCreationParameter" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testProjectCreationParameter"/>
+      </Input>
+      <Output>
+        <Data Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase67"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return TestFactoryIntegrationImpl.cloneReferencedOrderInputSource(testCase, workspacename, workspacename66, testProjectCreationParameter);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Configure ODS Name" Name="configureODSName">
+      <Meta>
+        <Abstract.UID>7F954D3B-E2F0-8EE1-0985-44FC3327DAAC</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">TestFactoryIntegrationImpl.configureODSName(testDataMetaData);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Copy Datamodel to new Workspace" Name="copyDatamodelToNewWorkspace">
+      <Input>
+        <Data Label="Workspacename" ReferenceName="Workspacename" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="workspacename"/>
+        <Data IsList="true" Label="Interface" ReferenceName="Interface" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="interface36"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">TestFactoryIntegrationImpl.copyDatamodelToNewWorkspace(workspacename, interface36);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="create Coverage Matrix as CSV" Name="createCoverageMatrixAsCSV">
+      <Input>
+        <Data IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase"/>
+      </Input>
+      <Output>
+        <Data Label="Managed File ID" ReferenceName="ManagedFileID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="managedFileID"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return TestFactoryIntegrationImpl.createCoverageMatrixAsCSV(testCase);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Coverage Matrix as Excel" Name="createCoverageMatrixAsExcel">
+      <Input>
+        <Data IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase"/>
+      </Input>
+      <Output>
+        <Data Label="Managed File ID" ReferenceName="ManagedFileID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="managedFileID"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return TestFactoryIntegrationImpl.createCoverageMatrixAsExcel(testCase);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="create CSV from Testdata" Name="createCSVFromTestdata">
+      <Input>
+        <Data IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable"/>
+        <Data Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData"/>
+      </Input>
+      <Output>
+        <Data Label="Managed File ID" ReferenceName="ManagedFileID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="managedFileID"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return TestFactoryIntegrationImpl.createCSVFromTestdata(storable, testDataMetaData);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Excel from Testdata" Name="createExcelFromTestdata">
+      <Input>
+        <Data IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable"/>
+        <Data Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData"/>
+      </Input>
+      <Output>
+        <Data Label="Managed File ID" ReferenceName="ManagedFileID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="managedFileID"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return TestFactoryIntegrationImpl.createExcelFromTestdata(storable, testDataMetaData);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Excel from Test Report" Name="createExcelFromTestReport">
+      <Input>
+        <Data Label="Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport"/>
+        <Data IsList="true" Label="Test Report Entry - Feature" ReferenceName="TestReportEntryFeature" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReportEntryFeature"/>
+        <Data IsList="true" Label="Test Report Entry - Test Case" ReferenceName="TestReportEntryTestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReportEntryTestCase"/>
+      </Input>
+      <Output>
+        <Data Label="Managed File ID" ReferenceName="ManagedFileID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="managedFileID"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return TestFactoryIntegrationImpl.createExcelFromTestReport(testReport, testReportEntryFeature, testReportEntryTestCase);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Workspace and Import Infrastructure" Name="createWorkspaceAndImportInfrastructure">
+      <Input>
+        <Data Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject"/>
+      </Input>
+      <Output>
+        <Data Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject100"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return TestFactoryIntegrationImpl.createWorkspaceAndImportInfrastructure(testProject);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Delete Order Input Source" Name="deleteOrderInputSource">
+      <Meta>
+        <Abstract.UID>AD8A724B-6460-E786-9010-E549AC5CEB6B</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase"/>
+        <Data Label="Workspacename" ReferenceName="Workspacename" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="workspacename"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">TestFactoryIntegrationImpl.deleteOrderInputSource(testCase, workspacename);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Delete Workspace" Name="deleteWorkspace">
+      <Input>
+        <Data Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">TestFactoryIntegrationImpl.deleteWorkspace(testProject);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Determine Workspace" Name="determineWorkspace">
+      <Input/>
+      <Output>
+        <Data Label="Workspacename" ReferenceName="Workspacename" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="workspacename"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return TestFactoryIntegrationImpl.determineWorkspace();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Export System Under Test" Name="exportSystemUnderTest">
+      <Input>
+        <Data Label="System Under Test" ReferenceName="SystemUnderTest" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTest"/>
+      </Input>
+      <Output>
+        <Data Label="Managed File ID" ReferenceName="ManagedFileID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="managedFileID"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return TestFactoryIntegrationImpl.exportSystemUnderTest(systemUnderTest);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Export Testproject" Name="exportTestproject" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject"/>
+        <Data Label="Workspacename" ReferenceName="Workspacename" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="workspacename"/>
+      </Input>
+      <Output>
+        <Data Label="Managed File ID" ReferenceName="ManagedFileID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="managedFileID"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return TestFactoryIntegrationImpl.exportTestproject(correlatedXynaOrder, testProject, workspacename);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Filter List Of Counters" Name="filterListOfCounters">
+      <Input>
+        <Data IsList="true" Label="Counters to filter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter"/>
+        <Data Label="Counter to remove" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter168"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Filtered Counters" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter166"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return TestFactoryIntegrationImpl.filterListOfCounters(counter, counter168);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Filter List Of Test Cases" Name="filterListOfTestCases">
+      <Meta>
+        <Abstract.UID>A31BBB93-8A1B-BAB0-C734-1E690AFEB9C9</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase30"/>
+        <Data Label="Test Case - Removed From List" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase89"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return TestFactoryIntegrationImpl.filterListOfTestCases(testCase30, testCase);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Find Legacy Test Data References" Name="findLegacyTestDataReferences">
+      <Meta>
+        <Abstract.UID>B246B488-1D09-9306-FE19-43BD73067F86</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="Test Data" ReferenceName="TestData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testData"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Legacy Test Data Reference" ReferenceName="LegacyTestDataReference" ReferencePath="xdev.xtestfactory.infrastructure.util.testdata.legacy" VariableName="legacyTestDataReference"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return TestFactoryIntegrationImpl.findLegacyTestDataReferences(testData);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="get FQN" Name="getFQN">
+      <Input>
+        <Data Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable"/>
+      </Input>
+      <Output>
+        <Data Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return TestFactoryIntegrationImpl.getFQN(storable);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Order ID And Exception Count" Name="getOrderIDAndExceptionCount" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data Label="Order ID" ReferenceName="OrderID" ReferencePath="xdev.xtestfactory.infrastructure.services" VariableName="orderID"/>
+        <Data Label="Exception Count" ReferenceName="ExceptionCount" ReferencePath="xdev.xtestfactory.infrastructure.services" VariableName="exceptionCount"/>
+        <Data Label="Test Case ID" ReferenceName="TestCaseID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseID"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return TestFactoryIntegrationImpl.getOrderIDAndExceptionCount(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Test Case ID" Name="getTestCaseID">
+      <Input/>
+      <Output>
+        <Data Label="Test Case ID" ReferenceName="TestCaseID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseID"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return TestFactoryIntegrationImpl.getTestCaseID();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Test Data Generation ID" Name="getTestDataGenerationID">
+      <Input/>
+      <Output>
+        <Data Label="Test Data Generation ID" ReferenceName="TestDataGenerationID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDataGenerationID"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return TestFactoryIntegrationImpl.getTestDataGenerationID();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="get Testdata Storables From CSV" Name="getTestdataStorablesFromCSV">
+      <Input>
+        <Data Label="Managed File ID" ReferenceName="ManagedFileID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="managedFileID"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return TestFactoryIntegrationImpl.getTestdataStorablesFromCSV(managedFileID);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Import Infrastructure" Name="importInfrastructure">
+      <Input>
+        <Data Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">TestFactoryIntegrationImpl.importInfrastructure(testProject);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Import System Under Test" Name="importSystemUnderTest">
+      <Input>
+        <Data Label="Managed File ID" ReferenceName="ManagedFileID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="managedFileID"/>
+      </Input>
+      <Output>
+        <Data Label="System Under Test" ReferenceName="SystemUnderTest" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTest"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return TestFactoryIntegrationImpl.importSystemUnderTest(managedFileID);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="import TestProject" Name="importTestProject" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Managed File ID" ReferenceName="ManagedFileID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="managedFileID"/>
+      </Input>
+      <Output>
+        <Data Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return TestFactoryIntegrationImpl.importTestProject(correlatedXynaOrder, managedFileID);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Notify Test Case Execution Service" Name="notifyTestCaseExecutionService" RequiresXynaOrder="true">
+      <Meta>
+        <Abstract.UID>99B1BC27-CAE8-B7FB-3E18-FEF37BB07A9F</Abstract.UID>
+      </Meta>
+      <Input/>
+      <Output/>
+      <Throws>
+        <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+        <Exception Label="Test Data Not Found" ReferenceName="TestDataNotFound" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="const_TestDataNotFound"/>
+        <Exception Label="Test Data Has Already Been Used" ReferenceName="TestDataHasAlreadyBeenUsed" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="testDataHasAlreadyBeenUsed97"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">TestFactoryIntegrationImpl.notifyTestCaseExecutionService(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Query With Test Data Support" Name="queryWithTestDataSupport" RequiresXynaOrder="true">
+      <Input>
+        <Data Label="Selection mask" ReferenceName="SelectionMask" ReferencePath="xnwh.persistence" VariableName="selectionMask"/>
+        <Data Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition"/>
+        <Data Label="Query parameter" ReferenceName="QueryParameter" ReferencePath="xnwh.persistence" VariableName="queryParameter"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable"/>
+      </Output>
+      <Throws>
+        <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+        <Exception Label="No Matching Test Data Available" ReferenceName="NoMatchingTestDataAvailable" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="noMatchingTestDataAvailable"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return TestFactoryIntegrationImpl.queryWithTestDataSupport(correlatedXynaOrder, selectionMask, filterCondition, queryParameter);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Start SUT Configuration Adjustment Order" Name="startSUTConfigurationAdjustmentOrder">
+      <Meta>
+        <Abstract.UID>2BCFA471-38E3-91BA-745A-282E045BA919</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data Label="System Under Test" ReferenceName="SystemUnderTest" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTest"/>
+        <Data Label="System Under Test Instance - Old" ReferenceName="SystemUnderTestInstance" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTestInstance"/>
+        <Data Label="System Under Test Instance - New" ReferenceName="SystemUnderTestInstance" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTestInstance89"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception Label="SUT Instance Specific Configuration Failed" ReferenceName="SUTInstanceSpecificConfigurationFailed" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="sUTInstanceSpecificConfigurationFailed"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">TestFactoryIntegrationImpl.startSUTConfigurationAdjustmentOrder(systemUnderTest, systemUnderTestInstance, systemUnderTestInstance89);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

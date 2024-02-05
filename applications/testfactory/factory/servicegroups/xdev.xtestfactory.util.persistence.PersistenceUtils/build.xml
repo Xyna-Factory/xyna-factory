@@ -26,17 +26,11 @@
     </pathconvert>
     <property name="xmom.dir" value="${basedir}/../../XMOM" />
 
-    <property name="project.name" value="UtilsImpl" />
-    <property name="fqclassname" value="xdev.xtestfactory.infrastructure.gui.Utils" />
-    <property name="mdm.xml.path" value="xdev/xtestfactory/infrastructure/gui" />
-    <property name="mdm.xml.filename" value="Utils.xml" />
-    <property name="mdm.service.path" value="xdev.xtestfactory.infrastructure.gui.Utils" />
-
-    <target name="prepareLibs" description="Prepare Libs">
-        <ant antfile="build.xml" target="build" inheritAll="false" dir="${root.dir}/modules/xmcp/zetaFramework/sharedlib/ZetaTools">
-            <property name="target.dir" value="${basedir}/lib/xyna" />
-        </ant>
-    </target>
+    <property name="project.name" value="PersistenceUtilsImpl" />
+    <property name="fqclassname" value="xdev.xtestfactory.util.persistence.PersistenceUtils" />
+    <property name="mdm.xml.path" value="xdev/xtestfactory/util/persistence" />
+    <property name="mdm.xml.filename" value="PersistenceUtils.xml" />
+    <property name="mdm.service.path" value="xdev.xtestfactory.util.persistence.PersistenceUtils" />
 
     <import file="${root.dir}/installation/build/buildService.xml" />
 
