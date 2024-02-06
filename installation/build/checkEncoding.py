@@ -3,7 +3,7 @@
 """
 Goes through all the files in the given directory and checks, that they match their expected encoding:
 
-- .xml, .json, .py and .pom: UTF-8
+- .xml, .json, .py .sh and .pom: UTF-8
 - .java: ISO-8859-1
 """
 
@@ -23,7 +23,8 @@ EXPECTED_UTF_8: list[str] = [
     ".xml",
     ".pom",
     ".py",
-    ".json"
+    ".json",
+    ".sh"
 ]
 
 # characters the give away, that a file opened with the given encoding isn't actually encoded that way
