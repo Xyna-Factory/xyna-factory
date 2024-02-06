@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -279,15 +279,42 @@ public class Now extends AbsoluteDate {
 
   private static void init(Now instance) {
     long now = System.currentTimeMillis();
-    String format = instance.getFormatInternally();
+    String format = instance.getFormatInternally() == null ? DEFAULT_FORMAT.getFormat() : instance.getFormatInternally();
     instance.unversionedSetDate(instance.getOrCreateLazyDateFormat().format(now, format));
   }
+  
+  @Override
+  public void setFormat(DateFormat format) {
+    if(getFormatInternally() == null) {
+      try {
+        getOrCreateLazyDateFormat().validate(getDate(), DEFAULT_FORMAT.getFormat());
+        super.setFormat(DEFAULT_FORMAT);
+      } catch(Exception e) {
+        //no format specified and default format is not valid for current date.
+      }
+    }
+    super.setFormat(format);
+  }
 
-  protected String getFormatInternally() {
-    if (getFormat() == null || getFormat().getFormat() == null) {
+  private static final DefaultFormat DEFAULT_FORMAT = new DefaultFormat();
+  
+  private static class DefaultFormat extends DateFormat {
+
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    public DateFormat clone() {
+      return new DefaultFormat();
+    }
+
+    @Override
+    public DateFormat clone(boolean deep) {
+      return new DefaultFormat();
+    }
+
+    @Override
+    public String getFormat() {
       return "yyyy-MM-dd HH:mm:ss";
-    } else {
-      return super.getFormatInternally();
     }
   }
 }
