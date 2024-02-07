@@ -35,6 +35,7 @@ import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.misc.StringSplitter;
 import com.gip.xyna.xfmg.xfctrl.datamodelmgmt.selectdatamodel.DataModelSelectParser;
 import com.gip.xyna.xfmg.xfctrl.deploystate.selectdeploymentitem.DeploymentItemSelectParser;
+import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
 import com.gip.xyna.xfmg.xods.orderinputsourcemgmt.selectorderinputsource.OrderInputSourceSelectParser;
 import com.gip.xyna.xnwh.exceptions.XNWH_NoSelectGivenException;
 import com.gip.xyna.xnwh.exceptions.XNWH_SelectParserException;
@@ -58,6 +59,7 @@ public abstract class SelectionParser<P extends WhereClausesContainerBase<P>> {
   private final static char CHARACTER_ESCAPE_SEQUENCE = '\"'; //Bereiche sind durch umgebende " escaped
   private final static String CHARACTER_ESCAPE_SEQUENCE_STRING = String.valueOf(CHARACTER_ESCAPE_SEQUENCE);
   public final static String CHARACTER_WILDCARD = "%";
+  public final static String CHARACTER_SINGLE_CHARACTER_WILDCARD = "_";
   private final static String CHARACTER_NEGATION = "!";
   private final static String OR_IDENTIFIER = " OR ";
   private final static String AND_IDENTIFIER = " AND ";
@@ -68,10 +70,17 @@ public abstract class SelectionParser<P extends WhereClausesContainerBase<P>> {
   private final static String CHARACTER_NULL = "NULL";
   
   private final static Pattern PATTERN_SIMPLE_SIGNS = Pattern.compile("[^!<>()%\"]+");
-  
-  //Splittet einen String an %
-  private final static StringSplitter SPLITTER_WILDCARD = new StringSplitter(CHARACTER_WILDCARD);
-  
+
+  //Splits string at % and _
+  private final static StringSplitter SPLITTER_WILDCARD = new StringSplitter(String.join("|", CHARACTER_WILDCARD, CHARACTER_SINGLE_CHARACTER_WILDCARD));
+
+  /**
+   * @deprecated
+   * https://github.com/Xyna-Factory/xyna-factory/wiki/Breaking-Change:-Single-Character-Wildcard-Support
+   */
+  @Deprecated
+  private final static StringSplitter DEPRECATED_WILCARD_SPLITTER = new StringSplitter(CHARACTER_WILDCARD);
+
   public static enum Copula {
     AND, OR;
   }
@@ -872,7 +881,10 @@ public abstract class SelectionParser<P extends WhereClausesContainerBase<P>> {
 
   public abstract Selection getSelectImpl();
   
-
+  /**
+   * @deprecated use EscapeParameters
+   */
+  @Deprecated
   public static interface EscapeParams {
 
     /**
@@ -888,6 +900,12 @@ public abstract class SelectionParser<P extends WhereClausesContainerBase<P>> {
      */
     public String getWildcard();
   
+  }
+  
+  public static interface EscapeParameters {
+    public String escapeForLike(String s);
+    public String getMultiCharacterWildcard();
+    public String getSingleCharacterWildcard();
   }
   
   private enum EscapeState {
@@ -920,12 +938,38 @@ public abstract class SelectionParser<P extends WhereClausesContainerBase<P>> {
    * Verwandelt den param-String (angegeben in persistencelayer-neutralem Format) in das spezifische Format, was 
    * der PersistenceLayer benötigt.
    * 
-   * @param param
-   * @param isLike
-   * @param e
-   * @return
+   * @deprecated
    */
+  @Deprecated
   public static String escapeParams(String param, boolean isLike, EscapeParams e) {
+    return escapeParams(param, isLike, new EscapeParameters() {
+
+      @Override
+      public String escapeForLike(String s) {
+        return e.escapeForLike(s);
+      }
+
+      @Override
+      public String getMultiCharacterWildcard() {
+        return e.getWildcard();
+      }
+
+      @Override
+      public String getSingleCharacterWildcard() {
+        return CHARACTER_SINGLE_CHARACTER_WILDCARD;
+      }
+      
+    });
+  }
+  
+  /**
+   * Used by PersistenceLayers. Equals-Requests remain unchanged. In Like-Requests, % and _ are replaced
+   * by PersistenceLayer-specific wildcards. All other characters get escaped according to the PersistenceLayer.
+   * 
+   * Translates param-string (PersistenceLayer-neutral format) into a PersistenceLayer-specific format.
+   * 
+   */
+  public static String escapeParams(String param, boolean isLike, EscapeParameters e) {
     //return input for equals
     if (!isLike) {
       return param;
@@ -948,13 +992,14 @@ public abstract class SelectionParser<P extends WhereClausesContainerBase<P>> {
       }
       
       if (ep.getState() == EscapeState.UNESCAPED) {
-        //in den unescapten Anteilen bei Like die % durch PersistenceLayer-spezifische Wildcard ersetzen
+        //replace % and _ in unescaped-parts with PersistenceLayer-specific wildcards
         if (isLike) {
-          List<String> parts = SPLITTER_WILDCARD.split(ep.getValue(), true);
+          StringSplitter splitter = XynaProperty.BC_SINGLE_CHARACTER_WILDCARD.get() ? SPLITTER_WILDCARD : DEPRECATED_WILCARD_SPLITTER;
+          List<String> parts =  splitter.split(ep.getValue(), true);
           for (String p : parts) {
-            if (SPLITTER_WILDCARD.isSeparator(p)) {
+            if (splitter.isSeparator(p)) {
               sb.append(e.escapeForLike(part.toString()));
-              sb.append(e.getWildcard());
+              sb.append(p.equals(CHARACTER_WILDCARD) ? e.getMultiCharacterWildcard() : e.getSingleCharacterWildcard());
               part.setLength(0);
             } else {
               part.append(p);

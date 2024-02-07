@@ -106,7 +106,7 @@ import com.gip.xyna.xnwh.pools.OraclePoolType;
 import com.gip.xyna.xnwh.pools.PoolDefinition;
 import com.gip.xyna.xnwh.pools.TypedConnectionPoolParameter;
 import com.gip.xyna.xnwh.selection.parsing.SelectionParser;
-import com.gip.xyna.xnwh.selection.parsing.SelectionParser.EscapeParams;
+import com.gip.xyna.xnwh.selection.parsing.SelectionParser.EscapeParameters;
 import com.gip.xyna.xnwh.utils.SQLErrorHandling;
 import com.gip.xyna.xnwh.utils.SQLErrorHandlingLogger;
 import com.gip.xyna.xnwh.utils.SQLErrorHandlingLogger.ErrorCodeHandlingElement;
@@ -2304,7 +2304,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
 
   }
   
-  private static class EscapeForOracle implements EscapeParams {
+  private static class EscapeForOracle implements EscapeParameters {
 
     public String escapeForLike(String toEscape) {
       if (toEscape == null) {
@@ -2316,8 +2316,14 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
       return toEscape;
     }
 
-    public String getWildcard() {
+    @Override
+    public String getMultiCharacterWildcard() {
       return "%";
+    }
+
+    @Override
+    public String getSingleCharacterWildcard() {
+      return "_";
     }
     
   }
