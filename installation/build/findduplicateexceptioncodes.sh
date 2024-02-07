@@ -32,11 +32,11 @@ find $DIR -name "*.xml" | grep -v "Exceptions.xml" | grep -v "xmcp.xml" | grep -
 cat $FILE1 | xargs grep "Code=" | sed 's/.* Code="\([^"]*\)".* TypeName="\([^"]*\)".* TypePath="\([^"]*\)".*/\1 \3.\2/g' | awk '{printf "%-30s %s\n", $1, $2 }' | sort | uniq > $FILE
 #SSHMOCK-00000                  xact.ssh.mock.NoSessionFoundException
 #SSHMOCK-00001                  xact.ssh.mock.ParseBehaviorException
-#Achtung: eine Zeile kann wegen dem uniq zu mehreren Files gehören
+#Achtung: eine Zeile kann wegen dem uniq zu mehreren Files gehÃ¶ren
 
-#für alle doppelten exceptioncodes ($i)
-#  für alle exceptionnamen mit code $i (=$j)
-#     für alle files, die einen der doppelten codes enthalten: (punkte im exceptionname gelten dann als wildcards und matchen auf die slashes in den filenamen)
+#fÃ¼r alle doppelten exceptioncodes ($i)
+#  fÃ¼r alle exceptionnamen mit code $i (=$j)
+#     fÃ¼r alle files, die einen der doppelten codes enthalten: (punkte im exceptionname gelten dann als wildcards und matchen auf die slashes in den filenamen)
 
 for i in $(cat $FILE | awk '{print $1}' | uniq -d); do for j in $(grep "$i " $FILE | awk '{print $2}'); do for k in $(grep $j $FILE1); do echo $i" "$j" "$k | awk '{printf "%-30s %-65s %s\n", $1, $2, $3 }'; done; done; done;
 
