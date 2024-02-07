@@ -10240,12 +10240,11 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       Set<Long> revisions = new HashSet<Long>();
       Application app = new Application(applicationName, versionName);
       Collection<RuntimeDependencyContext> dependentRuntimeContexts = new HashSet<RuntimeDependencyContext>();
+      implicitDependencies = findDependenciesForStub(null, (List<ApplicationEntryStorable>) appEntries, revision, revisions, app, false);
       for (Long rev : revisions) {
         dependentRuntimeContexts
             .add(RuntimeContextDependencyManagement.asRuntimeDependencyContext(revisionManagement.getRuntimeContext(rev)));
       }
-      implicitDependencies =
-          findDependenciesForStub(null, (List<ApplicationEntryStorable>) appEntries, revision, revisions, app, false);
 
       createXMLEntries(implicitDependencies, false, null, applicationXmlEntry, revision, false, false, createStub);
 
