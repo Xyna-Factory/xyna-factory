@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="build" default="build" basedir=".">
+<project name="build" default="build" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
 
   <import file="../../installation/build/ant-xyna.xml" />
 
@@ -24,27 +24,40 @@
 
   <property name="target.dir" value="${basedir}/deploy" />
 
+        <resolver:pom file="${basedir}/pom.xml" id="pom"/>
+
+        <path id="libraries">
+                <fileset dir="${basedir}/lib/xyna">
+                  <include name="**/*.jar" />
+                </fileset>
+        </path>
+
+
   <!-- ================================= 
 	         target: build             
 	        ================================= -->
-	<target name="build" >
-	    <genCodeClass basedir="${basedir}" lookupjar="y" />
-	    <buildJar destfile="${target.dir}/${project.name.local}.jar" />
-	    <copy todir="${target.dir}">
-	      <fileset dir="${basedir}/lib">
-	        <include name="**/*.jar" />
-	        <include name="**/*LICENSE*" />
-	        <include name="**/*NOTICE*" />
-	      </fileset>     
-	    </copy>
-	  </target>
+  <target name="build" depends="resolve">
+    <genCodeClass basedir="${basedir}" lookupjar="y" />
+    <buildJar destfile="${target.dir}/${project.name.local}.jar" />
+    <copy todir="${target.dir}">
+      <fileset dir="${basedir}/lib">
+        <include name="**/*.jar" />
+        <include name="**/*LICENSE*" />
+        <include name="**/*NOTICE*" />
+      </fileset>     
+    </copy>
+  </target>
+
+      <target name="resolve">
+        <resolver:resolve>
+          <resolver:dependencies pomRef="pom"/>
+          <resolver:remoterepos refid="xyna.repository"/>
+          <resolver:files refid="files" dir="${basedir}/lib/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
+          <!--resolver:files refid="files" dir="${basedir}/lib" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/-->
+        </resolver:resolve>
+        <loadLicenses targetDir="${basedir}/lib" />
+        <!-- delete generated-resources ? -->
+      </target>
+
 	  	
-  <path id="libraries">
-    <fileset dir="${basedir}/../../installation/build/lib/factory">
-      <include name="**/*.jar"/>
-    </fileset>
-    <fileset dir="${basedir}/lib">
-       <include name="**/*.jar"/>
-     </fileset>
-  </path>
 </project>
