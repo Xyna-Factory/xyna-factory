@@ -30,6 +30,7 @@ import java.util.function.Supplier;
 
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 
+import xmcp.processmodeller.datatypes.expression.CastExpression;
 import xmcp.processmodeller.datatypes.expression.Expression;
 import xmcp.processmodeller.datatypes.expression.Expression2Args;
 import xmcp.processmodeller.datatypes.expression.ExpressionVariable;
@@ -59,6 +60,7 @@ public class ExpressionAssigners {
   private static Map<Class<? extends GeneralXynaObject>, Function<GeneralXynaObject, ExpressionAssigner>> createAssignerCreatorMap() {
     Map<Class<? extends GeneralXynaObject>, Function<GeneralXynaObject, ExpressionAssigner>> map = new HashMap<>();
     map.put(NotExpression.class, (x) -> new NotExpressionAssigner((NotExpression) x));
+    map.put(CastExpression.class, (x) -> new FunctionExpressionAssigner((CastExpression) x));
     map.put(Expression2Args.class, (x) -> new Expression2ArgsExpressionAssigner((Expression2Args) x));
     map.put(FunctionExpression.class, (x) -> new FunctionExpressionAssigner((FunctionExpression) x));
     map.put(ExpressionVariable.class, (x) -> new VariableExpressionAssigner((ExpressionVariable) x));
