@@ -18,7 +18,7 @@
 -->
 <project name="build" default="build" basedir=".">
 
-  <import file="../../../../../installation/build/ant-xyna.xml" />
+  <import file="../../installation/build/ant-xyna.xml" />
 
   <property name="project.name.local" value="XTFInputSource" />
 
@@ -40,7 +40,7 @@
 	  </target>
 	  	
   <path id="libraries">
-    <fileset dir="${basedir}/../../../../../../../installation/build/lib/factory">
+    <fileset dir="${basedir}/../../installation/build/lib/factory">
       <include name="**/*.jar"/>
     </fileset>
     <fileset dir="${basedir}/lib">
