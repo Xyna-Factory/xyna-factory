@@ -59,13 +59,13 @@ import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.AssumedDeadlockException;
 
-import jxl.Workbook;
-import jxl.write.Label;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
 import xdev.xtestfactory.infrastructure.datatypes.ManagedFileID;
 import xdev.xtestfactory.infrastructure.exceptions.InvalidCSV;
 import xdev.xtestfactory.infrastructure.services.impl.TestFactoryIntegrationServiceOperationImpl;
+import xdev.xtestfactory.infrastructure.services.impl.adapter.excel.ExcelAdapter;
+import xdev.xtestfactory.infrastructure.services.impl.adapter.excel.ExcelAdapter.CellData;
+import xdev.xtestfactory.infrastructure.services.impl.adapter.excel.ExcelAdapter.Sheet;
+import xdev.xtestfactory.infrastructure.services.impl.adapter.excel.ExcelAdapter.Workbook;
 import xdev.xtestfactory.infrastructure.storables.TestDataMetaData;
 import xdev.xtestfactory.infrastructure.storables.TestReport;
 import xdev.xtestfactory.infrastructure.storables.TestReportEntryFeature;
@@ -135,7 +135,7 @@ public class OtherExportImportAndUtils {
     sdf.setLenient(false);
     String testReportFileName = "TestReport_" + sdf.format(new Date());
 
-    ByteArrayOutputStream os = createExcelFromTestReportImpl(testreport, features, testcases);
+    ByteArrayOutputStream os = createExcelFromTestReportImpl(testreport, features, testcases, ExcelAdapter.createAdapter());
 
     ManagedFileID resultid = new ManagedFileID();
     resultid.setID(uncompressedToFileManagement(os.toByteArray(), ContentType.XLS, testReportFileName));
@@ -147,27 +147,28 @@ public class OtherExportImportAndUtils {
   }
 
 
-  private static ByteArrayOutputStream createExcelFromTestReportImpl(TestReport testreport,
+  private static <T> ByteArrayOutputStream createExcelFromTestReportImpl(TestReport testreport,
                                                       List<? extends TestReportEntryFeature> features,
-                                                      List<? extends TestReportEntryTestCase> testcases) {
+                                                      List<? extends TestReportEntryTestCase> testcases,
+                                                      ExcelAdapter<T> adapter) {
 
     SimpleDateFormat df = Constants.defaultUTCSimpleDateFormat();
 
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     try {
-      WritableWorkbook workbook = Workbook.createWorkbook(os);
-      WritableSheet featuresheet = workbook.createSheet("Features", 0);
-      WritableSheet testcasessheet = workbook.createSheet("TestCases", 1);
+      Workbook<T> workbook = adapter.createWorkbook(os);
+      Sheet<T> featuresheet = workbook.createSheet("Features", 0);
+      Sheet<T> testcasessheet = workbook.createSheet("TestCases", 1);
 
       int x = 0;
       int y = 0;
 
       // Ueberschrift mit Testreportname und Datum
-      Label label = new Label(x, y, testreport.getName() + " Features");
+      CellData label = adapter.createCellData(x, y, testreport.getName() + " Features");
       featuresheet.addCell(label);
       x++;
       if (testreport.getCreationDate() != null && testreport.getCreationDate().getTimeInMilliseconds() != 0) {
-        label = new Label(x, y, df.format(new Date(testreport.getCreationDate().getTimeInMilliseconds())));
+        label = adapter.createCellData(x, y, df.format(new Date(testreport.getCreationDate().getTimeInMilliseconds())));
         featuresheet.addCell(label);
       }
       y = y + 2;
@@ -175,16 +176,16 @@ public class OtherExportImportAndUtils {
       // Spaltenbeschreibungen
       x = 0;
 
-      label = new Label(x, y, "Featurename");
+      label = adapter.createCellData(x, y, "Featurename");
       featuresheet.addCell(label);
       x++;
-      label = new Label(x, y, "Executions");
+      label = adapter.createCellData(x, y, "Executions");
       featuresheet.addCell(label);
       x++;
-      label = new Label(x, y, "Successes");
+      label = adapter.createCellData(x, y, "Successes");
       featuresheet.addCell(label);
       x++;
-      label = new Label(x, y, "LastWasSuccess");
+      label = adapter.createCellData(x, y, "LastWasSuccess");
       featuresheet.addCell(label);
       y++;
 
@@ -192,16 +193,16 @@ public class OtherExportImportAndUtils {
 
       for (TestReportEntryFeature cur : features) {
         x = 0;
-        label = new Label(x, y, (cur.getFeature().getDeleted() ? "[deleted] " : "") + cur.getFeature().getName());
+        label = adapter.createCellData(x, y, (cur.getFeature().getDeleted() ? "[deleted] " : "") + cur.getFeature().getName());
         featuresheet.addCell(label);
         x++;
-        label = new Label(x, y, String.valueOf(cur.getOutcomeStatistics().getExecutions()));
+        label = adapter.createCellData(x, y, String.valueOf(cur.getOutcomeStatistics().getExecutions()));
         featuresheet.addCell(label);
         x++;
-        label = new Label(x, y, String.valueOf(cur.getOutcomeStatistics().getSuccesses()));
+        label = adapter.createCellData(x, y, String.valueOf(cur.getOutcomeStatistics().getSuccesses()));
         featuresheet.addCell(label);
         x++;
-        label = new Label(x, y, String.valueOf(cur.getOutcomeStatistics().getLastWasSuccess()));
+        label = adapter.createCellData(x, y, String.valueOf(cur.getOutcomeStatistics().getLastWasSuccess()));
         featuresheet.addCell(label);
         y++;
       }
@@ -210,11 +211,11 @@ public class OtherExportImportAndUtils {
       y = 0;
 
       // Ueberschrift mit Testreportname und Datum
-      label = new Label(x, y, testreport.getName() + " Test Cases");
+      label = adapter.createCellData(x, y, testreport.getName() + " Test Cases");
       testcasessheet.addCell(label);
       x++;
       if (testreport.getCreationDate() != null && testreport.getCreationDate().getTimeInMilliseconds() != 0) {
-        label = new Label(x, y, df.format(new Date(testreport.getCreationDate().getTimeInMilliseconds())));
+        label = adapter.createCellData(x, y, df.format(new Date(testreport.getCreationDate().getTimeInMilliseconds())));
         testcasessheet.addCell(label);
       }
       y = y + 2;
@@ -222,16 +223,16 @@ public class OtherExportImportAndUtils {
       // Spaltenbeschreibungen
       x = 0;
 
-      label = new Label(x, y, "Test Case Name");
+      label = adapter.createCellData(x, y, "Test Case Name");
       testcasessheet.addCell(label);
       x++;
-      label = new Label(x, y, "Executions");
+      label = adapter.createCellData(x, y, "Executions");
       testcasessheet.addCell(label);
       x++;
-      label = new Label(x, y, "Successes");
+      label = adapter.createCellData(x, y, "Successes");
       testcasessheet.addCell(label);
       x++;
-      label = new Label(x, y, "LastWasSuccess");
+      label = adapter.createCellData(x, y, "LastWasSuccess");
       testcasessheet.addCell(label);
       y++;
 
@@ -240,16 +241,16 @@ public class OtherExportImportAndUtils {
 
       for (TestReportEntryTestCase cur : testcases) {
         x = 0;
-        label = new Label(x, y, (cur.getTestCase().getDeleted() ? "[deleted] " : "") + cur.getTestCase().getName());
+        label = adapter.createCellData(x, y, (cur.getTestCase().getDeleted() ? "[deleted] " : "") + cur.getTestCase().getName());
         testcasessheet.addCell(label);
         x++;
-        label = new Label(x, y, String.valueOf(cur.getOutcomeStatistics().getExecutions()));
+        label = adapter.createCellData(x, y, String.valueOf(cur.getOutcomeStatistics().getExecutions()));
         testcasessheet.addCell(label);
         x++;
-        label = new Label(x, y, String.valueOf(cur.getOutcomeStatistics().getSuccesses()));
+        label = adapter.createCellData(x, y, String.valueOf(cur.getOutcomeStatistics().getSuccesses()));
         testcasessheet.addCell(label);
         x++;
-        label = new Label(x, y, String.valueOf(cur.getOutcomeStatistics().getLastWasSuccess()));
+        label = adapter.createCellData(x, y, String.valueOf(cur.getOutcomeStatistics().getLastWasSuccess()));
         testcasessheet.addCell(label);
         y++;
       }
@@ -462,8 +463,8 @@ public class OtherExportImportAndUtils {
   }
 
 
-  private static ByteArrayOutputStream createExcelContentFromTestdata(List<? extends Storable> testdata, String fqn,
-                                                                      TestDataMetaData metaData) {
+  private static <T> ByteArrayOutputStream createExcelContentFromTestdata(List<? extends Storable> testdata, String fqn,
+                                                                      TestDataMetaData metaData, ExcelAdapter<T> adapter) {
 
     List<List<String>> stringTable;
     try {
@@ -475,17 +476,17 @@ public class OtherExportImportAndUtils {
 
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     try {
-      WritableWorkbook workbook = Workbook.createWorkbook(os);
-      WritableSheet sheet = workbook.createSheet("Test data: " + fqn, 0);
+      Workbook<T> workbook = adapter.createWorkbook(os);
+      Sheet<T> sheet = workbook.createSheet("Test data: " + fqn, 0);
 
-      Label label = new Label(0, 0, fqn);
+      CellData label = adapter.createCellData(0, 0, fqn);
       sheet.addCell(label);
 
       int columnIndex = 0;
       int rowIndex = 1;
       for (List<String> nextLine : stringTable) {
         for (String cv : nextLine) {
-          label = new Label(columnIndex, rowIndex, cv);
+          label = adapter.createCellData(columnIndex, rowIndex, cv);
           sheet.addCell(label);
           columnIndex++;
         }
@@ -515,7 +516,7 @@ public class OtherExportImportAndUtils {
 
   public static ManagedFileID createExcelFromTestdata(List<? extends Storable> testdata, TestDataMetaData metaData) {
     ManagedFileID resultid = new ManagedFileID();
-    ByteArrayOutputStream out = createExcelContentFromTestdata(testdata, metaData.getTestDataFullQualifiedStorableName(), metaData);
+    ByteArrayOutputStream out = createExcelContentFromTestdata(testdata, metaData.getTestDataFullQualifiedStorableName(), metaData, ExcelAdapter.createAdapter());
     String testdataName = metaData.getName().replace(" ", "");
     resultid.setID(uncompressedToFileManagement(out.toByteArray(), ContentType.XLS, testdataName));
     return resultid;

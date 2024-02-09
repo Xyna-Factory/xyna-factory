@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -89,7 +89,7 @@ public class XTFInputSourceType implements OrderInputSourceType {
       pluginDescription = PluginDescription.create(PluginType.orderInputSource)
           .description("Creation of order input by executing another workflow. The output of that workflow is then used as input for the ordertype to be started originally. The other workflow must contain xprc.xpce.OrderCreationParameter as output.")
           .label("Workflow input generator type").name(XTFInputSourceType.class.getSimpleName()).parameters(ParameterUsage.Create, paras)
-          .addDatatype(load("XTFInputSource.xml")).addForm(load("XTFInputSourceForm.xml")).build();
+          .addDatatype(load("XTFInputSource.xml")).build();
     } catch (IOException e) {
       throw new RuntimeException("could not initialize plugin description", e);
     } catch (Ex_FileAccessException e) {
@@ -140,7 +140,7 @@ public class XTFInputSourceType implements OrderInputSourceType {
       //To ensure downward compatibility with older XTF versions, check if workflow exists.
       if (XTFrevision != null) {
 
-        dv = new FractalWorkflowDestination(XTF_PLANNING_WF_NAME, XTFrevision);
+        dv = new FractalWorkflowDestination(XTF_PLANNING_WF_NAME);
 
         try {
           XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getXynaPlanning().getPlanningDispatcher()
@@ -152,7 +152,7 @@ public class XTFInputSourceType implements OrderInputSourceType {
       }
 
       revision = rcdm.getRevisionDefiningXMOMObjectOrParent(XTF_CLEANUP_WF_NAME, revision);
-      dv = new FractalWorkflowDestination(XTF_CLEANUP_WF_NAME, revision);
+      dv = new FractalWorkflowDestination(XTF_CLEANUP_WF_NAME);
 
       try {
         XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getXynaCleanup().getCleanupEngineDispatcher()

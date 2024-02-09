@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2023 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="ListPlugins" TypePath="xmcp.forms.plugin" Label="List Plugins">
+  <Operation ID="0" Label="List Plugins" Name="ListPlugins" IsStatic="false">
+    <Input>
+    </Input>
+    <Output>
+      <Data ID="18" Label="Plugin" VariableName="plugin18" IsList="true" ReferenceName="Plugin" ReferencePath="xmcp.forms.plugin"/>
+    </Output>
+    <ServiceReference ID="41" Label="Plugin Management" ReferenceName="PluginManagement.PluginManagement" ReferencePath="xmcp.forms.plugin">
+      <Source RefID="40"/>
+      <Target RefID="40"/>
+    </ServiceReference>
+    <Function ID="40" Label="List Plugins">
+      <Source RefID="41">
+      </Source>
+      <Target RefID="41">
+      </Target>
+      <Target RefID="43">
+      </Target>
+      <Invoke ServiceID="41" Operation="listPlugins">
+      </Invoke>
+      <Receive ServiceID="41">
+        <Target RefID="43">
+        </Target>
+      </Receive>
+    </Function>
+    <Data ID="43" VariableName="plugin43" Label="Plugin" IsList="true" ReferenceName="Plugin" ReferencePath="xmcp.forms.plugin">
+      <Source RefID="40"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="43">
+      </Source>
+      <Target RefID="18">
+      </Target>
+      <Copy>
+        <Source RefID="43">
+        </Source>
+        <Target RefID="18">
+        </Target>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

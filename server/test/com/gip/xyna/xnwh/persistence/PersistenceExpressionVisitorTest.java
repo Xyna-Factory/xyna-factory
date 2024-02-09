@@ -74,7 +74,6 @@ public class PersistenceExpressionVisitorTest extends TestCase {
     execute("%", "\\%");
     execute("\\\\%", "\\\\\\\\\\%");
     execute("\\\\\\\\%", "\\\\\\\\\\\\\\\\\\%");
-
   }
 
 
@@ -82,6 +81,31 @@ public class PersistenceExpressionVisitorTest extends TestCase {
     execute("\\%", "\\%");
     execute("\\\\\\%", "\\\\\\\\\\%");
     execute("\\\\\\\\\\%", "\\\\\\\\\\\\\\\\\\%");
+  }
+  
+  public void testUnescapedQuestionMark() {
+    execute("?", "_");
+    execute("?a", "_a");
+    execute("\\\\?", "\\\\\\\\_");
+    execute("\\\\\\\\?", "\\\\\\\\\\\\\\\\_");
+  }
+  
+  public void testEscapedQuestionMark() {
+    execute("\\?", "?");
+    execute("\\\\\\?", "\\\\\\\\?");
+    execute("\\\\\\\\\\?", "\\\\\\\\\\\\\\\\?");
+  }
+  
+  public void testUnescapedUnderscore() {
+    execute("_", "\\_");
+    execute("\\\\_", "\\\\\\\\\\_");
+    execute("\\\\\\\\_", "\\\\\\\\\\\\\\\\\\_");
+  }
+  
+  public void testEscapedUnderscore() {
+    execute("\\_", "\\_");
+    execute("\\\\\\_", "\\\\\\\\\\_");
+    execute("\\\\\\\\\\_", "\\\\\\\\\\\\\\\\\\_");
   }
 
 

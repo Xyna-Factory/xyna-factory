@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,30 +16,22 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="build" default="genCodeClass" basedir=".">
+<project name="build" default="deploy" basedir=".">
 
-	<!-- this is the relative path to the root -->
-	<property name="root" value="./../.." />
 
-	<target name="genCodeClass" description="Generate code class for exceptions.">
-	    <java fork="true" failonerror="yes" classname="com.gip.xyna.utils.exceptions.ExceptionStorage">
-				<sysproperty key="BLACK_SERVER_HOME" value="${root}/common" />
-				<classpath refid="libraries" />
-				<classpath>
-					<fileset dir="${basedir}/lib">
-						<include name="**/*.jar" />
-					</fileset>
-				</classpath>
-				<arg value="Exceptions.xml" />
-				<arg value="${basedir}/src" />
-				<arg value="y" />
-			</java>
-		</target>
-	
-	<!-- custom libraries to be included -->
-    <path id="libraries">
-      <fileset dir="${root}/common/lib">
-        <include name="**/*.jar"/>
-      </fileset>
-    </path>
+
+    <!-- this is the absolute path to the root -->
+    <pathconvert property="root.dir" >
+        <path location="${basedir}/../../../../.."/>
+    </pathconvert>
+    <property name="xmom.dir" value="${basedir}/../../XMOM" />
+
+	<property name="project.name" value="TestFactoryIntegrationImpl" />
+	<property name="fqclassname" value="xdev.xtestfactory.infrastructure.services.TestFactoryIntegration" />
+    <property name="mdm.xml.path" value="xdev/xtestfactory/infrastructure/services" />
+    <property name="mdm.xml.filename" value="TestFactoryIntegration.xml" />
+    <property name="mdm.service.path" value="xdev.xtestfactory.infrastructure.services.TestFactoryIntegration" />
+
+    <import file="${root.dir}/installation/build/buildService.xml" />
+
 </project>
