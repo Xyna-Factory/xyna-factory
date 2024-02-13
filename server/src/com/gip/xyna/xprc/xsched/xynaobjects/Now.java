@@ -288,9 +288,13 @@ public class Now extends AbsoluteDate {
     if(getFormatInternally() == null) {
       try {
         getOrCreateLazyDateFormat().validate(getDate(), DEFAULT_FORMAT.getFormat());
+        //Set the format to the default, so that the super call knows the current format and can change it to the new one.
+        //The default format is not a regular datatype and should only be used to facilitate the change to a different format.
         super.setFormat(DEFAULT_FORMAT);
       } catch(Exception e) {
-        //no format specified and default format is not valid for current date.
+        //No format specified and default format is not valid for current date.
+        //That means date was updated to a non-default format and a previous format does not exist.
+        //Call super.setFormat to set the new format
       }
     }
     super.setFormat(format);

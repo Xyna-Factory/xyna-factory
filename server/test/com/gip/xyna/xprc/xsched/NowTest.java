@@ -79,4 +79,14 @@ public class NowTest extends TestCase {
     Now now = builder.instance();
     assertEquals(format, now.getFormat());
   }
+  
+  public void testNowNulledDate() {
+    Now now = new Now();
+    YyyyMMDdTHHMmSs format = new YyyyMMDdTHHMmSs();
+    now.setFormat(null);
+    now.setDate(null);
+    now.setFormat(format);
+    assertEquals(null, now.getDate());
+    assertEquals(format, now.getFormat());
+  }
 }
