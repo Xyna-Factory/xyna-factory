@@ -22,14 +22,14 @@
 #
 # Listen-Operationen
 #
-# Achtung: die Listen werden alle nur per Namen übergeben!
+# Achtung: die Listen werden alle nur per Namen Ã¼bergeben!
 #######################################################
 
-#Hinzufügen zu Liste
+#HinzufÃ¼gen zu Liste
 #  Eingabeparameter:
 #    1 = Liste
 #    2-n = weitere Listenelemente
-#  Rückgabeparameter
+#  RÃ¼ckgabeparameter
 #    neue Liste
 #  Beispiel 
 #    LS=$(f_add_to_list LS "clivie" "dahlie");
@@ -43,11 +43,11 @@ f_add_to_list() {
   fi;
 }
 
-#Hinzufügen zum Anfang der Liste
+#HinzufÃ¼gen zum Anfang der Liste
 #  Eingabeparameter:
 #    1 = Liste
 #    2-n = weitere Listenelemente
-#  Rückgabeparameter
+#  RÃ¼ckgabeparameter
 #    neue Liste
 #  Beispiel 
 #    LS=$(f_add_to_list_begin LS "clivie" "dahlie");
@@ -61,11 +61,11 @@ f_add_to_list_begin() {
   fi;
 }
 
-#Hinzufügen zur Liste, wenn Eintrag noch fehlt
+#HinzufÃ¼gen zur Liste, wenn Eintrag noch fehlt
 #  Eingabeparameter:
 #    1 = Liste
 #    2-n = weitere Listenelemente
-#  Rückgabeparameter
+#  RÃ¼ckgabeparameter
 #    neue Liste
 #  Beispiel 
 #    LS=$(f_add_to_list_once LS "clivie" "dahlie");
@@ -96,7 +96,7 @@ f_add_to_list_once() {
 #  Eingabeparameter:
 #    1 = Liste
 #    2 = gesuchtes Element
-#  Rückgabeparameter
+#  RÃ¼ckgabeparameter
 #    boolean
 #  Beispiel: 
 #    if f_is_in_list LS "begonie" ; then ...
@@ -116,7 +116,7 @@ f_is_in_list() {
 #  Eingabeparameter:
 #    1 = Liste
 #    2-n = zu entfernende Listenelemente
-#  Rückgabeparameter
+#  RÃ¼ckgabeparameter
 #    neue Liste
 #  Beispiel 
 #    LS=$(f_remove_from_list LS "clivie" "dahlie");
@@ -144,10 +144,10 @@ f_remove_from_list() {
 }
 
 
-#Rückgabe erster Wert in Liste
+#RÃ¼ckgabe erster Wert in Liste
 #  Eingabeparameter:
 #    1 = Liste
-#  Rückgabeparameter
+#  RÃ¼ckgabeparameter
 #    erster Wert
 #  Beispiel 
 #    VAL=$(f_first_in_list LS);
@@ -161,10 +161,10 @@ f_first_in_list() {
   echo
 }
 
-#Rückgabe letzter Wert in Liste
+#RÃ¼ckgabe letzter Wert in Liste
 #  Eingabeparameter:
 #    1 = Liste
-#  Rückgabeparameter
+#  RÃ¼ckgabeparameter
 #    letzter Wert
 #  Beispiel 
 #    VAL=$(f_last_in_list LS);

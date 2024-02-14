@@ -19,10 +19,10 @@
 
 # Processing -> Xyna Applications library
 
-# Einstiegspunkt für import_applications() aus blackedition_lib.sh/install_black_edition.sh 
+# Einstiegspunkt fÃ¼r import_applications() aus blackedition_lib.sh/install_black_edition.sh 
 #
 # Aufruf-Parameter 1=APP_FILE (Beispiel "xprc/Processing.1.0.app")
-# Kommunikation mit Aufrufer über folgende Variablen:
+# Kommunikation mit Aufrufer Ã¼ber folgende Variablen:
 # * APP_LIST             #noch zu installierende Apps
 # * IMPORTED_APP_LIST    #importierte Apps
 # * FAILED_APP_LIST      #Apps mit Fehler: nicht gefunden; fehlgeschlagener Import 
@@ -35,7 +35,7 @@ f_import_applications_internal() {
   local RC;
   local DO_IMPORT=false;
   
-  #Überspringen, wenn bereits als fehlerhaft bekannt
+  #Ãœberspringen, wenn bereits als fehlerhaft bekannt
   if f_is_in_list FAILED_APP_LIST ${APP_FILE} ; then
     return;
   fi;
@@ -87,7 +87,7 @@ f_import_applications_internal() {
 # Ermittlung der von einer Application vorausgesetzten Applications
 #
 # Aufruf-Parameter 1=APP_FILE (Beispiel "xprc/Processing.1.0.app")
-# Kommunikation mit Aufrufer über folgende Variablen:
+# Kommunikation mit Aufrufer Ã¼ber folgende Variablen:
 # * REQ_APP_FILE_LIST    #erforderte Apps
 # * FAILED_APP_LIST      #Apps mit Fehler: nicht gefunden
 #
@@ -125,9 +125,9 @@ f_import_applications_internal_get_required_applications() {
 }
 
 # Verwaltung der von einer Application vorausgesetzten Applications:
-# Eintrag in die Verwaltungs-Listen; Prüfung dass kein Abhängigkeits-Zirkel auftritt
+# Eintrag in die Verwaltungs-Listen; PrÃ¼fung dass kein AbhÃ¤ngigkeits-Zirkel auftritt
 #
-# Kommunikation mit Aufrufer über folgende Variablen:
+# Kommunikation mit Aufrufer Ã¼ber folgende Variablen:
 # * REQ_APP_FILE_LIST    #erforderte Apps
 # * FAILED_APP_LIST      #Apps mit Fehler: nicht gefunden
 # * APP_LIST             #noch zu installierende Apps
@@ -149,14 +149,14 @@ f_import_applications_internal_required () {
   #aktuelle App kann noch nicht installiert werden, deswegen wieder in Liste eintragen
   APP_LIST=$(f_add_to_list_begin APP_LIST ${APP_FILE});
       
-  #aktuelle App in REQUIRING_APP_LIST eintragen, um Zirkel erkennen zu können 
+  #aktuelle App in REQUIRING_APP_LIST eintragen, um Zirkel erkennen zu kÃ¶nnen 
   REQUIRING_APP_LIST=$(f_add_to_list REQUIRING_APP_LIST ${APP_FILE});
   
   local REQ_APP_FILE;
   for REQ_APP_FILE in ${REQ_APP_FILE_LIST} ; do
-    #evtl in Gesamt-Liste löschen, damit nicht doppelt
+    #evtl in Gesamt-Liste lÃ¶schen, damit nicht doppelt
     APP_LIST=$(f_remove_from_list APP_LIST ${REQ_APP_FILE});
-    #Requirement vorne eintragen, damit als nächstes ausgewertet
+    #Requirement vorne eintragen, damit als nÃ¤chstes ausgewertet
     APP_LIST=$(f_add_to_list_begin APP_LIST ${REQ_APP_FILE});
   done
 }
@@ -209,7 +209,7 @@ f_import_application () {
     return 100;
   fi
 
-  # tail -1 gibt nur die höchste Versionsnummer zurück, weil die Ausgabe von listapplications bereits sortiert ist. Migration von älteren Applications muss manuell erfolgen
+  # tail -1 gibt nur die hÃ¶chste Versionsnummer zurÃ¼ck, weil die Ausgabe von listapplications bereits sortiert ist. Migration von Ã¤lteren Applications muss manuell erfolgen
   local OLD_APP=$(f_xynafactory listapplications -h | ${VOLATILE_GREP} -v "STATUS: 'AUDIT_MODE'" | ${VOLATILE_GREP} "'${NEW_APP}' '" | tail -1)
   local OLD_APP_LINE=$OLD_APP
   # Erzeuge Array in LINE  (Separiert nach leerzeichen), d.h. Name, Version, etc separat
@@ -334,10 +334,10 @@ f_import_application () {
 }
 
 
-# Prüfung, ob Application unter components liegt
+# PrÃ¼fung, ob Application unter components liegt
 #
 # Aufruf-Parameter 1=Name
-# Rückgabe:
+# RÃ¼ckgabe:
 #   0, wenn Datei existiert
 #
 f_application_exists_in_components () {
@@ -354,12 +354,12 @@ f_application_exists_in_components () {
   return ${EXISTS}
 }
 
-# Rückgabe des DateiNamens, mit der Application unter components liegt
+# RÃ¼ckgabe des DateiNamens, mit der Application unter components liegt
 #
 # Aufruf-Parameter 1=Name
 # Ausgabe: 
 #   Dateiname (Beispiel "xprc/Processing.1.0.app")
-# Rückgabe:
+# RÃ¼ckgabe:
 #   0, wenn Datei existiert
 #
 f_find_application_in_components () {
@@ -385,7 +385,7 @@ f_find_application_in_components () {
   return ${EXISTS}
 }
 
-# Rückgabe der DateiNamen aller Applications unter components
+# RÃ¼ckgabe der DateiNamen aller Applications unter components
 #
 
 # Ausgabe: 

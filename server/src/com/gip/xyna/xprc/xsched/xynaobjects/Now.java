@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -279,15 +279,46 @@ public class Now extends AbsoluteDate {
 
   private static void init(Now instance) {
     long now = System.currentTimeMillis();
-    String format = instance.getFormatInternally();
+    String format = instance.getFormatInternally() == null ? DEFAULT_FORMAT.getFormat() : instance.getFormatInternally();
     instance.unversionedSetDate(instance.getOrCreateLazyDateFormat().format(now, format));
   }
+  
+  @Override
+  public void setFormat(DateFormat format) {
+    if(getFormatInternally() == null) {
+      try {
+        getOrCreateLazyDateFormat().validate(getDate(), DEFAULT_FORMAT.getFormat());
+        //Set the format to the default, so that the super call knows the current format and can change it to the new one.
+        //The default format is not a regular datatype and should only be used to facilitate the change to a different format.
+        super.setFormat(DEFAULT_FORMAT);
+      } catch(Exception e) {
+        //No format specified and default format is not valid for current date.
+        //That means date was updated to a non-default format and a previous format does not exist.
+        //Call super.setFormat to set the new format
+      }
+    }
+    super.setFormat(format);
+  }
 
-  protected String getFormatInternally() {
-    if (getFormat() == null || getFormat().getFormat() == null) {
+  private static final DefaultFormat DEFAULT_FORMAT = new DefaultFormat();
+  
+  private static class DefaultFormat extends DateFormat {
+
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    public DateFormat clone() {
+      return new DefaultFormat();
+    }
+
+    @Override
+    public DateFormat clone(boolean deep) {
+      return new DefaultFormat();
+    }
+
+    @Override
+    public String getFormat() {
       return "yyyy-MM-dd HH:mm:ss";
-    } else {
-      return super.getFormatInternally();
     }
   }
 }

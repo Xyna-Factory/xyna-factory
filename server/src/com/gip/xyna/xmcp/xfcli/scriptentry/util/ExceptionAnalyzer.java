@@ -63,7 +63,7 @@ public class ExceptionAnalyzer {
   private void analyzeDeployException(Throwable t, GenerationBase gb) {
 
     //defined no or multiple unique identifiers
-    if (t instanceof RuntimeException && t.getMessage().endsWith("unique identifier.")) {
+    if (t instanceof RuntimeException && t.getMessage() != null && t.getMessage().endsWith("unique identifier.")) {
       System.out.println("ERROR: " + t.getMessage() + " - check \"xprc.xfractwfe.generation.storable.xmom.interfaces\"");
       return;
     }

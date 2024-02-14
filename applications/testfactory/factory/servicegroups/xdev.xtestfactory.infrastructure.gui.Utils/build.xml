@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,59 +17,27 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <project name="build" default="deploy" basedir=".">
-	
-  <!-- this is the relative path to the root -->
-  <property name="root.dir" value="./../.." />
 
-  <property name="common.lib.dir" value="${root.dir}/common/lib" />
-  <property name="common.xyna.lib.dir" value="${common.lib.dir}/xyna" />
-  <property name="exception.xml.dir" value="${root.dir}/server" />
-  <property name="base.lib.dir" value="${basedir}/lib" />
-  <property name="target.dir" value="${basedir}/deploy" />
-  	
-	<condition property="host.properties.found">
-		<or>
-			<available file="${basedir}/server.properties" />
-			<available file="${root.dir}/server.properties" />
-		</or>
-	</condition>
-	
-	<property file="${basedir}/server.properties" />
-	<property file="${root.dir}/server.properties" />
 
-	<property name="project.name" value="UtilsImpl" />
-	<property name="fqclassname" value="xdev.xtestfactory.infrastructure.gui.Utils" />
-	<property name="workspacename" value="default workspace" />
-	<property name="revision.dir" value="../revisions/rev_workingset" />
-	
-	<!-- depends on server make use of server variable -->
-	<property name="server.mdm.path" value="${server.path}/${revision.dir}/saved/services/xdev.xtestfactory.infrastructure.gui.Utils" />
-	<property name="server.mdm.xml.path" value="${server.path}/${revision.dir}/saved/XMOM/xdev/xtestfactory/infrastructure/gui" />
-	<property name="server.mdm.xml.filename" value="Utils.xml" />
-	<property name="local.xml.dir" value="${basedir}/xmldefinition" />
-	
-	<!--property name="build.import.xml.path" value="TemplateBuildImportName" /-->
-	<pathconvert targetos="unix" property="deploy.jars">
-		<path>
-			<pathelement location="TemplateDeployMainJar" />
-			<fileset dir="${basedir}/lib">
-				<include name="*.jar"/>
-			</fileset>
-		</path>
-		
-		<map from="${basedir}/lib" to="${revision.dir}/saved/XMOM/xdev/xtestfactory/infrastructure/gui"/>
-	</pathconvert>
-	
-	<property name="deploy.sharedlibs" value=":" />
-	<property name="deploy.template" value="deploydatatype -fqDatatypeName ${fqclassname} -workspaceName '${workspacename}' -protectionMode TRY -registerWithXMOM true" />
-	
-	<!-- change this import to use a common build script for multiple projects -->
-	<import file="${basedir}/buildService.xml" />
-	
-	<!-- custom libraries to be included -->
-    <path id="libraries">
-      <fileset dir="${common.lib.dir}">
-        <include name="**/*.jar"/>
-      </fileset>
-    </path>
+
+    <!-- this is the absolute path to the root -->
+    <pathconvert property="root.dir" >
+        <path location="${basedir}/../../../../.."/>
+    </pathconvert>
+    <property name="xmom.dir" value="${basedir}/../../XMOM" />
+
+    <property name="project.name" value="UtilsImpl" />
+    <property name="fqclassname" value="xdev.xtestfactory.infrastructure.gui.Utils" />
+    <property name="mdm.xml.path" value="xdev/xtestfactory/infrastructure/gui" />
+    <property name="mdm.xml.filename" value="Utils.xml" />
+    <property name="mdm.service.path" value="xdev.xtestfactory.infrastructure.gui.Utils" />
+
+    <target name="prepareLibs" description="Prepare Libs">
+        <ant antfile="build.xml" target="build" inheritAll="false" dir="${root.dir}/modules/xmcp/zetaFramework/sharedlib/ZetaTools">
+            <property name="target.dir" value="${basedir}/lib/xyna" />
+        </ant>
+    </target>
+
+    <import file="${root.dir}/installation/build/buildService.xml" />
+
 </project>

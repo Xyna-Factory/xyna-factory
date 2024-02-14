@@ -356,13 +356,13 @@ f_compare_versions () {
   echo ${INT_RETURN_VALUE}
 }
 
-#  Beginnt übergebene Zeichenkette mit einem Kleinbuchstaben?
+#  Beginnt Ã¼bergebene Zeichenkette mit einem Kleinbuchstaben?
 #
 #  Eingabeparameter:
 #o   1 = Zeichenkette
 #  Rueckgabewert
 #    0 beginnt mit Kleinbuchstaben
-#    1 beginnt mit Großbuchstabenfalls
+#    1 beginnt mit GroÃŸbuchstabenfalls
 #    2 ansonsten 
 f_starts_with_lowercase () {
   case ${1} in
@@ -373,7 +373,7 @@ f_starts_with_lowercase () {
 }
 
 
-# Trennt übergebenen String anhand Komma oder Leerzeichen, wandelt alles in Kleinbuchstaben außer "ALL" 
+# Trennt Ã¼bergebenen String anhand Komma oder Leerzeichen, wandelt alles in Kleinbuchstaben auÃŸer "ALL" 
 # und gibt als Leerzeichen-separierten String aus
 #Aufruf  f_split_to_array "abc Fgh ALL,ijk,LMN" -> [abc fgh ALL ijk lmn] 
 f_split_to_array () {
@@ -387,7 +387,7 @@ f_split_to_array () {
     }'
 }
 
-# Auswertung, ob mindestens eine der übergebenen Variablen true ist
+# Auswertung, ob mindestens eine der Ã¼bergebenen Variablen true ist
 f_selected () {
   for v in "$@" ; do
     if [[ "x${v}" == "xtrue" ]] ; then
@@ -397,10 +397,10 @@ f_selected () {
   return 1;
 }
 
-# Auswertung, ob Übergabe $1 true ist
+# Auswertung, ob Ãœbergabe $1 true ist
 #  Eingabeparameter:
 #    1 = Zeichenkette
-#  Rückgabeparameter
+#  RÃ¼ckgabeparameter
 #    boolean
 # Beispiel: if f_is_true ${VAL} ; then ...
 f_is_true () {
@@ -411,10 +411,10 @@ f_is_true () {
   fi;
 }
 
-# Auswertung, ob Übergabe $1 eine Ganzzahl ist
+# Auswertung, ob Ãœbergabe $1 eine Ganzzahl ist
 #  Eingabeparameter:
 #    1 = Zeichenkette
-#  Rückgabeparameter
+#  RÃ¼ckgabeparameter
 #    boolean
 # Beispiel: if f_is_integer ${VAL} ; then ...
 f_is_integer () {

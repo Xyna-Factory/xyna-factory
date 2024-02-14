@@ -446,7 +446,7 @@ f_set_etc_opt_xyna_permission() {
   local VAR_DIR=${XYNA_CACHE_DIR}
   local ETC_ROOT_DIR=$(dirname ${XYNA_ENVIRONMENT_DIR})
   
-  #Alle Dateien sollen GIPGROUP gehören
+  #Alle Dateien sollen GIPGROUP gehÃ¶ren
   if ! check_if_group_exists ${GIPGROUP} ; then
     ${VOLATILE_CHGRP} -Rf "${GIPGROUP}" "${ETC_ROOT_DIR}"
   fi

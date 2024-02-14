@@ -29,19 +29,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipInputStream;
 
-import jxl.Workbook;
-import jxl.write.Label;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
-
 import org.apache.log4j.Logger;
 
-import xdev.xtestfactory.infrastructure.datatypes.CounterID;
 import xdev.xtestfactory.infrastructure.datatypes.ManagedFileID;
 import xdev.xtestfactory.infrastructure.datatypes.TestCaseID;
-import xdev.xtestfactory.infrastructure.datatypes.TestCaseInstance;
 import xdev.xtestfactory.infrastructure.datatypes.TestDataGenerationID;
-import xdev.xtestfactory.infrastructure.datatypes.TestObjectMapping;
 import xdev.xtestfactory.infrastructure.datatypes.TestProjectCreationParameter;
 import xdev.xtestfactory.infrastructure.datatypes.Workspacename;
 import xdev.xtestfactory.infrastructure.exceptions.NoMatchingTestDataAvailable;
@@ -52,6 +44,10 @@ import xdev.xtestfactory.infrastructure.exceptions.TestProjectNotUnique;
 import xdev.xtestfactory.infrastructure.services.ExceptionCount;
 import xdev.xtestfactory.infrastructure.services.OrderID;
 import xdev.xtestfactory.infrastructure.services.TestFactoryIntegrationServiceOperation;
+import xdev.xtestfactory.infrastructure.services.impl.adapter.excel.ExcelAdapter;
+import xdev.xtestfactory.infrastructure.services.impl.adapter.excel.ExcelAdapter.CellData;
+import xdev.xtestfactory.infrastructure.services.impl.adapter.excel.ExcelAdapter.Sheet;
+import xdev.xtestfactory.infrastructure.services.impl.adapter.excel.ExcelAdapter.Workbook;
 import xdev.xtestfactory.infrastructure.services.impl.complexerfunctions.OtherExportImportAndUtils;
 import xdev.xtestfactory.infrastructure.services.impl.complexerfunctions.OtherExportImportAndUtils.ContentType;
 import xdev.xtestfactory.infrastructure.services.impl.complexerfunctions.TestDataQueryAndNotification;
@@ -62,10 +58,8 @@ import xdev.xtestfactory.infrastructure.storables.Interface;
 import xdev.xtestfactory.infrastructure.storables.SystemUnderTest;
 import xdev.xtestfactory.infrastructure.storables.SystemUnderTestInstance;
 import xdev.xtestfactory.infrastructure.storables.TestCase;
-import xdev.xtestfactory.infrastructure.storables.TestCaseChain;
 import xdev.xtestfactory.infrastructure.storables.TestData;
 import xdev.xtestfactory.infrastructure.storables.TestDataMetaData;
-import xdev.xtestfactory.infrastructure.storables.TestObject;
 import xdev.xtestfactory.infrastructure.storables.TestProject;
 import xdev.xtestfactory.infrastructure.storables.TestReport;
 import xdev.xtestfactory.infrastructure.storables.TestReportEntryFeature;
@@ -109,11 +103,6 @@ import com.gip.xyna.xfmg.xods.orderinputsourcemgmt.OrderInputSourceManagement;
 import com.gip.xyna.xfmg.xods.orderinputsourcemgmt.storables.OrderInputSourceStorable;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
-import com.gip.xyna.xnwh.persistence.xmom.DeleteParameter;
-import com.gip.xyna.xnwh.persistence.xmom.DeleteParameter.BackwardReferenceHandling;
-import com.gip.xyna.xnwh.persistence.xmom.DeleteParameter.ForwardReferenceHandling;
-import com.gip.xyna.xnwh.persistence.xmom.StoreParameter;
-import com.gip.xyna.xnwh.persistence.xmom.XMOMPersistenceManagement;
 import com.gip.xyna.xprc.XynaOrderCreationParameter;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 import com.gip.xyna.xprc.XynaOrderServerExtension.ExecutionType;
@@ -358,20 +347,20 @@ public class TestFactoryIntegrationServiceOperationImpl
   }
 
 
-  private ByteArrayOutputStream convertCSVToExcelFileOutputStream(String csvcontent) {
+  private <T> ByteArrayOutputStream convertCSVToExcelFileOutputStream(String csvcontent, ExcelAdapter<T> adapter) {
     // csv in Excel Dokument umwandeln
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     try {
-      WritableWorkbook workbook = Workbook.createWorkbook(os);
-      WritableSheet sheet = workbook.createSheet("First Page", 0);
-
+      Workbook<T> workbook = adapter.createWorkbook(os);
+      Sheet<T> sheet = workbook.createSheet("First Page", 0);
+      
       int x = 0;
       int y = 0;
       String[] zeilen = csvcontent.split("\n");
       for (String s : zeilen) {
         String[] spalten = s.split(";");
         for (String cv : spalten) {
-          Label label = new Label(x, y, cv);
+          CellData label = adapter.createCellData(x, y, cv);
           sheet.addCell(label);
           x++;
         }
@@ -394,7 +383,7 @@ public class TestFactoryIntegrationServiceOperationImpl
     String coverageFileName = "CoverageMatrix";
     ManagedFileID resultid = new ManagedFileID();
     String resultcsv = getCSV(testcases);
-    ByteArrayOutputStream os = convertCSVToExcelFileOutputStream(resultcsv);
+    ByteArrayOutputStream os = convertCSVToExcelFileOutputStream(resultcsv, ExcelAdapter.createAdapter());
     resultid.setID(OtherExportImportAndUtils.uncompressedToFileManagement(os.toByteArray(), ContentType.XLS,
                                                                           coverageFileName));
     if (resultid.getID() == null)
