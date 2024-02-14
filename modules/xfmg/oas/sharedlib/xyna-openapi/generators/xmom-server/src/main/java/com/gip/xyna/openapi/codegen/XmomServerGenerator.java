@@ -68,20 +68,23 @@ public class XmomServerGenerator extends DefaultCodegen {
     super.preprocessOpenAPI(openAPI);
 
     Info info = openAPI.getInfo();
-    Map<String, Object> vendorExtentions = info.getExtensions();
-    
+
     // replace spaces, "-", "." with underscores in info.title
     info.setTitle(sanitizeName(info.getTitle()));
 
-    // change the path of the generated XMOMs
-    String xModelPath = (String)vendorExtentions.get("x-model-path");
-    if (xModelPath != null && !xModelPath.trim().isEmpty()) {
-      modelPackage = xModelPath.replace('-', '_').replace(' ', '_').toLowerCase();
-    }
+    Map<String, Object> vendorExtentions = info.getExtensions();    
 
-    String xProviderPath = (String)vendorExtentions.get("x-provider-path");
-    if (xProviderPath != null && !xProviderPath.trim().isEmpty()) {
-      apiPackage = xProviderPath.replace('-', '_').replace(' ', '_').toLowerCase();
+    // change the path of the generated XMOMs
+    if (vendorExtentions != null) {
+      String xModelPath = (String)vendorExtentions.get("x-model-path");
+      if (xModelPath != null && !xModelPath.trim().isEmpty()) {
+        modelPackage = xModelPath.replace('-', '_').replace(' ', '_').toLowerCase();
+      }
+
+      String xProviderPath = (String)vendorExtentions.get("x-provider-path");
+      if (xProviderPath != null && !xProviderPath.trim().isEmpty()) {
+        apiPackage = xProviderPath.replace('-', '_').replace(' ', '_').toLowerCase();
+      }
     }
   }
 
