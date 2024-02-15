@@ -36,7 +36,7 @@
         <Documentation>Get JSONValue of member with given Key. Returns null if member does not exist</Documentation>
       </Meta>
       <SourceCode>
-        <CodeSnippet Type="Java">return this.getMembers()== null ? null : this.getMembers().stream().filter(x -> key.equals(x.getKey())).map(x -> x.getValue()).findFirst().orElseGet(null);</CodeSnippet>
+        <CodeSnippet Type="Java">return this.getMembers()== null ? null : this.getMembers().stream().filter(x -> key.equals(x.getKey())).map(x -> x.getValue()).findFirst().orElseGet(() -> null);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
