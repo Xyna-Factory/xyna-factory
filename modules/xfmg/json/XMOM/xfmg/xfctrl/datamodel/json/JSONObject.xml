@@ -30,7 +30,7 @@
         </Data>
       </Input>
       <Output>
-        <Data ID="5" Label="Value" VariableName="value" ReferenceName="xfmg.xfctrl.datamodel.json" ReferencePath="JSONValue"/>
+        <Data ID="5" Label="Value" VariableName="value" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json"/>
       </Output>
       <Meta>
         <Documentation>Get JSONValue of member with given Key. Returns null if member does not exist</Documentation>
