@@ -18,6 +18,7 @@
 package com.gip.xyna.openapi.codegen;
 
 import org.openapitools.codegen.*;
+import org.openapitools.codegen.model.ModelsMap;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -77,6 +78,29 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     }
   }
 
+  @Override
+  public Map<String, ModelsMap> postProcessAllModels(Map<String, ModelsMap> objs) {
+    objs = super.postProcessAllModels(objs);
+    for (ModelsMap models: objs.values()) {
+      CodegenModel model = models.getModels().get(0).getModel();
+      if (model.getName().equals(model.parent)) {
+        model.parent = null;
+      }
+      ModelsMap parentMap = objs.get(model.parent);
+      if (parentMap != null) {
+        CodegenModel parent = parentMap.getModels().get(0).getModel();
+        for(CodegenProperty var: model.vars) {
+          for(CodegenProperty parentVar: parent.vars) {
+            if(parentVar.getName().equals(var.getName())) {
+              var.isInherited = true;
+            }
+          }
+        }
+      }
+    }
+    return objs;
+  }
+  
   /**
    * Returns human-friendly help for the generator.  Provide the consumer with help
    * tips, parameters here
