@@ -19,22 +19,10 @@
 <project name="build" default="build-all" basedir=".">
     
     <property name="target.dir" value="${basedir}/deploy" />
-    <import file="buildModule.xml" />
-    
-    <target name="build-base">
-        <buildModule target="build" dir="base/base"       target.dir="${target.dir}" />
-        <buildModule target="build" dir="xprc/processing" target.dir="${target.dir}" />
-    </target>
+    <import file="../buildModule.xml" />
     
     <target name="build-all">
-        <buildModule target="build-all" dir="base" target.dir="${target.dir}"/>
-        <buildModule target="build-all" dir="xact" target.dir="${target.dir}"/>
-        <buildModule target="build-all" dir="xfmg" target.dir="${target.dir}"/>
-        <buildModule target="build-all" dir="xprc" target.dir="${target.dir}"/>
-        <buildModule target="build-all" dir="xmcp" target.dir="${target.dir}"/>
-        <buildModule target="build-all" dir="xint" target.dir="${target.dir}"/>
-        <buildModule target="build-all" dir="xnwh" target.dir="${target.dir}"/>
-        <buildModule target="build-all" dir="xdev" target.dir="${target.dir}"/>
+        <buildModule target="build"     dir="xtf"        target.dir="${target.dir}/xdev" />
     </target>
     
 </project>
