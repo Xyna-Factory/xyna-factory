@@ -350,4 +350,8 @@ public class HTTPStartParameter extends EnhancedStartParameter {
     return NetworkInterfaceUtils.getFirstIpAddressByInterfaceName(address, ipv6, useLocalAddresses);
   }
 
+  @Override
+  public String toString() {
+    return String.format("[Address: '%s' Port:'%d']", address, port);
+  }
 }
