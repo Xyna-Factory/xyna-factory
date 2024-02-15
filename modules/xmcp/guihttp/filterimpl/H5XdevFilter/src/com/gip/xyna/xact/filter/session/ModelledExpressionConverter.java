@@ -24,9 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
-import org.apache.log4j.Logger;
 
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xact.filter.session.exceptions.UnknownObjectIdException;
 import com.gip.xyna.xact.filter.session.expressions.ExpressionAssigners.ExpressionAssigner;
 import com.gip.xyna.xact.filter.session.expressions.ExpressionAssigners;
@@ -40,6 +38,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xprc.xfractwfe.formula.Expression;
 import com.gip.xyna.xprc.xfractwfe.formula.Expression2Args;
 import com.gip.xyna.xprc.xfractwfe.formula.FunctionExpression;
+import com.gip.xyna.xprc.xfractwfe.formula.Functions;
 import com.gip.xyna.xprc.xfractwfe.formula.LiteralExpression;
 import com.gip.xyna.xprc.xfractwfe.formula.Not;
 import com.gip.xyna.xprc.xfractwfe.formula.Operator;
@@ -54,14 +53,13 @@ import com.gip.xyna.xprc.xfractwfe.generation.StepChoice;
 import com.gip.xyna.xprc.xfractwfe.generation.StepFunction;
 import com.gip.xyna.xprc.xfractwfe.generation.StepMapping;
 
+import xmcp.processmodeller.datatypes.expression.CastExpression;
 import xmcp.processmodeller.datatypes.expression.ExpressionVariable;
 import xmcp.processmodeller.datatypes.response.GetModelledExpressionsResponse;
 
 
 
 public class ModelledExpressionConverter {
-
-  private static final Logger logger = CentralFactoryLogging.getLogger(ModelledExpressionConverter.class);
 
 
   public GetModelledExpressionsResponse convert(GenerationBaseObject gbo, String stepId) {
@@ -161,12 +159,15 @@ public class ModelledExpressionConverter {
       GeneralXynaObject xo = objects.get(obj);
       FunctionSubExpressionAssigner cur = new FunctionSubExpressionAssigner((xmcp.processmodeller.datatypes.expression.FunctionExpression) xo);
       context.push(cur);
+      objects.put(cur, xo);
     }
 
 
     @Override
     public void functionStarts(FunctionExpression fe) {
-      xmcp.processmodeller.datatypes.expression.FunctionExpression exp = new xmcp.processmodeller.datatypes.expression.FunctionExpression(null, null, null, null);
+      xmcp.processmodeller.datatypes.expression.FunctionExpression exp = Functions.CAST_FUNCTION_NAME.equals(fe.getFunction().getName()) ? 
+            new CastExpression(null, null, null, null): 
+            new xmcp.processmodeller.datatypes.expression.FunctionExpression(null, null, null, null);
       exp.unversionedSetFunction(fe.getFunction().getName());
       assignExpression(exp);
       ExpressionAssigner assigner = ExpressionAssigners.createAssigner(exp);
