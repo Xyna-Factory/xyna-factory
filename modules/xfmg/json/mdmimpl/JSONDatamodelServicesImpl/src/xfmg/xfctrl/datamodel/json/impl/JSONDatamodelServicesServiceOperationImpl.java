@@ -462,7 +462,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
                 if (Modifier.isAbstract(typeOfField.getModifiers())) {
                   throw new RuntimeException("Can not instantiate abstract member type " + typeOfField + " for member " + varNameInXyna + ".");
                 }
-                o = createXynaObject((Class<GeneralXynaObject>) typeOfField, job, decider);
+                o = createXynaObject((Class<GeneralXynaObject>) typeOfField, value.getObjectValue(), decider);
                 xo.set(varNameInXyna, o);
               }
               if (o instanceof XynaObject) {
