@@ -62,15 +62,18 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     super.preprocessOpenAPI(openAPI);
 
     Info info = openAPI.getInfo();
-    Map<String, Object> vendorExtentions = info.getExtensions();
     
     // replace spaces, "-", "." with underscores in info.title
     info.setTitle(sanitizeName(info.getTitle()));
+    
+    Map<String, Object> vendorExtentions = info.getExtensions();
 
     // change the path of the generated XMOMs
-    String xModelPath = (String)vendorExtentions.get("x-model-path");
-    if (xModelPath != null && !xModelPath.trim().isEmpty()) {
-      modelPackage = xModelPath.replace('-', '_').replace(' ', '_').toLowerCase();
+    if (vendorExtentions != null) {
+      String xModelPath = (String)vendorExtentions.get("x-model-path");
+      if (xModelPath != null && !xModelPath.trim().isEmpty()) {
+        modelPackage = xModelPath.replace('-', '_').replace(' ', '_').toLowerCase();
+      }
     }
   }
 

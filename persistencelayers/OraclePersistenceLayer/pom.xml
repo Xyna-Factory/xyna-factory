@@ -57,7 +57,7 @@
         </dependency>
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
-            <artifactId>ojdbc10</artifactId>
+            <artifactId>ojdbc11</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>
