@@ -503,7 +503,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
   }
 
   private <A extends GeneralXynaObject> List<A> createList(Class<A> genTypeClass, List<? extends JSONValue> array, String currentPath, Map<String, String> mapTransformations, Map<String, String> substitutions, boolean useLabels, XynaObjectDecider decider) {
-    if (Modifier.isAbstract(genTypeClass.getModifiers())) {
+    if (decider == null && Modifier.isAbstract(genTypeClass.getModifiers())) {
       throw new RuntimeException("Can not instantiate list elements of abstract type " + genTypeClass + ".");
     }
     List<A> l = new ArrayList<A>();
@@ -514,7 +514,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
       if (JSONVALTYPES.OBJECT.equals(jv.getType())) {
         A listElement;
         try {
-          listElement = (A) genTypeClass.getConstructor().newInstance();
+          listElement = createXynaObject(genTypeClass, jv.getObjectValue(), decider);
         } catch (Exception ex) {
           throw new RuntimeException(ex);
         }
