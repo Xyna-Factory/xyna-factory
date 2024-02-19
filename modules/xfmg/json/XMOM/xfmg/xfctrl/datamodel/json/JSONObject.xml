@@ -20,4 +20,24 @@
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
   <Data IsList="true" Label="Members" ReferenceName="JSONKeyValue" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="members"/>
+  <Service Label="JSONObject" TypeName="JSONObject">
+    <Operation Label="get Member" Name="getMember" IsStatic="false">
+      <Input>
+        <Data ID="3" Label="Key" VariableName="key">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="5" Label="Value" VariableName="value" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json"/>
+      </Output>
+      <Meta>
+        <Documentation>Get JSONValue of member with given Key. Returns null if member does not exist</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">return this.getMembers()== null ? null : this.getMembers().stream().filter(x -> key.equals(x.getKey())).map(x -> x.getValue()).findFirst().orElseGet(() -> null);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>
