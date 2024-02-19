@@ -129,9 +129,9 @@ public class JSONTestWithOptions extends TestCase {
     String jsonString = 
 "{"+
 "  \"member\": {"+
-"     \"name\": \"test\""+
-"  },"+
-"  \"@type\": \"RoleXO\""+
+"     \"name\": \"test\","+
+"     \"@type\": \"RoleXO\""+
+"  }"+
 "}";
     
     List<JSONToken> tokens = jt.tokenize(jsonString);
