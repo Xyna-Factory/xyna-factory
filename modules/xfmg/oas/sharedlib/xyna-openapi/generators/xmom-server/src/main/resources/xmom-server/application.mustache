@@ -16,8 +16,8 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<Application applicationName="{{openAPI.info.title}}_Provider" 
- comment="{{openAPI.info.description}}" 
+<Application applicationName="{{openAPI.info.title}}_Provider"
+ comment="{{openAPI.info.description}}"
  factoryVersion="{{xynaFactoryVersion}}" versionName="{{openAPI.info.version}}" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
@@ -65,5 +65,9 @@
       <FqName>{{apiPackage}}.{{pathPrefix}}.response.{{#lambda.pascalcase}}{{httpMethod}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}}</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>{{/responses}}{{/operation}}{{/operations}}{{/apiInfo.apis}}
+    <XMOMEntry implicitDependency="false">
+      <FqName>{{apiPackage}}.OASDecider</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
   </XMOMEntries>
 </Application>
