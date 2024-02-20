@@ -622,7 +622,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
           }
           break;
       }
-      String varName = varNameInXyna;
+      String varName = varNamesOfXynaObject.get(varNameInXyna);
       String newPath = currentPath.isEmpty() ? varNameInXyna : currentPath + "." + varNameInXyna; 
       if (substitutions.containsKey(newPath)) {
         varName = substitutions.get(newPath);

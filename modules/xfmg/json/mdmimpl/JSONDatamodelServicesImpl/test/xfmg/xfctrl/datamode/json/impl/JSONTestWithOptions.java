@@ -34,6 +34,7 @@ import xfmg.xfctrl.datamodel.json.impl.JSONDatamodelServicesServiceOperationImpl
 import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONObjectWriter;
 import xfmg.xfctrl.datamodel.json.JSONKeyValue;
 import xfmg.xfctrl.datamodel.json.JSONObject;
+import xfmg.xfctrl.datamodel.json.JSONValue;
 import xfmg.xfctrl.datamodel.json.impl.JSONTokenizer.JSONToken;
 import xfmg.xfctrl.datamodel.json.parameter.XynaObjectDecider;
 
@@ -43,6 +44,7 @@ import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
+import com.gip.xyna.xprc.xfractwfe.generation.LabelAnnotation;
 
 import junit.framework.TestCase;
 
@@ -275,6 +277,33 @@ public class JSONTestWithOptions extends TestCase {
     System.out.println(JSONObjectWriter.toJSON("", obj));
   }
   
+  public void testWriteWithOptions3UseLabel() {
+    RoleXO role1 = new RoleXO();
+    role1.name = "my.role.tenant.member";
+    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
+    Map<String, String> trans = new HashMap<String, String>();
+    Map<String, String> subs = new HashMap<String, String>();
+    JSONObject obj = impl.createFromXynaObjectRecursivly(role1, "", trans, subs, true, OASScope.none);
+    //can't use getMember(), because implementation is not set in mdm.jars created outside of a running factory
+    JSONValue readName = obj.getMembers().stream().filter(x -> "SomeName".equals(x.getKey())).map(x -> x.getValue()).findFirst().orElse(null);
+    assertTrue(readName != null);
+    assertTrue(role1.name.equals(readName.getStringOrNumberValue()));
+  }
+  
+  public void testWriteWithOptions4UseLabelAndSubstitude() {
+    RoleXO role1 = new RoleXO();
+    role1.name = "my.role.tenant.member";
+    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
+    Map<String, String> trans = new HashMap<String, String>();
+    Map<String, String> subs = new HashMap<String, String>();
+    subs.put("name", "someOtherName");
+    JSONObject obj = impl.createFromXynaObjectRecursivly(role1, "", trans, subs, true, OASScope.none);
+    //can't use getMember(), because implementation is not set in mdm.jars created outside of a running factory
+    JSONValue readName = obj.getMembers().stream().filter(x -> "someOtherName".equals(x.getKey())).map(x -> x.getValue()).findFirst().orElse(null);
+    assertTrue(readName != null);
+    assertTrue(role1.name.equals(readName.getStringOrNumberValue()));
+  }
+  
   
   public static class UserXO extends BaseTestXO {
 
@@ -363,6 +392,8 @@ public class JSONTestWithOptions extends TestCase {
   public static class RoleXO extends BaseTestXO {
     
     private static final long serialVersionUID = 1L;
+    
+    @LabelAnnotation(label="SomeName")
     private String name;
     
     public Set<String> getVariableNames() {
