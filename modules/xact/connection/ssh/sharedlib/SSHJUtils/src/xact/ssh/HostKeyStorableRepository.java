@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,21 +20,21 @@ package xact.ssh;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
@@ -53,14 +53,9 @@ import com.gip.xyna.xnwh.persistence.PreparedQueryCache;
 
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.common.KeyType;
-import net.schmizz.sshj.common.SSHException;
-import net.schmizz.sshj.transport.verification.HostKeyVerifier;
 import net.schmizz.sshj.transport.verification.OpenSSHKnownHosts;
-import net.schmizz.sshj.transport.verification.OpenSSHKnownHosts.EntryFactory;
 import net.schmizz.sshj.transport.verification.OpenSSHKnownHosts.HostEntry;
 import net.schmizz.sshj.transport.verification.OpenSSHKnownHosts.KnownHostEntry;
-
-import java.util.*;
 
 public class HostKeyStorableRepository implements XynaHostKeyRepository {
   
@@ -314,7 +309,7 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
       if (hits.isEmpty()) {
         logger.debug("SSH App: HostKeyStorableRepository - speedFindDirectMatch: No hits");
         return CheckResult.NOT_INCLUDED;
-      };
+      }
       boolean atLeastOneChanged = false;
       for (HostKeyStorable hostKeyStorable : hits) {
         CheckResult result = checkHostKey(hostKeyStorable, hostalias, key, type);
