@@ -124,19 +124,7 @@ public class JSONTestWithOptions extends TestCase {
   }
   
   
-  public void testWithOptions3() throws IllegalArgumentException, IllegalAccessException {
-    JSONTokenizer jt = new JSONTokenizer();
-    String jsonString = 
-"{"+
-"  \"member\": {"+
-"     \"name\": \"test\","+
-"     \"@type\": \"RoleXO\""+
-"  }"+
-"}";
-    
-    List<JSONToken> tokens = jt.tokenize(jsonString);
-    JSONParser jp = new JSONParser(jsonString);
-    JSONObject job = new JSONObject();
+  private XynaObjectDecider createDecider() {
     XynaObjectDecider decider = new XynaObjectDecider() {
 
       private static final long serialVersionUID = 1L;
@@ -162,6 +150,23 @@ public class JSONTestWithOptions extends TestCase {
       }
       
     };
+    return decider;
+  }
+  
+  public void testWithOptions3() throws IllegalArgumentException, IllegalAccessException {
+    JSONTokenizer jt = new JSONTokenizer();
+    String jsonString = 
+"{"+
+"  \"member\": {"+
+"     \"name\": \"test\","+
+"     \"@type\": \"RoleXO\""+
+"  }"+
+"}";
+    
+    List<JSONToken> tokens = jt.tokenize(jsonString);
+    JSONParser jp = new JSONParser(jsonString);
+    JSONObject job = new JSONObject();
+    XynaObjectDecider decider = createDecider();
     try {
       jp.fillObject(tokens, 0, job);
       StringBuilder sb = new StringBuilder();
@@ -176,6 +181,44 @@ public class JSONTestWithOptions extends TestCase {
       container = new ContainerXO();
       impl.fillXynaObjectRecursivly(container, job, "", Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap(), false, null);
       assertTrue(container.member instanceof BaseTestXO);
+    } catch (InvalidJSONException e) {
+      fail();
+    }
+  }
+
+  
+  public void testWithOptions4() throws IllegalArgumentException, IllegalAccessException {
+    JSONTokenizer jt = new JSONTokenizer();
+    String jsonString = 
+"{"+
+"  \"member\": ["+ 
+"    {"+
+"      \"member\": {"+
+"         \"name\": \"test\""+
+"      },"+
+"      \"@type\": \"RoleXO\""+
+"    }"+
+"  ]"+
+"}";
+    
+    List<JSONToken> tokens = jt.tokenize(jsonString);
+    JSONParser jp = new JSONParser(jsonString);
+    JSONObject job = new JSONObject();
+    XynaObjectDecider decider = createDecider();
+    try {
+      jp.fillObject(tokens, 0, job);
+      StringBuilder sb = new StringBuilder();
+      JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
+      ListContainerXO container = new ListContainerXO();
+      impl.fillXynaObjectRecursivly(container, job, "", Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap(), false, decider);
+      ObjectStringRepresentation.createStringRepOfObject(sb, job);
+      sb.append("\n=========================================\n\n");
+      ObjectStringRepresentation.createStringRepOfObject(sb, container);
+      System.out.println(sb);
+      assertTrue(container.member.get(0) instanceof RoleXO);
+      container = new ListContainerXO();
+      impl.fillXynaObjectRecursivly(container, job, "", Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap(), false, null);
+      assertTrue(container.member.get(0) instanceof BaseTestXO);
     } catch (InvalidJSONException e) {
       fail();
     }
@@ -384,6 +427,36 @@ public class JSONTestWithOptions extends TestCase {
     
   }
   
+  
+
+  public static class ListContainerXO extends BaseTestXO {
+    
+    private static final long serialVersionUID = 1L;
+    private List<BaseTestXO> member;
+    
+    public Set<String> getVariableNames() {
+      Set<String> set = new HashSet<String>();
+      set.add("member");
+      return set;
+    }
+
+    public Object get(String path) throws InvalidObjectPathException {
+      if (path.equals("member")) {
+        return member;
+      } else {
+        throw new InvalidObjectPathException(path);
+      }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void set(String path, Object value) throws XDEV_PARAMETER_NAME_NOT_FOUND {
+      if (path.equals("member")) {
+        member = (List<BaseTestXO>) value;
+      } else {
+        throw new XDEV_PARAMETER_NAME_NOT_FOUND(path);
+      }
+    }
+  }
   
   public static class BaseTestXO extends XynaObject {
 
