@@ -19,8 +19,11 @@ package xfmg.oas.generation.impl;
 
 
 
+import org.apache.log4j.Logger;
 import org.openapitools.codegen.OpenAPIGenerator;
+import org.openapitools.codegen.validation.ValidationResult;
 
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
@@ -50,6 +53,7 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
   private static final FileManagement fileManagement = 
       XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getFileManagement();
   
+  private static Logger logger = CentralFactoryLogging.getLogger(ApplicationGenerationServiceOperationImpl.class);
   
   public void onDeployment() throws XynaException {
     OverallInformationProvider.onDeployment();
@@ -72,28 +76,41 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
 
   @Override
   public void generateApplication(XynaOrderServerExtension correlatedXynaOrder, ApplicationGenerationParameter applicationGenerationParameter1, File file4) {
-    String swagger = file4.getPath();
-    String target = "/tmp/Order_" + correlatedXynaOrder.getId();
-
-    try {
-      OpenAPIGenerator.main(new String[] {"validate", "-i", swagger, "--recommend"});
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
     
     BuildoasapplicationImpl oasAppBuilder = new BuildoasapplicationImpl();
     
+    String specFile = file4.getPath();
+    String target = "/tmp/Order_" + correlatedXynaOrder.getId();
+
+    ValidationResult result = oasAppBuilder.validate(specFile);
+    StringBuilder errors = new StringBuilder("Validation found errors:");
+    if (!result.getErrors().isEmpty()) {
+      logger.error("Spec: " + specFile + " contains errors.");
+      result.getErrors().forEach(invalid -> {
+        logger.error(invalid.getMessage());
+        errors.append(" ");
+        errors.append(invalid.getMessage());
+      });
+    }
+    if (!result.getWarnings().isEmpty()) {
+      logger.error("Spec: " + specFile + " contains warnings.");
+      result.getWarnings().forEach(invalid -> logger.warn(invalid.getMessage()));
+    }
+    if (!result.getErrors().isEmpty()) {
+      throw new RuntimeException(errors.toString());
+    }
+    
     String id;
     
-    id = oasAppBuilder.createOasApp("xmom-data-model", target + "_datatypes", swagger);
+    id = oasAppBuilder.createOasApp("xmom-data-model", target + "_datatypes", specFile);
     importApplication(correlatedXynaOrder, id);
     
     if (applicationGenerationParameter1.getGenerateProvider()) {
-      id = oasAppBuilder.createOasApp("xmom-server", target + "_provider", swagger);
+      id = oasAppBuilder.createOasApp("xmom-server", target + "_provider", specFile);
       importApplication(correlatedXynaOrder, id);
     }
     if (applicationGenerationParameter1.getGenerateClient()) {
-      id = oasAppBuilder.createOasApp("xmom-client", target + "_client", swagger);
+      id = oasAppBuilder.createOasApp("xmom-client", target + "_client", specFile);
       importApplication(correlatedXynaOrder, id);
     }
   }

@@ -35,11 +35,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipOutputStream;
 
-import org.openapitools.codegen.OpenAPIGenerator;
+import org.openapitools.codegen.ClientOptInput;
+import org.openapitools.codegen.DefaultGenerator;
+import org.openapitools.codegen.config.CodegenConfigurator;
+import org.openapitools.codegen.validation.ValidationResult;
+import org.openapitools.codegen.validations.oas.OpenApiEvaluator;
+import org.openapitools.codegen.validations.oas.RuleConfiguration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.FileUtils;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
@@ -50,6 +56,12 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 import com.gip.xyna.xprc.xfractwfe.generation.compile.InMemoryCompilationSet;
 import com.gip.xyna.xprc.xfractwfe.generation.compile.JavaSourceFromString;
+
+import io.swagger.parser.OpenAPIParser;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.parser.core.models.ParseOptions;
+import io.swagger.v3.parser.core.models.SwaggerParseResult;
+
 import com.gip.xyna.xfmg.xfctrl.XynaFactoryControl;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xfmg.xfctrl.filemgmt.FileManagement;
@@ -60,27 +72,43 @@ import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 
 import xfmg.oas.generation.cli.generated.Buildoasapplication;
 
+import org.apache.log4j.Logger;
 
 
 public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasapplication> {
 
+  private static Logger logger = CentralFactoryLogging.getLogger(BuildoasapplicationImpl.class);
+  
   public void execute(OutputStream statusOutputStream, Buildoasapplication payload) throws XynaException {
-    String swagger = payload.getPath();
+    String specFile = payload.getPath();
     String target = "/tmp/" + payload.getApplicationName();
 
-    try {
-      OpenAPIGenerator.main(new String[] {"validate", "-i", swagger, "--recommend"});
-    } catch (Exception e) {
-      throw new RuntimeException(e);
+    ValidationResult result = validate(specFile);
+    StringBuilder errors = new StringBuilder("Validation found errors:");
+    if (!result.getErrors().isEmpty()) {
+      logger.error("Spec: " + specFile + " contains errors.");
+      result.getErrors().forEach(invalid -> {
+        logger.error(invalid.getMessage());
+        errors.append(" ");
+        errors.append(invalid.getMessage());
+      });
     }
-    String id = createOasApp("xmom-data-model", target + "_datatypes", swagger);
+    if (!result.getWarnings().isEmpty()) {
+      logger.error("Spec: " + specFile + " contains warnings.");
+      result.getWarnings().forEach(invalid -> logger.warn(invalid.getMessage()));
+    }
+    if (!result.getErrors().isEmpty()) {
+      throw new RuntimeException(errors.toString());
+    }
+
+    String id = createOasApp("xmom-data-model", target + "_datatypes", specFile);
     writeToCommandLine(statusOutputStream, "Datamodel ManagedFileId: " + id + " ");
     if (payload.getBuildProvider()) {
-      id = createOasApp("xmom-server", target + "_provider", swagger);
+      id = createOasApp("xmom-server", target + "_provider", specFile);
       writeToCommandLine(statusOutputStream, "provider ManagedFileId: " + id + " ");
     }
     if (payload.getBuildClient()) {
-      id = createOasApp("xmom-client", target + "_client", swagger);
+      id = createOasApp("xmom-client", target + "_client", specFile);
       writeToCommandLine(statusOutputStream, "client ManagedFileId: " + id + " ");
     }
 
@@ -88,8 +116,8 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
   }
 
   
-  public String createOasApp(String generator, String target, String swagger) {
-    OpenAPIGenerator.main(new String[] {"generate", "-g", generator, "-i", swagger, "-o", target});
+  public String createOasApp(String generator, String target, String specFile) {
+    callGenerator(generator, target, specFile);
 
     separateFiles(target);
     compileFilter(target);
@@ -122,6 +150,32 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
     tmpFile.deleteOnExit();
     
     return id;
+  }
+  
+
+  private void callGenerator(String generatorName, String target, String specFile) {
+    final CodegenConfigurator configurator = new CodegenConfigurator()
+        .setGeneratorName(generatorName)
+        .setInputSpec(specFile)
+        .setOutputDir(target);
+
+      final ClientOptInput clientOptInput = configurator.toClientOptInput();
+      DefaultGenerator generator = new DefaultGenerator();
+      generator.opts(clientOptInput).generate();
+  }
+  
+  
+  public ValidationResult validate(String specFile) {
+    ParseOptions options = new ParseOptions();
+    options.setResolve(true);
+    SwaggerParseResult result = new OpenAPIParser().readLocation(specFile, null, options);
+    OpenAPI specification = result.getOpenAPI();
+
+    RuleConfiguration ruleConfiguration = new RuleConfiguration();
+    ruleConfiguration.setEnableRecommendations(true);
+
+    OpenApiEvaluator evaluator = new OpenApiEvaluator(ruleConfiguration);
+    return evaluator.validate(specification);
   }
   
   
