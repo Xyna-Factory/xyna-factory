@@ -31,6 +31,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipOutputStream;
@@ -38,7 +39,6 @@ import java.util.zip.ZipOutputStream;
 import org.openapitools.codegen.ClientOptInput;
 import org.openapitools.codegen.DefaultGenerator;
 import org.openapitools.codegen.config.CodegenConfigurator;
-import org.openapitools.codegen.validation.ValidationResult;
 import org.openapitools.codegen.validations.oas.OpenApiEvaluator;
 import org.openapitools.codegen.validations.oas.RuleConfiguration;
 import org.w3c.dom.Document;
@@ -87,15 +87,15 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
     StringBuilder errors = new StringBuilder("Validation found errors:");
     if (!result.getErrors().isEmpty()) {
       logger.error("Spec: " + specFile + " contains errors.");
-      result.getErrors().forEach(invalid -> {
-        logger.error(invalid.getMessage());
+      result.getErrors().forEach(error -> {
+        logger.error(error);
         errors.append(" ");
-        errors.append(invalid.getMessage());
+        errors.append(error);
       });
     }
     if (!result.getWarnings().isEmpty()) {
-      logger.error("Spec: " + specFile + " contains warnings.");
-      result.getWarnings().forEach(invalid -> logger.warn(invalid.getMessage()));
+      logger.warn("Spec: " + specFile + " contains warnings.");
+      result.getWarnings().forEach(warning -> logger.warn(warning));
     }
     if (!result.getErrors().isEmpty()) {
       throw new RuntimeException(errors.toString());
@@ -165,17 +165,43 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
   }
   
   
+  public class ValidationResult {
+    private List<String> errors = new LinkedList<String>();
+    private List<String> warnings = new LinkedList<String>();
+    
+     public List<String> getErrors() {
+       return errors;
+     }
+     
+     public List<String> getWarnings() {
+       return warnings;
+     }
+     
+     public void addError(String error) {
+       errors.add(error);
+     }
+     
+     public void addWarning(String warning) {
+       warnings.add(warning);
+     }
+  }
+  
   public ValidationResult validate(String specFile) {
+    ValidationResult result = new ValidationResult();
     ParseOptions options = new ParseOptions();
     options.setResolve(true);
-    SwaggerParseResult result = new OpenAPIParser().readLocation(specFile, null, options);
-    OpenAPI specification = result.getOpenAPI();
+    SwaggerParseResult parserResult = new OpenAPIParser().readLocation(specFile, null, options);
+    parserResult.getMessages().forEach(message -> result.addError(message));
+    OpenAPI specification = parserResult.getOpenAPI();
 
     RuleConfiguration ruleConfiguration = new RuleConfiguration();
     ruleConfiguration.setEnableRecommendations(true);
 
     OpenApiEvaluator evaluator = new OpenApiEvaluator(ruleConfiguration);
-    return evaluator.validate(specification);
+    org.openapitools.codegen.validation.ValidationResult evaluatorResult = evaluator.validate(specification);
+    evaluatorResult.getErrors().forEach(invalid -> result.addError(invalid.getMessage()));
+    evaluatorResult.getWarnings().forEach(invalid -> result.addWarning(invalid.getMessage()));
+    return result;
   }
   
   

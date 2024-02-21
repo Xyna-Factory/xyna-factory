@@ -20,8 +20,6 @@ package xfmg.oas.generation.impl;
 
 
 import org.apache.log4j.Logger;
-import org.openapitools.codegen.OpenAPIGenerator;
-import org.openapitools.codegen.validation.ValidationResult;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
@@ -40,6 +38,7 @@ import xfmg.oas.generation.ApplicationGenerationParameter;
 import xfmg.oas.generation.ApplicationGenerationServiceOperation;
 import xfmg.oas.generation.cli.generated.OverallInformationProvider;
 import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl;
+import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl.ValidationResult;
 import xfmg.xfctrl.filemgmt.ManagedFileId;
 
 
@@ -86,15 +85,15 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
     StringBuilder errors = new StringBuilder("Validation found errors:");
     if (!result.getErrors().isEmpty()) {
       logger.error("Spec: " + specFile + " contains errors.");
-      result.getErrors().forEach(invalid -> {
-        logger.error(invalid.getMessage());
+      result.getErrors().forEach(error -> {
+        logger.error(error);
         errors.append(" ");
-        errors.append(invalid.getMessage());
+        errors.append(error);
       });
     }
     if (!result.getWarnings().isEmpty()) {
-      logger.error("Spec: " + specFile + " contains warnings.");
-      result.getWarnings().forEach(invalid -> logger.warn(invalid.getMessage()));
+      logger.warn("Spec: " + specFile + " contains warnings.");
+      result.getWarnings().forEach(warning -> logger.warn(warning));
     }
     if (!result.getErrors().isEmpty()) {
       throw new RuntimeException(errors.toString());
