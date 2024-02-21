@@ -18,15 +18,15 @@
 // validate {{#classname}}{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{/classname}}{{paramName}}{{^paramName}}{{dataType}}{{/paramName}} of type {{dataType}}{{#baseType}} with baseType {{baseType}}{{/baseType}}
 {{#isPrimitiveType}}{{^isContainer}}{{^isArray}}try {
     var primObj_{{-index}} = {{#isInteger}}
-    new com.gip.xyna.openapi.OpenAPINumberType&lt;Integer&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{paramName}}", (Integer)get("{{paramName}}"));{{/isInteger}}{{#isLong}}
-    new com.gip.xyna.openapi.OpenAPINumberType&lt;Long&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{paramName}}", (Long)get("{{paramName}}"));{{/isLong}}{{#isDouble}}
-    new com.gip.xyna.openapi.OpenAPINumberType&lt;Double&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{paramName}}", (Double)get("{{paramName}}"));{{/isDouble}}{{#isNumber}}
-    new com.gip.xyna.openapi.OpenAPINumberType&lt;Double&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{paramName}}", (Double)get("{{paramName}}"));{{/isNumber}}{{#isFloat}}
-    new com.gip.xyna.openapi.OpenAPINumberType&lt;Float&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{paramName}}", ((Double)get("{{paramName}}")).floatValue());{{/isFloat}}{{#isBoolean}}
-    new com.gip.xyna.openapi.OpenAPIBooleanType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{paramName}}", (Boolean)get("{{paramName}}"));{{/isBoolean}}{{#isString}}
-    new com.gip.xyna.openapi.OpenAPIStringType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{paramName}}", (String)get("{{paramName}}"));{{/isString}}{{#isDateTime}}
-    new com.gip.xyna.openapi.OpenAPIDateTimeType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{paramName}}", (String)get("{{paramName}}"));{{/isDateTime}}{{#isDate}}
-    new com.gip.xyna.openapi.OpenAPIDateType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{paramName}}", (String)get("{{paramName}}"));{{/isDate}}{{#minimum}}
+    new com.gip.xyna.openapi.OpenAPINumberType&lt;Integer&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}", (Integer)get("{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}"));{{/isInteger}}{{#isLong}}
+    new com.gip.xyna.openapi.OpenAPINumberType&lt;Long&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}", (Long)get("{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}"));{{/isLong}}{{#isDouble}}
+    new com.gip.xyna.openapi.OpenAPINumberType&lt;Double&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}", (Double)get("{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}"));{{/isDouble}}{{#isNumber}}
+    new com.gip.xyna.openapi.OpenAPINumberType&lt;Double&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}", (Double)get("{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}"));{{/isNumber}}{{#isFloat}}
+    new com.gip.xyna.openapi.OpenAPINumberType&lt;Float&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}", ((Double)get("{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}")).floatValue());{{/isFloat}}{{#isBoolean}}
+    new com.gip.xyna.openapi.OpenAPIBooleanType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}", (Boolean)get("{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}"));{{/isBoolean}}{{#isString}}
+    new com.gip.xyna.openapi.OpenAPIStringType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}", (String)get("{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}"));{{/isString}}{{#isDateTime}}
+    new com.gip.xyna.openapi.OpenAPIDateTimeType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}", (String)get("{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}"));{{/isDateTime}}{{#isDate}}
+    new com.gip.xyna.openapi.OpenAPIDateType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}", (String)get("{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}"));{{/isDate}}{{#minimum}}
     primObj_{{-index}}.setMin({{minimum}});{{/minimum}}{{#maximum}}
     primObj_{{-index}}.setMax({{maximum}});{{/maximum}}{{#exclusiveMinimum}}
     primObj_{{-index}}.setExcludeMin();{{/exclusiveMinimum}}{{#exclusiveMaximum}}
@@ -41,7 +41,7 @@
     result.getErrorMessages().addAll(primObj_{{-index}}.checkValid());
 }
 catch (Exception e) {
-    result.getErrorMessages().add("Error: could not validate {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{paramName}}");
+    result.getErrorMessages().add("Error: could not validate {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}");
 }
 {{/isArray}}{{/isContainer}}{{#isArray}}try {
     var primObjList_{{-index}} = (List&lt;{{#isPrimitiveType}}{{^isEnumRef}}{{#isArray}}{{items.dataType}}{{/isArray}}{{^isArray}}{{dataType}}{{/isArray}}{{/isEnumRef}}{{/isPrimitiveType}}{{#isEnumRef}}String{{/isEnumRef}}&gt;)this.get("{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}");
