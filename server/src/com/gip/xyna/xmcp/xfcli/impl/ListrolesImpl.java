@@ -40,50 +40,66 @@ public class ListrolesImpl extends XynaCommandImplementation<Listroles> {
     UserManagement um = XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getUserManagement();
     Collection<Role> roles = um.getRoles();
     StringBuilder rolesOut = new StringBuilder();
-    for (Role role : roles) {
-      if (um.isPredefined(PredefinedCategories.ROLE, role.getId())) {
-        rolesOut.append(role.getName());
-        rolesOut.append("* - ");
-      } else {
-        rolesOut.append(role.getName());
-        rolesOut.append(" - ");
-      }
-
-      rolesOut.append(role.getDomain());
-
-      if (role.getAlias() != null && !role.getAlias().equals("")) {
-        rolesOut.append(" - alias: ");
-        rolesOut.append(role.getAlias());
-      }
-
-      if (role.getDescription() != null && !role.getDescription().equals("")) {
-        rolesOut.append(" - ");
-        rolesOut.append(role.getDescription());
-      }
-
-      rolesOut.append("\n");
-      Set<String> rights = new TreeSet<String>(role.getRightsAsList());
-      for (String right : rights) {
-        rolesOut.append(INDENT_FOR_LISTS);
-        rolesOut.append(right);
-        rolesOut.append("\n");
-      }
-      if (role.getScopedRights() != null) {
-        Set<String> scopedRights = new TreeSet<String>(role.getScopedRights());
-        for (String scopedRight : scopedRights) {
-          rolesOut.append(INDENT_FOR_LISTS);
-          rolesOut.append(scopedRight);
-          rolesOut.append("\n");
-        }
-      }
+    String specificRole = payload.getRoleName();
+    boolean hasSpecificRole = specificRole != null && !specificRole.isEmpty(); 
+    if( hasSpecificRole ){
+	// clear roles to create empty output for non-existent role and therefore trigger message afterwards
+	roles.clear();
+	
+	// check if requested role really exists
+	if(um.getRole(specificRole) != null){
+	    roles.add( um.getRole(specificRole) );
+	}
     }
-    rolesOut.append("*: Xyna-Role - only restricted access allowed\n");
+    for (Role role : roles) {
+	if (um.isPredefined(PredefinedCategories.ROLE, role.getId())) {
+	    rolesOut.append(role.getName());
+	    rolesOut.append("* - ");
+	} else {
+	    rolesOut.append(role.getName());
+	    rolesOut.append(" - ");
+	}
+	
+	rolesOut.append(role.getDomain());
+	
+	if (role.getAlias() != null && !role.getAlias().equals("")) {
+	    rolesOut.append(" - alias: ");
+	    rolesOut.append(role.getAlias());
+	}
+
+	if (role.getDescription() != null && !role.getDescription().equals("")) {
+	    rolesOut.append(" - ");
+	    rolesOut.append(role.getDescription());
+	}
+
+	rolesOut.append("\n");
+	Set<String> rights = new TreeSet<String>(role.getRightsAsList());
+	for (String right : rights) {
+	    rolesOut.append(INDENT_FOR_LISTS);
+	    rolesOut.append(right);
+	    rolesOut.append("\n");
+	}
+	if (role.getScopedRights() != null) {
+	    Set<String> scopedRights = new TreeSet<String>(role.getScopedRights());
+	    for (String scopedRight : scopedRights) {
+		rolesOut.append(INDENT_FOR_LISTS);
+		rolesOut.append(scopedRight);
+		rolesOut.append("\n");
+	    }
+	}
+    }
     String output = rolesOut.toString();
-    if (output != null && output.length() != 0) {
-      writeToCommandLine(statusOutputStream, output);
-    } else {
-      writeToCommandLine(statusOutputStream, "No roles defined on server\n");
+    if (output != null && output.length() != 0){
+	rolesOut.append("*: Xyna-Role - only restricted access allowed\n");
+	output = rolesOut.toString();
+	writeToCommandLine(statusOutputStream, output);
+    }
+    else if(hasSpecificRole){
+	writeToCommandLine(statusOutputStream, "Role name " + specificRole + " does not exist\n");
+    }
+    else {
+	writeToCommandLine(statusOutputStream, "No roles defined on server\n");
     }
   }
-
+    
 }
