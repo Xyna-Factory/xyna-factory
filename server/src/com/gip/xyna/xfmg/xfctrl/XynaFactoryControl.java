@@ -78,6 +78,7 @@ public class XynaFactoryControl extends Section {
   private KeyManagement keyManagement;
   private RuntimeContextManagement runtimeContextManagement;
   private InfrastructureAlgorithmExecutionManagement threadManagement;
+  private OOMManagement oomManagement;
   
   public XynaFactoryControl() throws XynaException {
     super();
@@ -161,6 +162,9 @@ public class XynaFactoryControl extends Section {
     
     threadManagement = new InfrastructureAlgorithmExecutionManagement();
     deployFunctionGroup(threadManagement);
+    
+    oomManagement = new OOMManagement();
+    deployFunctionGroup(oomManagement);
   }
 
 
@@ -255,6 +259,10 @@ public class XynaFactoryControl extends Section {
   
   public InfrastructureAlgorithmExecutionManagement getInfrastructureAlgorithmExecutionManagement() {
     return threadManagement;
+  }
+  
+  public OOMManagement getOomManagement() {
+    return oomManagement;
   }
   
 }

@@ -74,19 +74,21 @@ public class EventListenerThread<J extends StartParameter, TC extends TriggerCon
       }
 
       while (running) {
-        receiveNext();
-        if (processingLimit.get() > 0) {
-          if (processingLimit.decrementAndGet() == 0) {
-            try {
-              logger.info("OrderEntranceLimit reached, terminating processing for " + el.getInstanceName());
-              XynaFactory.getInstance().getActivation().getActivationTrigger().disableTriggerInstance(
-                                        el.getInstanceName(), 
-                                        el.getRevision(), 
-                                        false);
-            } finally {
-              setRunning(false);
+        try {
+          receiveNext();
+          if (processingLimit.get() > 0) {
+            if (processingLimit.decrementAndGet() == 0) {
+              try {
+                logger.info("OrderEntranceLimit reached, terminating processing for " + el.getInstanceName());
+                XynaFactory.getInstance().getActivation().getActivationTrigger().disableTriggerInstance(el.getInstanceName(),
+                                                                                                        el.getRevision(), false);
+              } finally {
+                setRunning(false);
+              }
             }
           }
+        } catch (OutOfMemoryError t) {
+          Department.handleThrowable(t);
         }
       }
     } catch (Throwable t) {

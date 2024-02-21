@@ -173,20 +173,24 @@ public class XynaFactoryCommandLineInterface extends Thread {
         }
         
         while ( status.isNot(Status.Stopped) ) {
-          socket = openSocket();
-          if (status.isNot(Status.Stopped)) {
-            executeCommand(socket);
-            //das Socket wird in executeCommand geschlossen!
-          } else {
-            try {
-              CommandLineWriter clw = new CommandLineWriter( socket.getOutputStream() );
-              clw.writeString("Server shutting down.");
-              clw.writeEndToCommandLine(ReturnCode.COMMUNICATION_FAILED);
-            } catch (Throwable t) {
-              //pech
-            } finally {
-              closeSocketSafely(socket);
+          try {
+            socket = openSocket();
+            if (status.isNot(Status.Stopped)) {
+              executeCommand(socket);
+              //das Socket wird in executeCommand geschlossen!
+            } else {
+              try {
+                CommandLineWriter clw = new CommandLineWriter(socket.getOutputStream());
+                clw.writeString("Server shutting down.");
+                clw.writeEndToCommandLine(ReturnCode.COMMUNICATION_FAILED);
+              } catch (Throwable t) {
+                //pech
+              } finally {
+                closeSocketSafely(socket);
+              }
             }
+          } catch(OutOfMemoryError t) {
+            Department.handleThrowable(t);
           }
         }
 
