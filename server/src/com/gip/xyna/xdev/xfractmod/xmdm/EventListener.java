@@ -638,7 +638,7 @@ public abstract class EventListener<I extends TriggerConnection, J extends Start
       } catch (BindException be) {
         // Bei einem trigger-redeploy ist der port evtl vom betriebssystem her noch nicht wieder verfuegbar.
         if (tries >= numberOfRetries) {
-          throw new XACT_SocketCouldNotBeBoundException(numberOfRetries, be);
+          throw new XACT_SocketCouldNotBeBoundException(numberOfRetries, be.getMessage(), be);
         }
         try {
           Thread.sleep(retryIntervalMilli);

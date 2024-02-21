@@ -145,7 +145,7 @@ public class XmomClientGenerator extends DefaultCodegen {
      * it will be processed by the template engine.  Otherwise, it will be copied
      */
     supportingFiles.add(new SupportingFile("application.mustache", "", "application.xml"));
-
+    supportingFiles.add(new SupportingFile("OASDecider.mustache", "XMOM/" + apiPackage.replace('.', '/') + "/decider", "OASDecider.xml"));
     /**
      * Language Specific Primitives.  These types will not trigger imports by
      * the client generator

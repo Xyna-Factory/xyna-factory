@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,12 +81,13 @@ public class HostKeyHashMap {
   public static Collection<HostKeyStorable> getHostKeyCollection(String id) {
     try {
       Collection<HostKeyStorable> response = HostKeyHash.get(id);
-      return response;
+      if (response != null) {
+        return response;
+      }
     } catch(Exception e) {
-      Collection<HostKeyStorable> response = new java.util.ArrayList<HostKeyStorable>();
-      logger.trace("Error in getHostKeyCollection",e);
-      return response;
+      logger.trace("Error in getHostKeyCollection", e);
     }
+    return Collections.emptyList();
   }
 
 
@@ -95,12 +96,7 @@ public class HostKeyHashMap {
   }
 
   public static long getNumberOfKeys(String id) {
-    Collection<HostKeyStorable> tmpHostKeyStorable = HostKeyHashMap.getHostKeyCollection(id);
-    if (!tmpHostKeyStorable.isEmpty()) {
-      return tmpHostKeyStorable.size();
-    } else {
-      return 0;
-    }
+    return HostKeyHashMap.getHostKeyCollection(id).size();
   }
   
 }

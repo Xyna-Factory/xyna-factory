@@ -18,6 +18,7 @@
 --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="true" Label="Xyna Object Decider" TypeName="XynaObjectDecider" TypePath="xfmg.xfctrl.datamodel.json.parameter" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Extend this class and implement the Decide method for custom object instantiation. The decide method is called with the fqn of the static type and a JSONObject providing additional context.</Documentation>
   </Meta>
   <Service Label="Xyna Object Decider" TypeName="XynaObjectDecider">
     <Operation IsAbstract="true" IsStatic="false" Label="Decide" Name="decide">

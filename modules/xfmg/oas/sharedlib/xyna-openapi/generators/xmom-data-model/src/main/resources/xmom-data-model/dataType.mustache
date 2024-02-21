@@ -17,14 +17,14 @@
 }}
 <DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
  TypeName="{{classname}}" TypePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}" Label="{{name}}"
- BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
+ BaseTypeName="{{#parent}}{{parent}}{{/parent}}{{^parent}}OASBaseType{{/parent}}" BaseTypePath="{{#parent}}{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}{{/parent}}{{^parent}}xmcp.oas.datatype{{/parent}}">
     <Meta>
         <IsServiceGroupOnly>false</IsServiceGroupOnly>
         <Documentation>{{#description}}{{description}}{{/description}}
 {{#allOf}}{{#-first}}This data type is "allOf": {{.}}{{/-first}}{{^-first}}, {{.}}{{/-first}}{{/allOf}}{{#oneOf}}{{#-first}}This data type is "oneOf": {{.}}{{/-first}}{{^-first}}, {{.}}{{/-first}}{{/oneOf}}{{#anyOf}}{{#-first}}This data type is "anyOf": {{.}}{{/-first}}{{^-first}}, {{.}}{{/-first}}{{/anyOf}}
 </Documentation>
     </Meta>
-{{#vars}}
+{{#vars}}{{^isInherited}}
     <Data Label="{{baseName}}" VariableName="{{name}}" {{#isContainer}}IsList="true"{{/isContainer}}{{^isPrimitiveType}}{{^isEnumRef}}
      ReferenceName="{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isEnumRef}}{{/isPrimitiveType}}>
         <Meta>{{#isPrimitiveType}}{{^isEnumRef}}
@@ -39,7 +39,7 @@ required: {{required}}
             </Documentation>
         </Meta>
     </Data>
-{{/vars}}
+{{/isInherited}}{{/vars}}
     <Service Label="{{name}}" TypeName="{{classname}}">
         <Operation Label="Validate" Name="validate" IsStatic="false">
             <Input>
