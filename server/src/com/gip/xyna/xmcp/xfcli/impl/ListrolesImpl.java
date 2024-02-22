@@ -21,8 +21,10 @@ package com.gip.xyna.xmcp.xfcli.impl;
 
 import java.io.OutputStream;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Arrays;
 
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -41,19 +43,19 @@ public class ListrolesImpl extends XynaCommandImplementation<Listroles> {
 
   public void execute(OutputStream statusOutputStream, Listroles payload) throws XynaException {
     UserManagement um = XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getUserManagement();
-    Collection<Role> roles = um.getRoles();
     StringBuilder rolesOut = new StringBuilder();
     String specificRole = payload.getRoleName();
     boolean hasSpecificRole = specificRole != null && !specificRole.isEmpty();
+    Collection<Role> roles;
     if (hasSpecificRole) {
-      // clear roles to create empty output for non-existent role and therefore
-      // trigger message afterwards
-      roles.clear();
-
-      // check if requested role really exists
-      if (um.getRole(specificRole) != null) {
-        roles.add(um.getRole(specificRole));
+      Role singleRole = um.getRole(specificRole);
+      if (singleRole != null) {
+        roles = Arrays.asList(singleRole);
+      } else {
+        roles = Collections.emptyList();
       }
+    } else {
+      roles = um.getRoles();
     }
     for (Role role : roles) {
       if (um.isPredefined(PredefinedCategories.ROLE, role.getId())) {
