@@ -34,10 +34,9 @@
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
     <dependencies>
-      <dependency>
-        <groupId>org.openapitools</groupId>
-        <artifactId>openapi-generator-cli</artifactId>
-        <version>6.6.0</version>
-      </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>openapi-generator-cli</artifactId>
+        </dependency>
     </dependencies>
 </project>

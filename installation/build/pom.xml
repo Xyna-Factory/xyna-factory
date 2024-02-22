@@ -539,6 +539,11 @@
                 <artifactId>xml-apis</artifactId>
                 <version>1.4.01</version>
             </dependency>
+            <dependency>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-cli</artifactId>
+                <version>7.3.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

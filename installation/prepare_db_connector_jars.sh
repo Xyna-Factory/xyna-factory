@@ -17,7 +17,7 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 INSTANCE=001
-
+THIRD_PARTIES_PATH='third_parties'
 
 if [[ $# == 1 ]] ; then
   INSTANCE=$1
@@ -32,20 +32,18 @@ fi
 
 XYNA_PATH=$(grep "installation.folder" /etc/opt/xyna/environment/black_edition_${INSTANCE}.properties|cut -d'=' -f2)
 
-if [[ ! -d $XYNA_PATH/server ]] ; then
-  echo "$XYNA_PATH/server does not exist!"
+if [[ ! -d ${XYNA_PATH}/server ]] ; then
+  echo "${XYNA_PATH}/server does not exist!"
   exit 1
 fi
 
 # copy to userlib
-mkdir -p $XYNA_PATH/server/userlib
-cp mysql-connector*.jar $XYNA_PATH/server/userlib
-cp ojdbc*.jar $XYNA_PATH/server/userlib
-cp mariadb-java-client*.jar $XYNA_PATH/server/userlib
+mkdir -p ${XYNA_PATH}/server/userlib
+cp ${THIRD_PARTIES_PATH}/*.jar ${XYNA_PATH}/server/userlib
 
 # copy licenses
-mkdir -p $XYNA_PATH/third_parties/db
-cp licenses.xml $XYNA_PATH/third_parties/db
-cp 'oracle free use terms and conditions (futc) - oracle-free-license.html' $XYNA_PATH/third_parties/db
+mkdir -p ${XYNA_PATH}/third_parties/db
+cp ${THIRD_PARTIES_PATH}/*.xml ${XYNA_PATH}/${THIRD_PARTIES_PATH}/db
+cp ${THIRD_PARTIES_PATH}/*.html ${XYNA_PATH}/${THIRD_PARTIES_PATH}/db
 
 exit 0
