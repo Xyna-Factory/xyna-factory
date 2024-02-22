@@ -76,7 +76,7 @@ catch (Exception e) {
 }
 {{/composedSchemas}}{{#vars}}
 // validate {{#classname}}{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{/classname}}{{name}} of type {{dataType}}{{#baseType}} with baseType {{baseType}}{{/baseType}}
-{{#isPrimitiveType}}{{^isContainer}}try {
+{{#isPrimitiveType}}{{^isContainer}}{{^isArray}}try {
     var primObj_{{-index}} = {{#isInteger}}
     new com.gip.xyna.openapi.OpenAPINumberType&lt;Integer&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}", (Integer)get("{{name}}"));{{/isInteger}}{{#isLong}}
     new com.gip.xyna.openapi.OpenAPINumberType&lt;Long&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}", (Long)get("{{name}}"));{{/isLong}}{{#isDouble}}
@@ -103,7 +103,7 @@ catch (Exception e) {
 catch (Exception e) {
     result.getErrorMessages().add("Error: could not validate {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}");
 }
-{{/isContainer}}{{#isArray}}try {
+{{/isArray}}{{/isContainer}}{{#isArray}}try {
     var primObjList_{{-index}} = (List&lt;{{items.datatype}}&gt;)this.get("{{name}}");
     if (primObjList_{{-index}} != null) {
         for (var l : primObjList_{{-index}}) {
