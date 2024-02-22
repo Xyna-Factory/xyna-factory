@@ -639,8 +639,9 @@ build() {
 
 
 check_dependencies
-prepare_build
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+prepare_build
+
 IT_BRANCH_XYNA_MODELLER=""
 
 case $1 in
