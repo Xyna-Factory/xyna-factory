@@ -21,11 +21,9 @@ package com.gip.xyna.xnwh.pools.mock;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import com.gip.xyna.utils.db.ConnectionPool;
 import com.gip.xyna.utils.db.ConnectionPool.NoConnectionAvailableException.Reason;
 import com.gip.xyna.utils.db.ConnectionPool.NoConnectionAvailableReasonDetector;
-import com.gip.xyna.utils.db.DBConnectionData;
 import com.gip.xyna.utils.db.pool.ConnectionBuildStrategy;
 import com.gip.xyna.utils.db.pool.ValidationStrategy;
 import com.gip.xyna.utils.misc.Documentation;
@@ -103,18 +101,7 @@ public class MockMySQLPoolType extends ConnectionPoolType {
 
   @Override
   public ConnectionBuildStrategy createConnectionBuildStrategy(TypedConnectionPoolParameter cpp) {
-    Duration connectTimeout = CONNECT_TIMEOUT.getFromMap(cpp.getAdditionalParams());
-    Duration socketTimeout = SOCKET_TIMEOUT.getFromMap(cpp.getAdditionalParams());
-    DBConnectionData dbdata =
-        DBConnectionData.newDBConnectionData().
-            user(cpp.getUser()).password(cpp.getPassword()).url(cpp.getConnectString())
-            .connectTimeoutInSeconds((int)connectTimeout.getDuration(TimeUnit.SECONDS))
-            .socketTimeoutInSeconds((int)socketTimeout.getDuration(TimeUnit.SECONDS))
-            .classLoaderToLoadDriver(MockMySQLPoolType.class.getClassLoader()) // enforcing the connector jar to be stored in userlib
-            .property("rewriteBatchedStatements", "true")
-            .build();
-
-    return new MySQLConnectionBuildStrategy(dbdata, (int)connectTimeout.getDuration(TimeUnit.SECONDS) );
+    return new MySQLConnectionBuildStrategy();
   }
 
 
@@ -155,7 +142,7 @@ public class MockMySQLPoolType extends ConnectionPoolType {
 
   public static class MySQLConnectionBuildStrategy implements ConnectionBuildStrategy {
 
-    public MySQLConnectionBuildStrategy(DBConnectionData dbdata, int connectTimeout) {
+    public MySQLConnectionBuildStrategy() {
     }
 
     public Connection createNewConnection() {
