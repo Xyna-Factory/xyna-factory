@@ -23,7 +23,6 @@ import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
@@ -33,8 +32,6 @@ import com.gip.xyna.xfmg.xfctrl.filemgmt.FileManagement;
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.rtctxmgmt.LocalRuntimeContextManagementSecurity;
 import com.gip.xyna.xfmg.xopctrl.managedsessions.SessionManagement;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
-
-import org.apache.log4j.Logger;
 
 import base.File;
 import xfmg.oas.generation.ApplicationGenerationParameter;
@@ -60,7 +57,6 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
       XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement();
   private static final FileManagement fileManagement = 
       XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getFileManagement();
-  private static Logger logger = CentralFactoryLogging.getLogger(ApplicationGenerationServiceOperationImpl.class);
   
   private static Logger logger = CentralFactoryLogging.getLogger(ApplicationGenerationServiceOperationImpl.class);
   
