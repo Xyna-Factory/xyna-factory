@@ -63,18 +63,26 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
   
   public void onDeployment() throws XynaException {
     OverallInformationProvider.onDeployment();
-    Plugin plugin = createPlugin();
-    if (plugin != null) {
-      xmcp.forms.plugin.PluginManagement.registerPlugin(plugin);
+    try {
+      Plugin plugin = createPlugin();
+      if (plugin != null) {
+        xmcp.forms.plugin.PluginManagement.registerPlugin(plugin);
+      }
+    } catch (Exception e) {
+      logger.error("Could not register oas plugin.", e);
     }
   }
 
 
   public void onUndeployment() throws XynaException {
     OverallInformationProvider.onUndeployment();
-    Plugin plugin = createPlugin();
-    if (plugin != null) {
-      xmcp.forms.plugin.PluginManagement.unregisterPlugin(plugin);
+    try {
+      Plugin plugin = createPlugin();
+      if (plugin != null) {
+        xmcp.forms.plugin.PluginManagement.unregisterPlugin(plugin);
+      }
+    } catch(Exception e) {
+      logger.error("Could not unregister oas plugin.", e);
     }
   }
 
