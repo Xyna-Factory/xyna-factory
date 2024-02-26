@@ -20,6 +20,7 @@
 
     <property name="xyna.orderInputSource.ConstantInputSource" value="true" />
     <property name="xyna.orderInputSource.WorkflowInputSource" value="true" />
+    <property name="xyna.orderInputSource.XTFInputSource" value="true" />
 
      <property name="target.dir" value="${basedir}/deploy" />
 
@@ -39,6 +40,12 @@
         <xynaTarget name="buildWorkflowInputSource" if="xyna.orderInputSource.WorkflowInputSource">
             <ant antfile="build.xml" target="build" inheritAll="false" dir="WorkflowInputSource">
                 <property name="target.dir" value="${target.dir}/WorkflowInputSource" />
+            </ant>
+        </xynaTarget>
+
+        <xynaTarget name="buildXTFInputSource" if="xyna.orderInputSource.XTFInputSource">
+            <ant antfile="build.xml" target="build" inheritAll="false" dir="XTFInputSource">
+                <property name="target.dir" value="${target.dir}/XTFInputSource" />
             </ant>
         </xynaTarget>
 

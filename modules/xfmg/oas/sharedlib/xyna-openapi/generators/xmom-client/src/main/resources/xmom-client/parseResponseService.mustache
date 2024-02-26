@@ -28,7 +28,7 @@ TypeName="Parse{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}
         <Data ID="3" Label="Header" VariableName="header3" ReferenceName="Header" ReferencePath="xact.http"/>
       </Input>
       <Output>
-        <Data ID="4" Label="{{httpMethod}} {{path}} Response" VariableName="{{#lambda.camelcase}}{{httpMethod}}{{path}}{{/lambda.camelcase}}Response4" 
+        <Data ID="4" Label="{{httpMethod}} {{path}} Response" VariableName="{{#lambda.camelcase}}{{httpMethod}}{{path}}{{/lambda.camelcase}}Response4"
          ReferenceName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" ReferencePath="{{apiPackage}}.{{pathPrefix}}.response"/>
       </Output>
       <Throws>
@@ -46,7 +46,8 @@ TypeName="Parse{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}
 xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
 jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
-jsonOptions.setUseLabels(true);{{#responses}}
+jsonOptions.setUseLabels(true);
+jsonOptions.setObjectDecider(new {{apiPackage}}.decider.OASDecider());{{#responses}}
 
 {{#-first}}if{{/-first}}{{^-first}}else if{{/-first}} (statusCode == {{code}}) {
     {{apiPackage}}.{{pathPrefix}}.response.{{httpMethod}}{{#lambda.pascalcase}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}} responseDataType = new {{apiPackage}}.{{pathPrefix}}.response.{{httpMethod}}{{#lambda.pascalcase}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}}();

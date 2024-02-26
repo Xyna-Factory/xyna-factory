@@ -1,0 +1,2101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Application applicationName="XynaTestFactoryInfrastructure" comment="" factoryVersion="" versionName="9.0.0" xmlVersion="1.1">
+  <ApplicationInfo>
+    <RuntimeContextRequirements>
+      <RuntimeContextRequirement>
+        <ApplicationName>Processing</ApplicationName>
+        <VersionName>1.0.18</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>RegExp</ApplicationName>
+        <VersionName>1.0.1</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>UserSessionMgmt</ApplicationName>
+        <VersionName>1.0.2</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>XynaPropertyMgmt</ApplicationName>
+        <VersionName>1.0.1</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>ZetaFramework</ApplicationName>
+        <VersionName>0.6.49</VersionName>
+      </RuntimeContextRequirement>
+    </RuntimeContextRequirements>
+  </ApplicationInfo>
+  <Capacities>
+    <Capacity implicitDependency="true">
+      <Name>XTF Query Test Data</Name>
+      <Cardinality>1</Cardinality>
+      <State>ACTIVE</State>
+    </Capacity>
+    <Capacity implicitDependency="true">
+      <Name>XTF Test Report Entry</Name>
+      <Cardinality>1</Cardinality>
+      <State>ACTIVE</State>
+    </Capacity>
+  </Capacities>
+  <CapacityRequirements>
+    <CapacityRequirement>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.ResetTestData</OrdertypeName>
+      <CapacityName>XTF Query Test Data</CapacityName>
+      <Cardinality>1</Cardinality>
+    </CapacityRequirement>
+    <CapacityRequirement>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.StoreTestReport</OrdertypeName>
+      <CapacityName>XTF Test Report Entry</CapacityName>
+      <Cardinality>1</Cardinality>
+    </CapacityRequirement>
+    <CapacityRequirement>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.services.cleanup.UpdateFeatureData</OrdertypeName>
+      <CapacityName>XTF Test Report Entry</CapacityName>
+      <Cardinality>1</Cardinality>
+    </CapacityRequirement>
+    <CapacityRequirement>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.services.cleanup.UpdateTestCaseData</OrdertypeName>
+      <CapacityName>XTF Test Report Entry</CapacityName>
+      <Cardinality>1</Cardinality>
+    </CapacityRequirement>
+  </CapacityRequirements>
+  <Ordertypes>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.ChangeSystemUnderTest</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.ChangeSystemUnderTestInstance</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.CreateCoverageMatrixCSV</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.CreateCoverageMatrixExcel</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.CreateExcelFromTestReport</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.CreateTestProject</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.DeleteCounterWithoutStoreParameter</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.DeleteSystemUnderTest</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.DeleteTestCase</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.DeleteTestDataMetaData</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.DeleteTestDataMetaDataWithoutDeleteParameter</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.DeleteTestProject</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.DeleteTestProjectWithoutDeleteParameter</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.DeleteTestReport</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.DuplicateTestProject</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.DuplicateTestProjectWithoutUpdateParameter</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.ExportSystemUnderTest</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.ExportTestCases</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.ExportTestDataToCSV</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.ExportTestDataToExcel</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.ExportTestProject</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.GetAllTestDataMetaData</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.GetCounter</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.GetTestDataMetaData</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.ImportSystemUnderTest</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.ImportTestData</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.ImportTestDataFromCSV</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.ImportTestObjectData</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.ImportTestProject</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.ResetTestData</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.StoreCounter</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.StoreSystemUnderTest</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.StoreTestCase</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.StoreTestDataMetaData</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.StoreTestDataMetaDataWithoutStoreParameter</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.StoreTestProject</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.StoreTestProjectWithoutStoreParameter</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.StoreTestReport</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.UpdateTestFactoryInfrastructureInAllTestprojects</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.UpdateTestProject</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.UpsertCounterWithUniquenessCheck</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.AddFollowupTestCase</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.AddInitialTestCase</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.BuildTableColumnsByDataType</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.BuildTableColumnsByDataTypeExcludingMembers</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.BuildTableInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.BuildTableInfoByName</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.CreateTestCase</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.CreateTestCaseChain</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.CreateTestProject</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.DeleteTestCaseChainFromEntry</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.DeleteTestCaseFromEntry</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.DeleteTestCaseInstance</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.DeleteTestCasesFromEntryList</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.DeleteTestDataInstance</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.DeleteTestDataInstanceList</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.DeleteTestObject</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.DeleteTestProject</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.DuplicateTestCase</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.DuplicateTestProject</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.ExportTestCases</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.ExportTestProject</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.GetAllTestCases</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.GetCounters</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.GetFollowupTestCases</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.GetInitialTestCases</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.GetProjectDetails</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.GetTestCaseChains</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.GetTestCaseDetails</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.GetTestCaseInstancesFromTestCaseChain</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.GetTestDataInstances</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.GetTestObjectsFromTestCaseChain</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.GetTestProject</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.GetTestProjects</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.GetTestReportsConfig</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.StoreProjectDetails</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.StoreTestDataInstance</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.TestObjectServiceGetFollowupTestCases</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.TestObjectServiceGetInitialTestCases</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.ValidateTestCaseNotUsedInTestCaseChain</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.gui.ValidateTestProjectVersionName</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.selector.GetSelectorPrototypes</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.selector.GetTestCaseSelectorsFromTestCase</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.selector.GetTestCasesForSelection</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.selector.GetTestDataForComplexList</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.selector.GetTestDataForSimpleList</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.selector.RemoveSelectorInstanceFromTestCase</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.selector.SaveEditedTestCase</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.services.AddFollowupTestCaseWithOutput</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xdev.xtestfactory.infrastructure.services.TestFactoryCleanup</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.services.TestFactoryPlanning</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.services.UpdateTestCaseInstance</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.services.cleanup.UpdateFeatureData</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.services.cleanup.UpdateTestCaseData</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.services.counter.planning.PlanningGetNextCounterValue</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.util.DeleteAllTestDataContent</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.util.DetermineCurrentSystemUnderTestInstance</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.util.DetermineCurrentTestCaseChain</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.util.DetermineCurrentTestCaseInstance</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.util.DetermineCurrentTestProject</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.util.DetermineCurrentTestProjectID</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.util.DetermineDependentTestReports</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.util.DetermineTestReportEntries</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.util.GetAllTestObjects</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.util.GetTestCaseByID</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.util.NotifyTestCaseExecution</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.util.QueryTestCaseByNameInCurrentTestProject</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.util.Trim</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.util.TrimTestCaseName</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.util.UpdateTestCaseInstanceStatus</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.user.AddComplexTestDataSelectorPrototype</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.user.AddMultipleChoiceTestDataSelectorPrototype</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.user.AddSimpleTestDataSelectorPrototype</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.user.AddStandardSelectorPrototypesToTestProject</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.user.AddTestObjectTypeToProject</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.util.RemoveNullCounter</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <Planning>xdev.xtestfactory.infrastructure.services.counter.planning.PlanningGetNextCounterValue</Planning>
+      <DestinationKey>xdev.xtestfactory.util.counter.GetNextCounterValue</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.util.counter.GetNextCounterValueFromWorkspace</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xdev.xtestfactory.util.misc.GetCurrentTestCase</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.util.sutparameters.GetSystemUnderTestInstanceParameter</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.util.sutparameters.GetSystemUnderTestInstanceParameterFromOtherInstance</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.util.testdata.QueryWithTestDataSupport</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+  </Ordertypes>
+  <XMOMEntries>
+    <XMOMEntry implicitDependency="true">
+      <FqName>base.DateTime</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.ChangeSystemUnderTest</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.ChangeSystemUnderTestInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.CreateCoverageMatrixCSV</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.CreateCoverageMatrixExcel</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.CreateExcelFromTestReport</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.actions.CreateTestProject</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.DeleteCounterWithoutStoreParameter</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.DeleteSystemUnderTest</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.DeleteTestCase</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.DeleteTestDataMetaData</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.DeleteTestDataMetaDataWithoutDeleteParameter</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.actions.DeleteTestProject</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.DeleteTestProjectWithoutDeleteParameter</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.DeleteTestReport</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.actions.DuplicateTestProject</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.actions.DuplicateTestProjectWithoutUpdateParameter</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.ExportSystemUnderTest</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.ExportTestCases</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.ExportTestDataToCSV</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.ExportTestDataToExcel</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.ExportTestProject</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.GetAllTestDataMetaData</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.actions.GetCounter</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.GetTestDataMetaData</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.ImportSystemUnderTest</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.ImportTestData</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.ImportTestDataFromCSV</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.actions.ImportTestObjectData</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.actions.ImportTestProject</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.ResetTestData</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.StoreCounter</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.StoreSystemUnderTest</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.StoreTestCase</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.StoreTestDataMetaData</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.StoreTestDataMetaDataWithoutStoreParameter</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.StoreTestProject</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.StoreTestProjectWithoutStoreParameter</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.StoreTestReport</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.actions.TestDataUtils</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.UpdateTestFactoryInfrastructureInAllTestprojects</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.UpdateTestProject</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.actions.UpsertCounterWithUniquenessCheck</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.CounterID</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.ManagedFileID</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.SimpleTestDataInstance</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.SystemUnderTestInstanceProperty</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.TestCaseID</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.TestCaseInstance</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.TestDataGenerationID</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.TestDataMetaDataID</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.TestDataSelector</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.TestDataSelectorInstance</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.TestDataSelectorPrototype</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.TestObjectMapping</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.TestProjectCreationParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.Workspacename</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.reporting.OutcomeStatistics</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.CounterNameAmbiguousException</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.CounterNotFound</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.DuplicateSystemUnderTest</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.DuplicateTestCaseName</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.FailedToDetermineTestCaseChain</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.FailedToDetermineTestCaseInstance</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.FailedToDetermineTestProject</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.InvalidCSV</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.NoMatchingSUTInstanceParameter</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.NoMatchingTestDataAvailable</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.NoSystemUnderTestInstanceConfigured</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.NoSystemUnderTestWithThisID</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.NoTestCaseChainWithIdFound</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.NoTestProjectWithThisID</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.SUTInstanceSpecificConfigurationFailed</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.TestCaseChainNameAlreadyExists</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.TestCaseNotFoundForID</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.TestCaseStillReferencedFromTestCaseChain</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.TestDataHasAlreadyBeenUsed</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.TestDataNotFound</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.TestDataNotSpecifiedForExport</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.TestDataTypeHasNotEnoughColumns</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.TestObjectStillInUse</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.TestProjectNameNotAllowed</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.TestProjectNotFound</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.TestProjectNotUnique</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.TestProjectVersionNameNotAllowed</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.TestprojectHasNoName</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.UnknownCounterName</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.UnknownTestDataMetaDataID</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.AddFollowupTestCase</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.AddInitialTestCase</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.BuildTableColumnsByDataType</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.gui.BuildTableColumnsByDataTypeExcludingMembers</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.gui.BuildTableInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.gui.BuildTableInfoByName</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.CreateTestCase</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.CreateTestCaseChain</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.CreateTestProject</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.DeleteTestCaseChainFromEntry</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.DeleteTestCaseFromEntry</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.DeleteTestCaseInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.DeleteTestCasesFromEntryList</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.DeleteTestDataInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.DeleteTestDataInstanceList</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.DeleteTestObject</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.DeleteTestProject</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.DuplicateTestCase</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.DuplicateTestProject</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.ExportTestCases</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.gui.ExportTestProject</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.GetAllTestCases</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.GetCounters</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.GetFollowupTestCases</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.GetInitialTestCases</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.GetProjectDetails</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.GetTestCaseChains</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.GetTestCaseDetails</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.GetTestCaseInstancesFromTestCaseChain</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.GetTestDataInstances</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.GetTestObjectsFromTestCaseChain</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.GetTestProject</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.GetTestProjects</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.GetTestReportsConfig</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.StoreProjectDetails</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.StoreTestDataInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.gui.TestObjectServiceGetFollowupTestCases</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.gui.TestObjectServiceGetInitialTestCases</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.Utils</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.gui.ValidateTestCaseNotUsedInTestCaseChain</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.gui.ValidateTestProjectVersionName</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.gui.datatypes.ClientImplementation</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.gui.datatypes.CounterEntry</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.gui.datatypes.Entry</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.gui.datatypes.InitialTestCaseEntry</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.gui.datatypes.ProjectDetails</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.gui.datatypes.TestCaseChainEntry</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.gui.datatypes.TestCaseEntry</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.gui.datatypes.TestCaseInstanceEntry</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.gui.datatypes.TestDataMetaDataEntry</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.gui.datatypes.TestObjectEntry</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.gui.datatypes.TestProjectSelector</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.gui.datatypes.TestReportEntry</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.gui.datatypes.TestReportsConfig</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.gui.datatypes.TrueOrFalse</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.gui.service.TestCaseChain</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.selector.GetSelectorPrototypes</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.selector.GetTestCaseSelectorsFromTestCase</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.selector.GetTestCasesForSelection</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.selector.GetTestDataForComplexList</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.selector.GetTestDataForSimpleList</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.selector.RemoveSelectorInstanceFromTestCase</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.selector.SaveEditedTestCase</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.selector.SelectorHandling</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.selector.Services</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.services.AddFollowupTestCaseWithOutput</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.services.ExceptionCount</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.services.OrderID</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.services.TestFactoryCleanup</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.services.TestFactoryIntegration</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.services.TestFactoryPlanning</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.services.UpdateTestCaseInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.services.cleanup.UpdateFeatureData</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.services.cleanup.UpdateTestCaseData</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.services.counter.CounterService</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.services.counter.planning.PlanningGetNextCounterValue</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.Counter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.Feature</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.Interface</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.SystemUnderTest</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.SystemUnderTestInstance</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.TestCase</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.TestCaseExport</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.TestData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.TestDataMetaData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.TestDataUsageInfo</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.TestObject</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.TestObjectMetaData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.TestProject</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.TestReport</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.TestReportEntryFeature</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.TestReportEntryTestCase</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.TestReportEntryTestCaseInstance</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.util.DeleteAllTestDataContent</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.util.DetermineCurrentSystemUnderTestInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.util.DetermineCurrentTestCaseChain</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.util.DetermineCurrentTestCaseInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.util.DetermineCurrentTestProject</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.util.DetermineCurrentTestProjectID</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.util.DetermineDependentTestReports</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.util.DetermineTestReportEntries</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.util.GetAllTestObjects</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.util.GetTestCaseByID</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.infrastructure.util.NotifyTestCaseExecution</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.util.QueryTestCaseByNameInCurrentTestProject</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.util.Trim</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.util.TrimTestCaseName</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.util.UpdateTestCaseInstanceStatus</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.util.testdata.legacy.LegacyTestDataReference</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.user.AddComplexTestDataSelectorPrototype</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.user.AddMultipleChoiceTestDataSelectorPrototype</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.user.AddSimpleTestDataSelectorPrototype</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.user.AddStandardSelectorPrototypesToTestProject</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.user.AddTestObjectTypeToProject</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.user.TestDataReferenceRequired</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.user.TestDataSelectorPrototypeNameRequired</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.util.CounterName</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.util.CounterValue</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.util.RemoveNullCounter</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.util.counter.GetNextCounterValue</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.util.counter.GetNextCounterValueFromWorkspace</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.util.misc.GetCurrentTestCase</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.util.persistence.ExternalJoinQueryParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.util.persistence.ExternalJoinResult</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.util.persistence.PersistenceUtils</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.util.sutparameters.GetSystemUnderTestInstanceParameter</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.util.sutparameters.GetSystemUnderTestInstanceParameterFromOtherInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.util.sutparameters.SystemUnderTestInstanceParameterName</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.util.sutparameters.SystemUnderTestInstanceParameterValue</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.xtestfactory.util.testdata.QueryWithTestDataSupport</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xopctrl.User</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+  </XMOMEntries>
+  <XynaProperties>
+    <XynaProperty implicitDependency="false">
+      <Name>xdev.xtestfactory.infrastructure.actions_monitoring_level</Name>
+      <Value>20</Value>
+    </XynaProperty>
+    <XynaProperty implicitDependency="false">
+      <Name>xdev.xtestfactory.infrastructure.gui.testcases</Name>
+      <Value>100</Value>
+    </XynaProperty>
+    <XynaProperty implicitDependency="false">
+      <Name>xyna.global.set.ordercontext</Name>
+      <Value>true</Value>
+    </XynaProperty>
+  </XynaProperties>
+  <XmomStorables>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.datatypes.TestDataSelectorPrototype</XmlName>
+      <Path/>
+      <OdsName>testdataselectorprototype</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.Counter</XmlName>
+      <Path/>
+      <OdsName>counter</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.Feature</XmlName>
+      <Path/>
+      <OdsName>feature</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.Interface</XmlName>
+      <Path/>
+      <OdsName>interface</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.SystemUnderTest</XmlName>
+      <Path/>
+      <OdsName>systemundertest</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.SystemUnderTest</XmlName>
+      <Path>feature</Path>
+      <OdsName>reflistfeature1</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.SystemUnderTest</XmlName>
+      <Path>interface0</Path>
+      <OdsName>reflistinterface</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.SystemUnderTest</XmlName>
+      <Path>systemUnderTestInstance</Path>
+      <OdsName>reflistsystemundertestinstance</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.SystemUnderTestInstance</XmlName>
+      <Path/>
+      <OdsName>systemundertestinstance</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.SystemUnderTestInstance</XmlName>
+      <Path>systemUnderTestInstanceProperty</Path>
+      <OdsName>systemundertestinstanceproperty</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCase</XmlName>
+      <Path/>
+      <OdsName>testcase</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCase</XmlName>
+      <Path>author</Path>
+      <OdsName>user</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCase</XmlName>
+      <Path>coveredFeatures</Path>
+      <OdsName>reflistfeature</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCase</XmlName>
+      <Path>responsibleUser</Path>
+      <OdsName>user1</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCase</XmlName>
+      <Path>testDataSelectorInstances</Path>
+      <OdsName>testdataselectorinstance</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCase</XmlName>
+      <Path>testDateSelector</Path>
+      <OdsName>testdataselector</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path/>
+      <OdsName>testcasechain</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path>subscription</Path>
+      <OdsName>subscription3</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path>subscription.testCaseInstance</Path>
+      <OdsName>testcaseinstance3</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path>subscription.testCaseInstance.testCase</Path>
+      <OdsName>testcase3</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path>subscription.testCaseInstance.testCase.author</Path>
+      <OdsName>user8</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path>subscription.testCaseInstance.testCase.coveredFeatures</Path>
+      <OdsName>feature3</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path>subscription.testCaseInstance.testCase.responsibleUser</Path>
+      <OdsName>user9</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path>subscription.testCaseInstance.testCase.testDataSelectorInstances</Path>
+      <OdsName>testdataselectorinstance3</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path>subscription.testCaseInstance.testCase.testDateSelector</Path>
+      <OdsName>testdataselector3</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path>testCaseInstance</Path>
+      <OdsName>testcaseinstance1</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path>testCaseInstance.externalID</Path>
+      <OdsName>subscription2</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path>testCaseInstance.testCase</Path>
+      <OdsName>testcase1</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path>testCaseInstance.testCase.author</Path>
+      <OdsName>user4</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path>testCaseInstance.testCase.coveredFeatures</Path>
+      <OdsName>feature1</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path>testCaseInstance.testCase.responsibleUser</Path>
+      <OdsName>user5</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path>testCaseInstance.testCase.testDataSelectorInstances</Path>
+      <OdsName>testdataselectorinstance1</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path>testCaseInstance.testCase.testDateSelector</Path>
+      <OdsName>testdataselector1</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path>testCaseInstance.testObject</Path>
+      <OdsName>testobject1</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path>testCaseInstance.testObject.testObjectType</Path>
+      <OdsName>testobjecttype2</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path>testObject</Path>
+      <OdsName>testobject2</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path>testObject.testObjectType</Path>
+      <OdsName>testobjecttype3</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path>testObjectId</Path>
+      <OdsName>listtestobjectid</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseChain</XmlName>
+      <Path>testObjectMetaData</Path>
+      <OdsName>testobjectmetadata</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCaseExport</XmlName>
+      <Path/>
+      <OdsName>testcaseexport</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestData</XmlName>
+      <Path/>
+      <OdsName>testdata</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestDataMetaData</XmlName>
+      <Path/>
+      <OdsName>testdatametadata</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestDataUsageInfo</XmlName>
+      <Path/>
+      <OdsName>testdatausageinfo</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestObject</XmlName>
+      <Path/>
+      <OdsName>testobject</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestObject</XmlName>
+      <Path>testObjectType</Path>
+      <OdsName>testobjecttype4</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path/>
+      <OdsName>testproject</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>counter</Path>
+      <OdsName>reflistcounter</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>projectOwner</Path>
+      <OdsName>user2</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCase</Path>
+      <OdsName>reflisttestcase</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCaseChain</Path>
+      <OdsName>testcasechain2</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCaseChain.testCaseInstance</Path>
+      <OdsName>testcaseinstance5</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCaseChain.testCaseInstance.testCase</Path>
+      <OdsName>testcase5</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCaseChain.testCaseInstance.testCase.author</Path>
+      <OdsName>user12</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCaseChain.testCaseInstance.testCase.coveredFeatures</Path>
+      <OdsName>feature5</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCaseChain.testCaseInstance.testCase.responsibleUser</Path>
+      <OdsName>user13</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCaseChain.testCaseInstance.testCase.testDataSelectorInstances</Path>
+      <OdsName>testdataselectorinstance5</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCaseChain.testCaseInstance.testCase.testDateSelector</Path>
+      <OdsName>testdataselector5</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCaseChain.testCaseInstance.testObject</Path>
+      <OdsName>testobject5</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCaseChain.testObject</Path>
+      <OdsName>testobject6</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCaseChain1</Path>
+      <OdsName>testcasechain1</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCaseChain1.testCaseInstance</Path>
+      <OdsName>testcaseinstance4</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCaseChain1.testCaseInstance.testCase</Path>
+      <OdsName>testcase4</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCaseChain1.testCaseInstance.testCase.author</Path>
+      <OdsName>user10</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCaseChain1.testCaseInstance.testCase.coveredFeatures</Path>
+      <OdsName>feature4</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCaseChain1.testCaseInstance.testCase.responsibleUser</Path>
+      <OdsName>user11</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCaseChain1.testCaseInstance.testCase.testDataSelectorInstances</Path>
+      <OdsName>testdataselectorinstance4</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCaseChain1.testCaseInstance.testCase.testDateSelector</Path>
+      <OdsName>testdataselector4</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCaseChain1.testCaseInstance.testObject</Path>
+      <OdsName>testobject3</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCaseChain1.testObject</Path>
+      <OdsName>testobject4</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCaseChain1.testObjectId</Path>
+      <OdsName>listtestobjectid1</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCaseChainId</Path>
+      <OdsName>listtestcasechainid</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testDataMetaData</Path>
+      <OdsName>reflisttestdatametadata</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testDataSelectorPrototype</Path>
+      <OdsName>testdataselectorprototype2</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testDataSelectorPrototypes</Path>
+      <OdsName>testdataselectorprototype1</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testReport</Path>
+      <OdsName>reflisttestreport</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>usersWithAccess</Path>
+      <OdsName>user3</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestReport</XmlName>
+      <Path/>
+      <OdsName>testreport</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestReport</XmlName>
+      <Path>creationDate</Path>
+      <OdsName>datetime</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestReport</XmlName>
+      <Path>creator</Path>
+      <OdsName>username</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestReportEntryFeature</XmlName>
+      <Path/>
+      <OdsName>testreportentryfeature</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestReportEntryFeature</XmlName>
+      <Path>outcomeStatistics</Path>
+      <OdsName>outcomestatistics1</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestReportEntryTestCase</XmlName>
+      <Path/>
+      <OdsName>testreportentrytestcase</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestReportEntryTestCase</XmlName>
+      <Path>outcomeStatistics</Path>
+      <OdsName>outcomestatistics</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestReportEntryTestCaseInstance</XmlName>
+      <Path/>
+      <OdsName>testreportentrytestcaseinstance</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestReportEntryTestCaseInstance</XmlName>
+      <Path>endTime</Path>
+      <OdsName>datetime2</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestReportEntryTestCaseInstance</XmlName>
+      <Path>startTime</Path>
+      <OdsName>datetime1</OdsName>
+    </XmomStorable>
+  </XmomStorables>
+  <InheritanceRules>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.ChangeSystemUnderTest</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.ChangeSystemUnderTestInstance</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.CreateCoverageMatrixCSV</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.CreateCoverageMatrixExcel</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.CreateExcelFromTestReport</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.CreateTestProject</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.DeleteSystemUnderTest</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.DeleteTestCase</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.DeleteTestDataMetaData</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.DeleteTestProject</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.DeleteTestProjectWithoutDeleteParameter</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.DeleteTestReport</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.DuplicateTestProject</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.DuplicateTestProjectWithoutUpdateParameter</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.ExportSystemUnderTest</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.ExportTestDataToCSV</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.ExportTestDataToExcel</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.ExportTestProject</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.ImportSystemUnderTest</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.ImportTestData</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.ImportTestDataFromCSV</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.ImportTestProject</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.ResetTestData</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.StoreCounter</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.StoreSystemUnderTest</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.StoreTestCase</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.StoreTestDataMetaData</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.StoreTestProject</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.StoreTestReport</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+  </InheritanceRules>
+</Application>

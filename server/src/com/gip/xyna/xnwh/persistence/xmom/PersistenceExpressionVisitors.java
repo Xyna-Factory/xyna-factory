@@ -133,7 +133,9 @@ public class PersistenceExpressionVisitors {
     private boolean expectingIndex = false;
     private static final Pattern unescapedStarPattern = Pattern.compile("\\\\*[*]");
     private static final Pattern unescapedQuotesPattern = Pattern.compile("\\\\*[\"]");
+    private static final Pattern unescapedUnderscorePattern = Pattern.compile("\\\\*[_]");
     private static final Pattern unescapedWildcardPattern = Pattern.compile("\\\\*[%]");
+    private static final Pattern unescapedSingleWildcardPattern = Pattern.compile("\\\\*[?]");
     
     private final Parameter parameter;
     
@@ -419,8 +421,11 @@ public class PersistenceExpressionVisitors {
      *
      * escapes "
      * escapes %
+     * escapes _
      * changes * to %, unless * is escaped
+     * changes ? to _, unless ? is escaped
      * removes escaping from *
+     * removes escaping from ?
      * doubles escaped backslashes for SelectionParser
      */
     private String applyGlobEscapes(String v) {
@@ -432,11 +437,20 @@ public class PersistenceExpressionVisitors {
       m = unescapedWildcardPattern.matcher(v);
       // % -> \%
       v = m.replaceAll(this::addBackslashForUnescaped);
-
+      
+      m = unescapedUnderscorePattern.matcher(v);
+      // _ -> \_
+      v = m.replaceAll(this::addBackslashForUnescaped);
+      
       m = unescapedStarPattern.matcher(v);
       //  * -> % (in reesacpeAndReplaceLast)
       // \* -> * (in removeLastEsape)
       v = m.replaceAll(x -> isEscaped(x.group()) ? removeLastEscape(x.group()) : reescapeAndReplaceLast(x.group(), "%"));
+      
+      m = unescapedSingleWildcardPattern.matcher(v);
+      //  ? -> _ (in rescaeAndReplaceLast)
+      // \? -> ? (in removeLastEscaped)
+      v = m.replaceAll(x -> isEscaped(x.group()) ? removeLastEscape(x.group()) : reescapeAndReplaceLast(x.group(), "_"));
       
       //duplicate "\\\\" to "\\\\\\\\" for SelectionParser.
       v = v.replaceAll("\\\\\\\\", "\\\\\\\\\\\\\\\\");
@@ -451,7 +465,7 @@ public class PersistenceExpressionVisitors {
 
 
     private String reescapeAndReplaceLast(String s, String replacement) {
-      return s.subSequence(0, s.length() - 1) + s.substring(0, s.length() - 1) + "%";
+      return s.subSequence(0, s.length() - 1) + s.substring(0, s.length() - 1) + replacement;
     }
 
 

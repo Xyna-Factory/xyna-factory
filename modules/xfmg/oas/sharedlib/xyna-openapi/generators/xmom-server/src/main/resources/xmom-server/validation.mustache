@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
 // validate {{#classname}}{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{/classname}}{{paramName}}{{^paramName}}{{dataType}}{{/paramName}} of type {{dataType}}{{#baseType}} with baseType {{baseType}}{{/baseType}}
-{{#isPrimitiveType}}{{^isContainer}}{{^isObject}}try {
+{{#isPrimitiveType}}{{^isContainer}}{{^isObject}}{{^isArray}}try {
     var primObj_{{-index}} = {{#isInteger}}
     new com.gip.xyna.openapi.OpenAPINumberType&lt;Integer&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{paramName}}", (Integer)get("{{paramName}}"));{{/isInteger}}{{#isLong}}
     new com.gip.xyna.openapi.OpenAPINumberType&lt;Long&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{paramName}}", (Long)get("{{paramName}}"));{{/isLong}}{{#isDouble}}
@@ -43,8 +43,8 @@
 catch (Exception e) {
     result.getErrorMessages().add("Error: could not validate {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{paramName}}");
 }
-{{/isObject}}{{/isContainer}}{{#isArray}}try {
-    var primObjList_{{-index}} = (List&lt;{{items.datatype}}&gt;)this.get("{{paramName}}");
+{{/isArray}}{{/isObject}}{{/isContainer}}{{#isArray}}try {
+    var primObjList_{{-index}} = (List&lt;{{items.datatype}}&gt;)this.get("{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}");
     if (primObjList_{{-index}} != null) {
         for (var l : primObjList_{{-index}}) {
             var item = {{#items.isInteger}}

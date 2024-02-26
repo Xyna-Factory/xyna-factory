@@ -18,6 +18,7 @@
 package com.gip.xyna.openapi.codegen;
 
 import org.openapitools.codegen.*;
+import org.openapitools.codegen.model.ModelsMap;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -62,18 +63,44 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     super.preprocessOpenAPI(openAPI);
 
     Info info = openAPI.getInfo();
-    Map<String, Object> vendorExtentions = info.getExtensions();
     
     // replace spaces, "-", "." with underscores in info.title
     info.setTitle(sanitizeName(info.getTitle()));
+    
+    Map<String, Object> vendorExtentions = info.getExtensions();
 
     // change the path of the generated XMOMs
-    String xModelPath = (String)vendorExtentions.get("x-model-path");
-    if (xModelPath != null && !xModelPath.trim().isEmpty()) {
-      modelPackage = xModelPath.replace('-', '_').replace(' ', '_').toLowerCase();
+    if (vendorExtentions != null) {
+      String xModelPath = (String)vendorExtentions.get("x-model-path");
+      if (xModelPath != null && !xModelPath.trim().isEmpty()) {
+        modelPackage = xModelPath.replace('-', '_').replace(' ', '_').toLowerCase();
+      }
     }
   }
 
+  @Override
+  public Map<String, ModelsMap> postProcessAllModels(Map<String, ModelsMap> objs) {
+    objs = super.postProcessAllModels(objs);
+    for (ModelsMap models: objs.values()) {
+      CodegenModel model = models.getModels().get(0).getModel();
+      if (model.getName().equals(model.parent)) {
+        model.parent = null;
+      }
+      ModelsMap parentMap = objs.get(model.parent);
+      if (parentMap != null) {
+        CodegenModel parent = parentMap.getModels().get(0).getModel();
+        for(CodegenProperty var: model.vars) {
+          for(CodegenProperty parentVar: parent.vars) {
+            if(parentVar.getName().equals(var.getName())) {
+              var.isInherited = true;
+            }
+          }
+        }
+      }
+    }
+    return objs;
+  }
+  
   /**
    * Returns human-friendly help for the generator.  Provide the consumer with help
    * tips, parameters here

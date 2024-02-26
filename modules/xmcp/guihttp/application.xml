@@ -25,7 +25,7 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Http</ApplicationName>
-        <VersionName>1.2.5</VersionName>
+        <VersionName>1.2.6</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>ZetaFramework</ApplicationName>
@@ -2591,7 +2591,11 @@
       <FqName>xmcp.processmodeller.datatypes.expression.VariableInstanceFunctionIncovation</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
-	<!-- // modelled expression -->
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.CastExpression</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <!-- // modelled expression -->
     
   </XMOMEntries>
   <Filters>

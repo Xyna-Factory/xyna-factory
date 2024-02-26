@@ -30,6 +30,7 @@ import java.util.function.Supplier;
 
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 
+import xmcp.processmodeller.datatypes.expression.CastExpression;
 import xmcp.processmodeller.datatypes.expression.ExpressionVariable;
 import xmcp.processmodeller.datatypes.expression.FunctionExpression;
 import xmcp.processmodeller.datatypes.expression.VariableAccessPart;
@@ -56,6 +57,7 @@ public class VarAccessPartAssigners {
     Map<Class<? extends GeneralXynaObject>, Function<GeneralXynaObject, VariableAccessPartAssigner>> map = new HashMap<>();
     map.put(ExpressionVariable.class, (x) -> new ExpressionVariableAccessPartAssigner((ExpressionVariable) x));
     map.put(FunctionExpression.class, (x) -> new FunctionExpressionAccessPartAssigner((FunctionExpression) x));
+    map.put(CastExpression.class, (x) -> new FunctionExpressionAccessPartAssigner((CastExpression) x));
     return Collections.unmodifiableMap(map);
   }
 

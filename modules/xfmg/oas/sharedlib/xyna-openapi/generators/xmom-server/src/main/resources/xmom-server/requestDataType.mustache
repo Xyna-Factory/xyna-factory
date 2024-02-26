@@ -57,7 +57,7 @@ return result.getResult();
         <Data ID="1" Label="Http Request" VariableName="httpRequest1" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype"/>
       </Input>
       <Output>
-        <Data ID="2" Label="{{httpMethod}} {{path}} Parameter" VariableName="{{#lambda.camelcase}}{{httpMethod}}{{path}}{{/lambda.camelcase}}Parameter2" 
+        <Data ID="2" Label="{{httpMethod}} {{path}} Parameter" VariableName="{{#lambda.camelcase}}{{httpMethod}}{{path}}{{/lambda.camelcase}}Parameter2"
         ReferenceName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter" ReferencePath="{{apiPackage}}.{{pathPrefix}}.request"/>
       </Output>
       <SourceCode>
@@ -91,7 +91,7 @@ for (xact.http.HeaderField headerField: httpRequest1.getHeader().getHeaderField(
 jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
 jsonOptions.setUseLabels(true);{{#bodyParams}}{{#isModel}}
-
+jsonOptions.setObjectDecider(new {{apiPackage}}.decider.OASDecider());
 xact.templates.Document body = httpRequest1.getBody();
 {{dataType}} {{#lambda.lowercase}}{{paramName}}{{/lambda.lowercase}} = ({{dataType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(body, new {{dataType}}(), jsonOptions);
 ret.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}({{#lambda.lowercase}}{{paramName}}{{/lambda.lowercase}});
