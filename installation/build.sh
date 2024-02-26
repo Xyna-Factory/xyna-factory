@@ -642,7 +642,7 @@ check_dependencies
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 prepare_build
 
-IT_BRANCH_XYNA_MODELLER=""
+GIT_BRANCH_XYNA_MODELLER=""
 
 case $1 in
   "xynautils")
