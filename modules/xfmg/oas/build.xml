@@ -23,10 +23,13 @@
         <path location="${basedir}/../../../" />
     </pathconvert>
     <property name="target.dir" value="${basedir}/deploy/" />
+    <property name="datamodelres" value="${basedir}/sharedlib/xyna-openapi/generators/xmom-data-model/src/main/resources/xmom-data-model/" />
 
     <target name="build">
 
         <antcall target="prepare-mdm-jar-if-missing" />
+        
+        <antcall target="replace-appversion" />
 
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="sharedlib/xyna-openapi">
             <property name="target.dir" value="${target.dir}/app" />
@@ -43,6 +46,12 @@
         <antcall target="create-mdm-jar" />
         <supply-mdm-jar type="mdmimpl" name="ApplicationGenerationImpl" />
         <delete file="${basedir}/mdm.jar" />
+    </target>
+
+    <target name="replace-appversion">
+        <xmlproperty file="application.xml" />
+        <copy file="${datamodelres}/applicationAntToken.mustache" tofile="${datamodelres}/application.mustache" overwrite="true" />
+        <replace file="${datamodelres}/application.mustache" token="$AppVersion" value="${Application(versionName)}"/>
     </target>
 
     <import file="${root.dir}/installation/build/buildApplication.xml" />

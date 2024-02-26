@@ -68,20 +68,23 @@ public class XmomClientGenerator extends DefaultCodegen {
     super.preprocessOpenAPI(openAPI);
 
     Info info = openAPI.getInfo();
-    Map<String, Object> vendorExtentions = info.getExtensions();
     
     // replace spaces, "-", "." with underscores in info.title
     info.setTitle(sanitizeName(info.getTitle()));
 
-    // change the path of the generated XMOMs
-    String xModelPath = (String)vendorExtentions.get("x-model-path");
-    if (xModelPath != null && !xModelPath.trim().isEmpty()) {
-      modelPackage = xModelPath.replace('-', '_').replace(' ', '_').toLowerCase();
-    }
+    Map<String, Object> vendorExtentions = info.getExtensions();
 
-    String xClientPath = (String)vendorExtentions.get("x-client-path");
-    if (xClientPath != null && !xClientPath.trim().isEmpty()) {
-      apiPackage = xClientPath.replace('-', '_').replace(' ', '_').toLowerCase();
+    // change the path of the generated XMOMs
+    if (vendorExtentions != null) {
+      String xModelPath = (String)vendorExtentions.get("x-model-path");
+      if (xModelPath != null && !xModelPath.trim().isEmpty()) {
+        modelPackage = xModelPath.replace('-', '_').replace(' ', '_').toLowerCase();
+      }
+
+      String xClientPath = (String)vendorExtentions.get("x-client-path");
+      if (xClientPath != null && !xClientPath.trim().isEmpty()) {
+        apiPackage = xClientPath.replace('-', '_').replace(' ', '_').toLowerCase();
+      }
     }
   }
 
@@ -142,7 +145,7 @@ public class XmomClientGenerator extends DefaultCodegen {
      * it will be processed by the template engine.  Otherwise, it will be copied
      */
     supportingFiles.add(new SupportingFile("application.mustache", "", "application.xml"));
-
+    supportingFiles.add(new SupportingFile("OASDecider.mustache", "XMOM/" + apiPackage.replace('.', '/') + "/decider", "OASDecider.xml"));
     /**
      * Language Specific Primitives.  These types will not trigger imports by
      * the client generator

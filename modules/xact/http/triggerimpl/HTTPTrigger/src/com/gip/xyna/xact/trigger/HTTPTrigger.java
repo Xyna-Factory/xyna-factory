@@ -272,10 +272,8 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
         }
 
       }, 50, 100);
-    } catch (IOException e) {
-      throw new HTTPTRIGGER_ServerSocketCreationException(sp.toString(), e);
-    } catch (XynaException e) {
-      throw new HTTPTRIGGER_ServerSocketCreationException(sp.toString(), e);
+    } catch (IOException | XynaException  e) {
+      throw new HTTPTRIGGER_ServerSocketCreationException(sp.toString() + ". " + e.getMessage(), e);
     }
     if (logger.isDebugEnabled()) {
       logger.debug("listening for incoming http" + (sp.useHTTPs() ? "s" : "") + " on "
