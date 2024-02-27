@@ -362,12 +362,6 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
 
       Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
  
-      HostKeyCheckingMode checkingMode = HostKeyCheckingMode.getByXynaRepresentation(conParams.getHostKeyChecking());
-      logger.debug("SSHConnectionInstanceOperationImpl checkingMode: " + checkingMode.getStringRepresentation());
-      if (checkingMode.getStringRepresentation().equalsIgnoreCase("no")) {
-        client.addHostKeyVerifier(new PromiscuousVerifier());
-      }
-
       // Client uses only socketFactory.createSocket() and overrides with setConnectTimeout and setTimeout
       client.setConnectTimeout(connectionTimeout);
 
@@ -735,8 +729,15 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
 
   protected void initClient() {
     client = new SSHClient();
-    XynaHostKeyRepository hostRepo = new HostKeyStorableRepository(supportedFeatures.get());
-    client.addHostKeyVerifier(hostRepo);
+
+    HostKeyCheckingMode checkingMode = HostKeyCheckingMode.getByXynaRepresentation(getSSHConnectionParameter().getHostKeyChecking());
+    logger.debug("SSHConnectionInstanceOperationImpl checkingMode: " + checkingMode.getStringRepresentation());
+    if (checkingMode.getStringRepresentation().equalsIgnoreCase("no")) {
+      client.addHostKeyVerifier(new PromiscuousVerifier());
+    } else {
+      XynaHostKeyRepository hostRepo = new HostKeyStorableRepository(supportedFeatures.get());
+      client.addHostKeyVerifier(hostRepo);
+    }
 
     // Reduce valid KeyAlgorithms
     client.getTransport().getConfig()

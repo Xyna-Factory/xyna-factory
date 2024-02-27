@@ -1,2 +1,3 @@
 xyna-openapi/**/target/
-
+sharedlib/xyna-openapi/test/
+sharedlib/xyna-openapi/generators/xmom-data-model/src/main/resources/xmom-data-model/application.mustache

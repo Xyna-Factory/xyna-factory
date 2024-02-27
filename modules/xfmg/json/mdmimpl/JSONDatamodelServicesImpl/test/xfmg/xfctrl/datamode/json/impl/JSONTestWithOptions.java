@@ -34,6 +34,7 @@ import xfmg.xfctrl.datamodel.json.impl.JSONDatamodelServicesServiceOperationImpl
 import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONObjectWriter;
 import xfmg.xfctrl.datamodel.json.JSONKeyValue;
 import xfmg.xfctrl.datamodel.json.JSONObject;
+import xfmg.xfctrl.datamodel.json.JSONValue;
 import xfmg.xfctrl.datamodel.json.impl.JSONTokenizer.JSONToken;
 import xfmg.xfctrl.datamodel.json.parameter.XynaObjectDecider;
 
@@ -43,6 +44,7 @@ import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
+import com.gip.xyna.xprc.xfractwfe.generation.LabelAnnotation;
 
 import junit.framework.TestCase;
 
@@ -124,19 +126,7 @@ public class JSONTestWithOptions extends TestCase {
   }
   
   
-  public void testWithOptions3() throws IllegalArgumentException, IllegalAccessException {
-    JSONTokenizer jt = new JSONTokenizer();
-    String jsonString = 
-"{"+
-"  \"member\": {"+
-"     \"name\": \"test\""+
-"  },"+
-"  \"@type\": \"RoleXO\""+
-"}";
-    
-    List<JSONToken> tokens = jt.tokenize(jsonString);
-    JSONParser jp = new JSONParser(jsonString);
-    JSONObject job = new JSONObject();
+  private XynaObjectDecider createDecider() {
     XynaObjectDecider decider = new XynaObjectDecider() {
 
       private static final long serialVersionUID = 1L;
@@ -162,6 +152,23 @@ public class JSONTestWithOptions extends TestCase {
       }
       
     };
+    return decider;
+  }
+  
+  public void testWithOptions3() throws IllegalArgumentException, IllegalAccessException {
+    JSONTokenizer jt = new JSONTokenizer();
+    String jsonString = 
+"{"+
+"  \"member\": {"+
+"     \"name\": \"test\","+
+"     \"@type\": \"RoleXO\""+
+"  }"+
+"}";
+    
+    List<JSONToken> tokens = jt.tokenize(jsonString);
+    JSONParser jp = new JSONParser(jsonString);
+    JSONObject job = new JSONObject();
+    XynaObjectDecider decider = createDecider();
     try {
       jp.fillObject(tokens, 0, job);
       StringBuilder sb = new StringBuilder();
@@ -176,6 +183,44 @@ public class JSONTestWithOptions extends TestCase {
       container = new ContainerXO();
       impl.fillXynaObjectRecursivly(container, job, "", Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap(), false, null);
       assertTrue(container.member instanceof BaseTestXO);
+    } catch (InvalidJSONException e) {
+      fail();
+    }
+  }
+
+  
+  public void testWithOptions4() throws IllegalArgumentException, IllegalAccessException {
+    JSONTokenizer jt = new JSONTokenizer();
+    String jsonString = 
+"{"+
+"  \"member\": ["+ 
+"    {"+
+"      \"member\": {"+
+"         \"name\": \"test\""+
+"      },"+
+"      \"@type\": \"RoleXO\""+
+"    }"+
+"  ]"+
+"}";
+    
+    List<JSONToken> tokens = jt.tokenize(jsonString);
+    JSONParser jp = new JSONParser(jsonString);
+    JSONObject job = new JSONObject();
+    XynaObjectDecider decider = createDecider();
+    try {
+      jp.fillObject(tokens, 0, job);
+      StringBuilder sb = new StringBuilder();
+      JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
+      ListContainerXO container = new ListContainerXO();
+      impl.fillXynaObjectRecursivly(container, job, "", Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap(), false, decider);
+      ObjectStringRepresentation.createStringRepOfObject(sb, job);
+      sb.append("\n=========================================\n\n");
+      ObjectStringRepresentation.createStringRepOfObject(sb, container);
+      System.out.println(sb);
+      assertTrue(container.member.get(0) instanceof RoleXO);
+      container = new ListContainerXO();
+      impl.fillXynaObjectRecursivly(container, job, "", Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap(), false, null);
+      assertTrue(container.member.get(0) instanceof BaseTestXO);
     } catch (InvalidJSONException e) {
       fail();
     }
@@ -230,6 +275,33 @@ public class JSONTestWithOptions extends TestCase {
     subs.put("roles[].name", "tenant");
     JSONObject obj = impl.createFromXynaObjectRecursivly(user, "", trans, subs, false, OASScope.none);
     System.out.println(JSONObjectWriter.toJSON("", obj));
+  }
+  
+  public void testWriteWithOptions3UseLabel() {
+    RoleXO role1 = new RoleXO();
+    role1.name = "my.role.tenant.member";
+    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
+    Map<String, String> trans = new HashMap<String, String>();
+    Map<String, String> subs = new HashMap<String, String>();
+    JSONObject obj = impl.createFromXynaObjectRecursivly(role1, "", trans, subs, true, OASScope.none);
+    //can't use getMember(), because implementation is not set in mdm.jars created outside of a running factory
+    JSONValue readName = obj.getMembers().stream().filter(x -> "SomeName".equals(x.getKey())).map(x -> x.getValue()).findFirst().orElse(null);
+    assertTrue(readName != null);
+    assertTrue(role1.name.equals(readName.getStringOrNumberValue()));
+  }
+  
+  public void testWriteWithOptions4UseLabelAndSubstitude() {
+    RoleXO role1 = new RoleXO();
+    role1.name = "my.role.tenant.member";
+    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
+    Map<String, String> trans = new HashMap<String, String>();
+    Map<String, String> subs = new HashMap<String, String>();
+    subs.put("name", "someOtherName");
+    JSONObject obj = impl.createFromXynaObjectRecursivly(role1, "", trans, subs, true, OASScope.none);
+    //can't use getMember(), because implementation is not set in mdm.jars created outside of a running factory
+    JSONValue readName = obj.getMembers().stream().filter(x -> "someOtherName".equals(x.getKey())).map(x -> x.getValue()).findFirst().orElse(null);
+    assertTrue(readName != null);
+    assertTrue(role1.name.equals(readName.getStringOrNumberValue()));
   }
   
   
@@ -320,6 +392,8 @@ public class JSONTestWithOptions extends TestCase {
   public static class RoleXO extends BaseTestXO {
     
     private static final long serialVersionUID = 1L;
+    
+    @LabelAnnotation(label="SomeName")
     private String name;
     
     public Set<String> getVariableNames() {
@@ -384,6 +458,36 @@ public class JSONTestWithOptions extends TestCase {
     
   }
   
+  
+
+  public static class ListContainerXO extends BaseTestXO {
+    
+    private static final long serialVersionUID = 1L;
+    private List<BaseTestXO> member;
+    
+    public Set<String> getVariableNames() {
+      Set<String> set = new HashSet<String>();
+      set.add("member");
+      return set;
+    }
+
+    public Object get(String path) throws InvalidObjectPathException {
+      if (path.equals("member")) {
+        return member;
+      } else {
+        throw new InvalidObjectPathException(path);
+      }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void set(String path, Object value) throws XDEV_PARAMETER_NAME_NOT_FOUND {
+      if (path.equals("member")) {
+        member = (List<BaseTestXO>) value;
+      } else {
+        throw new XDEV_PARAMETER_NAME_NOT_FOUND(path);
+      }
+    }
+  }
   
   public static class BaseTestXO extends XynaObject {
 

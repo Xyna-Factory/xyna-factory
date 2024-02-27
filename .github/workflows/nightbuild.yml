@@ -39,4 +39,4 @@ jobs:
      - name: build
        run: |
           cd installation
-          ./build.sh all
+          ./build.sh all -b main
