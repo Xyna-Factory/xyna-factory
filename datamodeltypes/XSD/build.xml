@@ -24,6 +24,9 @@
 
     <property name="project.name.local" value="XSD" />
 
+    <!--Next release version for the archive file-->
+    <property name="release.number" value="1.0.0"/>
+
     <property name="target.dir" value="${basedir}/deploy" />
 
     <resolver:pom file="${basedir}/pom.xml" id="pom"/>
@@ -33,7 +36,7 @@
          ================================= -->
     <target name="build" depends="resolve, genCodeClass">
         <!--  <genCodeClass basedir="${basedir}" lookupjar="y" /> -->
-        <buildJar destfile="${target.dir}/${project.name.local}.jar" />
+        <buildJar destfile="${target.dir}/${project.name.local}-${release.number}.jar" />
 
         <copyJar from="${basedir}/lib" to="${target.dir}" />
         <copyLicense from="${basedir}/lib" to="${target.dir}" />
