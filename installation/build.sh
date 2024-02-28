@@ -671,6 +671,9 @@ case $1 in
   "compose")
     build_xyna_factory
     ;;
+  "plugins")
+    build_plugins
+    ;;
   *)
     print_help
     exit 1
