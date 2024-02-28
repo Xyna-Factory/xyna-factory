@@ -674,6 +674,9 @@ case $1 in
   "plugins")
     build_plugins
     ;;
+  "clusterproviders")
+    build_clusterproviders
+    ;;
   *)
     print_help
     exit 1
