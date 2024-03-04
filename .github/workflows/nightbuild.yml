@@ -39,4 +39,18 @@ jobs:
      - name: build
        run: |
           cd installation
-          ./build.sh all
+          ./build.sh all -b main
+
+     - name: Create Archive
+       id: create-archive
+       run: |
+          RUNS_AT=$(date -u +"%Y%m%dT%H%M%SZ")
+          echo "RUNS_AT=$RUNS_AT" >> "$GITHUB_OUTPUT"
+          tar cvf "XynaFactory-NIGHTLY-${RUNS_AT}.tar" --force-local -C release .
+          
+     - name: Upload Artifact XynaFactory-NIGHTLY-${{ steps.create-archive.outputs.RUNS_AT }}
+       uses: actions/upload-artifact@v4
+       with:
+          name: XynaFactory-NIGHTLY-${{ steps.create-archive.outputs.RUNS_AT }}
+          path: XynaFactory-NIGHTLY-${{ steps.create-archive.outputs.RUNS_AT }}.tar
+          retention-days: 1

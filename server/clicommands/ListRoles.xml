@@ -17,4 +17,5 @@
 -->
 <XynaCommandLineCommand>
   <CommandDefinition Name="listroles" Groups="User Management" Description="Lists all registered roles."/>
+  <Argument Name="roleName" Description="Lists only the rights for a given role name" Optional="true"/>
 </XynaCommandLineCommand>

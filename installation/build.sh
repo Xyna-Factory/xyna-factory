@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Copyright 2023 Xyna GmbH, Germany
+# Copyright 2024 Xyna GmbH, Germany
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -539,6 +539,7 @@ compose_server_persistencelayers() {
 compose_server_orderinpoutsourcetypes() {
   cd $SCRIPT_DIR/../release/server
   cp -r $SCRIPT_DIR/../localbuild/server/orderinputsourcetypes .
+  rm -rf $SCRIPT_DIR/../localbuild/server/orderinputsourcetypes/deploy/*/xyna
 }
 
 compose_server_lib() {
@@ -642,7 +643,7 @@ check_dependencies
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 prepare_build
 
-IT_BRANCH_XYNA_MODELLER=""
+GIT_BRANCH_XYNA_MODELLER=""
 
 case $1 in
   "xynautils")
@@ -669,6 +670,9 @@ case $1 in
     ;;
   "compose")
     build_xyna_factory
+    ;;
+  "plugins")
+    build_plugins
     ;;
   *)
     print_help
