@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,13 @@ import xfmg.oas.generation.cli.generated.OverallInformationProvider;
 import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl;
 import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl.ValidationResult;
 import xfmg.xfctrl.filemgmt.ManagedFileId;
+import xmcp.forms.plugin.Plugin;
+import xprc.xpce.Application;
+import xprc.xpce.Workspace;
 
+import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 
 
 public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploymentTask, ApplicationGenerationServiceOperation {
@@ -56,11 +62,27 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
   
   public void onDeployment() throws XynaException {
     OverallInformationProvider.onDeployment();
+    try {
+      Plugin plugin = createPlugin();
+      if (plugin != null) {
+        xmcp.forms.plugin.PluginManagement.registerPlugin(plugin);
+      }
+    } catch (Exception e) {
+      logger.error("Could not register oas plugin.", e);
+    }
   }
 
 
   public void onUndeployment() throws XynaException {
     OverallInformationProvider.onUndeployment();
+    try {
+      Plugin plugin = createPlugin();
+      if (plugin != null) {
+        xmcp.forms.plugin.PluginManagement.unregisterPlugin(plugin);
+      }
+    } catch(Exception e) {
+      logger.error("Could not unregister oas plugin.", e);
+    }
   }
 
 
@@ -71,6 +93,38 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
 
   public BehaviorAfterOnUnDeploymentTimeout getBehaviorAfterOnUnDeploymentTimeout() {
     return null;
+  }
+
+
+  private Plugin createPlugin() {
+    Plugin.Builder plugin = new Plugin.Builder();
+    plugin.navigationEntryLabel("OAS Import");
+    plugin.navigationEntryName("OAS Import");
+    plugin.definitionWorkflowFQN("xmcp.oas.fman.GetOASImportHistoryDefinition");
+    xprc.xpce.RuntimeContext rtc = getOwnRtc();
+    if (rtc == null) {
+      return null;
+    }
+    plugin.pluginRTC(rtc);
+    return plugin.instance();
+  }
+
+
+  private xprc.xpce.RuntimeContext getOwnRtc() {
+    try {
+      ClassLoaderBase clb = (ClassLoaderBase) getClass().getClassLoader();
+      Long revision = clb.getRevision();
+      RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+      RuntimeContext rtc = rm.getRuntimeContext(revision);
+      if(rtc instanceof com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application) {
+        return new Application(rtc.getName(), ((com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application)rtc).getVersionName());
+      } else {
+        return new Workspace(rtc.getName());
+      }
+    } catch(Exception e) {
+      logger.error("Could not determine RTC.", e);
+      return null;
+    }
   }
 
   @Override
