@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xprc.exceptions.XPRC_NoInputSpecifiedForChoice;
 
 
@@ -55,8 +56,35 @@ public class SubclassChoiceObject {
       }
     }
 
-    throw new RuntimeException("input of choice was not handled in workflow. type=" + input.getClass().getName() + ".");
-
+   
+    //type not found. check if classloader is current
+    Class<?> classWithSameName = null;
+    for (int i = 0; i < subclasses.length; i++) {
+      if (subclasses[i].getName().equals(input.getClass().getName())) {
+        classWithSameName = subclasses[i];
+      }
+    }
+    
+    if (classWithSameName == null) {
+      //not a classloader bug, just a modelling problem: the type is missing in the choice.
+      throw new RuntimeException("input of choice was not handled in workflow. type=" + input.getClass().getName() + ".");
+    }
+    
+    if (classWithSameName.getClassLoader() instanceof ClassLoaderBase) {
+      try {
+        ((ClassLoaderBase) classWithSameName.getClassLoader()).checkClosed();
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException("Workflow references old classloader for " + input.getClass().getName(), e);
+      }
+    }
+    if (input.getClass().getClassLoader() instanceof ClassLoaderBase) {
+      try {
+        ((ClassLoaderBase) input.getClass().getClassLoader()).checkClosed();
+      } catch (ClassNotFoundException e) {
+        throw new RuntimeException("Input of choice is loaded by old classloader: " + input.getClass().getName(), e);
+      }
+    }
+    throw new RuntimeException("input of choice could not be handled. classloaders do not match: " + input.getClass().getClassLoader() + ", " + classWithSameName.getClassLoader());
   }
 
 

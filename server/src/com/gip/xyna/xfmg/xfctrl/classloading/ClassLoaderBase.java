@@ -363,7 +363,7 @@ public class ClassLoaderBase extends URLClassLoader {
     throw e;
   }
   
-  protected void checkClosed() throws ClassNotFoundException {
+  public void checkClosed() throws ClassNotFoundException {
     if (closed) {
       //wenn bereits geschlossen, nicht mehr auf die urls zugreifen versuchen
       SimpleDateFormat format = Constants.defaultUTCSimpleDateFormat();
