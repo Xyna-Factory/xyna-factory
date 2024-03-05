@@ -1186,7 +1186,9 @@ public class ModelledExpression {
     }
     
     private boolean qualifiesForDynamicAdjustment(Expression expression) {
-      if (expression instanceof FunctionExpression) {
+      if (expression instanceof CastExpression) {
+        return false;
+      } else if (expression instanceof FunctionExpression) {
         return ((FunctionExpression)expression).getParts().size() > 0;
       } else if (expression instanceof LiteralExpression) {
         return false;

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,9 @@ package xfmg.oas.generation.impl;
 
 
 
-import org.openapitools.codegen.OpenAPIGenerator;
+import org.apache.log4j.Logger;
 
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
@@ -37,8 +38,15 @@ import xfmg.oas.generation.ApplicationGenerationParameter;
 import xfmg.oas.generation.ApplicationGenerationServiceOperation;
 import xfmg.oas.generation.cli.generated.OverallInformationProvider;
 import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl;
+import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl.ValidationResult;
 import xfmg.xfctrl.filemgmt.ManagedFileId;
+import xmcp.forms.plugin.Plugin;
+import xprc.xpce.Application;
+import xprc.xpce.Workspace;
 
+import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 
 
 public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploymentTask, ApplicationGenerationServiceOperation {
@@ -50,14 +58,31 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
   private static final FileManagement fileManagement = 
       XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getFileManagement();
   
+  private static Logger logger = CentralFactoryLogging.getLogger(ApplicationGenerationServiceOperationImpl.class);
   
   public void onDeployment() throws XynaException {
     OverallInformationProvider.onDeployment();
+    try {
+      Plugin plugin = createPlugin();
+      if (plugin != null) {
+        xmcp.forms.plugin.PluginManagement.registerPlugin(plugin);
+      }
+    } catch (Exception e) {
+      logger.error("Could not register oas plugin.", e);
+    }
   }
 
 
   public void onUndeployment() throws XynaException {
     OverallInformationProvider.onUndeployment();
+    try {
+      Plugin plugin = createPlugin();
+      if (plugin != null) {
+        xmcp.forms.plugin.PluginManagement.unregisterPlugin(plugin);
+      }
+    } catch(Exception e) {
+      logger.error("Could not unregister oas plugin.", e);
+    }
   }
 
 
@@ -70,30 +95,75 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
     return null;
   }
 
+
+  private Plugin createPlugin() {
+    Plugin.Builder plugin = new Plugin.Builder();
+    plugin.navigationEntryLabel("OAS Import");
+    plugin.navigationEntryName("OAS Import");
+    plugin.definitionWorkflowFQN("xmcp.oas.fman.GetOASImportHistoryDefinition");
+    xprc.xpce.RuntimeContext rtc = getOwnRtc();
+    if (rtc == null) {
+      return null;
+    }
+    plugin.pluginRTC(rtc);
+    return plugin.instance();
+  }
+
+
+  private xprc.xpce.RuntimeContext getOwnRtc() {
+    try {
+      ClassLoaderBase clb = (ClassLoaderBase) getClass().getClassLoader();
+      Long revision = clb.getRevision();
+      RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+      RuntimeContext rtc = rm.getRuntimeContext(revision);
+      if(rtc instanceof com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application) {
+        return new Application(rtc.getName(), ((com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application)rtc).getVersionName());
+      } else {
+        return new Workspace(rtc.getName());
+      }
+    } catch(Exception e) {
+      logger.error("Could not determine RTC.", e);
+      return null;
+    }
+  }
+
   @Override
   public void generateApplication(XynaOrderServerExtension correlatedXynaOrder, ApplicationGenerationParameter applicationGenerationParameter1, File file4) {
-    String swagger = file4.getPath();
-    String target = "/tmp/Order_" + correlatedXynaOrder.getId();
-
-    try {
-      OpenAPIGenerator.main(new String[] {"validate", "-i", swagger, "--recommend"});
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
     
     BuildoasapplicationImpl oasAppBuilder = new BuildoasapplicationImpl();
     
+    String specFile = file4.getPath();
+    String target = "/tmp/Order_" + correlatedXynaOrder.getId();
+
+    ValidationResult result = oasAppBuilder.validate(specFile);
+    StringBuilder errors = new StringBuilder("Validation found errors:");
+    if (!result.getErrors().isEmpty()) {
+      logger.error("Spec: " + specFile + " contains errors.");
+      result.getErrors().forEach(error -> {
+        logger.error(error);
+        errors.append(" ");
+        errors.append(error);
+      });
+    }
+    if (!result.getWarnings().isEmpty()) {
+      logger.warn("Spec: " + specFile + " contains warnings.");
+      result.getWarnings().forEach(warning -> logger.warn(warning));
+    }
+    if (!result.getErrors().isEmpty()) {
+      throw new RuntimeException(errors.toString());
+    }
+    
     String id;
     
-    id = oasAppBuilder.createOasApp("xmom-data-model", target + "_datatypes", swagger);
+    id = oasAppBuilder.createOasApp("xmom-data-model", target + "_datatypes", specFile);
     importApplication(correlatedXynaOrder, id);
     
     if (applicationGenerationParameter1.getGenerateProvider()) {
-      id = oasAppBuilder.createOasApp("xmom-server", target + "_provider", swagger);
+      id = oasAppBuilder.createOasApp("xmom-server", target + "_provider", specFile);
       importApplication(correlatedXynaOrder, id);
     }
     if (applicationGenerationParameter1.getGenerateClient()) {
-      id = oasAppBuilder.createOasApp("xmom-client", target + "_client", swagger);
+      id = oasAppBuilder.createOasApp("xmom-client", target + "_client", specFile);
       importApplication(correlatedXynaOrder, id);
     }
   }
