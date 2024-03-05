@@ -100,6 +100,7 @@ import com.gip.xyna.xact.filter.session.modify.operations.copy.StepCopier;
 import com.gip.xyna.xact.filter.session.repair.XMOMRepair;
 import com.gip.xyna.xact.filter.session.save.Persistence;
 import com.gip.xyna.xact.filter.session.workflowissues.WorkflowIssuesRequestProcessor;
+import com.gip.xyna.xact.filter.session.workflowwarnings.ReferenceInvalidatedNotification;
 import com.gip.xyna.xact.filter.session.workflowwarnings.DefaultWorkflowWarningsHandler;
 import com.gip.xyna.xact.filter.session.workflowwarnings.WorkflowWarningsHandler;
 import com.gip.xyna.xact.filter.util.ReadonlyUtil;
