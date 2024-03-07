@@ -295,6 +295,7 @@ public class ModelledExpressionConverter {
 
     @Override
     public void allPartsOfFunctionFinished(FunctionExpression fe) {
+      context.pop();
     }
 
 

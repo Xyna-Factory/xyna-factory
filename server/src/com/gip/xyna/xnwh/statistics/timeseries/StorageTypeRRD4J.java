@@ -38,6 +38,7 @@ import org.rrd4j.core.RrdDef;
 import org.rrd4j.core.Sample;
 
 import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.Department;
 import com.gip.xyna.xnwh.statistics.timeseries.TimeSeriesCreationParameter.DataSourceParameter;
 import com.gip.xyna.xnwh.statistics.timeseries.TimeSeriesCreationParameter.StorageParameter;
 
@@ -258,9 +259,9 @@ public class StorageTypeRRD4J implements StorageType {
 
       @Override
       public void run() {
-        try {
-          logger.info("TimeSeries RRD Sync Thread started");
-          while (syncthreadActive) {
+        logger.info("TimeSeries RRD Sync Thread started");
+        while (syncthreadActive) {
+          try {
             List<RrdDbWrapper> syncList;
             synchronized (StorageTypeRRD4J.this) {
               syncList = new ArrayList<>(cache.values());
@@ -297,11 +298,17 @@ public class StorageTypeRRD4J implements StorageType {
             } catch (InterruptedException e) {
               //ok, retry
             }
+          } catch (Throwable t) {
+            Department.handleThrowable(t);
+            if (t instanceof OutOfMemoryError) {
+              continue;
+            } else {
+              logger.warn("TimeSeries RRD Sync Thread failed", t);
+              break;
+            }
           }
-          logger.info("TimeSeries RRD Sync Thread finished");
-        } catch (Throwable t) {
-          logger.warn("TimeSeries RRD Sync Thread failed", t);
         }
+        logger.info("TimeSeries RRD Sync Thread finished");
       }
 
     }, "TimeSeriesRRD-Sync");

@@ -397,6 +397,49 @@ public class ExpressionTests extends TestCase {
     assertTrue(compare(exp, expectedResult));
   }
   
+  public void testIndexDef() {
+    ModelledExpression exp = convert("%1%[length(%0%)].text2=%0%[\"0\"].text");
+    ModelledExpression expectedResult = new ModelledExpression(
+        new SingleVarExpression(
+            new ExpressionVariable(0,
+                 Arrays.asList(new VariableAccessPart[] { new VariableAccessPart("text", null)}), 
+                 new LiteralExpression("0"))),
+        new SingleVarExpression(
+            new ExpressionVariable(1,
+                 Arrays.asList(new VariableAccessPart[] { new VariableAccessPart("text2", null)}), 
+                 new FunctionExpression(
+                     Arrays.asList(new Expression[] { new SingleVarExpression(new ExpressionVariable(0, null, null))}),                   
+                     "length", null, null)))
+        );
+    assertTrue(compare(exp, expectedResult));
+  }
+
+  public void testIndexDef2() {
+    ModelledExpression exp = convert("%1%[length(%0%)].text2");
+    ModelledExpression expectedResult = new ModelledExpression(
+        null,
+        new SingleVarExpression(
+            new ExpressionVariable(1,
+                 Arrays.asList(new VariableAccessPart[] { new VariableAccessPart("text2", null)}), 
+                 new FunctionExpression(
+                     Arrays.asList(new Expression[] { new SingleVarExpression(new ExpressionVariable(0, null, null))}),                   
+                     "length", null, null)))
+        );
+    assertTrue(compare(exp, expectedResult));
+  }
+  
+  public void testExpression() {
+    ModelledExpression exp = convert("%1%.text2");
+    ModelledExpression expectedResult = new ModelledExpression(
+        null,
+        new SingleVarExpression(
+            new ExpressionVariable(1,
+                 Arrays.asList(new VariableAccessPart[] { new VariableAccessPart("text2", null)}), 
+                 null))
+        );
+    assertTrue(compare(exp, expectedResult));
+  }
+  
   private static ModelledExpression convert(String expression) {
     com.gip.xyna.xprc.xfractwfe.generation.ModelledExpression me;
     try {
