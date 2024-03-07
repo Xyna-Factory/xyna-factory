@@ -143,14 +143,20 @@ public class TimedTasks<W> implements Iterable<W> {
 
     public void run() {
       running = true;
+      Task<W> task = null;
       try {
         while( running ) {
           //warten, bis Tasks vorhanden sind
           waitForTasks();
           //warten, bis aktueller Task ausgeführt werden darf
-          Task<W> task = waitForTask();    
-          if( ! running ) {
-            break;
+          try {
+            task = waitForTask();
+            if (!running) {
+              break;
+            }
+          } catch(OutOfMemoryError t) {
+            Department.handleThrowable(t);
+            continue;
           }
           //Task erhalten, diesen ausführen
           if( task != null ) {

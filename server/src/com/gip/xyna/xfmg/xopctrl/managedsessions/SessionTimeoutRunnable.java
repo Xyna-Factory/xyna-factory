@@ -23,6 +23,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.Department;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 
 
@@ -45,30 +46,31 @@ public class SessionTimeoutRunnable implements Runnable {
     synchronized (timeoutQueue) {
       try {
         while (true) {
-
-          while (timeoutQueue.isEmpty()) {
-            logger.debug("Waiting for Sessions to be registered...");
-            waitForNextNotify();
-          }
-
-          ManagedSession timedoutSession = timeoutQueue.poll();
-          if (timedoutSession == null) {
-            continue;
-          }
-
-          long diff =
-              timedoutSession.getLastInteraction() + SessionManagement.getSessionTimeout() - System.currentTimeMillis();
-          if (diff <= 0) {
-            try {
-              tryToTimeout(timedoutSession);
-            } catch (PersistenceLayerException e) {
-              logger.error("Error while trying to timeout session", e);
+          try {
+            while (timeoutQueue.isEmpty()) {
+              logger.debug("Waiting for Sessions to be registered...");
+              waitForNextNotify();
             }
-          } else {
-            timeoutQueue.add(timedoutSession);
-            waitForTimeout(diff);
-          }
 
+            ManagedSession timedoutSession = timeoutQueue.poll();
+            if (timedoutSession == null) {
+              continue;
+            }
+
+            long diff = timedoutSession.getLastInteraction() + SessionManagement.getSessionTimeout() - System.currentTimeMillis();
+            if (diff <= 0) {
+              try {
+                tryToTimeout(timedoutSession);
+              } catch (PersistenceLayerException e) {
+                logger.error("Error while trying to timeout session", e);
+              }
+            } else {
+              timeoutQueue.add(timedoutSession);
+              waitForTimeout(diff);
+            }
+          } catch(OutOfMemoryError t) {
+            Department.handleThrowable(t);
+          }
         }
       } catch (InterruptedException e) {
         // shutdown

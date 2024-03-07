@@ -31,10 +31,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
-
-import org.apache.log4j.Logger;
-
-import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.Department;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.SerializablePair;
 import com.gip.xyna.xact.filter.session.FQName;
@@ -83,7 +80,7 @@ public class PollEventFetcher {
   private final Map<String, Set<String>> correlationToRequestUUIDs = new ConcurrentHashMap<>();
   private static final AtomicLong subscriptionIdGenerator = new AtomicLong();
   private long lastReceivedId = -1;
-  private volatile boolean terminate = false;
+  private volatile boolean running = true;
 
   private static final MessageBusManagementPortal messageBusManagementPortal = XynaFactory.getInstance().getXynaMultiChannelPortal().getMessageBusManagement();
 
@@ -107,7 +104,7 @@ public class PollEventFetcher {
     Thread messageFetcher = new Thread("Message bus fetcher thread " + pollingThreadIdGenerator.getAndIncrement()) {
       @Override
       public void run() {
-        while (!terminate) {
+        while (running) {
           try {
             Map<String, Set<Long>> curCorrelationToSubscriptionIds;
             synchronized (pollRequestUUIDToEventsMap) {
@@ -125,19 +122,11 @@ public class PollEventFetcher {
               result.getMessages().forEach(x -> PollEventFetcher.this.messageReceived(x, curCorrelationToSubscriptionIds));
               lastReceivedId = result.getLastCheckedId();
             }
-          } catch (Exception e) {
-            Utils.logError("Multiuser: Failed to poll messages for session " + sessionId, e);
-          }
-
-          try {
             Thread.sleep(FETCH_DELAY);
-          } catch (Exception e) {
-            Utils.logError("Multiuser: Message polling thread for session " + sessionId + " died", e);
-            break;
+          } catch (OutOfMemoryError | InterruptedException t) {
+            Department.handleThrowable(t);
           }
         }
-
-        terminate = false;
       }
     };
 
@@ -435,7 +424,7 @@ public class PollEventFetcher {
 
 
   public void stop() {
-    terminate = true;
+    running = false;
   }
 
 }
