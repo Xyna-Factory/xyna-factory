@@ -666,6 +666,7 @@ case $1 in
     ;;
   "clusterproviders")
     build_clusterproviders
+    ;;
   "conpooltypes")
     build_conpooltypes
     ;;
