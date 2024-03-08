@@ -317,7 +317,7 @@ compose_connectors() {
   mkdir -p $SCRIPT_DIR/../release/third_parties
   mvn -f db.connector.pom.xml dependency:resolve -DexcludeTransitive=true
   mvn -f db.connector.pom.xml -DoutputDirectory="${SCRIPT_DIR}/../release/third_parties" dependency:copy-dependencies -DexcludeTransitive=true
-  mvn -f db.connector.pom.xml license:download-licenses -DlicensesOutputDirectory=${SCRIPT_DIR}/../release/third_parties -DlicensesOutputFile=${SCRIPT_DIR}/../release/third_parties/licenses.xml -DlicensesOutputFileEol=LF
+  mvn -f db.connector.pom.xml license:download-licenses -DlicensesOutputDirectory=${SCRIPT_DIR}/../release/third_parties -DlicensesOutputFile=${SCRIPT_DIR}/../release/third_parties/licenses.xml -DlicensesConfigFile=${SCRIPT_DIR}/db_connector_license_config.xml -DlicensesOutputFileEol=LF
   cp ${SCRIPT_DIR}/prepare_db_connector_jars.sh ${SCRIPT_DIR}/../release
 }
 
