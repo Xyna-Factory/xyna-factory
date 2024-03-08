@@ -152,16 +152,6 @@ build_xynafactory_jar() {
   mv xynafactoryCLIGenerator-1.0.0.jar lib/
 }
 
-build_defaultconnectionpooltypes() {
-  cd components/xnwh/pools/DefaultConnectionPoolTypes
-  sed -i 's/depends="resolve"//' build.xml
-  mkdir lib
-  mvn dependency:resolve
-  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  ant -Doracle.home=/tmp build
-  mvn install:install-file -Dfile=./deploy/DefaultConnectionPoolTypes.jar -DpomFile=./pom.xml 
-}
-
 
 prepare_modules() {
   echo "prepareing modules..."
@@ -218,7 +208,7 @@ build_conpooltypes() {
   echo "building connectionpooltypes..."
   cd $SCRIPT_DIR/build
   ant -Doracle.home=/tmp conpooltypes
-  mvn install:install-file -Dfile=../../common/lib/xyna/DefaultConnectionPoolTypes.jar -DpomFile=../../components/xnwh/pools/DefaultConnectionPoolTypes/pom.xml
+  mvn install:install-file -Dfile=../../common/lib/xyna/DefaultConnectionPoolTypes-1.0.0.jar -DpomFile=../../components/xnwh/pools/DefaultConnectionPoolTypes/pom.xml
 }
 
 build_persistencelayers() {
@@ -676,6 +666,8 @@ case $1 in
     ;;
   "clusterproviders")
     build_clusterproviders
+  "conpooltypes")
+    build_conpooltypes
     ;;
   *)
     print_help

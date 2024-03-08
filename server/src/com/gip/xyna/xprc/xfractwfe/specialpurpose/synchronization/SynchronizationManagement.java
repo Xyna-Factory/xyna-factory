@@ -524,60 +524,61 @@ public class SynchronizationManagement extends FunctionGroup
 
         runToggle = true;
         while (runToggle) {
-
-          synchronized (runToggleMonitor) {
-            try {
-              runToggleMonitor.wait(10000);
-            } catch (InterruptedException e) {
-              logger.error("Synchronization manager cleanup thread got interrupted, stopping.", e);
-              runToggle = false;
-              break;
-            }
-            currentlyRunning = true;
-          }
-
           try {
-
-            if (!runToggle) {
-              break;
-            }
-
-            if (dirtyCounter.get() == 0) {
-              //              continue;
-              // FIXME dont check this here but rather within the actual algorithm. only set to zero if
-              //       it is evident that there are no entries left to be watched.
-            } else {
-              dirtyCounter.set(0);
-            }
-
-            if (logger.isTraceEnabled()) {
-              logger.trace("Looking for outdated synchronization entries...");
-            }
-            try {
-              WarehouseRetryExecutor
-                  .executeWithRetriesNoException(cleanupExecutable, cleanupAlgorithm.getConnectionTypeForCleanup(),
-                                                 Constants.DEFAULT_CONNECTION_TO_CLUSTER_BROKEN_RETRIES,
-                                                 Constants.DEFAULT_NO_CONNECTION_AVAILABLE_RETRIES__CRITICAL,
-                                                 new StorableClassList(SynchronizationEntry.class));
-              repeatedExceptionCheck.clear();
-            } catch (Throwable e) {
-              Department.handleThrowable(e);
-              boolean repeated = repeatedExceptionCheck.checkRepeated(e);
-              if( repeated ) {
-                logger.warn( "Warehouse access failed, retrying: "+repeatedExceptionCheck );
-              } else {
-                logger.warn( "Warehouse access failed, retrying: "+repeatedExceptionCheck, e);
-              }
-            }
-
-          } finally {
-
             synchronized (runToggleMonitor) {
-              currentlyRunning = false;
+              try {
+                runToggleMonitor.wait(10000);
+              } catch (InterruptedException e) {
+                logger.error("Synchronization manager cleanup thread got interrupted, stopping.", e);
+                runToggle = false;
+                break;
+              }
+              currentlyRunning = true;
             }
 
-          }
+            try {
 
+              if (!runToggle) {
+                break;
+              }
+
+              if (dirtyCounter.get() == 0) {
+                //              continue;
+                // FIXME dont check this here but rather within the actual algorithm. only set to zero if
+                //       it is evident that there are no entries left to be watched.
+              } else {
+                dirtyCounter.set(0);
+              }
+
+              if (logger.isTraceEnabled()) {
+                logger.trace("Looking for outdated synchronization entries...");
+              }
+              try {
+                WarehouseRetryExecutor.executeWithRetriesNoException(cleanupExecutable, cleanupAlgorithm.getConnectionTypeForCleanup(),
+                                                                     Constants.DEFAULT_CONNECTION_TO_CLUSTER_BROKEN_RETRIES,
+                                                                     Constants.DEFAULT_NO_CONNECTION_AVAILABLE_RETRIES__CRITICAL,
+                                                                     new StorableClassList(SynchronizationEntry.class));
+                repeatedExceptionCheck.clear();
+              } catch (Throwable e) {
+                Department.handleThrowable(e);
+                boolean repeated = repeatedExceptionCheck.checkRepeated(e);
+                if (repeated) {
+                  logger.warn("Warehouse access failed, retrying: " + repeatedExceptionCheck);
+                } else {
+                  logger.warn("Warehouse access failed, retrying: " + repeatedExceptionCheck, e);
+                }
+              }
+
+            } finally {
+
+              synchronized (runToggleMonitor) {
+                currentlyRunning = false;
+              }
+
+            }
+          } catch (OutOfMemoryError t) {
+            Department.handleThrowable(t);
+          }
         }
 
         synchronized (runToggleMonitor) {

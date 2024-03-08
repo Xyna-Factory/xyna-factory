@@ -62,11 +62,15 @@ public class MessageStore {
             refreshFromTopic();
           } catch (Throwable t) {
             Department.handleThrowable(t);
-            logger.debug("Error while refreshing from topic", t);
             try {
-              Thread.sleep(3000);
-            } catch (InterruptedException e) {
-              // ntbd
+              logger.debug("Error while refreshing from topic", t);
+              try {
+                Thread.sleep(3000);
+              } catch (InterruptedException e) {
+                // ntbd
+              }
+            } catch (OutOfMemoryError e) {
+              Department.handleThrowable(t);
             }
           }
         }
