@@ -115,7 +115,8 @@ body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONListWithOptions
 body = new xact.templates.Document();
 body.setText(get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}().toString());{{/primitiveType}}{{/isModel}}{{#isModel}}{{#isString}}
 body = new xact.templates.Document();
-body.setText(get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}().toString());{{/isString}}{{/isModel}}
+xact.templates.Document dataIn = new xact.templates.Document(new xact.templates.PlainText(), get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}());
+body.setText(xfmg.xfctrl.datamodel.json.JSONDatamodelServices.encodeValue(dataIn).getText());{{/isString}}{{/isModel}}
 
 return body;{{/dataType}}
 </CodeSnippet>
