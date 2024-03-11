@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,5 +19,11 @@
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
   <Libraries>ApplicationGenerationImpl.jar</Libraries>
-  <Service Label="Application Generation" TypeName="ApplicationGeneration"/>
+  <Service Label="Application Generation" TypeName="ApplicationGeneration">
+    <Meta>
+      <AdditionalDependencies>
+        <Datatype>xmcp.forms.plugin.PluginManagement</Datatype>
+      </AdditionalDependencies>
+    </Meta>
+  </Service>
 </DataType>

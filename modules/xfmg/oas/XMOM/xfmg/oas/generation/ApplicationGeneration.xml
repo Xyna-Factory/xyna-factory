@@ -22,6 +22,11 @@
   <Libraries>ApplicationGenerationImpl.jar</Libraries>
   <SharedLibraries>xyna-openapi</SharedLibraries>
   <Service Label="Application Generation" TypeName="ApplicationGeneration">
+    <Meta>
+      <AdditionalDependencies>
+        <Datatype>xmcp.forms.plugin.PluginManagement</Datatype>
+      </AdditionalDependencies>
+    </Meta>
     <Operation IsStatic="true" Label="Generate Application" Name="generateApplication" RequiresXynaOrder="true">
       <Input>
         <Data ID="1" Label="Application Generation Parameter" ReferenceName="ApplicationGenerationParameter" ReferencePath="xfmg.oas.generation" VariableName="applicationGenerationParameter1"/>
