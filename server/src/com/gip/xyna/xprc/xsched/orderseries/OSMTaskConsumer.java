@@ -29,6 +29,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.Department;
 import com.gip.xyna.utils.collections.CounterMap;
 import com.gip.xyna.utils.collections.LruCache;
 import com.gip.xyna.utils.collections.Pair;
@@ -80,23 +81,27 @@ public class OSMTaskConsumer implements Runnable {
   public void run() {
     thread = Thread.currentThread();
     running = true;
-    while(running) {
-      if( paused ) {
-        pauseLatch.countDown();
-        try {
-          unpauseLatch.await();
-        } catch (InterruptedException e) { 
-          //ignorieren: evtl. wurde ja running auf false gesetzt
-          continue;
-        }
-      }
-      OSMTask task = null;
+    while (running) {
       try {
-        task = retrieveTask();
-      } catch (InterruptedException e) { 
-        //ignorieren: evtl. wurde ja running auf false gesetzt 
+        if (paused) {
+          pauseLatch.countDown();
+          try {
+            unpauseLatch.await();
+          } catch (InterruptedException e) {
+            //ignorieren: evtl. wurde ja running auf false gesetzt
+            continue;
+          }
+        }
+        OSMTask task = null;
+        try {
+          task = retrieveTask();
+        } catch (InterruptedException e) {
+          //ignorieren: evtl. wurde ja running auf false gesetzt 
+        }
+        execute(task);
+      } catch (OutOfMemoryError t) {
+        Department.handleThrowable(t);
       }
-      execute( task );
     }
     thread = null;
   }

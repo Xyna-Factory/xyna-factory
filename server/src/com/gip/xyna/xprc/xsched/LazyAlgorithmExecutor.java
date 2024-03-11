@@ -254,19 +254,23 @@ public class LazyAlgorithmExecutor<ALG extends Algorithm> implements Runnable {
       }
       
       while (threadMayRun) {
-        loopAsLongAsRequested();
-        synchronized (sleepLock) {
-          if (threadMayRun) {
-            if (loopsWithoutSleep > 0) {
-              loopsWithoutSleep--;
-              continue;
+        try {
+          loopAsLongAsRequested();
+          synchronized (sleepLock) {
+            if (threadMayRun) {
+              if (loopsWithoutSleep > 0) {
+                loopsWithoutSleep--;
+                continue;
+              }
+              logger.trace(sleepMessage);
+              threadIsAsleep = true;
+              sleepLock.wait(periodicWakeupInterval);
+              threadIsAsleep = false;
+              logger.trace(wokenMessage);
             }
-            logger.trace(sleepMessage);
-            threadIsAsleep = true;
-            sleepLock.wait(periodicWakeupInterval);
-            threadIsAsleep = false;
-            logger.trace(wokenMessage);
           }
+        } catch (OutOfMemoryError t) {
+          Department.handleThrowable(t);
         }
       }
       if (logger.isDebugEnabled()) {
