@@ -25,11 +25,12 @@
 </Documentation>
     </Meta>
 {{#vars}}{{^isInherited}}
-    <Data Label="{{baseName}}" VariableName="{{name}}" {{#isContainer}}IsList="true"{{/isContainer}}{{^isPrimitiveType}}{{^isEnumRef}}
-     ReferenceName="{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isEnumRef}}{{/isPrimitiveType}}>
+    <Data Label="{{baseName}}" VariableName="{{name}}" {{#isContainer}}IsList="true"{{/isContainer}}{{^isPrimitiveType}}{{^isEnumRef}}{{^isString}}
+     ReferenceName="{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isString}}{{/isEnumRef}}{{/isPrimitiveType}}>
         <Meta>{{#isPrimitiveType}}{{^isEnumRef}}
             <Type>{{#isContainer}}{{items.dataType}}{{/isContainer}}{{^isContainer}}{{dataType}}{{/isContainer}}</Type>{{/isEnumRef}}{{/isPrimitiveType}}{{#isEnumRef}}
-            <Type>String</Type>{{/isEnumRef}}
+            <Type>String</Type>{{/isEnumRef}}{{^isEnumRef}}{{^isPrimitiveType}}{{#isString}}
+            <Type>String</Type>{{/isString}}{{/isPrimitiveType}}{{/isEnumRef}}
             <Documentation>{{#description}}{{description}}{{/description}}{{#isEnumRef}}
 Enum of Type: {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}.{{complexType}}
 values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}

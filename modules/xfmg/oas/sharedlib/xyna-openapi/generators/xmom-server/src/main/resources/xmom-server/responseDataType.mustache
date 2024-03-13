@@ -53,11 +53,12 @@ BaseTypeName="ResponseParameter" BaseTypePath="xmcp.oas.datatype.provider">
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
     <Documentation>{{#message}}Response message: {{message}}{{/message}}</Documentation>
   </Meta>{{#dataType}}
-  <Data Label="{{complexType}}" VariableName="{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}" {{#isArray}}IsList="true"{{/isArray}}{{^isPrimitiveType}}{{^isEnumRef}}
-     ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isEnumRef}}{{/isPrimitiveType}}>
+  <Data Label="{{complexType}}" VariableName="{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}" {{#isArray}}IsList="true"{{/isArray}}{{^isPrimitiveType}}{{^isEnumRef}}{{^isString}}
+     ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isString}}{{/isEnumRef}}{{/isPrimitiveType}}>
         <Meta>{{#isPrimitiveType}}{{^isEnumRef}}
-            <Type>{{#isArray}}{{items.dataType}}{{/isArray}}{{^isArray}}{{dataType}}{{/isArray}}</Type>{{/isEnumRef}}{{/isPrimitiveType}}{{#isEnumRef}}
-            <Type>String</Type>{{/isEnumRef}}
+            <Type>{{#isArray}}{{items.dataType}}{{/isArray}}{{^isArray}}{{^isString}}{{dataType}}{{/isString}}{{/isArray}}</Type>{{/isEnumRef}}{{/isPrimitiveType}}{{#isEnumRef}}
+            <Type>String</Type>{{/isEnumRef}}{{#isString}}
+            <Type>String</Type>{{/isString}}
             <Documentation>{{#description}}{{description}}{{/description}}{{#isEnumRef}}
 Enum of Type: {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}.{{complexType}}
 values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}
@@ -79,7 +80,7 @@ format: {{format}}{{/format}}
             </Documentation>
         </Meta>
     </Data>{{/isPrimitiveType}}{{/responseHeaders}}
-  <Service Label="{{httpMethod}} {{path}} Response {{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}" 
+  <Service Label="{{httpMethod}} {{path}} Response {{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}"
    TypeName="{{#lambda.pascalcase}}{{httpMethod}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}}">
     <Operation Label="get Status Code" Name="getStatusCode" IsStatic="false">
       <Input>
@@ -107,12 +108,15 @@ jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.js
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
 jsonOptions.setUseLabels(true);
 
-xact.templates.Document body;{{^isArray}}{{#isModel}}
-body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(this.get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}(), jsonOptions);{{/isModel}}{{/isArray}}{{#isArray}}{{#items.isModel}}
+xact.templates.Document body;{{^isArray}}{{#isModel}}{{^isString}}
+body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(this.get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}(), jsonOptions);{{/isString}}{{/isModel}}{{/isArray}}{{#isArray}}{{#items.isModel}}
 List&lt;GeneralXynaObject&gt; list = new ArrayList&lt;&gt;(get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}());
 body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONListWithOptions(list, jsonOptions);{{/items.isModel}}{{/isArray}}{{^isModel}}{{#primitiveType}}
 body = new xact.templates.Document();
-body.setText(get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}().toString());{{/primitiveType}}{{/isModel}}
+body.setText(get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}().toString());{{/primitiveType}}{{/isModel}}{{#isModel}}{{#isString}}
+body = new xact.templates.Document();
+xact.templates.Document dataIn = new xact.templates.Document(new xact.templates.PlainText(), get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}());
+body.setText("\"" + xfmg.xfctrl.datamodel.json.JSONDatamodelServices.encodeValue(dataIn).getText() + "\"");{{/isString}}{{/isModel}}
 
 return body;{{/dataType}}
 </CodeSnippet>

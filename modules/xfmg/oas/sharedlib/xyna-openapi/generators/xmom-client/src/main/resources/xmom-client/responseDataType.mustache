@@ -33,11 +33,12 @@ BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
     <Documentation>{{#message}}Response message: {{message}}{{/message}}</Documentation>
   </Meta>{{#dataType}}
-  <Data Label="{{baseType}}" VariableName="{{#lambda.camelcase}}{{baseType}}{{/lambda.camelcase}}" {{#isArray}}IsList="true"{{/isArray}}{{^isPrimitiveType}}{{^isEnumRef}}
-     ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isEnumRef}}{{/isPrimitiveType}}>
-        <Meta>{{#isPrimitiveType}}{{^isEnumRef}}
-            <Type>{{#isArray}}{{items.dataType}}{{/isArray}}{{^isArray}}{{dataType}}{{/isArray}}</Type>{{/isEnumRef}}{{/isPrimitiveType}}{{#isEnumRef}}
-            <Type>String</Type>{{/isEnumRef}}
+  <Data Label="{{baseType}}" VariableName="{{#lambda.camelcase}}{{baseType}}{{/lambda.camelcase}}" {{#isArray}}IsList="true"{{/isArray}}{{^isPrimitiveType}}{{^isEnumRef}}{{^isString}}
+     ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isString}}{{/isEnumRef}}{{/isPrimitiveType}}>
+        <Meta>{{#isPrimitiveType}}{{^isEnumRef}}{{^isString}}
+            <Type>{{#isArray}}{{items.dataType}}{{/isArray}}{{^isArray}}{{dataType}}{{/isArray}}</Type>{{/isString}}{{/isEnumRef}}{{/isPrimitiveType}}{{#isEnumRef}}{{^isString}}
+            <Type>String</Type>{{/isString}}{{/isEnumRef}}{{#isString}}
+            <Type>String</Type>{{/isString}}
             <Documentation>{{#description}}{{description}}{{/description}}{{#isEnumRef}}
 Enum of Type: {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}.{{complexType}}
 values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}
@@ -59,7 +60,7 @@ format: {{format}}{{/format}}
             </Documentation>
         </Meta>
     </Data>{{/isPrimitiveType}}{{/responseHeaders}}
-    <Service Label="{{httpMethod}} {{path}} Response {{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}" 
+    <Service Label="{{httpMethod}} {{path}} Response {{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}"
     TypeName="{{#lambda.pascalcase}}{{httpMethod}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}}">
       <Operation Label="Validate" Name="validate" IsStatic="false">
         <Input>
