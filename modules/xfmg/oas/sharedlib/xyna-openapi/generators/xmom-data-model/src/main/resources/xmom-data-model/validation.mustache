@@ -36,7 +36,7 @@ result.setErrorMessages(new ArrayList&lt;String&gt;());
         result.getErrorMessages().add("Error: Discriminator \"{{discriminator.propertyBaseName}}\" in {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}} is null");
     }
     {{/-first}}
-    
+
     else if (this.{{discriminator.propertyGetter}}().equals("{{.}}")) {
         var oneOfDataType = ({{.}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{.}}(), jsonParsingOptions);
         var oneOfValidationResult = oneOfDataType.validate();
@@ -57,7 +57,7 @@ result.setErrorMessages(new ArrayList&lt;String&gt;());
         result.getErrorMessages().add("Error: {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}} is not a valid object of type {{.}}");
         result.getErrorMessages().addAll(allOfValidationResult_{{-index}}.getErrorMessages());
     }{{/model.allOf}}{{#model.anyOf}}{{#-first}}
-    
+
     boolean isValidAnyOf = false;{{/-first}}
     var anyOf_{{-index}} = ({{.}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{.}}(), jsonParsingOptions);
     var anyOfValidationResult_{{-index}} = anyOf_{{-index}}.validate();
@@ -75,7 +75,15 @@ catch (Exception e) {
     result.getErrorMessages().add("Error: could not validate composed schema type for {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}");
 }
 {{/composedSchemas}}{{#vars}}
-// validate {{#classname}}{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{/classname}}{{name}} of type {{dataType}}{{#baseType}} with baseType {{baseType}}{{/baseType}}
+// validate {{#classname}}{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{/classname}}{{name}} of type {{^isString}}{{dataType}}{{/isString}}{{#isString}}String{{/isString}}{{#baseType}}{{^isString}} with baseType {{baseType}}{{/isString}}{{/baseType}}
+{{^isPrimitiveType}}{{#isString}}try {
+    var primStrObj_{{-index}} = new com.gip.xyna.openapi.OpenAPIStringType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{paramName}}{{^paramName}}{{dataType}}{{/paramName}}", (String)get("{{#lambda.camelcase}}{{baseType}}{{/lambda.camelcase}}"));
+
+    result.getErrorMessages().addAll(primStrObj_{{-index}}.checkValid());
+}
+catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{paramName}}{{^paramName}}{{dataType}}{{/paramName}}");
+}{{/isString}}{{/isPrimitiveType}}
 {{#isPrimitiveType}}{{^isContainer}}{{^isArray}}try {
     var primObj_{{-index}} = {{#isInteger}}
     new com.gip.xyna.openapi.OpenAPINumberType&lt;Integer&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}", (Integer)get("{{name}}"));{{/isInteger}}{{#isLong}}
@@ -136,7 +144,7 @@ catch (Exception e) {
 catch (Exception e) {
     result.getErrorMessages().add("Error: could not validate {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}");
 }
-{{/isArray}}{{/isPrimitiveType}}{{^isPrimitiveType}}{{^isEnumRef}}try {
+{{/isArray}}{{/isPrimitiveType}}{{^isPrimitiveType}}{{^isEnumRef}}{{^isString}}try {
     var cplxObj_{{-index}} = this.get("{{#lambda.pascalcase}}{{name}}{{/lambda.pascalcase}}");
     if (cplxObj_{{-index}} != null) { {{^isArray}}
         var cplxValidationResult_{{-index}} = (({{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}})cplxObj_{{-index}}).validate();
@@ -153,5 +161,5 @@ catch (Exception e) {
 catch (Exception e) {
     result.getErrorMessages().add("Error: could not validate {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}");
 }
-{{/isEnumRef}}{{#isEnumRef}}{{>enumValidation}}{{/isEnumRef}}{{/isPrimitiveType}}{{/vars}}
+{{/isString}}{{/isEnumRef}}{{#isEnumRef}}{{>enumValidation}}{{/isEnumRef}}{{/isPrimitiveType}}{{/vars}}
 return result.getResult();
