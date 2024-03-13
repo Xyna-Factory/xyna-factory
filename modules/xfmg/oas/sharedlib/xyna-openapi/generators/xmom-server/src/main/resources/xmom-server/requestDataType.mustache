@@ -24,9 +24,10 @@ BaseTypeName="RequestParameter" BaseTypePath="xmcp.oas.datatype.provider">
   </Meta>{{#allParams}}
     <Data Label="{{paramName}}" VariableName="{{#lambda.camelcase}}{{paramName}}{{/lambda.camelcase}}" {{#isContainer}}IsList="true"{{/isContainer}}{{^isPrimitiveType}}{{^isEnumRef}}
      ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isEnumRef}}{{/isPrimitiveType}}>
-        <Meta>{{#isPrimitiveType}}{{^isEnumRef}}
-            <Type>{{#isContainer}}{{items.dataType}}{{/isContainer}}{{^isContainer}}{{dataType}}{{/isContainer}}</Type>{{/isEnumRef}}{{/isPrimitiveType}}{{#isEnumRef}}
-            <Type>String</Type>{{/isEnumRef}}
+        <Meta>{{#isPrimitiveType}}{{^isEnumRef}}{{^isString}}
+            <Type>{{#isContainer}}{{items.dataType}}{{/isContainer}}{{^isContainer}}{{dataType}}{{/isContainer}}</Type>{{/isString}}{{/isEnumRef}}{{/isPrimitiveType}}{{#isEnumRef}}
+            <Type>String</Type>{{/isEnumRef}}{{#isString}}
+            <Type>String</Type>{{/isString}}
             <Documentation>{{#description}}{{description}}{{/description}}{{#isEnumRef}}
 Enum of Type: {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}.{{complexType}}
 values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}
@@ -67,7 +68,7 @@ return result.getResult();
 for (xmcp.oas.datatype.URLPathParameter pathPara: httpRequest1.getURLPathParameter()) {
     {{#pathParams}}
     {{#-first}}if{{/-first}}{{^-first}}else if{{/-first}} (pathPara.getAttribute().equals("{{paramName}}")) {
-        ret.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}({{dataType}}.valueOf(pathPara.getValue()));
+        ret.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}({{^isString}}{{dataType}}{{/isString}}{{#isString}}String{{/isString}}.valueOf(pathPara.getValue()));
     }
     {{/pathParams}}
 }

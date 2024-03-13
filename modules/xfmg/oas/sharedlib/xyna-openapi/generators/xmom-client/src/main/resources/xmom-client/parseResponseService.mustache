@@ -64,7 +64,7 @@ jsonOptions.setObjectDecider(new {{apiPackage}}.decider.OASDecider());{{#respons
     }
     else {
         responseDataType.set{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}(null);
-    }{{/items.isModel}}{{/isArray}}{{^isArray}}{{#isModel}}
+    }{{/items.isModel}}{{/isArray}}{{^isArray}}{{#isModel}}{{^isString}}
     if (!document.getText().trim().equals("")) {
         {{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{dataType}} body;
         body = ({{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{dataType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{dataType}}(), jsonOptions);
@@ -72,7 +72,13 @@ jsonOptions.setObjectDecider(new {{apiPackage}}.decider.OASDecider());{{#respons
     }
     else {
         responseDataType.set{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}(null);
-    }{{/isModel}}{{/isArray}}{{#hasHeaders}}
+    }{{/isString}}{{/isModel}}{{/isArray}}{{#isString}}
+    if (!document.getText().trim().equals("")) {
+      responseDataType.set{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}(document.getText());
+    }
+    else {
+      responseDataType.set{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}(null);
+    }{{/isString}}{{#hasHeaders}}
 
     for (xact.http.HeaderField field : header3.getHeaderField()) { {{#responseHeaders}}
         {{#-first}}if{{/-first}}{{^-first}}else if{{/-first}} (field.getName().equals("{{paramName}}")) {
