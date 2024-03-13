@@ -1,0 +1,31 @@
+name: Check Application Version On Pull Request
+on:
+  pull_request:
+    branches: [ "main" ]       
+
+jobs:
+  check-application-version-on-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+
+     - name: Set up Zulu JDK 11
+       uses: actions/setup-java@v3
+       with:
+         java-version: 11
+         distribution: 'zulu'
+
+     - name: Check out xyna-factory
+       uses: actions/checkout@v3
+
+     - uses: actions/cache@v3
+       id: maven-cache
+       with:
+         path: /home/runner/.m2
+         key: ${{ runner.os }}-maven-cache-for-pr-build-${{ hashFiles('installation/build/pom.xml') }}
+
+     - name: determine changed modules
+       env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       run: |
+          gh pr diff ${{ github.event.pull_request.number }} --name-only | xargs -I {} dirname {} | grep '^modules/' | cut -f 2-3 -d/ | sort | uniq | tee changed-modules.txt
+          cat changed-modules.txt
