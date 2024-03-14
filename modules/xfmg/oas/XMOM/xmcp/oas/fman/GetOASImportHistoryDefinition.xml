@@ -23,13 +23,13 @@
       <Data ID="8172" Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId8172"/>
       <Data ID="13193" IsList="true" Label="ApplicationParam" ReferenceName="Text" ReferencePath="base" VariableName="text13193"/>
     </Output>
-    <ServiceReference ID="8135" Label="Set Runtime Context" ReferenceName="SetRuntimeContext" ReferencePath="xmcp.oas.fman">
-      <Source RefID="8134"/>
-      <Target RefID="8134"/>
-    </ServiceReference>
     <ServiceReference ID="8471" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="8470"/>
       <Target RefID="8470"/>
+    </ServiceReference>
+    <ServiceReference ID="8135" Label="Set Runtime Context" ReferenceName="SetRuntimeContext" ReferencePath="xmcp.oas.fman">
+      <Source RefID="8134"/>
+      <Target RefID="8134"/>
     </ServiceReference>
     <Mappings ID="4110" Label="Mapping">
       <Input>
@@ -116,6 +116,7 @@
           <Mapping>%1%.label="Import OAS Applications"</Mapping>
           <Mapping>%1%.serviceFQN="xmcp.oas.fman.ApplicationImport"</Mapping>
           <Mapping>%1%.synchronously="true"</Mapping>
+          <Mapping>%1%.showResult="true"</Mapping>
         </Mappings>
       </Serial>
       <Serial>
@@ -135,6 +136,7 @@
           <Mapping>%1%.label="Import Client Application"</Mapping>
           <Mapping>%1%.serviceFQN="xmcp.oas.fman.ApplicationImport"</Mapping>
           <Mapping>%1%.synchronously="true"</Mapping>
+          <Mapping>%1%.showResult="true"</Mapping>
         </Mappings>
       </Serial>
       <Serial>
@@ -154,6 +156,7 @@
           <Mapping>%1%.label="Import Provider Application"</Mapping>
           <Mapping>%1%.serviceFQN="xmcp.oas.fman.ApplicationImport"</Mapping>
           <Mapping>%1%.synchronously="true"</Mapping>
+          <Mapping>%1%.showResult="true"</Mapping>
         </Mappings>
       </Serial>
       <Serial>
@@ -171,6 +174,7 @@
           <Mapping>%1%.label="Import Datamodel Application"</Mapping>
           <Mapping>%1%.serviceFQN="xmcp.oas.fman.ApplicationImport"</Mapping>
           <Mapping>%1%.synchronously="true"</Mapping>
+          <Mapping>%1%.showResult="true"</Mapping>
         </Mappings>
       </Serial>
     </Parallel>
