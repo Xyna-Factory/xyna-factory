@@ -439,6 +439,7 @@ compose_files() {
   cp ../blackedition/blackedition_lib.sh .
   cp ../blackedition/install_black_edition.sh .
   cp ../blackedition/uninstall_black_edition.sh .
+  cp ../blackedition/readme.txt .
 }
 
 
