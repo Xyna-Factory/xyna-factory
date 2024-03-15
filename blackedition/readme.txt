@@ -9,16 +9,16 @@ service provisioning, self-service automation, network abstraction & activation,
 
 # Bundle zip archive content
 
-+--------------------------------------------------------------------------------+---------------------------------------------
++--------------------------------------------------------------------------------+-------------------------------------------------------------------
 | Files                                                                          | Description
-+--------------------------------------------------------------------------------+---------------------------------------------
++--------------------------------------------------------------------------------+-------------------------------------------------------------------
 | XynaFactory_<VERSION>_<TIMESTAMP>_bundle/                                      | Base dirctory
 | +-- readme.txt                                                                 | this readme file
 | +-- Release-Notes.pdf                                                          | release notes
 | +-- XBE_Prerequisites_<VERSION>.zip                                            | Xyna Prerequisites package
 | +-- XynaFactory_<VERSION>_<TIMESTAMP>.zip                                      | Xyna Factory Server
 | +-- modeller.war                                                               | Xyna Modeller HTML-GUI 
-| +-- prepare_db_connector_jars.sh                                               | Skript for installation all jdbc-connectors
+| +-- prepare_db_connector_jars.sh                                               | Script for installing all supported jdbc-connectors
 | +-- third_parties/                                                             | third_parties directory
 | |   +-- licenses.xml                                                           | Summary of existing licenses
 | |   +-- gnu general public license version 2.0 - license.txt                   | License for jdbc-connector mysql-connector-j-<VERSION>.jar
@@ -27,20 +27,20 @@ service provisioning, self-service automation, network abstraction & activation,
 | |   +-- mariadb-java-client-<VERSION>.jar                                      | jdbc-connector for mariadb 
 | |   +-- mysql-connector-j-<VERSION>.jar                                        | jdbc-connector for mysql
 | |   +-- ojdbc11-<VERSION>.jar                                                  | jdbc-connector for oracledb
-+--------------------------------------------------------------------------------+---------------------------------------------
++--------------------------------------------------------------------------------+--------------------------------------------------------------------
 
 # Installing
 
-see https://github.com/Xyna-Factory/xyna/wiki/Installation
+See https://github.com/Xyna-Factory/xyna/wiki/Installation
 
 # wiki
 
-https://github.com/Xyna-Factory/xyna/wiki
+See https://github.com/Xyna-Factory/xyna/wiki
 
 # Getting Started
 
-see https://github.com/Xyna-Factory/xyna/wiki
+See https://github.com/Xyna-Factory/xyna/wiki
 
 # Tutorials
 
-https://github.com/Xyna-Factory/xyna/wiki/Tutorials
+see https://github.com/Xyna-Factory/xyna/wiki/Tutorials
