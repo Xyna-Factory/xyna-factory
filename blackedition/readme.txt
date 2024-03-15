@@ -43,4 +43,4 @@ See https://github.com/Xyna-Factory/xyna/wiki
 
 # Tutorials
 
-see https://github.com/Xyna-Factory/xyna/wiki/Tutorials
+See https://github.com/Xyna-Factory/xyna/wiki/Tutorials
