@@ -27,19 +27,16 @@ service provisioning, self-service automation, network abstraction & activation,
 | |   +-- mariadb-java-client-<VERSION>.jar                                      | jdbc-connector for mariadb 
 | |   +-- mysql-connector-j-<VERSION>.jar                                        | jdbc-connector for mysql
 | |   +-- ojdbc11-<VERSION>.jar                                                  | jdbc-connector for oracledb
-+--------------------------------------------------------------------------------+--------------------------------------------------------------------
++-----
+---------------------------------------------------------------------------+--------------------------------------------------------------------
+
+# Wiki
+
+See https://github.com/Xyna-Factory/xyna/wiki
 
 # Installing
 
 See https://github.com/Xyna-Factory/xyna/wiki/Installation
-
-# wiki
-
-See https://github.com/Xyna-Factory/xyna/wiki
-
-# Getting Started
-
-See https://github.com/Xyna-Factory/xyna/wiki
 
 # Tutorials
 
