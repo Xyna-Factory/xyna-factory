@@ -1,33 +1,46 @@
-Xyna-Factory
+# Xyna Factory
 
+Xyna Factory is an automation platform for graphically modeled workflows with a focus on network- / resource-related processes in carrier, 
+provider and large enterprise networks. 
+Invented and originally developed for large, demanding projects at Tier-1 service providers, 
+Xyna was designed and implemented from the beginning with a large-scale and carrier-grade claim. 
+Xyna is a generic platform from which various domain-specific applications can be derived: order management, 
+service provisioning, self-service automation, network abstraction & activation, DHCP & ACS clusters, network intelligence & monitoring platforms – and much more.
 
+# Bundle zip archive content
 
-# Bundle-ZIP archive content
++--------------------------------------------------------------------------------+---------------------------------------------
+| Files                                                                          | Description
++--------------------------------------------------------------------------------+---------------------------------------------
+| XynaFactory_<VERSION>_<TIMESTAMP>_bundle/                                      | Base dirctory
+| +-- readme.txt                                                                 | this readme file
+| +-- Release-Notes.pdf                                                          | release notes
+| +-- XBE_Prerequisites_<VERSION>.zip                                            | Xyna Prerequisites package
+| +-- XynaFactory_<VERSION>_<TIMESTAMP>.zip                                      | Xyna Factory Server
+| +-- modeller.war                                                               | Xyna Modeller HTML-GUI 
+| +-- prepare_db_connector_jars.sh                                               | Skript for installation all jdbc-connectors
+| +-- third_parties/                                                             | third_parties directory
+| |   +-- licenses.xml                                                           | Summary of existing licenses
+| |   +-- gnu general public license version 2.0 - license.txt                   | License for jdbc-connector mysql-connector-j-<VERSION>.jar
+| |   +-- gnu lesser general public license v2.1 - license.txt                   | License for jdbc-connector mariadb-java-client-<VERSION>.jar
+| |   +-- oracle free use terms and conditions (futc) - oracle-free-license.html | License for jdbc-connector ojdbc11-<VERSION>.jar
+| |   +-- mariadb-java-client-<VERSION>.jar                                      | jdbc-connector for mariadb 
+| |   +-- mysql-connector-j-<VERSION>.jar                                        | jdbc-connector for mysql
+| |   +-- ojdbc11-<VERSION>.jar                                                  | jdbc-connector for oracledb
++--------------------------------------------------------------------------------+---------------------------------------------
 
-XynaFactory_<VERSION>_<TIMESTAMP>_bundle/
-+-- readme.txt
-+-- Release-Notes.pdf
-+-- XBE_Prerequisites_<VERSION>.zip
-+-- XynaFactory_<VERSION>_<TIMESTAMP>.zip
-+-- modeller.war
-+-- prepare_db_connector_jars.sh
-+-- third_parties/
-|   +-- licenses.xml
-|   +-- gnu general public license version 2.0 - license.txt
-|   +-- gnu lesser general public license v2.1 - license.txt
-|   +-- oracle free use terms and conditions (futc) - oracle-free-license.html
-|   +-- mariadb-java-client-<VERSION>.jar
-|   +-- mysql-connector-j-<VERSION>.jar
-|   +-- ojdbc11-<VERSION>.jar
+# Installing
 
-## Getting Started
+see https://github.com/Xyna-Factory/xyna/wiki/Installation
 
-### Dependencies
+# wiki
 
-### Installing
+https://github.com/Xyna-Factory/xyna/wiki
 
-### Executing program
+# Getting Started
 
+see https://github.com/Xyna-Factory/xyna/wiki
 
-## Help
+# Tutorials
 
+https://github.com/Xyna-Factory/xyna/wiki/Tutorials
