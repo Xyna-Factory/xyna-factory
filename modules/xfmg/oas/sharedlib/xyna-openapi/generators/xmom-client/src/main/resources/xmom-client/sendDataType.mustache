@@ -52,10 +52,16 @@ required: {{required}}
         <Exception ID="8" Label="Connection Already Closed Exception" VariableName="connectionAlreadyClosedException8" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions"/>
       </Throws>
       <SourceCode>
-        <CodeSnippet Type="Java">{{^hasBodyParam}}return xact.http.HTTPService.send(hTTPConnection1, sendParameter2);{{/hasBodyParam}}{{#hasBodyParam}}xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
+        <CodeSnippet Type="Java">{{#hasHeaderParams}}ArrayList&lt;xact.http.HeaderField&gt; customHeaders = new ArrayList&lt;xact.http.HeaderField&gt;();
+{{#allParams}}{{#isHeaderParam}}{{#isPrimitiveType}}customHeaders.add(new xact.http.HeaderField("{{baseName}}",String.valueOf(this.get{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}())));
+{{/isPrimitiveType}}{{/isHeaderParam}}{{/allParams}}for (xact.http.HeaderField field : customHeaders){if(field.getValue().equals("null")){field.setValue(null);}}
+if(sendParameter2.getHeader().getHeaderField()==null){sendParameter2.getHeader().setHeaderField(customHeaders);}else{sendParameter2.getHeader().getHeaderField().addAll((List) customHeaders);}{{/hasHeaderParams}}
+
+{{^hasBodyParam}}return xact.http.HTTPService.send(hTTPConnection1, sendParameter2);{{/hasBodyParam}}{{#hasBodyParam}}xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
 jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
 jsonOptions.setUseLabels(true);{{#bodyParams}}
+
 
 xact.templates.Document body;{{#isArray}}
 List&lt;GeneralXynaObject&gt; list = new ArrayList&lt;&gt;(this.get{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}());
