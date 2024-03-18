@@ -1,6 +1,6 @@
-{{!
+/*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,5 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-}}
-{{#xynaModel}}{{^isEnum}}{{>dataType}}{{/isEnum}}{{#isEnum}}{{>enum}}{{/isEnum}}{{/xynaModel}}
+ */
+package com.gip.xyna.openapi;
+
+import java.util.List;
+
+public class BooleanTypeValidator extends PrimitiveTypeValidator<Boolean> {
+  
+    @Override
+    public List<String> checkValid() {
+        List<String> errorMessages = super.checkValid();
+
+        if (this.isNull()) {
+            return errorMessages;
+        }
+
+        return errorMessages;
+    }
+}

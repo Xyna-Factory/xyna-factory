@@ -15,151 +15,30 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
-xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
-result.setErrorMessages(new ArrayList&lt;String&gt;());
-
-{{#composedSchemas}}try {
-    xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonWritingOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
-    jsonWritingOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
-    jsonWritingOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
-    jsonWritingOptions.setUseLabels(true);
-
-    xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonParsingOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
-    jsonParsingOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
-    jsonParsingOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
-    jsonParsingOptions.setUseLabels(true);
-
-    xact.templates.Document document;
-    document = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(this, jsonWritingOptions);{{#model.oneOf}}{{#-first}}
-
-    if (this.{{discriminator.propertyGetter}}() == null) {
-        result.getErrorMessages().add("Error: Discriminator \"{{discriminator.propertyBaseName}}\" in {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}} is null");
-    }
-    {{/-first}}
-
-    else if (this.{{discriminator.propertyGetter}}().equals("{{.}}")) {
-        var oneOfDataType = ({{.}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{.}}(), jsonParsingOptions);
-        var oneOfValidationResult = oneOfDataType.validate();
-        if (!oneOfValidationResult.getResult().getIsValid()) {
-            result.getErrorMessages().add("Error: {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}} is not a valid object of type {{.}}");
-            result.getErrorMessages().addAll(oneOfValidationResult.getErrorMessages());
-        }
-    }
-    {{#-last}}
-
-    else {
-        result.getErrorMessages().add("Error: Invalid value for discriminator \"{{discriminator.propertyBaseName}}\" in {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}");
-    }{{/-last}}{{/model.oneOf}}{{#model.allOf}}
-
-    var allOf_{{-index}} = ({{.}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{.}}(), jsonParsingOptions);
-    var allOfValidationResult_{{-index}} = allOf_{{-index}}.validate();
-    if (!allOfValidationResult_{{-index}}.getResult().getIsValid()) {
-        result.getErrorMessages().add("Error: {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}} is not a valid object of type {{.}}");
-        result.getErrorMessages().addAll(allOfValidationResult_{{-index}}.getErrorMessages());
-    }{{/model.allOf}}{{#model.anyOf}}{{#-first}}
-
-    boolean isValidAnyOf = false;{{/-first}}
-    var anyOf_{{-index}} = ({{.}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{.}}(), jsonParsingOptions);
-    var anyOfValidationResult_{{-index}} = anyOf_{{-index}}.validate();
-    if (anyOf_{{-index}}.validate().getIsValid()){
-        isValidAnyOf = true;
-    }
-    {{#-last}}
-
-    if (!isValidAnyOf) {
-        result.getErrorMessages().add("Error: {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}} is not valid against any of: {{model.anyOf}}");
-    }{{/-last}}{{/model.anyOf}}
-
-}
-catch (Exception e) {
-    result.getErrorMessages().add("Error: could not validate composed schema type for {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}");
-}
-{{/composedSchemas}}{{#vars}}
-// validate {{#classname}}{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{/classname}}{{name}} of type {{^isString}}{{dataType}}{{/isString}}{{#isString}}String{{/isString}}{{#baseType}}{{^isString}} with baseType {{baseType}}{{/isString}}{{/baseType}}
-{{^isPrimitiveType}}{{#isString}}try {
-    var primStrObj_{{-index}} = new com.gip.xyna.openapi.OpenAPIStringType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{paramName}}{{^paramName}}{{dataType}}{{/paramName}}", (String)get("{{#lambda.camelcase}}{{baseType}}{{/lambda.camelcase}}"));
-
-    result.getErrorMessages().addAll(primStrObj_{{-index}}.checkValid());
-}
-catch (Exception e) {
-    result.getErrorMessages().add("Error: could not validate {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{paramName}}{{^paramName}}{{dataType}}{{/paramName}}");
-}{{/isString}}{{/isPrimitiveType}}
-{{#isPrimitiveType}}{{^isContainer}}{{^isArray}}try {
-    var primObj_{{-index}} = {{#isInteger}}
-    new com.gip.xyna.openapi.OpenAPINumberType&lt;Integer&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}", (Integer)get("{{name}}"));{{/isInteger}}{{#isLong}}
-    new com.gip.xyna.openapi.OpenAPINumberType&lt;Long&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}", (Long)get("{{name}}"));{{/isLong}}{{#isDouble}}
-    new com.gip.xyna.openapi.OpenAPINumberType&lt;Double&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}", (Double)get("{{name}}"));{{/isDouble}}{{#isNumber}}
-    new com.gip.xyna.openapi.OpenAPINumberType&lt;Double&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}", (Double)get("{{name}}"));{{/isNumber}}{{#isFloat}}
-    new com.gip.xyna.openapi.OpenAPINumberType&lt;Float&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}", ((Double)get("{{name}}")).floatValue());{{/isFloat}}{{#isBoolean}}
-    new com.gip.xyna.openapi.OpenAPIBooleanType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}", (Boolean)get("{{name}}"));{{/isBoolean}}{{#isString}}
-    new com.gip.xyna.openapi.OpenAPIStringType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}", (String)get("{{name}}"));{{/isString}}{{#isDateTime}}
-    new com.gip.xyna.openapi.OpenAPIDateTimeType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}", (String)get("{{name}}"));{{/isDateTime}}{{#isDate}}
-    new com.gip.xyna.openapi.OpenAPIDateType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}", (String)get("{{name}}"));{{/isDate}}{{#minimum}}
-    primObj_{{-index}}.setMin({{minimum}});{{/minimum}}{{#maximum}}
-    primObj_{{-index}}.setMax({{maximum}});{{/maximum}}{{#exclusiveMinimum}}
-    primObj_{{-index}}.setExcludeMin();{{/exclusiveMinimum}}{{#exclusiveMaximum}}
-    primObj_{{-index}}.setExcludeMax();{{/exclusiveMaximum}}{{#multipleOf}}
-    primObj_{{-index}}.setMultipleOf({{multipleOf}});{{/multipleOf}}{{#isString}}{{#dataFormat}}
-    primObj_{{-index}}.setFormat("{{dataFormat}}");{{/dataFormat}}{{#minLength}}
-    primObj_{{-index}}.setMinLength({{minLength}});{{/minLength}}{{#maxLength}}
-    primObj_{{-index}}.setMaxLength({{maxLength}});{{/maxLength}}{{/isString}}{{#required}}
-    primObj_{{-index}}.setRequired();{{/required}}{{#nullable}}
-    primObj_{{-index}}.setNullable();{{/nullable}}
-
-    result.getErrorMessages().addAll(primObj_{{-index}}.checkValid());
-}
-catch (Exception e) {
-    result.getErrorMessages().add("Error: could not validate {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}");
-}
-{{/isArray}}{{/isContainer}}{{#isArray}}try {
-    var primObjList_{{-index}} = (List&lt;{{items.datatype}}&gt;)this.get("{{name}}");
-    if (primObjList_{{-index}} != null) {
-        for (var l : primObjList_{{-index}}) {
-            var item = {{#items.isInteger}}
-            new com.gip.xyna.openapi.OpenAPINumberType&lt;Integer&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}", l);{{/items.isInteger}}{{#items.isLong}}
-            new com.gip.xyna.openapi.OpenAPINumberType&lt;Long&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}", l);{{/items.isLong}}{{#items.isDouble}}
-            new com.gip.xyna.openapi.OpenAPINumberType&lt;Double&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}", l);{{/items.isDouble}}{{#items.isNumber}}
-            new com.gip.xyna.openapi.OpenAPINumberType&lt;Double&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}", l);{{/items.isNumber}}{{#items.isFloat}}
-            new com.gip.xyna.openapi.OpenAPINumberType&lt;Float&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}", l.floatValue());{{/items.isFloat}}{{#items.isString}}
-            new com.gip.xyna.openapi.OpenAPIStringType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}", l);{{/items.isString}}{{#items.isDateTime}}
-            new com.gip.xyna.openapi.OpenAPIDateTimeType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}", l);{{/items.isDateTime}}{{#items.isDate}}
-            new com.gip.xyna.openapi.OpenAPIDateType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}", l);{{/items.isDate}}{{#items.minimum}}
-            item.setMin({{items.minimum}});{{/items.minimum}}{{#items.maximum}}
-            item.setMax({{items.maximum}});{{/items.maximum}}{{#items.exclusiveMinimum}}
-            item.setExcludeMin();{{/items.exclusiveMinimum}}{{#items.exclusiveMaximum}}
-            item.setExcludeMax();{{/items.exclusiveMaximum}}{{#multipleOf}}
-            item.setMultipleOf({{multipleOf}});{{/multipleOf}}{{#items.isString}}{{#items.dataFormat}}
-            item.setFormat("{{items.dataFormat}}");{{/items.dataFormat}}{{#items.minLength}}
-            item.setMinLength({{items.minLength}});{{/items.minLength}}{{#items.maxLength}}
-            item.setMaxLength({{items.maxLength}});{{/items.maxLength}}{{/items.isString}}{{#items.required}}
-            item.setRequired();{{/items.required}}{{#items.nullable}}
-            item.setNullable();{{/items.nullable}}
-
-            result.getErrorMessages().addAll(item.checkValid());
+// validate {{propClassName}}.{{propVarName}} of type {{#isPrimitive}}{{dataType}}{{/isPrimitive}}{{^isPrimitive}}{{propRefType}}{{/isPrimitive}}
+try { {{#isPrimitive}}
+    var validator_{{propVarName}} = {{validatorClassConstructor}};
+    {{#validatorConfig}}{{!
+    }}validator_{{propVarName}}.{{.}};{{!
+    }}{{/validatorConfig}}
+    result.getErrorMessages().addAll(validator_{{propVarName}}.checkValid());{{!
+    }}{{/isPrimitive}}{{^isPrimitive}}
+    {{^isList}}{{!
+    }}{{propRefType}} {{propVarName}} = {{getPropVarName}};
+    if ({{propVarName}} != null) {
+        result.getErrorMessages().addAll({{propVarName}}.validate().getErrorMessages());
+        }{{#required}} else {
+        result.getErrorMessages().add("{{propClassName}}.{{propVarName}} of type {{propRefType}} is required, but is null.");
+    }{{/required}}
+    {{/isList}}{{#isList}}{{!
+    }}List&lt;{{propRefType}}&gt; {{propVarName}} = {{getPropVarName}};
+        for ({{propRefType}} obj : {{propVarName}}) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
         }
     } {{#required}}else {
-        result.getErrorMessages().add("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}} List of type {{dataType}} is required, but is null.");
-    }{{/required}}
+        result.getErrorMessages().add("{{propClassName}}.{{propVarName}} of type {{propRefType}} is required, but is null.");
+    }{{/required}}{{/isList}}
+{{/isPrimitive}}
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate {{propClassName}}.{{propVarName}}");
 }
-catch (Exception e) {
-    result.getErrorMessages().add("Error: could not validate {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}");
-}
-{{/isArray}}{{/isPrimitiveType}}{{^isPrimitiveType}}{{^isEnumRef}}{{^isString}}try {
-    var cplxObj_{{-index}} = this.get("{{#lambda.pascalcase}}{{name}}{{/lambda.pascalcase}}");
-    if (cplxObj_{{-index}} != null) { {{^isArray}}
-        var cplxValidationResult_{{-index}} = (({{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}})cplxObj_{{-index}}).validate();
-        result.getErrorMessages().addAll(cplxValidationResult_{{-index}}.getErrorMessages());{{/isArray}}{{#isArray}}
-        var cplxObjList_{{-index}} = (List&lt;{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}&gt;)cplxObj_{{-index}};
-        for (var l : cplxObjList_{{-index}}) {
-            var lValidationResult = l.validate();
-            result.getErrorMessages().addAll(lValidationResult.getErrorMessages());
-        }{{/isArray}}
-    } {{#required}}else {
-        result.getErrorMessages().add("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}} of type {{complexType}} is required but is null.");
-    }{{/required}}
-}
-catch (Exception e) {
-    result.getErrorMessages().add("Error: could not validate {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{name}}");
-}
-{{/isString}}{{/isEnumRef}}{{#isEnumRef}}{{>enumValidation}}{{/isEnumRef}}{{/isPrimitiveType}}{{/vars}}
-return result.getResult();

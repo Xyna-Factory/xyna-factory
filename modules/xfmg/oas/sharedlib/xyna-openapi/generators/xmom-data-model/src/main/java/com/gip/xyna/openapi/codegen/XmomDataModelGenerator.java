@@ -18,7 +18,9 @@
 package com.gip.xyna.openapi.codegen;
 
 import org.openapitools.codegen.*;
+import org.openapitools.codegen.model.ModelMap;
 import org.openapitools.codegen.model.ModelsMap;
+import org.openapitools.codegen.utils.ModelUtils;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -30,7 +32,6 @@ public class XmomDataModelGenerator extends DefaultCodegen {
 
   // source folder where to write the files
   protected String sourceFolder = "XMOM";
-  protected String apiVersion = "1.0.0";
   protected String xynaFactoryVersion = "CURRENT_VERSION";
   
   public static final String XYNA_FACTORY_VERSION = "xynaFactoryVersion";
@@ -81,14 +82,13 @@ public class XmomDataModelGenerator extends DefaultCodegen {
   @Override
   public Map<String, ModelsMap> postProcessAllModels(Map<String, ModelsMap> objs) {
     objs = super.postProcessAllModels(objs);
-    for (ModelsMap models: objs.values()) {
-      CodegenModel model = models.getModels().get(0).getModel();
+    for (String modelname : objs.keySet()) {
+      CodegenModel model = ModelUtils.getModelByName(modelname, objs);
       if (model.getName().equals(model.parent)) {
         model.parent = null;
       }
-      ModelsMap parentMap = objs.get(model.parent);
-      if (parentMap != null) {
-        CodegenModel parent = parentMap.getModels().get(0).getModel();
+      CodegenModel parent = ModelUtils.getModelByName(model.parent, objs);
+      if (parent != null) {
         for(CodegenProperty var: model.vars) {
           for(CodegenProperty parentVar: parent.vars) {
             if(parentVar.getName().equals(var.getName())) {
@@ -97,7 +97,19 @@ public class XmomDataModelGenerator extends DefaultCodegen {
           }
         }
       }
+      XynaCodegenModel xModel = new XynaCodegenModel(model, this);
+      objs.get(modelname).put("xynaModel", xModel);
+      if (Boolean.TRUE.equals(additionalProperties.get("debugXO"))) {
+        System.out.println(xModel);
+      }
     }
+    return objs;
+  }
+  
+  @Override
+  public Map<String, Object> postProcessSupportingFileData(Map<String, Object> objs) {
+    List<ModelMap> models = (List<ModelMap>) objs.get("models");
+    models.forEach((ModelMap map) -> map.put("xynaModel", new XynaCodegenModel(map.getModel(), this)));
     return objs;
   }
   
@@ -127,7 +139,6 @@ public class XmomDataModelGenerator extends DefaultCodegen {
       "model.mustache", // the template to use
       ".xml");       // the extension for each file to write
 
-
     /**
      * Template Location.  This is the location which templates will be read from.  The generator
      * will use the resource stream to attempt to read the templates.
@@ -154,7 +165,6 @@ public class XmomDataModelGenerator extends DefaultCodegen {
      * Additional Properties.  These values can be passed to the templates and
      * are available in models, apis, and supporting files
      */
-    additionalProperties.put("apiVersion", apiVersion);
     additionalProperties.put(XYNA_FACTORY_VERSION, xynaFactoryVersion);
 
 
@@ -178,14 +188,14 @@ public class XmomDataModelGenerator extends DefaultCodegen {
 
     typeMapping.clear();
     typeMapping.put("boolean", "Boolean");
-    typeMapping.put("integer", "Integer");
+    typeMapping.put("integer", "Long");
     typeMapping.put("long", "Long");
     typeMapping.put("double", "Double");
     typeMapping.put("float", "Double");
     typeMapping.put("number", "Double");
     typeMapping.put("string", "String");
-    typeMapping.put("DateTime", "String");
-    typeMapping.put("date", "String");
+    typeMapping.put("DateTime", "DateTimeType");
+    typeMapping.put("date", "DateType");
     typeMapping.put("password", "String");
     typeMapping.put("byte", "String");
     typeMapping.put("binary", "String");

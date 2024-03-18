@@ -22,8 +22,6 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.Test;
 import org.openapitools.codegen.ClientOptInput;
@@ -58,15 +56,13 @@ public class XmomDataModelGeneratorTest {
       throw new RuntimeException(e);
     }
 
-    Map<String, String> globalProperies = new HashMap<String, String>();
-    globalProperies.put("debugModels", "true");
     // to understand how the 'openapi-generator-cli' module is using 'CodegenConfigurator', have a look at the 'Generate' class:
     // https://github.com/OpenAPITools/openapi-generator/blob/master/modules/openapi-generator-cli/src/main/java/org/openapitools/codegen/cmd/Generate.java
     final CodegenConfigurator configurator = new CodegenConfigurator()
       .setGeneratorName("xmom-data-model") // use this codegen library
       .setInputSpec("../../test/resources/" + specFile) // sample OpenAPI file
       .setOutputDir("../../test/output/xmom-data-model/" + specFile.substring(0, specFile.lastIndexOf('.'))) // output directory
-      .setGlobalProperties(globalProperies);
+      .addAdditionalProperty("debugXO", Boolean.TRUE);
     final ClientOptInput clientOptInput = configurator.toClientOptInput();
     DefaultGenerator generator = new DefaultGenerator();
     generator.opts(clientOptInput).generate();

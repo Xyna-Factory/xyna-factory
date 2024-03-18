@@ -17,22 +17,21 @@
  */
 package com.gip.xyna.openapi;
 
-import java.util.List;
+public class PrimitiveTypeValidator<T> extends BaseValidator {
 
-public class OpenAPIBooleanType extends OpenAPIPrimitiveType<Boolean> {
+    private T value;
 
-    public OpenAPIBooleanType(String name, Boolean value) {
-        super(name, value);
+    public void setValue(T value) {
+      this.value = value;
+    }
+    
+    public T getValue() {
+        return value;
     }
 
     @Override
-    public List<String> checkValid() {
-        List<String> errorMessages = super.checkValid();
-
-        if (this.isNull()) {
-            return errorMessages;
-        }
-
-        return errorMessages;
+    boolean isNull() {
+        return value == null;
     }
+
 }

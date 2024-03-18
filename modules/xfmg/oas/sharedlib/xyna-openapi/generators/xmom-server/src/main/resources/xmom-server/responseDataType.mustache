@@ -15,16 +15,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
-{{#operations}}{{#operation}}<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="true"
-TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" TypePath="{{apiPackage}}.{{pathPrefix}}.response" Label="{{httpMethod}} {{path}} Response"
+{{#operations}}{{#xynaOperation}}<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="true"
+TypeName="{{responseRefName}}" TypePath="{{responseRefPath}}" Label="{{responseLabel}}"
 BaseTypeName="ResponseParameter" BaseTypePath="xmcp.oas.datatype.provider">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
-    <Documentation>Specified Responses:{{#responses}}
-- {{code}} {{message}}{{/responses}}
-</Documentation>
+    <Documentation>{{responseDescription}}</Documentation>
   </Meta>
-  <Service Label="{{httpMethod}} {{path}} Response" TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response">
+  <Service Label="{{responseLabel}}" TypeName="{{responseRefName}}">
     <Operation Label="get Status Code" Name="getStatusCode" IsStatic="false" IsAbstract="true">
       <Input>
       </Input>
@@ -46,42 +44,27 @@ BaseTypeName="ResponseParameter" BaseTypePath="xmcp.oas.datatype.provider">
   </Service>
 </DataType>
 {{#responses}}
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false" Label="{{httpMethod}} {{path}} Response {{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}"
- BaseTypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" BaseTypePath="{{apiPackage}}.{{pathPrefix}}.response"
- TypeName="{{#lambda.pascalcase}}{{httpMethod}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}}" TypePath="{{apiPackage}}.{{pathPrefix}}.response">
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
+TypeName="{{respRefName}}" TypePath="{{respRefPath}}" Label="{{respLabel}}"
+BaseTypeName="{{responseRefName}}" BaseTypePath="{{responseRefPath}}">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
-    <Documentation>{{#message}}Response message: {{message}}{{/message}}</Documentation>
-  </Meta>{{#dataType}}
-  <Data Label="{{complexType}}" VariableName="{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}" {{#isArray}}IsList="true"{{/isArray}}{{^isPrimitiveType}}{{^isEnumRef}}{{^isString}}
-     ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isString}}{{/isEnumRef}}{{/isPrimitiveType}}>
-        <Meta>{{#isPrimitiveType}}{{^isEnumRef}}
-            <Type>{{#isArray}}{{items.dataType}}{{/isArray}}{{^isArray}}{{^isString}}{{dataType}}{{/isString}}{{/isArray}}</Type>{{/isEnumRef}}{{/isPrimitiveType}}{{#isEnumRef}}
-            <Type>String</Type>{{/isEnumRef}}{{#isString}}
-            <Type>String</Type>{{/isString}}
-            <Documentation>{{#description}}{{description}}{{/description}}{{#isEnumRef}}
-Enum of Type: {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}.{{complexType}}
-values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}
-{{/isEnumRef}}{{#format}}
-format: {{format}}{{/format}}
-required: {{required}}
-            </Documentation>
+    <Documentation>{{respDescription}}</Documentation>
+  </Meta>{{#body}}
+  <Data Label="{{propLabel}}" VariableName="{{propVarName}}" {{#isList}}IsList="true"{{/isList}}{{^isPrimitive}}
+     ReferenceName="{{propRefType}}" ReferencePath="{{propRefPath}}"{{/isPrimitive}}>
+        <Meta>{{#isPrimitive}}
+            <Type>{{javaType}}</Type>{{/isPrimitive}}
+            <Documentation>{{propDescription}}</Documentation>
         </Meta>
-    </Data>{{/dataType}}{{#responseHeaders}}{{#isPrimitiveType}}
-  <Data Label="{{baseName}}" VariableName="{{paramName}}" {{#isArray}}IsList="true"{{/isArray}}>
+    </Data>{{/body}}{{#responseHeaders}}{{#isPrimitive}}
+  <Data Label="{{propLabel}}" VariableName="{{propVarName}}" {{#isList}}IsList="true"{{/isList}}>
         <Meta>
-          <Type>{{#isArray}}{{items.dataType}}{{/isArray}}{{^isArray}}{{dataType}}{{/isArray}}</Type>
-          <Documentation>{{#description}}{{description}}{{/description}}{{#isEnum}}
-Enum with values: {{_enum}}{{/isEnum}}{{#format}}
-format: {{format}}{{/format}}
-
-{{#required}}required{{/required}}
-{{#isNullable}}nullable{{/isNullable}}
-            </Documentation>
+          <Type>{{javaType}}</Type>
+          <Documentation>{{propDescription}}</Documentation>
         </Meta>
-    </Data>{{/isPrimitiveType}}{{/responseHeaders}}
-  <Service Label="{{httpMethod}} {{path}} Response {{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}"
-   TypeName="{{#lambda.pascalcase}}{{httpMethod}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}}">
+    </Data>{{/isPrimitive}}{{/responseHeaders}}
+  <Service Label="{{respLabel}}" TypeName="{{respRefName}}">
     <Operation Label="get Status Code" Name="getStatusCode" IsStatic="false">
       <Input>
       </Input>
@@ -93,7 +76,7 @@ format: {{format}}{{/format}}
         </Data>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return "{{code}} {{message}}";</CodeSnippet>
+        <CodeSnippet Type="Java">return "{{codeWithMessage}}";</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation Label="get Payload" Name="getPayload" IsStatic="false">
@@ -103,23 +86,26 @@ format: {{format}}{{/format}}
         <Data ID="1" Label="Document" VariableName="document1" ReferenceName="Document" ReferencePath="xact.templates"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">{{^dataType}}return new xact.templates.Document();{{/dataType}}{{#dataType}}xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
+        <CodeSnippet Type="Java">{{!
+}}{{^body}}return new xact.templates.Document();{{/body}}{{!
+}}{{#body}}xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
 jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
 jsonOptions.setUseLabels(true);
 
-xact.templates.Document body;{{^isArray}}{{#isModel}}{{^isString}}
-body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(this.get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}(), jsonOptions);{{/isString}}{{/isModel}}{{/isArray}}{{#isArray}}{{#items.isModel}}
-List&lt;GeneralXynaObject&gt; list = new ArrayList&lt;&gt;(get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}());
-body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONListWithOptions(list, jsonOptions);{{/items.isModel}}{{/isArray}}{{^isModel}}{{#primitiveType}}
+xact.templates.Document body;{{^isPrimitive}}{{!
+}}{{#isList}}
+List&lt;GeneralXynaObject&gt; obj = new ArrayList&lt;&gt;({{getPropVarName}});{{!
+}}{{/isList}}{{^isList}}
+GeneralXynaObject obj = {{getPropVarName}};{{!
+}}{{/isList}}
+body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSON{{#isList}}List{{/isList}}WithOptions(obj, jsonOptions);{{!
+}}{{/isPrimitive}}{{#isPrimitive}}
 body = new xact.templates.Document();
-body.setText(get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}().toString());{{/primitiveType}}{{/isModel}}{{#isModel}}{{#isString}}
-body = new xact.templates.Document();
-xact.templates.Document dataIn = new xact.templates.Document(new xact.templates.PlainText(), get{{#lambda.pascalcase}}{{baseType}}{{/lambda.pascalcase}}());
-body.setText("\"" + xfmg.xfctrl.datamodel.json.JSONDatamodelServices.encodeValue(dataIn).getText() + "\"");{{/isString}}{{/isModel}}
-
-return body;{{/dataType}}
-</CodeSnippet>
+body.setText({{getPropVarName}}.toString());{{!
+}}{{/isPrimitive}}
+return body;{{/body}}
+        </CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation Label="Validate" Name="validate" IsStatic="false">
@@ -129,15 +115,15 @@ return body;{{/dataType}}
         <Data ID="2" Label="OAS Validation Result" VariableName="oASValidationResult2" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
 result.setErrorMessages(new ArrayList&lt;String&gt;());
-
-{{#dataType}}{{^isArray}}{{#isModel}}{{>validation}}{{/isModel}}{{/isArray}}{{#isArray}}{{#items.isModel}}{{>validation}}{{/items.isModel}}{{/isArray}}{{/dataType}}{{#responseHeaders}}
-{{>validation}}{{/responseHeaders}}
-return result.getResult();</CodeSnippet>
+{{#body}}{{>validation}}{{/body}}
+{{#responseHeaders}}{{>validation}}{{/responseHeaders}}
+return result.getResult();
+        </CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
 </DataType>
-{{/responses}}
-{{/operation}}{{/operations}}
+{{/responses}}{{/xynaOperation}}{{/operations}}
