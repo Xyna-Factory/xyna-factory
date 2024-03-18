@@ -38,7 +38,7 @@
       </copy>
 
       <copy todir="${target.dir}">
-        <fileset dir="${basedir}/xyna-openapi-utils/target">
+        <fileset dir="${basedir}/generator-utils/target">
           <include name="*.jar" />
         </fileset>
       </copy>
