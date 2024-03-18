@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="addrepositoryconnection" Description="Adds a repository connection" />
+  <CommandDefinition Groups="Git Repository Management" Name="addrepositoryconnection" Description="Adds a repository connection" />
   <Argument Name="path" Description="Path to the repository" />
   <Argument Name="workspace" Description="Workspace to create within the factory and connect to the repository" Optional="true" />
   <BoolOption Name="f" LongName="full" Description="Determines whether all repository workspaces will be created within the factory and then connected to the repository. This option takes precedence over the 'workspace' argument." Optional="true"/>

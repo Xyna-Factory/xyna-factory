@@ -16,6 +16,6 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="listrepositoryusers" Description="Lists all configured repository users" />
+  <CommandDefinition Groups="Git Repository Management" Name="listrepositoryusers" Description="Lists all configured repository users" />
   <Argument Name="repository" Description="Path to the repository" Optional="true"/>
 </XynaCommandLineCommand>

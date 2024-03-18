@@ -16,6 +16,6 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="listworkspacegitdiffs" Description="print all open workspace differences lists, or details for a specific list" />
+  <CommandDefinition Groups="Git Workspace Management" Name="listworkspacegitdiffs" Description="print all open workspace differences lists, or details for a specific list" />
   <Argument Name="id" Description="id of the workspace differences list to display. If not set, all open lists will be displayed," Optional="true"/>
 </XynaCommandLineCommand>
