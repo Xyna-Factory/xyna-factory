@@ -29,14 +29,18 @@ service provisioning, self-service automation, network abstraction & activation,
 | |   +-- ojdbc11-<VERSION>.jar                                                  | jdbc-connector for oracledb
 +--------------------------------------------------------------------------------+--------------------------------------------------------------------
 
+# GitHub
+
+https://github.com/Xyna-Factory
+
 # Wiki
 
-See https://github.com/Xyna-Factory/xyna/wiki
+https://github.com/Xyna-Factory/xyna/wiki
 
 # Installing
 
-See https://github.com/Xyna-Factory/xyna/wiki/Installation
+https://github.com/Xyna-Factory/xyna/wiki/Installation
 
 # Tutorials
 
-See https://github.com/Xyna-Factory/xyna/wiki/Tutorials
+https://github.com/Xyna-Factory/xyna/wiki/Tutorials
