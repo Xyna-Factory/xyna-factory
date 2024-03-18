@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="removerepositoryconnection" Description="Removes a repository connection" />
+  <CommandDefinition Groups="Git Repository Management" Name="removerepositoryconnection" Description="Removes a repository connection" />
   <Argument Name="workspace" Description="Workspace within the factory to disconnect from the repository"/>
   <BoolOption Name="f" LongName="full" Description="Determines whether all repository workspaces within the factory will be disconnected from the repository. This option takes precedence over the 'workspace' argument." Optional="true"/>
   <BoolOption Name="d" LongName="delete" Description="Determines whether the respective workspaces within the factory will be deleted." Optional="true"/>
