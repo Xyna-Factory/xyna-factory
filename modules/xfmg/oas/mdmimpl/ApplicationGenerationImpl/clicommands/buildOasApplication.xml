@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="buildoasapplication" Description="Create Applications based on open api specifications" />
+  <CommandDefinition Groups="Open API Management" Name="buildoasapplication" Description="Create Applications based on open api specifications" />
   <Argument Name="applicationName" Description="Name of the application to generate" />
   <Argument Name="path" Description="Path to the specification file" />
   <BoolOption Name="p" LongName="buildProvider" Description="Create a provider application as well" Optional="true"/>

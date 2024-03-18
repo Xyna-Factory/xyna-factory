@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="createfactoryxml" Description="create factory.xml from current factory configuration" />
+  <CommandDefinition Groups="Git Object Management" Name="createfactoryxml" Description="create factory.xml from current factory configuration" />
   <BoolOption Name="p" LongName="printResult" Description="Instead of writing to file, only display content" Optional="true"/>
   <BoolOption Name="s" LongName="splitResult" Description="Instead of writing to a file, create a folder containing a file for each type of factory content" Optional="true"/>
 </XynaCommandLineCommand>
