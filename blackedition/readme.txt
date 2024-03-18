@@ -27,8 +27,7 @@ service provisioning, self-service automation, network abstraction & activation,
 | |   +-- mariadb-java-client-<VERSION>.jar                                      | jdbc-connector for mariadb 
 | |   +-- mysql-connector-j-<VERSION>.jar                                        | jdbc-connector for mysql
 | |   +-- ojdbc11-<VERSION>.jar                                                  | jdbc-connector for oracledb
-+-----
----------------------------------------------------------------------------+--------------------------------------------------------------------
++--------------------------------------------------------------------------------+--------------------------------------------------------------------
 
 # Wiki
 
