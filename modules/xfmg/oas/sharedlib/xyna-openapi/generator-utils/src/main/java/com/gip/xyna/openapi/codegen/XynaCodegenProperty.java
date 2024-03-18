@@ -297,7 +297,7 @@ public class XynaCodegenProperty {
     Integer maxLength;
     boolean required;
     boolean nullable;
-    List<String> allowableValues;
+    List<String> allowableValues = new ArrayList<String>();
     
     ValuesToValidate(CodegenProperty property) {
       CodegenProperty mostInnerItems = property.mostInnerItems != null ? property.mostInnerItems : property;
@@ -312,9 +312,11 @@ public class XynaCodegenProperty {
       maxLength = mostInnerItems.maxLength;
       required = mostInnerItems.required;
       nullable = mostInnerItems.isNullable;
-      @SuppressWarnings("unchecked")
-      List<Map<String, Object>> enumVars = (List<Map<String, Object>>) mostInnerItems.allowableValues.getOrDefault(("enumVars"), List.of());
-      allowableValues.addAll(enumVars.stream().map(enumVar -> enumVar.get("name").toString()).collect(Collectors.toList()));   
+      if (mostInnerItems.allowableValues != null) {
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> enumVars = (List<Map<String, Object>>) mostInnerItems.allowableValues.getOrDefault(("enumVars"), List.of());
+        allowableValues.addAll(enumVars.stream().map(enumVar -> enumVar.get("name").toString()).collect(Collectors.toList()));
+      }
     }
   }
   
