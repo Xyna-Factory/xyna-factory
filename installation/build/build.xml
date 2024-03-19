@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@
 
 	<property name="coherence.dir" value="${root.dir}/coherence/" />
 
-	<property name="components.xnwh.pooltypes.dir" value="${root.dir}/components/xnwh/pools/DefaultConnectionPoolTypes" />
+	<property name="components.xnwh.pooltypes.dir" value="${root.dir}/components/xnwh/pools" />
 
 
 	<!--- - - - - - - - - - - - - - - - -
