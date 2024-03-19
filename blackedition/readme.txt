@@ -12,7 +12,7 @@ service provisioning, self-service automation, network abstraction & activation,
 +--------------------------------------------------------------------------------+-------------------------------------------------------------------
 | Files                                                                          | Description
 +--------------------------------------------------------------------------------+-------------------------------------------------------------------
-| XynaFactory_<VERSION>_<TIMESTAMP>_bundle/                                      | Base dirctory
+| XynaFactory_<VERSION>_<TIMESTAMP>_bundle/                                      | Base directory
 | +-- readme.txt                                                                 | this readme file
 | +-- Release-Notes.pdf                                                          | release notes
 | +-- XBE_Prerequisites_<VERSION>.zip                                            | Xyna Prerequisites package
