@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<licenseSummary xmlns="http://mojo.codehaus.org/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://mojo.codehaus.org/ licenses.xsd">
+  <dependencies>
+    <dependency>
+      <groupId>org.mariadb.jdbc</groupId>
+      <artifactId>mariadb-java-client</artifactId>
+      <licenses>
+        <license>
+          <name>GNU Lesser General Public License v2.1</name>
+          <url>https://raw.githubusercontent.com/mariadb-corporation/mariadb-connector-j/master/LICENSE</url>
+        </license>
+      </licenses>
+    </dependency>
+    <dependency>
+      <groupId>com.mysql</groupId>
+      <artifactId>mysql-connector-j</artifactId>
+      <licenses>
+        <license>
+          <name>GNU General Public License Version 2.0</name>
+          <url>https://raw.githubusercontent.com/mysql/mysql-connector-j/release/8.x/LICENSE</url>
+        </license>
+      </licenses>
+    </dependency>
+  </dependencies>
+</licenseSummary>

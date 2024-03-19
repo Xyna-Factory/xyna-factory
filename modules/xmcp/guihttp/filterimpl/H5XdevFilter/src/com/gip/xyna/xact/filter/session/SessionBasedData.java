@@ -56,6 +56,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.Department;
 import com.gip.xyna.FileUtils;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
@@ -240,7 +241,7 @@ public class SessionBasedData {
   private final Map<String, Long> pollRequestUUIDToLastPoll = new ConcurrentHashMap<>();
   private final AtomicLong pollRequestId = new AtomicLong();
   private final List<Long> pendingPollRequestIds = Collections.synchronizedList(new ArrayList<>());
-  private volatile boolean terminateOrphanCleaner = false;
+  private volatile boolean orphanCleanerShouldRun = true;
   private volatile boolean shutdownInProgress = false;
   private volatile boolean pollRequestTerminationPending = false;
   private PollEventFetcher pollEventFetcher;
@@ -265,29 +266,33 @@ public class SessionBasedData {
     Thread orphanedPollRequestCleaner = new Thread("Orphaned poll-request cleaner") {
       @Override
       public void run() {
-        while (!terminateOrphanCleaner) {
-          long maxWaitTime = XynaProperty.MESSAGE_BUS_FETCH_TIMEOUT.getMillis() * CLIENT_POLLING_TIMEOUT_FACTOR.get();
-          List<String> orphanedUUIDs = new ArrayList<>();
+        while (orphanCleanerShouldRun) {
+          try {
+            long maxWaitTime = XynaProperty.MESSAGE_BUS_FETCH_TIMEOUT.getMillis() * CLIENT_POLLING_TIMEOUT_FACTOR.get();
+            List<String> orphanedUUIDs = new ArrayList<>();
 
-          synchronized (pollRequestUUIDToLastPoll) {
-            for (Entry<String, Long> lastPoll : pollRequestUUIDToLastPoll.entrySet()) {
-              if ( System.currentTimeMillis() > (lastPoll.getValue() + maxWaitTime) ) {
-                orphanedUUIDs.add(lastPoll.getKey());
-                pollRequestUUIDToEventsMap.remove(lastPoll.getKey());
-                pollRequestUUIDToIsProject.remove(lastPoll.getKey());
+            synchronized (pollRequestUUIDToLastPoll) {
+              for (Entry<String, Long> lastPoll : pollRequestUUIDToLastPoll.entrySet()) {
+                if (System.currentTimeMillis() > (lastPoll.getValue() + maxWaitTime)) {
+                  orphanedUUIDs.add(lastPoll.getKey());
+                  pollRequestUUIDToEventsMap.remove(lastPoll.getKey());
+                  pollRequestUUIDToIsProject.remove(lastPoll.getKey());
+                }
+              }
+
+              for (String orphanedUUID : orphanedUUIDs) {
+                pollRequestUUIDToLastPoll.remove(orphanedUUID);
               }
             }
 
-            for (String orphanedUUID : orphanedUUIDs) {
-              pollRequestUUIDToLastPoll.remove(orphanedUUID);
+            try {
+              Thread.sleep(ORPHANED_POLL_REQUEST_CLEAN_INTERVAL);
+            } catch (Exception e) {
+              logger.error("Multiuser: Cleanup thread for orphaned polling requests for session " + session.getId() + " died", e);
+              break;
             }
-          }
-
-          try {
-            Thread.sleep(ORPHANED_POLL_REQUEST_CLEAN_INTERVAL);
-          } catch (Exception e) {
-            logger.error("Multiuser: Cleanup thread for orphaned polling requests for session " + session.getId() + " died", e);
-            break;
+          } catch (OutOfMemoryError t) {
+            Department.handleThrowable(t);
           }
         }
       }
@@ -301,7 +306,7 @@ public class SessionBasedData {
     shutdownInProgress = true;
     pollEventFetcher.stop();
     locks.clear();
-    terminateOrphanCleaner = true;
+    orphanCleanerShouldRun = false;
   }
   
   

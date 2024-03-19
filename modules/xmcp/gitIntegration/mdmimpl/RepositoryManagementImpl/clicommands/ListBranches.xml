@@ -16,6 +16,6 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="listbranches" Description="Lists all branches of the repository" />
+  <CommandDefinition Groups="Git Repository Management" Name="listbranches" Description="Lists all branches of the repository" />
   <Argument Name="repository" Description="Path to the repository" />
 </XynaCommandLineCommand>

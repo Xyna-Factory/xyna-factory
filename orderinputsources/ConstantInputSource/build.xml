@@ -22,6 +22,9 @@
 
   <property name="project.name.local" value="ConstantInputSource" />
 
+  <!--Next release version for the archive file-->
+  <property name="release.number" value="1.0.0"/>
+
   <property name="target.dir" value="${basedir}/deploy" />
 
         <resolver:pom file="${basedir}/pom.xml" id="pom"/>
@@ -38,7 +41,7 @@
 	        ================================= -->
   <target name="build" depends="resolve">
     <genCodeClass basedir="${basedir}" lookupjar="y" />
-    <buildJar destfile="${target.dir}/${project.name.local}.jar" />
+    <buildJar destfile="${target.dir}/${project.name.local}-${release.number}.jar" />
     <copy todir="${target.dir}">
       <fileset dir="${basedir}/lib">
         <include name="**/*.jar" />

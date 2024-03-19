@@ -15,7 +15,15 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
-// validate {{#classname}}{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{/classname}}{{paramName}}{{^paramName}}{{dataType}}{{/paramName}} of type {{dataType}}{{#baseType}} with baseType {{baseType}}{{/baseType}}
+// validate {{#classname}}{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{/classname}}{{paramName}}{{^paramName}}{{dataType}}{{/paramName}} of type {{^isString}}{{dataType}}{{/isString}}{{#isString}}String{{/isString}}{{#baseType}}{{^isString}} with baseType {{baseType}}{{/isString}}{{/baseType}}
+{{^isPrimitiveType}}{{#isString}}try {
+    var primStrObj_{{-index}} = new com.gip.xyna.openapi.OpenAPIStringType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{paramName}}{{^paramName}}{{dataType}}{{/paramName}}", (String)get("{{#lambda.camelcase}}{{baseType}}{{/lambda.camelcase}}"));
+
+    result.getErrorMessages().addAll(primStrObj_{{-index}}.checkValid());
+}
+catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{paramName}}{{^paramName}}{{dataType}}{{/paramName}}");
+}{{/isString}}{{/isPrimitiveType}}
 {{#isPrimitiveType}}{{^isContainer}}{{^isArray}}try {
     var primObj_{{-index}} = {{#isInteger}}
     new com.gip.xyna.openapi.OpenAPINumberType&lt;Integer&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}", (Integer)get("{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}"));{{/isInteger}}{{#isLong}}
@@ -24,7 +32,7 @@
     new com.gip.xyna.openapi.OpenAPINumberType&lt;Double&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}", (Double)get("{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}"));{{/isNumber}}{{#isFloat}}
     new com.gip.xyna.openapi.OpenAPINumberType&lt;Float&gt;("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}", ((Double)get("{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}")).floatValue());{{/isFloat}}{{#isBoolean}}
     new com.gip.xyna.openapi.OpenAPIBooleanType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}", (Boolean)get("{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}"));{{/isBoolean}}{{#isString}}
-    new com.gip.xyna.openapi.OpenAPIStringType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}", (String)get("{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}"));{{/isString}}{{#isDateTime}}
+    new com.gip.xyna.openapi.OpenAPIStringType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{paramName}}{{^paramName}}{{dataType}}{{/paramName}}", (String)get("{{paramName}}{{^paramName}}{{dataType}}{{/paramName}}"));{{/isString}}{{#isDateTime}}
     new com.gip.xyna.openapi.OpenAPIDateTimeType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}", (String)get("{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}"));{{/isDateTime}}{{#isDate}}
     new com.gip.xyna.openapi.OpenAPIDateType("{{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}", (String)get("{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}"));{{/isDate}}{{#minimum}}
     primObj_{{-index}}.setMin({{minimum}});{{/minimum}}{{#maximum}}
@@ -41,7 +49,7 @@
     result.getErrorMessages().addAll(primObj_{{-index}}.checkValid());
 }
 catch (Exception e) {
-    result.getErrorMessages().add("Error: could not validate {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}");
+    result.getErrorMessages().add("Error: could not validate {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{paramName}}{{^paramName}}{{dataType}}{{/paramName}}");
 }
 {{/isArray}}{{/isContainer}}{{#isArray}}try {
     var primObjList_{{-index}} = (List&lt;{{#isPrimitiveType}}{{^isEnumRef}}{{#isArray}}{{items.dataType}}{{/isArray}}{{^isArray}}{{dataType}}{{/isArray}}{{/isEnumRef}}{{/isPrimitiveType}}{{#isEnumRef}}String{{/isEnumRef}}&gt;)this.get("{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}");
@@ -76,7 +84,7 @@ catch (Exception e) {
 catch (Exception e) {
     result.getErrorMessages().add("Error: could not validate {{#lambda.pascalcase}}{{classname}}{{/lambda.pascalcase}}.{{#lambda.camelcase}}{{complexType}}{{/lambda.camelcase}}");
 }
-{{/isArray}}{{/isPrimitiveType}}{{^isPrimitiveType}}{{^isEnumRef}}try {
+{{/isArray}}{{/isPrimitiveType}}{{^isPrimitiveType}}{{^isEnumRef}}{{^isString}}try {
     var cplxObj_{{-index}} = this.get("{{#lambda.camelcase}}{{^isArray}}{{paramName}}{{^paramName}}{{complexType}}{{/paramName}}{{/isArray}}{{#isArray}}{{items.dataType}}{{/isArray}}{{/lambda.camelcase}}");
     if (cplxObj_{{-index}} != null) { {{^isArray}}
         var cplxValidationResult_{{-index}} = (({{complexType}})cplxObj_{{-index}}).validate();
@@ -93,4 +101,4 @@ catch (Exception e) {
 catch (Exception e) {
     result.getErrorMessages().add("Error: could not validate {{#lambda.camelcase}}{{^isArray}}{{paramName}}{{^paramName}}{{complexType}}{{/paramName}}{{/isArray}}{{#isArray}}{{items.dataType}}{{/isArray}}{{/lambda.camelcase}}");
 }
-{{/isEnumRef}}{{#isEnumRef}}{{>enumValidation}}{{/isEnumRef}}{{/isPrimitiveType}}
+{{/isString}}{{/isEnumRef}}{{#isEnumRef}}{{>enumValidation}}{{/isEnumRef}}{{/isPrimitiveType}}

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -205,7 +205,7 @@ public class CronLikeOrder extends ClusteredStorable<CronLikeOrder> {
     }
   }
   
-  private static CronLikeOrderStartUnderlyingOrderAlgorithm startUnderlyingOrderAlgorithm = null;
+  private static volatile CronLikeOrderStartUnderlyingOrderAlgorithm startUnderlyingOrderAlgorithm = null;
 
   private final ResponseListener defaultCountingResponseListener = new ResponseListener() {
     //achtung: bei refactoring aufpassen: derzeit ist der responselistener das einzige erkennungsmerkmal, um in einem gespawnten

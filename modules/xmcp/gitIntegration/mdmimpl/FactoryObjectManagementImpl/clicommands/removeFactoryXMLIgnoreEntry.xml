@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="removefactoryxmlignoreentry" Description="remove an ignore entry from the current factory configuration" />
+  <CommandDefinition Groups="Git Object Management" Name="removefactoryxmlignoreentry" Description="remove an ignore entry from the current factory configuration" />
   <Argument Name="type" Description="type of the ignore entry" Optional="false"/>
   <Argument Name="value" Description="value of the ignore entry" Optional="false"/>
 </XynaCommandLineCommand>

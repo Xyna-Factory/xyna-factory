@@ -21,6 +21,10 @@
   <import file="../../installation/build/ant-xyna.xml" />
 
   <property name="project.name.local" value="OracleRACClusterProvider" />
+
+  <!--Next release version for the archive file-->
+  <property name="release.number" value="1.0.0"/>
+
   <property name="root.dir" value="./../../" />
   <property name="common.lib.dir" value="${root.dir}/common/lib" />
 
@@ -41,7 +45,7 @@
 	        ================================= -->
   <target name="build" depends="resolve">
     <genCodeClass basedir="${basedir}" lookupjar="y" />
-    <buildJar destfile="${target.dir}/${project.name.local}.jar" />
+    <buildJar destfile="${target.dir}/${project.name.local}-${release.number}.jar" />
 	<copy todir="${target.dir}">
 		<fileset dir="${basedir}/lib">
 			<include name="*.jar" />
