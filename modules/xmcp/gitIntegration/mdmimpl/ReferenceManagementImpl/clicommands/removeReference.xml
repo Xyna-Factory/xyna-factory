@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="removeReference" Description="Remove a reference for build support" />
+  <CommandDefinition Groups="Git Reference Management" Name="removeReference" Description="Remove a reference for build support" />
   <Argument Name="workspaceName" Description="Workspace in which the object is registered" />
   <Argument Name="path" Description="Path to where the referenced files are stored/generated from" />
   <Argument Name="objectName" Description="FqName of the Object using this reference" />

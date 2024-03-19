@@ -16,5 +16,5 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="listfactoryxmlignoreentries" Description="list all ignore entries from the current factory configuration" />
+  <CommandDefinition Groups="Git Object Management" Name="listfactoryxmlignoreentries" Description="list all ignore entries from the current factory configuration" />
 </XynaCommandLineCommand>
