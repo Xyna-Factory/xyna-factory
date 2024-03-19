@@ -16,5 +16,5 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="listrepositories" Description="Lists all repositorys" />
+  <CommandDefinition Groups="Git Repository Management" Name="listrepositories" Description="Lists all repositorys" />
 </XynaCommandLineCommand>

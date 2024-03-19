@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -82,7 +82,11 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
   public void execute(OutputStream statusOutputStream, Buildoasapplication payload) throws XynaException {
     String specFile = payload.getPath();
     String target = "/tmp/" + payload.getApplicationName();
-
+    
+    if(specFile.endsWith(".zip")) {
+      specFile = decompressArchive(specFile);
+    }
+    
     ValidationResult result = validate(specFile);
     StringBuilder errors = new StringBuilder("Validation found errors:");
     if (!result.getErrors().isEmpty()) {
@@ -316,5 +320,20 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
       }
     }
     return null;
+  }
+  
+  public static String decompressArchive(String zipFile) {
+    String unzipDir =  "/tmp/" + new File(zipFile).getName() + "_unzipped";
+    FileUtils.deleteDirectoryRecursively(new File(unzipDir));
+    try {
+      FileUtils.unzip(zipFile, unzipDir, (path) -> true);
+    } catch (Ex_FileAccessException e) {
+      throw new RuntimeException("Could not unzip " + zipFile, e);
+    }
+    File[] files = new File(unzipDir).listFiles((path) -> path.isFile());
+    if(files.length != 1) {
+      throw new RuntimeException("Could not find specification file in zip.");
+    }
+    return files[0].getAbsolutePath();
   }
 }

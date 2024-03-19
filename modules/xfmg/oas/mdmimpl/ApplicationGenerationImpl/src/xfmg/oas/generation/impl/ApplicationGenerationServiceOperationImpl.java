@@ -185,8 +185,12 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
   
   @Override
   public void generateApplicationByManagedFileID(XynaOrderServerExtension correlatedXynaOrder, ApplicationGenerationParameter applicationGenerationParameter2, ManagedFileId managedFileId3) {
+    String path = fileManagement.getAbsolutePath(managedFileId3.getId());
+    if(fileManagement.getFileInfo(managedFileId3.getId()).getOriginalFilename().endsWith(".zip")) {
+      path = BuildoasapplicationImpl.decompressArchive(path);
+    }
     File file = new File.Builder()
-        .path(fileManagement.getAbsolutePath(managedFileId3.getId()))
+        .path(path)
         .instance();
     generateApplication(correlatedXynaOrder, applicationGenerationParameter2, file);
   }
