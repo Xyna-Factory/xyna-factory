@@ -108,6 +108,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
   
   @Override
   public Map<String, Object> postProcessSupportingFileData(Map<String, Object> objs) {
+    @SuppressWarnings("unchecked")
     List<ModelMap> models = (List<ModelMap>) objs.get("models");
     models.forEach((ModelMap map) -> map.put("xynaModel", new XynaCodegenModel(map.getModel(), this)));
     return objs;

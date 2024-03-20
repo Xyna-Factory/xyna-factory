@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.openapitools.codegen.CodegenDiscriminator.MappedModel;
 import org.openapitools.codegen.CodegenModel;
 import org.openapitools.codegen.DefaultCodegen;
 
@@ -25,9 +26,16 @@ public class XynaCodegenModel {
   // enum
   final List<String> allowableValues = new ArrayList<String>();
   
+  //discriminator
+  final boolean hasDiscriminator;
+  final String discriminatorKey;
+  final List<DiscriminatorMap> discriminatorMap;
+  
+  
   XynaCodegenModel(CodegenModel model, DefaultCodegen gen) {
     label = model.name;
-    typeName = model.classname;
+    typeName = buildTypeName(model);
+    typePath = buildTypePath(gen);
     description = buildDescription(model);
     vars = model.vars.stream().map(prop -> new XynaCodegenProperty(new CodegenPropertyHolder(prop), gen, typeName)).collect(Collectors.toList());
     isEnum = model.isEnum;
@@ -43,7 +51,26 @@ public class XynaCodegenModel {
       parent = OASBASE;
     }
     
-    typePath = gen.modelPackage();
+    hasDiscriminator = model.getHasDiscriminatorWithNonEmptyMapping();
+    if (hasDiscriminator) {
+      discriminatorKey = model.discriminator.getPropertyBaseName();
+      discriminatorMap = new ArrayList<DiscriminatorMap>();
+      for (MappedModel mappedModel: model.discriminator.getMappedModels()) {
+        String fqn = buildTypePath(gen) + "." + buildTypeName(mappedModel.getModel());
+        discriminatorMap.add(new DiscriminatorMap(mappedModel.getMappingName(), fqn));
+      }
+    } else {
+      discriminatorKey = null;
+      discriminatorMap = null;
+    }
+  }
+  
+  private String buildTypeName(CodegenModel model) {
+    return model.classname;
+  }
+  
+  private String buildTypePath(DefaultCodegen gen) {
+    return gen.modelPackage();
   }
   
   private String buildDescription(CodegenModel model) {
@@ -80,8 +107,11 @@ public class XynaCodegenModel {
     parent = null;
     vars = new ArrayList<XynaCodegenProperty>();
     description = "";
+    hasDiscriminator = false;
+    discriminatorKey = null;
+    discriminatorMap = null;
   }
-  
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -94,12 +124,16 @@ public class XynaCodegenModel {
         Objects.equals(parent, that.parent) &&
         Objects.equals(vars, that.vars) &&
         isEnum == that.isEnum &&
-        Objects.equals(allowableValues, that.allowableValues);
+        hasDiscriminator == that.hasDiscriminator &&
+        Objects.equals(discriminatorKey, that.discriminatorKey) &&
+        Objects.equals(discriminatorMap, that.discriminatorMap);
   }
-  
+
   @Override
   public int hashCode() {
-      return Objects.hash(label, typeName, typePath, description, parent, vars, isEnum, allowableValues);
+      return Objects.hash(label, typeName, typePath, description,
+                          parent, vars, isEnum, allowableValues,
+                          hasDiscriminator, discriminatorKey, discriminatorMap);
   }
   
   @Override
@@ -113,7 +147,22 @@ public class XynaCodegenModel {
       sb.append(",\n    ").append("vars=").append(String.valueOf(vars).replace("\n", "\n    "));
       sb.append(",\n    ").append("isEnum='").append(isEnum).append('\'');
       sb.append(",\n    ").append("allowableValues='").append(allowableValues).append('\'');
+      sb.append(",\n    ").append("hasDiscriminator='").append(hasDiscriminator).append('\'');
+      if (hasDiscriminator) {
+        sb.append(",\n    ").append("discriminatorKey='").append(discriminatorKey).append('\'');
+        sb.append(",\n    ").append("discriminatorMap='").append(discriminatorMap).append('\'');
+      }
       sb.append("\n}");
       return sb.toString();
+  }
+  
+  static class DiscriminatorMap {
+    String keyValue;
+    String fqn;
+    
+    DiscriminatorMap(String keyValue, String fqn) {
+      this.keyValue = keyValue;
+      this.fqn = fqn;
+    }
   }
 }

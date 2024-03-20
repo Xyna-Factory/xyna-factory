@@ -121,8 +121,35 @@ public class XmomServerGenerator extends DefaultCodegen {
   
   @Override
   public Map<String, Object> postProcessSupportingFileData(Map<String, Object> objs) {
-    super.postProcessSupportingFileData(objs);
-    // List<OperationMap> models = (List<OperationMap>) objs.get("operation");
+    objs = super.postProcessSupportingFileData(objs);
+    @SuppressWarnings("unchecked")
+    List<ModelMap> models = (ArrayList<ModelMap>) objs.get("models");
+    List<XynaCodegenModel> xModels = new ArrayList<XynaCodegenModel>();
+    for (ModelMap modelMap : models) {
+      CodegenModel model = modelMap.getModel();
+      if (model.getName().equals(model.parent)) {
+        model.parent = null;
+      }
+      CodegenModel parent = models.stream()
+          .map(mo -> mo.getModel())
+          .filter(mo -> mo.getName().equals(model.parent))
+          .findFirst().orElse(null);
+      if (parent != null) {
+        for(CodegenProperty var: model.vars) {
+          for(CodegenProperty parentVar: parent.vars) {
+            if(parentVar.getName().equals(var.getName())) {
+              var.isInherited = true;
+            }
+          }
+        }
+      }
+      XynaCodegenModel xModel = new XynaCodegenModel(model, this);
+      xModels.add(xModel);
+      if (Boolean.TRUE.equals(additionalProperties.get("debugXO"))) {
+        System.out.println(xModel);
+      }
+    }
+    objs.put("xynaModels", xModels);
     return objs;
   }
 
