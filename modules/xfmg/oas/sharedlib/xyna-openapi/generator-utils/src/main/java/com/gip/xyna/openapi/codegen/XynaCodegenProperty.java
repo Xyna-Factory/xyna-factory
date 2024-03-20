@@ -1,5 +1,7 @@
 package com.gip.xyna.openapi.codegen;
 
+
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +30,7 @@ public class XynaCodegenProperty {
     map.put("String", new DatatypeInfos("String", "StringTypeValidator", DatatypeInfos::stringConstraints));
     map.put("DateType", new DatatypeInfos("String", "StringTypeValidator", DatatypeInfos::stringConstraints));
     map.put("DateTimeType", new DatatypeInfos("String", "StringTypeValidator", DatatypeInfos::stringConstraints));
-    map.put("Default", new DatatypeInfos("String", "StringTypeValidator;", DatatypeInfos::emptyConstraints));
+    map.put("Default", new DatatypeInfos("String", "StringTypeValidator", DatatypeInfos::emptyConstraints));
     return map;
   }
 
@@ -46,7 +48,7 @@ public class XynaCodegenProperty {
    
   final boolean isPrimitive;
   // primitive
-  final String datatype;
+  final String dataType;
   final String javaType;
   final String validatorClassConstructor;
   final List<String> validatorConfig;
@@ -60,43 +62,70 @@ public class XynaCodegenProperty {
     propVarName = camelize(propertyInfo.getName().replace(" ", "_"), LOWERCASE_FIRST_LETTER);
     getPropVarName = "get" + camelize(propVarName.replace(" ", "_"), UPPERCASE_FIRST_CHAR) + "()";
     setPropVarName = "set" + camelize(propVarName.replace(" ", "_"), UPPERCASE_FIRST_CHAR);
-
+    isList = isList(propertyInfo);
     isInherited = propertyInfo.getIsInherited();
-    isList = propertyInfo.getIsContainer();
-
-    isPrimitive = propertyInfo.getIsPrimitiveType() || propertyInfo.getIsEnumRef();
-    datatype = buildDatatype(propertyInfo);
-    if (isPrimitive) {
-      javaType = DatatypeMap.getOrDefault(datatype, DatatypeMap.get("Default")).javaType;
-    } else {
-      javaType = null;
-    }
+    isPrimitive = isPrimitive(propertyInfo);
+    dataType = buildDatatype(propertyInfo);
+    javaType = isPrimitive ? DatatypeMap.getOrDefault(dataType, DatatypeMap.get("Default")).javaType : null;
     validatorClassConstructor = buildValidatorClassConstructor();
     validatorConfig = buildValidatorConfig(propertyInfo);
-    
+
     if (isPrimitive) {
       propRefType = null;
       propRefPath = null;
     } else {
       propRefType = camelize(propertyInfo.getComplexType().replace(" ", "_"), UPPERCASE_FIRST_CHAR);
       propRefPath = gen.modelPackage();
-    }    
+    }
     propDescription = buildDescription(propertyInfo);
   }
-  
+
+
+  /**
+   * derives the dataType from the codegenProperty.
+   * Returns null if no primitive member should be created.
+   * Otherwise returns a String matching a key in DatatypeMap
+   */
   private String buildDatatype(CodegenPropertyInfo propertyInfo) {
-    if (isPrimitive) {
-      if (propertyInfo.getIsEnumRef()) {  
+    if (!isPrimitive(propertyInfo)) {
+      return null;
+    }
+    if (propertyInfo.getIsPrimitiveType()) {
+      if (propertyInfo.getIsEnumRef()) {
         return "Enum";
-      } else if (isList) {
-        return propertyInfo.getItems().getDataType();
+      } else if (isList(propertyInfo)) {
+        return buildDatatype(propertyInfo.getMostInnerItems());
       } else {
         return propertyInfo.getDataType();
       }
     } else {
-      return null;
+      return capitalize(propertyInfo.getOpenApiType());
     }
   }
+
+
+  private boolean isList(CodegenPropertyInfo property) {
+    return property.getIsContainer(); //TODO: isArray?
+  }
+
+
+  private String capitalize(String in) {
+    return in.substring(0, 1).toUpperCase() + in.substring(1);
+  }
+
+
+  /**
+   * determines whether the property should result in a primitive member or not.
+   * In most cases, property.isPrimitiveType returns the desired value, however
+   * there are several special cases, where testing for this property yields the
+   * wrong result: Enums, primitive types with format information or collections
+   * of primitive types
+   */
+  private boolean isPrimitive(CodegenPropertyInfo property) {
+    return property.getIsPrimitiveType() || property.getIsEnumRef() || property.getIsString() || property.getIsNumber()
+        || property.getIsInteger() || (isList(property) && isPrimitive(property.getMostInnerItems()));
+  }
+
 
   private String buildValidatorClassConstructor() {
     if (!isPrimitive) {
@@ -104,13 +133,12 @@ public class XynaCodegenProperty {
     }
     String validatorPath = "com.gip.xyna.openapi.";
     StringBuilder validatorClassConstructor = new StringBuilder("new ").append(validatorPath);
-
+    String javaClassName = DatatypeMap.getOrDefault(dataType, DatatypeMap.get("Default")).className;
     if (isList) {
-      validatorClassConstructor.append("PrimitiveListTypeValidator&lt;&gt;").append("(")
-      .append(validatorPath).append(DatatypeMap.getOrDefault(datatype, DatatypeMap.get("Default")).className).append("::new")
-      .append(")");
+      validatorClassConstructor.append("PrimitiveListTypeValidator<").append(javaClassName).append(">(").append(validatorPath)
+          .append(javaClassName).append("::new").append(")");
     } else {
-      validatorClassConstructor.append(DatatypeMap.getOrDefault(datatype, DatatypeMap.get("Default")).className).append("()");
+      validatorClassConstructor.append(javaClassName).append("()");
     }
     return validatorClassConstructor.toString();
   }
@@ -139,21 +167,21 @@ public class XynaCodegenProperty {
         
     ValuesToValidate valuesToValidate = new ValuesToValidate(propertyInfo);
 
-    config.add("setName(" + propLabel + ")");
+    config.add("setName(\"" + propLabel + "\")");
     config.add(setValue);
 
-    config.addAll(DatatypeMap.getOrDefault(datatype, DatatypeMap.get("Default")).setterListBuilder.apply(valuesToValidate, fix));
-    
+    config.addAll(DatatypeMap.getOrDefault(dataType, DatatypeMap.get("Default")).setterListBuilder.apply(valuesToValidate, fix));
+
     if (valuesToValidate.required) {
       config.add(setRequired);
     }
     if (valuesToValidate.nullable) {
       config.add(setNullable);
     }
-    
+
     return config;
   }
-  
+
   private String buildDescription(CodegenPropertyInfo propertyInfo) {
     StringBuilder sb = new StringBuilder();
     if (propertyInfo.getDescription() != null) {
@@ -176,14 +204,15 @@ public class XynaCodegenProperty {
     }
     sb.append("        ");
     return sb.toString();
-  }  
-  
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof XynaCodegenProperty)) return false;
+
     XynaCodegenProperty that = (XynaCodegenProperty) o;
-    return Objects.equals(propClassName, that.propClassName) &&
+    return Objects.equals(propClassName, that.propClassName) && Objects.equals(propLabel, that.propLabel)
         Objects.equals(propLabel, that.propLabel) &&
         Objects.equals(propVarName, that.propVarName) &&
         Objects.equals(getPropVarName, that.getPropVarName) &&
@@ -200,51 +229,53 @@ public class XynaCodegenProperty {
         Objects.equals(propRefPath, that.propRefPath);
 
   }
-  
+
   @Override
   public int hashCode() {
-      return Objects.hash(propClassName, propLabel, propVarName, getPropVarName, setPropVarName, propDescription, isInherited, 
-                          isList, isPrimitive, datatype, javaType, validatorClassConstructor, validatorConfig,
-                          propRefType, propRefPath);
-  }
-  
-  @Override
-  public String toString() {
-      final StringBuilder sb = new StringBuilder("XynaCodegenProperty{");
-      sb.append("\n    ").append("propClassName='").append(propClassName).append('\'');
-      sb.append("\n    ").append("propLabel='").append(propLabel).append('\'');
-      sb.append(",\n    ").append("propVarName='").append(propVarName).append('\'');
-      sb.append(",\n    ").append("getPropVarName='").append(getPropVarName).append('\'');
-      sb.append(",\n    ").append("setPropVarName='").append(setPropVarName).append('\'');
-      sb.append(",\n    ").append("isInherited='").append(isInherited).append('\'');
-      sb.append(",\n    ").append("isList='").append(isList).append('\'');
-      sb.append(",\n    ").append("isPrimitive='").append(isPrimitive).append('\'');
-      sb.append(",\n    ").append("propDescription='").append(String.valueOf(propDescription).replace("\n", "\\n")).append('\'');
-      sb.append(",\n    ").append("datatype='").append(datatype).append('\'');
-      sb.append(",\n    ").append("javaType='").append(javaType).append('\'');
-      sb.append(",\n    ").append("validatorClassConstructor='").append(validatorClassConstructor).append('\'');
-      sb.append(",\n    ").append("validatorConfig='").append(String.valueOf(validatorConfig).replace("\n", "\n    ")).append('\'');
-      sb.append(",\n    ").append("propRefType='").append(propRefType).append('\'');
-      sb.append(",\n    ").append("propRefPath='").append(propRefPath).append('\'');
-      sb.append("\n}");
-      return sb.toString();
+    return Objects.hash(propClassName, propLabel, propVarName, getPropVarName, setPropVarName, propDescription, isInherited, isList,
+                        isPrimitive, dataType, javaType, validatorClassConstructor, validatorConfig, propRefType, propRefPath);
   }
 
-  static class DatatypeInfos{
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("XynaCodegenProperty{");
+    sb.append("\n    ").append("propClassName='").append(propClassName).append('\'');
+    sb.append("\n    ").append("propLabel='").append(propLabel).append('\'');
+    sb.append(",\n    ").append("propVarName='").append(propVarName).append('\'');
+    sb.append(",\n    ").append("getPropVarName='").append(getPropVarName).append('\'');
+    sb.append(",\n    ").append("setPropVarName='").append(setPropVarName).append('\'');
+    sb.append(",\n    ").append("isInherited='").append(isInherited).append('\'');
+    sb.append(",\n    ").append("isList='").append(isList).append('\'');
+    sb.append(",\n    ").append("isPrimitive='").append(isPrimitive).append('\'');
+    sb.append(",\n    ").append("propDescription='").append(String.valueOf(propDescription).replace("\n", "\\n")).append('\'');
+    sb.append(",\n    ").append("dataType='").append(dataType).append('\'');
+    sb.append(",\n    ").append("javaType='").append(javaType).append('\'');
+    sb.append(",\n    ").append("validatorClassConstructor='").append(validatorClassConstructor).append('\'');
+    sb.append(",\n    ").append("validatorConfig='").append(String.valueOf(validatorConfig).replace("\n", "\n    ")).append('\'');
+    sb.append(",\n    ").append("propRefType='").append(propRefType).append('\'');
+    sb.append(",\n    ").append("propRefPath='").append(propRefPath).append('\'');
+    sb.append("\n}");
+    return sb.toString();
+  }
+
+
+  static class DatatypeInfos {
+
     String javaType;
     String className;
     BiFunction<ValuesToValidate, PraefixPostfix, List<String>> setterListBuilder;
-    
+
     DatatypeInfos(String javaType, String className, BiFunction<ValuesToValidate, PraefixPostfix, List<String>> setterListBuilder) {
       this.javaType = javaType;
       this.className = className;
       this.setterListBuilder = setterListBuilder;
     }
-    
+
     public static List<String> emptyConstraints(ValuesToValidate values, PraefixPostfix fix) {
       return new ArrayList<String>();
     }
-    
+
     public static List<String> numberConstraints(ValuesToValidate values, PraefixPostfix fix) {
       List<String> result = new ArrayList<String>();
       if (values.minimum != null) {
@@ -264,7 +295,7 @@ public class XynaCodegenProperty {
       }
       return result;
     }
-    
+
     public static List<String> stringConstraints(ValuesToValidate values, PraefixPostfix fix) {
       List<String> result = new ArrayList<String>();
       if (values.dataFormat != null) {
@@ -278,7 +309,7 @@ public class XynaCodegenProperty {
       }
       return result;
     }
-    
+
     public static List<String> enumConstraints(ValuesToValidate values, PraefixPostfix fix) {
       List<String> result = new ArrayList<String>();
       if (values.allowableValues != null && !values.allowableValues.isEmpty()) {
@@ -289,8 +320,9 @@ public class XynaCodegenProperty {
       return result;
     }
   }
-  
+
   static class ValuesToValidate {
+
     String minimum;
     String maximum;
     boolean excludeMin;
@@ -302,10 +334,10 @@ public class XynaCodegenProperty {
     boolean required;
     boolean nullable;
     List<String> allowableValues = new ArrayList<String>();
-    
+
     ValuesToValidate(CodegenPropertyInfo propertyInfo) {
       CodegenPropertyInfo mostInnerItems = propertyInfo.getMostInnerItems() != null ? propertyInfo.getMostInnerItems() : propertyInfo;
-      
+
       minimum = mostInnerItems.getMinimum();
       maximum = mostInnerItems.getMaximum();
       excludeMin = mostInnerItems.getExclusiveMinimum();
@@ -318,12 +350,13 @@ public class XynaCodegenProperty {
       nullable = mostInnerItems.getIsNullable();
       if (mostInnerItems.getAllowableValues() != null) {
         @SuppressWarnings("unchecked")
-        List<Map<String, Object>> enumVars = (List<Map<String, Object>>) mostInnerItems.getAllowableValues().getOrDefault(("enumVars"), List.of());
+        List<Map<String, Object>> enumVars =
+            (List<Map<String, Object>>) mostInnerItems.getAllowableValues().getOrDefault(("enumVars"), List.of());
         allowableValues.addAll(enumVars.stream().map(enumVar -> enumVar.get("name").toString()).collect(Collectors.toList()));
       }
     }
   }
-  
+
   static class PraefixPostfix {
     String praefix = "";
     String postfix = "";

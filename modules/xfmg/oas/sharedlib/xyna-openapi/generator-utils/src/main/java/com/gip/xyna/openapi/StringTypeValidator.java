@@ -17,7 +17,10 @@
  */
 package com.gip.xyna.openapi;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,6 +30,23 @@ public class StringTypeValidator extends PrimitiveTypeValidator<String> {
     private Integer max;
     private String format;
     private String pattern;
+    
+    private static final String UUID_REGEX = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
+    
+    private static final Map<String, Function<String, Boolean>> FormatValidatorMap = buildFormatValidatorMap();
+    
+    
+    private static Map<String, Function<String, Boolean>> buildFormatValidatorMap() {
+      Map<String, Function<String, Boolean>> result = new HashMap<String, Function<String, Boolean>>();
+      result.put("uuid", createFormatValidatorFunction(UUID_REGEX));
+      
+      return result;
+    }
+    
+    
+    private static Function<String, Boolean> createFormatValidatorFunction(String pattern) {
+      return toCheck -> checkPattern(pattern, toCheck);
+    }
     
     public void setFormat(String f) {
         format = f;
@@ -66,20 +86,43 @@ public class StringTypeValidator extends PrimitiveTypeValidator<String> {
 
         if (!checkPattern()) {
             errorMessages.add(String.format(
-                "%s: Invalid format, value \"%s\" does not match format \"%s\"", getName(), getValue(), format)
+                "%s: Value \"%s\" does not match pattern \"%s\"", getName(), getValue(), pattern)
             );
+        }
+        
+        if (!checkFormat()) {
+          errorMessages.add(String.format(
+                "%s: Value \"%s\" does not match format \"%s\"", getName(), getValue(), pattern)
+          );
         }
 
         return errorMessages;
     }
 
     private boolean checkPattern() {
-        if (pattern == null)
-            return true;
+      return checkPattern(pattern, getValue());
+    }
+    
+    private static boolean checkPattern(String pattern, String toCheck) {
+      if (pattern == null)
+        return true;
 
-        Pattern p = Pattern.compile(pattern);
-        Matcher m = p.matcher(getValue());
-        return m.find();
+    Pattern p = Pattern.compile(pattern);
+    Matcher m = p.matcher(toCheck);
+    return m.find();
+    }
+    
+    private boolean checkFormat() {
+      if(format == null) {
+        return true;
+      }
+      
+      Function<String, Boolean> validatorFunction = FormatValidatorMap.getOrDefault(format, null);
+      if (validatorFunction == null) {
+        return true; //unknown format
+      }
+      
+      return validatorFunction.apply(getValue());
     }
 
     private boolean checkMaxLength() {

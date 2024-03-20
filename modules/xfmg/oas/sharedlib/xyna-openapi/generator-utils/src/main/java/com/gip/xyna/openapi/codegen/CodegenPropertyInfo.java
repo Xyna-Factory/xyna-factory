@@ -13,7 +13,11 @@ public interface CodegenPropertyInfo {
   public boolean getIsContainer();
   public boolean getIsPrimitiveType();
   public boolean getIsEnumRef();
+  public boolean getIsString();
+  public boolean getIsNumber();
+  public boolean getIsInteger();
   public String getComplexType();
+  public String getOpenApiType();
   public CodegenPropertyInfo getItems();
   public CodegenPropertyInfo getMostInnerItems();
   public String getDataType();
@@ -139,6 +143,22 @@ class CodegenPropertyHolder implements CodegenPropertyInfo{
   public Map<String, Object> getAllowableValues() {
     return property.allowableValues;
   }
+
+  public boolean getIsString() {
+    return property.getIsString();
+  }
+
+  public boolean getIsNumber() {
+    return property.getIsNumber();
+  }
+
+  public boolean getIsInteger() {
+    return getIsInteger();
+  }
+
+  public String getOpenApiType() {
+    return property.getOpenApiType();
+  }
 }
 
 class CodegenParameterHolder implements CodegenPropertyInfo{
@@ -247,5 +267,21 @@ class CodegenParameterHolder implements CodegenPropertyInfo{
 
   public Map<String, Object> getAllowableValues() {
     return parameter.allowableValues;
+  }
+
+  public boolean getIsString() {
+    return parameter.isString;
+  }
+
+  public boolean getIsNumber() {
+    return parameter.isNumber;
+  }
+
+  public boolean getIsInteger() {
+    return parameter.isInteger;
+  }
+
+  public String getOpenApiType() {
+    return parameter.getBaseType();
   }
 }
