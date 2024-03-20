@@ -16,5 +16,5 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="comparefactoryxml" Description="compare factory.xml file with the current configuration" />
+  <CommandDefinition Groups="Git Object Management" Name="comparefactoryxml" Description="compare factory.xml file with the current configuration" />
 </XynaCommandLineCommand>

@@ -16,6 +16,6 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="compareworkspacexml" Description="compare a workspace.xml file with the current configuration" />
+  <CommandDefinition Groups="Git Workspace Management" Name="compareworkspacexml" Description="compare a workspace.xml file with the current configuration" />
   <Argument Name="workspaceName" Description="Workspace to take workspace.xml from" />
 </XynaCommandLineCommand>
