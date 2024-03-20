@@ -48,7 +48,7 @@ public class XynaCodegenOperation {
   XynaCodegenOperation(CodegenOperation operation, DefaultCodegen gen, String pathPrefix, int id) {
     
     implLabel = operation.httpMethod + " " + operation.path;
-    implVarName = camelize((operation.httpMethod + "_" + operation.path).replace(" ", "_"), LOWERCASE_FIRST_LETTER);
+    implVarName = camelize(gen.sanitizeName((operation.httpMethod + "_" + operation.path)), LOWERCASE_FIRST_LETTER);
     implDescription = operation.summary + "\n" + operation.notes;
     
     parameterId = id;
