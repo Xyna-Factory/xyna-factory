@@ -153,7 +153,7 @@ class CodegenPropertyHolder implements CodegenPropertyInfo{
   }
 
   public boolean getIsInteger() {
-    return getIsInteger();
+    return property.getIsInteger();
   }
 
   public String getOpenApiType() {
