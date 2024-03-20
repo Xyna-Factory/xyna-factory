@@ -57,22 +57,22 @@ return result.getResult();
         <CodeSnippet Type="Java">
 {{parameterRefName}} ret = new {{parameterRefName}}();
 for (xmcp.oas.datatype.URLPathParameter pathPara: httpRequest1.getURLPathParameter()) { {{!
-}}{{#params}}{{#isPathParam}}
+}}{{#params}}{{#isPathParam}}{{#isPrimitive}}
     if (pathPara.getAttribute().equals("{{propLabel}}")) {
-        ret.{{setPropVarName}}({{dataType}}.valueOf(pathPara.getValue()));
-    }{{/isPathParam}}{{/params}}{{!
+        ret.{{setPropVarName}}({{javaType}}.valueOf(pathPara.getValue()));
+    }{{/isPrimitive}}{{/isPathParam}}{{/params}}{{!
 }}}
 for (xact.http.URLPathQuery query: httpRequest1.getURLQueries()) { {{!
-}}{{#params}}{{#isQueryParam}}
+}}{{#params}}{{#isQueryParam}}{{#isPrimitive}}
     if (query.getAttribute().equals("{{propLabel}}")) {
-        ret.{{setPropVarName}}({{dataType}}.valueOf(query.getValue()));
-    }{{/isQueryParam}}{{/params}}{{!
+        ret.{{setPropVarName}}({{javaType}}.valueOf(query.getValue()));
+    }{{/isPrimitive}}{{/isQueryParam}}{{/params}}{{!
 }}}
 for (xact.http.HeaderField headerField: httpRequest1.getHeader().getHeaderField()) { {{!
-}}{{#params}}{{#isHeaderParam}}
+}}{{#params}}{{#isHeaderParam}}{{#isPrimitive}}
     if (headerField.getName().equals("{{propLabel}}")) {
-        ret.{{setPropVarName}}({{dataType}}.valueOf(headerField.getValue()));
-    }{{/isHeaderParam}}{{/params}}{{!
+        ret.{{setPropVarName}}({{javaType}}.valueOf(headerField.getValue()));
+    }{{/isPrimitive}}{{/isHeaderParam}}{{/params}}{{!
 }}}{{#hasBody}}
 xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
 jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
