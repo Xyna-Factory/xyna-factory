@@ -107,24 +107,6 @@ public class XmomServerGenerator extends DefaultCodegen {
 
     int index = 0;
     for(CodegenOperation co : opList){
-      
-      // add regexPath property to each operation which is used by the filter
-      String regexPath = co.path;
-      if (co.pathParams.size() > 0) {
-        for(CodegenParameter p : co.pathParams) {
-          if (p.isNumeric || p.isInteger || p.isLong || p.isNumber || p.isFloat || p.isDouble) {
-            regexPath = regexPath.replaceAll("\\{" + p.baseName + "\\}", "(?<" + p.baseName + ">[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?)");
-          }
-          else if (p.isString) {
-            regexPath = regexPath.replaceAll("\\{" + p.baseName + "\\}", "(?<" + p.baseName + ">[^/?]*)");
-          }
-        }
-      }
-      co.vendorExtensions.put("regexPath", regexPath);
-      
-      // boolean to check if a 'request data type' for this operation is needed to auto parse parameters
-      co.vendorExtensions.put("hasParseParams", co.getHasPathParams() || co.getHasQueryParams() || co.getHasHeaderParams());
-      
       XynaCodegenOperation xOperation = new XynaCodegenOperation(co, this, (String) ops.get("pathPrefix"), 2*index);
       xoperationList.add(xOperation);
       if (Boolean.TRUE.equals(additionalProperties.get("debugXO"))) {
