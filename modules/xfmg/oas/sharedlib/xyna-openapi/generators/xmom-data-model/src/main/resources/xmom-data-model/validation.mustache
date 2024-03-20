@@ -27,7 +27,7 @@ try { {{!
 
 }}{{^isPrimitive}}{{!
     }}{{^isList}}
-    {{propRefType}} {{propVarName}} = {{getPropVarName}};
+    {{propRefPath}}.{{propRefType}} {{propVarName}} = {{getPropVarName}};
     if ({{propVarName}} != null) {
         result.getErrorMessages().addAll({{propVarName}}.validate().getErrorMessages());
     }{{#required}} else {
@@ -36,9 +36,9 @@ try { {{!
     {{/isList}}{{!
 
     }}{{#isList}}
-    List&lt;{{propRefType}}&gt; {{propVarName}} = {{getPropVarName}};
+    List&lt;{{propRefPath}}.{{propRefType}}&gt; {{propVarName}} = {{getPropVarName}};
     if ({{propVarName}} != null) {
-        for ({{propRefType}} obj : {{propVarName}}) {
+        for ({{propRefPath}}.{{propRefType}} obj : {{propVarName}}) {
             result.getErrorMessages().addAll(obj.validate().getErrorMessages());
         }
     } {{#required}}else {
