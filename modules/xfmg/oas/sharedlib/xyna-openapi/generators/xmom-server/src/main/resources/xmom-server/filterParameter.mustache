@@ -17,6 +17,6 @@
 }}
 {{#apiInfo.apis}}{{#operations}}{{#xynaOperation}}
     addPathParameter("{{apiRefPath}}.{{apiRefName}}", Method.{{httpMethod}}, "{{workflowPath}}.{{workflowTypeName}}",
-        "{{basePathWithoutHost}}{{filterRegexPath}}"{{#params}}{{#isPathParam}}, "{{propVarName}}"{{/isPathParam}}{{/params}}
+        "{{basePathWithoutHost}}{{{filterRegexPath}}}"{{#params}}{{#isPathParam}}, "{{propLabel}}"{{/isPathParam}}{{/params}}
     );
 {{/xynaOperation}}{{/operations}}{{/apiInfo.apis}}

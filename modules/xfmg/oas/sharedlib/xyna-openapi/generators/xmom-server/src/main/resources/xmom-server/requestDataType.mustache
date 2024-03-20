@@ -58,7 +58,7 @@ return result.getResult();
 {{parameterRefName}} ret = new {{parameterRefName}}();
 for (xmcp.oas.datatype.URLPathParameter pathPara: httpRequest1.getURLPathParameter()) { {{!
 }}{{#allParams}}{{#isPathParam}}
-    if (pathPara.getAttribute().equals("{{propVarName}}")) {
+    if (pathPara.getAttribute().equals("{{propLabel}}")) {
         ret.{{setPropVarName}}({{dataType}}.valueOf(pathPara.getValue()));
     }{{/isPathParam}}{{/allParams}}{{!
 }}}

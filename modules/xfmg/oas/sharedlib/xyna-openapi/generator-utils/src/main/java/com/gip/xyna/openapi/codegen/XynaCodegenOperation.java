@@ -68,8 +68,6 @@ public class XynaCodegenOperation {
     workflowTypeName = camelize(implVarName.replace(" ", "_"), UPPERCASE_FIRST_CHAR) + "Endpoint";
     workflowPath = gen.apiPackage() + "." + pathPrefix + ".wf";
     
-    filterRegexPath = buildFilterRegexp(operation);
-    
     hasBody = operation.getHasBodyParam();
     for (CodegenParameter para: operation.allParams) {
       params.add(new XynaCodegenParameter(para, gen, parameterRefName));
@@ -78,18 +76,21 @@ public class XynaCodegenOperation {
       responses.add(new XynaCodegenResponse(res, gen, this));
     }
     
+    filterRegexPath = buildFilterRegexp(operation, params);
     httpMethod = operation.httpMethod;
   }
   
-  public String buildFilterRegexp(CodegenOperation operation) {
+  public String buildFilterRegexp(CodegenOperation operation, List<XynaCodegenParameter> params) {
     String regexPath = operation.path;
-    if (operation.pathParams != null) {
-      for(CodegenParameter param : operation.pathParams) {
-        if (param.isNumeric || param.isInteger || param.isLong || param.isNumber || param.isFloat || param.isDouble) {
-          regexPath = regexPath.replaceAll("\\{" + param.baseName + "\\}", "(?<" + param.baseName + ">[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?)");
+    for(XynaCodegenParameter param : params) {
+      if (param.isPathParam && param.isPrimitive) {
+        if (param.javaType == "Integer" || param.javaType == "Long" || param.javaType == "Double" || param.javaType == "Float") {
+          regexPath = regexPath.replaceAll("\\{" + param.propLabel + "\\}", "(?<" + param.propLabel + ">[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?)");
         }
-        else if (param.isString) {
-          regexPath = regexPath.replaceAll("\\{" + param.baseName + "\\}", "(?<" + param.baseName + ">[^/?]*)");
+        else if (param.dataType == "String") {
+          regexPath = regexPath.replaceAll("\\{" + param.propLabel + "\\}", "(?<" + param.propLabel + ">[^/?]*)");
+        } else if (param.dataType == "Boolean") {
+          regexPath = regexPath.replaceAll("\\{" + param.propLabel + "\\}", "(?<" + param.propLabel + ">([fF][aA][lL][sS][eE])|([tT][rR][uU][eE]))");
         }
       }
     }
