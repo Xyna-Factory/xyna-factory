@@ -36,7 +36,7 @@ try { {{!
     {{/isList}}{{!
 
     }}{{#isList}}
-    List&lt;{{propRefPath}}.{{propRefType}}&gt; {{propVarName}} = {{getPropVarName}};
+    List&lt;? extends {{propRefPath}}.{{propRefType}}&gt; {{propVarName}} = {{getPropVarName}};
     if ({{propVarName}} != null) {
         for ({{propRefPath}}.{{propRefType}} obj : {{propVarName}}) {
             result.getErrorMessages().addAll(obj.validate().getErrorMessages());
