@@ -29,7 +29,7 @@ public class XynaCodegenModel {
     label = model.name;
     typeName = model.classname;
     description = buildDescription(model);
-    vars = model.vars.stream().map(prop -> new XynaCodegenProperty(prop, gen, typeName)).collect(Collectors.toList());
+    vars = model.vars.stream().map(prop -> new XynaCodegenProperty(new CodegenPropertyHolder(prop), gen, typeName)).collect(Collectors.toList());
     isEnum = model.isEnum;
     if (model.allowableValues != null) {
       @SuppressWarnings("unchecked")

@@ -22,11 +22,11 @@ BaseTypeName="RequestParameter" BaseTypePath="xmcp.oas.datatype.provider">
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
     <Documentation></Documentation>
   </Meta>{{#allParams}}
-    <Data Label="{{paramLabel}}" VariableName="{{paramVarName}}" {{#isList}}IsList="true"{{/isList}}{{^isPrimitive}}
-     ReferenceName="{{paramRefName}}" ReferencePath="{{paramRefPath}}"{{/isPrimitive}}>
+    <Data Label="{{propLabel}}" VariableName="{{propVarName}}" {{#isList}}IsList="true"{{/isList}}{{^isPrimitive}}
+     ReferenceName="{{propRefType}}" ReferencePath="{{propRefPath}}"{{/isPrimitive}}>
         <Meta>{{#isPrimitive}}
-            <Type>{{datatype}}</Type>{{/isPrimitive}}
-            <Documentation>{{description}}</Documentation>
+            <Type>{{javaType}}</Type>{{/isPrimitive}}
+            <Documentation>{{propDescription}}</Documentation>
         </Meta>
     </Data>{{/allParams}}
   <Service Label="{{parameterLabel}}" TypeName="{{parameterRefName}}">
@@ -37,12 +37,12 @@ BaseTypeName="RequestParameter" BaseTypePath="xmcp.oas.datatype.provider">
         <Data ID="3" Label="OASValidationResult" VariableName="oASValidationResult3" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
 result.setErrorMessages(new ArrayList&lt;String&gt;());
-
-{{!#allParams}}{{!>validation}}{{!/allParams}}
+{{#allParams}}{{>validation}}{{/allParams}}
 return result.getResult();
-</CodeSnippet>
+        </CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation Label="parse Parameter" Name="parseParameter" IsStatic="false">
@@ -54,24 +54,24 @@ return result.getResult();
         ReferenceName="{{parameterRefName}}" ReferencePath="{{parameterRefPath}}"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">{{parameterRefName}} ret = new {{parameterRefName}}();
-
+        <CodeSnippet Type="Java">
+{{parameterRefName}} ret = new {{parameterRefName}}();
 for (xmcp.oas.datatype.URLPathParameter pathPara: httpRequest1.getURLPathParameter()) { {{!
 }}{{#allParams}}{{#isPathParam}}
-    if (pathPara.getAttribute().equals("{{paramLabel}}")) {
-        ret.{{setParamVarName}}({{dataType}}.valueOf(pathPara.getValue()));
+    if (pathPara.getAttribute().equals("{{propVarName}}")) {
+        ret.{{setPropVarName}}({{dataType}}.valueOf(pathPara.getValue()));
     }{{/isPathParam}}{{/allParams}}{{!
 }}}
 for (xact.http.URLPathQuery query: httpRequest1.getURLQueries()) { {{!
 }}{{#allParams}}{{#isQueryParam}}
-    if (query.getAttribute().equals("{{paramLabel}}")) {
-        ret.{{setParamVarName}}({{dataType}}.valueOf(query.getValue()));
+    if (query.getAttribute().equals("{{propLabel}}")) {
+        ret.{{setPropVarName}}({{dataType}}.valueOf(query.getValue()));
     }{{/isQueryParam}}{{/allParams}}{{!
 }}}
 for (xact.http.HeaderField headerField: httpRequest1.getHeader().getHeaderField()) { {{!
 }}{{#allParams}}{{#isHeaderParam}}
-    if (headerField.getName().equals("{{paramLabel}}")) {
-        ret.{{setParamVarName}}({{dataType}}.valueOf(headerField.getValue()));
+    if (headerField.getName().equals("{{propLabel}}")) {
+        ret.{{setPropVarName}}({{dataType}}.valueOf(headerField.getValue()));
     }{{/isHeaderParam}}{{/allParams}}{{!
 }}}{{#hasBody}}
 xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
@@ -80,10 +80,11 @@ jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.pa
 jsonOptions.setUseLabels(true);{{#allParams}}{{#isBodyParam}}{{^isPrimitive}}
 jsonOptions.setObjectDecider(new {{apiRefPath}}.decider.OASDecider());
 xact.templates.Document body = httpRequest1.getBody();
-{{paramRefName}} {{paramVarName}} = ({{paramRefName}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(body, new {{paramRefName}}(), jsonOptions);
-ret.{{setParamVarName}}({{paramVarName}});
+{{propRefType}} {{propVarName}} = ({{propRefType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(body, new {{propRefType}}(), jsonOptions);
+ret.{{setPropVarName}}({{propVarName}});
 {{/isPrimitive}}{{/isBodyParam}}{{/allParams}}{{/hasBody}}
-return ret;</CodeSnippet>
+return ret;
+        </CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

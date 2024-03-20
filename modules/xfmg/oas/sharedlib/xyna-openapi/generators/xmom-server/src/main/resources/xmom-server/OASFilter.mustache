@@ -71,15 +71,15 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
   private static final long serialVersionUID = 1L;
 
   private static Logger logger = CentralFactoryLogging.getLogger(OASFilter.class);
-  
+
   private static final Map<Pair<String, Long>, GeneralXynaObject> fqnInstanceDatatypeMapSucceed = new HashMap<>();
-  
+
   private static final LinkedList<PathParameter> pathParameter = new LinkedList<>();
   static {
     {{>filterParameter}}
   }
 
-  static void addPathParameter(String fqnInstanceDatatype, Method method, String ordertype,  String path, String... attributes) {
+  static void addPathParameter(String fqnInstanceDatatype, Method method, String ordertype, String path, String... attributes) {
     for (PathParameter para: pathParameter) {
       if (para.hasPath(path)) {
         para.registerMethod(method, ordertype);
@@ -90,7 +90,7 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
     pathPara.registerMethod(method, ordertype);
     pathParameter.add(pathPara);
   }
-  
+
   /**
    * Called to create a configuration template to parse configuration and show configuration options.
    * @return OASConfigurationParameter template
@@ -105,7 +105,7 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
    * This method returns a FilterResponse object, which includes the XynaOrder if the filter is responsible for the request.
    * # If this filter is not responsible the returned object must be: FilterResponse.notResponsible()
    * # If this filter is responsible the returned object must be: FilterResponse.responsible(XynaOrder order)
-   * # If this filter is responsible but the request is handled without creating a XynaOrder the 
+   * # If this filter is responsible but the request is handled without creating a XynaOrder the
    *   returned object must be: FilterResponse.responsibleWithoutXynaorder()
    * # If this filter is responsible but the request should be handled by an older version of the filter in another application version, the returned
    *    object must be: FilterResponse.responsibleButTooNew().
@@ -120,7 +120,7 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
     try {
       logger.debug("Reading Header");
       tc.readHeader();
-      
+
       String uri = tc.getUri();
       if (uri.endsWith("/")) {
         uri = uri.substring(0, uri.length()-1);
@@ -136,7 +136,7 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
             implDatatype = searchAndInstanciateFirstSucceed(pathPara.getInstanceDatatype());
             fqnInstanceDatatypeMapSucceed.put(new Pair<>(pathPara.getInstanceDatatype(), getRevision()), implDatatype);
           }
-          
+
           if (ordertype != null && implDatatype != null) {
             tc.read();
             HttpRequest req = readRequest(tc);
@@ -237,7 +237,7 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
     }
   }
 
-  
+
   private Pair<Properties, String> createResponseHeader(Header header) {
     Properties responseHeader = new Properties();
     String mime = null;
@@ -263,8 +263,8 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
     }
     return Pair.of(responseHeader, mime);
   }
-  
-  
+
+
   private Pair<InputStream, Long> createOutputAndLength(String data, String mime) {
 
     String charset = Constants.DEFAULT_ENCODING;
@@ -321,7 +321,7 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
    */
   @Override
   public void onDeployment(EventListener triggerInstance) {
-    
+
     for (PathParameter pathPara: pathParameter) {
       GeneralXynaObject succeed = searchAndInstanciateFirstSucceed(pathPara.getInstanceDatatype());
       fqnInstanceDatatypeMapSucceed.put(new Pair<>(pathPara.getInstanceDatatype(), getRevision()), succeed);
@@ -357,7 +357,7 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
    */
   @Override
   public void onUndeployment(EventListener triggerInstance) {
-    
+
     int instancesWithSameFilterAndRevison = 0;
     try {
       instancesWithSameFilterAndRevison = XynaFactory.getInstance().getActivation().getActivationTrigger().getFilterInstancesForFilter("OASFilter", getRevision()).size();
@@ -375,14 +375,14 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
       }
     }
   }
-  
+
   private boolean isInWorkspace() {
     return XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().
         isWorkspaceRevision(getRevision());
   }
 
   private boolean checkClassLoader(GeneralXynaObject currentSucceed) {
-    
+
     if (currentSucceed == null) {
       return false;
     }
@@ -404,26 +404,26 @@ class PathParameter {
   private String fqnOfInstanceDatatype;
   private Pattern pathRegEx;
   private String[] attributeNames;
-  
+
   public PathParameter(String instanceDatatype, String path, String... attributes) {
     fqnOfInstanceDatatype = instanceDatatype;
     pathRegEx = Pattern.compile("^" + path + "$");
     attributeNames = attributes;
   }
-  
+
   public void registerMethod(Method method, String ordertype) {
     methodOrdertypeMapping.put(method.toString().toUpperCase(), ordertype);
   }
-  
+
   public String getOrdertype(String method) {
     return methodOrdertypeMapping.get(method.toUpperCase());
   }
-  
+
   public boolean matchPath(String path) {
     Matcher matcher = pathRegEx.matcher(path);
     return matcher.find();
   }
-  
+
   public List<URLPathParameter> getPathAttribute(String path) {
     ArrayList<URLPathParameter> ret = new ArrayList<>();
     Matcher matcher = pathRegEx.matcher(path);
@@ -434,15 +434,15 @@ class PathParameter {
     }
     return ret;
   }
-  
+
   public boolean hasPath(String path) {
     return pathRegEx.pattern().equals("^" + path + "$");
   }
-  
+
   public String getInstanceDatatype() {
     return fqnOfInstanceDatatype;
   }
-  
+
   public String toString() {
     return this.pathRegEx.toString();
   }

@@ -32,13 +32,13 @@ public class XynaCodegenResponse {
     respRefPath = operation.responseRefPath;
     respDescription = buildRespDescription(response);
     if (response.returnProperty != null) {
-      body = new XynaCodegenProperty(response.returnProperty, gen, respRefName);
+      body = new XynaCodegenProperty(new CodegenPropertyHolder(response.returnProperty), gen, respRefName);
     } else {
       body = null;
     }
     if (response.headers != null) {
       responseHeaders = response.headers.stream()
-          .map(prop -> new XynaCodegenProperty(prop, gen, respRefName))
+          .map(prop -> new XynaCodegenProperty(new CodegenPropertyHolder(prop), gen, respRefName))
           .collect(Collectors.toList());
     } else {
       responseHeaders = new ArrayList<>();

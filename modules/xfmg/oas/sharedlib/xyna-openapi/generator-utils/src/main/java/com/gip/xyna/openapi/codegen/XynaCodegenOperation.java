@@ -36,9 +36,13 @@ public class XynaCodegenOperation {
   final String workflowTypeName;
   final String workflowPath;
   
+  final String filterRegexPath;
+  
   final boolean hasBody;
   final List<XynaCodegenParameter> params = new ArrayList<>();
   final List<XynaCodegenResponse> responses = new ArrayList<>();
+  
+  final String httpMethod;
 
   
   XynaCodegenOperation(CodegenOperation operation, DefaultCodegen gen, String pathPrefix, int id) {
@@ -64,13 +68,32 @@ public class XynaCodegenOperation {
     workflowTypeName = camelize(implVarName.replace(" ", "_"), UPPERCASE_FIRST_CHAR) + "Endpoint";
     workflowPath = gen.apiPackage() + "." + pathPrefix + ".wf";
     
+    filterRegexPath = buildFilterRegexp(operation);
+    
     hasBody = operation.getHasBodyParam();
     for (CodegenParameter para: operation.allParams) {
-      params.add(new XynaCodegenParameter(para, gen));
+      params.add(new XynaCodegenParameter(para, gen, parameterRefName));
     }
     for (CodegenResponse res: operation.responses) {
       responses.add(new XynaCodegenResponse(res, gen, this));
     }
+    
+    httpMethod = operation.httpMethod;
+  }
+  
+  public String buildFilterRegexp(CodegenOperation operation) {
+    String regexPath = operation.path;
+    if (operation.pathParams != null) {
+      for(CodegenParameter param : operation.pathParams) {
+        if (param.isNumeric || param.isInteger || param.isLong || param.isNumber || param.isFloat || param.isDouble) {
+          regexPath = regexPath.replaceAll("\\{" + param.baseName + "\\}", "(?<" + param.baseName + ">[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?)");
+        }
+        else if (param.isString) {
+          regexPath = regexPath.replaceAll("\\{" + param.baseName + "\\}", "(?<" + param.baseName + ">[^/?]*)");
+        }
+      }
+    }
+    return regexPath;
   }
   
   private String buildResponseDescription(CodegenOperation operation) {
@@ -107,6 +130,9 @@ public class XynaCodegenOperation {
         Objects.equals(workflowLabel, that.workflowLabel) &&
         Objects.equals(workflowTypeName, that.workflowTypeName) &&
         Objects.equals(workflowPath, that.workflowPath) &&
+
+        Objects.equals(filterRegexPath, that.filterRegexPath) &&
+        Objects.equals(httpMethod, that.httpMethod) &&
         
         hasBody == that.hasBody &&
         Objects.equals(params, that.params) &&
@@ -119,6 +145,7 @@ public class XynaCodegenOperation {
                           parameterId, parameterLabel, parameterVarName, parameterRefName, parameterRefPath,
                           responseId, responseLabel, responseVarName, responseRefName, responseRefPath, responseDescription,
                           workflowLabel, workflowTypeName, workflowPath,
+                          filterRegexPath, httpMethod,
                           hasBody, params, responses);
   }
   
@@ -145,6 +172,9 @@ public class XynaCodegenOperation {
       sb.append(",\n    ").append("workflowLabel='").append(workflowLabel).append('\'');
       sb.append(",\n    ").append("workflowTypeName='").append(workflowTypeName).append('\'');
       sb.append(",\n    ").append("workflowPath='").append(workflowPath).append('\'');
+      
+      sb.append(",\n    ").append("filterRegexPath='").append(filterRegexPath).append('\'');
+      sb.append(",\n    ").append("httpMethod='").append(httpMethod).append('\'');
 
       sb.append(",\n    ").append("hasBody='").append(hasBody).append('\'');
       sb.append(",\n    ").append("params=").append(String.valueOf(params).replace("\n", "\n    "));
