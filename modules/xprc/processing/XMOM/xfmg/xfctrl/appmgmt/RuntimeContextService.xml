@@ -68,5 +68,16 @@
         <CodeSnippet Type="Java">return xfmg.xfctrl.appmgmt.RuntimeContextServiceImpl.filterRuntimeContextsForLatestVersion(runtimeContext7);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation Label="get RuntimeContext from Revision" Name="getRuntimeContextFromRevision" IsStatic="true">
+      <Input>
+        <Data ID="9" Label="Revision" VariableName="integerNumber9" ReferenceName="IntegerNumber" ReferencePath="base.math"/>
+      </Input>
+      <Output>
+        <Data ID="10" Label="Runtime Context" VariableName="runtimeContext10" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.appmgmt.RuntimeContextServiceImpl.getRuntimeContextFromRevision(integerNumber9);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>
