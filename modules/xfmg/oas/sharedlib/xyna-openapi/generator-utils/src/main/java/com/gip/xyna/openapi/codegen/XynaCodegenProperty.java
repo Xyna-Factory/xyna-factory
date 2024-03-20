@@ -212,7 +212,7 @@ public class XynaCodegenProperty {
     if (!(o instanceof XynaCodegenProperty)) return false;
 
     XynaCodegenProperty that = (XynaCodegenProperty) o;
-    return Objects.equals(propClassName, that.propClassName) && Objects.equals(propLabel, that.propLabel)
+    return Objects.equals(propClassName, that.propClassName) &&
         Objects.equals(propLabel, that.propLabel) &&
         Objects.equals(propVarName, that.propVarName) &&
         Objects.equals(getPropVarName, that.getPropVarName) &&
@@ -221,7 +221,7 @@ public class XynaCodegenProperty {
         isInherited == that.isInherited &&
         isList == that.isList &&
         isPrimitive == that.isPrimitive &&
-        Objects.equals(datatype, that.datatype) &&
+        Objects.equals(dataType, that.dataType) &&
         Objects.equals(javaType, that.javaType) &&
         Objects.equals(validatorClassConstructor, that.validatorClassConstructor) &&
         Objects.equals(validatorConfig, that.validatorConfig) &&
