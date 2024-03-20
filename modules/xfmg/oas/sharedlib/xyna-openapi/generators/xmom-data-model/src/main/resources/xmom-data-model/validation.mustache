@@ -35,8 +35,9 @@ try { {{!
     }{{/required}}
     {{/isList}}{{!
 
-    }}{{#isList}}{{!
-    }}List&lt;{{propRefType}}&gt; {{propVarName}} = {{getPropVarName}};
+    }}{{#isList}}
+    List&lt;{{propRefType}}&gt; {{propVarName}} = {{getPropVarName}};
+    if ({{propVarName}} != null) {
         for ({{propRefType}} obj : {{propVarName}}) {
             result.getErrorMessages().addAll(obj.validate().getErrorMessages());
         }
