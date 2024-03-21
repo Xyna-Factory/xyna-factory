@@ -15,27 +15,22 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
-{{#operations}}{{#operation}}<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
-TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}SendParameter" TypePath="{{apiPackage}}.{{pathPrefix}}.send" Label="{{httpMethod}} {{path}} Send Parameter"
+{{#operations}}{{#xynaOperation}}<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
+TypeName="{{sendRefName}}" TypePath="{{sendRefPath}}" Label="{{sendLabel}}"
 BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
-  </Meta>{{#allParams}}
-    <Data Label="{{paramName}}" VariableName="{{#lambda.camelcase}}{{paramName}}{{/lambda.camelcase}}" {{#isContainer}}IsList="true"{{/isContainer}}{{^isPrimitiveType}}{{^isEnumRef}}
-     ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isEnumRef}}{{/isPrimitiveType}}>
-        <Meta>{{#isPrimitiveType}}{{^isEnumRef}}
-            <Type>{{#isContainer}}{{items.dataType}}{{/isContainer}}{{^isContainer}}{{^isString}}{{dataType}}{{/isString}}{{#isString}}String{{/isString}}{{/isContainer}}</Type>{{/isEnumRef}}{{/isPrimitiveType}}{{#isEnumRef}}
-            <Type>String</Type>{{/isEnumRef}}
-            <Documentation>{{#description}}{{description}}{{/description}}{{#isEnumRef}}
-Enum of Type: {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}.{{complexType}}
-values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}
-{{/isEnumRef}}{{#format}}
-format: {{format}}{{/format}}
-required: {{required}}
-            </Documentation>
+  </Meta>{{!
+
+}}{{#params}}{{! SAME AS requestDataType from server! }}
+    <Data Label="{{propLabel}}" VariableName="{{propVarName}}" {{#isList}}IsList="true"{{/isList}}{{^isPrimitive}}
+     ReferenceName="{{propRefType}}" ReferencePath="{{propRefPath}}"{{/isPrimitive}}>
+        <Meta>{{#isPrimitive}}
+            <Type>{{javaType}}</Type>{{/isPrimitive}}
+            <Documentation>{{propDescription}}</Documentation>
         </Meta>
-    </Data>{{/allParams}}
-  <Service Label="{{httpMethod}} {{path}} Send Parameter" TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}SendParameter">
+    </Data>{{/params}}
+  <Service Label="{{sendLabel}}" TypeName="{{sendRefName}}">
     <Operation Label="sendRequest" Name="sendRequest" IsStatic="false">
       <Input>
         <Data ID="1" Label="HTTP Connection" VariableName="hTTPConnection1" ReferenceName="HTTPConnection" ReferencePath="xact.http"/>
@@ -52,20 +47,29 @@ required: {{required}}
         <Exception ID="8" Label="Connection Already Closed Exception" VariableName="connectionAlreadyClosedException8" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions"/>
       </Throws>
       <SourceCode>
-        <CodeSnippet Type="Java">{{^hasBodyParam}}return xact.http.HTTPService.send(hTTPConnection1, sendParameter2);{{/hasBodyParam}}{{#hasBodyParam}}xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
+        <CodeSnippet Type="Java">{{!
+}}{{^hasBody}}return xact.http.HTTPService.send(hTTPConnection1, sendParameter2);{{/hasBody}}{{!
+
+}}{{#hasBody}}xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
 jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
-jsonOptions.setUseLabels(true);{{#bodyParams}}
+jsonOptions.setUseLabels(true);{{!
+}}{{#params}}{{#isBodyParam}}
 
-xact.templates.Document body;{{#isArray}}
-List&lt;GeneralXynaObject&gt; list = new ArrayList&lt;&gt;(this.get{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}());
-body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONListWithOptions(list, jsonOptions);{{/isArray}}{{^isArray}}
-body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(this.get{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}(), jsonOptions);{{/isArray}}{{^isModel}}{{#primitiveType}}
+xact.templates.Document body;{{!
+}}{{#isArray}}
+List&lt;GeneralXynaObject&gt; list = new ArrayList&lt;&gt;(this.{{getPropVarName}});
+body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONListWithOptions(list, jsonOptions);{{!
+}}{{/isArray}}{{^isArray}}
+body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(this.{{getPropVarName}}, jsonOptions);{{!
+}}{{/isArray}}{{!
+
+}}{{^isModel}}{{#primitiveType}}
 body = new xact.templates.Document();
-body.setText(get{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}().toString());{{/primitiveType}}{{/isModel}}
+body.setText({{getPropVarName}}.toString());{{/primitiveType}}{{/isModel}}
 
-return xact.http.HTTPService.sendDocument(hTTPConnection1, sendParameter2, body);{{/bodyParams}}{{/hasBodyParam}}
-</CodeSnippet>
+return xact.http.HTTPService.sendDocument(hTTPConnection1, sendParameter2, body);{{/isBodyParam}}{{/params}}{{/hasBody}}
+        </CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation Label="Validate" Name="validate" IsStatic="false">
@@ -78,11 +82,11 @@ return xact.http.HTTPService.sendDocument(hTTPConnection1, sendParameter2, body)
         <CodeSnippet Type="Java">xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
 result.setErrorMessages(new ArrayList&lt;String&gt;());
 
-{{#allParams}}{{>validation}}{{/allParams}}
+{{#params}}{{>validation}}{{/params}}
 return result.getResult();
 </CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
 </DataType>
-{{/operation}}{{/operations}}
+{{/xynaOperation}}{{/operations}}
