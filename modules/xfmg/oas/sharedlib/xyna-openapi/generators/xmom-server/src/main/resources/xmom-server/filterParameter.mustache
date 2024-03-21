@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
 {{#apiInfo.apis}}{{#operations}}{{#xynaOperation}}
-    addPathParameter("{{apiRefPath}}.{{apiRefName}}", Method.{{httpMethod}}, "{{workflowPath}}.{{workflowTypeName}}",
-        "{{basePathWithoutHost}}{{{filterRegexPath}}}"{{#params}}{{#isPathParam}}, "{{propLabel}}"{{/isPathParam}}{{/params}}
+    addPathParameter("{{apiRefPath}}.{{apiRefName}}", Method.{{httpMethod}}, "{{endpointWorkflowPath}}.{{endpointWorkflowTypeName}}",
+        "{{basePathWithoutHost}}{{{filterRegexPath}}}"{{#pathParams}}, "{{propLabel}}"{{/pathParams}}
     );
 {{/xynaOperation}}{{/operations}}{{/apiInfo.apis}}

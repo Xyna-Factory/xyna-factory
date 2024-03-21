@@ -22,10 +22,6 @@
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
-        <ApplicationName>Processing</ApplicationName>
-        <VersionName>1.0.18</VersionName>
-      </RuntimeContextRequirement>
-      <RuntimeContextRequirement>
         <ApplicationName>{{openAPI.info.title}}_Data_Model</ApplicationName>
         <VersionName>{{openAPI.info.version}}</VersionName>
       </RuntimeContextRequirement>
@@ -50,7 +46,7 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>{{#xynaOperation}}
     <XMOMEntry implicitDependency="false">
-      <FqName>{{workflowPath}}.{{workflowTypeName}}</FqName>
+      <FqName>{{endpointWorkflowPath}}.{{endpointWorkflowTypeName}}</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">

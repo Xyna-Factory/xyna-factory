@@ -22,10 +22,6 @@
   <ApplicationInfo>
   <RuntimeContextRequirements>
       <RuntimeContextRequirement>
-        <ApplicationName>Processing</ApplicationName>
-        <VersionName>1.0.18</VersionName>
-      </RuntimeContextRequirement>
-      <RuntimeContextRequirement>
         <ApplicationName>{{openAPI.info.title}}_Data_Model</ApplicationName>
         <VersionName>{{openAPI.info.version}}</VersionName>
       </RuntimeContextRequirement>
@@ -35,27 +31,35 @@
   </Ordertypes>
   <SharedLibs>
   </SharedLibs>
-  <XMOMEntries>{{#apiInfo.apis}}{{#operations}}{{#operation}}
+  <XMOMEntries>
+    {{#apiInfo.apis}}
+    {{#operations}}
+    {{#xynaOperation}}
     <XMOMEntry implicitDependency="false">
-      <FqName>{{apiPackage}}.{{pathPrefix}}.wf.Request{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}</FqName>
+      <FqName>{{requestWorkflowPath}}.{{requestWorkflowTypeName}}</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>{{apiPackage}}.{{pathPrefix}}.send.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}SendParameter</FqName>
+      <FqName>{{sendRefPath}}.{{sendRefName}}</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>{{apiPackage}}.{{pathPrefix}}.response.Parse{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response</FqName>
+      <FqName>{{parseResponseRefPath}}.{{parseResponseRefName}}</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>{{apiPackage}}.{{pathPrefix}}.response.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response</FqName>
+      <FqName>{{responseRefPath}}.{{responseRefName}}</FqName>
       <Type>DATATYPE</Type>
-    </XMOMEntry>{{#responses}}
+    </XMOMEntry>
+    {{#responses}}
     <XMOMEntry implicitDependency="false">
-      <FqName>{{apiPackage}}.{{pathPrefix}}.response.{{#lambda.pascalcase}}{{httpMethod}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}}</FqName>
+      <FqName>{{respRefPath}}.{{respRefName}}</FqName>
       <Type>DATATYPE</Type>
-    </XMOMEntry>{{/responses}}{{/operation}}{{/operations}}{{/apiInfo.apis}}
+    </XMOMEntry>
+    {{/responses}}
+    {{/xynaOperation}}
+    {{/operations}}
+    {{/apiInfo.apis}}
     <XMOMEntry implicitDependency="false">
       <FqName>{{apiPackage}}.decider.OASDecider</FqName>
       <Type>DATATYPE</Type>

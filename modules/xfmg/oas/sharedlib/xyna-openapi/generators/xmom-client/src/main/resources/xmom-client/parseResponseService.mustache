@@ -15,12 +15,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
-{{#operations}}{{#operation}}<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
-TypeName="Parse{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" TypePath="{{apiPackage}}.{{pathPrefix}}.response" Label="Parse {{httpMethod}} {{path}} Response">
+{{#operations}}
+{{#xynaOperation}}
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
+TypeName="{{parseResponseRefName}}" TypePath="{{parseResponseRefPath}}" Label="{{parseResponseLabel}}">
   <Meta>
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
-  <Service Label="Parse {{httpMethod}} {{path}} Response" TypeName="Parse{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response">
+  <Service Label="{{parseResponseLabel}}" TypeName="{{parseResponseRefName}}">
     <Operation Label="parseResponse" Name="parseResponse" IsStatic="true">
       <Input>
         <Data ID="1" Label="HTTP Connection" VariableName="hTTPConnection1" ReferenceName="HTTPConnection" ReferencePath="xact.http"/>
@@ -28,8 +30,8 @@ TypeName="Parse{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}
         <Data ID="3" Label="Header" VariableName="header3" ReferenceName="Header" ReferencePath="xact.http"/>
       </Input>
       <Output>
-        <Data ID="4" Label="{{httpMethod}} {{path}} Response" VariableName="{{#lambda.camelcase}}{{httpMethod}}{{path}}{{/lambda.camelcase}}Response4"
-         ReferenceName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" ReferencePath="{{apiPackage}}.{{pathPrefix}}.response"/>
+        <Data ID="4" Label="{{responseLabel}}" VariableName="{{responseVarName}}4"
+         ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}"/>
       </Output>
       <Throws>
         <Exception ID="6" Label="Connection Already Closed Exception" VariableName="connectionAlreadyClosedException6" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions"/>
@@ -37,9 +39,8 @@ TypeName="Parse{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}
         <Exception ID="5" Label="Unexpected HTTP Response Exception" VariableName="unexpectedHTTPResponseException5" ReferenceName="UnexpectedHTTPResponseException" ReferencePath="xact.http.exceptions"/>
       </Throws>
       <Meta>
-        <Documentation>Specified Responses:{{#responses}}
-- {{code}} {{message}}{{/responses}}
-</Documentation>
+        <Documentation>{{responseDescription}}
+        </Documentation>
       </Meta>
       <SourceCode>
         <CodeSnippet Type="Java">int statusCode = hTTPStatusCode2.getCode();
@@ -47,54 +48,51 @@ xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.x
 jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
 jsonOptions.setUseLabels(true);
-jsonOptions.setObjectDecider(new {{apiPackage}}.decider.OASDecider());{{#responses}}
+jsonOptions.setObjectDecider(new {{apiPackage}}.decider.OASDecider());
+{{#responses}}
+if (statusCode == {{code}}) {
+    {{respRefPath}}.{{respRefName}} responseDataType = new {{respRefPath}}.{{respRefName}}();
 
-{{#-first}}if{{/-first}}{{^-first}}else if{{/-first}} (statusCode == {{code}}) {
-    {{apiPackage}}.{{pathPrefix}}.response.{{httpMethod}}{{#lambda.pascalcase}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}} responseDataType = new {{apiPackage}}.{{pathPrefix}}.response.{{httpMethod}}{{#lambda.pascalcase}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}}();
-
-    xact.templates.Document document;
-    document = xact.http.HTTPService.receiveDocument(hTTPConnection1);{{#isArray}}{{#items.isModel}}
-    if (!document.getText().trim().equals("")) {
-        List&lt;{{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{items.dataType}}&gt; body = new ArrayList&lt; &gt;();
-        List&lt;GeneralXynaObject&gt; parsedList = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new {{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{items.dataType}}(), jsonOptions);
+    xact.templates.Document document = xact.http.HTTPService.receiveDocument(hTTPConnection1);
+    {{#body}}
+    if (!document.getText().trim().isEmpty()) {
+    {{^isPrimitive}}
+    {{#isList}}
+        List&lt;{{propRefPath}}.{{propRefType}}&gt; body = new ArrayList&lt; &gt;();
+        List&lt;GeneralXynaObject&gt; parsedList = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new {{propRefPath}}.{{propRefType}}(), jsonOptions);
         for (GeneralXynaObject obj : parsedList) {
-            body.add(({{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{items.dataType}})obj);
+            body.add(({{propRefPath}}.{{propRefType}})obj);
         }
-        responseDataType.set{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}(body);
+    {{/isList}}
+    {{^isList}}
+        {{propRefPath}}.{{propRefType}} body;
+        body = ({{propRefPath}}.{{propRefType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{propRefPath}}.{{propRefType}}(), jsonOptions);
+    {{/isList}}
+        responseDataType.{{setPropVarName}}(body);
+    {{/isPrimitive}}
+    {{#isPrimitive}}
+        responseDataType.{{setPropVarName}}({{javaType}}.valueOf(document.getText()));
+    {{/isPrimitive}}
+    } else {
+        responseDataType.{{setPropVarName}}(null);
     }
-    else {
-        responseDataType.set{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}(null);
-    }{{/items.isModel}}{{/isArray}}{{^isArray}}{{#isModel}}{{^isString}}
-    if (!document.getText().trim().equals("")) {
-        {{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{dataType}} body;
-        body = ({{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{dataType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{#modelPackage}}{{modelPackage}}.{{/modelPackage}}{{#moduleName}}{{moduleName}}.{{/moduleName}}{{dataType}}(), jsonOptions);
-        responseDataType.set{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}(body);
+    {{/body}}
+    for (xact.http.HeaderField field : header3.getHeaderField()) { {{#responseHeaders}}{{^primitiveType}}
+        if (field.getName().equals("{{propLabel}}")) {
+            responseDataType.{{setPropVarName}}({{javaType}}.valueOf(field.getValue()));
+        }{{/primitiveType}}{{/responseHeaders}}
     }
-    else {
-        responseDataType.set{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}(null);
-    }{{/isString}}{{/isModel}}{{/isArray}}{{#isString}}
-    if (!document.getText().trim().equals("")) {
-      responseDataType.set{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}(document.getText());
-    }
-    else {
-      responseDataType.set{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}(null);
-    }{{/isString}}{{#hasHeaders}}
-
-    for (xact.http.HeaderField field : header3.getHeaderField()) { {{#responseHeaders}}
-        {{#-first}}if{{/-first}}{{^-first}}else if{{/-first}} (field.getName().equals("{{paramName}}")) {
-            responseDataType.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}({{dataType}}.valueOf(field.getValue()));
-        }{{/responseHeaders}}
-    }{{/hasHeaders}}
 
     return responseDataType;
-}{{/responses}}
-
-else {
-    throw new xact.http.exceptions.UnexpectedHTTPResponseException("", hTTPStatusCode2, header3);
 }
-</CodeSnippet>
+{{/responses}}
+
+throw new xact.http.exceptions.UnexpectedHTTPResponseException("", hTTPStatusCode2, header3);
+        </CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
 </DataType>
-{{/operation}}{{/operations}}
+
+{{/xynaOperation}}
+{{/operations}}

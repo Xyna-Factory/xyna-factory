@@ -236,10 +236,10 @@ public class XynaCodegenProperty {
                         isPrimitive, dataType, javaType, validatorClassConstructor, validatorConfig, propRefType, propRefPath);
   }
 
-
-  @Override
-  public String toString() {
-    final StringBuilder sb = new StringBuilder("XynaCodegenProperty{");
+  protected void toString(StringBuilder sb) {
+    if (sb == null) {
+      return;
+    }
     sb.append("\n    ").append("propClassName='").append(propClassName).append('\'');
     sb.append("\n    ").append("propLabel='").append(propLabel).append('\'');
     sb.append(",\n    ").append("propVarName='").append(propVarName).append('\'');
@@ -255,8 +255,14 @@ public class XynaCodegenProperty {
     sb.append(",\n    ").append("validatorConfig='").append(String.valueOf(validatorConfig).replace("\n", "\n    ")).append('\'');
     sb.append(",\n    ").append("propRefType='").append(propRefType).append('\'');
     sb.append(",\n    ").append("propRefPath='").append(propRefPath).append('\'');
-    sb.append("\n}");
-    return sb.toString();
+  }
+  
+  @Override
+  public String toString() {
+      final StringBuilder sb = new StringBuilder(getClass().getSimpleName()).append("{");
+      toString(sb);
+      sb.append("\n}");
+      return sb.toString();
   }
 
 

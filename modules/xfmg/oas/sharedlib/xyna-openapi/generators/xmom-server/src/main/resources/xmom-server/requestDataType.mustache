@@ -57,32 +57,32 @@ return result.getResult();
         <CodeSnippet Type="Java">
 {{parameterRefName}} ret = new {{parameterRefName}}();
 for (xmcp.oas.datatype.URLPathParameter pathPara: httpRequest1.getURLPathParameter()) { {{!
-}}{{#params}}{{#isPathParam}}{{#isPrimitive}}
+}}{{#pathParams}}{{#isPrimitive}}
     if (pathPara.getAttribute().equals("{{propLabel}}")) {
         ret.{{setPropVarName}}({{javaType}}.valueOf(pathPara.getValue()));
-    }{{/isPrimitive}}{{/isPathParam}}{{/params}}{{!
+    }{{/isPrimitive}}{{/pathParams}}{{!
 }}}
 for (xact.http.URLPathQuery query: httpRequest1.getURLQueries()) { {{!
-}}{{#params}}{{#isQueryParam}}{{#isPrimitive}}
+}}{{#queryParams}}{{#isPrimitive}}
     if (query.getAttribute().equals("{{propLabel}}")) {
         ret.{{setPropVarName}}({{javaType}}.valueOf(query.getValue()));
-    }{{/isPrimitive}}{{/isQueryParam}}{{/params}}{{!
+    }{{/isPrimitive}}{{/queryParams}}{{!
 }}}
 for (xact.http.HeaderField headerField: httpRequest1.getHeader().getHeaderField()) { {{!
-}}{{#params}}{{#isHeaderParam}}{{#isPrimitive}}
+}}{{#headerParams}}{{#isPrimitive}}
     if (headerField.getName().equals("{{propLabel}}")) {
         ret.{{setPropVarName}}({{javaType}}.valueOf(headerField.getValue()));
-    }{{/isPrimitive}}{{/isHeaderParam}}{{/params}}{{!
+    }{{/isPrimitive}}{{/headerParams}}{{!
 }}}{{#hasBody}}
 xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
 jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
-jsonOptions.setUseLabels(true);{{#params}}{{#isBodyParam}}{{^isPrimitive}}
+jsonOptions.setUseLabels(true);{{#bodyParams}}{{^isPrimitive}}
 jsonOptions.setObjectDecider(new {{apiRefPath}}.decider.OASDecider());
 xact.templates.Document body = httpRequest1.getBody();
 {{propRefType}} {{propVarName}} = ({{propRefType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(body, new {{propRefType}}(), jsonOptions);
 ret.{{setPropVarName}}({{propVarName}});
-{{/isPrimitive}}{{/isBodyParam}}{{/params}}{{/hasBody}}
+{{/isPrimitive}}{{/bodyParams}}{{/hasBody}}
 return ret;
         </CodeSnippet>
       </SourceCode>

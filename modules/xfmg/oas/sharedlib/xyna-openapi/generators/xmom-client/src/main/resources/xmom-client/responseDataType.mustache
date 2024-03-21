@@ -15,53 +15,49 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
-{{#operations}}{{#operation}}<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="true"
-TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" TypePath="{{apiPackage}}.{{pathPrefix}}.response" Label="{{httpMethod}} {{path}} Response"
+{{#operations}}
+  {{#xynaOperation}}
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="true"
+TypeName="{{responseRefName}}" TypePath="{{responseRefPath}}" Label="{{responseLabel}}"
 BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
-    <Documentation>Specified Responses:{{#responses}}
-- {{code}} {{message}}{{/responses}}
-</Documentation>
+    <Documentation>{{responseDescription}}</Documentation>
   </Meta>
 </DataType>
-{{#responses}}
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false" Label="{{httpMethod}} {{path}} Response {{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}"
- BaseTypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" BaseTypePath="{{apiPackage}}.{{pathPrefix}}.response"
- TypeName="{{#lambda.pascalcase}}{{httpMethod}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}}" TypePath="{{apiPackage}}.{{pathPrefix}}.response">
+
+    {{#responses}}
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
+TypeName="{{respRefName}}" TypePath="{{respRefPath}}" Label="{{respLabel}}"
+BaseTypeName="{{responseRefName}}" BaseTypePath="{{responseRefPath}}">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
-    <Documentation>{{#message}}Response message: {{message}}{{/message}}</Documentation>
-  </Meta>{{#dataType}}
-  <Data Label="{{baseType}}" VariableName="{{#lambda.camelcase}}{{baseType}}{{/lambda.camelcase}}" {{#isArray}}IsList="true"{{/isArray}}{{^isPrimitiveType}}{{^isEnumRef}}{{^isString}}
-     ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isString}}{{/isEnumRef}}{{/isPrimitiveType}}>
-        <Meta>{{#isPrimitiveType}}{{^isEnumRef}}{{^isString}}
-            <Type>{{#isArray}}{{items.dataType}}{{/isArray}}{{^isArray}}{{dataType}}{{/isArray}}</Type>{{/isString}}{{/isEnumRef}}{{/isPrimitiveType}}{{#isEnumRef}}{{^isString}}
-            <Type>String</Type>{{/isString}}{{/isEnumRef}}{{#isString}}
-            <Type>String</Type>{{/isString}}
-            <Documentation>{{#description}}{{description}}{{/description}}{{#isEnumRef}}
-Enum of Type: {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}.{{complexType}}
-values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}
-{{/isEnumRef}}{{#format}}
-format: {{format}}{{/format}}
-required: {{required}}
-            </Documentation>
-        </Meta>
-    </Data>{{/dataType}}{{#responseHeaders}}{{#isPrimitiveType}}
-  <Data Label="{{baseName}}" VariableName="{{paramName}}" {{#isArray}}IsList="true"{{/isArray}}>
-        <Meta>
-          <Type>{{#isArray}}{{items.dataType}}{{/isArray}}{{^isArray}}{{dataType}}{{/isArray}}</Type>
-          <Documentation>{{#description}}{{description}}{{/description}}{{#isEnum}}
-Enum with values: {{_enum}}{{/isEnum}}{{#format}}
-format: {{format}}{{/format}}
-
-{{#required}}required{{/required}}
-{{#isNullable}}nullable{{/isNullable}}
-            </Documentation>
-        </Meta>
-    </Data>{{/isPrimitiveType}}{{/responseHeaders}}
-    <Service Label="{{httpMethod}} {{path}} Response {{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}"
-    TypeName="{{#lambda.pascalcase}}{{httpMethod}}{{path}}Response{{#lambda.statuscode}}{{code}}{{/lambda.statuscode}}{{/lambda.pascalcase}}">
+    <Documentation>{{respDescription}}</Documentation>
+  </Meta>
+      {{#body}}
+    <Data Label="{{propLabel}}" VariableName="{{propVarName}}" {{#isList}}IsList="true"{{/isList}}
+        {{^isPrimitive}}
+     ReferenceName="{{propRefType}}" ReferencePath="{{propRefPath}}"
+        {{/isPrimitive}}>
+      <Meta>
+        {{#isPrimitive}}
+        <Type>{{javaType}}</Type>
+        {{/isPrimitive}}
+        <Documentation>{{propDescription}}</Documentation>
+      </Meta>
+    </Data>
+      {{/body}}
+      {{#responseHeaders}}
+        {{#isPrimitive}}
+    <Data Label="{{propLabel}}" VariableName="{{propVarName}}" {{#isList}}IsList="true"{{/isList}}>
+      <Meta>
+        <Type>{{javaType}}</Type>
+        <Documentation>{{propDescription}}</Documentation>
+      </Meta>
+    </Data>
+        {{/isPrimitive}}
+      {{/responseHeaders}}
+    <Service Label="{{respLabel}}" TypeName="{{respRefName}}">
       <Operation Label="Validate" Name="validate" IsStatic="false">
         <Input>
         </Input>
@@ -69,14 +65,18 @@ format: {{format}}{{/format}}
           <Data ID="1" Label="OAS Validation Result" VariableName="oASValidationResult1" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype"/>
         </Output>
         <SourceCode>
-          <CodeSnippet Type="Java">xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+          <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
 result.setErrorMessages(new ArrayList&lt;String&gt;());
-
-{{#dataType}}{{>validation}}{{/dataType}}
-return result.getResult();</CodeSnippet>
+{{#body}}{{>validation}}{{/body}}
+{{#responseHeaders}}{{>validation}}{{/responseHeaders}}
+return result.getResult();
+          </CodeSnippet>
         </SourceCode>
       </Operation>
     </Service>
 </DataType>
-{{/responses}}
-{{/operation}}{{/operations}}
+    {{/responses}}
+
+  {{/xynaOperation}}
+{{/operations}}

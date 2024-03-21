@@ -18,6 +18,9 @@
 package com.gip.xyna.openapi.codegen;
 
 import org.openapitools.codegen.*;
+import org.openapitools.codegen.model.ModelMap;
+import org.openapitools.codegen.model.OperationMap;
+import org.openapitools.codegen.model.OperationsMap;
 
 import com.gip.xyna.openapi.codegen.templating.mustache.IndexLambda;
 import com.gip.xyna.openapi.codegen.templating.mustache.PathParameterLambda;
@@ -86,6 +89,69 @@ public class XmomClientGenerator extends DefaultCodegen {
         apiPackage = xClientPath.replace('-', '_').replace(' ', '_').toLowerCase();
       }
     }
+  }
+  
+  @Override
+  public OperationsMap postProcessOperationsWithModels(OperationsMap objs, List<ModelMap> allModels) {
+    OperationsMap results = super.postProcessOperationsWithModels(objs, allModels);
+
+    OperationMap ops = results.getOperations();
+    List<CodegenOperation> opList = ops.getOperation();
+    if (!opList.isEmpty()) {
+      String tag = opList.get(0).baseName;
+      ops.put("apiLabel", tag + " Api");
+      ops.put("apiRefName", tag + "Api");
+      ops.put("apiRefPath", apiPackage);
+    }
+    
+    List<XynaCodegenOperation> xoperationList = new ArrayList<XynaCodegenOperation>(opList.size());
+
+    int index = 0;
+    for(CodegenOperation co : opList){
+      XynaCodegenOperation xOperation = new XynaCodegenClientOperation(co, this, (String) ops.get("pathPrefix"), 2*index);
+      xoperationList.add(xOperation);
+      if (Boolean.TRUE.equals(additionalProperties.get("debugXO"))) {
+        System.out.println(xOperation);
+      }
+      index++;
+    }
+
+    ops.put("xynaOperation" , xoperationList);
+    return results;
+  }
+  
+  @Override
+  public Map<String, Object> postProcessSupportingFileData(Map<String, Object> objs) {
+    objs = super.postProcessSupportingFileData(objs);
+    @SuppressWarnings("unchecked")
+    List<ModelMap> models = (ArrayList<ModelMap>) objs.get("models");
+    List<XynaCodegenModel> xModels = new ArrayList<XynaCodegenModel>();
+    for (ModelMap modelMap : models) {
+      CodegenModel model = modelMap.getModel();
+      if (model.getName().equals(model.parent)) {
+        model.parent = null;
+      }
+      CodegenModel parent = models.stream()
+          .map(mo -> mo.getModel())
+          .filter(mo -> mo.getName().equals(model.parent))
+          .findFirst().orElse(null);
+      if (parent != null) {
+        for(CodegenProperty var: model.vars) {
+          for(CodegenProperty parentVar: parent.vars) {
+            if(parentVar.getName().equals(var.getName())) {
+              var.isInherited = true;
+            }
+          }
+        }
+      }
+      XynaCodegenModel xModel = new XynaCodegenModel(model, this);
+      xModels.add(xModel);
+      if (Boolean.TRUE.equals(additionalProperties.get("debugXO"))) {
+        System.out.println(xModel);
+      }
+    }
+    objs.put("xynaModels", xModels);
+    return objs;
   }
 
   /**

@@ -1,7 +1,7 @@
 package com.gip.xyna.openapi.codegen;
 
-import static org.openapitools.codegen.utils.CamelizeOption.UPPERCASE_FIRST_CHAR;
 import static org.openapitools.codegen.utils.CamelizeOption.LOWERCASE_FIRST_LETTER;
+import static org.openapitools.codegen.utils.CamelizeOption.UPPERCASE_FIRST_CHAR;
 import static org.openapitools.codegen.utils.StringUtils.camelize;
 
 import java.util.ArrayList;
@@ -13,173 +13,139 @@ import org.openapitools.codegen.CodegenParameter;
 import org.openapitools.codegen.CodegenResponse;
 import org.openapitools.codegen.DefaultCodegen;
 
-public class XynaCodegenOperation {
+public abstract class XynaCodegenOperation {
   
-  final String implLabel;
-  final String implVarName;
-  final String implDescription;
-
-  final int parameterId;
-  final String parameterLabel;
-  final String parameterVarName;
-  final String parameterRefName;
-  final String parameterRefPath;
-
-  final int responseId;
+  protected final String baseLabel;
+  protected final String baseVarName;
+  protected final String baseRefName;
+  protected final String basePath;
+  
   final String responseLabel;
   final String responseVarName;
   final String responseRefName;
   final String responseRefPath;
   final String responseDescription;
   
-  final String workflowLabel;
-  final String workflowTypeName;
-  final String workflowPath;
-  
-  final String filterRegexPath;
-  
   final boolean hasBody;
-  final List<XynaCodegenParameter> params = new ArrayList<>();
-  final List<XynaCodegenResponse> responses = new ArrayList<>();
+  final List<XynaCodegenParameter> params;
+  final List<XynaCodegenParameter> headerParams;
+  final List<XynaCodegenParameter> pathParams;
+  final List<XynaCodegenParameter> queryParams;
+  final List<XynaCodegenParameter> bodyParams;
+  final List<XynaCodegenResponse> responses;
   
   final String httpMethod;
 
   
-  XynaCodegenOperation(CodegenOperation operation, DefaultCodegen gen, String pathPrefix, int id) {
+  XynaCodegenOperation(CodegenOperation operation, DefaultCodegen gen, String pathPrefix) {
     
-    implLabel = operation.httpMethod + " " + operation.path;
-    implVarName = camelize(gen.sanitizeName((operation.httpMethod + "_" + operation.path)), LOWERCASE_FIRST_LETTER);
-    implDescription = operation.summary + "\n" + operation.notes;
+    baseLabel = operation.httpMethod + " " + operation.path;
+    baseVarName = camelize(gen.sanitizeName((operation.httpMethod + "_" + operation.path)), LOWERCASE_FIRST_LETTER);
+    baseRefName = camelize(baseVarName.replace(" ", "_"), UPPERCASE_FIRST_CHAR);
+    basePath = gen.apiPackage() + "." + pathPrefix;
     
-    parameterId = id;
-    parameterLabel = implLabel + " Parameter";
-    parameterVarName = implVarName + "Parameter";
-    parameterRefName = camelize(implVarName.replace(" ", "_"), UPPERCASE_FIRST_CHAR) + "Parameter";
-    parameterRefPath = gen.apiPackage() + "." + pathPrefix + ".request";
-    
-    responseId = id + 1;
-    responseLabel = implLabel + " Response";
-    responseVarName = implVarName + "Response";
-    responseRefName = camelize(implVarName.replace(" ", "_"), UPPERCASE_FIRST_CHAR) + "Response";
-    responseRefPath = gen.apiPackage() + "." + pathPrefix + ".response";
-    responseDescription = buildResponseDescription(operation);
-    
-    workflowLabel = implLabel + " Endpoint";
-    workflowTypeName = camelize(implVarName.replace(" ", "_"), UPPERCASE_FIRST_CHAR) + "Endpoint";
-    workflowPath = gen.apiPackage() + "." + pathPrefix + ".wf";
+    responseLabel = baseLabel + " Response";
+    responseVarName = baseVarName + "Response";
+    responseRefName = baseRefName + "Response";
+    responseRefPath = basePath + ".response";
     
     hasBody = operation.getHasBodyParam();
-    for (CodegenParameter para: operation.allParams) {
-      params.add(new XynaCodegenParameter(para, gen, parameterRefName));
-    }
-    for (CodegenResponse res: operation.responses) {
-      responses.add(new XynaCodegenResponse(res, gen, this));
-    }
+    params = buildXynaCodegenParameter(operation.allParams, gen);
+    headerParams = buildXynaCodegenParameter(operation.headerParams, gen);
+    pathParams = buildXynaCodegenParameter(operation.pathParams, gen);
+    queryParams = buildXynaCodegenParameter(operation.queryParams, gen);
+    bodyParams = buildXynaCodegenParameter(operation.bodyParams, gen);
+    responses = buildXynaCodegenResponse(operation.responses, gen);
     
-    filterRegexPath = buildFilterRegexp(operation, params);
+    responseDescription = buildResponseDescription(operation);
+
     httpMethod = operation.httpMethod;
   }
   
-  public String buildFilterRegexp(CodegenOperation operation, List<XynaCodegenParameter> params) {
-    String regexPath = operation.path;
-    for(XynaCodegenParameter param : params) {
-      if (param.isPathParam && param.isPrimitive) {
-        if (param.javaType == "Integer" || param.javaType == "Long" || param.javaType == "Double" || param.javaType == "Float") {
-          regexPath = regexPath.replaceAll("\\{" + param.propLabel + "\\}", "(?<" + param.propLabel + ">[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?)");
-        }
-        else if (param.dataType == "String") {
-          regexPath = regexPath.replaceAll("\\{" + param.propLabel + "\\}", "(?<" + param.propLabel + ">[^/?]*)");
-        } else if (param.dataType == "Boolean") {
-          regexPath = regexPath.replaceAll("\\{" + param.propLabel + "\\}", "(?<" + param.propLabel + ">([fF][aA][lL][sS][eE])|([tT][rR][uU][eE]))");
-        }
-      }
+  protected abstract String getPropertyClassName();
+  
+  private List<XynaCodegenParameter> buildXynaCodegenParameter(List<CodegenParameter> params, DefaultCodegen gen) {
+    List<XynaCodegenParameter> xynaParams = new ArrayList<>(params.size());
+    int index = 0;
+    for (CodegenParameter para: params) {
+      xynaParams.add(new XynaCodegenParameter(para, gen, getPropertyClassName(), index));
+      index++;
     }
-    return regexPath;
+    return  xynaParams;
+  }
+  
+  private List<XynaCodegenResponse> buildXynaCodegenResponse(List<CodegenResponse> responses, DefaultCodegen gen) {
+    List<XynaCodegenResponse> xynaResp = new ArrayList<>(responses.size());
+    int index = 0;
+    for (CodegenResponse resp: responses) {
+      xynaResp.add(new XynaCodegenResponse(resp, gen, this, index));
+      index++;
+    }
+    return  xynaResp;
   }
   
   private String buildResponseDescription(CodegenOperation operation) {
     final StringBuilder sb = new StringBuilder("Specified Responses:").append("\n    ");
     for (XynaCodegenResponse res: responses) {
-      sb.append(res.codeWithMessage).append("\n    ");
+      sb.append(res.getCodeWithMessage()).append("\n    ");
     }
     return sb.toString();
   }
-
+  
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof XynaCodegenOperation)) return false;
     XynaCodegenOperation that = (XynaCodegenOperation) o;
     return
-        Objects.equals(implLabel, that.implLabel) &&
-        Objects.equals(implVarName, that.implVarName) &&
-        Objects.equals(implDescription, that.implDescription) &&
-
-        parameterId == that.parameterId &&
-        Objects.equals(parameterLabel, that.parameterLabel) &&
-        Objects.equals(parameterVarName, that.parameterVarName) &&
-        Objects.equals(parameterRefName, that.parameterRefName) &&
-        Objects.equals(parameterRefPath, that.parameterRefPath) &&
-
-        responseId == that.responseId &&
+        Objects.equals(baseLabel, that.baseLabel) &&
+        Objects.equals(baseVarName, that.baseVarName) &&
+        Objects.equals(baseRefName, that.baseRefName) &&
+        Objects.equals(basePath, that.basePath) &&
+        
         Objects.equals(responseLabel, that.responseLabel) &&
         Objects.equals(responseVarName, that.responseVarName) &&
         Objects.equals(responseRefName, that.responseRefName) &&
         Objects.equals(responseRefPath, that.responseRefPath) &&
         Objects.equals(responseDescription, that.responseDescription) &&
-        
-        Objects.equals(workflowLabel, that.workflowLabel) &&
-        Objects.equals(workflowTypeName, that.workflowTypeName) &&
-        Objects.equals(workflowPath, that.workflowPath) &&
 
-        Objects.equals(filterRegexPath, that.filterRegexPath) &&
         Objects.equals(httpMethod, that.httpMethod) &&
         
         hasBody == that.hasBody &&
         Objects.equals(params, that.params) &&
+        Objects.equals(headerParams, that.headerParams) &&
+        Objects.equals(pathParams, that.pathParams) &&
+        Objects.equals(queryParams, that.queryParams) &&
+        Objects.equals(bodyParams, that.bodyParams) &&
         Objects.equals(responses, that.responses);
   }
 
   @Override
   public int hashCode() {
-      return Objects.hash(implLabel, implVarName, implDescription,
-                          parameterId, parameterLabel, parameterVarName, parameterRefName, parameterRefPath,
-                          responseId, responseLabel, responseVarName, responseRefName, responseRefPath, responseDescription,
-                          workflowLabel, workflowTypeName, workflowPath,
-                          filterRegexPath, httpMethod,
-                          hasBody, params, responses);
+      return Objects.hash(baseLabel, baseVarName, baseRefName, basePath,
+                          httpMethod, hasBody, responses,
+                          params, headerParams, pathParams, queryParams, bodyParams);
+  }
+
+  protected void toString(StringBuilder sb) {
+    if (sb == null) {
+      return;
+    }
+    sb.append(",\n    ").append("httpMethod='").append(httpMethod).append('\'');
+
+    sb.append(",\n    ").append("hasBody='").append(hasBody).append('\'');
+    sb.append(",\n    ").append("params=").append(String.valueOf(params).replace("\n", "\n    "));
+    sb.append(",\n    ").append("headerParams=").append(String.valueOf(params).replace("\n", "\n    "));
+    sb.append(",\n    ").append("pathParams=").append(String.valueOf(params).replace("\n", "\n    "));
+    sb.append(",\n    ").append("queryParams=").append(String.valueOf(params).replace("\n", "\n    "));
+    sb.append(",\n    ").append("bodyParams=").append(String.valueOf(params).replace("\n", "\n    "));
+    sb.append(",\n    ").append("responses=").append(String.valueOf(responses).replace("\n", "\n    "));
   }
   
   @Override
   public String toString() {
-      final StringBuilder sb = new StringBuilder("XynaCodegenOperation{");
-      sb.append(",\n    ").append("implLabel='").append(implLabel).append('\'');
-      sb.append(",\n    ").append("implVarName='").append(implVarName).append('\'');
-      sb.append(",\n    ").append("implDescription='").append(String.valueOf(implDescription).replace("\n", "\\n")).append('\'');
-
-      sb.append(",\n    ").append("parameterId='").append(parameterId).append('\'');
-      sb.append(",\n    ").append("parameterLabel='").append(parameterLabel).append('\'');
-      sb.append(",\n    ").append("parameterVarName='").append(parameterVarName).append('\'');
-      sb.append(",\n    ").append("parameterRefName='").append(parameterRefName).append('\'');
-      sb.append(",\n    ").append("parameterRefPath='").append(parameterRefPath).append('\'');
-
-      sb.append(",\n    ").append("responseId='").append(responseId).append('\'');
-      sb.append(",\n    ").append("responseLabel='").append(responseLabel).append('\'');
-      sb.append(",\n    ").append("responseVarName='").append(responseVarName).append('\'');
-      sb.append(",\n    ").append("responseRefName='").append(responseRefName).append('\'');
-      sb.append(",\n    ").append("responseRefPath='").append(responseRefPath).append('\'');
-      sb.append(",\n    ").append("responseDescription='").append(String.valueOf(responseDescription).replace("\n", "\\n")).append('\'');
-      
-      sb.append(",\n    ").append("workflowLabel='").append(workflowLabel).append('\'');
-      sb.append(",\n    ").append("workflowTypeName='").append(workflowTypeName).append('\'');
-      sb.append(",\n    ").append("workflowPath='").append(workflowPath).append('\'');
-      
-      sb.append(",\n    ").append("filterRegexPath='").append(filterRegexPath).append('\'');
-      sb.append(",\n    ").append("httpMethod='").append(httpMethod).append('\'');
-
-      sb.append(",\n    ").append("hasBody='").append(hasBody).append('\'');
-      sb.append(",\n    ").append("params=").append(String.valueOf(params).replace("\n", "\n    "));
-      sb.append(",\n    ").append("responses=").append(String.valueOf(responses).replace("\n", "\n    "));
+      final StringBuilder sb = new StringBuilder(getClass().getSimpleName()).append("{");
+      toString(sb);
       sb.append("\n}");
       return sb.toString();
   }

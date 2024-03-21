@@ -107,7 +107,7 @@ public class XmomServerGenerator extends DefaultCodegen {
 
     int index = 0;
     for(CodegenOperation co : opList){
-      XynaCodegenOperation xOperation = new XynaCodegenOperation(co, this, (String) ops.get("pathPrefix"), 2*index);
+      XynaCodegenOperation xOperation = new XynaCodegenProviderOperation(co, this, (String) ops.get("pathPrefix"), 2*index);
       xoperationList.add(xOperation);
       if (Boolean.TRUE.equals(additionalProperties.get("debugXO"))) {
         System.out.println(xOperation);

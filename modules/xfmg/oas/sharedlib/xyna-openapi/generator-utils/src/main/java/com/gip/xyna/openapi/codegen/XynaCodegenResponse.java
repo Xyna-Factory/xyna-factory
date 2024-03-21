@@ -19,18 +19,23 @@ public class XynaCodegenResponse {
   final String respRefName;
   final String respRefPath;
   final String respDescription;
-  final String codeWithMessage;
+  
+  final int index;
+  final String code;
+  final String message;
   
   final XynaCodegenProperty body;
   final List<XynaCodegenProperty> responseHeaders;
   
-  public XynaCodegenResponse(CodegenResponse response, DefaultCodegen gen, XynaCodegenOperation operation) {
+  public XynaCodegenResponse(CodegenResponse response, DefaultCodegen gen, XynaCodegenOperation operation, int index) {
 
-    codeWithMessage = codeWithMessage(response.code);
-    respLabel = operation.responseLabel + " " + codeWithMessage;
-    respRefName = camelize((operation.responseRefName + "_" + codeWithMessage).replace(" ", "_"), UPPERCASE_FIRST_CHAR);
+    code = response.code;
+    message = message(response);
+    respLabel = operation.responseLabel + " " + getCodeWithMessage();
+    respRefName = camelize((operation.responseRefName + "_" + getCodeWithMessage()).replace(" ", "_"), UPPERCASE_FIRST_CHAR);
     respRefPath = operation.responseRefPath;
     respDescription = buildRespDescription(response);
+    this.index = index;
     if (response.returnProperty != null) {
       body = new XynaCodegenProperty(new CodegenPropertyHolder(response.returnProperty), gen, respRefName);
     } else {
@@ -45,12 +50,21 @@ public class XynaCodegenResponse {
     }
   }
   
-  private String codeWithMessage(String code) {
-    if (StatusCodeLambda.httpStatusCodes.containsKey(code)) {
-      return code + " " + StatusCodeLambda.httpStatusCodes.get(code);
-    } else {
+  public String getCodeWithMessage() {
+    if (message.isBlank()) {
       return code;
     }
+    return code + " " + message;
+  }
+  
+  private String message(CodegenResponse response) {
+    if (response.message != null && !response.message.isBlank()) {
+      return response.message;
+    }
+    if (StatusCodeLambda.httpStatusCodes.containsKey(response.code)) {
+      return StatusCodeLambda.httpStatusCodes.get(code);
+    }
+    return "";
   }
   
   private String buildRespDescription(CodegenResponse response) {
@@ -69,7 +83,9 @@ public class XynaCodegenResponse {
         Objects.equals(respRefName, that.respRefName) &&
         Objects.equals(respRefPath, that.respRefPath) &&
         Objects.equals(respDescription, that.respDescription) &&
-        Objects.equals(codeWithMessage, that.codeWithMessage) &&
+        index == that.index &&
+        Objects.equals(code, that.code) &&
+        Objects.equals(message, that.message) &&
         Objects.equals(body, that.body) &&
         Objects.equals(responseHeaders, that.responseHeaders);
 
@@ -78,7 +94,7 @@ public class XynaCodegenResponse {
   @Override
   public int hashCode() {
       return Objects.hash(respLabel, respRefName, respRefPath, respDescription,
-                          codeWithMessage, body, responseHeaders);
+                          index, code, message, body, responseHeaders);
   }
   
   @Override
@@ -88,7 +104,9 @@ public class XynaCodegenResponse {
       sb.append(",\n    ").append("respRefName='").append(respRefName).append('\'');
       sb.append(",\n    ").append("respRefPath='").append(respRefPath).append('\'');
       sb.append(",\n    ").append("respDescription='").append(String.valueOf(respDescription).replace("\n", "\\n")).append('\'');
-      sb.append(",\n    ").append("codeWithMessage='").append(codeWithMessage).append('\'');
+      sb.append(",\n    ").append("index='").append(index).append('\'');
+      sb.append(",\n    ").append("code='").append(code).append('\'');
+      sb.append(",\n    ").append("message='").append(message).append('\'');
       sb.append(",\n    ").append("body='").append(String.valueOf(body).replace("\n", "\n    ")).append('\'');
       sb.append(",\n    ").append("responseHeaders='").append(String.valueOf(responseHeaders).replace("\n", "\n    ")).append('\'');
       sb.append("\n}");

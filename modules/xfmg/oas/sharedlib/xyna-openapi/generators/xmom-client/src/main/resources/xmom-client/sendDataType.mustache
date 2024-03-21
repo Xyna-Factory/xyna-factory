@@ -15,21 +15,28 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
-{{#operations}}{{#xynaOperation}}<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
+{{#operations}}
+  {{#xynaOperation}}
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
 TypeName="{{sendRefName}}" TypePath="{{sendRefPath}}" Label="{{sendLabel}}"
 BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>{{!
 
-}}{{#params}}{{! SAME AS requestDataType from server! }}
-    <Data Label="{{propLabel}}" VariableName="{{propVarName}}" {{#isList}}IsList="true"{{/isList}}{{^isPrimitive}}
-     ReferenceName="{{propRefType}}" ReferencePath="{{propRefPath}}"{{/isPrimitive}}>
-        <Meta>{{#isPrimitive}}
-            <Type>{{javaType}}</Type>{{/isPrimitive}}
-            <Documentation>{{propDescription}}</Documentation>
-        </Meta>
-    </Data>{{/params}}
+    }}{{#params}}{{! SAME AS requestDataType from server! }}
+    <Data Label="{{propLabel}}" VariableName="{{propVarName}}" {{#isList}}IsList="true"{{/isList}}
+      {{^isPrimitive}}
+     ReferenceName="{{propRefType}}" ReferencePath="{{propRefPath}}"
+      {{/isPrimitive}}>
+      <Meta>
+      {{#isPrimitive}}
+        <Type>{{javaType}}</Type>
+      {{/isPrimitive}}
+        <Documentation>{{propDescription}}</Documentation>
+      </Meta>
+    </Data>
+    {{/params}}
   <Service Label="{{sendLabel}}" TypeName="{{sendRefName}}">
     <Operation Label="sendRequest" Name="sendRequest" IsStatic="false">
       <Input>
@@ -47,28 +54,35 @@ BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
         <Exception ID="8" Label="Connection Already Closed Exception" VariableName="connectionAlreadyClosedException8" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions"/>
       </Throws>
       <SourceCode>
-        <CodeSnippet Type="Java">{{!
-}}{{^hasBody}}return xact.http.HTTPService.send(hTTPConnection1, sendParameter2);{{/hasBody}}{{!
-
-}}{{#hasBody}}xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
+        <CodeSnippet Type="Java">
+{{^hasBody}}
+return xact.http.HTTPService.send(hTTPConnection1, sendParameter2);
+{{/hasBody}}
+{{#hasBody}}
+xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
 jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
-jsonOptions.setUseLabels(true);{{!
-}}{{#params}}{{#isBodyParam}}
+jsonOptions.setUseLabels(true);
+{{#bodyParams}}
 
-xact.templates.Document body;{{!
-}}{{#isArray}}
-List&lt;GeneralXynaObject&gt; list = new ArrayList&lt;&gt;(this.{{getPropVarName}});
-body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONListWithOptions(list, jsonOptions);{{!
-}}{{/isArray}}{{^isArray}}
-body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(this.{{getPropVarName}}, jsonOptions);{{!
-}}{{/isArray}}{{!
-
-}}{{^isModel}}{{#primitiveType}}
+xact.templates.Document body;
+{{^isPrimitive}}
+{{#isList}}
+List&lt;GeneralXynaObject&gt; list = new ArrayList&lt;&gt;({{getPropVarName}});
+body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONListWithOptions(list, jsonOptions);
+{{/isList}}
+{{^isList}}
+body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions({{getPropVarName}}, jsonOptions);
+{{/isList}}
+{{/isPrimitive}}
+{{#isPrimitive}}
 body = new xact.templates.Document();
-body.setText({{getPropVarName}}.toString());{{/primitiveType}}{{/isModel}}
+body.setText(String.valueOf({{getPropVarName}}));
+{{/isPrimitive}}
 
-return xact.http.HTTPService.sendDocument(hTTPConnection1, sendParameter2, body);{{/isBodyParam}}{{/params}}{{/hasBody}}
+return xact.http.HTTPService.sendDocument(hTTPConnection1, sendParameter2, body);
+{{/bodyParams}}
+{{/hasBody}}
         </CodeSnippet>
       </SourceCode>
     </Operation>
@@ -79,14 +93,19 @@ return xact.http.HTTPService.sendDocument(hTTPConnection1, sendParameter2, body)
         <Data ID="9" Label="OASValidationResult" VariableName="oASValidationResult9" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
 result.setErrorMessages(new ArrayList&lt;String&gt;());
 
-{{#params}}{{>validation}}{{/params}}
+{{#params}}
+{{>validation}}
+{{/params}}
 return result.getResult();
-</CodeSnippet>
+        </CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
 </DataType>
-{{/xynaOperation}}{{/operations}}
+
+  {{/xynaOperation}}
+{{/operations}}

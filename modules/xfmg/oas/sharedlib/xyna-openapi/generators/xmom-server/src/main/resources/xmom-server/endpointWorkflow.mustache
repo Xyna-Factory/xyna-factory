@@ -16,8 +16,8 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
 {{#operations}}{{#xynaOperation}}<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8"
-TypeName="{{workflowTypeName}}" TypePath="{{workflowPath}}" Label="{{workflowLabel}}">
-  <Operation ID="0" Label="{{workflowLabel}}" Name="{{workflowTypeName}}" IsStatic="false">
+TypeName="{{endpointWorkflowTypeName}}" TypePath="{{endpointWorkflowPath}}" Label="{{endpointWorkflowLabel}}">
+  <Operation ID="0" Label="{{endpointWorkflowLabel}}" Name="{{endpointWorkflowTypeName}}" IsStatic="false">
     <Input>
       <Data ID="2" Label="/{{pathPrefix}} Api" VariableName="{{apiRefName}}2" ReferenceName="{{apiRefName}}" ReferencePath="{{apiRefPath}}"/>
       <Data ID="3" Label="Http Request" VariableName="httpRequest3" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype"/>

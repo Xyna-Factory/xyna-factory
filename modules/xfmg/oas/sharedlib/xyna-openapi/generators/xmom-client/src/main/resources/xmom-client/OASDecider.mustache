@@ -39,16 +39,23 @@ BaseTypeName="XynaObjectDecider" BaseTypePath="xfmg.xfctrl.datamodel.json.parame
         </Data>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">{{#models}}{{#model}}{{#hasDiscriminatorWithNonEmptyMapping}}if (string16.equals("{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}.{{classname}}")) {
-  String dyntype = "";{{#discriminator}}
-  xfmg.xfctrl.datamodel.json.JSONValue value = jSONObject2.getMember("{{propertyBaseName}}");
+        <CodeSnippet Type="Java">
+{{#xynaModels}}
+{{#hasDiscriminator}}
+if (string16.equals("{{typePath}}.{{typeName}}")) {
+  String dyntype = "";
+  xfmg.xfctrl.datamodel.json.JSONValue value = jSONObject2.getMember("{{discriminatorKey}}");
   if (value != null) {
     dyntype = value.getStringOrNumberValue();
-  }{{#mappedModels}}
-  if (dyntype.equals("{{mappingName}}")) {
-    return new {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}.{{modelName}}();
-  }{{/mappedModels}}
-}{{/discriminator}}{{/hasDiscriminatorWithNonEmptyMapping}}{{/model}}{{/models}}
+  }
+  {{#discriminatorMap}}
+  if (dyntype.equals("{{keyValue}}")) {
+    return new {{fqn}}();
+  }
+  {{/discriminatorMap}}
+}
+{{/hasDiscriminator}}
+{{/xynaModels}}
 try {
   return (com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject) this.getClass().getClassLoader().loadClass(string16).getConstructor().newInstance();
 } catch(Exception e) {

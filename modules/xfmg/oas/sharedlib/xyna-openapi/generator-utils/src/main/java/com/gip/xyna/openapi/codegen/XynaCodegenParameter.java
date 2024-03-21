@@ -7,18 +7,12 @@ import org.openapitools.codegen.DefaultCodegen;
 
 public class XynaCodegenParameter extends XynaCodegenProperty {
 
-  final boolean isPathParam;
-  final boolean isQueryParam;
-  final boolean isHeaderParam;
-  final boolean isBodyParam;
+  final int index;
 
-  XynaCodegenParameter(CodegenParameter parameter, DefaultCodegen gen, String className) {
+  XynaCodegenParameter(CodegenParameter parameter, DefaultCodegen gen, String className, int index) {
     super(new CodegenParameterHolder(parameter), gen, className);
     
-    isPathParam = parameter.isPathParam;
-    isQueryParam = parameter.isQueryParam;
-    isHeaderParam = parameter.isHeaderParam;
-    isBodyParam = parameter.isBodyParam;
+    this.index = index;
   }
   
   @Override
@@ -28,30 +22,22 @@ public class XynaCodegenParameter extends XynaCodegenProperty {
     if (!(o instanceof XynaCodegenParameter)) return false;
     XynaCodegenParameter that = (XynaCodegenParameter) o;
     return
-        isPathParam == that.isPathParam &&
-        isQueryParam == that.isQueryParam &&
-        isHeaderParam == that.isHeaderParam &&
-        isBodyParam == that.isBodyParam;
+        index == that.index;
   }
   
   @Override
   public int hashCode() {
         int hash = super.hashCode();
-        hash = 89 * Objects.hash(isPathParam, isQueryParam, isHeaderParam, isBodyParam); 
+        hash = 89 * Objects.hash(index); 
         return hash;   
 
   }
   
   @Override
-  public String toString() {
-      final StringBuilder sb = new StringBuilder(super.toString().replace("XynaCodegenProperty", "XynaCodegenParameter"));
-      sb.delete(sb.length() - 2, sb.length());
-
-      sb.append(",\n    ").append("isPathParam='").append(isPathParam).append('\'');
-      sb.append(",\n    ").append("isQueryParam='").append(isQueryParam).append('\'');
-      sb.append(",\n    ").append("isHeaderParam='").append(isHeaderParam).append('\'');
-      sb.append(",\n    ").append("isBodyParam='").append(isBodyParam).append('\'');
-      sb.append("\n}");
-      return sb.toString();
+  protected void toString(StringBuilder sb) {
+    if (sb == null) {
+      return;
+    }
+    sb.append(",\n    ").append("index='").append(index).append('\'');
   }
 }

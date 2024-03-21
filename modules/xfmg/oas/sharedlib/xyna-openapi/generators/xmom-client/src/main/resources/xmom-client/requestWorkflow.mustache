@@ -15,17 +15,19 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
-{{#operations}}{{#operation}}<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" 
- TypeName="Request{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}" TypePath="{{apiPackage}}.{{pathPrefix}}.wf" Label="request {{httpMethod}} {{path}}">
-  <Operation ID="0" Label="request {{httpMethod}} {{path}}" Name="Request{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}" IsStatic="false">
+{{#operations}}
+{{#xynaOperation}}
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8"
+ TypeName="{{requestWorkflowTypeName}}" TypePath="{{requestWorkflowPath}}" Label="{{requestWorkflowLabel}}">
+  <Operation ID="0" Label="{{requestWorkflowLabel}}" Name="{{requestWorkflowTypeName}}" IsStatic="false">
     <Input>
       <Data ID="10" Label="Connect Parameter Host Port" VariableName="connectParameterHostPort10" ReferenceName="ConnectParameterHostPort" ReferencePath="xact.http"/>
-      <Data ID="11" Label="{{httpMethod}} {{path}} Send Parameter" VariableName="{{#lambda.camelcase}}{{httpMethod}}{{path}}{{/lambda.camelcase}}SendParameter11" 
-       ReferenceName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}SendParameter" ReferencePath="{{apiPackage}}.{{pathPrefix}}.send"/>
+      <Data ID="11" Label="{{sendLabel}}" VariableName="{{sendVarName}}11"
+       ReferenceName="{{sendRefName}}" ReferencePath="{{sendRefPath}}"/>
     </Input>
     <Output>
-      <Data ID="15" Label="{{httpMethod}} {{path}} Response" VariableName="{{#lambda.camelcase}}{{httpMethod}}{{path}}{{/lambda.camelcase}}Response15"
-       ReferenceName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" ReferencePath="{{apiPackage}}.{{pathPrefix}}.response"/>
+      <Data ID="15" Label="{{responseLabel}}" VariableName="{{responseVarName}}15"
+       ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}"/>
     </Output>
     <Throws>
       <Exception Label="Connect Exception" VariableName="connectException30143" ReferenceName="ConnectException" ReferencePath="xact.http.exceptions"/>
@@ -38,8 +40,8 @@
       <Source RefID="2"/>
       <Target RefID="2"/>
     </ServiceReference>
-    <ServiceReference ID="17" Label="Parse {{httpMethod}} {{path}} Response" 
-     ReferenceName="Parse{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response.Parse{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" ReferencePath="{{apiPackage}}.{{pathPrefix}}.response">
+    <ServiceReference ID="17" Label="{{parseResponseLabel}}"
+     ReferenceName="{{parseResponseRefName}}.{{parseResponseRefName}}" ReferencePath="{{parseResponseRefPath}}">
       <Source RefID="16"/>
       <Target RefID="16"/>
     </ServiceReference>
@@ -55,8 +57,8 @@
       <Source RefID="7"/>
       <Target RefID="7"/>
     </ServiceReference>
-    <ServiceReference ID="22" Label="{{httpMethod}} {{path}} Send Parameter" 
-     ReferenceName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}SendParameter.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}SendParameter" ReferencePath="{{apiPackage}}.{{pathPrefix}}.send">
+    <ServiceReference ID="22" Label="{{sendLabel}}"
+     ReferenceName="{{sendRefName}}.{{sendRefName}}" ReferencePath="{{sendRefPath}}">
       <Source RefID="21"/>
       <Target RefID="21"/>
     </ServiceReference>
@@ -72,7 +74,7 @@
       <Invoke ServiceID="24" Operation="OASTypeValidation">
         <Source RefID="11">
           <Meta>
-            <ExpectedType>{{apiPackage}}.{{pathPrefix}}.send.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}SendParameter</ExpectedType>
+            <ExpectedType>{{sendRefPath}}.{{sendRefName}}</ExpectedType>
           </Meta>
         </Source>
         <Source RefID="25">
@@ -96,8 +98,8 @@
         </Source>
       </Input>
       <Input>
-        <Data ID="14" VariableName="{{#lambda.camelcase}}{{httpMethod}}{{path}}{{/lambda.camelcase}}SendParameter14" Label="{{httpMethod}} {{path}} Send Parameter"
-         ReferenceName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}SendParameter" ReferencePath="{{apiPackage}}.{{pathPrefix}}.send">
+        <Data ID="14" VariableName="{{sendVarName}}14" Label="{{sendLabel}}"
+         ReferenceName="{{sendRefName}}" ReferencePath="{{sendRefPath}}">
           <Source RefID="5"/>
         </Data>
         <Source RefID="11">
@@ -109,14 +111,19 @@
         </Data>
         <Target RefID="9">
         </Target>
-      </Output>{{^lambda.index}}0{{/lambda.index}}{{#responses}}
-      <Mapping>%2%.expectedHTTPStatusCode["{{^lambda.index}}{{/lambda.index}}"].code="{{code}}"</Mapping>
-      <Mapping>%2%.expectedHTTPStatusCode["{{#lambda.index}}{{/lambda.index}}"].reason="{{message}}"</Mapping>{{/responses}}
+      </Output>
+      {{#responses}}
+      <Mapping>%2%.expectedHTTPStatusCode["{{index}}"].code="{{code}}"</Mapping>
+      <Mapping>%2%.expectedHTTPStatusCode["{{index}}"].reason="{{message}}"</Mapping>
+      {{/responses}}
       <Mapping>%2%.hTTPMethod#cast("xact.http.enums.httpmethods.{{httpMethod}}")=%0%</Mapping>
       <Mapping>%2%.header.contentType.mediaType="application/json"</Mapping>
-      <Mapping>%2%.uRLPath.path={{#lambda.pathparam}}{{basePathWithoutHost}}{{path}}{{/lambda.pathparam}}</Mapping>{{^lambda.index}}0{{/lambda.index}}{{#queryParams}}
-      <Mapping>%2%.uRLPath.query["{{^lambda.index}}{{/lambda.index}}"].attribute="{{paramName}}"</Mapping>
-      <Mapping>%2%.uRLPath.query["{{#lambda.index}}{{/lambda.index}}"].value=%1%.{{paramName}}</Mapping>{{/queryParams}}
+      {{!TODO path doesn't exist in XynaOperation. We need a function in XynaOperation replaces lambda.pathparam}}
+      <Mapping>%2%.uRLPath.path={{#lambda.pathparam}}{{basePathWithoutHost}}{{path}}{{/lambda.pathparam}}</Mapping>
+      {{#queryParams}}
+      <Mapping>%2%.uRLPath.query["{{index}}"].attribute="{{propVarName}}"</Mapping>
+      <Mapping>%2%.uRLPath.query["{{index}}"].value=%1%.{{propVarName}}</Mapping>
+      {{/queryParams}}
     </Mappings>
     <Function ID="2" Label="Get HTTP Connection">
       <Source RefID="3">
@@ -218,7 +225,7 @@
       <Invoke ServiceID="27" Operation="OASTypeValidation">
         <Source RefID="18">
           <Meta>
-            <ExpectedType>{{apiPackage}}.{{pathPrefix}}.response.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response</ExpectedType>
+            <ExpectedType>{{responseRefPath}}.{{responseRefName}}</ExpectedType>
           </Meta>
         </Source>
         <Source RefID="28">
@@ -238,8 +245,8 @@
     </Data>
     <Data ID="13" VariableName="const_{{httpMethod}}13" Label="{{httpMethod}}" ReferenceName="{{httpMethod}}" ReferencePath="xact.http.enums.httpmethods">
     </Data>
-    <Data ID="18" VariableName="{{#lambda.camelcase}}{{httpMethod}}{{path}}{{/lambda.camelcase}}Response18" Label="{{httpMethod}} {{path}} Response"
-     ReferenceName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" ReferencePath="{{apiPackage}}.{{pathPrefix}}.response">
+    <Data ID="18" VariableName="{{responseVarName}}18" Label="{{responseLabel}}"
+     ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}">
       <Source RefID="16"/>
     </Data>
     <Data ID="19" VariableName="hTTPStatusCode19" Label="HTTP Status Code" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode">
@@ -306,4 +313,6 @@
     </Catch>
   </Operation>
 </Service>
-{{/operation}}{{/operations}}
+
+{{/xynaOperation}}
+{{/operations}}
