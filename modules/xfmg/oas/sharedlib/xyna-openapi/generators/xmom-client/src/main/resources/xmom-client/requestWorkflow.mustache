@@ -124,6 +124,10 @@
       <Mapping>%2%.uRLPath.query["{{index}}"].attribute="{{propVarName}}"</Mapping>
       <Mapping>%2%.uRLPath.query["{{index}}"].value=%1%.{{propVarName}}</Mapping>
       {{/queryParams}}
+      {{#headerParams}}
+      <Mapping>%2%.header.headerField["{{index}}"].name="{{propLabel}}"</Mapping>
+      <Mapping>%2%.header.headerField["{{index}}"].value=%1%.{{propVarName}}</Mapping>
+      {{/headerParams}}
     </Mappings>
     <Function ID="2" Label="Get HTTP Connection">
       <Source RefID="3">
