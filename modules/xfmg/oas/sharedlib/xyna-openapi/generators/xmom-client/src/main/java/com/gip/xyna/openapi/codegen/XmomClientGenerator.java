@@ -222,7 +222,7 @@ public class XmomClientGenerator extends DefaultCodegen {
 
     typeMapping.clear();
     typeMapping.put("boolean", "Boolean");
-    typeMapping.put("integer", "Integer");
+    typeMapping.put("integer", "Long");
     typeMapping.put("long", "Long");
     typeMapping.put("double", "Double");
     typeMapping.put("float", "Double");
