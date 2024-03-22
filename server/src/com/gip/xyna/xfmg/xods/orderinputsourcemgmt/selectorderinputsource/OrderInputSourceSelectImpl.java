@@ -61,12 +61,19 @@ public class OrderInputSourceSelectImpl extends OrderInputSourceWhereClausesCont
       throw new XNWH_NoSelectGivenException();
     }
     Iterator<OrderInputSourceColumn> iter = selected.iterator();
-    while(iter.hasNext()) {
-      sb.append(iter.next().getColumnName());
-      if(iter.hasNext()) {
+    while (iter.hasNext()) {
+      OrderInputSourceColumn col = iter.next();
+      if (!col.isTransient()) {
+        sb.append(col.getColumnName());
         sb.append(", ");
       }
     }
+
+    int len = sb.length();
+    if (sb.lastIndexOf(", ") == len - 2) {
+      sb.delete(len - 2, len);
+    }
+
     sb.append(" from ").append(OrderInputSourceStorable.TABLENAME);
     if (getWhereClauses().size() > 0) {
       sb.append(" where");

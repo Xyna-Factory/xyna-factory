@@ -22,13 +22,13 @@
   </Meta>
   <Libraries>RuntimeContextServiceImpl.jar</Libraries>
   <Service Label="RuntimeContextService" TypeName="RuntimeContextService">
-    <Operation IsStatic="true" Label="get Own RuntimeContext" Name="getOwnRuntimeContext">
+    <Operation IsStatic="true" Label="get Own RuntimeContext" Name="getOwnRuntimeContext" RequiresXynaOrder="true">
       <Input/>
       <Output>
         <Data ID="1" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return RuntimeContextServiceImpl.getOwnRuntimeContext();</CodeSnippet>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.appmgmt.RuntimeContextServiceImpl.getOwnRuntimeContext(correlatedXynaOrder);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="get RuntimeContext Dependencies Recursively" Name="getRuntimeContextDependenciesRecursively">
@@ -39,7 +39,7 @@
         <Data ID="3" IsList="true" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext3"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return RuntimeContextServiceImpl.getRuntimeContextDependenciesRecursively(runtimeContext2);</CodeSnippet>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.appmgmt.RuntimeContextServiceImpl.getRuntimeContextDependenciesRecursively(runtimeContext2);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="filter RuntimeContexts by contains" Name="filterRuntimeContextsByContains">
@@ -51,10 +51,32 @@
         <Data ID="5" IsList="true" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext5"/>
       </Output>
       <Meta>
-        <Documentation>Gibt alle RuntimeContexte zurück, die im Namen mindestens einen der Filter-Strings enthalten.</Documentation>
+        <Documentation>Gibt alle RuntimeContexte zurück, die im Namen mindestens einen der Filter-Strings enthalten. Sortiere lexikographisch</Documentation>
       </Meta>
       <SourceCode>
-        <CodeSnippet Type="Java">return RuntimeContextServiceImpl.filterRuntimeContextsByContains(text6, runtimeContext4);</CodeSnippet>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.appmgmt.RuntimeContextServiceImpl.filterRuntimeContextsByContains(text6, runtimeContext4);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="filter RuntimeContexts for latest version" Name="filterRuntimeContextsForLatestVersion">
+      <Input>
+        <Data ID="7" IsList="true" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext7"/>
+      </Input>
+      <Output>
+        <Data ID="8" IsList="true" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext8"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.appmgmt.RuntimeContextServiceImpl.filterRuntimeContextsForLatestVersion(runtimeContext7);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="get RuntimeContext from Revision" Name="getRuntimeContextFromRevision" IsStatic="true">
+      <Input>
+        <Data ID="9" Label="Revision" VariableName="integerNumber9" ReferenceName="IntegerNumber" ReferencePath="base.math"/>
+      </Input>
+      <Output>
+        <Data ID="10" Label="Runtime Context" VariableName="runtimeContext10" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.appmgmt.RuntimeContextServiceImpl.getRuntimeContextFromRevision(integerNumber9);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="addcliusertorepository" Description="Configures a cli user for a repository" />
+  <CommandDefinition Groups="Git Repository Management" Name="addcliusertorepository" Description="Configures a cli user for a repository" />
   <Argument Name="repository" Description="Path to the repository" />
   <Argument Name="username" Description="Repository username" />
   <Argument Name="password" Description="Password" />

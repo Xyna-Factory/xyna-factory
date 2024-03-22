@@ -44,6 +44,7 @@ import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 
 import base.Text;
+import base.math.IntegerNumber;
 import xfmg.xfctrl.appmgmt.RuntimeContextServiceServiceOperation;
 import xprc.xpce.RuntimeContext;
 
@@ -238,6 +239,23 @@ public class RuntimeContextServiceServiceOperationImpl implements ExtendedDeploy
     }
 
     return result;
+  }
+
+
+  @Override
+  public RuntimeContext getRuntimeContextFromRevision(IntegerNumber arg0) {
+    RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+    try {
+      com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext rtc = rm.getRuntimeContext(arg0.getValue());
+      if (rtc instanceof Application) {
+        return new xprc.xpce.Application(rtc.getName(), ((Application) rtc).getVersionName());
+      } else {
+        return new xprc.xpce.Workspace(rtc.getName());
+      }
+    } catch (Exception e) {
+      logger.error("Could not determine RTC of revision: " + arg0 == null ? "null" : arg0.getValue(), e);
+      return null;
+    }
   }
 
 }

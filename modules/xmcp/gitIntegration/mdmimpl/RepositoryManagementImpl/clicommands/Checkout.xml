@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="checkout" Description="Checkout branches of a repository" />
+  <CommandDefinition Groups="Git Repository Management" Name="checkout" Description="Checkout branches of a repository" />
   <Argument Name="branchName" Description="Name of the branch or commit hash" />
   <Argument Name="repository" Description="Path to the repository" />
 </XynaCommandLineCommand>
