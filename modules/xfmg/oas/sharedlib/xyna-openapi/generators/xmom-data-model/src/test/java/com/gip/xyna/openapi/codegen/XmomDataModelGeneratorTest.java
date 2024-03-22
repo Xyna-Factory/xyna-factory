@@ -17,6 +17,7 @@
  */
 package com.gip.xyna.openapi.codegen;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
@@ -50,6 +51,11 @@ public class XmomDataModelGeneratorTest {
     PrintStream originalOut = System.out;
     try {
       Path outputFilePath = Paths.get("../../test/output/xmom-data-model/" + specFile.substring(0, specFile.lastIndexOf('.')) + "/model.json");
+      File file = outputFilePath.toFile();
+      if(!file.exists()) {
+        file.getParentFile().mkdirs();
+        file.createNewFile();
+      }
       PrintStream out = new PrintStream(Files.newOutputStream(outputFilePath), true);
       System.setOut(out);
     } catch (IOException e) {
