@@ -208,8 +208,8 @@ public class XynaCodegenProperty {
   
   public String toJson() {
     if(javaType.equals("String")) {
-      // body.setText("\"" + xfmg.xfctrl.datamodel.json.JSONDatamodelServices.encodeValue("+ getPropVarName + ") + "\"");
-      return "\"\\\"\" + xfmg.xfctrl.datamodel.json.JSONDatamodelServices.encodeValue("+ getPropVarName + ") + \"\\\"\"";
+      return "\"\\\"\" + xfmg.xfctrl.datamodel.json.JSONDatamodelServices.encodeValue("+ 
+          "new xact.templates.Document.Builder().text(" + getPropVarName + ").instance()).getText() + \"\\\"\"";
     } else {
       return getPropVarName + ".toString()";
     }
