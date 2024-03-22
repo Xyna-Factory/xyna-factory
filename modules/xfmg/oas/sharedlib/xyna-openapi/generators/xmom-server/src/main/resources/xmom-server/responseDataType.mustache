@@ -15,35 +15,18 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
-{{#operations}}{{#xynaOperation}}<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="true"
+{{#operations}}
+{{#xynaOperation}}
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="true"
 TypeName="{{responseRefName}}" TypePath="{{responseRefPath}}" Label="{{responseLabel}}"
 BaseTypeName="ResponseParameter" BaseTypePath="xmcp.oas.datatype.provider">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
     <Documentation>{{responseDescription}}</Documentation>
   </Meta>
-  <Service Label="{{responseLabel}}" TypeName="{{responseRefName}}">
-    <Operation Label="get Status Code" Name="getStatusCode" IsStatic="false" IsAbstract="true">
-      <Input>
-      </Input>
-      <Output>
-        <Data Label="Http Status" VariableName="Http Status">
-          <Meta>
-            <Type>String</Type>
-          </Meta>
-        </Data>
-      </Output>
-    </Operation>
-    <Operation Label="get Payload" Name="getPayload" IsStatic="false" IsAbstract="true">
-      <Input>
-      </Input>
-      <Output>
-        <Data ID="1" Label="Document" VariableName="document1" ReferenceName="Document" ReferencePath="xact.templates"/>
-      </Output>
-    </Operation>
-  </Service>
 </DataType>
 {{#responses}}
+
 <DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
 TypeName="{{respRefName}}" TypePath="{{respRefPath}}" Label="{{respLabel}}"
 BaseTypeName="{{responseRefName}}" BaseTypePath="{{responseRefPath}}">
@@ -81,9 +64,12 @@ BaseTypeName="{{responseRefName}}" BaseTypePath="{{responseRefPath}}">
         <Data ID="1" Label="Document" VariableName="document1" ReferenceName="Document" ReferencePath="xact.templates"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">{{!
-}}{{^body}}return new xact.templates.Document();{{/body}}{{!
-}}{{#body}}xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
+        <CodeSnippet Type="Java">
+{{^body}}
+return new xact.templates.Document();
+{{/body}}
+{{#body}}
+xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
 jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
 jsonOptions.setUseLabels(true);
@@ -102,7 +88,8 @@ body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSON{{#isList}}List
 body = new xact.templates.Document();
 body.setText({{toJson}});
 {{/isPrimitive}}
-return body;{{/body}}
+return body;
+{{/body}}
         </CodeSnippet>
       </SourceCode>
     </Operation>
@@ -116,12 +103,39 @@ return body;{{/body}}
         <CodeSnippet Type="Java">
 xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
 result.setErrorMessages(new ArrayList&lt;String&gt;());
-{{#body}}{{>validation}}{{/body}}
-{{#responseHeaders}}{{>validation}}{{/responseHeaders}}
+{{#body}}
+{{>validation}}
+{{/body}}
+{{#responseHeaders}}
+
+{{>validation}}
+{{/responseHeaders}}
 return result.getResult();
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get Headers" Name="getHeaders">
+      <Input/>
+      <Output>
+        <Data ID="4" IsList="true" Label="Header Field" ReferenceName="HeaderField" ReferencePath="xact.http" VariableName="headerField4"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+List&lt;HeaderField&gt; headers = new ArrayList&lt;&gt;();
+{{#responseHeaders}}
+if ({{getPropVarName}} != null) {
+  headers.add(new HeaderField.Builder()
+              .name("{{propLabel}}")
+              .value(String.valueOf({{getPropVarName}}))
+              .instance());
+}
+{{/responseHeaders}}
+return headers;
         </CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
 </DataType>
-{{/responses}}{{/xynaOperation}}{{/operations}}
+{{/responses}}
+{{/xynaOperation}}
+{{/operations}}

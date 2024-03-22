@@ -38,6 +38,7 @@ public class XynaCodegenParameter extends XynaCodegenProperty {
     if (sb == null) {
       return;
     }
+    super.toString(sb);
     sb.append(",\n    ").append("index='").append(index).append('\'');
   }
 }
