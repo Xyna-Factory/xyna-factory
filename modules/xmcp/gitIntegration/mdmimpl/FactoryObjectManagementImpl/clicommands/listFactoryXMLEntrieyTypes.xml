@@ -16,5 +16,5 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="listfactoryxmlentrytypes" Description="list all supported entries types for the current factory configuration" />
+  <CommandDefinition Groups="Git Object Management" Name="listfactoryxmlentrytypes" Description="list all supported entries types for the current factory configuration" />
 </XynaCommandLineCommand>

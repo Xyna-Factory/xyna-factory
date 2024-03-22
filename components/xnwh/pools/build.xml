@@ -1,6 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +16,17 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<XynaCommandLineCommand>
-  <CommandDefinition Groups="Git Repository Management" Name="push" Description="commit and push to a repository" />
-  <Argument Name="repository" Description="Path to the repository" />
-  <BoolOption Name="d" LongName="dryrun" Description="only print repository state, don't push" Optional="true" />
-  <Argument Name="message" Description="commit message" />
-</XynaCommandLineCommand>
+<project name="build" default="build" basedir=".">
+
+    <property name="target.dir" value="${basedir}/deploy/" />
+
+    <target name="build">
+        <ant dir="DefaultConnectionPoolTypes" target="build">
+                <property name="target.dir" value="${target.dir}" />
+        </ant>
+        <ant dir="MockConnectionPoolTypes" target="build">
+                <property name="target.dir" value="${target.dir}" />
+        </ant>
+    </target>
+
+</project>

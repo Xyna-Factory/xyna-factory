@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="resolvefactoryxml" Description="resolve part of, or an entire factory difference list." />
+  <CommandDefinition Groups="Git Object Management" Name="resolvefactoryxml" Description="resolve part of, or an entire factory difference list." />
   <Argument Name="id" Description="factory difference list id. See listfactorydiffs" />
   <Argument Name="entry" Description="Entry in the factory difference list to resolve" Optional="true" />
   <Argument Name="resolution" Description="How to resolve the difference: CREATE/MODIFY/DELETE. If not specified, the suggested resolution is chosen." Optional="true" />
