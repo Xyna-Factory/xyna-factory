@@ -19,6 +19,7 @@ public class XynaCodegenClientOperation extends XynaCodegenOperation {
   final String requestWorkflowLabel;
   final String requestWorkflowTypeName;
   final String requestWorkflowPath;
+  final String requestWorkflowURLPath;
   
   XynaCodegenClientOperation(CodegenOperation operation, DefaultCodegen gen, String pathPrefix, int id) {
      super(operation, gen, pathPrefix);
@@ -35,9 +36,22 @@ public class XynaCodegenClientOperation extends XynaCodegenOperation {
     requestWorkflowLabel = "Request " +  baseLabel;
     requestWorkflowTypeName = "Request" + baseRefName;
     requestWorkflowPath = basePath + ".wf";
+    requestWorkflowURLPath = buildPath(operation);
   }
   
-
+  public String buildPath(CodegenOperation operation) {
+    String result = "\"" + operation.path;
+    if (!result.endsWith("}")) {
+      result = result + "\"";
+    }
+    for (XynaCodegenParameter pathPara: pathParams) {
+      result = result.replaceAll("\\{" + pathPara.propLabel + "\\}$", "\", %1%." + pathPara.propVarName);
+      result = result.replaceAll("\\{" + pathPara.propLabel + "\\}", "\", %1%." + pathPara.propVarName + ", \"");
+    }
+    return result;
+  }
+  
+  
   @Override
   protected String getPropertyClassName() {
     return responseRefName;
@@ -61,7 +75,8 @@ public class XynaCodegenClientOperation extends XynaCodegenOperation {
         
         Objects.equals(requestWorkflowLabel, that.requestWorkflowLabel) &&
         Objects.equals(requestWorkflowTypeName, that.requestWorkflowTypeName) &&
-        Objects.equals(requestWorkflowPath, that.requestWorkflowPath);
+        Objects.equals(requestWorkflowPath, that.requestWorkflowPath) &&
+        Objects.equals(requestWorkflowURLPath, that.requestWorkflowURLPath);
   }
 
   @Override
@@ -69,7 +84,7 @@ public class XynaCodegenClientOperation extends XynaCodegenOperation {
     int hash = super.hashCode();
     hash = 89 * Objects.hash(sendLabel, sendRefName, sendRefPath, sendVarName,
                              parseResponseLabel, parseResponseRefName, parseResponseRefPath,
-                            requestWorkflowLabel, requestWorkflowTypeName, requestWorkflowPath);
+                            requestWorkflowLabel, requestWorkflowTypeName, requestWorkflowPath, requestWorkflowURLPath);
     return hash;
   }
 
@@ -90,5 +105,6 @@ public class XynaCodegenClientOperation extends XynaCodegenOperation {
     sb.append(",\n    ").append("requestWorkflowLabel='").append(requestWorkflowLabel).append('\'');
     sb.append(",\n    ").append("requestWorkflowTypeName='").append(requestWorkflowTypeName).append('\'');
     sb.append(",\n    ").append("requestWorkflowPath='").append(requestWorkflowPath).append('\'');
+    sb.append(",\n    ").append("requestWorkflowURLPath='").append(requestWorkflowURLPath).append('\'');
   }
 }

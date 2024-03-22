@@ -118,8 +118,7 @@
       {{/responses}}
       <Mapping>%2%.hTTPMethod#cast("xact.http.enums.httpmethods.{{httpMethod}}")=%0%</Mapping>
       <Mapping>%2%.header.contentType.mediaType="application/json"</Mapping>
-      {{!TODO path doesn't exist in XynaOperation. We need a function in XynaOperation replaces lambda.pathparam}}
-      <Mapping>%2%.uRLPath.path={{#lambda.pathparam}}{{basePathWithoutHost}}{{path}}{{/lambda.pathparam}}</Mapping>
+      <Mapping>%2%.uRLPath.path=concat("{{basePathWithoutHost}}", {{{requestWorkflowURLPath}}})</Mapping>
       {{#queryParams}}
       <Mapping>%2%.uRLPath.query["{{index}}"].attribute="{{propVarName}}"</Mapping>
       <Mapping>%2%.uRLPath.query["{{index}}"].value=%1%.{{propVarName}}</Mapping>
