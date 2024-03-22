@@ -57,11 +57,11 @@ public class XynaCodegenProviderOperation extends XynaCodegenOperation {
     String regexPath = operation.path;
     for(XynaCodegenParameter param : pathParams) {
       if (param.isPrimitive) {
-        if (param.javaType == "Integer" || param.javaType == "Long" || param.javaType == "Double" || param.javaType == "Float") {
+        if (param.javaType.equals("Integer") || param.javaType.equals("Long") || param.javaType.equals("Double") || param.javaType.equals("Float")) {
           regexPath = regexPath.replaceAll("\\{" + param.propLabel + "\\}", "(?<" + param.propLabel + ">[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?)");
-        } else if (param.dataType == "String") {
+        } else if (param.javaType.equals("String")) {
           regexPath = regexPath.replaceAll("\\{" + param.propLabel + "\\}", "(?<" + param.propLabel + ">[^/?]*)");
-        } else if (param.dataType == "Boolean") {
+        } else if (param.javaType.equals("Boolean")) {
           regexPath = regexPath.replaceAll("\\{" + param.propLabel + "\\}", "(?<" + param.propLabel + ">([fF][aA][lL][sS][eE])|([tT][rR][uU][eE]))");
         }
       }

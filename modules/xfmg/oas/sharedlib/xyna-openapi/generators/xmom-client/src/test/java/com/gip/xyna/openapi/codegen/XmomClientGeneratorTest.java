@@ -17,6 +17,15 @@
  */
 package com.gip.xyna.openapi.codegen;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Test;
 import org.openapitools.codegen.ClientOptInput;
 import org.openapitools.codegen.DefaultGenerator;
@@ -40,16 +49,32 @@ public class XmomClientGeneratorTest {
   public void launchCodeGenerator() {
 
     String specFile = "";
+    PrintStream originalOut = System.out;
+    try {
+      Path outputFilePath = Paths.get("../../test/output/xmom-client/" + specFile.substring(0, specFile.lastIndexOf('.')) + "/operations.json");
+      File file = outputFilePath.toFile();
+      if(!file.exists()) {
+        file.getParentFile().mkdirs();
+        file.createNewFile();
+      }
+      PrintStream out = new PrintStream(Files.newOutputStream(outputFilePath), true);
+      System.setOut(out);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
 
     // to understand how the 'openapi-generator-cli' module is using 'CodegenConfigurator', have a look at the 'Generate' class:
     // https://github.com/OpenAPITools/openapi-generator/blob/master/modules/openapi-generator-cli/src/main/java/org/openapitools/codegen/cmd/Generate.java
     final CodegenConfigurator configurator = new CodegenConfigurator()
       .setGeneratorName("xmom-client") // use this codegen library
       .setInputSpec("../../test/resources/" + specFile) // sample OpenAPI file
-      .setOutputDir("../../test/output/xmom-client/" + specFile.substring(0, specFile.lastIndexOf('.'))); // output directory
-
+      .setOutputDir("../../test/output/xmom-client/" + specFile.substring(0, specFile.lastIndexOf('.'))) // output directory
+      .addAdditionalProperty("debugXO", Boolean.TRUE);
     final ClientOptInput clientOptInput = configurator.toClientOptInput();
     DefaultGenerator generator = new DefaultGenerator();
     generator.opts(clientOptInput).generate();
+    
+    
+    System.setOut(originalOut);
   }
 }

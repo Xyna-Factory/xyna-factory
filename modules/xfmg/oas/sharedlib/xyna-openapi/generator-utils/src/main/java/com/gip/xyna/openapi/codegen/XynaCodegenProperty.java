@@ -58,7 +58,7 @@ public class XynaCodegenProperty {
   
   XynaCodegenProperty(CodegenPropertyInfo propertyInfo, DefaultCodegen gen, String className) {
     propClassName = className;
-    propLabel = camelize(propertyInfo.getBaseName(), UPPERCASE_FIRST_CHAR);
+    propLabel = propertyInfo.getBaseName();
     propVarName = camelize(propertyInfo.getName().replace(" ", "_"), LOWERCASE_FIRST_LETTER);
     getPropVarName = "get" + camelize(propVarName.replace(" ", "_"), UPPERCASE_FIRST_CHAR) + "()";
     setPropVarName = "set" + camelize(propVarName.replace(" ", "_"), UPPERCASE_FIRST_CHAR);
