@@ -60,8 +60,15 @@ customHeaders.add(new xact.http.HeaderField("{{baseName}}",String.valueOf(this.g
 {{/isPrimitiveType}}
 {{/isHeaderParam}}
 {{/allParams}}
-for (xact.http.HeaderField field : customHeaders){if(field.getValue().equals("null")){field.setValue(null);}}
-if(sendParameter2.getHeader().getHeaderField()==null){sendParameter2.getHeader().setHeaderField(customHeaders);}else{sendParameter2.getHeader().getHeaderField().addAll((List) customHeaders);}{{/hasHeaderParams}}
+for (xact.http.HeaderField field : customHeaders){
+  if(field.getValue().equals("null")) {field.setValue(null);}
+}
+if(sendParameter2.getHeader().getHeaderField()==null){
+  sendParameter2.getHeader().setHeaderField(customHeaders);
+}
+else {
+sendParameter2.getHeader().getHeaderField().addAll((List) customHeaders);
+}{{/hasHeaderParams}}
 
 {{^hasBodyParam}}return xact.http.HTTPService.send(hTTPConnection1, sendParameter2);{{/hasBodyParam}}{{#hasBodyParam}}xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
 jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
