@@ -88,17 +88,20 @@ jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.js
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
 jsonOptions.setUseLabels(true);
 
-xact.templates.Document body;{{^isPrimitive}}{{!
-}}{{#isList}}
-List&lt;GeneralXynaObject&gt; obj = new ArrayList&lt;&gt;({{getPropVarName}});{{!
-}}{{/isList}}{{^isList}}
-GeneralXynaObject obj = {{getPropVarName}};{{!
-}}{{/isList}}
-body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSON{{#isList}}List{{/isList}}WithOptions(obj, jsonOptions);{{!
-}}{{/isPrimitive}}{{#isPrimitive}}
+xact.templates.Document body;
+{{^isPrimitive}}
+{{#isList}}
+List&lt;GeneralXynaObject&gt; obj = new ArrayList&lt;&gt;({{getPropVarName}});
+{{/isList}}
+{{^isList}}
+GeneralXynaObject obj = {{getPropVarName}};
+{{/isList}}
+body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSON{{#isList}}List{{/isList}}WithOptions(obj, jsonOptions);
+{{/isPrimitive}}
+{{#isPrimitive}}
 body = new xact.templates.Document();
-body.setText({{getPropVarName}}.toString());{{!
-}}{{/isPrimitive}}
+body.setText({{toJson}});
+{{/isPrimitive}}
 return body;{{/body}}
         </CodeSnippet>
       </SourceCode>

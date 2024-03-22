@@ -205,6 +205,15 @@ public class XynaCodegenProperty {
     sb.append("        ");
     return sb.toString();
   }
+  
+  public String toJson() {
+    if(javaType.equals("String")) {
+      // body.setText("\"" + xfmg.xfctrl.datamodel.json.JSONDatamodelServices.encodeValue("+ getPropVarName + ") + "\"");
+      return "\"\\\"\" + xfmg.xfctrl.datamodel.json.JSONDatamodelServices.encodeValue("+ getPropVarName + ") + \"\\\"\"";
+    } else {
+      return getPropVarName + ".toString()";
+    }
+  }
 
   @Override
   public boolean equals(Object o) {
