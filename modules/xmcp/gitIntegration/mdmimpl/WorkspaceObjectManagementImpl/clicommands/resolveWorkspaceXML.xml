@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="resolveworkspacexml" Description="resolve part of, or an entire workspace difference list." />
+  <CommandDefinition Groups="Git Workspace Management" Name="resolveworkspacexml" Description="resolve part of, or an entire workspace difference list." />
   <Argument Name="id" Description="workspace difference list id. See listworkspacediffs" />
   <Argument Name="entry" Description="Entry in the workspace difference list to resolve" Optional="true" />
   <Argument Name="resolution" Description="How to resolve the difference: CREATE/MODIFY/DELETE. If not specified, the suggested resolution is chosen." Optional="true" />
