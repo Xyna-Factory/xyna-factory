@@ -22,10 +22,10 @@ public class XynaCodegenProperty {
   private static Map<String, DatatypeInfos> buildDatatypeMap() {
     Map<String, DatatypeInfos> map = new HashMap<>();
     map.put("Boolean", new DatatypeInfos("Boolean", "BooleanTypeValidator", DatatypeInfos::emptyConstraints));
-    map.put("Integer", new DatatypeInfos("Integer", "NumberTypeValidator&lt;Integer&gt;", DatatypeInfos::numberConstraints));
-    map.put("Long", new DatatypeInfos("Long", "NumberTypeValidator&lt;Long&gt;", DatatypeInfos::numberConstraints));
-    map.put("Float", new DatatypeInfos("Float", "NumberTypeValidator&lt;Float&gt;", DatatypeInfos::numberConstraints));
-    map.put("Double", new DatatypeInfos("Double", "NumberTypeValidator&lt;Double&gt;", DatatypeInfos::numberConstraints));
+    map.put("Integer", new DatatypeInfos("Integer", "NumberTypeValidator<Integer>", DatatypeInfos::numberConstraints));
+    map.put("Long", new DatatypeInfos("Long", "NumberTypeValidator<Long>", DatatypeInfos::numberConstraints));
+    map.put("Float", new DatatypeInfos("Float", "NumberTypeValidator<Float>", DatatypeInfos::numberConstraints));
+    map.put("Double", new DatatypeInfos("Double", "NumberTypeValidator<Double>", DatatypeInfos::numberConstraints));
     map.put("Enum", new DatatypeInfos("String", "EnumTypeValidator", DatatypeInfos::enumConstraints));
     map.put("String", new DatatypeInfos("String", "StringTypeValidator", DatatypeInfos::stringConstraints));
     map.put("DateType", new DatatypeInfos("String", "StringTypeValidator", DatatypeInfos::stringConstraints));
