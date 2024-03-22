@@ -5,15 +5,11 @@
         <IsServiceGroupOnly>false</IsServiceGroupOnly>
         <Documentation>{{description}}</Documentation>
     </Meta>
-{{#vars}}{{^isInherited}}
-    <Data Label="{{propLabel}}" VariableName="{{propVarName}}" {{#isList}}IsList="true"{{/isList}}{{^isPrimitive}}
-     ReferenceName="{{propRefType}}" ReferencePath="{{propRefPath}}"{{/isPrimitive}}>
-        <Meta>{{#isPrimitive}}
-            <Type>{{javaType}}</Type>{{/isPrimitive}}
-            <Documentation>{{propDescription}}</Documentation>
-        </Meta>
-    </Data>
-{{/isInherited}}{{/vars}}
+{{#vars}}
+{{^isInherited}}
+{{>property}}
+{{/isInherited}}
+{{/vars}}
     <Service Label="{{label}}" TypeName="{{typeName}}">
         <Operation Label="Validate" Name="validate" IsStatic="false">
             <Input>

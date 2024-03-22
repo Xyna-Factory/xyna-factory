@@ -21,14 +21,10 @@ BaseTypeName="RequestParameter" BaseTypePath="xmcp.oas.datatype.provider">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
     <Documentation></Documentation>
-  </Meta>{{#params}}
-    <Data Label="{{propLabel}}" VariableName="{{propVarName}}" {{#isList}}IsList="true"{{/isList}}{{^isPrimitive}}
-     ReferenceName="{{propRefType}}" ReferencePath="{{propRefPath}}"{{/isPrimitive}}>
-        <Meta>{{#isPrimitive}}
-            <Type>{{javaType}}</Type>{{/isPrimitive}}
-            <Documentation>{{propDescription}}</Documentation>
-        </Meta>
-    </Data>{{/params}}
+  </Meta>
+  {{#params}}
+{{>property}}
+  {{/params}}
   <Service Label="{{parameterLabel}}" TypeName="{{parameterRefName}}">
     <Operation Label="Validate" Name="validate" IsStatic="false">
       <Input>

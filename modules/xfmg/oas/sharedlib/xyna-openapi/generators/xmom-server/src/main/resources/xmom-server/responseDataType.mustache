@@ -50,20 +50,15 @@ BaseTypeName="{{responseRefName}}" BaseTypePath="{{responseRefPath}}">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
     <Documentation>{{respDescription}}</Documentation>
-  </Meta>{{#body}}
-  <Data Label="{{propLabel}}" VariableName="{{propVarName}}" {{#isList}}IsList="true"{{/isList}}{{^isPrimitive}}
-     ReferenceName="{{propRefType}}" ReferencePath="{{propRefPath}}"{{/isPrimitive}}>
-        <Meta>{{#isPrimitive}}
-            <Type>{{javaType}}</Type>{{/isPrimitive}}
-            <Documentation>{{propDescription}}</Documentation>
-        </Meta>
-    </Data>{{/body}}{{#responseHeaders}}{{#isPrimitive}}
-  <Data Label="{{propLabel}}" VariableName="{{propVarName}}" {{#isList}}IsList="true"{{/isList}}>
-        <Meta>
-          <Type>{{javaType}}</Type>
-          <Documentation>{{propDescription}}</Documentation>
-        </Meta>
-    </Data>{{/isPrimitive}}{{/responseHeaders}}
+  </Meta>
+  {{#body}}
+{{>property}}
+  {{/body}}
+  {{#responseHeaders}}
+  {{#isPrimitive}}
+{{>property}}
+  {{/isPrimitive}}
+  {{/responseHeaders}}
   <Service Label="{{respLabel}}" TypeName="{{respRefName}}">
     <Operation Label="get Status Code" Name="getStatusCode" IsStatic="false">
       <Input>

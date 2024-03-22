@@ -15,16 +15,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
-{{#allowableValues}}try {
-  if ((String)get("{{name}}") != null) {
-    String[] enumValues_{{-index}} = { {{#values}}"{{.}}"{{^-last}}, {{/-last}}{{/values}} };
-    if (!Arrays.asList(enumValues_{{-index}}).contains((String)get("{{name}}"))) {
-      result.getErrorMessages().add(String.format("{{classname}}: Invalid enum value \"%s\"", (String)get("{{name}}")));
-    }
-  }{{#required}} else { 
-        result.getErrorMessages().add("{{classname}}: Enum value is required, but is null.");
-  }{{/required}}
-}
-catch (Exception e) {
-  result.getErrorMessages().add("Error: could not validate {{classname}}.{{name}}");
-}{{/allowableValues}}
+    <Data Label="{{propLabel}}" VariableName="{{propVarName}}"{{#isList}} IsList="true"{{/isList}}{{!
+    }}{{^isPrimitive}}{{!
+    }} ReferenceName="{{propRefType}}" ReferencePath="{{propRefPath}}"{{!
+    }}{{/isPrimitive}}>
+        <Meta>
+        {{#isPrimitive}}
+            <Type>{{javaType}}</Type>
+        {{/isPrimitive}}
+        <Documentation>{{propDescription}}</Documentation>
+        </Meta>
+    </Data>

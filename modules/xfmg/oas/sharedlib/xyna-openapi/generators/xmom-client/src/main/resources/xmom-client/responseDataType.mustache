@@ -35,26 +35,11 @@ BaseTypeName="{{responseRefName}}" BaseTypePath="{{responseRefPath}}">
     <Documentation>{{respDescription}}</Documentation>
   </Meta>
       {{#body}}
-    <Data Label="{{propLabel}}" VariableName="{{propVarName}}" {{#isList}}IsList="true"{{/isList}}
-        {{^isPrimitive}}
-     ReferenceName="{{propRefType}}" ReferencePath="{{propRefPath}}"
-        {{/isPrimitive}}>
-      <Meta>
-        {{#isPrimitive}}
-        <Type>{{javaType}}</Type>
-        {{/isPrimitive}}
-        <Documentation>{{propDescription}}</Documentation>
-      </Meta>
-    </Data>
+{{>property}}
       {{/body}}
       {{#responseHeaders}}
         {{#isPrimitive}}
-    <Data Label="{{propLabel}}" VariableName="{{propVarName}}" {{#isList}}IsList="true"{{/isList}}>
-      <Meta>
-        <Type>{{javaType}}</Type>
-        <Documentation>{{propDescription}}</Documentation>
-      </Meta>
-    </Data>
+{{>property}}
         {{/isPrimitive}}
       {{/responseHeaders}}
     <Service Label="{{respLabel}}" TypeName="{{respRefName}}">

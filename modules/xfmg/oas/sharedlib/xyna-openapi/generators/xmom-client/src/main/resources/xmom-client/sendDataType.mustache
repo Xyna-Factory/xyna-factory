@@ -22,20 +22,9 @@ TypeName="{{sendRefName}}" TypePath="{{sendRefPath}}" Label="{{sendLabel}}"
 BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
-  </Meta>{{!
-
-    }}{{#params}}{{! SAME AS requestDataType from server! }}
-    <Data Label="{{propLabel}}" VariableName="{{propVarName}}" {{#isList}}IsList="true"{{/isList}}
-      {{^isPrimitive}}
-     ReferenceName="{{propRefType}}" ReferencePath="{{propRefPath}}"
-      {{/isPrimitive}}>
-      <Meta>
-      {{#isPrimitive}}
-        <Type>{{javaType}}</Type>
-      {{/isPrimitive}}
-        <Documentation>{{propDescription}}</Documentation>
-      </Meta>
-    </Data>
+  </Meta>
+    {{#params}}
+{{>property}}   
     {{/params}}
   <Service Label="{{sendLabel}}" TypeName="{{sendRefName}}">
     <Operation Label="sendRequest" Name="sendRequest" IsStatic="false">
