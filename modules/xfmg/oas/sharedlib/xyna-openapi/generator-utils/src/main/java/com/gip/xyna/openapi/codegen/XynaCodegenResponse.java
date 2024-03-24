@@ -1,7 +1,7 @@
 package com.gip.xyna.openapi.codegen;
 
-import static org.openapitools.codegen.utils.CamelizeOption.UPPERCASE_FIRST_CHAR;
-import static org.openapitools.codegen.utils.StringUtils.camelize;
+import com.gip.xyna.openapi.codegen.utils.Camelizer.Case;
+import static com.gip.xyna.openapi.codegen.utils.Camelizer.camelize;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class XynaCodegenResponse {
     code = response.code;
     message = message(response);
     respLabel = operation.responseLabel + " " + getCodeWithMessage();
-    respRefName = camelize((operation.responseRefName + "_" + getCodeWithMessage()).replace(" ", "_"), UPPERCASE_FIRST_CHAR);
+    respRefName = camelize(operation.responseRefName + "_" + getCodeWithMessage(), Case.PASCAL);
     respRefPath = operation.responseRefPath;
     respDescription = buildRespDescription(response);
     this.index = index;

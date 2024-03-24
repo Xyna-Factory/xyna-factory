@@ -12,9 +12,8 @@ import java.util.stream.Collectors;
 
 import org.openapitools.codegen.DefaultCodegen;
 
-import static org.openapitools.codegen.utils.CamelizeOption.LOWERCASE_FIRST_LETTER;
-import static org.openapitools.codegen.utils.CamelizeOption.UPPERCASE_FIRST_CHAR;
-import static org.openapitools.codegen.utils.StringUtils.camelize;
+import com.gip.xyna.openapi.codegen.utils.Camelizer.Case;
+import static com.gip.xyna.openapi.codegen.utils.Camelizer.camelize;
 
 public class XynaCodegenProperty {
   
@@ -59,9 +58,9 @@ public class XynaCodegenProperty {
   XynaCodegenProperty(CodegenPropertyInfo propertyInfo, DefaultCodegen gen, String className) {
     propClassName = className;
     propLabel = propertyInfo.getBaseName();
-    propVarName = camelize(propertyInfo.getName().replace(" ", "_"), LOWERCASE_FIRST_LETTER);
-    getPropVarName = "get" + camelize(propVarName.replace(" ", "_"), UPPERCASE_FIRST_CHAR) + "()";
-    setPropVarName = "set" + camelize(propVarName.replace(" ", "_"), UPPERCASE_FIRST_CHAR);
+    propVarName = camelize(propertyInfo.getName(), Case.CAMEL);
+    getPropVarName = "get" + camelize(propVarName, Case.PASCAL) + "()";
+    setPropVarName = "set" + camelize(propVarName, Case.PASCAL);
     isList = isList(propertyInfo);
     isInherited = propertyInfo.getIsInherited();
     isPrimitive = isPrimitive(propertyInfo);
@@ -74,7 +73,7 @@ public class XynaCodegenProperty {
       propRefType = null;
       propRefPath = null;
     } else {
-      propRefType = camelize(propertyInfo.getComplexType().replace(" ", "_"), UPPERCASE_FIRST_CHAR);
+      propRefType = camelize(propertyInfo.getComplexType(), Case.PASCAL);
       propRefPath = gen.modelPackage();
     }
     propDescription = buildDescription(propertyInfo);
@@ -122,8 +121,9 @@ public class XynaCodegenProperty {
    * of primitive types
    */
   private boolean isPrimitive(CodegenPropertyInfo property) {
-    return property.getIsPrimitiveType() || property.getIsEnumRef() || property.getIsString() || property.getIsNumber()
-        || property.getIsInteger() || (isList(property) && isPrimitive(property.getMostInnerItems()));
+    return property.getIsPrimitiveType() || property.getIsEnumRef() || property.getComplexType() == null
+        || property.getIsString() || property.getIsNumber() || property.getIsInteger()
+        || (isList(property) && isPrimitive(property.getMostInnerItems()));
   }
 
 

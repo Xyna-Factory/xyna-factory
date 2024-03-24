@@ -1,8 +1,7 @@
 package com.gip.xyna.openapi.codegen;
 
-import static org.openapitools.codegen.utils.CamelizeOption.LOWERCASE_FIRST_LETTER;
-import static org.openapitools.codegen.utils.CamelizeOption.UPPERCASE_FIRST_CHAR;
-import static org.openapitools.codegen.utils.StringUtils.camelize;
+import com.gip.xyna.openapi.codegen.utils.Camelizer.Case;
+import static com.gip.xyna.openapi.codegen.utils.Camelizer.camelize;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +39,8 @@ public abstract class XynaCodegenOperation {
   XynaCodegenOperation(CodegenOperation operation, DefaultCodegen gen, String pathPrefix) {
     
     baseLabel = operation.httpMethod + " " + operation.path;
-    baseVarName = camelize(gen.sanitizeName((operation.httpMethod + "_" + operation.path)), LOWERCASE_FIRST_LETTER);
-    baseRefName = camelize(baseVarName.replace(" ", "_"), UPPERCASE_FIRST_CHAR);
+    baseVarName = camelize(gen.sanitizeName(operation.httpMethod + "_" + operation.path), Case.CAMEL);
+    baseRefName = camelize(baseVarName, Case.PASCAL);
     basePath = gen.apiPackage() + "." + pathPrefix;
     
     responseLabel = baseLabel + " Response";
@@ -135,10 +134,10 @@ public abstract class XynaCodegenOperation {
 
     sb.append(",\n    ").append("hasBody='").append(hasBody).append('\'');
     sb.append(",\n    ").append("params=").append(String.valueOf(params).replace("\n", "\n    "));
-    sb.append(",\n    ").append("headerParams=").append(String.valueOf(params).replace("\n", "\n    "));
-    sb.append(",\n    ").append("pathParams=").append(String.valueOf(params).replace("\n", "\n    "));
-    sb.append(",\n    ").append("queryParams=").append(String.valueOf(params).replace("\n", "\n    "));
-    sb.append(",\n    ").append("bodyParams=").append(String.valueOf(params).replace("\n", "\n    "));
+    sb.append(",\n    ").append("headerParams=").append(String.valueOf(headerParams).replace("\n", "\n    "));
+    sb.append(",\n    ").append("pathParams=").append(String.valueOf(pathParams).replace("\n", "\n    "));
+    sb.append(",\n    ").append("queryParams=").append(String.valueOf(queryParams).replace("\n", "\n    "));
+    sb.append(",\n    ").append("bodyParams=").append(String.valueOf(bodyParams).replace("\n", "\n    "));
     sb.append(",\n    ").append("responses=").append(String.valueOf(responses).replace("\n", "\n    "));
   }
   
