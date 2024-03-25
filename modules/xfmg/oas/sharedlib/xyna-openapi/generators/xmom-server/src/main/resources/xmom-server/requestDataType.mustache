@@ -15,7 +15,9 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
-{{#operations}}{{#xynaOperation}}<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
+{{#operations}}
+{{#xynaOperation}}
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
 TypeName="{{parameterRefName}}" TypePath="{{parameterRefPath}}" Label="{{parameterLabel}}"
 BaseTypeName="RequestParameter" BaseTypePath="xmcp.oas.datatype.provider">
   <Meta>
@@ -36,7 +38,9 @@ BaseTypeName="RequestParameter" BaseTypePath="xmcp.oas.datatype.provider">
         <CodeSnippet Type="Java">
 xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
 result.setErrorMessages(new ArrayList&lt;String&gt;());
-{{#params}}{{>validation}}{{/params}}
+{{#params}}
+{{>validation}}
+{{/params}}
 return result.getResult();
         </CodeSnippet>
       </SourceCode>
@@ -84,15 +88,19 @@ xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.x
 jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
 jsonOptions.setUseLabels(true);
-xact.templates.Document body;
-{{#bodyParams}}
-{{^isPrimitive}}
+xact.templates.Document body = httpRequest1.getBody();
+  {{#bodyParams}}
+    {{^isPrimitive}}
 jsonOptions.setObjectDecider(new {{apiRefPath}}.decider.OASDecider());
-body = httpRequest1.getBody();
 {{propRefType}} {{propVarName}} = ({{propRefType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(body, new {{propRefType}}(), jsonOptions);
 ret.{{setPropVarName}}({{propVarName}});
-{{/isPrimitive}}
-{{/bodyParams}}
+    {{/isPrimitive}}
+    {{#isPrimitive}}
+      {{^isList}}
+ret.{{setPropVarName}}({{javaType}}.valueOf(body.getText()));
+      {{/isList}}
+    {{/isPrimitive}}
+  {{/bodyParams}}
 {{/hasBody}}
 return ret;
         </CodeSnippet>
@@ -100,4 +108,6 @@ return ret;
     </Operation>
   </Service>
 </DataType>
-{{/xynaOperation}}{{/operations}}
+
+{{/xynaOperation}}
+{{/operations}}
