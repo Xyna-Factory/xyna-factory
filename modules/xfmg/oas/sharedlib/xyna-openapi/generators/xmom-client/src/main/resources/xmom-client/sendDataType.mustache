@@ -103,7 +103,7 @@ return result.getResult();
 List&lt;HeaderField&gt; headerFields = new ArrayList&lt;HeaderField&gt;();
     {{#headerParams}}
 if ({{getPropVarName}} != null) {
-  headerFields.add(new HeaderField("{{propLabel}}", {{getPropVarName}}));
+  headerFields.add(new HeaderField("{{propLabel}}", String.valueOf({{getPropVarName}})));
 }
     {{/headerParams}}
 return headerFields;
@@ -120,7 +120,7 @@ return headerFields;
 List&lt;URLPathQuery&gt; urlPathQuery = new ArrayList&lt;URLPathQuery&gt;();
     {{#queryParams}}
 if ({{getPropVarName}} != null) {
-  urlPathQuery.add(new URLPathQuery("{{propVarName}}", {{getPropVarName}}));
+  urlPathQuery.add(new URLPathQuery("{{propVarName}}", String.valueOf({{getPropVarName}})));
 }
     {{/queryParams}}
 return urlPathQuery;
