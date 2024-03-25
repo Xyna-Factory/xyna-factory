@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Force Deploy deployment item" TypeName="ForceDeployDeploymentItem" TypePath="xmcp.factorymanager.deploymentitems" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" IsStatic="false" Label="Force Deploy deployment item" Name="ForceDeployDeploymentItem">
+    <Input>
+      <Data ID="7" IsList="true" Label="Deployment item id" ReferenceName="DeploymentItemId" ReferencePath="xmcp.factorymanager.deploymentitems" VariableName="deploymentItemId"/>
+      <Data ID="8" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp" VariableName="runtimeContext"/>
+    </Input>
+    <Output>
+      <Data ID="9" IsList="true" Label="Deployment Item" ReferenceName="DeploymentItem" ReferencePath="xmcp.factorymanager.deploymentitems" VariableName="deploymentItem9"/>
+    </Output>
+    <Throws>
+      <Exception Label="Deploy DeploymentItem Exception" ReferenceName="DeployDeploymentItemException" ReferencePath="xmcp.factorymanager.deploymentitems.exceptions" VariableName="deployDeploymentItemException212"/>
+      <Exception Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights213"/>
+    </Throws>
+    <ServiceReference ID="73" Label="DeploymentItems" ReferenceName="DeploymentItems.DeploymentItems" ReferencePath="xmcp.factorymanager">
+      <Source RefID="72"/>
+      <Target RefID="72"/>
+    </ServiceReference>
+    <ServiceReference ID="14" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared">
+      <Source RefID="15"/>
+      <Target RefID="15"/>
+    </ServiceReference>
+    <Function ID="15" Label="Check Rights for Current User">
+      <Source RefID="14"/>
+      <Source RefID="18"/>
+      <Target RefID="14"/>
+      <Invoke Operation="CheckRightsForCurrentUser" ServiceID="14">
+        <Source RefID="18">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="14"/>
+    </Function>
+    <Function ID="72" Label="Force Deploy">
+      <Source RefID="73"/>
+      <Source RefID="7"/>
+      <Source RefID="8"/>
+      <Target RefID="73"/>
+      <Target RefID="75"/>
+      <Invoke Operation="forceDeploy" ServiceID="73">
+        <Source RefID="7"/>
+        <Source RefID="8"/>
+      </Invoke>
+      <Receive ServiceID="73">
+        <Target RefID="75"/>
+      </Receive>
+    </Function>
+    <Data ID="18" IsList="true" Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="const_UserAuthenticationRight">
+      <Target RefID="15"/>
+      <Value>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xmcp.xfm.factoryManager</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="User Authentication Right" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data Label="Right" VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xfmg.xfctrl.deploymentItems:deploy:*:*:*</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Data ID="75" IsList="true" Label="Deployment Item" ReferenceName="DeploymentItem" ReferencePath="xmcp.factorymanager.deploymentitems" VariableName="deploymentItem75">
+      <Source RefID="72"/>
+    </Data>
+    <Assign ID="10">
+      <Source RefID="75"/>
+      <Target RefID="9"/>
+      <Copy>
+        <Source RefID="75"/>
+        <Target RefID="9"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

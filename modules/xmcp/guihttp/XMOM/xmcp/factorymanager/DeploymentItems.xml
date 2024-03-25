@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,6 +96,21 @@
       </Throws>
       <SourceCode>
         <CodeSnippet Type="Java">return xmcp.factorymanager.DeploymentItemsImpl.undeploy(undeployDeploymentItem, runtimeContext);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Force Deploy" Name="forceDeploy">
+      <Input>
+        <Data IsList="true" Label="Deployment item id" ReferenceName="DeploymentItemId" ReferencePath="xmcp.factorymanager.deploymentitems" VariableName="deploymentItemId"/>
+        <Data Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp" VariableName="runtimeContext"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Deployment Item" ReferenceName="DeploymentItem" ReferencePath="xmcp.factorymanager.deploymentitems" VariableName="deploymentItem"/>
+      </Output>
+      <Throws>
+        <Exception Label="Deploy DeploymentItem Exception" ReferenceName="DeployDeploymentItemException" ReferencePath="xmcp.factorymanager.deploymentitems.exceptions" VariableName="deployDeploymentItemException"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.DeploymentItemsImpl.forceDeploy(deploymentItemId, runtimeContext);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
