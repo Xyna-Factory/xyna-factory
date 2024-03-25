@@ -15,7 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
-// validate {{propClassName}}.{{propVarName}} of type {{#isPrimitive}}{{dataType}}{{/isPrimitive}}{{^isPrimitive}}{{propRefType}}{{/isPrimitive}}
+// validate {{propClassName}}.{{propVarName}} of type {{#isPrimitive}}{{javaType}}{{/isPrimitive}}{{^isPrimitive}}{{propRefType}}{{/isPrimitive}}
 try {
 {{#isPrimitive}}
     var validator_{{propVarName}} = {{validatorClassConstructor}};
