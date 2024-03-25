@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="DeploymentItems" TypeName="DeploymentItems" TypePath="xmcp.factorymanager" Version="1.8">
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="DeploymentItems" TypeName="DeploymentItems" TypePath="xmcp.factorymanager" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
@@ -104,7 +104,7 @@
         <Data ID="2" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp" VariableName="runtimeContext2"/>
       </Input>
       <Output>
-        <Data ID="4" IsList="true" Label="DeploymentItem" ReferenceName="DeploymentItem" ReferencePath="xmcp.factorymanager.deploymentitems" VariableName="deploymentItem4"/>
+        <Data ID="4" IsList="true" Label="Deployment Item" ReferenceName="DeploymentItem" ReferencePath="xmcp.factorymanager.deploymentitems" VariableName="deploymentItem4"/>
       </Output>
       <Throws>
         <Exception ID="3" Label="Deploy DeploymentItem Exception" ReferenceName="DeployDeploymentItemException" ReferencePath="xmcp.factorymanager.deploymentitems.exceptions" VariableName="deployDeploymentItemException3"/>
