@@ -53,9 +53,9 @@ public class XynaCodegenProviderOperation extends XynaCodegenOperation {
     return parameterRefName;
   }
   
-  public String buildFilterRegexp(CodegenOperation operation, List<XynaCodegenParameter> pathParams) {
+  public String buildFilterRegexp(CodegenOperation operation, List<XynaCodegenProperty> pathParams) {
     String regexPath = operation.path;
-    for(XynaCodegenParameter param : pathParams) {
+    for(XynaCodegenProperty param : pathParams) {
       if (param.isPrimitive) {
         if (param.javaType.equals("Integer") || param.javaType.equals("Long") || param.javaType.equals("Double") || param.javaType.equals("Float")) {
           regexPath = regexPath.replaceAll("\\{" + param.propLabel + "\\}", "(?<" + param.propLabel + ">[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?)");

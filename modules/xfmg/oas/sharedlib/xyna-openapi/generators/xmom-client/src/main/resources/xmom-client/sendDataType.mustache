@@ -24,10 +24,10 @@ BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
     {{#params}}
-{{>property}}   
+{{>property}}
     {{/params}}
   <Service Label="{{sendLabel}}" TypeName="{{sendRefName}}">
-    <Operation Label="sendRequest" Name="sendRequest" IsStatic="false">
+    <Operation Label="Send Request" Name="sendRequest" IsStatic="false">
       <Input>
         <Data ID="1" Label="HTTP Connection" VariableName="hTTPConnection1" ReferenceName="HTTPConnection" ReferencePath="xact.http"/>
         <Data ID="2" Label="Send Parameter" VariableName="sendParameter2" ReferenceName="SendParameter" ReferencePath="xact.http"/>
@@ -90,6 +90,40 @@ result.setErrorMessages(new ArrayList&lt;String&gt;());
 {{>validation}}
 {{/params}}
 return result.getResult();
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Build Header Fields" Name="buildHeaderFields">
+      <Input/>
+      <Output>
+        <Data ID="22" IsList="true" Label="Header Field" ReferenceName="HeaderField" ReferencePath="xact.http" VariableName="headerField22"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+List&lt;HeaderField&gt; headerFields = new ArrayList&lt;HeaderField&gt;();
+    {{#headerParams}}
+if ({{getPropVarName}} != null) {
+  headerFields.add(new HeaderField({{propLabel}}, {{getPropVarName}}));
+}
+    {{/headerParams}}
+return headerFields
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Build Query" Name="buildQuery">
+      <Input/>
+      <Output>
+        <Data ID="47" IsList="true" Label="URL-path Query" ReferenceName="URLPathQuery" ReferencePath="xact.http" VariableName="uRLPathQuery47"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+List&lt;URLPathQuery&gt; urlPathQuery = new ArrayList&lt;URLPathQuery&gt;();
+    {{#queryParams}}
+if ({{getPropVarName}} != null) {
+  urlPathQuery.add(new URLPathQuery({{propVarName}}, {{getPropVarName}}));
+}
+    {{/queryParams}}
+return urlPathQuery
         </CodeSnippet>
       </SourceCode>
     </Operation>

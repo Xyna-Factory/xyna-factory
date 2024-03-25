@@ -44,7 +44,7 @@ public class XynaCodegenClientOperation extends XynaCodegenOperation {
     if (!result.endsWith("}")) {
       result = result + "\"";
     }
-    for (XynaCodegenParameter pathPara: pathParams) {
+    for (XynaCodegenProperty pathPara: pathParams) {
       result = result.replaceAll("\\{" + pathPara.propLabel + "\\}$", "\", %1%." + pathPara.propVarName);
       result = result.replaceAll("\\{" + pathPara.propLabel + "\\}", "\", %1%." + pathPara.propVarName + ", \"");
     }

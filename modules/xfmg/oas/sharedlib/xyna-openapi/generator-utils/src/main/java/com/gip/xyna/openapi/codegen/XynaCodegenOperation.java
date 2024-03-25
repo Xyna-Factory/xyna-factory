@@ -26,11 +26,11 @@ public abstract class XynaCodegenOperation {
   final String responseDescription;
   
   final boolean hasBody;
-  final List<XynaCodegenParameter> params;
-  final List<XynaCodegenParameter> headerParams;
-  final List<XynaCodegenParameter> pathParams;
-  final List<XynaCodegenParameter> queryParams;
-  final List<XynaCodegenParameter> bodyParams;
+  final List<XynaCodegenProperty> params;
+  final List<XynaCodegenProperty> headerParams;
+  final List<XynaCodegenProperty> pathParams;
+  final List<XynaCodegenProperty> queryParams;
+  final List<XynaCodegenProperty> bodyParams;
   final List<XynaCodegenResponse> responses;
   
   final String httpMethod;
@@ -49,11 +49,11 @@ public abstract class XynaCodegenOperation {
     responseRefPath = basePath + ".response";
     
     hasBody = operation.getHasBodyParam();
-    params = buildXynaCodegenParameter(operation.allParams, gen);
-    headerParams = buildXynaCodegenParameter(operation.headerParams, gen);
-    pathParams = buildXynaCodegenParameter(operation.pathParams, gen);
-    queryParams = buildXynaCodegenParameter(operation.queryParams, gen);
-    bodyParams = buildXynaCodegenParameter(operation.bodyParams, gen);
+    params = buildXynaCodegenProperty(operation.allParams, gen);
+    headerParams = buildXynaCodegenProperty(operation.headerParams, gen);
+    pathParams = buildXynaCodegenProperty(operation.pathParams, gen);
+    queryParams = buildXynaCodegenProperty(operation.queryParams, gen);
+    bodyParams = buildXynaCodegenProperty(operation.bodyParams, gen);
     responses = buildXynaCodegenResponse(operation.responses, gen);
     
     responseDescription = buildResponseDescription(operation);
@@ -63,14 +63,12 @@ public abstract class XynaCodegenOperation {
   
   protected abstract String getPropertyClassName();
   
-  private List<XynaCodegenParameter> buildXynaCodegenParameter(List<CodegenParameter> params, DefaultCodegen gen) {
-    List<XynaCodegenParameter> xynaParams = new ArrayList<>(params.size());
-    int index = 0;
+  private List<XynaCodegenProperty> buildXynaCodegenProperty(List<CodegenParameter> params, DefaultCodegen gen) {
+    List<XynaCodegenProperty> xynaProp = new ArrayList<>(params.size());
     for (CodegenParameter para: params) {
-      xynaParams.add(new XynaCodegenParameter(para, gen, getPropertyClassName(), index));
-      index++;
+      xynaProp.add(new XynaCodegenProperty(new CodegenParameterHolder(para), gen, getPropertyClassName()));
     }
-    return  xynaParams;
+    return  xynaProp;
   }
   
   private List<XynaCodegenResponse> buildXynaCodegenResponse(List<CodegenResponse> responses, DefaultCodegen gen) {
