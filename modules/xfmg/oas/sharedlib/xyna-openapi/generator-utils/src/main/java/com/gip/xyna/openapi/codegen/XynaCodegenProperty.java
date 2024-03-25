@@ -207,12 +207,15 @@ public class XynaCodegenProperty {
   }
   
   public String toJson() {
+    
+    String result = getPropVarName + " == null ? null : ";
     if(javaType.equals("String")) {
-      return "\"\\\"\" + xfmg.xfctrl.datamodel.json.JSONDatamodelServices.encodeValue("+ 
+      result += "\"\\\"\" + xfmg.xfctrl.datamodel.json.JSONDatamodelServices.encodeValue("+ 
           "new xact.templates.Document.Builder().text(" + getPropVarName + ").instance()).getText() + \"\\\"\"";
     } else {
-      return getPropVarName + ".toString()";
+      result += getPropVarName + ".toString()";
     }
+    return result;
   }
 
   @Override

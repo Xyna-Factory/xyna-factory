@@ -71,16 +71,22 @@ if (statusCode == {{code}}) {
         responseDataType.{{setPropVarName}}(body);
     {{/isPrimitive}}
     {{#isPrimitive}}
+    {{^isList}}
         responseDataType.{{setPropVarName}}({{javaType}}.valueOf(document.getText()));
+    {{/isList}}
     {{/isPrimitive}}
     } else {
         responseDataType.{{setPropVarName}}(null);
     }
     {{/body}}
-    for (xact.http.HeaderField field : header3.getHeaderField()) { {{#responseHeaders}}{{^primitiveType}}
+    for (xact.http.HeaderField field : header3.getHeaderField()) {
+    {{#responseHeaders}}
+    {{^primitiveType}}
         if (field.getName().equals("{{propLabel}}")) {
             responseDataType.{{setPropVarName}}({{javaType}}.valueOf(field.getValue()));
-        }{{/primitiveType}}{{/responseHeaders}}
+        }
+    {{/primitiveType}}
+    {{/responseHeaders}}
     }
 
     return responseDataType;
