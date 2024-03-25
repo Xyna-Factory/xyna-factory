@@ -16,5 +16,5 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="listrepositoryconnections" Description="Lists all repository connections" />
+  <CommandDefinition Groups="Git Repository Management" Name="listrepositoryconnections" Description="Lists all repository connections" />
 </XynaCommandLineCommand>

@@ -308,6 +308,7 @@ build_xyna_factory() {
   compose_prerequisites
   compose_modeller
   compose_connectors
+  compose_readmefile
   zip_result
 }
 
@@ -319,6 +320,11 @@ compose_connectors() {
   mvn -f db.connector.pom.xml -DoutputDirectory="${SCRIPT_DIR}/../release/third_parties" dependency:copy-dependencies -DexcludeTransitive=true
   mvn -f db.connector.pom.xml license:download-licenses -DlicensesOutputDirectory=${SCRIPT_DIR}/../release/third_parties -DlicensesOutputFile=${SCRIPT_DIR}/../release/third_parties/licenses.xml -DlicensesConfigFile=${SCRIPT_DIR}/db_connector_license_config.xml -DlicensesOutputFileEol=LF
   cp ${SCRIPT_DIR}/prepare_db_connector_jars.sh ${SCRIPT_DIR}/../release
+}
+
+compose_readmefile() {
+  cd $SCRIPT_DIR
+  cp ../blackedition/readme.txt ${SCRIPT_DIR}/../release
 }
 
 

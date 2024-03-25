@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="listcommits" Description="Lists commits of a given branch in a repository" />
+  <CommandDefinition Groups="Git Repository Management" Name="listcommits" Description="Lists commits of a given branch in a repository" />
   <Argument Name="repository" Description="Path to the repository" />
   <Argument Name="branch" Description="Branch in the repository" />
   <Argument Name="length" Description="Number of commits to print" />
