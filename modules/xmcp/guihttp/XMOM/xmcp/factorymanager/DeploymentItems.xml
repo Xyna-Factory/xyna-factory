@@ -100,17 +100,17 @@
     </Operation>
     <Operation IsStatic="true" Label="Force Deploy" Name="forceDeploy">
       <Input>
-        <Data IsList="true" Label="Deployment item id" ReferenceName="DeploymentItemId" ReferencePath="xmcp.factorymanager.deploymentitems" VariableName="deploymentItemId"/>
-        <Data Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp" VariableName="runtimeContext"/>
+        <Data ID="1" IsList="true" Label="Deployment item id" ReferenceName="DeploymentItemId" ReferencePath="xmcp.factorymanager.deploymentitems" VariableName="deploymentItemId1"/>
+        <Data ID="2" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xmcp" VariableName="runtimeContext2"/>
       </Input>
       <Output>
-        <Data IsList="true" Label="Deployment Item" ReferenceName="DeploymentItem" ReferencePath="xmcp.factorymanager.deploymentitems" VariableName="deploymentItem"/>
+        <Data ID="4" IsList="true" Label="DeploymentItem" ReferenceName="DeploymentItem" ReferencePath="xmcp.factorymanager.deploymentitems" VariableName="deploymentItem4"/>
       </Output>
       <Throws>
-        <Exception Label="Deploy DeploymentItem Exception" ReferenceName="DeployDeploymentItemException" ReferencePath="xmcp.factorymanager.deploymentitems.exceptions" VariableName="deployDeploymentItemException"/>
+        <Exception ID="3" Label="Deploy DeploymentItem Exception" ReferenceName="DeployDeploymentItemException" ReferencePath="xmcp.factorymanager.deploymentitems.exceptions" VariableName="deployDeploymentItemException3"/>
       </Throws>
       <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.factorymanager.DeploymentItemsImpl.forceDeploy(deploymentItemId, runtimeContext);</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.DeploymentItemsImpl.forceDeploy(deploymentItemId1, runtimeContext2);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
