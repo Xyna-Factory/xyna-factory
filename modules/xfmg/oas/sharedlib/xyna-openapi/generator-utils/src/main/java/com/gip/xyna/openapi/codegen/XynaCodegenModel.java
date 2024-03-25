@@ -7,6 +7,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.openapitools.codegen.CodegenDiscriminator.MappedModel;
+
+import com.gip.xyna.openapi.codegen.utils.Sanitizer;
+
 import org.openapitools.codegen.CodegenModel;
 import org.openapitools.codegen.DefaultCodegen;
 
@@ -66,11 +69,11 @@ public class XynaCodegenModel {
   }
   
   private String buildTypeName(CodegenModel model) {
-    return model.classname;
+    return Sanitizer.sanitize(model.classname);
   }
   
   private String buildTypePath(DefaultCodegen gen) {
-    return gen.modelPackage();
+    return Sanitizer.sanitize(gen.modelPackage());
   }
   
   private String buildDescription(CodegenModel model) {

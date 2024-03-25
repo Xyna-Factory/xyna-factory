@@ -1,5 +1,6 @@
 package com.gip.xyna.openapi.codegen;
 
+import com.gip.xyna.openapi.codegen.utils.Sanitizer;
 import com.gip.xyna.openapi.codegen.utils.Camelizer.Case;
 import static com.gip.xyna.openapi.codegen.utils.Camelizer.camelize;
 
@@ -41,7 +42,7 @@ public abstract class XynaCodegenOperation {
     baseLabel = operation.httpMethod + " " + operation.path;
     baseVarName = camelize(gen.sanitizeName(operation.httpMethod + "_" + operation.path), Case.CAMEL);
     baseRefName = camelize(baseVarName, Case.PASCAL);
-    basePath = gen.apiPackage() + "." + pathPrefix;
+    basePath = Sanitizer.sanitize(gen.apiPackage() + "." + pathPrefix);
     
     responseLabel = baseLabel + " Response";
     responseVarName = baseVarName + "Response";
