@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import org.openapitools.codegen.DefaultCodegen;
 
+import com.gip.xyna.openapi.codegen.utils.Sanitizer;
 import com.gip.xyna.openapi.codegen.utils.Camelizer.Case;
 import static com.gip.xyna.openapi.codegen.utils.Camelizer.camelize;
 
@@ -58,7 +59,7 @@ public class XynaCodegenProperty {
   XynaCodegenProperty(CodegenPropertyInfo propertyInfo, DefaultCodegen gen, String className) {
     propClassName = className;
     propLabel = propertyInfo.getBaseName();
-    propVarName = camelize(propertyInfo.getName(), Case.CAMEL);
+    propVarName = Sanitizer.sanitize(camelize(propertyInfo.getName(), Case.CAMEL));
     getPropVarName = "get" + camelize(propVarName, Case.PASCAL) + "()";
     setPropVarName = "set" + camelize(propVarName, Case.PASCAL);
     isList = isList(propertyInfo);
@@ -74,7 +75,7 @@ public class XynaCodegenProperty {
       propRefPath = null;
     } else {
       propRefType = camelize(propertyInfo.getComplexType(), Case.PASCAL);
-      propRefPath = gen.modelPackage();
+      propRefPath = Sanitizer.sanitize(gen.modelPackage());
     }
     propDescription = buildDescription(propertyInfo);
   }

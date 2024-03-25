@@ -22,6 +22,8 @@ import org.openapitools.codegen.model.ModelMap;
 import org.openapitools.codegen.model.ModelsMap;
 import org.openapitools.codegen.utils.ModelUtils;
 
+import com.gip.xyna.openapi.codegen.utils.Sanitizer;
+
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 
@@ -74,7 +76,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     if (vendorExtentions != null) {
       String xModelPath = (String)vendorExtentions.get("x-model-path");
       if (xModelPath != null && !xModelPath.trim().isEmpty()) {
-        modelPackage = xModelPath.replace('-', '_').replace(' ', '_').toLowerCase();
+        modelPackage = Sanitizer.sanitize(xModelPath.replace('-', '_').replace(' ', '_').toLowerCase());
       }
     }
   }
