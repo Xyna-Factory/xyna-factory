@@ -97,20 +97,16 @@ ret.{{setPropVarName}}({{propVarName}});
     {{/isPrimitive}}
     {{#isPrimitive}}
       {{^isList}}
-String text;
-if ({{getPropVarName}} &#x3D;&#x3D; null) {
-  text = null;
-} else {
+if ({{getPropVarName}} !&#x3D; null) {
         {{#isString}}
-  text = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.decodeValue(document).getText();
+  String text = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.decodeValue(document).getText();
   text = text.substring(1, text.length()-1);
+  ret.{{setPropVarName}}(text);
         {{/isString}}
         {{^isString}}
-  text = {{javaType}}.valueOf(document.getText());
+  ret.{{setPropVarName}}({{javaType}}.valueOf(document.getText()));
         {{/isString}}
 }
-body = new xact.templates.Document();
-body.setText(text);
       {{/isList}}
     {{/isPrimitive}}
   {{/bodyParams}}
