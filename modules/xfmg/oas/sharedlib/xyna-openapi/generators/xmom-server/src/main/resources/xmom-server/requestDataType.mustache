@@ -97,7 +97,20 @@ ret.{{setPropVarName}}({{propVarName}});
     {{/isPrimitive}}
     {{#isPrimitive}}
       {{^isList}}
-ret.{{setPropVarName}}({{fromJson}});
+String text;
+if ({{getPropVarName}} &#x3D;&#x3D; null) {
+  text = null;
+} else {
+        {{#isString}}
+  text = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.decodeValue(document).getText();
+  text = text.substring(1, text.length()-1);
+        {{/isString}}
+        {{^isString}}
+  text = {{javaType}}.valueOf(document.getText());
+        {{/isString}}
+}
+body = new xact.templates.Document();
+body.setText(text);
       {{/isList}}
     {{/isPrimitive}}
   {{/bodyParams}}

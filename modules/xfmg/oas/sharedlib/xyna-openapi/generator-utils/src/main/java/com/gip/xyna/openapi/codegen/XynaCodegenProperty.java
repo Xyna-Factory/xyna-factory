@@ -205,27 +205,8 @@ public class XynaCodegenProperty {
     return sb.toString();
   }
   
-  public String toJson() {
-    
-    String result = getPropVarName + " == null ? null : ";
-    if(javaType.equals("String")) {
-      result += "\"\\\"\" + xfmg.xfctrl.datamodel.json.JSONDatamodelServices.encodeValue("+ 
-          "new xact.templates.Document.Builder().text(" + getPropVarName + ").instance()).getText() + \"\\\"\"";
-    } else {
-      result += getPropVarName + ".toString()";
-    }
-    return result;
-  }
-  
-  public String fromJson() {
-    
-    String result = "document == null ? null : ";
-    if(javaType.equals("String")) {
-      result += "xfmg.xfctrl.datamodel.json.JSONDatamodelServices.decodeValue(document).getText()";
-    } else {
-      result += javaType + ".valueOf(document.getText())";
-    }
-    return result;
+  public boolean isString() {
+    return "String".equals(javaType);
   }
 
   @Override
