@@ -78,14 +78,18 @@ jsonOptions.setObjectDecider(new {{apiPackage}}.decider.OASDecider());{{#respons
     }
     else {
       responseDataType.set{{#lambda.pascalcase}}{{complexType}}{{/lambda.pascalcase}}(null);
-    }{{/isString}}{{#hasHeaders}}
+    }{{/isString}}
 
-    for (xact.http.HeaderField field : header3.getHeaderField()) { {{#responseHeaders}}
+    {{#hasHeaders}}
+    for (xact.http.HeaderField field : header3.getHeaderField()) {
+    {{#responseHeaders}}
         {{#-first}}if{{/-first}}{{^-first}}else if{{/-first}} (field.getName().equalsIgnoreCase("{{baseName}}")) {
           {{#isString}}responseDataType.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}({{dataType}}.valueOf(field.getValue()));{{/isString}}{{^isString}}if (field.getValue()==null||field.getValue().isEmpty()) {responseDataType.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}(null);}
           else {responseDataType.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}({{dataType}}.valueOf(field.getValue()));}{{/isString}}
-        }{{/responseHeaders}}
-    }{{/hasHeaders}}
+        }
+    {{/responseHeaders}}
+    }
+    {{/hasHeaders}}
 
     return responseDataType;
 }{{/responses}}
