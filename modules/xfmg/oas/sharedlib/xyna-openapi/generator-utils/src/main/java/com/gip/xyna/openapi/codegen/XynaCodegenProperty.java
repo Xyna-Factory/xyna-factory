@@ -218,6 +218,17 @@ public class XynaCodegenProperty {
     }
     return result;
   }
+  
+  public String fromJson() {
+    
+    String result = "document == null ? null : ";
+    if(javaType.equals("String")) {
+      result += "xfmg.xfctrl.datamodel.json.JSONDatamodelServices.decodeValue(document).getText()";
+    } else {
+      result += javaType + ".valueOf(document.getText())";
+    }
+    return result;
+  }
 
   @Override
   public boolean equals(Object o) {
