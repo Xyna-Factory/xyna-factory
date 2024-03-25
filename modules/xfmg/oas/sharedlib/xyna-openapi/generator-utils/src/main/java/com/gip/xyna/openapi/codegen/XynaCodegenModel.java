@@ -2,7 +2,6 @@ package com.gip.xyna.openapi.codegen;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -40,8 +39,13 @@ public class XynaCodegenModel {
     typeName = buildTypeName(model);
     typePath = buildTypePath(gen);
     description = buildDescription(model);
-    vars = model.vars.stream().map(prop -> new XynaCodegenProperty(new CodegenPropertyHolder(prop), gen, typeName)).collect(Collectors.toList());
+    
     isEnum = model.isEnum;
+    if (isEnum) {
+      vars = List.of(new XynaCodegenProperty(new CodegenEnum(model.allowableValues), gen, typeName));
+    } else {
+      vars = model.vars.stream().map(prop -> new XynaCodegenProperty(new CodegenPropertyHolder(prop), gen, typeName)).collect(Collectors.toList());
+    }
     if (model.allowableValues != null) {
       @SuppressWarnings("unchecked")
       List<String> enumValues = (List<String>) model.allowableValues.getOrDefault(("values"), List.of());

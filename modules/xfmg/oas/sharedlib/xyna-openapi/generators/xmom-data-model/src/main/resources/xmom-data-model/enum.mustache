@@ -22,12 +22,11 @@
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
     <Documentation>{{description}}</Documentation>
   </Meta>
-  <Data Label="value" VariableName="value">
-    <Meta>
-      <Type>String</Type>
-      <Documentation>{{description}}</Documentation>
-    </Meta>
-  </Data>
+{{#vars}}
+{{^isInherited}}
+{{>property}}
+{{/isInherited}}
+{{/vars}}
   <Service Label="{{label}}" TypeName="{{typeName}}">
    <Operation Label="Validate" Name="validate" IsStatic="false">
       <Input>

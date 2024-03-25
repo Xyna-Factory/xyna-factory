@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
-import java.util.stream.Collectors;
 
 import org.openapitools.codegen.DefaultCodegen;
 
@@ -379,9 +378,8 @@ public class XynaCodegenProperty {
       nullable = mostInnerItems.getIsNullable();
       if (mostInnerItems.getAllowableValues() != null) {
         @SuppressWarnings("unchecked")
-        List<Map<String, Object>> enumVars =
-            (List<Map<String, Object>>) mostInnerItems.getAllowableValues().getOrDefault(("enumVars"), List.of());
-        allowableValues.addAll(enumVars.stream().map(enumVar -> enumVar.get("name").toString()).collect(Collectors.toList()));
+        List<String> enumValues = (List<String>) mostInnerItems.getAllowableValues().getOrDefault(("values"), List.of());
+        allowableValues.addAll(enumValues);
       }
     }
   }

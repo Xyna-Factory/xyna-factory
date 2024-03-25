@@ -284,4 +284,122 @@ class CodegenParameterHolder implements CodegenPropertyInfo{
   public String getOpenApiType() {
     return parameter.getBaseType();
   }
+  
+}
+
+class CodegenEnum implements CodegenPropertyInfo{
+   
+  private Map<String, Object> allowableValues;
+  
+  CodegenEnum(Map<String, Object> allowableValues) {
+    this.allowableValues = allowableValues;
+  }
+  
+  public String getBaseName() {
+    return "Value";
+  }
+  
+  public String getName() {
+    return "value";
+  }
+  
+  public boolean getIsInherited() {
+    return false;
+  }
+  
+  public boolean getIsContainer() {
+    return false;
+  }
+  
+  public boolean getIsPrimitiveType() {
+    return true;
+  }
+  
+  public boolean getIsEnumOrRef() {
+    return true;
+  }
+  
+  public String getComplexType() {
+    return null;
+  }
+  
+  public CodegenPropertyInfo getItems() {
+    return null;
+  }
+  
+  public CodegenPropertyInfo getMostInnerItems() {
+    return null;
+  }
+  
+  public String getDataType() {
+    return "Enum";
+  }
+  
+  public String getDescription() {
+    return "";
+  }
+  
+  public String getFormat() {
+    return null;
+  }
+  
+  public String getMinimum() {
+    return null;
+  }
+  
+  public String getMaximum() {
+    return null;
+  }
+  
+  public boolean getExclusiveMinimum() {
+    return false;
+  }
+  
+  public boolean getExclusiveMaximum() {
+    return false;
+  }
+  
+  public Number getMultipleOf() {
+    return null;
+  }
+  
+  public String getDataFormat() {
+    return null;
+  }
+
+  public Integer getMinLength() {
+    return null;
+  }
+
+  public Integer getMaxLength() {
+    return null;
+  }
+
+  public boolean getRequired() {
+    return false;
+  }
+
+  public boolean getIsNullable() {
+    return false;
+  }
+
+  public Map<String, Object> getAllowableValues() {
+    return allowableValues;
+  }
+
+  public boolean getIsString() {
+    return true;
+  }
+
+  public boolean getIsNumber() {
+    return false;
+  }
+
+  public boolean getIsInteger() {
+    return false;
+  }
+
+  public String getOpenApiType() {
+    return "Enum";
+  }
 }
