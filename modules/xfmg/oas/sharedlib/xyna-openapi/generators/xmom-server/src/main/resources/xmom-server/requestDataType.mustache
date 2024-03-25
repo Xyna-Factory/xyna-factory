@@ -82,13 +82,13 @@ for (xact.http.URLPathQuery query: httpRequest1.getURLQueries()) {
 }
 {{/hasQueryParams}}{{#hasHeaderParams}}
 for (xact.http.HeaderField headerField: httpRequest1.getHeader().getHeaderField()) {
-{{#headerParams}}
+  {{#headerParams}}
     {{#-first}}if{{/-first}}{{^-first}}else if{{/-first}} (headerField.getName().equalsIgnoreCase("{{baseName}}")) {
-        {{#isString}}ret.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}({{dataType}}.valueOf(headerField.getValue()));{{/isString}}{{^isString}}if (headerField.getValue()==null||headerField.getValue().isEmpty()) {ret.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}(null);}
+        {{#isString}}ret.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}({{dataType}}.valueOf(headerField.getValue()));{{/isString}}{{^isString}}if (headerField.getValue()==null||headerField.getValue().isEmpty()){ret.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}(null);}
         else {ret.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}({{dataType}}.valueOf(headerField.getValue()));}{{/isString}}
     }
+  {{/headerParams}}
 }
-{{/headerParams}}
 {{/hasHeaderParams}}
 {{#hasBodyParam}}xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
 jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
