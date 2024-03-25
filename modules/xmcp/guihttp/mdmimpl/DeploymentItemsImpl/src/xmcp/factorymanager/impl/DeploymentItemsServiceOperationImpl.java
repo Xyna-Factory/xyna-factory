@@ -302,7 +302,7 @@ public class DeploymentItemsServiceOperationImpl implements ExtendedDeploymentTa
     return result;
   }
 
-    @Override
+  @Override
   public List<? extends DeploymentItem> forceDeploy(List<? extends DeploymentItemId> deploymentItemIds, RuntimeContext runtimeContext)
       throws DeployDeploymentItemException {
     List<DeploymentItem> result = new ArrayList<>();
