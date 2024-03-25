@@ -36,7 +36,7 @@ public class XynaCodegenProviderOperation extends XynaCodegenOperation {
     parameterId = id;
     parameterLabel = baseLabel + " Parameter";
     parameterVarName = baseVarName + "Parameter";
-    parameterRefName = baseRefName + "Parameter";
+    parameterRefName = getPropertyClassName(); 
     parameterRefPath = basePath + ".request";
     
     responseId = id + 1;
@@ -50,7 +50,7 @@ public class XynaCodegenProviderOperation extends XynaCodegenOperation {
   
   @Override
   protected String getPropertyClassName() {
-    return parameterRefName;
+    return baseRefName + "Parameter";
   }
   
   public String buildFilterRegexp(CodegenOperation operation, List<XynaCodegenProperty> pathParams) {

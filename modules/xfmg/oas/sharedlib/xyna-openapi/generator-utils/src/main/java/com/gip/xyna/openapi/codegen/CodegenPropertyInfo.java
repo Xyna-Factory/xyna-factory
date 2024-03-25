@@ -12,7 +12,7 @@ public interface CodegenPropertyInfo {
   public boolean getIsInherited();
   public boolean getIsContainer();
   public boolean getIsPrimitiveType();
-  public boolean getIsEnumRef();
+  public boolean getIsEnumOrRef();
   public boolean getIsString();
   public boolean getIsNumber();
   public boolean getIsInteger();
@@ -66,8 +66,8 @@ class CodegenPropertyHolder implements CodegenPropertyInfo{
     return property.isPrimitiveType;
   }
   
-  public boolean getIsEnumRef() {
-    return property.isEnumRef;
+  public boolean getIsEnumOrRef() {
+    return property.getIsEnumOrRef();
   }
   
   public String getComplexType() {
@@ -191,8 +191,8 @@ class CodegenParameterHolder implements CodegenPropertyInfo{
     return parameter.isPrimitiveType;
   }
   
-  public boolean getIsEnumRef() {
-    return parameter.isEnumRef;
+  public boolean getIsEnumOrRef() {
+    return parameter.getIsEnumOrRef();
   }
   
   public String getComplexType() {

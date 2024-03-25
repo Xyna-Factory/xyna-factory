@@ -39,7 +39,9 @@
         <CodeSnippet Type="Java">
 xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
 result.setErrorMessages(new ArrayList&lt;String&gt;());
+{{#vars}}
 {{>validation}}
+{{/vars}}
 return result.getResult();
         </CodeSnippet>
       </SourceCode>

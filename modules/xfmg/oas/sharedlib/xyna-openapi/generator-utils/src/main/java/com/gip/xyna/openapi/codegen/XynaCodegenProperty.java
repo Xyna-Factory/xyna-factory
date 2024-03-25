@@ -90,10 +90,11 @@ public class XynaCodegenProperty {
     if (!isPrimitive(propertyInfo)) {
       return null;
     }
+    if (propertyInfo.getIsEnumOrRef()) {
+      return "Enum";
+    }
     if (propertyInfo.getIsPrimitiveType()) {
-      if (propertyInfo.getIsEnumRef()) {
-        return "Enum";
-      } else if (isList(propertyInfo)) {
+      if (isList(propertyInfo)) {
         return buildDatatype(propertyInfo.getMostInnerItems());
       } else {
         return propertyInfo.getDataType();
@@ -122,7 +123,7 @@ public class XynaCodegenProperty {
    * of primitive types
    */
   private boolean isPrimitive(CodegenPropertyInfo property) {
-    return property.getIsPrimitiveType() || property.getIsEnumRef() || property.getComplexType() == null
+    return property.getIsPrimitiveType() || property.getIsEnumOrRef() || property.getComplexType() == null
         || property.getIsString() || property.getIsNumber() || property.getIsInteger()
         || (isList(property) && isPrimitive(property.getMostInnerItems()));
   }
@@ -183,17 +184,15 @@ public class XynaCodegenProperty {
     return config;
   }
 
+  @SuppressWarnings("unchecked")
   private String buildDescription(CodegenPropertyInfo propertyInfo) {
     StringBuilder sb = new StringBuilder();
     if (propertyInfo.getDescription() != null) {
       sb.append(propertyInfo.getDescription()).append('\n');
     }
-    if (propertyInfo.getIsEnumRef()) {
-      sb.append("Enum of Type: ");
-      sb.append(propRefType).append('.').append(propRefType);
-      sb.append('\n');
+    if (propertyInfo.getIsEnumOrRef()) {
       sb.append("values: ");
-      sb.append(String.join(", ", propertyInfo.getAllowableValues().keySet()));
+      sb.append(String.join(", ", (List<String>)propertyInfo.getAllowableValues().getOrDefault("values", List.of())));
       sb.append('\n');
     }
     if (propertyInfo.getFormat() != null) {

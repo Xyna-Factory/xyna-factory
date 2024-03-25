@@ -44,8 +44,8 @@ public class XynaCodegenModel {
     isEnum = model.isEnum;
     if (model.allowableValues != null) {
       @SuppressWarnings("unchecked")
-      List<Map<String, Object>> enumVars = (List<Map<String, Object>>) model.allowableValues.getOrDefault(("enumVars"), List.of());
-      allowableValues.addAll(enumVars.stream().map(enumVar -> enumVar.get("name").toString()).collect(Collectors.toList()));
+      List<String> enumValues = (List<String>) model.allowableValues.getOrDefault(("values"), List.of());
+      allowableValues.addAll(enumValues);
     }
     if (model.parent != null) {
       // maybe we should find the correct model, then building a new one.
