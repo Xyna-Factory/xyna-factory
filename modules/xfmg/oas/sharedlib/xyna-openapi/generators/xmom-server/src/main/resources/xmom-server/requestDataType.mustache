@@ -88,16 +88,16 @@ xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.x
 jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
 jsonOptions.setUseLabels(true);
-xact.templates.Document body = httpRequest1.getBody();
+xact.templates.Document document = httpRequest1.getBody();
   {{#bodyParams}}
     {{^isPrimitive}}
 jsonOptions.setObjectDecider(new {{apiRefPath}}.decider.OASDecider());
-{{propRefType}} {{propVarName}} = ({{propRefType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(body, new {{propRefType}}(), jsonOptions);
+{{propRefType}} {{propVarName}} = ({{propRefType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{propRefType}}(), jsonOptions);
 ret.{{setPropVarName}}({{propVarName}});
     {{/isPrimitive}}
     {{#isPrimitive}}
       {{^isList}}
-ret.{{setPropVarName}}({{javaType}}.valueOf(body.getText()));
+ret.{{setPropVarName}}({{fromJson}});
       {{/isList}}
     {{/isPrimitive}}
   {{/bodyParams}}

@@ -73,7 +73,7 @@ if (statusCode == {{code}}) {
     {{/isPrimitive}}
     {{#isPrimitive}}
     {{^isList}}
-        responseDataType.{{setPropVarName}}({{javaType}}.valueOf(document.getText()));
+        responseDataType.{{setPropVarName}}({{fromJson}});
     {{/isList}}
     {{/isPrimitive}}
     } else {
