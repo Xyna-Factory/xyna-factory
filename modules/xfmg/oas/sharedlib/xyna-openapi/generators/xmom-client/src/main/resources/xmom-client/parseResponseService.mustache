@@ -73,16 +73,14 @@ if (statusCode == {{code}}) {
     {{/isPrimitive}}
     {{#isPrimitive}}
       {{^isList}}
-        if ({{getPropVarName}} !&#x3D; null) {
         {{#isString}}
-            String body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.decodeValue(document).getText();
-            body = body.substring(1, body.length()-1);
-            responseDataType.{{setPropVarName}}(body);
+        String body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.decodeValue(document).getText();
+        body = body.substring(1, body.length()-1);
+        responseDataType.{{setPropVarName}}(body);
         {{/isString}}
         {{^isString}}
-            responseDataType.{{setPropVarName}}({{javaType}}.valueOf(document.getText()));
+        responseDataType.{{setPropVarName}}({{javaType}}.valueOf(document.getText()));
         {{/isString}}
-        }
       {{/isList}}
     {{/isPrimitive}}
     } else {
