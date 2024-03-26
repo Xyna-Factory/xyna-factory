@@ -59,5 +59,8 @@
     <Meta>
       <Type>String</Type>
     </Meta>
+    <Restriction>
+      <MaxLength>100000</MaxLength>
+    </Restriction>
   </Data>
 </DataType>
