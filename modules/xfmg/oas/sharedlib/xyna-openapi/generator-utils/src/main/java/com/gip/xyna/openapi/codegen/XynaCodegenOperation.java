@@ -1,5 +1,6 @@
 package com.gip.xyna.openapi.codegen;
 
+import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
 import com.gip.xyna.openapi.codegen.utils.Camelizer.Case;
 import static com.gip.xyna.openapi.codegen.utils.Camelizer.camelize;
@@ -37,7 +38,7 @@ public abstract class XynaCodegenOperation {
   final String httpMethod;
 
   
-  XynaCodegenOperation(CodegenOperation operation, DefaultCodegen gen, String pathPrefix) {
+  public XynaCodegenOperation(XynaCodegenFactory factory, CodegenOperation operation, DefaultCodegen gen, String pathPrefix) {
     
     baseLabel = operation.httpMethod + " " + operation.path;
     baseVarName = camelize(gen.sanitizeName(operation.httpMethod + "_" + operation.path), Case.CAMEL);
@@ -50,12 +51,12 @@ public abstract class XynaCodegenOperation {
     responseRefPath = basePath + ".response";
     
     hasBody = operation.getHasBodyParam();
-    params = buildXynaCodegenProperty(operation.allParams, gen);
-    headerParams = buildXynaCodegenProperty(operation.headerParams, gen);
-    pathParams = buildXynaCodegenProperty(operation.pathParams, gen);
-    queryParams = buildXynaCodegenProperty(operation.queryParams, gen);
-    bodyParams = buildXynaCodegenProperty(operation.bodyParams, gen);
-    responses = buildXynaCodegenResponse(operation.responses, gen);
+    params = buildXynaCodegenProperty(factory, operation.allParams, gen);
+    headerParams = buildXynaCodegenProperty(factory, operation.headerParams, gen);
+    pathParams = buildXynaCodegenProperty(factory, operation.pathParams, gen);
+    queryParams = buildXynaCodegenProperty(factory, operation.queryParams, gen);
+    bodyParams = buildXynaCodegenProperty(factory, operation.bodyParams, gen);
+    responses = buildXynaCodegenResponse(factory, operation.responses, gen);
     
     responseDescription = buildResponseDescription(operation);
 
@@ -64,19 +65,19 @@ public abstract class XynaCodegenOperation {
   
   protected abstract String getPropertyClassName();
   
-  private List<XynaCodegenProperty> buildXynaCodegenProperty(List<CodegenParameter> params, DefaultCodegen gen) {
+  private List<XynaCodegenProperty> buildXynaCodegenProperty(XynaCodegenFactory factory, List<CodegenParameter> params, DefaultCodegen gen) {
     List<XynaCodegenProperty> xynaProp = new ArrayList<>(params.size());
     for (CodegenParameter para: params) {
-      xynaProp.add(new XynaCodegenProperty(new CodegenParameterHolder(para), gen, getPropertyClassName()));
+      xynaProp.add(factory.getOrCreateXynaCodegenProperty(para, getPropertyClassName()));
     }
     return  xynaProp;
   }
   
-  private List<XynaCodegenResponse> buildXynaCodegenResponse(List<CodegenResponse> responses, DefaultCodegen gen) {
+  private List<XynaCodegenResponse> buildXynaCodegenResponse(XynaCodegenFactory factory, List<CodegenResponse> responses, DefaultCodegen gen) {
     List<XynaCodegenResponse> xynaResp = new ArrayList<>(responses.size());
     int index = 0;
     for (CodegenResponse resp: responses) {
-      xynaResp.add(new XynaCodegenResponse(resp, gen, this, index));
+      xynaResp.add(factory.getOrCreateXynaCodegenResponse(resp, this, index));
       index++;
     }
     return  xynaResp;
