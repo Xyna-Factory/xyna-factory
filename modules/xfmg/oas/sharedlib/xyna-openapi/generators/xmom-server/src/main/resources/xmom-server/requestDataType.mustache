@@ -15,29 +15,19 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
-{{#operations}}{{#operation}}<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
-TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter" TypePath="{{apiPackage}}.{{pathPrefix}}.request" Label="{{httpMethod}} {{path}} Parameter"
+{{#operations}}
+{{#xynaOperation}}
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
+TypeName="{{parameterRefName}}" TypePath="{{parameterRefPath}}" Label="{{parameterLabel}}"
 BaseTypeName="RequestParameter" BaseTypePath="xmcp.oas.datatype.provider">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
     <Documentation></Documentation>
-  </Meta>{{#allParams}}
-    <Data Label="{{baseName}}" VariableName="{{#lambda.camelcase}}{{paramName}}{{/lambda.camelcase}}" {{#isContainer}}IsList="true"{{/isContainer}}{{^isPrimitiveType}}{{^isEnumRef}}
-     ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isEnumRef}}{{/isPrimitiveType}}>
-        <Meta>{{#isPrimitiveType}}{{^isEnumRef}}{{^isString}}
-            <Type>{{#isContainer}}{{items.dataType}}{{/isContainer}}{{^isContainer}}{{dataType}}{{/isContainer}}</Type>{{/isString}}{{/isEnumRef}}{{/isPrimitiveType}}{{#isEnumRef}}
-            <Type>String</Type>{{/isEnumRef}}{{#isString}}
-            <Type>String</Type>{{/isString}}
-            <Documentation>{{#description}}{{description}}{{/description}}{{#isEnumRef}}
-Enum of Type: {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}.{{complexType}}
-values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}
-{{/isEnumRef}}{{#format}}
-format: {{format}}{{/format}}
-required: {{required}}
-            </Documentation>
-        </Meta>
-    </Data>{{/allParams}}
-  <Service Label="{{httpMethod}} {{path}} Parameter" TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter">
+  </Meta>
+  {{#params}}
+{{>property}}
+  {{/params}}
+  <Service Label="{{parameterLabel}}" TypeName="{{parameterRefName}}">
     <Operation Label="Validate" Name="validate" IsStatic="false">
       <Input>
       </Input>
@@ -45,12 +35,14 @@ required: {{required}}
         <Data ID="3" Label="OASValidationResult" VariableName="oASValidationResult3" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
 result.setErrorMessages(new ArrayList&lt;String&gt;());
-
-{{#allParams}}{{>validation}}{{/allParams}}
+{{#params}}
+{{>validation}}
+{{/params}}
 return result.getResult();
-</CodeSnippet>
+        </CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation Label="parse Parameter" Name="parseParameter" IsStatic="false">
@@ -58,50 +50,71 @@ return result.getResult();
         <Data ID="1" Label="Http Request" VariableName="httpRequest1" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype"/>
       </Input>
       <Output>
-        <Data ID="2" Label="{{httpMethod}} {{path}} Parameter" VariableName="{{#lambda.camelcase}}{{httpMethod}}{{path}}{{/lambda.camelcase}}Parameter2"
-        ReferenceName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter" ReferencePath="{{apiPackage}}.{{pathPrefix}}.request"/>
+        <Data ID="2" Label="{{parameterLabel}}" VariableName="{{parameterVarName}}2"
+        ReferenceName="{{parameterRefName}}" ReferencePath="{{parameterRefPath}}"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter ret = new {{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter();
-
-{{#hasPathParams}}
+        <CodeSnippet Type="Java">
+{{parameterRefName}} ret = new {{parameterRefName}}();
 for (xmcp.oas.datatype.URLPathParameter pathPara: httpRequest1.getURLPathParameter()) {
-    {{#pathParams}}
-    {{#-first}}if{{/-first}}{{^-first}}else if{{/-first}} (pathPara.getAttribute().equals("{{paramName}}")) {
-        ret.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}({{^isString}}{{dataType}}{{/isString}}{{#isString}}String{{/isString}}.valueOf(pathPara.getValue()));
+{{#pathParams}}
+{{#isPrimitive}}
+    if (pathPara.getAttribute().equals("{{propLabel}}")) {
+        ret.{{setPropVarName}}({{javaType}}.valueOf(pathPara.getValue()));
     }
-    {{/pathParams}}
+{{/isPrimitive}}
+{{/pathParams}}
 }
-{{/hasPathParams}}{{#hasQueryParams}}
 for (xact.http.URLPathQuery query: httpRequest1.getURLQueries()) {
-    {{#queryParams}}
-    {{#-first}}if{{/-first}}{{^-first}}else if{{/-first}} (query.getAttribute().equals("{{paramName}}")) {
-        ret.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}({{dataType}}.valueOf(query.getValue()));
+{{#queryParams}}
+{{#isPrimitive}}
+    if (query.getAttribute().equals("{{propLabel}}")) {
+        ret.{{setPropVarName}}({{javaType}}.valueOf(query.getValue()));
     }
-    {{/queryParams}}
+{{/isPrimitive}}
+{{/queryParams}}
 }
-{{/hasQueryParams}}{{#hasHeaderParams}}
 for (xact.http.HeaderField headerField: httpRequest1.getHeader().getHeaderField()) {
-  {{#headerParams}}
-    {{#-first}}if{{/-first}}{{^-first}}else if{{/-first}} (headerField.getName().equalsIgnoreCase("{{baseName}}")) {
-        {{#isString}}ret.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}({{dataType}}.valueOf(headerField.getValue()));{{/isString}}{{^isString}}if (headerField.getValue()==null||headerField.getValue().isEmpty()){ret.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}(null);}
-        else {ret.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}({{dataType}}.valueOf(headerField.getValue()));}{{/isString}}
+{{#headerParams}}
+{{#isPrimitive}}
+    if (headerField.getName().equals("{{propLabel}}".trim().toLowerCase())) {
+        ret.{{setPropVarName}}({{javaType}}.valueOf(headerField.getValue()));
     }
-  {{/headerParams}}
+{{/isPrimitive}}
+{{/headerParams}}
 }
-{{/hasHeaderParams}}
-{{#hasBodyParam}}xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
+{{#hasBody}}
+xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
 jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
-jsonOptions.setUseLabels(true);{{#bodyParams}}{{#isModel}}
-jsonOptions.setObjectDecider(new {{apiPackage}}.decider.OASDecider());
-xact.templates.Document body = httpRequest1.getBody();
-{{dataType}} {{#lambda.lowercase}}{{paramName}}{{/lambda.lowercase}} = ({{dataType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(body, new {{dataType}}(), jsonOptions);
-ret.set{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}({{#lambda.lowercase}}{{paramName}}{{/lambda.lowercase}});
-{{/isModel}}{{/bodyParams}}{{/hasBodyParam}}
-return ret;</CodeSnippet>
+jsonOptions.setUseLabels(true);
+xact.templates.Document document = httpRequest1.getBody();
+  {{#bodyParams}}
+    {{^isPrimitive}}
+jsonOptions.setObjectDecider(new {{apiRefPath}}.decider.OASDecider());
+{{propRefType}} {{propVarName}} = ({{propRefType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{propRefType}}(), jsonOptions);
+ret.{{setPropVarName}}({{propVarName}});
+    {{/isPrimitive}}
+    {{#isPrimitive}}
+      {{^isList}}
+        {{#isString}}
+String text = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.decodeValue(document).getText();
+text = text.substring(1, text.length()-1);
+ret.{{setPropVarName}}(text);
+        {{/isString}}
+        {{^isString}}
+ret.{{setPropVarName}}({{javaType}}.valueOf(document.getText()));
+        {{/isString}}
+      {{/isList}}
+    {{/isPrimitive}}
+  {{/bodyParams}}
+{{/hasBody}}
+return ret;
+        </CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
 </DataType>
-{{/operation}}{{/operations}}
+
+{{/xynaOperation}}
+{{/operations}}

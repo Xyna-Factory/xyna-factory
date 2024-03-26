@@ -15,11 +15,11 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
-{{#operations}}{{#operation}}<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" 
-TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Endpoint" TypePath="{{apiPackage}}.{{pathPrefix}}.wf" Label="{{httpMethod}} {{path}} endpoint">
-  <Operation ID="0" Label="{{httpMethod}} {{path}} endpoint" Name="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Endpoint" IsStatic="false">
+{{#operations}}{{#xynaOperation}}<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8"
+TypeName="{{endpointWorkflowTypeName}}" TypePath="{{endpointWorkflowPath}}" Label="{{endpointWorkflowLabel}}">
+  <Operation ID="0" Label="{{endpointWorkflowLabel}}" Name="{{endpointWorkflowTypeName}}" IsStatic="false">
     <Input>
-      <Data ID="2" Label="/{{pathPrefix}} Api" VariableName="{{baseName}}Api2" ReferenceName="{{baseName}}Api" ReferencePath="{{apiPackage}}"/>
+      <Data ID="2" Label="/{{pathPrefix}} Api" VariableName="{{apiRefName}}2" ReferenceName="{{apiRefName}}" ReferencePath="{{apiRefPath}}"/>
       <Data ID="3" Label="Http Request" VariableName="httpRequest3" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype"/>
     </Input>
     <Output>
@@ -33,7 +33,7 @@ TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Endp
       <Source RefID="8"/>
       <Target RefID="8"/>
     </ServiceReference>
-    <ServiceReference ID="6" Label="{{baseName}} Api" ReferenceName="{{baseName}}Api.{{baseName}}Api" ReferencePath="{{apiPackage}}">
+    <ServiceReference ID="6" Label="{{apiLabel}}" ReferenceName="{{apiRefName}}.{{apiRefName}}" ReferencePath="{{apiRefPath}}">
       <Source RefID="5"/>
       <Target RefID="5"/>
     </ServiceReference>
@@ -56,7 +56,7 @@ TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Endp
         <Source RefID="11">
           <Meta>
             <LinkType>Constant</LinkType>
-            <ExpectedType>{{apiPackage}}.{{pathPrefix}}.request.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter</ExpectedType>
+            <ExpectedType>{{parameterRefPath}}.{{parameterRefName}}</ExpectedType>
           </Meta>
         </Source>
         <Source RefID="3">
@@ -65,12 +65,12 @@ TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Endp
       <Receive ServiceID="9">
         <Target RefID="10">
           <Meta>
-            <ExpectedType>{{apiPackage}}.{{pathPrefix}}.request.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter</ExpectedType>
+            <ExpectedType>{{parameterRefPath}}.{{parameterRefName}}</ExpectedType>
           </Meta>
         </Target>
       </Receive>
     </Function>
-    <Function ID="5" Label="{{httpMethod}} {{path}}">
+    <Function ID="5" Label="{{implLabel}}">
       <Source RefID="6">
       </Source>
       <Source RefID="2">
@@ -81,7 +81,7 @@ TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Endp
       </Target>
       <Target RefID="7">
       </Target>
-      <Invoke ServiceID="6" Operation="{{#lambda.camelcase}}{{httpMethod}}{{path}}{{/lambda.camelcase}}">
+      <Invoke ServiceID="6" Operation="{{implVarName}}">
         <Source RefID="2">
         </Source>
         <Source RefID="10">
@@ -104,7 +104,7 @@ TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Endp
       <Invoke ServiceID="13" Operation="Encode">
         <Source RefID="7">
           <Meta>
-            <ExpectedType>{{apiPackage}}.{{pathPrefix}}.response.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response</ExpectedType>
+            <ExpectedType>{{responseRefPath}}.{{responseRefName}}</ExpectedType>
           </Meta>
         </Source>
       </Invoke>
@@ -113,12 +113,12 @@ TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Endp
         </Target>
       </Receive>
     </Function>
-    <Data ID="7" VariableName="{{#lambda.camelcase}}{{httpMethod}}{{path}}{{/lambda.camelcase}}Response7" Label="{{httpMethod}} {{path}} Response" ReferenceName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Response" ReferencePath="{{apiPackage}}.{{pathPrefix}}.response">
+    <Data ID="7" VariableName="{{responseVarName}}7" Label="{{responseLabel}}" ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}">
       <Source RefID="5"/>
     </Data>
-    <Data ID="10" VariableName="{{#lambda.camelcase}}{{httpMethod}}{{path}}{{/lambda.camelcase}}Parameter10" Label="{{httpMethod}} {{path}} Parameter" ReferenceName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter" ReferencePath="{{apiPackage}}.{{pathPrefix}}.request">
+    <Data ID="10" VariableName="{{parameterVarName}}10" Label="{{parameterLabel}}" ReferenceName="{{parameterRefName}}" ReferencePath="{{parameterRefPath}}">
     </Data>
-    <Data ID="11" VariableName="const_{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter11" Label="{{httpMethod}} {{path}} Parameter" ReferenceName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Parameter" ReferencePath="{{apiPackage}}.{{pathPrefix}}.request">
+    <Data ID="11" VariableName="const_{{parameterVarName}}11" Label="{{parameterLabel}}" ReferenceName="{{parameterRefName}}" ReferencePath="{{parameterRefPath}}">
     </Data>
     <Data ID="14" VariableName="httpResponse14" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype">
       <Source RefID="12"/>
@@ -194,4 +194,4 @@ TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Endp
     </Catch>
   </Operation>
 </Service>
-{{/operation}}{{/operations}}
+{{/xynaOperation}}{{/operations}}

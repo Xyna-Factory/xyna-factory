@@ -15,28 +15,19 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
-{{#operations}}{{#operation}}<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
-TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}SendParameter" TypePath="{{apiPackage}}.{{pathPrefix}}.send" Label="{{httpMethod}} {{path}} Send Parameter"
+{{#operations}}
+  {{#xynaOperation}}
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
+TypeName="{{sendRefName}}" TypePath="{{sendRefPath}}" Label="{{sendLabel}}"
 BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
-  </Meta>{{#allParams}}
-    <Data Label="{{baseName}}" VariableName="{{#lambda.camelcase}}{{paramName}}{{/lambda.camelcase}}" {{#isContainer}}IsList="true"{{/isContainer}}{{^isPrimitiveType}}{{^isEnumRef}}
-     ReferenceName="{{complexType}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"{{/isEnumRef}}{{/isPrimitiveType}}>
-        <Meta>{{#isPrimitiveType}}{{^isEnumRef}}
-            <Type>{{#isContainer}}{{items.dataType}}{{/isContainer}}{{^isContainer}}{{^isString}}{{dataType}}{{/isString}}{{#isString}}String{{/isString}}{{/isContainer}}</Type>{{/isEnumRef}}{{/isPrimitiveType}}{{#isEnumRef}}
-            <Type>String</Type>{{/isEnumRef}}
-            <Documentation>{{#description}}{{description}}{{/description}}{{#isEnumRef}}
-Enum of Type: {{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}.{{complexType}}
-values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}
-{{/isEnumRef}}{{#format}}
-format: {{format}}{{/format}}
-required: {{required}}
-            </Documentation>
-        </Meta>
-    </Data>{{/allParams}}
-  <Service Label="{{httpMethod}} {{path}} Send Parameter" TypeName="{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}SendParameter">
-    <Operation Label="sendRequest" Name="sendRequest" IsStatic="false">
+  </Meta>
+    {{#params}}
+{{>property}}
+    {{/params}}
+  <Service Label="{{sendLabel}}" TypeName="{{sendRefName}}">
+    <Operation Label="Send Request" Name="sendRequest" IsStatic="false">
       <Input>
         <Data ID="1" Label="HTTP Connection" VariableName="hTTPConnection1" ReferenceName="HTTPConnection" ReferencePath="xact.http"/>
         <Data ID="2" Label="Send Parameter" VariableName="sendParameter2" ReferenceName="SendParameter" ReferencePath="xact.http"/>
@@ -52,39 +43,47 @@ required: {{required}}
         <Exception ID="8" Label="Connection Already Closed Exception" VariableName="connectionAlreadyClosedException8" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions"/>
       </Throws>
       <SourceCode>
-        <CodeSnippet Type="Java">{{#hasHeaderParams}}ArrayList&lt;xact.http.HeaderField&gt; customHeaders = new ArrayList&lt;xact.http.HeaderField&gt;();
-{{#allParams}}
-{{#isHeaderParam}}
-{{#isPrimitiveType}}
-customHeaders.add(new xact.http.HeaderField("{{baseName}}",String.valueOf(this.get{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}())));
-{{/isPrimitiveType}}
-{{/isHeaderParam}}
-{{/allParams}}
-for (xact.http.HeaderField field : customHeaders){
-  if(field.getValue().equals("null")) {field.setValue(null);}
-}
-if(sendParameter2.getHeader().getHeaderField()==null){
-  sendParameter2.getHeader().setHeaderField(customHeaders);
-}
-else {
-sendParameter2.getHeader().getHeaderField().addAll((List) customHeaders);
-}{{/hasHeaderParams}}
-
-{{^hasBodyParam}}return xact.http.HTTPService.send(hTTPConnection1, sendParameter2);{{/hasBodyParam}}{{#hasBodyParam}}xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
+        <CodeSnippet Type="Java">
+{{^hasBody}}
+return xact.http.HTTPService.send(hTTPConnection1, sendParameter2);
+{{/hasBody}}
+{{#hasBody}}
+xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
 jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
-jsonOptions.setUseLabels(true);{{#bodyParams}}
+jsonOptions.setUseLabels(true);
+{{#bodyParams}}
 
-
-xact.templates.Document body;{{#isArray}}
-List&lt;GeneralXynaObject&gt; list = new ArrayList&lt;&gt;(this.get{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}());
-body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONListWithOptions(list, jsonOptions);{{/isArray}}{{^isArray}}
-body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(this.get{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}(), jsonOptions);{{/isArray}}{{^isModel}}{{#primitiveType}}
+xact.templates.Document body;
+{{^isPrimitive}}
+{{#isList}}
+List&lt;GeneralXynaObject&gt; list = new ArrayList&lt;&gt;({{getPropVarName}});
+body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONListWithOptions(list, jsonOptions);
+{{/isList}}
+{{^isList}}
+body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions({{getPropVarName}}, jsonOptions);
+{{/isList}}
+{{/isPrimitive}}
+{{#isPrimitive}}
+String text;
+if ({{getPropVarName}} == null) {
+  text = null;
+} else {
+{{#isString}}
+  text = &quot;\&quot;&quot; + xfmg.xfctrl.datamodel.json.JSONDatamodelServices.encodeValue(new xact.templates.Document.Builder().text({{getPropVarName}}).instance()).getText() + &quot;\&quot;&quot;;
+{{/isString}}
+{{^isString}}
+  text = String.valueOf({{getPropVarName}});
+{{/isString}}
+}
 body = new xact.templates.Document();
-body.setText(get{{#lambda.pascalcase}}{{paramName}}{{/lambda.pascalcase}}().toString());{{/primitiveType}}{{/isModel}}
+body.setText(text);
+{{/isPrimitive}}
 
-return xact.http.HTTPService.sendDocument(hTTPConnection1, sendParameter2, body);{{/bodyParams}}{{/hasBodyParam}}
-</CodeSnippet>
+return xact.http.HTTPService.sendDocument(hTTPConnection1, sendParameter2, body);
+{{/bodyParams}}
+{{/hasBody}}
+        </CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation Label="Validate" Name="validate" IsStatic="false">
@@ -94,14 +93,53 @@ return xact.http.HTTPService.sendDocument(hTTPConnection1, sendParameter2, body)
         <Data ID="9" Label="OASValidationResult" VariableName="oASValidationResult9" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
 result.setErrorMessages(new ArrayList&lt;String&gt;());
 
-{{#allParams}}{{>validation}}{{/allParams}}
+{{#params}}
+{{>validation}}
+{{/params}}
 return result.getResult();
-</CodeSnippet>
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Build Header Fields" Name="buildHeaderFields">
+      <Input/>
+      <Output>
+        <Data ID="22" IsList="true" Label="Header Field" ReferenceName="HeaderField" ReferencePath="xact.http" VariableName="headerField22"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+List&lt;HeaderField&gt; headerFields = new ArrayList&lt;HeaderField&gt;();
+    {{#headerParams}}
+if ({{getPropVarName}} != null) {
+  headerFields.add(new HeaderField("{{propLabel}}", String.valueOf({{getPropVarName}})));
+}
+    {{/headerParams}}
+return headerFields;
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Build Query" Name="buildQuery">
+      <Input/>
+      <Output>
+        <Data ID="47" IsList="true" Label="URL-path Query" ReferenceName="URLPathQuery" ReferencePath="xact.http" VariableName="uRLPathQuery47"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+List&lt;URLPathQuery&gt; urlPathQuery = new ArrayList&lt;URLPathQuery&gt;();
+    {{#queryParams}}
+if ({{getPropVarName}} != null) {
+  urlPathQuery.add(new URLPathQuery("{{propVarName}}", String.valueOf({{getPropVarName}})));
+}
+    {{/queryParams}}
+return urlPathQuery;
+        </CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
 </DataType>
-{{/operation}}{{/operations}}
+
+  {{/xynaOperation}}
+{{/operations}}

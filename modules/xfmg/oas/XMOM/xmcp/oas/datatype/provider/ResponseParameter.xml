@@ -42,5 +42,11 @@
         <Data ID="9" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult9"/>
       </Output>
     </Operation>
+    <Operation IsAbstract="true" IsStatic="false" Label="get Headers" Name="getHeaders">
+      <Input/>
+      <Output>
+        <Data ID="43" IsList="true" Label="Header Field" ReferenceName="HeaderField" ReferencePath="xact.http" VariableName="headerField43"/>
+      </Output>
+    </Operation>
   </Service>
 </DataType>

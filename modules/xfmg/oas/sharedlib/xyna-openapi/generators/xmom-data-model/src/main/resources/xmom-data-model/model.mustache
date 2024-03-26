@@ -15,4 +15,4 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
-{{#models}}{{#model}}{{#isEnum}}{{>enum}}{{/isEnum}}{{^isEnum}}{{>dataType}}{{/isEnum}}{{/model}}{{/models}}
+{{#xynaModel}}{{^isEnum}}{{>dataType}}{{/isEnum}}{{#isEnum}}{{>enum}}{{/isEnum}}{{/xynaModel}}

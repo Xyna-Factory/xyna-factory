@@ -15,8 +15,8 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
-{{#apiInfo.apis}}{{#operations}}{{#operation}}
-    addPathParameter("{{apiPackage}}.{{classFilename}}", Method.{{httpMethod}}, "{{apiPackage}}.{{pathPrefix}}.wf.{{httpMethod}}{{#lambda.pascalcase}}{{path}}{{/lambda.pascalcase}}Endpoint", 
-        "{{basePathWithoutHost}}{{{vendorExtensions.regexPath}}}"{{#pathParams}}, "{{paramName}}"{{/pathParams}}
+{{#apiInfo.apis}}{{#operations}}{{#xynaOperation}}
+    addPathParameter("{{apiRefPath}}.{{apiRefName}}", Method.{{httpMethod}}, "{{endpointWorkflowPath}}.{{endpointWorkflowTypeName}}",
+        "{{basePathWithoutHost}}{{{filterRegexPath}}}"{{#pathParams}}, "{{propLabel}}"{{/pathParams}}
     );
-{{/operation}}{{/operations}}{{/apiInfo.apis}}
+{{/xynaOperation}}{{/operations}}{{/apiInfo.apis}}

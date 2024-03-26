@@ -15,23 +15,19 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8"
- TypeName="{{classname}}"
- TypePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"
- Label="{{name}}" IsAbstract="false" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype"
->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
+ TypeName="{{typeName}}" TypePath="{{typePath}}" Label="{{label}}"
+ BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
-    <Documentation>{{#description}}{{description}}{{/description}}
-values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}</Documentation>
+    <Documentation>{{description}}</Documentation>
   </Meta>
-  <Data Label="value" VariableName="value">
-    <Meta>
-      <Type>String</Type>
-      <Documentation>values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/allowableValues}}</Documentation>
-    </Meta>
-  </Data>
-  <Service Label="{{classname}}" TypeName="{{classname}}">
+{{#vars}}
+{{^isInherited}}
+{{>property}}
+{{/isInherited}}
+{{/vars}}
+  <Service Label="{{label}}" TypeName="{{typeName}}">
    <Operation Label="Validate" Name="validate" IsStatic="false">
       <Input>
       </Input>
@@ -39,20 +35,23 @@ values: {{#allowableValues}}{{#values}}{{.}}{{^-last}}, {{/-last}}{{/values}}{{/
         <Data ID="1" Label="OAS Validation Result" VariableName="oASValidationResult1" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
 result.setErrorMessages(new ArrayList&lt;String&gt;());
-
-{{>enumValidation}}
-return result.getResult();</CodeSnippet>
+{{#vars}}
+{{>validation}}
+{{/vars}}
+return result.getResult();
+        </CodeSnippet>
       </SourceCode>
-    </Operation>{{#allowableValues}}{{#values}}
+    </Operation>{{#allowableValues}}
     <Operation Label="get {{#lambda.uppercase}}{{.}}{{/lambda.uppercase}}" Name="get{{#lambda.uppercase}}{{.}}{{/lambda.uppercase}}" IsStatic="false">
       <Input/>
       <Output>
-        <Data ID="2" Label="{{classname}}" VariableName="varName" ReferenceName="{{classname}}" ReferencePath="{{#modelPackage}}{{modelPackage}}{{/modelPackage}}{{#moduleName}}.{{moduleName}}{{/moduleName}}"/>
+        <Data ID="2" Label="{{label}}" VariableName="varName" ReferenceName="{{typeName}}" ReferencePath="{{typePath}}"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return new {{classname}}(&quot;{{.}}&quot;);</CodeSnippet>
+        <CodeSnippet Type="Java">return new {{typeName}}(&quot;{{.}}&quot;);</CodeSnippet>
      </SourceCode>
     </Operation>
     <Operation Label="is {{#lambda.uppercase}}{{.}}{{/lambda.uppercase}}" Name="is{{#lambda.uppercase}}{{.}}{{/lambda.uppercase}}" IsStatic="false">
@@ -67,6 +66,6 @@ return result.getResult();</CodeSnippet>
       <SourceCode>
         <CodeSnippet Type="Java">return &quot;{{.}}&quot;.equals(this.getValue());</CodeSnippet>
      </SourceCode>
-    </Operation>{{/values}}
-    </Service>{{/allowableValues}}
+    </Operation>{{/allowableValues}}
+  </Service>
 </DataType>
