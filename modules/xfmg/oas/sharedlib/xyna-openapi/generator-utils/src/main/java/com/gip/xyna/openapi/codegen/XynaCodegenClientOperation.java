@@ -5,6 +5,8 @@ import java.util.Objects;
 import org.openapitools.codegen.CodegenOperation;
 import org.openapitools.codegen.DefaultCodegen;
 
+import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
+
 public class XynaCodegenClientOperation extends XynaCodegenOperation {
   
   final String sendLabel;
@@ -21,8 +23,8 @@ public class XynaCodegenClientOperation extends XynaCodegenOperation {
   final String requestWorkflowPath;
   final String requestWorkflowURLPath;
   
-  XynaCodegenClientOperation(CodegenOperation operation, DefaultCodegen gen, String pathPrefix, int id) {
-     super(operation, gen, pathPrefix);
+  public XynaCodegenClientOperation(XynaCodegenFactory factory, CodegenOperation operation, DefaultCodegen gen, String pathPrefix, int id) {
+     super(factory, operation, gen, pathPrefix);
     
     parseResponseLabel = "Parse " + baseLabel + " Response";
     parseResponseRefName = "Parse" + baseRefName + "Response";

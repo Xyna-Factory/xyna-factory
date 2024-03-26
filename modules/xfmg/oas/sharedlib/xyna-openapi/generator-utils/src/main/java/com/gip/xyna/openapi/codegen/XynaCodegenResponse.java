@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.openapitools.codegen.CodegenResponse;
 import org.openapitools.codegen.DefaultCodegen;
 
+import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
 import com.gip.xyna.openapi.codegen.templating.mustache.StatusCodeLambda;
 
 public class XynaCodegenResponse {
@@ -27,7 +28,7 @@ public class XynaCodegenResponse {
   final XynaCodegenProperty body;
   final List<XynaCodegenProperty> responseHeaders;
   
-  public XynaCodegenResponse(CodegenResponse response, DefaultCodegen gen, XynaCodegenOperation operation, int index) {
+  public XynaCodegenResponse(XynaCodegenFactory factory, CodegenResponse response, DefaultCodegen gen, XynaCodegenOperation operation, int index) {
 
     code = response.code;
     message = message(response);
@@ -37,13 +38,13 @@ public class XynaCodegenResponse {
     respDescription = buildRespDescription(response);
     this.index = index;
     if (response.returnProperty != null) {
-      body = new XynaCodegenProperty(new CodegenPropertyHolder(response.returnProperty), gen, respRefName);
+      body = factory.getOrCreateXynaCodegenProperty(response.returnProperty, respRefName);
     } else {
       body = null;
     }
     if (response.headers != null) {
       responseHeaders = response.headers.stream()
-          .map(prop -> new XynaCodegenProperty(new CodegenPropertyHolder(prop), gen, respRefName))
+          .map(prop -> factory.getOrCreateXynaCodegenProperty(prop, respRefName))
           .collect(Collectors.toList());
     } else {
       responseHeaders = new ArrayList<>();

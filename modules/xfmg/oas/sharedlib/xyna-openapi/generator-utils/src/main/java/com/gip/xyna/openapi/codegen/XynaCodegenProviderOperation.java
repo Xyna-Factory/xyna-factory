@@ -6,6 +6,8 @@ import java.util.Objects;
 import org.openapitools.codegen.CodegenOperation;
 import org.openapitools.codegen.DefaultCodegen;
 
+import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
+
 public class XynaCodegenProviderOperation extends XynaCodegenOperation {
   
   final String implLabel;
@@ -26,8 +28,8 @@ public class XynaCodegenProviderOperation extends XynaCodegenOperation {
   
   final String filterRegexPath;
   
-  XynaCodegenProviderOperation(CodegenOperation operation, DefaultCodegen gen, String pathPrefix, int id) {
-    super(operation, gen, pathPrefix);
+  public XynaCodegenProviderOperation(XynaCodegenFactory factory, CodegenOperation operation, DefaultCodegen gen, String pathPrefix, int id) {
+    super(factory, operation, gen, pathPrefix);
     
     implLabel = baseLabel;
     implVarName = baseVarName;

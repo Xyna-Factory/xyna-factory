@@ -22,6 +22,7 @@ import org.openapitools.codegen.model.ModelMap;
 import org.openapitools.codegen.model.ModelsMap;
 import org.openapitools.codegen.utils.ModelUtils;
 
+import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
 
 import io.swagger.v3.oas.models.OpenAPI;
@@ -35,6 +36,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
   // source folder where to write the files
   protected String sourceFolder = "XMOM";
   protected String xynaFactoryVersion = "CURRENT_VERSION";
+  private XynaCodegenFactory codegenFactory= new XynaCodegenFactory(this);
   
   public static final String XYNA_FACTORY_VERSION = "xynaFactoryVersion";
 
@@ -99,7 +101,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
           }
         }
       }
-      XynaCodegenModel xModel = new XynaCodegenModel(model, this);
+      XynaCodegenModel xModel = codegenFactory.getOrCreateXynaCodegenModel(model);
       objs.get(modelname).put("xynaModel", xModel);
       if (Boolean.TRUE.equals(additionalProperties.get("debugXO"))) {
         System.out.println(xModel);
@@ -112,7 +114,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
   public Map<String, Object> postProcessSupportingFileData(Map<String, Object> objs) {
     @SuppressWarnings("unchecked")
     List<ModelMap> models = (List<ModelMap>) objs.get("models");
-    models.forEach((ModelMap map) -> map.put("xynaModel", new XynaCodegenModel(map.getModel(), this)));
+    models.forEach((ModelMap map) -> map.put("xynaModel", codegenFactory.getOrCreateXynaCodegenModel(map.getModel())));
     return objs;
   }
   

@@ -20,6 +20,7 @@ package com.gip.xyna.openapi.codegen;
 import org.openapitools.codegen.*;
 import org.openapitools.codegen.model.*;
 
+import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
 import com.gip.xyna.openapi.codegen.templating.mustache.IndexLambda;
 import com.gip.xyna.openapi.codegen.templating.mustache.StatusCodeLambda;
 import com.google.common.collect.ImmutableMap;
@@ -36,6 +37,7 @@ public class XmomServerGenerator extends DefaultCodegen {
   // source folder where to write the files
   protected String sourceFolder = "XMOM";
   protected String xynaFactoryVersion = "CURRENT_VERSION";
+  private XynaCodegenFactory codegenFactory= new XynaCodegenFactory(this);
   
   public static final String XYNA_FACTORY_VERSION = "xynaFactoryVersion";
 
@@ -107,7 +109,7 @@ public class XmomServerGenerator extends DefaultCodegen {
 
     int index = 0;
     for(CodegenOperation co : opList){
-      XynaCodegenOperation xOperation = new XynaCodegenProviderOperation(co, this, (String) ops.get("pathPrefix"), 2*index);
+      XynaCodegenOperation xOperation = codegenFactory.getOrCreateXynaCodegenProviderOperation(co, (String) ops.get("pathPrefix"), 2*index);
       xoperationList.add(xOperation);
       if (Boolean.TRUE.equals(additionalProperties.get("debugXO"))) {
         System.out.println(xOperation);
@@ -143,7 +145,7 @@ public class XmomServerGenerator extends DefaultCodegen {
           }
         }
       }
-      XynaCodegenModel xModel = new XynaCodegenModel(model, this);
+      XynaCodegenModel xModel = codegenFactory.getOrCreateXynaCodegenModel(model);
       xModels.add(xModel);
       if (Boolean.TRUE.equals(additionalProperties.get("debugXO"))) {
         System.out.println(xModel);

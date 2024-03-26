@@ -11,6 +11,7 @@ import java.util.function.BiFunction;
 
 import org.openapitools.codegen.DefaultCodegen;
 
+import com.gip.xyna.openapi.codegen.factory.CodegenPropertyInfo;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
 import com.gip.xyna.openapi.codegen.utils.Camelizer.Case;
 import static com.gip.xyna.openapi.codegen.utils.Camelizer.camelize;
@@ -55,7 +56,7 @@ public class XynaCodegenProperty {
   final String propRefType;
   final String propRefPath;
   
-  XynaCodegenProperty(CodegenPropertyInfo propertyInfo, DefaultCodegen gen, String className) {
+  public XynaCodegenProperty(CodegenPropertyInfo propertyInfo, DefaultCodegen gen, String className) {
     propClassName = className;
     propLabel = propertyInfo.getBaseName();
     propVarName = Sanitizer.sanitize(camelize(propertyInfo.getName(), Case.CAMEL));

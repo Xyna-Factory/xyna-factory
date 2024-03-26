@@ -1,4 +1,4 @@
-package com.gip.xyna.openapi.codegen;
+package com.gip.xyna.openapi.codegen.factory;
 
 import java.util.Map;
 

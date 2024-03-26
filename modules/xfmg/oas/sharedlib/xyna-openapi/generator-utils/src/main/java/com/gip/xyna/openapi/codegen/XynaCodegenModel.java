@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.openapitools.codegen.CodegenDiscriminator.MappedModel;
 
+import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
 
 import org.openapitools.codegen.CodegenModel;
@@ -33,8 +34,7 @@ public class XynaCodegenModel {
   final String discriminatorKey;
   final List<DiscriminatorMap> discriminatorMap;
   
-  
-  XynaCodegenModel(CodegenModel model, DefaultCodegen gen) {
+  public XynaCodegenModel(XynaCodegenFactory factory, CodegenModel model, DefaultCodegen gen) {
     label = model.name;
     typeName = buildTypeName(model);
     typePath = buildTypePath(gen);
@@ -42,9 +42,9 @@ public class XynaCodegenModel {
     
     isEnum = model.isEnum;
     if (isEnum) {
-      vars = List.of(new XynaCodegenProperty(new CodegenEnum(model.allowableValues), gen, typeName));
+      vars = List.of(factory.getOrCreateXynaCodegenEnumProperty(model.allowableValues, typeName));
     } else {
-      vars = model.vars.stream().map(prop -> new XynaCodegenProperty(new CodegenPropertyHolder(prop), gen, typeName)).collect(Collectors.toList());
+      vars = model.vars.stream().map(prop -> factory.getOrCreateXynaCodegenProperty(prop, typeName)).collect(Collectors.toList());
     }
     if (model.allowableValues != null) {
       @SuppressWarnings("unchecked")
@@ -53,7 +53,7 @@ public class XynaCodegenModel {
     }
     if (model.parent != null) {
       // maybe we should find the correct model, then building a new one.
-      parent = new XynaCodegenModel(model.parentModel, gen);
+      parent = factory.getOrCreateXynaCodegenModel(model.parentModel);
     } else {
       parent = OASBASE;
     }
