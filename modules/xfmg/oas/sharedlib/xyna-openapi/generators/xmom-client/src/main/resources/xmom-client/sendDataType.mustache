@@ -131,7 +131,7 @@ return headerFields;
 List&lt;URLPathQuery&gt; urlPathQuery = new ArrayList&lt;URLPathQuery&gt;();
     {{#queryParams}}
 if ({{getPropVarName}} != null) {
-  urlPathQuery.add(new URLPathQuery("{{propVarName}}", String.valueOf({{getPropVarName}})));
+  urlPathQuery.add(new URLPathQuery("{{propLabel}}", String.valueOf({{getPropVarName}})));
 }
     {{/queryParams}}
 return urlPathQuery;
