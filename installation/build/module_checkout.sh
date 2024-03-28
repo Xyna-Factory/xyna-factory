@@ -1,6 +1,6 @@
 #!/bin/bash
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Copyright 2023 Xyna GmbH, Germany
+# Copyright 2024 Xyna GmbH, Germany
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,49 +15,24 @@
 # limitations under the License.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-
-# checkout modules, but only application.xml and XMOM-files
-
-#svn-modules path => branch/tag
-#option to also checkout build.xml files
-
 if [[ $# -eq 0 ]]; then
-  echo "$0 - check out xyna module application and XMOM-files."
-  echo "    usage: pass at least one parameter"
-  echo "    svn-modules path e.g. https://github.com/Xyna-Factory/xyna-factory/tags/9.0.1.0/modules"
-  echo "    optional: also checkout build.xml files"
+  echo "$0 - check out xyna module application.xml and XMOM-files."
+  echo "    usage: $0 <branch>. Example: $0 main"
   exit 1
 fi
 
-svn checkout "$1" --depth immediates
-if [[ $? != 0 ]]; then
-  echo "checkout failed. Abort!"
-  exit 2
-fi
-cd modules
-if [[ $? != 0 ]]; then
-  echo "checkout did not create a modules folder. Abort!"
-  exit 2
-fi
+git clone --no-checkout https://github.com/Xyna-Factory/xyna-factory.git --branch "$1"
+cd xyna-factory
+git sparse-checkout init --cone
 
-for path in $(find . -maxdepth 1 -type d)
+PATHS=""
+for path in $(git ls-tree --full-name --name-only -r HEAD | grep "^modules/.*/XMOM" | cut -d "/" -f 1-3 | uniq)
 do
-  if [ "$path" == "./.svn" ] || [ "$path" == "." ]; then
-	continue
-  fi
-  svn update --set-depth immediates "$path"
-  for module in $(find $path -maxdepth 1 -type d)
-  do
-    if [ "x$module" == "x$path" ]; then
-	  echo "ignore $module"
-	  continue
-	fi
-    svn update --set-depth infinity "$module/XMOM"
-	svn update --set-depth empty "$module/application.xml"
-	if [[ $# == 2 ]]; then
-	  svn update --set-depth empty "$module/build.xml"
-	fi
-  done
+  PATHS="${PATHS} ${path}/XMOM"
+  PATHS="${PATHS} ${path}/application.xml"
 done
+
+git sparse-checkout set ${PATHS}
+git checkout "$1"
 echo "work complete"
 exit 0
