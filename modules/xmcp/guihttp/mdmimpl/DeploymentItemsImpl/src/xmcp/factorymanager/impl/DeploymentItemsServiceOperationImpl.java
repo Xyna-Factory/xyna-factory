@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -266,6 +266,47 @@ public class DeploymentItemsServiceOperationImpl implements ExtendedDeploymentTa
       throws DeployDeploymentItemException {
     List<DeploymentItem> result = new ArrayList<>();
     WorkflowProtectionMode mode = WorkflowProtectionMode.BREAK_ON_USAGE;
+    CommandControl.tryLock(CommandControl.Operation.XMOM_WORKFLOW_DEPLOY, runtimeContext.getRevision());
+    List<GenerationBase> objects = new ArrayList<>();
+    boolean succeeded = false;
+    try {
+      for (DeploymentItemId id : deploymentItemIds) {
+        XMOMType type = XMOMType.valueOf(id.getType());
+        switch(type) {
+          case DATATYPE:
+            objects.add(DOM.getInstance(id.getName(), runtimeContext.getRevision()));
+            break;
+          case WORKFLOW:
+            objects.add(WF.getInstance(id.getName(), runtimeContext.getRevision()));
+            break;
+          case EXCEPTION:
+            objects.add(ExceptionGeneration.getInstance(id.getName(), runtimeContext.getRevision()));
+            break;
+          default :
+            break;
+        }
+      }
+      GenerationBase.deploy(objects, DeploymentMode.codeChanged, false, mode);
+      succeeded = true;
+    } catch (XPRC_InvalidPackageNameException | MDMParallelDeploymentException | XPRC_DeploymentDuringUndeploymentException e) {
+      throw new DeployDeploymentItemException(e.getMessage(), e);
+    } finally {
+      CommandControl.unlock(CommandControl.Operation.XMOM_WORKFLOW_DEPLOY, runtimeContext.getRevision());
+    }
+    if(succeeded) {
+      for (DeploymentItemId id : deploymentItemIds) {
+        DeploymentItemStateReport report = deploymentItemStateManagement.get(id.getName(), runtimeContext.getRevision()).getStateReport();
+        result.add(convert(report));
+      }
+    }
+    return result;
+  }
+
+  @Override
+  public List<? extends DeploymentItem> forceDeploy(List<? extends DeploymentItemId> deploymentItemIds, RuntimeContext runtimeContext)
+      throws DeployDeploymentItemException {
+    List<DeploymentItem> result = new ArrayList<>();
+    WorkflowProtectionMode mode = WorkflowProtectionMode.FORCE_DEPLOYMENT;
     CommandControl.tryLock(CommandControl.Operation.XMOM_WORKFLOW_DEPLOY, runtimeContext.getRevision());
     List<GenerationBase> objects = new ArrayList<>();
     boolean succeeded = false;
