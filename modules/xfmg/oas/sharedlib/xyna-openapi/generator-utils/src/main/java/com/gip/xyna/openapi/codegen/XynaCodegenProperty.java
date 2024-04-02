@@ -141,7 +141,7 @@ public class XynaCodegenProperty {
    */
   private boolean isPrimitive(CodegenPropertyInfo property) {
     return property.getIsPrimitiveType() || property.getIsEnumOrRef() || property.getComplexType() == null
-        || property.getIsString() || property.getIsNumber() || property.getIsInteger()
+        || property.getIsString() || property.getIsNumber() || property.getIsInteger() || "string".equals(property.getOpenApiType())
         || (isList(property) && isPrimitive(property.getMostInnerItems()));
   }
 
