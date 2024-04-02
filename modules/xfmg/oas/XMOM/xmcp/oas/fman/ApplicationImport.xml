@@ -23,28 +23,39 @@
     </Input>
     <Output/>
     <Throws>
-      <Exception Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException13556">
-        <Meta>
-          <Type>XynaException</Type>
-        </Meta>
-      </Exception>
-      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException13557"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException49711"/>
     </Throws>
-    <ServiceReference ID="12544" Label="FileManagement" ReferenceName="FileManagement.FileManagement" ReferencePath="xfmg.xfctrl.filemgmt">
-      <Source RefID="12543"/>
-      <Target RefID="12543"/>
+    <ServiceReference ID="39968" Label="Application Generation" ReferenceName="ApplicationGeneration.ApplicationGeneration" ReferencePath="xfmg.oas.generation">
+      <Source RefID="39967"/>
+      <Target RefID="39967"/>
     </ServiceReference>
-    <ServiceReference ID="64" Label="Application Generation" ReferenceName="ApplicationGeneration.ApplicationGeneration" ReferencePath="xfmg.oas.generation">
-      <Source RefID="63"/>
-      <Target RefID="63"/>
+    <ServiceReference ID="107" Label="FileManagement" ReferenceName="FileManagement.FileManagement" ReferencePath="xfmg.xfctrl.filemgmt">
+      <Source RefID="106"/>
+      <Target RefID="106"/>
+    </ServiceReference>
+    <ServiceReference ID="44692" Label="FileManagement" ReferenceName="FileManagement.FileManagement" ReferencePath="xfmg.xfctrl.filemgmt">
+      <Source RefID="44691"/>
+      <Target RefID="44691"/>
     </ServiceReference>
     <ServiceReference ID="209" Label="Store" ReferenceName="Store" ReferencePath="xnwh.persistence">
       <Source RefID="208"/>
       <Target RefID="208"/>
     </ServiceReference>
-    <ServiceReference ID="107" Label="FileManagement" ReferenceName="FileManagement.FileManagement" ReferencePath="xfmg.xfctrl.filemgmt">
-      <Source RefID="106"/>
-      <Target RefID="106"/>
+    <ServiceReference ID="38737" Label="Exception Service" ReferenceName="ExceptionService.ExceptionService" ReferencePath="core.exception">
+      <Source RefID="38736"/>
+      <Target RefID="38736"/>
+    </ServiceReference>
+    <ServiceReference ID="39447" Label="Store" ReferenceName="Store" ReferencePath="xnwh.persistence">
+      <Source RefID="39446"/>
+      <Target RefID="39446"/>
+    </ServiceReference>
+    <ServiceReference ID="49590" Label="Exception Service" ReferenceName="ExceptionService.ExceptionService" ReferencePath="core.exception">
+      <Source RefID="49589"/>
+      <Target RefID="49589"/>
+    </ServiceReference>
+    <ServiceReference ID="12544" Label="FileManagement" ReferenceName="FileManagement.FileManagement" ReferencePath="xfmg.xfctrl.filemgmt">
+      <Source RefID="12543"/>
+      <Target RefID="12543"/>
     </ServiceReference>
     <Mappings ID="53" Label="Mapping">
       <Output>
@@ -98,7 +109,7 @@
           </Copy>
         </Assign>
       </Case>
-      <Case ID="11385" Premise="%0%.text==&quot;Client Application&quot;">
+      <Case ID="11385" Label="" Premise="%0%.text==&quot;Client Application&quot;">
         <Mappings ID="12034" Label="Set Generate Client Application">
           <Output>
             <Data ID="12035" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory12035"/>
@@ -129,7 +140,7 @@
           </Copy>
         </Assign>
       </Case>
-      <Case ID="11708" Premise="%0%.text==&quot;Provider Application&quot;">
+      <Case ID="11708" Label="" Premise="%0%.text==&quot;Provider Application&quot;">
         <Mappings ID="12200" Label="Set Generate Provider Application">
           <Output>
             <Data ID="12201" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory12201"/>
@@ -160,7 +171,7 @@
           </Copy>
         </Assign>
       </Case>
-      <Case ID="11871" Premise="%0%.text==&quot;Datamodel Application&quot;">
+      <Case ID="11871" Label="" Premise="%0%.text==&quot;Datamodel Application&quot;">
         <Mappings ID="12366" Label="Set Generate Datamodel Application">
           <Output>
             <Data ID="12367" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory12367"/>
@@ -225,16 +236,16 @@
         </Assign>
       </Case>
     </Choice>
-    <Function ID="63" Label="Generate Application by managed File ID">
-      <Source RefID="64"/>
+    <Function ID="39967" Label="Generate Application by managed File ID">
+      <Source RefID="39968"/>
       <Source RefID="12461"/>
       <Source RefID="9084"/>
-      <Target RefID="64"/>
-      <Invoke Operation="generateApplicationByManagedFileID" ServiceID="64">
+      <Target RefID="39968"/>
+      <Invoke Operation="generateApplicationByManagedFileID" ServiceID="39968">
         <Source RefID="12461"/>
         <Source RefID="9084"/>
       </Invoke>
-      <Receive ServiceID="64"/>
+      <Receive ServiceID="39968"/>
     </Function>
     <Function ID="12543" Label="Get File Info">
       <Source RefID="12544"/>
@@ -387,6 +398,167 @@
     <Data ID="14144" Label="File Info" ReferenceName="FileInfo" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="fileInfo14144">
       <Source RefID="12543"/>
     </Data>
+    <Data ID="38510" Label="Now" ReferenceName="Now" ReferencePath="base.date" VariableName="now38510"/>
+    <Data ID="38975" Label="Exception Message" ReferenceName="Text" ReferencePath="base" VariableName="text38975"/>
+    <Data ID="39212" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory39212"/>
+    <Data ID="39450" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="storeParameter39450">
+      <Data VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+    </Data>
+    <Data ID="48831" Label="File Info" ReferenceName="FileInfo" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="fileInfo48831"/>
+    <Exception ID="36984" Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception36984"/>
+    <Exception ID="44696" Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception44696">
+      <Source RefID="44693"/>
+    </Exception>
     <Assign ID="1"/>
+    <Catch ExceptionID="36984" ID="36987">
+      <Mappings ID="38508" Label="Mapping">
+        <Output>
+          <Data ID="38509" Label="Now" ReferenceName="Now" ReferencePath="base.date" VariableName="now38509"/>
+          <Target RefID="38510"/>
+        </Output>
+      </Mappings>
+      <Function ID="38736" Label="Wrap Exception">
+        <Source RefID="38737"/>
+        <Source RefID="36984"/>
+        <Target RefID="38737"/>
+        <Target RefID="38739"/>
+        <Invoke Operation="wrapException" ServiceID="38737">
+          <Source RefID="36984"/>
+        </Invoke>
+        <Receive ServiceID="38737">
+          <Target RefID="38739"/>
+        </Receive>
+      </Function>
+      <Function ID="44691" Label="Get File Info">
+        <Source RefID="44692"/>
+        <Source RefID="9084"/>
+        <Target RefID="44692"/>
+        <Target RefID="44694"/>
+        <Invoke Operation="getFileInfo" ServiceID="44692">
+          <Source RefID="9084"/>
+        </Invoke>
+        <Receive ServiceID="44692">
+          <Target RefID="44694"/>
+        </Receive>
+        <Catch ExceptionID="44696" ID="44697">
+          <Mappings ID="48828" Label="Mapping">
+            <Input>
+              <Data ID="48829" Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId48829"/>
+              <Source RefID="9084"/>
+            </Input>
+            <Output>
+              <Data ID="48830" Label="File Info" ReferenceName="FileInfo" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="fileInfo48830"/>
+              <Target RefID="48831"/>
+            </Output>
+            <Mapping>%1%.name=concat("File Not Found for ID: ", %0%.id)</Mapping>
+          </Mappings>
+          <Assign>
+            <Source RefID="48831"/>
+            <Target RefID="44694"/>
+            <Copy>
+              <Source RefID="48831"/>
+              <Target RefID="44694"/>
+            </Copy>
+          </Assign>
+        </Catch>
+      </Function>
+      <Mappings ID="38972" Label="Mapping">
+        <Input>
+          <Data ID="38973" Label="Exception Holder" ReferenceName="ExceptionHolder" ReferencePath="core.exception" VariableName="exceptionHolder38973"/>
+          <Source RefID="38739"/>
+        </Input>
+        <Output>
+          <Data ID="38974" Label="Exception Message" ReferenceName="Text" ReferencePath="base" VariableName="text38974"/>
+          <Target RefID="38975"/>
+        </Output>
+        <Mapping>%1%.text=%0%.getExceptionMessage().message</Mapping>
+      </Mappings>
+      <Mappings ID="39208" Label="Mapping">
+        <Input>
+          <Data ID="39210" Label="Exception Message" ReferenceName="Text" ReferencePath="base" VariableName="text39210"/>
+          <Source RefID="38975">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Input>
+        <Input>
+          <Data ID="42030" Label="Now" ReferenceName="Now" ReferencePath="base.date" VariableName="now42030">
+            <Source RefID="39208"/>
+          </Data>
+          <Source RefID="38510"/>
+        </Input>
+        <Input>
+          <Data ID="45006" Label="File Info" ReferenceName="FileInfo" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="fileInfo45006">
+            <Source RefID="39208"/>
+          </Data>
+          <Source RefID="44694"/>
+        </Input>
+        <Output>
+          <Data ID="39211" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory39211"/>
+          <Target RefID="39212"/>
+        </Output>
+        <Mapping>%3%.date=%1%.date</Mapping>
+        <Mapping>%3%.errorMessage=%0%.text</Mapping>
+        <Mapping>%3%.importStatus="Error"</Mapping>
+        <Mapping>%3%.fileName=%2%.name</Mapping>
+        <Mapping>%3%.specificationFile=%0%.text</Mapping>
+      </Mappings>
+      <Function ID="39446" Label="Store">
+        <Source RefID="39447"/>
+        <Source RefID="39212"/>
+        <Source RefID="39450"/>
+        <Target RefID="39447"/>
+        <Target RefID="39449"/>
+        <Invoke Operation="Store" ServiceID="39447">
+          <Source RefID="39212"/>
+          <Source RefID="39450">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+        </Invoke>
+        <Receive ServiceID="39447">
+          <Target RefID="39449"/>
+        </Receive>
+      </Function>
+      <Function ID="49589" Label="Rethrow Exception">
+        <Source RefID="49590"/>
+        <Source RefID="38739"/>
+        <Target RefID="49590"/>
+        <Invoke Operation="rethrowException_1" ServiceID="49590">
+          <Source RefID="38739"/>
+        </Invoke>
+        <Receive ServiceID="49590"/>
+      </Function>
+      <Assign/>
+      <Data ID="38739" Label="Exception Holder" ReferenceName="ExceptionHolder" ReferencePath="core.exception" VariableName="exceptionHolder38739">
+        <Source RefID="38736"/>
+      </Data>
+      <Data ID="39449" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable39449">
+        <Source RefID="6"/>
+        <Source RefID="39446"/>
+      </Data>
+      <Data ID="44694" Label="File Info" ReferenceName="FileInfo" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="fileInfo44694">
+        <Source RefID="44691"/>
+      </Data>
+    </Catch>
   </Operation>
 </Service>

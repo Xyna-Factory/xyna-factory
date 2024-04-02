@@ -20,6 +20,7 @@ package com.gip.xyna.openapi.codegen;
 import org.openapitools.codegen.*;
 import org.openapitools.codegen.model.*;
 
+import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
 import com.gip.xyna.openapi.codegen.templating.mustache.IndexLambda;
 import com.gip.xyna.openapi.codegen.templating.mustache.StatusCodeLambda;
 import com.google.common.collect.ImmutableMap;
@@ -35,8 +36,8 @@ public class XmomServerGenerator extends DefaultCodegen {
 
   // source folder where to write the files
   protected String sourceFolder = "XMOM";
-  protected String apiVersion = "1.0.0";
   protected String xynaFactoryVersion = "CURRENT_VERSION";
+  private XynaCodegenFactory codegenFactory= new XynaCodegenFactory(this);
   
   public static final String XYNA_FACTORY_VERSION = "xynaFactoryVersion";
 
@@ -97,28 +98,61 @@ public class XmomServerGenerator extends DefaultCodegen {
 
     OperationMap ops = results.getOperations();
     List<CodegenOperation> opList = ops.getOperation();
+    if (!opList.isEmpty()) {
+      String tag = opList.get(0).baseName;
+      ops.put("apiLabel", tag + " Api");
+      ops.put("apiRefName", tag + "Api");
+      ops.put("apiRefPath", apiPackage);
+    }
+    
+    List<XynaCodegenOperation> xoperationList = new ArrayList<XynaCodegenOperation>(opList.size());
 
+    int index = 0;
     for(CodegenOperation co : opList){
-      
-      // add regexPath property to each operation which is used by the filter
-      String regexPath = co.path;
-      if (co.pathParams.size() > 0) {
-        for(CodegenParameter p : co.pathParams) {
-          if (p.isNumeric || p.isInteger || p.isLong || p.isNumber || p.isFloat || p.isDouble) {
-            regexPath = regexPath.replaceAll("\\{" + p.baseName + "\\}", "(?<" + p.baseName + ">[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?)");
-          }
-          else if (p.isString) {
-            regexPath = regexPath.replaceAll("\\{" + p.baseName + "\\}", "(?<" + p.baseName + ">[^/?]*)");
+      XynaCodegenOperation xOperation = codegenFactory.getOrCreateXynaCodegenProviderOperation(co, (String) ops.get("pathPrefix"), 2*index);
+      xoperationList.add(xOperation);
+      if (Boolean.TRUE.equals(additionalProperties.get("debugXO"))) {
+        System.out.println(xOperation);
+      }
+      index++;
+    }
+
+    ops.put("xynaOperation" , xoperationList);
+    return results;
+  }
+  
+  @Override
+  public Map<String, Object> postProcessSupportingFileData(Map<String, Object> objs) {
+    objs = super.postProcessSupportingFileData(objs);
+    @SuppressWarnings("unchecked")
+    List<ModelMap> models = (ArrayList<ModelMap>) objs.get("models");
+    List<XynaCodegenModel> xModels = new ArrayList<XynaCodegenModel>();
+    for (ModelMap modelMap : models) {
+      CodegenModel model = modelMap.getModel();
+      if (model.getName().equals(model.parent)) {
+        model.parent = null;
+      }
+      CodegenModel parent = models.stream()
+          .map(mo -> mo.getModel())
+          .filter(mo -> mo.getName().equals(model.parent))
+          .findFirst().orElse(null);
+      if (parent != null) {
+        for(CodegenProperty var: model.vars) {
+          for(CodegenProperty parentVar: parent.vars) {
+            if(parentVar.getName().equals(var.getName())) {
+              var.isInherited = true;
+            }
           }
         }
       }
-      co.vendorExtensions.put("regexPath", regexPath);
-      
-      // boolean to check if a 'request data type' for this operation is needed to auto parse parameters
-      co.vendorExtensions.put("hasParseParams", co.getHasPathParams() || co.getHasQueryParams() || co.getHasHeaderParams());
+      XynaCodegenModel xModel = codegenFactory.getOrCreateXynaCodegenModel(model);
+      xModels.add(xModel);
+      if (Boolean.TRUE.equals(additionalProperties.get("debugXO"))) {
+        System.out.println(xModel);
+      }
     }
-
-    return results;
+    objs.put("xynaModels", xModels);
+    return objs;
   }
 
   /**
@@ -170,7 +204,6 @@ public class XmomServerGenerator extends DefaultCodegen {
      * Additional Properties.  These values can be passed to the templates and
      * are available in models, apis, and supporting files
      */
-    additionalProperties.put("apiVersion", apiVersion);
     additionalProperties.put(XYNA_FACTORY_VERSION, xynaFactoryVersion);
 
     /**
@@ -195,14 +228,14 @@ public class XmomServerGenerator extends DefaultCodegen {
 
     typeMapping.clear();
     typeMapping.put("boolean", "Boolean");
-    typeMapping.put("integer", "Integer");
+    typeMapping.put("integer", "Long");
     typeMapping.put("long", "Long");
     typeMapping.put("double", "Double");
     typeMapping.put("float", "Double");
     typeMapping.put("number", "Double");
     typeMapping.put("string", "String");
-    typeMapping.put("DateTime", "String");
-    typeMapping.put("date", "String");
+    typeMapping.put("DateTime", "DateTimeType");
+    typeMapping.put("date", "DateType");
     typeMapping.put("password", "String");
     typeMapping.put("byte", "String");
     typeMapping.put("binary", "String");

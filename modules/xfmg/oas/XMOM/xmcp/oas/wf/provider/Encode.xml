@@ -23,9 +23,9 @@
     <Output>
       <Data ID="127" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype" VariableName="httpResponse127"/>
     </Output>
-    <ServiceReference ID="2242" Label="OAS Type Validation" ReferenceName="OASTypeValidation" ReferencePath="xmcp.oas.wf">
-      <Source RefID="2241"/>
-      <Target RefID="2241"/>
+    <ServiceReference ID="2882" Label="Response Parameter" ReferenceName="ResponseParameter.ResponseParameter" ReferencePath="xmcp.oas.datatype.provider">
+      <Source RefID="2881"/>
+      <Target RefID="2881"/>
     </ServiceReference>
     <ServiceReference ID="29" Label="Response Parameter" ReferenceName="ResponseParameter.ResponseParameter" ReferencePath="xmcp.oas.datatype.provider">
       <Source RefID="28"/>
@@ -34,6 +34,10 @@
     <ServiceReference ID="2754" Label="Validation Error Response" ReferenceName="ValidationErrorResponse.ValidationErrorResponse" ReferencePath="xmcp.oas.datatype.provider">
       <Source RefID="2753"/>
       <Target RefID="2753"/>
+    </ServiceReference>
+    <ServiceReference ID="2242" Label="OAS Type Validation" ReferenceName="OASTypeValidation" ReferencePath="xmcp.oas.wf">
+      <Source RefID="2241"/>
+      <Target RefID="2241"/>
     </ServiceReference>
     <Function ID="28" Label="get Payload">
       <Source RefID="29"/>
@@ -45,6 +49,18 @@
       </Invoke>
       <Receive ServiceID="29">
         <Target RefID="31"/>
+      </Receive>
+    </Function>
+    <Function ID="2881" Label="get Headers">
+      <Source RefID="2882"/>
+      <Source RefID="14"/>
+      <Target RefID="2882"/>
+      <Target RefID="2884"/>
+      <Invoke Operation="getHeaders" ServiceID="2882">
+        <Source RefID="14"/>
+      </Invoke>
+      <Receive ServiceID="2882">
+        <Target RefID="2884"/>
       </Receive>
     </Function>
     <Function ID="2241" Label="OAS Type Validation">
@@ -73,13 +89,20 @@
         <Data ID="60" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document60"/>
         <Source RefID="31"/>
       </Input>
+      <Input>
+        <Data ID="2933" IsList="true" Label="Header Field" ReferenceName="HeaderField" ReferencePath="xact.http" VariableName="headerField2933">
+          <Source RefID="57"/>
+        </Data>
+        <Source RefID="2884"/>
+      </Input>
       <Output>
         <Data ID="61" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype" VariableName="httpResponse61"/>
         <Target RefID="1685"/>
       </Output>
-      <Mapping>%2%.body=%1%</Mapping>
-      <Mapping>%2%.header.contentType.mediaType="application/json"</Mapping>
-      <Mapping>%2%.statusCode=%0%.getStatusCode()</Mapping>
+      <Mapping>%3%.body=%1%</Mapping>
+      <Mapping>%3%.header.contentType.mediaType="application/json"</Mapping>
+      <Mapping>%3%.header.headerField=%2%</Mapping>
+      <Mapping>%3%.statusCode=%0%.getStatusCode()</Mapping>
     </Mappings>
     <Data ID="31" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document31">
       <Source RefID="28"/>
@@ -104,6 +127,9 @@
       <Source RefID="2492"/>
     </Data>
     <Data ID="2801" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype" VariableName="httpResponse2801"/>
+    <Data ID="2884" IsList="true" Label="Header Field" ReferenceName="HeaderField" ReferencePath="xact.http" VariableName="headerField2884">
+      <Source RefID="2881"/>
+    </Data>
     <Exception ID="2455" Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception" VariableName="validationException2455"/>
     <Assign ID="1">
       <Source RefID="1685"/>

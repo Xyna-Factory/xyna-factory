@@ -28,7 +28,7 @@
         <module>generators/xmom-data-model</module>
         <module>generators/xmom-server</module>
         <module>generators/xmom-client</module>
-        <module>xyna-openapi-utils</module>
+        <module>generator-utils</module>
     </modules>
 
     <dependencies>
