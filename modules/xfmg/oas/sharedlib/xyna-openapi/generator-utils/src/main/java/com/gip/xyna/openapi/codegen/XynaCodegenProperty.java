@@ -152,12 +152,12 @@ public class XynaCodegenProperty {
     }
     String validatorPath = "com.gip.xyna.openapi.";
     StringBuilder validatorClassConstructor = new StringBuilder("new ").append(validatorPath);
-    String javaClassName = DatatypeMap.getOrDefault(dataType, DatatypeMap.get("Default")).className;
+    DatatypeInfos typeInfo = DatatypeMap.getOrDefault(dataType, DatatypeMap.get("Default"));
     if (isList) {
-      validatorClassConstructor.append("PrimitiveListTypeValidator<").append(javaClassName).append(">(").append(validatorPath)
-          .append(javaClassName).append("::new").append(")");
+      validatorClassConstructor.append("PrimitiveListTypeValidator<").append(typeInfo.javaType).append(">(").append(validatorPath)
+          .append(typeInfo.validatorClassName).append("::new").append(")");
     } else {
-      validatorClassConstructor.append(javaClassName).append("()");
+      validatorClassConstructor.append(typeInfo.validatorClassName).append("()");
     }
     return validatorClassConstructor.toString();
   }
@@ -290,12 +290,12 @@ public class XynaCodegenProperty {
   static class DatatypeInfos {
 
     String javaType;
-    String className;
+    String validatorClassName;
     BiFunction<ValuesToValidate, PraefixPostfix, List<String>> setterListBuilder;
 
     DatatypeInfos(String javaType, String className, BiFunction<ValuesToValidate, PraefixPostfix, List<String>> setterListBuilder) {
       this.javaType = javaType;
-      this.className = className;
+      this.validatorClassName = className;
       this.setterListBuilder = setterListBuilder;
     }
 
