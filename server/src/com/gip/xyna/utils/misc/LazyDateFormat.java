@@ -115,6 +115,7 @@ public class LazyDateFormat implements Serializable {
 
 
   private boolean isCacheUpToDate(String date, String format) {
+    //format may only null for base.date.Now
     if (format == null || format.equals(lastFormat)) {
       return Objects.equals(date, lastDate);
     }
