@@ -152,12 +152,12 @@ public class XynaCodegenProperty {
     }
     String validatorPath = "com.gip.xyna.openapi.";
     StringBuilder validatorClassConstructor = new StringBuilder("new ").append(validatorPath);
-    String javaClassName = DatatypeMap.getOrDefault(dataType, DatatypeMap.get("Default")).className;
+    DatatypeInfos typeInfo = DatatypeMap.getOrDefault(dataType, DatatypeMap.get("Default"));
     if (isList) {
-      validatorClassConstructor.append("PrimitiveListTypeValidator<").append(javaClassName).append(">(").append(validatorPath)
-          .append(javaClassName).append("::new").append(")");
+      validatorClassConstructor.append("PrimitiveListTypeValidator<").append(typeInfo.javaType).append(">(").append(validatorPath)
+          .append(typeInfo.className).append("::new").append(")");
     } else {
-      validatorClassConstructor.append(javaClassName).append("()");
+      validatorClassConstructor.append(typeInfo.className).append("()");
     }
     return validatorClassConstructor.toString();
   }
