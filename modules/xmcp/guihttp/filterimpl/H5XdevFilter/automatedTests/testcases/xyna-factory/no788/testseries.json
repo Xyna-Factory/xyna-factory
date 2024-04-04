@@ -1,0 +1,9 @@
+{
+  "tests":
+  [
+    "now_validate.json",
+    "now_format.json",
+    "now_cb.json",
+    "now_cb_format.json"
+  ]
+}
