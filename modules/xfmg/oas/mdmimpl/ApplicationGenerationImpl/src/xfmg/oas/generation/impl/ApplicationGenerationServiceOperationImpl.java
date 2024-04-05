@@ -99,11 +99,11 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
   private Plugin createPlugin() {
     String entryName = "OAS Import";
     RuntimeContext rtc = getOwnRtc();
-    if (rtc instanceof Application) {
-      entryName = entryName + " " + ((Application) rtc).getVersion();
-    }
     if (rtc == null) {
       return null;
+    }
+    if (rtc instanceof Application) {
+      entryName = entryName + " " + ((Application) rtc).getVersion();
     }
     Plugin.Builder plugin = new Plugin.Builder();
     plugin.navigationEntryLabel(entryName);
