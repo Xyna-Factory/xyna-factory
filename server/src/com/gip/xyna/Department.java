@@ -135,6 +135,12 @@ public abstract class Department extends XynaFactoryComponent {
    * throwables sollten nicht einfach gefangen werden, ohne dass man sich bewusst ist, was da alles enthalten ist
    */
   public static void handleThrowable(Throwable t) {
+    if (XynaFactory.getInstance().getFactoryManagement() == null
+        || XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl() == null
+        || XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getOomManagement() == null) {
+      errorLogger.warn("Could not handle throwable - OomManagement not initialized");
+      return;
+    }
     XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getOomManagement().handleThrowable(t);
   }
 
