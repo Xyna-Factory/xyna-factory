@@ -203,14 +203,14 @@ import xmcp.yggdrasil.SubscribeProjectPollEventsResponse;
 public class SessionBasedData {
 
   public static final XynaPropertyInt UNDO_LIMIT = new XynaPropertyInt("xyna.processmodeller.undo.limit", 50).
-      setDefaultDocumentation(DocumentationLanguage.DE, "Die maximale Anzahl an Eintr‰gen der Undo-Historie.").
+      setDefaultDocumentation(DocumentationLanguage.DE, "Die maximale Anzahl an Eintr√§gen der Undo-Historie.").
       setDefaultDocumentation(DocumentationLanguage.EN, "The maximum number of entries in the undo history.");
   public static final XynaPropertyInt REDO_LIMIT = new XynaPropertyInt("xyna.processmodeller.redo.limit", 50).
-      setDefaultDocumentation(DocumentationLanguage.DE, "Die maximale Anzahl an Eintr‰gen der Redo-Historie.").
+      setDefaultDocumentation(DocumentationLanguage.DE, "Die maximale Anzahl an Eintr√§gen der Redo-Historie.").
       setDefaultDocumentation(DocumentationLanguage.EN, "The maximum number of entries in the redo history.");
 
   public static final XynaPropertyInt CLIENT_POLLING_TIMEOUT_FACTOR = new XynaPropertyInt("xyna.messagebus.modeller.clientpollingtimeoutfactor", 10).
-      setDefaultDocumentation(DocumentationLanguage.DE, "Faktor, der mit xyna.messagebus.request.timeout.millis multipliziert die Zeit ergibt, nach der sp‰testens ein neuer Polling-Request eines GUI-Tabs folgen muss, um nicht als verwaist gelˆscht zu werden.").
+      setDefaultDocumentation(DocumentationLanguage.DE, "Faktor, der mit xyna.messagebus.request.timeout.millis multipliziert die Zeit ergibt, nach der sp√§testens ein neuer Polling-Request eines GUI-Tabs folgen muss, um nicht als verwaist gel√∂scht zu werden.").
       setDefaultDocumentation(DocumentationLanguage.EN, "Factor that gives, multiplied by xyna.messagebus.request.timeout.millis, the maximum amount of time allowed between two polling requests for a GUI tab. Exceeding the limit leads to the tab being treated as orphaned.");
 
   public static final long MESSAGE_BUS_UPDATE_SLEEP_TIME = 100;
@@ -614,8 +614,10 @@ public class SessionBasedData {
         return reply;
       }
 
-      if (!pollRequestUUIDToEventsMap.get(pollUuid).isEmpty()) {
-        break;
+      synchronized (pollRequestUUIDToEventsMap) {
+        if (!pollRequestUUIDToEventsMap.containsKey(pollUuid) || !pollRequestUUIDToEventsMap.get(pollUuid).isEmpty()) {
+          break;
+        }
       }
 
       Thread.sleep(MESSAGE_BUS_UPDATE_SLEEP_TIME);
@@ -687,6 +689,7 @@ public class SessionBasedData {
 
     if (!pendingPollRequestIds.isEmpty()) {
       logger.warn("Multiuser: Failed to terminate running poll requests");
+      pendingPollRequestIds.clear();
     }
 
     pollRequestTerminationPending = false;
