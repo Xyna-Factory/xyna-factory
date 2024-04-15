@@ -614,10 +614,8 @@ public class SessionBasedData {
         return reply;
       }
 
-      synchronized (pollRequestUUIDToEventsMap) {
-        if (!pollRequestUUIDToEventsMap.containsKey(pollUuid) || !pollRequestUUIDToEventsMap.get(pollUuid).isEmpty()) {
-          break;
-        }
+      if (!pollRequestUUIDToEventsMap.get(pollUuid).isEmpty()) {
+        break;
       }
 
       Thread.sleep(MESSAGE_BUS_UPDATE_SLEEP_TIME);
@@ -689,7 +687,6 @@ public class SessionBasedData {
 
     if (!pendingPollRequestIds.isEmpty()) {
       logger.warn("Multiuser: Failed to terminate running poll requests");
-      pendingPollRequestIds.clear();
     }
 
     pollRequestTerminationPending = false;
