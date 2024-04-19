@@ -204,7 +204,7 @@
         <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
       </Input>
       <Output>
-        <Data Label="JSONValue" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="JSONObject"/>
+        <Data Label="JSONObject" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="JSONObject"/>
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl.parseGenericJSONObject(document);</CodeSnippet>
