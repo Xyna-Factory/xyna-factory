@@ -875,6 +875,32 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     return createList(xo.getClass(), arr, "", mapTransformations, mapSubstitutions, useLabels, decider);
   }
   
+  private List<JSONValue> parseGenericList(Document document) {
+    String json = document.getText();
+    if (json == null || json.isBlank()) {
+      return new ArrayList<JSONValue>();
+    }
+    JSONTokenizer jt = new JSONTokenizer();
+    List<JSONToken> tokens = jt.tokenize(json);
+    JSONParser jp = new JSONParser(json);
+    List<JSONValue> result = new ArrayList<JSONValue>();
+    jp.fillArray(tokens, 0, result);
+    return result;
+  }
+  
+  private JSONObject parseGenericObject(Document document) {
+    String json = document.getText();
+    if (json == null || json.isBlank()) {
+      return null;
+    }
+    JSONTokenizer jt = new JSONTokenizer();
+    List<JSONToken> tokens = jt.tokenize(json);
+    JSONParser jp = new JSONParser(json);
+    JSONObject job = new JSONObject();
+    jp.fillObject(tokens, 0, job);
+    return job;
+  }
+  
   
   @SuppressWarnings("unchecked")
   @Override
@@ -900,5 +926,15 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
   }
 
 
+  @Override
+  public JSONObject parseGenericJSONObject(Document document) {
+    return parseGenericObject(document);
+  }
+
+
+  @Override
+  public List<JSONValue> parseGenericJSONList(Document document) {
+    return parseGenericList(document);
+  }
 
 }
