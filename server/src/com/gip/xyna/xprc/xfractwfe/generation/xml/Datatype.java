@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -104,9 +104,11 @@ public class Datatype extends HierarchyTypeWithVariables {
   
   public String toXML() {
     XmlBuilder xml = new XmlBuilder();
-    xml.append("<!--");
-    xml.append(XynaProperty.XML_HEADER_COMMENT.get());
-    xml.append("-->");
+    if(!XynaProperty.XML_HEADER_COMMENT.get().isBlank()) {
+      xml.append("<!--");
+      xml.append(XynaProperty.XML_HEADER_COMMENT.get());
+      xml.append("-->\n");
+    }
     xml.startElementWithAttributes(EL.DATATYPE);
     xml.addAttribute(ATT.XMLNS, NAMESPACE );
     xml.addAttribute(ATT.MDM_VERSION, XMOM_VERSION);
