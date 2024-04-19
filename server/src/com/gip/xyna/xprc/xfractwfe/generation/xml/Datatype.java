@@ -107,7 +107,7 @@ public class Datatype extends HierarchyTypeWithVariables {
     if(!XynaProperty.XML_HEADER_COMMENT.get().isBlank()) {
       xml.append("<!--");
       xml.append(XynaProperty.XML_HEADER_COMMENT.get());
-      xml.append("-->\n");
+      xml.append("-->");
     }
     xml.startElementWithAttributes(EL.DATATYPE);
     xml.addAttribute(ATT.XMLNS, NAMESPACE );
