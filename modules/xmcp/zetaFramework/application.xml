@@ -160,6 +160,10 @@
         <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.OpenDialogButtonDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
         <FqName>xmcp.forms.datatypes.PanelBoxDefinition</FqName>
         <Type>DATATYPE</Type>
     </XMOMEntry>
