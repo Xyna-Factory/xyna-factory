@@ -34,11 +34,13 @@ import com.gip.xyna.xfmg.xopctrl.managedsessions.SessionManagement;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 
 import base.File;
+import base.math.IntegerNumber;
 import xfmg.oas.generation.ApplicationGenerationParameter;
 import xfmg.oas.generation.ApplicationGenerationServiceOperation;
 import xfmg.oas.generation.cli.generated.OverallInformationProvider;
 import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl;
 import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl.ValidationResult;
+import xfmg.xfctrl.appmgmt.RuntimeContextService;
 import xfmg.xfctrl.filemgmt.ManagedFileId;
 import xmcp.forms.plugin.Plugin;
 import xprc.xpce.Application;
@@ -115,20 +117,9 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
 
 
   private RuntimeContext getOwnRtc() {
-    try {
-      ClassLoaderBase clb = (ClassLoaderBase) getClass().getClassLoader();
-      Long revision = clb.getRevision();
-      RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
-      com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext rtc = rm.getRuntimeContext(revision);
-      if(rtc instanceof com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application) {
-        return new Application(rtc.getName(), ((com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application)rtc).getVersionName());
-      } else {
-        return new Workspace(rtc.getName());
-      }
-    } catch(Exception e) {
-      logger.error("Could not determine RTC.", e);
-      return null;
-    }
+    ClassLoaderBase clb = (ClassLoaderBase) getClass().getClassLoader();
+    Long revision = clb.getRevision();
+    return RuntimeContextService.getRuntimeContextFromRevision(new IntegerNumber(revision));
   }
 
   @Override
