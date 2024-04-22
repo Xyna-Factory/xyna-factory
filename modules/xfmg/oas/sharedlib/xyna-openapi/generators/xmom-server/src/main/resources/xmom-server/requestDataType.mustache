@@ -106,6 +106,7 @@ ret.{{setPropVarName}}(text);
 ret.{{setPropVarName}}({{javaType}}.valueOf(document.getText()));
         {{/isString}}
       {{/isList}}
+      {{#isList}}
 List&lt;? extends xfmg.xfctrl.datamodel.json.JSONValue&gt; values = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseGenericJSONList(document);
 List&lt;{{javaType}}&gt; resultData = new ArrayList&lt; &gt;();
 for(xfmg.xfctrl.datamodel.json.JSONValue value : values) {
@@ -126,7 +127,6 @@ for(xfmg.xfctrl.datamodel.json.JSONValue value : values) {
     resultData.add(valueProcessed);
 }
 ret.{{setPropVarName}}(resultData);
-      {{^isList}}
       {{/isList}}
     {{/isPrimitive}}
   {{/bodyParams}}
