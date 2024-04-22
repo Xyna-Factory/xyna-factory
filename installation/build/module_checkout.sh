@@ -32,7 +32,7 @@ do
   PATHS="${PATHS} ${path}/application.xml"
 done
 
-git sparse-checkout set ${PATHS}
+git sparse-checkout add ${PATHS}
 git checkout "$1"
 echo "work complete"
 exit 0
