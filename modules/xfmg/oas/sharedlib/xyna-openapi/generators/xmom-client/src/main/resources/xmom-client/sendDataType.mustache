@@ -69,12 +69,30 @@ String text;
 if ({{getPropVarName}} == null) {
   text = null;
 } else {
-{{#isString}}
-  text = &quot;\&quot;&quot; + xfmg.xfctrl.datamodel.json.JSONDatamodelServices.encodeValue(new xact.templates.Document.Builder().text({{getPropVarName}}).instance()).getText() + &quot;\&quot;&quot;;
-{{/isString}}
-{{^isString}}
-  text = String.valueOf({{getPropVarName}});
-{{/isString}}
+  text =
+  {{#isList}}
+    &quot;[&quot; + String.join(&quot;,&quot;, {{getPropVarName}}.stream().map(listEntry -> listEntry == null ? null :
+  {{/isList}}
+  {{#isString}}
+    &quot;\&quot;&quot; + xfmg.xfctrl.datamodel.json.JSONDatamodelServices.encodeValue(new xact.templates.Document.Builder().text(
+  {{/isString}}
+  {{^isString}}
+    String.valueOf(
+  {{/isString}}
+  {{#isList}}
+    listEntry
+  {{/isList}}
+  {{^isList}}
+    {{getPropVarName}}
+  {{/isList}}
+    )
+  {{#isString}}
+    .instance()).getText() + &quot;\&quot;&quot;
+  {{/isString}}
+  {{#isList}}
+    ).collect(java.util.stream.Collectors.toList())) + &quot;]&quot;
+  {{/isList}}
+    ;
 }
 body = new xact.templates.Document();
 body.setText(text);
