@@ -1,0 +1,10 @@
+{
+    "template": "copilot/mapping-assignments.ftl",
+    "parser": "xmcp.xypilot.impl.gen.parse.MappingParser",
+    "inference_parameters": {
+        "model": "copilot-java",
+        "n": 1,
+        "stop": ["return", "\n  }"]
+    }
+}
+
