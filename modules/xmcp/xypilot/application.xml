@@ -227,7 +227,7 @@
     </XynaProperty>
     <XynaProperty implicitDependency="false">
       <Name>xmcp.xypilot.model</Name>
-      <Value>fauxpilot</Value>
+      <Value/>
     </XynaProperty>
     <XynaProperty implicitDependency="false">
       <Name>xmcp.xypilot.uri</Name>
