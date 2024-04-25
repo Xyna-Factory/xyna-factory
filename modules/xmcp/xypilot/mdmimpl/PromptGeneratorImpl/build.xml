@@ -34,4 +34,16 @@
 
     <import file="${root.dir}/installation/build/buildService.xml" />
 
+    <target name="post-build-src" description="post-build-src">
+         <jar destfile="${target.dir}/${project.name}.jar" update="true">
+             <fileset dir="${basedir}">
+                 <include name="res/templates/**/*.ftl" />
+             </fileset>
+             <fileset dir="${basedir}">
+                 <include name="res/pipelines/**/*.json" />
+             </fileset>
+        </jar>
+    </target>
+
+
 </project>
