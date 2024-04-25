@@ -222,10 +222,22 @@ public class XynaCodegenProperty {
     sb.append("        ");
     return sb.toString();
   }
-  
+
+
   public boolean isString() {
     return "String".equals(javaType);
   }
+
+
+  public boolean isNumber() {
+    return "Integer".equals(javaType) || "Long".equals(javaType) || "Float".equals(javaType) || "Double".equals(javaType);
+  }
+
+
+  public boolean isBoolean() {
+    return "Boolean".equals(javaType);
+  }
+
 
   @Override
   public boolean equals(Object o) {
