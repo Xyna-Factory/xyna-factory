@@ -23,18 +23,18 @@
 	//		"label": "Factory XDevH5"
 	//	}
 	//},
-	// because legacy
+	// because it's needed
 	"onCreateCommand": "sudo mkdir -p /opt/common",
 	// we need ant-contrib which is not available via sdkman
 	"updateContentCommand": "sudo apt-get -y update; sudo apt-get -y upgrade; sudo apt-get -y install ant-contrib; sudo apt-get -y clean",
 	// for some reason this directory is needed by the build
-	"postCreateCommand": "sudo mkdir -p /usr/local/sdkman/candidates/java/current/Packages; echo -e \"\nrun 'installation/build.sh all -b main to build'\ntakes about an hour on bind-mount fs and 25 min on local fs\"",
+	"postCreateCommand": "sudo mkdir -p /usr/local/sdkman/candidates/java/current/Packages; echo -e \"\nrun 'installation/build.sh build to build'\ntakes about an hour on bind-mount fs and 25 min on local fs\"",
 	// Configure tool-specific properties.
 	"customizations": {
 				// Configure properties specific to VS Code.
 				"vscode": {
 					// Set *default* container specific settings.json values on container create.
-					// Java files are ISO-8859-15 by default, because legacy
+					// Java files are ISO-8859-15 by default, because thats how it is
 					"settings": {"files.encoding": "iso885915"},
 					"extensions": []
 				}
