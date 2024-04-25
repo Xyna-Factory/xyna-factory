@@ -106,6 +106,28 @@ ret.{{setPropVarName}}(text);
 ret.{{setPropVarName}}({{javaType}}.valueOf(document.getText()));
         {{/isString}}
       {{/isList}}
+      {{#isList}}
+List&lt;? extends xfmg.xfctrl.datamodel.json.JSONValue&gt; values = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseGenericJSONList(document);
+List&lt;{{javaType}}&gt; resultData = new ArrayList&lt; &gt;();
+for(xfmg.xfctrl.datamodel.json.JSONValue value : values) {
+    if(value == null || "NULL".equals(value.getType())) {
+        resultData.add(null);
+        continue;
+    }
+  {{javaType}} valueProcessed =
+        {{#isString}}
+    xfmg.xfctrl.datamodel.json.JSONDatamodelServices.decodeValue(new xact.templates.Document.Builder().text(value.getStringOrNumberValue()).instance()).getText();
+        {{/isString}}
+        {{#isNumber}}
+    {{javaType}}.valueOf(value.getStringOrNumberValue());
+        {{/isNumber}}
+        {{#isBoolean}}
+    value.getBooleanValue();
+        {{/isBoolean}}
+    resultData.add(valueProcessed);
+}
+ret.{{setPropVarName}}(resultData);
+      {{/isList}}
     {{/isPrimitive}}
   {{/bodyParams}}
 {{/hasBody}}
