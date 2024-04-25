@@ -34,8 +34,8 @@
 				// Configure properties specific to VS Code.
 				"vscode": {
 					// Set *default* container specific settings.json values on container create.
-					// Java files are ISO-8859-15 by default, because thats how it is
-					"settings": {"files.encoding": "iso885915"},
+					// Java files are ISO-8859-15 by default, because that's how it is
+					"settings": { "[java]": {"files.encoding": "iso885915" } },
 					"extensions": []
 				}
 	}
