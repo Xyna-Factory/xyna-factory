@@ -32,9 +32,18 @@ public final class SnmpAccessData {
   static Logger logger = Logger.getLogger(SnmpAccessData.class.getName());
 
   public static final String MD5 = "MD5";
+  public static final String SHA = "SHA";
   public static final String SHA1 = "SHA1";
+  public static final String SHA224 = "SHA224";
+  public static final String SHA256 = "SHA256";
+  public static final String SHA384 = "SHA384";
+  public static final String SHA512 = "SHA512";
+  public static final String DES = "DES";
   public static final String DES56 = "DES56";
+  public static final String DESEDE = "DESEDE";
   public static final String AES128 = "AES128";
+  public static final String AES192 = "AES192";
+  public static final String AES256 = "AES256";
 
   public static final String VERSION_1 = "v1";
   public static final String VERSION_2c = "v2c";

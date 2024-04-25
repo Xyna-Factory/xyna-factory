@@ -22,4 +22,14 @@
       <Type>String</Type>
     </Meta>
   </Data>
+  <Data Label="Auth Algo" ReferenceName="OptionalSNMPv3AuthAlgorithm" ReferencePath="xact.snmp.algorithms" VariableName="optionalSNMPv3AuthAlgorithm">
+    <Meta>
+      <Documentation>if not set explicitly use value of Xyna Property xact.snmp.v3.authalgorithm</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Priv Algo" ReferenceName="OptionalSNMPv3PrivAlgorithm" ReferencePath="xact.snmp.algorithms" VariableName="optionalSNMPv3PrivAlgorithm">
+    <Meta>
+      <Documentation>if not set explicitly use value of Xyna Property xact.snmp.v3.privalgorithm</Documentation>
+    </Meta>
+  </Data>
 </DataType>

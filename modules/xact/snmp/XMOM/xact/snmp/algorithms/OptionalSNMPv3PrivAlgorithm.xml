@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="OptionalSNMPv3PrivAlgorithm" TypePath="xact.snmp.algorithms" Label="Optional SNMP v3 Auth Algorithm" IsAbstract="true">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="optional algorithm" VariableName="optionalAlgorithm" ReferenceName="SNMPv3PrivAlgorithm" ReferencePath="xact.snmp.algorithms" />
+  <Service Label="get algorithm or" TypeName="OptionalSNMPv3PrivAlgorithm">
+    <Operation Label="get algorithm or" Name="getAlgorithmOr" IsStatic="false">
+      <Input>
+        <Data ID="11" Label="default algorithm" VariableName="defaultAlgorithm" ReferenceName="SNMPv3PrivAlgorithm" ReferencePath="xact.snmp.algorithms"/>
+      </Input>
+      <Output>
+        <Data ID="12" Label="algorithm" VariableName="algorithm" ReferenceName="SNMPv3PrivAlgorithm" ReferencePath="xact.snmp.algorithms"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getOptionalAlgorithm() != null ? getOptionalAlgorithm() : defaultAlgorithm;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="get priv algorithm by name" Name="getPrivAlgorithmByName" IsStatic="true">
+      <Input>
+        <Data ID="11" Label="algorithm name" VariableName="algorithmName" ReferenceName="SNMPv3AlgorithmName" ReferencePath="xact.snmp.algorithms"/>
+      </Input>
+      <Output>
+        <Data ID="12" Label="algorithm" VariableName="algorithm" ReferenceName="OptionalSNMPv3PrivAlgorithm" ReferencePath="xact.snmp.algorithms"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+        if (algorithmName == null || algorithmName.getName() == null) return new OptionalSNMPv3PrivAlgorithm();
+        String name = algorithmName.getName().toLowerCase().replaceAll("-", "");
+
+        if ("des".equals(name)) return new OptionalSNMPv3PrivAlgorithm(new DES("DES"));
+        if ("desede".equals(name)) return new OptionalSNMPv3PrivAlgorithm(new DESEDE("DESEDE"));
+        if ("aes128".equals(name)) return new OptionalSNMPv3PrivAlgorithm(new AES128("AES128"));
+        if ("aes192".equals(name)) return new OptionalSNMPv3PrivAlgorithm(new AES192("AES192"));
+        if ("aes256".equals(name)) return new OptionalSNMPv3PrivAlgorithm(new AES256("AES256"));
+        
+        return new OptionalSNMPv3PrivAlgorithm();
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

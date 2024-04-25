@@ -56,6 +56,9 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement;
 
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyEnum;
+import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
+
 import xact.snmp.OID;
 import xact.snmp.OIDs;
 import xact.snmp.RetryModel;
@@ -97,11 +100,44 @@ public class SNMPServiceServiceOperationImpl implements ExtendedDeploymentTask, 
   private static final String SECURE_STORAGE_KEY_AUTHPASSWORD = "xact.snmp.v3.authpassword";
   private static final String SECURE_STORAGE_KEY_PRIVPASSWORD = "xact.snmp.v3.privpassword";
 
+  private static final XynaPropertyEnum<AUTH_ALGO> XYNAPROPERTY_AUTH_ALGO = 
+  new XynaPropertyEnum<AUTH_ALGO>("xact.snmp.v3.authalgorithm", AUTH_ALGO.class, AUTH_ALGO.SHA256)
+  .setDefaultDocumentation(DocumentationLanguage.DE, "Mögliche authentifizierungs Algorithmen: MD5, SHA, SHA1, SHA224, SHA256, SHA384, SHA512")
+  .setDefaultDocumentation(DocumentationLanguage.EN, "Available authentification algorithms: MD5, SHA, SHA1, SHA224, SHA256, SHA384, SHA512");
+  private static final XynaPropertyEnum<PRIV_ALGO> XYNAPROPERTY_PRIV_ALGO = new
+  XynaPropertyEnum<PRIV_ALGO>("xact.snmp.v3.privalgorithm",PRIV_ALGO.class, PRIV_ALGO.AES128)
+  .setDefaultDocumentation(DocumentationLanguage.DE, "Mögliche verschlüsselungs Algorithmen: DES, DESEDE, AES256, AES192, AES128")
+  .setDefaultDocumentation(DocumentationLanguage.EN, "Available encryption algorithms: DES, DESEDE, AES256, AES192, AES128");
+
   private static int socketTimeout = -1;
   private static EngineIdGeneration engineIdGeneration;
   private static int maxRetriesAfterTimeout = -1;
   private static int retryinterval = -1;
 
+  private static enum AUTH_ALGO {
+
+    MD5(SnmpAccessData.MD5), SHA(SnmpAccessData.SHA), SHA1(SnmpAccessData.SHA1),
+    SHA224(SnmpAccessData.SHA224), SHA256(SnmpAccessData.SHA256), SHA384(SnmpAccessData.SHA384), SHA512(SnmpAccessData.SHA512);
+
+    private String name;
+
+    AUTH_ALGO(String name) {this.name = name;}
+
+    String getName() {return name; }
+
+  };
+
+  private static enum PRIV_ALGO {
+
+    DES(SnmpAccessData.DES), DESEDE(SnmpAccessData.DESEDE), AES256(SnmpAccessData.AES256), AES192(SnmpAccessData.AES192), AES128(SnmpAccessData.AES128);
+
+    private String name;
+
+    PRIV_ALGO(String name) {this.name = name;}
+
+    String getName() {return name; }
+
+  };
 
   public SNMPServiceServiceOperationImpl() {
   }
@@ -248,10 +284,20 @@ public class SNMPServiceServiceOperationImpl implements ExtendedDeploymentTask, 
       String privPassword = retrievePassword(connectionDataV3, SECURE_STORAGE_KEY_PRIVPASSWORD);
 
       if (authPassword != null) {
-        builder.authenticationProtocol(SnmpAccessData.MD5).authenticationPassword(authPassword);
+        AUTH_ALGO auth_algo = XYNAPROPERTY_AUTH_ALGO.get();
+        if (connectionDataV3.getOptionalSNMPv3AuthAlgorithm() != null &&
+        connectionDataV3.getOptionalSNMPv3AuthAlgorithm().getOptionalAlgorithm() != null ) {
+          auth_algo = AUTH_ALGO.valueOf(connectionDataV3.getOptionalSNMPv3AuthAlgorithm().getOptionalAlgorithm().getAlgorithm().getName());
+        }
+        builder.authenticationProtocol(auth_algo.getName()).authenticationPassword(authPassword);
       }
       if (privPassword != null) {
-        builder.privacyProtocol(SnmpAccessData.DES56).privacyPassword(privPassword);
+        PRIV_ALGO priv_algo = XYNAPROPERTY_PRIV_ALGO.get();
+        if (connectionDataV3.getOptionalSNMPv3PrivAlgorithm() != null &&
+        connectionDataV3.getOptionalSNMPv3PrivAlgorithm().getOptionalAlgorithm() != null ) {
+          priv_algo = PRIV_ALGO.valueOf(connectionDataV3.getOptionalSNMPv3PrivAlgorithm().getOptionalAlgorithm().getAlgorithm().getName());
+        }
+        builder.privacyProtocol(priv_algo.getName()).privacyPassword(privPassword);
       }
       SnmpAccessData accessData = builder.build();
       try {
