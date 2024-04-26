@@ -16,12 +16,12 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="OptionalSNMPv3PrivAlgorithm" TypePath="xact.snmp.algorithms" Label="Optional SNMP v3 Auth Algorithm" IsAbstract="true">
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="OptionalSNMPv3PrivAlgorithm" TypePath="xact.snmp.algorithms" Label="Optional SNMP v3 Priv Algorithm">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
   <Data Label="optional algorithm" VariableName="optionalAlgorithm" ReferenceName="SNMPv3PrivAlgorithm" ReferencePath="xact.snmp.algorithms" />
-  <Service Label="get algorithm or" TypeName="OptionalSNMPv3PrivAlgorithm">
+  <Service Label="Optional SNMP v3 Priv Algorithm" TypeName="OptionalSNMPv3PrivAlgorithm">
     <Operation Label="get algorithm or" Name="getAlgorithmOr" IsStatic="false">
       <Input>
         <Data ID="11" Label="default algorithm" VariableName="defaultAlgorithm" ReferenceName="SNMPv3PrivAlgorithm" ReferencePath="xact.snmp.algorithms"/>
@@ -35,7 +35,7 @@
     </Operation>
     <Operation Label="get priv algorithm by name" Name="getPrivAlgorithmByName" IsStatic="true">
       <Input>
-        <Data ID="11" Label="algorithm name" VariableName="algorithmName" ReferenceName="SNMPv3AlgorithmName" ReferencePath="xact.snmp.algorithms"/>
+        <Data ID="11" Label="algorithm name" VariableName="algorithmName" ReferenceName="SNMPv3PrivAlgorithmName" ReferencePath="xact.snmp.algorithms"/>
       </Input>
       <Output>
         <Data ID="12" Label="algorithm" VariableName="algorithm" ReferenceName="OptionalSNMPv3PrivAlgorithm" ReferencePath="xact.snmp.algorithms"/>
@@ -47,6 +47,8 @@
 
         if ("des".equals(name)) return new OptionalSNMPv3PrivAlgorithm(new DES("DES"));
         if ("desede".equals(name)) return new OptionalSNMPv3PrivAlgorithm(new DESEDE("DESEDE"));
+        if ("3des".equals(name)) return new OptionalSNMPv3PrivAlgorithm(new DESEDE("DESEDE"));
+        if ("aes".equals(name)) return new OptionalSNMPv3PrivAlgorithm(new AES128("AES128"));
         if ("aes128".equals(name)) return new OptionalSNMPv3PrivAlgorithm(new AES128("AES128"));
         if ("aes192".equals(name)) return new OptionalSNMPv3PrivAlgorithm(new AES192("AES192"));
         if ("aes256".equals(name)) return new OptionalSNMPv3PrivAlgorithm(new AES256("AES256"));
@@ -55,5 +57,19 @@
         </CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation Label="is present" Name="isPresent" IsStatic="false">
+      <Input>
+      </Input>
+      <Output>
+        <Data ID="11" Label="is present" VariableName="isPresent0">
+          <Meta>
+            <Type>boolean</Type>
+         </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getOptionalAlgorithm() != null;</CodeSnippet>
+      </SourceCode>
+    </Operation>    
   </Service>
 </DataType>

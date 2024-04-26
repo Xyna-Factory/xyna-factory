@@ -16,12 +16,12 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="OptionalSNMPv3AuthAlgorithm" TypePath="xact.snmp.algorithms" Label="Optional SNMP v3 Auth Algorithm" IsAbstract="true">
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="OptionalSNMPv3AuthAlgorithm" TypePath="xact.snmp.algorithms" Label="Optional SNMP v3 Auth Algorithm">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
   <Data Label="optional algorithm" VariableName="optionalAlgorithm" ReferenceName="SNMPv3AuthAlgorithm" ReferencePath="xact.snmp.algorithms" />
-  <Service Label="get algorithm or" TypeName="OptionalSNMPv3AuthAlgorithm">
+  <Service Label="Optional SNMP v3 Auth Algorithm" TypeName="OptionalSNMPv3AuthAlgorithm">
     <Operation Label="get algorithm or" Name="getAlgorithmOr" IsStatic="false">
       <Input>
         <Data ID="11" Label="default algorithm" VariableName="defaultAlgorithm" ReferenceName="SNMPv3AuthAlgorithm" ReferencePath="xact.snmp.algorithms"/>
@@ -35,7 +35,7 @@
     </Operation>
     <Operation Label="get auth algorithm by name" Name="getAuthAlgorithmByName" IsStatic="true">
       <Input>
-        <Data ID="11" Label="algorithm name" VariableName="algorithmName" ReferenceName="SNMPv3AlgorithmName" ReferencePath="xact.snmp.algorithms"/>
+        <Data ID="11" Label="algorithm name" VariableName="algorithmName" ReferenceName="SNMPv3AuthAlgorithmName" ReferencePath="xact.snmp.algorithms"/>
       </Input>
       <Output>
         <Data ID="12" Label="algorithm" VariableName="algorithm" ReferenceName="OptionalSNMPv3AuthAlgorithm" ReferencePath="xact.snmp.algorithms"/>
@@ -46,7 +46,7 @@
         String name = algorithmName.getName().toLowerCase().replaceAll("-", "");
 
         if ("md5".equals(name)) return new OptionalSNMPv3AuthAlgorithm(new MD5("MD5"));
-        if ("sha".equals(name)) return new OptionalSNMPv3AuthAlgorithm(new SHA("SHA"));
+        if ("sha".equals(name)) return new OptionalSNMPv3AuthAlgorithm(new SHA1("SHA1"));
         if ("sha1".equals(name)) return new OptionalSNMPv3AuthAlgorithm(new SHA1("SHA1"));
         if ("sha224".equals(name)) return new OptionalSNMPv3AuthAlgorithm(new SHA224("SHA224"));
         if ("sha256".equals(name)) return new OptionalSNMPv3AuthAlgorithm(new SHA256("SHA256"));
@@ -55,6 +55,20 @@
         
         return new OptionalSNMPv3AuthAlgorithm();
         </CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="is present" Name="isPresent" IsStatic="false">
+      <Input>
+      </Input>
+      <Output>
+        <Data ID="11" Label="is present" VariableName="isPresent0">
+          <Meta>
+            <Type>boolean</Type>
+         </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getOptionalAlgorithm() != null;</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

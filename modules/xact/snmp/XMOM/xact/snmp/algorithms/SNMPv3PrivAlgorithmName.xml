@@ -16,10 +16,13 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="SNMPv3AlgorithmName" TypePath="xact.snmp.algorithms" Label="SNMP v3 Algorithm Name" IsAbstract="true">
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="SNMPv3PrivAlgorithmName" TypePath="xact.snmp.algorithms" Label="SNMP v3 Priv Algorithm Name">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
   <Data Label="name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+    </Meta>  
   </Data>
 </DataType>

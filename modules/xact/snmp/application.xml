@@ -68,7 +68,11 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xact.snmp.algorithms.SNMPv3AlgorithmName</FqName>
+      <FqName>xact.snmp.algorithms.SNMPv3AuthAlgorithmName</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.snmp.algorithms.SNMPv3PrivAlgorithmName</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -93,10 +97,6 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xact.snmp.algorithms.MD5</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xact.snmp.algorithms.SHA</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
