@@ -57,6 +57,7 @@ import xmcp.factorymanager.ParameterInheritanceRule;
 import xmcp.factorymanager.impl.converter.OrderTypeConverter;
 import xmcp.factorymanager.ordertypes.OrderType;
 import xmcp.factorymanager.ordertypes.OrderTypeName;
+import xmcp.factorymanager.ordertypes.OrderTypeTableFilter;
 import xmcp.factorymanager.ordertypes.exception.CreateNewOderTypeException;
 import xmcp.factorymanager.ordertypes.exception.DeleteOrderTypeException;
 import xmcp.factorymanager.ordertypes.exception.LoadOrderTpeException;
@@ -256,7 +257,10 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
   }
 
   @Override
-  public List<? extends OrderType> getListEntries(TableInfo tableInfo) throws LoadOrderTypesException {   
+  public List<? extends OrderType> getListEntries(TableInfo tableInfo, OrderTypeTableFilter filter) throws LoadOrderTypesException {   
+    
+    boolean hidePaths = true;
+    
     TableHelper<OrderType, TableInfo> tableHelper = TableHelper.<OrderType, TableInfo>init(tableInfo)
         .limitConfig(TableInfo::getLimit)
         .sortConfig(ti -> {
