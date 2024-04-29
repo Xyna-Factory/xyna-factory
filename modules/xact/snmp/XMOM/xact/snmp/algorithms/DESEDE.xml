@@ -19,6 +19,7 @@
 <DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="DESEDE" TypePath="xact.snmp.algorithms" Label="DESEDE" IsAbstract="false" BaseTypeName="SNMPv3PrivAlgorithm" BaseTypePath="xact.snmp.algorithms">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>DES Encrypt-Decrypt-Encrypt, aka 3DES, Tripple-DES</Documentation>
   </Meta>
   <Service Label="DESEDE" TypeName="DESEDE">
     <Operation Label="get algorithm" Name="getAlgorithm" IsStatic="false">

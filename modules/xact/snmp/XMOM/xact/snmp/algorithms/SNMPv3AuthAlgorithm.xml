@@ -23,7 +23,7 @@
   <Data Label="name" VariableName="name">
     <Meta>
       <Type>String</Type>
-      <Documentation>MD5, SHA, SHA1, SHA2, SHA224, SHA256, SHA384, SHA512</Documentation>
+      <Documentation>MD5, SHA, SHA224, SHA256, SHA384, SHA512</Documentation>
     </Meta>
   </Data>
   <Service Label="get algorithm" TypeName="SNMPv3AuthAlgorithm">

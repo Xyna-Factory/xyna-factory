@@ -50,7 +50,7 @@
         if ("sha1".equals(name)) return new OptionalSNMPv3AuthAlgorithm(new SHA1("SHA1"));
         if ("sha224".equals(name)) return new OptionalSNMPv3AuthAlgorithm(new SHA224("SHA224"));
         if ("sha256".equals(name)) return new OptionalSNMPv3AuthAlgorithm(new SHA256("SHA256"));
-        if ("sha284".equals(name)) return new OptionalSNMPv3AuthAlgorithm(new SHA384("SHA384"));
+        if ("sha384".equals(name)) return new OptionalSNMPv3AuthAlgorithm(new SHA384("SHA384"));
         if ("sha512".equals(name)) return new OptionalSNMPv3AuthAlgorithm(new SHA512("SHA512"));
         
         return new OptionalSNMPv3AuthAlgorithm();

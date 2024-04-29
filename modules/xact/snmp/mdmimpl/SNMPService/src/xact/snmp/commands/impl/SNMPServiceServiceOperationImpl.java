@@ -103,15 +103,15 @@ public class SNMPServiceServiceOperationImpl implements ExtendedDeploymentTask, 
   private static final XynaPropertyEnum<AUTH_ALGO> XYNAPROPERTY_AUTH_ALGO = new XynaPropertyEnum<AUTH_ALGO>(
       "xact.snmp.v3.authalgorithm", AUTH_ALGO.class, AUTH_ALGO.SHA256)
       .setDefaultDocumentation(DocumentationLanguage.DE,
-          "Mögliche authentifizierungs Algorithmen: MD5, SHA, SHA1, SHA224, SHA256, SHA384, SHA512")
+          "Mögliche authentifizierungs Algorithmen: MD5, SHA1, SHA224, SHA256, SHA384, SHA512")
       .setDefaultDocumentation(DocumentationLanguage.EN,
-          "Available authentification algorithms: MD5, SHA, SHA1, SHA224, SHA256, SHA384, SHA512");
+          "Available authentification algorithms: MD5, SHA1, SHA224, SHA256, SHA384, SHA512");
   private static final XynaPropertyEnum<PRIV_ALGO> XYNAPROPERTY_PRIV_ALGO = new XynaPropertyEnum<PRIV_ALGO>(
       "xact.snmp.v3.privalgorithm", PRIV_ALGO.class, PRIV_ALGO.AES128)
       .setDefaultDocumentation(DocumentationLanguage.DE,
-          "Mögliche verschlüsselungs Algorithmen: DES, DESEDE, AES256, AES192, AES128")
+          "Mögliche verschlüsselungs Algorithmen: DES, DESEDE, AES128, AES192, AES256")
       .setDefaultDocumentation(DocumentationLanguage.EN,
-          "Available encryption algorithms: DES, DESEDE, AES256, AES192, AES128");
+          "Available encryption algorithms: DES, DESEDE, AES128, AES192, AES256");
 
   private static int socketTimeout = -1;
   private static EngineIdGeneration engineIdGeneration;
@@ -120,8 +120,8 @@ public class SNMPServiceServiceOperationImpl implements ExtendedDeploymentTask, 
 
   private static enum AUTH_ALGO {
 
-    MD5(SnmpAccessData.MD5), SHA(SnmpAccessData.SHA), SHA1(SnmpAccessData.SHA1),
-    SHA224(SnmpAccessData.SHA224), SHA256(SnmpAccessData.SHA256), SHA384(SnmpAccessData.SHA384),
+    MD5(SnmpAccessData.MD5), SHA1(SnmpAccessData.SHA), SHA224(SnmpAccessData.SHA224), SHA256(SnmpAccessData.SHA256),
+    SHA384(SnmpAccessData.SHA384),
     SHA512(SnmpAccessData.SHA512);
 
     private String name;

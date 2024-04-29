@@ -19,6 +19,7 @@
 <DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="SNMPv3PrivAlgorithmName" TypePath="xact.snmp.algorithms" Label="SNMP v3 Priv Algorithm Name">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>DES, DESEDE, AES128, AES192, AES256</Documentation>
   </Meta>
   <Data Label="name" VariableName="name">
     <Meta>

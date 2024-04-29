@@ -23,7 +23,7 @@
   <Data Label="name" VariableName="name">
     <Meta>
       <Type>String</Type>
-      <Documentation>DES, DESEDE, DES56, AES256, AES192, AES128</Documentation>
+      <Documentation>DES, DESEDE, AES128, AES192, AES256</Documentation>
     </Meta>
   </Data>
   <Service Label="get algorithm" TypeName="SNMPv3PrivAlgorithm">
