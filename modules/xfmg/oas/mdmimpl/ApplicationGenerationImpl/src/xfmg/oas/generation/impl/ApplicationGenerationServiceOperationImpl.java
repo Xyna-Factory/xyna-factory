@@ -34,19 +34,21 @@ import com.gip.xyna.xfmg.xopctrl.managedsessions.SessionManagement;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 
 import base.File;
+import base.math.IntegerNumber;
 import xfmg.oas.generation.ApplicationGenerationParameter;
 import xfmg.oas.generation.ApplicationGenerationServiceOperation;
 import xfmg.oas.generation.cli.generated.OverallInformationProvider;
 import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl;
 import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl.ValidationResult;
+import xfmg.xfctrl.appmgmt.RuntimeContextService;
 import xfmg.xfctrl.filemgmt.ManagedFileId;
 import xmcp.forms.plugin.Plugin;
 import xprc.xpce.Application;
+import xprc.xpce.RuntimeContext;
 import xprc.xpce.Workspace;
 
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
-import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 
 
 public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploymentTask, ApplicationGenerationServiceOperation {
@@ -97,34 +99,27 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
 
 
   private Plugin createPlugin() {
-    Plugin.Builder plugin = new Plugin.Builder();
-    plugin.navigationEntryLabel("OAS Import");
-    plugin.navigationEntryName("OAS Import");
-    plugin.definitionWorkflowFQN("xmcp.oas.fman.GetOASImportHistoryDefinition");
-    xprc.xpce.RuntimeContext rtc = getOwnRtc();
+    String entryName = "OAS Import";
+    RuntimeContext rtc = getOwnRtc();
     if (rtc == null) {
       return null;
     }
+    if (rtc instanceof Application) {
+      entryName = entryName + " " + ((Application) rtc).getVersion();
+    }
+    Plugin.Builder plugin = new Plugin.Builder();
+    plugin.navigationEntryLabel(entryName);
+    plugin.navigationEntryName(entryName);
+    plugin.definitionWorkflowFQN("xmcp.oas.fman.GetOASImportHistoryDefinition");
     plugin.pluginRTC(rtc);
     return plugin.instance();
   }
 
 
-  private xprc.xpce.RuntimeContext getOwnRtc() {
-    try {
-      ClassLoaderBase clb = (ClassLoaderBase) getClass().getClassLoader();
-      Long revision = clb.getRevision();
-      RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
-      RuntimeContext rtc = rm.getRuntimeContext(revision);
-      if(rtc instanceof com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application) {
-        return new Application(rtc.getName(), ((com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application)rtc).getVersionName());
-      } else {
-        return new Workspace(rtc.getName());
-      }
-    } catch(Exception e) {
-      logger.error("Could not determine RTC.", e);
-      return null;
-    }
+  private RuntimeContext getOwnRtc() {
+    ClassLoaderBase clb = (ClassLoaderBase) getClass().getClassLoader();
+    Long revision = clb.getRevision();
+    return RuntimeContextService.getRuntimeContextFromRevision(new IntegerNumber(revision));
   }
 
   @Override
