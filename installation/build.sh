@@ -23,6 +23,9 @@ print_help() {
   echo "Usage: $0 build"
   echo "Usage: $0 all -b GIT_BRANCH_XYNA_MODELLER"
   echo "Usage: $0 compose"
+  echo "Usage: $0 plugins"
+  echo "Usage: $0 clusterproviders"
+  echo "Usage: $0 conpooltypes"
 }
 
 check_dependencies() {
