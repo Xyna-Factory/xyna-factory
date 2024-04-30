@@ -106,10 +106,10 @@
 
   params:
     var: the variable (AVariable)
-    resolveTypes: Wether to resolve imported types.
+    resolveTypes: whether to resolve imported types.
         True: simple name, if the type is imported, else FQN.
         False: simple name
-    allowCollections: Wether to allow collection types, e.g. List<String> or use array types, e.g. String[].
+    allowCollections: whether to allow collection types, e.g. List<String> or use array types, e.g. String[].
         True: allow collection types
         False: do not allow collection types
 
@@ -130,7 +130,7 @@
 
   params:
     var: the member variable (AVariable)
-    resolveTypes: Wether to resolve imported types.
+    resolveTypes: whether to resolve imported types.
         True: simple name, if the type is imported, else FQN.
         False: simple name
 
@@ -147,7 +147,7 @@
     private String name;
 -->
 <#macro member_var var resolveTypes=false>
-<#--!"" required cause of XYNA bug, where exception variables always have null documentation -->
+<#-- exception documentation may be null -->
 <@documentation_block var.documentation!""/>
 private <@variable var resolveTypes/>;
 </#macro>
@@ -255,7 +255,7 @@ ${method.documentation}
     prefix: the prefix of each parameter
     params: the list of parameters (AVariable)
     start: the enumeration index of the first parameter
-    resolveTypes: Wether to resolve imported types.
+    resolveTypes: whether to resolve imported types.
         True: simple name, if the type is imported, else FQN.
         False: simple name
 
@@ -278,10 +278,10 @@ ${method.documentation}
 
   params:
     params: the parameters (List<AVariable>)
-    resolveTypes: Wether to resolve imported types.
+    resolveTypes: whether to resolve imported types.
         True: simple name, if the type is imported, else FQN.
         False: simple name
-    allowCollections: Wether to allow collection types, e.g. List<String> or use array types, e.g. String[].
+    allowCollections: whether to allow collection types, e.g. List<String> or use array types, e.g. String[].
 
   result:
     [type] [varName], [type] [varName], ... <inline>
@@ -302,10 +302,10 @@ ${method.documentation}
 
   params:
     params: the parameters (List<AVariable>)
-    resolveTypes: Wether to resolve imported types.
+    resolveTypes: whether to resolve imported types.
         True: simple name, if the type is imported, else FQN.
         False: simple name
-    allowCollections: Wether to allow collection types, e.g. List<String> or use array types, e.g. String[].
+    allowCollections: whether to allow collection types, e.g. List<String> or use array types, e.g. String[].
 
   result:
     type, type, ... <inline>
@@ -326,7 +326,7 @@ ${method.documentation}
 
   params:
     exceptions: the exceptions (ExceptionVariable) to create the throws declaration for
-    resolveTypes: Wether to resolve imported types.
+    resolveTypes: whether to resolve imported types.
         True: simple name, if the type is imported, else FQN.
         False: simple name
 
@@ -349,10 +349,10 @@ ${method.documentation}
 
   params:
     method: the method (Operation) to create the header for
-    resolveTypes: Wether to resolve imported types.
+    resolveTypes: whether to resolve imported types.
         True: simple name, if the type is imported, else FQN.
         False: simple name
-    allowCollections: Wether to allow collection types, e.g. List<String> or use array types, e.g. String[].
+    allowCollections: whether to allow collection types, e.g. List<String> or use array types, e.g. String[].
 
   result:
     (static) [returnTypes|void] name([parameters]) (throws) [exceptions] <inline>
@@ -373,10 +373,10 @@ ${method.documentation}
 
   params:
     method: the method (Operation) to create the header for
-    resolveTypes: Wether to resolve imported types.
+    resolveTypes: whether to resolve imported types.
         True: simple name, if the type is imported, else FQN.
         False: simple name
-    allowCollections: Wether to allow collection types, e.g. List<String> or use array types, e.g. String[].
+    allowCollections: whether to allow collection types, e.g. List<String> or use array types, e.g. String[].
 
   result:
     (static) [returnTypes|void] name([parameterTypes]) (throws) [exceptions] <inline>
@@ -397,7 +397,7 @@ ${method.documentation}
 
   params:
     method: the method (Operation)
-    resolveTypes: Wether to resolve imported types.
+    resolveTypes: whether to resolve imported types.
       True: simple name, if the type is imported, else FQN.
       False: simple name
 
@@ -436,7 +436,7 @@ public <@method_header method resolveTypes/> {
 
   params:
     method: the method (Operation)
-    resolveTypes: Wether to resolve imported types.
+    resolveTypes: whether to resolve imported types.
       True: simple name, if the type is imported, else FQN.
       False: simple name
 
