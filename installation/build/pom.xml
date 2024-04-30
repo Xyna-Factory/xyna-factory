@@ -544,6 +544,11 @@
                 <artifactId>openapi-generator-cli</artifactId>
                 <version>7.3.0</version>
             </dependency>
+            <dependency>
+                <groupId>org.freemarker</groupId>
+                <artifactId>freemarker</artifactId>
+                <version>2.3.32</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

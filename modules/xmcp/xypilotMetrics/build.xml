@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,18 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="build" default="build-all" basedir=".">
-    
+<project name="build" default="build" basedir=".">
+
+    <!-- this is the absolute path to the root -->
+    <pathconvert property="root.dir">
+        <path location="${basedir}/../../../" />
+    </pathconvert>
     <property name="target.dir" value="${basedir}/deploy/" />
-    <import file="../buildModule.xml" />
-    
-    <target name="build-all">
-        <buildModule target="build" dir="guihttp"       target.dir="${target.dir}/xmcp" />
-        <buildModule target="build" dir="zetaFramework" target.dir="${target.dir}/xmcp" />
-        <buildModule target="build" dir="multirole" target.dir="${target.dir}/xmcp" />
-        <buildModule target="build" dir="xypilot" target.dir="${target.dir}/xmcp" />
-        <buildModule target="build" dir="xypilotMetrics" target.dir="${target.dir}/xmcp" />
-        <buildModule target="build" dir="xypilotMetricsDefaults" target.dir="${target.dir}/xmcp" />
+
+    <target name="build">
+        <antcall target="build-application" />
     </target>
-    
+
+    <import file="${root.dir}/installation/build/buildApplication.xml" />
+
 </project>

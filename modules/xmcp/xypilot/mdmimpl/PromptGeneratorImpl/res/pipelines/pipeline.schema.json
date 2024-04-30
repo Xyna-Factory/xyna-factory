@@ -1,0 +1,64 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "template": {
+            "type": "string"
+        },
+        "parser": {
+            "type": "string"
+        },
+        "inference_parameters": {
+            "type": "object",
+            "properties": {
+                "model": {
+                    "type": "string"
+                },
+                "max_tokens": {
+                    "type": "integer"
+                },
+                "temperature": {
+                    "type": "number"
+                },
+                "top_p": {
+                    "type": "number"
+                },
+                "n": {
+                    "type": "integer"
+                },
+                "stream": {
+                    "type": "boolean"
+                },
+                "logprobs": {
+                    "type": "integer"
+                },
+                "echo": {
+                    "type": "boolean"
+                },
+                "stop": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "presence_penalty": {
+                    "type": "number"
+                },
+                "frequency_penalty": {
+                    "type": "number"
+                },
+                "best_of": {
+                    "type": "integer"
+                },
+                "logit_bias": {
+                    "type": "object"
+                },
+                "user": {
+                    "type": "string"
+                }
+            },
+            "required": ["model"]
+        }
+    },
+    "required": ["template", "parser", "inference_parameters"]
+}

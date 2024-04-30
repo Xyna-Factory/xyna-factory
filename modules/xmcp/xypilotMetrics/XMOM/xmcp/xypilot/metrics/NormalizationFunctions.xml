@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Normalization Functions" TypeName="NormalizationFunctions" TypePath="xmcp.xypilot.metrics" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="Normalization Functions" TypeName="NormalizationFunctions">
+    <Operation IsStatic="true" Label="Softmax" Name="softmax">
+      <Input>
+        <Data ID="7" IsList="true" Label="Score" ReferenceName="Score" ReferencePath="xmcp.xypilot.metrics" VariableName="score7"/>
+      </Input>
+      <Output>
+        <Data ID="8" IsList="true" Label="Score" ReferenceName="Score" ReferencePath="xmcp.xypilot.metrics" VariableName="score8"/>
+      </Output>
+      <Meta>
+        <Documentation>Normalizes a list of values to the range [0,1] using the softmax function.
+r_i = e^v_i/sum(e^v_j)
+https://en.wikipedia.org/wiki/Softmax_function</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">java.util.List&lt;Score&gt; expScores = score7.stream()
+    .map(score -&gt; new Score(java.lang.Math.exp(score.getValue())))
+    .collect(java.util.stream.Collectors.toList());
+
+return linear(expScores);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Linear" Name="linear">
+      <Input>
+        <Data ID="9" IsList="true" Label="Score" ReferenceName="Score" ReferencePath="xmcp.xypilot.metrics" VariableName="score9"/>
+      </Input>
+      <Output>
+        <Data ID="10" IsList="true" Label="Score" ReferenceName="Score" ReferencePath="xmcp.xypilot.metrics" VariableName="score10"/>
+      </Output>
+      <Meta>
+        <Documentation>Linearly normalizes a list of values to the range [0,1], where the minimum of all values corresponds to 0 and the maximum to 1.
+r_i = (v_i-min)/(max-min)</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">double min = score9.stream().mapToDouble(score -&gt; score.getValue()).min().orElse(0);
+double max = score9.stream().mapToDouble(score -&gt; score.getValue()).max().orElse(0);
+
+if (max == min) {
+    return Collections.nCopies(score9.size(), new Score(max == 0 ? 0 : 1));
+}
+return score9.stream()
+    .map(score -&gt; new Score((score.getValue()-min)/(max-min)))
+    .collect(java.util.stream.Collectors.toList());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Invert" Name="invert">
+      <Input>
+        <Data ID="11" IsList="true" Label="Score" ReferenceName="Score" ReferencePath="xmcp.xypilot.metrics" VariableName="score11"/>
+      </Input>
+      <Output>
+        <Data ID="12" IsList="true" Label="Score" ReferenceName="Score" ReferencePath="xmcp.xypilot.metrics" VariableName="score12"/>
+      </Output>
+      <Meta>
+        <Documentation>Inverts a list of values in the range [0,1].
+r_i = 1 - v_i</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">return score11.stream()
+    .map(score -&gt; new Score(1.0 - score.getValue()))
+    .collect(java.util.stream.Collectors.toList());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

@@ -1,0 +1,80 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="IPv4Address" TypePath="test.xypilot" Label="IPv4 Address" IsAbstract="false">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Represents a IPv4 address using a 32-bit integer.
+The address is stored as a 32-bit integer in network byte order.
+
+The address can be converted to and from a textual representation.
+
+The textual representation is a string consisting of four decimal
+numbers in the range 0 to 255, separated by dots.</Documentation>
+  </Meta>
+  <Data Label="address" VariableName="address">
+    <Meta>
+      <Type>int</Type>
+      <Documentation><![CDATA[the address of the IP address]]></Documentation>
+    </Meta>
+  </Data>
+  <Service Label="IPv4 Address" TypeName="IPv4Address">
+    <Operation Label="asText" Name="asText" IsStatic="false">
+      <Input>
+      </Input>
+      <Output>
+        <Data ID="3" Label="Text" VariableName="text3" ReferenceName="Text" ReferencePath="base"/>
+      </Output>
+      <Meta>
+        <Documentation>Returns a textual representation of the address in the format
+"a.b.c.d" where a, b, c and d are integers in the range 0 to 255.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">Text text2 = new Text();
+int value = this.address;
+for (int i = 0; i &lt; 4; i++) {
+  int octet = value &amp; 0xFF;
+  text2.append(new Text(String.valueOf(octet)));
+  if (i &lt; 3) {
+    text2.append(new Text("."));
+  }
+  value = value &gt;&gt; 8;
+}
+return text2;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="fromText" Name="fromText" IsStatic="false">
+      <Input>
+        <Data ID="11" Label="ipAddressText" VariableName="text11" ReferenceName="Text" ReferencePath="base"/>
+      </Input>
+      <Output>
+        <Data ID="15" Label="IPv4 Address" VariableName="iPv4Address15" ReferenceName="IPv4Address" ReferencePath="test.xypilot"/>
+      </Output>
+      <Meta>
+        <Documentation>Creates a new IPv4Address from a textual representation.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">String ip = text11.getText();
+String[] octets = ip.split("\\.");
+int value = 0;
+for (int i = 0; i &lt; 4; i++) {
+  value = value &lt;&lt; 8;
+  value = value | Integer.parseInt(octets[i]);
+}
+return new IPv4Address(value);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
