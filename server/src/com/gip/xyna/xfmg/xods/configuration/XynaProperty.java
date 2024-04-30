@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -770,7 +770,7 @@ public interface XynaProperty {
 
   
   public static final XynaPropertyString XML_HEADER_COMMENT = new XynaPropertyString("xyna.generation.xml.headercomment", "")
-      .setDefaultDocumentation(DocumentationLanguage.EN, "This is put into application.xmls and XMOM files as header comment. Changes take effect immediately. Old files are not updated.");
+      .setDefaultDocumentation(DocumentationLanguage.EN, "This is put into application.xmls and XMOM files as header comment. Changes take effect immediately. Old files are not updated. Should not include <!-- and -->.");
 
   public static final XynaPropertyBoolean BC_SINGLE_CHARACTER_WILDCARD = new XynaPropertyBoolean("xyna.xnwh.persistence.support_single_character_wildcard", false)
       .setDefaultDocumentation(DocumentationLanguage.EN, "If set to true, \"_\" is replaced by the persistencelayer-specific single character wildcard.")
