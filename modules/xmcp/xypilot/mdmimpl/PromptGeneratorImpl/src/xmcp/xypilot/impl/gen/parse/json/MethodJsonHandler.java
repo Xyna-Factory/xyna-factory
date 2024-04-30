@@ -322,22 +322,7 @@ public class MethodJsonHandler implements JsonLineHandler {
 
 
     private boolean methodsAreEquivalent(MethodDefinition method1, MethodDefinition method2) {
-        // if (method1.getName().equals(method2.getName())) {
-        //     if (method1.getInputParams().size() == method2.getInputParams().size()) {
-        //         for (int i = 0; i < method1.getInputParams().size(); i++) {
-        //             Parameter param1 = method1.getInputParams().get(i);
-        //             Parameter param2 = method2.getInputParams().get(i);
-        //             if (!param1.getType().equals(param2.getType())) {
-        //                 return false;
-        //             }
-        //         }
-        //         return true;
-        //     }
-        // }
-        // return false;
-
-        // usually the above would be correct to determine if two methods are equivalent,
-        // but we don't want to generate methods with the same name, as it is not supported by the factory
+        // Method namens must be unique
         return method1.getName().equals(method2.getName());
     }
 

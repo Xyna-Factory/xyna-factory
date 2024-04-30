@@ -82,7 +82,7 @@
 
   params:
     datatype: the datatype (DomOrExceptionGenerationBase) to create the class header for
-    resolveTypes: Wether to resolve imported types.
+    resolveTypes: whether to resolve imported types.
         True: simple name, if the type is imported, else FQN.
         False: simple name
 

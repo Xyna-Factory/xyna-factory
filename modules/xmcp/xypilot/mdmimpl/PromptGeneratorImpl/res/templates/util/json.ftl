@@ -42,7 +42,7 @@
   "name": "${memberVar.varName}",
   "fqn": "${memberVar.isJavaBaseType()?then(memberVar.javaTypeEnum.javaTypeName, memberVar.domOrExceptionObject.originalFqName)}",
   "isList": ${memberVar.isList()?c},
-  <#--  !"" is only necessary cause of XYNA bug, where member documentation is always null for exceptions  -->
+  <#--  exception documentation may be null -->
   "documentation": "${memberVar.documentation!""?json_string}"
 }<#rt/>
 </#macro>

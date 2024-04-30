@@ -97,45 +97,6 @@ public class CompletionResponse {
             return objectLists;
         }
 
-        /*
-         * @Override
-         * public String toString() {
-         * StringBuilder sb = new StringBuilder();
-         * append(sb, "");
-         * return sb.toString();
-         * }
-         * 
-         * public void append(StringBuilder sb, String indent) {
-         * sb.append(indent).append("GenericResult @" +
-         * System.identityHashCode(this)).append(Constants.LINE_SEPARATOR)
-         * .append(indent).append("  ").append("attributes: " +
-         * attributes.keySet()).append(Constants.LINE_SEPARATOR)
-         * .append(indent).append("  ").append("      " +
-         * attributes).append(Constants.LINE_SEPARATOR)
-         * .append(indent).append("  ").append("lists: " +
-         * lists.keySet()).append(Constants.LINE_SEPARATOR)
-         * .append(indent).append("  ").append("objects: " +
-         * objects.keySet()).append(Constants.LINE_SEPARATOR);
-         * for (Entry<String, GenericResult> entry : objects.entrySet()) {
-         * sb.append(indent).append("  ").append(entry.getKey()).append(Constants.
-         * LINE_SEPARATOR);
-         * entry.getValue().append(sb, indent + "  ");
-         * }
-         * sb.append(indent).append("  ").append("objectLists: " +
-         * objectLists.keySet()).append(Constants.LINE_SEPARATOR);
-         * for (Entry<String, List<GenericResult>> entry : objectLists.entrySet()) {
-         * sb.append(indent).append("  ").append(entry.getKey()).append(Constants.
-         * LINE_SEPARATOR);
-         * for (int i = 0; i < entry.getValue().size(); i++) {
-         * sb.append(indent).append("  ").append("[").append(i).append("]");
-         * entry.getValue().get(i).append(sb, indent + "  ");
-         * }
-         * }
-         * sb.append(Constants.LINE_SEPARATOR)
-         * .toString();
-         * }
-         */
-
         public <T> T visit(JsonVisitor<T> visitor) throws UnexpectedJSONContentException {
             return visit(visitor, Collections.<String>emptyList());
         }
