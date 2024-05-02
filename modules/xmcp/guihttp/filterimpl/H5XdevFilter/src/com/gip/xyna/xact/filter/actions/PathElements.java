@@ -49,6 +49,7 @@ public class PathElements {
   public static final String PROJECT_EVENTS_UNSUBSCRIBE = "unsubscribeProjectEvents";
   public static final String ENCODE                     = "encode";
   public static final String DECODE                     = "decode";
+  public static final String MODELLED_EXPRESSIONS       = "modelledExpressions";
 
   // sub path elements
   public static final String SAVE                 = "save";

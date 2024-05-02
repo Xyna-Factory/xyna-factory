@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,19 @@ package xfmg.xfctrl.datamode.json.impl;
 
 import java.util.List;
 
+import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
+
 import xfmg.xfctrl.datamodel.json.impl.InvalidJSONException;
+import xfmg.xfctrl.datamodel.json.impl.JSONDatamodelServicesServiceOperationImpl;
 import xfmg.xfctrl.datamodel.json.impl.JSONParser;
 import xfmg.xfctrl.datamodel.json.impl.JSONTokenizer;
-import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONObject;
+import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONObjectWriter;
+import xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl;
+import xfmg.xfctrl.datamodel.json.JSONObject;
+import xfmg.xfctrl.datamodel.json.JSONValue;
 import xfmg.xfctrl.datamodel.json.impl.JSONTokenizer.JSONToken;
 import junit.framework.TestCase;
+import xact.templates.Document;
 
 
 public class JSONTest extends TestCase {
@@ -41,7 +48,7 @@ public class JSONTest extends TestCase {
         "  \"Payload\" : {\n" + 
         "      \"panelID\" : \"pagetopper\"\n" + 
         "    }\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
   
   public void testExample2() {
@@ -58,7 +65,7 @@ public class JSONTest extends TestCase {
         "  \"user\" : {\n" + 
         "      \"userID\" : \"1\"\n" + 
         "    }\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
   
   public void testExample3() {
@@ -78,7 +85,7 @@ public class JSONTest extends TestCase {
         "          \"userID\" : \"6\"\n" + 
         "        }\n" + 
         "    }\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
   
   public void testExample4() {
@@ -99,7 +106,7 @@ public class JSONTest extends TestCase {
         "          \"userID\" : \"6\"\n" + 
         "        }\n" + 
         "    }\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
   
   public void testExample5() {
@@ -114,7 +121,7 @@ public class JSONTest extends TestCase {
         "    \"TestGroup\"\n" + 
         "  ],\n" + 
         "  \"b\" : \"Bla\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
   
   
@@ -128,7 +135,7 @@ public class JSONTest extends TestCase {
     assertEquals("{\n" + 
         "  \"a\" : [],\n" + 
         "  \"b\" : \"Bla\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
   
 
@@ -143,7 +150,7 @@ public class JSONTest extends TestCase {
         "  \"candidate\" : \"a=candidate:802777727 2 tcp 1509957375 10.0.13.94 0 typ host generation 0\\\\r\\\\n\",\n" + 
         "  \"sdpMLineIndex\" : \"1\",\n" + 
         "  \"type\" : \"candidate\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
   
 
@@ -158,7 +165,7 @@ public class JSONTest extends TestCase {
         "  \"candidate\" : \"a=candidate:802777727 2 tcp 1509957375 10.0.13.94 0 typ host generation 0\\r\\n\",\n" + 
         "  \"sdpMLineIndex\" : \"1\",\n" + 
         "  \"type\" : \"candidate\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
 
   public void testExample9() {
@@ -170,7 +177,7 @@ public class JSONTest extends TestCase {
     jp.fillObject(tokens, 0, job);
     assertEquals("{\n" + 
         "  \"type\" : \"Bla\\r\\nBlup\\\"Hallo\\\" We\\\\lt. Ende gut, \\\\\\\"Alles gut\\\\\\\"\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
   
 
@@ -183,7 +190,7 @@ public class JSONTest extends TestCase {
     jp.fillObject(tokens, 0, job);
     assertEquals("{\n" + 
         "  \"type\" : \"Bla\\r\\nBlup\\\"Hallo\\\" We\\\\lt. Ende gut, \\\\\\\"Alles gut\\\\\\\"\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
 
   public void testExample11() {
@@ -195,7 +202,7 @@ public class JSONTest extends TestCase {
     jp.fillObject(tokens, 0, job);
     assertEquals("{\n" + 
         "  \"type\" : \"Bla\\r\\nBlup\\\"Hallo\\\" We\\\\lt. Ende gut, \\\\\\\"Alles gut\\\\\\\"\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
 
   public void testExample12() {
@@ -207,7 +214,7 @@ public class JSONTest extends TestCase {
     jp.fillObject(tokens, 0, job);
     assertEquals("{\n" + 
         "  \"type\" : \"Bla\\r\\nBlup\\\"Hallo\\\" We\\\\lt. Ende gut, \\\\\\\"Alles gut\\\\\\\"\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
 
   public void testExample13() {
@@ -232,7 +239,7 @@ public class JSONTest extends TestCase {
         "      ],\n" + 
         "      \"b\" : \"Bla\"\n" + 
         "    }\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
 
   public void testExample14() {
@@ -254,7 +261,7 @@ public class JSONTest extends TestCase {
         "    -3333\n" + 
         "  ],\n" + 
         "  \"b\" : \"Bla\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
 
   public void testExample15() {
@@ -277,7 +284,7 @@ public class JSONTest extends TestCase {
         "    \"a\\f\"\n" + 
         "  ],\n" + 
         "  \"b\" : \"Bla\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
 
   public void testExample16() {
@@ -299,7 +306,7 @@ public class JSONTest extends TestCase {
         "    -3333\n" + 
         "  ],\n" + 
         "  \"b\" : \"Bla\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
   
   public void testExample17() {
@@ -321,7 +328,7 @@ public class JSONTest extends TestCase {
         "    -3333\n" + 
         "  ],\n" + 
         "  \"b\" : \"Bla\"\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
   }
 
   public void testExample18() {
@@ -332,7 +339,7 @@ public class JSONTest extends TestCase {
     JSONObject job = new JSONObject();
     jp.fillObject(tokens, 0, job);
     assertEquals("{\n" + 
-        "  \"asdâ‚¬h@\" : 3e-12,\n" + 
+        "  \"asd€h@\" : 3e-12,\n" + 
         "  \"basdasd\" : [\n" + 
         "    \"\\\"\\\\a,]}[{s\",\n" + 
         "    \"a2\",\n" + 
@@ -341,7 +348,15 @@ public class JSONTest extends TestCase {
         "        \"x\" : null\n" + 
         "      }\n" + 
         "  ]\n" + 
-        "}", job.toJSON(""));
+        "}", JSONObjectWriter.toJSON("", job));
+  }
+  
+  public void testExample19() {
+    Document doc = new Document(null, "  ");
+    GeneralXynaObject obj = JSONDatamodelServicesImpl.parseObjectFromJSON(doc, null);
+    assertEquals(null, obj);
+    List<GeneralXynaObject> lst = JSONDatamodelServicesImpl.parseListFromJSON(doc, null);
+    assertEquals(lst.size(),0);
   }
 
   
@@ -497,5 +512,62 @@ public class JSONTest extends TestCase {
     } catch (InvalidJSONException e) {
       assertEquals("JSON string invalid at position 13. Cause: Too may commas.", e.getMessage());
     }
+  }
+  
+  public void testParseGenericList1() {
+    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
+    String jsonString = "[ \"test\" ]";
+    List<JSONValue> result = impl.parseGenericJSONList(new Document.Builder().text(jsonString).instance());
+    assertEquals(1, result.size());
+    assertEquals("STRING", result.get(0).getType());
+    assertEquals("test", result.get(0).getStringOrNumberValue());
+  }
+  
+  public void testParseGenericList2() {
+    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
+    String jsonString = "[ \"test\", null, \"test2\" ]";
+    List<JSONValue> result = impl.parseGenericJSONList(new Document.Builder().text(jsonString).instance());
+    assertEquals(3, result.size());
+    assertEquals("STRING", result.get(0).getType());
+    assertEquals("test", result.get(0).getStringOrNumberValue());
+    assertEquals("NULL", result.get(1).getType());
+    assertEquals("STRING", result.get(2).getType());
+    assertEquals("test2", result.get(2).getStringOrNumberValue());
+  }
+  
+  public void testParseGenericList3() {
+    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
+    String jsonString = "[ 24 ]";
+    List<JSONValue> result = impl.parseGenericJSONList(new Document.Builder().text(jsonString).instance());
+    assertEquals(1, result.size());
+    assertEquals("NUMBER", result.get(0).getType());
+    assertEquals("24", result.get(0).getStringOrNumberValue());
+  }
+  
+  public void testParseGenericList4() {
+    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
+    String jsonString = "";
+    List<JSONValue> result = impl.parseGenericJSONList(new Document.Builder().text(jsonString).instance());
+    assertEquals(0, result.size());
+    result = impl.parseGenericJSONList(new Document.Builder().text(null).instance());
+    assertEquals(0, result.size());
+  }
+  
+  public void testParseGenericObject1() {
+    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
+    String jsonString = "{ \"test\" : \"value\" }";
+    JSONObject result = impl.parseGenericJSONObject(new Document.Builder().text(jsonString).instance());
+    assertEquals(1, result.getMembers().size());
+    assertEquals("test", result.getMembers().get(0).getKey());
+    assertEquals("value", result.getMembers().get(0).getValue().getStringOrNumberValue());
+  }
+  
+  public void testParseGenericObject2() {
+    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
+    String jsonString = "";
+    JSONObject result = impl.parseGenericJSONObject(new Document.Builder().text(jsonString).instance());
+    assertEquals(null, result);
+    result = impl.parseGenericJSONObject(new Document.Builder().text(null).instance());
+    assertEquals(null, result);
   }
 }

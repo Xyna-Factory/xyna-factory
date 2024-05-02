@@ -362,12 +362,6 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
 
       Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
  
-      HostKeyCheckingMode checkingMode = HostKeyCheckingMode.getByXynaRepresentation(conParams.getHostKeyChecking());
-      logger.debug("SSHConnectionInstanceOperationImpl checkingMode: " + checkingMode.getStringRepresentation());
-      if (checkingMode.getStringRepresentation().equalsIgnoreCase("no")) {
-        client.addHostKeyVerifier(new PromiscuousVerifier());
-      }
-
       // Client uses only socketFactory.createSocket() and overrides with setConnectTimeout and setTimeout
       client.setConnectTimeout(connectionTimeout);
 
@@ -637,8 +631,8 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     boolean byLineBreak = sendPartitionByLineBreak.get();
     while (offset < bytes.length) {
       if (offset > 0) {
-        // TODO das ist eigtl ein Workaround fï¿½r Bug 21939. SchÃ¶ner wÃ¤re es, wenn wir
-        // das Buffering besser verstehen und konfigurieren wÃ¼rden
+        // TODO das ist eigtl ein Workaround für Bug 21939. Schöner wäre es, wenn wir
+        // das Buffering besser verstehen und konfigurieren würden
         readNewInput(getInputStream(), accumulatedResponse);
         if (millis > 0) {
           try {
@@ -735,8 +729,15 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
 
   protected void initClient() {
     client = new SSHClient();
-    XynaHostKeyRepository hostRepo = new HostKeyStorableRepository(supportedFeatures.get());
-    client.addHostKeyVerifier(hostRepo);
+
+    HostKeyCheckingMode checkingMode = HostKeyCheckingMode.getByXynaRepresentation(getSSHConnectionParameter().getHostKeyChecking());
+    logger.debug("SSHConnectionInstanceOperationImpl checkingMode: " + checkingMode.getStringRepresentation());
+    if (checkingMode.getStringRepresentation().equalsIgnoreCase("no")) {
+      client.addHostKeyVerifier(new PromiscuousVerifier());
+    } else {
+      XynaHostKeyRepository hostRepo = new HostKeyStorableRepository(supportedFeatures.get());
+      client.addHostKeyVerifier(hostRepo);
+    }
 
     // Reduce valid KeyAlgorithms
     client.getTransport().getConfig()
@@ -830,7 +831,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
         try {
           sleep.sleep();
         } catch (Exception ee) {
-        } // interruption soll ï¿½ber cancel geschehen
+        } // interruption soll über cancel geschehen
       }
       return responseBuilder.toString();
     } finally {

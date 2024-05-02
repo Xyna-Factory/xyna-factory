@@ -1,0 +1,10 @@
+{
+    "template": "fauxpilot/mapping-label.ftl",
+    "parser": "xmcp.xypilot.impl.gen.parse.TextParser",
+    "inference_parameters": {
+        "model": "py-model",
+        "n": 1,
+        "stop": ["\n"],
+        "max_tokens": 16
+    }
+}

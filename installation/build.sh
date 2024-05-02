@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Copyright 2023 Xyna GmbH, Germany
+# Copyright 2024 Xyna GmbH, Germany
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,8 +19,13 @@
 set -e
 
 print_help() {
-  echo "$0: build some or all parts of xyna."
-  echo "available options are: xynautils, build, all, compose"
+  echo "Usage: $0 xynautils"
+  echo "Usage: $0 build"
+  echo "Usage: $0 all -b GIT_BRANCH_XYNA_MODELLER"
+  echo "Usage: $0 compose"
+  echo "Usage: $0 plugins"
+  echo "Usage: $0 clusterproviders"
+  echo "Usage: $0 conpooltypes"
 }
 
 check_dependencies() {
@@ -150,16 +155,6 @@ build_xynafactory_jar() {
   mv xynafactoryCLIGenerator-1.0.0.jar lib/
 }
 
-build_defaultconnectionpooltypes() {
-  cd components/xnwh/pools/DefaultConnectionPoolTypes
-  sed -i 's/depends="resolve"//' build.xml
-  mkdir lib
-  mvn dependency:resolve
-  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  ant -Doracle.home=/tmp build
-  mvn install:install-file -Dfile=./deploy/DefaultConnectionPoolTypes.jar -DpomFile=./pom.xml 
-}
-
 
 prepare_modules() {
   echo "prepareing modules..."
@@ -216,7 +211,7 @@ build_conpooltypes() {
   echo "building connectionpooltypes..."
   cd $SCRIPT_DIR/build
   ant -Doracle.home=/tmp conpooltypes
-  mvn install:install-file -Dfile=../../common/lib/xyna/DefaultConnectionPoolTypes.jar -DpomFile=../../components/xnwh/pools/DefaultConnectionPoolTypes/pom.xml
+  mvn install:install-file -Dfile=../../common/lib/xyna/DefaultConnectionPoolTypes-1.0.0.jar -DpomFile=../../components/xnwh/pools/DefaultConnectionPoolTypes/pom.xml
 }
 
 build_persistencelayers() {
@@ -283,11 +278,15 @@ build_prerequisites() {
   ant -f delivery.xml
 }
 
-build_modeller() {
-  MODELLER_TAG=$(cat ${SCRIPT_DIR}/delivery/delivery.properties | grep ^xynamodeller.release.tag | cut -d'=' -f2) #e.g. 9.0.0.0
-  echo "building Modeller GUI from tag ${MODELLER_TAG}"
+build_modeller() { 
+  if [[ -z ${GIT_BRANCH_XYNA_MODELLER} ]]; then
+    RELEASE_NUMBER=$(cat ${SCRIPT_DIR}/delivery/delivery.properties | grep ^release.number | cut -d'=' -f2)
+    # branch is RELEASE_NUMBER without the first 'v'
+    GIT_BRANCH_XYNA_MODELLER=${RELEASE_NUMBER:1}
+  fi
+  echo "building Modeller GUI from branch ${GIT_BRANCH_XYNA_MODELLER}"
   cd $SCRIPT_DIR/build
-  ant -f build-gui.xml -Dmodeller.tag=${MODELLER_TAG}
+  ant -f build-gui.xml -Dmodeller.branch=${GIT_BRANCH_XYNA_MODELLER}
 }
 
 build_xyna_factory() {
@@ -312,17 +311,23 @@ build_xyna_factory() {
   compose_prerequisites
   compose_modeller
   compose_connectors
+  compose_readmefile
   zip_result
 }
 
 
 compose_connectors() {
   cd $SCRIPT_DIR
-  mkdir -p $SCRIPT_DIR/../release
+  mkdir -p $SCRIPT_DIR/../release/third_parties
   mvn -f db.connector.pom.xml dependency:resolve -DexcludeTransitive=true
-  mvn -f db.connector.pom.xml -DoutputDirectory="${SCRIPT_DIR}/../release" dependency:copy-dependencies -DexcludeTransitive=true
-  mvn -f db.connector.pom.xml license:download-licenses -DlicensesOutputDirectory=${SCRIPT_DIR}/../release -DlicensesOutputFile=${SCRIPT_DIR}/../release/licenses.xml -DlicensesOutputFileEol=LF
+  mvn -f db.connector.pom.xml -DoutputDirectory="${SCRIPT_DIR}/../release/third_parties" dependency:copy-dependencies -DexcludeTransitive=true
+  mvn -f db.connector.pom.xml license:download-licenses -DlicensesOutputDirectory=${SCRIPT_DIR}/../release/third_parties -DlicensesOutputFile=${SCRIPT_DIR}/../release/third_parties/licenses.xml -DlicensesConfigFile=${SCRIPT_DIR}/db_connector_license_config.xml -DlicensesOutputFileEol=LF
   cp ${SCRIPT_DIR}/prepare_db_connector_jars.sh ${SCRIPT_DIR}/../release
+}
+
+compose_readmefile() {
+  cd $SCRIPT_DIR
+  cp ../blackedition/readme.txt ${SCRIPT_DIR}/../release
 }
 
 
@@ -533,6 +538,7 @@ compose_server_persistencelayers() {
 compose_server_orderinpoutsourcetypes() {
   cd $SCRIPT_DIR/../release/server
   cp -r $SCRIPT_DIR/../localbuild/server/orderinputsourcetypes .
+  rm -rf $SCRIPT_DIR/../localbuild/server/orderinputsourcetypes/deploy/*/xyna
 }
 
 compose_server_lib() {
@@ -632,16 +638,11 @@ build() {
 }
 
 
-# main
-if [ $# -eq 0 ]
-then
-  print_help
-  exit 0
-fi
-
 check_dependencies
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 prepare_build
+
+GIT_BRANCH_XYNA_MODELLER=""
 
 case $1 in
   "xynautils")
@@ -651,14 +652,35 @@ case $1 in
     build
     ;;
   "all")
+    OPTIND=2
+    while getopts ":b:" options; do
+      case "${options}" in 
+        b)
+          GIT_BRANCH_XYNA_MODELLER=${OPTARG}
+          ;;
+        *) # If unknown (any other) option:
+          print_help
+          exit 1
+          ;;
+      esac
+    done
     check_dependencies_frontend
     build_all
     ;;
   "compose")
     build_xyna_factory
     ;;
+  "plugins")
+    build_plugins
+    ;;
+  "clusterproviders")
+    build_clusterproviders
+    ;;
+  "conpooltypes")
+    build_conpooltypes
+    ;;
   *)
-    echo "unknown argument: $1"
+    print_help
     exit 1
     ;;
 esac

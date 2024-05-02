@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,4 +27,10 @@
       <Type>boolean</Type>
     </Meta>
   </Data>
+  <Data Label="Object Decider" ReferenceName="XynaObjectDecider" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="objectDecider">
+    <Meta>
+      <Documentation>When a json Object is encountered, the decide() Method of this object will be called to determine the Object to be created. If no object decider is specified, an object of the static member type will be created.</Documentation>
+    </Meta>
+  </Data>
 </DataType>
+

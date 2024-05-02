@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,6 +52,7 @@ import xmcp.gitintegration.MODIFY;
 import xmcp.gitintegration.RuntimeContextDependency;
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.impl.OutputCreator;
+import xmcp.gitintegration.impl.TmpSessionAuthWrapper;
 
 
 
@@ -451,24 +452,16 @@ public class ApplicationDefinitionProcessor implements WorkspaceContentProcessor
 
   @Override
   public void delete(ApplicationDefinition item, long revision) {
-    try {
-      TemporarySessionAuthentication tsa = createTemporarySessionAuthentication(TEMPORARY_SESSION_AUTHENTICATION_USERNAME_CREATE);
+    try (TmpSessionAuthWrapper wrapper = new TmpSessionAuthWrapper(TEMPORARY_SESSION_AUTHENTICATION_USERNAME_CREATE,
+                                                                   TemporarySessionAuthentication.TEMPORARY_CLI_USER_ROLE)) {
       RemoveApplicationParameters params = new RemoveApplicationParameters();
       params.setParentWorkspace(revisionManagement.getWorkspace(revision));
-      params.setUser(tsa.getUsername());
+      params.setUser(wrapper.getTSA().getUsername());
 
       applicationManagement.removeApplicationVersion(item.getName(), null, params, emptyEvent);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-  }
-
-
-  private static TemporarySessionAuthentication createTemporarySessionAuthentication(String userName) throws Exception {
-    TemporarySessionAuthentication tsa =
-        TemporarySessionAuthentication.tempAuthWithUniqueUser(userName, TemporarySessionAuthentication.TEMPORARY_CLI_USER_ROLE);
-    tsa.initiate();
-    return tsa;
   }
 
 }

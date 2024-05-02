@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,6 +56,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.Department;
 import com.gip.xyna.FileUtils;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
@@ -179,6 +180,7 @@ import xmcp.processmodeller.datatypes.response.FactoryItem;
 import xmcp.processmodeller.datatypes.response.GetClipboardResponse;
 import xmcp.processmodeller.datatypes.response.GetDataflowResponse;
 import xmcp.processmodeller.datatypes.response.GetIssuesResponse;
+import xmcp.processmodeller.datatypes.response.GetModelledExpressionsResponse;
 import xmcp.processmodeller.datatypes.response.GetObjectXMLResponse;
 import xmcp.processmodeller.datatypes.response.GetOrderInputSourcesResponse;
 import xmcp.processmodeller.datatypes.response.GetRelationsResponse;
@@ -239,7 +241,7 @@ public class SessionBasedData {
   private final Map<String, Long> pollRequestUUIDToLastPoll = new ConcurrentHashMap<>();
   private final AtomicLong pollRequestId = new AtomicLong();
   private final List<Long> pendingPollRequestIds = Collections.synchronizedList(new ArrayList<>());
-  private volatile boolean terminateOrphanCleaner = false;
+  private volatile boolean orphanCleanerShouldRun = true;
   private volatile boolean shutdownInProgress = false;
   private volatile boolean pollRequestTerminationPending = false;
   private PollEventFetcher pollEventFetcher;
@@ -264,29 +266,33 @@ public class SessionBasedData {
     Thread orphanedPollRequestCleaner = new Thread("Orphaned poll-request cleaner") {
       @Override
       public void run() {
-        while (!terminateOrphanCleaner) {
-          long maxWaitTime = XynaProperty.MESSAGE_BUS_FETCH_TIMEOUT.getMillis() * CLIENT_POLLING_TIMEOUT_FACTOR.get();
-          List<String> orphanedUUIDs = new ArrayList<>();
+        while (orphanCleanerShouldRun) {
+          try {
+            long maxWaitTime = XynaProperty.MESSAGE_BUS_FETCH_TIMEOUT.getMillis() * CLIENT_POLLING_TIMEOUT_FACTOR.get();
+            List<String> orphanedUUIDs = new ArrayList<>();
 
-          synchronized (pollRequestUUIDToLastPoll) {
-            for (Entry<String, Long> lastPoll : pollRequestUUIDToLastPoll.entrySet()) {
-              if ( System.currentTimeMillis() > (lastPoll.getValue() + maxWaitTime) ) {
-                orphanedUUIDs.add(lastPoll.getKey());
-                pollRequestUUIDToEventsMap.remove(lastPoll.getKey());
-                pollRequestUUIDToIsProject.remove(lastPoll.getKey());
+            synchronized (pollRequestUUIDToLastPoll) {
+              for (Entry<String, Long> lastPoll : pollRequestUUIDToLastPoll.entrySet()) {
+                if (System.currentTimeMillis() > (lastPoll.getValue() + maxWaitTime)) {
+                  orphanedUUIDs.add(lastPoll.getKey());
+                  pollRequestUUIDToEventsMap.remove(lastPoll.getKey());
+                  pollRequestUUIDToIsProject.remove(lastPoll.getKey());
+                }
+              }
+
+              for (String orphanedUUID : orphanedUUIDs) {
+                pollRequestUUIDToLastPoll.remove(orphanedUUID);
               }
             }
 
-            for (String orphanedUUID : orphanedUUIDs) {
-              pollRequestUUIDToLastPoll.remove(orphanedUUID);
+            try {
+              Thread.sleep(ORPHANED_POLL_REQUEST_CLEAN_INTERVAL);
+            } catch (Exception e) {
+              logger.error("Multiuser: Cleanup thread for orphaned polling requests for session " + session.getId() + " died", e);
+              break;
             }
-          }
-
-          try {
-            Thread.sleep(ORPHANED_POLL_REQUEST_CLEAN_INTERVAL);
-          } catch (Exception e) {
-            logger.error("Multiuser: Cleanup thread for orphaned polling requests for session " + session.getId() + " died", e);
-            break;
+          } catch (OutOfMemoryError t) {
+            Department.handleThrowable(t);
           }
         }
       }
@@ -300,7 +306,7 @@ public class SessionBasedData {
     shutdownInProgress = true;
     pollEventFetcher.stop();
     locks.clear();
-    terminateOrphanCleaner = true;
+    orphanCleanerShouldRun = false;
   }
   
   
@@ -390,6 +396,8 @@ public class SessionBasedData {
         return copyXml(request);
       case Warnings:
          return getWarnings(request);
+      case ModelledExpressions:
+        return getModelledExpressions(request);
       default:
         if( request.getOperation().isModification() ) {
           return objectModification(request);
@@ -412,6 +420,16 @@ public class SessionBasedData {
     }
   }
 
+
+  private XMOMGuiReply getModelledExpressions(XMOMGuiRequest request) {
+    FQName fqn = request.getFQName();
+    GenerationBaseObject gbo = gbos.get(fqn);
+    XMOMGuiReply reply = new XMOMGuiReply();
+    ModelledExpressionConverter converter = new ModelledExpressionConverter();
+    GetModelledExpressionsResponse response = converter.convert(gbo, request.getObjectId());
+    reply.setXynaObject(response);
+    return reply;
+  }
 
   private XMOMGuiReply getWarnings(XMOMGuiRequest request) {
     FQName fqn = request.getFQName();
@@ -596,8 +614,10 @@ public class SessionBasedData {
         return reply;
       }
 
-      if (!pollRequestUUIDToEventsMap.get(pollUuid).isEmpty()) {
-        break;
+      synchronized (pollRequestUUIDToEventsMap) {
+        if (!pollRequestUUIDToEventsMap.containsKey(pollUuid) || !pollRequestUUIDToEventsMap.get(pollUuid).isEmpty()) {
+          break;
+        }
       }
 
       Thread.sleep(MESSAGE_BUS_UPDATE_SLEEP_TIME);
@@ -669,6 +689,7 @@ public class SessionBasedData {
 
     if (!pendingPollRequestIds.isEmpty()) {
       logger.warn("Multiuser: Failed to terminate running poll requests");
+      pendingPollRequestIds.clear();
     }
 
     pollRequestTerminationPending = false;

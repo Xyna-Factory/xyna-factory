@@ -16,6 +16,6 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="listReferences" Description="list all configured references" />
+  <CommandDefinition Groups="Git Reference Management" Name="listReferences" Description="list all configured references" />
   <Argument Name="workspaceName" Description="only show references for this workspace" Optional="true" />
 </XynaCommandLineCommand>

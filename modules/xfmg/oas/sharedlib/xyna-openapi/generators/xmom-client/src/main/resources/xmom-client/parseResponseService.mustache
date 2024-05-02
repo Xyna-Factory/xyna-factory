@@ -1,0 +1,134 @@
+{{!
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+}}
+{{#operations}}
+{{#xynaOperation}}
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
+TypeName="{{parseResponseRefName}}" TypePath="{{parseResponseRefPath}}" Label="{{parseResponseLabel}}">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="{{parseResponseLabel}}" TypeName="{{parseResponseRefName}}">
+    <Operation Label="parseResponse" Name="parseResponse" IsStatic="true">
+      <Input>
+        <Data ID="1" Label="HTTP Connection" VariableName="hTTPConnection1" ReferenceName="HTTPConnection" ReferencePath="xact.http"/>
+        <Data ID="2" Label="HTTP Status Code" VariableName="hTTPStatusCode2" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode"/>
+        <Data ID="3" Label="Header" VariableName="header3" ReferenceName="Header" ReferencePath="xact.http"/>
+      </Input>
+      <Output>
+        <Data ID="4" Label="{{responseLabel}}" VariableName="{{responseVarName}}4"
+         ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}"/>
+      </Output>
+      <Throws>
+        <Exception ID="6" Label="Connection Already Closed Exception" VariableName="connectionAlreadyClosedException6" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions"/>
+        <Exception ID="7" Label="Http Exception" VariableName="httpException7" ReferenceName="HttpException" ReferencePath="xact.http.exceptions"/>
+        <Exception ID="5" Label="Unexpected HTTP Response Exception" VariableName="unexpectedHTTPResponseException5" ReferenceName="UnexpectedHTTPResponseException" ReferencePath="xact.http.exceptions"/>
+      </Throws>
+      <Meta>
+        <Documentation>{{responseDescription}}
+        </Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+int statusCode = hTTPStatusCode2.getCode();
+xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
+jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
+jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
+jsonOptions.setUseLabels(true);
+jsonOptions.setObjectDecider(new {{apiPackage}}.decider.OASDecider());
+{{#responses}}
+if (statusCode == {{code}}) {
+    {{respRefPath}}.{{respRefName}} responseDataType = new {{respRefPath}}.{{respRefName}}();
+
+    xact.templates.Document document = xact.http.HTTPService.receiveDocument(hTTPConnection1);
+    {{#body}}
+    if (!document.getText().trim().isEmpty()) {
+    {{^isPrimitive}}
+    {{#isList}}
+        List&lt;{{propRefPath}}.{{propRefType}}&gt; body = new ArrayList&lt; &gt;();
+        List&lt;GeneralXynaObject&gt; parsedList = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new {{propRefPath}}.{{propRefType}}(), jsonOptions);
+        for (GeneralXynaObject obj : parsedList) {
+            body.add(({{propRefPath}}.{{propRefType}})obj);
+        }
+    {{/isList}}
+    {{^isList}}
+        {{propRefPath}}.{{propRefType}} body;
+        body = ({{propRefPath}}.{{propRefType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{propRefPath}}.{{propRefType}}(), jsonOptions);
+    {{/isList}}
+        responseDataType.{{setPropVarName}}(body);
+    {{/isPrimitive}}
+    {{#isPrimitive}}
+      {{^isList}}
+        {{#isString}}
+        String body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.decodeValue(document).getText();
+        body = body.substring(1, body.length()-1);
+        responseDataType.{{setPropVarName}}(body);
+        {{/isString}}
+        {{^isString}}
+        responseDataType.{{setPropVarName}}({{javaType}}.valueOf(document.getText()));
+        {{/isString}}
+      {{/isList}}
+      {{#isList}}
+        List&lt;? extends xfmg.xfctrl.datamodel.json.JSONValue&gt; values = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseGenericJSONList(document);
+        List&lt;{{javaType}}&gt; resultData = new ArrayList&lt; &gt;();
+        for(xfmg.xfctrl.datamodel.json.JSONValue value : values) {
+          if(value == null || "NULL".equals(value.getType())) {
+              resultData.add(null);
+              continue;
+          }
+          {{javaType}} valueProcessed =
+          {{#isString}}
+            xfmg.xfctrl.datamodel.json.JSONDatamodelServices.decodeValue(new xact.templates.Document.Builder().text(value.getStringOrNumberValue()).instance()).getText();
+          {{/isString}}
+          {{#isNumber}}
+            {{javaType}}.valueOf(value.getStringOrNumberValue());
+          {{/isNumber}}
+          {{#isBoolean}}
+            value.getBooleanValue();
+          {{/isBoolean}}
+          resultData.add(valueProcessed);
+        }
+        responseDataType.{{setPropVarName}}(resultData);
+      {{/isList}}
+    {{/isPrimitive}}
+    } else {
+        responseDataType.{{setPropVarName}}(null);
+    }
+    {{/body}}
+    for (xact.http.HeaderField field : header3.getHeaderField()) {
+    {{#responseHeaders}}
+    {{^primitiveType}}
+        if (field.getName().equals("{{propLabel}}")) {
+            responseDataType.{{setPropVarName}}({{javaType}}.valueOf(field.getValue()));
+        }
+    {{/primitiveType}}
+    {{/responseHeaders}}
+    }
+
+    return responseDataType;
+}
+{{/responses}}
+
+throw new xact.http.exceptions.UnexpectedHTTPResponseException("", hTTPStatusCode2, header3);
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
+
+{{/xynaOperation}}
+{{/operations}}

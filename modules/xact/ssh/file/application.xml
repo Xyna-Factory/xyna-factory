@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="SSHFile" comment="" factoryVersion="" versionName="1.0.5" xmlVersion="1.1">
+<Application applicationName="SSHFile" comment="" factoryVersion="" versionName="1.0.6" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">SSH File Transfer (SCP)</Description>
     <Description Lang="EN">SSH file transfer (SCP)</Description>
@@ -24,7 +24,7 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>SSH</ApplicationName>
-        <VersionName>2.0.26</VersionName>
+        <VersionName>2.0.27</VersionName>
       </RuntimeContextRequirement>
      <RuntimeContextRequirement>
         <ApplicationName>FileMgmt</ApplicationName>

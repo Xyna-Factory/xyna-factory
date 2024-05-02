@@ -1,0 +1,10 @@
+{
+    "template": "copilot/dom-methods.ftl",
+    "parser": "xmcp.xypilot.impl.gen.parse.MethodParser",
+    "inference_parameters": {
+        "model": "copilot-json",
+        "n": 1,
+        "stop": ["\n  ]"]
+    }
+}
+

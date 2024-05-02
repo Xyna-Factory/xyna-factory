@@ -41,7 +41,7 @@ public class ReferenceUpdater {
   }
 
 
-  private String getWorkspaceName(long revision) {
+  public static String getWorkspaceName(long revision) {
     RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     try {
       return revMgmt.getWorkspace(revision).getName();

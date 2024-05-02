@@ -1,0 +1,197 @@
+{{!
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+}}
+{{#operations}}{{#xynaOperation}}<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8"
+TypeName="{{endpointWorkflowTypeName}}" TypePath="{{endpointWorkflowPath}}" Label="{{endpointWorkflowLabel}}">
+  <Operation ID="0" Label="{{endpointWorkflowLabel}}" Name="{{endpointWorkflowTypeName}}" IsStatic="false">
+    <Input>
+      <Data ID="2" Label="/{{pathPrefix}} Api" VariableName="{{apiRefName}}2" ReferenceName="{{apiRefName}}" ReferencePath="{{apiRefPath}}"/>
+      <Data ID="3" Label="Http Request" VariableName="httpRequest3" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype"/>
+    </Input>
+    <Output>
+      <Data ID="4" Label="Http Response" VariableName="httpResponse4" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype"/>
+    </Output>
+    <ServiceReference ID="13" Label="Encode" ReferenceName="Encode" ReferencePath="xmcp.oas.wf.provider">
+      <Source RefID="12"/>
+      <Target RefID="12"/>
+    </ServiceReference>
+    <ServiceReference ID="9" Label="Decode" ReferenceName="Decode" ReferencePath="xmcp.oas.wf.provider">
+      <Source RefID="8"/>
+      <Target RefID="8"/>
+    </ServiceReference>
+    <ServiceReference ID="6" Label="{{apiLabel}}" ReferenceName="{{apiRefName}}.{{apiRefName}}" ReferencePath="{{apiRefPath}}">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <ServiceReference ID="20" Label="Encode" ReferenceName="Encode" ReferencePath="xmcp.oas.wf.provider">
+      <Source RefID="19"/>
+      <Target RefID="19"/>
+    </ServiceReference>
+    <Function ID="8" Label="Decode">
+      <Source RefID="9">
+      </Source>
+      <Source RefID="11">
+      </Source>
+      <Source RefID="3">
+      </Source>
+      <Target RefID="9">
+      </Target>
+      <Target RefID="10">
+      </Target>
+      <Invoke ServiceID="9" Operation="Decode">
+        <Source RefID="11">
+          <Meta>
+            <LinkType>Constant</LinkType>
+            <ExpectedType>{{parameterRefPath}}.{{parameterRefName}}</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="3">
+        </Source>
+      </Invoke>
+      <Receive ServiceID="9">
+        <Target RefID="10">
+          <Meta>
+            <ExpectedType>{{parameterRefPath}}.{{parameterRefName}}</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
+    <Function ID="5" Label="{{implLabel}}">
+      <Source RefID="6">
+      </Source>
+      <Source RefID="2">
+      </Source>
+      <Source RefID="10">
+      </Source>
+      <Target RefID="6">
+      </Target>
+      <Target RefID="7">
+      </Target>
+      <Invoke ServiceID="6" Operation="{{implVarName}}">
+        <Source RefID="2">
+        </Source>
+        <Source RefID="10">
+        </Source>
+      </Invoke>
+      <Receive ServiceID="6">
+        <Target RefID="7">
+        </Target>
+      </Receive>
+    </Function>
+    <Function ID="12" Label="Encode">
+      <Source RefID="13">
+      </Source>
+      <Source RefID="7">
+      </Source>
+      <Target RefID="13">
+      </Target>
+      <Target RefID="14">
+      </Target>
+      <Invoke ServiceID="13" Operation="Encode">
+        <Source RefID="7">
+          <Meta>
+            <ExpectedType>{{responseRefPath}}.{{responseRefName}}</ExpectedType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="13">
+        <Target RefID="14">
+        </Target>
+      </Receive>
+    </Function>
+    <Data ID="7" VariableName="{{responseVarName}}7" Label="{{responseLabel}}" ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}">
+      <Source RefID="5"/>
+    </Data>
+    <Data ID="10" VariableName="{{parameterVarName}}10" Label="{{parameterLabel}}" ReferenceName="{{parameterRefName}}" ReferencePath="{{parameterRefPath}}">
+    </Data>
+    <Data ID="11" VariableName="const_{{parameterVarName}}11" Label="{{parameterLabel}}" ReferenceName="{{parameterRefName}}" ReferencePath="{{parameterRefPath}}">
+    </Data>
+    <Data ID="14" VariableName="httpResponse14" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype">
+      <Source RefID="12"/>
+    </Data>
+    <Data ID="23" VariableName="validationErrorResponse23" Label="Validation Error Response" ReferenceName="ValidationErrorResponse" ReferencePath="xmcp.oas.datatype.provider">
+      <Source RefID="17"/>
+    </Data>
+    <Exception ID="15" VariableName="validationException15" Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception">
+    </Exception>
+    <Assign ID="1">
+      <Source RefID="14">
+      </Source>
+      <Target RefID="4">
+      </Target>
+      <Copy>
+        <Source RefID="14">
+        </Source>
+        <Target RefID="4">
+        </Target>
+      </Copy>
+    </Assign>
+    <Catch ID="16" ExceptionID="15">
+      <Mappings ID="17" Label="Get Validation Error Response">
+        <Input>
+          <Exception ID="18" VariableName="validationException18" Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception">
+            <Source RefID="17"/>
+          </Exception>
+          <Source RefID="15">
+          </Source>
+        </Input>
+        <Output>
+          <Data ID="22" VariableName="validationErrorResponse22" Label="Validation Error Response" ReferenceName="ValidationErrorResponse" ReferencePath="xmcp.oas.datatype.provider">
+            <Source RefID="17"/>
+          </Data>
+          <Target RefID="23">
+          </Target>
+        </Output>
+        <Mapping>%1%=%0%.errorResponse</Mapping>
+      </Mappings>
+      <Function ID="19" Label="Encode">
+        <Source RefID="20">
+        </Source>
+        <Source RefID="23">
+        </Source>
+        <Target RefID="20">
+        </Target>
+        <Target RefID="21">
+        </Target>
+        <Invoke ServiceID="20" Operation="Encode">
+          <Source RefID="23">
+          </Source>
+        </Invoke>
+        <Receive ServiceID="20">
+          <Target RefID="21">
+          </Target>
+        </Receive>
+      </Function>
+      <Assign>
+        <Source RefID="21">
+        </Source>
+        <Target RefID="4">
+        </Target>
+        <Copy>
+          <Source RefID="21">
+          </Source>
+          <Target RefID="4">
+          </Target>
+        </Copy>
+      </Assign>
+      <Data ID="21" VariableName="httpResponse21" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype">
+        <Source RefID="19"/>
+      </Data>
+    </Catch>
+  </Operation>
+</Service>
+{{/xynaOperation}}{{/operations}}

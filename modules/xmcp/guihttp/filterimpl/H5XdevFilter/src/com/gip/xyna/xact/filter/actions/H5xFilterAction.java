@@ -30,13 +30,18 @@ import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xfmg.exceptions.XFMG_ACCESS_VIOLATION;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.Role;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.GuiRight;
+import com.gip.xyna.xfmg.xopctrl.usermanagement.XynaPlainSessionCredentials;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 
 public abstract class H5xFilterAction  implements FilterAction{
 
   protected boolean isLoggedIn(HTTPTriggerConnection tc) {
+    return isLoggedIn(AuthUtils.readCredentialsFromRequest(tc));
+  }
+  
+  protected boolean isLoggedIn(XynaPlainSessionCredentials creds) {
     try {
-      return AuthUtils.authenticate(AuthUtils.readCredentialsFromRequest(tc)) != null;
+      return AuthUtils.authenticate(creds) != null;
     } catch (RemoteException e) {
       return false;
     }
@@ -47,17 +52,25 @@ public abstract class H5xFilterAction  implements FilterAction{
   }
   
   protected boolean hasRight(HTTPTriggerConnection tc, String right) {
+    return hasRight(AuthUtils.readCredentialsFromRequest(tc), right);
+  }
+  
+  protected boolean hasRight(XynaPlainSessionCredentials creds, String right) {
     try {
-      Role role = AuthUtils.authenticate(AuthUtils.readCredentialsFromRequest(tc));
-      return XynaFactory.getInstance().getFactoryManagementPortal().hasRight(right, role);
-    } catch (RemoteException | PersistenceLayerException ex) {
+      return XynaFactory.getInstance().getFactoryManagementPortal().hasRight(right, getRole(creds));
+    } catch (PersistenceLayerException ex) {
       return false;
     }
   }
 
+
   protected Role getRole(HTTPTriggerConnection tc) {
+    return getRole(AuthUtils.readCredentialsFromRequest(tc));
+  }
+  
+  protected Role getRole(XynaPlainSessionCredentials creds) {
     try {
-      return AuthUtils.authenticate(AuthUtils.readCredentialsFromRequest(tc));
+      return AuthUtils.authenticate(creds);
     } catch (RemoteException ex) {
       return null;
     }
@@ -80,6 +93,25 @@ public abstract class H5xFilterAction  implements FilterAction{
       if (!hasRight(tc, right)) {
         Role role = getRole(tc);
         AuthUtils.replyError(tc, jfai, Status.forbidden, new XFMG_ACCESS_VIOLATION(right, role != null ? role.getName() : ""));
+        return false;
+      }
+    }
+    
+    return true;
+  }
+  
+  protected boolean checkLoginAndRights(XynaPlainSessionCredentials creds, String... rights) {
+    if(!isLoggedIn(creds)) {
+      return false;
+    }
+    
+    if(rights == null) {
+      return true;
+    }
+    
+    for(String right : rights) {
+      if (!hasRight(creds, right)) {
+        getRole(creds);
         return false;
       }
     }

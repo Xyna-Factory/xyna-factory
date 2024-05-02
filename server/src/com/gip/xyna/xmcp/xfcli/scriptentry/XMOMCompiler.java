@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -449,12 +450,32 @@ public class XMOMCompiler {
     relevant.add(toBuild);
     try {
       Long revision = source.getRevision(toBuild);
+      if(revision == null) {
+        throw new RuntimeException("Could not find " + toBuild + ". Available runtimecontexts:\n" + createRTCListString(source));
+      }
       Stream<Long> revisions = source.getDependenciesRecursivly(revision).stream();
       relevant.addAll(revisions.map(r -> mapToRuntimeContext(r, source)).collect(Collectors.toSet()));
-    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-      throw new RuntimeException(e);
+    } catch (Exception e) {
+      throw new RuntimeException(e.getMessage()+" Available runtimecontexts:\n" + createRTCListString(source), e);
     }
     return relevant;
+  }
+  
+  private String createRTCListString(FileSystemXMLSource source) {
+    StringBuilder sb = new StringBuilder();
+    List<Long> revisions = new ArrayList<>(source.getRevisions());
+    Collections.sort(revisions);
+    try {
+    for(Long revision : revisions) {
+      RuntimeContext rtc = source.getRuntimeContext(revision);
+      sb.append(rtc).append(": ");
+      sb.append(source.getXMOMPath(rtc).getParent());
+      sb.append("\n");
+    }
+    } catch(Exception e) {
+      sb.append("ERROR: ").append(e.getMessage());
+    }
+    return sb.toString();
   }
 
 

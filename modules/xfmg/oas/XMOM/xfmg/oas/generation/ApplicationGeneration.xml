@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Application Generation" TypeName="ApplicationGeneration" TypePath="xfmg.oas.generation" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>ApplicationGenerationImpl.jar</Libraries>
+  <SharedLibraries>xyna-openapi</SharedLibraries>
+  <Service Label="Application Generation" TypeName="ApplicationGeneration">
+    <Meta>
+      <AdditionalDependencies>
+        <Datatype>xmcp.forms.plugin.PluginManagement</Datatype>
+      </AdditionalDependencies>
+    </Meta>
+    <Operation IsStatic="true" Label="Generate Application" Name="generateApplication" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="1" Label="Application Generation Parameter" ReferenceName="ApplicationGenerationParameter" ReferencePath="xfmg.oas.generation" VariableName="applicationGenerationParameter1"/>
+        <Data ID="4" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file4"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.oas.generation.ApplicationGenerationImpl.generateApplication(correlatedXynaOrder, applicationGenerationParameter1, file4);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Generate Application by managed File ID" Name="generateApplicationByManagedFileID" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="2" Label="Application Generation Parameter" ReferenceName="ApplicationGenerationParameter" ReferencePath="xfmg.oas.generation" VariableName="applicationGenerationParameter2"/>
+        <Data ID="3" Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId3"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.oas.generation.ApplicationGenerationImpl.generateApplicationByManagedFileID(correlatedXynaOrder, applicationGenerationParameter2, managedFileId3);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

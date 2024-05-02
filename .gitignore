@@ -169,3 +169,7 @@ localbuild
 !xynautils/install/build/lib/*.jar
 
 /modules/xmcp/guihttp/filterimpl/H5XdevFilter/automatedTests/config.cfg
+
+# Apache Ant
+.ant-targets-build.xml
+.ant.properties

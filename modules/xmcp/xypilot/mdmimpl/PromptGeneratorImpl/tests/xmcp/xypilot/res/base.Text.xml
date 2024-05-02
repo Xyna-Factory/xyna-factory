@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 GIP SmartMercial GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Text" TypeName="Text" TypePath="base" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="text" VariableName="text">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Service Label="Text" TypeName="Text">
+    <Operation IsStatic="false" Label="Append" Name="append">
+      <Meta>
+        <Documentation>Appends the Text to this Text</Documentation>
+      </Meta>
+      <Input>
+        <Data Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">this.setText(this.getText().concat(text.getText()));</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Is null or Empty" Name="isNullOrEmpty">
+      <Meta>
+        <Documentation>Return true if this Text is either null or if this Text is """</Documentation>
+      </Meta>
+      <Input/>
+      <Output>
+        <Data Label="Is Empty" VariableName="isEmpty">
+          <Meta>
+            <Type>Boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return text==null||text.isEmpty();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Trim" Name="trim">
+      <Meta>
+        <Documentation>Trims leading and trailing whitespaces off theText</Documentation>
+      </Meta>
+      <Input/>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">text = text.trim();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

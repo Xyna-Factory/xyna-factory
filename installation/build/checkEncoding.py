@@ -1,9 +1,9 @@
 #!/usr/bin/python3
-# -*- coding: iso-8859-15 -*-
+# -*- coding: utf-8 -*-
 """
 Goes through all the files in the given directory and checks, that they match their expected encoding:
 
-- .xml, .json and .pom: UTF-8
+- .xml, .json, .py .sh and .pom: UTF-8
 - .java: ISO-8859-1
 """
 
@@ -23,17 +23,20 @@ EXPECTED_UTF_8: list[str] = [
     ".xml",
     ".pom",
     ".py",
-    ".json"
+    ".json",
+    ".sh"
 ]
 
 # characters the give away, that a file opened with the given encoding isn't actually encoded that way
 ENCODING_WITNESSES: dict[str, list[str]] = {
     ISO_8859_1: [
-        "Ã¶",
-        "Ã¤",
-        "Ã¼",
-        "Ã–",
-        "Ã",
+      "\xc3\xa4", #ä
+      "\xc3\xbc", #ü
+      "\xc3\xb6", #ö
+      "\xc3\x84", #Ä
+      "\xc3\x9c", #Ü
+      "\xc3\x96", #Ö
+      "\xc3\x9f", #ß
     ],
     UTF_8: [
         "\uFFFD"
@@ -64,7 +67,6 @@ def ignore_file(file: Path) -> bool:
         or ".swf" in file.name \
         or not "." in file.name \
         or ".class" in file.name \
-        or "checkEncoding.py" in file.name \
         or "OtherExportImportAndUtils.java" in file.name
 
 

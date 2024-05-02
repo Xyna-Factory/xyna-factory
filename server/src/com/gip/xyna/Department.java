@@ -39,15 +39,6 @@ import com.gip.xyna.xfmg.XynaFactoryManagementBase;
 public abstract class Department extends XynaFactoryComponent {
 
   private static Logger errorLogger = CentralFactoryLogging.getLogger(Department.class);
-
-  // TODO make this configurable?
-  private static int[] outOfMemoryReserve;
-
-  static {
-    if (XynaFactory.isFactoryServer()) {
-      outOfMemoryReserve = new int[256 * 1024]; // 1mb
-    }
-  }
   
   protected HashMap<String, Section> sections;
 
@@ -144,28 +135,13 @@ public abstract class Department extends XynaFactoryComponent {
    * throwables sollten nicht einfach gefangen werden, ohne dass man sich bewusst ist, was da alles enthalten ist
    */
   public static void handleThrowable(Throwable t) {
-    // TODO move to util class
-
-    // http://java.sun.com/j2se/1.4.2/docs/api/java/lang/Error.html
-    if (t instanceof ThreadDeath) { // ThreadDeath fehler müssen weitergeworfen werden!
-      throw (ThreadDeath) t;
+    if (XynaFactory.getInstance().getFactoryManagement() == null
+        || XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl() == null
+        || XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getOomManagement() == null) {
+      errorLogger.warn("Could not handle throwable - OomManagement not initialized");
+      return;
     }
-    if (t instanceof OutOfMemoryError) {
-      // TODO macht das sinn: statisch irgendwo platz reservieren und bei oom exception freigeben
-      // damit fehlermeldung zumindest weitergeleitet werden kann und nich nur im log auftaucht
-      // (catch-code braucht evtl auch speicher)
-      // problem: wie reallokiert man den speicher, nachdem er einmal freigegeben wurde?
-      long time = System.currentTimeMillis();
-      outOfMemoryReserve = null;
-      synchronized (lastGCs) {
-        if (time - lastGCs.get(0) > 10000) {
-          System.gc();
-          lastGCs.add(time);
-        }
-      }
-      errorLogger.fatal("Out of memory", t);
-    }
-
+    XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getOomManagement().handleThrowable(t);
   }
 
 

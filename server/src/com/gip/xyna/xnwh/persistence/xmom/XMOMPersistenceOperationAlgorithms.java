@@ -1839,15 +1839,10 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
   
   public static class TypeCollectionVisitor implements StorableStructureVisitor {
 
-    private Map<String, Collection<StorableStructureInformation>> types = new HashMap<>();
+    private Set<String> types = new HashSet<>();
     
     public void enter(StorableColumnInformation columnLink, StorableStructureInformation current) {
-      Collection<StorableStructureInformation> subtypes = types.get(current.getFqXmlName());
-      if (subtypes == null) {
-        subtypes = new HashSet<>();
-        types.put(current.getFqXmlName(), subtypes);
-      }
-      subtypes.add(current);
+      types.add(current.getFqXmlName());
     }
 
     public void exit(StorableColumnInformation columnLink, StorableStructureInformation current) {
@@ -1857,7 +1852,7 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
       return XMOMStorableStructureCache.ALL_RECURSIONS_AND_FULL_HIERARCHY;
     }
     
-    public Map<String, Collection<StorableStructureInformation>> getTypes() {
+    public Set<String> getTypes() {
       return types;
     }
     

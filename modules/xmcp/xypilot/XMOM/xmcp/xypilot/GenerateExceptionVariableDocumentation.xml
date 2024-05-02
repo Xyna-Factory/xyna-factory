@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Generate Exception Variable Documentation" TypeName="GenerateExceptionVariableDocumentation" TypePath="xmcp.xypilot" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Generate Exception Variable Documentation" Name="GenerateExceptionVariableDocumentation">
+    <Input>
+      <Data ID="35" Label="Member Reference" ReferenceName="MemberReference" ReferencePath="xmcp.xypilot" VariableName="memberReference35"/>
+    </Input>
+    <Output>
+      <Data ID="132" Label="Generate Documentation Response" ReferenceName="GenerateDocumentationResponse" ReferencePath="xmcp.xypilot" VariableName="generateDocumentationResponse132"/>
+    </Output>
+    <ServiceReference ID="159" Label="PromptGenerator" ReferenceName="PromptGenerator.PromptGenerator" ReferencePath="xmcp.xypilot">
+      <Source RefID="158"/>
+      <Target RefID="158"/>
+    </ServiceReference>
+    <Function ID="158" Label="Generate Exception Variable Documentation">
+      <Source RefID="159"/>
+      <Source RefID="35"/>
+      <Target RefID="159"/>
+      <Target RefID="161"/>
+      <Invoke Operation="generateExceptionVariableDocumentation" ServiceID="159">
+        <Source RefID="35"/>
+      </Invoke>
+      <Receive ServiceID="159">
+        <Target RefID="161"/>
+      </Receive>
+    </Function>
+    <Mappings ID="56" Label="Mapping">
+      <Input>
+        <Data ID="178" Label="Documentation" ReferenceName="Documentation" ReferencePath="xmcp.xypilot" VariableName="documentation178">
+          <Source RefID="56"/>
+        </Data>
+        <Source RefID="161"/>
+      </Input>
+      <Output>
+        <Data ID="97" Label="Generate Documentation Response" ReferenceName="GenerateDocumentationResponse" ReferencePath="xmcp.xypilot" VariableName="generateDocumentationResponse97">
+          <Source RefID="56"/>
+        </Data>
+        <Target RefID="98"/>
+      </Output>
+      <Mapping>%1%.documentation=%0%.text</Mapping>
+    </Mappings>
+    <Data ID="98" Label="Generate Documentation Response" ReferenceName="GenerateDocumentationResponse" ReferencePath="xmcp.xypilot" VariableName="generateDocumentationResponse98">
+      <Source RefID="56"/>
+    </Data>
+    <Data ID="161" Label="Documentation" ReferenceName="Documentation" ReferencePath="xmcp.xypilot" VariableName="documentation161">
+      <Source RefID="158"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="98"/>
+      <Target RefID="132"/>
+      <Copy>
+        <Source RefID="98"/>
+        <Target RefID="132"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

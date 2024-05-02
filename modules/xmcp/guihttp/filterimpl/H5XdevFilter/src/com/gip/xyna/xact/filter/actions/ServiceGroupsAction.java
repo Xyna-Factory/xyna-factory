@@ -116,7 +116,7 @@ public class ServiceGroupsAction extends XmomGuiAction {
   }
 
   @Override
-  protected boolean isEditAction(HTTPTriggerConnection tc) {
+  protected boolean isEditAction(Method method) {
     // users without the right EDIT_MDM should still be able to create a new document (without being able to save it)
     return false;
   }

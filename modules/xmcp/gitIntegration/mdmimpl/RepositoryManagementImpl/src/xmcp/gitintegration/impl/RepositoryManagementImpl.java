@@ -352,7 +352,7 @@ public class RepositoryManagementImpl {
 
   public static String listRepositoryConnections() {
     return String.join("\n", loadRepositoryConnections().stream().map(storable -> "Workspace: '" + storable.getWorkspacename()
-        + "', Path: '" + storable.getPath() + "', SubPath: '" + storable.getSubpath() + "'" + "', Splitted: '" + storable.getSplitted() + "'").collect(Collectors.toList()));
+        + "', Path: '" + storable.getPath() + "', SubPath: '" + storable.getSubpath() + "', Splitted: '" + storable.getSplitted() + "'").collect(Collectors.toList()));
   }
 
 

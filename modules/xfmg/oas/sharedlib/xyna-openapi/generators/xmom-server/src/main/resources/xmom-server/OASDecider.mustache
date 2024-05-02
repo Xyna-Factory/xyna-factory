@@ -1,0 +1,60 @@
+{{!
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+}}
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
+TypeName="OASDecider" TypePath="{{apiPackage}}.decider" Label="OASDecider"
+BaseTypeName="XynaObjectDecider" BaseTypePath="xfmg.xfctrl.datamodel.json.parameter">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="decide" TypeName="Decide">
+    <Operation Label="Decide" Name="decide" IsStatic="false">
+      <Input>
+        <Data ID="16" Label="Generic Type" VariableName="string16">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="2" Label="JSON Object" VariableName="jSONObject2" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json"/>
+      </Input>
+      <Output>
+        <Data ID="17" Label="AnyType" VariableName="anytype17" ReferenceName="AnyType" ReferencePath="base">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">{{#xynaModels}}{{#hasDiscriminator}}if (string16.equals("{{typePath}}.{{typeName}}")) {
+  String dyntype = "";
+  xfmg.xfctrl.datamodel.json.JSONValue value = jSONObject2.getMember("{{discriminatorKey}}");
+  if (value != null) {
+    dyntype = value.getStringOrNumberValue();
+  }{{#discriminatorMap}}
+  if (dyntype.equals("{{keyValue}}")) {
+    return new {{fqn}}();
+  }{{/discriminatorMap}}
+}{{/hasDiscriminator}}{{/xynaModels}}
+try {
+  return (com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject) this.getClass().getClassLoader().loadClass(string16).getConstructor().newInstance();
+} catch(Exception e) {
+  return null;
+}</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

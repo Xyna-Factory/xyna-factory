@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="pull" Description="pull from a repository" />
+  <CommandDefinition Groups="Git Repository Management" Name="pull" Description="pull from a repository" />
   <Argument Name="repository" Description="Path to the repository" />
   <BoolOption Name="d" LongName="dryrun" Description="only print repository state, don't pull" Optional="true" />
 </XynaCommandLineCommand>

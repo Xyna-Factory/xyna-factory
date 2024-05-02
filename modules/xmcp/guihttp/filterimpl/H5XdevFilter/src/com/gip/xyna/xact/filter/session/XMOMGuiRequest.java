@@ -72,7 +72,8 @@ public class XMOMGuiRequest {
     SubscribeProjectPollEvents,
     UnsubscribeProjectPollEvents,
     CopyXml,
-    Warnings
+    Warnings,
+    ModelledExpressions
     ;
     
     private boolean isModification;

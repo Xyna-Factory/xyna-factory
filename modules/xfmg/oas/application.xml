@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Application applicationName="OAS_Base" factoryVersion="" versionName="1.1.4" xmlVersion="1.1">
+  <ApplicationInfo>
+    <RuntimeContextRequirements>
+      <RuntimeContextRequirement>
+        <ApplicationName>FileMgmt</ApplicationName>
+        <VersionName>1.0.10</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>Http</ApplicationName>
+        <VersionName>1.2.6</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>Json</ApplicationName>
+        <VersionName>1.2.6</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>XynaPropertyMgmt</ApplicationName>
+        <VersionName>1.0.1</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>ZetaFramework</ApplicationName>
+        <VersionName>0.6.50</VersionName>
+      </RuntimeContextRequirement>
+    </RuntimeContextRequirements>
+  </ApplicationInfo>
+  <Ordertypes>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.oas.fman.ApplicationImport</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.oas.fman.GetOASImportDetailsDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.oas.fman.GetOASImportHistoryDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.oas.fman.DefineGenerationDialog</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.oas.fman.OASImportTableInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.oas.fman.SetRuntimeContext</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.oas.wf.OASTypeValidation</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.oas.wf.provider.Decode</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.oas.wf.provider.Encode</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+  </Ordertypes>
+  <SharedLibs>
+    <SharedLib implicitDependency="false">
+      <SharedLib>xyna-openapi</SharedLib>
+    </SharedLib>
+  </SharedLibs>
+  <XMOMEntries>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xfmg.oas.generation.ApplicationGeneration</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xfmg.oas.generation.ApplicationGenerationParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.datatype.HttpRequest</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.datatype.HttpResponse</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.datatype.OASBaseType</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.datatype.OASValidationResult</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.datatype.URLPathParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.datatype.ValidationError</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.oas.datatype.provider.RequestParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.oas.datatype.provider.ResponseParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.datatype.provider.ValidationErrorResponse</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.exception.ValidationException</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.ApplicationImport</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.GetOASImportDetailsDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.GetOASImportHistoryDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.DefineGenerationDialog</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.OASImportTableInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.SetRuntimeContext</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.oas.fman.storables.OAS_ImportHistory</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.wf.OASTypeValidation</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.wf.provider.Decode</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.wf.provider.Encode</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+  </XMOMEntries>
+  <XynaProperties>
+    <XynaProperty implicitDependency="false">
+      <Name>xmcp.oas.fman.properties.runtime_context</Name>
+      <Value/>
+    </XynaProperty>
+    <XynaProperty implicitDependency="false">
+      <Name>xmcp.oas.validation.request_validation</Name>
+      <Value>400 Bad Request</Value>
+    </XynaProperty>
+    <XynaProperty implicitDependency="false">
+      <Name>xmcp.oas.validation.response_validation</Name>
+      <Value>500 Internal Server Error</Value>
+    </XynaProperty>
+  </XynaProperties>
+  <XmomStorables>
+    <XmomStorable>
+      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
+      <Path/>
+      <OdsName>oas_importhistory</OdsName>
+      <FqPath/>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
+      <Path>date</Path>
+      <OdsName>oas_importhistory</OdsName>
+      <FqPath>date</FqPath>
+      <ColumnName>date</ColumnName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
+      <Path>errorMessage</Path>
+      <OdsName>oas_importhistory</OdsName>
+      <FqPath>errorMessage</FqPath>
+      <ColumnName>errormessage</ColumnName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
+      <Path>fileName</Path>
+      <OdsName>oas_importhistory</OdsName>
+      <FqPath>fileName</FqPath>
+      <ColumnName>filename</ColumnName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
+      <Path>importStatus</Path>
+      <OdsName>oas_importhistory</OdsName>
+      <FqPath>importStatus</FqPath>
+      <ColumnName>importstatus</ColumnName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
+      <Path>specificationFile</Path>
+      <OdsName>oas_importhistory</OdsName>
+      <FqPath>specificationFile</FqPath>
+      <ColumnName>specificationfile</ColumnName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
+      <Path>specificationFile</Path>
+      <OdsName>specificationfile</OdsName>
+      <FqPath>specificationFile{base.Text}</FqPath>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
+      <Path>specificationFile.parentuid</Path>
+      <OdsName>specificationfile</OdsName>
+      <FqPath>specificationFile{base.Text}.parentuid</FqPath>
+      <ColumnName>parentuid</ColumnName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
+      <Path>specificationFile.text</Path>
+      <OdsName>specificationfile</OdsName>
+      <FqPath>specificationFile{base.Text}.text</FqPath>
+      <ColumnName>text</ColumnName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
+      <Path>specificationFile.typename</Path>
+      <OdsName>specificationfile</OdsName>
+      <FqPath>specificationFile{base.Text}.typename</FqPath>
+      <ColumnName>typename</ColumnName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
+      <Path>specificationFile.unid</Path>
+      <OdsName>specificationfile</OdsName>
+      <FqPath>specificationFile{base.Text}.unid</FqPath>
+      <ColumnName>unid</ColumnName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
+      <Path>type</Path>
+      <OdsName>oas_importhistory</OdsName>
+      <FqPath>type</FqPath>
+      <ColumnName>type</ColumnName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
+      <Path>typename</Path>
+      <OdsName>oas_importhistory</OdsName>
+      <FqPath>typename</FqPath>
+      <ColumnName>typename</ColumnName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
+      <Path>uniqueIdentifier</Path>
+      <OdsName>oas_importhistory</OdsName>
+      <FqPath>uniqueIdentifier</FqPath>
+      <ColumnName>uniqueidentifier</ColumnName>
+    </XmomStorable>
+  </XmomStorables>
+</Application>
