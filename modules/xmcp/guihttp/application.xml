@@ -2615,7 +2615,7 @@
       <JarFiles>H5XdevFilter/H5XdevFilter.jar:H5XdevFilter/HttpUtils.jar:</JarFiles>
       <FqFilterClassname>com.gip.xyna.xact.filter.H5XdevFilter</FqFilterClassname>
       <TriggerName>Http</TriggerName>
-      <SharedLibs>XynaObjectJsonBuilder:EndpointProvider</SharedLibs>
+      <SharedLibs>XynaObjectJsonBuilder</SharedLibs>
     </Filter>
   </Filters>
   <FilterInstances>
