@@ -25,6 +25,9 @@
         <buildModule target="build" dir="guihttp"       target.dir="${target.dir}/xmcp" />
         <buildModule target="build" dir="zetaFramework" target.dir="${target.dir}/xmcp" />
         <buildModule target="build" dir="multirole" target.dir="${target.dir}/xmcp" />
+        <buildModule target="build" dir="xypilot" target.dir="${target.dir}/xmcp" />
+        <buildModule target="build" dir="xypilotMetrics" target.dir="${target.dir}/xmcp" />
+        <buildModule target="build" dir="xypilotMetricsDefaults" target.dir="${target.dir}/xmcp" />
     </target>
     
 </project>
