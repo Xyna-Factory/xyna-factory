@@ -15,10 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="ContainerArea" BaseTypePath="xmcp.processmodeller.datatypes" Label="Member Method Area" TypeName="MemberMethodArea" TypePath="xmcp.processmodeller.datatypes.datatypemodeller" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="GuiDefiningWorkflow" TypePath="xmcp.yggdrasil.plugin" Label="Gui Defining Workflow" IsAbstract="false">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Plugin" VariableName="plugin" ReferenceName="Plugin" ReferencePath="xmcp.yggdrasil.plugin"/>
+  <Data Label="FQN" VariableName="fQN">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Runtime Context" VariableName="runtimeContext" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce"/>
 </DataType>
