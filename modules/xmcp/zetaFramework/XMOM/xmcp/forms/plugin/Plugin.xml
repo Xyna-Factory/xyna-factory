@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,4 +39,9 @@
     </Meta>
   </Data>
   <Data Label="Plugin RTC" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="pluginRTC"/>
+  <Data Label="Path" VariableName="path">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
 </DataType>
