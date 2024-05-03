@@ -364,7 +364,7 @@ public class SNMPServiceServiceOperationImpl implements ExtendedDeploymentTask, 
 
 
   /**
-   * böser hack: SNMP4j speichert die enginetime auf eine merkwÃ¼rdige art und weise in UsmTimeTable.
+   * böser hack: SNMP4j speichert die enginetime auf eine merkürdige art und weise in UsmTimeTable.
    * beim verschicken eines requests mit authorativeEngineTime wird diese auf die vergangene zeit seit dem
    * letzten mal, dass jemand "setEngineTime" gesagt hat, gesetzt. anstatt auf die vergangene zeit seit der
    * derzeit gesetzten enginestarttime.
