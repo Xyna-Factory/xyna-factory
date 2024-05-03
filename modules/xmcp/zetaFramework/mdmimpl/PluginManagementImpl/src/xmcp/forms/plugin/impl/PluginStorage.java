@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,7 +108,7 @@ public class PluginStorage {
     builder.navigationIconName(storable.getNavigationiconname());
     builder.definitionWorkflowFQN(storable.getDefinitionworkflowfqn());
     builder.pluginRTC(convertToRtc(storable.getPluginrtc()));
-
+    builder.path(storable.getPath());
     return builder.instance();
   }
 
@@ -120,6 +120,7 @@ public class PluginStorage {
     result.setNavigationiconname(plugin.getNavigationIconName());
     result.setDefinitionworkflowfqn(plugin.getDefinitionWorkflowFQN());
     result.setPluginrtc(convertRtc(plugin.getPluginRTC()));
+    result.setPath(plugin.getPath());
     result.setId(PluginStorable.createId(result));
     return result;
   }
