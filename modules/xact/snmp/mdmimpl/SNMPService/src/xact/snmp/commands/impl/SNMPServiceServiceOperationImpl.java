@@ -103,13 +103,13 @@ public class SNMPServiceServiceOperationImpl implements ExtendedDeploymentTask, 
   private static final XynaPropertyEnum<AUTH_ALGO> XYNAPROPERTY_AUTH_ALGO = new XynaPropertyEnum<AUTH_ALGO>(
       "xact.snmp.v3.authalgorithm", AUTH_ALGO.class, AUTH_ALGO.MD5)
       .setDefaultDocumentation(DocumentationLanguage.DE,
-          "MÃ¶gliche authentifizierungs Algorithmen: MD5, SHA1, SHA224, SHA256, SHA384, SHA512")
+          "Mögliche authentifizierungs Algorithmen: MD5, SHA1, SHA224, SHA256, SHA384, SHA512")
       .setDefaultDocumentation(DocumentationLanguage.EN,
           "Available authentification algorithms: MD5, SHA1, SHA224, SHA256, SHA384, SHA512");
   private static final XynaPropertyEnum<PRIV_ALGO> XYNAPROPERTY_PRIV_ALGO = new XynaPropertyEnum<PRIV_ALGO>(
       "xact.snmp.v3.privalgorithm", PRIV_ALGO.class, PRIV_ALGO.DES)
       .setDefaultDocumentation(DocumentationLanguage.DE,
-          "MÃ¶gliche verschlÃ¼sselungs Algorithmen: DES, DESEDE, AES128, AES192, AES256")
+          "Mögliche verschlüsselungs Algorithmen: DES, DESEDE, AES128, AES192, AES256")
       .setDefaultDocumentation(DocumentationLanguage.EN,
           "Available encryption algorithms: DES, DESEDE, AES128, AES192, AES256");
 
@@ -364,7 +364,7 @@ public class SNMPServiceServiceOperationImpl implements ExtendedDeploymentTask, 
 
 
   /**
-   * boeser hack: SNMP4j speichert die enginetime auf eine merkwÃ¼rdige art und weise in UsmTimeTable.
+   * böser hack: SNMP4j speichert die enginetime auf eine merkwÃ¼rdige art und weise in UsmTimeTable.
    * beim verschicken eines requests mit authorativeEngineTime wird diese auf die vergangene zeit seit dem
    * letzten mal, dass jemand "setEngineTime" gesagt hat, gesetzt. anstatt auf die vergangene zeit seit der
    * derzeit gesetzten enginestarttime.
