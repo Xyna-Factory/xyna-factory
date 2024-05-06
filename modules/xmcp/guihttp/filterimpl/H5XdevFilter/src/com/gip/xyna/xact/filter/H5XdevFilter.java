@@ -55,6 +55,7 @@ import com.gip.xyna.xact.filter.util.Utils;
 import com.gip.xyna.xact.filter.util.xo.DomOrExceptionStructure;
 import com.gip.xyna.xact.filter.util.xo.DomOrExceptionSubtypes;
 import com.gip.xyna.xact.filter.util.xo.ServiceSignature;
+import com.gip.xyna.xact.filter.xmom.datatypes.json.GuiHttpPluginManagement;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
 import com.gip.xyna.xdev.xfractmod.xmdm.ConnectionFilter;
@@ -424,6 +425,8 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
         Utils.logError(ex);
       }
     }
+    
+    GuiHttpPluginManagement.getInstance().stop();
     
     super.onUndeployment(triggerInstance);
     

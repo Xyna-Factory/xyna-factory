@@ -23,6 +23,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
+import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.Department;
+import com.gip.xyna.XynaFactory;
+import com.gip.xyna.xmcp.xguisupport.messagebus.MessageBusManagementPortal;
+import com.gip.xyna.xmcp.xguisupport.messagebus.transfer.MessageRetrievalResult;
+import com.gip.xyna.xmcp.xguisupport.messagebus.transfer.MessageSubscriptionParameter;
+
 import xmcp.forms.plugin.PluginManagement;
 import xmcp.yggdrasil.plugin.Context;
 import xmcp.yggdrasil.plugin.GuiDefiningWorkflow;
@@ -34,7 +43,16 @@ public class GuiHttpPluginManagement {
 
   private HashMap<String, Plugin.Builder> builders;
 
+  private static final String subscriptionProduct = "zeta";
+  private static final String subscriptionContext = "plugin";
+  private static final String subscriptionSessionId = "guihttppluginmanagement";
+  private static final String threadName = "GuiHttpPluginManagement";
+  private static Logger logger = CentralFactoryLogging.getLogger(GuiHttpPluginManagement.class);
   private static GuiHttpPluginManagement instance;
+  private final MessageBusManagementPortal messageBusManagementPortal;
+  private final Thread messageBusThread;
+  private Long lastReceivedId = -1l;
+  private boolean running = true;
 
 
   public static GuiHttpPluginManagement getInstance() {
@@ -52,11 +70,35 @@ public class GuiHttpPluginManagement {
 
   private GuiHttpPluginManagement() {
     builders = new HashMap<>();
+    messageBusManagementPortal = XynaFactory.getInstance().getXynaMultiChannelPortal().getMessageBusManagement();
+    MessageSubscriptionParameter subscription = new MessageSubscriptionParameter(1l, subscriptionProduct, subscriptionContext, ".*");
+    messageBusManagementPortal.addSubscription(subscriptionSessionId, subscription);
     updatePluginData();
+    messageBusThread = new Thread(this::monitorMessageBus, threadName);
+    messageBusThread.start();
+  }
+
+
+  private void monitorMessageBus() {
+    while (running) {
+      try {
+        MessageRetrievalResult result = messageBusManagementPortal.fetchMessages(subscriptionSessionId, lastReceivedId);
+        if (result.getMessages() != null && !result.getMessages().isEmpty()) {
+          updatePluginData();
+        }
+        Thread.sleep(60000); //1 minute
+      } catch (OutOfMemoryError | InterruptedException t) {
+        Department.handleThrowable(t);
+      }
+    }
+    if (logger.isDebugEnabled()) {
+      logger.debug("Messagebus monitoring thread " + threadName + " finished.");
+    }
   }
 
 
   public void updatePluginData() {
+    logger.debug("updating plugin data");
     builders.clear();
     List<? extends xmcp.forms.plugin.Plugin> plugins = PluginManagement.listPlugins();
     HashMap<String, List<GuiDefiningWorkflow>> definingWorkflows = new HashMap<>();
@@ -87,5 +129,17 @@ public class GuiHttpPluginManagement {
     builder.context(context);
 
     return builder.instance().clone();
+  }
+
+
+  public void stop() {
+    running = false;
+    try {
+      messageBusThread.interrupt();
+    } catch (Exception e) {
+      if (logger.isWarnEnabled()) {
+        logger.warn("interrupting messageBusThread '" + threadName + "' resulted in exception: " + e);
+      }
+    }
   }
 }
