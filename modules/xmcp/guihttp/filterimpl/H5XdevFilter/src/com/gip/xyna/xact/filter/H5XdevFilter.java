@@ -397,6 +397,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     }
     
     soa.setEndpoints(endpoints);
+    GuiHttpPluginManagement.getInstance().start();
 
     STATIC_FILES.registerDependency(UserType.Filter, NAME);
     ACCESS_CONTROL_ALLOW_ORIGIN.registerDependency(UserType.Filter, NAME);

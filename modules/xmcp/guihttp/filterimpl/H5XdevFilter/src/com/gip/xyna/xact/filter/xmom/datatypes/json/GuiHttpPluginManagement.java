@@ -50,9 +50,8 @@ public class GuiHttpPluginManagement {
   private static Logger logger = CentralFactoryLogging.getLogger(GuiHttpPluginManagement.class);
   private static GuiHttpPluginManagement instance;
   private final MessageBusManagementPortal messageBusManagementPortal;
-  private final Thread messageBusThread;
+  private Thread messageBusThread;
   private Long lastReceivedId = -1l;
-  private boolean running = true;
 
 
   public static GuiHttpPluginManagement getInstance() {
@@ -73,14 +72,12 @@ public class GuiHttpPluginManagement {
     messageBusManagementPortal = XynaFactory.getInstance().getXynaMultiChannelPortal().getMessageBusManagement();
     MessageSubscriptionParameter subscription = new MessageSubscriptionParameter(1l, subscriptionProduct, subscriptionContext, ".*");
     messageBusManagementPortal.addSubscription(subscriptionSessionId, subscription);
-    updatePluginData();
-    messageBusThread = new Thread(this::monitorMessageBus, threadName);
-    messageBusThread.start();
+    start();
   }
 
 
   private void monitorMessageBus() {
-    while (running) {
+    while (GuiHttpPluginManagement.getInstance().messageBusThread == Thread.currentThread()) {
       try {
         MessageRetrievalResult result = messageBusManagementPortal.fetchMessages(subscriptionSessionId, lastReceivedId);
         if (result.getMessages() != null && !result.getMessages().isEmpty()) {
@@ -92,7 +89,7 @@ public class GuiHttpPluginManagement {
       }
     }
     if (logger.isDebugEnabled()) {
-      logger.debug("Messagebus monitoring thread " + threadName + " finished.");
+      logger.debug("Messagebus monitoring thread '" + threadName + "' (" + Thread.currentThread() + ") finished.");
     }
   }
 
@@ -133,13 +130,28 @@ public class GuiHttpPluginManagement {
 
 
   public void stop() {
-    running = false;
+    Thread oldThread = messageBusThread;
+    messageBusThread = null;
     try {
-      messageBusThread.interrupt();
+      if (oldThread != null) {
+        oldThread.interrupt();
+      }
     } catch (Exception e) {
       if (logger.isWarnEnabled()) {
-        logger.warn("interrupting messageBusThread '" + threadName + "' resulted in exception: " + e);
+        logger.warn("interrupting messageBusThread '" + threadName + "' ("+ oldThread + ") resulted in exception: " + e);
       }
+    }
+  }
+  
+  public void start() {
+    updatePluginData();
+    if(messageBusThread != null) {
+      return;
+    }
+    messageBusThread = new Thread(this::monitorMessageBus, threadName);
+    messageBusThread.start();
+    if(logger.isDebugEnabled()) {
+      logger.debug("Started new messageBusThread: " + messageBusThread);
     }
   }
 }
