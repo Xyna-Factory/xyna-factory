@@ -1,0 +1,10 @@
+{
+    "template": "copilot/exception-variables.ftl",
+    "parser": "xmcp.xypilot.impl.gen.parse.MemberParser",
+    "inference_parameters": {
+        "model": "copilot-json",
+        "n": 1,
+        "stop": ["\n  ]"]
+    }
+}
+

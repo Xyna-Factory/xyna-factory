@@ -37,10 +37,14 @@ import com.gip.xyna.xact.filter.actions.auth.LogoutAction;
 import com.gip.xyna.xact.filter.actions.auth.SharedLoginAction;
 import com.gip.xyna.xact.filter.actions.auth.utils.AuthUtils;
 import com.gip.xyna.xact.filter.actions.generateinput.GenerateinputAction;
+import com.gip.xyna.xact.filter.actions.listpaths.DatatypesAction;
+import com.gip.xyna.xact.filter.actions.listpaths.ExceptionsAction;
+import com.gip.xyna.xact.filter.actions.listpaths.WorkflowsAction;
 import com.gip.xyna.xact.filter.actions.monitor.AuditsOrderIdDownloadAction;
 import com.gip.xyna.xact.filter.actions.monitor.ImportedAuditsAction;
 import com.gip.xyna.xact.filter.actions.monitor.OpenAuditAction;
 import com.gip.xyna.xact.filter.actions.orderinputdetails.OrderinputdetailsAction;
+import com.gip.xyna.xact.filter.actions.startorder.Endpoint;
 import com.gip.xyna.xact.filter.actions.startorder.StartorderAction;
 import com.gip.xyna.xact.filter.actions.starttestcase.StarttestcaseAction;
 import com.gip.xyna.xact.filter.actions.xacm.CreateUserAction;
@@ -364,7 +368,8 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add(new SharedLoginAction());
     allFilterActions.add(new ChangePasswordAction());
 
-    allFilterActions.add(new StartorderAction());
+    StartorderAction soa = new StartorderAction();
+    allFilterActions.add(soa);
     allFilterActions.add(new StarttestcaseAction());
     allFilterActions.add(new OrderinputdetailsAction());
     allFilterActions.add(new GenerateinputAction());
@@ -382,6 +387,15 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     
     allFilterActions.add( new EncodeAction() );
     allFilterActions.add( new DecodeAction() );
+    
+    List<Endpoint> endpoints = new ArrayList<>();
+    for(FilterAction fa : allFilterActions) {
+      if(fa instanceof Endpoint) {
+        endpoints.add((Endpoint)fa);
+      }
+    }
+    
+    soa.setEndpoints(endpoints);
 
     STATIC_FILES.registerDependency(UserType.Filter, NAME);
     ACCESS_CONTROL_ALLOW_ORIGIN.registerDependency(UserType.Filter, NAME);

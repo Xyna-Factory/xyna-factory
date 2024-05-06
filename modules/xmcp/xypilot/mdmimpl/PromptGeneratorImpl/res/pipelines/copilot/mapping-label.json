@@ -1,0 +1,11 @@
+{
+    "template": "copilot/mapping-label.ftl",
+    "parser": "xmcp.xypilot.impl.gen.parse.MappingLabelParser",
+    "inference_parameters": {
+        "model": "copilot-java",
+        "n": 1,
+        "stop": ["\n"],
+        "max_tokens": 16
+    }
+}
+

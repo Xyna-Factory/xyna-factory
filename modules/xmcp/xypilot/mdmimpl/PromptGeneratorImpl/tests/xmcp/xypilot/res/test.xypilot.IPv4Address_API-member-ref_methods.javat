@@ -1,0 +1,6 @@
+// class IPv4Address // Represents a IPv4 address using a 32-bit integer. The address is stored as a 32-bit integer in network byte order.  The address can be converted to and from a textual representation.  The textual representation is a string consisting of four decimal numbers in the range 0 to 255, separated by dots.
+// Public members:
+// - int address
+// Public methods:
+// Text asText(); // Returns a textual representation of the address in the format. "a.b.c.d" where a, b, c and d are integers in the range 0 to 255.
+// IPv4Address fromText(Text); // Creates a new IPv4Address from a textual representation.. . @param text a textual representation of the address in the format. "a.b.c.d" where a, b, c and d are integers in the range 0 to 255

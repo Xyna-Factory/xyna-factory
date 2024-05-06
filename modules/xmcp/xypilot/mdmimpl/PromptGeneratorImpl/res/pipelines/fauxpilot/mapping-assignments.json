@@ -1,0 +1,11 @@
+{
+    "template": "fauxpilot/mapping-assignments.ftl",
+    "parser": "xmcp.xypilot.impl.gen.parse.MappingParser",
+    "inference_parameters": {
+        "model": "fastertransformer",
+        "n": 1,
+        "stop": ["return", "\n  }"],
+        "max_tokens": 128
+    }
+}
+

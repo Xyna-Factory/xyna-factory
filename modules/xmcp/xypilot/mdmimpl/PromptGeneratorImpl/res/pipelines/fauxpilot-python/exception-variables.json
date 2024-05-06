@@ -1,0 +1,11 @@
+{
+    "template": "fauxpilot/exception-variables.ftl",
+    "parser": "xmcp.xypilot.impl.gen.parse.MemberParser",
+    "inference_parameters": {
+        "model": "py-model",
+        "n": 1,
+        "stop": ["\n  ]"],
+        "max_tokens": 512
+    }
+}
+

@@ -1,0 +1,12 @@
+{
+    "name": "address",
+    "fqn": "int",
+    "isList": false,
+    "documentation": "the address of the IP address"
+},
+{
+    "name": "octets",
+    "fqn": "java.lang.String",
+    "isList": true,
+    "documentation": "the octets of the IP address as a list of strings"
+}
