@@ -50,6 +50,11 @@ public abstract class RuntimeContextDependendAction extends H5xFilterAction {
   
   @Override
   public FilterActionInstance act(URLPath url, HTTPTriggerConnection tc) throws XynaException {
+    RTCInfo info = extractRTCInfo(url);
+    return act( info.rc, info.revision, info.subUrl, tc.getMethodEnum(), tc);
+  }
+  
+  public RTCInfo extractRTCInfo(URLPath url) throws XynaException {
     RuntimeContext rc = null;
     Long revision = null;
     URLPath subUrl = null;
@@ -76,7 +81,12 @@ public abstract class RuntimeContextDependendAction extends H5xFilterAction {
       rc = rm.getRuntimeContext(revision);
       subUrl = url;
     }
-    return act( rc, revision, subUrl, tc.getMethodEnum(), tc);
+    
+    RTCInfo result = new RTCInfo();
+    result.rc = rc;
+    result.revision = revision;
+    result.subUrl = subUrl;
+    return result;
   }
   
 
@@ -90,5 +100,11 @@ public abstract class RuntimeContextDependendAction extends H5xFilterAction {
   }
   
 
+  
+  public static class RTCInfo {
+    public RuntimeContext rc = null;
+    public Long revision = null;
+    public URLPath subUrl = null;
+  }
 
 }

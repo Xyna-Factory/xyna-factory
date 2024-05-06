@@ -1,0 +1,11 @@
+  {
+    "name": "address",
+    "fqn": "int"
+  }
+}
+# -> early out should be ignored
+  {
+    "name": "octets",
+    "fqn": "int",
+    "isList": true
+  }

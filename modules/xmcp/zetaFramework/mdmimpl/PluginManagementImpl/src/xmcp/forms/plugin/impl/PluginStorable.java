@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,7 @@ public class PluginStorable extends Storable<PluginStorable> {
   public static final String COL_NavigationIconName = "navigationiconname";
   public static final String COL_definitionworkflowfqn = "definitionworkflowfqn";
   public static final String COL_pluginrtc = "pluginrtc";
+  public static final String COL_path = "path";
 
   @Column(name = COL_ID)
   private String id;
@@ -59,6 +60,9 @@ public class PluginStorable extends Storable<PluginStorable> {
 
   @Column(name = COL_pluginrtc)
   private String pluginrtc;
+
+  @Column(name = COL_path)
+  private String path;
 
 
   public PluginStorable() {
@@ -90,6 +94,7 @@ public class PluginStorable extends Storable<PluginStorable> {
     navigationiconname = cast.navigationiconname;
     definitionworkflowfqn = cast.definitionworkflowfqn;
     pluginrtc = cast.pluginrtc;
+    path = cast.path;
   }
 
 
@@ -104,6 +109,11 @@ public class PluginStorable extends Storable<PluginStorable> {
       result.navigationiconname = rs.getString(COL_NavigationIconName);
       result.definitionworkflowfqn = rs.getString(COL_definitionworkflowfqn);
       result.pluginrtc = rs.getString(COL_pluginrtc);
+      try {
+        result.path = rs.getString(COL_path);
+      } catch (Exception e) {
+        result.path = null;
+      }
       return result;
     }
 
@@ -172,6 +182,16 @@ public class PluginStorable extends Storable<PluginStorable> {
 
   public void setPluginrtc(String pluginrtc) {
     this.pluginrtc = pluginrtc;
+  }
+
+
+  public String getPath() {
+    return path;
+  }
+
+
+  public void setPath(String path) {
+    this.path = path;
   }
 
 }

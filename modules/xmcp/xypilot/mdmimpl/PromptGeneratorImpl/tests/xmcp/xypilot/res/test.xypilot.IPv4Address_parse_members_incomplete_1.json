@@ -1,0 +1,12 @@
+  {
+    "name": "address",
+    "fqn": "int",
+    "isList": false,
+    "documentation": "the address of the IP address"
+  },
+  {
+    "name": "octets",
+    "fqn": "byte",
+    "isList": true,
+    "documentation": "the
+# last member not finished

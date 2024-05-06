@@ -57,6 +57,9 @@ public class URLPath {
     return null; //nichts gefunden
   }
   
+  public List<URLPathQuery> getQueryList() {
+    return queryList;
+  }
   
   public static URLPath parseURLPath( HTTPTriggerConnection tc ) {
     List<URLPathQuery> queryList = new ArrayList<URLPathQuery>();
