@@ -20,6 +20,8 @@ package com.gip.xyna.xact.filter.actions.startorder;
 
 
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
@@ -68,6 +70,12 @@ public class StartorderAction extends RuntimeContextDependendAction {
   private static final XynaFactoryControl xfctrl = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl();
   private static final String documentFqn = "xact.templates.Document";
   private static final String ordertypeFqn = "xprc.xpce.OrderType";
+  private List<Endpoint> endpoints;
+  
+  
+  public void setEndpoints(List<Endpoint> endpoints) {
+    this.endpoints = endpoints;
+  }
 
   protected boolean matchRuntimeContextIndependent(URLPath url, Method method) {
     return url.getPath().equals("/" + PathElements.START_ORDER) && Method.POST == method;
@@ -164,6 +172,7 @@ public class StartorderAction extends RuntimeContextDependendAction {
     xocp.setMonitoringLevel(srj.getMonitoringLevel());
     xocp.setSessionId(xpsc.getSessionId());
     xocp.setTransientCreationRole(role);
+    xocp.addRunnableForFilterAccess("H5XdevFilter", new H5XdevFilterAccessRunnable(tc, endpoints));
 
     XynaMultiChannelPortalSecurityLayer xynaMultiChannelPortalSecurityLayer =
         XynaFactory.getInstance().getXynaMultiChannelPortalSecurityLayer();
