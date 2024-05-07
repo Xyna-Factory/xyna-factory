@@ -24,13 +24,13 @@ import java.util.Map.Entry;
 import com.gip.xyna.xact.filter.session.GenerationBaseObject;
 import com.gip.xyna.xact.filter.session.gb.ObjectId;
 import com.gip.xyna.xact.filter.session.gb.ObjectType;
+import com.gip.xyna.xact.filter.xmom.PluginPaths;
 import com.gip.xyna.xact.filter.xmom.workflows.enums.Tags;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
 
 import xmcp.processmodeller.datatypes.ExceptionType;
-import xmcp.processmodeller.datatypes.TextArea;
 import xmcp.processmodeller.datatypes.datatypemodeller.ExceptionMessage;
 import xmcp.processmodeller.datatypes.datatypemodeller.ExceptionMessagesArea;
 
@@ -66,12 +66,10 @@ public class ExceptiontypeXo extends DomOrExceptionXo {
     exceptionType.addToAreas(createDataTypeTypeLabelArea());
     exceptionType.addToAreas(createExceptionMessagesArea());
     
-    TextArea documentationArea = createDocumentationArea();
-    documentationArea.setText(exceptionGeneration.getDocumentation());
-    exceptionType.addToAreas(documentationArea);
+    exceptionType.addToAreas(createDocumentationArea(exceptionGeneration.getDocumentation(), PluginPaths.location_exception_documentation));
     
     exceptionType.addToAreas(createInheritedVariablesArea());
-    exceptionType.addToAreas(createMemberVariableArea());
+    exceptionType.addToAreas(createMemberVariableArea(PluginPaths.location_exception_members));
     
     return exceptionType;
   }
@@ -92,6 +90,9 @@ public class ExceptiontypeXo extends DomOrExceptionXo {
       area.addToItems(em);
       i++;
     }
+
+    area.unversionedSetPlugin(pluginMgmt.createPlugin(contextBuilder.instantiateContext(PluginPaths.location_exception_message, null)));
+
     return area;
   }
 
