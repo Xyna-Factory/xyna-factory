@@ -46,7 +46,7 @@ public class XmomDataModelGeneratorTest {
   @Test
   public void launchCodeGenerator() {
     
-    String specFile = "";
+    String specFile = "xgo680.yaml";
     
     PrintStream originalOut = System.out;
     try {

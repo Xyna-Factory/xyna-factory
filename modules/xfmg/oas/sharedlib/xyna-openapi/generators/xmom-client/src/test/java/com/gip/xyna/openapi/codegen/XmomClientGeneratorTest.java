@@ -48,7 +48,7 @@ public class XmomClientGeneratorTest {
   @Test
   public void launchCodeGenerator() {
 
-    String specFile = "";
+    String specFile = "TMF621-Trouble_Ticket-v5.0.0.oas-provider.yaml";
     PrintStream originalOut = System.out;
     try {
       Path outputFilePath = Paths.get("../../test/output/xmom-client/" + specFile.substring(0, specFile.lastIndexOf('.')) + "/operations.json");
