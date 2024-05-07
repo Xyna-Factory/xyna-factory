@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="build" default="build" basedir=".">
-
-    <!-- this is the absolute path to the root -->
-    <pathconvert property="root.dir">
-        <path location="${basedir}/../../../" />
-    </pathconvert>
-    <property name="target.dir" value="${basedir}/deploy" />
-    <property name="base.lib.dir" value="${basedir}/lib" />
-    
-    <target name="build" depends="resolve">
-        <buildJar basedir="${basedir}"
-              lib.dir="${basedir}/lib"
-              destfile="${target.dir}/demonlib.jar" />
-    </target>
-    <import file="${root.dir}/xynautils/install/xynautils/masterbuild.xml" />
-
-</project>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="SNMPv3AuthAlgorithmName" TypePath="xact.snmp.algorithms" Label="SNMP v3 Auth Algorithm Name">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>MD5, SHA, SHA224, SHA256, SHA384, SHA512</Documentation>
+  </Meta>
+  <Data Label="name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+</DataType>

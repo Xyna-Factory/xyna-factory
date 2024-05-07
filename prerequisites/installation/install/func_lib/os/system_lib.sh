@@ -40,7 +40,7 @@ check_target_platform () {
             fi
             ;;
           rhel)
-            TOKEN_ETC_ISSUE="Red Hat Enterprise Linux Server"
+            TOKEN_ETC_ISSUE="Red Hat Enterprise Linux"
             if [[ -f "/etc/redhat-release" ]]; then
               TARGET_FILE="/etc/redhat-release"
             fi
