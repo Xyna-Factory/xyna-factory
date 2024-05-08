@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2024 Xyna GmbH, Germany
@@ -16,9 +16,20 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="ContainerArea" BaseTypePath="xmcp.processmodeller.datatypes" Label="Member Method Area" TypeName="MemberMethodArea" TypePath="xmcp.processmodeller.datatypes.datatypemodeller" Version="1.8">
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="SHA1" TypePath="xact.snmp.algorithms" Label="SHA1" IsAbstract="false" BaseTypeName="SNMPv3AuthAlgorithm" BaseTypePath="xact.snmp.algorithms">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Plugin" VariableName="plugin" ReferenceName="Plugin" ReferencePath="xmcp.yggdrasil.plugin"/>
+  <Service Label="SHA1" TypeName="SHA1">
+    <Operation Label="get algorithm" Name="getAlgorithm" IsStatic="false">
+      <Input>
+      </Input>
+      <Output>
+        <Data ID="1" Label="algorithm" VariableName="algorithm" ReferenceName="SNMPv3AuthAlgorithm" ReferencePath="xact.snmp.algorithms"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new SHA1("SHA1");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

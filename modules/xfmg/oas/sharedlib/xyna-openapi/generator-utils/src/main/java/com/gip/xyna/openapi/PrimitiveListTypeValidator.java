@@ -20,16 +20,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class PrimitiveListTypeValidator<T> extends BaseValidator {
+public class PrimitiveListTypeValidator<T, V extends PrimitiveTypeValidator<T>> extends BaseValidator {
 
-    private List<PrimitiveTypeValidator<T>> validators = new ArrayList<>();
-    private Supplier<PrimitiveTypeValidator<T>> dummy;
+    private List<V> validators = new ArrayList<>();
+    private Supplier<V> dummy;
     
-    public PrimitiveListTypeValidator(Supplier<PrimitiveTypeValidator<T>> dummy) {
+    public PrimitiveListTypeValidator(Supplier<V> dummy) {
       this.dummy = dummy;
     }
     
-    public void setDummy(Supplier<PrimitiveTypeValidator<T>> dummy) {
+    public void setDummy(Supplier<V> dummy) {
       this.dummy = dummy;
     }
     
@@ -42,7 +42,7 @@ public class PrimitiveListTypeValidator<T> extends BaseValidator {
     public void addValues(List<T> value) {
       if (value != null && dummy != null) {
         for (T val : value) {
-          PrimitiveTypeValidator<T> newValidator = dummy.get();
+          V newValidator = dummy.get();
           newValidator.setName(getName());
           newValidator.setValue(val);
           validators.add(newValidator);
@@ -50,7 +50,7 @@ public class PrimitiveListTypeValidator<T> extends BaseValidator {
       }
     }
 
-    public List<PrimitiveTypeValidator<T>> getValidators() {
+    public List<V> getValidators() {
         return validators;
     }
     

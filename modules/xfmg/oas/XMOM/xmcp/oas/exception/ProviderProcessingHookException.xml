@@ -15,10 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="ContainerArea" BaseTypePath="xmcp.processmodeller.datatypes" Label="Member Method Area" TypeName="MemberMethodArea" TypePath="xmcp.processmodeller.datatypes.datatypemodeller" Version="1.8">
-  <Meta>
-    <IsServiceGroupOnly>false</IsServiceGroupOnly>
-  </Meta>
-  <Data Label="Plugin" VariableName="plugin" ReferenceName="Plugin" ReferencePath="xmcp.yggdrasil.plugin"/>
-</DataType>
+--><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Version="1.8" Name="ExceptionStore">
+  <ExceptionType Code="TMF-00101" TypeName="ProviderProcessingHookException" TypePath="xmcp.oas.exception" Label="Provider Processing Hook Exception" IsAbstract="false" BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception">
+    <Data Label="Error Response" VariableName="errorResponse" ReferenceName="ResponseParameter" ReferencePath="xmcp.oas.datatype.provider"/>
+    <MessageText Language="DE">Provider Processing Hook Exception</MessageText>
+    <MessageText Language="EN">Provider Processing Hook Exception</MessageText>
+  </ExceptionType>
+</ExceptionStore>

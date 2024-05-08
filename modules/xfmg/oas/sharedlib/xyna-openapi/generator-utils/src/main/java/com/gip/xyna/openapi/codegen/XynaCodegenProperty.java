@@ -154,8 +154,11 @@ public class XynaCodegenProperty {
     StringBuilder validatorClassConstructor = new StringBuilder("new ").append(validatorPath);
     DatatypeInfos typeInfo = DatatypeMap.getOrDefault(dataType, DatatypeMap.get("Default"));
     if (isList) {
-      validatorClassConstructor.append("PrimitiveListTypeValidator<").append(typeInfo.javaType).append(">(").append(validatorPath)
-          .append(typeInfo.validatorClassName).append("::new").append(")");
+      validatorClassConstructor.append("PrimitiveListTypeValidator<")
+          .append(typeInfo.javaType).append(",").append(validatorPath).append(typeInfo.validatorClassName)
+          .append(">(")
+          .append(validatorPath).append(typeInfo.validatorClassName).append("::new")
+          .append(")");
     } else {
       validatorClassConstructor.append(typeInfo.validatorClassName).append("()");
     }
@@ -184,7 +187,7 @@ public class XynaCodegenProperty {
       fix.postfix = ")";
     }
         
-    ValuesToValidate valuesToValidate = new ValuesToValidate(propertyInfo);
+    ValuesToValidate valuesToValidate = new ValuesToValidate(propertyInfo, javaType);
 
     config.add("setName(\"" + propLabel + "\")");
     config.add(setValue);
@@ -374,11 +377,17 @@ public class XynaCodegenProperty {
     boolean nullable;
     List<String> allowableValues = new ArrayList<String>();
 
-    ValuesToValidate(CodegenPropertyInfo propertyInfo) {
+    ValuesToValidate(CodegenPropertyInfo propertyInfo, String javatype) {
       CodegenPropertyInfo mostInnerItems = propertyInfo.getMostInnerItems() != null ? propertyInfo.getMostInnerItems() : propertyInfo;
 
       minimum = mostInnerItems.getMinimum();
+      if ("Long".equals(javatype) && minimum != null) {
+        minimum = minimum + "L";
+      }
       maximum = mostInnerItems.getMaximum();
+      if ("Long".equals(javatype) && maximum != null) {
+        maximum = maximum + "L";
+      }
       excludeMin = mostInnerItems.getExclusiveMinimum();
       excludeMax = mostInnerItems.getExclusiveMaximum();
       multipleOf = mostInnerItems.getMultipleOf();
