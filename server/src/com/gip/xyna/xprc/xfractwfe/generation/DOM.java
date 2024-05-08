@@ -597,6 +597,12 @@ public class DOM extends DomOrExceptionGenerationBase {
       } else {
         isServiceGroupOnly = null;
       }
+      
+      List<String> knownMetaTags = Arrays.asList(GenerationBase.EL.DOCUMENTATION, 
+                                                 GenerationBase.EL.DATAMODEL,
+                                                 GenerationBase.EL.PATHMAP,
+                                                 GenerationBase.EL.IS_SERVICE_GROUP_ONLY);
+      unknownMetaTags = XMLUtils.getFilteredSubElements(metaElement, knownMetaTags);
     }
 
     //pktype ist ggf aus supertype und wird erst später befüllt (validate)

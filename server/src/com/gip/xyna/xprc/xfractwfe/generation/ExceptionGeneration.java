@@ -431,6 +431,9 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
       if (documentationElement != null) {
         setDocumentation(XMLUtils.getTextContent(documentationElement));
       }
+      
+      List<String> knownMetaTags = Arrays.asList(GenerationBase.EL.DOCUMENTATION);
+      unknownMetaTags = com.gip.xyna.xprc.xfractwfe.generation.XMLUtils.getFilteredSubElements(metaElement, knownMetaTags);
     }
   }
 

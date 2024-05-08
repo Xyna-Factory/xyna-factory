@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.w3c.dom.Element;
+
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.ATT;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.EL;
 import com.gip.xyna.xprc.xfractwfe.generation.WF;
@@ -44,6 +46,7 @@ public class SnippetOperation extends Operation {
   public boolean isCancelable;
   public WF wf;
   private boolean requiresXynaOrder = false;
+  private List<Element> unknownMetaTags;
   
   
   protected SnippetOperation() {
@@ -64,6 +67,7 @@ public class SnippetOperation extends Operation {
     this.documentation = operation.documentation;
     this.hasBeenPersisted = operation.hasBeenPersisted;
     this.requiresXynaOrder = operation.requiresXynaOrder;
+    this.unknownMetaTags = operation.unknownMetaTags;
   }
   
   private <T> List<T> clone(List<T> list) {
@@ -175,6 +179,10 @@ public class SnippetOperation extends Operation {
     return wf;
   }
   
+  public List<Element> getUnknownMetaTags() {
+    return unknownMetaTags;
+  }
+  
   public static SnippetOperationBuilder create(String name) {
     return new SnippetOperationBuilder(name);
   }
@@ -246,6 +254,11 @@ public class SnippetOperation extends Operation {
       return this;
     }
     
+    public SnippetOperationBuilder unknownMetaTags(List<Element> unknownMetaTags) {
+      operation.unknownMetaTags = unknownMetaTags;
+      return this;
+    }
+    
     private List<Variable> getOrCreateInputs() {
       if( operation.inputs == null ) {
         operation.inputs = new ArrayList<Variable>();
@@ -300,10 +313,14 @@ public class SnippetOperation extends Operation {
 
   @Override
   public boolean hasUnknownMetaTags() {
-    return false;
+    return unknownMetaTags != null && unknownMetaTags.size() > 0;
   }
 
   @Override
-  public void appendUnknownMetaTags(XmlBuilder xml) {}
+  public void appendUnknownMetaTags(XmlBuilder xml) {
+    if (hasUnknownMetaTags()) {
+      unknownMetaTags.forEach(tag -> xml.append(tag));
+    }
+  }
 
 }

@@ -20,7 +20,10 @@ package com.gip.xyna.xprc.xfractwfe.generation.xml;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable.PrimitiveType;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.EL;
 
+import java.util.List;
 import java.util.Set;
+
+import org.w3c.dom.Element;
 
 import com.gip.xyna.xprc.xfractwfe.generation.PersistenceInformation;
 import com.gip.xyna.xprc.xfractwfe.generation.PersistenceTypeInformation;
@@ -39,6 +42,7 @@ public class Meta implements XmlAppendable {
   private Boolean isServiceGroupOnly;
   private PersistenceInformation persistenceInformation;
   private Set<PersistenceTypeInformation> persistenceTypes;
+  private List<Element> unknownMetaTags;
 
   public Meta() {
   }
@@ -51,6 +55,7 @@ public class Meta implements XmlAppendable {
     this.isServiceGroupOnly = meta.isServiceGroupOnly;
     this.persistenceInformation = meta.persistenceInformation;
     this.persistenceTypes = meta.persistenceTypes;
+    this.unknownMetaTags = meta.unknownMetaTags;
   }
 
   
@@ -125,6 +130,11 @@ public class Meta implements XmlAppendable {
       if (description != null && description.length() > 0) {
         xml.element(EL.DESCRIPTION, XMLUtils.escapeXMLValueAndInvalidChars(description, false, false));
       }
+      
+      if(unknownMetaTags != null && unknownMetaTags.size() > 0) {
+        unknownMetaTags.forEach(tag -> xml.append(tag));
+      }
+      
     } xml.endElement(EL.META);
   }
 
@@ -135,7 +145,8 @@ public class Meta implements XmlAppendable {
         || (type != null)
         || (dataModel != null)
         || (documentation != null && documentation.length() > 0)
-        || (description != null && description.length() > 0);
+        || (description != null && description.length() > 0)
+        || (unknownMetaTags != null && unknownMetaTags.size() > 0);
   }
 
   public DataModel getDataModel() {
@@ -170,6 +181,14 @@ public class Meta implements XmlAppendable {
     this.persistenceInformation = persistenceInformation;
   }
 
+  public List<Element> getUnknownMetaTags() {
+    return unknownMetaTags;
+  }
+  
+  public void setUnknownMetaTags(List<Element> unknownMetaTags) {
+    this.unknownMetaTags = unknownMetaTags;
+  }
+  
   public static Meta simpleType(PrimitiveType simpleType) {
     Meta m = new Meta();
     m.type = simpleType;
@@ -222,6 +241,12 @@ public class Meta implements XmlAppendable {
   public static Meta description(String description) {
     Meta m = new Meta();
     m.description = description;
+    return m;
+  }
+  
+  public static Meta unknownMetaTags(List<Element> unknownMetaTags) {
+    Meta m = new Meta();
+    m.unknownMetaTags = unknownMetaTags;
     return m;
   }
   

@@ -75,7 +75,7 @@ public class Utils {
       vb.complexType( getXmomType(var.getDomOrExceptionObject()) );
     }
 
-    // TODO: unknownMetaTags?
+    vb.meta(Meta.unknownMetaTags(var.getUnknownMetaTags()));
 
     if (var instanceof DatatypeVariable) {
       DatatypeVariable dtVar = (DatatypeVariable)var;
@@ -96,7 +96,8 @@ public class Utils {
        .isFinal(operation.isFinal())
        .isAbstract(operation.isAbstract())
        .documentation(operation.getDocumentation())
-       .hasBeenPersisted(operation.hasBeenPersisted());
+       .hasBeenPersisted(operation.hasBeenPersisted())
+       .unknownMetaTags(operation.getUnknownMetaTags());
 
     for (AVariable inputVar : operation.getInputVars()) {
       sob.input(createVariable(inputVar));
@@ -136,7 +137,8 @@ public class Utils {
   public static Meta createMeta(DomOrExceptionGenerationBase dtOrException) {
     Meta meta = new Meta();
     meta.setDocumentation(dtOrException.getDocumentation());
-
+    meta.setUnknownMetaTags(dtOrException.getUnknownMetaTags());
+    
     if (dtOrException instanceof DOM) {
       DOM dom = (DOM)dtOrException;
       meta.setIsServiceGroupOnly(dom.isServiceGroupOnly());

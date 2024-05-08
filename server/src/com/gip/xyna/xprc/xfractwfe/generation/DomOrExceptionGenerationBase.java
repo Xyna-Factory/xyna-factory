@@ -23,6 +23,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.w3c.dom.Element;
+
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xfmg.xfctrl.dependencies.DependencyNode;
@@ -38,6 +40,7 @@ public abstract class DomOrExceptionGenerationBase extends GenerationBase implem
   private boolean isAbstract = false;
   private boolean cacheSubTypes = false;
   private Set<GenerationBase> subTypeCache;
+  protected List<Element> unknownMetaTags;
 
   public String getDocumentation() {
     return documentation;
@@ -61,6 +64,14 @@ public abstract class DomOrExceptionGenerationBase extends GenerationBase implem
     if (!cacheSubTypes) {
       subTypeCache = null;
     }
+  }
+  
+  public List<Element> getUnknownMetaTags() {
+    return unknownMetaTags;
+  }
+  
+  public void setUnknownMetaTags(List<Element> unknownMetaTags) {
+    this.unknownMetaTags = unknownMetaTags;
   }
 
   protected DomOrExceptionGenerationBase(String originalClassName, String fqClassName, Long revision) {
