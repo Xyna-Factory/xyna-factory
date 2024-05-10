@@ -38,7 +38,7 @@ public abstract class DomOrExceptionGenerationBase extends GenerationBase implem
   private boolean isAbstract = false;
   private boolean cacheSubTypes = false;
   private Set<GenerationBase> subTypeCache;
-  protected List<String> unknownMetaTags;
+  protected UnknownMetaTagsComponent unknownMetaTagsComponent = new UnknownMetaTagsComponent();
 
   public String getDocumentation() {
     return documentation;
@@ -65,11 +65,11 @@ public abstract class DomOrExceptionGenerationBase extends GenerationBase implem
   }
   
   public List<String> getUnknownMetaTags() {
-    return unknownMetaTags;
+    return unknownMetaTagsComponent.getUnknownMetaTags();
   }
   
   public void setUnknownMetaTags(List<String> unknownMetaTags) {
-    this.unknownMetaTags = unknownMetaTags;
+    unknownMetaTagsComponent.setUnknownMetaTags(unknownMetaTags);
   }
 
   protected DomOrExceptionGenerationBase(String originalClassName, String fqClassName, Long revision) {

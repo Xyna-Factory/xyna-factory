@@ -27,7 +27,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
@@ -434,8 +433,8 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
       }
       
       List<String> knownMetaTags = Arrays.asList(GenerationBase.EL.DOCUMENTATION);
-      List<Element> unknownMetaElements = com.gip.xyna.xprc.xfractwfe.generation.XMLUtils.getFilteredSubElements(metaElement, knownMetaTags);
-      unknownMetaTags = unknownMetaElements.stream().map(x -> com.gip.xyna.xprc.xfractwfe.generation.XMLUtils.getXMLString(x, false)).collect(Collectors.toList());    }
+      unknownMetaTagsComponent.parseUnknownMetaTags(rootElement, knownMetaTags);
+    }
   }
 
 

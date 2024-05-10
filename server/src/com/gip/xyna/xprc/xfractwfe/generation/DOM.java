@@ -602,8 +602,7 @@ public class DOM extends DomOrExceptionGenerationBase {
                                                  GenerationBase.EL.DATAMODEL,
                                                  GenerationBase.EL.PATHMAP,
                                                  GenerationBase.EL.IS_SERVICE_GROUP_ONLY);
-      List<Element> unknownMetaElements = XMLUtils.getFilteredSubElements(metaElement, knownMetaTags);
-      unknownMetaTags = unknownMetaElements.stream().map(x -> XMLUtils.getXMLString(x, false)).collect(Collectors.toList());
+       unknownMetaTagsComponent.parseUnknownMetaTags(rootElement, knownMetaTags);
     }
 
     //pktype ist ggf aus supertype und wird erst später befüllt (validate)
