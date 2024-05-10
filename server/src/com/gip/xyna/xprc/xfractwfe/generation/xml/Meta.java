@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,16 +23,11 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.EL;
 import java.util.List;
 import java.util.Set;
 
-import org.w3c.dom.Element;
-
 import com.gip.xyna.xprc.xfractwfe.generation.PersistenceInformation;
 import com.gip.xyna.xprc.xfractwfe.generation.PersistenceTypeInformation;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 
-/**
- *
- */
 public class Meta implements XmlAppendable {
   
   private PrimitiveType type;
@@ -42,7 +37,7 @@ public class Meta implements XmlAppendable {
   private Boolean isServiceGroupOnly;
   private PersistenceInformation persistenceInformation;
   private Set<PersistenceTypeInformation> persistenceTypes;
-  private List<Element> unknownMetaTags;
+  private List<String> unknownMetaTags;
 
   public Meta() {
   }
@@ -132,11 +127,12 @@ public class Meta implements XmlAppendable {
       }
       
       if(unknownMetaTags != null && unknownMetaTags.size() > 0) {
-        unknownMetaTags.forEach(tag -> xml.append(tag));
+        unknownMetaTags.forEach(tag -> XMLUtils.appendStringAsElement(tag, xml));
       }
       
     } xml.endElement(EL.META);
   }
+
 
   public boolean hasEntries() {
     return (persistenceInformation != null && persistenceInformation.getRestrictionsCount() > 0)
@@ -181,11 +177,11 @@ public class Meta implements XmlAppendable {
     this.persistenceInformation = persistenceInformation;
   }
 
-  public List<Element> getUnknownMetaTags() {
+  public List<String> getUnknownMetaTags() {
     return unknownMetaTags;
   }
   
-  public void setUnknownMetaTags(List<Element> unknownMetaTags) {
+  public void setUnknownMetaTags(List<String> unknownMetaTags) {
     this.unknownMetaTags = unknownMetaTags;
   }
   
@@ -244,7 +240,7 @@ public class Meta implements XmlAppendable {
     return m;
   }
   
-  public static Meta unknownMetaTags(List<Element> unknownMetaTags) {
+  public static Meta unknownMetaTags(List<String> unknownMetaTags) {
     Meta m = new Meta();
     m.unknownMetaTags = unknownMetaTags;
     return m;

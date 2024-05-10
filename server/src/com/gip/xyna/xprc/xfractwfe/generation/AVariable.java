@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -631,7 +632,7 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
   
   private boolean isUserOutput = false;
 
-  private List<Element> unknownMetaTags;
+  private List<String> unknownMetaTags;
   
   private final Set<String> sourceIds = new HashSet<>();
   private String targetId = null;
@@ -947,16 +948,17 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
   @Override
   public void parseUnknownMetaTags(Element element, List<String> knownMetaTags) {
     Element meta = XMLUtils.getChildElementByName(element, GenerationBase.EL.META);
-    unknownMetaTags = XMLUtils.getFilteredSubElements(meta, knownMetaTags);
+    List<Element> unknownMetaElements = XMLUtils.getFilteredSubElements(meta, knownMetaTags);
+    unknownMetaTags = unknownMetaElements.stream().map(x -> XMLUtils.getXMLString(x, false)).collect(Collectors.toList());
   }
 
   @Override
-  public List<Element> getUnknownMetaTags() {
+  public List<String> getUnknownMetaTags() {
     return unknownMetaTags;
   }
 
   @Override
-  public void setUnknownMetaTags(List<Element> unknownMetaTags) {
+  public void setUnknownMetaTags(List<String> unknownMetaTags) {
     this.unknownMetaTags = unknownMetaTags;
   }
 
@@ -971,9 +973,7 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
       return;
     }
 
-    for (Element tag : unknownMetaTags) {
-      xml.append(tag);
-    }
+    unknownMetaTags.forEach(tag -> XMLUtils.appendStringAsElement(tag, xml));
   }
 
   public final String getFQClassName() {

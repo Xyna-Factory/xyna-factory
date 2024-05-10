@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -602,7 +602,8 @@ public class DOM extends DomOrExceptionGenerationBase {
                                                  GenerationBase.EL.DATAMODEL,
                                                  GenerationBase.EL.PATHMAP,
                                                  GenerationBase.EL.IS_SERVICE_GROUP_ONLY);
-      unknownMetaTags = XMLUtils.getFilteredSubElements(metaElement, knownMetaTags);
+      List<Element> unknownMetaElements = XMLUtils.getFilteredSubElements(metaElement, knownMetaTags);
+      unknownMetaTags = unknownMetaElements.stream().map(x -> XMLUtils.getXMLString(x, false)).collect(Collectors.toList());
     }
 
     //pktype ist ggf aus supertype und wird erst später befüllt (validate)

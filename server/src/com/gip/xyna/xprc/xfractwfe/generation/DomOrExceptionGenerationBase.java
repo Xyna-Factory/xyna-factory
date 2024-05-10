@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.w3c.dom.Element;
-
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xfmg.xfctrl.dependencies.DependencyNode;
@@ -40,7 +38,7 @@ public abstract class DomOrExceptionGenerationBase extends GenerationBase implem
   private boolean isAbstract = false;
   private boolean cacheSubTypes = false;
   private Set<GenerationBase> subTypeCache;
-  protected List<Element> unknownMetaTags;
+  protected List<String> unknownMetaTags;
 
   public String getDocumentation() {
     return documentation;
@@ -66,11 +64,11 @@ public abstract class DomOrExceptionGenerationBase extends GenerationBase implem
     }
   }
   
-  public List<Element> getUnknownMetaTags() {
+  public List<String> getUnknownMetaTags() {
     return unknownMetaTags;
   }
   
-  public void setUnknownMetaTags(List<Element> unknownMetaTags) {
+  public void setUnknownMetaTags(List<String> unknownMetaTags) {
     this.unknownMetaTags = unknownMetaTags;
   }
 

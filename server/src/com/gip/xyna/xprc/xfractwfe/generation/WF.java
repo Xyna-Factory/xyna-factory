@@ -34,6 +34,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
@@ -186,13 +187,14 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
   private ArrayList<ExceptionVariable> thrownExceptionVariables = new ArrayList<ExceptionVariable>();
 
   private String documentation = "";
-  private List<Element> unknownMetaTags;
+  private List<String> unknownMetaTags;
   private SpecialPurposeIdentifier specialPurposeIdentifier;
 
   @Override
   public void parseUnknownMetaTags(Element element, List<String> knownMetaTags) {
     Element meta = XMLUtils.getChildElementByName(element, GenerationBase.EL.META);
-    unknownMetaTags = XMLUtils.getFilteredSubElements(meta, knownMetaTags);
+    List<Element> unknownMetaElements = XMLUtils.getFilteredSubElements(meta, knownMetaTags);
+    unknownMetaTags = unknownMetaElements.stream().map(x -> XMLUtils.getXMLString(x, false)).collect(Collectors.toList());
   }
 
   @Override
@@ -202,12 +204,12 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
   
 
   @Override
-  public List<Element> getUnknownMetaTags() {
+  public List<String> getUnknownMetaTags() {
     return unknownMetaTags;
   }
 
   @Override
-  public void setUnknownMetaTags(List<Element> unknownMetaTags) {
+  public void setUnknownMetaTags(List<String> unknownMetaTags) {
     this.unknownMetaTags = unknownMetaTags;
   }
 
@@ -217,9 +219,7 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
       return;
     }
 
-    for (Element tag : unknownMetaTags) {
-      xml.append(tag);
-    }
+    unknownMetaTags.forEach(tag -> XMLUtils.appendStringAsElement(tag, xml));
   }
 
   private WFStep wfAsStep;

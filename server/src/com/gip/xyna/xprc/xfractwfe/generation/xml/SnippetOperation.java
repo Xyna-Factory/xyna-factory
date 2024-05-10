@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,6 @@ package com.gip.xyna.xprc.xfractwfe.generation.xml;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.w3c.dom.Element;
 
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.ATT;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.EL;
@@ -46,7 +44,7 @@ public class SnippetOperation extends Operation {
   public boolean isCancelable;
   public WF wf;
   private boolean requiresXynaOrder = false;
-  private List<Element> unknownMetaTags;
+  private List<String> unknownMetaTags;
   
   
   protected SnippetOperation() {
@@ -179,7 +177,7 @@ public class SnippetOperation extends Operation {
     return wf;
   }
   
-  public List<Element> getUnknownMetaTags() {
+  public List<String> getUnknownMetaTags() {
     return unknownMetaTags;
   }
   
@@ -254,7 +252,7 @@ public class SnippetOperation extends Operation {
       return this;
     }
     
-    public SnippetOperationBuilder unknownMetaTags(List<Element> unknownMetaTags) {
+    public SnippetOperationBuilder unknownMetaTags(List<String> unknownMetaTags) {
       operation.unknownMetaTags = unknownMetaTags;
       return this;
     }
@@ -316,10 +314,11 @@ public class SnippetOperation extends Operation {
     return unknownMetaTags != null && unknownMetaTags.size() > 0;
   }
 
+
   @Override
   public void appendUnknownMetaTags(XmlBuilder xml) {
     if (hasUnknownMetaTags()) {
-      unknownMetaTags.forEach(tag -> xml.append(tag));
+      unknownMetaTags.forEach(tag -> XMLUtils.appendStringAsElement(tag, xml));
     }
   }
 
