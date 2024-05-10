@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
@@ -74,7 +73,7 @@ public abstract class Operation implements HasDocumentation {
   private ArrayList<AVariable> inputVars = new ArrayList<AVariable>();
   private ArrayList<AVariable> outputVars = new ArrayList<AVariable>();
   private List<ExceptionVariable> thrownExceptions = new ArrayList<ExceptionVariable>();
-  private List<String> unknownMetaTags;
+  private UnknownMetaTagsComponent unknownMetaTagsComponent = new UnknownMetaTagsComponent();
 
 
   public boolean isStatic() {
@@ -218,8 +217,7 @@ public abstract class Operation implements HasDocumentation {
       List<String> knownMetaTags = Arrays.asList(GenerationBase.EL.DOCUMENTATION,
                                                  GenerationBase.EL.HAS_BEEN_PERSISTED,
                                                  GenerationBase.EL.VERSION);
-      List<Element> unknownMetaElements = XMLUtils.getFilteredSubElements(metaElement, knownMetaTags);
-      unknownMetaTags = unknownMetaElements.stream().map(x -> XMLUtils.getXMLString(x, false)).collect(Collectors.toList());
+      unknownMetaTagsComponent.parseUnknownMetaTags(operation, knownMetaTags);
     }
     
     // input/output variables
@@ -256,11 +254,11 @@ public abstract class Operation implements HasDocumentation {
   }
   
   public List<String> getUnknownMetaTags() {
-    return unknownMetaTags;
+    return unknownMetaTagsComponent.getUnknownMetaTags();
   }
   
   public void setUnknownMetaTags(List<String> unknownMetaTags) {
-    this.unknownMetaTags = unknownMetaTags;
+    unknownMetaTagsComponent.setUnknownMetaTags(unknownMetaTags);
   }
 
 
