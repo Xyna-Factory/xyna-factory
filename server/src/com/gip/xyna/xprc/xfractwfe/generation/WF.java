@@ -34,7 +34,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
@@ -187,39 +186,33 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
   private ArrayList<ExceptionVariable> thrownExceptionVariables = new ArrayList<ExceptionVariable>();
 
   private String documentation = "";
-  private List<String> unknownMetaTags;
+  private UnknownMetaTagsComponent unknownMetaTagsComponent = new UnknownMetaTagsComponent();
   private SpecialPurposeIdentifier specialPurposeIdentifier;
 
   @Override
   public void parseUnknownMetaTags(Element element, List<String> knownMetaTags) {
-    Element meta = XMLUtils.getChildElementByName(element, GenerationBase.EL.META);
-    List<Element> unknownMetaElements = XMLUtils.getFilteredSubElements(meta, knownMetaTags);
-    unknownMetaTags = unknownMetaElements.stream().map(x -> XMLUtils.getXMLString(x, false)).collect(Collectors.toList());
+    unknownMetaTagsComponent.parseUnknownMetaTags(element, knownMetaTags);
   }
 
   @Override
   public boolean hasUnknownMetaTags() {
-    return ( (unknownMetaTags != null) && (unknownMetaTags.size() > 0) );
+    return unknownMetaTagsComponent.hasUnknownMetaTags();
   }
   
 
   @Override
   public List<String> getUnknownMetaTags() {
-    return unknownMetaTags;
+    return unknownMetaTagsComponent.getUnknownMetaTags();
   }
 
   @Override
   public void setUnknownMetaTags(List<String> unknownMetaTags) {
-    this.unknownMetaTags = unknownMetaTags;
+    unknownMetaTagsComponent.setUnknownMetaTags(unknownMetaTags);
   }
 
   @Override
   public void appendUnknownMetaTags(XmlBuilder xml) {
-    if (unknownMetaTags == null) {
-      return;
-    }
-
-    unknownMetaTags.forEach(tag -> XMLUtils.appendStringAsElement(tag, xml));
+    unknownMetaTagsComponent.appendUnknownMetaTags(xml);
   }
 
   private WFStep wfAsStep;

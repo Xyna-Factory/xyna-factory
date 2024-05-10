@@ -385,7 +385,7 @@ public abstract class Step implements XmlAppendable, HasMetaTags {
   private Integer xmlId;
   protected GenerationBase creator;
   private List<Parameter> parameterList;
-  private List<String> unknownMetaTags;
+  private UnknownMetaTagsComponent unknownMetaTagsComponent = new UnknownMetaTagsComponent();
 
   public Step(ScopeStep parentScope, GenerationBase creator) {
     this(creator);
@@ -451,12 +451,12 @@ public abstract class Step implements XmlAppendable, HasMetaTags {
 
   @Override
   public List<String> getUnknownMetaTags() {
-    return unknownMetaTags;
+    return unknownMetaTagsComponent.getUnknownMetaTags();
   }
 
   @Override
   public void setUnknownMetaTags(List<String> unknownMetaTags) {
-    this.unknownMetaTags = unknownMetaTags;
+    unknownMetaTagsComponent.setUnknownMetaTags(unknownMetaTags);
   }
 
   public Parameter getFirstParameter() {
@@ -885,25 +885,19 @@ public abstract class Step implements XmlAppendable, HasMetaTags {
 
   @Override
   public void parseUnknownMetaTags(Element element, List<String> knownMetaTags) {
-    Element meta = XMLUtils.getChildElementByName(element, GenerationBase.EL.META);
-    List<Element> unknownMetaElements = XMLUtils.getFilteredSubElements(meta, knownMetaTags);
-    unknownMetaTags = unknownMetaElements.stream().map(x -> XMLUtils.getXMLString(x, false)).collect(Collectors.toList());
+    unknownMetaTagsComponent.parseUnknownMetaTags(element, knownMetaTags);  
   }
 
 
   @Override
   public boolean hasUnknownMetaTags() {
-    return ( (unknownMetaTags != null) && (unknownMetaTags.size() > 0) );
+    return unknownMetaTagsComponent.hasUnknownMetaTags();
   }
 
 
   @Override
   public void appendUnknownMetaTags(XmlBuilder xml) {
-    if (unknownMetaTags == null) {
-      return;
-    }
-
-    unknownMetaTags.forEach(tag -> XMLUtils.appendStringAsElement(tag, xml));
+    unknownMetaTagsComponent.appendUnknownMetaTags(xml);
   }
 
 
