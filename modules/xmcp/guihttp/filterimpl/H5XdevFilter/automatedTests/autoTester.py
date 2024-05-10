@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Copyright 2023 Xyna GmbH, Germany
+# Copyright 2024 Xyna GmbH, Germany
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -1561,9 +1561,6 @@ class RequestTester:
       self.logout(0)
     else:
       requiredFactories = int(testJson["factoryCount"])
-      if len(self.factories) < requiredFactories:
-        raise Exception("Insufficient factories configured. Test requires " + str(requiredFactories) + " factories, but only " + str(len(self.factories)) + " are configured!")
-
       for i in range(0,requiredFactories,1):
         self.logout(i)
 
@@ -1573,8 +1570,6 @@ class RequestTester:
       self.login(0)
     else:
       requiredFactories = int(testJson["factoryCount"])
-      if len(self.factories) < requiredFactories:
-        raise Exception("Insufficient factories configured. Test requires " + str(requiredFactories) + " factories, but only " + str(len(self.factories)) + " are configured!")
       for i in range(0,requiredFactories,1):
         self.login(i)
 
@@ -1590,6 +1585,12 @@ class RequestTester:
   def resolveFactoryConstraints(self, testJson):
     if self.debug:
       print("resolving constraints")
+
+    if "factoryCount" in testJson:
+      requiredFactories = int(testJson["factoryCount"])
+      if len(self.factories) < requiredFactories:
+        raise NoValidFactoryConfigException(f"Insufficient factories configured. Test requires {requiredFactories} factories, but only {len(self.factories)} are configured!")
+
     self.factoryIndexMap = {}
     self.testHasConstraints = False
     factoryCount = int(testJson["factoryCount"]) if "factoryCount" in testJson else 1
@@ -1703,7 +1704,7 @@ class RequestTester:
           self.resolveFactoryConstraints(testcontent)
         except NoValidFactoryConfigException as e:
           self.fails = self.fails + 1
-          self.failedList.append(path + test + "(from "+ path + seriesFile + ") - no valid factory configuration found.")
+          self.failedList.append(f"{path}{test} (from {path}{seriesFile}) - {e}")
           continue
 
         self.loginForTest(testcontent)
