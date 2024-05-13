@@ -601,7 +601,8 @@ public class DOM extends DomOrExceptionGenerationBase {
       List<String> knownMetaTags = Arrays.asList(GenerationBase.EL.DOCUMENTATION, 
                                                  GenerationBase.EL.DATAMODEL,
                                                  GenerationBase.EL.PATHMAP,
-                                                 GenerationBase.EL.IS_SERVICE_GROUP_ONLY);
+                                                 GenerationBase.EL.IS_SERVICE_GROUP_ONLY,
+                                                 GenerationBase.EL.PERSISTENCE);
        unknownMetaTagsComponent.parseUnknownMetaTags(rootElement, knownMetaTags);
     }
 
