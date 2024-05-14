@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,18 @@
     <Meta>
       <Type>String</Type>
     </Meta>
+  </Data>
+  <Data Label="Type" VariableName="type">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="IsList" VariableName="isList">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+  <Data Label="Meta tags" ReferenceName="MetaTag" ReferencePath="xprc.xpce.datatype" IsList="true" VariableName="metaTags">
   </Data>
   <Service Label="Named XMOMMember" TypeName="NamedVariableMember">
     <Operation ID="4" IsStatic="false" Label="Get Member Object" Name="getMemberObject">
