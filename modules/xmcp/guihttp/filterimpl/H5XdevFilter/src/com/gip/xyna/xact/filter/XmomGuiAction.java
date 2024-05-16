@@ -180,7 +180,7 @@ public abstract class XmomGuiAction extends RuntimeContextDependendAction implem
 
 
     try {
-      return xmomGui.processRequest(new XmomGuiSession(creds.getSessionId()), request).getXynaObject();
+      return xmomGui.processRequest(new XmomGuiSession(creds.getSessionId(), creds.getToken()), request).getXynaObject();
     } catch (Exception e) {
       if(logger.isWarnEnabled()) {
         logger.warn("Exception executing "+ url.getPath() +": " + e);
