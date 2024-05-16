@@ -1,6 +1,7 @@
-/*
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- */
-
-package com.gip.xyna.xprc.xfractwfe.generation;
-
-import java.util.List;
-
-import org.w3c.dom.Element;
-
-import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
-
-public interface HasMetaTags {
-  public boolean hasUnknownMetaTags();
-  public List<String> getUnknownMetaTags();
-  public void setUnknownMetaTags(List<String> unknownMetaTags);
-  public void parseUnknownMetaTags(Element element, List<String> knownMetaTags);
-  public void appendUnknownMetaTags(XmlBuilder xml);
-}
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Meta tag" TypeName="MetaTag" TypePath="xprc.xpce.datatype" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>  
+  <Data Label="Value" VariableName="value">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+</DataType>
