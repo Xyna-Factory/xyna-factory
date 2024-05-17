@@ -17,6 +17,8 @@
  */
 package xmcp.xypilot.impl.gen.util;
 
+
+
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.Collections;
@@ -39,6 +41,8 @@ import xmcp.xypilot.impl.factory.XynaFactory;
 import xmcp.xypilot.impl.locator.UnsavedChangesXmlSource;
 import xmcp.xypilot.Documentation;
 
+
+
 public class FilterCallbackInteractionUtils {
 
   private static final Logger logger = Logger.getLogger("XyPilot");
@@ -48,42 +52,44 @@ public class FilterCallbackInteractionUtils {
   private static final HTTPMethod httpPut = new PUT();
   private static final String getXmlUrlTemplate = "/runtimeContext/%s/xmom/%s/%s/%s/xml";
   private static final String putObjDocTemplate = "/runtimeContext/%s/xmom/%s/%s/%s/objects/documentationArea/change";
-  
-  
+
+
   public static DOM getDom(XMOMItemReference ref, XynaOrderServerExtension order) throws XynaException {
     Long revision = getRevision(ref);
-    URLPath url = createGetXmlUrlPath(getXmlUrlTemplate, ref, "datatypes");
-    String xml = ((GetXMLResponse)order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpGet)).getCurrent();
+    URLPath url = createUrlPath(getXmlUrlTemplate, ref, "datatypes");
+    String xml = ((GetXMLResponse) order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpGet)).getCurrent();
     XMLSourceAbstraction inputSource = new UnsavedChangesXmlSource(xml, ref.getFqName(), revision);
     return DOM.getOrCreateInstance(ref.getFqName(), new GenerationBaseCache(), revision, inputSource);
   }
-  
-  public static void updateDomDocumentation(Documentation documentation, XynaOrderServerExtension order, XMOMItemReference ref) throws XynaException {
-    URLPath url = createGetXmlUrlPath(putObjDocTemplate, ref, "datatypes");
-    String payload = " { \"text\": \"" + JsonUtils.escapeString(documentation.getText()) + "\"}";
+
+
+  public static void updateDomDocu(Documentation docu, XynaOrderServerExtension order, XMOMItemReference ref) throws XynaException {
+    URLPath url = createUrlPath(putObjDocTemplate, ref, "datatypes");
+    String payload = " { \"text\": \"" + JsonUtils.escapeString(docu.getText()) + "\"}";
     order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpPut, payload);
   }
 
-  
-  private static URLPath createGetXmlUrlPath(String template, XMOMItemReference ref, String type) {
-    String path = ref.getFqName().substring(0, ref.getFqName().lastIndexOf("."));
-    String name = ref.getFqName().substring(ref.getFqName().lastIndexOf(".") + 1);
+
+  private static URLPath createUrlPath(String template, XMOMItemReference ref, String type) {
+    String fqn = ref.getFqName();
+    String path = fqn.substring(0, fqn.lastIndexOf("."));
+    String name = fqn.substring(fqn.lastIndexOf(".") + 1);
     String ws = URLEncoder.encode(ref.getWorkspace(), Charset.defaultCharset());
-    URLPath url = new URLPath.Builder().path(String.format(template, ws, type, path, name)).query(Collections.emptyList()).instance(); 
+    URLPath url = new URLPath.Builder().path(String.format(template, ws, type, path, name)).query(Collections.emptyList()).instance();
     return url;
   }
-  
-  
+
+
   /**
    * Gets the revision for the given workspace or -1 if an error occurs
    */
   public static long getRevision(XMOMItemReference item) {
-      try {
-          long parentRev = XynaFactory.getInstance().getRevision(null, null, item.getWorkspace());
-          return XynaFactory.getInstance().getRevisionDefiningXMOMObjectOrParent(item.getFqName(), parentRev);
-      } catch (Throwable e) {
-          logger.warn("Couldn't generate revision of Workspace " + item.getWorkspace() + ". Return -1.", e);
-          return -1L;
-      }
+    try {
+      long parentRev = XynaFactory.getInstance().getRevision(null, null, item.getWorkspace());
+      return XynaFactory.getInstance().getRevisionDefiningXMOMObjectOrParent(item.getFqName(), parentRev);
+    } catch (Throwable e) {
+      logger.warn("Couldn't generate revision of Workspace " + item.getWorkspace() + ". Return -1.", e);
+      return -1L;
+    }
   }
 }
