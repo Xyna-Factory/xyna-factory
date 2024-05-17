@@ -67,10 +67,10 @@ public class PluginManagement {
     Plugin.Builder builder = new Plugin.Builder();
     builder.pluginRTC(rtc);
     builder.definitionWorkflowFQN("xmcp.xypilot.GetGenerateButtonDefinition");
-    for (String nameAndPath : pluginEntryNameAndPath.keySet()) {
-      builder.navigationEntryName(pluginEntryNameAndPath.get(nameAndPath).getName());
-      builder.navigationEntryLabel(pluginEntryNameAndPath.get(nameAndPath).getName());
-      builder.path(pluginEntryNameAndPath.get(nameAndPath).getPath());
+    for (GenerationButton btn : pluginEntryNameAndPath.values()) {
+      builder.navigationEntryName(btn.getName());
+      builder.navigationEntryLabel(btn.getName());
+      builder.path(btn.getPath());
       consumer.accept(builder.instance());
     }
   }
