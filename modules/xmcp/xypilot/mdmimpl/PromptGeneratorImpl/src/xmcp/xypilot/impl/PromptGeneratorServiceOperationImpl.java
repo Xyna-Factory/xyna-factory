@@ -18,17 +18,28 @@
 package xmcp.xypilot.impl;
 
 import base.Text;
+import base.math.IntegerNumber;
+import xfmg.xfctrl.appmgmt.RuntimeContextService;
 import xfmg.xopctrl.XynaUserSession;
 
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
+import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
+import com.gip.xyna.xmcp.xguisupport.messagebus.transfer.MessageInputParameter;
+import com.gip.xyna.xprc.XynaOrderServerExtension;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import org.apache.log4j.Logger;
+
 import xmcp.xypilot.XMOMItemReference;
+import xmcp.xypilot.impl.factory.XynaFactory;
 import xmcp.xypilot.impl.gen.model.DomMethodModel;
 import xmcp.xypilot.impl.gen.model.DomModel;
 import xmcp.xypilot.impl.gen.model.DomVariableModel;
@@ -36,9 +47,13 @@ import xmcp.xypilot.impl.gen.model.ExceptionModel;
 import xmcp.xypilot.impl.gen.model.ExceptionVariableModel;
 import xmcp.xypilot.impl.gen.model.MappingModel;
 import xmcp.xypilot.impl.gen.pipeline.Pipeline;
+import xmcp.xypilot.impl.gen.util.FilterCallbackInteractionUtils;
 import xmcp.xypilot.impl.locator.DataModelLocator;
 import xmcp.xypilot.impl.locator.PipelineLocator;
 import xmcp.xypilot.metrics.Code;
+import xmcp.yggdrasil.plugin.Context;
+import xprc.xpce.RuntimeContext;
+import xmcp.forms.plugin.Plugin;
 import xmcp.xypilot.Documentation;
 import xmcp.xypilot.ExceptionMessage;
 import xmcp.xypilot.Mapping;
@@ -46,71 +61,103 @@ import xmcp.xypilot.MappingAssignment;
 import xmcp.xypilot.MemberReference;
 import xmcp.xypilot.MemberVariable;
 import xmcp.xypilot.MethodDefinition;
+import xmcp.xypilot.PromptGenerator;
 import xmcp.xypilot.PromptGeneratorServiceOperation;
 
 public class PromptGeneratorServiceOperationImpl implements ExtendedDeploymentTask, PromptGeneratorServiceOperation {
 
     private static Logger logger = Logger.getLogger("XyPilot");
 
+    private static final Map<String, GenerationButton> pluginEntryNameAndPath = createPluginNameAndPaths();
+    
+    private static Map<String, GenerationButton> createPluginNameAndPaths() {
+      Map<String, GenerationButton> result = new HashMap<>();
+      createGenerationButton(result, "DTDocu", "modeller/datatype/documentation", PromptGeneratorServiceOperationImpl::genDatatypeDocu);
+      return result;
+    }
+
+
+    private static void createGenerationButton(Map<String, GenerationButton> map, String name, String path,
+                                               BiConsumer<XynaOrderServerExtension, Context> method) {
+      map.put(path, new GenerationButton(name, path, method));
+    }
+
 
     public void onDeployment() throws XynaException {
-        // do something on deployment, if required
-        // This is executed again on each classloader-reload, that is each
-        // time a dependent object is redeployed, for example a type of an input
-        // parameter.
-        logger.debug("==========================\nPrompt Generator\n========================");
+      managePlugins(xmcp.forms.plugin.PluginManagement::registerPlugin);
     }
 
 
     public void onUndeployment() throws XynaException {
-        // do something on undeployment, if required
-        // This is executed again on each classloader-unload, that is each
-        // time a dependent object is redeployed, for example a type of an input
-        // parameter.
+      managePlugins(xmcp.forms.plugin.PluginManagement::unregisterPlugin);
     }
 
 
     public Long getOnUnDeploymentTimeout() {
-        // The (un)deployment runs in its own thread. The service may define a timeout
-        // in milliseconds, after which Thread.interrupt is called on this thread.
-        // If null is returned, the default timeout (defined by XynaProperty
-        // xyna.xdev.xfractmod.xmdm.deploymenthandler.timeout) will be used.
-        return null;
+      return null;
     }
 
 
     public BehaviorAfterOnUnDeploymentTimeout getBehaviorAfterOnUnDeploymentTimeout() {
-        // Defines the behavior of the (un)deployment after reaching the timeout and if
-        // this service ignores a Thread.interrupt.
-        // - BehaviorAfterOnUnDeploymentTimeout.EXCEPTION: Deployment will be aborted,
-        // while undeployment will log the exception and NOT abort.
-        // - BehaviorAfterOnUnDeploymentTimeout.IGNORE: (Un)Deployment will be continued
-        // in another thread asynchronously.
-        // - BehaviorAfterOnUnDeploymentTimeout.KILLTHREAD: (Un)Deployment will be
-        // continued after calling Thread.stop on the thread.
-        // executing the (Un)Deployment.
-        // If null is returned, the factory default <IGNORE> will be used.
-        return null;
+      return null;
     }
 
 
+    private RuntimeContext getOwnRtc() {
+      ClassLoaderBase clb = (ClassLoaderBase) getClass().getClassLoader();
+      Long revision = clb.getRevision();
+      return RuntimeContextService.getRuntimeContextFromRevision(new IntegerNumber(revision));
+    }
+
+    private void managePlugins(Consumer<Plugin> consumer) {
+      Plugin.Builder builder = new Plugin.Builder();
+      builder.pluginRTC(getOwnRtc());
+      builder.definitionWorkflowFQN("xmcp.xypilot.GetGenerateButtonDefinition");
+      for(String nameAndPath : pluginEntryNameAndPath.keySet()) {
+        builder.navigationEntryName(pluginEntryNameAndPath.get(nameAndPath).getName());
+        builder.navigationEntryLabel(pluginEntryNameAndPath.get(nameAndPath).getName());
+        builder.path(pluginEntryNameAndPath.get(nameAndPath).getPath());
+        consumer.accept(builder.instance());
+      }
+    }
+
+
+    private String createCorrelation(XMOMItemReference ref, String type) {
+      return String.format("%s-%s-WS:\"%s\"", type, ref.getFqName(), ref.getWorkspace());
+    }
+    
+    private void publishUpdateMessage(XMOMItemReference xmomItemReference, String type) throws XynaException {
+      String correlation = createCorrelation(xmomItemReference, type);
+      MessageInputParameter message = new MessageInputParameter("Xyna", "Process Modeller Autosaves", correlation, "", null, false);
+      XynaFactory.getInstance().Publish(message);
+    }
+    
+    
+    private static XMOMItemReference buildItemFromContext(Context context) {
+      XMOMItemReference.Builder builder = new XMOMItemReference.Builder();
+      builder.fqName(context.getFQN());
+      builder.workspace(((xprc.xpce.Workspace)context.getRuntimeContext()).getName());
+      return builder.instance();
+    }
+    
     @Override
-    public Documentation generateDatatypeDocumentation(XMOMItemReference xmomItemReference) {
-        try {
-            // get the data model
-            DomModel model = DataModelLocator.getDomModel(xmomItemReference);
-
-            // load the pipeline
-            Pipeline<Documentation, DomModel> pipeline = PipelineLocator.getPipeline("dom-documentation");
-
-            // run the pipeline on the model
-            return pipeline.run(model).firstChoice();
-        } catch (Throwable e) {
-            logger.warn("Couldn't generate documentation", e);
-            return new Documentation("");
-        }
+    public Documentation generateDatatypeDocumentation(XynaOrderServerExtension correlatedOrder, XMOMItemReference xmomItemReference) {
+      try {
+        DomModel model = DataModelLocator.getDomModel(xmomItemReference, correlatedOrder);
+        Pipeline<Documentation, DomModel> pipeline = PipelineLocator.getPipeline("dom-documentation");
+        Documentation doc = pipeline.run(model).firstChoice();
+        FilterCallbackInteractionUtils.updateDomDocumentation(doc, correlatedOrder, xmomItemReference);
+        publishUpdateMessage(xmomItemReference, "DataType");
+        return doc;
+      } catch (Throwable e) {
+        logger.warn("Couldn't generate documentation", e);
+        return new Documentation("");
+      }
     }
-
+    
+    private static void genDatatypeDocu(XynaOrderServerExtension order, Context context) {
+      PromptGenerator.generateDatatypeDocumentation(order, buildItemFromContext(context));
+    }
 
     @Override
     public Documentation generateExceptionDocumentation(XMOMItemReference xmomItemReference) {
@@ -134,7 +181,7 @@ public class PromptGeneratorServiceOperationImpl implements ExtendedDeploymentTa
     public Documentation generateDatatypeMethodDocumentation(MemberReference memberReference) {
         try {
             // get the data model
-            DomMethodModel model = DataModelLocator.getDomMethodModel(memberReference);
+            DomMethodModel model = DataModelLocator.getDomMethodModel(memberReference, null);
 
             // load the pipeline
             Pipeline<Documentation, DomMethodModel> pipeline = PipelineLocator.getPipeline("dom-method-documentation");
@@ -152,7 +199,7 @@ public class PromptGeneratorServiceOperationImpl implements ExtendedDeploymentTa
     public Documentation generateDatatypeVariableDocumentation(MemberReference memberReference) {
         try {
             // get the data model
-            DomVariableModel model = DataModelLocator.getDomVariableModel(memberReference);
+            DomVariableModel model = DataModelLocator.getDomVariableModel(memberReference, null);
 
             // load the pipeline
             Pipeline<Documentation, DomVariableModel> pipeline = PipelineLocator.getPipeline("dom-variable-documentation");
@@ -205,7 +252,7 @@ public class PromptGeneratorServiceOperationImpl implements ExtendedDeploymentTa
     public List<? extends MemberVariable> generateDatatypeVariables(XMOMItemReference xmomItemReference) {
         try {
             // get the data model
-            DomModel model = DataModelLocator.getDomModel(xmomItemReference);
+            DomModel model = DataModelLocator.getDomModel(xmomItemReference, null);
 
             // load the pipeline
             Pipeline<List<? extends MemberVariable>, DomModel> pipeline = PipelineLocator.getPipeline("dom-variables");
@@ -223,7 +270,7 @@ public class PromptGeneratorServiceOperationImpl implements ExtendedDeploymentTa
     public List<? extends MethodDefinition> generateDatatypeMethods(XMOMItemReference xmomItemReference) {
         try {
             // get the data model
-            DomModel model = DataModelLocator.getDomModel(xmomItemReference);
+            DomModel model = DataModelLocator.getDomModel(xmomItemReference, null);
 
             // load the pipeline
             Pipeline<List<? extends MethodDefinition>, DomModel> pipeline = PipelineLocator.getPipeline("dom-methods");
@@ -278,7 +325,7 @@ public class PromptGeneratorServiceOperationImpl implements ExtendedDeploymentTa
         try {
             logger.debug("Fetching data model for " + memberReference.getMember());
             // get the data model
-            DomMethodModel model = DataModelLocator.getDomMethodModel(memberReference);
+            DomMethodModel model = DataModelLocator.getDomMethodModel(memberReference, null);
             logger.debug("Generating implementation for " + model.getTargetMethod().getName());
             // load the pipeline
             Pipeline<Code, DomMethodModel> pipeline = PipelineLocator.getPipeline("dom-method-implementation");
@@ -313,6 +360,36 @@ public class PromptGeneratorServiceOperationImpl implements ExtendedDeploymentTa
     @Override
     public Text getXML(XMOMItemReference xmomItemReference, XynaUserSession session) {
         return new Text("");
+    }
+
+
+    @Override
+    public void generate(XynaOrderServerExtension correlatedXynaOrder, Context context) {
+      pluginEntryNameAndPath.get(context.getLocation()).execute(correlatedXynaOrder, context);
+    }
+    
+    private static class GenerationButton {
+      private final String name;
+      private final String path;
+      private final BiConsumer<XynaOrderServerExtension, Context> method;
+      
+      public GenerationButton(String name, String path, BiConsumer<XynaOrderServerExtension, Context> method) {
+        this.name = name;
+        this.path = path;
+        this.method = method;
+      }
+      
+      public String getName() {
+        return name;
+      }
+      
+      public String getPath() {
+        return path;
+      }
+        
+      public void execute(XynaOrderServerExtension order, Context c) {
+        method.accept(order, c);
+      }
     }
 
 }

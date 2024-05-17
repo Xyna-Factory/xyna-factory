@@ -19,12 +19,8 @@
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
-        <ApplicationName>Base</ApplicationName>
-        <VersionName>1.0.19</VersionName>
-      </RuntimeContextRequirement>
-      <RuntimeContextRequirement>
-        <ApplicationName>UserSessionMgmt</ApplicationName>
-        <VersionName>1.0.2</VersionName>
+        <ApplicationName>GuiHttp</ApplicationName>
+        <VersionName>1.384</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>XyPilotMetricsDefaults</ApplicationName>
@@ -214,6 +210,14 @@
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.xypilot.XMOMItemReference</FqName>
       <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.GetGenerateButtonDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.Generate</FqName>
+      <Type>WORKFLOW</Type>
     </XMOMEntry>
   </XMOMEntries>
   <XynaProperties>
