@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="OAS_Base" factoryVersion="" versionName="1.1.6" xmlVersion="1.1">
+<Application applicationName="OAS_Base" factoryVersion="" versionName="1.1.7" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -176,6 +176,10 @@
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.wf.provider.Encode</FqName>
       <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.OasGuiServices</FqName>
+      <Type>DATATYPE</Type>
     </XMOMEntry>
   </XMOMEntries>
   <XynaProperties>

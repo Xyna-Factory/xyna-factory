@@ -29,6 +29,7 @@ import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
+import com.gip.xyna.xfmg.xopctrl.usermanagement.XynaPlainSessionCredentials;
 
 /**
  * Basis für alle FilterActions, die wahlweise mit und ohne rtc aufgerufen werden können
@@ -95,8 +96,8 @@ public abstract class RuntimeContextDependendAction extends H5xFilterAction {
   protected abstract FilterActionInstance act(RuntimeContext rc, Long revision, URLPath url, Method method, HTTPTriggerConnection tc) throws XynaException;
   
   protected XmomGuiSession getSession(HTTPTriggerConnection tc) throws XynaException {
-    String id = AuthUtils.readCredentialsFromRequest(tc).getSessionId();
-    return new XmomGuiSession(id);
+    XynaPlainSessionCredentials creds = AuthUtils.readCredentialsFromRequest(tc);
+    return new XmomGuiSession(creds.getSessionId(), creds.getToken());
   }
   
 
