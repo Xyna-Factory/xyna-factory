@@ -25,11 +25,9 @@
     <property name="antUtils.dir" value="${root.dir}/installation/build/" />
     <property name="common.lib.dir" value="${root.dir}/common/lib" />
     <property name="common.xyna.lib.dir" value="${common.lib.dir}/xyna" />
-	<property name="xyna.modules.dir" value="${root.dir}/modules" />
-	<!-- github supports svn: tag would be: https://github.com/Xyna-Factory/xyna-factory/tags/9.0.1.0/modules -->
-	<!-- location of xyna modules -->
-	<property name="xyna.modules.svn" value="https://github.com/Xyna-Factory/xyna-factory/trunk/modules" />
-	
+    <property name="xyna.modules.dir" value="${root.dir}/modules" />
+    <property name="xyna.module.checkout.branch" value="main" />
+
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
         <classpath>
             <pathelement location="${root.dir}/installation/build/lib/ant-contrib.jar" />
@@ -373,7 +371,7 @@
 				<local name="script.absolute" />
 				<property name="script.absolute" location="${antUtils.dir}/module_checkout.sh"/>
 				<exec executable="${script.absolute}" dir="${xyna.modules.dir}/..">
-					<arg value="${xyna.modules.svn}"/>
+					<arg value="${xyna.module.checkout.branch}"/>
 				</exec>
 			</then>
 		</if>
