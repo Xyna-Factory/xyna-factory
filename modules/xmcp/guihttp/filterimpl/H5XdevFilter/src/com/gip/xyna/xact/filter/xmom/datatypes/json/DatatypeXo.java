@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,15 +23,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xact.filter.HasXoRepresentation;
 import com.gip.xyna.xact.filter.json.RuntimeContextJson;
 import com.gip.xyna.xact.filter.session.GenerationBaseObject;
 import com.gip.xyna.xact.filter.session.gb.ObjectId;
 import com.gip.xyna.xact.filter.session.gb.ObjectType;
 import com.gip.xyna.xact.filter.xmom.MetaXmomContainers;
+import com.gip.xyna.xact.filter.xmom.PluginPaths;
 import com.gip.xyna.xact.filter.xmom.workflows.enums.Tags;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
@@ -63,8 +61,6 @@ public class DatatypeXo extends DomOrExceptionXo implements HasXoRepresentation 
   private final DOM dom;
   private boolean readonly = false;
 
-  private static final Logger logger = CentralFactoryLogging.getLogger(DatatypeXo.class);
-
 
   public DatatypeXo(GenerationBaseObject gbo) {
     super(gbo);
@@ -88,20 +84,15 @@ public class DatatypeXo extends DomOrExceptionXo implements HasXoRepresentation 
     dataType.setIsAbstract(dom.isAbstract());
     dataType.addToAreas(createDataTypeTypeLabelArea());
 
-//    if (dom.isInheritedFromStorable()) {
-//      dataType.addToAreas(createStorablePropertyArea());
-//    }
     dataType.addToAreas(createGlobalStorablePropertyArea());
 
-    TextArea documentationArea = createDocumentationArea();
-    documentationArea.setText(dom.getDocumentation());
-    dataType.addToAreas(documentationArea);
+    dataType.addToAreas(createDocumentationArea(dom.getDocumentation(), PluginPaths.location_datatype_documenation));
     
     dataType.addToAreas(createJavaLibrariesArea());
     dataType.addToAreas(createJavaSharedLibrariesArea());
 
     dataType.addToAreas(createInheritedVariablesArea());
-    dataType.addToAreas(createMemberVariableArea());
+    dataType.addToAreas(createMemberVariableArea(PluginPaths.location_datatype_members));
     dataType.addToAreas(createInheritedMethodArea());
     dataType.addToAreas(createOverrideMethodArea());
     dataType.addToAreas(createMemberMethodArea());
@@ -178,6 +169,7 @@ public class DatatypeXo extends DomOrExceptionXo implements HasXoRepresentation 
       method.setDeletable(!m.isInherited());
       area.addToItems(method);
     });
+    area.unversionedSetPlugin(pluginMgmt.createPlugin(contextBuilder.instantiateContext(PluginPaths.location_datatype_methods, null)));
     return area;
   }
   
@@ -338,7 +330,7 @@ public class DatatypeXo extends DomOrExceptionXo implements HasXoRepresentation 
     area.setId(ObjectId.createId(ObjectType.typeInfoArea, null));
     dataType.addToAreas(area);
 
-    TextArea documentationArea = createDocumentationArea();
+    TextArea documentationArea = createEmptyDocumentationArea();
     documentationArea.setText("Conceptual parent of all modelled datatypes and exceptions.");
     dataType.addToAreas(documentationArea);
 

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,8 @@ import com.gip.xyna.xact.filter.session.gb.vars.IdentifiedVariables;
 import com.gip.xyna.xact.filter.session.gb.vars.IdentifiedVariablesService;
 import com.gip.xyna.xact.filter.util.AVariableIdentification.VarUsageType;
 import com.gip.xyna.xact.filter.xmom.MetaXmomContainers;
+import com.gip.xyna.xact.filter.xmom.PluginPaths;
+import com.gip.xyna.xact.filter.xmom.datatypes.json.Utils.ExtendedContextBuilder;
 import com.gip.xyna.xact.filter.xmom.workflows.enums.GuiLabels;
 import com.gip.xyna.xact.filter.xmom.workflows.enums.Tags;
 import com.gip.xyna.xact.filter.xmom.workflows.json.ServiceUtils;
@@ -42,6 +44,7 @@ import xmcp.processmodeller.datatypes.TextArea;
 import xmcp.processmodeller.datatypes.datatypemodeller.DynamicMethod;
 import xmcp.processmodeller.datatypes.datatypemodeller.Method;
 import xmcp.processmodeller.datatypes.datatypemodeller.StaticMethod;
+import xmcp.yggdrasil.plugin.Context;
 
 
 public class DatatypeMethodXo implements HasXoRepresentation {
@@ -56,8 +59,10 @@ public class DatatypeMethodXo implements HasXoRepresentation {
   private String implementation;
   private String reference;
   private Boolean overrides = Boolean.FALSE;
+  protected final GuiHttpPluginManagement pluginMgmt;
+  protected final ExtendedContextBuilder contextBuilder;
 
-  public DatatypeMethodXo(Operation operation, GenerationBaseObject gbo, String id) {
+  public DatatypeMethodXo(Operation operation, GenerationBaseObject gbo, String id, ExtendedContextBuilder contextBuilder) {
     this.gbo = gbo;
     try {
       this.methodId = ObjectId.parse(id);
@@ -66,6 +71,7 @@ public class DatatypeMethodXo implements HasXoRepresentation {
     }
     this.identifiedVariables = new IdentifiedVariablesService(methodId, operation, gbo.getDOM());
     this.identifiedVariables.showLinkState(false);
+    pluginMgmt = GuiHttpPluginManagement.getInstance();
 
     this.operation = operation;
     if(operation.isAbstract()) {
@@ -81,8 +87,9 @@ public class DatatypeMethodXo implements HasXoRepresentation {
         reference = workflowCall.getWfFQClassName();
       }
     }
+    this.contextBuilder = contextBuilder;
   }
-  
+
   @Override
   public GeneralXynaObject getXoRepresentation() {
     Method method;
@@ -136,7 +143,8 @@ public class DatatypeMethodXo implements HasXoRepresentation {
     area.setId(ObjectId.createOperationDocumentationAreaId(String.valueOf(ObjectId.parseMemberMethodNumber(methodId))));
     area.setText(operation.getDocumentation());
     area.setReadonly(inheritedFrom != null);
-
+    Context context = contextBuilder.instantiateContext(PluginPaths.location_datatype_method_documentation, methodId.getObjectId());
+    area.unversionedSetPlugin(pluginMgmt.createPlugin(context));
     return area;
   }
 

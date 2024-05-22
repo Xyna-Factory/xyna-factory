@@ -186,40 +186,33 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
   private ArrayList<ExceptionVariable> thrownExceptionVariables = new ArrayList<ExceptionVariable>();
 
   private String documentation = "";
-  private List<Element> unknownMetaTags;
+  private UnknownMetaTagsComponent unknownMetaTagsComponent = new UnknownMetaTagsComponent();
   private SpecialPurposeIdentifier specialPurposeIdentifier;
 
   @Override
   public void parseUnknownMetaTags(Element element, List<String> knownMetaTags) {
-    Element meta = XMLUtils.getChildElementByName(element, GenerationBase.EL.META);
-    unknownMetaTags = XMLUtils.getFilteredSubElements(meta, knownMetaTags);
+    unknownMetaTagsComponent.parseUnknownMetaTags(element, knownMetaTags);
   }
 
   @Override
   public boolean hasUnknownMetaTags() {
-    return ( (unknownMetaTags != null) && (unknownMetaTags.size() > 0) );
+    return unknownMetaTagsComponent.hasUnknownMetaTags();
   }
   
 
   @Override
-  public List<Element> getUnknownMetaTags() {
-    return unknownMetaTags;
+  public List<String> getUnknownMetaTags() {
+    return unknownMetaTagsComponent.getUnknownMetaTags();
   }
 
   @Override
-  public void setUnknownMetaTags(List<Element> unknownMetaTags) {
-    this.unknownMetaTags = unknownMetaTags;
+  public void setUnknownMetaTags(List<String> unknownMetaTags) {
+    unknownMetaTagsComponent.setUnknownMetaTags(unknownMetaTags);
   }
 
   @Override
   public void appendUnknownMetaTags(XmlBuilder xml) {
-    if (unknownMetaTags == null) {
-      return;
-    }
-
-    for (Element tag : unknownMetaTags) {
-      xml.append(tag);
-    }
+    unknownMetaTagsComponent.appendUnknownMetaTags(xml);
   }
 
   private WFStep wfAsStep;

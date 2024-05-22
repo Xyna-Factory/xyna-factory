@@ -1,0 +1,19 @@
+// Test
+   // www
+String str1 = "abc"      /* comment */ ;   
+    String str2 = "123";     //comment"  
+String str3 = "http://google.com";   /*comment*/
+String str4 = "('file:///index.html/')";  //comment
+String str5 = "{\"temperature\": {\"type\"}}";  //comment
+/*def
+foo*/ int bar = 1;
+"xxx\"xxx\\"
+"xxx\\\"xxx\\\\"
+
+   /*def
+
+  text
+
+    foo*/
+
+   // qwerty

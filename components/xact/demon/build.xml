@@ -23,6 +23,7 @@
         <path location="${basedir}/../../../" />
     </pathconvert>
     <property name="target.dir" value="${basedir}/deploy" />
+    <property name="base.lib.dir" value="${basedir}/lib" />
     
     <target name="build" depends="resolve">
         <buildJar basedir="${basedir}"

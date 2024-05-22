@@ -16,12 +16,12 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="ZetaFramework" comment="" factoryVersion="" versionName="0.6.49" xmlVersion="1.1">
+<Application applicationName="ZetaFramework" comment="" factoryVersion="" versionName="0.6.51" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Processing</ApplicationName>
-        <VersionName>1.0.19</VersionName>
+        <VersionName>1.0.20</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
@@ -157,6 +157,10 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
         <FqName>xmcp.forms.datatypes.OpenDetailsButtonDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.OpenDialogButtonDefinition</FqName>
         <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">

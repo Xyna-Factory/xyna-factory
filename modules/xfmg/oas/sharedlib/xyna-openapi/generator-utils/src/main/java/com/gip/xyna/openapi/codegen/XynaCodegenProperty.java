@@ -152,12 +152,15 @@ public class XynaCodegenProperty {
     }
     String validatorPath = "com.gip.xyna.openapi.";
     StringBuilder validatorClassConstructor = new StringBuilder("new ").append(validatorPath);
-    String javaClassName = DatatypeMap.getOrDefault(dataType, DatatypeMap.get("Default")).className;
+    DatatypeInfos typeInfo = DatatypeMap.getOrDefault(dataType, DatatypeMap.get("Default"));
     if (isList) {
-      validatorClassConstructor.append("PrimitiveListTypeValidator<").append(javaClassName).append(">(").append(validatorPath)
-          .append(javaClassName).append("::new").append(")");
+      validatorClassConstructor.append("PrimitiveListTypeValidator<")
+          .append(typeInfo.javaType).append(",").append(validatorPath).append(typeInfo.validatorClassName)
+          .append(">(")
+          .append(validatorPath).append(typeInfo.validatorClassName).append("::new")
+          .append(")");
     } else {
-      validatorClassConstructor.append(javaClassName).append("()");
+      validatorClassConstructor.append(typeInfo.validatorClassName).append("()");
     }
     return validatorClassConstructor.toString();
   }
@@ -184,7 +187,7 @@ public class XynaCodegenProperty {
       fix.postfix = ")";
     }
         
-    ValuesToValidate valuesToValidate = new ValuesToValidate(propertyInfo);
+    ValuesToValidate valuesToValidate = new ValuesToValidate(propertyInfo, javaType);
 
     config.add("setName(\"" + propLabel + "\")");
     config.add(setValue);
@@ -222,10 +225,22 @@ public class XynaCodegenProperty {
     sb.append("        ");
     return sb.toString();
   }
-  
+
+
   public boolean isString() {
     return "String".equals(javaType);
   }
+
+
+  public boolean isNumber() {
+    return "Integer".equals(javaType) || "Long".equals(javaType) || "Float".equals(javaType) || "Double".equals(javaType);
+  }
+
+
+  public boolean isBoolean() {
+    return "Boolean".equals(javaType);
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -290,12 +305,12 @@ public class XynaCodegenProperty {
   static class DatatypeInfos {
 
     String javaType;
-    String className;
+    String validatorClassName;
     BiFunction<ValuesToValidate, PraefixPostfix, List<String>> setterListBuilder;
 
     DatatypeInfos(String javaType, String className, BiFunction<ValuesToValidate, PraefixPostfix, List<String>> setterListBuilder) {
       this.javaType = javaType;
-      this.className = className;
+      this.validatorClassName = className;
       this.setterListBuilder = setterListBuilder;
     }
 
@@ -362,11 +377,17 @@ public class XynaCodegenProperty {
     boolean nullable;
     List<String> allowableValues = new ArrayList<String>();
 
-    ValuesToValidate(CodegenPropertyInfo propertyInfo) {
+    ValuesToValidate(CodegenPropertyInfo propertyInfo, String javatype) {
       CodegenPropertyInfo mostInnerItems = propertyInfo.getMostInnerItems() != null ? propertyInfo.getMostInnerItems() : propertyInfo;
 
       minimum = mostInnerItems.getMinimum();
+      if ("Long".equals(javatype) && minimum != null) {
+        minimum = minimum + "L";
+      }
       maximum = mostInnerItems.getMaximum();
+      if ("Long".equals(javatype) && maximum != null) {
+        maximum = maximum + "L";
+      }
       excludeMin = mostInnerItems.getExclusiveMinimum();
       excludeMax = mostInnerItems.getExclusiveMaximum();
       multipleOf = mostInnerItems.getMultipleOf();

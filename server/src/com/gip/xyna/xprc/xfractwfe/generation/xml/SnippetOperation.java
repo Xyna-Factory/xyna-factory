@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import java.util.List;
 
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.ATT;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.EL;
+import com.gip.xyna.xprc.xfractwfe.generation.UnknownMetaTagsComponent;
 import com.gip.xyna.xprc.xfractwfe.generation.WF;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.Variable.VariableBuilder;
@@ -44,6 +45,7 @@ public class SnippetOperation extends Operation {
   public boolean isCancelable;
   public WF wf;
   private boolean requiresXynaOrder = false;
+  private UnknownMetaTagsComponent unknownMetaTagsComponent = new UnknownMetaTagsComponent();
   
   
   protected SnippetOperation() {
@@ -64,6 +66,7 @@ public class SnippetOperation extends Operation {
     this.documentation = operation.documentation;
     this.hasBeenPersisted = operation.hasBeenPersisted;
     this.requiresXynaOrder = operation.requiresXynaOrder;
+    this.unknownMetaTagsComponent = operation.unknownMetaTagsComponent;
   }
   
   private <T> List<T> clone(List<T> list) {
@@ -175,6 +178,10 @@ public class SnippetOperation extends Operation {
     return wf;
   }
   
+  public List<String> getUnknownMetaTags() {
+    return unknownMetaTagsComponent.getUnknownMetaTags();
+  }
+  
   public static SnippetOperationBuilder create(String name) {
     return new SnippetOperationBuilder(name);
   }
@@ -246,6 +253,11 @@ public class SnippetOperation extends Operation {
       return this;
     }
     
+    public SnippetOperationBuilder unknownMetaTags(List<String> unknownMetaTags) {
+      operation.unknownMetaTagsComponent.setUnknownMetaTags(unknownMetaTags);
+      return this;
+    }
+    
     private List<Variable> getOrCreateInputs() {
       if( operation.inputs == null ) {
         operation.inputs = new ArrayList<Variable>();
@@ -300,10 +312,13 @@ public class SnippetOperation extends Operation {
 
   @Override
   public boolean hasUnknownMetaTags() {
-    return false;
+    return unknownMetaTagsComponent.hasUnknownMetaTags();
   }
 
+
   @Override
-  public void appendUnknownMetaTags(XmlBuilder xml) {}
+  public void appendUnknownMetaTags(XmlBuilder xml) {
+    unknownMetaTagsComponent.appendUnknownMetaTags(xml);
+  }
 
 }
