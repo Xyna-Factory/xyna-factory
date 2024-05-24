@@ -84,6 +84,9 @@ public class JsonUtils {
      * @return
      */
     public static String escapeString(String text) {
+        if (text == null) {
+          return "";
+        }
         return text
             .replace("\\", "\\\\")
             .replace("\n", "\\n")

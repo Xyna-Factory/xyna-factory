@@ -105,7 +105,7 @@ public class PromptGeneratorServiceOperationImpl implements ExtendedDeploymentTa
     public Documentation generateExceptionDocumentation(XMOMItemReference xmomItemReference) {
         try {
             // get the data model
-            ExceptionModel model = DataModelLocator.getExceptionModel(xmomItemReference);
+            ExceptionModel model = DataModelLocator.getExceptionModel(xmomItemReference, null);
 
             // load the pipeline
             Pipeline<Documentation, ExceptionModel> pipeline = PipelineLocator.getPipeline("exception-documentation");
@@ -159,7 +159,7 @@ public class PromptGeneratorServiceOperationImpl implements ExtendedDeploymentTa
     public Documentation generateExceptionVariableDocumentation(MemberReference memberReference) {
         try {
             // get the data model
-            ExceptionVariableModel model = DataModelLocator.getExceptionVariableModel(memberReference);
+            ExceptionVariableModel model = DataModelLocator.getExceptionVariableModel(memberReference, null);
 
             // load the pipeline
             Pipeline<Documentation, ExceptionVariableModel> pipeline = PipelineLocator.getPipeline("exception-variable-documentation");
@@ -176,7 +176,7 @@ public class PromptGeneratorServiceOperationImpl implements ExtendedDeploymentTa
     public List<? extends MemberVariable> generateExceptionVariables(XMOMItemReference xmomItemReference) {
         try {
             // get the data model
-            ExceptionModel model = DataModelLocator.getExceptionModel(xmomItemReference);
+            ExceptionModel model = DataModelLocator.getExceptionModel(xmomItemReference, null);
 
             // load the pipeline
             Pipeline<List<? extends MemberVariable>, ExceptionModel> pipeline = PipelineLocator.getPipeline("exception-variables");
@@ -285,7 +285,7 @@ public class PromptGeneratorServiceOperationImpl implements ExtendedDeploymentTa
     public List<? extends ExceptionMessage> generateExceptionMessages(XMOMItemReference xmomItemReference) {
         try {
             // get the data model
-            ExceptionModel model = DataModelLocator.getExceptionModel(xmomItemReference);
+            ExceptionModel model = DataModelLocator.getExceptionModel(xmomItemReference, null);
 
             // load the pipeline
             Pipeline<List<ExceptionMessage>, ExceptionModel> pipeline = PipelineLocator.getPipeline("exception-messages");
