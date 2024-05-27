@@ -40,6 +40,11 @@ public class XynaCodegenClientOperation extends XynaCodegenOperation {
   final String requestWorkflowPath;
   final String requestWorkflowURLPath;
   
+  final String requestWorkflowWithProcessingLabel;
+  final String requestWorkflowWithProcessingTypeName;
+  final String requestWorkflowWithProcessingPath;
+  final String requestWorkflowWithProcessingURLPath;
+  
   public XynaCodegenClientOperation(XynaCodegenFactory factory, CodegenOperation operation, DefaultCodegen gen, String pathPrefix, int id) {
      super(factory, operation, gen, pathPrefix);
     
@@ -56,6 +61,12 @@ public class XynaCodegenClientOperation extends XynaCodegenOperation {
     requestWorkflowTypeName = "Request" + baseRefName;
     requestWorkflowPath = basePath + ".wf";
     requestWorkflowURLPath = buildPath(operation);
+    
+    requestWorkflowWithProcessingLabel = requestWorkflowLabel + " with Processing";
+    requestWorkflowWithProcessingTypeName = requestWorkflowTypeName + "WithProcessing";
+    requestWorkflowWithProcessingPath = requestWorkflowPath;
+    requestWorkflowWithProcessingURLPath = requestWorkflowURLPath;
+    
   }
   
   public String buildPath(CodegenOperation operation) {

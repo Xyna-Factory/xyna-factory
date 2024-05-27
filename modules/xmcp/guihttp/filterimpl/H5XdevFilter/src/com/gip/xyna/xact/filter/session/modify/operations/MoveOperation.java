@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -432,22 +432,17 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
         dom.addOperation(dom.getOperations().size(), newOperation);
         
         GBSubObject gbsNewMethod = new GBSubObject(object.getRoot(), new ObjectId(ObjectType.operation, String.valueOf(Utils.getOperationIndex(newOperation))), dom, newOperation);
-        copyVars(object.getOperation().getInputVars(), VarUsageType.input, gbsNewMethod);      
-        copyVars(object.getOperation().getOutputVars(), VarUsageType.output, gbsNewMethod);
-        copyExceptions(object.getOperation().getThrownExceptions(), VarUsageType.thrown, gbsNewMethod);
+        gbsNewMethod.getRoot().resetVariableMap();
+        copyVars(oldOperation.getInputVars(), VarUsageType.input, gbsNewMethod);      
+        copyVars(oldOperation.getOutputVars(), VarUsageType.output, gbsNewMethod);
+        copyVars(oldOperation.getThrownExceptions(), VarUsageType.thrown, gbsNewMethod);
       } else {
         throw new UnsupportedOperationException("overrideMethod", "Override method of type " + oldOperation.getClass().getName() + " is not supported");
       }
     }
   }
   
-  private void copyVars(List<AVariable> vars, VarUsageType varUsageType, GBSubObject gbsNewMethod) throws XynaException {
-    for (AVariable var : vars) {
-      copyVar(var, varUsageType, gbsNewMethod);
-    }
-  }
-  
-  private void copyExceptions(List<ExceptionVariable> vars, VarUsageType varUsageType, GBSubObject gbsNewMethod) throws XynaException {
+  private void copyVars(List<? extends AVariable> vars, VarUsageType varUsageType, GBSubObject gbsNewMethod) throws XynaException {
     for (AVariable var : vars) {
       copyVar(var, varUsageType, gbsNewMethod);
     }

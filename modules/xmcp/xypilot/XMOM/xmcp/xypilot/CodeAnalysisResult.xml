@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Code Analysis Result" TypeName="CodeAnalysisResult" TypePath="xmcp.xypilot" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data IsList="true" Label="Metric Results" ReferenceName="MetricEvaluationResult" ReferencePath="xmcp.xypilot" VariableName="metricResults"/>
+  <Data IsList="true" Label="Codes" ReferenceName="Code" ReferencePath="xmcp.xypilot.metrics" VariableName="codes"/>
+  <Service Label="Code Analysis Result" TypeName="CodeAnalysisResult">
+    <Operation IsStatic="false" Label="Build Suggestions" Name="buildSuggestions">
+      <Input/>
+      <Output>
+        <Data ID="5" IsList="true" Label="Code Suggestion" ReferenceName="CodeSuggestion" ReferencePath="xmcp.xypilot" VariableName="codeSuggestion5"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">ArrayList&lt;CodeSuggestion&gt; suggestions = new ArrayList&lt;CodeSuggestion&gt;();
+
+for (int i = 0; i &lt; codes.size(); ++i) {
+    final int codeIndex = i;
+    suggestions.add(
+        new CodeSuggestion(
+            codes.get(i).getText(),
+            metricResults.stream()
+                .map(result -&gt; new MetricScore(
+                    result.getMetric(), 
+                    result.getScores().get(codeIndex).getValue(), 
+                    result.getNormalizedScores().get(codeIndex).getValue()
+                ))
+                .collect(java.util.stream.Collectors.toList())
+        )
+    );
+}
+
+return suggestions;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Generate Datatype Methods" TypeName="GenerateDatatypeMethods" TypePath="xmcp.xypilot" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Generate Datatype Methods" Name="GenerateDatatypeMethods">
+    <Input>
+      <Data ID="108" Label="XMOM Item Reference" ReferenceName="XMOMItemReference" ReferencePath="xmcp.xypilot" VariableName="xMOMItemReference108"/>
+    </Input>
+    <Output>
+      <Data ID="647" Label="Generate Methods Response" ReferenceName="GenerateMethodsResponse" ReferencePath="xmcp.xypilot" VariableName="generateMethodsResponse647"/>
+    </Output>
+    <ServiceReference ID="674" Label="PromptGenerator" ReferenceName="PromptGenerator.PromptGenerator" ReferencePath="xmcp.xypilot">
+      <Source RefID="673"/>
+      <Target RefID="673"/>
+    </ServiceReference>
+    <Function ID="673" Label="Generate Datatype Methods">
+      <Source RefID="674"/>
+      <Source RefID="108"/>
+      <Target RefID="674"/>
+      <Target RefID="676"/>
+      <Invoke Operation="generateDatatypeMethods" ServiceID="674">
+        <Source RefID="108"/>
+      </Invoke>
+      <Receive ServiceID="674">
+        <Target RefID="676"/>
+      </Receive>
+    </Function>
+    <Mappings ID="223" Label="Create Response">
+      <Input>
+        <Data ID="516" IsList="true" Label="Method Definition" ReferenceName="MethodDefinition" ReferencePath="xmcp.xypilot" VariableName="methodDefinition516">
+          <Source RefID="223"/>
+        </Data>
+        <Source RefID="676"/>
+      </Input>
+      <Output>
+        <Data ID="565" Label="Generate Methods Response" ReferenceName="GenerateMethodsResponse" ReferencePath="xmcp.xypilot" VariableName="generateMethodsResponse565">
+          <Source RefID="223"/>
+        </Data>
+        <Target RefID="566"/>
+      </Output>
+      <Mapping>%1%.methods=%0%</Mapping>
+    </Mappings>
+    <Data ID="566" Label="Generate Methods Response" ReferenceName="GenerateMethodsResponse" ReferencePath="xmcp.xypilot" VariableName="generateMethodsResponse566">
+      <Source RefID="223"/>
+    </Data>
+    <Data ID="676" IsList="true" Label="Method Definition" ReferenceName="MethodDefinition" ReferencePath="xmcp.xypilot" VariableName="methodDefinition676">
+      <Source RefID="673"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="566"/>
+      <Target RefID="647"/>
+      <Copy>
+        <Source RefID="566"/>
+        <Target RefID="647"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

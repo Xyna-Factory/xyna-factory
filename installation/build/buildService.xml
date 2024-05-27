@@ -107,6 +107,13 @@
     </target>
 
     <!-- ================================= 
+         target: post-build-src             
+         ================================= -->
+    <target name="post-build-src" description="post-build-src">
+        <!-- leer, überschreibbar im build.xml -->
+    </target>
+	
+    <!-- ================================= 
          target: deploy             
          ================================= -->
     <!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
@@ -199,7 +206,7 @@
          target: build             
          ================================= -->
     <!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
-    <target name="build" depends="build-src" description="Build jar file with java implementation of services.">
+    <target name="build" depends="build-src,post-build-src" description="Build jar file with java implementation of services.">
         <!-- copy libraries to target.dir -->
         <copyJar from="${base.lib.dir}" to="${target.dir}" />
         <copyLicense from="${base.lib.dir}" to="${target.dir}" />

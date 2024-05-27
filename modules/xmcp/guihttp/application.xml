@@ -17,7 +17,11 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <!--                                               ################# Version auch in blackedition_lib.sh updaten ########### -->
+<<<<<<< 826-order-types-layout-disrupts-overview
 <Application applicationName="GuiHttp" comment="" factoryVersion="" versionName="1.1.385" xmlVersion="1.1">
+=======
+<Application applicationName="GuiHttp" comment="" factoryVersion="" versionName="1.1.384" xmlVersion="1.1">
+>>>>>>> main
   <ApplicationInfo>
     <Description Lang="DE">GuiHTTPFilter</Description>
     <Description Lang="EN">GuiHTTPFilter</Description>
@@ -29,7 +33,7 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>ZetaFramework</ApplicationName>
-        <VersionName>0.6.50</VersionName>
+        <VersionName>0.6.51</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>XynaPropertyMgmt</ApplicationName>
@@ -2604,7 +2608,22 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <!-- // modelled expression -->
-    
+
+    <!-- // plugin -->
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yggdrasil.plugin.Context</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yggdrasil.plugin.GuiDefiningWorkflow</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yggdrasil.plugin.Plugin</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <!-- // plugin -->
+
   </XMOMEntries>
   <Filters>
     <Filter implicitDependency="true">
