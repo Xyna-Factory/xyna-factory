@@ -31,7 +31,7 @@ import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xprc.xpce.parameterinheritance.ParameterInheritanceManagement.ParameterType;
 import com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule;
 import com.gip.xyna.xprc.xpce.planning.Capacity;
-
+import xmcp.factorymanager.ordertypes.OrderTypeTableFilter;
 import xmcp.RuntimeContext;
 import xmcp.factorymanager.DestinationType;
 import xmcp.factorymanager.ParameterInheritanceRule;
