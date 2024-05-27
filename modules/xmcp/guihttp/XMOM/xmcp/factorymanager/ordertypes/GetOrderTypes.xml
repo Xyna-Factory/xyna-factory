@@ -25,18 +25,28 @@
     <Input>
       <Data ID="9" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
       <Data ID="401" Label="Execution Destination Filter" ReferenceName="ExecutionDestinationFilter" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="executionDestination401"/>
+      <Data ID="1691" Label="Order Type Table Filter" ReferenceName="OrderTypeTableFilter" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="orderTypeTableFilter1691"/>
     </Input>
     <Output>
       <Data ID="66" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo66"/>
       <Data ID="168" IsList="true" Label="Order Type" ReferenceName="OrderType" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="orderTypeParameter168"/>
     </Output>
     <Throws>
-      <Exception Label="Load Order Types Exception" ReferenceName="LoadOrderTypesException" ReferencePath="xmcp.factorymanager.ordertypes.exception" VariableName="loadOrderTypesException2773"/>
-      <Exception Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights2774"/>
+      <Exception Label="Load Order Types Exception" ReferenceName="LoadOrderTypesException" ReferencePath="xmcp.factorymanager.ordertypes.exception" VariableName="loadOrderTypesException1774"/>
+      <Exception Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights1775"/>
     </Throws>
-    <ServiceReference ID="223" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared"/>
-    <ServiceReference ID="120" Label="Order Type Services" ReferenceName="OrderTypeServices.OrderTypeServices" ReferencePath="xmcp.factorymanager"/>
-    <ServiceReference ID="57" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables"/>
+    <ServiceReference ID="120" Label="Order Type Services" ReferenceName="OrderTypeServices.OrderTypeServices" ReferencePath="xmcp.factorymanager">
+      <Source RefID="109"/>
+      <Target RefID="109"/>
+    </ServiceReference>
+    <ServiceReference ID="57" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="58"/>
+      <Target RefID="58"/>
+    </ServiceReference>
+    <ServiceReference ID="223" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared">
+      <Source RefID="224"/>
+      <Target RefID="224"/>
+    </ServiceReference>
     <Function ID="224" Label="Check Rights for Current User">
       <Source RefID="223"/>
       <Source RefID="226"/>
@@ -295,6 +305,7 @@
         <Function ID="109" Label="Get list entries">
           <Source RefID="120"/>
           <Source RefID="59"/>
+          <Source RefID="1691"/>
           <Target RefID="120"/>
           <Target RefID="217"/>
           <Invoke Operation="getListEntries" ServiceID="120">
@@ -303,6 +314,7 @@
                 <LinkType>UserConnected</LinkType>
               </Meta>
             </Source>
+            <Source RefID="1691"/>
           </Invoke>
           <Receive ServiceID="120">
             <Target RefID="217"/>
@@ -407,11 +419,6 @@
               <Type>String</Type>
             </Meta>
           </Data>
-          <Data ID="178" Label="Monitoring Level" VariableName="monitoringLevel">
-            <Meta>
-              <Type>Integer</Type>
-            </Meta>
-          </Data>
           <Data ID="179" Label="Monitoring Level Is Custom" VariableName="monitoringLevelIsCustom">
             <Meta>
               <Type>boolean</Type>
@@ -513,11 +520,6 @@
       <Data ID="202" Label="Documentation" VariableName="documentation">
         <Meta>
           <Type>String</Type>
-        </Meta>
-      </Data>
-      <Data ID="203" Label="Monitoring Level" VariableName="monitoringLevel">
-        <Meta>
-          <Type>Integer</Type>
         </Meta>
       </Data>
       <Data ID="204" Label="Monitoring Level Is Custom" VariableName="monitoringLevelIsCustom">
