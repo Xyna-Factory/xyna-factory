@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Version="1.8" Name="ExceptionStore">
-  <ExceptionType Code="TMF-00102" TypeName="ProviderProcessingHookException" TypePath="xmcp.oas.exception" Label="Provider Processing Hook Exception" IsAbstract="false" BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception">
+  <ExceptionType Code="OAS-00102" TypeName="ProviderProcessingHookException" TypePath="xmcp.oas.exception" Label="Provider Processing Hook Exception" IsAbstract="false" BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception">
     <Data Label="Error Response" VariableName="errorResponse" ReferenceName="ResponseParameter" ReferencePath="xmcp.oas.datatype.provider"/>
     <MessageText Language="DE">Provider Processing Hook Exception</MessageText>
     <MessageText Language="EN">Provider Processing Hook Exception</MessageText>

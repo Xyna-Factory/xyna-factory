@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Version="1.8" Name="ExceptionStore">
-  <ExceptionType Code="TMF-00103" TypeName="ClientProcessingHookException" TypePath="xmcp.oas.exception" Label="Client Processing Hook Exception" IsAbstract="false" BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception">
+  <ExceptionType Code="OAS-00103" TypeName="ClientProcessingHookException" TypePath="xmcp.oas.exception" Label="Client Processing Hook Exception" IsAbstract="false" BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception">
     <MessageText Language="DE">Client Processing Hook Exception</MessageText>
     <MessageText Language="EN">Client Processing Hook Exception</MessageText>
   </ExceptionType>
