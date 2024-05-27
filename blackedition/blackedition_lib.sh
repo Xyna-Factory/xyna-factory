@@ -30,11 +30,7 @@ ALL_DATAMODELTYPES=("mib","tr069","xsd");
 #ACHTUNG: Version auch bei addRequirement zu default workspace berücksichtigen
 ALL_APPLICATIONS="Base Processing"; #Default-Applications, die immer installiert sein sollten
 APPMGMTVERSION=1.0.10
-<<<<<<< 826-order-types-layout-disrupts-overview
 GUIHTTPVERSION=1.1.385
-=======
-GUIHTTPVERSION=1.1.384
->>>>>>> main
 SNMPSTATVERSION=1.0.3
 PROCESSINGVERSION=1.0.20
 ALL_REPOSITORYACCESSES=("svn");
