@@ -51,20 +51,19 @@ public class OrderTypeConverter {
     OrderType r = new OrderType();
     r.setDocumentation(in.getDocumentation());
     if(in.getExecutionDestinationValue() != null)
-      r.setExecutionDestination(filter ? convert(in.getExecutionDestinationValue()) : convert(in.getExecutionDestinationValue()).substring(in.getExecutionDestinationValue().lastIndexOf('.')) + 1);
-      // r.setExecutionDestination(convert(in.getExecutionDestinationValue(), filter));
+      r.setExecutionDestination(convert(in.getExecutionDestinationValue(), filter));
     if(in.getMonitoringLevel() != null)
       r.setMonitoringLevel(String.valueOf(in.getMonitoringLevel()));
     r.setEvaluatedMonitoringLevel(in.getMonitoringLevel());
     r.setName(filter ? in.getOrdertypeName() : in.getOrdertypeName().substring(in.getOrdertypeName().lastIndexOf('.')) + 1);
     // r.setName(in.getOrdertypeName());
     if(in.getPlanningDestinationValue() != null) 
-      r.setPlanningDestination(convert(in.getPlanningDestinationValue()));
+      r.setPlanningDestination(convert(in.getPlanningDestinationValue(), filter));
     r.setPriority(in.getPriority());
     r.setUsedCapacities(usedCapacities(in.getRequiredCapacities()));
     r.setApplication(in.getApplicationName());
     if(in.getCleanupDestinationValue() != null)
-      r.setCleanupDestination(convert(in.getCleanupDestinationValue()));
+      r.setCleanupDestination(convert(in.getCleanupDestinationValue(), filter));
     r.setRuntimeContext(convert(in.getRuntimeContext()));
     if(in.getRequiredCapacities() != null)
       r.setRequiredCapacities(in.getRequiredCapacities().stream().map(cap -> {
@@ -110,11 +109,11 @@ public class OrderTypeConverter {
     return sb.toString();
   }
   
-  private static DestinationType convert(DestinationValueParameter in) {
+  private static DestinationType convert(DestinationValueParameter in, boolean filter) {
     if(in == null)
       return null;
     DestinationType r = new DestinationType();
-    r.setName(in.getFullQualifiedName());
+    r.setName(filter ? in.getFullQualifiedName() : in.getFullQualifiedName().substring(in.getFullQualifiedName().lastIndexOf('.')) + 1);
     r.setType(in.getDestinationType());
     return r;
   }
