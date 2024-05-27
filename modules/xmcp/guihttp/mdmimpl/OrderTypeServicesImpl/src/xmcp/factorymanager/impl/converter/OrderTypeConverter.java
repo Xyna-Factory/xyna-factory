@@ -50,11 +50,11 @@ public class OrderTypeConverter {
     OrderType r = new OrderType();
     r.setDocumentation(in.getDocumentation());
     if(in.getExecutionDestinationValue() != null)
-      r.setExecutionDestination(filter.getShowPath() ? convert(in.getExecutionDestinationValue()).substring(in.getOrdertypeName().lastIndexOf('.')) + 1 : convert(in.getExecutionDestinationValue()));
+      r.setExecutionDestination(filter.getShowPath() ? convert(in.getExecutionDestinationValue()) : convert(in.getExecutionDestinationValue()).substring(in.getOrdertypeName().lastIndexOf('.')) + 1);
     if(in.getMonitoringLevel() != null)
       r.setMonitoringLevel(String.valueOf(in.getMonitoringLevel()));
     r.setEvaluatedMonitoringLevel(in.getMonitoringLevel());
-    r.setName(filter.getShowPath() ? in.getOrdertypeName().substring(in.getOrdertypeName().lastIndexOf('.')) + 1 : in.getOrdertypeName());
+    r.setName(filter.getShowPath() ? in.getOrdertypeName() : in.getOrdertypeName().substring(in.getOrdertypeName().lastIndexOf('.')) + 1);
     // r.setName(in.getOrdertypeName());
     if(in.getPlanningDestinationValue() != null) 
       r.setPlanningDestination(convert(in.getPlanningDestinationValue()));
