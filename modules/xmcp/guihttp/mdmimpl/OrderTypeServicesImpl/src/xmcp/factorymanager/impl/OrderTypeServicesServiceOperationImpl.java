@@ -248,7 +248,7 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
   @Override
   public OrderType getOrderTypeDetails(RuntimeContext runtimeContext, OrderTypeName orderTypeName) throws LoadOrderTpeException {
     try {
-      return OrderTypeConverter.convert(ordertypeManagement.getOrdertype(orderTypeName.getName(), revisionManagement.getRuntimeContext(runtimeContext.getRevision())));
+      return OrderTypeConverter.convert(ordertypeManagement.getOrdertype(orderTypeName.getName(), revisionManagement.getRuntimeContext(runtimeContext.getRevision())), true);
     } catch (PersistenceLayerException e) {
       throw new LoadOrderTpeException(e.getMessage(), e);
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
@@ -291,7 +291,7 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
       List<OrdertypeParameter> orderTypes = multiChannelPortal.listOrdertypes(SearchOrdertypeParameter.all());
       
       List<OrderType> result = orderTypes.stream()
-          .map((in) -> OrderTypeConverter.convert(in, filter))
+          .map((in) -> OrderTypeConverter.convert(in, filter.getShowPath()))
           .filter(tableHelper.filter())
           .collect(Collectors.toList());
       tableHelper.sort(result);
