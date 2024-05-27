@@ -86,7 +86,7 @@
       </Meta>
       <Input>
         <Data Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
-        <Data ID="1" Label="Order Type Table Filter" ReferenceName="OrderTypeTableFilter" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="orderTypeTableFilter1"/>
+        <Data Label="Order Type Table Filter" ReferenceName="OrderTypeTableFilter" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="orderTypeTableFilter1"/>
       </Input>
       <Output>
         <Data IsList="true" Label="Order Type" ReferenceName="OrderType" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="orderTypeParameter"/>
