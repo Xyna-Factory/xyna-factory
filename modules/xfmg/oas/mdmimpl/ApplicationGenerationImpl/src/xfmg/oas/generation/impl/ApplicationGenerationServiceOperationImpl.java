@@ -173,7 +173,7 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
   
   private void createAndImportApplication(XynaOrderServerExtension correlatedXynaOrder, String generator, String target, String specFile, String workspace) {
     BuildoasapplicationImpl oasAppBuilder = new BuildoasapplicationImpl();
-    try(OASApplicationData data = oasAppBuilder.createOasApp("xmom-data-model", target + "_datatypes", specFile)) {
+    try(OASApplicationData data = oasAppBuilder.createOasApp(generator, target, specFile)) {
       importApplication(correlatedXynaOrder, data.getId(), workspace);
     } catch (IOException e) {
       if(logger.isWarnEnabled()) {
