@@ -1424,6 +1424,10 @@
       <FqName>xmcp.factorymanager.OrderTypeServices</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.ordertypes.OrderTypeTableFilter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
   	<XMOMEntry implicitDependency="false">
       <FqName>xmcp.factorymanager.ordertypes.GetOrdertypeCapacities</FqName>
       <Type>WORKFLOW</Type>
