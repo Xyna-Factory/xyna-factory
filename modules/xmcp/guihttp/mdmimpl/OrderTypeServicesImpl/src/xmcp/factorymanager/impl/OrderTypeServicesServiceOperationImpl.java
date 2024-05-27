@@ -57,6 +57,7 @@ import xmcp.factorymanager.ParameterInheritanceRule;
 import xmcp.factorymanager.impl.converter.OrderTypeConverter;
 import xmcp.factorymanager.ordertypes.OrderType;
 import xmcp.factorymanager.ordertypes.OrderTypeName;
+import xmcp.factorymanager.ordertypes.OrderTypeTableFilter;
 import xmcp.factorymanager.ordertypes.exception.CreateNewOderTypeException;
 import xmcp.factorymanager.ordertypes.exception.DeleteOrderTypeException;
 import xmcp.factorymanager.ordertypes.exception.LoadOrderTpeException;
@@ -256,7 +257,7 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
   }
 
   @Override
-  public List<? extends OrderType> getListEntries(TableInfo tableInfo) throws LoadOrderTypesException {   
+  public List<? extends OrderType> getListEntries(TableInfo tableInfo, OrderTypeTableFilter filter) throws LoadOrderTypesException {   
     TableHelper<OrderType, TableInfo> tableHelper = TableHelper.<OrderType, TableInfo>init(tableInfo)
         .limitConfig(TableInfo::getLimit)
         .sortConfig(ti -> {
@@ -290,7 +291,7 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
       List<OrdertypeParameter> orderTypes = multiChannelPortal.listOrdertypes(SearchOrdertypeParameter.all());
       
       List<OrderType> result = orderTypes.stream()
-          .map(OrderTypeConverter::convert)
+          .map((in) -> OrderTypeConverter.convert(in, filter))
           .filter(tableHelper.filter())
           .collect(Collectors.toList());
       tableHelper.sort(result);

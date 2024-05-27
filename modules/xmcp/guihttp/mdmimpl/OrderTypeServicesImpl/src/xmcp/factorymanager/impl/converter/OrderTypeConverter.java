@@ -44,17 +44,18 @@ public class OrderTypeConverter {
 
   }
   
-  public static OrderType convert(OrdertypeParameter in) {
+  public static OrderType convert(OrdertypeParameter in, OrderTypeTableFilter filter) {
     if(in == null)
       return null;
     OrderType r = new OrderType();
     r.setDocumentation(in.getDocumentation());
     if(in.getExecutionDestinationValue() != null)
-      r.setExecutionDestination(convert(in.getExecutionDestinationValue()));
+      r.setExecutionDestination(filter.getShowPath() ? convert(in.getExecutionDestinationValue()).substring(in.getOrdertypeName().lastIndexOf('.')) + 1 : convert(in.getExecutionDestinationValue()));
     if(in.getMonitoringLevel() != null)
       r.setMonitoringLevel(String.valueOf(in.getMonitoringLevel()));
     r.setEvaluatedMonitoringLevel(in.getMonitoringLevel());
-    r.setName(in.getOrdertypeName());
+    r.setName(filter.getShowPath() ? in.getOrdertypeName().substring(in.getOrdertypeName().lastIndexOf('.')) + 1 : in.getOrdertypeName());
+    // r.setName(in.getOrdertypeName());
     if(in.getPlanningDestinationValue() != null) 
       r.setPlanningDestination(convert(in.getPlanningDestinationValue()));
     r.setPriority(in.getPriority());
