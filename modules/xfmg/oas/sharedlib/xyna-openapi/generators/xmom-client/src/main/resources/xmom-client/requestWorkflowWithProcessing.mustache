@@ -20,32 +20,21 @@
 <Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="{{requestWorkflowWithProcessingTypeName}}" TypePath="{{requestWorkflowWithProcessingPath}}" Label="{{requestWorkflowWithProcessingLabel}}">
   <Operation ID="0" Label="{{requestWorkflowWithProcessingLabel}}" Name="{{requestWorkflowWithProcessingTypeName}}" IsStatic="false">
     <Input>
-      <Data ID="10" Label="Connect Parameter Host Port" VariableName="connectParameterHostPort10" ReferenceName="ConnectParameterHostPort" ReferencePath="xact.http">
-      </Data>
-      <Data ID="11" Label="{{sendLabel}}" VariableName="{{sendVarName}}11" ReferenceName="{{sendRefName}}" ReferencePath="{{sendRefPath}}">
-      </Data>
-      <Data ID="13362" Label="Client Processing Hook" VariableName="clientProcessingHook13362" ReferenceName="ClientProcessingHook" ReferencePath="xmcp.oas.datatype.client">
-      </Data>
+      <Data ID="10" Label="Connect Parameter Host Port" VariableName="connectParameterHostPort10" ReferenceName="ConnectParameterHostPort" ReferencePath="xact.http" />
+      <Data ID="11" Label="{{sendLabel}}" VariableName="{{sendVarName}}11" ReferenceName="{{sendRefName}}" ReferencePath="{{sendRefPath}}" />
+      <Data ID="13362" Label="Client Processing Hook" VariableName="clientProcessingHook13362" ReferenceName="ClientProcessingHook" ReferencePath="xmcp.oas.datatype.client" />
     </Input>
     <Output>
-      <Data ID="15" Label="{{responseLabel}}" VariableName="{{responseVarName}}15" ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}">
-      </Data>
+      <Data ID="15" Label="{{responseLabel}}" VariableName="{{responseVarName}}15" ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}" />
     </Output>
     <Throws>
-      <Exception Label="Connect Exception" VariableName="connectException16703" ReferenceName="ConnectException" ReferencePath="xact.http.exceptions">
-      </Exception>
-      <Exception Label="Connection Already Closed Exception" VariableName="connectionAlreadyClosedException16704" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions">
-      </Exception>
-      <Exception Label="Http Exception" VariableName="httpException16705" ReferenceName="HttpException" ReferencePath="xact.http.exceptions">
-      </Exception>
-      <Exception Label="Timeout Exception" VariableName="timeoutException16706" ReferenceName="TimeoutException" ReferencePath="xact.http.exceptions">
-      </Exception>
-      <Exception Label="Unexpected HTTP Response Exception" VariableName="unexpectedHTTPResponseException16707" ReferenceName="UnexpectedHTTPResponseException" ReferencePath="xact.http.exceptions">
-      </Exception>
-      <Exception Label="Client Processing Hook Exception" VariableName="clientProcessingHookException16708" ReferenceName="ClientProcessingHookException" ReferencePath="xmcp.oas.exception">
-      </Exception>
-      <Exception Label="ValidationException" VariableName="validationException16709" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception">
-      </Exception>
+      <Exception Label="Connect Exception" VariableName="connectException16703" ReferenceName="ConnectException" ReferencePath="xact.http.exceptions" />
+      <Exception Label="Connection Already Closed Exception" VariableName="connectionAlreadyClosedException16704" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions" />
+      <Exception Label="Http Exception" VariableName="httpException16705" ReferenceName="HttpException" ReferencePath="xact.http.exceptions" />
+      <Exception Label="Timeout Exception" VariableName="timeoutException16706" ReferenceName="TimeoutException" ReferencePath="xact.http.exceptions" />
+      <Exception Label="Unexpected HTTP Response Exception" VariableName="unexpectedHTTPResponseException16707" ReferenceName="UnexpectedHTTPResponseException" ReferencePath="xact.http.exceptions" />
+      <Exception Label="Client Processing Hook Exception" VariableName="clientProcessingHookException16708" ReferenceName="ClientProcessingHookException" ReferencePath="xmcp.oas.exception" />
+      <Exception Label="ValidationException" VariableName="validationException16709" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception" />
     </Throws>
     <ServiceReference ID="8" Label="HTTP Service" ReferenceName="HTTPService.HTTPService" ReferencePath="xact.http">
       <Source RefID="7"/>
@@ -84,12 +73,9 @@
       <Target RefID="13935"/>
     </ServiceReference>
     <Function ID="23" Label="OAS Type Validation">
-      <Source RefID="24">
-      </Source>
-      <Source RefID="11">
-      </Source>
-      <Source RefID="25">
-      </Source>
+      <Source RefID="24" />
+      <Source RefID="11" />
+      <Source RefID="25" />
       <Target RefID="24">
       </Target>
       <Invoke ServiceID="24" Operation="OASTypeValidation">
@@ -143,65 +129,42 @@
       <Mapping>%2%.header.headerField=%1%.buildHeaderFields()</Mapping>
     </Mappings>
     <Function ID="15174" Label="Preprocess Request">
-      <Source RefID="15175">
-      </Source>
-      <Source RefID="13362">
-      </Source>
-      <Source RefID="9">
-      </Source>
-      <Target RefID="15175">
-      </Target>
-      <Target RefID="15177">
-      </Target>
+      <Source RefID="15175" />
+      <Source RefID="13362" />
+      <Source RefID="9" />
+      <Target RefID="15175" />
+      <Target RefID="15177" />
       <Invoke ServiceID="15175" Operation="preprocessRequest">
-        <Source RefID="13362">
-        </Source>
-        <Source RefID="9">
-        </Source>
+        <Source RefID="13362" />
+        <Source RefID="9" />
       </Invoke>
       <Receive ServiceID="15175">
-        <Target RefID="15177">
-        </Target>
+        <Target RefID="15177" />
       </Receive>
     </Function>
     <Function ID="2" Label="Get HTTP Connection">
-      <Source RefID="3">
-      </Source>
-      <Source RefID="10">
-      </Source>
-      <Target RefID="3">
-      </Target>
-      <Target RefID="4">
-      </Target>
+      <Source RefID="3" />
+      <Source RefID="10" />
+      <Target RefID="3" />
+      <Target RefID="4" />
       <Invoke ServiceID="3" Operation="getHTTPConnection">
-        <Source RefID="10">
-        </Source>
+        <Source RefID="10" />
       </Invoke>
       <Receive ServiceID="3">
-        <Target RefID="4">
-        </Target>
+        <Target RefID="4" />
       </Receive>
     </Function>
     <Function ID="21" Label="sendRequest">
-      <Source RefID="22">
-      </Source>
-      <Source RefID="11">
-      </Source>
-      <Source RefID="4">
-      </Source>
-      <Source RefID="15177">
-      </Source>
-      <Target RefID="22">
-      </Target>
-      <Target RefID="19">
-      </Target>
-      <Target RefID="20">
-      </Target>
+      <Source RefID="22" />
+      <Source RefID="11" />
+      <Source RefID="4" />
+      <Source RefID="15177" />
+      <Target RefID="22" />
+      <Target RefID="19" />
+      <Target RefID="20" />
       <Invoke ServiceID="22" Operation="sendRequest">
-        <Source RefID="11">
-        </Source>
-        <Source RefID="4">
-        </Source>
+        <Source RefID="11" />
+        <Source RefID="4" />
         <Source RefID="15177">
           <Meta>
             <LinkType>UserConnected</LinkType>
@@ -209,86 +172,54 @@
         </Source>
       </Invoke>
       <Receive ServiceID="22">
-        <Target RefID="19">
-        </Target>
-        <Target RefID="20">
-        </Target>
+        <Target RefID="19" />
+        <Target RefID="20" />
       </Receive>
     </Function>
     <Function ID="12936" Label="Receive Document">
-      <Source RefID="12937">
-      </Source>
-      <Source RefID="4">
-      </Source>
-      <Target RefID="12937">
-      </Target>
-      <Target RefID="12939">
-      </Target>
+      <Source RefID="12937" />
+      <Source RefID="4" />
+      <Target RefID="12937" />
+      <Target RefID="12939" />
       <Invoke ServiceID="12937" Operation="receiveDocument">
-        <Source RefID="4">
-        </Source>
+        <Source RefID="4" />
       </Invoke>
       <Receive ServiceID="12937">
-        <Target RefID="12939">
-        </Target>
+        <Target RefID="12939" />
       </Receive>
     </Function>
     <Function ID="13935" Label="Postprocess Request">
-      <Source RefID="13936">
-      </Source>
-      <Source RefID="13362">
-      </Source>
-      <Source RefID="20">
-      </Source>
-      <Source RefID="19">
-      </Source>
-      <Source RefID="12939">
-      </Source>
-      <Target RefID="13936">
-      </Target>
-      <Target RefID="13938">
-      </Target>
-      <Target RefID="13939">
-      </Target>
-      <Target RefID="13940">
-      </Target>
+      <Source RefID="13936" />
+      <Source RefID="13362" />
+      <Source RefID="20" />
+      <Source RefID="19" />
+      <Source RefID="12939" />
+      <Target RefID="13936" />
+      <Target RefID="13938" />
+      <Target RefID="13939" />
+      <Target RefID="13940" />
       <Invoke ServiceID="13936" Operation="postprocessRequest">
-        <Source RefID="13362">
-        </Source>
-        <Source RefID="20">
-        </Source>
-        <Source RefID="19">
-        </Source>
-        <Source RefID="12939">
-        </Source>
+        <Source RefID="13362" />
+        <Source RefID="20" />
+        <Source RefID="19" />
+        <Source RefID="12939" />
       </Invoke>
       <Receive ServiceID="13936">
-        <Target RefID="13938">
-        </Target>
-        <Target RefID="13939">
-        </Target>
-        <Target RefID="13940">
-        </Target>
+        <Target RefID="13938" />
+        <Target RefID="13939" />
+        <Target RefID="13940" />
       </Receive>
     </Function>
     <Function ID="16" Label="parseResponse">
-      <Source RefID="17">
-      </Source>
-      <Source RefID="4">
-      </Source>
-      <Source RefID="13939">
-      </Source>
-      <Source RefID="13938">
-      </Source>
-      <Source RefID="13940">
-      </Source>
-      <Target RefID="17">
-      </Target>
-      <Target RefID="18">
-      </Target>
+      <Source RefID="17" />
+      <Source RefID="4" />
+      <Source RefID="13939" />
+      <Source RefID="13938" />
+      <Source RefID="13940" />
+      <Target RefID="17" />
+      <Target RefID="18" />
       <Invoke ServiceID="17" Operation="parseResponse">
-        <Source RefID="4">
-        </Source>
+        <Source RefID="4" />
         <Source RefID="13939">
           <Meta>
             <LinkType>UserConnected</LinkType>
@@ -306,8 +237,7 @@
         </Source>
       </Invoke>
       <Receive ServiceID="17">
-        <Target RefID="18">
-        </Target>
+        <Target RefID="18" />
       </Receive>
     </Function>
     <Function ID="7" Label="Close Connection">
@@ -318,21 +248,15 @@
       <Target RefID="8">
       </Target>
       <Invoke ServiceID="8" Operation="closeConnection">
-        <Source RefID="4">
-        </Source>
+        <Source RefID="4" />
       </Invoke>
-      <Receive ServiceID="8">
-      </Receive>
+      <Receive ServiceID="8" />
     </Function>
     <Function ID="26" Label="OAS Type Validation">
-      <Source RefID="27">
-      </Source>
-      <Source RefID="18">
-      </Source>
-      <Source RefID="28">
-      </Source>
-      <Target RefID="27">
-      </Target>
+      <Source RefID="27" />
+      <Source RefID="18" />
+      <Source RefID="28" />
+      <Target RefID="27" />
       <Invoke ServiceID="27" Operation="OASTypeValidation">
         <Source RefID="18">
           <Meta>
