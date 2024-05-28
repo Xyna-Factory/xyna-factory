@@ -71,7 +71,6 @@ import xfmg.xfctrl.datamodel.json.JSONDatamodelServicesServiceOperation;
 import xfmg.xfctrl.datamodel.json.JSONKeyValue;
 import xfmg.xfctrl.datamodel.json.JSONObject;
 import xfmg.xfctrl.datamodel.json.JSONValue;
-import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONObjectWriter;
 import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONVALTYPES;
 import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONValueWriter;
 import xfmg.xfctrl.datamodel.json.impl.JSONTokenizer.JSONToken;
@@ -117,11 +116,6 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
   }
 
   @Override
-  public GeneralXynaObject parseObjectFromJSON(Document document, GeneralXynaObject jSONBaseModel) {
-    return parseObjectFromJSON(document, jSONBaseModel, new JsonOptions(), null);
-  }
-
-  @Override
   public Document decodeValue(Document doc) {
     String s = doc.getText();
     JSONToken token = new JSONToken(JSONTokenType.text, 0, s.length()-1);
@@ -138,21 +132,23 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     String jsonString = JSONValueWriter.toJSON("", value);
     return new Document(doc.getDocumentType(), jsonString.substring(1, jsonString.length() - 1));
   }
+
   
   @Override
-  public Document writeJSON(GeneralXynaObject jSONBaseModel) {
-    return writeJSON(jSONBaseModel, new JsonOptions(), OASScope.none);
+  public GeneralXynaObject parseObjectFromJSON(Document document, GeneralXynaObject jSONBaseModel) {
+    return parseObjectFromJSON(document, jSONBaseModel, new JsonOptions(), null);
+  }
+  
+  @Override
+  public GeneralXynaObject parseObjectFromJSONWithOptions(Document document, GeneralXynaObject jSONBaseModel, JSONParsingOptions jSONParsingOptions) {
+    JsonOptions options = convertParsingOptions(jSONParsingOptions);
+    return parseObjectFromJSON(document, jSONBaseModel, options, jSONParsingOptions.getObjectDecider());
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public List<GeneralXynaObject> parseListFromJSON(Document document, GeneralXynaObject xo) {
     return (List<GeneralXynaObject>) parseListFromJSONWithOptions(document, xo, new JsonOptions(), null);
-  }
-  
-  @Override
-  public Document writeJSONList(List<GeneralXynaObject> list) {
-    return writeJSONList(list, new JsonOptions(), OASScope.none);
   }
   
   @Override
@@ -163,9 +159,13 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
   }
 
   @Override
-  public GeneralXynaObject parseObjectFromJSONWithOptions(Document document, GeneralXynaObject jSONBaseModel, JSONParsingOptions jSONParsingOptions) {
-    JsonOptions options = convertParsingOptions(jSONParsingOptions);
-    return parseObjectFromJSON(document, jSONBaseModel, options, jSONParsingOptions.getObjectDecider());
+  public Document writeJSON(GeneralXynaObject jSONBaseModel) {
+    return writeJSON(jSONBaseModel, new JsonOptions(), OASScope.none);
+  }
+  
+  @Override
+  public Document writeJSONList(List<GeneralXynaObject> list) {
+    return writeJSONList(list, new JsonOptions(), OASScope.none);
   }
 
   @Override
@@ -190,7 +190,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     return parseGenericList(document);
   }
   
-  public GeneralXynaObject parseObjectFromJSON(Document document, GeneralXynaObject jSONBaseModel, JsonOptions options, XynaObjectDecider decider) {
+  public GeneralXynaObject parseObjectFromJSON(Document document, GeneralXynaObject xo, JsonOptions options, XynaObjectDecider decider) {
     String json = document.getText();
     if (json == null || json.isBlank()) {
       return null;
@@ -198,11 +198,19 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     JSONTokenizer jt = new JSONTokenizer();
     List<JSONToken> tokens = jt.tokenize(json);
     JSONParser jp = new JSONParser(json);
-    JSONObject job = new JSONObject();
-    jp.fillObject(tokens, 0, job);
+    if(tokens.get(0).type.equals(JSONTokenType.curleyBraceOpen)) {
+      JSONObject job = new JSONObject();
+      jp.fillObject(tokens, 0, job);
+      fillXynaObjectRecursivly(xo, job, "", options, decider);
+    } else if (tokens.get(0).type.equals(JSONTokenType.squareBraceOpen) && options.listwrapper.contains(xo.getClass().getCanonicalName())) {
+      List<JSONValue> job = new ArrayList<>();
+      jp.fillArray(tokens, 0, job);
+      fillXynaObjectListWrapper(xo, job, "", options, decider);
+    } else {
+      throw new RuntimeException("Could not parse Object from Json. Neither an object nor a list wrapper");
+    }
 
-    fillXynaObjectRecursivly(jSONBaseModel, job, "", options, decider);
-    return jSONBaseModel;
+    return xo;
   }
   
   private Set<String> convertListWrappers(List<? extends ListWrapper> wrappers) {
@@ -708,9 +716,9 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
   public Document writeJSON(GeneralXynaObject jSONBaseModel, JsonOptions options, OASScope scope) {
     Document d = new Document();
     d.setDocumentType(new JSON());
-    JSONObject job = createFromXynaObjectRecursivly(jSONBaseModel, "", options, scope);
+    JSONValue job = createValFromXynaObjectRecursively(jSONBaseModel, "", options, scope);
     if (job != null) {
-      d.setText(JSONObjectWriter.toJSON("", job));
+      d.setText(JSONValueWriter.toJSON("", job));
     } else {
       d.setText("");
     }
@@ -773,7 +781,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     }
   }
   
-  public JSONValue createValFromXynaObjectListRecurisvely(List<GeneralXynaObject> xo, String currentPath, JsonOptions options, OASScope scope) {
+  public JSONValue createValFromXynaObjectListRecurisvely(List<? extends GeneralXynaObject> xo, String currentPath, JsonOptions options, OASScope scope) {
     if(xo == null) {
       return createNullValue();
     }
@@ -1071,19 +1079,8 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     if (list == null || list.isEmpty()) {
       d.setText("[]");
     } else {
-      StringBuilder sb = new StringBuilder("[\n");
-      int cnt = 0;
-      for (GeneralXynaObject xo : list) {
-        sb.append("  ");
-        JSONObject job = createFromXynaObjectRecursivly(xo, "", options, scope);
-        sb.append(JSONObjectWriter.toJSON("  ", job));
-        if (++cnt < list.size()) {
-          sb.append(",");
-        }
-        sb.append("\n");
-      }
-      sb.append("]");
-      d.setText(sb.toString());
+      JSONValue value = createValFromXynaObjectListRecurisvely(list, "", options, scope);
+      d.setText(JSONValueWriter.toJSON("", value));
     }
     return d;
   }
