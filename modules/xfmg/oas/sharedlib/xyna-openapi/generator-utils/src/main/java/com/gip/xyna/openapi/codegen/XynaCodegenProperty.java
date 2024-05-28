@@ -384,9 +384,21 @@ public class XynaCodegenProperty {
       if ("Long".equals(javatype) && minimum != null) {
         minimum = minimum + "L";
       }
+      if ("Float".equals(javatype) && minimum != null) {
+        minimum = minimum + "F";
+      }
+      if ("Double".equals(javatype) && minimum != null) {
+        minimum = minimum + "D";
+      }
       maximum = mostInnerItems.getMaximum();
       if ("Long".equals(javatype) && maximum != null) {
         maximum = maximum + "L";
+      }
+      if ("Float".equals(javatype) && maximum != null) {
+        maximum = maximum + "F";
+      }
+      if ("Double".equals(javatype) && maximum != null) {
+        maximum = maximum + "D";
       }
       excludeMin = mostInnerItems.getExclusiveMinimum();
       excludeMax = mostInnerItems.getExclusiveMaximum();
