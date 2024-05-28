@@ -22,7 +22,7 @@
   <Libraries>PromptGeneratorImpl.jar</Libraries>
   <Libraries>freemarker-2.3.32.jar</Libraries>
   <Service Label="PromptGenerator" TypeName="PromptGenerator">
-    <Operation IsStatic="true" Label="Generate Datatype Documentation" Name="generateDatatypeDocumentation">
+    <Operation IsStatic="true" Label="Generate Datatype Documentation" Name="generateDatatypeDocumentation" RequiresXynaOrder="true">
       <Input>
         <Data ID="866" Label="XMOM Item Reference" ReferenceName="XMOMItemReference" ReferencePath="xmcp.xypilot" VariableName="xMOMItemReference866"/>
       </Input>
@@ -35,7 +35,7 @@
 If anything doesn't work, an empty Documentation is returned.</Documentation>
       </Meta>
       <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.xypilot.PromptGeneratorImpl.generateDatatypeDocumentation(xMOMItemReference866);</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.xypilot.PromptGeneratorImpl.generateDatatypeDocumentation(correlatedXynaOrder, xMOMItemReference866);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Generate Exception Documentation" Name="generateExceptionDocumentation">
@@ -229,6 +229,20 @@ If anything doesn't work, an empty List is returned.</Documentation>
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return xmcp.xypilot.PromptGeneratorImpl.getXML(xMOMItemReference899, xynaUserSession897);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="Generate" Name="generate" IsStatic="true" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="900" Label="Context" VariableName="context900" ReferenceName="Context" ReferencePath="xmcp.yggdrasil.plugin">
+        </Data>
+      </Input>
+      <Output>
+      </Output>
+      <Meta>
+        <HasBeenPersisted>false</HasBeenPersisted>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.xypilot.PromptGeneratorImpl.generate(correlatedXynaOrder, context900);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

@@ -19,6 +19,7 @@ package xfmg.oas.generation.impl;
 
 
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -38,6 +39,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl.ApplicationPartImportMode;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl.ImportApplicationParameter;
+import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xfmg.xfctrl.filemgmt.FileManagement;
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.rtctxmgmt.LocalRuntimeContextManagementSecurity;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
@@ -53,13 +55,13 @@ import xfmg.oas.generation.ApplicationGenerationParameter;
 import xfmg.oas.generation.ApplicationGenerationServiceOperation;
 import xfmg.oas.generation.cli.generated.OverallInformationProvider;
 import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl;
+import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl.OASApplicationData;
 import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl.ValidationResult;
 import xfmg.xfctrl.appmgmt.RuntimeContextService;
 import xfmg.xfctrl.filemgmt.ManagedFileId;
 import xmcp.forms.plugin.Plugin;
 import xprc.xpce.Application;
 import xprc.xpce.RuntimeContext;
-import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 
 
 public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploymentTask, ApplicationGenerationServiceOperation {
@@ -158,19 +160,25 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
     if (!result.getErrors().isEmpty()) {
       throw new RuntimeException(errors.toString());
     }
-    
-    String id;
+
     String workspace = applicationGenerationParameter1.getWorkspaceName();
-    id = oasAppBuilder.createOasApp("xmom-data-model", target + "_datatypes", specFile);
-    importApplication(correlatedXynaOrder, id, workspace);
-    
+    createAndImportApplication(correlatedXynaOrder, "xmom-data-model", target + "_datatypes", specFile, workspace);
     if (applicationGenerationParameter1.getGenerateProvider()) {
-      id = oasAppBuilder.createOasApp("xmom-server", target + "_provider", specFile);
-      importApplication(correlatedXynaOrder, id, workspace);
+      createAndImportApplication(correlatedXynaOrder, "xmom-server", target + "_provider", specFile, workspace);
     }
     if (applicationGenerationParameter1.getGenerateClient()) {
-      id = oasAppBuilder.createOasApp("xmom-client", target + "_client", specFile);
-      importApplication(correlatedXynaOrder, id, workspace);
+      createAndImportApplication(correlatedXynaOrder, "xmom-client", target + "_client", specFile, workspace);
+    }
+  }
+  
+  private void createAndImportApplication(XynaOrderServerExtension correlatedXynaOrder, String generator, String target, String specFile, String workspace) {
+    BuildoasapplicationImpl oasAppBuilder = new BuildoasapplicationImpl();
+    try(OASApplicationData data = oasAppBuilder.createOasApp(generator, target, specFile)) {
+      importApplication(correlatedXynaOrder, data.getId(), workspace);
+    } catch (IOException e) {
+      if(logger.isWarnEnabled()) {
+        logger.warn("Could not clean up temporary files for " + generator, e);
+      }
     }
   }
   

@@ -181,6 +181,7 @@ public class XmomClientGenerator extends DefaultCodegen {
     apiTemplateFiles.put("responseDataType.mustache", "_responseDataTypes_toSplit.xml");
     apiTemplateFiles.put("parseResponseService.mustache", "_parseResponseServices_toSplit.xml");
     apiTemplateFiles.put("requestWorkflow.mustache", "_requestWorkflows_toSplit.xml");
+    apiTemplateFiles.put("requestWorkflowWithProcessing.mustache", "_requestWorkflowWithProcessing_toSplit.xml");
     
     templateDir = "xmom-client";
 
