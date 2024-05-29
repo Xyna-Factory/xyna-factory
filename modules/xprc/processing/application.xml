@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <!--                                               ################# Version auch in blackedition_lib.sh updaten ########### -->
-<Application applicationName="Processing" comment="" factoryVersion="" versionName="1.0.19" xmlVersion="1.1">
+<Application applicationName="Processing" comment="" factoryVersion="" versionName="1.0.20" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Konfiguration im Planning-Workflow, Starten von Aufträgen</Description>
     <Description Lang="EN">Configuration in Planning workflow, starting orders</Description>
@@ -52,6 +52,10 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xprc.xpce.datatype.NamedXMOMMember</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xprc.xpce.datatype.MetaTag</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">

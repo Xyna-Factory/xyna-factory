@@ -28,6 +28,7 @@ TypeName="{{parseResponseRefName}}" TypePath="{{parseResponseRefPath}}" Label="{
         <Data ID="1" Label="HTTP Connection" VariableName="hTTPConnection1" ReferenceName="HTTPConnection" ReferencePath="xact.http"/>
         <Data ID="2" Label="HTTP Status Code" VariableName="hTTPStatusCode2" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode"/>
         <Data ID="3" Label="Header" VariableName="header3" ReferenceName="Header" ReferencePath="xact.http"/>
+        <Data ID="8" Label="Document" VariableName="document8" ReferenceName="Document" ReferencePath="xact.templates"/>
       </Input>
       <Output>
         <Data ID="4" Label="{{responseLabel}}" VariableName="{{responseVarName}}4"
@@ -50,11 +51,12 @@ jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.js
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
 jsonOptions.setUseLabels(true);
 jsonOptions.setObjectDecider(new {{apiPackage}}.decider.OASDecider());
+xact.templates.Document document = document8;
 {{#responses}}
 if (statusCode == {{code}}) {
     {{respRefPath}}.{{respRefName}} responseDataType = new {{respRefPath}}.{{respRefName}}();
 
-    xact.templates.Document document = xact.http.HTTPService.receiveDocument(hTTPConnection1);
+
     {{#body}}
     if (!document.getText().trim().isEmpty()) {
     {{^isPrimitive}}

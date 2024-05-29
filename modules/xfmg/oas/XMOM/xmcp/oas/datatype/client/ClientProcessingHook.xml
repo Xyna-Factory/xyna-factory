@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="ClientProcessingHook" TypePath="xmcp.oas.datatype.client" Label="Client Processing Hook" IsAbstract="false">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="Client Processing Hook" TypeName="ClientProcessingHook">
+    <Operation Label="Preprocess Request" Name="preprocessRequest" IsStatic="false">
+      <Input>
+        <Data ID="10" Label="Send Parameter" VariableName="sendParameter10" ReferenceName="SendParameter" ReferencePath="xact.http">
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="14" Label="Send Parameter" VariableName="sendParameter14" ReferenceName="SendParameter" ReferencePath="xact.http">
+        </Data>
+      </Output>
+      <Throws>
+        <Exception ID="45" Label="Client Processing Hook Exception" VariableName="clientProcessingHookException45" ReferenceName="ClientProcessingHookException" ReferencePath="xmcp.oas.exception">
+        </Exception>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return sendParameter10;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="Postprocess Request" Name="postprocessRequest" IsStatic="false">
+      <Input>
+        <Data ID="19" Label="Header" VariableName="header19" ReferenceName="Header" ReferencePath="xact.http">
+        </Data>
+        <Data ID="26" Label="HTTP Status Code" VariableName="hTTPStatusCode26" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode">
+        </Data>
+        <Data ID="32" Label="Document" VariableName="document32" ReferenceName="Document" ReferencePath="xact.templates">
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="23" Label="Header" VariableName="header23" ReferenceName="Header" ReferencePath="xact.http">
+        </Data>
+        <Data ID="29" Label="HTTP Status Code" VariableName="hTTPStatusCode29" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode">
+        </Data>
+        <Data ID="36" Label="Document" VariableName="document36" ReferenceName="Document" ReferencePath="xact.templates">
+        </Data>
+      </Output>
+      <Throws>
+        <Exception ID="41" Label="Client Processing Hook Exception" VariableName="clientProcessingHookException41" ReferenceName="ClientProcessingHookException" ReferencePath="xmcp.oas.exception">
+        </Exception>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new Container(header19, hTTPStatusCode26, document32);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

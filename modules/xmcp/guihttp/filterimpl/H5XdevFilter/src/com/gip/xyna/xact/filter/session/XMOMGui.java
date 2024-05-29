@@ -184,6 +184,10 @@ public class XMOMGui {
     return sbd;
   }
   
+  public synchronized SessionBasedData getSessionBasedData(String sessionId) {
+    return sessionBasedData.get(sessionId);
+  }
+  
   private synchronized SessionBasedData createNewSessionBasedData(XmomGuiSession session) {
     
     SessionBasedData sbd = new SessionBasedData(session, this);

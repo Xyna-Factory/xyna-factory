@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Datatype Inspector" TypeName="DatatypeInspector" TypePath="xprc.xpce.datatype" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Datatype Inspector" TypeName="DatatypeInspector" TypePath="xprc.xpce.datatype" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
   <Libraries>DatatypeInspectorImpl.jar</Libraries>
-  <Service Label="DOMInspector" TypeName="DatatypeInspector">
+  <Service Label="Datatype Inspector" TypeName="DatatypeInspector">
     <Operation IsStatic="false" Label="Get Documentation" Name="getDocumentation">
       <Input/>
       <Output>
@@ -51,7 +50,11 @@
     </Operation>
     <Operation IsStatic="false" Label="Inspect" Name="inspect">
       <Input>
-        <Data Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType"/>
+        <Data Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
       </Input>
       <Output>
         <Data Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector"/>
@@ -71,9 +74,13 @@
         <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().inspectByName(correlatedXynaOrder, text);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation ID="24" IsStatic="true" Label="Inspect Datatype" Name="inspectDatatype">
+    <Operation IsStatic="true" Label="Inspect Datatype" Name="inspectDatatype">
       <Input>
-        <Data ID="22" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType"/>
+        <Data ID="22" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
       </Input>
       <Output>
         <Data ID="23" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector"/>
@@ -82,7 +89,7 @@
         <CodeSnippet Type="Java">return DatatypeInspectorImpl.inspectDatatype(anyType);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation ID="27" IsStatic="true" Label="Inspect Datatype by Name" Name="inspectDatatypeByName" RequiresXynaOrder="true">
+    <Operation IsStatic="true" Label="Inspect Datatype by Name" Name="inspectDatatypeByName" RequiresXynaOrder="true">
       <Input>
         <Data ID="25" Label="FqXmlName" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
       </Input>
@@ -135,6 +142,15 @@
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().listAllXynaObjectMembers();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Get Meta Tags" Name="getMetaTags">
+      <Input/>
+      <Output>
+        <Data ID="66" IsList="true" Label="Meta tag" ReferenceName="MetaTag" ReferencePath="xprc.xpce.datatype" VariableName="metaTag66"/>
+      </Output>
+      <SourceCode>
+	<CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getMetaTags();</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
