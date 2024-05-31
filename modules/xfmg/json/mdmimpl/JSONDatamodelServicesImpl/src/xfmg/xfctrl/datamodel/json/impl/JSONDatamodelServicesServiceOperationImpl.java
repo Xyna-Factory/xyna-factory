@@ -214,6 +214,9 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
   }
   
   private Set<String> convertListWrappers(List<? extends ListWrapper> wrappers) {
+    if(wrappers == null) {
+      return Collections.emptySet();
+    }
     Set<String> result = new HashSet<String>();
     wrappers.forEach(x -> result.add(x.getFqn()));
     return result;
