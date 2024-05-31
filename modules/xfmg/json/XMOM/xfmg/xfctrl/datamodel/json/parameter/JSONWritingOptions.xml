@@ -36,4 +36,5 @@ When set to Response, the Json will not contain any membervars that are marked a
 If not set or set to a different value no membervars will be skipped.</Documentation>
     </Meta>
   </Data>
+  <Data Label="List Wrapper" VariableName="listWrapper" IsList="true" ReferenceName="ListWrapper" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" />
 </DataType>
