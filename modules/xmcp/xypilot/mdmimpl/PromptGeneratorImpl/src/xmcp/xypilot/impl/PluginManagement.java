@@ -73,6 +73,12 @@ public class PluginManagement {
       builder.path(btn.getPath());
       consumer.accept(builder.instance());
     }
+
+    builder.definitionWorkflowFQN("xmcp.xypilot.GetManageXyPilotConfigDefinition");
+    builder.navigationEntryName("XyPilot Config");
+    builder.navigationEntryLabel("XyPilot Config");
+    builder.path("manager");
+    consumer.accept(builder.instance());
   }
 
 

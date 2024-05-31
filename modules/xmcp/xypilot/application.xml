@@ -219,6 +219,18 @@
       <FqName>xmcp.xypilot.Generate</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.XypilotUserConfig</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.GetManageXyPilotConfigDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.SetXyPilotConfig</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
   </XMOMEntries>
   <XynaProperties>
     <XynaProperty implicitDependency="false">

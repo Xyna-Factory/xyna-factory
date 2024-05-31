@@ -21,10 +21,13 @@ package xmcp.xypilot.impl;
 
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xmcp.xguisupport.messagebus.transfer.MessageInputParameter;
+import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 
 import xmcp.xypilot.Documentation;
 import xmcp.xypilot.XMOMItemReference;
+import xmcp.xypilot.XypilotUserConfig;
+import xmcp.xypilot.impl.config.XypilotUserConfigStorage;
 import xmcp.xypilot.impl.factory.XynaFactory;
 import xmcp.xypilot.impl.gen.model.DomModel;
 import xmcp.xypilot.impl.gen.pipeline.Pipeline;
@@ -58,14 +61,25 @@ public class Generation {
 
 
   public void genDatatypeDocu(XynaOrderServerExtension order, Context context) throws Exception {
+    XypilotUserConfig config = getConfigFromOrder(order);
     XMOMItemReference xmomItemReference = buildItemFromContext(context);
     DomModel model = DataModelLocator.getDomModel(xmomItemReference, order);
-    Pipeline<Documentation, DomModel> pipeline = PipelineLocator.getPipeline("dom-documentation");
-    Documentation doc = pipeline.run(model).firstChoice();
+    Pipeline<Documentation, DomModel> pipeline = PipelineLocator.getPipeline(config, "dom-documentation");
+    Documentation doc = pipeline.run(model, config.getUri()).firstChoice();
     FilterCallbackInteractionUtils.updateDomDocu(doc, order, xmomItemReference);
     publishUpdateMessage(xmomItemReference, "DataType");
   }
 
+  public XypilotUserConfig getConfigFromOrder(XynaOrderServerExtension order) throws PersistenceLayerException {
+    String sessionId = order.getSessionId();
+    String user = XynaFactory.getInstance().resolveSessionToUser(sessionId);
+    XypilotUserConfigStorage storage = new XypilotUserConfigStorage();
+    XypilotUserConfig config = storage.loadConfig(user);
+    if(config == null) {
+      throw new RuntimeException("No XyPilot Config for user " + user);
+    }
+    return config;
+  }
 
   @FunctionalInterface
   public interface GenerationInterface {

@@ -231,18 +231,31 @@ If anything doesn't work, an empty List is returned.</Documentation>
         <CodeSnippet Type="Java">return xmcp.xypilot.PromptGeneratorImpl.getXML(xMOMItemReference899, xynaUserSession897);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation Label="Generate" Name="generate" IsStatic="true" RequiresXynaOrder="true">
+    <Operation IsStatic="true" Label="Generate" Name="generate" RequiresXynaOrder="true">
       <Input>
-        <Data ID="900" Label="Context" VariableName="context900" ReferenceName="Context" ReferencePath="xmcp.yggdrasil.plugin">
-        </Data>
+        <Data ID="900" Label="Context" ReferenceName="Context" ReferencePath="xmcp.yggdrasil.plugin" VariableName="context900"/>
       </Input>
-      <Output>
-      </Output>
-      <Meta>
-        <HasBeenPersisted>false</HasBeenPersisted>
-      </Meta>
+      <Output/>
       <SourceCode>
         <CodeSnippet Type="Java">xmcp.xypilot.PromptGeneratorImpl.generate(correlatedXynaOrder, context900);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Load User Config" Name="loadUserConfig" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data ID="901" Label="Xypilot User Config" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot" VariableName="xypilotUserConfig901"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.xypilot.PromptGeneratorImpl.loadUserConfig(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Store User Config" Name="storeUserConfig" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="902" Label="Xypilot User Config" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot" VariableName="xypilotUserConfig902"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.xypilot.PromptGeneratorImpl.storeUserConfig(correlatedXynaOrder, xypilotUserConfig902);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
