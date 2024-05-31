@@ -71,6 +71,7 @@ import xfmg.xfctrl.datamodel.json.JSONDatamodelServicesServiceOperation;
 import xfmg.xfctrl.datamodel.json.JSONKeyValue;
 import xfmg.xfctrl.datamodel.json.JSONObject;
 import xfmg.xfctrl.datamodel.json.JSONValue;
+import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONObjectWriter;
 import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONVALTYPES;
 import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONValueWriter;
 import xfmg.xfctrl.datamodel.json.impl.JSONTokenizer.JSONToken;
@@ -188,6 +189,24 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
   @Override
   public List<JSONValue> parseGenericJSONList(Document document) {
     return parseGenericList(document);
+  }
+  
+  @Override
+  @SuppressWarnings("unchecked")
+  public Document writeGenericJSONList(List<? extends JSONValue> value) {
+    if(value == null) {
+      return new Document.Builder().documentType(new JSON()).text("null").instance();
+    }
+    JSONValue val = new JSONValue.Builder().type(JSONVALTYPES.ARRAY).arrayValue((List<JSONValue>) value).instance();
+    return new Document.Builder().documentType(new JSON()).text(JSONValueWriter.toJSON("", val)).instance();
+  }
+
+  @Override
+  public Document writeGenericJSONObject(JSONObject value) {
+    if(value == null) {
+      return new Document.Builder().documentType(new JSON()).text("null").instance();
+    }
+    return new Document.Builder().documentType(new JSON()).text(JSONObjectWriter.toJSON("", value)).instance();
   }
   
   public GeneralXynaObject parseObjectFromJSON(Document document, GeneralXynaObject xo, JsonOptions options, XynaObjectDecider decider) {
@@ -1152,5 +1171,4 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     }
     
   }
-
 }
