@@ -57,11 +57,21 @@ jsonOptions.setUseLabels(true);
 xact.templates.Document body;
 {{^isPrimitive}}
 {{#isList}}
+{{^isGenericJsonList}}
 List&lt;GeneralXynaObject&gt; list = new ArrayList&lt;&gt;({{getPropVarName}});
 body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONListWithOptions(list, jsonOptions);
+{{/isGenericJsonList}}
+{{#isGenericJsonList}}
+body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeGenericJSONList({{getPropVarName}});
+{{/isGenericJsonList}}
 {{/isList}}
 {{^isList}}
+{{^isGenericJsonObject}}
 body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions({{getPropVarName}}, jsonOptions);
+{{/isGenericJsonObject}}
+{{#isGenericJsonObject}}
+body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeGenericJSONObject({{getPropVarName}});
+{{/isGenericJsonObject}}
 {{/isList}}
 {{/isPrimitive}}
 {{#isPrimitive}}

@@ -62,14 +62,24 @@ if (statusCode == {{code}}) {
     {{^isPrimitive}}
     {{#isList}}
         List&lt;{{propRefPath}}.{{propRefType}}&gt; body = new ArrayList&lt; &gt;();
+        {{^isGenericJsonList}}
         List&lt;GeneralXynaObject&gt; parsedList = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new {{propRefPath}}.{{propRefType}}(), jsonOptions);
         for (GeneralXynaObject obj : parsedList) {
             body.add(({{propRefPath}}.{{propRefType}})obj);
         }
+        {{/isGenericJsonList}}
+        {{#isGenericJsonList}}
+        body = (List&lt;{{propRefPath}}.{{propRefType}}&gt;)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseGenericJSONList(document);
+        {{/isGenericJsonList}}
     {{/isList}}
     {{^isList}}
         {{propRefPath}}.{{propRefType}} body;
+        {{^isGenericJsonObject}}
         body = ({{propRefPath}}.{{propRefType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{propRefPath}}.{{propRefType}}(), jsonOptions);
+        {{/isGenericJsonObject}}
+        {{#isGenericJsonObject}}
+        body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseGenericJSONObject(document);
+        {{/isGenericJsonObject}}
     {{/isList}}
         responseDataType.{{setPropVarName}}(body);
     {{/isPrimitive}}
