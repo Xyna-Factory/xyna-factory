@@ -123,7 +123,7 @@ public class PromptGeneratorServiceOperationImpl implements ExtendedDeploymentTa
     public Documentation generateDatatypeMethodDocumentation(MemberReference memberReference) {
         try {
             // get the data model
-            DomMethodModel model = DataModelLocator.getDomMethodModel(memberReference, null);
+            DomMethodModel model = DataModelLocator.getDomMethodModel(memberReference.getItem(), null, "");
 
             // load the pipeline
             Pipeline<Documentation, DomMethodModel> pipeline = PipelineLocator.getPipeline("dom-method-documentation");
@@ -141,7 +141,7 @@ public class PromptGeneratorServiceOperationImpl implements ExtendedDeploymentTa
     public Documentation generateDatatypeVariableDocumentation(MemberReference memberReference) {
         try {
             // get the data model
-            DomVariableModel model = DataModelLocator.getDomVariableModel(memberReference, null);
+            DomVariableModel model = DataModelLocator.getDomVariableModel(memberReference.getItem(), null, "");
 
             // load the pipeline
             Pipeline<Documentation, DomVariableModel> pipeline = PipelineLocator.getPipeline("dom-variable-documentation");
@@ -159,7 +159,7 @@ public class PromptGeneratorServiceOperationImpl implements ExtendedDeploymentTa
     public Documentation generateExceptionVariableDocumentation(MemberReference memberReference) {
         try {
             // get the data model
-            ExceptionVariableModel model = DataModelLocator.getExceptionVariableModel(memberReference, null);
+            ExceptionVariableModel model = DataModelLocator.getExceptionVariableModel(memberReference.getItem(), null, "");
 
             // load the pipeline
             Pipeline<Documentation, ExceptionVariableModel> pipeline = PipelineLocator.getPipeline("exception-variable-documentation");
@@ -267,7 +267,7 @@ public class PromptGeneratorServiceOperationImpl implements ExtendedDeploymentTa
         try {
             logger.debug("Fetching data model for " + memberReference.getMember());
             // get the data model
-            DomMethodModel model = DataModelLocator.getDomMethodModel(memberReference, null);
+            DomMethodModel model = DataModelLocator.getDomMethodModel(memberReference.getItem(), null, "");
             logger.debug("Generating implementation for " + model.getTargetMethod().getName());
             // load the pipeline
             Pipeline<Code, DomMethodModel> pipeline = PipelineLocator.getPipeline("dom-method-implementation");

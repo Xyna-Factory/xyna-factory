@@ -27,7 +27,6 @@ import com.gip.xyna.xprc.XynaOrderServerExtension;
 
 import xmcp.xypilot.Documentation;
 import xmcp.xypilot.ExceptionMessage;
-import xmcp.xypilot.MemberReference;
 import xmcp.xypilot.MemberVariable;
 import xmcp.xypilot.MethodDefinition;
 import xmcp.xypilot.XMOMItemReference;
@@ -85,9 +84,9 @@ public class Generation {
     publishUpdateMessage(xmomItemReference, "DataType");
   }
   
-  public void genDatatypeVarDocu(MemberReference memberReference, XynaOrderServerExtension order, Context context) throws Exception {
+  public void genDatatypeVarDocu(XynaOrderServerExtension order, Context context) throws Exception {
     XMOMItemReference xmomItemReference = buildItemFromContext(context);
-    DomVariableModel model = DataModelLocator.getDomVariableModel(memberReference, order);
+    DomVariableModel model = DataModelLocator.getDomVariableModel(xmomItemReference, order, context.getObjectId());
     Pipeline<Documentation, DomVariableModel> pipeline = PipelineLocator.getPipeline("dom-variable-documentation");
     Documentation doc = pipeline.run(model).firstChoice();
     FilterCallbackInteractionUtils.updateDomVarDocu(doc, order, xmomItemReference, context.getObjectId());
@@ -103,9 +102,9 @@ public class Generation {
     publishUpdateMessage(xmomItemReference, "DataType");
   }
 
-  public void genDatatypeMethodDocu(MemberReference memberReference, XynaOrderServerExtension order, Context context) throws Exception {
+  public void genDatatypeMethodDocu(XynaOrderServerExtension order, Context context) throws Exception {
     XMOMItemReference xmomItemReference = buildItemFromContext(context);
-    DomMethodModel model = DataModelLocator.getDomMethodModel(memberReference, order);
+    DomMethodModel model = DataModelLocator.getDomMethodModel(xmomItemReference, order, context.getObjectId());
     Pipeline<Documentation, DomMethodModel> pipeline = PipelineLocator.getPipeline("dom-method-documentation");
     Documentation doc = pipeline.run(model).firstChoice();
     FilterCallbackInteractionUtils.updateDomVarDocu(doc, order, xmomItemReference, context.getObjectId());
@@ -139,9 +138,9 @@ public class Generation {
     publishUpdateMessage(xmomItemReference, "Exception");
   }
   
-  public void genExceptionVarDocu(MemberReference memberReference, XynaOrderServerExtension order, Context context) throws Exception {
+  public void genExceptionVarDocu(XynaOrderServerExtension order, Context context) throws Exception {
     XMOMItemReference xmomItemReference = buildItemFromContext(context);
-    ExceptionVariableModel model = DataModelLocator.getExceptionVariableModel(memberReference, order);
+    ExceptionVariableModel model = DataModelLocator.getExceptionVariableModel(xmomItemReference, order, context.getObjectId());
     Pipeline<Documentation, ExceptionVariableModel> pipeline = PipelineLocator.getPipeline("exception-variable-documentation");
     Documentation doc = pipeline.run(model).firstChoice();
     FilterCallbackInteractionUtils.updateExceptionVarDocu(doc, order, xmomItemReference, context.getObjectId());

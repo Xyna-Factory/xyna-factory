@@ -38,7 +38,13 @@ import xact.http.URLPath;
 import xact.http.enums.httpmethods.GET;
 import xact.http.enums.httpmethods.HTTPMethod;
 import xact.http.enums.httpmethods.PUT;
+import xmcp.processmodeller.datatypes.Area;
+import xmcp.processmodeller.datatypes.ContainerArea;
+import xmcp.processmodeller.datatypes.Item;
+import xmcp.processmodeller.datatypes.ModellingItem;
+import xmcp.processmodeller.datatypes.XMOMItem;
 import xmcp.processmodeller.datatypes.response.GetXMLResponse;
+import xmcp.processmodeller.datatypes.response.GetXMOMItemResponse;
 import xmcp.xypilot.XMOMItemReference;
 import xmcp.xypilot.impl.factory.XynaFactory;
 import xmcp.xypilot.impl.locator.UnsavedChangesXmlSource;
@@ -58,6 +64,7 @@ public class FilterCallbackInteractionUtils {
   private static final HTTPMethod httpGet = new GET();
   private static final HTTPMethod httpPut = new PUT();
   private static final String getXmlUrlTemplate = "/runtimeContext/%s/xmom/%s/%s/%s/xml";
+  private static final String getDatatypeResponseUrlTemplate = "/runtimeContext/%s/xmom/%s/%s/%s";
   private static final String putChangeTemplate = "/runtimeContext/%s/xmom/%s/%s/%s/objects/%s/change";
   private static final String putInsertTemplate = "/runtimeContext/%s/xmom/%s/%s/%s/objects/%s/insert";
 
@@ -78,6 +85,51 @@ public class FilterCallbackInteractionUtils {
     URLPath url = createUrlPath(getXmlUrlTemplate, ref, type);
     String xml = ((GetXMLResponse) order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpGet)).getCurrent();
     return new UnsavedChangesXmlSource(xml, ref.getFqName(), revision);
+  }
+  
+  public static Item getDatatypeItemByAreaOrItemId(XMOMItemReference ref, XynaOrderServerExtension order, String id) throws XynaException {
+    XMOMItem parent = getXmomItem(ref, order, "datatypes");
+    return findId(parent, id);
+  }
+  
+  public static Item getExceptionItemByAreaOrItemId(XMOMItemReference ref, XynaOrderServerExtension order, String id) throws XynaException {
+    XMOMItem parent = getXmomItem(ref, order, "exceptions");
+    return findId(parent, id);
+  }
+  
+  private static XMOMItem getXmomItem(XMOMItemReference ref, XynaOrderServerExtension order, String type) throws XynaException {
+    URLPath url = createUrlPath(getDatatypeResponseUrlTemplate, ref, type);
+    return ((GetXMOMItemResponse) order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpGet)).getXmomItem();
+  }
+  
+  private static Item findId(Item item, String id) {
+    if (item.getId().equals(id)) {
+      return item;
+    }
+    if (item instanceof ModellingItem) {
+      for (Area area: ((ModellingItem) item).getAreas()) {
+        Item ret = findId(item, area, id);
+        if (ret != null) {
+          return ret;
+        }
+      }
+    }
+    return null;
+  }
+  
+  private static Item findId(Item parent, Area area, String id) {
+    if (area.getId().equals(id)) {
+      return parent;
+    }
+    if (area instanceof ContainerArea) {
+      for (Item item: ((ContainerArea) area).getItems()) {
+        Item ret = findId(item, id);
+        if (ret != null) {
+          return ret;
+        }
+      }
+    }
+    return null;
   }
 
   public static void updateDomDocu(Documentation docu, XynaOrderServerExtension order, XMOMItemReference ref) throws XynaException {
