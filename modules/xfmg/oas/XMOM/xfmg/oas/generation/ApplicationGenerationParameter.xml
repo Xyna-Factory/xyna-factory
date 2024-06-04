@@ -29,4 +29,9 @@
       <Type>boolean</Type>
     </Meta>
   </Data>
+  <Data Label="Workspace Name" VariableName="workspaceName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
 </DataType>

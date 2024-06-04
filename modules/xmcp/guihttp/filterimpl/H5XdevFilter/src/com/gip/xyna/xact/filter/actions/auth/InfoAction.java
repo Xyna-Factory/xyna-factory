@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,23 +19,31 @@ package com.gip.xyna.xact.filter.actions.auth;
 
 
 
-import java.rmi.RemoteException;
+import java.util.Map;
 
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.filter.FilterAction;
+import com.gip.xyna.xact.filter.H5XdevFilter;
 import com.gip.xyna.xact.filter.HTMLBuilder.HTMLPart;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
 import com.gip.xyna.xact.filter.URLPath;
 import com.gip.xyna.xact.filter.actions.PathElements;
 import com.gip.xyna.xact.filter.actions.auth.utils.AuthUtils;
+import com.gip.xyna.xact.filter.session.SessionBasedData;
+import com.gip.xyna.xact.filter.session.XMOMGui;
 import com.gip.xyna.xact.filter.session.XMOMGuiReply.Status;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
-import com.gip.xyna.xfmg.xopctrl.usermanagement.XynaPlainSessionCredentials;
 
 
 
 public class InfoAction implements FilterAction {
+
+  private final XMOMGui xmomgui;
+
+  public InfoAction(XMOMGui xmomGui) {
+    this.xmomgui = xmomGui;
+  }
 
 
   public boolean match(URLPath url, Method method) {
@@ -46,14 +54,16 @@ public class InfoAction implements FilterAction {
   public FilterActionInstance act(URLPath url, HTTPTriggerConnection tc) throws XynaException {
     JsonFilterActionInstance jfai = new JsonFilterActionInstance();
 
-    XynaPlainSessionCredentials xpsc = AuthUtils.readCredentialsFromRequest(tc);
-    try {
-      AuthUtils.authenticate(xpsc);
-    } catch (RemoteException e) {
-      AuthUtils.replyError(tc, jfai, Status.unauthorized, e);
+    Map<String, String> map = AuthUtils.readCookies(tc);
+    String sessionIdKey = H5XdevFilter.STRICT_TRANSPORT_SECURITY.get() ? AuthUtils.COOKIE_FIELD_SESSION_ID_STS : AuthUtils.COOKIE_FIELD_SESSION_ID;
+    String sessionId = map.get(sessionIdKey);
+    SessionBasedData sbd = xmomgui.getSessionBasedData(sessionId);
+   
+    if(sbd == null) {
+      AuthUtils.replyError(tc, jfai, Status.unauthorized, new RuntimeException());
       return jfai;
     }
-    String sdj = AuthUtils.getSessionDetailsJson(xpsc.getSessionId(), xpsc.getToken());
+    String sdj = AuthUtils.getSessionDetailsJson(sbd.getSession().getId(), sbd.getSession().getToken());
 
     jfai.sendJson(tc, sdj);
     return jfai;

@@ -1372,14 +1372,15 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
      * erst löschen, dann fehler werfen, falls noch anderswo referenziert, damit mehrfache referenzen auf das gleiche storable innerhalb einer
      * hierarchie nicht beim "handleBackwardReferences" zu fehlern führt
      */
-
-    for (StorableStructureInformation structure : deletionOrder) {
-      if (pkMap.containsKey(structure.getTableName()) && pkMap.get(structure.getTableName()) != null) {
-        Set<Object> pks = pkMap.get(structure.getTableName());
-        for (Object value : pks) {
-          if (value != null) {
-            if (structure instanceof XMOMStorableStructureInformation) {
-              handleBackwardReferences(con, (XMOMStorableStructureInformation) structure, value, deleteParameter, pkMap, context);
+    if (deleteParameter.getBackwardReferenceHandling() != BackwardReferenceHandling.IGNORE) {
+      for (StorableStructureInformation structure : deletionOrder) {
+        if (pkMap.containsKey(structure.getTableName()) && pkMap.get(structure.getTableName()) != null) {
+          Set<Object> pks = pkMap.get(structure.getTableName());
+          for (Object value : pks) {
+            if (value != null) {
+              if (structure instanceof XMOMStorableStructureInformation) {
+                handleBackwardReferences(con, (XMOMStorableStructureInformation) structure, value, deleteParameter, pkMap, context);
+              }
             }
           }
         }

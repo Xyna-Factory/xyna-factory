@@ -26,6 +26,11 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.XynaFactory;
+import com.gip.xyna.utils.collections.SerializablePair;
+import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xmcp.xguisupport.messagebus.MessageBusManagementPortal;
+import com.gip.xyna.xmcp.xguisupport.messagebus.transfer.MessageInputParameter;
 import com.gip.xyna.xnwh.persistence.ODSConnection;
 import com.gip.xyna.xnwh.persistence.ODSConnectionType;
 import com.gip.xyna.xnwh.persistence.ODSImpl;
@@ -49,8 +54,11 @@ import xprc.xpce.Workspace;
  */
 public class PluginStorage {
 
+  private static final String product = "zeta";
+  private static final String context = "plugin";
+  
   private static Logger logger = CentralFactoryLogging.getLogger(PluginStorage.class);
-
+  private static final MessageBusManagementPortal messageBusManagementPortal = XynaFactory.getInstance().getXynaMultiChannelPortal().getMessageBusManagement();
 
   public void init() throws PersistenceLayerException {
     ODSImpl ods = ODSImpl.getInstance();
@@ -65,6 +73,7 @@ public class PluginStorage {
     } catch (PersistenceLayerException e) {
       throw new RuntimeException(e);
     }
+    publishMessageBusEvent("registration", storable.getId());
   }
 
 
@@ -97,6 +106,24 @@ public class PluginStorage {
       buildExecutor().execute(new UnregisterPlugin(storable));
     } catch (PersistenceLayerException e) {
       throw new RuntimeException(e);
+    }
+    publishMessageBusEvent("removal", storable.getId());
+  }
+
+
+  private void publishMessageBusEvent(String usecase, String plugin) {
+    List<SerializablePair<String, String>> payload = new ArrayList<>();
+    payload.add(new SerializablePair<String, String>(usecase, plugin));
+    MessageInputParameter para = new MessageInputParameter(product, context, usecase, "zeta", payload, false);
+    try {
+      Long id = messageBusManagementPortal.publish(para);
+      if (logger.isDebugEnabled()) {
+        logger.debug("published message bus event '" + id + "' for '" + usecase + "' of plugin '" + plugin + "'");
+      }
+    } catch (XynaException e) {
+      if (logger.isWarnEnabled()) {
+        logger.warn("could not publish plugin update! " + e);
+      }
     }
   }
 

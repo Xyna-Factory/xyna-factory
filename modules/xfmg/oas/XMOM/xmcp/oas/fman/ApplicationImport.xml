@@ -20,11 +20,36 @@
     <Input>
       <Data ID="9084" Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId9084"/>
       <Data ID="9633" Label="ApplicationParam" ReferenceName="Text" ReferencePath="base" VariableName="text9633"/>
+      <Data ID="49887" Label="Workspace Name" ReferenceName="Text" ReferencePath="base" VariableName="text49887"/>
     </Input>
     <Output/>
     <Throws>
-      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException49711"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException52126"/>
     </Throws>
+    <ServiceReference ID="209" Label="Store" ReferenceName="Store" ReferencePath="xnwh.persistence">
+      <Source RefID="208"/>
+      <Target RefID="208"/>
+    </ServiceReference>
+    <ServiceReference ID="39447" Label="Store" ReferenceName="Store" ReferencePath="xnwh.persistence">
+      <Source RefID="39446"/>
+      <Target RefID="39446"/>
+    </ServiceReference>
+    <ServiceReference ID="44692" Label="FileManagement" ReferenceName="FileManagement.FileManagement" ReferencePath="xfmg.xfctrl.filemgmt">
+      <Source RefID="44691"/>
+      <Target RefID="44691"/>
+    </ServiceReference>
+    <ServiceReference ID="38737" Label="Exception Service" ReferenceName="ExceptionService.ExceptionService" ReferencePath="core.exception">
+      <Source RefID="38736"/>
+      <Target RefID="38736"/>
+    </ServiceReference>
+    <ServiceReference ID="12544" Label="FileManagement" ReferenceName="FileManagement.FileManagement" ReferencePath="xfmg.xfctrl.filemgmt">
+      <Source RefID="12543"/>
+      <Target RefID="12543"/>
+    </ServiceReference>
+    <ServiceReference ID="49590" Label="Exception Service" ReferenceName="ExceptionService.ExceptionService" ReferencePath="core.exception">
+      <Source RefID="49589"/>
+      <Target RefID="49589"/>
+    </ServiceReference>
     <ServiceReference ID="39968" Label="Application Generation" ReferenceName="ApplicationGeneration.ApplicationGeneration" ReferencePath="xfmg.oas.generation">
       <Source RefID="39967"/>
       <Target RefID="39967"/>
@@ -32,30 +57,6 @@
     <ServiceReference ID="107" Label="FileManagement" ReferenceName="FileManagement.FileManagement" ReferencePath="xfmg.xfctrl.filemgmt">
       <Source RefID="106"/>
       <Target RefID="106"/>
-    </ServiceReference>
-    <ServiceReference ID="44692" Label="FileManagement" ReferenceName="FileManagement.FileManagement" ReferencePath="xfmg.xfctrl.filemgmt">
-      <Source RefID="44691"/>
-      <Target RefID="44691"/>
-    </ServiceReference>
-    <ServiceReference ID="209" Label="Store" ReferenceName="Store" ReferencePath="xnwh.persistence">
-      <Source RefID="208"/>
-      <Target RefID="208"/>
-    </ServiceReference>
-    <ServiceReference ID="38737" Label="Exception Service" ReferenceName="ExceptionService.ExceptionService" ReferencePath="core.exception">
-      <Source RefID="38736"/>
-      <Target RefID="38736"/>
-    </ServiceReference>
-    <ServiceReference ID="39447" Label="Store" ReferenceName="Store" ReferencePath="xnwh.persistence">
-      <Source RefID="39446"/>
-      <Target RefID="39446"/>
-    </ServiceReference>
-    <ServiceReference ID="49590" Label="Exception Service" ReferenceName="ExceptionService.ExceptionService" ReferencePath="core.exception">
-      <Source RefID="49589"/>
-      <Target RefID="49589"/>
-    </ServiceReference>
-    <ServiceReference ID="12544" Label="FileManagement" ReferenceName="FileManagement.FileManagement" ReferencePath="xfmg.xfctrl.filemgmt">
-      <Source RefID="12543"/>
-      <Target RefID="12543"/>
     </ServiceReference>
     <Mappings ID="53" Label="Mapping">
       <Output>
@@ -74,7 +75,11 @@
         <Data ID="9804" Label="ApplicationParam" ReferenceName="Text" ReferencePath="base" VariableName="text9804">
           <Source RefID="374"/>
         </Data>
-        <Source RefID="9633"/>
+        <Source RefID="9633">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
       </Input>
       <Case ID="10287" Label="" Premise="%0%.text==&quot;OAS Applications&quot;">
         <Mappings ID="10370" Label="Set Generate OAS Applications">
@@ -236,13 +241,43 @@
         </Assign>
       </Case>
     </Choice>
+    <Mappings ID="50248" Label="Mapping">
+      <Input>
+        <Data ID="50491" Label="Application Generation Parameter" ReferenceName="ApplicationGenerationParameter" ReferencePath="xfmg.oas.generation" VariableName="applicationGenerationParameter50491">
+          <Source RefID="50248"/>
+        </Data>
+        <Source RefID="12461"/>
+      </Input>
+      <Input>
+        <Data ID="51368" Label="Workspace Name" ReferenceName="Text" ReferencePath="base" VariableName="text51368">
+          <Source RefID="50248"/>
+        </Data>
+        <Source RefID="49887">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="50369" Label="Application Generation Parameter" ReferenceName="ApplicationGenerationParameter" ReferencePath="xfmg.oas.generation" VariableName="applicationGenerationParameter50369">
+          <Source RefID="50248"/>
+        </Data>
+        <Target RefID="50370"/>
+      </Output>
+      <Mapping>%2%~=%0%</Mapping>
+      <Mapping>%2%.workspaceName=%1%.text</Mapping>
+    </Mappings>
     <Function ID="39967" Label="Generate Application by managed File ID">
       <Source RefID="39968"/>
-      <Source RefID="12461"/>
+      <Source RefID="50370"/>
       <Source RefID="9084"/>
       <Target RefID="39968"/>
       <Invoke Operation="generateApplicationByManagedFileID" ServiceID="39968">
-        <Source RefID="12461"/>
+        <Source RefID="50370">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
         <Source RefID="9084"/>
       </Invoke>
       <Receive ServiceID="39968"/>
@@ -422,6 +457,9 @@
       </Data>
     </Data>
     <Data ID="48831" Label="File Info" ReferenceName="FileInfo" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="fileInfo48831"/>
+    <Data ID="50370" Label="Application Generation Parameter" ReferenceName="ApplicationGenerationParameter" ReferencePath="xfmg.oas.generation" VariableName="applicationGenerationParameter50370">
+      <Source RefID="50248"/>
+    </Data>
     <Exception ID="36984" Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception36984"/>
     <Exception ID="44696" Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception44696">
       <Source RefID="44693"/>

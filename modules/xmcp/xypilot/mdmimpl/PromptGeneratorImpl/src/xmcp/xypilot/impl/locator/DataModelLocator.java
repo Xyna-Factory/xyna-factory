@@ -18,6 +18,7 @@
 package xmcp.xypilot.impl.locator;
 
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xprc.XynaOrderServerExtension;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
@@ -33,6 +34,7 @@ import xmcp.xypilot.impl.gen.model.MappingModel;
 import xmcp.xypilot.impl.gen.model.DomVariableModel;
 import xmcp.xypilot.impl.gen.model.DomMethodModel;
 import xmcp.xypilot.impl.gen.util.DomUtils;
+import xmcp.xypilot.impl.gen.util.FilterCallbackInteractionUtils;
 
 public class DataModelLocator {
 
@@ -41,9 +43,10 @@ public class DataModelLocator {
         return new MappingModel(targetMapping);
     }
 
-    public static DomModel getDomModel(XMOMItemReference xmomItemReference) throws XynaException {
-        DOM dom = GenerationBaseObjectLocator.getDom(xmomItemReference);
-        return new DomModel(dom);
+
+    public static DomModel getDomModel(XMOMItemReference xmomItemReference, XynaOrderServerExtension order) throws XynaException {
+      DOM dom = FilterCallbackInteractionUtils.getDom(xmomItemReference, order);
+      return new DomModel(dom);
     }
 
     public static ExceptionModel getExceptionModel(XMOMItemReference xmomItemReference) throws XynaException {
@@ -51,10 +54,11 @@ public class DataModelLocator {
         return new ExceptionModel(exception);
     }
 
-    public static DomMethodModel getDomMethodModel(MemberReference memberReference) throws XynaException {
-        DOM dom = GenerationBaseObjectLocator.getDom(memberReference.getItem());
-        Operation targetMethod = dom.getOperationByName(memberReference.getMember());
-        return new DomMethodModel(dom, targetMethod);
+
+    public static DomMethodModel getDomMethodModel(MemberReference memberReference, XynaOrderServerExtension order) throws XynaException {
+      DOM dom = FilterCallbackInteractionUtils.getDom(memberReference.getItem(), order);
+      Operation targetMethod = dom.getOperationByName(memberReference.getMember());
+      return new DomMethodModel(dom, targetMethod);
     }
 
     public static ExceptionVariableModel getExceptionVariableModel(MemberReference memberReference) throws XynaException {
@@ -63,9 +67,11 @@ public class DataModelLocator {
         return new ExceptionVariableModel(exception, targetVariable);
     }
 
-    public static DomVariableModel getDomVariableModel(MemberReference memberReference) throws XynaException {
-        DOM dom = GenerationBaseObjectLocator.getDom(memberReference.getItem());
-        AVariable targetVariable = DomUtils.getVariableByName(dom, memberReference.getMember());
-        return new DomVariableModel(dom, targetVariable);
+
+    public static DomVariableModel getDomVariableModel(MemberReference memberReference, XynaOrderServerExtension order)
+        throws XynaException {
+      DOM dom = FilterCallbackInteractionUtils.getDom(memberReference.getItem(), order);
+      AVariable targetVariable = DomUtils.getVariableByName(dom, memberReference.getMember());
+      return new DomVariableModel(dom, targetVariable);
     }
 }
