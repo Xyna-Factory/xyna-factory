@@ -56,7 +56,7 @@ public class OrderTypeConverter {
       r.setMonitoringLevel(String.valueOf(in.getMonitoringLevel()));
     r.setEvaluatedMonitoringLevel(in.getMonitoringLevel());
     if(in.getOrdertypeName() != null) {    
-      r.setName(filter ? in.getOrdertypeName() : in.getOrdertypeName().substring(in.getOrdertypeName().lastIndexOf('.')) + 1);
+      r.setName(filter ? in.getOrdertypeName() : in.getOrdertypeName().substring((in.getOrdertypeName().lastIndexOf('.')) + 1));
     }
     // r.setName(in.getOrdertypeName());
     if(in.getPlanningDestinationValue() != null) 
@@ -116,7 +116,7 @@ public class OrderTypeConverter {
       return null;
     DestinationType r = new DestinationType();
     r.setName(in.getFullQualifiedName());
-    // r.setName(filter ? in.getFullQualifiedName() : in.getFullQualifiedName().substring(in.getFullQualifiedName().lastIndexOf('.')) + 1);
+    r.setName(filter ? in.getFullQualifiedName() : in.getFullQualifiedName().substring((in.getFullQualifiedName().lastIndexOf('.')) + 1));
     r.setType(in.getDestinationType());
     return r;
   }
