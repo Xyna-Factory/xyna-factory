@@ -115,7 +115,8 @@ public class OrderTypeConverter {
     if(in == null)
       return null;
     DestinationType r = new DestinationType();
-    r.setName(filter ? in.getFullQualifiedName() : in.getFullQualifiedName().substring(in.getFullQualifiedName().lastIndexOf('.')) + 1);
+    r.setName(in.getFullQualifiedName());
+    // r.setName(filter ? in.getFullQualifiedName() : in.getFullQualifiedName().substring(in.getFullQualifiedName().lastIndexOf('.')) + 1);
     r.setType(in.getDestinationType());
     return r;
   }
