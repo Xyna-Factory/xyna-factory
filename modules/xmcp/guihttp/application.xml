@@ -17,7 +17,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <!--                                               ################# Version auch in blackedition_lib.sh updaten ########### -->
-<Application applicationName="GuiHttp" comment="" factoryVersion="" versionName="1.1.384" xmlVersion="1.1">
+<Application applicationName="GuiHttp" comment="" factoryVersion="" versionName="1.1.385" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">GuiHTTPFilter</Description>
     <Description Lang="EN">GuiHTTPFilter</Description>
@@ -1422,6 +1422,10 @@
   	<!-- OrderTypeServices -->
   	<XMOMEntry implicitDependency="false">
       <FqName>xmcp.factorymanager.OrderTypeServices</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.ordertypes.OrderTypeTableFilter</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
   	<XMOMEntry implicitDependency="false">
