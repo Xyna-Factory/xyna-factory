@@ -32,5 +32,6 @@
       <Documentation>When a json Object is encountered, the decide() Method of this object will be called to determine the Object to be created. If no object decider is specified, an object of the static member type will be created.</Documentation>
     </Meta>
   </Data>
+  <Data Label="List Wrapper" VariableName="listWrapper" IsList="true" ReferenceName="ListWrapper" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" />
 </DataType>
 
