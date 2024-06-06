@@ -221,5 +221,27 @@
         <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl.parseGenericJSONList(document);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Write Generic JSON List" Name="writeGenericJSONList">
+      <Input>
+        <Data IsList="true" Label="JSON Value" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONValue5"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document2"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl.writeGenericJSONList(jSONValue5);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Write Generic JSON Object" Name="writeGenericJSONObject">
+      <Input>
+        <Data Label="JSON Object" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONObject4"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document3"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl.writeGenericJSONObject(jSONObject4);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>
