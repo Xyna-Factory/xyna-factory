@@ -772,7 +772,7 @@ public interface XynaProperty {
   public static final XynaPropertyString XML_HEADER_COMMENT = new XynaPropertyString("xyna.generation.xml.headercomment", "")
       .setDefaultDocumentation(DocumentationLanguage.EN, "This is put into application.xmls and XMOM files as header comment. Changes take effect immediately. Old files are not updated. Should not include <!-- and -->.");
 
-  public static final XynaPropertyBoolean BC_SINGLE_CHARACTER_WILDCARD = new XynaPropertyBoolean("xyna.xnwh.persistence.support_single_character_wildcard", false)
+  public static final XynaPropertyBoolean BC_SINGLE_CHARACTER_WILDCARD = new XynaPropertyBoolean("xyna.xnwh.persistence.support_single_character_wildcard", true)
       .setDefaultDocumentation(DocumentationLanguage.EN, "If set to true, \"_\" is replaced by the persistencelayer-specific single character wildcard.")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Wenn diese Property auf true steht, wird \"_\" duch den Persistenzlayer-spezifische Platzhalter für ein einzelnes Zeichen ersetzt.");
 
