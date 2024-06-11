@@ -22,24 +22,38 @@ package xmcp.xypilot.impl.gen.util;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.Collections;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.utils.misc.JsonBuilder;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
+import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.XMLSourceAbstraction;
 
 import xact.http.URLPath;
 import xact.http.enums.httpmethods.GET;
 import xact.http.enums.httpmethods.HTTPMethod;
+import xact.http.enums.httpmethods.POST;
 import xact.http.enums.httpmethods.PUT;
+import xmcp.processmodeller.datatypes.Area;
+import xmcp.processmodeller.datatypes.ContainerArea;
+import xmcp.processmodeller.datatypes.Item;
+import xmcp.processmodeller.datatypes.ModellingItem;
+import xmcp.processmodeller.datatypes.XMOMItem;
 import xmcp.processmodeller.datatypes.response.GetXMLResponse;
+import xmcp.processmodeller.datatypes.response.GetXMOMItemResponse;
 import xmcp.xypilot.XMOMItemReference;
 import xmcp.xypilot.impl.factory.XynaFactory;
 import xmcp.xypilot.impl.locator.UnsavedChangesXmlSource;
 import xmcp.xypilot.Documentation;
+import xmcp.xypilot.ExceptionMessage;
+import xmcp.xypilot.MemberVariable;
+import xmcp.xypilot.MethodDefinition;
+import xmcp.xypilot.Parameter;
 
 
 
@@ -50,32 +64,195 @@ public class FilterCallbackInteractionUtils {
   private static final String h5xdevfilterCallbackName = "H5XdevFilter";
   private static final HTTPMethod httpGet = new GET();
   private static final HTTPMethod httpPut = new PUT();
+  private static final HTTPMethod httpPost = new POST();
   private static final String getXmlUrlTemplate = "/runtimeContext/%s/xmom/%s/%s/%s/xml";
-  private static final String putObjDocTemplate = "/runtimeContext/%s/xmom/%s/%s/%s/objects/documentationArea/change";
+  private static final String getDatatypeResponseUrlTemplate = "/runtimeContext/%s/xmom/%s/%s/%s";
+  private static final String putChangeTemplate = "/runtimeContext/%s/xmom/%s/%s/%s/objects/%s/change";
+  private static final String putInsertTemplate = "/runtimeContext/%s/xmom/%s/%s/%s/objects/%s/insert";
 
-
-  public static DOM getDom(XMOMItemReference ref, XynaOrderServerExtension order) throws XynaException {
+  public static DOM getDatatypeDom(XMOMItemReference ref, XynaOrderServerExtension order) throws XynaException {
     Long revision = getRevision(ref);
-    URLPath url = createUrlPath(getXmlUrlTemplate, ref, "datatypes");
-    String xml = ((GetXMLResponse) order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpGet)).getCurrent();
-    XMLSourceAbstraction inputSource = new UnsavedChangesXmlSource(xml, ref.getFqName(), revision);
-    return DOM.getOrCreateInstance(ref.getFqName(), new GenerationBaseCache(), revision, inputSource);
+    XMLSourceAbstraction inputSource = getXml(ref, order, "datatypes");
+    DOM dom = DOM.getOrCreateInstance(ref.getFqName(), new GenerationBaseCache(), revision, inputSource);
+    dom.parse(false);
+    return dom;
+  }
+  
+  public static ExceptionGeneration getException(XMOMItemReference ref, XynaOrderServerExtension order) throws XynaException {
+    Long revision = getRevision(ref);
+    XMLSourceAbstraction inputSource = getXml(ref, order, "exceptions");
+    ExceptionGeneration exg = ExceptionGeneration.getOrCreateInstance(ref.getFqName(), new GenerationBaseCache(), revision, inputSource);
+    exg.parse(false);
+    return exg;
   }
 
+  private static XMLSourceAbstraction getXml(XMOMItemReference ref, XynaOrderServerExtension order, String type) throws XynaException {
+    Long revision = getRevision(ref);
+    URLPath url = createUrlPath(getXmlUrlTemplate, ref, type);
+    String xml = ((GetXMLResponse) order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpGet)).getCurrent();
+    return new UnsavedChangesXmlSource(xml, ref.getFqName(), revision);
+  }
+  
+  public static Item getDatatypeItemByAreaOrItemId(XMOMItemReference ref, XynaOrderServerExtension order, String id) throws XynaException {
+    XMOMItem parent = getXmomItem(ref, order, "datatypes");
+    return findId(parent, id);
+  }
+  
+  public static Item getExceptionItemByAreaOrItemId(XMOMItemReference ref, XynaOrderServerExtension order, String id) throws XynaException {
+    XMOMItem parent = getXmomItem(ref, order, "exceptions");
+    return findId(parent, id);
+  }
+  
+  private static XMOMItem getXmomItem(XMOMItemReference ref, XynaOrderServerExtension order, String type) throws XynaException {
+    URLPath url = createUrlPath(getDatatypeResponseUrlTemplate, ref, type);
+    return ((GetXMOMItemResponse) order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpGet)).getXmomItem();
+  }
+  
+  private static Item findId(Item item, String id) {
+    if (item.getId() != null && item.getId().equals(id)) {
+      return item;
+    }
+    if (item instanceof ModellingItem && ((ModellingItem)item).getAreas() != null) {
+      for (Area area: ((ModellingItem) item).getAreas()) {
+        Item ret = findId(item, area, id);
+        if (ret != null) {
+          return ret;
+        }
+      }
+    }
+    return null;
+  }
+  
+  private static Item findId(Item parent, Area area, String id) {
+    if (area.getId() != null && area.getId().equals(id)) {
+      return parent;
+    }
+    if (area instanceof ContainerArea && ((ContainerArea)area).getItems() != null) {
+      for (Item item: ((ContainerArea) area).getItems()) {
+        Item ret = findId(item, id);
+        if (ret != null) {
+          return ret;
+        }
+      }
+    }
+    return null;
+  }
 
   public static void updateDomDocu(Documentation docu, XynaOrderServerExtension order, XMOMItemReference ref) throws XynaException {
-    URLPath url = createUrlPath(putObjDocTemplate, ref, "datatypes");
-    String payload = " { \"text\": \"" + JsonUtils.escapeString(docu.getText()) + "\"}";
-    order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpPut, payload);
+    updateDocu(docu, order, ref, "datatypes", "documentationArea");
+  }
+  
+  public static void updateExceptionDocu(Documentation docu, XynaOrderServerExtension order, XMOMItemReference ref) throws XynaException {
+    updateDocu(docu, order, ref, "exceptions", "documentationArea");
+  }
+  
+  public static void updateDomVarDocu(Documentation docu, XynaOrderServerExtension order, XMOMItemReference ref, String objectId) throws XynaException {
+    updateDocu(docu, order, ref, "datatypes", objectId);
+  }
+  
+  public static void updateExceptionVarDocu(Documentation docu, XynaOrderServerExtension order, XMOMItemReference ref, String objectId) throws XynaException {
+    updateDocu(docu, order, ref, "exceptions", objectId);
+  }
+    
+  private static void updateDocu(Documentation docu, XynaOrderServerExtension order, XMOMItemReference ref, String type, String objectId) throws XynaException {
+    URLPath url = createUrlPath(putChangeTemplate, ref, type, objectId);
+    JsonBuilder payload = new JsonBuilder();
+    payload.startObject();
+    payload.addStringAttribute("text", JsonUtils.escapeString(docu.getText()));
+    payload.endObject();
+    order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpPut, payload.toString());
+  }
+  
+  public static void addDomVars(List<? extends MemberVariable> vars, XynaOrderServerExtension order, XMOMItemReference ref) throws XynaException {
+    addVars(vars, order, ref, "datatypes");
+  }
+  
+  public static void addExceptionVars(List<? extends MemberVariable> vars, XynaOrderServerExtension order, XMOMItemReference ref) throws XynaException {
+    addVars(vars, order, ref, "exceptions");
+  }
+  
+  private static void addVars(List<? extends MemberVariable> vars, XynaOrderServerExtension order, XMOMItemReference ref, String type) throws XynaException {
+    URLPath url = createUrlPath(putInsertTemplate, ref, type, "memberVarArea");
+    for (MemberVariable var: vars) {
+      JsonBuilder payload = new JsonBuilder();
+      payload.startObject();
+      payload.addIntegerAttribute("index", -1);
+      payload.addObjectAttribute("content");
+      payload.addStringAttribute("type", "memberVar");
+      payload.addStringAttribute("label", JsonUtils.escapeString(var.getName()));
+      payload.addStringAttribute("documentation", JsonUtils.escapeString(var.getDocumentation()));
+      payload.addStringAttribute("primitiveType", JsonUtils.escapeString(var.getPrimitiveType()));
+      payload.addBooleanAttribute("isList", var.getIsList());
+      payload.endObject();
+      payload.endObject();
+      order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpPost, payload.toString());
+    }
+  }
+  
+  public static void addDomMethods(List<? extends MethodDefinition> methods, XynaOrderServerExtension order, XMOMItemReference ref) throws XynaException {
+    URLPath url = createUrlPath(putInsertTemplate, ref, "datatypes", "memberMethodsArea");
+    for (MethodDefinition method: methods) {
+      JsonBuilder payload = new JsonBuilder();
+      payload.startObject();
+      payload.addIntegerAttribute("index", -1);
+      payload.addObjectAttribute("content");
+      payload.addStringAttribute("type", "memberMethod");
+      payload.addStringAttribute("label", JsonUtils.escapeString(method.getName()));
+      payload.addStringAttribute("documentation", JsonUtils.escapeString(method.getDocumentation()));
+      payload.addListAttribute("input");
+      for (int index = 0; index < method.getInputParams().size(); index++) {
+        Parameter para = method.getInputParams().get(index);
+        payload.startObject();
+        payload.addStringAttribute("label", para.getName());
+        payload.addStringAttribute("fqn", para.getType());
+        payload.addBooleanAttribute("isList", para.getIsList());
+        payload.endObject();
+      }
+      payload.endList();
+      payload.addListAttribute("output");
+      for (Parameter para: method.getOutputParams()) {
+        payload.startObject();
+        payload.addStringAttribute("fqn", para.getType());
+        payload.addBooleanAttribute("isList", para.getIsList());
+        payload.endObject();
+      }
+      payload.endList();
+      payload.addListAttribute("throws");
+      for (Parameter para: method.getThrowParams()) {
+        payload.startObject();
+        payload.addStringAttribute("fqn", para.getType());
+        payload.endObject();
+      }
+      payload.endList();
+      payload.addStringAttribute("implementation", method.getOutputParams().size() > 0 ? "return null" : "");
+      payload.endObject();
+      payload.endObject();
+      order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpPost, payload.toString());
+    }
+  }
+  
+  public static void updateExceptionMessages(List<ExceptionMessage> exceptionMessages, XynaOrderServerExtension order, XMOMItemReference ref) throws XynaException {
+    URLPath url = createUrlPath(putChangeTemplate, ref, "exceptions", "exceptionMessageArea");
+    for (ExceptionMessage message: exceptionMessages) {
+      JsonBuilder payload = new JsonBuilder();
+      payload.startObject();
+      payload.addStringAttribute("messageLanguage", JsonUtils.escapeString(message.getLanguage()));
+      payload.addStringAttribute("messageText", JsonUtils.escapeString(message.getMessage()));
+      payload.endObject();
+      order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpPut, payload.toString());
+    }
   }
 
-
   private static URLPath createUrlPath(String template, XMOMItemReference ref, String type) {
+    return createUrlPath(template, ref, type, "");
+  }
+  
+  private static URLPath createUrlPath(String template, XMOMItemReference ref, String type, String objectid) {
     String fqn = ref.getFqName();
     String path = fqn.substring(0, fqn.lastIndexOf("."));
     String name = fqn.substring(fqn.lastIndexOf(".") + 1);
     String ws = URLEncoder.encode(ref.getWorkspace(), Charset.defaultCharset());
-    URLPath url = new URLPath.Builder().path(String.format(template, ws, type, path, name)).query(Collections.emptyList()).instance();
+    URLPath url = new URLPath.Builder().path(String.format(template, ws, type, path, name, objectid)).query(Collections.emptyList()).instance();
     return url;
   }
 

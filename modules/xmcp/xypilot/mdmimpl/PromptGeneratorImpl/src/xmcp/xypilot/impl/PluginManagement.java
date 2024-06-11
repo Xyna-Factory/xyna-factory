@@ -44,6 +44,14 @@ public class PluginManagement {
     Map<String, GenerationButton> result = new HashMap<>();
     Generation generation = new Generation();
     createGenerationButton(result, "DTDocu", "modeller/datatype/documentation", generation::genDatatypeDocu);
+    createGenerationButton(result, "DTMem", "modeller/datatype/members", generation::genDatatypeVariables);
+    createGenerationButton(result, "DTMemDocu", "modeller/datatype/members/documentation", generation::genDatatypeVarDocu);
+    createGenerationButton(result, "DTMeth", "modeller/datatype/methods", generation::genMethods);
+    createGenerationButton(result, "DTMethDocu", "modeller/datatype/methods/documentation", generation::genDatatypeMethodDocu);
+    createGenerationButton(result, "ExDocu", "modeller/exception/documentation", generation::genExceptionDocu);
+    createGenerationButton(result, "ExMem", "modeller/exception/members", generation::genExceptionVariables);
+    createGenerationButton(result, "ExMemDocu", "modeller/exception/members/documentation", generation::genExceptionVarDocu);
+    createGenerationButton(result, "ExMess", "modeller/exception/message", generation::genExceptionMessages);
     return result;
   }
 
