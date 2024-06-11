@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 package xfmg.xfctrl.datamode.json.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,8 +31,10 @@ import xfmg.xfctrl.datamodel.json.impl.InvalidJSONException;
 import xfmg.xfctrl.datamodel.json.impl.JSONDatamodelServicesServiceOperationImpl;
 import xfmg.xfctrl.datamodel.json.impl.JSONParser;
 import xfmg.xfctrl.datamodel.json.impl.JSONTokenizer;
+import xfmg.xfctrl.datamodel.json.impl.JSONDatamodelServicesServiceOperationImpl.JsonOptions;
 import xfmg.xfctrl.datamodel.json.impl.JSONDatamodelServicesServiceOperationImpl.OASScope;
 import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONObjectWriter;
+import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONVALTYPES;
 import xfmg.xfctrl.datamodel.json.JSONKeyValue;
 import xfmg.xfctrl.datamodel.json.JSONObject;
 import xfmg.xfctrl.datamodel.json.JSONValue;
@@ -67,7 +70,7 @@ public class JSONTestWithOptions extends TestCase {
       Map<String, String> trans = new HashMap<String, String>();
       trans.put("roles", "name");
       trans.put("roles[].roles", "name");
-      impl.fillXynaObjectRecursivly(user, job, "", trans, Collections.<String, String>emptyMap(), false, null);
+      impl.fillXynaObjectRecursivly(user, job, "", new JsonOptions(trans, Collections.emptyMap(), Collections.emptySet(), false), null);
       ObjectStringRepresentation.createStringRepOfObject(sb, job);
       sb.append("\n=========================================\n\n");
       ObjectStringRepresentation.createStringRepOfObject(sb, user);
@@ -114,7 +117,7 @@ public class JSONTestWithOptions extends TestCase {
       trans.put("roles[].roles", "name");
       Map<String, String> subs = new HashMap<String, String>();
       subs.put("tenant", "roles[].name");
-      impl.fillXynaObjectRecursivly(user, job, "", trans, subs, false, null);
+      impl.fillXynaObjectRecursivly(user, job, "", new JsonOptions(trans, subs, Collections.emptySet(), false), null);
       ObjectStringRepresentation.createStringRepOfObject(sb, job);
       sb.append("\n=========================================\n\n");
       ObjectStringRepresentation.createStringRepOfObject(sb, user);
@@ -174,14 +177,14 @@ public class JSONTestWithOptions extends TestCase {
       StringBuilder sb = new StringBuilder();
       JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
       ContainerXO container = new ContainerXO();
-      impl.fillXynaObjectRecursivly(container, job, "", Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap(), false, decider);
+      impl.fillXynaObjectRecursivly(container, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), Collections.emptySet(), false), decider);
       ObjectStringRepresentation.createStringRepOfObject(sb, job);
       sb.append("\n=========================================\n\n");
       ObjectStringRepresentation.createStringRepOfObject(sb, container);
       System.out.println(sb);
       assertTrue(container.member instanceof RoleXO);
       container = new ContainerXO();
-      impl.fillXynaObjectRecursivly(container, job, "", Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap(), false, null);
+      impl.fillXynaObjectRecursivly(container, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), Collections.emptySet(), false), null);
       assertTrue(container.member instanceof BaseTestXO);
     } catch (InvalidJSONException e) {
       fail();
@@ -212,18 +215,157 @@ public class JSONTestWithOptions extends TestCase {
       StringBuilder sb = new StringBuilder();
       JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
       ListContainerXO container = new ListContainerXO();
-      impl.fillXynaObjectRecursivly(container, job, "", Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap(), false, decider);
+      impl.fillXynaObjectRecursivly(container, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), Collections.emptySet(), false), decider);
       ObjectStringRepresentation.createStringRepOfObject(sb, job);
       sb.append("\n=========================================\n\n");
       ObjectStringRepresentation.createStringRepOfObject(sb, container);
       System.out.println(sb);
       assertTrue(container.member.get(0) instanceof RoleXO);
       container = new ListContainerXO();
-      impl.fillXynaObjectRecursivly(container, job, "", Collections.<String, String>emptyMap(), Collections.<String, String>emptyMap(), false, null);
+      impl.fillXynaObjectRecursivly(container, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), Collections.emptySet(), false), null);
       assertTrue(container.member.get(0) instanceof BaseTestXO);
     } catch (InvalidJSONException e) {
       fail();
     }
+  }
+  
+  
+  public void testWithOptions5_listwrapperwrapper() {
+    JSONTokenizer jt = new JSONTokenizer();
+    String jsonString = 
+"["+
+"  ["+ 
+"    {"+
+"       \"name\": \"test\""+
+"    }"+
+"  ]"+
+"]";
+    
+    List<JSONToken> tokens = jt.tokenize(jsonString);
+    JSONParser jp = new JSONParser(jsonString);
+    List<JSONValue> job = new ArrayList<JSONValue>();
+    XynaObjectDecider decider = null;
+    jp.fillArray(tokens, 0, job);
+    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
+    ListWrapperWrapper xo = new ListWrapperWrapper();
+    Set<String> wrappers = new HashSet<String>();
+    wrappers.add(ListWrapperWrapper.class.getCanonicalName());
+    wrappers.add(ListWrapperXO.class.getCanonicalName());
+    impl.fillXynaObjectListWrapper(xo, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), wrappers, false), decider);
+    assertTrue(xo.lists.size() == 1);
+    assertTrue(xo.lists.get(0).roles.size() == 1);
+    assertTrue(xo.lists.get(0).roles.get(0).name.equals("test"));
+  }
+  
+  public void testWithOptions6_listwrapper() {
+    JSONTokenizer jt = new JSONTokenizer();
+    String jsonString = 
+"["+
+"  ["+ 
+"    {"+
+"       \"name\": \"test\""+
+"    }"+
+"  ]"+
+"]";
+    
+    List<JSONToken> tokens = jt.tokenize(jsonString);
+    JSONParser jp = new JSONParser(jsonString);
+    List<JSONValue> job = new ArrayList<JSONValue>();
+    XynaObjectDecider decider = null;
+    jp.fillArray(tokens, 0, job);
+    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
+    List<ListWrapperXO> xo;
+    Set<String> wrappers = new HashSet<String>();
+    wrappers.add(ListWrapperXO.class.getCanonicalName());
+    xo = impl.createList(ListWrapperXO.class, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), wrappers, false), decider);
+    assertTrue(xo.size() == 1);
+    assertTrue(xo.get(0).roles.size() == 1);
+    assertTrue(xo.get(0).roles.get(0).name.equals("test"));
+  }
+  
+  public void testWithOptions7_innerListWrapper() {
+    JSONTokenizer jt = new JSONTokenizer();
+    String jsonString = 
+"{"+        
+"  \"list2d\": ["+
+"    ["+ 
+"      {"+
+"         \"name\": \"test\""+
+"      }"+
+"    ]"+
+"  ]"+
+"}";
+    
+    List<JSONToken> tokens = jt.tokenize(jsonString);
+    JSONParser jp = new JSONParser(jsonString);
+    JSONObject job = new JSONObject();
+    XynaObjectDecider decider = null;
+    List2dContainerXO xo = new List2dContainerXO();
+    jp.fillObject(tokens, 0, job);
+    Set<String> wrappers = new HashSet<String>();
+    wrappers.add(ListWrapperXO.class.getCanonicalName());
+    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
+    impl.fillXynaObjectRecursivly(xo, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), wrappers, false), decider);
+
+    assertTrue(xo.list2d.size() == 1);
+    assertTrue(xo.list2d.get(0).roles.size() == 1);
+    assertTrue(xo.list2d.get(0).roles.get(0).name.equals("test"));
+  }
+  
+
+  public void testWithOptions8_innerListWrapperWrapper() {
+    JSONTokenizer jt = new JSONTokenizer();
+    String jsonString = 
+"{"+        
+"  \"list2d\": ["+
+"    ["+ 
+"      {"+
+"         \"name\": \"test\""+
+"      }"+
+"    ]"+
+"  ]"+
+"}";
+    
+    List<JSONToken> tokens = jt.tokenize(jsonString);
+    JSONParser jp = new JSONParser(jsonString);
+    JSONObject job = new JSONObject();
+    XynaObjectDecider decider = null;
+    List2dWrapper2XO xo = new List2dWrapper2XO();
+    jp.fillObject(tokens, 0, job);
+    Set<String> wrappers = new HashSet<String>();
+    wrappers.add(ListWrapperWrapper.class.getCanonicalName());
+    wrappers.add(ListWrapperXO.class.getCanonicalName());
+    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
+    impl.fillXynaObjectRecursivly(xo, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), wrappers, false), decider);
+
+    assertTrue(xo.list2d.lists.size() == 1);
+    assertTrue(xo.list2d.lists.get(0).roles.size() == 1);
+    assertTrue(xo.list2d.lists.get(0).roles.get(0).name.equals("test"));
+  }
+  
+  public void testWithOptions9_primitiveList() {
+    JSONTokenizer jt = new JSONTokenizer();
+    String jsonString =       
+"["+
+"  ["+ 
+"       \"test\""+
+"  ]"+
+"]";
+    
+    List<JSONToken> tokens = jt.tokenize(jsonString);
+    JSONParser jp = new JSONParser(jsonString);
+    List<JSONValue> job = new ArrayList<JSONValue>();
+    jp.fillArray(tokens, 0, job);
+    XynaObjectDecider decider = null;
+    Set<String> wrappers = new HashSet<String>();
+    wrappers.add(PrimitiveListWrapperXO.class.getCanonicalName());
+    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
+    List<PrimitiveListWrapperXO> list = null;
+    list = impl.createList(PrimitiveListWrapperXO.class, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), wrappers, false), decider);
+    
+    assertTrue(list.size() == 1);
+    assertTrue(list.get(0).values.size() == 1);
+    assertTrue(list.get(0).values.get(0).equals("test"));
   }
   
   
@@ -247,7 +389,8 @@ public class JSONTestWithOptions extends TestCase {
     Map<String, String> trans = new HashMap<String, String>();
     trans.put("roles", "name");
     trans.put("roles[].roles", "name");
-    JSONObject obj = impl.createFromXynaObjectRecursivly(user, "", trans, Collections.<String, String>emptyMap(), false, OASScope.none);
+    JsonOptions options = new JsonOptions(trans, Collections.emptyMap(), Collections.emptySet(), false);
+    JSONObject obj = impl.createFromXynaObjectRecursivly(user, "", options, OASScope.none);
     System.out.println(JSONObjectWriter.toJSON("", obj));
   }
   
@@ -273,7 +416,8 @@ public class JSONTestWithOptions extends TestCase {
     trans.put("roles[].roles", "name");
     Map<String, String> subs = new HashMap<String, String>();
     subs.put("roles[].name", "tenant");
-    JSONObject obj = impl.createFromXynaObjectRecursivly(user, "", trans, subs, false, OASScope.none);
+    JsonOptions options = new JsonOptions(trans, subs, Collections.emptySet(), false);
+    JSONObject obj = impl.createFromXynaObjectRecursivly(user, "", options, OASScope.none);
     System.out.println(JSONObjectWriter.toJSON("", obj));
   }
   
@@ -283,7 +427,8 @@ public class JSONTestWithOptions extends TestCase {
     JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
     Map<String, String> trans = new HashMap<String, String>();
     Map<String, String> subs = new HashMap<String, String>();
-    JSONObject obj = impl.createFromXynaObjectRecursivly(role1, "", trans, subs, true, OASScope.none);
+    JsonOptions options = new JsonOptions(trans, subs, Collections.emptySet(), true);
+    JSONObject obj = impl.createFromXynaObjectRecursivly(role1, "", options, OASScope.none);
     //can't use getMember(), because implementation is not set in mdm.jars created outside of a running factory
     JSONValue readName = obj.getMembers().stream().filter(x -> "SomeName".equals(x.getKey())).map(x -> x.getValue()).findFirst().orElse(null);
     assertTrue(readName != null);
@@ -297,13 +442,156 @@ public class JSONTestWithOptions extends TestCase {
     Map<String, String> trans = new HashMap<String, String>();
     Map<String, String> subs = new HashMap<String, String>();
     subs.put("name", "someOtherName");
-    JSONObject obj = impl.createFromXynaObjectRecursivly(role1, "", trans, subs, true, OASScope.none);
+    JsonOptions options = new JsonOptions(trans, subs, Collections.emptySet(), true);
+    JSONObject obj = impl.createFromXynaObjectRecursivly(role1, "", options, OASScope.none);
     //can't use getMember(), because implementation is not set in mdm.jars created outside of a running factory
     JSONValue readName = obj.getMembers().stream().filter(x -> "someOtherName".equals(x.getKey())).map(x -> x.getValue()).findFirst().orElse(null);
     assertTrue(readName != null);
     assertTrue(role1.name.equals(readName.getStringOrNumberValue()));
   }
   
+  public void testWriteWithOptions5ListWrapper() {
+    ListWrapperXO wrapper = new ListWrapperXO();
+    wrapper.roles = Arrays.asList(new RoleXO[] { new RoleXO("test") });
+    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
+    Map<String, String> trans = new HashMap<String, String>();
+    Map<String, String> subs = new HashMap<String, String>();
+    Set<String> wrappers = new HashSet<String>();
+    wrappers.add(ListWrapperXO.class.getCanonicalName());
+    JsonOptions options = new JsonOptions(trans, subs, wrappers, false);
+    JSONValue value = impl.createValFromXynaObjectListRecurisvely(Arrays.asList(wrapper), "", options, OASScope.none);
+    assertTrue(value.getType().equals(JSONVALTYPES.ARRAY));
+    assertTrue(value.getArrayValue().size() == 1);
+    assertTrue(value.getArrayValue().get(0).getType().equals(JSONVALTYPES.ARRAY));
+    assertTrue(value.getArrayValue().get(0).getArrayValue().get(0).getType().equals(JSONVALTYPES.OBJECT));
+    JSONValue val = getValue(value.getArrayValue().get(0).getArrayValue().get(0).getObjectValue(), "name");
+    assertTrue(val.getStringOrNumberValue().equals("test"));    
+  }
+  
+  public void testWriteWithOptions6ListWrapperWrapper() {
+    ListWrapperWrapper wrapper = new ListWrapperWrapper();
+    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
+    wrapper.lists = Arrays.asList(new ListWrapperXO());
+    wrapper.lists.get(0).roles = Arrays.asList(new RoleXO("test"));
+    Map<String, String> trans = new HashMap<String, String>();
+    Map<String, String> subs = new HashMap<String, String>();
+    Set<String> wrappers = new HashSet<String>();
+    wrappers.add(ListWrapperWrapper.class.getCanonicalName());
+    wrappers.add(ListWrapperXO.class.getCanonicalName());
+    JsonOptions options = new JsonOptions(trans, subs, wrappers, false);
+    JSONValue value = impl.createValFromXynaObjectRecursively(wrapper, "", options, OASScope.none);
+    assertTrue(value.getType().equals(JSONVALTYPES.ARRAY));
+    assertTrue(value.getArrayValue().size() == 1);
+    assertTrue(value.getArrayValue().get(0).getType().equals(JSONVALTYPES.ARRAY));
+    assertTrue(value.getArrayValue().get(0).getArrayValue().get(0).getType().equals(JSONVALTYPES.OBJECT));
+    JSONValue val = getValue(value.getArrayValue().get(0).getArrayValue().get(0).getObjectValue(), "name");
+    assertTrue(val.getStringOrNumberValue().equals("test"));  
+  }
+  
+  public void testWriteWIthOptions7PrimitiveListWrapper() {
+    PrimitiveListWrapperXO primListWrapper = new PrimitiveListWrapperXO();
+    primListWrapper.values = Arrays.asList("test");
+    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
+    Map<String, String> trans = new HashMap<String, String>();
+    Map<String, String> subs = new HashMap<String, String>();
+    Set<String> wrappers = new HashSet<String>();
+    wrappers.add(PrimitiveListWrapperXO.class.getCanonicalName());
+    JsonOptions options = new JsonOptions(trans, subs, wrappers, false);
+    JSONValue value = impl.createValFromXynaObjectListRecurisvely(Arrays.asList(primListWrapper), "", options, OASScope.none);
+    assertTrue(value.getType().equals(JSONVALTYPES.ARRAY));
+    assertTrue(value.getArrayValue().size() == 1);
+    assertTrue(value.getArrayValue().get(0).getType().equals(JSONVALTYPES.ARRAY));
+    assertTrue(value.getArrayValue().get(0).getArrayValue().size() == 1);
+    assertTrue(value.getArrayValue().get(0).getArrayValue().get(0).getStringOrNumberValue().equals("test"));
+  }
+  
+  private JSONValue getValue(JSONObject obj, String name) {
+    return obj.getMembers().stream().filter(x -> name.equals(x.getKey())).map(x -> x.getValue()).findFirst().orElse(null);
+  }
+  
+  public static class ListWrapperWrapper extends BaseTestXO {
+    private static final long serialVersionUID = 1L;
+    private List<ListWrapperXO> lists;
+    
+    public Set<String> getVariableNames() {
+      Set<String> set = new HashSet<String>();
+      set.add("lists");
+      return set;
+    }
+    
+    public Object get(String path) throws InvalidObjectPathException {
+      if (path.equals("lists")) {
+        return lists;
+      } else {
+        throw new InvalidObjectPathException(path);
+      }
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void set(String path, Object value) throws XDEV_PARAMETER_NAME_NOT_FOUND {
+      if (path.equals("lists")) {
+        lists = (List<ListWrapperXO>) value;
+      } else {
+        throw new XDEV_PARAMETER_NAME_NOT_FOUND(path);
+      }
+    }
+  }
+  
+  public static class ListWrapperXO extends BaseTestXO {
+    private static final long serialVersionUID = 1L;
+    private List<RoleXO> roles;
+    
+    public Set<String> getVariableNames() {
+      Set<String> set = new HashSet<String>();
+      set.add("roles");
+      return set;
+    }
+    
+    public Object get(String path) throws InvalidObjectPathException {
+      if (path.equals("roles")) {
+        return roles;
+      } else {
+        throw new InvalidObjectPathException(path);
+      }
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void set(String path, Object value) throws XDEV_PARAMETER_NAME_NOT_FOUND {
+      if (path.equals("roles")) {
+        roles = (List<RoleXO>) value;
+      } else {
+        throw new XDEV_PARAMETER_NAME_NOT_FOUND(path);
+      }
+    }
+  }
+  
+  public static class PrimitiveListWrapperXO extends BaseTestXO {
+    private static final long serialVersionUID = 1L;
+    private List<String> values;
+    
+    public Set<String> getVariableNames() {
+      Set<String> set = new HashSet<String>();
+      set.add("values");
+      return set;
+    }
+    
+    public Object get(String path) throws InvalidObjectPathException {
+      if (path.equals("values")) {
+        return values;
+      } else {
+        throw new InvalidObjectPathException(path);
+      }
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void set(String path, Object value) throws XDEV_PARAMETER_NAME_NOT_FOUND {
+      if (path.equals("values")) {
+        values = (List<String>) value;
+      } else {
+        throw new XDEV_PARAMETER_NAME_NOT_FOUND(path);
+      }
+    }
+  }
   
   public static class UserXO extends BaseTestXO {
 
@@ -396,6 +684,11 @@ public class JSONTestWithOptions extends TestCase {
     @LabelAnnotation(label="SomeName")
     private String name;
     
+    public RoleXO() { }
+    public RoleXO(String name) {
+      this.name = name;
+    }
+    
     public Set<String> getVariableNames() {
       Set<String> set = new HashSet<String>();
       set.add("name");
@@ -483,6 +776,61 @@ public class JSONTestWithOptions extends TestCase {
     public void set(String path, Object value) throws XDEV_PARAMETER_NAME_NOT_FOUND {
       if (path.equals("member")) {
         member = (List<BaseTestXO>) value;
+      } else {
+        throw new XDEV_PARAMETER_NAME_NOT_FOUND(path);
+      }
+    }
+  }
+  
+  public static class List2dContainerXO extends BaseTestXO {
+    private static final long serialVersionUID = 1L;
+    private List<ListWrapperXO> list2d;
+    
+    public Set<String> getVariableNames() {
+      Set<String> set = new HashSet<String>();
+      set.add("list2d");
+      return set;
+    }
+
+    public Object get(String path) throws InvalidObjectPathException {
+      if (path.equals("list2d")) {
+        return list2d;
+      } else {
+        throw new InvalidObjectPathException(path);
+      }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void set(String path, Object value) throws XDEV_PARAMETER_NAME_NOT_FOUND {
+      if (path.equals("list2d")) {
+        list2d = (List<ListWrapperXO>) value;
+      } else {
+        throw new XDEV_PARAMETER_NAME_NOT_FOUND(path);
+      }
+    }
+  }
+  
+  public static class List2dWrapper2XO extends BaseTestXO {
+    private static final long serialVersionUID = 1L;
+    private ListWrapperWrapper list2d;
+    
+    public Set<String> getVariableNames() {
+      Set<String> set = new HashSet<String>();
+      set.add("list2d");
+      return set;
+    }
+
+    public Object get(String path) throws InvalidObjectPathException {
+      if (path.equals("list2d")) {
+        return list2d;
+      } else {
+        throw new InvalidObjectPathException(path);
+      }
+    }
+
+    public void set(String path, Object value) throws XDEV_PARAMETER_NAME_NOT_FOUND {
+      if (path.equals("list2d")) {
+        list2d = (ListWrapperWrapper) value;
       } else {
         throw new XDEV_PARAMETER_NAME_NOT_FOUND(path);
       }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Version="1.8" Name="ExceptionStore">
-  <ExceptionType Code="OAS-00102" TypeName="ProviderProcessingHookException" TypePath="xmcp.oas.exception" Label="Provider Processing Hook Exception" IsAbstract="false" BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception">
-    <Data Label="Error Response" VariableName="errorResponse" ReferenceName="ResponseParameter" ReferencePath="xmcp.oas.datatype.provider"/>
-    <MessageText Language="DE">Provider Processing Hook Exception</MessageText>
-    <MessageText Language="EN">Provider Processing Hook Exception</MessageText>
-  </ExceptionType>
-</ExceptionStore>
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Order Type Table Filter" TypeName="OrderTypeTableFilter" TypePath="xmcp.factorymanager.ordertypes" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Show path" VariableName="showPath">
+    <Meta>
+      <Type>Boolean</Type>
+    </Meta>
+  </Data>
+</DataType>
+
