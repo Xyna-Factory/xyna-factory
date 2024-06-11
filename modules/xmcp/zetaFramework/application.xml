@@ -212,11 +212,19 @@
         <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.plugin.PluginPath</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
         <FqName>xmcp.forms.plugin.PluginManagement</FqName>
         <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
         <FqName>xmcp.forms.plugin.ListPlugins</FqName>
+        <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.plugin.FilterPluginsByPaths</FqName>
         <Type>WORKFLOW</Type>
     </XMOMEntry>
   </XMOMEntries>
