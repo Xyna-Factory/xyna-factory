@@ -27,6 +27,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.StepMapping;
 
 import xmcp.processmodeller.datatypes.Item;
 import xmcp.processmodeller.datatypes.Variable;
+import xmcp.processmodeller.datatypes.datatypemodeller.MemberVariable;
 import xmcp.processmodeller.datatypes.datatypemodeller.Method;
 import xmcp.xypilot.MemberReference;
 import xmcp.xypilot.XMOMItemReference;
@@ -69,20 +70,20 @@ public class DataModelLocator {
     public static DomVariableModel getDomVariableModel(XMOMItemReference xmomItemReference, XynaOrderServerExtension order, String id) throws XynaException {
       DOM dom = FilterCallbackInteractionUtils.getDatatypeDom(xmomItemReference, order);
       Item item = FilterCallbackInteractionUtils.getDatatypeItemByAreaOrItemId(xmomItemReference, order, id);
-      if (item == null || !(item instanceof Variable)) {
+      if (item == null || !(item instanceof MemberVariable)) {
         throw new XynaException("Variable not found!");
       }
-      AVariable targetVariable = DomUtils.getVariableByName(dom, ((Variable) item).getName());
+      AVariable targetVariable = DomUtils.getVariableByName(dom, ((MemberVariable) item).getName());
       return new DomVariableModel(dom, targetVariable);
     }
 
     public static ExceptionVariableModel getExceptionVariableModel(XMOMItemReference xmomItemReference, XynaOrderServerExtension order, String id) throws XynaException {
         ExceptionGeneration exception = FilterCallbackInteractionUtils.getException(xmomItemReference, order);
         Item item = FilterCallbackInteractionUtils.getExceptionItemByAreaOrItemId(xmomItemReference, order, id);
-        if (item == null || !(item instanceof Variable)) {
+        if (item == null || !(item instanceof MemberVariable)) {
           throw new XynaException("Variable not found!");
         }
-        AVariable targetVariable = DomUtils.getVariableByName(exception, ((Variable) item).getName());
+        AVariable targetVariable = DomUtils.getVariableByName(exception, ((MemberVariable) item).getName());
         return new ExceptionVariableModel(exception, targetVariable);
     }
 }

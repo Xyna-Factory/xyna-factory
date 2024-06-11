@@ -37,6 +37,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.XMLSourceAbstractio
 import xact.http.URLPath;
 import xact.http.enums.httpmethods.GET;
 import xact.http.enums.httpmethods.HTTPMethod;
+import xact.http.enums.httpmethods.POST;
 import xact.http.enums.httpmethods.PUT;
 import xmcp.processmodeller.datatypes.Area;
 import xmcp.processmodeller.datatypes.ContainerArea;
@@ -63,6 +64,7 @@ public class FilterCallbackInteractionUtils {
   private static final String h5xdevfilterCallbackName = "H5XdevFilter";
   private static final HTTPMethod httpGet = new GET();
   private static final HTTPMethod httpPut = new PUT();
+  private static final HTTPMethod httpPost = new POST();
   private static final String getXmlUrlTemplate = "/runtimeContext/%s/xmom/%s/%s/%s/xml";
   private static final String getDatatypeResponseUrlTemplate = "/runtimeContext/%s/xmom/%s/%s/%s";
   private static final String putChangeTemplate = "/runtimeContext/%s/xmom/%s/%s/%s/objects/%s/change";
@@ -71,13 +73,17 @@ public class FilterCallbackInteractionUtils {
   public static DOM getDatatypeDom(XMOMItemReference ref, XynaOrderServerExtension order) throws XynaException {
     Long revision = getRevision(ref);
     XMLSourceAbstraction inputSource = getXml(ref, order, "datatypes");
-    return DOM.getOrCreateInstance(ref.getFqName(), new GenerationBaseCache(), revision, inputSource);
+    DOM dom = DOM.getOrCreateInstance(ref.getFqName(), new GenerationBaseCache(), revision, inputSource);
+    dom.parse(false);
+    return dom;
   }
   
   public static ExceptionGeneration getException(XMOMItemReference ref, XynaOrderServerExtension order) throws XynaException {
     Long revision = getRevision(ref);
     XMLSourceAbstraction inputSource = getXml(ref, order, "exceptions");
-    return ExceptionGeneration.getOrCreateInstance(ref.getFqName(), new GenerationBaseCache(), revision, inputSource);
+    ExceptionGeneration exg = ExceptionGeneration.getOrCreateInstance(ref.getFqName(), new GenerationBaseCache(), revision, inputSource);
+    exg.parse(false);
+    return exg;
   }
 
   private static XMLSourceAbstraction getXml(XMOMItemReference ref, XynaOrderServerExtension order, String type) throws XynaException {
@@ -103,10 +109,10 @@ public class FilterCallbackInteractionUtils {
   }
   
   private static Item findId(Item item, String id) {
-    if (item.getId().equals(id)) {
+    if (item.getId() != null && item.getId().equals(id)) {
       return item;
     }
-    if (item instanceof ModellingItem) {
+    if (item instanceof ModellingItem && ((ModellingItem)item).getAreas() != null) {
       for (Area area: ((ModellingItem) item).getAreas()) {
         Item ret = findId(item, area, id);
         if (ret != null) {
@@ -118,10 +124,10 @@ public class FilterCallbackInteractionUtils {
   }
   
   private static Item findId(Item parent, Area area, String id) {
-    if (area.getId().equals(id)) {
+    if (area.getId() != null && area.getId().equals(id)) {
       return parent;
     }
-    if (area instanceof ContainerArea) {
+    if (area instanceof ContainerArea && ((ContainerArea)area).getItems() != null) {
       for (Item item: ((ContainerArea) area).getItems()) {
         Item ret = findId(item, id);
         if (ret != null) {
@@ -179,12 +185,12 @@ public class FilterCallbackInteractionUtils {
       payload.addBooleanAttribute("isList", var.getIsList());
       payload.endObject();
       payload.endObject();
-      order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpPut, payload.toString());
+      order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpPost, payload.toString());
     }
   }
   
   public static void addDomMethods(List<? extends MethodDefinition> methods, XynaOrderServerExtension order, XMOMItemReference ref) throws XynaException {
-    URLPath url = createUrlPath(putInsertTemplate, ref, "datatypes", "memberVarArea");
+    URLPath url = createUrlPath(putInsertTemplate, ref, "datatypes", "memberMethodsArea");
     for (MethodDefinition method: methods) {
       JsonBuilder payload = new JsonBuilder();
       payload.startObject();
@@ -197,22 +203,17 @@ public class FilterCallbackInteractionUtils {
       for (int index = 0; index < method.getInputParams().size(); index++) {
         Parameter para = method.getInputParams().get(index);
         payload.startObject();
-        payload.addObjectAttribute("content");
         payload.addStringAttribute("label", para.getName());
         payload.addStringAttribute("fqn", para.getType());
-        payload.addStringAttribute("name", para.getName() + index);
         payload.addBooleanAttribute("isList", para.getIsList());
-        payload.endObject();
         payload.endObject();
       }
       payload.endList();
       payload.addListAttribute("output");
       for (Parameter para: method.getOutputParams()) {
         payload.startObject();
-        payload.addObjectAttribute("content");
         payload.addStringAttribute("fqn", para.getType());
         payload.addBooleanAttribute("isList", para.getIsList());
-        payload.endObject();
         payload.endObject();
       }
       payload.endList();
@@ -226,7 +227,7 @@ public class FilterCallbackInteractionUtils {
       payload.addStringAttribute("implementation", method.getOutputParams().size() > 0 ? "return null" : "");
       payload.endObject();
       payload.endObject();
-      order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpPut, payload.toString());
+      order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpPost, payload.toString());
     }
   }
   
