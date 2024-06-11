@@ -117,7 +117,7 @@ public class Generation {
     Pipeline<Documentation, ExceptionModel> pipeline = PipelineLocator.getPipeline("exception-documentation");
     Documentation doc = pipeline.run(model).firstChoice();
     FilterCallbackInteractionUtils.updateExceptionDocu(doc, order, xmomItemReference);
-    publishUpdateMessage(xmomItemReference, "Exception");
+    publishUpdateMessage(xmomItemReference, "ExceptionType");
   }
   
   public void genExceptionMessages(XynaOrderServerExtension order, Context context) throws Exception {
@@ -126,7 +126,7 @@ public class Generation {
     Pipeline<List<ExceptionMessage>, ExceptionModel> pipeline = PipelineLocator.getPipeline("exception-messages");
     List<ExceptionMessage> excMess = pipeline.run(model).firstChoice();
     FilterCallbackInteractionUtils.updateExceptionMessages(excMess, order, xmomItemReference);
-    publishUpdateMessage(xmomItemReference, "Exception");
+    publishUpdateMessage(xmomItemReference, "ExceptionType");
   }
   
   public void genExceptionVariables(XynaOrderServerExtension order, Context context) throws Exception {
@@ -135,7 +135,7 @@ public class Generation {
     Pipeline<List<? extends MemberVariable>, ExceptionModel> pipeline = PipelineLocator.getPipeline("exception-variables");
     List<? extends MemberVariable> vars = pipeline.run(model).firstChoice();
     FilterCallbackInteractionUtils.addExceptionVars(vars, order, xmomItemReference);
-    publishUpdateMessage(xmomItemReference, "Exception");
+    publishUpdateMessage(xmomItemReference, "ExceptionType");
   }
   
   public void genExceptionVarDocu(XynaOrderServerExtension order, Context context) throws Exception {
@@ -144,7 +144,7 @@ public class Generation {
     Pipeline<Documentation, ExceptionVariableModel> pipeline = PipelineLocator.getPipeline("exception-variable-documentation");
     Documentation doc = pipeline.run(model).firstChoice();
     FilterCallbackInteractionUtils.updateExceptionVarDocu(doc, order, xmomItemReference, context.getObjectId());
-    publishUpdateMessage(xmomItemReference, "Exception");
+    publishUpdateMessage(xmomItemReference, "ExceptionType");
   }
 
 
