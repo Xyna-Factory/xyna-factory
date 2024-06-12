@@ -31,7 +31,11 @@ public class UnsavedChangesXmlSource extends FactoryManagedRevisionXMLSource {
   private Long revision;
   
   public UnsavedChangesXmlSource(String xml, String fqn, Long revision) throws XPRC_XmlParsingException {
-    this.xml = XMLUtils.parseString(xml);
+    try {
+      this.xml = XMLUtils.parseString(xml, true);
+    } catch (Ex_FileAccessException e) {
+      throw new XPRC_XmlParsingException("currentXml", e);
+    }
     this.fqn = fqn;
     this.revision = revision;
   }
