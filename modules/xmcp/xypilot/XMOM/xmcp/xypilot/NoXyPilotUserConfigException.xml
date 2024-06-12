@@ -15,15 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Generate Documentation Response" TypeName="GenerateDocumentationResponse" TypePath="xmcp.xypilot" Version="1.8">
-  <Meta>
-    <IsServiceGroupOnly>false</IsServiceGroupOnly>
-    <Documentation>A response to a generate documentation request</Documentation>
-  </Meta>
-  <Data Label="documentation" VariableName="documentation">
-    <Meta>
-      <Type>String</Type>
-      <Documentation>The generated documentation</Documentation>
-    </Meta>
-  </Data>
-</DataType>
+ --><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Version="1.8" Name="ExceptionStore">
+  <ExceptionType Code="XYPILOT-00001" TypeName="NoXyPilotUserConfigException" TypePath="xmcp.xypilot" Label="No XyPilot User Config Exception" IsAbstract="false" BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception">
+    <Data Label="user" VariableName="user">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <MessageText Language="DE">Es wurde keine XyPilot-Konfiguration für den Benutzer %0% gefunden.</MessageText>
+    <MessageText Language="EN">No XyPilot configuration found for the current user %0%.</MessageText>
+  </ExceptionType>
+</ExceptionStore>
