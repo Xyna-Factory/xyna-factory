@@ -98,95 +98,90 @@ public class PromptGeneratorServiceOperationImpl implements ExtendedDeploymentTa
 
     @Override
     public Documentation generateExceptionDocumentation(XMOMItemReference xmomItemReference) {
-//        try {
-//            // get the data model
-//            ExceptionModel model = DataModelLocator.getExceptionModel(xmomItemReference);
-//
-//            // load the pipeline
-//            Pipeline<Documentation, ExceptionModel> pipeline = PipelineLocator.getPipeline("exception-documentation");
-//
-//            // run the pipeline on the model
-//            return pipeline.run(model).firstChoice();
-//        } catch (Throwable e) {
-//            logger.warn("Couldn't generate documentation", e);
-//            return new Documentation("");
-//        }
-      return new Documentation("");
+        try {
+            // get the data model
+            ExceptionModel model = DataModelLocator.getExceptionModel(xmomItemReference, null);
+
+            // load the pipeline
+            Pipeline<Documentation, ExceptionModel> pipeline = PipelineLocator.getPipeline("exception-documentation");
+
+            // run the pipeline on the model
+            return pipeline.run(model).firstChoice();
+        } catch (Throwable e) {
+            logger.warn("Couldn't generate documentation", e);
+            return new Documentation("");
+        }
     }
 
 
     @Override
     public Documentation generateDatatypeMethodDocumentation(MemberReference memberReference) {
-//        try {
-//            // get the data model
-//            DomMethodModel model = DataModelLocator.getDomMethodModel(memberReference, null);
-//
-//            // load the pipeline
-//            Pipeline<Documentation, DomMethodModel> pipeline = PipelineLocator.getPipeline("dom-method-documentation");
-//
-//            // run the pipeline on the model
-//            return pipeline.run(model).firstChoice();
-//        } catch (Throwable e) {
-//            logger.warn("Couldn't generate member documentation", e);
-//            return new Documentation("");
-//        }
-      return new Documentation("");
+        try {
+            // get the data model
+            DomMethodModel model = DataModelLocator.getDomMethodModel(memberReference.getItem(), null, "");
+
+            // load the pipeline
+            Pipeline<Documentation, DomMethodModel> pipeline = PipelineLocator.getPipeline("dom-method-documentation");
+
+            // run the pipeline on the model
+            return pipeline.run(model).firstChoice();
+        } catch (Throwable e) {
+            logger.warn("Couldn't generate member documentation", e);
+            return new Documentation("");
+        }
     }
 
 
     @Override
     public Documentation generateDatatypeVariableDocumentation(MemberReference memberReference) {
-//        try {
-//            // get the data model
-//            DomVariableModel model = DataModelLocator.getDomVariableModel(memberReference, null);
-//
-//            // load the pipeline
-//            Pipeline<Documentation, DomVariableModel> pipeline = PipelineLocator.getPipeline("dom-variable-documentation");
-//
-//            // run the pipeline on the model
-//            return pipeline.run(model).firstChoice();
-//        } catch (Throwable e) {
-//            logger.warn("Couldn't generate member documentation", e);
-//            return new Documentation("");
-//        }
-      return new Documentation("");
+        try {
+            // get the data model
+            DomVariableModel model = DataModelLocator.getDomVariableModel(memberReference.getItem(), null, "");
+
+            // load the pipeline
+            Pipeline<Documentation, DomVariableModel> pipeline = PipelineLocator.getPipeline("dom-variable-documentation");
+
+            // run the pipeline on the model
+            return pipeline.run(model).firstChoice();
+        } catch (Throwable e) {
+            logger.warn("Couldn't generate member documentation", e);
+            return new Documentation("");
+        }
     }
 
 
     @Override
     public Documentation generateExceptionVariableDocumentation(MemberReference memberReference) {
-//        try {
-//            // get the data model
-//            ExceptionVariableModel model = DataModelLocator.getExceptionVariableModel(memberReference);
-//
-//            // load the pipeline
-//            Pipeline<Documentation, ExceptionVariableModel> pipeline = PipelineLocator.getPipeline("exception-variable-documentation");
-//
-//            // run the pipeline on the model
-//            return pipeline.run(model).firstChoice();
-//        } catch (Throwable e) {
-//            logger.warn("Couldn't generate member documentation", e);
-//            return new Documentation("");
-//        }
-      return new Documentation("");
+        try {
+            // get the data model
+            ExceptionVariableModel model = DataModelLocator.getExceptionVariableModel(memberReference.getItem(), null, "");
+
+            // load the pipeline
+            Pipeline<Documentation, ExceptionVariableModel> pipeline = PipelineLocator.getPipeline("exception-variable-documentation");
+
+            // run the pipeline on the model
+            return pipeline.run(model).firstChoice();
+        } catch (Throwable e) {
+            logger.warn("Couldn't generate member documentation", e);
+            return new Documentation("");
+        }
     }
 
     @Override
     public List<? extends MemberVariable> generateExceptionVariables(XMOMItemReference xmomItemReference) {
-//        try {
-//            // get the data model
-//            ExceptionModel model = DataModelLocator.getExceptionModel(xmomItemReference);
-//
-//            // load the pipeline
-//            Pipeline<List<? extends MemberVariable>, ExceptionModel> pipeline = PipelineLocator.getPipeline("exception-variables");
-//
-//            // run the pipeline on the model
-//            return pipeline.run(model).firstChoice();
-//        } catch (Throwable e) {
-//            logger.warn("Couldn't generate members", e);
-//            return new ArrayList<MemberVariable>();
-//        }
-      return new ArrayList<MemberVariable>();
+        try {
+            // get the data model
+            ExceptionModel model = DataModelLocator.getExceptionModel(xmomItemReference, null);
+
+            // load the pipeline
+            Pipeline<List<? extends MemberVariable>, ExceptionModel> pipeline = PipelineLocator.getPipeline("exception-variables");
+
+            // run the pipeline on the model
+            return pipeline.run(model).firstChoice();
+        } catch (Throwable e) {
+            logger.warn("Couldn't generate members", e);
+            return new ArrayList<MemberVariable>();
+        }
     }
 
 
@@ -268,40 +263,38 @@ public class PromptGeneratorServiceOperationImpl implements ExtendedDeploymentTa
 
     @Override
     public List<? extends Code> generateDatatypeMethodImplementation(MemberReference memberReference) {
-//        try {
-//            logger.debug("Fetching data model for " + memberReference.getMember());
-//            // get the data model
-//            DomMethodModel model = DataModelLocator.getDomMethodModel(memberReference, null);
-//            logger.debug("Generating implementation for " + model.getTargetMethod().getName());
-//            // load the pipeline
-//            Pipeline<Code, DomMethodModel> pipeline = PipelineLocator.getPipeline("dom-method-implementation");
-//
-//            // run the pipeline on the model
-//            return pipeline.run(model).choices();
-//        } catch (Throwable e) {
-//            logger.warn("Couldn't generate implementation", e);
-//            return new ArrayList<Code>();
-//        }
-      return new ArrayList<Code>();
+        try {
+            logger.debug("Fetching data model for " + memberReference.getMember());
+            // get the data model
+            DomMethodModel model = DataModelLocator.getDomMethodModel(memberReference.getItem(), null, "");
+            logger.debug("Generating implementation for " + model.getTargetMethod().getName());
+            // load the pipeline
+            Pipeline<Code, DomMethodModel> pipeline = PipelineLocator.getPipeline("dom-method-implementation");
+
+            // run the pipeline on the model
+            return pipeline.run(model).choices();
+        } catch (Throwable e) {
+            logger.warn("Couldn't generate implementation", e);
+            return new ArrayList<Code>();
+        }
     }
 
 
     @Override
     public List<? extends ExceptionMessage> generateExceptionMessages(XMOMItemReference xmomItemReference) {
-//        try {
-//            // get the data model
-//            ExceptionModel model = DataModelLocator.getExceptionModel(xmomItemReference);
-//
-//            // load the pipeline
-//            Pipeline<List<ExceptionMessage>, ExceptionModel> pipeline = PipelineLocator.getPipeline("exception-messages");
-//
-//            // run the pipeline on the model
-//            return pipeline.run(model).firstChoice();
-//        } catch (Throwable e) {
-//            logger.warn("Couldn't generate exception messages", e);
-//            return new ArrayList<ExceptionMessage>();
-//        }
-      return new ArrayList<ExceptionMessage>();
+        try {
+            // get the data model
+            ExceptionModel model = DataModelLocator.getExceptionModel(xmomItemReference, null);
+
+            // load the pipeline
+            Pipeline<List<ExceptionMessage>, ExceptionModel> pipeline = PipelineLocator.getPipeline("exception-messages");
+
+            // run the pipeline on the model
+            return pipeline.run(model).firstChoice();
+        } catch (Throwable e) {
+            logger.warn("Couldn't generate exception messages", e);
+            return new ArrayList<ExceptionMessage>();
+        }
     }
 
 
