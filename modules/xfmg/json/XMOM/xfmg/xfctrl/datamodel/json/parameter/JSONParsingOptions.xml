@@ -33,5 +33,11 @@
     </Meta>
   </Data>
   <Data Label="List Wrapper" VariableName="listWrapper" IsList="true" ReferenceName="ListWrapper" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" />
+  <Data Label="Inline Generic Values" VariableName="inlineGenericValues">
+    <Meta>
+      <Type>Boolean</Type>
+      <Documentation>If set to true, xfmg.xfctrl.datamodel.json.JSONObject and xfmg.xfctrl.datamodel.json.JSONValue are filled directly instead of using the generic parsing process.</Documentation>
+    </Meta>
+  </Data>
 </DataType>
 

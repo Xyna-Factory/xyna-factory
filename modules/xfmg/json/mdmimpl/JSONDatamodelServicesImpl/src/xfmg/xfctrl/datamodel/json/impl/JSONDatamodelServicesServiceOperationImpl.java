@@ -363,10 +363,17 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     return new Pair<Class<?>, Type>(typeOfField, genericType);
   }
   
+  @SuppressWarnings("unchecked")
   public void fillXynaObjectRecursivly(GeneralXynaObject xo, JSONObject job, String currentPath, JsonOptions options, XynaObjectDecider decider) {
     if (xo == null) {
       return;
     }
+    
+    if(options.inlineGenerics && xo.getClass() == JSONObject.class) {
+      ((JSONObject)xo).unversionedSetMembers((List<JSONKeyValue>) job.getMembers());
+      return;
+    }
+    
     boolean useLabels = options.useLabels;
     Map<String, String> substitutions = options.substitutions;
     Map<String,String> varNamesOfXynaObject = getVarNames(xo, useLabels);
@@ -688,10 +695,16 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     }
   }
 
+  @SuppressWarnings("unchecked")
   public <A extends GeneralXynaObject> List<A> createList(Class<A> genTypeClass, List<? extends JSONValue> array, String currentPath, JsonOptions options, XynaObjectDecider decider) {
     if (decider == null && Modifier.isAbstract(genTypeClass.getModifiers())) {
       throw new RuntimeException("Can not instantiate list elements of abstract type " + genTypeClass + ".");
     }
+    
+    if(options.inlineGenerics && genTypeClass == JSONValue.class) {
+      return (List<A>) array;
+    }
+    
     List<A> l = new ArrayList<A>();
     
     String newPath = currentPath.isEmpty() ? currentPath : currentPath+"[]";
@@ -757,7 +770,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     Map<String, String> mapTransformations = convertListToMapTransformations(options.getListToMapTransformation());
     Map<String, String> mapSubstitutions = convertMemberSubstitutions(options.getMemberSubstitution());
     Set<String> listWrappers = convertListWrappers(options.getListWrapper());
-    JsonOptions result = new JsonOptions(mapTransformations, mapSubstitutions, listWrappers, options.getUseLabels());
+    JsonOptions result = new JsonOptions(mapTransformations, mapSubstitutions, listWrappers, options.getUseLabels(), options.getInlineGenericValues());
     return result;
   }
   
@@ -766,7 +779,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     Map<String, String> mapTransformations = convertListToMapTransformations(options.getListToMapTransformation());
     Map<String, String> mapSubstitutions = convertMemberSubstitutions(options.getMemberSubstitution());
     Set<String> listWrappers = convertListWrappers(options.getListWrapper());
-    JsonOptions result = new JsonOptions(mapTransformations, mapSubstitutions, listWrappers, options.getUseLabels());
+    JsonOptions result = new JsonOptions(mapTransformations, mapSubstitutions, listWrappers, options.getUseLabels(), options.getInlineGenericValues());
     return result;
   }
 
@@ -820,6 +833,11 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     if(xo == null) {
       return null;
     }
+    
+    if(options.inlineGenerics && xo.getClass() == JSONValue.class) {
+      return (JSONValue)xo;
+    }
+    
     JSONValue result = new JSONValue();
     if(options.listwrapper.contains(xo.getClass().getCanonicalName())) {
       Map<String,String> varNamesOfXynaObject = getVarNames(xo, options.useLabels);
@@ -927,6 +945,11 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     if (xo == null) {
       return null;
     }
+    
+    if(options.inlineGenerics && xo.getClass() == JSONObject.class) {
+      return (JSONObject)xo;
+    }
+    
     JSONObject job = new JSONObject();
     List<JSONKeyValue> members = new ArrayList<JSONKeyValue>();
     HashMap<String,String> varNamesOfXynaObject = getVarNames(xo, options.useLabels);
@@ -1155,19 +1178,22 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     private Map<String, String> substitutions;
     private Set<String> listwrapper;
     private boolean useLabels;
+    private boolean inlineGenerics;
 
     public JsonOptions() {
       transformations = Collections.emptyMap();
       substitutions = Collections.emptyMap();
       listwrapper = Collections.emptySet();
       useLabels = false;
+      inlineGenerics = false;
     }
     
-    public JsonOptions(Map<String, String> transformations, Map<String, String> substitutions, Set<String> listwrapper, boolean useLabels) {
+    public JsonOptions(Map<String, String> transformations, Map<String, String> substitutions, Set<String> listwrapper, boolean useLabels, boolean inlineGenerics) {
       this.transformations = transformations;
       this.substitutions = substitutions;
       this.listwrapper = listwrapper;
       this.useLabels = useLabels;
+      this.inlineGenerics = inlineGenerics;
     }
     
   }
