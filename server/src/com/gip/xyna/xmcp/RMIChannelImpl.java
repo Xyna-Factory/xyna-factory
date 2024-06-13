@@ -457,12 +457,12 @@ public class RMIChannelImpl extends Section implements XynaRMIChannelBase, Initi
         throw new RemoteException("Could not authenticate user '" + publicIdentity + "'. Password expired!");
       }
       if (logger.isWarnEnabled() && unexpectedSessionAuthentificationException(cause)) {
-        logger.warn("Authentification probem.", cause);
+        logger.warn("Authentification problem.", cause);
       }
       throw new RemoteException("Could not authenticate '" + publicIdentity + "'");
     }
     if (logger.isWarnEnabled() && unexpectedSessionAuthentificationException(cause)) {
-      logger.warn("Authentification probem.", cause);
+      logger.warn("Authentification problem.", cause);
     }
   }
 

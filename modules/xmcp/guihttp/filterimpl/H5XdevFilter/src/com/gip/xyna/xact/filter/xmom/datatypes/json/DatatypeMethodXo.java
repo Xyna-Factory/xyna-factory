@@ -143,7 +143,7 @@ public class DatatypeMethodXo implements HasXoRepresentation {
     area.setId(ObjectId.createOperationDocumentationAreaId(String.valueOf(ObjectId.parseMemberMethodNumber(methodId))));
     area.setText(operation.getDocumentation());
     area.setReadonly(inheritedFrom != null);
-    Context context = contextBuilder.instantiateContext(PluginPaths.location_datatype_method_documentation, methodId.getObjectId());
+    Context context = contextBuilder.instantiateContext(PluginPaths.location_datatype_method_documentation, area.getId());
     area.unversionedSetPlugin(pluginMgmt.createPlugin(context));
     return area;
   }

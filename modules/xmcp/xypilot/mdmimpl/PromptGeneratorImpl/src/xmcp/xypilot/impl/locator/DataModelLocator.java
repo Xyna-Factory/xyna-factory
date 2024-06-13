@@ -25,6 +25,10 @@ import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.StepMapping;
 
+import xmcp.processmodeller.datatypes.Item;
+import xmcp.processmodeller.datatypes.Variable;
+import xmcp.processmodeller.datatypes.datatypemodeller.MemberVariable;
+import xmcp.processmodeller.datatypes.datatypemodeller.Method;
 import xmcp.xypilot.MemberReference;
 import xmcp.xypilot.XMOMItemReference;
 import xmcp.xypilot.impl.gen.model.DomModel;
@@ -43,35 +47,43 @@ public class DataModelLocator {
         return new MappingModel(targetMapping);
     }
 
-
     public static DomModel getDomModel(XMOMItemReference xmomItemReference, XynaOrderServerExtension order) throws XynaException {
-      DOM dom = FilterCallbackInteractionUtils.getDom(xmomItemReference, order);
+      DOM dom = FilterCallbackInteractionUtils.getDatatypeDom(xmomItemReference, order);
       return new DomModel(dom);
     }
 
-    public static ExceptionModel getExceptionModel(XMOMItemReference xmomItemReference) throws XynaException {
-        ExceptionGeneration exception = GenerationBaseObjectLocator.getException(xmomItemReference);
-        return new ExceptionModel(exception);
+    public static ExceptionModel getExceptionModel(XMOMItemReference xmomItemReference, XynaOrderServerExtension order) throws XynaException {
+      ExceptionGeneration exception = FilterCallbackInteractionUtils.getException(xmomItemReference, order);
+      return new ExceptionModel(exception);
     }
 
-
-    public static DomMethodModel getDomMethodModel(MemberReference memberReference, XynaOrderServerExtension order) throws XynaException {
-      DOM dom = FilterCallbackInteractionUtils.getDom(memberReference.getItem(), order);
-      Operation targetMethod = dom.getOperationByName(memberReference.getMember());
+    public static DomMethodModel getDomMethodModel(XMOMItemReference xmomItemReference, XynaOrderServerExtension order, String id) throws XynaException {
+      DOM dom = FilterCallbackInteractionUtils.getDatatypeDom(xmomItemReference, order);
+      Item item = FilterCallbackInteractionUtils.getDatatypeItemByAreaOrItemId(xmomItemReference, order, id);
+      if (item == null || !(item instanceof Method)) {
+        throw new XynaException("Method not found!");
+      }
+      Operation targetMethod = dom.getOperationByName(((Method) item).getName());
       return new DomMethodModel(dom, targetMethod);
     }
 
-    public static ExceptionVariableModel getExceptionVariableModel(MemberReference memberReference) throws XynaException {
-        ExceptionGeneration exception = GenerationBaseObjectLocator.getException(memberReference.getItem());
-        AVariable targetVariable = DomUtils.getVariableByName(exception, memberReference.getMember());
-        return new ExceptionVariableModel(exception, targetVariable);
+    public static DomVariableModel getDomVariableModel(XMOMItemReference xmomItemReference, XynaOrderServerExtension order, String id) throws XynaException {
+      DOM dom = FilterCallbackInteractionUtils.getDatatypeDom(xmomItemReference, order);
+      Item item = FilterCallbackInteractionUtils.getDatatypeItemByAreaOrItemId(xmomItemReference, order, id);
+      if (item == null || !(item instanceof MemberVariable)) {
+        throw new XynaException("Variable not found!");
+      }
+      AVariable targetVariable = DomUtils.getVariableByName(dom, ((MemberVariable) item).getName());
+      return new DomVariableModel(dom, targetVariable);
     }
 
-
-    public static DomVariableModel getDomVariableModel(MemberReference memberReference, XynaOrderServerExtension order)
-        throws XynaException {
-      DOM dom = FilterCallbackInteractionUtils.getDom(memberReference.getItem(), order);
-      AVariable targetVariable = DomUtils.getVariableByName(dom, memberReference.getMember());
-      return new DomVariableModel(dom, targetVariable);
+    public static ExceptionVariableModel getExceptionVariableModel(XMOMItemReference xmomItemReference, XynaOrderServerExtension order, String id) throws XynaException {
+        ExceptionGeneration exception = FilterCallbackInteractionUtils.getException(xmomItemReference, order);
+        Item item = FilterCallbackInteractionUtils.getExceptionItemByAreaOrItemId(xmomItemReference, order, id);
+        if (item == null || !(item instanceof MemberVariable)) {
+          throw new XynaException("Variable not found!");
+        }
+        AVariable targetVariable = DomUtils.getVariableByName(exception, ((MemberVariable) item).getName());
+        return new ExceptionVariableModel(exception, targetVariable);
     }
 }
