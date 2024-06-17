@@ -626,9 +626,9 @@ public class HTTPTriggerConnection extends TriggerConnection {
     }
   }
 
+
   /**
-   * Decodes parameters in percent-encoded URI-format ( e.g. "name=Jack%20Daniels&pass=Single%20Malt" ) and adds them to
-   * given HashMap.
+   * Decodes parameters in percent-encoded URI-format ( e.g. "default%20workspace" ) and adds them to given HashMap.
    */
   private void decodeParameters(String paras, HashMap<String, List<String>> p) {
     if(paras == null) {
