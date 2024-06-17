@@ -38,9 +38,8 @@ public class Pipeline<T, D> {
     private Template template;
     private Parser<T, D> parser;
     private InferenceParameters inferenceParameters;
-
-    public Pipeline() {
-    }
+    
+    public Pipeline() { }
 
     /**
      * Runs the pipeline.
@@ -52,9 +51,9 @@ public class Pipeline<T, D> {
      * @throws TemplateException
      * @throws IOException
      */
-    public Suggestions<T> run(D dataModel) throws TemplateException, IOException {
+    public Suggestions<T> run(D dataModel, String baseUri) throws TemplateException, IOException {
         Prompt prompt = Prompt.generate(dataModel, template);
-        List<String> completions = getCompletions(prompt);
+        List<String> completions = getCompletions(prompt, baseUri);
         return new Suggestions<>(
             completions.stream().map(completion -> parser.parse(completion, dataModel)).collect(Collectors.toList())
         );
@@ -92,7 +91,7 @@ public class Pipeline<T, D> {
      * @param prompt
      * @return
      */
-    private List<String> getCompletions(Prompt prompt) {
+    private List<String> getCompletions(Prompt prompt, String baseUri) {
         CompletionBody body = new CompletionBody();
         body.model = inferenceParameters.model;
         body.prompt = prompt.prefix;
@@ -114,7 +113,7 @@ public class Pipeline<T, D> {
 
         logger.debug("Prompt:\n" + prompt);
 
-        List<String> res = Client.getCompletion(body);
+        List<String> res = Client.getCompletion(body, baseUri);
 
         for (int i = 0; i < res.size(); i++) {
             logger.debug("Choice " + i + ":\n" + res.get(i));

@@ -69,4 +69,6 @@ public interface XynaFactoryFacade {
     public WF getWorkflow(String fqn, long revision, boolean deployedState) throws XynaException;
 
     public void Publish(MessageInputParameter message) throws XynaException;
+    
+    public String resolveSessionToUser(String sessionId);
 }
