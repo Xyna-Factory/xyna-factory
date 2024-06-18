@@ -52,26 +52,17 @@ xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.x
 jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
 jsonOptions.setUseLabels(true);
+jsonOptions.setProcessAllInputGenerically(false);
 {{#bodyParams}}
 
 xact.templates.Document body;
 {{^isPrimitive}}
 {{#isList}}
-{{^isGenericJsonList}}
 List&lt;GeneralXynaObject&gt; list = new ArrayList&lt;&gt;({{getPropVarName}});
 body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONListWithOptions(list, jsonOptions);
-{{/isGenericJsonList}}
-{{#isGenericJsonList}}
-body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeGenericJSONList({{getPropVarName}});
-{{/isGenericJsonList}}
 {{/isList}}
 {{^isList}}
-{{^isGenericJsonObject}}
 body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions({{getPropVarName}}, jsonOptions);
-{{/isGenericJsonObject}}
-{{#isGenericJsonObject}}
-body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeGenericJSONObject({{getPropVarName}});
-{{/isGenericJsonObject}}
 {{/isList}}
 {{/isPrimitive}}
 {{#isPrimitive}}
