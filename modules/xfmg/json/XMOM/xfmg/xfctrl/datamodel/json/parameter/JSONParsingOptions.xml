@@ -36,7 +36,12 @@
   <Data Label="Process All Input Generically" VariableName="processAllInputGenerically">
     <Meta>
       <Type>Boolean</Type>
-      <Documentation>If set to true, xfmg.xfctrl.datamodel.json.JSONObject and xfmg.xfctrl.datamodel.json.JSONValue are filled using the generic parsing process. If set to null, xfmg.json.GenericProcessing is used!</Documentation>
+      <Documentation>When set to true, xfmg.xfctrl.datamodel.json.JSONObject and xfmg.xfctrl.datamodel.json.JSONValue are filled using the generic parsing process.
+When set to false, xfmg.xfctrl.datamodel.json.JSONObject and xfmg.xfctrl.datamodel.json.JSONValue are expecting inline json.
+When set to null, the xynaproperty xfmg.json.GenericProcessing is used!
+Example json for a xfmg.xfctrl.datamodel.json.JSONObject with one member "key" that has a value of "value":
+inline: { "key": "value" }
+generic serialization: { "members": [ {"key": "key", value: { "type": "STRING", "stringOrNumberValue": "value" }}]}</Documentation>
     </Meta>
   </Data>
 </DataType>
