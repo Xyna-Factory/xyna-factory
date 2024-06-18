@@ -71,7 +71,6 @@ import xfmg.xfctrl.datamodel.json.JSONDatamodelServicesServiceOperation;
 import xfmg.xfctrl.datamodel.json.JSONKeyValue;
 import xfmg.xfctrl.datamodel.json.JSONObject;
 import xfmg.xfctrl.datamodel.json.JSONValue;
-import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONObjectWriter;
 import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONVALTYPES;
 import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONValueWriter;
 import xfmg.xfctrl.datamodel.json.impl.JSONTokenizer.JSONToken;
@@ -88,7 +87,10 @@ import xfmg.xfctrl.datamodel.json.parameter.XynaObjectDecider;
 public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploymentTask, JSONDatamodelServicesServiceOperation {
 
   private static final Logger logger = CentralFactoryLogging.getLogger(JSONDatamodelServicesServiceOperationImpl.class);
-
+  private static final boolean defaultGenericProcessing = true;
+  public static final XynaPropertyBoolean GENERIC_PROCESSING = new XynaPropertyBoolean("xfmg.json.GenericProcessing", defaultGenericProcessing)
+      .setDefaultDocumentation(DocumentationLanguage.EN, "If ProcessAllInputGenerically is set to null in JSONParsing or JSONWriting Options, this value is used.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Wenn ProcessAllInputGenerically in JSONParsing oder JSONWriting Options nicht gesetzt ist, wird dieser Wert benutzt.");
 
   public void onDeployment() throws XynaException {
   }
@@ -181,34 +183,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     return writeJSON(jSONBaseModel, options, OASScope.valueOfOrNone(jSONWritingOptions.getOASMessageType()));
   }
 
-  @Override
-  public JSONObject parseGenericJSONObject(Document document) {
-    return parseGenericObject(document);
-  }
 
-  @Override
-  public List<JSONValue> parseGenericJSONList(Document document) {
-    return parseGenericList(document);
-  }
-  
-  @Override
-  @SuppressWarnings("unchecked")
-  public Document writeGenericJSONList(List<? extends JSONValue> value) {
-    if(value == null) {
-      return new Document.Builder().documentType(new JSON()).text("null").instance();
-    }
-    JSONValue val = new JSONValue.Builder().type(JSONVALTYPES.ARRAY).arrayValue((List<JSONValue>) value).instance();
-    return new Document.Builder().documentType(new JSON()).text(JSONValueWriter.toJSON("", val)).instance();
-  }
-
-  @Override
-  public Document writeGenericJSONObject(JSONObject value) {
-    if(value == null) {
-      return new Document.Builder().documentType(new JSON()).text("null").instance();
-    }
-    return new Document.Builder().documentType(new JSON()).text(JSONObjectWriter.toJSON("", value)).instance();
-  }
-  
   public GeneralXynaObject parseObjectFromJSON(Document document, GeneralXynaObject xo, JsonOptions options, XynaObjectDecider decider) {
     String json = document.getText();
     if (json == null || json.isBlank()) {
@@ -770,7 +745,8 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     Map<String, String> mapTransformations = convertListToMapTransformations(options.getListToMapTransformation());
     Map<String, String> mapSubstitutions = convertMemberSubstitutions(options.getMemberSubstitution());
     Set<String> listWrappers = convertListWrappers(options.getListWrapper());
-    JsonOptions result = new JsonOptions(mapTransformations, mapSubstitutions, listWrappers, options.getUseLabels(), options.getInlineGenericValues());
+    boolean inline = options.getProcessAllInputGenerically() != null ? !options.getProcessAllInputGenerically() : !GENERIC_PROCESSING.get();
+    JsonOptions result = new JsonOptions(mapTransformations, mapSubstitutions, listWrappers, options.getUseLabels(), inline);
     return result;
   }
   
@@ -779,7 +755,8 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     Map<String, String> mapTransformations = convertListToMapTransformations(options.getListToMapTransformation());
     Map<String, String> mapSubstitutions = convertMemberSubstitutions(options.getMemberSubstitution());
     Set<String> listWrappers = convertListWrappers(options.getListWrapper());
-    JsonOptions result = new JsonOptions(mapTransformations, mapSubstitutions, listWrappers, options.getUseLabels(), options.getInlineGenericValues());
+    boolean inline = options.getProcessAllInputGenerically() != null ? !options.getProcessAllInputGenerically() : !GENERIC_PROCESSING.get();
+    JsonOptions result = new JsonOptions(mapTransformations, mapSubstitutions, listWrappers, options.getUseLabels(), inline);
     return result;
   }
 
@@ -1146,46 +1123,21 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
 
     return createList(xo.getClass(), arr, "", options, decider);
   }
-  
-  private List<JSONValue> parseGenericList(Document document) {
-    String json = document.getText();
-    if (json == null || json.isBlank()) {
-      return new ArrayList<JSONValue>();
-    }
-    JSONTokenizer jt = new JSONTokenizer();
-    List<JSONToken> tokens = jt.tokenize(json);
-    JSONParser jp = new JSONParser(json);
-    List<JSONValue> result = new ArrayList<JSONValue>();
-    jp.fillArray(tokens, 0, result);
-    return result;
-  }
-  
-  private JSONObject parseGenericObject(Document document) {
-    String json = document.getText();
-    if (json == null || json.isBlank()) {
-      return null;
-    }
-    JSONTokenizer jt = new JSONTokenizer();
-    List<JSONToken> tokens = jt.tokenize(json);
-    JSONParser jp = new JSONParser(json);
-    JSONObject job = new JSONObject();
-    jp.fillObject(tokens, 0, job);
-    return job;
-  }
+
   
   public static class JsonOptions {
-    private Map<String, String> transformations;
-    private Map<String, String> substitutions;
-    private Set<String> listwrapper;
-    private boolean useLabels;
-    private boolean inlineGenerics;
+    private final Map<String, String> transformations;
+    private final Map<String, String> substitutions;
+    private final Set<String> listwrapper;
+    private final boolean useLabels;
+    private final boolean inlineGenerics;
 
     public JsonOptions() {
       transformations = Collections.emptyMap();
       substitutions = Collections.emptyMap();
       listwrapper = Collections.emptySet();
       useLabels = false;
-      inlineGenerics = false;
+      inlineGenerics = defaultGenericProcessing;
     }
     
     public JsonOptions(Map<String, String> transformations, Map<String, String> substitutions, Set<String> listwrapper, boolean useLabels, boolean inlineGenerics) {
