@@ -36,9 +36,11 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -79,7 +81,12 @@ public class HTTPTriggerConnection extends TriggerConnection {
   private String method; 
   private Method methodEnum;
   private Properties header;
+  @Deprecated
+  /**
+   * Use parameters instead
+   */
   private Properties paras;
+  private HashMap<String, List<String>> parameters;
   private String payload;
   private String charSet = Charset.defaultCharset().name();
 
@@ -350,7 +357,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
         }
         String chunk = readPayloadInternally(chunkSize, false);
         payloadBuilder.append(chunk);
-        String throwAwayLine = lineBufferedInputStream.readLine(); // we expect a trailing linebreak per chunk
+        lineBufferedInputStream.readLine(); // we expect a trailing linebreak per chunk
         chunkMeta = lineBufferedInputStream.readLine();
         if (chunkMeta == null) {
           break;
@@ -538,9 +545,11 @@ public class HTTPTriggerConnection extends TriggerConnection {
 
     // Decode parameters from the URI
     paras = new Properties();
+    parameters = new HashMap<>();
     int qmi = uri.indexOf('?');
     if (qmi >= 0) {
       decodeParas(uri.substring(qmi + 1), paras);
+      decodeParameters(uri.substring(qmi +1), parameters);
       uri = decode(uri.substring(0, qmi));
     } else {
       uri = decode(uri);
@@ -616,6 +625,27 @@ public class HTTPTriggerConnection extends TriggerConnection {
       }
     }
   }
+
+
+  /**
+   * Decodes parameters in percent-encoded URI-format ( e.g. "name=default%20workspace&desc=a%20description" ) and adds 
+   * them to given HashMap.
+   */
+  private void decodeParameters(String paras, HashMap<String, List<String>> p) {
+    if(paras == null) {
+      return;
+    }
+    
+    StringTokenizer st = new StringTokenizer(paras, "&");
+    while (st.hasMoreTokens()) {
+      String e = st.nextToken();
+      int sep = e.indexOf('=');
+      String key = sep >= 0 ? decode(e.substring(0, sep)).trim() : decode(e).trim();
+      String value = sep >= 0 ? decode(e.substring(sep + 1)) : "";
+      p.putIfAbsent(key, new ArrayList<String>());
+      p.get(key).add(value);
+    }
+  }
   
   private static String decode(String string) {
     if( string == null ) {
@@ -680,7 +710,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
   public void sendResponse(String response) throws SocketNotAvailableException {
     try {
       byte[] msgBytes = response.getBytes(getCharSet());
-      sendResponse(HTTP_OK, MIME_PLAINTEXT, null, new ByteArrayInputStream(msgBytes), new Long(msgBytes.length));
+      sendResponse(HTTP_OK, MIME_PLAINTEXT, null, new ByteArrayInputStream(msgBytes), Long.valueOf(msgBytes.length));
     } catch (UnsupportedEncodingException e) {
       handleUnsupportedEncoding();
     }
@@ -689,7 +719,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
   public void sendHtmlResponse(String response) throws SocketNotAvailableException {
     try {
       byte[] msgBytes = response.getBytes(getCharSet());
-      sendResponse(HTTP_OK, MIME_HTML, null, new ByteArrayInputStream(msgBytes), new Long(msgBytes.length));
+      sendResponse(HTTP_OK, MIME_HTML, null, new ByteArrayInputStream(msgBytes),  Long.valueOf(msgBytes.length));
     } catch (UnsupportedEncodingException e) {
       handleUnsupportedEncoding();
     }
