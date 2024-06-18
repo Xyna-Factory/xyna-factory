@@ -1091,8 +1091,24 @@ public class HTTPTriggerConnection extends TriggerConnection {
   }
 
 
+  @Deprecated
+  /**
+   * Use getParameters() or getFirstValueOfParameter() instead
+   */
   public Properties getParas() {
     return paras;
+  }
+  
+  public HashMap<String, List<String>> getParameters() {
+    return parameters;
+  }
+  
+  public String getFirstValueOfParameter(String key) {
+    return parameters.get(key).get(0);
+  }
+  
+  public String getFirstValueOfParameterOrDefault(String key, String def) {
+    return parameters.containsKey(key) ? getFirstValueOfParameter(key) : def;
   }
 
   public String getPayload() {
