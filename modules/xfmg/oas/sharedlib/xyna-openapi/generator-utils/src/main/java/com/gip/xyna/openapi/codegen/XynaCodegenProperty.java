@@ -91,12 +91,22 @@ public class XynaCodegenProperty {
       propRefType = null;
       propRefPath = null;
     } else {
-      propRefType = camelize(propertyInfo.getComplexType(), Case.PASCAL);
-      propRefPath = Sanitizer.sanitize(gen.modelPackage());
+      if(isGenericJsonObject(propertyInfo)) {
+        propRefType = isList ? "JSONValue": "JSONObject";
+        propRefPath = "xfmg.xfctrl.datamodel.json";
+      } else {
+        propRefType = camelize(propertyInfo.getComplexType(), Case.PASCAL);
+        propRefPath = Sanitizer.sanitize(gen.modelPackage());
+      }
     }
     propDescription = buildDescription(propertyInfo);
   }
 
+  
+  private boolean isGenericJsonObject(CodegenPropertyInfo propertyInfo) {
+    return ("object".equalsIgnoreCase(propertyInfo.getDataType()) || "array".equalsIgnoreCase(propertyInfo.getDataType())) &&
+        (propertyInfo.getComplexType() == null || "object".equalsIgnoreCase(propertyInfo.getComplexType())); //TODO: complex type array?
+  }
 
   /**
    * derives the dataType from the codegenProperty.
@@ -140,11 +150,11 @@ public class XynaCodegenProperty {
    * of primitive types
    */
   private boolean isPrimitive(CodegenPropertyInfo property) {
-    return property.getIsPrimitiveType() || property.getIsEnumOrRef() || property.getComplexType() == null
+    return !"object".equalsIgnoreCase(property.getDataType()) &&
+        (property.getIsPrimitiveType() || property.getIsEnumOrRef() || property.getComplexType() == null
         || property.getIsString() || property.getIsNumber() || property.getIsInteger() || "string".equals(property.getOpenApiType())
-        || (isList(property) && isPrimitive(property.getMostInnerItems()));
+        || (isList(property) && isPrimitive(property.getMostInnerItems())));
   }
-
 
   private String buildValidatorClassConstructor() {
     if (!isPrimitive) {
@@ -240,7 +250,13 @@ public class XynaCodegenProperty {
   public boolean isBoolean() {
     return "Boolean".equals(javaType);
   }
-
+  
+  public boolean isGenericJsonObject() {
+    return "xfmg.xfctrl.datamodel.json".equals(propRefPath) && "JSONObject".equals(propRefType);
+  }
+  public boolean isGenericJsonList() {
+    return "xfmg.xfctrl.datamodel.json".equals(propRefPath) && "JSONValue".equals(propRefType);
+  }
 
   @Override
   public boolean equals(Object o) {
