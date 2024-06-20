@@ -33,11 +33,14 @@
         <Exception ID="45" Label="Client Processing Hook Exception" VariableName="clientProcessingHookException45" ReferenceName="ClientProcessingHookException" ReferencePath="xmcp.oas.exception">
         </Exception>
       </Throws>
+      <Meta>
+        <Documentation>Hook to preprocess send parameter.</Documentation>
+      </Meta>
       <SourceCode>
         <CodeSnippet Type="Java">return sendParameter10;</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation Label="Postprocess Request" Name="postprocessRequest" IsStatic="false">
+    <Operation Label="Postprocess Response" Name="postprocessResponse" IsStatic="false">
       <Input>
         <Data ID="19" Label="Header" VariableName="header19" ReferenceName="Header" ReferencePath="xact.http">
         </Data>
@@ -58,6 +61,9 @@
         <Exception ID="41" Label="Client Processing Hook Exception" VariableName="clientProcessingHookException41" ReferenceName="ClientProcessingHookException" ReferencePath="xmcp.oas.exception">
         </Exception>
       </Throws>
+      <Meta>
+        <Documentation>Hook to postprocess response before it is parsed.</Documentation>
+      </Meta>
       <SourceCode>
         <CodeSnippet Type="Java">return new Container(header19, hTTPStatusCode26, document32);</CodeSnippet>
       </SourceCode>

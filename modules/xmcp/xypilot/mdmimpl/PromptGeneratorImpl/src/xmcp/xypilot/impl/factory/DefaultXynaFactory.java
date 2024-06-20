@@ -210,4 +210,11 @@ public class DefaultXynaFactory implements XynaFactoryFacade {
       XynaFactory.getInstance().getXynaMultiChannelPortal().publish(message);
     }
 
+
+    @Override
+    public String resolveSessionToUser(String sessionId) {
+      return XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement()
+          .resolveSessionToUser(sessionId);
+    }
+
 }

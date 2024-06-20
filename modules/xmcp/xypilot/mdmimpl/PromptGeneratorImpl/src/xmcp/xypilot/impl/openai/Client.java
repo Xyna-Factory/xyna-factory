@@ -37,7 +37,6 @@ import javax.net.ssl.X509TrustManager;
 
 import org.apache.log4j.Logger;
 
-import xmcp.xypilot.impl.Config;
 
 public class Client {
     private static Logger logger = Logger.getLogger("XyPilot");
@@ -48,7 +47,7 @@ public class Client {
      * @param body
      * @return list of completions or an empty list if any error occurs
      */
-    public static List<String> getCompletion(CompletionBody body) {
+    public static List<String> getCompletion(CompletionBody body, String baseUri) {
         // Create a trust manager that does not validate certificate chains
         TrustManager[] trustAllCerts = new TrustManager[] {
                 new X509TrustManager() {
@@ -93,7 +92,7 @@ public class Client {
         }
 
         try {
-            String uri = Config.uri() + "/v1/completions";
+            String uri = baseUri + "/v1/completions";
             uri = uri.replace("http:", "https:");
             URL url = new URL(uri);
             HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();

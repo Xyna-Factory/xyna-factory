@@ -32,7 +32,6 @@ import com.gip.xyna.utils.misc.JsonParser.JsonVisitor;
 import com.gip.xyna.utils.misc.JsonParser.UnexpectedJSONContentException;
 
 import freemarker.template.Configuration;
-import xmcp.xypilot.impl.Config;
 
 
 /**
@@ -48,15 +47,20 @@ public class PipelineBuilder {
         this.cfg = cfg;
     }
 
-    public <T, D> Pipeline<T, D> build(String json) throws InvalidJSONException, UnexpectedJSONContentException {
+    public <T, D> Pipeline<T, D> build(int maxSuggestions, String json) throws InvalidJSONException, UnexpectedJSONContentException {
         // parse the pipeline json file
         JsonParser parser = new JsonParser();
-        return parser.parse(json, new PipelineJsonVisitor<T, D>());
+        return parser.parse(json, new PipelineJsonVisitor<T, D>(maxSuggestions));
     }
 
 
     class InferenceParametersJsonVisitor extends EmptyJsonVisitor<InferenceParameters> {
-
+        int maxSuggestions;
+        
+        public InferenceParametersJsonVisitor(int maxSuggestions) {
+          this.maxSuggestions = maxSuggestions;
+        }
+        
         class LogitBiasJsonVisitor extends EmptyJsonVisitor<Map<String, Double>> {
 
             private Map<String, Double> logitBias = new HashMap<>();
@@ -126,7 +130,7 @@ public class PipelineBuilder {
                     break;
                 case "n":
                     if (type == Type.String && value.equals("max")) {
-                        parameters.n = Optional.of(Config.maxSuggestions());
+                        parameters.n = Optional.of(maxSuggestions);
                     } else if (type == Type.Number) {
                         parameters.n = Optional.of(Integer.parseInt(value));
                     } else {
@@ -219,8 +223,12 @@ public class PipelineBuilder {
 
 
     class PipelineJsonVisitor<T, D> extends EmptyJsonVisitor<Pipeline<T, D>> {
-
+        private int maxSuggestions;
         private Pipeline<T, D> pipeline = new Pipeline<>();
+        
+        public PipelineJsonVisitor(int maxSuggestions) {
+          this.maxSuggestions = maxSuggestions;
+        }
 
         @SuppressWarnings("unchecked")
         private Parser<T, D> findParserByClassName(String className) throws NoSuchElementException {
@@ -297,7 +305,7 @@ public class PipelineBuilder {
         public JsonVisitor<?> objectStarts(String label) throws UnexpectedJSONContentException {
             switch (label) {
                 case "inference_parameters":
-                    return new InferenceParametersJsonVisitor();
+                    return new InferenceParametersJsonVisitor(maxSuggestions);
                 default:
                     throw new UnexpectedJSONContentException("Unexpected object: " + label);
             }
