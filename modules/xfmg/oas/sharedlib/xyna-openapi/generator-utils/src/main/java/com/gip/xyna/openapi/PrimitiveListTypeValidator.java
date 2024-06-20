@@ -25,20 +25,44 @@ public class PrimitiveListTypeValidator<T, V extends PrimitiveTypeValidator<T>> 
     private List<V> validators = new ArrayList<>();
     private Supplier<V> dummy;
     
+    // properties to check
+    private Integer minItems;
+    private Integer maxItems;
+    
+    // property to check for null
+    private boolean noList;
+
     public PrimitiveListTypeValidator(Supplier<V> dummy) {
       this.dummy = dummy;
     }
-    
+
     public void setDummy(Supplier<V> dummy) {
       this.dummy = dummy;
     }
-    
+
+    public void setMinItems(Integer minItems) {
+        this.minItems = minItems;
+    }
+
+    public void setMaxItems(Integer maxItems) {
+        this.maxItems = maxItems;
+    }
+
+    @Override
+    boolean isNull() {
+        return noList;
+    }
+
+    boolean isEmpty() {
+        return validators.isEmpty();
+    }
+
     @Override
     public void setName(String name) {
       super.setName(name);
       validators.forEach(validator -> validator.setName(name));
     }
-    
+
     public void addValues(List<T> value) {
       if (value != null && dummy != null) {
         for (T val : value) {
@@ -47,6 +71,8 @@ public class PrimitiveListTypeValidator<T, V extends PrimitiveTypeValidator<T>> 
           newValidator.setValue(val);
           validators.add(newValidator);
         }
+      } else if (value == null) {
+          noList = true;
       }
     }
 
@@ -56,20 +82,27 @@ public class PrimitiveListTypeValidator<T, V extends PrimitiveTypeValidator<T>> 
     
     @Override
     public List<String> checkValid() {
-      List<String> errorMessages = super.checkValid();
+      List<String> errorMessages = new ArrayList<>();
       
       if (!isNull()) {
-        for (PrimitiveTypeValidator<?> val : getValidators()) {
-          errorMessages.addAll(val.checkValid());
+        int listsize = getValidators().size();
+        if (minItems != null && listsize < minItems)
+        {
+          errorMessages.add(this.getName()+": List of primitive type must have at least "+minItems+" items but has fewer");
         }
+        if (maxItems != null && listsize > maxItems)
+        {
+          errorMessages.add(this.getName()+": List of primitive type must not exceed "+maxItems+" items but has more");
+        }
+        if (!isEmpty()) {
+            for (PrimitiveTypeValidator<?> val : getValidators()) {
+              errorMessages.addAll(val.checkValid());
+            }
+        }
+      } else if (this.getRequired()) {
+          errorMessages.add(this.getName()+": List of primitive type is required but is null");
       }
       
       return errorMessages;
   }
-
-    @Override
-    boolean isNull() {
-        return validators == null || validators.isEmpty();
-    }
-
 }

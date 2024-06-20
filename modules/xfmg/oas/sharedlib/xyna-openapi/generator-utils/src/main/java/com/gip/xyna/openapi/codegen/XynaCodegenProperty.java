@@ -54,24 +54,30 @@ public class XynaCodegenProperty {
   // Used for validation exception message, to clarify context 
   final String propClassName;
 
+  //general properties
   final String propLabel;
   final String propVarName;
   final String getPropVarName;
   final String setPropVarName;
   final boolean isInherited;
   final boolean isList;
-
+  final boolean isPrimitive;
+  
   final String propDescription;
    
-  final boolean isPrimitive;
-  // primitive
+  // for primitive
   final String dataType;
   final String javaType;
   final String validatorClassConstructor;
   final List<String> validatorConfig;
-  //not primitive
+  
+  // for not primitive
+  final boolean isRequired;
   final String propRefType;
   final String propRefPath;
+  // for complex lists
+  final Integer minItems;
+  final Integer maxItems;
   
   public XynaCodegenProperty(CodegenPropertyInfo propertyInfo, DefaultCodegen gen, String className) {
     propClassName = className;
@@ -82,10 +88,9 @@ public class XynaCodegenProperty {
     isList = isList(propertyInfo);
     isInherited = propertyInfo.getIsInherited();
     isPrimitive = isPrimitive(propertyInfo);
+    isRequired = propertyInfo.getRequired();
     dataType = buildDatatype(propertyInfo);
     javaType = isPrimitive ? DatatypeMap.getOrDefault(dataType, DatatypeMap.get("Default")).javaType : null;
-    validatorClassConstructor = buildValidatorClassConstructor();
-    validatorConfig = buildValidatorConfig(propertyInfo);
 
     if (isPrimitive) {
       propRefType = null;
@@ -94,6 +99,17 @@ public class XynaCodegenProperty {
       propRefType = camelize(propertyInfo.getComplexType(), Case.PASCAL);
       propRefPath = Sanitizer.sanitize(gen.modelPackage());
     }
+
+    if (isList) {
+        minItems = propertyInfo.getMinItems();
+        maxItems = propertyInfo.getMaxItems();
+    } else {
+        minItems = null;
+        maxItems = null;
+    }
+
+    validatorClassConstructor = buildValidatorClassConstructor();
+    validatorConfig = buildValidatorConfig(propertyInfo);
     propDescription = buildDescription(propertyInfo);
   }
 
@@ -171,6 +187,9 @@ public class XynaCodegenProperty {
       return config;
     }
     
+    //prepare valuesToValidate
+    ValuesToValidate valuesToValidate = new ValuesToValidate(propertyInfo, javaType);
+    
     String setValue;
     if (isList) {
       setValue = "addValues(" + getPropVarName + ")";
@@ -179,21 +198,27 @@ public class XynaCodegenProperty {
     }
     String setRequired = "setRequired()";
     String setNullable = "setNullable()";
-
+    String setMinItems = "setMinItems("+valuesToValidate.minItems+")";
+    String setMaxItems = "setMaxItems("+valuesToValidate.maxItems+")";
     
     PraefixPostfix fix = new PraefixPostfix();
     if (isList) {
       fix.praefix = "getValidators().forEach(val -> val.";
       fix.postfix = ")";
     }
-        
-    ValuesToValidate valuesToValidate = new ValuesToValidate(propertyInfo, javaType);
-
+    
+    //build config
     config.add("setName(\"" + propLabel + "\")");
     config.add(setValue);
 
     config.addAll(DatatypeMap.getOrDefault(dataType, DatatypeMap.get("Default")).setterListBuilder.apply(valuesToValidate, fix));
 
+    if (isList && valuesToValidate.minItems!=null) {
+        config.add(setMinItems);
+    }
+    if (isList && valuesToValidate.maxItems!=null) {
+        config.add(setMaxItems);
+    }
     if (valuesToValidate.required) {
       config.add(setRequired);
     }
@@ -256,7 +281,10 @@ public class XynaCodegenProperty {
         Objects.equals(propDescription, that.propDescription) &&
         isInherited == that.isInherited &&
         isList == that.isList &&
+        Objects.equals(minItems, that.minItems) &&
+        Objects.equals(maxItems, that.maxItems) &&
         isPrimitive == that.isPrimitive &&
+        isRequired == that.isRequired &&
         Objects.equals(dataType, that.dataType) &&
         Objects.equals(javaType, that.javaType) &&
         Objects.equals(validatorClassConstructor, that.validatorClassConstructor) &&
@@ -283,7 +311,10 @@ public class XynaCodegenProperty {
     sb.append(",\n    ").append("setPropVarName='").append(setPropVarName).append('\'');
     sb.append(",\n    ").append("isInherited='").append(isInherited).append('\'');
     sb.append(",\n    ").append("isList='").append(isList).append('\'');
+    sb.append(",\n    ").append("minItems='").append(minItems).append('\'');
+    sb.append(",\n    ").append("maxItems='").append(maxItems).append('\'');
     sb.append(",\n    ").append("isPrimitive='").append(isPrimitive).append('\'');
+    sb.append(",\n    ").append("isRequired='").append(isRequired).append('\'');
     sb.append(",\n    ").append("propDescription='").append(String.valueOf(propDescription).replace("\n", "\\n")).append('\'');
     sb.append(",\n    ").append("dataType='").append(dataType).append('\'');
     sb.append(",\n    ").append("javaType='").append(javaType).append('\'');
@@ -349,6 +380,14 @@ public class XynaCodegenProperty {
       if (values.maxLength != null) {
         result.add(fix.praefix + "setMaxLength(" + values.maxLength + ")" + fix.postfix);
       }
+      if (values.pattern != null) {
+          // clean delimiters
+          String cleanedPattern = values.pattern;
+          if (cleanedPattern.startsWith("/") && cleanedPattern.endsWith("/")) {
+              cleanedPattern = cleanedPattern.substring(1,cleanedPattern.length()-1);
+          }
+          result.add(fix.praefix + "setPattern(\"" + cleanedPattern + "\")" + fix.postfix);
+      }
       return result;
     }
 
@@ -373,8 +412,12 @@ public class XynaCodegenProperty {
     String dataFormat;
     Integer minLength;
     Integer maxLength;
+    Integer minItems;
+    Integer maxItems;
     boolean required;
     boolean nullable;
+    String pattern;
+
     List<String> allowableValues = new ArrayList<String>();
 
     ValuesToValidate(CodegenPropertyInfo propertyInfo, String javatype) {
@@ -404,10 +447,16 @@ public class XynaCodegenProperty {
       excludeMax = mostInnerItems.getExclusiveMaximum();
       multipleOf = mostInnerItems.getMultipleOf();
       dataFormat = mostInnerItems.getDataFormat();
+      pattern = mostInnerItems.getPattern();
       minLength = mostInnerItems.getMinLength();
       maxLength = mostInnerItems.getMaxLength();
-      required = mostInnerItems.getRequired();
       nullable = mostInnerItems.getIsNullable();
+      minItems = propertyInfo.getMinItems();
+      maxItems = propertyInfo.getMaxItems();
+      required = mostInnerItems.getRequired();
+      if (propertyInfo.getIsContainer() && !required) {
+          required = propertyInfo.getRequired();
+      }
       if (mostInnerItems.getAllowableValues() != null) {
         @SuppressWarnings("unchecked")
         List<String> enumValues = (List<String>) mostInnerItems.getAllowableValues().getOrDefault(("values"), List.of());
