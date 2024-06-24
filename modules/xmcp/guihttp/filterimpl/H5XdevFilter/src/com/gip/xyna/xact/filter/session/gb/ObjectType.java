@@ -69,6 +69,7 @@ public enum ObjectType {
   operation,
   exception, 
   servicegroup,
+  implementationArea,
   
   memberDocumentationArea,
   operationDocumentationArea,
