@@ -170,7 +170,7 @@ public class XynaCodegenProperty {
       || isString(property)
       || property.getIsNumber() 
       || property.getIsInteger() 
-      || isPrimitiveList(property));
+      || isPrimitiveList(property);
     }
 
 
