@@ -190,20 +190,16 @@ public class XynaCodegenProperty {
     //prepare valuesToValidate
     ValuesToValidate valuesToValidate = new ValuesToValidate(propertyInfo, javaType);
     
-    String setValue;
-    if (isList) {
-      setValue = "addValues(" + getPropVarName + ")";
-    } else {
-      setValue = "setValue(" + getPropVarName + ")";
-    }
+    String setValue = "setValue(" + getPropVarName + ")";
     String setRequired = "setRequired()";
     String setNullable = "setNullable()";
     String setMinItems = "setMinItems("+valuesToValidate.minItems+")";
     String setMaxItems = "setMaxItems("+valuesToValidate.maxItems+")";
     
+    //for primitive lists only
     PraefixPostfix fix = new PraefixPostfix();
     if (isList) {
-      fix.praefix = "getValidators().forEach(val -> val.";
+      fix.praefix = "getValidatorsNonNull().forEach(val -> val.";
       fix.postfix = ")";
     }
     
