@@ -105,7 +105,7 @@ public class XynaCodegenProperty {
   
   private boolean isGenericJsonObject(CodegenPropertyInfo propertyInfo) {
     return ("object".equalsIgnoreCase(propertyInfo.getDataType()) || "array".equalsIgnoreCase(propertyInfo.getDataType())) &&
-        (propertyInfo.getComplexType() == null || "object".equalsIgnoreCase(propertyInfo.getComplexType())); //TODO: complex type array?
+        (propertyInfo.getComplexType() == null || "object".equalsIgnoreCase(propertyInfo.getComplexType()));
   }
 
   /**
