@@ -44,6 +44,7 @@ import xmcp.xypilot.impl.gen.pipeline.Pipeline;
 import xmcp.xypilot.impl.gen.util.FilterCallbackInteractionUtils;
 import xmcp.xypilot.impl.locator.DataModelLocator;
 import xmcp.xypilot.impl.locator.PipelineLocator;
+import xmcp.xypilot.metrics.Code;
 import xmcp.yggdrasil.plugin.Context;
 import xprc.xpce.Workspace;
 
@@ -117,6 +118,16 @@ public class Generation {
     Pipeline<Documentation, DomMethodModel> pipeline = PipelineLocator.getPipeline(config, "dom-method-documentation");
     Documentation doc = pipeline.run(model, config.getUri()).firstChoice();
     FilterCallbackInteractionUtils.updateDomVarDocu(doc, order, xmomItemReference, context.getObjectId());
+    publishUpdateMessage(xmomItemReference, "DataType");
+  }
+  
+  public void genDatatypeMethodImpl(XynaOrderServerExtension order, Context context) throws Exception {
+    XypilotUserConfig config = getConfigFromOrder(order);
+    XMOMItemReference xmomItemReference = buildItemFromContext(context);
+    DomMethodModel model = DataModelLocator.getDomMethodModel(xmomItemReference, order, context.getObjectId());
+    Pipeline<Code, DomMethodModel> pipeline = PipelineLocator.getPipeline(config, "dom-method-implementation");
+    Code code = pipeline.run(model, config.getUri()).firstChoice();
+    FilterCallbackInteractionUtils.updateDomMethodImpl(code, order, xmomItemReference, context.getObjectId());
     publishUpdateMessage(xmomItemReference, "DataType");
   }
 
