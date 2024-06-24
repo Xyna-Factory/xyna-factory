@@ -15,10 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Generate Implementation Response" TypeName="GenerateImplementationResponse" TypePath="xmcp.xypilot" Version="1.8">
+ --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="XypilotUserConfig" TypePath="xmcp.xypilot" Label="Xypilot User Config" IsAbstract="false">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
-    <Documentation>A response to a generate implementation request</Documentation>
   </Meta>
-  <Data IsList="true" Label="suggestions" ReferenceName="CodeSuggestion" ReferencePath="xmcp.xypilot" VariableName="suggestions"/>
+  <Data Label="User" VariableName="user">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Uri" VariableName="uri">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Model" VariableName="model">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Max Suggestions" VariableName="maxSuggestions">
+    <Meta>
+      <Type>int</Type>
+    </Meta>
+  </Data>
 </DataType>

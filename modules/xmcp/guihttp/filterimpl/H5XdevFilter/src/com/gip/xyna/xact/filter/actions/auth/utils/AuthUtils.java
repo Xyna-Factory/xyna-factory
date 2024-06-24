@@ -80,7 +80,7 @@ public class AuthUtils {
   private static Object factoryVersionlock = new Object();
   
   
-  public static final XynaPropertyBoolean USE_CSRF_TOKEN = new XynaPropertyBoolean("xmcp.guihttp.csrf", false)
+  public static final XynaPropertyBoolean USE_CSRF_TOKEN = new XynaPropertyBoolean("xmcp.guihttp.csrf", true)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Add csrf token to login response and validate " + HEADER_FILED_CSRF_TOKEN + " header.")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Füge csrf token zur login response hinzu und validiere " + HEADER_FILED_CSRF_TOKEN + " heder.");
 

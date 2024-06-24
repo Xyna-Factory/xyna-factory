@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Generate Variables Response" TypeName="GenerateVariablesResponse" TypePath="xmcp.xypilot" Version="1.8">
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Order Type Table Filter" TypeName="OrderTypeTableFilter" TypePath="xmcp.factorymanager.ordertypes" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
-    <Documentation>A response to a generate variables request. The response contains a list of generated variables.</Documentation>
   </Meta>
-  <Data IsList="true" Label="variables" ReferenceName="MemberVariable" ReferencePath="xmcp.xypilot" VariableName="variables">
+  <Data Label="Show path" VariableName="showPath">
     <Meta>
-      <Documentation>The list of generated variables.</Documentation>
+      <Type>Boolean</Type>
     </Meta>
   </Data>
 </DataType>
+

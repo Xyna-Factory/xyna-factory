@@ -70,7 +70,7 @@ public class JSONTestWithOptions extends TestCase {
       Map<String, String> trans = new HashMap<String, String>();
       trans.put("roles", "name");
       trans.put("roles[].roles", "name");
-      impl.fillXynaObjectRecursivly(user, job, "", new JsonOptions(trans, Collections.emptyMap(), Collections.emptySet(), false), null);
+      impl.fillXynaObjectRecursivly(user, job, "", new JsonOptions(trans, Collections.emptyMap(), Collections.emptySet(), false, false), null);
       ObjectStringRepresentation.createStringRepOfObject(sb, job);
       sb.append("\n=========================================\n\n");
       ObjectStringRepresentation.createStringRepOfObject(sb, user);
@@ -117,7 +117,7 @@ public class JSONTestWithOptions extends TestCase {
       trans.put("roles[].roles", "name");
       Map<String, String> subs = new HashMap<String, String>();
       subs.put("tenant", "roles[].name");
-      impl.fillXynaObjectRecursivly(user, job, "", new JsonOptions(trans, subs, Collections.emptySet(), false), null);
+      impl.fillXynaObjectRecursivly(user, job, "", new JsonOptions(trans, subs, Collections.emptySet(), false, false), null);
       ObjectStringRepresentation.createStringRepOfObject(sb, job);
       sb.append("\n=========================================\n\n");
       ObjectStringRepresentation.createStringRepOfObject(sb, user);
@@ -177,14 +177,14 @@ public class JSONTestWithOptions extends TestCase {
       StringBuilder sb = new StringBuilder();
       JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
       ContainerXO container = new ContainerXO();
-      impl.fillXynaObjectRecursivly(container, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), Collections.emptySet(), false), decider);
+      impl.fillXynaObjectRecursivly(container, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), Collections.emptySet(), false, false), decider);
       ObjectStringRepresentation.createStringRepOfObject(sb, job);
       sb.append("\n=========================================\n\n");
       ObjectStringRepresentation.createStringRepOfObject(sb, container);
       System.out.println(sb);
       assertTrue(container.member instanceof RoleXO);
       container = new ContainerXO();
-      impl.fillXynaObjectRecursivly(container, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), Collections.emptySet(), false), null);
+      impl.fillXynaObjectRecursivly(container, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), Collections.emptySet(), false, false), null);
       assertTrue(container.member instanceof BaseTestXO);
     } catch (InvalidJSONException e) {
       fail();
@@ -215,14 +215,14 @@ public class JSONTestWithOptions extends TestCase {
       StringBuilder sb = new StringBuilder();
       JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
       ListContainerXO container = new ListContainerXO();
-      impl.fillXynaObjectRecursivly(container, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), Collections.emptySet(), false), decider);
+      impl.fillXynaObjectRecursivly(container, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), Collections.emptySet(), false, false), decider);
       ObjectStringRepresentation.createStringRepOfObject(sb, job);
       sb.append("\n=========================================\n\n");
       ObjectStringRepresentation.createStringRepOfObject(sb, container);
       System.out.println(sb);
       assertTrue(container.member.get(0) instanceof RoleXO);
       container = new ListContainerXO();
-      impl.fillXynaObjectRecursivly(container, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), Collections.emptySet(), false), null);
+      impl.fillXynaObjectRecursivly(container, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), Collections.emptySet(), false, false), null);
       assertTrue(container.member.get(0) instanceof BaseTestXO);
     } catch (InvalidJSONException e) {
       fail();
@@ -251,7 +251,7 @@ public class JSONTestWithOptions extends TestCase {
     Set<String> wrappers = new HashSet<String>();
     wrappers.add(ListWrapperWrapper.class.getCanonicalName());
     wrappers.add(ListWrapperXO.class.getCanonicalName());
-    impl.fillXynaObjectListWrapper(xo, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), wrappers, false), decider);
+    impl.fillXynaObjectListWrapper(xo, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), wrappers, false, false), decider);
     assertTrue(xo.lists.size() == 1);
     assertTrue(xo.lists.get(0).roles.size() == 1);
     assertTrue(xo.lists.get(0).roles.get(0).name.equals("test"));
@@ -277,7 +277,7 @@ public class JSONTestWithOptions extends TestCase {
     List<ListWrapperXO> xo;
     Set<String> wrappers = new HashSet<String>();
     wrappers.add(ListWrapperXO.class.getCanonicalName());
-    xo = impl.createList(ListWrapperXO.class, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), wrappers, false), decider);
+    xo = impl.createList(ListWrapperXO.class, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), wrappers, false, false), decider);
     assertTrue(xo.size() == 1);
     assertTrue(xo.get(0).roles.size() == 1);
     assertTrue(xo.get(0).roles.get(0).name.equals("test"));
@@ -305,7 +305,7 @@ public class JSONTestWithOptions extends TestCase {
     Set<String> wrappers = new HashSet<String>();
     wrappers.add(ListWrapperXO.class.getCanonicalName());
     JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
-    impl.fillXynaObjectRecursivly(xo, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), wrappers, false), decider);
+    impl.fillXynaObjectRecursivly(xo, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), wrappers, false, false), decider);
 
     assertTrue(xo.list2d.size() == 1);
     assertTrue(xo.list2d.get(0).roles.size() == 1);
@@ -336,7 +336,7 @@ public class JSONTestWithOptions extends TestCase {
     wrappers.add(ListWrapperWrapper.class.getCanonicalName());
     wrappers.add(ListWrapperXO.class.getCanonicalName());
     JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
-    impl.fillXynaObjectRecursivly(xo, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), wrappers, false), decider);
+    impl.fillXynaObjectRecursivly(xo, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), wrappers, false, false), decider);
 
     assertTrue(xo.list2d.lists.size() == 1);
     assertTrue(xo.list2d.lists.get(0).roles.size() == 1);
@@ -361,7 +361,7 @@ public class JSONTestWithOptions extends TestCase {
     wrappers.add(PrimitiveListWrapperXO.class.getCanonicalName());
     JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
     List<PrimitiveListWrapperXO> list = null;
-    list = impl.createList(PrimitiveListWrapperXO.class, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), wrappers, false), decider);
+    list = impl.createList(PrimitiveListWrapperXO.class, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), wrappers, false, false), decider);
     
     assertTrue(list.size() == 1);
     assertTrue(list.get(0).values.size() == 1);
@@ -389,7 +389,7 @@ public class JSONTestWithOptions extends TestCase {
     Map<String, String> trans = new HashMap<String, String>();
     trans.put("roles", "name");
     trans.put("roles[].roles", "name");
-    JsonOptions options = new JsonOptions(trans, Collections.emptyMap(), Collections.emptySet(), false);
+    JsonOptions options = new JsonOptions(trans, Collections.emptyMap(), Collections.emptySet(), false, false);
     JSONObject obj = impl.createFromXynaObjectRecursivly(user, "", options, OASScope.none);
     System.out.println(JSONObjectWriter.toJSON("", obj));
   }
@@ -416,7 +416,7 @@ public class JSONTestWithOptions extends TestCase {
     trans.put("roles[].roles", "name");
     Map<String, String> subs = new HashMap<String, String>();
     subs.put("roles[].name", "tenant");
-    JsonOptions options = new JsonOptions(trans, subs, Collections.emptySet(), false);
+    JsonOptions options = new JsonOptions(trans, subs, Collections.emptySet(), false, false);
     JSONObject obj = impl.createFromXynaObjectRecursivly(user, "", options, OASScope.none);
     System.out.println(JSONObjectWriter.toJSON("", obj));
   }
@@ -427,7 +427,7 @@ public class JSONTestWithOptions extends TestCase {
     JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
     Map<String, String> trans = new HashMap<String, String>();
     Map<String, String> subs = new HashMap<String, String>();
-    JsonOptions options = new JsonOptions(trans, subs, Collections.emptySet(), true);
+    JsonOptions options = new JsonOptions(trans, subs, Collections.emptySet(), true, false);
     JSONObject obj = impl.createFromXynaObjectRecursivly(role1, "", options, OASScope.none);
     //can't use getMember(), because implementation is not set in mdm.jars created outside of a running factory
     JSONValue readName = obj.getMembers().stream().filter(x -> "SomeName".equals(x.getKey())).map(x -> x.getValue()).findFirst().orElse(null);
@@ -442,7 +442,7 @@ public class JSONTestWithOptions extends TestCase {
     Map<String, String> trans = new HashMap<String, String>();
     Map<String, String> subs = new HashMap<String, String>();
     subs.put("name", "someOtherName");
-    JsonOptions options = new JsonOptions(trans, subs, Collections.emptySet(), true);
+    JsonOptions options = new JsonOptions(trans, subs, Collections.emptySet(), true, false);
     JSONObject obj = impl.createFromXynaObjectRecursivly(role1, "", options, OASScope.none);
     //can't use getMember(), because implementation is not set in mdm.jars created outside of a running factory
     JSONValue readName = obj.getMembers().stream().filter(x -> "someOtherName".equals(x.getKey())).map(x -> x.getValue()).findFirst().orElse(null);
@@ -458,7 +458,7 @@ public class JSONTestWithOptions extends TestCase {
     Map<String, String> subs = new HashMap<String, String>();
     Set<String> wrappers = new HashSet<String>();
     wrappers.add(ListWrapperXO.class.getCanonicalName());
-    JsonOptions options = new JsonOptions(trans, subs, wrappers, false);
+    JsonOptions options = new JsonOptions(trans, subs, wrappers, false, false);
     JSONValue value = impl.createValFromXynaObjectListRecurisvely(Arrays.asList(wrapper), "", options, OASScope.none);
     assertTrue(value.getType().equals(JSONVALTYPES.ARRAY));
     assertTrue(value.getArrayValue().size() == 1);
@@ -478,7 +478,7 @@ public class JSONTestWithOptions extends TestCase {
     Set<String> wrappers = new HashSet<String>();
     wrappers.add(ListWrapperWrapper.class.getCanonicalName());
     wrappers.add(ListWrapperXO.class.getCanonicalName());
-    JsonOptions options = new JsonOptions(trans, subs, wrappers, false);
+    JsonOptions options = new JsonOptions(trans, subs, wrappers, false, false);
     JSONValue value = impl.createValFromXynaObjectRecursively(wrapper, "", options, OASScope.none);
     assertTrue(value.getType().equals(JSONVALTYPES.ARRAY));
     assertTrue(value.getArrayValue().size() == 1);
@@ -496,7 +496,7 @@ public class JSONTestWithOptions extends TestCase {
     Map<String, String> subs = new HashMap<String, String>();
     Set<String> wrappers = new HashSet<String>();
     wrappers.add(PrimitiveListWrapperXO.class.getCanonicalName());
-    JsonOptions options = new JsonOptions(trans, subs, wrappers, false);
+    JsonOptions options = new JsonOptions(trans, subs, wrappers, false, false);
     JSONValue value = impl.createValFromXynaObjectListRecurisvely(Arrays.asList(primListWrapper), "", options, OASScope.none);
     assertTrue(value.getType().equals(JSONVALTYPES.ARRAY));
     assertTrue(value.getArrayValue().size() == 1);

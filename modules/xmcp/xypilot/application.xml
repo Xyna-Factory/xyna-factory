@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- --><Application applicationName="XyPilot" comment="" factoryVersion="" versionName="1.1.1" xmlVersion="1.1">
+ --><Application applicationName="XyPilot" comment="" factoryVersion="" versionName="1.1.3" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>GuiHttp</ApplicationName>
-        <VersionName>1.1.384</VersionName>
+        <VersionName>1.1.387</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>XyPilotMetricsDefaults</ApplicationName>
@@ -30,51 +30,19 @@
   </ApplicationInfo>
   <Ordertypes>
     <Ordertype implicitDependency="false">
-      <DestinationKey>xmcp.xypilot.GenerateDatatypeDocumentation</DestinationKey>
+      <DestinationKey>xmcp.xypilot.GetGenerateButtonDefinition</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="false">
-      <DestinationKey>xmcp.xypilot.GenerateDatatypeMethodDocumentation</DestinationKey>
+      <DestinationKey>xmcp.xypilot.Generate</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="false">
-      <DestinationKey>xmcp.xypilot.GenerateDatatypeMethodImplementation</DestinationKey>
+      <DestinationKey>xmcp.xypilot.GetManageXyPilotConfigDefinition</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="false">
-      <DestinationKey>xmcp.xypilot.GenerateDatatypeMethods</DestinationKey>
-      <OrderContextMapping>false</OrderContextMapping>
-    </Ordertype>
-    <Ordertype implicitDependency="false">
-      <DestinationKey>xmcp.xypilot.GenerateDatatypeVariableDocumentation</DestinationKey>
-      <OrderContextMapping>false</OrderContextMapping>
-    </Ordertype>
-    <Ordertype implicitDependency="false">
-      <DestinationKey>xmcp.xypilot.GenerateDatatypeVariables</DestinationKey>
-      <OrderContextMapping>false</OrderContextMapping>
-    </Ordertype>
-    <Ordertype implicitDependency="false">
-      <DestinationKey>xmcp.xypilot.GenerateExceptionDocumentation</DestinationKey>
-      <OrderContextMapping>false</OrderContextMapping>
-    </Ordertype>
-    <Ordertype implicitDependency="false">
-      <DestinationKey>xmcp.xypilot.GenerateExceptionMessages</DestinationKey>
-      <OrderContextMapping>false</OrderContextMapping>
-    </Ordertype>
-    <Ordertype implicitDependency="false">
-      <DestinationKey>xmcp.xypilot.GenerateExceptionVariableDocumentation</DestinationKey>
-      <OrderContextMapping>false</OrderContextMapping>
-    </Ordertype>
-    <Ordertype implicitDependency="false">
-      <DestinationKey>xmcp.xypilot.GenerateExceptionVariables</DestinationKey>
-      <OrderContextMapping>false</OrderContextMapping>
-    </Ordertype>
-    <Ordertype implicitDependency="false">
-      <DestinationKey>xmcp.xypilot.GenerateMappingAssignments</DestinationKey>
-      <OrderContextMapping>false</OrderContextMapping>
-    </Ordertype>
-    <Ordertype implicitDependency="false">
-      <DestinationKey>xmcp.xypilot.GenerateMappingLabel</DestinationKey>
+      <DestinationKey>xmcp.xypilot.SetXyPilotConfig</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
   </Ordertypes>
@@ -93,82 +61,6 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.xypilot.ExceptionMessage</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.xypilot.GenerateDatatypeDocumentation</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.xypilot.GenerateDatatypeMethodDocumentation</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.xypilot.GenerateDatatypeMethodImplementation</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.xypilot.GenerateDatatypeMethods</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.xypilot.GenerateDatatypeVariableDocumentation</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.xypilot.GenerateDatatypeVariables</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.xypilot.GenerateDocumentationResponse</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.xypilot.GenerateExceptionDocumentation</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.xypilot.GenerateExceptionMessages</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.xypilot.GenerateExceptionMessagesResponse</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.xypilot.GenerateExceptionVariableDocumentation</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.xypilot.GenerateExceptionVariables</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.xypilot.GenerateImplementationResponse</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.xypilot.GenerateMappingAssignments</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.xypilot.GenerateMappingAssignmentsResponse</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.xypilot.GenerateMappingLabel</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.xypilot.GenerateMappingLabelResponse</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.xypilot.GenerateMethodsResponse</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.xypilot.GenerateVariablesResponse</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -218,6 +110,22 @@
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.xypilot.Generate</FqName>
       <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.GetManageXyPilotConfigDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.SetXyPilotConfig</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.XypilotUserConfig</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.NoXyPilotUserConfigException</FqName>
+      <Type>EXCEPTION</Type>
     </XMOMEntry>
   </XMOMEntries>
   <XynaProperties>

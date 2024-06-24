@@ -81,6 +81,7 @@ class Factory:
   usename = ""
   password = ""
   cookieFile = ""
+  csrfToken = None
   tags = {}
 
 class RequestTester:
@@ -327,6 +328,12 @@ class RequestTester:
       arguments.append(cookieFile)
     arguments.append('--cookie')
     arguments.append(cookieFile)
+    
+    token = self.factories[factoryIndexTranslated].csrfToken
+    if token != None:
+      arguments.append("-H")
+      arguments.append(f"xyna-csrf-token:{token}")
+
 
   # expects factoryIndex as defined by test. Not translated using self.factoryIndexMap
   def createUploadArguments(self, filepath, factoryIndex):
@@ -1550,10 +1557,17 @@ class RequestTester:
     payload = '{"username": "' + username + '", "password": "' + password + '", "path": "/"}'
     response = self.executeRequest("/auth/login", 'POST', payload, factoryIndex, True)
     self.checkNoException(response, "/auth/login", [], payload)
+    self.factories[factoryIndexTranslated].csrfToken = self.extractToken(response)
+
+
+  def extractToken(self, loginResponse):
+    data = json.loads(loginResponse)
+    return data["sessionToken"] if "sessionToken" in data else None
 
 
   def logout(self, factoryIndex):
     self.executeRequest("/auth/logout", 'POST', '', factoryIndex, True)
+    self.token = None
 
 
   def logoutForTest(self, testJson):

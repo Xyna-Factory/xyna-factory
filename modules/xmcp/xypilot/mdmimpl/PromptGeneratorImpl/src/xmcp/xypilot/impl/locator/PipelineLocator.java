@@ -29,7 +29,7 @@ import com.gip.xyna.utils.misc.JsonParser.InvalidJSONException;
 import com.gip.xyna.utils.misc.JsonParser.UnexpectedJSONContentException;
 
 import freemarker.template.Configuration;
-import xmcp.xypilot.impl.Config;
+import xmcp.xypilot.XypilotUserConfig;
 import xmcp.xypilot.impl.gen.pipeline.Pipeline;
 import xmcp.xypilot.impl.gen.pipeline.PipelineBuilder;
 
@@ -37,22 +37,22 @@ public class PipelineLocator {
 
     private final static Logger logger = Logger.getLogger("XyPilot");
 
-    private final static Configuration cfg = Config.getTemplateConfiguration();
+    private final static Configuration cfg = ConfigurationLocator.getTemplateConfiguration();
 
     private final static PipelineBuilder pipelineBuilder = new PipelineBuilder(cfg);
 
-    public static String getPath(String pipelineName) {
-        return Config.PIPELINE_PACKAGE_PATH + "/" + Config.model() + "/" + pipelineName + ".json";
+    public static String getPath(String model, String pipelineName) {
+        return ConfigurationLocator.PIPELINE_PACKAGE_PATH + "/" + model + "/" + pipelineName + ".json";
     }
 
-    public static <T, D> Pipeline<T, D> getPipeline(String pipelineName) throws IOException, InvalidJSONException, UnexpectedJSONContentException {
-        logger.debug("Loading pipeline " + getPath(pipelineName) + "...");
+    public static <T, D> Pipeline<T, D> getPipeline(XypilotUserConfig config, String pipelineName) throws IOException, InvalidJSONException, UnexpectedJSONContentException {
+        logger.debug("Loading pipeline " + getPath(config.getModel(), pipelineName) + "...");
 
         // load the pipeline from the jar
-        try (InputStream in = PipelineLocator.class.getResourceAsStream(getPath(pipelineName));
+        try (InputStream in = PipelineLocator.class.getResourceAsStream(getPath(config.getModel(), pipelineName));
             BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             String json = reader.lines().reduce("", (a, b) -> a + b + "\n");
-            return pipelineBuilder.build(json);
+            return pipelineBuilder.build(config.getMaxSuggestions(), json);
         }
     }
 }
