@@ -147,7 +147,9 @@ public class XynaCodegenProperty {
 
 
   private boolean isString(CodegenPropertyInfo property) {
-    return property.getIsString() || "string".equalsIgnoreCase(property.getOpenApiType())
+    return property.getIsString() 
+      || "string".equalsIgnoreCase(property.getOpenApiType()) 
+      || property.getIsEnumOrRef();
   }
 
 
@@ -163,8 +165,7 @@ public class XynaCodegenProperty {
       return false;
     }
 
-    return property.getIsPrimitiveType() 
-      || property.getIsEnumOrRef() 
+    return property.getIsPrimitiveType()
       || property.getComplexType() == null 
       || isString(property)
       || property.getIsNumber() 
