@@ -141,6 +141,15 @@ public class XynaCodegenProperty {
     return in.substring(0, 1).toUpperCase() + in.substring(1);
   }
 
+  private boolean isPrimitiveList(CodegenPropertyInfo property) {
+    return isList(property) && isPrimitive(property.getMostInnerItems());
+  }
+
+
+  private boolean isString(CodegenPropertyInfo property) {
+    return property.getIsString() || "string".equalsIgnoreCase(property.getOpenApiType())
+  }
+
 
   /**
    * determines whether the property should result in a primitive member or not.
@@ -150,11 +159,19 @@ public class XynaCodegenProperty {
    * of primitive types
    */
   private boolean isPrimitive(CodegenPropertyInfo property) {
-    return !"object".equalsIgnoreCase(property.getDataType()) &&
-        (property.getIsPrimitiveType() || property.getIsEnumOrRef() || property.getComplexType() == null
-        || property.getIsString() || property.getIsNumber() || property.getIsInteger() || "string".equals(property.getOpenApiType())
-        || (isList(property) && isPrimitive(property.getMostInnerItems())));
-  }
+    if (isGenericJsonObject(property)) {
+      return false;
+    }
+
+    return property.getIsPrimitiveType() 
+      || property.getIsEnumOrRef() 
+      || property.getComplexType() == null 
+      || isString(property)
+      || property.getIsNumber() 
+      || property.getIsInteger() 
+      || isPrimitiveList(property));
+    }
+
 
   private String buildValidatorClassConstructor() {
     if (!isPrimitive) {
