@@ -30,13 +30,34 @@
         </Data>
       </Input>
       <Output>
-        <Data ID="5" Label="Value" VariableName="value" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json"/>
+        <Data Label="Value" VariableName="value" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json"/>
       </Output>
       <Meta>
         <Documentation>Get JSONValue of member with given Key. Returns null if member does not exist</Documentation>
       </Meta>
       <SourceCode>
         <CodeSnippet Type="Java">return this.getMembers()== null ? null : this.getMembers().stream().filter(x -> key.equals(x.getKey())).map(x -> x.getValue()).findFirst().orElseGet(() -> null);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="From Json" Name="fromJson" IsStatic="true">
+      <Input>
+        <Data Label="Document" VariableName="document2" ReferenceName="Document" ReferencePath="xact.templates" />
+      </Input>
+      <Output>
+        <Data Label="JsonObject" VariableName="jsonObject1" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" />
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return (JSONObject)JSONDatamodelServices.parseObjectFromJSONWithOptions(document2, new JSONObject(), new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions.Builder().processAllInputGenerically(false).instance());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="To Json" Name="toJson" IsStatic="false">
+      <Input>
+      </Input>
+      <Output>
+        <Data Label="Document" VariableName="document3" ReferenceName="Document" ReferencePath="xact.templates" />
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return JSONDatamodelServices.writeJSONWithOptions(this, new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions.Builder().processAllInputGenerically(false).instance());</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
