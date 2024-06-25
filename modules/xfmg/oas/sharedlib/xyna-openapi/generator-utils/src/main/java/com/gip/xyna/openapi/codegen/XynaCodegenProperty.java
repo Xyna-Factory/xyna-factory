@@ -102,10 +102,15 @@ public class XynaCodegenProperty {
     propDescription = buildDescription(propertyInfo);
   }
 
-  
-  private boolean isGenericJsonObject(CodegenPropertyInfo propertyInfo) {
-    return ("object".equalsIgnoreCase(propertyInfo.getDataType()) || "array".equalsIgnoreCase(propertyInfo.getDataType())) &&
-        (propertyInfo.getComplexType() == null || "object".equalsIgnoreCase(propertyInfo.getComplexType()));
+
+  private boolean isGenericJsonObject(CodegenPropertyInfo propertyInfo) { 
+    if("object".equalsIgnoreCase(propertyInfo.getDataType())) {
+      return true;
+    }        
+    if ("array".equalsIgnoreCase(propertyInfo.getDataType()) && "object".equalsIgnoreCase(propertyInfo.getComplexType())) {
+      return true;
+    }
+    return false;
   }
 
   /**
