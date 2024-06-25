@@ -73,15 +73,16 @@ xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.x
 jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
 jsonOptions.setUseLabels(true);
+jsonOptions.setProcessAllInputGenerically(false);
 
 xact.templates.Document body;
 {{^isPrimitive}}
-{{#isList}}
+  {{#isList}}
 List&lt;GeneralXynaObject&gt; obj = new ArrayList&lt;&gt;({{getPropVarName}});
-{{/isList}}
-{{^isList}}
-GeneralXynaObject obj = {{getPropVarName}};
-{{/isList}}
+  {{/isList}}
+  {{^isList}}
+{{propRefPath}}.{{propRefType}} obj = {{getPropVarName}};
+  {{/isList}}
 body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSON{{#isList}}List{{/isList}}WithOptions(obj, jsonOptions);
 {{/isPrimitive}}
 {{#isPrimitive}}
