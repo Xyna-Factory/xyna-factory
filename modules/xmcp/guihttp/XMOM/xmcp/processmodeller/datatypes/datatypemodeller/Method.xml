@@ -30,11 +30,6 @@
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Implementation" VariableName="implementation">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
   <Data Label="Is Abortable" VariableName="isAbortable">
     <Meta>
       <Type>boolean</Type>

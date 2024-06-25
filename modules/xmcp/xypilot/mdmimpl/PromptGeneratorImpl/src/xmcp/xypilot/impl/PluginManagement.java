@@ -48,6 +48,7 @@ public class PluginManagement {
     createGenerationButton(result, "DTMemDocu", "modeller/datatype/members/documentation", generation::genDatatypeVarDocu);
     createGenerationButton(result, "DTMeth", "modeller/datatype/methods", generation::genMethods);
     createGenerationButton(result, "DTMethDocu", "modeller/datatype/methods/documentation", generation::genDatatypeMethodDocu);
+    createGenerationButton(result, "DTMethImpl", "modeller/datatype/methods/implementation", generation::genDatatypeMethodImpl);
     createGenerationButton(result, "ExDocu", "modeller/exception/documentation", generation::genExceptionDocu);
     createGenerationButton(result, "ExMem", "modeller/exception/members", generation::genExceptionVariables);
     createGenerationButton(result, "ExMemDocu", "modeller/exception/members/documentation", generation::genExceptionVarDocu);
