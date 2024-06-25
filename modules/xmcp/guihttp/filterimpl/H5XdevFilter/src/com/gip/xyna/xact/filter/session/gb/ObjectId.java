@@ -264,6 +264,10 @@ public class ObjectId {
       String baseId = ObjectIdPrefix.operation.getBaseId(id);
       return new ObjectId(ObjectType.operation, baseId, part, objectId);
     }
+    if( ObjectIdPrefix.implementationArea.match(id) ) {
+      String baseId = ObjectIdPrefix.implementationArea.getBaseId(id);
+      return new ObjectId(ObjectType.implementationArea, baseId, part, objectId);
+    }
     if( ObjectIdPrefix.remoteDestinationArea.match(id)) {
       String baseId = ObjectIdPrefix.remoteDestinationArea.getBaseId(id);
       return new ObjectId(ObjectType.remoteDestinationArea, baseId, part, objectId);
@@ -426,6 +430,10 @@ public class ObjectId {
   
   public static String createOperationDocumentationAreaId(String baseId) {
     return ObjectIdPrefix.operationDocumentationArea.getPrefix() + emptyIfNull(baseId);
+  }
+  
+  public static String createOperationImplementationAreaId(String baseId) {
+    return ObjectIdPrefix.implementationArea.getPrefix() + emptyIfNull(baseId);
   }
   
   public static String createIdForCase(String baseId, String branchId, String caseId) {
@@ -860,6 +868,14 @@ public class ObjectId {
       }
     },
     operationDocumentationArea("operationDocumentationArea"){
+      public boolean match(String objectId) {
+        return objectId.startsWith(prefix);
+      }
+      public String getBaseId(String id) {
+        return id.substring(prefix.length());
+      }
+    },
+    implementationArea("implementationArea") {
       public boolean match(String objectId) {
         return objectId.startsWith(prefix);
       }

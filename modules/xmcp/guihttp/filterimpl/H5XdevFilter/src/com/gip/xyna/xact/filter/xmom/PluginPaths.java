@@ -31,6 +31,7 @@ public class PluginPaths {
   public static final String location_datatype_members = String.join("/", location_datatype, members);
   public static final String location_datatype_member_documenation = String.join("/", location_datatype_members, documentation);
   public static final String location_datatype_method_documentation = String.join("/", location_datatype_methods, documentation);
+  public static final String location_datatype_method_implementation = String.join("/", location_datatype_methods, "implementation");
   
   public static final String location_exception_documentation = String.join("/", location_exception, documentation);
   public static final String location_exception_members = String.join("/", location_exception, members);
