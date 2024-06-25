@@ -46,11 +46,15 @@ public abstract class BaseValidator {
         isRequired = true;
     }
 
+    public boolean getRequired() {
+        return isRequired;
+    }
+
     public List<String> checkValid() {
         List<String> errorMessages = new ArrayList<String>();
         
         if (isRequired && isNull()) {
-            errorMessages.add(name + ": Property is required, but has value null");
+            errorMessages.add(name + ": Property is required but has value null");
         }
         
         return errorMessages;
