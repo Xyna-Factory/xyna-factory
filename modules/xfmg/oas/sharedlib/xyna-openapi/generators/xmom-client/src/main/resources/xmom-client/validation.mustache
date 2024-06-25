@@ -28,7 +28,9 @@ try {
   {{^isList}}
     {{propRefPath}}.{{propRefType}} {{propVarName}} = {{getPropVarName}};
     if ({{propVarName}} != null) {
+      {{^isGenericJsonObject}}
         result.getErrorMessages().addAll({{propVarName}}.validate().getErrorMessages());
+      {{/isGenericJsonObject}}
     }{{#required}} else {
         result.getErrorMessages().add("{{propClassName}}.{{propVarName}} of type {{propRefType}} is required, but is null.");
     }{{/required}}
@@ -36,9 +38,11 @@ try {
   {{#isList}}
     List&lt;? extends {{propRefPath}}.{{propRefType}}&gt; {{propVarName}} = {{getPropVarName}};
     if ({{propVarName}} != null) {
+      {{^isGenericJsonList}}
         for ({{propRefPath}}.{{propRefType}} obj : {{propVarName}}) {
             result.getErrorMessages().addAll(obj.validate().getErrorMessages());
         }
+      {{/isGenericJsonList}}
     }{{#required}} else {
         result.getErrorMessages().add("{{propClassName}}.{{propVarName}} of type {{propRefType}} is required, but is null.");
     }{{/required}}
