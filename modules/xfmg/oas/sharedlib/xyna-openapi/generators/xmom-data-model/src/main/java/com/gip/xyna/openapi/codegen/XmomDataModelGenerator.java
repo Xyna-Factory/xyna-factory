@@ -81,6 +81,16 @@ public class XmomDataModelGenerator extends DefaultCodegen {
         modelPackage = Sanitizer.sanitize(xModelPath.replace('-', '_').replace(' ', '_').toLowerCase());
       }
     }
+    
+    /**
+     * Supporting Files.  You can write single files for the generator with the
+     * entire object tree available.  If the input file has a suffix of `.mustache
+     * it will be processed by the template engine.  Otherwise, it will be copied
+     */
+    supportingFiles.add(new SupportingFile("application.mustache",   // the input template or file
+      "",                                                       // the destination folder, relative `outputFolder`
+      "application.xml")                                          // the output file
+    );
   }
 
   @Override
@@ -172,16 +182,6 @@ public class XmomDataModelGenerator extends DefaultCodegen {
      */
     additionalProperties.put(XYNA_FACTORY_VERSION, xynaFactoryVersion);
 
-
-    /**
-     * Supporting Files.  You can write single files for the generator with the
-     * entire object tree available.  If the input file has a suffix of `.mustache
-     * it will be processed by the template engine.  Otherwise, it will be copied
-     */
-    supportingFiles.add(new SupportingFile("application.mustache",   // the input template or file
-      "",                                                       // the destination folder, relative `outputFolder`
-      "application.xml")                                          // the output file
-    );
 
     /**
      * Language Specific Primitives.  These types will not trigger imports by
