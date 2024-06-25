@@ -96,8 +96,13 @@ public class XynaCodegenProperty {
       propRefType = null;
       propRefPath = null;
     } else {
-      propRefType = camelize(propertyInfo.getComplexType(), Case.PASCAL);
-      propRefPath = Sanitizer.sanitize(gen.modelPackage());
+      if(isGenericJsonObject(propertyInfo)) {
+        propRefType = isList ? "JSONValue": "JSONObject";
+        propRefPath = "xfmg.xfctrl.datamodel.json";
+      } else {
+        propRefType = camelize(propertyInfo.getComplexType(), Case.PASCAL);
+        propRefPath = Sanitizer.sanitize(gen.modelPackage());
+      }
     }
 
     if (isList) {
@@ -113,6 +118,16 @@ public class XynaCodegenProperty {
     propDescription = buildDescription(propertyInfo);
   }
 
+
+  private boolean isGenericJsonObject(CodegenPropertyInfo propertyInfo) { 
+    if("object".equalsIgnoreCase(propertyInfo.getDataType())) {
+      return true;
+    }        
+    if ("array".equalsIgnoreCase(propertyInfo.getDataType()) && "object".equalsIgnoreCase(propertyInfo.getComplexType())) {
+      return true;
+    }
+    return false;
+  }
 
   /**
    * derives the dataType from the codegenProperty.
@@ -147,6 +162,17 @@ public class XynaCodegenProperty {
     return in.substring(0, 1).toUpperCase() + in.substring(1);
   }
 
+  private boolean isPrimitiveList(CodegenPropertyInfo property) {
+    return isList(property) && isPrimitive(property.getMostInnerItems());
+  }
+
+
+  private boolean isString(CodegenPropertyInfo property) {
+    return property.getIsString() 
+      || "string".equalsIgnoreCase(property.getOpenApiType()) 
+      || property.getIsEnumOrRef();
+  }
+
 
   /**
    * determines whether the property should result in a primitive member or not.
@@ -156,10 +182,17 @@ public class XynaCodegenProperty {
    * of primitive types
    */
   private boolean isPrimitive(CodegenPropertyInfo property) {
-    return property.getIsPrimitiveType() || property.getIsEnumOrRef() || property.getComplexType() == null
-        || property.getIsString() || property.getIsNumber() || property.getIsInteger() || "string".equals(property.getOpenApiType())
-        || (isList(property) && isPrimitive(property.getMostInnerItems()));
-  }
+    if (isGenericJsonObject(property)) {
+      return false;
+    }
+
+    return property.getIsPrimitiveType()
+      || property.getComplexType() == null 
+      || isString(property)
+      || property.getIsNumber() 
+      || property.getIsInteger() 
+      || isPrimitiveList(property);
+    }
 
 
   private String buildValidatorClassConstructor() {
@@ -261,7 +294,13 @@ public class XynaCodegenProperty {
   public boolean isBoolean() {
     return "Boolean".equals(javaType);
   }
-
+  
+  public boolean isGenericJsonObject() {
+    return "xfmg.xfctrl.datamodel.json".equals(propRefPath) && "JSONObject".equals(propRefType);
+  }
+  public boolean isGenericJsonList() {
+    return "xfmg.xfctrl.datamodel.json".equals(propRefPath) && "JSONValue".equals(propRefType);
+  }
 
   @Override
   public boolean equals(Object o) {

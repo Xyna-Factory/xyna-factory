@@ -28,7 +28,9 @@ try {
   {{^isList}}
     {{propRefPath}}.{{propRefType}} {{propVarName}} = {{getPropVarName}};
     if ({{propVarName}} != null) {
+      {{^isGenericJsonObject}}
         result.getErrorMessages().addAll({{propVarName}}.validate().getErrorMessages());
+      {{/isGenericJsonObject}}
     }{{#isRequired}} else {
         result.getErrorMessages().add("{{propClassName}}.{{propVarName}}: Object of type {{propRefType}} is required but is null");
     }{{/isRequired}}
@@ -46,9 +48,11 @@ try {
           result.getErrorMessages().add("{{propClassName}}.{{propVarName}}: List of type {{propRefType}} must not exceed {{maxItems}} items but has more");
         }
         {{/maxItems}}
+        {{^isGenericJsonList}}
         for ({{propRefPath}}.{{propRefType}} obj : {{propVarName}}) {
             result.getErrorMessages().addAll(obj.validate().getErrorMessages());
         }
+        {{/isGenericJsonList}}
     }{{#isRequired}} else {
         result.getErrorMessages().add("{{propClassName}}.{{propVarName}}: List of type {{propRefType}} is required but is null");
     }{{/isRequired}}
