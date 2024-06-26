@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,8 @@
 package com.gip.xyna.xact.trigger.actions;
 
 import java.io.InputStream;
-import java.util.Properties;
-
 import org.apache.log4j.Logger;
 
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.trigger.FilterAction;
@@ -61,7 +58,7 @@ public class FileDownloadAction implements FilterAction {
     FileManagement fm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getFileManagement();
     
     try {
-      String fileId = tc.getParas().getProperty("p0");
+      String fileId = tc.getFirstValueOfParameter("p0");
       TransientFile file = fm.retrieve( fileId );
       InputStream is = file.openInputStream();
       try {

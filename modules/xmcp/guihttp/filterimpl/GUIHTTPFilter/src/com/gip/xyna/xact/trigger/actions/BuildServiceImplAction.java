@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,8 +63,8 @@ public class BuildServiceImplAction implements FilterAction {
 
   public FilterResponse act(Logger logger, HTTPTriggerConnection tc) throws XynaException {
     logger.info("got service implementation template request");
-    String fqClassNameDOM = tc.getParas().getProperty("datatype");
-    String workspaceName = tc.getParas().getProperty("workspace");
+    String fqClassNameDOM = tc.getFirstValueOfParameter("datatype");
+    String workspaceName = tc.getFirstValueOfParameter("workspace");
 
     RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     Long revision = revisionManagement.getRevision(null, null, workspaceName);
