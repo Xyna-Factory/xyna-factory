@@ -54,6 +54,7 @@ import xmcp.xypilot.ExceptionMessage;
 import xmcp.xypilot.MemberVariable;
 import xmcp.xypilot.MethodDefinition;
 import xmcp.xypilot.Parameter;
+import xmcp.xypilot.metrics.Code;
 
 
 
@@ -149,7 +150,16 @@ public class FilterCallbackInteractionUtils {
   public static void updateDomVarDocu(Documentation docu, XynaOrderServerExtension order, XMOMItemReference ref, String objectId) throws XynaException {
     updateDocu(docu, order, ref, "datatypes", objectId);
   }
-  
+
+  public static void updateDomMethodImpl(Code code, XynaOrderServerExtension order, XMOMItemReference ref, String objectId) throws XynaException {
+    URLPath url = createUrlPath(putChangeTemplate, ref, "datatypes", objectId);
+    JsonBuilder payload = new JsonBuilder();
+    payload.startObject();
+    payload.addStringAttribute("implementation", JsonUtils.escapeString(code.getText()));
+    payload.endObject();
+    order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpPut, payload.toString());
+  }
+
   public static void updateExceptionVarDocu(Documentation docu, XynaOrderServerExtension order, XMOMItemReference ref, String objectId) throws XynaException {
     updateDocu(docu, order, ref, "exceptions", objectId);
   }

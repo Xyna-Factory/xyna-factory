@@ -36,4 +36,27 @@
       <Type>Boolean</Type>
     </Meta>
   </Data>
+  <Service Label="JSONValue" TypeName="JSONValue">
+    <Operation Label="From Json" Name="fromJson" IsStatic="true">
+      <Input>
+        <Data Label="Document" VariableName="document2" ReferenceName="Document" ReferencePath="xact.templates" />
+      </Input>
+      <Output>
+        <Data Label="JsonValue" VariableName="jsonObject1" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json" />
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return (JSONValue)JSONDatamodelServices.parseObjectFromJSONWithOptions(document2, new JSONValue(), new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions.Builder().processAllInputGenerically(false).instance());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="To Json" Name="toJson" IsStatic="false">
+      <Input>
+      </Input>
+      <Output>
+        <Data Label="Document" VariableName="document3" ReferenceName="Document" ReferencePath="xact.templates" />
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return JSONDatamodelServices.writeJSONWithOptions(this, new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions.Builder().processAllInputGenerically(false).instance());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

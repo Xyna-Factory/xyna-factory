@@ -46,8 +46,11 @@ public interface CodegenPropertyInfo {
   public boolean getExclusiveMaximum();
   public Number getMultipleOf();
   public String getDataFormat();
+  public String getPattern();
   public Integer getMinLength();
   public Integer getMaxLength();
+  public Integer getMinItems();
+  public Integer getMaxItems();
   public boolean getRequired();
   public boolean getIsNullable();
   public Map<String, Object> getAllowableValues();
@@ -141,6 +144,10 @@ class CodegenPropertyHolder implements CodegenPropertyInfo{
     return property.dataFormat;
   }
 
+  public String getPattern() {
+      return property.pattern;
+  }
+
   public Integer getMinLength() {
     return property.minLength;
   }
@@ -148,7 +155,15 @@ class CodegenPropertyHolder implements CodegenPropertyInfo{
   public Integer getMaxLength() {
     return property.maxLength;
   }
-
+  
+  public Integer getMinItems() {
+    return property.minItems;
+  }
+  
+  public Integer getMaxItems() {
+    return property.maxItems;
+  }
+  
   public boolean getRequired() {
     return property.required;
   }
@@ -266,6 +281,10 @@ class CodegenParameterHolder implements CodegenPropertyInfo{
     return parameter.dataFormat;
   }
 
+  public String getPattern() {
+    return parameter.pattern;
+  }
+
   public Integer getMinLength() {
     return parameter.minLength;
   }
@@ -274,6 +293,14 @@ class CodegenParameterHolder implements CodegenPropertyInfo{
     return parameter.maxLength;
   }
 
+  public Integer getMinItems() {
+  return parameter.minItems;
+  }
+
+  public Integer getMaxItems() {
+    return parameter.maxItems;
+  }
+  
   public boolean getRequired() {
     return parameter.required;
   }
@@ -384,11 +411,23 @@ class CodegenEnum implements CodegenPropertyInfo{
     return null;
   }
 
+  public String getPattern() {
+    return null;
+  }
+
   public Integer getMinLength() {
     return null;
   }
 
   public Integer getMaxLength() {
+    return null;
+  }
+
+  public Integer getMinItems() {
+    return null;
+  }
+
+  public Integer getMaxItems() {
     return null;
   }
 
