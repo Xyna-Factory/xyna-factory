@@ -26,7 +26,6 @@ import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.StepMapping;
 
 import xmcp.processmodeller.datatypes.Item;
-import xmcp.processmodeller.datatypes.Variable;
 import xmcp.processmodeller.datatypes.datatypemodeller.MemberVariable;
 import xmcp.processmodeller.datatypes.datatypemodeller.Method;
 import xmcp.xypilot.MemberReference;
@@ -48,7 +47,7 @@ public class DataModelLocator {
     }
 
     public static DomModel getDomModel(XMOMItemReference xmomItemReference, XynaOrderServerExtension order) throws XynaException {
-      DOM dom = FilterCallbackInteractionUtils.getDatatypeDom(xmomItemReference, order);
+      DOM dom = FilterCallbackInteractionUtils.getDatatypeDom(xmomItemReference, order, "datatypes");
       return new DomModel(dom);
     }
 
@@ -57,9 +56,9 @@ public class DataModelLocator {
       return new ExceptionModel(exception);
     }
 
-    public static DomMethodModel getDomMethodModel(XMOMItemReference xmomItemReference, XynaOrderServerExtension order, String id) throws XynaException {
-      DOM dom = FilterCallbackInteractionUtils.getDatatypeDom(xmomItemReference, order);
-      Item item = FilterCallbackInteractionUtils.getDatatypeItemByAreaOrItemId(xmomItemReference, order, id);
+    public static DomMethodModel getDomMethodModel(XMOMItemReference xmomItemReference, XynaOrderServerExtension order, String id, String type) throws XynaException {
+      DOM dom = FilterCallbackInteractionUtils.getDatatypeDom(xmomItemReference, order, type);
+      Item item = FilterCallbackInteractionUtils.getDatatypeItemByAreaOrItemId(xmomItemReference, order, id, type);
       if (item == null || !(item instanceof Method)) {
         throw new XynaException("Method not found!");
       }
@@ -68,8 +67,8 @@ public class DataModelLocator {
     }
 
     public static DomVariableModel getDomVariableModel(XMOMItemReference xmomItemReference, XynaOrderServerExtension order, String id) throws XynaException {
-      DOM dom = FilterCallbackInteractionUtils.getDatatypeDom(xmomItemReference, order);
-      Item item = FilterCallbackInteractionUtils.getDatatypeItemByAreaOrItemId(xmomItemReference, order, id);
+      DOM dom = FilterCallbackInteractionUtils.getDatatypeDom(xmomItemReference, order, "datatypes");
+      Item item = FilterCallbackInteractionUtils.getDatatypeItemByAreaOrItemId(xmomItemReference, order, id, "datatypes");
       if (item == null || !(item instanceof MemberVariable)) {
         throw new XynaException("Variable not found!");
       }
@@ -84,6 +83,7 @@ public class DataModelLocator {
           throw new XynaException("Variable not found!");
         }
         AVariable targetVariable = DomUtils.getVariableByName(exception, ((MemberVariable) item).getName());
-        return new ExceptionVariableModel(exception, targetVariable);
+        ExceptionVariableModel result = new ExceptionVariableModel(exception, targetVariable);
+        return result;
     }
 }
