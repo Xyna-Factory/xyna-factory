@@ -46,9 +46,11 @@ import xmcp.xypilot.impl.gen.util.FilterCallbackInteractionUtils;
 
 public class DataModelLocator {
   
+  public static final String datatypesTypeName = "datatypes";
+  public static final String serviceGroupsTypeName = "servicegroups";
+  
   private static final String docuTextAreaName = "documentation";
   private static final String implTextAreaName = "implementation";
-  private static final String datatypesTypeName = "datatypes";
 
   public static MappingModel getMappingModel(MemberReference memberReference) throws XynaException {
     StepMapping targetMapping = GenerationBaseObjectLocator.getMapping(memberReference);

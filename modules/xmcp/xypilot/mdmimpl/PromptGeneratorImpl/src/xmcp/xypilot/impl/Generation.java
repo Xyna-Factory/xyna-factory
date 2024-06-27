@@ -116,7 +116,8 @@ public class Generation {
   public void genDatatypeMethodDocu(XynaOrderServerExtension order, Context context) throws Exception {
     XypilotUserConfig config = getConfigFromOrder(order);
     XMOMItemReference xmomItemReference = buildItemFromContext(context);
-    DomMethodModel model = DataModelLocator.getDomMethodModel(xmomItemReference, order, context.getObjectId(), "datatypes");
+    String type = DataModelLocator.datatypesTypeName;
+    DomMethodModel model = DataModelLocator.getDomMethodModel(xmomItemReference, order, context.getObjectId(), type);
     Pipeline<Documentation, DomMethodModel> pipeline = PipelineLocator.getPipeline(config, "dom-method-documentation");
     Documentation doc = pipeline.run(model, config.getUri()).firstChoice();
     doc.unversionedSetText(model.getLatestDocumentation() + doc.getText());
@@ -127,7 +128,8 @@ public class Generation {
   public void genDatatypeMethodImpl(XynaOrderServerExtension order, Context context) throws Exception {
     XypilotUserConfig config = getConfigFromOrder(order);
     XMOMItemReference xmomItemReference = buildItemFromContext(context);
-    DomMethodModel model = DataModelLocator.getDomMethodModel(xmomItemReference, order, context.getObjectId(), "datatypes");
+    String type = DataModelLocator.datatypesTypeName;
+    DomMethodModel model = DataModelLocator.getDomMethodModel(xmomItemReference, order, context.getObjectId(), type);
     Pipeline<Code, DomMethodModel> pipeline = PipelineLocator.getPipeline(config, "dom-method-implementation");
     Code code = pipeline.run(model, config.getUri()).firstChoice();
     code.unversionedSetText(model.getLatestImplementation() + code.getText());
@@ -191,7 +193,8 @@ public class Generation {
   public void genServiceGroupMethodDocu(XynaOrderServerExtension order, Context context) throws Exception {
     XypilotUserConfig config = getConfigFromOrder(order);
     XMOMItemReference xmomItemReference = buildItemFromContext(context);
-    DomMethodModel model = DataModelLocator.getDomMethodModel(xmomItemReference, order, context.getObjectId(), "servicegroups");
+    String type = DataModelLocator.serviceGroupsTypeName;
+    DomMethodModel model = DataModelLocator.getDomMethodModel(xmomItemReference, order, context.getObjectId(), type);
     Pipeline<Documentation, DomMethodModel> pipeline = PipelineLocator.getPipeline(config, "dom-method-documentation");
     Documentation doc = pipeline.run(model, config.getUri()).firstChoice();
     doc.unversionedSetText(model.getLatestDocumentation() + doc.getText());
@@ -202,7 +205,8 @@ public class Generation {
   public void genServiceGroupMethodImpl(XynaOrderServerExtension order, Context context) throws Exception {
     XypilotUserConfig config = getConfigFromOrder(order);
     XMOMItemReference xmomItemReference = buildItemFromContext(context);
-    DomMethodModel model = DataModelLocator.getDomMethodModel(xmomItemReference, order, context.getObjectId(), "servicegroups");
+    String type = DataModelLocator.serviceGroupsTypeName;
+    DomMethodModel model = DataModelLocator.getDomMethodModel(xmomItemReference, order, context.getObjectId(), type);
     Pipeline<Code, DomMethodModel> pipeline = PipelineLocator.getPipeline(config, "dom-method-implementation");
     Code code = pipeline.run(model, config.getUri()).firstChoice();
     code.unversionedSetText(model.getLatestImplementation() + code.getText());
