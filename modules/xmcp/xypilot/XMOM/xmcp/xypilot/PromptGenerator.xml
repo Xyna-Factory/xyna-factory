@@ -22,6 +22,11 @@
   <Libraries>PromptGeneratorImpl.jar</Libraries>
   <Libraries>freemarker-2.3.32.jar</Libraries>
   <Service Label="PromptGenerator" TypeName="PromptGenerator">
+    <Meta>
+      <AdditionalDependencies>
+        <Datatype>xmcp.forms.plugin.PluginManagement</Datatype>
+      </AdditionalDependencies>
+    </Meta>
     <Operation IsStatic="true" Label="Generate" Name="generate" RequiresXynaOrder="true">
       <Input>
         <Data Label="Context" ReferenceName="Context" ReferencePath="xmcp.yggdrasil.plugin" VariableName="context900"/>
