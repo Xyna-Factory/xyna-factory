@@ -6,6 +6,7 @@ labels: ''
 assignees: ''
 
 ---
+- To ensure best support please mention the version of the application you are refering to, as well as the XynaFactory version you are using
 
 - Please write every issues in english so it can be easily accessed by the most users
 
