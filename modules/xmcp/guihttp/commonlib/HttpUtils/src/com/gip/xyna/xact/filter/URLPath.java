@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 
@@ -63,8 +62,10 @@ public class URLPath {
   
   public static URLPath parseURLPath( HTTPTriggerConnection tc ) {
     List<URLPathQuery> queryList = new ArrayList<URLPathQuery>();
-    for (Entry<Object, Object> e : tc.getParas().entrySet()) {
-      queryList.add(  new URLPathQuery(String.valueOf(e.getKey()), String.valueOf(e.getValue())) );
+    for (String key : tc.getParameters().keySet()) {
+      for(String value : tc.getParameters().get(key)) {
+        queryList.add(  new URLPathQuery(key, value) );
+      }
     }
     return new URLPath(tc.getUri(), queryList, null);
   }

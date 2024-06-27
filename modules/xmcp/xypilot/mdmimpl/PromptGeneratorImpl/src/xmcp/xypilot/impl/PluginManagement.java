@@ -48,10 +48,14 @@ public class PluginManagement {
     createGenerationButton(result, "DTMemDocu", "modeller/datatype/members/documentation", generation::genDatatypeVarDocu);
     createGenerationButton(result, "DTMeth", "modeller/datatype/methods", generation::genMethods);
     createGenerationButton(result, "DTMethDocu", "modeller/datatype/methods/documentation", generation::genDatatypeMethodDocu);
-    createGenerationButton(result, "ExDocu", "modeller/exception/documentation", generation::genExceptionDocu);
-    createGenerationButton(result, "ExMem", "modeller/exception/members", generation::genExceptionVariables);
-    createGenerationButton(result, "ExMemDocu", "modeller/exception/members/documentation", generation::genExceptionVarDocu);
-    createGenerationButton(result, "ExMess", "modeller/exception/message", generation::genExceptionMessages);
+    createGenerationButton(result, "DTMethImpl", "modeller/datatype/methods/implementation", generation::genDatatypeMethodImpl);
+    createGenerationButton(result, "EXDocu", "modeller/exception/documentation", generation::genExceptionDocu);
+    createGenerationButton(result, "EXMem", "modeller/exception/members", generation::genExceptionVariables);
+    createGenerationButton(result, "EXMemDocu", "modeller/exception/members/documentation", generation::genExceptionVarDocu);
+    createGenerationButton(result, "EXMess", "modeller/exception/message", generation::genExceptionMessages);
+    createGenerationButton(result, "SGMethDocu", "modeller/servicegroup/methods/documentation", generation::genServiceGroupMethodDocu);
+    createGenerationButton(result, "SGMethImpl", "modeller/servicegroup/methods/implementation", generation::genServiceGroupMethodImpl);
+    
     return result;
   }
 

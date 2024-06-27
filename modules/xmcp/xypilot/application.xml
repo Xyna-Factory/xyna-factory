@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- --><Application applicationName="XyPilot" comment="" factoryVersion="" versionName="1.1.3" xmlVersion="1.1">
+ --><Application applicationName="XyPilot" comment="" factoryVersion="" versionName="1.1.5" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>GuiHttp</ApplicationName>
-        <VersionName>1.1.387</VersionName>
+        <VersionName>1.1.389</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>XyPilotMetricsDefaults</ApplicationName>
