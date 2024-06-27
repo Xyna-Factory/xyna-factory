@@ -71,9 +71,9 @@ public class FilterCallbackInteractionUtils {
   private static final String putChangeTemplate = "/runtimeContext/%s/xmom/%s/%s/%s/objects/%s/change";
   private static final String putInsertTemplate = "/runtimeContext/%s/xmom/%s/%s/%s/objects/%s/insert";
 
-  public static DOM getDatatypeDom(XMOMItemReference ref, XynaOrderServerExtension order) throws XynaException {
+  public static DOM getDatatypeDom(XMOMItemReference ref, XynaOrderServerExtension order, String type) throws XynaException {
     Long revision = getRevision(ref);
-    XMLSourceAbstraction inputSource = getXml(ref, order, "datatypes");
+    XMLSourceAbstraction inputSource = getXml(ref, order, type);
     DOM dom = DOM.getOrCreateInstance(ref.getFqName(), new GenerationBaseCache(), revision, inputSource);
     dom.parse(false);
     return dom;
@@ -94,8 +94,8 @@ public class FilterCallbackInteractionUtils {
     return new UnsavedChangesXmlSource(xml, ref.getFqName(), revision);
   }
   
-  public static Item getDatatypeItemByAreaOrItemId(XMOMItemReference ref, XynaOrderServerExtension order, String id) throws XynaException {
-    XMOMItem parent = getXmomItem(ref, order, "datatypes");
+  public static Item getDatatypeItemByAreaOrItemId(XMOMItemReference ref, XynaOrderServerExtension order, String id, String type) throws XynaException {
+    XMOMItem parent = getXmomItem(ref, order, type);
     return findId(parent, id);
   }
   
