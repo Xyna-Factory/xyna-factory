@@ -87,6 +87,18 @@ public class XmomServerGenerator extends DefaultCodegen {
         apiPackage = xProviderPath.replace('-', '_').replace(' ', '_').toLowerCase();
       }
     }
+    
+    /**
+     * Supporting Files.  You can write single files for the generator with the
+     * entire object tree available.  If the input file has a suffix of `.mustache
+     * it will be processed by the template engine.  Otherwise, it will be copied
+     */
+    supportingFiles.add(new SupportingFile("OASFilter.mustache",   // the input template or file
+      "filter/OASFilter",                                                // the destination folder, relative `outputFolder`
+      "OASFilter.java")                                     // the output file
+    );
+    supportingFiles.add(new SupportingFile("OASDecider.mustache", "XMOM/" + apiPackage.replace('.', '/') + "/decider", "OASDecider.xml"));
+    supportingFiles.add(new SupportingFile("application.mustache", "", "application.xml"));
   }
 
   /**
@@ -205,18 +217,6 @@ public class XmomServerGenerator extends DefaultCodegen {
      * are available in models, apis, and supporting files
      */
     additionalProperties.put(XYNA_FACTORY_VERSION, xynaFactoryVersion);
-
-    /**
-     * Supporting Files.  You can write single files for the generator with the
-     * entire object tree available.  If the input file has a suffix of `.mustache
-     * it will be processed by the template engine.  Otherwise, it will be copied
-     */
-    supportingFiles.add(new SupportingFile("OASFilter.mustache",   // the input template or file
-      "filter/OASFilter",                                                // the destination folder, relative `outputFolder`
-      "OASFilter.java")                                     // the output file
-    );
-    supportingFiles.add(new SupportingFile("OASDecider.mustache", "XMOM/" + apiPackage.replace('.', '/') + "/decider", "OASDecider.xml"));
-    supportingFiles.add(new SupportingFile("application.mustache", "", "application.xml"));
 
     /**
      * Language Specific Primitives.  These types will not trigger imports by

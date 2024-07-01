@@ -22,54 +22,99 @@ import java.util.function.Supplier;
 
 public class PrimitiveListTypeValidator<T, V extends PrimitiveTypeValidator<T>> extends BaseValidator {
 
-    private List<V> validators = new ArrayList<>();
+    private List<V> validators;
     private Supplier<V> dummy;
     
+    // properties to check
+    private Integer minItems;
+    private Integer maxItems;
+
     public PrimitiveListTypeValidator(Supplier<V> dummy) {
       this.dummy = dummy;
     }
-    
+
     public void setDummy(Supplier<V> dummy) {
       this.dummy = dummy;
     }
+
+    public void setMinItems(Integer minItems) {
+        this.minItems = minItems;
+    }
+
+    public void setMaxItems(Integer maxItems) {
+        this.maxItems = maxItems;
+    }
+
+    @Override
+    boolean isNull() {
+        return validators == null;
+    }
+
+    boolean isEmpty() {
+        return validators.isEmpty();
+    }
     
+    public List<V> getValidators() {
+        return validators;
+    }
+
     @Override
     public void setName(String name) {
       super.setName(name);
-      validators.forEach(validator -> validator.setName(name));
-    }
-    
-    public void addValues(List<T> value) {
-      if (value != null && dummy != null) {
-        for (T val : value) {
-          V newValidator = dummy.get();
-          newValidator.setName(getName());
-          newValidator.setValue(val);
-          validators.add(newValidator);
-        }
+      if (validators != null) {
+        validators.forEach(validator -> validator.setName(name));
       }
     }
 
-    public List<V> getValidators() {
-        return validators;
+    // initialize validators and set values
+    public void setValue(List<T> value) {
+      if (value == null) {
+        validators = null;
+      } else {
+          validators = new ArrayList<>();
+          if (dummy != null) {
+            for (T val : value) {
+              V newValidator = dummy.get();
+              newValidator.setName(getName());
+              newValidator.setValue(val);
+              validators.add(newValidator);
+            }
+          }
+        }
+    }
+    
+    // getter to simplify forEach calls from constraints.
+    public List<V> getValidatorsNonNull() {
+        if (validators==null) {
+          return (new ArrayList<>());
+      } else {
+          return validators;
+      }
     }
     
     @Override
     public List<String> checkValid() {
-      List<String> errorMessages = super.checkValid();
+      List<String> errorMessages = new ArrayList<>();
       
       if (!isNull()) {
-        for (PrimitiveTypeValidator<?> val : getValidators()) {
-          errorMessages.addAll(val.checkValid());
+        int listsize = validators.size();
+        if (minItems != null && listsize < minItems)
+        {
+          errorMessages.add(this.getName()+": List of primitive type must have at least "+minItems+" items but has fewer");
         }
+        if (maxItems != null && listsize > maxItems)
+        {
+          errorMessages.add(this.getName()+": List of primitive type must not exceed "+maxItems+" items but has more");
+        }
+        if (!isEmpty()) {
+            for (PrimitiveTypeValidator<?> val : validators) {
+              errorMessages.addAll(val.checkValid());
+            }
+        }
+      } else if (this.getRequired()) {
+          errorMessages.add(this.getName()+": List of primitive type is required but is null");
       }
       
       return errorMessages;
   }
-
-    @Override
-    boolean isNull() {
-        return validators == null || validators.isEmpty();
-    }
-
 }

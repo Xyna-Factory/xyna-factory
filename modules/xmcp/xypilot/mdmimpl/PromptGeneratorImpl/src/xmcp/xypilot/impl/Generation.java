@@ -44,6 +44,7 @@ import xmcp.xypilot.impl.gen.pipeline.Pipeline;
 import xmcp.xypilot.impl.gen.util.FilterCallbackInteractionUtils;
 import xmcp.xypilot.impl.locator.DataModelLocator;
 import xmcp.xypilot.impl.locator.PipelineLocator;
+import xmcp.xypilot.metrics.Code;
 import xmcp.yggdrasil.plugin.Context;
 import xprc.xpce.Workspace;
 
@@ -76,6 +77,7 @@ public class Generation {
     DomModel model = DataModelLocator.getDomModel(xmomItemReference, order);
     Pipeline<Documentation, DomModel> pipeline = PipelineLocator.getPipeline(config, "dom-documentation");
     Documentation doc = pipeline.run(model, config.getUri()).firstChoice();
+    doc.unversionedSetText(model.getLatestDocumentation() + doc.getText());
     FilterCallbackInteractionUtils.updateDomDocu(doc, order, xmomItemReference);
     publishUpdateMessage(xmomItemReference, "DataType");
   }
@@ -96,6 +98,7 @@ public class Generation {
     DomVariableModel model = DataModelLocator.getDomVariableModel(xmomItemReference, order, context.getObjectId());
     Pipeline<Documentation, DomVariableModel> pipeline = PipelineLocator.getPipeline(config, "dom-variable-documentation");
     Documentation doc = pipeline.run(model, config.getUri()).firstChoice();
+    doc.unversionedSetText(model.getLatestDocumentation() + doc.getText());
     FilterCallbackInteractionUtils.updateDomVarDocu(doc, order, xmomItemReference, context.getObjectId());
     publishUpdateMessage(xmomItemReference, "DataType");
   }
@@ -113,10 +116,24 @@ public class Generation {
   public void genDatatypeMethodDocu(XynaOrderServerExtension order, Context context) throws Exception {
     XypilotUserConfig config = getConfigFromOrder(order);
     XMOMItemReference xmomItemReference = buildItemFromContext(context);
-    DomMethodModel model = DataModelLocator.getDomMethodModel(xmomItemReference, order, context.getObjectId());
+    String type = DataModelLocator.datatypesTypeName;
+    DomMethodModel model = DataModelLocator.getDomMethodModel(xmomItemReference, order, context.getObjectId(), type);
     Pipeline<Documentation, DomMethodModel> pipeline = PipelineLocator.getPipeline(config, "dom-method-documentation");
     Documentation doc = pipeline.run(model, config.getUri()).firstChoice();
+    doc.unversionedSetText(model.getLatestDocumentation() + doc.getText());
     FilterCallbackInteractionUtils.updateDomVarDocu(doc, order, xmomItemReference, context.getObjectId());
+    publishUpdateMessage(xmomItemReference, "DataType");
+  }
+  
+  public void genDatatypeMethodImpl(XynaOrderServerExtension order, Context context) throws Exception {
+    XypilotUserConfig config = getConfigFromOrder(order);
+    XMOMItemReference xmomItemReference = buildItemFromContext(context);
+    String type = DataModelLocator.datatypesTypeName;
+    DomMethodModel model = DataModelLocator.getDomMethodModel(xmomItemReference, order, context.getObjectId(), type);
+    Pipeline<Code, DomMethodModel> pipeline = PipelineLocator.getPipeline(config, "dom-method-implementation");
+    Code code = pipeline.run(model, config.getUri()).firstChoice();
+    code.unversionedSetText(model.getLatestImplementation() + code.getText());
+    FilterCallbackInteractionUtils.updateDomMethodImpl(code, order, xmomItemReference, context.getObjectId());
     publishUpdateMessage(xmomItemReference, "DataType");
   }
 
@@ -126,6 +143,7 @@ public class Generation {
     ExceptionModel model = DataModelLocator.getExceptionModel(xmomItemReference, order);
     Pipeline<Documentation, ExceptionModel> pipeline = PipelineLocator.getPipeline(config, "exception-documentation");
     Documentation doc = pipeline.run(model, config.getUri()).firstChoice();
+    doc.unversionedSetText(model.getLatestDocumentation() + doc.getText());
     FilterCallbackInteractionUtils.updateExceptionDocu(doc, order, xmomItemReference);
     publishUpdateMessage(xmomItemReference, "ExceptionType");
   }
@@ -156,6 +174,7 @@ public class Generation {
     ExceptionVariableModel model = DataModelLocator.getExceptionVariableModel(xmomItemReference, order, context.getObjectId());
     Pipeline<Documentation, ExceptionVariableModel> pipeline = PipelineLocator.getPipeline(config, "exception-variable-documentation");
     Documentation doc = pipeline.run(model, config.getUri()).firstChoice();
+    doc.unversionedSetText(model.getLatestDocumentation() + doc.getText());
     FilterCallbackInteractionUtils.updateExceptionVarDocu(doc, order, xmomItemReference, context.getObjectId());
     publishUpdateMessage(xmomItemReference, "ExceptionType");
   }
@@ -170,6 +189,31 @@ public class Generation {
     }
     return config;
   }
+  
+  public void genServiceGroupMethodDocu(XynaOrderServerExtension order, Context context) throws Exception {
+    XypilotUserConfig config = getConfigFromOrder(order);
+    XMOMItemReference xmomItemReference = buildItemFromContext(context);
+    String type = DataModelLocator.serviceGroupsTypeName;
+    DomMethodModel model = DataModelLocator.getDomMethodModel(xmomItemReference, order, context.getObjectId(), type);
+    Pipeline<Documentation, DomMethodModel> pipeline = PipelineLocator.getPipeline(config, "dom-method-documentation");
+    Documentation doc = pipeline.run(model, config.getUri()).firstChoice();
+    doc.unversionedSetText(model.getLatestDocumentation() + doc.getText());
+    FilterCallbackInteractionUtils.updateDomVarDocu(doc, order, xmomItemReference, context.getObjectId());
+    publishUpdateMessage(xmomItemReference, "DataType");
+  }
+
+  public void genServiceGroupMethodImpl(XynaOrderServerExtension order, Context context) throws Exception {
+    XypilotUserConfig config = getConfigFromOrder(order);
+    XMOMItemReference xmomItemReference = buildItemFromContext(context);
+    String type = DataModelLocator.serviceGroupsTypeName;
+    DomMethodModel model = DataModelLocator.getDomMethodModel(xmomItemReference, order, context.getObjectId(), type);
+    Pipeline<Code, DomMethodModel> pipeline = PipelineLocator.getPipeline(config, "dom-method-implementation");
+    Code code = pipeline.run(model, config.getUri()).firstChoice();
+    code.unversionedSetText(model.getLatestImplementation() + code.getText());
+    FilterCallbackInteractionUtils.updateDomMethodImpl(code, order, xmomItemReference, context.getObjectId());
+    publishUpdateMessage(xmomItemReference, "DataType");
+  }
+
 
   @FunctionalInterface
   public interface GenerationInterface {
