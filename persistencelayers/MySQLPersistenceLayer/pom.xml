@@ -20,7 +20,7 @@
     <parent>
         <groupId>com.gip.xyna</groupId>
         <artifactId>bom</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
         <relativePath>../../installation/build/pom.xml</relativePath>
     </parent>
     
