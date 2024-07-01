@@ -153,5 +153,25 @@
 	<CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getMetaTags();</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="false" Label="Get Datatype Instance" Name="getDatatypeInstance">
+      <Output>
+        <Data Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getDatatypeInstance();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+	<Operation IsStatic="false" Label="Get Subtypes" Name="getSubtypes">
+      <Output>
+        <Data Label="Subtype" IsList="true" ReferenceName="Text" ReferencePath="base" VariableName="subtypes" />
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getSubtypes();</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

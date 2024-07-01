@@ -19,6 +19,7 @@ package xprc.xpce.datatype.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -130,25 +131,32 @@ public class DatatypeInspectorInstanceOperationImpl extends DatatypeInspectorSup
         }
         nvm.setParentObject(rootObject);
         if (!var.isJavaBaseType()) {
-          Object nextO = currentGXO.get(varName);
-          if (nextO != null) {
-            if (nextO instanceof List) {
-              for (int i = 0; i < ((List) nextO).size(); i++) {
-                GeneralXynaObject elementGXO = (GeneralXynaObject) ((List) nextO).get(i);
-                Long revision = com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement.getRevisionByClass(elementGXO.getClass());
-                String fqName = elementGXO.getClass().getName();
-                DOM elementDOM = STATIC_INSTANCE.getGeneration(fqName, revision);
-                list.addAll(listVariableMembersRecursivly(rootObject, currentVarName + "[" + i + "]", elementDOM,
-                                                          elementGXO, inspectionParameter));
+          if (currentGXO == null) {
+            /*
+             * TODO support for recursion in this case. this changes the current behavior for the common usecase of just using an empty object-instance
+             * => 1. configuration options for recursion over structure (backward compatible defaults)
+             *    2. prevent cycles (endless recursion)
+             *    3. maybe make it configurable to not have recursion even when object instance is set.
+             */
+          } else {
+            Object nextO = currentGXO.get(varName);
+            if (nextO != null) {
+              if (nextO instanceof List) {
+                for (int i = 0; i < ((List) nextO).size(); i++) {
+                  GeneralXynaObject elementGXO = (GeneralXynaObject) ((List) nextO).get(i);
+                  Long revision = com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement.getRevisionByClass(elementGXO.getClass());
+                  String fqName = elementGXO.getClass().getName();
+                  DOM elementDOM = STATIC_INSTANCE.getGeneration(fqName, revision);
+                  list.addAll(listVariableMembersRecursivly(rootObject, currentVarName + "[" + i + "]", elementDOM, elementGXO,
+                                                            inspectionParameter));
+                }
+              } else {
+                GeneralXynaObject nextGXO = (GeneralXynaObject) nextO;
+                Long revision = com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement.getRevisionByClass(nextGXO.getClass());
+                String fqName = nextGXO.getClass().getName();
+                DOM nextDOM = STATIC_INSTANCE.getGeneration(fqName, revision);
+                list.addAll(listVariableMembersRecursivly(rootObject, currentVarName, nextDOM, nextGXO, inspectionParameter));
               }
-            } else {
-              GeneralXynaObject nextGXO = (GeneralXynaObject) nextO;
-              Long revision = com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement
-                              .getRevisionByClass(nextGXO.getClass());
-              String fqName = nextGXO.getClass().getName();
-              DOM nextDOM = STATIC_INSTANCE.getGeneration(fqName, revision);
-              list.addAll(listVariableMembersRecursivly(rootObject, currentVarName, nextDOM, nextGXO,
-                                                        inspectionParameter));
             }
           }
         }
@@ -172,10 +180,12 @@ public class DatatypeInspectorInstanceOperationImpl extends DatatypeInspectorSup
         list.add( nxm );
 
         Object o = null;
-        try {
-          o = xynaObject.get(varName);
-        } catch( Exception e ) {
-          throw new RuntimeException(e);
+        if (xynaObject != null) {
+          try {
+            o = xynaObject.get(varName);
+          } catch (Exception e) {
+            throw new RuntimeException(e);
+          }
         }
         if( o instanceof GeneralXynaObject ) {
           nxm.setAnyType( (GeneralXynaObject)o );
@@ -241,6 +251,17 @@ public class DatatypeInspectorInstanceOperationImpl extends DatatypeInspectorSup
       metaTags.add(new MetaTag(kv[0], kv[1]));
     }
     return metaTags;
+  }
+
+  @Override
+  public GeneralXynaObject getDatatypeInstance() {
+    return xynaObject;
+  }
+
+
+  @Override
+  public List<? extends Text> getSubtypes() {
+    return dom.getSubTypes(dom.getCacheReference(), false).stream().map(d -> new Text(d.getOriginalFqName())).collect(Collectors.toList());
   }
   
  }
