@@ -152,9 +152,8 @@ public class XynaObjectJsonBuilder {
   
   private ClassLoader findClassLoader(String fqn) throws XPRC_InvalidPackageNameException {
     String fqClassName = GenerationBase.transformNameForJava(fqn);
-    
     if (GenerationBase.isReservedServerObjectByFqClassName(fqClassName)) {
-      return getClass().getClassLoader();
+      return GenerationBase.getReservedClass(fqn).getClassLoader();
     }
     
     ClassLoaderDispatcher cld = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getClassLoaderDispatcher();
