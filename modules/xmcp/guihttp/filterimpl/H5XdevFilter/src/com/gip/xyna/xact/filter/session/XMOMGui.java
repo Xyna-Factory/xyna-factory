@@ -175,7 +175,7 @@ public class XMOMGui {
     }
   }
   
-  private synchronized SessionBasedData getOrCreateSessionBasedData(XmomGuiSession session) {
+  public synchronized SessionBasedData getOrCreateSessionBasedData(XmomGuiSession session) {
     
     SessionBasedData sbd = sessionBasedData.get(session.getId());
     if(sbd == null) {
