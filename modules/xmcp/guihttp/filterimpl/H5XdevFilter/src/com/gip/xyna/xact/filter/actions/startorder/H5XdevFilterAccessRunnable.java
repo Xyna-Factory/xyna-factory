@@ -64,4 +64,7 @@ public class H5XdevFilterAccessRunnable implements RunnableForFilterAccess {
     
     return null;
   }
+  
+  @Override
+  public boolean serialize() { return false; }
 }

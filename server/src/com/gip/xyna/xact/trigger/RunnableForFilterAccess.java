@@ -27,4 +27,5 @@ public interface RunnableForFilterAccess extends Serializable {
 
   public Object execute(Object... parameters) throws XynaException;
 
+  public default boolean serialize() { return true; }
 }
