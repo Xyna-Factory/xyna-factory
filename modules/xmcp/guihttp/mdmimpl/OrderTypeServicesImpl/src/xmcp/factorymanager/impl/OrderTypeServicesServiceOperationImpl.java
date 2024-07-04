@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -131,7 +131,8 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
   }
   
   @Override
-  public void changeOrderType(OrderType orderType) throws UpdateOrderTypeException {    
+  public void changeOrderType(OrderType orderType) throws UpdateOrderTypeException {
+    orderType.setName(orderType.getFullQualifiedName());
     try {
       ordertypeManagement.modifyOrdertype(createOrderTypeParameter(orderType));
     } catch (PersistenceLayerException | XFMG_InvalidModificationOfUnexistingOrdertype | XFMG_InvalidCapacityCardinality | XPRC_INVALID_MONITORING_TYPE e) {
@@ -143,6 +144,7 @@ public class OrderTypeServicesServiceOperationImpl implements ExtendedDeployment
 
   @Override
   public void createOrderType(OrderType orderType) throws CreateNewOderTypeException {
+    orderType.setName(orderType.getFullQualifiedName());
     try {
       ordertypeManagement.createOrdertype(createOrderTypeParameter(orderType));
     } catch (PersistenceLayerException | XFMG_InvalidCreationOfExistingOrdertype | XFMG_FailedToAddObjectToApplication | XPRC_INVALID_MONITORING_TYPE e) {
