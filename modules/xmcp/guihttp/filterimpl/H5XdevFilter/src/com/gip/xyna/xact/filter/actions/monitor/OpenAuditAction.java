@@ -26,6 +26,9 @@ import com.gip.xyna.xact.filter.monitor.GetAuditRequestProcessor;
 import com.gip.xyna.xact.filter.session.XMOMGuiReply;
 import com.gip.xyna.xact.filter.util.ReadonlyUtil;
 
+import org.apache.log4j.Logger;
+
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
 import com.gip.xyna.xact.filter.URLPath;
@@ -41,6 +44,7 @@ import xmcp.processmonitor.datatypes.response.GetAuditResponse;
 public class OpenAuditAction extends H5xFilterAction implements Endpoint {
 
   private static final String BASE_PATH = "/" + PathElements.AUDITS;
+  private static final Logger logger = CentralFactoryLogging.getLogger(OpenAuditAction.class);
 
 
   public void appendIndexPage(HTMLPart body) {
@@ -82,11 +86,15 @@ public class OpenAuditAction extends H5xFilterAction implements Endpoint {
     return url.getPath().startsWith(BASE_PATH) && url.getPathLength() == 2;
   }
 
+
   @Override
   public GeneralXynaObject execute(XynaPlainSessionCredentials creds, URLPath url, Method method, String payload) {
     try {
       return new GetAuditRequestProcessor().processGetAuditRequest(Long.valueOf(url.getPathElement(1)));
     } catch (Exception e) {
+      if (logger.isWarnEnabled()) {
+        logger.warn("Could not process open audit request.", e);
+      }
       return null;
     }
   }
