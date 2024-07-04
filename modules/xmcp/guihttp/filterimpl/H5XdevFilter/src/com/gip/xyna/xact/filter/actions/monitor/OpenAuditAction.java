@@ -38,7 +38,6 @@ import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.Rights;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.XynaPlainSessionCredentials;
 
-import xmcp.processmonitor.datatypes.NoAuditData;
 import xmcp.processmonitor.datatypes.response.GetAuditResponse;
 
 public class OpenAuditAction extends H5xFilterAction implements Endpoint {

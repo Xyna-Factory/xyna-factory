@@ -41,7 +41,6 @@ import com.gip.xyna.xfmg.xopctrl.usermanagement.XynaPlainSessionCredentials;
 
 public abstract class XmomGuiAction extends RuntimeContextDependendAction implements Endpoint {
   
-  @SuppressWarnings("unused")
   private static final Logger logger = CentralFactoryLogging.getLogger(XmomGuiAction.class);
   
   protected final XMOMGui xmomGui;

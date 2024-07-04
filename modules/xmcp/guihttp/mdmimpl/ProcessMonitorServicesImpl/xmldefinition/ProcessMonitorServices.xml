@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,12 @@
       <Throws>
         <Exception Label="No Audit Data" ReferenceName="NoAuditData" ReferencePath="xmcp.processmonitor.datatypes" VariableName="noAuditData"/>
       </Throws>
+      <Meta>
+        <Documentation>Deprecated. 
+Use filter callback instead: 
+xact.http.URLPath url = new xact.http.URLPath.Builder().path("/audits/" + orderid).query(Collections.emptyList()).instance();
+correlatedXynaOrder.getRunnableForFilterAccess("H5XdevFilter").execute(url, new xact.http.enums.httpmethods.GET())</Documentation>
+      </Meta>
       <SourceCode>
         <CodeSnippet Type="Java">return xmcp.processmonitor.ProcessMonitorServicesImpl.getAudit(orderOverviewEntry);</CodeSnippet>
       </SourceCode>
