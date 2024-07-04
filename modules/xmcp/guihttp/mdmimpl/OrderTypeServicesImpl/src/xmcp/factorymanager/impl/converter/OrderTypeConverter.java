@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,10 +55,10 @@ public class OrderTypeConverter {
     if(in.getMonitoringLevel() != null)
       r.setMonitoringLevel(String.valueOf(in.getMonitoringLevel()));
     r.setEvaluatedMonitoringLevel(in.getMonitoringLevel());
-    if(in.getOrdertypeName() != null) {    
+    if(in.getOrdertypeName() != null) {
+      r.setFullQualifiedName(in.getOrdertypeName());
       r.setName(filter ? in.getOrdertypeName() : in.getOrdertypeName().substring((in.getOrdertypeName().lastIndexOf('.')) + 1));
     }
-    // r.setName(in.getOrdertypeName());
     if(in.getPlanningDestinationValue() != null) 
       r.setPlanningDestination(convert(in.getPlanningDestinationValue(), filter));
     r.setPriority(in.getPriority());
