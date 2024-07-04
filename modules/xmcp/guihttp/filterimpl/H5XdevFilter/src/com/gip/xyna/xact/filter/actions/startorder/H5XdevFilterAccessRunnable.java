@@ -38,8 +38,8 @@ import xact.http.enums.httpmethods.HTTPMethod;
 public class H5XdevFilterAccessRunnable implements RunnableForFilterAccess {
 
   private static final long serialVersionUID = 1L;
-  private volatile XynaPlainSessionCredentials creds;
-  private volatile List<Endpoint> endpoints;
+  private XynaPlainSessionCredentials creds;
+  private transient List<Endpoint> endpoints;
 
   public H5XdevFilterAccessRunnable(HTTPTriggerConnection tc, List<Endpoint> endpoints) {
     creds = AuthUtils.readCredentialsFromRequest(tc);
@@ -64,4 +64,7 @@ public class H5XdevFilterAccessRunnable implements RunnableForFilterAccess {
     
     return null;
   }
+  
+  @Override
+  public boolean serialize() { return false; }
 }
