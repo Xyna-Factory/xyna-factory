@@ -140,20 +140,19 @@ public class XynaObjectJsonBuilder {
       return;
     }
      
-    Class<? extends GeneralXynaObject> clazz = null;
     try {
-      ClassLoader cl = findClassLoader(gxol.getContainedFQTypeName());
-      clazz = (Class<? extends GeneralXynaObject>) cl.loadClass(gxol.getContainedFQTypeName());
+      Class<? extends GeneralXynaObject> clazz = loadClass(gxol.getContainedFQTypeName());
       buildListJson(clazz, gxol);
     } catch (ClassNotFoundException | XPRC_InvalidPackageNameException e) {
       throw new RuntimeException("Could not load inner list class: '" + gxol.getContainedFQTypeName() +"'.", e);
     }
   }
   
-  private ClassLoader findClassLoader(String fqn) throws XPRC_InvalidPackageNameException {
+  @SuppressWarnings("unchecked")
+  private Class<? extends GeneralXynaObject> loadClass(String fqn) throws XPRC_InvalidPackageNameException, ClassNotFoundException {
     String fqClassName = GenerationBase.transformNameForJava(fqn);
     if (GenerationBase.isReservedServerObjectByFqClassName(fqClassName)) {
-      return GenerationBase.getReservedClass(fqn).getClassLoader();
+      return (Class<? extends GeneralXynaObject>) GenerationBase.getReservedClass(fqn).getClassLoader().loadClass(fqClassName);
     }
     
     ClassLoaderDispatcher cld = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getClassLoaderDispatcher();
@@ -164,7 +163,7 @@ public class XynaObjectJsonBuilder {
         cl = cld.findClassLoaderByType(fqClassName, revToUse, ClassLoaderType.Exception, true);
       }
       if (cl != null) {
-        return cl;
+        return (Class<? extends GeneralXynaObject>) cl.loadClass(fqn);
       }
     }
     
