@@ -301,11 +301,11 @@ public class PLSQLBuilder {
   }
   
   public static String buildDequeueBlock() {
-    return buildDequeueBlock( DequeueOptions.newDequeueOptions().build() ); 
+    return buildDequeueBlock( DequeueOptions.newDequeueOptions().queueName("DequeueName").timeout(1000).build() ); 
   }
   
   public static String buildEnqueueBlock() {
-    return buildEnqueueBlock( EnqueueOptions.newEnqueueOptions().build() ); 
+    return buildEnqueueBlock( EnqueueOptions.newEnqueueOptions().queueName("EnqueueName").delay(1000).expiration(1000).defaultPriority(7).build() ); 
   }
 
   private static void appendPlaceHolder(StringBuilder sb, int number) {
