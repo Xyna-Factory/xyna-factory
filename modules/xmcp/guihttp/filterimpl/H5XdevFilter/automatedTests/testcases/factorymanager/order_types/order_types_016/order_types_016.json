@@ -27,9 +27,6 @@
           "!GuiHttp!": "default workspace"
         },
         {
-          "!1.1.99!": "1.1.99"
-        },
-        {
           "!Xyna_Fractal_Workflow!": "Xyna Fractal Workflow"
         },
         {
@@ -63,31 +60,7 @@
           "!xmcp.factorymanager.ordertypes.GetOrderTypes!": "xmcp.factorymanager.ordertypes.GetOrderTypes"
         },
         {
-          "!1.2!": "1.2"
-        },
-        {
-          "!asc!": "asc"
-        },
-        {
-          "!Name!": "Name"
-        },
-        {
           "!xmcp.tables.datatypes.TableColumn!": "xmcp.tables.datatypes.TableColumn"
-        },
-        {
-          "!name!": "name"
-        },
-        {
-          "!Application!": "Application"
-        },
-        {
-          "!application!": "application"
-        },
-        {
-          "!Version!": "Version"
-        },
-        {
-          "!version!": "version"
         },
         {
           "!workspace!": "workspace"
@@ -99,31 +72,7 @@
           "!executionDestination.name!": "executionDestination.name"
         },
         {
-          "!Used_Capacities!": "Used Capacities"
-        },
-        {
-          "!usedCapacities!": "usedCapacities"
-        },
-        {
-          "!Priority!": "Priority"
-        },
-        {
-          "!priority!": "priority"
-        },
-        {
-          "!Monitoring_Level!": "Monitoring Level"
-        },
-        {
-          "!monitoringLevel!": "monitoringLevel"
-        },
-        {
           "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
-        },
-        {
-          "!ZetaFramework!": "ZetaFramework"
-        },
-        {
-          "!0.6.33!": "0.6.33"
         },
         {
           "!xmcp.factorymanager.ordertypes.DeleteOrderType!": "xmcp.factorymanager.ordertypes.DeleteOrderType"
@@ -163,6 +112,7 @@
             "monitoringLevel": 5,
             "monitoringLevelIsCustom": false,
             "name": "!autotest.generated!",
+            "fullQualifiedName": "!autotest.generated!",
             "parameterInheritanceRules": {
               "$list": [],
               "$meta": {
@@ -223,11 +173,11 @@
                   "break0": false,
                   "disableFilter": false,
                   "disableSort": false,
-                  "name": "!Name!",
-                  "path": "!name!",
+                  "name": "Name",
+                  "path": "name",
                   "pre": false,
                   "shrink": false,
-                  "sort": "!asc!"
+                  "sort": "asc"
                 },
                 {
                   "$meta": {
@@ -236,8 +186,8 @@
                   "break0": false,
                   "disableFilter": false,
                   "disableSort": false,
-                  "name": "!Application!",
-                  "path": "!application!",
+                  "name": "Application",
+                  "path": "application",
                   "pre": false,
                   "shrink": false
                 },
@@ -248,8 +198,8 @@
                   "break0": false,
                   "disableFilter": false,
                   "disableSort": false,
-                  "name": "!Version!",
-                  "path": "!version!",
+                  "name": "Version",
+                  "path": "version",
                   "pre": false,
                   "shrink": false
                 },
@@ -284,8 +234,8 @@
                   "break0": false,
                   "disableFilter": false,
                   "disableSort": false,
-                  "name": "!Used_Capacities!",
-                  "path": "!usedCapacities!",
+                  "name": "Used Capacities",
+                  "path": "usedCapacities",
                   "pre": false,
                   "shrink": false
                 },
@@ -296,8 +246,8 @@
                   "break0": false,
                   "disableFilter": false,
                   "disableSort": false,
-                  "name": "!Priority!",
-                  "path": "!priority!",
+                  "name": "Priority",
+                  "path": "priority",
                   "pre": false,
                   "shrink": false
                 },
@@ -308,8 +258,8 @@
                   "break0": false,
                   "disableFilter": false,
                   "disableSort": false,
-                  "name": "!Monitoring_Level!",
-                  "path": "!monitoringLevel!",
+                  "name": "Monitoring Level",
+                  "path": "monitoringLevel",
                   "pre": false,
                   "shrink": false
                 }
@@ -319,7 +269,7 @@
               }
             },
             "filterCaseSensitive": false,
-            "version": "!1.2!"
+            "version": "1.2"
           }
         ],
         "monitoringLevel": 20,
@@ -350,6 +300,7 @@
               "fqn": "!xmcp.factorymanager.ordertypes.OrderTypeName!"
             },
             "name": "awfjawkfakowfwafjkwapofkawfkawfkawf"
+            "fullQualifiedName": "awfjawkfakowfwafjkwapofkawfkawfkawf",
           }
         ],
         "orderType": "!xmcp.factorymanager.ordertypes.DeleteOrderType!"

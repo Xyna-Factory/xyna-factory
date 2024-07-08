@@ -25,12 +25,6 @@
           "!xmcp.factorymanager.ordertypes.OrderType!": "xmcp.factorymanager.ordertypes.OrderType"
         },
         {
-          "!GuiHttp!": "default workspace"
-        },
-        {
-          "!1.1.99!": "1.1.99"
-        },
-        {
           "!Xyna_Fractal_Workflow!": "Xyna Fractal Workflow"
         },
         {
@@ -59,72 +53,6 @@
         },
         {
           "!DefaultPlanning!": "DefaultPlanning"
-        },
-        {
-          "!xmcp.factorymanager.ordertypes.GetOrderTypes!": "xmcp.factorymanager.ordertypes.GetOrderTypes"
-        },
-        {
-          "!1.2!": "1.2"
-        },
-        {
-          "!asc!": "asc"
-        },
-        {
-          "!Name!": "Name"
-        },
-        {
-          "!xmcp.tables.datatypes.TableColumn!": "xmcp.tables.datatypes.TableColumn"
-        },
-        {
-          "!name!": "name"
-        },
-        {
-          "!Application!": "Application"
-        },
-        {
-          "!application!": "application"
-        },
-        {
-          "!Version!": "Version"
-        },
-        {
-          "!version!": "version"
-        },
-        {
-          "!workspace!": "workspace"
-        },
-        {
-          "!Execution_Destination_Type/Name!": "Execution Destination Type/Name"
-        },
-        {
-          "!executionDestination.name!": "executionDestination.name"
-        },
-        {
-          "!Used_Capacities!": "Used Capacities"
-        },
-        {
-          "!usedCapacities!": "usedCapacities"
-        },
-        {
-          "!Priority!": "Priority"
-        },
-        {
-          "!priority!": "priority"
-        },
-        {
-          "!Monitoring_Level!": "Monitoring Level"
-        },
-        {
-          "!monitoringLevel!": "monitoringLevel"
-        },
-        {
-          "!xmcp.tables.datatypes.TableInfo!": "xmcp.tables.datatypes.TableInfo"
-        },
-        {
-          "!ZetaFramework!": "ZetaFramework"
-        },
-        {
-          "!0.6.33!": "0.6.33"
         }
       ],
       "operation": "multiSet"
@@ -158,6 +86,7 @@
             "monitoringLevel": 5,
             "monitoringLevelIsCustom": false,
             "name": "!autotest.generated!",
+            "fullQualifiedName": "!autotest.generated!",
             "parameterInheritanceRules": {
               "$list": [],
               "$meta": {
@@ -216,7 +145,8 @@
             "$meta": {
               "fqn": "xmcp.factorymanager.ordertypes.OrderTypeName"
             },
-            "name": "!autotest.generated!"
+            "name": "!autotest.generated!",
+			"fullQualifiedName": "!autotest.generated!",
           }
         ],
         "orderType": "xmcp.factorymanager.ordertypes.GetOrderType"
