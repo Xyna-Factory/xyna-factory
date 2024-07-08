@@ -685,7 +685,7 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
     
     for (UpdateGeneration update : updates) {
       UnfinishedUpdateStatement unfinishedUpdateStatement = update.getUnfinishedUpdateStatement();
-      for(QualifiedStorableColumnInformation column : unfinishedUpdateStatement.getQualifiedColumn()) {
+      for (QualifiedStorableColumnInformation column : unfinishedUpdateStatement.getQualifiedColumn()) {
         context.checkAccess(AccessType.UPDATE, column.getColumn());
       }
     }
@@ -755,9 +755,9 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
   private String determineTypeName(XynaObject storable, List<Integer> idx, QualifiedStorableColumnInformation column) {
     Iterator<Integer> listIdxIterator = idx.iterator();
     XynaObject current = storable;
-    for(StorableColumnInformation access : column.getAccessPath()) {
+    for (StorableColumnInformation access : column.getAccessPath()) {
       try {
-        if(access.isList()) {
+        if (access.isList()) {
           current = (XynaObject) ((List) current.get(access.getVariableName())).get(listIdxIterator.next());
         } else {
           current = (XynaObject) current.get(access.getVariableName());
@@ -766,7 +766,7 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
         throw new RuntimeException(e);
       }
     }
-    
+
     return current.getClass().getDeclaredAnnotationsByType(XynaObjectAnnotation.class)[0].fqXmlName();
   }
   

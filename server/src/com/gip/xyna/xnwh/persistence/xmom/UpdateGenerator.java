@@ -130,25 +130,26 @@ public class UpdateGenerator {
       return compare(this, o);
     }
     
+
     private static int compare(UpdateGeneration u1, UpdateGeneration u2) {
-      if(u1.listIdxs.size() != u2.listIdxs.size()) {
-        return u1.listIdxs.size() - u2.listIdxs.size() ;
+      if (u1.listIdxs.size() != u2.listIdxs.size()) {
+        return u1.listIdxs.size() - u2.listIdxs.size();
       }
-      
-      for(int i=0; i< u1.listIdxs.size(); i++) {
-        if(u1.listIdxs.get(i) != u2.listIdxs.get(i)) {
+
+      for (int i = 0; i < u1.listIdxs.size(); i++) {
+        if (!u1.listIdxs.get(i).equals(u2.listIdxs.get(i))) {
           return u1.listIdxs.get(i) - u2.listIdxs.get(i);
         }
       }
-      
-      if(u1.getUnfinishedUpdateStatement().needsLike != u2.getUnfinishedUpdateStatement().needsLike) {
+
+      if (u1.getUnfinishedUpdateStatement().needsLike != u2.getUnfinishedUpdateStatement().needsLike) {
         return u1.getUnfinishedUpdateStatement().needsLike ? 1 : -1;
       }
-      
-      if(u1.getUnfinishedUpdateStatement().parentInfo.tableName != u2.getUnfinishedUpdateStatement().parentInfo.tableName) {
+
+      if (u1.getUnfinishedUpdateStatement().parentInfo.tableName != u2.getUnfinishedUpdateStatement().parentInfo.tableName) {
         return u1.getUnfinishedUpdateStatement().parentInfo.tableName.compareTo(u2.getUnfinishedUpdateStatement().parentInfo.tableName);
       }
-      
+
       return 0;
     }
     
@@ -210,27 +211,27 @@ public class UpdateGenerator {
       StringBuilder sb = new StringBuilder();
       sb.append("insert into ").append(parentInfo.getTableName()).append(" (");
       sb.append(String.join(", ", columnNames));
-      
+
       sb.append(", ").append(parentInfo.getPrimaryKeyName());
-      params.add(primaryKey+ primaryKeySuffix);
+      params.add(primaryKey + primaryKeySuffix);
       String typeColName = getColName(VarType.TYPENAME);
-      if(typeColName != null) {
+      if (typeColName != null) {
         sb.append(", ").append(typeColName);
         params.add(typename);
       }
       String parentIdColName = getColName(VarType.EXPANSION_PARENT_FK);
-      if(parentIdColName != null) {
+      if (parentIdColName != null) {
         sb.append(", ").append(parentIdColName);
         params.add(primaryKey);
       }
       String listIdxColName = getColName(VarType.LIST_IDX);
-      if(listIdxColName != null) {
+      if (listIdxColName != null) {
         sb.append(", ").append(listIdxColName);
-        params.add(primaryKeySuffix.substring(primaryKeySuffix.lastIndexOf("#")+1));
+        params.add(primaryKeySuffix.substring(primaryKeySuffix.lastIndexOf("#") + 1));
       }
-      
+
       sb.append(") values (? ");
-      sb.append(", ?".repeat(params.size()-1));
+      sb.append(", ?".repeat(params.size() - 1));
       sb.append(")");
       return Pair.of(sb.toString(), params);
     }
@@ -238,17 +239,18 @@ public class UpdateGenerator {
  
     private String getColName(VarType type) {
       StorableColumnInformation colInfo = parentInfo.getColInfoByVarType(type);
-      if(colInfo != null) {
+      if (colInfo != null) {
         return colInfo.getColumnName();
       }
       return null;
     }
 
+
     private Parameter fillParameter() {
       Parameter params = new Parameter();
-      for(int i=0; i<columns.size(); i++) {
+      for (int i = 0; i < columns.size(); i++) {
         Object value = values.get(i);
-        if(value != null) {
+        if (value != null) {
           params.add(value);
         }
       }
@@ -315,10 +317,10 @@ public class UpdateGenerator {
   //if there are multiple updates for the same row, combine them
   public static void combineUpdates(List<UpdateGeneration> updates) {
     Collections.sort(updates);
-    for(int i= updates.size()-1; i>=1; i--) {
+    for (int i = updates.size() - 1; i >= 1; i--) {
       UpdateGeneration u1 = updates.get(i);
-      UpdateGeneration u2 = updates.get(i-1);
-      if(UpdateGeneration.canCombine(u1, u2)) {
+      UpdateGeneration u2 = updates.get(i - 1);
+      if (UpdateGeneration.canCombine(u1, u2)) {
         u2.combine(u1);
         updates.remove(u1);
       }
