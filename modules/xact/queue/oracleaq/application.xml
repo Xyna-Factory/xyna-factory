@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="OracleAQ" comment="" factoryVersion="" versionName="1.0" xmlVersion="1.1">
+<Application applicationName="OracleAQ" comment="" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">OracleAQ</Description>
     <Description Lang="EN">OracleAQ</Description>
