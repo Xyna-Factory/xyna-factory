@@ -120,6 +120,10 @@ public class XynaCodegenProperty {
 
 
   private boolean isGenericJsonObject(CodegenPropertyInfo propertyInfo) { 
+    if("object".equalsIgnoreCase(propertyInfo.getComplexType())) {
+      return true;
+    }
+    
     if("object".equalsIgnoreCase(propertyInfo.getDataType())) {
       return true;
     }        
