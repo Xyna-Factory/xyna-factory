@@ -146,7 +146,7 @@
               "fqn": "xmcp.factorymanager.ordertypes.OrderTypeName"
             },
             "name": "!autotest.generated!",
-			"fullQualifiedName": "!autotest.generated!",
+            "fullQualifiedName": "!autotest.generated!"
           }
         ],
         "orderType": "xmcp.factorymanager.ordertypes.GetOrderType"
