@@ -20,9 +20,12 @@
 Label="{{apiLabel}}" TypeName="{{apiRefName}}" TypePath="{{apiRefPath}}">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Abstract base type.
+Create a derived data type in your implementing workspace and override the services to implement the endpoints.
+    </Documentation>
   </Meta>
   <Service Label="{{apiLabel}}" TypeName="{{apiRefName}}">{{#xynaOperation}}
-    <Operation Label="{{implLabel}}" Name="{{implVarName}}" IsAbstract="true" IsStatic="false">
+    <Operation Label="{{implLabel}}" Name="{{implVarName}}" IsStatic="false">
       <Meta>
         <Documentation>{{implDescription}}
         </Documentation>
@@ -35,6 +38,9 @@ Label="{{apiLabel}}" TypeName="{{apiRefName}}" TypePath="{{apiRefPath}}">
         <Data ID="{{responseId}}" Label="{{responseLabel}}" VariableName="{{responseVarName}}{{responseId}}"
         ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}" />
       </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return null;</CodeSnippet>
+      </SourceCode>
     </Operation>{{/xynaOperation}}
     <Operation Label="Preprocess Request" Name="preprocessRequest" IsStatic="false">
       <Input>
