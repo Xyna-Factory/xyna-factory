@@ -1,6 +1,6 @@
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Copyright 2022 Xyna GmbH, Germany
+# Copyright 2024 Xyna GmbH, Germany
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -103,8 +103,8 @@ f_get_instantiated_persistencelayer_id () {
     #o    got:  - 13  3    HISTORY  XML Persistence (storage/Configuration)
     #o    got:  - 14  3    DEFAULT  XML Persistence (storage/XynaFactoryWarehouse)
     #o    got:  - 15  0    DEFAULT  Memory (4 known Tables)
-    #o    got:  - 16  2    HISTORY  com.gip.xyna.xnwh.persistence.mysql.MySQLPersistenceLayer@4ebac9b9 (dpileasequery@jdbc:mysql://localhost/audit poolSize=20 timeout=60000)
-    #o    got:  - 17  2    HISTORY  com.gip.xyna.xnwh.persistence.mysql.MySQLPersistenceLayer@c5a67c9 (dhcptriggerv4@jdbc:mysql://localhost/xynadhcp poolSize=5 timeout=5000)
+    #o    got:  - 16  2    HISTORY  MySQL Persistence (dpileasequery@jdbc:mysql://localhost/audit poolSize=20 timeout=60000)
+    #o    got:  - 17  2    HISTORY  MySQL Persistence (dhcptriggerv4@jdbc:mysql://localhost/xynadhcp poolSize=5 timeout=5000)
     #
     #  Die erste Spalte "got: " rausschneiden. Das deckt den Fall ab, dass eine
     #+ Fabrik laeuft, die die Spalte "got: " nicht ausgibt.
@@ -271,7 +271,7 @@ f_list_table_config () {
     f_check_xyna_online ${BLACK_HOME}
     #  Herausfinden, an welcher Instanz die Tabelle haengt
     #o    got:  - idgeneration (DEFAULT)  ->  8=Java Serialization
-    #o    got:  - optionsv4 (HISTORY)  ->  17=com.gip.xyna.mysql.MySQLPersistenceLayer@c5a67c9 (xyna@jdbc:mysql://localhost/xynadb poolSize=5 timeout=5000)
+    #o    got:  - optionsv4 (HISTORY)  ->  17=MySQL Persistence (xyna@jdbc:mysql://localhost/xynadb poolSize=5 timeout=5000)
     #
     #  Die erste Spalte "got: " rausschneiden. Das deckt den Fall ab, dass eine
     #+ Fabrik laeuft, die die Spalte "got: " nicht ausgibt.

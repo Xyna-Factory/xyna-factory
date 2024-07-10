@@ -2253,8 +2253,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
 
 
   public String getInformation() {
-    //user pw jdbc:mysql://x.x.x.x/schema), poolsize, timeout(ms)
-    return toString() + " (" + username + "@" + url + " timeout=" + timeout + ")";
+    return String.format("MySQL Persistence (%s@%s timeout=%s)", username, url, timeout);
   }
 
 

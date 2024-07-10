@@ -26,6 +26,7 @@ import java.util.Set;
 
 import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xmcp.xguisupport.messagebus.transfer.MessageInputParameter;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xprc.exceptions.XPRC_InheritedConcurrentDeploymentException;
 import com.gip.xyna.xprc.exceptions.XPRC_InvalidPackageNameException;
@@ -40,7 +41,6 @@ import com.gip.xyna.xprc.xfractwfe.generation.WF;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.AssumedDeadlockException;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.StringXMLSource;
 
-import xmcp.xypilot.impl.Config;
 import xmcp.xypilot.impl.util.DOMUtils;
 
 public class TestXynaFactory implements XynaFactoryFacade {
@@ -64,19 +64,6 @@ public class TestXynaFactory implements XynaFactoryFacade {
 
     @Override
     public void getDependenciesRecursivly(Long revision, Set<Long> dependencies) {
-    }
-
-    @Override
-    public String getProperty(String key) {
-        switch (key) {
-            case Config.PROPERTY_XYPILOT_URI:
-                return "http://localhost:5000";
-            case Config.PROPERTY_XYPILOT_MAX_SUGGESTIONS:
-                return "1";
-            case Config.PROPERTY_XYPILOT_MODEL:
-                return "fastertransformer";
-        }
-        return null;
     }
 
     @Override
@@ -138,6 +125,21 @@ public class TestXynaFactory implements XynaFactoryFacade {
     @Override
     public WF getWorkflow(String fqn, long revision, boolean deployedState) throws XynaException {
         throw new UnsupportedOperationException("Unsupported method 'getWorkflow'");
+    }
+
+    @Override
+    public void Publish(MessageInputParameter message) throws XynaException {
+      
+    }
+
+    @Override
+    public String resolveSessionToUser(String sessionId) {
+      return "testuser";
+    }
+
+    @Override
+    public String getProperty(String key) {
+      return null;
     }
 
 }

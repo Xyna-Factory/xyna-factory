@@ -64,14 +64,14 @@ public class NumberTypeValidator<N extends Number & Comparable<N>> extends Primi
         if (!checkMin()) {
             String condition = excludeMin ? ">" : ">=";
             errorMessages.add(String.format(
-                "%s: Value is %s, but must be %s %s", getName(), getValue().toString(), condition, min.toString())
+                "%s: Value is %s but must be %s %s", getName(), getValue().toString(), condition, min.toString())
             );
         }
         
         if (!checkMax()) {
             String condition = excludeMax ? "<" : "<=";
             errorMessages.add(String.format(
-                "%s: Value is %s, but must be %s %s", getName(), getValue().toString(), condition, max.toString())
+                "%s: Value is %s but must be %s %s", getName(), getValue().toString(), condition, max.toString())
             );
         }
         

@@ -361,12 +361,12 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add(new OptionsAction(ACCESS_CONTROL_ALLOW_ORIGIN));
     allFilterActions.add(new IndexAction(allFilterActions, applicationVersion, NAME, BASE_PATH));
 
-    allFilterActions.add(new LoginAction());
-    allFilterActions.add(new InfoAction());
+    allFilterActions.add(new LoginAction(xmomGui));
+    allFilterActions.add(new InfoAction(xmomGui));
     allFilterActions.add(new LogoutAction());
     allFilterActions.add(new ExternalUserLoginInformationAction());
-    allFilterActions.add(new ExternalUserLoginAction());
-    allFilterActions.add(new SharedLoginAction());
+    allFilterActions.add(new ExternalUserLoginAction(xmomGui));
+    allFilterActions.add(new SharedLoginAction(xmomGui));
     allFilterActions.add(new ChangePasswordAction());
 
     StartorderAction soa = new StartorderAction();

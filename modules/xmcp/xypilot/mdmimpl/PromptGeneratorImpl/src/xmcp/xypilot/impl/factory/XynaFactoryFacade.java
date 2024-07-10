@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xmcp.xguisupport.messagebus.transfer.MessageInputParameter;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
@@ -66,4 +67,8 @@ public interface XynaFactoryFacade {
     public ExceptionGeneration getException(String fqn, long revision, boolean deployedState) throws XynaException;
 
     public WF getWorkflow(String fqn, long revision, boolean deployedState) throws XynaException;
+
+    public void Publish(MessageInputParameter message) throws XynaException;
+    
+    public String resolveSessionToUser(String sessionId);
 }

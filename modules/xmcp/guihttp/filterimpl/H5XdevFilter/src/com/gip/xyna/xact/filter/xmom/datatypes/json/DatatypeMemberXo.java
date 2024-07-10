@@ -208,8 +208,8 @@ public class DatatypeMemberXo implements HasXoRepresentation {
     area.setId(ObjectId.createMemberDocumentationAreaId(String.valueOf(ObjectId.parseMemberVarNumber(memberId))));
     area.setText(var.getDocumentation());
     area.setReadonly(inheritedFrom != null);
-    String location = XMOMType.DATATYPE.equals(contextBuilder.getType()) ? PluginPaths.location_datatype_member_documenation : PluginPaths.location_exception_documentation;
-    area.unversionedSetPlugin(pluginMgmt.createPlugin(contextBuilder.instantiateContext(location, memberId.getObjectId())));
+    String location = XMOMType.DATATYPE.equals(contextBuilder.getType()) ? PluginPaths.location_datatype_member_documenation : PluginPaths.location_exception_member_documentation;
+    area.unversionedSetPlugin(pluginMgmt.createPlugin(contextBuilder.instantiateContext(location, area.getId())));
 
     return area;
   }

@@ -33,6 +33,7 @@ import com.gip.xyna.XynaFactory;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase.XMOMType;
+import com.gip.xyna.xmcp.xguisupport.messagebus.transfer.MessageInputParameter;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xprc.exceptions.XPRC_InheritedConcurrentDeploymentException;
 import com.gip.xyna.xprc.exceptions.XPRC_MDMDeploymentException;
@@ -202,6 +203,18 @@ public class DefaultXynaFactory implements XynaFactoryFacade {
 
         logger.debug("Got type " + gb.getTypeAsString());
         return (WF) gb;
+    }
+
+    @Override
+    public void Publish(MessageInputParameter message) throws XynaException {
+      XynaFactory.getInstance().getXynaMultiChannelPortal().publish(message);
+    }
+
+
+    @Override
+    public String resolveSessionToUser(String sessionId) {
+      return XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement()
+          .resolveSessionToUser(sessionId);
     }
 
 }

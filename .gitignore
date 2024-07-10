@@ -171,6 +171,9 @@ ${third_parties.dir}/
 
 /modules/xmcp/guihttp/filterimpl/H5XdevFilter/automatedTests/config.cfg
 
+# XyPilot Specific
+modules/xmcp/xypilot/copilot-api/copilot/__pycache__/*.pyc
+
 # Apache Ant
 .ant-targets-build.xml
 .ant.properties

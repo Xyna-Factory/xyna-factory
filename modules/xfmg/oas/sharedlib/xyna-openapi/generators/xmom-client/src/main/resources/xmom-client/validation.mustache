@@ -28,20 +28,34 @@ try {
   {{^isList}}
     {{propRefPath}}.{{propRefType}} {{propVarName}} = {{getPropVarName}};
     if ({{propVarName}} != null) {
+      {{^isGenericJsonObject}}
         result.getErrorMessages().addAll({{propVarName}}.validate().getErrorMessages());
-    }{{#required}} else {
-        result.getErrorMessages().add("{{propClassName}}.{{propVarName}} of type {{propRefType}} is required, but is null.");
-    }{{/required}}
+      {{/isGenericJsonObject}}
+    }{{#isRequired}} else {
+        result.getErrorMessages().add("{{propClassName}}.{{propVarName}}: Object of type {{propRefType}} is required but is null");
+    }{{/isRequired}}
   {{/isList}}
   {{#isList}}
     List&lt;? extends {{propRefPath}}.{{propRefType}}&gt; {{propVarName}} = {{getPropVarName}};
     if ({{propVarName}} != null) {
+        {{#minItems}}
+        if ({{propVarName}}.size() &lt; {{minItems}}) {
+          result.getErrorMessages().add("{{propClassName}}.{{propVarName}}: List of type {{propRefType}} must have at least {{minItems}} items but has fewer");
+        }
+        {{/minItems}}
+        {{#maxItems}}
+        if ({{propVarName}}.size() &gt; {{maxItems}}) {
+          result.getErrorMessages().add("{{propClassName}}.{{propVarName}}: List of type {{propRefType}} must not exceed {{maxItems}} items but has more");
+        }
+        {{/maxItems}}
+        {{^isGenericJsonList}}
         for ({{propRefPath}}.{{propRefType}} obj : {{propVarName}}) {
             result.getErrorMessages().addAll(obj.validate().getErrorMessages());
         }
-    }{{#required}} else {
-        result.getErrorMessages().add("{{propClassName}}.{{propVarName}} of type {{propRefType}} is required, but is null.");
-    }{{/required}}
+        {{/isGenericJsonList}}
+    }{{#isRequired}} else {
+        result.getErrorMessages().add("{{propClassName}}.{{propVarName}}: List of type {{propRefType}} is required, but is null.");
+    }{{/isRequired}}
   {{/isList}}
 {{/isPrimitive}}
 } catch (Exception e) {

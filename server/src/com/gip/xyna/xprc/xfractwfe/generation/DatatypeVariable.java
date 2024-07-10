@@ -74,8 +74,7 @@ public class DatatypeVariable extends AVariable {
   public static final String ANY_TYPE = "base.AnyType";
 
   protected void specialParseXml(Element e, Long revision) throws XPRC_InvalidPackageNameException {
-
-    parseUnknownMetaTags(e, Arrays.asList(EL.PERSISTENCE, EL.METATYPE, EL.USEROUTPUT));
+    parseUnknownMetaTags(e, Arrays.asList(EL.PERSISTENCE, EL.METATYPE, EL.USEROUTPUT, GenerationBase.EL.DOCUMENTATION));
 
     // parse data
     boolean isRef = !GenerationBase.isEmpty(e.getAttribute(GenerationBase.ATT.REFERENCENAME));

@@ -22,213 +22,39 @@
   <Libraries>PromptGeneratorImpl.jar</Libraries>
   <Libraries>freemarker-2.3.32.jar</Libraries>
   <Service Label="PromptGenerator" TypeName="PromptGenerator">
-    <Operation IsStatic="true" Label="Generate Datatype Documentation" Name="generateDatatypeDocumentation">
+    <Meta>
+      <AdditionalDependencies>
+        <Datatype>xmcp.forms.plugin.PluginManagement</Datatype>
+      </AdditionalDependencies>
+    </Meta>
+    <Operation IsStatic="true" Label="Generate" Name="generate" RequiresXynaOrder="true">
       <Input>
-        <Data ID="866" Label="XMOM Item Reference" ReferenceName="XMOMItemReference" ReferencePath="xmcp.xypilot" VariableName="xMOMItemReference866"/>
+        <Data Label="Context" ReferenceName="Context" ReferencePath="xmcp.yggdrasil.plugin" VariableName="context900"/>
       </Input>
-      <Output>
-        <Data ID="867" Label="Documentation" ReferenceName="Documentation" ReferencePath="xmcp.xypilot" VariableName="documentation867"/>
-      </Output>
-      <Meta>
-        <Documentation>Generates Documentation for the DataType described by the XMOM Item Reference.
-
-If anything doesn't work, an empty Documentation is returned.</Documentation>
-      </Meta>
+      <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.xypilot.PromptGeneratorImpl.generateDatatypeDocumentation(xMOMItemReference866);</CodeSnippet>
+        <CodeSnippet Type="Java">xmcp.xypilot.PromptGeneratorImpl.generate(correlatedXynaOrder, context900);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Generate Exception Documentation" Name="generateExceptionDocumentation">
-      <Input>
-        <Data ID="869" Label="XMOM Item Reference" ReferenceName="XMOMItemReference" ReferencePath="xmcp.xypilot" VariableName="xMOMItemReference869"/>
-      </Input>
+    <Operation IsStatic="true" Label="Load User Config" Name="loadUserConfig" RequiresXynaOrder="true">
+      <Input/>
       <Output>
-        <Data ID="868" Label="Documentation" ReferenceName="Documentation" ReferencePath="xmcp.xypilot" VariableName="documentation868"/>
+        <Data Label="Xypilot User Config" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot" VariableName="xypilotUserConfig901"/>
       </Output>
-      <Meta>
-        <Documentation>Generates Documentation for the Exception described by the XMOM Item Reference.
-
-If anything doesn't work, an empty Documentation is returned.</Documentation>
-      </Meta>
+      <Throws>
+        <Exception Label="No XyPilot User Config Exception" VariableName="noXyPilotUserConfigException3" ReferenceName="NoXyPilotUserConfigException" ReferencePath="xmcp.xypilot" />
+      </Throws>
       <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.xypilot.PromptGeneratorImpl.generateExceptionDocumentation(xMOMItemReference869);</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.xypilot.PromptGeneratorImpl.loadUserConfig(correlatedXynaOrder);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Generate Datatype Method Documentation" Name="generateDatatypeMethodDocumentation">
+    <Operation IsStatic="true" Label="Store User Config" Name="storeUserConfig" RequiresXynaOrder="true">
       <Input>
-        <Data ID="871" Label="Member Reference" ReferenceName="MemberReference" ReferencePath="xmcp.xypilot" VariableName="memberReference871"/>
+        <Data Label="Xypilot User Config" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot" VariableName="xypilotUserConfig902"/>
       </Input>
-      <Output>
-        <Data ID="870" Label="Documentation" ReferenceName="Documentation" ReferencePath="xmcp.xypilot" VariableName="documentation870"/>
-      </Output>
-      <Meta>
-        <Documentation>Generates Documentation for the Method of a DataType described by the Member Reference (DataType, MethodName).
-
-If anything doesn't work, an empty Documentation is returned.</Documentation>
-      </Meta>
+      <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.xypilot.PromptGeneratorImpl.generateDatatypeMethodDocumentation(memberReference871);</CodeSnippet>
-      </SourceCode>
-    </Operation>
-    <Operation IsStatic="true" Label="Generate Datatype Variable Documentation" Name="generateDatatypeVariableDocumentation">
-      <Input>
-        <Data ID="872" Label="Member Reference" ReferenceName="MemberReference" ReferencePath="xmcp.xypilot" VariableName="memberReference872"/>
-      </Input>
-      <Output>
-        <Data ID="873" Label="Documentation" ReferenceName="Documentation" ReferencePath="xmcp.xypilot" VariableName="documentation873"/>
-      </Output>
-      <Meta>
-        <Documentation>Generates Documentation for the Variable of a DataType described by the Member Reference (DataType, VariableName).
-
-If anything doesn't work, an empty Documentation is returned.</Documentation>
-      </Meta>
-      <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.xypilot.PromptGeneratorImpl.generateDatatypeVariableDocumentation(memberReference872);</CodeSnippet>
-      </SourceCode>
-    </Operation>
-    <Operation IsStatic="true" Label="Generate Exception Variable Documentation" Name="generateExceptionVariableDocumentation">
-      <Input>
-        <Data ID="874" Label="Member Reference" ReferenceName="MemberReference" ReferencePath="xmcp.xypilot" VariableName="memberReference874"/>
-      </Input>
-      <Output>
-        <Data ID="875" Label="Documentation" ReferenceName="Documentation" ReferencePath="xmcp.xypilot" VariableName="documentation875"/>
-      </Output>
-      <Meta>
-        <Documentation>Generates Documentation for the Variable of an Exception described by the Member Reference (Exception, VariableName).
-
-If anything doesn't work, an empty Documentation is returned.</Documentation>
-      </Meta>
-      <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.xypilot.PromptGeneratorImpl.generateExceptionVariableDocumentation(memberReference874);</CodeSnippet>
-      </SourceCode>
-    </Operation>
-    <Operation IsStatic="true" Label="Generate Exception Variables" Name="generateExceptionVariables">
-      <Input>
-        <Data ID="876" Label="XMOM Item Reference" ReferenceName="XMOMItemReference" ReferencePath="xmcp.xypilot" VariableName="xMOMItemReference876"/>
-      </Input>
-      <Output>
-        <Data ID="877" IsList="true" Label="Member Variable" ReferenceName="MemberVariable" ReferencePath="xmcp.xypilot" VariableName="memberVariable877"/>
-      </Output>
-      <Meta>
-        <Documentation>Generates member variables for the Exception described by the XMOM Item Reference.
-
-If anything doesn't work, an empty List is returned.</Documentation>
-      </Meta>
-      <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.xypilot.PromptGeneratorImpl.generateExceptionVariables(xMOMItemReference876);</CodeSnippet>
-      </SourceCode>
-    </Operation>
-    <Operation IsStatic="true" Label="Generate Datatype Variables" Name="generateDatatypeVariables">
-      <Input>
-        <Data ID="878" Label="XMOM Item Reference" ReferenceName="XMOMItemReference" ReferencePath="xmcp.xypilot" VariableName="xMOMItemReference878"/>
-      </Input>
-      <Output>
-        <Data ID="879" IsList="true" Label="Member Variable" ReferenceName="MemberVariable" ReferencePath="xmcp.xypilot" VariableName="memberVariable879"/>
-      </Output>
-      <Meta>
-        <Documentation>Generates member variables for the DataType described by the XMOM Item Reference.
-
-If anything doesn't work, an empty List is returned.</Documentation>
-      </Meta>
-      <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.xypilot.PromptGeneratorImpl.generateDatatypeVariables(xMOMItemReference878);</CodeSnippet>
-      </SourceCode>
-    </Operation>
-    <Operation IsStatic="true" Label="Generate Datatype Methods" Name="generateDatatypeMethods">
-      <Input>
-        <Data ID="880" Label="XMOM Item Reference" ReferenceName="XMOMItemReference" ReferencePath="xmcp.xypilot" VariableName="xMOMItemReference880"/>
-      </Input>
-      <Output>
-        <Data ID="881" IsList="true" Label="Method Definition" ReferenceName="MethodDefinition" ReferencePath="xmcp.xypilot" VariableName="methodDefinition881"/>
-      </Output>
-      <Meta>
-        <Documentation>Generates method definitions for the DataType described by the XMOM Item Reference.
-
-If anything doesn't work, an empty List is returned.</Documentation>
-      </Meta>
-      <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.xypilot.PromptGeneratorImpl.generateDatatypeMethods(xMOMItemReference880);</CodeSnippet>
-      </SourceCode>
-    </Operation>
-    <Operation IsStatic="true" Label="Generate Mapping Label" Name="generateMappingLabel">
-      <Input>
-        <Data ID="882" Label="Member Reference" ReferenceName="MemberReference" ReferencePath="xmcp.xypilot" VariableName="memberReference882"/>
-      </Input>
-      <Output>
-        <Data ID="883" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text883"/>
-      </Output>
-      <Meta>
-        <Documentation>Generates a label for the given Mapping.
-The item of the member reference must describe a Workflow and the member must be the StepId of the mapping to be expanded.
-Note: It is expected that the actual numerical Id (as seen in the XML) is prefixed by "step".
-
-If anything doesn't work, an empty Text is returned.</Documentation>
-      </Meta>
-      <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.xypilot.PromptGeneratorImpl.generateMappingLabel(memberReference882);</CodeSnippet>
-      </SourceCode>
-    </Operation>
-    <Operation IsStatic="true" Label="Generate Mapping Assignments" Name="generateMappingAssignments">
-      <Input>
-        <Data ID="885" Label="Member Reference" ReferenceName="MemberReference" ReferencePath="xmcp.xypilot" VariableName="memberReference885"/>
-      </Input>
-      <Output>
-        <Data ID="893" Label="Mapping" ReferenceName="Mapping" ReferencePath="xmcp.xypilot" VariableName="mapping893"/>
-      </Output>
-      <Meta>
-        <Documentation>Generates the mapping-assignments for the given mapping.
-The item of the member reference must describe a Workflow and the member must be the StepId of the mapping to be expanded.
-Note: It is expected that the actual numerical Id (as seen in the XML) is prefixed by "step".
-
-If anything goes wrong, the return is a mapping with an empty assignment list</Documentation>
-      </Meta>
-      <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.xypilot.PromptGeneratorImpl.generateMappingAssignments(memberReference885);</CodeSnippet>
-      </SourceCode>
-    </Operation>
-    <Operation IsStatic="true" Label="Generate Datatype Method Implementation" Name="generateDatatypeMethodImplementation">
-      <Input>
-        <Data ID="888" Label="Member Reference" ReferenceName="MemberReference" ReferencePath="xmcp.xypilot" VariableName="memberReference888"/>
-      </Input>
-      <Output>
-        <Data ID="887" IsList="true" Label="Code" ReferenceName="Code" ReferencePath="xmcp.xypilot.metrics" VariableName="code887"/>
-      </Output>
-      <Meta>
-        <Documentation>Generates codesuggestions for the Method of a DataType described by the Member Reference (DataType, MethodName).
-The number of suggestions returned is defined by the xmcp.xypilot.max_suggestions property.
-
-If anything doesn't work, an empty List is returned.</Documentation>
-      </Meta>
-      <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.xypilot.PromptGeneratorImpl.generateDatatypeMethodImplementation(memberReference888);</CodeSnippet>
-      </SourceCode>
-    </Operation>
-    <Operation IsStatic="true" Label="Generate Exception Messages" Name="generateExceptionMessages">
-      <Input>
-        <Data ID="891" Label="XMOM Item Reference" ReferenceName="XMOMItemReference" ReferencePath="xmcp.xypilot" VariableName="xMOMItemReference891"/>
-      </Input>
-      <Output>
-        <Data ID="892" IsList="true" Label="Exception Message" ReferenceName="ExceptionMessage" ReferencePath="xmcp.xypilot" VariableName="exceptionMessage892"/>
-      </Output>
-      <Meta>
-        <Documentation>Generates exception messages for the Exception described by the XMOM Item Reference.
-
-If anything doesn't work, an empty List is returned.</Documentation>
-      </Meta>
-      <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.xypilot.PromptGeneratorImpl.generateExceptionMessages(xMOMItemReference891);</CodeSnippet>
-      </SourceCode>
-    </Operation>
-    <Operation IsStatic="true" Label="Get XML" Name="getXML">
-      <Input>
-        <Data ID="899" Label="XMOM Item Reference" ReferenceName="XMOMItemReference" ReferencePath="xmcp.xypilot" VariableName="xMOMItemReference899"/>
-        <Data ID="897" Label="Xyna User Session" ReferenceName="XynaUserSession" ReferencePath="xfmg.xopctrl" VariableName="xynaUserSession897"/>
-      </Input>
-      <Output>
-        <Data ID="898" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text898"/>
-      </Output>
-      <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.xypilot.PromptGeneratorImpl.getXML(xMOMItemReference899, xynaUserSession897);</CodeSnippet>
+        <CodeSnippet Type="Java">xmcp.xypilot.PromptGeneratorImpl.storeUserConfig(correlatedXynaOrder, xypilotUserConfig902);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

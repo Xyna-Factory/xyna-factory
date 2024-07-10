@@ -19,6 +19,7 @@ package xfmg.oas.generation.cli.impl;
 
 
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -105,22 +106,31 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
       throw new RuntimeException(errors.toString());
     }
 
-    String id = createOasApp("xmom-data-model", target + "_datatypes", specFile);
-    writeToCommandLine(statusOutputStream, "Datamodel ManagedFileId: " + id + " ");
+    createAppAndPrintId(statusOutputStream, "xmom-data-model", target + "_datatypes", specFile, "datamodel");
     if (payload.getBuildProvider()) {
-      id = createOasApp("xmom-server", target + "_provider", specFile);
-      writeToCommandLine(statusOutputStream, "provider ManagedFileId: " + id + " ");
+      createAppAndPrintId(statusOutputStream, "xmom-server", target + "_provider", specFile, "provider");
     }
     if (payload.getBuildClient()) {
-      id = createOasApp("xmom-client", target + "_client", specFile);
-      writeToCommandLine(statusOutputStream, "client ManagedFileId: " + id + " ");
+      createAppAndPrintId(statusOutputStream, "xmom-client", target + "_client", specFile, "client");
     }
 
     writeToCommandLine(statusOutputStream, "Done.");
   }
+  
+  private void createAppAndPrintId(OutputStream statusOutputStream, String generator, String target, String specFile, String type) {
+    try (OASApplicationData appData = createOasApp(generator, target, specFile)) {
+      writeToCommandLine(statusOutputStream, type + " ManagedFileId: " + appData.getId() + " ");
+    } catch (IOException e) {
+      writeToCommandLine(statusOutputStream, "Could not clean up temporary files for " + type);
+      if (logger.isWarnEnabled()) {
+        logger.warn("Could not clean up temporary files for " + type, e);
+      }
+    }
+  }
 
   
-  public String createOasApp(String generator, String target, String specFile) {
+  public OASApplicationData createOasApp(String generator, String target, String specFile) {
+    List<File> files = new ArrayList<>();
     callGenerator(generator, target, specFile);
 
     separateFiles(target);
@@ -129,12 +139,14 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
  
     File targetAsFile = new File(target);
     File unzipedApp = new File("/tmp/" + appName);
+    files.add(unzipedApp);
     
     File tmpFile;
     try {
       FileUtils.copyRecursivelyWithFolderStructure(targetAsFile, unzipedApp);
       FileUtils.deleteDirectoryRecursively(targetAsFile);
       tmpFile = File.createTempFile(appName + "_", ".zip");
+      files.add(tmpFile);
     } catch (IOException | Ex_FileAccessException e1) {
       throw new RuntimeException(e1);
     }
@@ -150,10 +162,8 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-
-    tmpFile.deleteOnExit();
     
-    return id;
+    return new OASApplicationData(id, files);
   }
   
 
@@ -335,5 +345,34 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
       throw new RuntimeException("Could not find specification file in zip.");
     }
     return files[0].getAbsolutePath();
+  }
+  
+  public static class OASApplicationData implements Closeable {
+    private final String id;
+    private final List<File> files;
+    
+    public OASApplicationData(String id, List<File> files) {
+      this.id = id;
+      this.files = files;
+    }
+    
+    public String getId() {
+      return id;
+    }
+    
+    public List<File> getFiles() {
+      return files;
+    }
+
+    @Override
+    public void close() throws IOException {
+      for(File f : files) {
+        if(f.isFile()) {
+          f.delete();
+        } else if(f.isDirectory()) {
+          FileUtils.deleteDirectory(f);
+        }
+      }
+    }
   }
 }

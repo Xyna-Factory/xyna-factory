@@ -126,7 +126,7 @@
             <dependency>
                 <groupId>com.gip.xyna</groupId>
                 <artifactId>xynafactory</artifactId>
-                <version>10.0.0.0</version>
+                <version>10.1.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
@@ -212,7 +212,7 @@
             <dependency>
                 <groupId>com.oracle.database.jdbc</groupId>
                 <artifactId>ojdbc11</artifactId>
-                <version>23.3.0.23.09</version>
+                <version>23.4.0.24.05</version>
             </dependency>
             <dependency>
                 <groupId>com.oracle.database.xml</groupId>
@@ -357,7 +357,7 @@
             <dependency>
                 <groupId>org.mariadb.jdbc</groupId>
                 <artifactId>mariadb-java-client</artifactId>
-                <version>3.3.3</version>
+                <version>3.4.0</version>
             </dependency>
             <dependency>
                 <groupId>net.jradius</groupId>

@@ -25,18 +25,16 @@ import freemarker.template.Configuration;
 import freemarker.template.MalformedTemplateNameException;
 import freemarker.template.Template;
 import freemarker.template.TemplateNotFoundException;
-import xmcp.xypilot.impl.Config;
 
 public class TemplateLocator {
 
-    private final static Configuration cfg = Config.getTemplateConfiguration();
+    private final static Configuration cfg = ConfigurationLocator.getTemplateConfiguration();
 
     public static String getPath(String model, String templateName) {
         return model + "/" + templateName + ".ftl";
     }
 
-    public static Template getTemplate(String templateName) throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException {
-        String model = Config.model();
+    public static Template getTemplate(String templateName, String model) throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException {
         return cfg.getTemplate(getPath(model, templateName));
     }
 }

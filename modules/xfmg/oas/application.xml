@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="OAS_Base" factoryVersion="" versionName="1.1.6" xmlVersion="1.1">
+<Application applicationName="OAS_Base" factoryVersion="" versionName="1.1.18" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -25,11 +25,11 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>Http</ApplicationName>
-        <VersionName>1.2.6</VersionName>
+        <VersionName>1.2.8</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>Json</ApplicationName>
-        <VersionName>1.2.6</VersionName>
+        <VersionName>1.2.10</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>XynaPropertyMgmt</ApplicationName>
@@ -37,7 +37,7 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>ZetaFramework</ApplicationName>
-        <VersionName>0.6.51</VersionName>
+        <VersionName>0.6.53</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
@@ -138,6 +138,10 @@
       <Type>EXCEPTION</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.exception.ClientProcessingHookException</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.fman.ApplicationImport</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
@@ -176,6 +180,14 @@
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.wf.provider.Encode</FqName>
       <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.OasGuiServices</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.datatype.client.ClientProcessingHook</FqName>
+      <Type>DATATYPE</Type>
     </XMOMEntry>
   </XMOMEntries>
   <XynaProperties>

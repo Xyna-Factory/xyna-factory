@@ -116,11 +116,10 @@ public class DatatypeMethodXo implements HasXoRepresentation {
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       // nothing
     }
-    if(implementation != null) {
-      method.setImplementation(implementation);
-    }
+
     Integer methodNumber = ObjectId.parseMemberMethodNumber(methodId);
     method.addToAreas(createDocumentationArea());
+    method.addToAreas(createImplementationArea());
     method.addToAreas(ServiceUtils.createVariableArea(gbo, ObjectId.createId(ObjectType.methodVarArea, String.valueOf(methodNumber), ObjectPart.input), VarUsageType.input,
                                                       identifiedVariables, ServiceUtils.getServiceTag(VarUsageType.input), 
                                                       new String[] {MetaXmomContainers.DATA_FQN, MetaXmomContainers.EXCEPTION_FQN}, 
@@ -143,7 +142,21 @@ public class DatatypeMethodXo implements HasXoRepresentation {
     area.setId(ObjectId.createOperationDocumentationAreaId(String.valueOf(ObjectId.parseMemberMethodNumber(methodId))));
     area.setText(operation.getDocumentation());
     area.setReadonly(inheritedFrom != null);
-    Context context = contextBuilder.instantiateContext(PluginPaths.location_datatype_method_documentation, methodId.getObjectId());
+    String pluginPath = operation.isStatic() ? PluginPaths.location_servicegroup_method_documentation : PluginPaths.location_datatype_method_documentation;
+    Context context = contextBuilder.instantiateContext(pluginPath, area.getId());
+    area.unversionedSetPlugin(pluginMgmt.createPlugin(context));
+    return area;
+  }
+  
+  private TextArea createImplementationArea() {
+    TextArea area = new TextArea();
+    area.setName(Tags.DATA_TYPE_IMPLEMENTATION);
+    area.setId(ObjectId.createOperationImplementationAreaId(String.valueOf(ObjectId.parseMemberMethodNumber(methodId))));
+    area.setText(implementation);
+    area.setReadonly(inheritedFrom != null);
+    String pluginContextId = ObjectId.createMemberMethodId(ObjectId.parseMemberMethodNumber(methodId));
+    String pluginPath = operation.isStatic() ? PluginPaths.location_servicegroup_method_implementation : PluginPaths.location_datatype_method_implementation;
+    Context context = contextBuilder.instantiateContext(pluginPath, pluginContextId);
     area.unversionedSetPlugin(pluginMgmt.createPlugin(context));
     return area;
   }

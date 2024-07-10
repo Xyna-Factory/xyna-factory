@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
-  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="TMF-00101" IsAbstract="false" Label="Validation Exception" TypeName="ValidationException" TypePath="xmcp.oas.exception">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="OAS-00101" IsAbstract="false" Label="Validation Exception" TypeName="ValidationException" TypePath="xmcp.oas.exception">
     <Data Label="Error Response" ReferenceName="ValidationErrorResponse" ReferencePath="xmcp.oas.datatype.provider" VariableName="errorResponse"/>
     <MessageText Language="DE">Validation Exception</MessageText>
     <MessageText Language="EN">Validation Exception</MessageText>

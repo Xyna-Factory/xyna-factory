@@ -873,7 +873,7 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
     isList = XMLUtils.isTrue(e, GenerationBase.ATT.ISLIST);
     prototype = XMLUtils.isTrue(e, GenerationBase.ATT.ABSTRACT);
 
-    parseUnknownMetaTags(e, Arrays.asList(EL.PERSISTENCE, EL.USEROUTPUT));
+    parseUnknownMetaTags(e, Arrays.asList(EL.PERSISTENCE, EL.USEROUTPUT, GenerationBase.EL.DOCUMENTATION));
     Element meta = XMLUtils.getChildElementByName(e, GenerationBase.EL.META);
     if (meta != null) {
       persistenceTypes = PersistenceTypeInformation.parse(meta);
