@@ -114,6 +114,7 @@
             "monitoringLevel": -1,
             "monitoringLevelIsCustom": true,
             "name": "!autotest.generated!",
+            "fullQualifiedName": "!autotest.generated!",
             "parameterInheritanceRules": {
               "$list": [],
               "$meta": {
