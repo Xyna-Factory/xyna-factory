@@ -171,7 +171,9 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
     final CodegenConfigurator configurator = new CodegenConfigurator()
         .setGeneratorName(generatorName)
         .setInputSpec(specFile)
+        .addAdditionalProperty("generateAliasAsModel", "true")
         .setOutputDir(target);
+
 
       final ClientOptInput clientOptInput = configurator.toClientOptInput();
       DefaultGenerator generator = new DefaultGenerator();

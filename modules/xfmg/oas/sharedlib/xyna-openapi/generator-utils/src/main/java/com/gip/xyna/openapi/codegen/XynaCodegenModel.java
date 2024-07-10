@@ -28,6 +28,7 @@ import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
 
 import org.openapitools.codegen.CodegenModel;
+import org.openapitools.codegen.CodegenProperty;
 import org.openapitools.codegen.DefaultCodegen;
 
 public class XynaCodegenModel {
@@ -50,9 +51,12 @@ public class XynaCodegenModel {
   final boolean hasDiscriminator;
   final String discriminatorKey;
   final List<DiscriminatorMap> discriminatorMap;
+
+  final boolean isListWrapper;
   
   public XynaCodegenModel(XynaCodegenFactory factory, CodegenModel model, DefaultCodegen gen) {
     label = model.name;
+    isListWrapper = model.isArray;
     typeName = buildTypeName(model);
     typePath = buildTypePath(gen);
     description = buildDescription(model);
@@ -63,12 +67,14 @@ public class XynaCodegenModel {
     } else {
       vars = model.vars.stream().map(prop -> factory.getOrCreateXynaCodegenProperty(prop, typeName)).collect(Collectors.toList());
     }
+    
+    
     if (model.allowableValues != null) {
       @SuppressWarnings("unchecked")
       List<String> enumValues = (List<String>) model.allowableValues.getOrDefault(("values"), List.of());
       allowableValues.addAll(enumValues);
     }
-    if (model.parent != null) {
+    if (model.parent != null && model.parentModel != null) {
       // maybe we should find the correct model, then building a new one.
       parent = factory.getOrCreateXynaCodegenModel(model.parentModel);
     } else {
@@ -86,6 +92,17 @@ public class XynaCodegenModel {
     } else {
       discriminatorKey = null;
       discriminatorMap = null;
+    }
+
+    if(isListWrapper) {
+      CodegenProperty item = model.getItems();
+      if(item.mostInnerItems == null) {
+        CodegenProperty mostInnerItem = item.clone();
+        item.mostInnerItems = mostInnerItem;
+      }
+      item.isContainer = true;
+      XynaCodegenProperty itemProperty = factory.getOrCreateXynaCodegenProperty(item, Sanitizer.sanitize(item.name));
+      vars.add(itemProperty);
     }
   }
   
@@ -118,6 +135,9 @@ public class XynaCodegenModel {
       sb.append("values: ");
       sb.append(String.join(", ", allowableValues)).append('\n');
     }
+    if(isListWrapper) {
+      sb.append("This is a listWrapper!\n");
+    }
     sb.append("        ");
     return sb.toString();
   }
@@ -134,6 +154,7 @@ public class XynaCodegenModel {
     hasDiscriminator = false;
     discriminatorKey = null;
     discriminatorMap = null;
+    isListWrapper = false;
   }
 
   @Override

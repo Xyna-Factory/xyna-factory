@@ -53,10 +53,12 @@ public abstract class XynaCodegenOperation {
   final List<XynaCodegenResponse> responses;
   
   final String httpMethod;
+  
+  final String listWrapperPath;
 
   
   public XynaCodegenOperation(XynaCodegenFactory factory, CodegenOperation operation, DefaultCodegen gen, String pathPrefix) {
-    
+    listWrapperPath = gen.modelPackage();
     baseLabel = operation.httpMethod + " " + operation.path;
     baseVarName = camelize(gen.sanitizeName(operation.httpMethod + "_" + operation.path), Case.CAMEL);
     baseRefName = camelize(baseVarName, Case.PASCAL);

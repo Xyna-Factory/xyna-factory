@@ -76,6 +76,9 @@ public class XynaCodegenResponse {
   }
   
   private String message(CodegenResponse response) {
+    if (response.message != null && !response.message.isBlank()) {
+      return response.message;
+    }
     if (StatusCodeLambda.httpStatusCodes.containsKey(response.code)) {
       return StatusCodeLambda.httpStatusCodes.get(code);
     }

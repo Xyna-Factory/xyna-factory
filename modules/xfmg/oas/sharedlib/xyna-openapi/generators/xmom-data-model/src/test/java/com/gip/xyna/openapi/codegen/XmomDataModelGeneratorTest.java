@@ -23,6 +23,8 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Test;
 import org.openapitools.codegen.ClientOptInput;
@@ -68,7 +70,9 @@ public class XmomDataModelGeneratorTest {
       .setGeneratorName("xmom-data-model") // use this codegen library
       .setInputSpec("../../test/resources/" + specFile) // sample OpenAPI file
       .setOutputDir("../../test/output/xmom-data-model/" + specFile.substring(0, specFile.lastIndexOf('.'))) // output directory
-      .addAdditionalProperty("debugXO", Boolean.TRUE);
+      .addAdditionalProperty("debugXO", Boolean.TRUE)
+      .addAdditionalProperty("generateAliasAsModel", "true");
+
     final ClientOptInput clientOptInput = configurator.toClientOptInput();
     DefaultGenerator generator = new DefaultGenerator();
     generator.opts(clientOptInput).generate();

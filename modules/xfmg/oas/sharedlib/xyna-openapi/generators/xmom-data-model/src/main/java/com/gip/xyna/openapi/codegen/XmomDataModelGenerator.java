@@ -24,7 +24,6 @@ import org.openapitools.codegen.utils.ModelUtils;
 
 import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
-
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 
@@ -66,7 +65,6 @@ public class XmomDataModelGenerator extends DefaultCodegen {
   @Override
   public void preprocessOpenAPI(OpenAPI openAPI) {
     super.preprocessOpenAPI(openAPI);
-
     Info info = openAPI.getInfo();
     
     // replace spaces, "-", "." with underscores in info.title
@@ -82,6 +80,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
       }
     }
     
+    
     /**
      * Supporting Files.  You can write single files for the generator with the
      * entire object tree available.  If the input file has a suffix of `.mustache
@@ -91,7 +90,12 @@ public class XmomDataModelGenerator extends DefaultCodegen {
       "",                                                       // the destination folder, relative `outputFolder`
       "application.xml")                                          // the output file
     );
+    supportingFiles.add(new SupportingFile("listwrapperprovider.mustache",
+                                           "XMOM/" + modelPackage.replace(".", "/"),
+                                           "ListWrapperProvider.xml")
+                                         );
   }
+
 
   @Override
   public Map<String, ModelsMap> postProcessAllModels(Map<String, ModelsMap> objs) {
@@ -116,15 +120,31 @@ public class XmomDataModelGenerator extends DefaultCodegen {
       if (Boolean.TRUE.equals(additionalProperties.get("debugXO"))) {
         System.out.println(xModel);
       }
+      if(xModel.isListWrapper) {
+        objs.get(modelname).put("xynaListWrapper", xModel.typePath + "." + xModel.typeName);
+      }
     }
     return objs;
   }
   
   @Override
+  @SuppressWarnings("unchecked")
   public Map<String, Object> postProcessSupportingFileData(Map<String, Object> objs) {
-    @SuppressWarnings("unchecked")
+    List<String> listWrapper = new ArrayList<String>();
     List<ModelMap> models = (List<ModelMap>) objs.get("models");
-    models.forEach((ModelMap map) -> map.put("xynaModel", codegenFactory.getOrCreateXynaCodegenModel(map.getModel())));
+    for(ModelMap map : models) {
+      XynaCodegenModel xynaModel = codegenFactory.getOrCreateXynaCodegenModel(map.getModel());
+      map.put("xynaModel", xynaModel);
+      if(xynaModel.isListWrapper) {
+        listWrapper.add(xynaModel.typePath + "." + xynaModel.typeName);
+      }
+    }
+
+    ListWrapperData listWrapperData = new ListWrapperData();
+    listWrapperData.setPath(Sanitizer.sanitize(modelPackage()));
+    listWrapperData.setListWrapper(listWrapper);
+    objs.put("ListWrapperData", listWrapperData);
+    
     return objs;
   }
   
@@ -227,8 +247,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
   }
 
   @Override
-  @SuppressWarnings("static-method")
   public void postProcess() {
-      System.out.println("generation of data-model finished");
+    System.out.println("generation of data-model finished");
   }
 }

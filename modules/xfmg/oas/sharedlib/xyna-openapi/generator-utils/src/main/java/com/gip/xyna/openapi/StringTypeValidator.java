@@ -93,7 +93,7 @@ public class StringTypeValidator extends PrimitiveTypeValidator<String> {
         
         if (!checkFormat()) {
           errorMessages.add(String.format(
-                "%s: Value \"%s\" does not match format \"%s\"", getName(), getValue(), pattern)
+                "%s: Value \"%s\" does not match format \"%s\"", getName(), getValue(), FormatValidatorMap.get(format))
           );
         }
 
