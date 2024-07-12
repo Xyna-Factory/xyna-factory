@@ -20,6 +20,8 @@ package com.gip.xyna.openapi.codegen;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.openapitools.codegen.CodegenDiscriminator.MappedModel;
@@ -101,11 +103,20 @@ public class XynaCodegenModel {
         item.mostInnerItems = mostInnerItem;
       }
       item.isContainer = true;
-      item.name = item.getComplexType() == null ? "TODO" : item.getComplexType();
+      item.name = item.getComplexType() == null ? extractRefName(model.getModelJson(), item.dataType) : item.getComplexType();
       item.baseName = item.name;
       XynaCodegenProperty itemProperty = factory.getOrCreateXynaCodegenProperty(item, Sanitizer.sanitize(item.name));
       vars.add(itemProperty);
     }
+  }
+  
+  private String extractRefName(String json, String fallback) {
+    Pattern p = Pattern.compile("\"items\"\\s*:\\s*\\{\\s*\"\\$ref\"\\s*:\\s*\"([^\"]+)\"");
+    Matcher match = p.matcher(json);
+    if (match.find()) {
+      return match.group(1).substring(match.group(1).lastIndexOf("/") + 1);
+    }
+    return fallback;
   }
   
   private String buildTypeName(CodegenModel model) {
