@@ -101,6 +101,8 @@ public class XynaCodegenModel {
         item.mostInnerItems = mostInnerItem;
       }
       item.isContainer = true;
+      item.name = item.getComplexType() == null ? "TODO" : item.getComplexType();
+      item.baseName = item.name;
       XynaCodegenProperty itemProperty = factory.getOrCreateXynaCodegenProperty(item, Sanitizer.sanitize(item.name));
       vars.add(itemProperty);
     }
