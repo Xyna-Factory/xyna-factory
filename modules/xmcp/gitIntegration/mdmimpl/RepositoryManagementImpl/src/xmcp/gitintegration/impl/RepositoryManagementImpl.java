@@ -229,10 +229,11 @@ public class RepositoryManagementImpl {
     if (!new File(path).isDirectory()) {
       return "Error: Path '" + path + "' is not a directory!";
     }
+    Path basePath = Paths.get(path);
     // collect a list of all paths to workspace.xml files
     List<Path> wsXmls = new ArrayList<>();
     try {
-      wsXmls.addAll(Files.find(Paths.get(path), Integer.MAX_VALUE, RepositoryManagementImpl::matchWsFile).collect(Collectors.toList()));
+      wsXmls.addAll(Files.find(basePath, Integer.MAX_VALUE, RepositoryManagementImpl::matchWsFile).collect(Collectors.toList()));
     } catch (IOException e) {
       e.printStackTrace();
       return "Error: Exception occured while searching for workspace.xml files!";
@@ -340,8 +341,8 @@ public class RepositoryManagementImpl {
         }
       }
       // persist storable
-      String subPathString = subPath.toString().substring(path.toString().length() + 1); //+1 for "/"
-      persistRepositoryConnectionStorable(new RepositoryConnectionStorable(workspaceName, path.toString(), subPathString, savedInRepo,
+      String subPathString = subPath.toString().substring(basePath.toString().length() + 1); //+1 for "/"
+      persistRepositoryConnectionStorable(new RepositoryConnectionStorable(workspaceName, basePath.toString(), subPathString, savedInRepo,
                                                                            isSplitted));
       count++;
     }
