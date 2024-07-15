@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -631,7 +630,7 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
   
   private boolean isUserOutput = false;
 
-  private List<Element> unknownMetaTags;
+  private UnknownMetaTagsComponent unknownMetaTagsComponent = new UnknownMetaTagsComponent();
   
   private final Set<String> sourceIds = new HashSet<>();
   private String targetId = null;
@@ -874,7 +873,7 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
     isList = XMLUtils.isTrue(e, GenerationBase.ATT.ISLIST);
     prototype = XMLUtils.isTrue(e, GenerationBase.ATT.ABSTRACT);
 
-    parseUnknownMetaTags(e, Arrays.asList(EL.PERSISTENCE, EL.USEROUTPUT));
+    parseUnknownMetaTags(e, Arrays.asList(EL.PERSISTENCE, EL.USEROUTPUT, GenerationBase.EL.DOCUMENTATION));
     Element meta = XMLUtils.getChildElementByName(e, GenerationBase.EL.META);
     if (meta != null) {
       persistenceTypes = PersistenceTypeInformation.parse(meta);
@@ -946,34 +945,27 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
 
   @Override
   public void parseUnknownMetaTags(Element element, List<String> knownMetaTags) {
-    Element meta = XMLUtils.getChildElementByName(element, GenerationBase.EL.META);
-    unknownMetaTags = XMLUtils.getFilteredSubElements(meta, knownMetaTags);
+    unknownMetaTagsComponent.parseUnknownMetaTags(element, knownMetaTags);
   }
 
   @Override
-  public List<Element> getUnknownMetaTags() {
-    return unknownMetaTags;
+  public List<String> getUnknownMetaTags() {
+    return unknownMetaTagsComponent.getUnknownMetaTags();
   }
 
   @Override
-  public void setUnknownMetaTags(List<Element> unknownMetaTags) {
-    this.unknownMetaTags = unknownMetaTags;
+  public void setUnknownMetaTags(List<String> unknownMetaTags) {
+    unknownMetaTagsComponent.setUnknownMetaTags(unknownMetaTags);
   }
 
   @Override
   public boolean hasUnknownMetaTags() {
-    return ( (unknownMetaTags != null) && (unknownMetaTags.size() > 0) );
+    return unknownMetaTagsComponent.hasUnknownMetaTags();
   }
 
   @Override
   public void appendUnknownMetaTags(XmlBuilder xml) {
-    if (unknownMetaTags == null) {
-      return;
-    }
-
-    for (Element tag : unknownMetaTags) {
-      xml.append(tag);
-    }
+    unknownMetaTagsComponent.appendUnknownMetaTags(xml);
   }
 
   public final String getFQClassName() {

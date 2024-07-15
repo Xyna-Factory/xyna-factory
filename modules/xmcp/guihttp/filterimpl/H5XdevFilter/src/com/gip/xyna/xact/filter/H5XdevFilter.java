@@ -37,10 +37,14 @@ import com.gip.xyna.xact.filter.actions.auth.LogoutAction;
 import com.gip.xyna.xact.filter.actions.auth.SharedLoginAction;
 import com.gip.xyna.xact.filter.actions.auth.utils.AuthUtils;
 import com.gip.xyna.xact.filter.actions.generateinput.GenerateinputAction;
+import com.gip.xyna.xact.filter.actions.listpaths.DatatypesAction;
+import com.gip.xyna.xact.filter.actions.listpaths.ExceptionsAction;
+import com.gip.xyna.xact.filter.actions.listpaths.WorkflowsAction;
 import com.gip.xyna.xact.filter.actions.monitor.AuditsOrderIdDownloadAction;
 import com.gip.xyna.xact.filter.actions.monitor.ImportedAuditsAction;
 import com.gip.xyna.xact.filter.actions.monitor.OpenAuditAction;
 import com.gip.xyna.xact.filter.actions.orderinputdetails.OrderinputdetailsAction;
+import com.gip.xyna.xact.filter.actions.startorder.Endpoint;
 import com.gip.xyna.xact.filter.actions.startorder.StartorderAction;
 import com.gip.xyna.xact.filter.actions.starttestcase.StarttestcaseAction;
 import com.gip.xyna.xact.filter.actions.xacm.CreateUserAction;
@@ -51,6 +55,7 @@ import com.gip.xyna.xact.filter.util.Utils;
 import com.gip.xyna.xact.filter.util.xo.DomOrExceptionStructure;
 import com.gip.xyna.xact.filter.util.xo.DomOrExceptionSubtypes;
 import com.gip.xyna.xact.filter.util.xo.ServiceSignature;
+import com.gip.xyna.xact.filter.xmom.datatypes.json.GuiHttpPluginManagement;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
 import com.gip.xyna.xdev.xfractmod.xmdm.ConnectionFilter;
@@ -356,15 +361,16 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add(new OptionsAction(ACCESS_CONTROL_ALLOW_ORIGIN));
     allFilterActions.add(new IndexAction(allFilterActions, applicationVersion, NAME, BASE_PATH));
 
-    allFilterActions.add(new LoginAction());
-    allFilterActions.add(new InfoAction());
+    allFilterActions.add(new LoginAction(xmomGui));
+    allFilterActions.add(new InfoAction(xmomGui));
     allFilterActions.add(new LogoutAction());
     allFilterActions.add(new ExternalUserLoginInformationAction());
-    allFilterActions.add(new ExternalUserLoginAction());
-    allFilterActions.add(new SharedLoginAction());
+    allFilterActions.add(new ExternalUserLoginAction(xmomGui));
+    allFilterActions.add(new SharedLoginAction(xmomGui));
     allFilterActions.add(new ChangePasswordAction());
 
-    allFilterActions.add(new StartorderAction());
+    StartorderAction soa = new StartorderAction();
+    allFilterActions.add(soa);
     allFilterActions.add(new StarttestcaseAction());
     allFilterActions.add(new OrderinputdetailsAction());
     allFilterActions.add(new GenerateinputAction());
@@ -382,6 +388,16 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     
     allFilterActions.add( new EncodeAction() );
     allFilterActions.add( new DecodeAction() );
+    
+    List<Endpoint> endpoints = new ArrayList<>();
+    for(FilterAction fa : allFilterActions) {
+      if(fa instanceof Endpoint) {
+        endpoints.add((Endpoint)fa);
+      }
+    }
+    
+    soa.setEndpoints(endpoints);
+    GuiHttpPluginManagement.getInstance().start();
 
     STATIC_FILES.registerDependency(UserType.Filter, NAME);
     ACCESS_CONTROL_ALLOW_ORIGIN.registerDependency(UserType.Filter, NAME);
@@ -410,6 +426,8 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
         Utils.logError(ex);
       }
     }
+    
+    GuiHttpPluginManagement.getInstance().stop();
     
     super.onUndeployment(triggerInstance);
     

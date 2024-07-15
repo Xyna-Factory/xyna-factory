@@ -53,6 +53,7 @@ public class StringTypeValidator extends PrimitiveTypeValidator<String> {
     }
 
     public void setPattern(String p) {
+        // delimiters are cleaned in stringConstraints
         pattern = p;
     }
 
@@ -74,13 +75,13 @@ public class StringTypeValidator extends PrimitiveTypeValidator<String> {
 
         if (!checkMinLength()) {
             errorMessages.add(String.format(
-                "%s: String value \"%s\" is to short, minimum length is %d", getName(), getValue(), min)
+                "%s: String value \"%s\" is too short as minimum length is %d", getName(), getValue(), min)
             );
         }
         
         if (!checkMaxLength()) {
             errorMessages.add(String.format(
-                "%s: String value \"%s\" is to long, maximum length is %d", getName(), getValue(), max)
+                "%s: String value \"%s\" is too long as maximum length is %d", getName(), getValue(), max)
             );
         }
 

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,9 +30,12 @@ import com.gip.xyna.xact.filter.json.FQNameJson;
 import com.gip.xyna.xact.filter.json.ObjectIdentifierJson;
 import com.gip.xyna.xact.filter.session.exceptions.UnknownObjectIdException;
 import com.gip.xyna.xact.filter.session.gb.ObjectId;
+import com.gip.xyna.xact.filter.xmom.PluginPaths;
+import com.gip.xyna.xact.filter.xmom.datatypes.json.Utils.ExtendedContextBuilder;
 import com.gip.xyna.xact.filter.xmom.workflows.enums.GuiLabels;
 import com.gip.xyna.xact.filter.xmom.workflows.enums.Tags;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
+import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase.XMOMType;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache.StorableColumnInformation;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache.StorableStructureInformation;
@@ -62,14 +65,19 @@ public class DatatypeMemberXo implements HasXoRepresentation {
   private FQNameJson fqName;
   private ObjectIdentifierJson inheritedFrom;
 
+  protected final GuiHttpPluginManagement pluginMgmt;
+  protected final ExtendedContextBuilder contextBuilder;
+
   private static final Logger logger = CentralFactoryLogging.getLogger(DatatypeMemberXo.class);
 
-  public DatatypeMemberXo(AVariable var, String id, PersistenceInformation pi, XMOMStorableStructureInformation si, boolean isStorable) {
+  public DatatypeMemberXo(AVariable var, String id, PersistenceInformation pi, XMOMStorableStructureInformation si, boolean isStorable, ExtendedContextBuilder contextBuilder) {
     this.var = var;
     this.id = id;
     this.pi = pi;
     this.si = si;
     this.isStorable = isStorable;
+    pluginMgmt = GuiHttpPluginManagement.getInstance();
+    this.contextBuilder = contextBuilder;
 
     try {
       this.memberId = ObjectId.parse(id);
@@ -200,6 +208,8 @@ public class DatatypeMemberXo implements HasXoRepresentation {
     area.setId(ObjectId.createMemberDocumentationAreaId(String.valueOf(ObjectId.parseMemberVarNumber(memberId))));
     area.setText(var.getDocumentation());
     area.setReadonly(inheritedFrom != null);
+    String location = XMOMType.DATATYPE.equals(contextBuilder.getType()) ? PluginPaths.location_datatype_member_documenation : PluginPaths.location_exception_member_documentation;
+    area.unversionedSetPlugin(pluginMgmt.createPlugin(contextBuilder.instantiateContext(location, area.getId())));
 
     return area;
   }

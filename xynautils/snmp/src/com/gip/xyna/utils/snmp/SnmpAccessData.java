@@ -32,9 +32,18 @@ public final class SnmpAccessData {
   static Logger logger = Logger.getLogger(SnmpAccessData.class.getName());
 
   public static final String MD5 = "MD5";
+  public static final String SHA = "SHA";
   public static final String SHA1 = "SHA1";
+  public static final String SHA224 = "SHA224";
+  public static final String SHA256 = "SHA256";
+  public static final String SHA384 = "SHA384";
+  public static final String SHA512 = "SHA512";
+  public static final String DES = "DES";
   public static final String DES56 = "DES56";
+  public static final String DESEDE = "DESEDE";
   public static final String AES128 = "AES128";
+  public static final String AES192 = "AES192";
+  public static final String AES256 = "AES256";
 
   public static final String VERSION_1 = "v1";
   public static final String VERSION_2c = "v2c";
@@ -174,7 +183,7 @@ public final class SnmpAccessData {
     }
 
     /**
-     * erlaubt: {@link #MD5}, {@link #SHA1}
+     * erlaubt: {@link #MD5}, {@link #SHA1}, {@link #SHA224}, {@link #SHA256}, {@link #SHA384}, {@link #SHA512}
      * @param protocol
      * @return
      */
@@ -190,6 +199,26 @@ public final class SnmpAccessData {
         sad.authenticationProtocol = SnmpAccessData.SHA1;
         return this;
       }
+      if( protocol.equalsIgnoreCase(SnmpAccessData.SHA) ) {
+        sad.authenticationProtocol = SnmpAccessData.SHA;
+        return this;
+      }
+      if( protocol.equalsIgnoreCase(SnmpAccessData.SHA256) ) {
+        sad.authenticationProtocol = SnmpAccessData.SHA256;
+        return this;
+      }
+      if( protocol.equalsIgnoreCase(SnmpAccessData.SHA224) ) {
+        sad.authenticationProtocol = SnmpAccessData.SHA224;
+        return this;
+      }
+      if( protocol.equalsIgnoreCase(SnmpAccessData.SHA512) ) {
+        sad.authenticationProtocol = SnmpAccessData.SHA512;
+        return this;
+      }
+      if( protocol.equalsIgnoreCase(SnmpAccessData.SHA384) ) {
+        sad.authenticationProtocol = SnmpAccessData.SHA384;
+        return this;
+      }
       throw new IllegalArgumentException( "unknown protocol "+protocol );
     }
 
@@ -199,7 +228,7 @@ public final class SnmpAccessData {
     }
 
     /**
-     * erlaubt: {@link #DES56}, {@link #AES128}
+     * erlaubt: {@link #DES}, {@link #DES56}, {@link #DESEDE}, {@link #AES128}, {@link #AES192}, {@link #AES256}
      * @param protocol
      * @return
      */
@@ -211,8 +240,24 @@ public final class SnmpAccessData {
         sad.privacyProtocol = SnmpAccessData.DES56;
         return this;
       }
+      if( protocol.equalsIgnoreCase(SnmpAccessData.DES) ) {
+        sad.privacyProtocol = SnmpAccessData.DES;
+        return this;
+      }
+      if( protocol.equalsIgnoreCase(SnmpAccessData.DESEDE) ) {
+        sad.privacyProtocol = SnmpAccessData.DESEDE;
+        return this;
+      }
       if( protocol.equalsIgnoreCase(SnmpAccessData.AES128) ) {
         sad.privacyProtocol = SnmpAccessData.AES128;
+        return this;
+      }
+      if( protocol.equalsIgnoreCase(SnmpAccessData.AES192) ) {
+        sad.privacyProtocol = SnmpAccessData.AES192;
+        return this;
+      }
+      if( protocol.equalsIgnoreCase(SnmpAccessData.AES256) ) {
+        sad.privacyProtocol = SnmpAccessData.AES256;
         return this;
       }
       throw new IllegalArgumentException("Unknown protocol: <" + protocol + ">.");

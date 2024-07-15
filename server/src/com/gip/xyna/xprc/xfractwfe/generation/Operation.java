@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 package com.gip.xyna.xprc.xfractwfe.generation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -72,6 +73,7 @@ public abstract class Operation implements HasDocumentation {
   private ArrayList<AVariable> inputVars = new ArrayList<AVariable>();
   private ArrayList<AVariable> outputVars = new ArrayList<AVariable>();
   private List<ExceptionVariable> thrownExceptions = new ArrayList<ExceptionVariable>();
+  private UnknownMetaTagsComponent unknownMetaTagsComponent = new UnknownMetaTagsComponent();
 
 
   public boolean isStatic() {
@@ -211,6 +213,11 @@ public abstract class Operation implements HasDocumentation {
         }
         setVersion(new InterfaceVersion(version, current));
       }
+      
+      List<String> knownMetaTags = Arrays.asList(GenerationBase.EL.DOCUMENTATION,
+                                                 GenerationBase.EL.HAS_BEEN_PERSISTED,
+                                                 GenerationBase.EL.VERSION);
+      unknownMetaTagsComponent.parseUnknownMetaTags(operation, knownMetaTags);
     }
     
     // input/output variables
@@ -244,6 +251,14 @@ public abstract class Operation implements HasDocumentation {
 
   public List<ExceptionVariable> getThrownExceptionsForMod() {
     return thrownExceptions;
+  }
+  
+  public List<String> getUnknownMetaTags() {
+    return unknownMetaTagsComponent.getUnknownMetaTags();
+  }
+  
+  public void setUnknownMetaTags(List<String> unknownMetaTags) {
+    unknownMetaTagsComponent.setUnknownMetaTags(unknownMetaTags);
   }
 
 

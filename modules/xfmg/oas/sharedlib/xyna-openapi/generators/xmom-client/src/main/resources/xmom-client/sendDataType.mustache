@@ -52,6 +52,7 @@ xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.x
 jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
 jsonOptions.setUseLabels(true);
+jsonOptions.setProcessAllInputGenerically(false);
 {{#bodyParams}}
 
 xact.templates.Document body;
@@ -69,12 +70,30 @@ String text;
 if ({{getPropVarName}} == null) {
   text = null;
 } else {
-{{#isString}}
-  text = &quot;\&quot;&quot; + xfmg.xfctrl.datamodel.json.JSONDatamodelServices.encodeValue(new xact.templates.Document.Builder().text({{getPropVarName}}).instance()).getText() + &quot;\&quot;&quot;;
-{{/isString}}
-{{^isString}}
-  text = String.valueOf({{getPropVarName}});
-{{/isString}}
+  text =
+  {{#isList}}
+    &quot;[&quot; + String.join(&quot;,&quot;, {{getPropVarName}}.stream().map(listEntry -> listEntry == null ? null :
+  {{/isList}}
+  {{#isString}}
+    &quot;\&quot;&quot; + xfmg.xfctrl.datamodel.json.JSONDatamodelServices.encodeValue(new xact.templates.Document.Builder().text(
+  {{/isString}}
+  {{^isString}}
+    String.valueOf(
+  {{/isString}}
+  {{#isList}}
+    listEntry
+  {{/isList}}
+  {{^isList}}
+    {{getPropVarName}}
+  {{/isList}}
+    )
+  {{#isString}}
+    .instance()).getText() + &quot;\&quot;&quot;
+  {{/isString}}
+  {{#isList}}
+    ).collect(java.util.stream.Collectors.toList())) + &quot;]&quot;
+  {{/isList}}
+    ;
 }
 body = new xact.templates.Document();
 body.setText(text);

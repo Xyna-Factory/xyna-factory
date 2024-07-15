@@ -73,15 +73,16 @@ xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.x
 jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
 jsonOptions.setUseLabels(true);
+jsonOptions.setProcessAllInputGenerically(false);
 
 xact.templates.Document body;
 {{^isPrimitive}}
-{{#isList}}
+  {{#isList}}
 List&lt;GeneralXynaObject&gt; obj = new ArrayList&lt;&gt;({{getPropVarName}});
-{{/isList}}
-{{^isList}}
-GeneralXynaObject obj = {{getPropVarName}};
-{{/isList}}
+  {{/isList}}
+  {{^isList}}
+{{propRefPath}}.{{propRefType}} obj = {{getPropVarName}};
+  {{/isList}}
 body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSON{{#isList}}List{{/isList}}WithOptions(obj, jsonOptions);
 {{/isPrimitive}}
 {{#isPrimitive}}
@@ -89,12 +90,30 @@ String text;
 if ({{getPropVarName}} &#x3D;&#x3D; null) {
   text = null;
 } else {
-{{#isString}}
-  text = &quot;\&quot;&quot; + xfmg.xfctrl.datamodel.json.JSONDatamodelServices.encodeValue(new xact.templates.Document.Builder().text({{getPropVarName}}).instance()).getText() + &quot;\&quot;&quot;;
-{{/isString}}
-{{^isString}}
-  text = String.valueOf({{getPropVarName}});
-{{/isString}}
+  text =
+  {{#isList}}
+    &quot;[&quot; + String.join(&quot;,&quot;, {{getPropVarName}}.stream().map(listEntry -> listEntry == null ? null :
+  {{/isList}}
+  {{#isString}}
+    &quot;\&quot;&quot; + xfmg.xfctrl.datamodel.json.JSONDatamodelServices.encodeValue(new xact.templates.Document.Builder().text(
+  {{/isString}}
+  {{^isString}}
+    String.valueOf(
+  {{/isString}}
+  {{#isList}}
+    listEntry
+  {{/isList}}
+  {{^isList}}
+    {{getPropVarName}}
+  {{/isList}}
+    )
+  {{#isString}}
+    .instance()).getText() + &quot;\&quot;&quot;
+  {{/isString}}
+  {{#isList}}
+    ).collect(java.util.stream.Collectors.toList())) + &quot;]&quot;
+  {{/isList}}
+    ;
 }
 body = new xact.templates.Document();
 body.setText(text);

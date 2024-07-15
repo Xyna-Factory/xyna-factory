@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,18 @@
     <Meta>
       <Type>String</Type>
     </Meta>
+  </Data>
+  <Data Label="Type" VariableName="type">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="IsList" VariableName="isList">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+  <Data Label="Meta tags" ReferenceName="MetaTag" ReferencePath="xprc.xpce.datatype" IsList="true" VariableName="metaTags">
   </Data>
   <Service Label="Named XMOMMember" TypeName="NamedVariableMember">
     <Operation ID="4" IsStatic="false" Label="Get Member Object" Name="getMemberObject">
@@ -150,6 +162,20 @@ if (dotIndex &gt;= 0) {
   return field;</CodeSnippet>
       </SourceCode>
     </Operation>
+	 <Operation IsStatic="false" Label="Set Member Object List" Name="setMemberObjectList">
+      <Input>
+        <Data Label="Any Type" ReferenceName="AnyType" IsList="true" ReferencePath="base" VariableName="anyType"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">try {
+    XynaObject.set(parentObject, varName, anyType);
+  } catch( Exception e ) {
+    throw new RuntimeException(e);
+  } 
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
     <Operation ID="10" IsStatic="false" Label="Set Member Value" Name="setMemberValue">
       <Input>
         <Data ID="9" Label="Value" VariableName="value">
@@ -177,19 +203,19 @@ Class&lt;?&gt; fieldType = getField().getType();
     Object adjustedValue;
     if (fieldType.isAssignableFrom(String.class)) {
       adjustedValue = value;
-    } else if (fieldType.isAssignableFrom(Integer.class) &amp;&amp;
+    } else if (fieldType.isAssignableFrom(Integer.class) ||
                fieldType.isAssignableFrom(int.class)) {
            adjustedValue = Integer.parseInt(value);
-    } else if (fieldType.isAssignableFrom(Long.class) &amp;&amp;
+    } else if (fieldType.isAssignableFrom(Long.class) ||
                fieldType.isAssignableFrom(long.class)) {
       adjustedValue = Long.parseLong(value);
-    } else if (fieldType.isAssignableFrom(Boolean.class) &amp;&amp;
+    } else if (fieldType.isAssignableFrom(Boolean.class) ||
                fieldType.isAssignableFrom(boolean.class)) {
       adjustedValue = Boolean.parseBoolean(value);
-    } else if (fieldType.isAssignableFrom(Float.class) &amp;&amp;
+    } else if (fieldType.isAssignableFrom(Float.class) ||
                fieldType.isAssignableFrom(float.class)) {
       adjustedValue = Float.parseFloat(value);
-    } else if (fieldType.isAssignableFrom(Double.class) &amp;&amp;
+    } else if (fieldType.isAssignableFrom(Double.class) ||
                fieldType.isAssignableFrom(double.class)) {
       adjustedValue = Float.parseFloat(value);
     } else {
@@ -213,6 +239,60 @@ System.out.println("adjustedValue: " + adjustedValue);
       <Output/>
       <SourceCode>
         <CodeSnippet Type="Java">setMemberValue(text.getText());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+	    <Operation ID="10" IsStatic="false" Label="Set Member Value List Wrapped" Name="setMemberValueListWrapped">
+      <Input>
+        <Data ID="11" Label="Wrapper" IsList="true" ReferenceName="Text" ReferencePath="base" VariableName="value"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+		try {
+System.out.println("setting varName: " + varName);
+GeneralXynaObject gxo;
+String shortenedVarName;
+int dotIndex = varName.lastIndexOf('.');
+if (dotIndex &gt;= 0) {
+  gxo = (GeneralXynaObject)getUntypedMemberValue(varName.substring(0, dotIndex));
+  shortenedVarName = varName.substring(dotIndex + 1);
+} else {
+  gxo = parentObject;
+  shortenedVarName = varName;
+}
+
+java.util.List list = new java.util.ArrayList();
+String fieldtype = getType();
+if ("java.lang.String".equals(fieldtype)) {
+  for (Text t : value) {
+    list.add(t.getText());
+  }
+} else if ("int".equals(fieldtype) || "Integer".equals(fieldtype)) {
+  for (Text t : value) {
+    list.add(Integer.valueOf(t.getText()));
+  }
+} else if ("long".equals(fieldtype) || "Long".equals(fieldtype)) {
+  for (Text t : value) {
+    list.add(Long.valueOf(t.getText()));
+  }
+} else if ("boolean".equals(fieldtype) || "Boolean".equals(fieldtype)) {
+  for (Text t : value) {
+    list.add(Boolean.valueOf(t.getText()));
+  }
+} else if ("double".equals(fieldtype) || "Double".equals(fieldtype)) {
+  for (Text t : value) {
+    list.add(Double.valueOf(t.getText()));
+  }
+} else {
+  throw new RuntimeException("unsupported type: " + fieldtype);
+}
+
+System.out.println("gxo: " + gxo);
+System.out.println("shortenedVarName: " + shortenedVarName);
+  XynaObject.set(gxo, shortenedVarName, list);
+} catch(Exception e) {
+  throw new RuntimeException(e);
+}</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

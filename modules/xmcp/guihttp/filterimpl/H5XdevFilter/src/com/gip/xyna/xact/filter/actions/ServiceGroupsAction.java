@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -99,11 +99,8 @@ public class ServiceGroupsAction extends XmomGuiAction {
   private FilterActionInstance listPath(RuntimeContext rc, Long revision, URLPath url, HTTPTriggerConnection tc) throws SocketNotAvailableException {
     JsonFilterActionInstance jfai = new JsonFilterActionInstance();
     try {
-      SortType sortType = SortType.typeAware;
-      if(tc.getParas() != null && tc.getParas().contains("sort")) {
-        sortType = SortType.valueOf(tc.getParas().getProperty("sort"));
-      }
-      
+      SortType sortType = SortType.valueOf(tc.getFirstValueOfParameterOrDefault("sort", SortType.typeAware.name()));
+
       XmomObjectsPath xmomObjectsPath = new XmomObjectsPath(xmomGui.getXmomLoader(), "serviceGroups");
       xmomObjectsPath.filterTypes(ObjectIdentifierJson.Type.serviceGroup);
       xmomObjectsPath.search(revision, rc, "*", sortType);
@@ -116,7 +113,7 @@ public class ServiceGroupsAction extends XmomGuiAction {
   }
 
   @Override
-  protected boolean isEditAction(HTTPTriggerConnection tc) {
+  protected boolean isEditAction(Method method) {
     // users without the right EDIT_MDM should still be able to create a new document (without being able to save it)
     return false;
   }

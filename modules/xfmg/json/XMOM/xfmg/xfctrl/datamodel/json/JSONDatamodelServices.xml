@@ -199,27 +199,5 @@
         <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl.writeJSONWithOptions(jSONBaseModel,jSONWritingOptions);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Parse Generic JSON Object" Name="parseGenericJSONObject">
-      <Input>
-        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
-      </Input>
-      <Output>
-        <Data Label="JSONObject" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="JSONObject"/>
-      </Output>
-      <SourceCode>
-        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl.parseGenericJSONObject(document);</CodeSnippet>
-      </SourceCode>
-    </Operation>
-    <Operation IsStatic="true" Label="Parse Generic JSON List" Name="parseGenericJSONList">
-      <Input>
-        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
-      </Input>
-      <Output>
-        <Data IsList="true" Label="JSONValue" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONValue"/>
-      </Output>
-      <SourceCode>
-        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl.parseGenericJSONList(document);</CodeSnippet>
-      </SourceCode>
-    </Operation>
   </Service>
 </DataType>

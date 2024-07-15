@@ -1,0 +1,10 @@
+{
+    "template": "copilot/dom-method-implementation.ftl",
+    "parser": "xmcp.xypilot.impl.gen.parse.JavaCodeParser",
+    "inference_parameters": {
+        "model": "copilot-java",
+        "n": "max",
+        "stop": ["\n  }"]
+    }
+}
+

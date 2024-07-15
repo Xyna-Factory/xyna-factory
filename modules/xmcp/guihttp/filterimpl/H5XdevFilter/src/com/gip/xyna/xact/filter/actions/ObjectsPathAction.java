@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,10 +100,7 @@ public class ObjectsPathAction extends RuntimeContextDependendAction {
         }
       }
       XmomObjectsPath xmomObjectsPath = new XmomObjectsPath(xmomLoader, "objects");
-      SortType sortType = SortType.typeAware;
-      if(tc.getParas() != null && tc.getParas().contains("sort")) {
-        sortType = SortType.valueOf(tc.getParas().getProperty("sort"));
-      }
+      SortType sortType = SortType.valueOf(tc.getFirstValueOfParameterOrDefault("sort", SortType.typeAware.name()));
       xmomObjectsPath.search(revision, rc, path, sortType);
       
       if(addAnyType) {

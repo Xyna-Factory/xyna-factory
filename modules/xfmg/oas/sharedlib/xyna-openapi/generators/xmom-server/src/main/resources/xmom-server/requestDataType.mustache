@@ -88,11 +88,18 @@ xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.x
 jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
 jsonOptions.setUseLabels(true);
+jsonOptions.setProcessAllInputGenerically(false);
 xact.templates.Document document = httpRequest1.getBody();
   {{#bodyParams}}
     {{^isPrimitive}}
 jsonOptions.setObjectDecider(new {{apiRefPath}}.decider.OASDecider());
+      {{^isList}}
 {{propRefType}} {{propVarName}} = ({{propRefType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{propRefType}}(), jsonOptions);
+      {{/isList}}
+      {{#isList}}
+List tmp = (List)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new {{propRefType}}(), jsonOptions);
+List&lt;{{propRefPath}}.{{propRefType}}&gt; {{propVarName}} = (List&lt;{{propRefPath}}.{{propRefType}}&gt;)tmp;
+      {{/isList}}
 ret.{{setPropVarName}}({{propVarName}});
     {{/isPrimitive}}
     {{#isPrimitive}}
@@ -105,6 +112,29 @@ ret.{{setPropVarName}}(text);
         {{^isString}}
 ret.{{setPropVarName}}({{javaType}}.valueOf(document.getText()));
         {{/isString}}
+      {{/isList}}
+      {{#isList}}
+List tmp = (List)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new xfmg.xfctrl.datamodel.json.JSONValue(), jsonOptions);
+List&lt;? extends xfmg.xfctrl.datamodel.json.JSONValue&gt; values = (List&lt;? extends xfmg.xfctrl.datamodel.json.JSONValue&gt;)tmp;
+List&lt;{{javaType}}&gt; resultData = new ArrayList&lt; &gt;();
+for(xfmg.xfctrl.datamodel.json.JSONValue value : values) {
+    if(value == null || "NULL".equals(value.getType())) {
+        resultData.add(null);
+        continue;
+    }
+  {{javaType}} valueProcessed =
+        {{#isString}}
+    xfmg.xfctrl.datamodel.json.JSONDatamodelServices.decodeValue(new xact.templates.Document.Builder().text(value.getStringOrNumberValue()).instance()).getText();
+        {{/isString}}
+        {{#isNumber}}
+    {{javaType}}.valueOf(value.getStringOrNumberValue());
+        {{/isNumber}}
+        {{#isBoolean}}
+    value.getBooleanValue();
+        {{/isBoolean}}
+    resultData.add(valueProcessed);
+}
+ret.{{setPropVarName}}(resultData);
       {{/isList}}
     {{/isPrimitive}}
   {{/bodyParams}}

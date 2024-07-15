@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ public class BuildTriggerImplAction implements FilterAction {
 
   public FilterResponse act(Logger logger, HTTPTriggerConnection tc) throws XynaException {
     logger.info("got trigger implementation template request");
-    String triggerName = tc.getParas().getProperty("p");
+    String triggerName = tc.getFirstValueOfParameter("p");
 
     InputStream is = XynaFactory.getInstance().getXynaMultiChannelPortal().getTriggerImplTemplate(triggerName, true);
     try {

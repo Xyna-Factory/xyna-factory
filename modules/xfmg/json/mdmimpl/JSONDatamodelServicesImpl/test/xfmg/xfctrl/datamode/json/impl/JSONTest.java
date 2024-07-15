@@ -22,13 +22,11 @@ import java.util.List;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 
 import xfmg.xfctrl.datamodel.json.impl.InvalidJSONException;
-import xfmg.xfctrl.datamodel.json.impl.JSONDatamodelServicesServiceOperationImpl;
 import xfmg.xfctrl.datamodel.json.impl.JSONParser;
 import xfmg.xfctrl.datamodel.json.impl.JSONTokenizer;
 import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONObjectWriter;
 import xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl;
 import xfmg.xfctrl.datamodel.json.JSONObject;
-import xfmg.xfctrl.datamodel.json.JSONValue;
 import xfmg.xfctrl.datamodel.json.impl.JSONTokenizer.JSONToken;
 import junit.framework.TestCase;
 import xact.templates.Document;
@@ -512,62 +510,5 @@ public class JSONTest extends TestCase {
     } catch (InvalidJSONException e) {
       assertEquals("JSON string invalid at position 13. Cause: Too may commas.", e.getMessage());
     }
-  }
-  
-  public void testParseGenericList1() {
-    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
-    String jsonString = "[ \"test\" ]";
-    List<JSONValue> result = impl.parseGenericJSONList(new Document.Builder().text(jsonString).instance());
-    assertEquals(1, result.size());
-    assertEquals("STRING", result.get(0).getType());
-    assertEquals("test", result.get(0).getStringOrNumberValue());
-  }
-  
-  public void testParseGenericList2() {
-    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
-    String jsonString = "[ \"test\", null, \"test2\" ]";
-    List<JSONValue> result = impl.parseGenericJSONList(new Document.Builder().text(jsonString).instance());
-    assertEquals(3, result.size());
-    assertEquals("STRING", result.get(0).getType());
-    assertEquals("test", result.get(0).getStringOrNumberValue());
-    assertEquals("NULL", result.get(1).getType());
-    assertEquals("STRING", result.get(2).getType());
-    assertEquals("test2", result.get(2).getStringOrNumberValue());
-  }
-  
-  public void testParseGenericList3() {
-    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
-    String jsonString = "[ 24 ]";
-    List<JSONValue> result = impl.parseGenericJSONList(new Document.Builder().text(jsonString).instance());
-    assertEquals(1, result.size());
-    assertEquals("NUMBER", result.get(0).getType());
-    assertEquals("24", result.get(0).getStringOrNumberValue());
-  }
-  
-  public void testParseGenericList4() {
-    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
-    String jsonString = "";
-    List<JSONValue> result = impl.parseGenericJSONList(new Document.Builder().text(jsonString).instance());
-    assertEquals(0, result.size());
-    result = impl.parseGenericJSONList(new Document.Builder().text(null).instance());
-    assertEquals(0, result.size());
-  }
-  
-  public void testParseGenericObject1() {
-    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
-    String jsonString = "{ \"test\" : \"value\" }";
-    JSONObject result = impl.parseGenericJSONObject(new Document.Builder().text(jsonString).instance());
-    assertEquals(1, result.getMembers().size());
-    assertEquals("test", result.getMembers().get(0).getKey());
-    assertEquals("value", result.getMembers().get(0).getValue().getStringOrNumberValue());
-  }
-  
-  public void testParseGenericObject2() {
-    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
-    String jsonString = "";
-    JSONObject result = impl.parseGenericJSONObject(new Document.Builder().text(jsonString).instance());
-    assertEquals(null, result);
-    result = impl.parseGenericJSONObject(new Document.Builder().text(null).instance());
-    assertEquals(null, result);
   }
 }

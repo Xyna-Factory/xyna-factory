@@ -16,14 +16,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="Http" comment="" factoryVersion="" versionName="1.2.6" xmlVersion="1.1">
+<Application applicationName="Http" comment="" factoryVersion="" versionName="1.2.8" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">HTTP: Service und Trigger</Description>
     <Description Lang="EN">HTTP: service and trigger</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Processing</ApplicationName>
-        <VersionName>1.0.19</VersionName>
+        <VersionName>1.0.21</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

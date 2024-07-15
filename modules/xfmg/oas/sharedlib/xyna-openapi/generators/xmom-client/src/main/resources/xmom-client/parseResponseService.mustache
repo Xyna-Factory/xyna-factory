@@ -28,6 +28,7 @@ TypeName="{{parseResponseRefName}}" TypePath="{{parseResponseRefPath}}" Label="{
         <Data ID="1" Label="HTTP Connection" VariableName="hTTPConnection1" ReferenceName="HTTPConnection" ReferencePath="xact.http"/>
         <Data ID="2" Label="HTTP Status Code" VariableName="hTTPStatusCode2" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode"/>
         <Data ID="3" Label="Header" VariableName="header3" ReferenceName="Header" ReferencePath="xact.http"/>
+        <Data ID="8" Label="Document" VariableName="document8" ReferenceName="Document" ReferencePath="xact.templates"/>
       </Input>
       <Output>
         <Data ID="4" Label="{{responseLabel}}" VariableName="{{responseVarName}}4"
@@ -50,11 +51,13 @@ jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.js
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
 jsonOptions.setUseLabels(true);
 jsonOptions.setObjectDecider(new {{apiPackage}}.decider.OASDecider());
+jsonOptions.setProcessAllInputGenerically(false);
+xact.templates.Document document = document8;
 {{#responses}}
 if (statusCode == {{code}}) {
     {{respRefPath}}.{{respRefName}} responseDataType = new {{respRefPath}}.{{respRefName}}();
 
-    xact.templates.Document document = xact.http.HTTPService.receiveDocument(hTTPConnection1);
+
     {{#body}}
     if (!document.getText().trim().isEmpty()) {
     {{^isPrimitive}}
@@ -81,6 +84,29 @@ if (statusCode == {{code}}) {
         {{^isString}}
         responseDataType.{{setPropVarName}}({{javaType}}.valueOf(document.getText()));
         {{/isString}}
+      {{/isList}}
+      {{#isList}}
+        List tmp = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new xfmg.xfctrl.datamodel.json.JSONValue(), jsonOptions);
+        List&lt;? extends xfmg.xfctrl.datamodel.json.JSONValue&gt; values = ( List&lt;? extends xfmg.xfctrl.datamodel.json.JSONValue&gt;)tmp;
+        List&lt;{{javaType}}&gt; resultData = new ArrayList&lt; &gt;();
+        for(xfmg.xfctrl.datamodel.json.JSONValue value : values) {
+          if(value == null || "NULL".equals(value.getType())) {
+              resultData.add(null);
+              continue;
+          }
+          {{javaType}} valueProcessed =
+          {{#isString}}
+            xfmg.xfctrl.datamodel.json.JSONDatamodelServices.decodeValue(new xact.templates.Document.Builder().text(value.getStringOrNumberValue()).instance()).getText();
+          {{/isString}}
+          {{#isNumber}}
+            {{javaType}}.valueOf(value.getStringOrNumberValue());
+          {{/isNumber}}
+          {{#isBoolean}}
+            value.getBooleanValue();
+          {{/isBoolean}}
+          resultData.add(valueProcessed);
+        }
+        responseDataType.{{setPropVarName}}(resultData);
       {{/isList}}
     {{/isPrimitive}}
     } else {

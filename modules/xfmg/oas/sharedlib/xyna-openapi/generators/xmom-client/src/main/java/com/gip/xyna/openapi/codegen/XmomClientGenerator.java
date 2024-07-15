@@ -91,6 +91,14 @@ public class XmomClientGenerator extends DefaultCodegen {
         apiPackage = xClientPath.replace('-', '_').replace(' ', '_').toLowerCase();
       }
     }
+
+    /**
+     * Supporting Files.  You can write single files for the generator with the
+     * entire object tree available.  If the input file has a suffix of `.mustache
+     * it will be processed by the template engine.  Otherwise, it will be copied
+     */
+    supportingFiles.add(new SupportingFile("application.mustache", "", "application.xml"));
+    supportingFiles.add(new SupportingFile("OASDecider.mustache", "XMOM/" + apiPackage.replace('.', '/') + "/decider", "OASDecider.xml"));
   }
   
   @Override
@@ -181,6 +189,7 @@ public class XmomClientGenerator extends DefaultCodegen {
     apiTemplateFiles.put("responseDataType.mustache", "_responseDataTypes_toSplit.xml");
     apiTemplateFiles.put("parseResponseService.mustache", "_parseResponseServices_toSplit.xml");
     apiTemplateFiles.put("requestWorkflow.mustache", "_requestWorkflows_toSplit.xml");
+    apiTemplateFiles.put("requestWorkflowWithProcessing.mustache", "_requestWorkflowWithProcessing_toSplit.xml");
     
     templateDir = "xmom-client";
 
@@ -207,13 +216,6 @@ public class XmomClientGenerator extends DefaultCodegen {
     additionalProperties.put("apiVersion", apiVersion);
     additionalProperties.put(XYNA_FACTORY_VERSION, xynaFactoryVersion);
 
-    /**
-     * Supporting Files.  You can write single files for the generator with the
-     * entire object tree available.  If the input file has a suffix of `.mustache
-     * it will be processed by the template engine.  Otherwise, it will be copied
-     */
-    supportingFiles.add(new SupportingFile("application.mustache", "", "application.xml"));
-    supportingFiles.add(new SupportingFile("OASDecider.mustache", "XMOM/" + apiPackage.replace('.', '/') + "/decider", "OASDecider.xml"));
     /**
      * Language Specific Primitives.  These types will not trigger imports by
      * the client generator
