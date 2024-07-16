@@ -367,6 +367,31 @@ public class JSONTestWithOptions extends TestCase {
     assertTrue(list.get(0).values.size() == 1);
     assertTrue(list.get(0).values.get(0).equals("test"));
   }
+
+  public void testWithOptions10_primitiveList_label() {
+    JSONTokenizer jt = new JSONTokenizer();
+    String jsonString =       
+"["+
+"  ["+ 
+"       \"test\""+
+"  ]"+
+"]";
+    
+    List<JSONToken> tokens = jt.tokenize(jsonString);
+    JSONParser jp = new JSONParser(jsonString);
+    List<JSONValue> job = new ArrayList<JSONValue>();
+    jp.fillArray(tokens, 0, job);
+    XynaObjectDecider decider = null;
+    Set<String> wrappers = new HashSet<String>();
+    wrappers.add(PrimitiveListWrapperXO.class.getCanonicalName());
+    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
+    List<PrimitiveListWrapperXO> list = null;
+    list = impl.createList(PrimitiveListWrapperXO.class, job, "", new JsonOptions(Collections.emptyMap(), Collections.emptyMap(), wrappers, true, false), decider);
+    
+    assertTrue(list.size() == 1);
+    assertTrue(list.get(0).values.size() == 1);
+    assertTrue(list.get(0).values.get(0).equals("test"));
+  }
   
   
   public void testWriteWithOptions() throws IllegalArgumentException, IllegalAccessException {
@@ -567,6 +592,8 @@ public class JSONTestWithOptions extends TestCase {
   
   public static class PrimitiveListWrapperXO extends BaseTestXO {
     private static final long serialVersionUID = 1L;
+    
+    @LabelAnnotation(label="Values")
     private List<String> values;
     
     public Set<String> getVariableNames() {

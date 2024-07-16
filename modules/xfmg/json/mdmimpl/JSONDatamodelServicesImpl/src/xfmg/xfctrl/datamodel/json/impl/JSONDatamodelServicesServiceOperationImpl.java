@@ -222,12 +222,8 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
       return;
     }
 
-    boolean useLabels = options.useLabels;
     Set<String> listwrapper = options.listwrapper;
-    Map<String, String> substitutions = options.substitutions;
-    Map<String,String> varNamesOfXynaObject = getVarNames(xo, useLabels);
-    String memberToSet = findListWrapperMember(xo, varNamesOfXynaObject);
-    String varNameInXyna = determineVarNameInXyna(memberToSet, currentPath, substitutions, useLabels, varNamesOfXynaObject);
+    String varNameInXyna = findListWrapperMember(xo);
     String newPath = currentPath.isEmpty() ? varNameInXyna : currentPath + "." + varNameInXyna; 
     newPath += "[]";
     Pair<Class<?>, Type> fieldTypeInfo = determineTypeOfField(xo, varNameInXyna);
@@ -272,9 +268,9 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     }
     
     try {
-      xo.set(memberToSet, objects);
+      xo.set(varNameInXyna, objects);
     } catch (XDEV_PARAMETER_NAME_NOT_FOUND e) {
-      throw new RuntimeException("Could not set " + memberToSet + " at " + currentPath, e);
+      throw new RuntimeException("Could not set " + varNameInXyna + " at " + currentPath, e);
     }
     
   }
@@ -288,11 +284,12 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     }
   }
 
-  private String findListWrapperMember(GeneralXynaObject xo, Map<String, String> varNamesOfXynaObject) {
+  private String findListWrapperMember(GeneralXynaObject xo) { 
+    Set<String> varNamesOfXynaObject = getVarNames(xo);
     if(varNamesOfXynaObject.size() != 1) {
       throw new RuntimeException("List wrapper " + xo.getClass().getCanonicalName() + " defines " + varNamesOfXynaObject.size() + " members, instead of exactly one.");
     }
-    return varNamesOfXynaObject.keySet().stream().findAny().orElse(null);
+    return varNamesOfXynaObject.stream().findAny().orElse(null);
   }
   
   
@@ -701,23 +698,25 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
   }
   
   
+  private HashMap<String, String> getVarNames(GeneralXynaObject xo, boolean useLabels) {
+    Set<String> varNames = getVarNames(xo);
+    HashMap<String, String> ret = new HashMap<String, String>();
+    for (String v : varNames) {
+      ret.put(v,  useLabels ? XOUtils.getLabelFor(xo, v) : v);
+    }
+
+    return ret;
+  }
+  
+
   @SuppressWarnings("unchecked")
-  private HashMap<String,String> getVarNames(GeneralXynaObject xo, boolean useLabels) {
+  private Set<String> getVarNames(GeneralXynaObject xo) {
     try {
       Method methodGetVarNames = xo.getClass().getMethod("getVariableNames");
-      HashMap<String,String> ret = new HashMap<String,String>();
-      for ( String v : (Set<String>)methodGetVarNames.invoke(xo) ) {
-        if (useLabels) {
-          ret.put(v, XOUtils.getLabelFor(xo, v));
-        } else {
-          ret.put(v, v);
-        }
-      }
-
-      return ret;
-    } catch (Exception ex) {
+      return (Set<String>) methodGetVarNames.invoke(xo);
+    } catch (Exception e) {
       // not expected
-      throw new RuntimeException(ex);
+      throw new RuntimeException(e);
     }
   }
 
@@ -816,8 +815,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     
     JSONValue result = new JSONValue();
     if(options.listwrapper.contains(xo.getClass().getCanonicalName())) {
-      Map<String,String> varNamesOfXynaObject = getVarNames(xo, options.useLabels);
-      String member = findListWrapperMember(xo, varNamesOfXynaObject);
+      String member = findListWrapperMember(xo);
       String newPath = currentPath.isEmpty() ? member : currentPath + "." + member; 
       newPath += "[]";
       Pair<Class<?>, Type> fieldTypeInfo = determineTypeOfField(xo, member);
