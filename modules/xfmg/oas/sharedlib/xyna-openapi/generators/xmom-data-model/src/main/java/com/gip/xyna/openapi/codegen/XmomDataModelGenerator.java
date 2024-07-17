@@ -280,7 +280,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
   @SuppressWarnings("rawtypes")
   public CodegenProperty fromProperty(String name, Schema p, boolean required, boolean schemaIsFromAdditionalProperties) {
     CodegenProperty property = super.fromProperty(name, p, required, schemaIsFromAdditionalProperties);
-    if (p.getName() != null) {
+    if (typeAliases != null && typeAliases.containsKey(p.getName())) {
       property.name = p.getName();
       property.baseName = p.getName();
     }
