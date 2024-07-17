@@ -26,6 +26,7 @@ import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.media.Schema;
 
 import java.util.*;
 import java.io.File;
@@ -100,8 +101,10 @@ public class XmomDataModelGenerator extends DefaultCodegen {
   @Override
   public Map<String, ModelsMap> postProcessAllModels(Map<String, ModelsMap> objs) {
     objs = super.postProcessAllModels(objs);
+    
     for (String modelname : objs.keySet()) {
       CodegenModel model = ModelUtils.getModelByName(modelname, objs);
+      setListWrapper(model);
       if (model.getName().equals(model.parent)) {
         model.parent = null;
       }
@@ -125,6 +128,18 @@ public class XmomDataModelGenerator extends DefaultCodegen {
       }
     }
     return objs;
+  }
+  
+  
+  private void setListWrapper(CodegenModel model) {
+    if (model.isArray) {
+      CodegenProperty item = model.getItems();
+      CodegenProperty inner = item.mostInnerItems == null ? item.clone() : item.mostInnerItems;
+      model.vars.clear();
+      model.vars.add(item);
+      item.isContainer = true;
+      item.mostInnerItems = inner;
+    }
   }
   
   @Override
@@ -249,5 +264,27 @@ public class XmomDataModelGenerator extends DefaultCodegen {
   @Override
   public void postProcess() {
     System.out.println("generation of data-model finished");
+  }
+  
+  
+  @SuppressWarnings("rawtypes")
+  public Schema unaliasSchema(Schema schema) {
+    String schemaName = ModelUtils.getSimpleRef(schema.get$ref());
+    Schema ret = super.unaliasSchema(schema);
+    if (ret.getName() == null) {
+      ret.setName(schemaName);
+    }
+    return ret;
+}
+  
+  @SuppressWarnings("rawtypes")
+  public CodegenProperty fromProperty(String name, Schema p, boolean required, boolean schemaIsFromAdditionalProperties) {
+    CodegenProperty property = super.fromProperty(name, p, required, schemaIsFromAdditionalProperties);
+    if (p.getName() != null) {
+      property.name = p.getName();
+      property.baseName = p.getName();
+    }
+    
+    return property;
   }
 }

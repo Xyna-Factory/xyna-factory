@@ -30,7 +30,6 @@ import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
 
 import org.openapitools.codegen.CodegenModel;
-import org.openapitools.codegen.CodegenProperty;
 import org.openapitools.codegen.DefaultCodegen;
 
 public class XynaCodegenModel {
@@ -64,6 +63,7 @@ public class XynaCodegenModel {
     description = buildDescription(model);
     
     isEnum = model.isEnum;
+
     if (isEnum) {
       vars = List.of(factory.getOrCreateXynaCodegenEnumProperty(model.allowableValues, typeName));
     } else {
@@ -95,28 +95,6 @@ public class XynaCodegenModel {
       discriminatorKey = null;
       discriminatorMap = null;
     }
-
-    if(isListWrapper) {
-      CodegenProperty item = model.getItems();
-      if(item.mostInnerItems == null) {
-        CodegenProperty mostInnerItem = item.clone();
-        item.mostInnerItems = mostInnerItem;
-      }
-      item.isContainer = true;
-      item.name = item.getComplexType() == null ? extractRefName(model.getModelJson(), item.dataType) : item.getComplexType();
-      item.baseName = item.name;
-      XynaCodegenProperty itemProperty = factory.getOrCreateXynaCodegenProperty(item, Sanitizer.sanitize(item.name));
-      vars.add(itemProperty);
-    }
-  }
-  
-  private String extractRefName(String json, String fallback) {
-    Pattern p = Pattern.compile("\"items\"\\s*:\\s*\\{\\s*\"\\$ref\"\\s*:\\s*\"([^\"]+)\"");
-    Matcher match = p.matcher(json);
-    if (match.find()) {
-      return match.group(1).substring(match.group(1).lastIndexOf("/") + 1);
-    }
-    return fallback;
   }
   
   private String buildTypeName(CodegenModel model) {
