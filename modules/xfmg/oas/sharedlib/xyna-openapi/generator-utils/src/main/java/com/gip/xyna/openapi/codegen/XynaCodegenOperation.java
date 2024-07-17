@@ -58,7 +58,7 @@ public abstract class XynaCodegenOperation {
 
   
   public XynaCodegenOperation(XynaCodegenFactory factory, CodegenOperation operation, DefaultCodegen gen, String pathPrefix) {
-    listWrapperPath = gen.modelPackage();
+    listWrapperPath = Sanitizer.sanitize(gen.modelPackage());
     baseLabel = operation.httpMethod + " " + operation.path;
     baseVarName = camelize(gen.sanitizeName(operation.httpMethod + "_" + operation.path), Case.CAMEL);
     baseRefName = camelize(baseVarName, Case.PASCAL);
