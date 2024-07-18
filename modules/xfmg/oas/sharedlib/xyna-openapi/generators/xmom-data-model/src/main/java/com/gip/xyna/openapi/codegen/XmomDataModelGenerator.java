@@ -269,6 +269,9 @@ public class XmomDataModelGenerator extends DefaultCodegen {
   
   @SuppressWarnings("rawtypes")
   public Schema unaliasSchema(Schema schema) {
+    if(schema == null) {
+      return super.unaliasSchema(schema);
+    }
     String schemaName = ModelUtils.getSimpleRef(schema.get$ref());
     Schema ret = super.unaliasSchema(schema);
     if (ret.getName() == null) {
