@@ -101,7 +101,7 @@ public class XynaCodegenProperty {
         propRefPath = "xfmg.xfctrl.datamodel.json";
       } else {
         propRefType = camelize(propertyInfo.getComplexType(), Case.PASCAL);
-        propRefPath = Sanitizer.sanitize(gen.modelPackage());
+        propRefPath = Sanitizer.sanitize(gen.modelPackage() + propertyInfo.getAddionalPath());
       }
     }
 

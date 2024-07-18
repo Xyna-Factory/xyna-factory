@@ -57,6 +57,9 @@ public interface CodegenPropertyInfo {
   public boolean getRequired();
   public boolean getIsNullable();
   public Map<String, Object> getAllowableValues();
+  public default String getAddionalPath() {
+    return "";
+  };
 }
 
 class CodegenPropertyHolder implements CodegenPropertyInfo{
@@ -602,5 +605,9 @@ class AdditionalProperty implements CodegenPropertyInfo{
 
   public String getOpenApiType() {
     return wrapper.typeName;
+  }
+  
+  public String getAddionalPath() {
+    return ".wrapper";
   }
 }
