@@ -75,10 +75,6 @@ public abstract class XynaCodegenOperation {
     bodyParams = buildXynaCodegenProperty(factory, operation.bodyParams, gen);
     responses = buildXynaCodegenResponse(factory, operation.responses, gen);
     
-    if (operation.getHasBodyParam() && operation.bodyParam.getAdditionalProperties() != null) {
-      bodyParams.add(factory.getPropertyToAddionalPropertyWrapper(operation.bodyParam.getAdditionalProperties(), getPropertyClassName()));
-    }
-    
     responseDescription = buildResponseDescription(operation);
 
     httpMethod = operation.httpMethod;
