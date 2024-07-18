@@ -23,7 +23,7 @@
         <IsServiceGroupOnly>false</IsServiceGroupOnly>
         <Documentation>This is a wrapper for additional property!</Documentation>
     </Meta>
-    <Data Label="Value" VariableName="value"
+    <Data Label="Key" VariableName="key"
         <Meta>
             <Type>String</Type>
         </Meta>
@@ -31,7 +31,7 @@
 {{#prop}}
 {{>property}}
 {{/prop}}
-    <Service Label="{{label}}" TypeName="{{typeName}}">
+    <Service Label="{{typeLabel}}" TypeName="{{typeName}}">
         <Operation Label="Validate" Name="validate" IsStatic="false">
             <Input>
             </Input>

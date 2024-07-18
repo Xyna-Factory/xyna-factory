@@ -127,4 +127,10 @@ public class XynaCodegenFactory {
     additionalPropertyWrapper.putIfAbsent(newWrapper, newWrapper);
     return additionalPropertyWrapper.get(newWrapper);
   }
+  
+  
+  public XynaCodegenProperty getPropertyToAddionalPropertyWrapper(CodegenProperty addionalProperty, String className) {
+    AdditionalPropertyWrapper wrapper = getOrCreateAdditionalPropertyWrapper(addionalProperty);
+    return getOrCreateXynaCodegenProperty(wrapper, className);
+  }
 }

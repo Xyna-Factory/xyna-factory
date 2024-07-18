@@ -43,6 +43,7 @@ public class XynaCodegenResponse {
   final String message;
   
   final XynaCodegenProperty body;
+  final XynaCodegenProperty additionalProperty;
   final List<XynaCodegenProperty> responseHeaders;
   
   public XynaCodegenResponse(XynaCodegenFactory factory, CodegenResponse response, DefaultCodegen gen, XynaCodegenOperation operation, int index) {
@@ -58,6 +59,11 @@ public class XynaCodegenResponse {
       body = factory.getOrCreateXynaCodegenProperty(response.returnProperty, respRefName);
     } else {
       body = null;
+    }
+    if (response.getAdditionalProperties() != null) {
+      additionalProperty = factory.getPropertyToAddionalPropertyWrapper(response.getAdditionalProperties(), respRefName);
+    } else {
+      additionalProperty = null;
     }
     if (response.headers != null) {
       responseHeaders = response.headers.stream()

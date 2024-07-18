@@ -17,7 +17,7 @@ public class AdditionalPropertyWrapper {
   
   public AdditionalPropertyWrapper(XynaCodegenProperty prop, DefaultCodegen gen) {
 
-    typePath = Sanitizer.sanitize(gen.apiPackage() + ".wrapper");
+    typePath = Sanitizer.sanitize(gen.modelPackage() + ".wrapper");
     typeLabel = (prop.isPrimitive? prop.dataType: prop.propRefType) + " Wrapper";
     typeName = Camelizer.camelize(typeLabel, Case.PASCAL);
     this.prop = prop;

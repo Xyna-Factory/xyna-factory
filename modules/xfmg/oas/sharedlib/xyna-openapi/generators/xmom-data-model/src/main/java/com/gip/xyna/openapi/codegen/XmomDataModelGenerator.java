@@ -96,7 +96,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     );
     supportingFiles.add(new SupportingFile("additionalPropertyWrapper.mustache",
       "XMOM/" + modelPackage.replace('.', '/') + "/wrapper",
-      "additionalPropertyWrapper.xml"));
+      "additionalPropertyWrapper_toSplit.xml"));
   }
 
   @Override
@@ -126,6 +126,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     for(ModelMap model: modelMap.values()) {
       model.put("xynaModel", codegenFactory.getOrCreateXynaCodegenModel(model.getModel()));
       if (model.getModel().isAdditionalPropertiesTrue) {
+        refineAdditionalProperty(model.getModel().getAdditionalProperties());
         AdditionalPropertyWrapper addPropWrapper = codegenFactory.getOrCreateAdditionalPropertyWrapper(model.getModel().getAdditionalProperties());
         addPropWappers.add(addPropWrapper);
       }
@@ -133,11 +134,13 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     List<CodegenOperation> operations = XynaModelUtils.getOperationsFromSupportingFileData(objs);
     for (CodegenOperation operation: operations) {
       if (operation.getHasBodyParam() && operation.bodyParam.getAdditionalProperties() != null) {
+        refineAdditionalProperty(operation.bodyParam.getAdditionalProperties());
         AdditionalPropertyWrapper addPropWrapper = codegenFactory.getOrCreateAdditionalPropertyWrapper(operation.bodyParam.getAdditionalProperties());
         addPropWappers.add(addPropWrapper);
       }
       for (CodegenResponse response: operation.responses) {
         if (response.getAdditionalProperties() != null) {
+          refineAdditionalProperty(response.getAdditionalProperties());
           AdditionalPropertyWrapper addPropWrapper = codegenFactory.getOrCreateAdditionalPropertyWrapper(response.getAdditionalProperties());
           addPropWappers.add(addPropWrapper);
         }
@@ -175,6 +178,11 @@ public class XmomDataModelGenerator extends DefaultCodegen {
         }
       }
     }
+  }
+  
+  private void refineAdditionalProperty(CodegenProperty property) {
+    property.baseName = "Value";
+    property.name = "value";
   }
 
   @SuppressWarnings("rawtypes")

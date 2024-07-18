@@ -35,6 +35,10 @@
     <XMOMEntry implicitDependency="false">
       <FqName>{{typePath}}.{{typeName}}</FqName>
       <Type>DATATYPE</Type>
-    </XMOMEntry>{{/xynaModel}}{{/models}}
+    </XMOMEntry>{{/xynaModel}}{{/models}}{{#addPropWrapper}}
+    <XMOMEntry implicitDependency="false">
+      <FqName>{{typePath}}.{{typeName}}</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>{{/addPropWrapper}}
   </XMOMEntries>
 </Application>

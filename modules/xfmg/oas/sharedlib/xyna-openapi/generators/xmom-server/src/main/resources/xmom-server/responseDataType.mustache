@@ -37,6 +37,9 @@ BaseTypeName="{{responseRefName}}" BaseTypePath="{{responseRefPath}}">
   {{#body}}
 {{>property}}
   {{/body}}
+  {{#additionalProperty}}
+{{>property}}
+  {{/additionalProperty}}
   {{#responseHeaders}}
   {{#isPrimitive}}
 {{>property}}

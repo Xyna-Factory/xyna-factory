@@ -64,7 +64,7 @@ public class XynaCodegenModel {
       vars = model.vars.stream().map(prop -> factory.getOrCreateXynaCodegenProperty(prop, typeName)).collect(Collectors.toList());
     }
     if (model.isAdditionalPropertiesTrue) {
-      vars.add(getPropertyToAddionalPropertyWrapper(factory, model));
+      vars.add(factory.getPropertyToAddionalPropertyWrapper(model.getAdditionalProperties(), typeName));
     }
     if (model.allowableValues != null) {
       @SuppressWarnings("unchecked")
@@ -123,11 +123,6 @@ public class XynaCodegenModel {
     }
     sb.append("        ");
     return sb.toString();
-  }
-  
-  public XynaCodegenProperty getPropertyToAddionalPropertyWrapper(XynaCodegenFactory factory, CodegenModel model) {
-    AdditionalPropertyWrapper wrapper = factory.getOrCreateAdditionalPropertyWrapper(model.getAdditionalProperties());
-    return factory.getOrCreateXynaCodegenProperty(wrapper, typeName);
   }
   
   // Construct OAS Base

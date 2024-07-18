@@ -466,9 +466,16 @@ class CodegenEnum implements CodegenPropertyInfo{
 class AdditionalProperty implements CodegenPropertyInfo{
   
   private AdditionalPropertyWrapper wrapper;
+  private boolean isList;
+  private CodegenPropertyInfo item;
   
   AdditionalProperty(AdditionalPropertyWrapper wrapper) {
+    this(wrapper, true);
+  }
+  
+  private AdditionalProperty(AdditionalPropertyWrapper wrapper, boolean isList) {
     this.wrapper = wrapper;
+    this.isList = isList;
   }
   
   public String getBaseName() {
@@ -484,7 +491,7 @@ class AdditionalProperty implements CodegenPropertyInfo{
   }
   
   public boolean getIsContainer() {
-    return true;
+    return isList;
   }
   
   public boolean getIsPrimitiveType() {
@@ -500,11 +507,17 @@ class AdditionalProperty implements CodegenPropertyInfo{
   }
   
   public CodegenPropertyInfo getItems() {
-    return null;
+    if (isList && item == null) {
+      item = new AdditionalProperty(wrapper, false);
+    }
+    return item;
   }
   
   public CodegenPropertyInfo getMostInnerItems() {
-    return null;
+    if (isList && item == null) {
+      item = new AdditionalProperty(wrapper, false);
+    }
+    return item;
   }
   
   public String getDataType() {
@@ -576,7 +589,7 @@ class AdditionalProperty implements CodegenPropertyInfo{
   }
 
   public boolean getIsString() {
-    return true;
+    return false;
   }
 
   public boolean getIsNumber() {
