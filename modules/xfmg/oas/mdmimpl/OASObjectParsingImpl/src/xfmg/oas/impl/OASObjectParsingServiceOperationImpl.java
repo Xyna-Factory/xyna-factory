@@ -38,7 +38,7 @@ import xfmg.oas.OASObjectParsingServiceOperation;
 
 public class OASObjectParsingServiceOperationImpl implements ExtendedDeploymentTask, OASObjectParsingServiceOperation {
 
-  private static final String additionalPropertiesMemberName = "AdditionalProperties";
+  private static final String additionalPropertiesMemberName = "Additional Properties";
   
   public void onDeployment() throws XynaException {
   }
