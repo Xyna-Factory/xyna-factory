@@ -25,10 +25,10 @@
     <property name="xmom.dir" value="${basedir}/../../XMOM" />
 
     <property name="project.name" value="OASObjectParsingImpl" />
-    <property name="fqclassname" value="xfmg.oas.OASObjectParsingImpl" />
+    <property name="fqclassname" value="xfmg.oas.OASObjectParsing" />
     <property name="mdm.xml.path" value="xfmg/oas" />
-    <property name="mdm.xml.filename" value="OASObjectParsingImpl.xml" />
-    <property name="mdm.service.path" value="xfmg.oas.OASObjectParsingImpl" />
+    <property name="mdm.xml.filename" value="OASObjectParsing.xml" />
+    <property name="mdm.service.path" value="xfmg.oas.OASObjectParsing" />
 
     <import file="${root.dir}/installation/build/buildService.xml" />
 

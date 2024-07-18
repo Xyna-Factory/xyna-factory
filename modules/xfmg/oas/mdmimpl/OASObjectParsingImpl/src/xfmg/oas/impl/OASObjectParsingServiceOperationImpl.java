@@ -67,15 +67,16 @@ public class OASObjectParsingServiceOperationImpl implements ExtendedDeploymentT
   
 
   private void replaceAdditionalPropertiesInObject(JSONObject obj) {
-    JSONValue addProp = obj.getMember(additionalPropertiesMemberName);
-    if (addProp != null) {
-      replaceAdditionalProperties(obj, addProp);
-    }
     for (JSONKeyValue kvp : obj.getMembers()) {
       JSONObject innerObj = kvp.getValue().getObjectValue();
       if (innerObj instanceof JSONObject) {
         replaceAdditionalPropertiesInObject(innerObj);
       }
+    }
+    
+    JSONValue addProp = obj.getMember(additionalPropertiesMemberName);
+    if (addProp != null) {
+      replaceAdditionalProperties(obj, addProp);
     }
   }
 

@@ -19,6 +19,7 @@
   <Meta>
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
+  <Libraries>OASObjectParsingImpl.jar</Libraries>
   <Service Label="OAS Object Parsing" TypeName="OASObjectParsing">
     <Operation IsStatic="true" Label="Convert Oas Object to Json" Name="convertOasObjectToJson">
       <Input>
@@ -33,7 +34,7 @@
         <Data ID="4" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document4"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return null;</CodeSnippet>
+        <CodeSnippet Type="Java">return xfmg.oas.OASObjectParsingImpl.convertOasObjectToJson(anyType, jSONWritingOptions3);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
