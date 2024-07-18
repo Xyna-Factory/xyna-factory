@@ -190,6 +190,10 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
   </XMOMEntries>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xfmg.oas.OASObjectParsingImpl</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
   <XynaProperties>
     <XynaProperty implicitDependency="false">
       <Name>xmcp.oas.fman.properties.runtime_context</Name>
