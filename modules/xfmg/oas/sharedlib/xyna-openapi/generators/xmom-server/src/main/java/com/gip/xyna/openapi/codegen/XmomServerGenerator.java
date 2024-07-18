@@ -23,13 +23,16 @@ import org.openapitools.codegen.model.*;
 import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
 import com.gip.xyna.openapi.codegen.templating.mustache.IndexLambda;
 import com.gip.xyna.openapi.codegen.templating.mustache.StatusCodeLambda;
+import com.gip.xyna.openapi.codegen.utils.XynaModelUtils;
 import com.google.common.collect.ImmutableMap;
 import com.samskivert.mustache.Mustache.Lambda;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.media.Schema;
 
 import java.util.*;
+import java.util.Map.Entry;
 import java.io.File;
 
 public class XmomServerGenerator extends DefaultCodegen {
@@ -136,37 +139,44 @@ public class XmomServerGenerator extends DefaultCodegen {
   @Override
   public Map<String, Object> postProcessSupportingFileData(Map<String, Object> objs) {
     objs = super.postProcessSupportingFileData(objs);
-    @SuppressWarnings("unchecked")
-    List<ModelMap> models = (ArrayList<ModelMap>) objs.get("models");
+    Map<String, ModelMap> modelMap = XynaModelUtils.getModelsFromSupportingFileData(objs);
+    setInheritance(modelMap);
+
     List<XynaCodegenModel> xModels = new ArrayList<XynaCodegenModel>();
-    for (ModelMap modelMap : models) {
-      CodegenModel model = modelMap.getModel();
-      if (model.getName().equals(model.parent)) {
-        model.parent = null;
+    for(ModelMap model: modelMap.values()) {
+      XynaCodegenModel xModel = codegenFactory.getOrCreateXynaCodegenModel(model.getModel());
+      xModels.add(xModel);
+      if (Boolean.TRUE.equals(additionalProperties.get("debugXO"))) {
+        System.out.println(xModel);
       }
-      CodegenModel parent = models.stream()
-          .map(mo -> mo.getModel())
-          .filter(mo -> mo.getName().equals(model.parent))
-          .findFirst().orElse(null);
+    }
+
+    objs.put("xynaModels", xModels);
+    return objs;
+  }
+ 
+  private void setInheritance(Map<String, ModelMap> modelMap) {
+    for (Entry<String, ModelMap> model: modelMap.entrySet()) {
+      if (model.getValue().getModel().getName().equals(model.getValue().getModel().parent)) {
+        model.getValue().getModel().parent = null;
+      }
+      ModelMap parent = modelMap.get(model.getValue().getModel().parent);
       if (parent != null) {
-        for(CodegenProperty var: model.vars) {
-          for(CodegenProperty parentVar: parent.vars) {
+        for(CodegenProperty var: model.getValue().getModel().vars) {
+          for(CodegenProperty parentVar: parent.getModel().vars) {
             if(parentVar.getName().equals(var.getName())) {
               var.isInherited = true;
             }
           }
         }
       }
-      XynaCodegenModel xModel = codegenFactory.getOrCreateXynaCodegenModel(model);
-      xModels.add(xModel);
-      if (Boolean.TRUE.equals(additionalProperties.get("debugXO"))) {
-        System.out.println(xModel);
-      }
     }
-    objs.put("xynaModels", xModels);
-    return objs;
   }
-
+  
+  @SuppressWarnings("rawtypes")
+  protected void addParentFromContainer(CodegenModel model, Schema schema) {
+  }
+  
   /**
    * Returns human-friendly help for the generator.  Provide the consumer with help
    * tips, parameters here

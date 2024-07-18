@@ -24,11 +24,14 @@ import org.openapitools.codegen.utils.ModelUtils;
 
 import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
+import com.gip.xyna.openapi.codegen.utils.XynaModelUtils;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.media.Schema;
 
 import java.util.*;
+import java.util.Map.Entry;
 import java.io.File;
 
 public class XmomDataModelGenerator extends DefaultCodegen {
@@ -91,28 +94,20 @@ public class XmomDataModelGenerator extends DefaultCodegen {
       "",                                                       // the destination folder, relative `outputFolder`
       "application.xml")                                          // the output file
     );
+    supportingFiles.add(new SupportingFile("additionalPropertyWrapper.mustache",
+      "XMOM/" + modelPackage.replace('.', '/') + "/wrapper",
+      "additionalPropertyWrapper.xml"));
   }
 
   @Override
   public Map<String, ModelsMap> postProcessAllModels(Map<String, ModelsMap> objs) {
     objs = super.postProcessAllModels(objs);
-    for (String modelname : objs.keySet()) {
-      CodegenModel model = ModelUtils.getModelByName(modelname, objs);
-      if (model.getName().equals(model.parent)) {
-        model.parent = null;
-      }
-      CodegenModel parent = ModelUtils.getModelByName(model.parent, objs);
-      if (parent != null) {
-        for(CodegenProperty var: model.vars) {
-          for(CodegenProperty parentVar: parent.vars) {
-            if(parentVar.getName().equals(var.getName())) {
-              var.isInherited = true;
-            }
-          }
-        }
-      }
-      XynaCodegenModel xModel = codegenFactory.getOrCreateXynaCodegenModel(model);
-      objs.get(modelname).put("xynaModel", xModel);
+    Map<String, ModelMap> modelMap = XynaModelUtils.getModelsFromAllModels(objs);
+    setInheritance(modelMap);
+    setListWrapper(modelMap);
+    for (Entry<String, ModelMap> model: modelMap.entrySet()) {
+      XynaCodegenModel xModel = codegenFactory.getOrCreateXynaCodegenModel(model.getValue().getModel());
+      objs.get(model.getKey()).put("xynaModel", xModel);
       if (Boolean.TRUE.equals(additionalProperties.get("debugXO"))) {
         System.out.println(xModel);
       }
@@ -122,12 +117,89 @@ public class XmomDataModelGenerator extends DefaultCodegen {
   
   @Override
   public Map<String, Object> postProcessSupportingFileData(Map<String, Object> objs) {
-    @SuppressWarnings("unchecked")
-    List<ModelMap> models = (List<ModelMap>) objs.get("models");
-    models.forEach((ModelMap map) -> map.put("xynaModel", codegenFactory.getOrCreateXynaCodegenModel(map.getModel())));
+    objs = super.postProcessSupportingFileData(objs);
+    Map<String, ModelMap> modelMap = XynaModelUtils.getModelsFromSupportingFileData(objs);
+    setInheritance(modelMap);
+    setListWrapper(modelMap);
+    
+    Set<AdditionalPropertyWrapper> addPropWappers = new HashSet<AdditionalPropertyWrapper>();
+    for(ModelMap model: modelMap.values()) {
+      model.put("xynaModel", codegenFactory.getOrCreateXynaCodegenModel(model.getModel()));
+      if (model.getModel().isAdditionalPropertiesTrue) {
+        AdditionalPropertyWrapper addPropWrapper = codegenFactory.getOrCreateAdditionalPropertyWrapper(model.getModel().getAdditionalProperties());
+        addPropWappers.add(addPropWrapper);
+      }
+    }
+    List<CodegenOperation> operations = XynaModelUtils.getOperationsFromSupportingFileData(objs);
+    for (CodegenOperation operation: operations) {
+      if (operation.getHasBodyParam() && operation.bodyParam.getAdditionalProperties() != null) {
+        AdditionalPropertyWrapper addPropWrapper = codegenFactory.getOrCreateAdditionalPropertyWrapper(operation.bodyParam.getAdditionalProperties());
+        addPropWappers.add(addPropWrapper);
+      }
+      for (CodegenResponse response: operation.responses) {
+        if (response.getAdditionalProperties() != null) {
+          AdditionalPropertyWrapper addPropWrapper = codegenFactory.getOrCreateAdditionalPropertyWrapper(response.getAdditionalProperties());
+          addPropWappers.add(addPropWrapper);
+        }
+      }
+    }
+    
+    objs.put("addPropWrapper", addPropWappers);
     return objs;
   }
   
+  private void setListWrapper(Map<String, ModelMap> modelMap) {
+    for (ModelMap model: modelMap.values()) {
+      CodegenModel mo = model.getModel();
+      if (mo.isArray) {
+        CodegenProperty item = mo.getItems();
+        item.isContainer = true;
+        mo.getVars().add(item);
+      }
+    }
+  }
+  
+  private void setInheritance(Map<String, ModelMap> modelMap) {
+    for (Entry<String, ModelMap> model: modelMap.entrySet()) {
+      if (model.getValue().getModel().getName().equals(model.getValue().getModel().parent)) {
+        model.getValue().getModel().parent = null;
+      }
+      ModelMap parent = modelMap.get(model.getValue().getModel().parent);
+      if (parent != null) {
+        for(CodegenProperty var: model.getValue().getModel().vars) {
+          for(CodegenProperty parentVar: parent.getModel().vars) {
+            if(parentVar.getName().equals(var.getName())) {
+              var.isInherited = true;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @SuppressWarnings("rawtypes")
+  public Schema unaliasSchema(Schema schema) {
+    String schemaName = ModelUtils.getSimpleRef(schema.get$ref());
+    Schema ret = super.unaliasSchema(schema);
+    if (ret.getName() == null) {
+      ret.setName(schemaName);
+    }
+    return ret;
+  }
+
+  @SuppressWarnings("rawtypes")
+  protected void updatePropertyForString(CodegenProperty property, Schema p) {
+    super.updatePropertyForString(property, p);
+    if (p.getName() != null) {
+      property.name = p.getName();
+      property.baseName = p.getName();
+    }
+  }
+
+  @SuppressWarnings("rawtypes")
+  protected void addParentFromContainer(CodegenModel model, Schema schema) {
+  }
+
   /**
    * Returns human-friendly help for the generator.  Provide the consumer with help
    * tips, parameters here
