@@ -190,7 +190,7 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xfmg.oas.OASObjectParsingImpl</FqName>
+      <FqName>xfmg.oas.OASObjectParsing</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
   </XMOMEntries>
