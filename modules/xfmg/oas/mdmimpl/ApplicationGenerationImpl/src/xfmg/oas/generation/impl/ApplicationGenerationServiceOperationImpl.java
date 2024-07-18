@@ -44,6 +44,9 @@ import com.gip.xyna.xfmg.xfctrl.filemgmt.FileManagement;
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.rtctxmgmt.LocalRuntimeContextManagementSecurity;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
+import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.UserType;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
 import com.gip.xyna.xfmg.xopctrl.managedsessions.SessionManagement;
 import com.gip.xyna.xmcp.xfcli.impl.SavexmomobjectImpl;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
@@ -66,6 +69,10 @@ import xprc.xpce.RuntimeContext;
 
 public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploymentTask, ApplicationGenerationServiceOperation {
 
+  public static final XynaPropertyBoolean createListWrappers = new XynaPropertyBoolean("xfmg.oas.create_list_wrappers", false)
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Create an XmomObject for Schemas of type array")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Erzeuge Xmom Objekte für Schemas mit Typ array");
+  
   private static final LocalRuntimeContextManagementSecurity localLrcms =
       new LocalRuntimeContextManagementSecurity();
   private static final SessionManagement sessionManagement = 
@@ -85,6 +92,8 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
     } catch (Exception e) {
       logger.error("Could not register oas plugin.", e);
     }
+    
+    createListWrappers.registerDependency(UserType.Service, "OAS_Base");
   }
 
 

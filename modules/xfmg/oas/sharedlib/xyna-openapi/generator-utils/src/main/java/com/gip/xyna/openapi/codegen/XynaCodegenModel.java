@@ -19,9 +19,8 @@ package com.gip.xyna.openapi.codegen;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.openapitools.codegen.CodegenDiscriminator.MappedModel;
@@ -57,11 +56,10 @@ public class XynaCodegenModel {
   
   public XynaCodegenModel(XynaCodegenFactory factory, CodegenModel model, DefaultCodegen gen) {
     label = model.name;
-    isListWrapper = model.isArray;
+    isListWrapper = isListWrapper(model, gen.additionalProperties());
     typeName = buildTypeName(model);
     typePath = buildTypePath(gen);
     description = buildDescription(model);
-    
     isEnum = model.isEnum;
 
     if (isEnum) {
@@ -200,5 +198,9 @@ public class XynaCodegenModel {
       this.keyValue = keyValue;
       this.fqn = fqn;
     }
+  }
+  
+  public static boolean isListWrapper(CodegenModel model, Map<String, Object> additionalProperties) {
+    return model.isArray && (boolean)additionalProperties.getOrDefault("createListWrappers", false);
   }
 }

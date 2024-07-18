@@ -72,6 +72,7 @@ import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 
 import xfmg.oas.generation.cli.generated.Buildoasapplication;
+import xfmg.oas.generation.impl.ApplicationGenerationServiceOperationImpl;
 
 import org.apache.log4j.Logger;
 
@@ -171,7 +172,8 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
     final CodegenConfigurator configurator = new CodegenConfigurator()
         .setGeneratorName(generatorName)
         .setInputSpec(specFile)
-        .addAdditionalProperty("generateAliasAsModel", "true")
+        .addAdditionalProperty("generateAliasAsModel", ApplicationGenerationServiceOperationImpl.createListWrappers.get())
+        .addAdditionalProperty("createListWrappers", ApplicationGenerationServiceOperationImpl.createListWrappers.get())
         .setOutputDir(target);
 
 

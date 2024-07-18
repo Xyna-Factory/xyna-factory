@@ -132,7 +132,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
   
   
   private void setListWrapper(CodegenModel model) {
-    if (model.isArray) {
+    if (XynaCodegenModel.isListWrapper(model, additionalProperties())) {
       CodegenProperty item = model.getItems();
       CodegenProperty inner = item.mostInnerItems == null ? item.clone() : item.mostInnerItems;
       model.vars.clear();
