@@ -62,7 +62,7 @@ List&lt;GeneralXynaObject&gt; list = new ArrayList&lt;&gt;({{getPropVarName}});
 body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONListWithOptions(list, jsonOptions);
 {{/isList}}
 {{^isList}}
-body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions({{getPropVarName}}, jsonOptions);
+body = xfmg.oas.OASObjectParsing.convertOasObjectToJson({{getPropVarName}}, jsonOptions);
 {{/isList}}
 {{/isPrimitive}}
 {{#isPrimitive}}

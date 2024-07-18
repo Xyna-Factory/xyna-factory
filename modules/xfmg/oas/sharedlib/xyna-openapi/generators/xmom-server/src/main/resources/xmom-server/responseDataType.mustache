@@ -86,7 +86,7 @@ List&lt;GeneralXynaObject&gt; obj = new ArrayList&lt;&gt;({{getPropVarName}});
   {{^isList}}
 {{propRefPath}}.{{propRefType}} obj = {{getPropVarName}};
   {{/isList}}
-body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSON{{#isList}}List{{/isList}}WithOptions(obj, jsonOptions);
+body = xfmg.oas.OASObjectParsing.convertOasObjectToJson(obj, jsonOptions);
 {{/isPrimitive}}
 {{#isPrimitive}}
 String text;
