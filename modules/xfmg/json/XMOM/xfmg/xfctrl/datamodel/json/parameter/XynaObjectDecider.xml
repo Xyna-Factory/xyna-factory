@@ -38,5 +38,27 @@
         </Data>
       </Output>
     </Operation>
+    <Operation IsStatic="false" Label="On Unknown Member" Name="onUnknownMember">
+      <Input>
+        <Data ID="23" Label="xyna object" ReferenceName="AnyType" ReferencePath="base" VariableName="xo">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data ID="27" Label="Variable Name" VariableName="varName">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="30" Label="JSON Value" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONValue30"/>
+      </Input>
+      <Output/>
+      <Meta>
+        <Documentation>Called when the json contains a member that does not appear in the xyna object.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">logger.debug("parameter " + varName + " not found in " + xo);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

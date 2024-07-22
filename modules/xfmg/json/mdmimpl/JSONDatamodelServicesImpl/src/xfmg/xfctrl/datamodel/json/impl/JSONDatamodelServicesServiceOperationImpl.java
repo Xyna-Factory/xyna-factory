@@ -354,7 +354,11 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
       String varNameInXyna = determineVarNameInXyna(varName, currentPath, substitutions, useLabels, varNamesOfXynaObject);
       
       if (varNameInXyna == null) {
-        logger.debug("parameter " + varName + " not found in " + xo);
+        if (decider != null) {
+          decider.onUnknownMember(xo, varName, value);
+        } else {
+          logger.debug("parameter " + varNameInXyna + " not found in " + xo);
+        }
         continue;
       }
 
@@ -404,7 +408,6 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
         throw new RuntimeException("unexpected type : " + value.getType());
     }
   }
-
 
   @SuppressWarnings("unchecked")
   private void processObjectValue(GeneralXynaObject xo, JsonOptions options, XynaObjectDecider decider, String varName, JSONValue value,
