@@ -82,8 +82,8 @@ try {
         {{#addPropWrapper}}
         {{#usersFQN}}
         if (xo instanceof {{.}}) {
-          if (xo.get("addionalProperties") == null) {
-            xo.set("addionalProperties", new ArrayList&lt;{{wrapperFQN}}&gt;());
+          if (xo.get("additionalProperties") == null) {
+            xo.set("additionalProperties", new ArrayList&lt;{{wrapperFQN}}&gt;());
           }
           {{wrapperFQN}} wrapper = new {{wrapperFQN}}();
           wrapper.setKey(varName);
@@ -115,7 +115,7 @@ try {
             wrapper.setValue({{propVarName}});
           {{/isPrimitive}}
         {{/prop}}
-          ((List) xo.get("addionalProperties")).add(wrapper);
+          ((List) xo.get("additionalProperties")).add(wrapper);
         }
         {{/usersFQN}}
         {{/addPropWrapper}}
