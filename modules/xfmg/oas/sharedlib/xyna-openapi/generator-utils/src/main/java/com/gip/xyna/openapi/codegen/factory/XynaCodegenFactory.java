@@ -133,8 +133,8 @@ public class XynaCodegenFactory {
   }
   
   
-  public XynaCodegenProperty getPropertyToAddionalPropertyWrapper(CodegenProperty addionalProperty, String className) {
-    AdditionalPropertyWrapper wrapper = getOrCreateAdditionalPropertyWrapper(addionalProperty, null);
+  public XynaCodegenProperty getPropertyToAddionalPropertyWrapper(CodegenProperty additionalProperty, String className) {
+    AdditionalPropertyWrapper wrapper = getOrCreateAdditionalPropertyWrapper(additionalProperty, null);
     return getOrCreateXynaCodegenProperty(wrapper, className);
   }
 }

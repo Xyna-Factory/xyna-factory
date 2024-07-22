@@ -482,11 +482,11 @@ class AdditionalProperty implements CodegenPropertyInfo{
   }
   
   public String getBaseName() {
-    return "Addional Properties";
+    return "Additional Properties";
   }
   
   public String getName() {
-    return "addionalProperties";
+    return "additionalProperties";
   }
   
   public boolean getIsInherited() {
