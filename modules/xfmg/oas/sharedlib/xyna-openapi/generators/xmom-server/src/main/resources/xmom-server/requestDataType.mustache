@@ -94,11 +94,11 @@ xact.templates.Document document = httpRequest1.getBody();
     {{^isPrimitive}}
 jsonOptions.setObjectDecider(new {{apiRefPath}}.decider.OASDecider());
       {{^isList}}
-{{propRefPath}}.{{propRefType}} {{propVarName}} = ({{propRefPath}}.{{propRefType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{propRefPath}}.{{propRefType}}(), jsonOptions);
+{{propFQN}} {{propVarName}} = ({{propFQN}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{propFQN}}(), jsonOptions);
       {{/isList}}
       {{#isList}}
-List tmp = (List)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new {{propRefPath}}.{{propRefType}}(), jsonOptions);
-List&lt;{{propRefPath}}.{{propRefType}}&gt; {{propVarName}} = (List&lt;{{propRefPath}}.{{propRefType}}&gt;)tmp;
+List tmp = (List)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new {{propFQN}}(), jsonOptions);
+List&lt;{{propFQN}}&gt; {{propVarName}} = (List&lt;{{propFQN}}&gt;)tmp;
       {{/isList}}
 ret.{{setPropVarName}}({{propVarName}});
     {{/isPrimitive}}

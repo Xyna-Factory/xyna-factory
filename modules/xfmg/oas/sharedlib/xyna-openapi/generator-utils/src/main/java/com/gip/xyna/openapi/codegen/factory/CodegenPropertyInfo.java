@@ -506,7 +506,7 @@ class AdditionalProperty implements CodegenPropertyInfo{
   }
   
   public String getComplexType() {
-    return wrapper.typeName;
+    return wrapper.wrapperName;
   }
   
   public CodegenPropertyInfo getItems() {
@@ -524,7 +524,7 @@ class AdditionalProperty implements CodegenPropertyInfo{
   }
   
   public String getDataType() {
-    return wrapper.typeName;
+    return wrapper.wrapperName;
   }
   
   public String getDescription() {
@@ -604,7 +604,7 @@ class AdditionalProperty implements CodegenPropertyInfo{
   }
 
   public String getOpenApiType() {
-    return wrapper.typeName;
+    return wrapper.wrapperName;
   }
   
   public String getAddionalPath() {

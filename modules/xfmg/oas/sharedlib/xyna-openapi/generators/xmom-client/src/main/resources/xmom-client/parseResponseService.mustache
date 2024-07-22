@@ -55,22 +55,22 @@ jsonOptions.setProcessAllInputGenerically(false);
 xact.templates.Document document = document8;
 {{#responses}}
 if (statusCode == {{code}}) {
-    {{respRefPath}}.{{respRefName}} responseDataType = new {{respRefPath}}.{{respRefName}}();
+    {{respFQN}} responseDataType = new {{respFQN}}();
 
 
     {{#body}}
     if (!document.getText().trim().isEmpty()) {
     {{^isPrimitive}}
     {{#isList}}
-        List&lt;{{propRefPath}}.{{propRefType}}&gt; body = new ArrayList&lt; &gt;();
-        List&lt;GeneralXynaObject&gt; parsedList = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new {{propRefPath}}.{{propRefType}}(), jsonOptions);
+        List&lt;{{propFQN}}&gt; body = new ArrayList&lt; &gt;();
+        List&lt;GeneralXynaObject&gt; parsedList = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new {{propFQN}}(), jsonOptions);
         for (GeneralXynaObject obj : parsedList) {
-            body.add(({{propRefPath}}.{{propRefType}})obj);
+            body.add(({{propFQN}})obj);
         }
     {{/isList}}
     {{^isList}}
-        {{propRefPath}}.{{propRefType}} body;
-        body = ({{propRefPath}}.{{propRefType}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{propRefPath}}.{{propRefType}}(), jsonOptions);
+        {{propFQN}} body;
+        body = ({{propFQN}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{propFQN}}(), jsonOptions);
     {{/isList}}
         responseDataType.{{setPropVarName}}(body);
     {{/isPrimitive}}

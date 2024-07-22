@@ -27,6 +27,7 @@ import org.openapitools.codegen.CodegenOperation;
 import org.openapitools.codegen.model.ApiInfoMap;
 import org.openapitools.codegen.model.ModelMap;
 import org.openapitools.codegen.model.ModelsMap;
+import org.openapitools.codegen.model.OperationMap;
 import org.openapitools.codegen.model.OperationsMap;
 
 public class XynaModelUtils {
@@ -41,12 +42,12 @@ public class XynaModelUtils {
     return modelMap;
   }
 
-  public static List<CodegenOperation> getOperationsFromSupportingFileData(Map<String, Object> objs) {
+  public static List<OperationMap> getOperationsFromSupportingFileData(Map<String, Object> objs) {
     ApiInfoMap apiInfo = (ApiInfoMap) objs.get("apiInfo");
     List<OperationsMap> apiList = ((List<OperationsMap>) apiInfo.getApis());
-    List<CodegenOperation> operations = new ArrayList<>();
+    List<OperationMap> operations = new ArrayList<>();
     for(OperationsMap api: apiList) {
-      operations.addAll(api.getOperations().getOperation());
+      operations.add(api.getOperations());
     }
     return operations;
   }

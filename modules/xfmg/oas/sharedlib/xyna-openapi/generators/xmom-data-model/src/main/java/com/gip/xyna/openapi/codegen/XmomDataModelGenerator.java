@@ -20,9 +20,11 @@ package com.gip.xyna.openapi.codegen;
 import org.openapitools.codegen.*;
 import org.openapitools.codegen.model.ModelMap;
 import org.openapitools.codegen.model.ModelsMap;
+import org.openapitools.codegen.model.OperationMap;
 import org.openapitools.codegen.utils.ModelUtils;
 
 import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
+import com.gip.xyna.openapi.codegen.utils.GeneratorProperty;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
 import com.gip.xyna.openapi.codegen.utils.XynaModelUtils;
 
@@ -81,7 +83,15 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     if (vendorExtentions != null) {
       String xModelPath = (String)vendorExtentions.get("x-model-path");
       if (xModelPath != null && !xModelPath.trim().isEmpty()) {
-        modelPackage = Sanitizer.sanitize(xModelPath.replace('-', '_').replace(' ', '_').toLowerCase());
+        GeneratorProperty.setModelPath(this, Sanitizer.sanitize(xModelPath.replace('-', '_').replace(' ', '_').toLowerCase()));
+      }
+      String xClientPath = (String)vendorExtentions.get("x-client-path");
+      if (xClientPath != null && !xClientPath.trim().isEmpty()) {
+        GeneratorProperty.setClientPath(this, Sanitizer.sanitize(xClientPath.replace('-', '_').replace(' ', '_').toLowerCase()));
+      }
+      String xProviderPath = (String)vendorExtentions.get("x-provider-path");
+      if (xProviderPath != null && !xProviderPath.trim().isEmpty()) {
+        GeneratorProperty.setProviderPath(this, Sanitizer.sanitize(xProviderPath.replace('-', '_').replace(' ', '_').toLowerCase()));
       }
     }
     
@@ -95,7 +105,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
       "application.xml")                                          // the output file
     );
     supportingFiles.add(new SupportingFile("additionalPropertyWrapper.mustache",
-      "XMOM/" + modelPackage.replace('.', '/') + "/wrapper",
+      "XMOM/" + GeneratorProperty.getModelPath(this).replace('.', '/') + "/wrapper",
       "additionalPropertyWrapper_toSplit.xml"));
   }
 
@@ -108,7 +118,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     for (Entry<String, ModelMap> model: modelMap.entrySet()) {
       XynaCodegenModel xModel = codegenFactory.getOrCreateXynaCodegenModel(model.getValue().getModel());
       objs.get(model.getKey()).put("xynaModel", xModel);
-      if (Boolean.TRUE.equals(additionalProperties.get("debugXO"))) {
+      if (GeneratorProperty.getDebugXO(this)) {
         System.out.println(xModel);
       }
     }
@@ -124,29 +134,32 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     
     Set<AdditionalPropertyWrapper> addPropWappers = new HashSet<AdditionalPropertyWrapper>();
     for(ModelMap model: modelMap.values()) {
-      model.put("xynaModel", codegenFactory.getOrCreateXynaCodegenModel(model.getModel()));
+      XynaCodegenModel mo = codegenFactory.getOrCreateXynaCodegenModel(model.getModel());
+      model.put("xynaModel", mo);
       if (model.getModel().isAdditionalPropertiesTrue) {
         refineAdditionalProperty(model.getModel().getAdditionalProperties());
-        AdditionalPropertyWrapper addPropWrapper = codegenFactory.getOrCreateAdditionalPropertyWrapper(model.getModel().getAdditionalProperties());
+        String fqn = XynaCodegenModel.getFQN(model.getModel(), this);
+        AdditionalPropertyWrapper addPropWrapper = codegenFactory.getOrCreateAdditionalPropertyWrapper(model.getModel().getAdditionalProperties(), fqn);
         addPropWappers.add(addPropWrapper);
       }
     }
-    List<CodegenOperation> operations = XynaModelUtils.getOperationsFromSupportingFileData(objs);
-    for (CodegenOperation operation: operations) {
-      if (operation.getHasBodyParam() && operation.bodyParam.getAdditionalProperties() != null) {
-        refineAdditionalProperty(operation.bodyParam.getAdditionalProperties());
-        AdditionalPropertyWrapper addPropWrapper = codegenFactory.getOrCreateAdditionalPropertyWrapper(operation.bodyParam.getAdditionalProperties());
-        addPropWappers.add(addPropWrapper);
-      }
-      for (CodegenResponse response: operation.responses) {
-        if (response.getAdditionalProperties() != null) {
-          refineAdditionalProperty(response.getAdditionalProperties());
-          AdditionalPropertyWrapper addPropWrapper = codegenFactory.getOrCreateAdditionalPropertyWrapper(response.getAdditionalProperties());
-          addPropWappers.add(addPropWrapper);
+    List<OperationMap> operationMaps = XynaModelUtils.getOperationsFromSupportingFileData(objs);
+    for (OperationMap operationMap: operationMaps) {
+      for (CodegenOperation operation: operationMap.getOperation()) {
+        for (CodegenResponse response: operation.responses) {
+          if (response.getAdditionalProperties() != null) {
+            refineAdditionalProperty(response.getAdditionalProperties());
+            String clientfqn = XynaCodegenResponse.getClientFQN(operation, this, operationMap.getPathPrefix(), response);
+            AdditionalPropertyWrapper addPropWrapper = codegenFactory.getOrCreateAdditionalPropertyWrapper(response.getAdditionalProperties(), clientfqn);
+            addPropWappers.add(addPropWrapper);
+            String providerfqn = XynaCodegenResponse.getProviderFQN(operation, this, operationMap.getPathPrefix(), response);
+            addPropWrapper = codegenFactory.getOrCreateAdditionalPropertyWrapper(response.getAdditionalProperties(), providerfqn);
+            addPropWappers.add(addPropWrapper);
+          }
         }
       }
     }
-    
+
     objs.put("addPropWrapper", addPropWappers);
     return objs;
   }
@@ -245,6 +258,9 @@ public class XmomDataModelGenerator extends DefaultCodegen {
      * can be changed via "x-model-path" in the info section of the spec file
      */
     modelPackage = "model.generated";
+    GeneratorProperty.setModelPath(this, modelPackage);
+    GeneratorProperty.setClientPath(this, "xmcp.oas.client");
+    GeneratorProperty.setProviderPath(this, "xmcp.oas.provider");
 
     /**
      * Reserved words.  Override this with reserved words specific to your language
@@ -261,7 +277,9 @@ public class XmomDataModelGenerator extends DefaultCodegen {
      * are available in models, apis, and supporting files
      */
     additionalProperties.put(XYNA_FACTORY_VERSION, xynaFactoryVersion);
-
+    supportsInheritance = true;
+    supportsMultipleInheritance = false;
+    supportsAdditionalPropertiesWithComposedSchema = true;
 
     /**
      * Language Specific Primitives.  These types will not trigger imports by
@@ -303,7 +321,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
    * instantiated
    */
   public String modelFileFolder() {
-    return outputFolder + "/" + sourceFolder + "/" + modelPackage().replace('.', File.separatorChar);
+    return outputFolder + "/" + sourceFolder + "/" + GeneratorProperty.getModelPath(this).replace('.', File.separatorChar);
   }
 
   @Override

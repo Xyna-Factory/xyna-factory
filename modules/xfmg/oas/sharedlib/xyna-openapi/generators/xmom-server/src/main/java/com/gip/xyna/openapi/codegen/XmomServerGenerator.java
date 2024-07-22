@@ -23,6 +23,8 @@ import org.openapitools.codegen.model.*;
 import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
 import com.gip.xyna.openapi.codegen.templating.mustache.IndexLambda;
 import com.gip.xyna.openapi.codegen.templating.mustache.StatusCodeLambda;
+import com.gip.xyna.openapi.codegen.utils.GeneratorProperty;
+import com.gip.xyna.openapi.codegen.utils.Sanitizer;
 import com.gip.xyna.openapi.codegen.utils.XynaModelUtils;
 import com.google.common.collect.ImmutableMap;
 import com.samskivert.mustache.Mustache.Lambda;
@@ -83,11 +85,16 @@ public class XmomServerGenerator extends DefaultCodegen {
       String xModelPath = (String)vendorExtentions.get("x-model-path");
       if (xModelPath != null && !xModelPath.trim().isEmpty()) {
         modelPackage = xModelPath.replace('-', '_').replace(' ', '_').toLowerCase();
+        GeneratorProperty.setModelPath(this, modelPackage);
       }
-
       String xProviderPath = (String)vendorExtentions.get("x-provider-path");
       if (xProviderPath != null && !xProviderPath.trim().isEmpty()) {
         apiPackage = xProviderPath.replace('-', '_').replace(' ', '_').toLowerCase();
+        GeneratorProperty.setProviderPath(this, apiPackage);
+      }
+      String xClientPath = (String)vendorExtentions.get("x-client-path");
+      if (xClientPath != null && !xClientPath.trim().isEmpty()) {
+        GeneratorProperty.setClientPath(this, Sanitizer.sanitize(xClientPath.replace('-', '_').replace(' ', '_').toLowerCase()));
       }
     }
     
@@ -100,7 +107,7 @@ public class XmomServerGenerator extends DefaultCodegen {
       "filter/OASFilter",                                                // the destination folder, relative `outputFolder`
       "OASFilter.java")                                     // the output file
     );
-    supportingFiles.add(new SupportingFile("OASDecider.mustache", "XMOM/" + apiPackage.replace('.', '/') + "/decider", "OASDecider.xml"));
+    supportingFiles.add(new SupportingFile("OASDecider.mustache", "XMOM/" + GeneratorProperty.getProviderPath(this).replace('.', '/') + "/decider", "OASDecider.xml"));
     supportingFiles.add(new SupportingFile("application.mustache", "", "application.xml"));
   }
 
@@ -117,7 +124,7 @@ public class XmomServerGenerator extends DefaultCodegen {
       String tag = opList.get(0).baseName;
       ops.put("apiLabel", tag + " Api");
       ops.put("apiRefName", tag + "Api");
-      ops.put("apiRefPath", apiPackage);
+      ops.put("apiRefPath", GeneratorProperty.getProviderPath(this));
     }
     
     List<XynaCodegenOperation> xoperationList = new ArrayList<XynaCodegenOperation>(opList.size());
@@ -126,7 +133,7 @@ public class XmomServerGenerator extends DefaultCodegen {
     for(CodegenOperation co : opList){
       XynaCodegenOperation xOperation = codegenFactory.getOrCreateXynaCodegenProviderOperation(co, (String) ops.get("pathPrefix"), 2*index);
       xoperationList.add(xOperation);
-      if (Boolean.TRUE.equals(additionalProperties.get("debugXO"))) {
+      if (GeneratorProperty.getDebugXO(this)) {
         System.out.println(xOperation);
       }
       index++;
@@ -141,20 +148,47 @@ public class XmomServerGenerator extends DefaultCodegen {
     objs = super.postProcessSupportingFileData(objs);
     Map<String, ModelMap> modelMap = XynaModelUtils.getModelsFromSupportingFileData(objs);
     setInheritance(modelMap);
-
+    
     List<XynaCodegenModel> xModels = new ArrayList<XynaCodegenModel>();
+    Set<AdditionalPropertyWrapper> addPropWappers = new HashSet<AdditionalPropertyWrapper>();
     for(ModelMap model: modelMap.values()) {
       XynaCodegenModel xModel = codegenFactory.getOrCreateXynaCodegenModel(model.getModel());
       xModels.add(xModel);
-      if (Boolean.TRUE.equals(additionalProperties.get("debugXO"))) {
+      if (GeneratorProperty.getDebugXO(this)) {
         System.out.println(xModel);
+      }
+
+      if (model.getModel().isAdditionalPropertiesTrue) {
+        refineAdditionalProperty(model.getModel().getAdditionalProperties());
+        String fqn = XynaCodegenModel.getFQN(model.getModel(), this);
+        AdditionalPropertyWrapper addPropWrapper = codegenFactory.getOrCreateAdditionalPropertyWrapper(model.getModel().getAdditionalProperties(), fqn);
+        addPropWappers.add(addPropWrapper);
+      }
+    }
+    List<OperationMap> operationMaps = XynaModelUtils.getOperationsFromSupportingFileData(objs);
+    for (OperationMap operationMap: operationMaps) {
+      for (CodegenOperation operation: operationMap.getOperation()) {
+        for (CodegenResponse response: operation.responses) {
+          if (response.getAdditionalProperties() != null) {
+            refineAdditionalProperty(response.getAdditionalProperties());
+            String providerfqn = XynaCodegenResponse.getProviderFQN(operation, this, operationMap.getPathPrefix(), response);
+            AdditionalPropertyWrapper addPropWrapper = codegenFactory.getOrCreateAdditionalPropertyWrapper(response.getAdditionalProperties(), providerfqn);
+            addPropWappers.add(addPropWrapper);
+          }
+        }
       }
     }
 
     objs.put("xynaModels", xModels);
+    objs.put("addPropWrapper", addPropWappers);
     return objs;
   }
  
+  private void refineAdditionalProperty(CodegenProperty property) {
+    property.baseName = "Value";
+    property.name = "value";
+  }
+    
   private void setInheritance(Map<String, ModelMap> modelMap) {
     for (Entry<String, ModelMap> model: modelMap.entrySet()) {
       if (model.getValue().getModel().getName().equals(model.getValue().getModel().parent)) {
@@ -211,6 +245,9 @@ public class XmomServerGenerator extends DefaultCodegen {
      */
     modelPackage = "model.generated";
     apiPackage = "xmcp.oas.provider";
+    GeneratorProperty.setModelPath(this, modelPackage);
+    GeneratorProperty.setProviderPath(this, apiPackage);
+    GeneratorProperty.setClientPath(this, "xmcp.oas.client");
 
     /**
      * Reserved words.  Override this with reserved words specific to your language
@@ -270,7 +307,7 @@ public class XmomServerGenerator extends DefaultCodegen {
    */
   @Override
   public String apiFileFolder() {
-    return outputFolder + "/" + sourceFolder + "/" + apiPackage().replace('.', File.separatorChar);
+    return outputFolder + "/" + sourceFolder + "/" + GeneratorProperty.getProviderPath(this).replace('.', File.separatorChar);
   }
 
   @Override

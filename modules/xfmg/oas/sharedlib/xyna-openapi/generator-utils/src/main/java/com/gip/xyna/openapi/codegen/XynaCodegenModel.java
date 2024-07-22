@@ -92,12 +92,24 @@ public class XynaCodegenModel {
     }
   }
   
-  private String buildTypeName(CodegenModel model) {
+  public static String buildTypeName(CodegenModel model) {
     return Sanitizer.sanitize(model.classname);
   }
   
-  private String buildTypePath(DefaultCodegen gen) {
+  public static String buildTypePath(DefaultCodegen gen) {
     return Sanitizer.sanitize(gen.modelPackage());
+  }
+  
+  public String getModelFQN() {
+    return getFQN(typePath, typeName);
+  }
+  
+  public static String getFQN(CodegenModel model, DefaultCodegen gen) {
+    return getFQN(buildTypePath(gen), buildTypeName(model));
+  }
+  
+  private static String getFQN(String path, String name) {
+    return path + '.' + name;
   }
   
   private String buildDescription(CodegenModel model) {

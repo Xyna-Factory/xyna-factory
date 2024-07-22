@@ -21,7 +21,7 @@ BaseTypeName="XynaObjectDecider" BaseTypePath="xfmg.xfctrl.datamodel.json.parame
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Service Label="decide" TypeName="Decide">
+  <Service Label="OASDecider" TypeName="OASDecider">
     <Operation Label="Decide" Name="decide" IsStatic="false">
       <Input>
         <Data ID="16" Label="Generic Type" VariableName="string16">
@@ -42,7 +42,7 @@ BaseTypeName="XynaObjectDecider" BaseTypePath="xfmg.xfctrl.datamodel.json.parame
         <CodeSnippet Type="Java">
 {{#xynaModels}}
 {{#hasDiscriminator}}
-if (string16.equals("{{typePath}}.{{typeName}}")) {
+if (string16.equals("{{modelFQN}}")) {
   String dyntype = "";
   xfmg.xfctrl.datamodel.json.JSONValue value = jSONObject2.getMember("{{discriminatorKey}}");
   if (value != null) {
@@ -61,6 +61,71 @@ try {
 } catch(Exception e) {
   return null;
 }</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="On Unknown Member" Name="onUnknownMember" IsStatic="false">
+      <Input>
+        <Data ID="23" Label="xyna object" VariableName="xo" ReferenceName="AnyType" ReferencePath="base">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data ID="27" Label="Variable Name" VariableName="varName">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="30" Label="JSON Value" VariableName="jSONValue30" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json">
+        </Data>
+      </Input>
+      <Output>
+      </Output>
+      <Meta>
+        <Documentation>Called when the json contains a member that does not appear in the xyna object.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+        {{#addPropWrapper}}
+        {{#usersFQN}}
+        if (xo instanceof {{.}}.class) {
+          if (xo.get("addionalProperties") == null) {
+            xo.set("addionalProperties", new ArrayList&lt;{{wrapperFQN}}&gt;());
+          }
+          {{wrapperFQN}} wrapper = new {{wrapperFQN}}();
+          wrapper.setKey(varName);
+        {{#prop}}
+          {{#isPrimitive}}
+            {{#isBoolean}}
+          wrapper.setValue(jSONValue30.getBooleanValue());
+            {{/isBoolean}}
+            {{#isString}}
+          wrapper.setValue(jSONValue30.getStringOrNumberValue());
+            {{/isString}}
+            {{#isNumber}}
+          wrapper.setValue(({{javaType}}) jSONValue30.getStringOrNumberValue());
+            {{/isNumber}}
+          {{/isPrimitive}}
+          {{^isPrimitive}}
+            xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
+            jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
+            jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
+            jsonOptions.setUseLabels(true);
+            jsonOptions.setProcessAllInputGenerically(false);
+            xact.templates.Document document = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(jSONValue30, jsonOptions);
+            {{^isList}}
+            {{propFQN}} {{propVarName}} = ({{propFQN}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{propFQN}}, jsonOptions);
+            {{/isList}}
+            {{#isList}}
+            List {{propVarName}} = (List)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new {{propFQN}}(), jsonOptions);
+            {{/isList}}
+            wrapper.setValue({{propVarName}});
+          {{/isPrimitive}}
+        {{/prop}}
+          ((List) xo.get("addionalProperties")).add(wrapper);
+        }
+        {{/usersFQN}}
+        {{/addPropWrapper}}
+        </CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

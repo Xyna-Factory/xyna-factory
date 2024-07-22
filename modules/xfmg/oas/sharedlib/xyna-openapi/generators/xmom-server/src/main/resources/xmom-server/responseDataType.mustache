@@ -84,7 +84,7 @@ xact.templates.Document body;
 List&lt;GeneralXynaObject&gt; obj = new ArrayList&lt;&gt;({{getPropVarName}});
   {{/isList}}
   {{^isList}}
-{{propRefPath}}.{{propRefType}} obj = {{getPropVarName}};
+{{propFQN}} obj = {{getPropVarName}};
   {{/isList}}
 body = xfmg.oas.OASObjectParsing.convertOasObjectToJson(obj, jsonOptions);
 {{/isPrimitive}}
