@@ -78,9 +78,10 @@ try {
       </Meta>
       <SourceCode>
         <CodeSnippet Type="Java">
+      try {
         {{#addPropWrapper}}
         {{#usersFQN}}
-        if (xo instanceof {{.}}.class) {
+        if (xo instanceof {{.}}) {
           if (xo.get("addionalProperties") == null) {
             xo.set("addionalProperties", new ArrayList&lt;{{wrapperFQN}}&gt;());
           }
@@ -95,7 +96,7 @@ try {
           wrapper.setValue(jSONValue30.getStringOrNumberValue());
             {{/isString}}
             {{#isNumber}}
-          wrapper.setValue(({{javaType}}) jSONValue30.getStringOrNumberValue());
+          wrapper.setValue({{javaType}}.valueOf(jSONValue30.getStringOrNumberValue()));
             {{/isNumber}}
           {{/isPrimitive}}
           {{^isPrimitive}}
@@ -118,6 +119,11 @@ try {
         }
         {{/usersFQN}}
         {{/addPropWrapper}}
+      } catch(Exception e) {
+        if (logger.isWarnEnabled()) {
+          logger.warn(e);
+        }
+      }
         </CodeSnippet>
       </SourceCode>
     </Operation>
