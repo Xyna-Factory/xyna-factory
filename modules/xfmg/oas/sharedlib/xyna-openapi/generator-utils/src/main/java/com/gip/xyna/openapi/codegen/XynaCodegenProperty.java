@@ -29,6 +29,7 @@ import java.util.function.BiFunction;
 import org.openapitools.codegen.DefaultCodegen;
 
 import com.gip.xyna.openapi.codegen.factory.CodegenPropertyInfo;
+import com.gip.xyna.openapi.codegen.utils.GeneratorProperty;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
 import com.gip.xyna.openapi.codegen.utils.Camelizer.Case;
 import static com.gip.xyna.openapi.codegen.utils.Camelizer.camelize;
@@ -178,7 +179,7 @@ public class XynaCodegenProperty {
   }
   
   public static String getPath(CodegenPropertyInfo propertyInfo, DefaultCodegen gen) {
-    return Sanitizer.sanitize(gen.modelPackage() + propertyInfo.getAddionalPath());
+    return Sanitizer.sanitize(GeneratorProperty.getModelPath(gen) + propertyInfo.getAddionalPath());
   }
   
   public static String getType(CodegenPropertyInfo propertyInfo) {

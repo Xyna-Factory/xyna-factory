@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import org.openapitools.codegen.CodegenDiscriminator.MappedModel;
 
 import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
+import com.gip.xyna.openapi.codegen.utils.GeneratorProperty;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
 
 import org.openapitools.codegen.CodegenModel;
@@ -83,7 +84,7 @@ public class XynaCodegenModel {
       discriminatorKey = model.discriminator.getPropertyBaseName();
       discriminatorMap = new ArrayList<DiscriminatorMap>();
       for (MappedModel mappedModel: model.discriminator.getMappedModels()) {
-        String fqn = buildTypePath(gen) + "." + buildTypeName(mappedModel.getModel());
+        String fqn = getFQN(mappedModel.getModel(), gen);
         discriminatorMap.add(new DiscriminatorMap(mappedModel.getMappingName(), fqn));
       }
     } else {
@@ -97,7 +98,7 @@ public class XynaCodegenModel {
   }
   
   public static String buildTypePath(DefaultCodegen gen) {
-    return Sanitizer.sanitize(gen.modelPackage());
+    return Sanitizer.sanitize(GeneratorProperty.getModelPath(gen));
   }
   
   public String getModelFQN() {

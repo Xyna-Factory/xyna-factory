@@ -8,6 +8,7 @@ import org.openapitools.codegen.DefaultCodegen;
 
 import com.gip.xyna.openapi.codegen.utils.Camelizer;
 import com.gip.xyna.openapi.codegen.utils.Camelizer.Case;
+import com.gip.xyna.openapi.codegen.utils.GeneratorProperty;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
 
 public class AdditionalPropertyWrapper {
@@ -20,7 +21,7 @@ public class AdditionalPropertyWrapper {
   
   public AdditionalPropertyWrapper(XynaCodegenProperty prop, DefaultCodegen gen) {
 
-    wrapperPath = Sanitizer.sanitize(gen.modelPackage() + ".wrapper");
+    wrapperPath = Sanitizer.sanitize(GeneratorProperty.getModelPath(gen) + ".wrapper");
     wrapperLabel = (prop.isPrimitive? prop.dataType: prop.propRefType) + " Wrapper";
     wrapperName = Camelizer.camelize(wrapperLabel, Case.PASCAL);
     this.prop = prop;

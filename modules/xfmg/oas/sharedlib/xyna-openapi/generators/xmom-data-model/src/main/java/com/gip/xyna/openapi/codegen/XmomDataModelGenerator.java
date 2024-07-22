@@ -83,7 +83,8 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     if (vendorExtentions != null) {
       String xModelPath = (String)vendorExtentions.get("x-model-path");
       if (xModelPath != null && !xModelPath.trim().isEmpty()) {
-        GeneratorProperty.setModelPath(this, Sanitizer.sanitize(xModelPath.replace('-', '_').replace(' ', '_').toLowerCase()));
+        modelPackage = xModelPath.replace('-', '_').replace(' ', '_').toLowerCase();
+        GeneratorProperty.setModelPath(this, modelPackage);
       }
       String xClientPath = (String)vendorExtentions.get("x-client-path");
       if (xClientPath != null && !xClientPath.trim().isEmpty()) {
