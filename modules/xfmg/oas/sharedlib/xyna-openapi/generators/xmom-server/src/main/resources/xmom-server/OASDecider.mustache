@@ -100,17 +100,23 @@ try {
             {{/isNumber}}
           {{/isPrimitive}}
           {{^isPrimitive}}
-          xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
-          jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
-          jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
-          jsonOptions.setUseLabels(true);
-          jsonOptions.setProcessAllInputGenerically(false);
-          xact.templates.Document document = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(jSONValue30, jsonOptions);
+          xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonWritingOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
+          jsonWritingOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
+          jsonWritingOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
+          jsonWritingOptions.setUseLabels(true);
+          jsonWritingOptions.setProcessAllInputGenerically(false);
+          xact.templates.Document document = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(jSONValue30, jsonWritingOptions);
+
+          xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonParsingOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
+          jsonParsingOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
+          jsonParsingOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
+          jsonParsingOptions.setUseLabels(true);
+          jsonParsingOptions.setProcessAllInputGenerically(false);
             {{^isList}}
-            {{propFQN}} {{propVarName}} = ({{propFQN}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{propFQN}}(), jsonOptions);
+          {{propFQN}} {{propVarName}} = ({{propFQN}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{propFQN}}(), jsonParsingOptions);
             {{/isList}}
             {{#isList}}
-          List {{propVarName}} = (List)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new {{propFQN}}(), jsonOptions);
+          List {{propVarName}} = (List)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new {{propFQN}}(), jsonParsingOptions);
             {{/isList}}
           wrapper.setValue({{propVarName}});
           {{/isPrimitive}}
