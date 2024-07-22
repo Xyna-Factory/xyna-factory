@@ -17,7 +17,7 @@
 }}
 {{#addPropWrapper}}
 <DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
- TypeName="{{typeName}}" TypePath="{{typePath}}" Label="{{typeLabel}}"
+ TypeName="{{wrapperName}}" TypePath="{{wrapperPath}}" Label="{{wrapperLabel}}"
  BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
     <Meta>
         <IsServiceGroupOnly>false</IsServiceGroupOnly>
@@ -31,7 +31,7 @@
 {{#prop}}
 {{>property}}
 {{/prop}}
-    <Service Label="{{typeLabel}}" TypeName="{{typeName}}">
+    <Service Label="{{wrapperLabel}}" TypeName="{{wrapperName}}">
         <Operation Label="Validate" Name="validate" IsStatic="false">
             <Input>
             </Input>
