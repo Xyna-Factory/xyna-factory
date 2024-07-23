@@ -112,6 +112,7 @@ try {
           jsonParsingOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
           jsonParsingOptions.setUseLabels(true);
           jsonParsingOptions.setProcessAllInputGenerically(false);
+          jsonParsingOptions.setObjectDecider(this);
             {{^isList}}
           {{propFQN}} {{propVarName}} = ({{propFQN}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{propFQN}}(), jsonParsingOptions);
             {{/isList}}
