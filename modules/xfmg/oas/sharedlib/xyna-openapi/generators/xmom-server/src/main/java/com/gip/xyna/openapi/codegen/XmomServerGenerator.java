@@ -84,12 +84,12 @@ public class XmomServerGenerator extends DefaultCodegen {
     if (vendorExtentions != null) {
       String xModelPath = (String)vendorExtentions.get("x-model-path");
       if (xModelPath != null && !xModelPath.trim().isEmpty()) {
-        modelPackage = xModelPath.replace('-', '_').replace(' ', '_').toLowerCase();
+        modelPackage = Sanitizer.sanitize(xModelPath.replace('-', '_').replace(' ', '_').toLowerCase());
         GeneratorProperty.setModelPath(this, modelPackage);
       }
       String xProviderPath = (String)vendorExtentions.get("x-provider-path");
       if (xProviderPath != null && !xProviderPath.trim().isEmpty()) {
-        apiPackage = xProviderPath.replace('-', '_').replace(' ', '_').toLowerCase();
+        apiPackage = Sanitizer.sanitize(xProviderPath.replace('-', '_').replace(' ', '_').toLowerCase());
         GeneratorProperty.setProviderPath(this, apiPackage);
       }
       String xClientPath = (String)vendorExtentions.get("x-client-path");

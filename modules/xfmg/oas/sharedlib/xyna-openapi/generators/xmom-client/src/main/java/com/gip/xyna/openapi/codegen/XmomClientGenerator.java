@@ -88,7 +88,7 @@ public class XmomClientGenerator extends DefaultCodegen {
     if (vendorExtentions != null) {
       String xModelPath = (String)vendorExtentions.get("x-model-path");
       if (xModelPath != null && !xModelPath.trim().isEmpty()) {
-        modelPackage = xModelPath.replace('-', '_').replace(' ', '_').toLowerCase();
+        modelPackage = Sanitizer.sanitize(xModelPath.replace('-', '_').replace(' ', '_').toLowerCase());
         GeneratorProperty.setModelPath(this, modelPackage);
       }
       String xProviderPath = (String)vendorExtentions.get("x-provider-path");
@@ -97,7 +97,7 @@ public class XmomClientGenerator extends DefaultCodegen {
       }
       String xClientPath = (String)vendorExtentions.get("x-client-path");
       if (xClientPath != null && !xClientPath.trim().isEmpty()) {
-        apiPackage = xClientPath.replace('-', '_').replace(' ', '_').toLowerCase();
+        apiPackage = Sanitizer.sanitize(xClientPath.replace('-', '_').replace(' ', '_').toLowerCase());
         GeneratorProperty.setClientPath(this, apiPackage);
       }
     }
