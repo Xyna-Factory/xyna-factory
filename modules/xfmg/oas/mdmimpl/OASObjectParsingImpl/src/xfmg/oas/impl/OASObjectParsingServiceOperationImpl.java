@@ -102,6 +102,11 @@ public class OASObjectParsingServiceOperationImpl implements ExtendedDeploymentT
         continue;
       }
 
+      JSONObject obj = value.getObject();
+      if (obj != null) {
+        replaceAdditionalPropertiesInObject(obj)
+      }
+
       members.add(new JSONKeyValue.Builder().key(key.getStringOrNumberValue()).value(value).instance());
     }
 
