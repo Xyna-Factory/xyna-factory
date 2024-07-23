@@ -69,7 +69,8 @@ public class XmomClientGeneratorTest {
       .setGeneratorName("xmom-client") // use this codegen library
       .setInputSpec("../../test/resources/" + specFile) // sample OpenAPI file
       .setOutputDir("../../test/output/xmom-client/" + specFile.substring(0, specFile.lastIndexOf('.'))) // output directory
-      .addAdditionalProperty("debugXO", Boolean.TRUE);
+      .addAdditionalProperty("debugXO", Boolean.TRUE)
+      .addAdditionalProperty("generateAliasAsModel", "true");
     final ClientOptInput clientOptInput = configurator.toClientOptInput();
     DefaultGenerator generator = new DefaultGenerator();
     generator.opts(clientOptInput).generate();

@@ -36,5 +36,11 @@
       <FqName>{{typePath}}.{{typeName}}</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>{{/xynaModel}}{{/models}}
+    {{#ListWrapperData}}
+    <XMOMEntry implicitDependency="false">
+      <FqName>{{path}}.ListWrapperProvider</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    {{/ListWrapperData}}
   </XMOMEntries>
 </Application>

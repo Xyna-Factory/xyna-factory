@@ -24,9 +24,9 @@ import org.openapitools.codegen.utils.ModelUtils;
 
 import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
-
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.media.Schema;
 
 import java.util.*;
 import java.io.File;
@@ -66,7 +66,6 @@ public class XmomDataModelGenerator extends DefaultCodegen {
   @Override
   public void preprocessOpenAPI(OpenAPI openAPI) {
     super.preprocessOpenAPI(openAPI);
-
     Info info = openAPI.getInfo();
     
     // replace spaces, "-", "." with underscores in info.title
@@ -82,6 +81,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
       }
     }
     
+    
     /**
      * Supporting Files.  You can write single files for the generator with the
      * entire object tree available.  If the input file has a suffix of `.mustache
@@ -91,13 +91,20 @@ public class XmomDataModelGenerator extends DefaultCodegen {
       "",                                                       // the destination folder, relative `outputFolder`
       "application.xml")                                          // the output file
     );
+    supportingFiles.add(new SupportingFile("listwrapperprovider.mustache",
+                                           "XMOM/" + modelPackage.replace(".", "/"),
+                                           "ListWrapperProvider.xml")
+                                         );
   }
+
 
   @Override
   public Map<String, ModelsMap> postProcessAllModels(Map<String, ModelsMap> objs) {
     objs = super.postProcessAllModels(objs);
+    
     for (String modelname : objs.keySet()) {
       CodegenModel model = ModelUtils.getModelByName(modelname, objs);
+      setListWrapper(model);
       if (model.getName().equals(model.parent)) {
         model.parent = null;
       }
@@ -116,15 +123,43 @@ public class XmomDataModelGenerator extends DefaultCodegen {
       if (Boolean.TRUE.equals(additionalProperties.get("debugXO"))) {
         System.out.println(xModel);
       }
+      if(xModel.isListWrapper) {
+        objs.get(modelname).put("xynaListWrapper", xModel.typePath + "." + xModel.typeName);
+      }
     }
     return objs;
   }
   
+  
+  private void setListWrapper(CodegenModel model) {
+    if (XynaCodegenModel.isListWrapper(model, additionalProperties())) {
+      CodegenProperty item = model.getItems();
+      CodegenProperty inner = item.mostInnerItems == null ? item.clone() : item.mostInnerItems;
+      model.vars.clear();
+      model.vars.add(item);
+      item.isContainer = true;
+      item.mostInnerItems = inner;
+    }
+  }
+  
   @Override
+  @SuppressWarnings("unchecked")
   public Map<String, Object> postProcessSupportingFileData(Map<String, Object> objs) {
-    @SuppressWarnings("unchecked")
+    List<String> listWrapper = new ArrayList<String>();
     List<ModelMap> models = (List<ModelMap>) objs.get("models");
-    models.forEach((ModelMap map) -> map.put("xynaModel", codegenFactory.getOrCreateXynaCodegenModel(map.getModel())));
+    for(ModelMap map : models) {
+      XynaCodegenModel xynaModel = codegenFactory.getOrCreateXynaCodegenModel(map.getModel());
+      map.put("xynaModel", xynaModel);
+      if(xynaModel.isListWrapper) {
+        listWrapper.add(xynaModel.typePath + "." + xynaModel.typeName);
+      }
+    }
+
+    ListWrapperData listWrapperData = new ListWrapperData();
+    listWrapperData.setPath(Sanitizer.sanitize(modelPackage()));
+    listWrapperData.setListWrapper(listWrapper);
+    objs.put("ListWrapperData", listWrapperData);
+    
     return objs;
   }
   
@@ -227,8 +262,32 @@ public class XmomDataModelGenerator extends DefaultCodegen {
   }
 
   @Override
-  @SuppressWarnings("static-method")
   public void postProcess() {
-      System.out.println("generation of data-model finished");
+    System.out.println("generation of data-model finished");
+  }
+  
+  
+  @SuppressWarnings("rawtypes")
+  public Schema unaliasSchema(Schema schema) {
+    if(schema == null) {
+      return super.unaliasSchema(schema);
+    }
+    String schemaName = ModelUtils.getSimpleRef(schema.get$ref());
+    Schema ret = super.unaliasSchema(schema);
+    if (ret.getName() == null) {
+      ret.setName(schemaName);
+    }
+    return ret;
+}
+  
+  @SuppressWarnings("rawtypes")
+  public CodegenProperty fromProperty(String name, Schema p, boolean required, boolean schemaIsFromAdditionalProperties) {
+    CodegenProperty property = super.fromProperty(name, p, required, schemaIsFromAdditionalProperties);
+    if (typeAliases != null && typeAliases.containsKey(p.getName())) {
+      property.name = p.getName();
+      property.baseName = p.getName();
+    }
+    
+    return property;
   }
 }
