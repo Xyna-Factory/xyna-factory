@@ -45,26 +45,26 @@ return result.getResult();
         </CodeSnippet>
       </SourceCode>
     </Operation>{{#allowableValues}}
-    <Operation Label="get {{enumLabel}}" Name="get{{methodname}}" IsStatic="false">
+    <Operation Label="get {{{enumLabel}}}" Name="get{{{methodname}}}" IsStatic="false">
       <Input/>
       <Output>
         <Data ID="2" Label="{{label}}" VariableName="varName" ReferenceName="{{typeName}}" ReferencePath="{{typePath}}"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return new {{typeName}}(&quot;{{javaEscaped}}&quot;);</CodeSnippet>
+        <CodeSnippet Type="Java">return new {{typeName}}(&quot;{{{javaEscaped}}}&quot;);</CodeSnippet>
      </SourceCode>
     </Operation>
-    <Operation Label="is {{enumLabel}}" Name="is{{methodname}}" IsStatic="false">
+    <Operation Label="is {{{enumLabel}}}" Name="is{{{methodname}}}" IsStatic="false">
       <Input/>
       <Output>
-        <Data Label="{{enumLabel}}" VariableName="is{{methodname}}">
+        <Data Label="{{{enumLabel}}}" VariableName="is{{{methodname}}}">
           <Meta>
             <Type>boolean</Type>
           </Meta>
         </Data>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return &quot;{{javaEscaped}}&quot;.equals(this.getValue());</CodeSnippet>
+        <CodeSnippet Type="Java">return &quot;{{{javaEscaped}}}&quot;.equals(this.getValue());</CodeSnippet>
      </SourceCode>
     </Operation>{{/allowableValues}}
   </Service>
