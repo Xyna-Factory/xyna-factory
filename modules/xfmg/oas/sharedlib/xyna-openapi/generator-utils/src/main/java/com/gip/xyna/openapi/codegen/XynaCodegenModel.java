@@ -21,12 +21,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.openapitools.codegen.CodegenDiscriminator.MappedModel;
 
 import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
+import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 import org.openapitools.codegen.CodegenModel;
 import org.openapitools.codegen.DefaultCodegen;
@@ -45,7 +48,7 @@ public class XynaCodegenModel {
   
   final boolean isEnum;
   // enum
-  final List<String> allowableValues = new ArrayList<String>();
+  final List<EnumData> allowableValues = new ArrayList<EnumData>();
   
   //discriminator
   final boolean hasDiscriminator;
@@ -72,7 +75,9 @@ public class XynaCodegenModel {
     if (model.allowableValues != null) {
       @SuppressWarnings("unchecked")
       List<String> enumValues = (List<String>) model.allowableValues.getOrDefault(("values"), List.of());
-      allowableValues.addAll(enumValues);
+      allowableValues.addAll(enumValues.stream().map(
+         value -> new EnumData(value)
+      ).collect(Collectors.toList()));
     }
     if (model.parent != null && model.parentModel != null) {
       // maybe we should find the correct model, then building a new one.
@@ -122,7 +127,10 @@ public class XynaCodegenModel {
     }
     if (isEnum) {
       sb.append("values: ");
-      sb.append(String.join(", ", allowableValues)).append('\n');
+      List<String> originals = allowableValues.stream().map(
+                                     enumData -> enumData.enumLabel
+                               ).collect(Collectors.toList());
+      sb.append(String.join(", ", originals)).append('\n');
     }
     if(isListWrapper) {
       sb.append("This is a listWrapper!\n");
@@ -202,5 +210,22 @@ public class XynaCodegenModel {
   
   public static boolean isListWrapper(CodegenModel model, Map<String, Object> additionalProperties) {
     return model.isArray && (boolean)additionalProperties.getOrDefault("createListWrappers", false);
+  }
+  
+  class EnumData {
+    final String original;
+    final String enumLabel;
+    final String javaEscaped;
+    final String methodname;
+    
+    EnumData(String original) {
+      this.original = original;
+      enumLabel = XMLUtils.escapeXMLValue(original.toUpperCase() ,true, false);
+      Pattern exp = Pattern.compile("(\\\"|\\'|\\\\)");
+      Matcher matcher = exp.matcher(original);
+      String tmp = matcher.replaceAll((result) -> "\\\\\\" + result.group());
+      javaEscaped = XMLUtils.escapeXMLValue(tmp.toUpperCase() ,true, false);
+      methodname = original.replaceAll("[^a-zA-Z0-9_]", "");
+    }
   }
 }
