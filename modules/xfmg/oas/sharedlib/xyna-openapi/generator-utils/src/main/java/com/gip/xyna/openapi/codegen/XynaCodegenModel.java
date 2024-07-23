@@ -29,7 +29,6 @@ import org.openapitools.codegen.CodegenDiscriminator.MappedModel;
 
 import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
-import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 import org.openapitools.codegen.CodegenModel;
 import org.openapitools.codegen.DefaultCodegen;
@@ -220,12 +219,11 @@ public class XynaCodegenModel {
     
     EnumData(String original) {
       this.original = original;
-      enumLabel = XMLUtils.escapeXMLValue(original.toUpperCase() ,true, false);
+      enumLabel = original.toUpperCase();
       Pattern exp = Pattern.compile("(\\\"|\\'|\\\\)");
       Matcher matcher = exp.matcher(original);
-      String tmp = matcher.replaceAll((result) -> "\\\\\\" + result.group());
-      javaEscaped = XMLUtils.escapeXMLValue(tmp.toUpperCase() ,true, false);
-      methodname = original.replaceAll("[^a-zA-Z0-9_]", "");
+      javaEscaped = matcher.replaceAll((result) -> "\\\\" + result.group());
+      methodname = original.replaceAll("[^a-zA-Z0-9_]", "").toUpperCase();
     }
   }
 }
