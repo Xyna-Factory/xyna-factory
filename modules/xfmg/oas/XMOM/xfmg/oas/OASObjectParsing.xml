@@ -37,5 +37,21 @@
         <CodeSnippet Type="Java">return xfmg.oas.OASObjectParsingImpl.convertOasObjectToJson(anyType, jSONWritingOptions3);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Convert Oas List to Json" Name="convertOasListToJson">
+      <Input>
+        <Data ID="2" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType" IsList="true">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data ID="3" Label="JSON Writing Options" ReferenceName="JSONWritingOptions" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="jSONWritingOptions3"/>
+      </Input>
+      <Output>
+        <Data ID="4" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document4"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.oas.OASObjectParsingImpl.convertOasListToJson(anyType, jSONWritingOptions3);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

@@ -77,12 +77,13 @@ return new xact.templates.Document();
 xact.templates.Document body;
 {{^isPrimitive}}
   {{#isList}}
-List&lt;GeneralXynaObject&gt; obj = new ArrayList&lt;&gt;({{getPropVarName}});
+List&lt;GeneralXynaObject&gt; list = new ArrayList&lt;&gt;({{getPropVarName}});
+body = xfmg.oas.OASObjectParsing.convertOasListToJson(list, jsonOptions);
   {{/isList}}
   {{^isList}}
 {{propFQN}} obj = {{getPropVarName}};
-  {{/isList}}
 body = xfmg.oas.OASObjectParsing.convertOasObjectToJson(obj, jsonOptions);
+  {{/isList}}
 {{/isPrimitive}}
 {{#isPrimitive}}
 String text;

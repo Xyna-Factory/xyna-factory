@@ -55,7 +55,7 @@ xact.templates.Document body;
 {{^isPrimitive}}
 {{#isList}}
 List&lt;GeneralXynaObject&gt; list = new ArrayList&lt;&gt;({{getPropVarName}});
-body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONListWithOptions(list, jsonOptions);
+body = xfmg.oas.OASObjectParsing.convertOasListToJson(list, jsonOptions);
 {{/isList}}
 {{^isList}}
 body = xfmg.oas.OASObjectParsing.convertOasObjectToJson({{getPropVarName}}, jsonOptions);

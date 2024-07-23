@@ -27,6 +27,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTi
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 
 import xact.templates.Document;
+import xact.templates.JSON;
 import xfmg.xfctrl.datamodel.json.JSONDatamodelServices;
 import xfmg.xfctrl.datamodel.json.JSONKeyValue;
 import xfmg.xfctrl.datamodel.json.JSONObject;
@@ -65,6 +66,22 @@ public class OASObjectParsingServiceOperationImpl implements ExtendedDeploymentT
     return JSONDatamodelServices.writeJSONWithOptions(json, options);
   }
   
+  @Override
+  public Document convertOasListToJson(List<GeneralXynaObject> anyTypeList, JSONWritingOptions options) {
+    if (anyTypeList == null) {
+      return new Document.Builder().documentType(new JSON()).text("null").instance();
+    }
+    StringBuilder sb = new StringBuilder("[");
+    for (GeneralXynaObject obj: anyTypeList ) {
+      Document result = convertOasObjectToJson(obj, options);
+      sb.append(result.getText()).append(", ");
+    }
+    if (!anyTypeList.isEmpty()) {
+      sb.delete(sb.length()-2, sb.length());
+    }
+    sb.append("]");
+    return new Document.Builder().documentType(new JSON()).text(sb.toString()).instance();
+  }
 
   private void replaceAdditionalPropertiesInObject(JSONObject obj) {
     for (JSONKeyValue kvp : obj.getMembers()) {
