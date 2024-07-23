@@ -154,7 +154,13 @@ public class JSONTestWithOptions extends TestCase {
         return null;
       }
       
+      @Override
+      public void onUnknownMember(GeneralXynaObject xo, String varName, JSONValue jSONValue30) {
+        
+      }
+      
     };
+    
     return decider;
   }
   
@@ -391,6 +397,58 @@ public class JSONTestWithOptions extends TestCase {
     assertTrue(list.size() == 1);
     assertTrue(list.get(0).values.size() == 1);
     assertTrue(list.get(0).values.get(0).equals("test"));
+  }
+  
+  
+  public void testWithOptions11_unknown_member() {
+    JSONTokenizer jt = new JSONTokenizer();
+    String jsonString =       
+"{" +   
+  "\"unknown\": \"test\"" +
+"}";
+    
+    
+    List<JSONToken> tokens = jt.tokenize(jsonString);
+    JSONParser jp = new JSONParser(jsonString);
+    JSONObject job = new JSONObject();
+    XynaObjectDecider decider = new XynaObjectDecider() {
+      private static final long serialVersionUID = 1L;
+
+      @Override
+      public XynaObjectDecider clone() {
+        return null;
+      }
+
+      @Override
+      public XynaObjectDecider clone(boolean arg0) {
+        return null;
+      }
+
+      @Override
+      public GeneralXynaObject decide(String arg0, JSONObject arg1) {
+        return null;
+      }
+      
+      @Override
+      public void onUnknownMember(GeneralXynaObject xo, String varName, JSONValue value) {
+        if(xo instanceof UserXO && "STRING".equals(value.getType())) {
+          ((UserXO)xo).mail = value.getStringOrNumberValue();
+        }
+      }
+      
+    };
+    jp.fillObject(tokens, 0, job);
+    JSONDatamodelServicesServiceOperationImpl impl = new JSONDatamodelServicesServiceOperationImpl();
+    JsonOptions options = new JsonOptions(
+                                          Collections.emptyMap(), 
+                                          Collections.emptyMap(), 
+                                          Collections.emptySet(), 
+                                          false, true);
+    UserXO result = new UserXO();
+    impl.fillXynaObjectRecursivly(result, job, "", options, decider);
+    
+    assertTrue("test".equals(result.mail));
+    
   }
   
   
