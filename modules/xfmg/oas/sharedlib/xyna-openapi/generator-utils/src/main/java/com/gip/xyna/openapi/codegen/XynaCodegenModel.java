@@ -19,6 +19,7 @@ package com.gip.xyna.openapi.codegen;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -50,25 +51,30 @@ public class XynaCodegenModel {
   final boolean hasDiscriminator;
   final String discriminatorKey;
   final List<DiscriminatorMap> discriminatorMap;
+
+  final boolean isListWrapper;
   
   public XynaCodegenModel(XynaCodegenFactory factory, CodegenModel model, DefaultCodegen gen) {
     label = model.name;
+    isListWrapper = isListWrapper(model, gen.additionalProperties());
     typeName = buildTypeName(model);
     typePath = buildTypePath(gen);
     description = buildDescription(model);
-    
     isEnum = model.isEnum;
+
     if (isEnum) {
       vars = List.of(factory.getOrCreateXynaCodegenEnumProperty(model.allowableValues, typeName));
     } else {
       vars = model.vars.stream().map(prop -> factory.getOrCreateXynaCodegenProperty(prop, typeName)).collect(Collectors.toList());
     }
+    
+    
     if (model.allowableValues != null) {
       @SuppressWarnings("unchecked")
       List<String> enumValues = (List<String>) model.allowableValues.getOrDefault(("values"), List.of());
       allowableValues.addAll(enumValues);
     }
-    if (model.parent != null) {
+    if (model.parent != null && model.parentModel != null) {
       // maybe we should find the correct model, then building a new one.
       parent = factory.getOrCreateXynaCodegenModel(model.parentModel);
     } else {
@@ -118,6 +124,9 @@ public class XynaCodegenModel {
       sb.append("values: ");
       sb.append(String.join(", ", allowableValues)).append('\n');
     }
+    if(isListWrapper) {
+      sb.append("This is a listWrapper!\n");
+    }
     sb.append("        ");
     return sb.toString();
   }
@@ -134,6 +143,7 @@ public class XynaCodegenModel {
     hasDiscriminator = false;
     discriminatorKey = null;
     discriminatorMap = null;
+    isListWrapper = false;
   }
 
   @Override
@@ -188,5 +198,9 @@ public class XynaCodegenModel {
       this.keyValue = keyValue;
       this.fqn = fqn;
     }
+  }
+  
+  public static boolean isListWrapper(CodegenModel model, Map<String, Object> additionalProperties) {
+    return model.isArray && (boolean)additionalProperties.getOrDefault("createListWrappers", false);
   }
 }

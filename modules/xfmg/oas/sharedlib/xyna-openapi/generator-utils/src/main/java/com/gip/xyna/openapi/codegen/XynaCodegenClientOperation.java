@@ -123,6 +123,7 @@ public class XynaCodegenClientOperation extends XynaCodegenOperation {
     if (sb == null) {
       return;
     }
+    super.toString(sb);
     sb.append(",\n    ").append("sendLabel='").append(sendLabel).append('\'');
     sb.append(",\n    ").append("sendVarName='").append(sendVarName).append('\'');
     sb.append(",\n    ").append("sendRefName='").append(sendRefName).append('\'');
