@@ -21,6 +21,7 @@ import org.openapitools.codegen.*;
 import org.openapitools.codegen.model.ModelMap;
 import org.openapitools.codegen.model.OperationMap;
 import org.openapitools.codegen.model.OperationsMap;
+import org.openapitools.codegen.utils.ModelUtils;
 
 import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
 import com.gip.xyna.openapi.codegen.templating.mustache.IndexLambda;
@@ -323,5 +324,31 @@ public class XmomClientGenerator extends DefaultCodegen {
     lambdaBuilder.put("pathparam", new PathParameterLambda());
 
     return lambdaBuilder;
+  }
+  
+  
+  @SuppressWarnings("rawtypes")
+  public Schema unaliasSchema(Schema schema) {
+    if (schema == null) {
+      return super.unaliasSchema(schema);
+    }
+    String schemaName = ModelUtils.getSimpleRef(schema.get$ref());
+    Schema ret = super.unaliasSchema(schema);
+    if (ret.getName() == null) {
+      ret.setName(schemaName);
+    }
+    return ret;
+  }
+
+
+  @SuppressWarnings("rawtypes")
+  public CodegenProperty fromProperty(String name, Schema p, boolean required, boolean schemaIsFromAdditionalProperties) {
+    CodegenProperty property = super.fromProperty(name, p, required, schemaIsFromAdditionalProperties);
+    if (typeAliases != null && typeAliases.containsKey(p.getName())) {
+      property.name = p.getName();
+      property.baseName = p.getName();
+    }
+
+    return property;
   }
 }

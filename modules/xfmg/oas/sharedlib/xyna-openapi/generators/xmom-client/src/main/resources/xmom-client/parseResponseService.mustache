@@ -52,6 +52,7 @@ jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.pa
 jsonOptions.setUseLabels(true);
 jsonOptions.setObjectDecider(new {{apiPackage}}.decider.OASDecider());
 jsonOptions.setProcessAllInputGenerically(false);
+jsonOptions.setListWrapper((List){{listWrapperPath}}.ListWrapperProvider.getListWrapper());
 xact.templates.Document document = document8;
 {{#responses}}
 if (statusCode == {{code}}) {

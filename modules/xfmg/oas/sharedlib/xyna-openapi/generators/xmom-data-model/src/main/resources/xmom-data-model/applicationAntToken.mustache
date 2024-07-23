@@ -40,5 +40,11 @@
       <FqName>{{wrapperFQN}}</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>{{/addPropWrapper}}
+    {{#ListWrapperData}}
+    <XMOMEntry implicitDependency="false">
+      <FqName>{{path}}.ListWrapperProvider</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    {{/ListWrapperData}}
   </XMOMEntries>
 </Application>

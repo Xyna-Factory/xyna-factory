@@ -53,10 +53,12 @@ public abstract class XynaCodegenOperation {
   final List<XynaCodegenResponse> responses;
   
   final String httpMethod;
+  
+  final String listWrapperPath;
 
   
   public XynaCodegenOperation(XynaCodegenFactory factory, CodegenOperation operation, DefaultCodegen gen, String path, String pathPrefix) {
-    
+    listWrapperPath = Sanitizer.sanitize(gen.modelPackage());
     baseLabel = buildBaseLabel(operation, gen);
     baseVarName = buildBaseVarName(operation, gen);
     baseRefName = buildBaseRefName(operation, gen);

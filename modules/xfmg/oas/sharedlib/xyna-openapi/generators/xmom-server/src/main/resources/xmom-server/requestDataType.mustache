@@ -89,6 +89,8 @@ jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.js
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
 jsonOptions.setUseLabels(true);
 jsonOptions.setProcessAllInputGenerically(false);
+jsonOptions.setListWrapper((List){{listWrapperPath}}.ListWrapperProvider.getListWrapper());
+
 xact.templates.Document document = httpRequest1.getBody();
   {{#bodyParams}}
     {{^isPrimitive}}

@@ -72,11 +72,7 @@ BaseTypeName="{{responseRefName}}" BaseTypePath="{{responseRefPath}}">
 return new xact.templates.Document();
 {{/body}}
 {{#body}}
-xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
-jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
-jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
-jsonOptions.setUseLabels(true);
-jsonOptions.setProcessAllInputGenerically(false);
+{{>jsonOptions}}
 
 xact.templates.Document body;
 {{^isPrimitive}}
