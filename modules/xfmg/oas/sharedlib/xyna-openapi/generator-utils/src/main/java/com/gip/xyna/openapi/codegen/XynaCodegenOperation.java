@@ -57,17 +57,17 @@ public abstract class XynaCodegenOperation {
   final String listWrapperPath;
 
   
-  public XynaCodegenOperation(XynaCodegenFactory factory, CodegenOperation operation, DefaultCodegen gen, String pathPrefix) {
+  public XynaCodegenOperation(XynaCodegenFactory factory, CodegenOperation operation, DefaultCodegen gen, String path, String pathPrefix) {
     listWrapperPath = Sanitizer.sanitize(gen.modelPackage());
-    baseLabel = operation.httpMethod + " " + operation.path;
-    baseVarName = camelize(gen.sanitizeName(operation.httpMethod + "_" + operation.path), Case.CAMEL);
-    baseRefName = camelize(baseVarName, Case.PASCAL);
-    basePath = Sanitizer.sanitize(gen.apiPackage() + "." + pathPrefix);
+    baseLabel = buildBaseLabel(operation, gen);
+    baseVarName = buildBaseVarName(operation, gen);
+    baseRefName = buildBaseRefName(operation, gen);
+    basePath = buildBasePath(operation, gen, path, pathPrefix);
     
-    responseLabel = baseLabel + " Response";
-    responseVarName = baseVarName + "Response";
-    responseRefName = baseRefName + "Response";
-    responseRefPath = basePath + ".response";
+    responseLabel = buildResponseLabel(operation, gen);
+    responseVarName = buildResponseVarName(operation, gen);
+    responseRefName = buildResponseRefName(operation, gen);
+    responseRefPath = buildResponseRefPath(operation, gen, path, pathPrefix);
     
     hasBody = operation.getHasBodyParam();
     params = buildXynaCodegenProperty(factory, operation.allParams, gen);
@@ -83,6 +83,10 @@ public abstract class XynaCodegenOperation {
   }
   
   protected abstract String getPropertyClassName();
+  
+  public String getResponseFQN() {
+    return responseRefPath + "." + responseRefName;
+  }
   
   private List<XynaCodegenProperty> buildXynaCodegenProperty(XynaCodegenFactory factory, List<CodegenParameter> params, DefaultCodegen gen) {
     List<XynaCodegenProperty> xynaProp = new ArrayList<>(params.size());
@@ -108,6 +112,39 @@ public abstract class XynaCodegenOperation {
       sb.append(res.getCodeWithMessage()).append("\n    ");
     }
     return sb.toString();
+  }
+  
+  
+  protected static String buildBaseLabel(CodegenOperation operation, DefaultCodegen gen) {
+    return operation.httpMethod + " " + operation.path;
+  }
+  
+  protected static String buildBaseVarName(CodegenOperation operation, DefaultCodegen gen) {
+    return camelize(gen.sanitizeName(operation.httpMethod + "_" + operation.path), Case.CAMEL);
+  }
+  
+  protected static String buildBaseRefName(CodegenOperation operation, DefaultCodegen gen) {
+    return camelize(buildBaseVarName(operation, gen), Case.PASCAL);
+  }
+  
+  protected static String buildBasePath(CodegenOperation operation, DefaultCodegen gen, String path, String pathPrefix) {
+    return Sanitizer.sanitize(path + "." + pathPrefix);
+  }
+  
+  public static String buildResponseLabel(CodegenOperation operation, DefaultCodegen gen) {
+    return buildBaseLabel(operation, gen) + " Response";
+  }
+  
+  public static String buildResponseVarName(CodegenOperation operation, DefaultCodegen gen) {
+    return buildBaseVarName(operation, gen) + "Response";
+  }
+  
+  public static String buildResponseRefName(CodegenOperation operation, DefaultCodegen gen) {
+    return buildBaseRefName(operation, gen) + "Response";
+  }
+  
+  public static String buildResponseRefPath(CodegenOperation operation, DefaultCodegen gen, String path, String pathPrefix) {
+    return buildBasePath(operation, gen, path, pathPrefix) + ".response";
   }
   
   @Override

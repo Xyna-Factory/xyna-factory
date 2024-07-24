@@ -90,7 +90,7 @@ TypeName="{{endpointWorkflowTypeName}}" TypePath="{{endpointWorkflowPath}}" Labe
         <Source RefID="11">
           <Meta>
             <LinkType>Constant</LinkType>
-            <ExpectedType>{{parameterRefPath}}.{{parameterRefName}}</ExpectedType>
+            <ExpectedType>{{parameterFQN}}</ExpectedType>
           </Meta>
         </Source>
         <Source RefID="26">
@@ -102,7 +102,7 @@ TypeName="{{endpointWorkflowTypeName}}" TypePath="{{endpointWorkflowPath}}" Labe
       <Receive ServiceID="9">
         <Target RefID="10">
           <Meta>
-            <ExpectedType>{{parameterRefPath}}.{{parameterRefName}}</ExpectedType>
+            <ExpectedType>{{parameterFQN}}</ExpectedType>
           </Meta>
         </Target>
       </Receive>
@@ -141,7 +141,7 @@ TypeName="{{endpointWorkflowTypeName}}" TypePath="{{endpointWorkflowPath}}" Labe
       <Invoke ServiceID="13" Operation="Encode">
         <Source RefID="7">
           <Meta>
-            <ExpectedType>{{responseRefPath}}.{{responseRefName}}</ExpectedType>
+            <ExpectedType>{{responseFQN}}</ExpectedType>
           </Meta>
         </Source>
       </Invoke>

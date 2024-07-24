@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import org.openapitools.codegen.CodegenDiscriminator.MappedModel;
 
 import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
+import com.gip.xyna.openapi.codegen.utils.GeneratorProperty;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
 
 import org.openapitools.codegen.CodegenModel;
@@ -71,7 +72,10 @@ public class XynaCodegenModel {
     } else {
       vars = model.vars.stream().map(prop -> factory.getOrCreateXynaCodegenProperty(prop, typeName)).collect(Collectors.toList());
     }
-    
+    if (model.isAdditionalPropertiesTrue) {
+      vars.add(factory.getPropertyToAddionalPropertyWrapper(model.getAdditionalProperties(), typeName));
+    }
+
     if (model.parent != null && model.parentModel != null) {
       // maybe we should find the correct model, then building a new one.
       parent = factory.getOrCreateXynaCodegenModel(model.parentModel);
@@ -84,7 +88,7 @@ public class XynaCodegenModel {
       discriminatorKey = model.discriminator.getPropertyBaseName();
       discriminatorMap = new ArrayList<DiscriminatorMap>();
       for (MappedModel mappedModel: model.discriminator.getMappedModels()) {
-        String fqn = buildTypePath(gen) + "." + buildTypeName(mappedModel.getModel());
+        String fqn = getFQN(mappedModel.getModel(), gen);
         discriminatorMap.add(new DiscriminatorMap(mappedModel.getMappingName(), fqn));
       }
     } else {
@@ -93,12 +97,24 @@ public class XynaCodegenModel {
     }
   }
   
-  private String buildTypeName(CodegenModel model) {
+  public static String buildTypeName(CodegenModel model) {
     return Sanitizer.sanitize(model.classname);
   }
   
-  private String buildTypePath(DefaultCodegen gen) {
-    return Sanitizer.sanitize(gen.modelPackage());
+  public static String buildTypePath(DefaultCodegen gen) {
+    return Sanitizer.sanitize(GeneratorProperty.getModelPath(gen));
+  }
+  
+  public String getModelFQN() {
+    return getFQN(typePath, typeName);
+  }
+  
+  public static String getFQN(CodegenModel model, DefaultCodegen gen) {
+    return getFQN(buildTypePath(gen), buildTypeName(model));
+  }
+  
+  private static String getFQN(String path, String name) {
+    return path + '.' + name;
   }
   
   private String buildDescription(CodegenModel model) {

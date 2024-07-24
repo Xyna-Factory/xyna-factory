@@ -17,10 +17,13 @@
  */
 package com.gip.xyna.openapi.codegen.factory;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.openapitools.codegen.CodegenParameter;
 import org.openapitools.codegen.CodegenProperty;
+
+import com.gip.xyna.openapi.codegen.AdditionalPropertyWrapper;
 
 public interface CodegenPropertyInfo {
   
@@ -54,6 +57,9 @@ public interface CodegenPropertyInfo {
   public boolean getRequired();
   public boolean getIsNullable();
   public Map<String, Object> getAllowableValues();
+  public default String getAddionalPath() {
+    return "";
+  };
 }
 
 class CodegenPropertyHolder implements CodegenPropertyInfo{
@@ -457,5 +463,151 @@ class CodegenEnum implements CodegenPropertyInfo{
 
   public String getOpenApiType() {
     return "Enum";
+  }
+}
+
+class AdditionalProperty implements CodegenPropertyInfo{
+  
+  private AdditionalPropertyWrapper wrapper;
+  private boolean isList;
+  private CodegenPropertyInfo item;
+  
+  AdditionalProperty(AdditionalPropertyWrapper wrapper) {
+    this(wrapper, true);
+  }
+  
+  private AdditionalProperty(AdditionalPropertyWrapper wrapper, boolean isList) {
+    this.wrapper = wrapper;
+    this.isList = isList;
+  }
+  
+  public String getBaseName() {
+    return "Additional Properties";
+  }
+  
+  public String getName() {
+    return "additionalProperties";
+  }
+  
+  public boolean getIsInherited() {
+    return false;
+  }
+  
+  public boolean getIsContainer() {
+    return isList;
+  }
+  
+  public boolean getIsPrimitiveType() {
+    return false;
+  }
+  
+  public boolean getIsEnumOrRef() {
+    return false;
+  }
+  
+  public String getComplexType() {
+    return wrapper.wrapperName;
+  }
+  
+  public CodegenPropertyInfo getItems() {
+    if (isList && item == null) {
+      item = new AdditionalProperty(wrapper, false);
+    }
+    return item;
+  }
+  
+  public CodegenPropertyInfo getMostInnerItems() {
+    if (isList && item == null) {
+      item = new AdditionalProperty(wrapper, false);
+    }
+    return item;
+  }
+  
+  public String getDataType() {
+    return wrapper.wrapperName;
+  }
+  
+  public String getDescription() {
+    return "Reference to additional property wrapper.";
+  }
+  
+  public String getFormat() {
+    return null;
+  }
+  
+  public String getMinimum() {
+    return null;
+  }
+  
+  public String getMaximum() {
+    return null;
+  }
+  
+  public boolean getExclusiveMinimum() {
+    return false;
+  }
+  
+  public boolean getExclusiveMaximum() {
+    return false;
+  }
+  
+  public Number getMultipleOf() {
+    return null;
+  }
+  
+  public String getDataFormat() {
+    return null;
+  }
+
+  public String getPattern() {
+    return null;
+  }
+
+  public Integer getMinLength() {
+    return null;
+  }
+
+  public Integer getMaxLength() {
+    return null;
+  }
+
+  public Integer getMinItems() {
+    return null;
+  }
+
+  public Integer getMaxItems() {
+    return null;
+  }
+
+  public boolean getRequired() {
+    return false;
+  }
+
+  public boolean getIsNullable() {
+    return false;
+  }
+
+  public Map<String, Object> getAllowableValues() {
+    return new HashMap<>();
+  }
+
+  public boolean getIsString() {
+    return false;
+  }
+
+  public boolean getIsNumber() {
+    return false;
+  }
+
+  public boolean getIsInteger() {
+    return false;
+  }
+
+  public String getOpenApiType() {
+    return wrapper.wrapperName;
+  }
+  
+  public String getAddionalPath() {
+    return ".wrapper";
   }
 }

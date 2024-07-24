@@ -23,6 +23,7 @@ import org.openapitools.codegen.CodegenOperation;
 import org.openapitools.codegen.DefaultCodegen;
 
 import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
+import com.gip.xyna.openapi.codegen.utils.GeneratorProperty;
 
 public class XynaCodegenClientOperation extends XynaCodegenOperation {
   
@@ -46,7 +47,7 @@ public class XynaCodegenClientOperation extends XynaCodegenOperation {
   final String requestWorkflowWithProcessingURLPath;
   
   public XynaCodegenClientOperation(XynaCodegenFactory factory, CodegenOperation operation, DefaultCodegen gen, String pathPrefix, int id) {
-     super(factory, operation, gen, pathPrefix);
+     super(factory, operation, gen, GeneratorProperty.getClientPath(gen), pathPrefix);
     
     parseResponseLabel = "Parse " + baseLabel + " Response";
     parseResponseRefName = "Parse" + baseRefName + "Response";
@@ -69,6 +70,22 @@ public class XynaCodegenClientOperation extends XynaCodegenOperation {
     
   }
   
+  public String getSendFQN() {
+    return sendRefPath + "." + sendRefName;
+  }
+ 
+  public String getParseResponseFQN() {
+    return parseResponseRefPath + "." + parseResponseRefName;
+  }
+  
+  public String getRequestWorkflowFQN() {
+    return requestWorkflowPath + "." + requestWorkflowTypeName;
+  }
+  
+  public String getRequestWorkflowWithProcessingFQN() {
+    return requestWorkflowWithProcessingPath + "." + requestWorkflowWithProcessingTypeName;
+  }
+  
   public String buildPath(CodegenOperation operation) {
     String result = "\"" + operation.path;
     if (!result.endsWith("}")) {
@@ -80,7 +97,6 @@ public class XynaCodegenClientOperation extends XynaCodegenOperation {
     }
     return result;
   }
-  
   
   @Override
   protected String getPropertyClassName() {

@@ -46,19 +46,19 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>{{#xynaOperation}}
     <XMOMEntry implicitDependency="false">
-      <FqName>{{endpointWorkflowPath}}.{{endpointWorkflowTypeName}}</FqName>
+      <FqName>{{endpointWorkflowFQN}}</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>{{parameterRefPath}}.{{parameterRefName}}</FqName>
+      <FqName>{{parameterFQN}}</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>{{responseRefPath}}.{{responseRefName}}</FqName>
+      <FqName>{{responseFQN}}</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>{{#responses}}
     <XMOMEntry implicitDependency="false">
-      <FqName>{{respRefPath}}.{{respRefName}}</FqName>
+      <FqName>{{respFQN}}</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>{{/responses}}{{/xynaOperation}}{{/operations}}{{/apiInfo.apis}}
     <XMOMEntry implicitDependency="false">

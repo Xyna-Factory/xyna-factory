@@ -37,6 +37,9 @@ BaseTypeName="{{responseRefName}}" BaseTypePath="{{responseRefPath}}">
   {{#body}}
 {{>property}}
   {{/body}}
+  {{#additionalProperty}}
+{{>property}}
+  {{/additionalProperty}}
   {{#responseHeaders}}
   {{#isPrimitive}}
 {{>property}}
@@ -74,12 +77,13 @@ return new xact.templates.Document();
 xact.templates.Document body;
 {{^isPrimitive}}
   {{#isList}}
-List&lt;GeneralXynaObject&gt; obj = new ArrayList&lt;&gt;({{getPropVarName}});
+List&lt;GeneralXynaObject&gt; list = new ArrayList&lt;&gt;({{getPropVarName}});
+body = xfmg.oas.OASObjectParsing.convertOasListToJson(list, jsonOptions);
   {{/isList}}
   {{^isList}}
-{{propRefPath}}.{{propRefType}} obj = {{getPropVarName}};
+{{propFQN}} obj = {{getPropVarName}};
+body = xfmg.oas.OASObjectParsing.convertOasObjectToJson(obj, jsonOptions);
   {{/isList}}
-body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSON{{#isList}}List{{/isList}}WithOptions(obj, jsonOptions);
 {{/isPrimitive}}
 {{#isPrimitive}}
 String text;

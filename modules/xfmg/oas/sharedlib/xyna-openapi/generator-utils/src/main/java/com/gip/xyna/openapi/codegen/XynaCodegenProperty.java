@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 import org.openapitools.codegen.DefaultCodegen;
 
 import com.gip.xyna.openapi.codegen.factory.CodegenPropertyInfo;
+import com.gip.xyna.openapi.codegen.utils.GeneratorProperty;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
 import com.gip.xyna.openapi.codegen.utils.Camelizer.Case;
 import static com.gip.xyna.openapi.codegen.utils.Camelizer.camelize;
@@ -102,8 +103,8 @@ public class XynaCodegenProperty {
         propRefType = isList ? "JSONValue": "JSONObject";
         propRefPath = "xfmg.xfctrl.datamodel.json";
       } else {
-        propRefType = camelize(propertyInfo.getComplexType(), Case.PASCAL);
-        propRefPath = Sanitizer.sanitize(gen.modelPackage());
+        propRefType = getType(propertyInfo);
+        propRefPath = getPath(propertyInfo, gen);
       }
     }
 
@@ -173,7 +174,21 @@ public class XynaCodegenProperty {
   private boolean isPrimitiveList(CodegenPropertyInfo property) {
     return isList(property) && isPrimitive(property.getMostInnerItems());
   }
-
+  
+  public String getPropFQN() {
+    if (isPrimitive) {
+      return javaType;
+    }
+    return propRefPath + "." + propRefType;
+  }
+  
+  public static String getPath(CodegenPropertyInfo propertyInfo, DefaultCodegen gen) {
+    return Sanitizer.sanitize(GeneratorProperty.getModelPath(gen) + propertyInfo.getAddionalPath());
+  }
+  
+  public static String getType(CodegenPropertyInfo propertyInfo) {
+    return camelize(propertyInfo.getComplexType(), Case.PASCAL);
+  }
 
   private boolean isString(CodegenPropertyInfo property) {
     return property.getIsString() 
