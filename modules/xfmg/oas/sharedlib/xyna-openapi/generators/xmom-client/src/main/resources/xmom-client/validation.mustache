@@ -26,7 +26,7 @@ try {
 {{/isPrimitive}}
 {{^isPrimitive}}
   {{^isList}}
-    {{propRefPath}}.{{propRefType}} {{propVarName}} = {{getPropVarName}};
+    {{propFQN}} {{propVarName}} = {{getPropVarName}};
     if ({{propVarName}} != null) {
       {{^isGenericJsonObject}}
         result.getErrorMessages().addAll({{propVarName}}.validate().getErrorMessages());
@@ -36,7 +36,7 @@ try {
     }{{/isRequired}}
   {{/isList}}
   {{#isList}}
-    List&lt;? extends {{propRefPath}}.{{propRefType}}&gt; {{propVarName}} = {{getPropVarName}};
+    List&lt;? extends {{propFQN}}&gt; {{propVarName}} = {{getPropVarName}};
     if ({{propVarName}} != null) {
         {{#minItems}}
         if ({{propVarName}}.size() &lt; {{minItems}}) {
@@ -49,7 +49,7 @@ try {
         }
         {{/maxItems}}
         {{^isGenericJsonList}}
-        for ({{propRefPath}}.{{propRefType}} obj : {{propVarName}}) {
+        for ({{propFQN}} obj : {{propVarName}}) {
             result.getErrorMessages().addAll(obj.validate().getErrorMessages());
         }
         {{/isGenericJsonList}}

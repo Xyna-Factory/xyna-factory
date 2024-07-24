@@ -141,6 +141,8 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
             tc.read();
             HttpRequest req = readRequest(tc);
             req.setURLPathParameter(pathPara.getPathAttribute(uri));
+            req.setHTTPMethod(tc.getMethod());
+            req.setRequestPath(tc.getUri());
             XynaOrder xo = new XynaOrder(new DestinationKey(ordertype), implDatatype, req);
             return FilterResponse.responsible(xo);
           } else if (ordertype == null) {

@@ -33,8 +33,18 @@
   </SharedLibs>
   <XMOMEntries>{{#models}}{{#xynaModel}}
     <XMOMEntry implicitDependency="false">
-      <FqName>{{typePath}}.{{typeName}}</FqName>
+      <FqName>{{modelFQN}}</FqName>
       <Type>DATATYPE</Type>
-    </XMOMEntry>{{/xynaModel}}{{/models}}
+    </XMOMEntry>{{/xynaModel}}{{/models}}{{#addPropWrapper}}
+    <XMOMEntry implicitDependency="false">
+      <FqName>{{wrapperFQN}}</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>{{/addPropWrapper}}
+    {{#ListWrapperData}}
+    <XMOMEntry implicitDependency="false">
+      <FqName>{{path}}.ListWrapperProvider</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    {{/ListWrapperData}}
   </XMOMEntries>
 </Application>

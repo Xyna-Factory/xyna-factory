@@ -48,21 +48,17 @@ BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
 return xact.http.HTTPService.send(hTTPConnection1, sendParameter2);
 {{/hasBody}}
 {{#hasBody}}
-xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
-jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
-jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
-jsonOptions.setUseLabels(true);
-jsonOptions.setProcessAllInputGenerically(false);
+{{>jsonOptions}}
 {{#bodyParams}}
 
 xact.templates.Document body;
 {{^isPrimitive}}
 {{#isList}}
 List&lt;GeneralXynaObject&gt; list = new ArrayList&lt;&gt;({{getPropVarName}});
-body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONListWithOptions(list, jsonOptions);
+body = xfmg.oas.OASObjectParsing.convertOasListToJson(list, jsonOptions);
 {{/isList}}
 {{^isList}}
-body = (xact.templates.Document)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions({{getPropVarName}}, jsonOptions);
+body = xfmg.oas.OASObjectParsing.convertOasObjectToJson({{getPropVarName}}, jsonOptions);
 {{/isList}}
 {{/isPrimitive}}
 {{#isPrimitive}}

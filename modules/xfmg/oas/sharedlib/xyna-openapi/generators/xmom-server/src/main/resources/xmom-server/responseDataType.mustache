@@ -37,6 +37,9 @@ BaseTypeName="{{responseRefName}}" BaseTypePath="{{responseRefPath}}">
   {{#body}}
 {{>property}}
   {{/body}}
+  {{#additionalProperty}}
+{{>property}}
+  {{/additionalProperty}}
   {{#responseHeaders}}
   {{#isPrimitive}}
 {{>property}}
@@ -69,21 +72,18 @@ BaseTypeName="{{responseRefName}}" BaseTypePath="{{responseRefPath}}">
 return new xact.templates.Document();
 {{/body}}
 {{#body}}
-xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
-jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
-jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
-jsonOptions.setUseLabels(true);
-jsonOptions.setProcessAllInputGenerically(false);
+{{>jsonOptions}}
 
 xact.templates.Document body;
 {{^isPrimitive}}
   {{#isList}}
-List&lt;GeneralXynaObject&gt; obj = new ArrayList&lt;&gt;({{getPropVarName}});
+List&lt;GeneralXynaObject&gt; list = new ArrayList&lt;&gt;({{getPropVarName}});
+body = xfmg.oas.OASObjectParsing.convertOasListToJson(list, jsonOptions);
   {{/isList}}
   {{^isList}}
-{{propRefPath}}.{{propRefType}} obj = {{getPropVarName}};
+{{propFQN}} obj = {{getPropVarName}};
+body = xfmg.oas.OASObjectParsing.convertOasObjectToJson(obj, jsonOptions);
   {{/isList}}
-body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSON{{#isList}}List{{/isList}}WithOptions(obj, jsonOptions);
 {{/isPrimitive}}
 {{#isPrimitive}}
 String text;

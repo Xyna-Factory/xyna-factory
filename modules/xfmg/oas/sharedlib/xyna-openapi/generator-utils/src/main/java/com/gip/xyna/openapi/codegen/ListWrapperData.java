@@ -1,4 +1,4 @@
-{{!
+/*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2024 Xyna GmbH, Germany
  *
@@ -14,9 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-}}
-{{#apiInfo.apis}}{{#operations}}{{#xynaOperation}}
-    addPathParameter("{{apiRefPath}}.{{apiRefName}}", Method.{{httpMethod}}, "{{endpointWorkflowFQN}}",
-        "{{basePathWithoutHost}}{{{filterRegexPath}}}"{{#pathParams}}, "{{propLabel}}"{{/pathParams}}
-    );
-{{/xynaOperation}}{{/operations}}{{/apiInfo.apis}}
+ */
+package com.gip.xyna.openapi.codegen;
+
+import java.util.List;
+
+public class ListWrapperData {
+
+  private String path;
+  private List<String> listWrapper;
+  
+  public String getPath() {
+    return path;
+  }
+  
+  public void setPath(String path) {
+    this.path = path;
+  }
+  
+  public List<String> getListWrapper() {
+    return listWrapper;
+  }
+  
+  public void setListWrapper(List<String> listWrapper) {
+    this.listWrapper = listWrapper;
+  }
+}

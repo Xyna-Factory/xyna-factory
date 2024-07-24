@@ -22,4 +22,14 @@
   <Data IsList="true" Label="URL-Queries" ReferenceName="URLPathQuery" ReferencePath="xact.http" VariableName="uRLQueries"/>
   <Data Label="Header" ReferenceName="Header" ReferencePath="xact.http" VariableName="header"/>
   <Data Label="Body" ReferenceName="Document" ReferencePath="xact.templates" VariableName="body"/>
+  <Data Label="Request Path" VariableName="requestPath">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="HTTP Method" VariableName="hTTPMethod">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
 </DataType>

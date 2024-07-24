@@ -36,28 +36,28 @@
     {{#operations}}
     {{#xynaOperation}}
     <XMOMEntry implicitDependency="false">
-      <FqName>{{requestWorkflowPath}}.{{requestWorkflowTypeName}}</FqName>
+      <FqName>{{requestWorkflowFQN}}</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>{{requestWorkflowWithProcessingPath}}.{{requestWorkflowWithProcessingTypeName}}</FqName>
+      <FqName>{{requestWorkflowWithProcessingFQN}}</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>{{sendRefPath}}.{{sendRefName}}</FqName>
+      <FqName>{{sendFQN}}</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>{{parseResponseRefPath}}.{{parseResponseRefName}}</FqName>
+      <FqName>{{parseResponseFQN}}</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>{{responseRefPath}}.{{responseRefName}}</FqName>
+      <FqName>{{responseFQN}}</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     {{#responses}}
     <XMOMEntry implicitDependency="false">
-      <FqName>{{respRefPath}}.{{respRefName}}</FqName>
+      <FqName>{{respFQN}}</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     {{/responses}}
