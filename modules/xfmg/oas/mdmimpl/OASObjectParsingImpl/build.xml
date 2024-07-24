@@ -1,4 +1,5 @@
-{{!
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2024 Xyna GmbH, Germany
  *
@@ -14,9 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-}}
-{{#apiInfo.apis}}{{#operations}}{{#xynaOperation}}
-    addPathParameter("{{apiRefPath}}.{{apiRefName}}", Method.{{httpMethod}}, "{{endpointWorkflowFQN}}",
-        "{{basePathWithoutHost}}{{{filterRegexPath}}}"{{#pathParams}}, "{{propLabel}}"{{/pathParams}}
-    );
-{{/xynaOperation}}{{/operations}}{{/apiInfo.apis}}
+-->
+<project name="build" default="deploy" basedir=".">
+
+    <!-- this is the absolute path to the root -->
+    <pathconvert property="root.dir" >
+        <path location="${basedir}/../../../../.."/>
+    </pathconvert>
+    <property name="xmom.dir" value="${basedir}/../../XMOM" />
+
+    <property name="project.name" value="OASObjectParsingImpl" />
+    <property name="fqclassname" value="xfmg.oas.OASObjectParsing" />
+    <property name="mdm.xml.path" value="xfmg/oas" />
+    <property name="mdm.xml.filename" value="OASObjectParsing.xml" />
+    <property name="mdm.service.path" value="xfmg.oas.OASObjectParsing" />
+
+    <import file="${root.dir}/installation/build/buildService.xml" />
+
+</project>

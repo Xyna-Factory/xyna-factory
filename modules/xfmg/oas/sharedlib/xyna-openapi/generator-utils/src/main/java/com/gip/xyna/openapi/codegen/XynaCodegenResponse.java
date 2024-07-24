@@ -17,7 +17,9 @@
  */
 package com.gip.xyna.openapi.codegen;
 
+import com.gip.xyna.openapi.codegen.utils.GeneratorProperty;
 import com.gip.xyna.openapi.codegen.utils.Camelizer.Case;
+
 import static com.gip.xyna.openapi.codegen.utils.Camelizer.camelize;
 
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.openapitools.codegen.CodegenOperation;
 import org.openapitools.codegen.CodegenResponse;
 import org.openapitools.codegen.DefaultCodegen;
 
@@ -43,6 +46,7 @@ public class XynaCodegenResponse {
   final String message;
   
   final XynaCodegenProperty body;
+  final XynaCodegenProperty additionalProperty;
   final List<XynaCodegenProperty> responseHeaders;
   
   public XynaCodegenResponse(XynaCodegenFactory factory, CodegenResponse response, DefaultCodegen gen, XynaCodegenOperation operation, int index) {
@@ -50,7 +54,7 @@ public class XynaCodegenResponse {
     code = response.code;
     message = message(response);
     respLabel = operation.responseLabel + " " + getCodeWithMessage();
-    respRefName = camelize(operation.responseRefName + "_" + getCodeWithMessage(), Case.PASCAL);
+    respRefName = getName(operation.responseRefName, response);
     respRefPath = operation.responseRefPath;
     respDescription = buildRespDescription(response);
     this.index = index;
@@ -58,6 +62,11 @@ public class XynaCodegenResponse {
       body = factory.getOrCreateXynaCodegenProperty(response.returnProperty, respRefName);
     } else {
       body = null;
+    }
+    if (response.getAdditionalProperties() != null) {
+      additionalProperty = factory.getPropertyToAddionalPropertyWrapper(response.getAdditionalProperties(), respRefName);
+    } else {
+      additionalProperty = null;
     }
     if (response.headers != null) {
       responseHeaders = response.headers.stream()
@@ -69,15 +78,23 @@ public class XynaCodegenResponse {
   }
   
   public String getCodeWithMessage() {
+    return getCodeWithMessage(code, message);
+  }
+  
+  public static String getCodeWithMessage(CodegenResponse response) {
+    return getCodeWithMessage(response.code, message(response));
+  }
+  
+  private static String getCodeWithMessage(String code, String message) {
     if (message.isBlank()) {
       return code;
     }
     return code + " " + message;
   }
   
-  private String message(CodegenResponse response) {
+  private static String message(CodegenResponse response) {
     if (StatusCodeLambda.httpStatusCodes.containsKey(response.code)) {
-      return StatusCodeLambda.httpStatusCodes.get(code);
+      return StatusCodeLambda.httpStatusCodes.get(response.code);
     }
     return "";
   }
@@ -87,6 +104,27 @@ public class XynaCodegenResponse {
       return "Response message: " + response.message;
     }
     return "";
+  }
+  
+  public String getRespFQN() {
+    return respRefPath + "." + respRefName;
+  }
+  
+  public static String getName(String baseName, CodegenResponse response) {
+    return camelize(baseName + "_" + getCodeWithMessage(response), Case.PASCAL);
+  }
+  
+  public static String getClientFQN(CodegenOperation operation, DefaultCodegen gen, String pathPrefix, CodegenResponse response) {
+    return getFQN(operation, gen, GeneratorProperty.getClientPath(gen), pathPrefix, response);
+  }
+  
+  public static String getProviderFQN(CodegenOperation operation, DefaultCodegen gen, String pathPrefix, CodegenResponse response) {
+    return getFQN(operation, gen, GeneratorProperty.getProviderPath(gen), pathPrefix, response);
+  }
+  
+  private static String getFQN(CodegenOperation operation, DefaultCodegen gen, String path, String pathPrefix, CodegenResponse response) {
+    return XynaCodegenOperation.buildResponseRefPath(operation, gen, path, pathPrefix) + '.' +
+        getName(XynaCodegenOperation.buildResponseRefName(operation, gen), response);
   }
   
   @Override

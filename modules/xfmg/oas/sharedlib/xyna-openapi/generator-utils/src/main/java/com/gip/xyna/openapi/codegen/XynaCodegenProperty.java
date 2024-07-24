@@ -25,10 +25,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 import org.openapitools.codegen.DefaultCodegen;
 
 import com.gip.xyna.openapi.codegen.factory.CodegenPropertyInfo;
+import com.gip.xyna.openapi.codegen.utils.GeneratorProperty;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
 import com.gip.xyna.openapi.codegen.utils.Camelizer.Case;
 import static com.gip.xyna.openapi.codegen.utils.Camelizer.camelize;
@@ -70,6 +72,7 @@ public class XynaCodegenProperty {
   final String javaType;
   final String validatorClassConstructor;
   final List<String> validatorConfig;
+  final List<EnumData> allowableValues;
   
   // for not primitive
   final boolean isRequired;
@@ -91,7 +94,7 @@ public class XynaCodegenProperty {
     isRequired = propertyInfo.getRequired();
     dataType = buildDatatype(propertyInfo);
     javaType = isPrimitive ? DatatypeMap.getOrDefault(dataType, DatatypeMap.get("Default")).javaType : null;
-
+    
     if (isPrimitive) {
       propRefType = null;
       propRefPath = null;
@@ -100,8 +103,8 @@ public class XynaCodegenProperty {
         propRefType = isList ? "JSONValue": "JSONObject";
         propRefPath = "xfmg.xfctrl.datamodel.json";
       } else {
-        propRefType = camelize(propertyInfo.getComplexType(), Case.PASCAL);
-        propRefPath = Sanitizer.sanitize(gen.modelPackage());
+        propRefType = getType(propertyInfo);
+        propRefPath = getPath(propertyInfo, gen);
       }
     }
 
@@ -113,6 +116,8 @@ public class XynaCodegenProperty {
         maxItems = null;
     }
 
+    allowableValues = EnumData.buildFromMap(propertyInfo.getAllowableValues());
+    
     validatorClassConstructor = buildValidatorClassConstructor();
     validatorConfig = buildValidatorConfig(propertyInfo);
     propDescription = buildDescription(propertyInfo);
@@ -169,7 +174,21 @@ public class XynaCodegenProperty {
   private boolean isPrimitiveList(CodegenPropertyInfo property) {
     return isList(property) && isPrimitive(property.getMostInnerItems());
   }
-
+  
+  public String getPropFQN() {
+    if (isPrimitive) {
+      return javaType;
+    }
+    return propRefPath + "." + propRefType;
+  }
+  
+  public static String getPath(CodegenPropertyInfo propertyInfo, DefaultCodegen gen) {
+    return Sanitizer.sanitize(GeneratorProperty.getModelPath(gen) + propertyInfo.getAddionalPath());
+  }
+  
+  public static String getType(CodegenPropertyInfo propertyInfo) {
+    return camelize(propertyInfo.getComplexType(), Case.PASCAL);
+  }
 
   private boolean isString(CodegenPropertyInfo property) {
     return property.getIsString() 
@@ -225,7 +244,7 @@ public class XynaCodegenProperty {
     }
     
     //prepare valuesToValidate
-    ValuesToValidate valuesToValidate = new ValuesToValidate(propertyInfo, javaType);
+    ValuesToValidate valuesToValidate = new ValuesToValidate(propertyInfo, javaType, allowableValues);
     
     String setValue = "setValue(" + getPropVarName + ")";
     String setRequired = "setRequired()";
@@ -262,7 +281,6 @@ public class XynaCodegenProperty {
     return config;
   }
 
-  @SuppressWarnings("unchecked")
   private String buildDescription(CodegenPropertyInfo propertyInfo) {
     StringBuilder sb = new StringBuilder();
     if (propertyInfo.getDescription() != null) {
@@ -270,7 +288,7 @@ public class XynaCodegenProperty {
     }
     if (propertyInfo.getIsEnumOrRef()) {
       sb.append("values: ");
-      sb.append(String.join(", ", (List<String>)propertyInfo.getAllowableValues().getOrDefault("values", List.of())));
+      sb.append(String.join(", ", allowableValues.stream().map(enumData -> enumData.original).collect(Collectors.toList())));
       sb.append('\n');
     }
     if (propertyInfo.getFormat() != null) {
@@ -459,7 +477,7 @@ public class XynaCodegenProperty {
 
     List<String> allowableValues = new ArrayList<String>();
 
-    ValuesToValidate(CodegenPropertyInfo propertyInfo, String javatype) {
+    ValuesToValidate(CodegenPropertyInfo propertyInfo, String javatype, List<EnumData> allowValues) {
       CodegenPropertyInfo mostInnerItems = propertyInfo.getMostInnerItems() != null ? propertyInfo.getMostInnerItems() : propertyInfo;
 
       minimum = mostInnerItems.getMinimum();
@@ -496,11 +514,7 @@ public class XynaCodegenProperty {
       if (propertyInfo.getIsContainer() && !required) {
           required = propertyInfo.getRequired();
       }
-      if (mostInnerItems.getAllowableValues() != null) {
-        @SuppressWarnings("unchecked")
-        List<String> enumValues = (List<String>) mostInnerItems.getAllowableValues().getOrDefault(("values"), List.of());
-        allowableValues.addAll(enumValues);
-      }
+      allowableValues = allowValues.stream().map(enumData -> enumData.javaEscaped).collect(Collectors.toList());
     }
   }
 

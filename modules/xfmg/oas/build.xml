@@ -39,12 +39,17 @@
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
 
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/OASObjectParsingImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+
         <antcall target="build-application" />
     </target>
 
     <target name="prepare-mdm-jar">
         <antcall target="create-mdm-jar" />
         <supply-mdm-jar type="mdmimpl" name="ApplicationGenerationImpl" />
+        <supply-mdm-jar type="mdmimpl" name="OASObjectParsingImpl" />
         <delete file="${basedir}/mdm.jar" />
     </target>
 

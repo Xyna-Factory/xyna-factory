@@ -24,6 +24,7 @@ import org.openapitools.codegen.CodegenOperation;
 import org.openapitools.codegen.DefaultCodegen;
 
 import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
+import com.gip.xyna.openapi.codegen.utils.GeneratorProperty;
 
 public class XynaCodegenProviderOperation extends XynaCodegenOperation {
   
@@ -46,7 +47,7 @@ public class XynaCodegenProviderOperation extends XynaCodegenOperation {
   final String filterRegexPath;
   
   public XynaCodegenProviderOperation(XynaCodegenFactory factory, CodegenOperation operation, DefaultCodegen gen, String pathPrefix, int id) {
-    super(factory, operation, gen, pathPrefix);
+    super(factory, operation, gen, GeneratorProperty.getProviderPath(gen), pathPrefix);
     
     implLabel = baseLabel;
     implVarName = baseVarName;
@@ -65,6 +66,14 @@ public class XynaCodegenProviderOperation extends XynaCodegenOperation {
     endpointWorkflowPath = basePath + ".wf";
     
     filterRegexPath = buildFilterRegexp(operation, pathParams);
+  }
+  
+  public String getParameterFQN() {
+    return parameterRefPath + "." + parameterRefName;
+  }
+  
+  public String getEndpointWorkflowFQN() {
+    return endpointWorkflowPath + "." + endpointWorkflowTypeName;
   }
   
   @Override

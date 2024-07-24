@@ -189,6 +189,10 @@
       <FqName>xmcp.oas.datatype.client.ClientProcessingHook</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xfmg.oas.OASObjectParsing</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
   </XMOMEntries>
   <XynaProperties>
     <XynaProperty implicitDependency="false">
