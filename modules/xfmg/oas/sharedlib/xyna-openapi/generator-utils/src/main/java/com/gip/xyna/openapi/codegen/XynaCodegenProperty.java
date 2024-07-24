@@ -262,7 +262,6 @@ public class XynaCodegenProperty {
     return config;
   }
 
-  @SuppressWarnings("unchecked")
   private String buildDescription(CodegenPropertyInfo propertyInfo) {
     StringBuilder sb = new StringBuilder();
     if (propertyInfo.getDescription() != null) {
@@ -270,7 +269,7 @@ public class XynaCodegenProperty {
     }
     if (propertyInfo.getIsEnumOrRef()) {
       sb.append("values: ");
-      sb.append(String.join(", ", (List<String>)propertyInfo.getAllowableValues().getOrDefault("values", List.of())));
+      sb.append(String.join(", ", propertyInfo.getAllowableValues()));
       sb.append('\n');
     }
     if (propertyInfo.getFormat() != null) {
@@ -457,7 +456,7 @@ public class XynaCodegenProperty {
     boolean nullable;
     String pattern;
 
-    List<String> allowableValues = new ArrayList<String>();
+    List<String> allowableValues;
 
     ValuesToValidate(CodegenPropertyInfo propertyInfo, String javatype) {
       CodegenPropertyInfo mostInnerItems = propertyInfo.getMostInnerItems() != null ? propertyInfo.getMostInnerItems() : propertyInfo;
@@ -496,11 +495,7 @@ public class XynaCodegenProperty {
       if (propertyInfo.getIsContainer() && !required) {
           required = propertyInfo.getRequired();
       }
-      if (mostInnerItems.getAllowableValues() != null) {
-        @SuppressWarnings("unchecked")
-        List<String> enumValues = (List<String>) mostInnerItems.getAllowableValues().getOrDefault(("values"), List.of());
-        allowableValues.addAll(enumValues);
-      }
+      allowableValues =  mostInnerItems.getAllowableValues();
     }
   }
 

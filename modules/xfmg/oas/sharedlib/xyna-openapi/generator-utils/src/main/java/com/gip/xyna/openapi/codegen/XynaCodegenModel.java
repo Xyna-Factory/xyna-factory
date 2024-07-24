@@ -64,13 +64,6 @@ public class XynaCodegenModel {
     description = buildDescription(model);
     isEnum = model.isEnum;
 
-    if (isEnum) {
-      vars = List.of(factory.getOrCreateXynaCodegenEnumProperty(model.allowableValues, typeName));
-    } else {
-      vars = model.vars.stream().map(prop -> factory.getOrCreateXynaCodegenProperty(prop, typeName)).collect(Collectors.toList());
-    }
-    
-    
     if (model.allowableValues != null) {
       @SuppressWarnings("unchecked")
       List<String> enumValues = (List<String>) model.allowableValues.getOrDefault(("values"), List.of());
@@ -78,6 +71,14 @@ public class XynaCodegenModel {
          value -> new EnumData(value)
       ).collect(Collectors.toList()));
     }
+    
+    if (isEnum) {
+      List<String> escapedAllowableValues = allowableValues.stream().map(enumData -> enumData.javaEscaped).collect(Collectors.toList());
+      vars = List.of(factory.getOrCreateXynaCodegenEnumProperty(escapedAllowableValues, typeName));
+    } else {
+      vars = model.vars.stream().map(prop -> factory.getOrCreateXynaCodegenProperty(prop, typeName)).collect(Collectors.toList());
+    }
+    
     if (model.parent != null && model.parentModel != null) {
       // maybe we should find the correct model, then building a new one.
       parent = factory.getOrCreateXynaCodegenModel(model.parentModel);

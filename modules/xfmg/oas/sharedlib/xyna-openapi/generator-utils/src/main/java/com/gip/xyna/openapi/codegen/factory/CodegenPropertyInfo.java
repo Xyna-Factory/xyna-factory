@@ -17,7 +17,8 @@
  */
 package com.gip.xyna.openapi.codegen.factory;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.openapitools.codegen.CodegenParameter;
 import org.openapitools.codegen.CodegenProperty;
@@ -53,7 +54,7 @@ public interface CodegenPropertyInfo {
   public Integer getMaxItems();
   public boolean getRequired();
   public boolean getIsNullable();
-  public Map<String, Object> getAllowableValues();
+  public List<String> getAllowableValues();
 }
 
 class CodegenPropertyHolder implements CodegenPropertyInfo{
@@ -172,8 +173,12 @@ class CodegenPropertyHolder implements CodegenPropertyInfo{
     return property.isNullable;
   }
 
-  public Map<String, Object> getAllowableValues() {
-    return property.allowableValues;
+  @SuppressWarnings("unchecked")
+  public List<String> getAllowableValues() {
+    if (property.allowableValues == null) {
+      return new ArrayList<String>();
+    }
+    return (List<String>) property.allowableValues.getOrDefault("values", List.of());
   }
 
   public boolean getIsString() {
@@ -309,9 +314,14 @@ class CodegenParameterHolder implements CodegenPropertyInfo{
     return parameter.isNullable;
   }
 
-  public Map<String, Object> getAllowableValues() {
-    return parameter.allowableValues;
+  @SuppressWarnings("unchecked")
+  public List<String> getAllowableValues() {
+    if (parameter.allowableValues == null) {
+      return new ArrayList<String>();
+    }
+    return (List<String>) parameter.allowableValues.getOrDefault("values", List.of());
   }
+
 
   public boolean getIsString() {
     return parameter.isString;
@@ -333,10 +343,14 @@ class CodegenParameterHolder implements CodegenPropertyInfo{
 
 class CodegenEnum implements CodegenPropertyInfo{
    
-  private Map<String, Object> allowableValues;
+  private List<String> allowableValues;
   
-  CodegenEnum(Map<String, Object> allowableValues) {
-    this.allowableValues = allowableValues;
+  CodegenEnum(List<String> allowableValues) {
+    if (allowableValues != null) {
+      this.allowableValues = allowableValues;
+    } else {
+      this.allowableValues = new ArrayList<>();
+    }
   }
   
   public String getBaseName() {
@@ -439,7 +453,7 @@ class CodegenEnum implements CodegenPropertyInfo{
     return false;
   }
 
-  public Map<String, Object> getAllowableValues() {
+  public List<String> getAllowableValues() {
     return allowableValues;
   }
 
