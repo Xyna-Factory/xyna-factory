@@ -18,7 +18,6 @@
 package com.gip.xyna.openapi.codegen.factory;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.openapitools.codegen.CodegenModel;
@@ -87,7 +86,7 @@ public class XynaCodegenFactory {
     return getOrCreateXynaCodegenProperty(holder, className);
   }
 
-  public XynaCodegenProperty getOrCreateXynaCodegenEnumProperty(List<String> allowableValues, String className) {
+  public XynaCodegenProperty getOrCreateXynaCodegenEnumProperty(Map<String, Object> allowableValues, String className) {
     CodegenEnum holder = new CodegenEnum(allowableValues);
     return getOrCreateXynaCodegenProperty(holder, className);
   }

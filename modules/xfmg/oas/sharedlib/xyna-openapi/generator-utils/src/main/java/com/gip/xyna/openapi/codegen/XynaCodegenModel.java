@@ -47,7 +47,7 @@ public class XynaCodegenModel {
   
   final boolean isEnum;
   // enum
-  final List<EnumData> allowableValues = new ArrayList<EnumData>();
+  final List<EnumData> allowableValues;
   
   //discriminator
   final boolean hasDiscriminator;
@@ -64,17 +64,10 @@ public class XynaCodegenModel {
     description = buildDescription(model);
     isEnum = model.isEnum;
 
-    if (model.allowableValues != null) {
-      @SuppressWarnings("unchecked")
-      List<String> enumValues = (List<String>) model.allowableValues.getOrDefault(("values"), List.of());
-      allowableValues.addAll(enumValues.stream().map(
-         value -> new EnumData(value)
-      ).collect(Collectors.toList()));
-    }
+    allowableValues = EnumData.buildFromMap(model.allowableValues);
     
     if (isEnum) {
-      List<String> escapedAllowableValues = allowableValues.stream().map(enumData -> enumData.javaEscaped).collect(Collectors.toList());
-      vars = List.of(factory.getOrCreateXynaCodegenEnumProperty(escapedAllowableValues, typeName));
+      vars = List.of(factory.getOrCreateXynaCodegenEnumProperty(model.allowableValues, typeName));
     } else {
       vars = model.vars.stream().map(prop -> factory.getOrCreateXynaCodegenProperty(prop, typeName)).collect(Collectors.toList());
     }
@@ -152,6 +145,7 @@ public class XynaCodegenModel {
     discriminatorKey = null;
     discriminatorMap = null;
     isListWrapper = false;
+    allowableValues = new ArrayList<>();
   }
 
   @Override
@@ -211,20 +205,32 @@ public class XynaCodegenModel {
   public static boolean isListWrapper(CodegenModel model, Map<String, Object> additionalProperties) {
     return model.isArray && (boolean)additionalProperties.getOrDefault("createListWrappers", false);
   }
+}
+
+class EnumData {
+  final String original;
+  final String enumLabel;
+  final String javaEscaped;
+  final String methodname;
   
-  class EnumData {
-    final String original;
-    final String enumLabel;
-    final String javaEscaped;
-    final String methodname;
-    
-    EnumData(String original) {
-      this.original = original;
-      enumLabel = original.toUpperCase();
-      Pattern exp = Pattern.compile("(\\\"|\\'|\\\\)");
-      Matcher matcher = exp.matcher(original);
-      javaEscaped = matcher.replaceAll((result) -> "\\\\" + result.group());
-      methodname = original.replaceAll("[^a-zA-Z0-9_]", "").toUpperCase();
-    }
+  static List<EnumData> buildFromMap(Map<String, Object> allowableValuesMap) {
+    if (allowableValuesMap != null) {
+      @SuppressWarnings("unchecked")
+      List<String> enumValues = (List<String>) allowableValuesMap.getOrDefault(("values"), List.of());
+      return enumValues.stream().map(
+         value -> new EnumData(value)
+      ).collect(Collectors.toList());
+    } else {
+      return new ArrayList<>();
+    }    
+  }
+  
+  EnumData(String original) {
+    this.original = original;
+    enumLabel = original.toUpperCase();
+    Pattern exp = Pattern.compile("(\\\"|\\'|\\\\)");
+    Matcher matcher = exp.matcher(original);
+    javaEscaped = matcher.replaceAll((result) -> "\\\\" + result.group());
+    methodname = original.replaceAll("[^a-zA-Z0-9_]", "").toUpperCase();
   }
 }
