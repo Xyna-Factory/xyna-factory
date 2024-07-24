@@ -18,6 +18,12 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>com.gip.xyna</groupId>
+        <artifactId>bom</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../../../../../installation/build/pom.xml</relativePath>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gip.xyna.openapi</groupId>
     <artifactId>xyna-openapi</artifactId>
@@ -38,6 +44,22 @@
             <version>1.0.0</version>
             <type>pom</type>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-1.2-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gip.xyna</groupId>
+            <artifactId>xynafactory</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gip.xyna</groupId>
+            <artifactId>xynautils-database</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gip.xyna</groupId>
+            <artifactId>xynautils-exceptions</artifactId>
         </dependency>
     </dependencies>
 

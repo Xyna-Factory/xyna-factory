@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.openapitools.codegen.CodegenDiscriminator.MappedModel;
@@ -45,7 +47,7 @@ public class XynaCodegenModel {
   
   final boolean isEnum;
   // enum
-  final List<String> allowableValues = new ArrayList<String>();
+  final List<EnumData> allowableValues;
   
   //discriminator
   final boolean hasDiscriminator;
@@ -62,18 +64,14 @@ public class XynaCodegenModel {
     description = buildDescription(model);
     isEnum = model.isEnum;
 
+    allowableValues = EnumData.buildFromMap(model.allowableValues);
+    
     if (isEnum) {
       vars = List.of(factory.getOrCreateXynaCodegenEnumProperty(model.allowableValues, typeName));
     } else {
       vars = model.vars.stream().map(prop -> factory.getOrCreateXynaCodegenProperty(prop, typeName)).collect(Collectors.toList());
     }
     
-    
-    if (model.allowableValues != null) {
-      @SuppressWarnings("unchecked")
-      List<String> enumValues = (List<String>) model.allowableValues.getOrDefault(("values"), List.of());
-      allowableValues.addAll(enumValues);
-    }
     if (model.parent != null && model.parentModel != null) {
       // maybe we should find the correct model, then building a new one.
       parent = factory.getOrCreateXynaCodegenModel(model.parentModel);
@@ -122,7 +120,10 @@ public class XynaCodegenModel {
     }
     if (isEnum) {
       sb.append("values: ");
-      sb.append(String.join(", ", allowableValues)).append('\n');
+      List<String> originals = allowableValues.stream().map(
+                                     enumData -> enumData.enumLabel
+                               ).collect(Collectors.toList());
+      sb.append(String.join(", ", originals)).append('\n');
     }
     if(isListWrapper) {
       sb.append("This is a listWrapper!\n");
@@ -144,6 +145,7 @@ public class XynaCodegenModel {
     discriminatorKey = null;
     discriminatorMap = null;
     isListWrapper = false;
+    allowableValues = new ArrayList<>();
   }
 
   @Override
@@ -202,5 +204,33 @@ public class XynaCodegenModel {
   
   public static boolean isListWrapper(CodegenModel model, Map<String, Object> additionalProperties) {
     return model.isArray && (boolean)additionalProperties.getOrDefault("createListWrappers", false);
+  }
+}
+
+class EnumData {
+  final String original;
+  final String enumLabel;
+  final String javaEscaped;
+  final String methodname;
+  
+  static List<EnumData> buildFromMap(Map<String, Object> allowableValuesMap) {
+    if (allowableValuesMap != null) {
+      @SuppressWarnings("unchecked")
+      List<String> enumValues = (List<String>) allowableValuesMap.getOrDefault(("values"), List.of());
+      return enumValues.stream().map(
+         value -> new EnumData(value)
+      ).collect(Collectors.toList());
+    } else {
+      return new ArrayList<>();
+    }    
+  }
+  
+  EnumData(String original) {
+    this.original = original;
+    enumLabel = original.toUpperCase();
+    Pattern exp = Pattern.compile("(\\\"|\\'|\\\\)");
+    Matcher matcher = exp.matcher(original);
+    javaEscaped = matcher.replaceAll((result) -> "\\\\" + result.group());
+    methodname = original.replaceAll("[^a-zA-Z0-9_]", "").toUpperCase();
   }
 }
