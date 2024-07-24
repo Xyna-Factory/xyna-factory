@@ -49,13 +49,39 @@
         <Target RefID="31"/>
       </Receive>
     </Function>
+    <Mappings ID="4503" Label="Write Http Request to Request Parameter ">
+      <Input>
+        <Data ID="4606" Label="Request Parameter" ReferenceName="RequestParameter" ReferencePath="xmcp.oas.datatype.provider" VariableName="requestParameter4606">
+          <Source RefID="4503"/>
+        </Data>
+        <Source RefID="31">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="4877" Label="Http Request" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype" VariableName="httpRequest4877">
+          <Source RefID="4503"/>
+        </Data>
+        <Source RefID="14"/>
+      </Input>
+      <Output>
+        <Data ID="4641" Label="Request Parameter" ReferenceName="RequestParameter" ReferencePath="xmcp.oas.datatype.provider" VariableName="requestParameter4641">
+          <Source RefID="4503"/>
+        </Data>
+        <Target RefID="4642"/>
+      </Output>
+      <Mapping>%2%=%0%</Mapping>
+      <Mapping>%2%.hTTPRequest=%1%</Mapping>
+    </Mappings>
     <Function ID="4311" Label="OAS Type Validation">
       <Source RefID="4312"/>
-      <Source RefID="31"/>
+      <Source RefID="4642"/>
       <Source RefID="4362"/>
       <Target RefID="4312"/>
       <Invoke Operation="OASTypeValidation" ServiceID="4312">
-        <Source RefID="31">
+        <Source RefID="4642">
           <Meta>
             <LinkType>UserConnected</LinkType>
           </Meta>
@@ -86,14 +112,17 @@
       </Data>
       <Data ReferenceName="UseValue" ReferencePath="xfmg.xods.configuration.parameter" VariableName="behaviourIfPropertyNotSet"/>
     </Data>
+    <Data ID="4642" Label="Request Parameter" ReferenceName="RequestParameter" ReferencePath="xmcp.oas.datatype.provider" VariableName="requestParameter4642">
+      <Source RefID="4503"/>
+    </Data>
     <Exception ID="4402" Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception" VariableName="validationException4402">
       <Target RefID="4439"/>
     </Exception>
     <Assign ID="1">
-      <Source RefID="31"/>
+      <Source RefID="4642"/>
       <Target RefID="223"/>
       <Copy>
-        <Source RefID="31">
+        <Source RefID="4642">
           <Meta>
             <LinkType>UserConnected</LinkType>
           </Meta>
