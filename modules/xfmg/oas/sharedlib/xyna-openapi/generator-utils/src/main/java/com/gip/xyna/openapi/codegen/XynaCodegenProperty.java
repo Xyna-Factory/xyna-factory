@@ -442,6 +442,8 @@ public class XynaCodegenProperty {
           String cleanedPattern = values.pattern;
           if (cleanedPattern.startsWith("/") && cleanedPattern.endsWith("/")) {
               cleanedPattern = cleanedPattern.substring(1,cleanedPattern.length()-1);
+              //ensure all occurrences of "\" are escaped
+              cleanedPattern = cleanedPattern.replaceAll("(?:(?<=[^\\\\])|^)(\\\\(?:\\\\{2})*)(?=[^\\\\]|$)", "\\\\$0");
           }
           result.add(fix.praefix + "setPattern(\"" + cleanedPattern + "\")" + fix.postfix);
       }
