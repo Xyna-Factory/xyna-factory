@@ -32,4 +32,9 @@
       <Type>String</Type>
     </Meta>
   </Data>
+  <Data IsList="true" Label="Custom Preprocessing Parameters" VariableName="customPreprocessingParameters">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
 </DataType>
