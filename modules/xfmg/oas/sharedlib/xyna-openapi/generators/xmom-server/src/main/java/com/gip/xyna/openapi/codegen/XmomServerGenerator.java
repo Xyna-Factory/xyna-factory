@@ -216,7 +216,7 @@ public class XmomServerGenerator extends DefaultCodegen {
         List<MappedModel> toRemove = new ArrayList<>();
         for (MappedModel mapping: model.getValue().getModel().getDiscriminator().getMappedModels()) {
           CodegenModel mo = mapping.getModel();
-          while (mo.getParent() != null && mo.name == model.getValue().getModel().name) {
+          while (mo.getParent() != null && mo.name != model.getValue().getModel().name) {
             mo = modelMap.get(mapping.getModel().getParent()).getModel();
           }
           if (mo.name != model.getValue().getModel().name) {
