@@ -597,6 +597,9 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
       } else if (GuiLabels.DT_LABEL_IMPL_TYPE_CODED_SERVICE.equals(implementationType)) {
         newOperation = new JavaOperation(dom);
         ((JavaOperation)newOperation).setImpl("");
+      } else if (GuiLabels.DT_LABEL_IMPL_TYPE_CODED_SERVICE_PYTHON.equals(implementationType)) {
+        newOperation = new JavaOperation(dom);
+        ((JavaOperation)newOperation).setImpl("");
       } else if (GuiLabels.DT_LABEL_IMPL_TYPE_REFERENCE.equals(implementationType)) {
         newOperation = new WorkflowCallInService(dom);
         ((WorkflowCallInService)newOperation).setWf(change.getReference(), dom.getRevision());
@@ -605,6 +608,7 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
                                                 UnsupportedOperationException.IMPLEMENTATION_TYPE_NOT_SUPPORTED
                                                     + GuiLabels.DT_LABEL_IMPL_TYPE_ABSTRACT + ", "
                                                     + GuiLabels.DT_LABEL_IMPL_TYPE_CODED_SERVICE + ", "
+                                                    + GuiLabels.DT_LABEL_IMPL_TYPE_CODED_SERVICE_PYTHON + ", "
                                                     + GuiLabels.DT_LABEL_IMPL_TYPE_REFERENCE + ".");
       }
 
