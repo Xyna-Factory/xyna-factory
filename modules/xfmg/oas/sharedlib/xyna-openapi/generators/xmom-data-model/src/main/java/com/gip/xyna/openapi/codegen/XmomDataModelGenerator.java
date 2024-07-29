@@ -18,6 +18,7 @@
 package com.gip.xyna.openapi.codegen;
 
 import org.openapitools.codegen.*;
+import org.openapitools.codegen.CodegenDiscriminator.MappedModel;
 import org.openapitools.codegen.model.ModelMap;
 import org.openapitools.codegen.model.ModelsMap;
 import org.openapitools.codegen.model.OperationMap;
@@ -139,6 +140,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     objs = super.postProcessSupportingFileData(objs);
     Map<String, ModelMap> modelMap = XynaModelUtils.getModelsFromSupportingFileData(objs);
     setInheritance(modelMap);
+    updateDiscriminatorMapping(modelMap);
     setListWrapper(modelMap);
     
     List<String> listWrapper = new ArrayList<String>();
@@ -207,6 +209,24 @@ public class XmomDataModelGenerator extends DefaultCodegen {
             }
           }
         }
+      }
+    }
+  }
+  
+  private void updateDiscriminatorMapping(Map<String, ModelMap> modelMap) {
+    for (Entry<String, ModelMap> model: modelMap.entrySet()) {
+      if (model.getValue().getModel().getHasDiscriminatorWithNonEmptyMapping()) {
+        List<MappedModel> toRemove = new ArrayList<>();
+        for (MappedModel mapping: model.getValue().getModel().getDiscriminator().getMappedModels()) {
+          CodegenModel mo = mapping.getModel();
+          while (mo.getParent() != null && mo.name != model.getValue().getModel().name) {
+            mo = modelMap.get(mapping.getModel().getParent()).getModel();
+          }
+          if (mo.name != model.getValue().getModel().name) {
+            toRemove.add(mapping);
+          }
+        }
+        model.getValue().getModel().getDiscriminator().getMappedModels().removeAll(toRemove);
       }
     }
   }
