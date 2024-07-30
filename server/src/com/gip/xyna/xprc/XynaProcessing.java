@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,6 +85,7 @@ import com.gip.xyna.xprc.xfqctrl.FrequencyControlledTaskInformation;
 import com.gip.xyna.xprc.xfqctrl.XynaFrequencyControl;
 import com.gip.xyna.xprc.xfractwfe.DeploymentManagement;
 import com.gip.xyna.xprc.xfractwfe.XynaFractalWorkflowEngine;
+import com.gip.xyna.xprc.xfractwfe.XynaPythonSnippetManagement;
 import com.gip.xyna.xprc.xfractwfe.base.DeploymentHandling;
 import com.gip.xyna.xprc.xpce.InterruptableExecutionProcessor;
 import com.gip.xyna.xprc.xpce.OrderContext;
@@ -144,6 +145,7 @@ public class XynaProcessing extends XynaProcessingBase {
   private WorkflowEngine workflowEngine;
   private XynaProcessCtrlExecution xpce;
   private XynaXmomSerialization remotecallSerialization;
+  private XynaPythonSnippetManagement pythonCodeSnippetMgmt;
   private XynaScheduler scheduler;
   private XynaProcessingODS xprcods;
   private OrderStatus orderStatus;
@@ -224,6 +226,16 @@ public class XynaProcessing extends XynaProcessingBase {
         }
         deploySection(remotecallSerialization);
       }});
+    fExec.addTask("XynaPythonSnippetManagement", "pythonCodeSnippet").
+    after(OrderStartupAndMigrationManagement.class).
+    execAsync(new Runnable() {public void run() {
+      try {
+        pythonCodeSnippetMgmt = new XynaPythonSnippetManagement();
+      } catch (XynaException e) {
+        throw new RuntimeException(e);
+      }
+      deploySection(pythonCodeSnippetMgmt);
+    }});
     
 
 

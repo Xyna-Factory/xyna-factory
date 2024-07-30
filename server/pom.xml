@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -142,6 +142,11 @@
 		<dependency>
 			<groupId>com.gip.xyna</groupId>
 			<artifactId>xynafactoryCLIGenerator</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>black.ninia</groupId>
+			<artifactId>jep</artifactId>
 			<scope>compile</scope>
 		</dependency>
 		<!-- Test -->
