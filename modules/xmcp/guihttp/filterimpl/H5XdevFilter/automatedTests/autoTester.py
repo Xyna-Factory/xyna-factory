@@ -405,7 +405,7 @@ class RequestTester:
       listKeyName = listKeyName[0:listKeyName.index("[")]
     result = 0
     #path step is <something>[ <something> ] ... care: something and /
-    regex = re.compile('\[(.*[^\]])\]', re.IGNORECASE)
+    regex = re.compile(r"\[(.*[^\]])\]", re.IGNORECASE)
     indexDescription = re.search(regex, pathStep)
     try:
       indexDescription = indexDescription.group(0)
@@ -446,6 +446,8 @@ class RequestTester:
     parts = indexDescriptionString.split("&")
     for part in parts:
       data = part.split("=")
+      if len(data) != 2:
+        raise Exception("Failed to split index description. Equal sign not found. indexDescriptionString: " + str(indexDescriptionString))
       tuple = (str(data[0]), str(data[1])) # TODO: trim?
       result.append(tuple)
     return result
