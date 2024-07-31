@@ -3496,13 +3496,7 @@ public class Dataflow {
       
       //set connection to user, if it used to be of type user
       List<SimpleConnection> con = allConnections.get(resolutions.get(resolutionNr).getFirst()).getConnectionsPerLane();
-      if(resolutions.get(resolutionNr).getSecond() != null) {
-        for(SimpleConnection sCon : con) {
-          if(sCon.getLinkState() == LinkstateIn.AUTO && resolutions.get(resolutionNr).getFirst().connectedness.isUserConnected()) {
-            sCon.setLinkState(LinkstateIn.USER);
-          }
-        }
-      }
+      updateLinkstateToUser(resolutions.get(resolutionNr), con);
       
       //Warnings
       for (SimpleConnection sCon : con) {
@@ -3516,8 +3510,6 @@ public class Dataflow {
         warningsManagement.processNewProvidersForConnection(data);
       }      
       
-      
-      
       if(logger.isDebugEnabled()) {
         logger.debug("Calced Link for assign (" + assign.getStepId() + "["+resolutionNr+"]): " + resolutions.get(resolutionNr).getFirst().getIdentifiedVariable().getId() + "->");
         for (SimpleConnection sCon : allConnections.get(resolutions.get(resolutionNr).getFirst()).getConnectionsPerLane()) {
@@ -3526,7 +3518,25 @@ public class Dataflow {
       }
     }   
   }
-  
+
+
+  private void updateLinkstateToUser(Pair<AVariableIdentification, AVariableIdentification> resolution, List<SimpleConnection> con) {
+    if (resolution.getSecond() == null || resolution.getFirst() == null) {
+      return;
+    }
+    Connectedness connectedness = resolution.getFirst().connectedness;
+    if (connectedness == null || !connectedness.isUserConnected() || connectedness.getConnectedVariableId() == null) {
+      return;
+    }
+    for (SimpleConnection sCon : con) {
+      if (sCon.getLinkState() == LinkstateIn.AUTO && sCon.inputVars.get(0).getIdentifiedVariable() != null
+          && connectedness.getConnectedVariableId().equals(sCon.inputVars.get(0).getIdentifiedVariable().getId())) {
+        sCon.setLinkState(LinkstateIn.USER);
+      }
+    }
+  }
+
+
   private void rewriteDataflow() {
     dataflow.clear();
     Set<AVariableIdentification> toRemove = new HashSet<AVariableIdentification>();

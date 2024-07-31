@@ -23,8 +23,6 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.Test;
 import org.openapitools.codegen.ClientOptInput;
@@ -37,22 +35,21 @@ import org.openapitools.codegen.config.CodegenConfigurator;
  * and then see the results in the out directory.
  *
  * To experiment with debugging your code generator:
- * 1) Set a break point in XmomDataModelGenerator.java in the postProcessOperationsWithModels() method.
+ * 1) Set a break point in XmomServerGenerator.java in the postProcessOperationsWithModels() method.
  * 2) To launch this test in Eclipse: right-click | Debug As | JUnit Test
  *
  */
-public class XmomDataModelGeneratorTest {
+public class XmomServerGeneratorTest {
 
   // use this test to launch you code generator in the debugger.
   // this allows you to easily set break points in MyclientcodegenGenerator.
   @Test
   public void launchCodeGenerator() {
-    
+
     String specFile = "";
-    
     PrintStream originalOut = System.out;
     try {
-      Path outputFilePath = Paths.get("../../test/output/xmom-data-model/" + specFile.substring(0, specFile.lastIndexOf('.')) + "/model.json");
+      Path outputFilePath = Paths.get("../../test/output/xmom-server/" + specFile.substring(0, specFile.lastIndexOf('.')) + "/operations.json");
       File file = outputFilePath.toFile();
       if(!file.exists()) {
         file.getParentFile().mkdirs();
@@ -63,16 +60,20 @@ public class XmomDataModelGeneratorTest {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+    
+    String specFileLocation = "../../test/resources/" + specFile;
+    if (!(new File(specFileLocation).exists())) {
+      throw new RuntimeException("Specification file not found @ " + specFileLocation);
+    }
 
     // to understand how the 'openapi-generator-cli' module is using 'CodegenConfigurator', have a look at the 'Generate' class:
     // https://github.com/OpenAPITools/openapi-generator/blob/master/modules/openapi-generator-cli/src/main/java/org/openapitools/codegen/cmd/Generate.java
     final CodegenConfigurator configurator = new CodegenConfigurator()
-      .setGeneratorName("xmom-data-model") // use this codegen library
-      .setInputSpec("../../test/resources/" + specFile) // sample OpenAPI file
-      .setOutputDir("../../test/output/xmom-data-model/" + specFile.substring(0, specFile.lastIndexOf('.'))) // output directory
+      .setGeneratorName("xmom-server") // use this codegen library
+      .setInputSpec(specFileLocation) // sample OpenAPI file
+      .setOutputDir("../../test/output/xmom-server/" + specFile.substring(0, specFile.lastIndexOf('.'))) // output directory
       .addAdditionalProperty("debugXO", Boolean.TRUE)
       .addAdditionalProperty("generateAliasAsModel", "true");
-
     final ClientOptInput clientOptInput = configurator.toClientOptInput();
     DefaultGenerator generator = new DefaultGenerator();
     generator.opts(clientOptInput).generate();

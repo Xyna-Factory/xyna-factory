@@ -23,8 +23,6 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.Test;
 import org.openapitools.codegen.ClientOptInput;
@@ -62,12 +60,17 @@ public class XmomClientGeneratorTest {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+    
+    String specFileLocation = "../../test/resources/" + specFile;
+    if (!(new File(specFileLocation).exists())) {
+      throw new RuntimeException("Specification file not found @ " + specFileLocation);
+    }
 
     // to understand how the 'openapi-generator-cli' module is using 'CodegenConfigurator', have a look at the 'Generate' class:
     // https://github.com/OpenAPITools/openapi-generator/blob/master/modules/openapi-generator-cli/src/main/java/org/openapitools/codegen/cmd/Generate.java
     final CodegenConfigurator configurator = new CodegenConfigurator()
       .setGeneratorName("xmom-client") // use this codegen library
-      .setInputSpec("../../test/resources/" + specFile) // sample OpenAPI file
+      .setInputSpec(specFileLocation) // sample OpenAPI file
       .setOutputDir("../../test/output/xmom-client/" + specFile.substring(0, specFile.lastIndexOf('.'))) // output directory
       .addAdditionalProperty("debugXO", Boolean.TRUE)
       .addAdditionalProperty("generateAliasAsModel", "true");
