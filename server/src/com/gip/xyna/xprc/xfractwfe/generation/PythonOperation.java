@@ -19,24 +19,17 @@ package com.gip.xyna.xprc.xfractwfe.generation;
 
 
 
-import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
-import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
-import com.gip.xyna.xprc.XynaOrderServerExtension;
 import com.gip.xyna.xprc.xfractwfe.base.GenericInputAsContextStep;
 import com.gip.xyna.xprc.xfractwfe.base.StartVariableContextStep;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable.PrimitiveType;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.ATT;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.SpecialPurposeIdentifier;
-
-import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
-import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemStateManagement;
-import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemState;
-import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemState.DeploymentLocation;
 
 
 
@@ -46,7 +39,7 @@ public class PythonOperation extends CodeOperation {
 
 
   public PythonOperation(DOM parent) {
-    super(parent, "Python");
+    super(parent, ATT.PYTHON);
   }
 
 
@@ -83,148 +76,8 @@ public class PythonOperation extends CodeOperation {
   }
 
 
-  protected void generateJavaImplementation(CodeBuffer cb, Set<String> importedClassesFqStrings) {
-    // FIXME: damit klassen vom compiler kompiliert werden, muss ihre benutzung erkannt werden können.
-    // wenn aber output ein container ist, und die klassen ggfs im code nirgendwo referenziert werden, werden
-    // sie auch nicht kompiliert:
-    // workaround fuer fehlende imports, wenn ein container zurueckgegeben wird
-    // und impl "return null" ist und typen nicht als import definiert sind
-    // ist das die beste loesung? der compiler könnte die klassen-verwendung ja auch durchaus wegoptimieren
-    if (getOutputVars().size() > 1) {
-      int cnt = 0;
-      for (AVariable outputVar : getOutputVars()) {
-        if (!importedClassesFqStrings.contains(outputVar.getFQClassName())) {
-          cnt++;
-          cb.addLine(outputVar.getFQClassName() + " dummyVarForMissingImport" + cnt + " = null");
-        }
-      }
-    }
-
-    if (XynaFactory.isFactoryServer() && XynaProperty.INVALIDATE_WF_EXECUTION.get()) {
-      DeploymentItemStateManagement dism = GenerationBase.getDeploymentItemStateManagement();
-      if (dism != null) {
-        DeploymentItemState dis = dism.get(getParent().getOriginalFqName(), getParent().getRevision());
-        if (dis != null) {
-          DeploymentLocation location =
-              getParent().getDeploymentMode().shouldCopyXMLFromSavedToDeployed() ? DeploymentLocation.SAVED : DeploymentLocation.DEPLOYED;
-          if (dis.hasServiceImplInconsistencies(location, true)) {
-            cb.addLine("throw new ", RuntimeException.class.getName(),
-                       "(\"Operation is implemented as java library call, but library is out-of-date.\")");
-            return;
-          }
-        }
-      }
-    }
-
-    if (!XynaFactory.isFactoryServer()) {
-      // code generation from script access
-      cb.addLine("throw new ", RuntimeException.class.getName(), "(\"Class was generated outside a running factory.\")");
-    } else if (!isActive()) {
-      // stub generation from code access uses this atm
-      cb.addLine("throw new ", RuntimeException.class.getName(), "(\"Class was generated as stub.\")");
-    } else if (implementedInJavaLib() && !getParent().libraryExists()) {
-      //zustand beim ersten speichern von der gui aus -> soll kompilieren. TODO über irgendein flag steuern, ob das
-      //hier eine runtimeexception zur laufzeit oder zur deployzeit wirft.
-      cb.addLine("throw new ", RuntimeException.class.getName(),
-                 "(\"Operation is implemented as java library call, but library is not defined in xml.\")");
-    } else {
-      cb.add(getImpl().trim()).addLB();
-    }
+  protected void generateJavaImplementationInternally(CodeBuffer cb) {
+    cb.add(getImpl().trim()).addLB();
   }
-
-
-  public void generateJavaForInvocation(CodeBuffer cb, String operationName, String... additionalInputParameters) {
-    cb.add(operationName).add("(");
-    for (String additionalInputParameter : additionalInputParameters) {
-      cb.addListElement(additionalInputParameter);
-    }
-
-    if (requiresXynaOrder()) {
-      cb.addListElement(CORRELATED_XYNA_ORDER_VAR_NAME);
-    }
-    if (isSpecialPurpose(SpecialPurposeIdentifier.RETRIEVEDOCUMENT, SpecialPurposeIdentifier.STOPDOCUMENTCONTEXT)) {
-      cb.addListElement(VARNAME_INTERNAL_DOCUMENT_FROM_CONTEXT);
-    }
-    for (AVariable v : getInputVars()) {
-      cb.addListElement(v.getVarName());
-    }
-
-    final boolean specialPurposeAwaitSynchronization = isSpecialPurpose(SpecialPurposeIdentifier.SYNC_AWAIT);
-    final boolean specialPurposeLongRunningAwaitSynchronization = isSpecialPurpose(SpecialPurposeIdentifier.SYNC_LONG_AWAIT);
-    final boolean specialPurposeNotifySynchronization = isSpecialPurpose(SpecialPurposeIdentifier.SYNC_NOTIFY);
-    final boolean specialPurposeWaitOrSuspend = isSpecialPurpose(SpecialPurposeIdentifier.WAIT, SpecialPurposeIdentifier.SUSPEND);
-
-    if (specialPurposeAwaitSynchronization || specialPurposeNotifySynchronization || specialPurposeLongRunningAwaitSynchronization) {
-      cb.addListElement(VARNAME_INTERNAL_XYNA_STEP_ID_PARAMETER);
-      if (specialPurposeAwaitSynchronization || specialPurposeLongRunningAwaitSynchronization) {
-        cb.addListElement(VARNAME_INTERNAL_XYNA_FIRST_WAITING_TIME_PARAMETER);
-      }
-      cb.addListElement(VARNAME_INTERNAL_XYNA_LANE_ID_PARAMETER);
-    }
-    if (specialPurposeWaitOrSuspend) {
-      cb.addListElement(VARNAME_INTERNAL_XYNA_SUSPENSION_TIME_PARAMETER);
-      cb.addListElement(VARNAME_INTERNAL_XYNA_RESUME_TIME_PARAMETER);
-      cb.addListElement(VARNAME_INTERNAL_XYNA_LANE_ID_PARAMETER);
-    }
-
-    cb.add(")");
-  }
-
-
-  public void createMethodSignature(CodeBuffer cb, boolean includeImplementation, Set<String> importedClassesFqStrings,
-                                    String operationName, String... additionalInputParameters) {
-    // outputvar
-    cb.add(getOutputParameterOfMethodSignature(importedClassesFqStrings), " ");
-    cb.add(operationName).add("(");
-    for (String additionalInputParameter : additionalInputParameters) {
-      cb.addListElement(additionalInputParameter);
-    }
-
-    if (requiresXynaOrder()) {
-      cb.addListElement(XynaOrderServerExtension.class.getSimpleName() + " " + CORRELATED_XYNA_ORDER_VAR_NAME);
-    }
-    if (isSpecialPurpose(SpecialPurposeIdentifier.RETRIEVEDOCUMENT, SpecialPurposeIdentifier.STOPDOCUMENTCONTEXT)) {
-      cb.addListElement("xact.templates.Document " + VARNAME_INTERNAL_DOCUMENT_FROM_CONTEXT);
-    }
-    for (AVariable v : getInputVars()) {
-      cb.addListElement(v.getEventuallyQualifiedClassNameWithGenerics(importedClassesFqStrings) + " " + v.getVarName());
-    }
-
-    final boolean specialPurposeAwaitSynchronization = isSpecialPurpose(SpecialPurposeIdentifier.SYNC_AWAIT);
-    final boolean specialPurposeLongRunningAwaitSynchronization = isSpecialPurpose(SpecialPurposeIdentifier.SYNC_LONG_AWAIT);
-    final boolean specialPurposeNotifySynchronization = isSpecialPurpose(SpecialPurposeIdentifier.SYNC_NOTIFY);
-    final boolean specialPurposeWaitOrSuspend = isSpecialPurpose(SpecialPurposeIdentifier.WAIT, SpecialPurposeIdentifier.SUSPEND);
-
-    if (specialPurposeAwaitSynchronization || specialPurposeNotifySynchronization || specialPurposeLongRunningAwaitSynchronization) {
-      cb.addListElement("Integer " + VARNAME_INTERNAL_XYNA_STEP_ID_PARAMETER);
-      if (specialPurposeAwaitSynchronization || specialPurposeLongRunningAwaitSynchronization) {
-        cb.addListElement("Long " + VARNAME_INTERNAL_XYNA_FIRST_WAITING_TIME_PARAMETER);
-      }
-      cb.addListElement("String " + VARNAME_INTERNAL_XYNA_LANE_ID_PARAMETER);
-    }
-    if (specialPurposeWaitOrSuspend) {
-      cb.addListElement("Long " + VARNAME_INTERNAL_XYNA_SUSPENSION_TIME_PARAMETER);
-      cb.addListElement("java.util.concurrent.atomic.AtomicLong " + VARNAME_INTERNAL_XYNA_RESUME_TIME_PARAMETER);
-      cb.addListElement("String " + VARNAME_INTERNAL_XYNA_LANE_ID_PARAMETER);
-    }
-
-    cb.add(")");
-    if (getThrownExceptions().size() > 0) {
-      cb.add(" throws ");
-      List<ExceptionVariable> exceptions = getThrownExceptions();
-      for (int i = 0; i < getThrownExceptions().size(); i++) {
-        ExceptionVariable exceptionVar = exceptions.get(i);
-        if (exceptionVar.isPrototype()) {
-          throw new RuntimeException("Operation " + operationName + " throws prototype exception");
-        }
-        cb.add(exceptionVar.getClassName(importedClassesFqStrings));
-        if (i < getThrownExceptions().size() - 1) {
-          cb.add(", ");
-        }
-      }
-    }
-
-  }
-
 
 }

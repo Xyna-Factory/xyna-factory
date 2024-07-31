@@ -114,15 +114,8 @@ public class Utils {
     }
 
     if (operation instanceof CodeOperation) {
-      CodeOperation codeOperation = null;
-      if (operation instanceof PythonOperation) {
-        codeOperation = (PythonOperation) operation;
-      } else {
-        codeOperation = (JavaOperation) operation;
-      }
-
+      CodeOperation codeOperation = (CodeOperation) operation;
       sob.codeLanguage(codeOperation.getCodeLanguage());
-
       if (codeOperation.requiresXynaOrder()) {
         sob.requiresXynaOrder();
       }
