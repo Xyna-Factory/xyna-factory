@@ -100,9 +100,11 @@ public abstract class CodeOperation extends Operation {
     return isImplActive;
   }
 
+
   public String getCodeLanguage() {
     return CODE_LANGUAGE;
   }
+
 
   /**
   * @param operation muss ein operation element sein

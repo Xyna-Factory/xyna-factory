@@ -85,19 +85,23 @@ import com.gip.xyna.xprc.xfractwfe.generation.WorkflowCallServiceReference;
 import xmcp.processmodeller.datatypes.RepairEntry;
 import xmcp.xact.modeller.Hint;
 
+
+
 public class MoveOperation extends ModifyOperationBase<MoveJson> {
 
   private MoveJson move;
   private final Clipboard clipboard;
-  
+
+
   public MoveOperation() {
     this(null);
   }
-  
+
+
   public MoveOperation(Clipboard clipboard) {
     this.clipboard = clipboard;
   }
-  
+
 
   @Override
   public int parseRequest(String jsonRequest) throws InvalidJSONException, UnexpectedJSONContentException {
@@ -107,11 +111,15 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
     return move.getRevision();
   }
 
-  private void move(GBSubObject object) throws UnknownObjectIdException, MissingObjectException, XynaException, UnsupportedOperationException, MergeConflictException {
+
+  private void move(GBSubObject object)
+      throws UnknownObjectIdException, MissingObjectException, XynaException, UnsupportedOperationException, MergeConflictException {
     move(object, null);
   }
-  
-  private void move(GBSubObject object, QueryInsertStep queryInsertStep) throws UnknownObjectIdException, MissingObjectException, XynaException, UnsupportedOperationException, MergeConflictException {
+
+
+  private void move(GBSubObject object, QueryInsertStep queryInsertStep)
+      throws UnknownObjectIdException, MissingObjectException, XynaException, UnsupportedOperationException, MergeConflictException {
     if (clipboard != null) {
       try {
         moveFromClipboard(object);
@@ -120,13 +128,13 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
       }
       return;
     }
-    
-    if(isQuery(object)) {
+
+    if (isQuery(object)) {
       moveQuery();
       return;
     }
-    
-    
+
+
     if (object.isStepInTryBlock()) {
       // step is in a try-block -> move the try-block, instead
       move(object.getParent(), queryInsertStep);
@@ -195,7 +203,8 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
   }
 
 
-  private void moveStepFromClipboard(GBSubObject object) throws UnsupportedOperationException, XynaException, MissingObjectException, UnknownObjectIdException {
+  private void moveStepFromClipboard(GBSubObject object)
+      throws UnsupportedOperationException, XynaException, MissingObjectException, UnknownObjectIdException {
     GBSubObject gbSubObject = modification.getObject().getObject(move.getRelativeTo());
 
     clipboard.resetHints();
@@ -204,7 +213,7 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
       Hint hint = HintGeneration.convertRepairEntryToHint(entry);
       clipboard.getHints().add(hint);
     }
-    
+
     clipboard.removeEntry(object);
   }
 
@@ -227,12 +236,13 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
   }
 
 
-  private void moveQuery() throws UnknownObjectIdException, MissingObjectException, XynaException, UnsupportedOperationException, MergeConflictException {
+  private void moveQuery()
+      throws UnknownObjectIdException, MissingObjectException, XynaException, UnsupportedOperationException, MergeConflictException {
     StepMapping stepMapping = QueryUtils.findQueryHelperMapping(object);
-    if(stepMapping != null) {
+    if (stepMapping != null) {
       GBSubObject mapping = modification.getObject().getObject(ObjectId.createStepId(stepMapping).getObjectId());
       move(mapping, QueryInsertStep.mapping);
-      if(move.getRequestInsideIndex() != null) {
+      if (move.getRequestInsideIndex() != null) {
         move.setInsideIndex(move.getRequestInsideIndex());
       }
       if (RelativePosition.left == move.getRelativePosition() || RelativePosition.right == move.getRelativePosition()) {
@@ -243,9 +253,10 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
     move(object, QueryInsertStep.function);
   }
 
+
   private void prepareMoveCase(GBSubObject relativeToObject) throws MergeConflictException {
     int sourceCaseNo = ObjectId.parseCaseNumber(object.getId());
-    StepChoice stepChoice = (StepChoice)object.getStep();
+    StepChoice stepChoice = (StepChoice) object.getStep();
     int sourceBranchNo = stepChoice.getBranchNo(sourceCaseNo);
     CaseArea destCaseArea = relativeToObject.getCaseAreaInfo();
     int destBranchNo = destCaseArea.getCaseAreaNo();
@@ -272,7 +283,7 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
     }
 
     BranchInfo destBranch = stepChoice.getBranchesForGUI().get(destBranchNo);
-    StepSerial destContainer = (StepSerial)destBranch.getMainStep();
+    StepSerial destContainer = (StepSerial) destBranch.getMainStep();
 
     if (mergeConflict) {
       handleChoiceMergeConflict(stepChoice, sourceBranch, destBranch);
@@ -282,6 +293,7 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
     disconnectFromBranch(stepChoice, destContainer);
   }
 
+
   private void disconnectFromBranch(StepChoice stepChoice, StepSerial branchContainer) {
     if (stepChoice.getDistinctionType() != DistinctionType.TypeChoice) {
       return;
@@ -289,7 +301,7 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
 
     List<Step> assignSteps = branchContainer.getChildSteps().stream().filter(x -> x instanceof StepAssign).collect(Collectors.toList());
     if (assignSteps.size() > 1) {
-      StepAssign firstAssign = (StepAssign)assignSteps.get(0);
+      StepAssign firstAssign = (StepAssign) assignSteps.get(0);
       for (String idToDisconnect : firstAssign.getOutputVarIds()) {
         for (Step stepToDisconnect : getGuiSteps(branchContainer.getChildSteps())) {
           disconnectVarInput(stepToDisconnect, idToDisconnect);
@@ -300,16 +312,19 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
     }
   }
 
+
   private void disconnectVarInput(Step step, String varId) {
     String[] inputVarIds = step.getInputVarIds();
     for (int varIdx = 0; varIdx < inputVarIds.length; varIdx++) {
-      if ( (inputVarIds[varIdx] != null) && (inputVarIds[varIdx].equals(varId)) ) {
+      if ((inputVarIds[varIdx] != null) && (inputVarIds[varIdx].equals(varId))) {
         inputVarIds[varIdx] = null;
       }
     }
   }
 
-  private void handleChoiceMergeConflict(StepChoice stepChoice, BranchInfo sourceBranch, BranchInfo destBranch) throws MergeConflictException {
+
+  private void handleChoiceMergeConflict(StepChoice stepChoice, BranchInfo sourceBranch, BranchInfo destBranch)
+      throws MergeConflictException {
     // when force-flag is not set, merge conflicts lead to aborting the operation
     if (!move.isForce()) {
       throw new MergeConflictException();
@@ -317,12 +332,12 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
 
     // resolve merge conflict with method specified by parameter conflictHandling
 
-    StepSerial sourceContainer = (StepSerial)sourceBranch.getMainStep();
-    StepSerial destContainer = (StepSerial)destBranch.getMainStep();
+    StepSerial sourceContainer = (StepSerial) sourceBranch.getMainStep();
+    StepSerial destContainer = (StepSerial) destBranch.getMainStep();
     StepMap stepMap = modification.getObject().getStepMap();
 
     switch (move.getConflictHandling()) {
-      case USE_SOURCE:
+      case USE_SOURCE :
         for (Step guiStep : getGuiSteps(destContainer.getChildSteps())) {
           destContainer.removeChild(guiStep);
           stepMap.removeStep(guiStep);
@@ -330,7 +345,7 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
 
         destContainer.resetVariablesAndExceptions();
 
-      case APPEND:
+      case APPEND :
         disconnectFromBranch(stepChoice, sourceContainer); // when cases of type choice are merged, input of branch can't be used as casted type, anymore
         destContainer.addChildren(getGuiSteps(sourceContainer.getChildSteps()));
 
@@ -339,20 +354,23 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
         }
         break;
 
-      case USE_DESTINATION:
+      case USE_DESTINATION :
         for (Step guiStep : getGuiSteps(sourceContainer.getChildSteps())) {
           stepMap.removeStep(guiStep);
         }
     }
   }
 
+
   private void postprocess(GBSubObject relativeToObject) {
     if (object.getType() == ObjectType.distinctionCase && relativeToObject.getCaseAreaInfo() != null) {
-      StepChoice stepChoice = (StepChoice)object.getStep();
-      IdentifiedVariablesStepChoice identifiedVariables = ((IdentifiedVariablesStepChoice)modification.getObject().getVariableMap().identifyVariables(ObjectId.createStepId(stepChoice)));
+      StepChoice stepChoice = (StepChoice) object.getStep();
+      IdentifiedVariablesStepChoice identifiedVariables =
+          ((IdentifiedVariablesStepChoice) modification.getObject().getVariableMap().identifyVariables(ObjectId.createStepId(stepChoice)));
       identifiedVariables.loadCreatedVariables();
     }
   }
+
 
   private List<Step> getGuiSteps(List<Step> steps) {
     List<Step> guiSteps = new ArrayList<>();
@@ -365,10 +383,12 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
     return guiSteps;
   }
 
+
   @Override
-  protected void modifyStep(Step step) throws XynaException, UnknownObjectIdException, MissingObjectException, UnsupportedOperationException, MergeConflictException {
+  protected void modifyStep(Step step)
+      throws XynaException, UnknownObjectIdException, MissingObjectException, UnsupportedOperationException, MergeConflictException {
     move(object);
-    
+
     FQName fqName = modification.getObject().getFQName();
     ReferenceInvalidatedNotification notification = new ReferenceInvalidatedNotification(fqName, object.getRoot().getWorkflow());
     modification.getSession().getWFWarningsHandler(fqName).handleChange(object.getId(), notification);
@@ -376,7 +396,8 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
 
 
   @Override
-  protected void modifyVariable(Variable variable) throws XynaException, UnknownObjectIdException, MissingObjectException, UnsupportedOperationException, MergeConflictException {
+  protected void modifyVariable(Variable variable)
+      throws XynaException, UnknownObjectIdException, MissingObjectException, UnsupportedOperationException, MergeConflictException {
     Dataflow df = modification.getObject().getDataflow();
     Step step = object.getStep();
     if (df != null) {
@@ -385,50 +406,55 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
       }
     }
     move(object);
-    
+
     FQName fqName = modification.getObject().getFQName();
     ReferenceInvalidatedNotification notification = new ReferenceInvalidatedNotification(fqName, object.getRoot().getWorkflow());
     modification.getSession().getWFWarningsHandler(fqName).handleChange(object.getId(), notification);
   }
 
+
   @Override
-  protected void modifyMemberVar(DomOrExceptionGenerationBase dtOrException, MemberVarInfo memberVarInfo) throws UnknownObjectIdException, MissingObjectException, XynaException, UnsupportedOperationException, MergeConflictException {
+  protected void modifyMemberVar(DomOrExceptionGenerationBase dtOrException, MemberVarInfo memberVarInfo)
+      throws UnknownObjectIdException, MissingObjectException, XynaException, UnsupportedOperationException, MergeConflictException {
     move(object);
   }
 
+
   @Override
-  protected void modifyCase(Case caseInfo) throws XynaException, UnknownObjectIdException, MissingObjectException, InvalidJSONException, UnexpectedJSONContentException, UnsupportedOperationException, MergeConflictException {
+  protected void modifyCase(Case caseInfo) throws XynaException, UnknownObjectIdException, MissingObjectException, InvalidJSONException,
+      UnexpectedJSONContentException, UnsupportedOperationException, MergeConflictException {
     move(object);
   }
+
 
   @Override
   protected void modifyMemberMethod(DOM dom, MemberMethodInfo memberMethodInfo) throws XynaException, UnsupportedOperationException {
     Operation oldOperation = object.getOperation();
     Operation newOperation = null;
-    if(oldOperation != null) {
-      if(oldOperation instanceof JavaOperation) { // Override Method
+    if (oldOperation != null) {
+      if (oldOperation instanceof JavaOperation) { // Override Method
         newOperation = new JavaOperation(dom);
-        JavaOperation newJavaOperation = (JavaOperation)newOperation;
-        JavaOperation oldJavaOperation = (JavaOperation)oldOperation;
+        JavaOperation newJavaOperation = (JavaOperation) newOperation;
+        JavaOperation oldJavaOperation = (JavaOperation) oldOperation;
         newJavaOperation.setActive(oldJavaOperation.isActive());
         newJavaOperation.setImpl(oldJavaOperation.getImpl());
         newJavaOperation.setLabel(oldJavaOperation.getLabel());
-      } else if(oldOperation instanceof PythonOperation) { // Override Method
+      } else if (oldOperation instanceof PythonOperation) { // Override Method
         newOperation = new PythonOperation(dom);
-        PythonOperation newPythonOperation = (PythonOperation)newOperation;
-        PythonOperation oldPythonOperation = (PythonOperation)oldOperation;
+        PythonOperation newPythonOperation = (PythonOperation) newOperation;
+        PythonOperation oldPythonOperation = (PythonOperation) oldOperation;
         newPythonOperation.setActive(oldPythonOperation.isActive());
         newPythonOperation.setImpl(oldPythonOperation.getImpl());
         newPythonOperation.setLabel(oldPythonOperation.getLabel());
-      } else if(oldOperation instanceof WorkflowCallInService) {
+      } else if (oldOperation instanceof WorkflowCallInService) {
         newOperation = new WorkflowCallInService(dom);
-        WorkflowCallInService newWorkflowCallInService = (WorkflowCallInService)newOperation;
-        WorkflowCallInService oldWorkflowCallInService = (WorkflowCallInService)oldOperation;
+        WorkflowCallInService newWorkflowCallInService = (WorkflowCallInService) newOperation;
+        WorkflowCallInService oldWorkflowCallInService = (WorkflowCallInService) oldOperation;
         newWorkflowCallInService.setWf(oldWorkflowCallInService.getWfFQClassName(), dom.getRevision());
       } else if (oldOperation instanceof WorkflowCallServiceReference) {
         newOperation = new WorkflowCallServiceReference(dom);
       }
-      if(newOperation != null) {
+      if (newOperation != null) {
         newOperation.setAbstract(oldOperation.isAbstract());
         newOperation.setDocumentation(oldOperation.getDocumentation());
         newOperation.setIsStepEventListener(oldOperation.isStepEventListener());
@@ -436,38 +462,43 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
         newOperation.setName(oldOperation.getName());
         newOperation.setStatic(oldOperation.isStatic());
         newOperation.setVersion(oldOperation.getVersion());
-        
+
         dom.addOperation(dom.getOperations().size(), newOperation);
-        
-        GBSubObject gbsNewMethod = new GBSubObject(object.getRoot(), new ObjectId(ObjectType.operation, String.valueOf(Utils.getOperationIndex(newOperation))), dom, newOperation);
+
+        GBSubObject gbsNewMethod =
+            new GBSubObject(object.getRoot(), new ObjectId(ObjectType.operation, String.valueOf(Utils.getOperationIndex(newOperation))),
+                            dom, newOperation);
         gbsNewMethod.getRoot().resetVariableMap();
-        copyVars(oldOperation.getInputVars(), VarUsageType.input, gbsNewMethod);      
+        copyVars(oldOperation.getInputVars(), VarUsageType.input, gbsNewMethod);
         copyVars(oldOperation.getOutputVars(), VarUsageType.output, gbsNewMethod);
         copyVars(oldOperation.getThrownExceptions(), VarUsageType.thrown, gbsNewMethod);
       } else {
-        throw new UnsupportedOperationException("overrideMethod", "Override method of type " + oldOperation.getClass().getName() + " is not supported");
+        throw new UnsupportedOperationException("overrideMethod",
+                                                "Override method of type " + oldOperation.getClass().getName() + " is not supported");
       }
     }
   }
-  
+
+
   private void copyVars(List<? extends AVariable> vars, VarUsageType varUsageType, GBSubObject gbsNewMethod) throws XynaException {
     for (AVariable var : vars) {
       copyVar(var, varUsageType, gbsNewMethod);
     }
   }
-  
+
+
   private void copyVar(AVariable var, VarUsageType varUsageType, GBSubObject gbsNewMethod) throws XynaException {
     AVariableIdentification varIdent = null;
     DomOrExceptionGenerationBase doe = var.getDomOrExceptionObject();
     if (doe == null && var instanceof ServiceVariable && var.getJavaTypeEnum() != null) {
-      AVariable clone = new ServiceVariable((ServiceVariable)var);
+      AVariable clone = new ServiceVariable((ServiceVariable) var);
       clone.setId(String.valueOf(clone.getCreator().getNextXmlId()));
       clone.setVarName(var.getJavaTypeEnum().toString().toLowerCase() + clone.getId());
       varIdent = DirectVarIdentification.of(clone);
     } else {
       String type = doe instanceof ExceptionGeneration ? Tags.EXCEPTION : Tags.VARIABLE;
       VariableJson variableJson = new VariableJson(type, var.getLabel(), FQNameJson.ofPathAndName(var.getFQClassName()));
-      variableJson.setList(var.isList()); 
+      variableJson.setList(var.isList());
       GBBaseObject newVariable = createParameter(gbsNewMethod, variableJson);
       varIdent = newVariable.getVariable().getVariable();
     }

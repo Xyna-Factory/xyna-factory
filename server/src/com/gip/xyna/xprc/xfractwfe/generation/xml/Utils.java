@@ -18,6 +18,8 @@
 
 package com.gip.xyna.xprc.xfractwfe.generation.xml;
 
+
+
 import java.util.Collections;
 import java.util.List;
 
@@ -36,24 +38,29 @@ import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.SnippetOperation.SnippetOperationBuilder;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.Variable.VariableBuilder;
 
+
+
 public class Utils {
+
   public static XmomType getXmomType(GenerationBase base) {
-    if(base == null) {
+    if (base == null) {
       return new XmomType(GenerationBase.ANYTYPE_REFERENCE_PATH, GenerationBase.ANYTYPE_REFERENCE_NAME, "AnyType", false);
     }
     return new XmomType(base.getOriginalPath(), base.getOriginalSimpleName(), base.getLabel(), base.isAbstract());
   }
-  
+
+
   public static XmomType getBaseType(DomOrExceptionGenerationBase domOrExceptionGenerationBase) {
-    DomOrExceptionGenerationBase parent = domOrExceptionGenerationBase instanceof DOM ?
-        ((DOM) domOrExceptionGenerationBase).getSuperClassGenerationObject() : ((ExceptionGeneration) domOrExceptionGenerationBase).getSuperClassGenerationObject();
+    DomOrExceptionGenerationBase parent = domOrExceptionGenerationBase instanceof DOM ? ((DOM) domOrExceptionGenerationBase)
+        .getSuperClassGenerationObject() : ((ExceptionGeneration) domOrExceptionGenerationBase).getSuperClassGenerationObject();
     if (parent == null) {
       return null;
     }
 
     return getXmomType(parent);
   }
-  
+
+
   public static Variable createVariable(AVariable var) {
     VariableBuilder vb;
     if (var instanceof ExceptionVariable) {
@@ -61,11 +68,8 @@ public class Utils {
     } else {
       vb = Variable.create(var.getVarName());
     }
-    vb.label(var.getLabel()).
-       isList(var.isList()).
-       id(var.getId()).
-       documentation(var.getDocumentation()).
-       persistenceTypes(var.getPersistenceTypes());
+    vb.label(var.getLabel()).isList(var.isList()).id(var.getId()).documentation(var.getDocumentation())
+        .persistenceTypes(var.getPersistenceTypes());
 
     if (var.isJavaBaseType()) {
       vb.simpleType(var.getJavaTypeEnum());
@@ -74,32 +78,30 @@ public class Utils {
       String referenceName = labelToJavaName(var.getLabel(), true);
       vb.abstractType(variableName, referenceName);
     } else {
-      vb.complexType( getXmomType(var.getDomOrExceptionObject()) );
+      vb.complexType(getXmomType(var.getDomOrExceptionObject()));
     }
 
     vb.meta(Meta.unknownMetaTags(var.getUnknownMetaTags()));
 
     if (var instanceof DatatypeVariable) {
-      DatatypeVariable dtVar = (DatatypeVariable)var;
+      DatatypeVariable dtVar = (DatatypeVariable) var;
       vb.restrictions(dtVar.getRestrictions());
     }
 
     return vb.build();
   }
 
+
   public static Operation createOperation(com.gip.xyna.xprc.xfractwfe.generation.Operation operation) {
     return createOperation(operation, false);
   }
 
+
   public static Operation createOperation(com.gip.xyna.xprc.xfractwfe.generation.Operation operation, boolean escapeSourceCode) {
     SnippetOperationBuilder sob = SnippetOperation.create(operation.getName());
-    sob.label(operation.getLabel())
-       .isStatic(operation.isStatic())
-       .isFinal(operation.isFinal())
-       .isAbstract(operation.isAbstract())
-       .documentation(operation.getDocumentation())
-       .hasBeenPersisted(operation.hasBeenPersisted())
-       .unknownMetaTags(operation.getUnknownMetaTags());
+    sob.label(operation.getLabel()).isStatic(operation.isStatic()).isFinal(operation.isFinal()).isAbstract(operation.isAbstract())
+        .documentation(operation.getDocumentation()).hasBeenPersisted(operation.hasBeenPersisted())
+        .unknownMetaTags(operation.getUnknownMetaTags());
 
     for (AVariable inputVar : operation.getInputVars()) {
       sob.input(createVariable(inputVar));
@@ -114,13 +116,13 @@ public class Utils {
     if (operation instanceof CodeOperation) {
       CodeOperation codeOperation = null;
       if (operation instanceof PythonOperation) {
-        codeOperation = (PythonOperation)operation;
+        codeOperation = (PythonOperation) operation;
       } else {
-        codeOperation = (JavaOperation)operation;
+        codeOperation = (JavaOperation) operation;
       }
 
       sob.codeLanguage(codeOperation.getCodeLanguage());
-      
+
       if (codeOperation.requiresXynaOrder()) {
         sob.requiresXynaOrder();
       }
@@ -133,8 +135,7 @@ public class Utils {
         sourceCode = codeOperation.getImpl();
       }
 
-      sob.sourceCode(sourceCode)
-         .isCancelable(codeOperation.isStepEventListener());
+      sob.sourceCode(sourceCode).isCancelable(codeOperation.isStepEventListener());
     }
 
     if (operation instanceof WorkflowCallInService) {
@@ -144,25 +145,29 @@ public class Utils {
     return sob.build();
   }
 
+
   public static Meta createMeta(DomOrExceptionGenerationBase dtOrException) {
     Meta meta = new Meta();
     meta.setDocumentation(dtOrException.getDocumentation());
     meta.setUnknownMetaTags(dtOrException.getUnknownMetaTags());
-    
+
     if (dtOrException instanceof DOM) {
-      DOM dom = (DOM)dtOrException;
+      DOM dom = (DOM) dtOrException;
       meta.setIsServiceGroupOnly(dom.isServiceGroupOnly());
       meta.setPersistenceInformation(dom.getPersistenceInformation());
     }
 
     return meta;
   }
-  
+
+
   public static String labelToJavaName(String label, boolean startWithUpperCase) {
     return createUniqueJavaName(Collections.emptyList(), label, startWithUpperCase);
   }
 
+
   static final int MAX_UNIQUE_CHECK_COUNT = 10_000;
+
 
   /**
    * Creates a java name based on the given label that isn't already contained in the given list of used names.
@@ -175,7 +180,7 @@ public class Utils {
       return null;
     }
 
-    String[]  parts = label.split("[\\W]+");
+    String[] parts = label.split("[\\W]+");
     StringBuilder sb = new StringBuilder();
     boolean first = true;
     for (String s : parts) {
@@ -227,8 +232,9 @@ public class Utils {
     return uniqueJavaName;
   }
 
+
   public static String changeCaseFirstChar(String string, boolean startWithUpperCase) {
-    if ( (string == null) || (string.length() == 0) ) {
+    if ((string == null) || (string.length() == 0)) {
       return string;
     }
 

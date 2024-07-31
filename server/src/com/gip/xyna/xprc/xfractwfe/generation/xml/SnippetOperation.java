@@ -17,6 +17,8 @@
  */
 package com.gip.xyna.xprc.xfractwfe.generation.xml;
 
+
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +29,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.UnknownMetaTagsComponent;
 import com.gip.xyna.xprc.xfractwfe.generation.WF;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.Variable.VariableBuilder;
+
 
 
 public class SnippetOperation extends Operation {
@@ -47,11 +50,12 @@ public class SnippetOperation extends Operation {
   public WF wf;
   private boolean requiresXynaOrder = false;
   private UnknownMetaTagsComponent unknownMetaTagsComponent = new UnknownMetaTagsComponent();
-  
-  
+
+
   protected SnippetOperation() {
   }
-  
+
+
   private SnippetOperation(SnippetOperation operation) {
     this.name = operation.name;
     this.label = operation.label;
@@ -70,19 +74,22 @@ public class SnippetOperation extends Operation {
     this.requiresXynaOrder = operation.requiresXynaOrder;
     this.unknownMetaTagsComponent = operation.unknownMetaTagsComponent;
   }
-  
+
+
   private <T> List<T> clone(List<T> list) {
-    if( list == null || list.isEmpty() ) {
+    if (list == null || list.isEmpty()) {
       return Collections.emptyList();
     }
-    return Collections.unmodifiableList( new ArrayList<T>(list) );
+    return Collections.unmodifiableList(new ArrayList<T>(list));
   }
-  
+
+
   @Override
   protected void appendOperationContentToXML(XmlBuilder xml) {
     String documentation = getDocumentation();
-    if ( (documentation != null && documentation.length() > 0) || (!hasBeenPersisted()) || (hasUnknownMetaTags()) ) {
-      xml.startElement(EL.META);{
+    if ((documentation != null && documentation.length() > 0) || (!hasBeenPersisted()) || (hasUnknownMetaTags())) {
+      xml.startElement(EL.META);
+      {
         if (documentation != null && documentation.length() > 0) {
           xml.element(EL.DOCUMENTATION, XMLUtils.escapeXMLValueAndInvalidChars(documentation, false, false));
         }
@@ -92,230 +99,281 @@ public class SnippetOperation extends Operation {
         }
 
         appendUnknownMetaTags(xml);
-      } xml.endElement(EL.META);
+      }
+      xml.endElement(EL.META);
     }
 
     if (getSourceCode() != null) {
-      xml.startElement(EL.SOURCECODE); {
-        xml.startElementWithAttributes(EL.CODESNIPPET); {
+      xml.startElement(EL.SOURCECODE);
+      {
+        xml.startElementWithAttributes(EL.CODESNIPPET);
+        {
           xml.addAttribute(ATT.SNIPPETTYPE, this.codeLanguage);
           if (isCancelable()) {
             xml.addAttribute(ATT.ISCANCELABLE, Boolean.TRUE.toString());
           }
-          xml.endAttributesNoLineBreak();        // suppress line break to avoid having it shown in code snippet
+          xml.endAttributesNoLineBreak(); // suppress line break to avoid having it shown in code snippet
           xml.append(getSourceCode());
-        } xml.endElementNoIdent(EL.CODESNIPPET); // suppress indentation to avoid having it shown in code snippet
-      } xml.endElement(EL.SOURCECODE);
+        }
+        xml.endElementNoIdent(EL.CODESNIPPET); // suppress indentation to avoid having it shown in code snippet
+      }
+      xml.endElement(EL.SOURCECODE);
     }
 
     if (getWfCall() != null) {
-      xml.startElementWithAttributes(EL.WORKFLOW_CALL); {
+      xml.startElementWithAttributes(EL.WORKFLOW_CALL);
+      {
         xml.addAttribute(ATT.REFERENCENAME, getWfCall().getOriginalSimpleName());
         xml.addAttribute(ATT.REFERENCEPATH, getWfCall().getOriginalPath());
-      } xml.endAttributesAndElement();
+      }
+      xml.endAttributesAndElement();
     }
   }
-  
+
+
   @Override
   public List<Variable> getInputs() {
     return inputs;
   }
-  
+
+
   @Override
   public List<Variable> getOutputs() {
     return outputs;
   }
-  
+
+
   @Override
   public boolean isStatic() {
     return isStatic;
   }
-  
+
+
   @Override
   public boolean isFinal() {
     return isFinal;
   }
-  
+
+
   @Override
   public boolean isAbstract() {
     return isAbstract;
   }
-  
+
+
   @Override
   public boolean requiresXynaOrder() {
     return requiresXynaOrder;
   }
-  
+
+
   @Override
   public String getDocumentation() {
     return documentation;
   }
-  
+
+
   @Override
   public boolean hasBeenPersisted() {
     return hasBeenPersisted;
   }
-  
+
+
   public String getName() {
     return name;
   }
-  
+
+
   public String getLabel() {
     return label;
   }
-  
+
+
   public List<Variable> getExceptions() {
     return exceptions;
   }
-  
+
+
   public String getSourceCode() {
     return sourceCode;
   }
-  
+
+
   public boolean isCancelable() {
     return isCancelable;
   }
-  
+
+
   public WF getWfCall() {
     return wf;
   }
-  
+
+
   public List<String> getUnknownMetaTags() {
     return unknownMetaTagsComponent.getUnknownMetaTags();
   }
-  
+
+
   public static SnippetOperationBuilder create(String name) {
     return new SnippetOperationBuilder(name);
   }
 
+
   public static class SnippetOperationBuilder {
+
     SnippetOperation operation;
-    
+
+
     public SnippetOperationBuilder(String name) {
       operation = new SnippetOperation();
       operation.name = name;
     }
 
+
     public SnippetOperationBuilder label(String label) {
       operation.label = label;
       return this;
     }
-    
+
+
     public SnippetOperationBuilder input(Variable variable) {
       getOrCreateInputs().add(variable);
       return this;
     }
+
+
     public SnippetOperationBuilder input(VariableBuilder variable) {
       getOrCreateInputs().add(variable.build());
       return this;
     }
-    
+
+
     public SnippetOperationBuilder output(Variable variable) {
       getOrCreateOutputs().add(variable);
       return this;
     }
-    
+
+
     public SnippetOperationBuilder output(VariableBuilder variable) {
       getOrCreateOutputs().add(variable.build());
       return this;
     }
-    
+
+
     public SnippetOperationBuilder exception(Variable variable) {
       getOrCreateExceptions().add(variable);
       return this;
     }
-    
+
+
     public SnippetOperationBuilder exception(VariableBuilder variable) {
       getOrCreateExceptions().add(variable.build());
       return this;
     }
-    
+
+
     public SnippetOperationBuilder isStatic(boolean isStatic) {
       operation.isStatic = isStatic;
       return this;
     }
-    
+
+
     public SnippetOperationBuilder isFinal(boolean isFinal) {
       operation.isFinal = isFinal;
       return this;
     }
-    
+
+
     public SnippetOperationBuilder isAbstract(boolean isAbstract) {
       operation.isAbstract = isAbstract;
       return this;
     }
-    
+
+
     public SnippetOperationBuilder documentation(String documentation) {
       operation.documentation = documentation;
       return this;
     }
-    
+
+
     public SnippetOperationBuilder hasBeenPersisted(boolean hasBeenPersisted) {
       operation.hasBeenPersisted = hasBeenPersisted;
       return this;
     }
-    
+
+
     public SnippetOperationBuilder unknownMetaTags(List<String> unknownMetaTags) {
       operation.unknownMetaTagsComponent.setUnknownMetaTags(unknownMetaTags);
       return this;
     }
-    
+
+
     private List<Variable> getOrCreateInputs() {
-      if( operation.inputs == null ) {
+      if (operation.inputs == null) {
         operation.inputs = new ArrayList<Variable>();
       }
       return operation.inputs;
     }
-    
+
+
     private List<Variable> getOrCreateOutputs() {
-      if( operation.outputs == null ) {
+      if (operation.outputs == null) {
         operation.outputs = new ArrayList<Variable>();
       }
       return operation.outputs;
     }
-    
+
+
     private List<Variable> getOrCreateExceptions() {
-      if( operation.exceptions == null ) {
+      if (operation.exceptions == null) {
         operation.exceptions = new ArrayList<Variable>();
       }
       return operation.exceptions;
     }
-    
+
+
     public SnippetOperationBuilder sourceCode(String sourceCode) {
       operation.sourceCode = sourceCode;
       return this;
     }
 
+
     public SnippetOperationBuilder codeLanguage(String codeLanguage) {
       operation.codeLanguage = codeLanguage;
       return this;
     }
-    
+
+
     public SnippetOperationBuilder isCancelable(boolean isCancelable) {
       operation.isCancelable = isCancelable;
       return this;
     }
-    
+
+
     public SnippetOperationBuilder wfCall(WF wf) {
       operation.wf = wf;
       return this;
     }
-    
+
+
     public SnippetOperationBuilder requiresXynaOrder() {
       operation.requiresXynaOrder = true;
       return this;
     }
-    
+
+
     public SnippetOperation build() {
       return new SnippetOperation(operation);
     }
-    
+
   }
+
 
   @Override
   public String getId() {
     return null;
   }
+
 
   @Override
   public boolean hasUnknownMetaTags() {

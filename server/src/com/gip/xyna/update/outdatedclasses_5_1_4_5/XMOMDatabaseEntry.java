@@ -50,11 +50,11 @@ public abstract class XMOMDatabaseEntry extends Storable<XMOMDatabaseEntry> impl
   public static final String COL_DOCUMENTATION = "documentation";
   public static final String COL_METADATA = "metadata";
   public static final String COL_FACTORYCOMPONENT = "factorycomponent";
-  
+
   static final String SEPERATION_MARKER = ",";
-  
+
   protected final static Logger logger = CentralFactoryLogging.getLogger(XMOMDatabaseEntry.class);
-  
+
 
   private static final long serialVersionUID = -7301378884111678454L;
 
@@ -63,7 +63,7 @@ public abstract class XMOMDatabaseEntry extends Storable<XMOMDatabaseEntry> impl
 
   @Column(name = COL_LABEL, size = 250)
   private String label;
-  
+
   @Column(name = COL_PATH, size = 250)
   private String path;
 
@@ -75,24 +75,25 @@ public abstract class XMOMDatabaseEntry extends Storable<XMOMDatabaseEntry> impl
 
   @Column(name = COL_METADATA, size = 250)
   private String metadata;
-  
+
   @Column(name = COL_FACTORYCOMPONENT)
   private Boolean factorycomponent;
-  
-  
+
+
   public XMOMDatabaseEntry() {
   }
 
-  
+
   public XMOMDatabaseEntry(String fqname) {
     if (!isValidFQName(fqname)) {
       throw new RuntimeException("Creation of XMOMDatabaseEntry without fqName detected.");
     }
     this.fqname = fqname;
   }
-  
-  
-  public XMOMDatabaseEntry(String fqname, String label, String path, String name, String documentation, String metadata, Boolean factoryComponent) {
+
+
+  public XMOMDatabaseEntry(String fqname, String label, String path, String name, String documentation, String metadata,
+                           Boolean factoryComponent) {
     this(fqname);
     if (label != null) {
       //currently the label is only used in user driven XMOM-Searches, to make those case insensitive we only save (&search) lower cases
@@ -106,20 +107,17 @@ public abstract class XMOMDatabaseEntry extends Storable<XMOMDatabaseEntry> impl
     this.metadata = metadata;
     this.factorycomponent = factoryComponent;
   }
-  
-  
+
+
   static boolean isValidFQName(String fqName) {
-    if (fqName == null ||
-        fqName.equals("") ||
-        fqName.equals(".") ||
-        fqName.equals("null")) {
+    if (fqName == null || fqName.equals("") || fqName.equals(".") || fqName.equals("null")) {
       return false;
     } else {
       return true;
     }
   }
-  
-  
+
+
   protected static String concatVariables(List<? extends AVariable> vars) {
     if (vars != null && vars.size() > 0) {
       StringBuilder varBuilder = new StringBuilder("");
@@ -137,9 +135,7 @@ public abstract class XMOMDatabaseEntry extends Storable<XMOMDatabaseEntry> impl
         }
       }
       String varString = varBuilder.toString();
-      if (varString != null &&
-          !varString.equals(".") &&
-          !varString.equals("null")) {
+      if (varString != null && !varString.equals(".") && !varString.equals("null")) {
         return varString;
       } else {
         return "";
@@ -148,7 +144,7 @@ public abstract class XMOMDatabaseEntry extends Storable<XMOMDatabaseEntry> impl
       return "";
     }
   }
-  
+
 
   protected static String concatOperations(String serviceFqName, List<? extends Operation> ops) {
     StringBuilder opBuilder = new StringBuilder();
@@ -170,68 +166,68 @@ public abstract class XMOMDatabaseEntry extends Storable<XMOMDatabaseEntry> impl
     }
     return opBuilder.toString();
   }
-  
-  
-  
+
+
   public String getFqname() {
     return fqname;
   }
-  
+
+
   public void setFqname(String fqname) {
     this.fqname = fqname;
   }
 
-  
+
   public String getLabel() {
     return label;
   }
 
-  
+
   public void setLabel(String label) {
     this.label = label;
   }
 
-  
+
   public String getDocumentation() {
     return documentation;
   }
 
-  
+
   public void setDocumentation(String documentation) {
     this.documentation = documentation;
   }
 
-  
+
   public String getMetadata() {
     return metadata;
   }
 
-  
+
   public void setMetadata(String metadata) {
     this.metadata = metadata;
   }
 
-  
+
   public String getName() {
     return name;
   }
 
-  
+
   public void setName(String name) {
     this.name = name;
   }
-  
-  
+
+
   public String getPath() {
     return path;
   }
 
-  
+
   public void setPath(String path) {
     this.path = path;
   }
-  
-  
+
+
   public abstract XMOMDatabaseType getXMOMDatabaseType();
 
 
@@ -239,6 +235,7 @@ public abstract class XMOMDatabaseEntry extends Storable<XMOMDatabaseEntry> impl
   public Object getPrimaryKey() {
     return getFqname();
   }
+
 
   public static void readFromResultSetReader(XMOMDatabaseEntry entry, ResultSet rs) throws SQLException {
     entry.fqname = rs.getString(COL_FQNAME);
@@ -249,10 +246,10 @@ public abstract class XMOMDatabaseEntry extends Storable<XMOMDatabaseEntry> impl
     entry.metadata = rs.getString(COL_METADATA);
     entry.factorycomponent = rs.getBoolean(COL_FACTORYCOMPONENT);
   }
-  
 
-  public static void readFromResultSetReader(XMOMDatabaseEntry entry, Set<XMOMDatabaseEntryColumn> selectedCols,
-                                             ResultSet rs) throws SQLException {
+
+  public static void readFromResultSetReader(XMOMDatabaseEntry entry, Set<XMOMDatabaseEntryColumn> selectedCols, ResultSet rs)
+      throws SQLException {
     if (selectedCols.contains(XMOMDatabaseEntryColumn.FQNAME)) {
       entry.fqname = rs.getString(COL_FQNAME);
     }
@@ -276,6 +273,7 @@ public abstract class XMOMDatabaseEntry extends Storable<XMOMDatabaseEntry> impl
     }
   }
 
+
   @Override
   public <U extends XMOMDatabaseEntry> void setAllFieldsFromData(U data) {
     XMOMDatabaseEntry cast = data;
@@ -287,63 +285,64 @@ public abstract class XMOMDatabaseEntry extends Storable<XMOMDatabaseEntry> impl
     metadata = cast.metadata;
     factorycomponent = cast.factorycomponent;
   }
-  
-  
+
+
   protected static String generateFqNameForOperation(DOM enclosingDOM, String serviceName, CodeOperation operation) {
     return generateFqNameForOperation(enclosingDOM, serviceName, operation.getName());
   }
-  
-  
+
+
   protected static String generateFqNameForOperation(DOM enclosingDOM, String serviceName, String operationName) {
     StringBuilder nameBuilder = new StringBuilder(enclosingDOM.getOriginalFqName());
     nameBuilder.append(".").append(serviceName).append(".").append(operationName);
     return nameBuilder.toString();
   }
-  
-  
+
+
   protected static String getDomOriginalFQNameFromOperationFqName(String operationName) {
     StringBuilder nameBuilder = new StringBuilder();
     String[] operationNameParts = operationName.split("\\.");
     int relevantParts = operationNameParts.length - 2;
-    for (int i=0; i<relevantParts; i++) {
+    for (int i = 0; i < relevantParts; i++) {
       nameBuilder.append(operationNameParts[i]);
-      if (i<relevantParts-1) {
+      if (i < relevantParts - 1) {
         nameBuilder.append(".");
       }
     }
     return nameBuilder.toString();
   }
-  
-  
+
+
   protected static String generateSimpleNameForOperation(DOM enclosingDOM, String serviceName, CodeOperation operation) {
     return generateSimpleNameForOperation(enclosingDOM, serviceName, operation.getName());
   }
-  
-  
+
+
   protected static String generateSimpleNameForOperation(DOM enclosingDOM, String serviceName, String operationName) {
     StringBuilder nameBuilder = new StringBuilder(enclosingDOM.getOriginalSimpleName());
     nameBuilder.append(".").append(serviceName).append(".").append(operationName);
     return nameBuilder.toString();
   }
-  
-  
+
+
   protected static String generateFqNameForServiceGroup(DOM enclosingDOM, String serviceName) {
     StringBuilder nameBuilder = new StringBuilder(enclosingDOM.getOriginalFqName());
     nameBuilder.append(".").append(serviceName);
     return nameBuilder.toString();
   }
-  
-  
+
+
   protected static String generateSimpleNameForServiceGroup(DOM enclosingDOM, String serviceName) {
     StringBuilder nameBuilder = new StringBuilder(enclosingDOM.getOriginalSimpleName());
     nameBuilder.append(".").append(serviceName);
     return nameBuilder.toString();
   }
-  
+
+
   @Override
   public abstract XMOMDatabaseEntry clone() throws CloneNotSupportedException;
-  
-  
+
+
   public String getValueByColumn(XMOMDatabaseEntryColumn column) {
     switch (column) {
       case FQNAME :
@@ -358,7 +357,7 @@ public abstract class XMOMDatabaseEntry extends Storable<XMOMDatabaseEntry> impl
         return documentation;
       case METADATA :
         return metadata;
-      case FACTORYCOMPONENT:
+      case FACTORYCOMPONENT :
         return Boolean.toString(factorycomponent);
       default :
         throw new IllegalArgumentException(column.toString());
@@ -371,9 +370,8 @@ public abstract class XMOMDatabaseEntry extends Storable<XMOMDatabaseEntry> impl
   }
 
 
-  
   public void setFactorycomponent(Boolean factorycomponent) {
     this.factorycomponent = factorycomponent;
   }
-  
+
 }
