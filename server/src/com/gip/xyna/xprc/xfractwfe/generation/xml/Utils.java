@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
+import com.gip.xyna.xprc.xfractwfe.generation.CodeOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.DatatypeVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
@@ -29,6 +30,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.JavaOperation;
+import com.gip.xyna.xprc.xfractwfe.generation.PythonOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.WorkflowCallInService;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.SnippetOperation.SnippetOperationBuilder;
@@ -109,22 +111,30 @@ public class Utils {
       sob.exception(createVariable(exceptionVar));
     }
 
-    if (operation instanceof JavaOperation) {
-      JavaOperation javaOperation = (JavaOperation)operation;
-      if (javaOperation.requiresXynaOrder()) {
+    if (operation instanceof CodeOperation) {
+      CodeOperation codeOperation = null;
+      if (operation instanceof PythonOperation) {
+        codeOperation = (PythonOperation)operation;
+      } else {
+        codeOperation = (JavaOperation)operation;
+      }
+
+      sob.codeLanguage(codeOperation.getCodeLanguage());
+      
+      if (codeOperation.requiresXynaOrder()) {
         sob.requiresXynaOrder();
       }
 
       String sourceCode;
       if (escapeSourceCode) {
-        String strippedImpl = javaOperation.getImpl() != null ? javaOperation.getImpl().strip() : null;
+        String strippedImpl = codeOperation.getImpl() != null ? codeOperation.getImpl().strip() : null;
         sourceCode = XMLUtils.escapeXMLValueAndInvalidChars(strippedImpl, false, false);
       } else {
-        sourceCode = javaOperation.getImpl();
+        sourceCode = codeOperation.getImpl();
       }
 
       sob.sourceCode(sourceCode)
-         .isCancelable(javaOperation.isStepEventListener());
+         .isCancelable(codeOperation.isStepEventListener());
     }
 
     if (operation instanceof WorkflowCallInService) {

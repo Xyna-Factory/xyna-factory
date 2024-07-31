@@ -59,13 +59,15 @@ public abstract class CodeOperation extends Operation {
   //used for activation document handling
   public static final String VARNAME_INTERNAL_DOCUMENT_FROM_CONTEXT = "internalDocumentFromContext";
 
+  private final String CODE_LANGUAGE;
   private boolean requiresXynaOrder;
   private String impl;
   private boolean isImplActive = true;
 
 
-  public CodeOperation(DOM parent) {
+  public CodeOperation(DOM parent, String codeLanguage) {
     super(parent);
+    this.CODE_LANGUAGE = codeLanguage;
   }
 
 
@@ -98,6 +100,9 @@ public abstract class CodeOperation extends Operation {
     return isImplActive;
   }
 
+  public String getCodeLanguage() {
+    return CODE_LANGUAGE;
+  }
 
   /**
   * @param operation muss ein operation element sein

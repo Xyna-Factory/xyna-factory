@@ -42,6 +42,7 @@ public class SnippetOperation extends Operation {
   private List<Variable> outputs;
   public List<Variable> exceptions;
   public String sourceCode;
+  public String codeLanguage;
   public boolean isCancelable;
   public WF wf;
   private boolean requiresXynaOrder = false;
@@ -58,6 +59,7 @@ public class SnippetOperation extends Operation {
     this.outputs = clone(operation.outputs);
     this.exceptions = clone(operation.exceptions);
     this.sourceCode = operation.sourceCode;
+    this.codeLanguage = operation.codeLanguage;
     this.isCancelable = operation.isCancelable;
     this.wf = operation.wf;
     this.isStatic = operation.isStatic;
@@ -96,7 +98,7 @@ public class SnippetOperation extends Operation {
     if (getSourceCode() != null) {
       xml.startElement(EL.SOURCECODE); {
         xml.startElementWithAttributes(EL.CODESNIPPET); {
-          xml.addAttribute(ATT.SNIPPETTYPE, "Java");
+          xml.addAttribute(ATT.SNIPPETTYPE, this.codeLanguage);
           if (isCancelable()) {
             xml.addAttribute(ATT.ISCANCELABLE, Boolean.TRUE.toString());
           }
@@ -281,6 +283,11 @@ public class SnippetOperation extends Operation {
     
     public SnippetOperationBuilder sourceCode(String sourceCode) {
       operation.sourceCode = sourceCode;
+      return this;
+    }
+
+    public SnippetOperationBuilder codeLanguage(String codeLanguage) {
+      operation.codeLanguage = codeLanguage;
       return this;
     }
     

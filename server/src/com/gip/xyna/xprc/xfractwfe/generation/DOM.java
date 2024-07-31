@@ -554,7 +554,12 @@ public class DOM extends DomOrExceptionGenerationBase {
           if (wfCall) {
             o = new WorkflowCallInService(this);
           } else {
-            o = new JavaOperation(this);
+            Element sourceCode = XMLUtils.getChildElementByName(op, EL.SOURCECODE);
+            if (sourceCode != null && XMLUtils.getChildElementByName(sourceCode, EL.CODESNIPPET).getAttribute("Type").equals("Python")) {
+              o = new PythonOperation(this);
+            } else {
+              o = new JavaOperation(this);
+            }
           }
           o.parseXML(op);
           operationsForService.add(o);
@@ -1956,10 +1961,16 @@ public class DOM extends DomOrExceptionGenerationBase {
     vars.addAll(memberVars);
     for (List<Operation> operations : serviceNameToOperationMap.values()) {
       for (Operation op : operations) {
-        if (op instanceof JavaOperation) {
-          JavaOperation jop = (JavaOperation) op;
-          vars.addAll(jop.getInputVars());
-          vars.addAll(jop.getOutputVars());
+        if (op instanceof CodeOperation) {
+          CodeOperation codeOperation = null;
+          if (op instanceof PythonOperation) {
+            codeOperation = (PythonOperation) op;
+          } else {
+            codeOperation = (JavaOperation) op;
+          }
+
+          vars.addAll(codeOperation.getInputVars());
+          vars.addAll(codeOperation.getOutputVars());
         }
       }
     }

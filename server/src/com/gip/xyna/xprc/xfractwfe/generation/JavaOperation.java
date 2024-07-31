@@ -49,7 +49,7 @@ public class JavaOperation extends CodeOperation {
 
 
   public JavaOperation(DOM parent) {
-    super(parent);
+    super(parent, "Java");
   }
 
 

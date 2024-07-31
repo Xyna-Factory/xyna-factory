@@ -46,7 +46,7 @@ public class PythonOperation extends CodeOperation {
 
 
   public PythonOperation(DOM parent) {
-    super(parent);
+    super(parent, "Python");
   }
 
 
