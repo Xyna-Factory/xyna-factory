@@ -554,7 +554,13 @@ public class DOM extends DomOrExceptionGenerationBase {
           if (wfCall) {
             o = new WorkflowCallInService(this);
           } else {
-            o = new JavaOperation(this);
+            Element sourceCode = XMLUtils.getChildElementByName(op, EL.SOURCECODE);
+            if (sourceCode != null
+                && XMLUtils.getChildElementByName(sourceCode, EL.CODESNIPPET).getAttribute(ATT.SNIPPETTYPE).equals(ATT.PYTHON)) {
+              o = new PythonOperation(this);
+            } else {
+              o = new JavaOperation(this);
+            }
           }
           o.parseXML(op);
           operationsForService.add(o);
@@ -757,15 +763,15 @@ public class DOM extends DomOrExceptionGenerationBase {
     getDependentJarsWithoutRecursion(result, withSharedLibs, tryFromSaved);
     for (List<Operation> operations : serviceNameToOperationMap.values()) {
       for (Operation op : operations) {
-        if (op instanceof JavaOperation) {
-          for (AVariable v : ((JavaOperation) op).getInputVars()) {
+        if (op instanceof CodeOperation) {
+          for (AVariable v : ((CodeOperation) op).getInputVars()) {
             if (!(v.getDomOrExceptionObject() instanceof DOM))
               continue;
             result.addAll(((DOM) v.getDomOrExceptionObject()).getAdditionalLibsWithRecursion(withSharedLibs,
                                                                                              workedOperations,
                                                                                              tryFromSaved));
           }
-          for (AVariable v : ((JavaOperation) op).getOutputVars()) {
+          for (AVariable v : ((CodeOperation) op).getOutputVars()) {
             if (!(v.getDomOrExceptionObject() instanceof DOM))
               continue;
             result.addAll(((DOM) v.getDomOrExceptionObject()).getAdditionalLibsWithRecursion(withSharedLibs,
@@ -1956,10 +1962,10 @@ public class DOM extends DomOrExceptionGenerationBase {
     vars.addAll(memberVars);
     for (List<Operation> operations : serviceNameToOperationMap.values()) {
       for (Operation op : operations) {
-        if (op instanceof JavaOperation) {
-          JavaOperation jop = (JavaOperation) op;
-          vars.addAll(jop.getInputVars());
-          vars.addAll(jop.getOutputVars());
+        if (op instanceof CodeOperation) {
+          CodeOperation codeOperation = (CodeOperation) op;
+          vars.addAll(codeOperation.getInputVars());
+          vars.addAll(codeOperation.getOutputVars());
         }
       }
     }
