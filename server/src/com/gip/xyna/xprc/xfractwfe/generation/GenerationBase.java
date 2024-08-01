@@ -515,6 +515,8 @@ public abstract class GenerationBase {
     public static final String REFID = "RefID";
     public static final String PATH = "Path";
     public static final String SNIPPETTYPE = "Type";
+    public static final String JAVA = "Java";
+    public static final String PYTHON = "Python";
     public static final String SERVICE = "Service";
     public static final String SERVICEID = "ServiceID";
     public static final String ABSTRACT = "IsAbstract";

@@ -161,24 +161,26 @@ public class XynaObjectCodeGenerator {
     generateJavaMethods(cb);
   }
 
+
   public void generateJavaStub(CodeBuffer cb) {
     Set<String> libs = new HashSet<String>(dom.getAdditionalLibraries());
     dom.getAdditionalLibraries().clear();
     List<Operation> operations = dom.getOperations();
     for (Operation operation : operations) {
-      if (operation instanceof JavaOperation) {
-        ((JavaOperation) operation).setActive(false);
+      if (operation instanceof CodeOperation) {
+        ((CodeOperation) operation).setActive(false);
       }
     }
     generateJavaInternally(cb);
     dom.getAdditionalLibraries().addAll(libs);
     for (Operation operation : operations) {
       if (operation instanceof JavaOperation) {
-        ((JavaOperation) operation).setActive(true);
+        ((CodeOperation) operation).setActive(true);
       }
     }
   }
-  
+
+
   public void generateJavaImports(CodeBuffer cb) {
     // this set is only required for the following import creation. the imported class names set is required below.
     Set<String> importedSimpleClasseNames = new HashSet<String>();

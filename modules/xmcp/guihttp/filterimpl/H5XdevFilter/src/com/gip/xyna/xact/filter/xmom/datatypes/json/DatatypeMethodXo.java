@@ -37,6 +37,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.JavaOperation;
+import com.gip.xyna.xprc.xfractwfe.generation.PythonOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.WorkflowCall;
 
@@ -81,6 +82,10 @@ public class DatatypeMethodXo implements HasXoRepresentation {
         implementationType = GuiLabels.DT_LABEL_IMPL_TYPE_CODED_SERVICE;
         JavaOperation javaOperation = (JavaOperation)operation;
         implementation = javaOperation.getImpl();
+      } else if(operation instanceof PythonOperation) {
+        implementationType = GuiLabels.DT_LABEL_IMPL_TYPE_CODED_SERVICE_PYTHON;
+        PythonOperation pythonOperation = (PythonOperation)operation;
+        implementation = pythonOperation.getImpl();
       } else if(operation instanceof WorkflowCall) {
         implementationType = GuiLabels.DT_LABEL_IMPL_TYPE_REFERENCE;
         WorkflowCall workflowCall = (WorkflowCall)operation;
