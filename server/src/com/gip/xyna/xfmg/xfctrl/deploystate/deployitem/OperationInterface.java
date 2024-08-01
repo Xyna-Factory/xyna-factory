@@ -17,8 +17,6 @@
  */
 package com.gip.xyna.xfmg.xfctrl.deploystate.deployitem;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -42,9 +40,8 @@ import com.gip.xyna.xprc.xfractwfe.generation.StepFunction;
 import com.gip.xyna.xprc.xfractwfe.generation.WF;
 
 
-
 public class OperationInterface implements MatchableInterface {
-
+  
   private String name;
   private final OperationType type;
   private final ImplementationType implType;
@@ -65,16 +62,16 @@ public class OperationInterface implements MatchableInterface {
                              List<TypeInterface> output, List<TypeInterface> exceptions, boolean isActive) {
     this(name, type, implType, ProblemType.SERVICE_INVOCATION, input, output, exceptions, isActive);
   }
+  
 
-
-  protected OperationInterface(String name, OperationType type, ImplementationType implType, ProblemType problem, List<TypeInterface> input,
-                               List<TypeInterface> output, List<TypeInterface> exceptions) {
+  protected OperationInterface(String name, OperationType type, ImplementationType implType, ProblemType problem, 
+                               List<TypeInterface> input, List<TypeInterface> output, List<TypeInterface> exceptions) {
     this(name, type, implType, problem, input, output, exceptions, true);
   }
 
 
-  protected OperationInterface(String name, OperationType type, ImplementationType implType, ProblemType problem, List<TypeInterface> input,
-                               List<TypeInterface> output, List<TypeInterface> exceptions, boolean isActive) {
+  protected OperationInterface(String name, OperationType type, ImplementationType implType, ProblemType problem, 
+                             List<TypeInterface> input, List<TypeInterface> output, List<TypeInterface> exceptions, boolean isActive) {
     this.name = name;
     this.type = type;
     this.implType = implType;
@@ -85,42 +82,34 @@ public class OperationInterface implements MatchableInterface {
     this.isActive = isActive;
   }
 
-
   public String getName() {
     return name;
   }
 
-
   public OperationType getType() {
     return type;
   }
-
-
+  
   public ImplementationType getImplType() {
     return implType;
   }
-
-
+  
   public ProblemType getProblemType() {
     return problem;
   }
-
-
+  
   public List<TypeInterface> getInput() {
     return input;
   }
-
-
+  
   public List<TypeInterface> getOutput() {
     return output;
   }
-
-
+  
   public List<TypeInterface> getExceptions() {
     return exceptions;
   }
-
-
+  
   public List<TypeInterface> getAllTypeInterfaces() {
     List<TypeInterface> typeInterfaces = new ArrayList<TypeInterface>();
     if (input != null) {
@@ -132,7 +121,7 @@ public class OperationInterface implements MatchableInterface {
     if (exceptions != null) {
       typeInterfaces.addAll(exceptions);
     }
-
+    
     return typeInterfaces;
   }
 
@@ -163,8 +152,8 @@ public class OperationInterface implements MatchableInterface {
     }
     return false;
   }
-
-
+  
+  
   public boolean resolveLocal() {
     if (InterfaceResolutionContext.resCtx.get().getPublishedInterfaces().containsMatchingOperation(this)) {
       InterfaceResolutionContext.resCtx.get().addOperationInvocationAtTargetSite(this);
@@ -178,15 +167,14 @@ public class OperationInterface implements MatchableInterface {
   public boolean isActive() {
     return isActive;
   }
-
-
+  
   public boolean matches(DeploymentItemInterface other) {
     if (other instanceof OperationInterface) {
       OperationInterface otherOperation = (OperationInterface) other;
       if (//type == otherOperation.type &&
-      (name == null || otherOperation.name == null || name.equals(otherOperation.name))
-          && (input == null || otherOperation.input == null || input.size() == otherOperation.input.size())
-          && (output == null || otherOperation.output == null || output.size() == otherOperation.output.size())) {
+          (name == null || otherOperation.name == null || name.equals(otherOperation.name)) &&
+          (input == null || otherOperation.input == null || input.size() == otherOperation.input.size()) &&
+          (output ==  null || otherOperation.output == null || output.size() == otherOperation.output.size())) {
         // TODO handle exceptions ?
         if (input != null && otherOperation.input != null) {
           for (int i = 0; i < input.size(); i++) {
@@ -212,23 +200,22 @@ public class OperationInterface implements MatchableInterface {
     }
   }
 
-
+  
   public static enum OperationType {
     WORKFLOW, STATIC_SERVICE, INSTANCE_SERVICE;
   }
-
-
+  
+  
   public static enum ImplementationType {
     ABSTRACT, CONCRETE;
   }
-
-
+  
   @Override
   public int hashCode() {
     return Objects.hash(name, input, output, exceptions);
   }
-
-
+  
+  
   @Override
   public boolean equals(Object obj) {
     if (obj == null) {
@@ -245,7 +232,7 @@ public class OperationInterface implements MatchableInterface {
         && Objects.equals(exceptions, otherOp.exceptions);
   }
 
-
+  
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
@@ -253,18 +240,18 @@ public class OperationInterface implements MatchableInterface {
       sb.append("? ");
     } else {
       sb.append("[");
-      for (int i = 0; i < output.size(); i++) {
+      for (int i= 0; i < output.size(); i++) {
         sb.append(output.get(i).getDescription());
-        if (i + 1 < output.size()) {
+        if (i+1 < output.size()) {
           sb.append(", ");
         }
       }
       sb.append("] ");
     }
     sb.append(name).append("(");
-    for (int i = 0; i < input.size(); i++) {
+    for (int i= 0; i < input.size(); i++) {
       sb.append(input.get(i).getDescription());
-      if (i + 1 < input.size()) {
+      if (i+1 < input.size()) {
         sb.append(", ");
       }
     }
@@ -273,17 +260,17 @@ public class OperationInterface implements MatchableInterface {
       sb.append("throws ?");
     } else if (exceptions.size() > 0) {
       sb.append("throws ");
-      for (int i = 0; i < exceptions.size(); i++) {
+      for (int i= 0; i < exceptions.size(); i++) {
         sb.append(exceptions.get(i).getDescription());
-        if (i + 1 < exceptions.size()) {
+        if (i+1 < exceptions.size()) {
           sb.append(", ");
         }
       }
     }
     return sb.toString();
   }
-
-
+  
+  
   public String getDescription() {
     return toString();
   }
@@ -302,8 +289,7 @@ public class OperationInterface implements MatchableInterface {
     for (AVariable aVar : wf.getAllThrownExceptions()) {
       exceptions.add(TypeInterface.of(aVar, XMOMType.EXCEPTION));
     }
-    return new OperationInterface(wf.getOriginalSimpleName(), OperationType.WORKFLOW, ImplementationType.CONCRETE, input, output,
-                                  exceptions);
+    return new OperationInterface(wf.getOriginalSimpleName(), OperationType.WORKFLOW, ImplementationType.CONCRETE, input, output, exceptions);
   }
 
 
@@ -329,9 +315,10 @@ public class OperationInterface implements MatchableInterface {
       exceptions.add(TypeInterface.of(aVar, XMOMType.EXCEPTION));
     }
     // TODO versioning?
-    return new OperationInterface(operation.getName(), operation.isStatic() ? OperationType.STATIC_SERVICE : OperationType.INSTANCE_SERVICE,
-                                  operation.isAbstract() ? ImplementationType.ABSTRACT : ImplementationType.CONCRETE, input, output,
-                                  exceptions, isActive);
+    return new OperationInterface(operation.getName(),
+                                  operation.isStatic() ? OperationType.STATIC_SERVICE : OperationType.INSTANCE_SERVICE,
+                                  operation.isAbstract() ? ImplementationType.ABSTRACT : ImplementationType.CONCRETE, 
+                                  input, output, exceptions, isActive);
   }
 
 
@@ -370,29 +357,26 @@ public class OperationInterface implements MatchableInterface {
     }
     return of(step.getOperationName(), input, output);
   }
-
-
+  
+  
   public static OperationInterface of(String operationName, List<TypeInterface> input, List<TypeInterface> output) {
     return of(operationName, null, null, input, output, null);
   }
 
-
   public static OperationInterface of(OperationInterface oi, ProblemType problem) {
-    return new OperationInterface(oi.getName(), oi.getType(), oi.getImplType(), problem, oi.getInput(), oi.getOutput(), oi.getExceptions());
+    return new OperationInterface(oi.getName(), oi.getType(), oi.getImplType(), problem, oi.getInput(), oi.getOutput(), oi.getExceptions()); 
   }
-
 
   public static OperationInterface of(String operationName, OperationType type, ImplementationType implType, List<TypeInterface> inputTypes,
-                                      List<TypeInterface> outputTypes, List<TypeInterface> exceptionTypes) {
+                                       List<TypeInterface> outputTypes, List<TypeInterface> exceptionTypes) {
     return new OperationInterface(operationName, type, implType, inputTypes, outputTypes, exceptionTypes);
   }
-
 
   public void setName(String fqName) {
     this.name = fqName;
   }
 
-
+  
   /**
    * cloned insbesondere die input-liste
    */

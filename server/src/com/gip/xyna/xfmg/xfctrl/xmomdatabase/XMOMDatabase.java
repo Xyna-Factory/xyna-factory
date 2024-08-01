@@ -113,22 +113,20 @@ import com.gip.xyna.xprc.xprcods.workflowdb.WorkflowDatabase;
 
 public class XMOMDatabase extends FunctionGroup {
 
-
+  
   public final static String DEFAULT_NAME = "XMOMDatabase";
   private final static Logger logger = CentralFactoryLogging.getLogger(XMOMDatabase.class);
   private static final PreparedQueryCache cache = new PreparedQueryCache();
-
+  
   //Wert auf den die XynaProperty 'xyna.xfmg.xfctrl.xmomdatabase.discovery_on_startup' nach erfolgreichem shutdown gesetzt wird
   private boolean discoveryOnStartupValueAfterSchutdown = true;
-
-
+  
   public static enum XMOMType {
-
-    DATATYPE(EL.DATATYPE, ApplicationEntryType.DATATYPE, "DataType"), WORKFLOW(EL.SERVICE, ApplicationEntryType.WORKFLOW,
-        "Workflow"), EXCEPTION(EL.EXCEPTIONSTORAGE, ApplicationEntryType.EXCEPTION, "ExceptionType"), FORM(EL.FORMDEFINITION,
-            ApplicationEntryType.FORMDEFINITION,
-            "FormDefinition"), ORDERINPUTSOURCE(EL.ORDER_INPUT_SOURCE, ApplicationEntryType.ORDERINPUTSOURCE, "OrderInputSource");
-
+    DATATYPE(EL.DATATYPE, ApplicationEntryType.DATATYPE,  "DataType"),
+    WORKFLOW(EL.SERVICE, ApplicationEntryType.WORKFLOW, "Workflow"),
+    EXCEPTION(EL.EXCEPTIONSTORAGE, ApplicationEntryType.EXCEPTION, "ExceptionType"),
+    FORM(EL.FORMDEFINITION, ApplicationEntryType.FORMDEFINITION, "FormDefinition"),
+    ORDERINPUTSOURCE(EL.ORDER_INPUT_SOURCE, ApplicationEntryType.ORDERINPUTSOURCE, "OrderInputSource");
 
     private final String xmlTag;
     private final String niceName;
@@ -136,7 +134,7 @@ public class XMOMDatabase extends FunctionGroup {
     private static Map<String, XMOMType> mapByName = new HashMap<String, XMOMDatabase.XMOMType>();
     private static Map<String, XMOMType> mapByString = new HashMap<String, XMOMDatabase.XMOMType>();
     static {
-      for (XMOMType type : values()) {
+      for (XMOMType type: values()) {
         mapByName.put(type.xmlTag, type);
         mapByString.put(type.toString().toLowerCase(), type);
       }
@@ -153,8 +151,7 @@ public class XMOMDatabase extends FunctionGroup {
     public static XMOMType getXMOMTypeByRootTag(String rootTag) {
       return mapByName.get(rootTag);
     }
-
-
+    
     public static XMOMType getXMOMTypeByString(String stringRepresentation) {
       XMOMType result = mapByString.get(stringRepresentation.toLowerCase());
       if (result == null) {
@@ -162,13 +159,13 @@ public class XMOMDatabase extends FunctionGroup {
       }
       return result;
     }
-
-
+    
+    
     public ApplicationEntryType getApplicationEntryRepresentation() {
       return appEntryType;
     }
-
-
+    
+    
     public static XMOMType deriveXMOMType(ApplicationEntryType aet) {
       for (XMOMType type : values()) {
         if (type.appEntryType == aet) {
@@ -177,8 +174,8 @@ public class XMOMDatabase extends FunctionGroup {
       }
       throw new IllegalArgumentException("XMOMType not deriveable from " + aet.toString());
     }
-
-
+    
+    
     public static XMOMType getXMOMTypeByGenerationInstance(GenerationBase gb) {
       if (gb instanceof DOM) {
         return XMOMType.DATATYPE;
@@ -187,20 +184,17 @@ public class XMOMDatabase extends FunctionGroup {
       } else if (gb instanceof WF) {
         return XMOMType.WORKFLOW;
       } else {
-        throw new IllegalArgumentException("Unidentified GenerationBase type " + gb.getClass().getName());
+        throw new IllegalArgumentException("Unidentified GenerationBase type " + gb.getClass().getName()); 
       }
     }
-
-
+    
     public String getNiceName() {
       return niceName;
     }
-
-
+    
     public String getRootTag() {
       return xmlTag;
     }
-
 
     public static XMOMType getXMOMTypeByDependencySourceType(DependencySourceType type) {
       switch (type) {
@@ -239,7 +233,7 @@ public class XMOMDatabase extends FunctionGroup {
     return fqServiceName.substring(0, lastDotIndex);
   }
 
-
+  
   public static String getFqOriginalNameFromFqServiceName(String fqServiceName) {
     int lastDotIndex = fqServiceName.lastIndexOf(".");
     if (lastDotIndex < 0) {
@@ -250,67 +244,63 @@ public class XMOMDatabase extends FunctionGroup {
 
 
   private static enum StorageAction {
-    create, //neuen Entry anlegen
-    update, //alten Entry updaten
+    create,  //neuen Entry anlegen
+    update,  //alten Entry updaten
     discard; //aktuell betrachteten Entry verwerfen, da vorhandener Entry neuer ist
   }
-
+  
   public static enum XMOMState {
-
-    missing_xml(-1L), missing_xml_but_backward_relations(0L);
-
-
+    missing_xml(-1L),
+    missing_xml_but_backward_relations(0L);
+    
     Long timestamp;
-
 
     private XMOMState(Long timestamp) {
       this.timestamp = timestamp;
     }
-
-
+    
+    
     public Long getTimestamp() {
       return timestamp;
     }
   }
+  
+  private final static Comparator<XMOMDatabaseSearchResultEntry> improvedSearchResultComparator = new Comparator<XMOMDatabaseSearchResultEntry>() {
 
-
-  private final static Comparator<XMOMDatabaseSearchResultEntry> improvedSearchResultComparator =
-      new Comparator<XMOMDatabaseSearchResultEntry>() {
-
-        public int compare(XMOMDatabaseSearchResultEntry o1, XMOMDatabaseSearchResultEntry o2) {
-          if (o1.getWeigth() == o2.getWeigth()) { //weights first
-            if (o1.getSimplename() == null && o2.getSimplename() == null) {
-              return o1.getFqName().compareTo(o2.getFqName());
-            }
-            if (o1.getSimplename() == null) {
-              return 1;
-            }
-            if (o2.getSimplename() == null) {
-              return -1;
-            }
-            if (o1.getSimplename().equals(o2.getSimplename())) { //simplenames second
-              return compareStringsNotFavoringLongStrings2(o1.getSimplepath(), o2.getSimplepath()); //path has to differ then! /pout
-            } else {
-              return compareStringsNotFavoringLongStrings2(o1.getSimplename(), o2.getSimplename());
-            }
-          } else if (o1.getWeigth() > o2.getWeigth()) {
-            return -1;
-          } else {
-            return 1;
-          }
+    public int compare(XMOMDatabaseSearchResultEntry o1, XMOMDatabaseSearchResultEntry o2) {
+      if (o1.getWeigth() == o2.getWeigth()) { //weights first
+        if (o1.getSimplename() == null && o2.getSimplename() == null) {
+          return o1.getFqName().compareTo(o2.getFqName());
         }
-      };
-
-
+        if(o1.getSimplename() == null) {
+          return 1;
+        }
+        if(o2.getSimplename() == null) {
+          return -1;
+        }
+        if (o1.getSimplename().equals(o2.getSimplename())) { //simplenames second
+          return compareStringsNotFavoringLongStrings2(o1.getSimplepath(), o2.getSimplepath()); //path has to differ then! /pout
+        } else {
+          return compareStringsNotFavoringLongStrings2(o1.getSimplename(), o2.getSimplename());
+        }
+      } else if (o1.getWeigth() > o2.getWeigth()) {
+        return -1;
+      } else {
+        return 1;
+      }
+    }
+  };
+  
+  
   // ab == a -> ac == a -> ab != ac : this might violate the comperator contract
   private static final int compareStringsNotFavoringLongStrings(String first, String second) {
     if (first == null && second == null) {
       return 0;
     }
-    if (first == null) {
+    if(first == null) {
       return 1;
     }
-    if (second == null) {
+    if(second == null) {
       return -1;
     }
     if (first.length() == second.length()) {
@@ -320,43 +310,43 @@ public class XMOMDatabase extends FunctionGroup {
       return first.substring(0, shortLength).compareToIgnoreCase(second.substring(0, shortLength));
     }
   }
-
-
+  
+  
   private static final int compareStringsNotFavoringLongStrings2(String first, String second) {
     if (first == null && second == null) {
       return 0;
     }
-    if (first == null) {
+    if(first == null) {
       return 1;
     }
-    if (second == null) {
+    if(second == null) {
       return -1;
     }
     return -first.compareTo(second);
   }
-
-
+  
   public static final List<XMOMDatabaseSearchResultEntry> sortResultList(List<XMOMDatabaseSearchResultEntry> unsortedResults) {
-    Collections.sort(unsortedResults, improvedSearchResultComparator);
-    return unsortedResults;
+      Collections.sort(unsortedResults, improvedSearchResultComparator);
+    return unsortedResults;    
   }
 
 
   private ODS ods;
   private final ReentrantReadWriteLock cacheLock = new ReentrantReadWriteLock();
-  private ThreadPoolExecutor searchRequestPool =
-      new ThreadPoolExecutor(5, 50, 300, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new ArchiveRequestThreadFactory());
-
+  private ThreadPoolExecutor searchRequestPool = new ThreadPoolExecutor(5, 50, 300, TimeUnit.SECONDS,
+                                                                        new LinkedBlockingQueue<Runnable>(), new ArchiveRequestThreadFactory());
+  
+  
+  
 
   public XMOMDatabase() throws XynaException {
   }
-
-
+  
   public XMOMDatabase(String cause) throws XynaException {
     super(cause);
   }
 
-
+  
   public static XMOMDatabase getXMOMDatabasePreInit(ODS ods, String cause) throws XynaException {
     if (!XynaFactory.getInstance().isStartingUp()) {
       throw new XynaException("PreInitXMOMDatabase can only be retrieved during Factory startup.");
@@ -373,7 +363,6 @@ public class XMOMDatabase extends FunctionGroup {
     return xmomDatabase;
   }
 
-
   @Override
   public String getDefaultName() {
     return DEFAULT_NAME;
@@ -381,33 +370,28 @@ public class XMOMDatabase extends FunctionGroup {
 
 
   protected static class XMOMObjectSet extends ObjectWithRemovalSupport {
-
+    
     //das Pair setzt sich aus dem originalFqName und dem rootType zusammen;
     //Boolean hat keine Bedeutung (es gibt kein ConcurrentSet)
-    private final ConcurrentHashMap<Pair<String, String>, Boolean> xmomObjects = new ConcurrentHashMap<Pair<String, String>, Boolean>();
-
-
+    private final ConcurrentHashMap<Pair<String,String>, Boolean> xmomObjects = new ConcurrentHashMap<Pair<String,String>, Boolean>();
+    
     @Override
     protected boolean shouldBeDeleted() {
       return xmomObjects.isEmpty();
     }
-
-
+    
     public void add(String originalFqName, String rootTag) {
       xmomObjects.put(Pair.of(originalFqName, rootTag), true);
     }
-
-
+    
     public void remove(String originalFqName, String rootTag) {
       xmomObjects.remove(Pair.of(originalFqName, rootTag));
     }
-
-
+    
     protected boolean isEmpty() {
       return xmomObjects.isEmpty();
     }
-
-
+    
     public Set<Pair<String, String>> getXMOMObjects() {
       return xmomObjects.keySet();
     }
@@ -436,109 +420,104 @@ public class XMOMDatabase extends FunctionGroup {
     //         weil die Objekte alle vorher irgendwann manuell deployed wurden und deshalb keine Informationen verloren gehen.
     //         Deshalb wären die Deploymenthandler beim Serverstart-Deployment sogar redundant und schlecht für die Performance.
     //Deshalb ist hier eine Abhängigkeit auf WFDatabase ok.
-    fExec.addTask(XMOMDatabase.class, "XMOMDatabase").after(WorkflowDatabase.FUTURE_EXECUTION_ID).after(XynaProperty.class)
-        .execAsync(new Runnable() {
+    fExec.addTask(XMOMDatabase.class, "XMOMDatabase").
+         after(WorkflowDatabase.FUTURE_EXECUTION_ID).
+         after(XynaProperty.class).
+         execAsync(new Runnable() { public void run() {
+           XynaFactory.getInstance().getProcessing().getWorkflowEngine().getDeploymentHandling()
+               .addDeploymentHandler(DeploymentHandling.PRIORITY_WORKFLOW_DATABASE, new DeploymentHandler() {
 
-          public void run() {
-            XynaFactory.getInstance().getProcessing().getWorkflowEngine().getDeploymentHandling()
-                .addDeploymentHandler(DeploymentHandling.PRIORITY_WORKFLOW_DATABASE, new DeploymentHandler() {
+                 //zum GenerationBase-Objekt in Beziehung stehende XMOMObjekte, die nicht in der XMOMDatabase gefunden werden,
+                 //sammeln und im finish registrieren
+                 ConcurrentMapWithObjectRemovalSupport<Long, XMOMObjectSet> xmomObjectsToFinishLater = new ConcurrentMapWithObjectRemovalSupport<Long, XMOMObjectSet>() {
 
-                  //zum GenerationBase-Objekt in Beziehung stehende XMOMObjekte, die nicht in der XMOMDatabase gefunden werden,
-                  //sammeln und im finish registrieren
-                  ConcurrentMapWithObjectRemovalSupport<Long, XMOMObjectSet> xmomObjectsToFinishLater =
-                      new ConcurrentMapWithObjectRemovalSupport<Long, XMOMObjectSet>() {
+                   private static final long serialVersionUID = 1L;
 
-                        private static final long serialVersionUID = 1L;
+                   @Override
+                   public XMOMObjectSet createValue(Long key) {
+                     return new XMOMObjectSet();
+                   }
+                 };
+                 
+                 //das registrieren der XMOMObjekte soll immer nur ein Thread pro Revision machen, da ein Cache für die GenerationBase-Objekte verwendet wird
+                 HashParallelReentrantLock<Long> finishLock = new HashParallelReentrantLock<Long>(5);
 
+                 public void exec(final GenerationBase object, DeploymentMode mode) throws XPRC_DeploymentHandlerException {
+                   if (mode.shouldCopyXMLFromSavedToDeployed() || mode == DeploymentMode.codeUnchanged
+                                    || mode == DeploymentMode.reloadWithXMOMDatabaseUpdate) {
+                     xmomObjectsToFinishLater.process(object.getRevision(), new ValueProcessor<XMOMObjectSet, Boolean>() {
 
-                        @Override
-                        public XMOMObjectSet createValue(Long key) {
-                          return new XMOMObjectSet();
-                        }
-                      };
+                       public Boolean exec(XMOMObjectSet finishLater) {
+                         finishLater.add(object.getOriginalFqName(), XMOMType.getXMOMTypeByGenerationInstance(object).getRootTag());
+                         return true;
+                       }
+                     });
+                   }
+                 }
 
-                  //das registrieren der XMOMObjekte soll immer nur ein Thread pro Revision machen, da ein Cache für die GenerationBase-Objekte verwendet wird
-                  HashParallelReentrantLock<Long> finishLock = new HashParallelReentrantLock<Long>(5);
+                 public void finish(boolean success) throws XPRC_DeploymentHandlerException {
+                   final GenerationBaseCache gbcache = new GenerationBaseCache();
+                   for (final Long revision : xmomObjectsToFinishLater.keySet()) {
+                     finishLock.lock(revision);
+                     try {
+                       xmomObjectsToFinishLater.process(revision, new ValueProcessor<XMOMObjectSet, Boolean>() {
 
+                         public Boolean exec(XMOMObjectSet xmomObjectsToRegister) {
+                           try {
+                             //alle eingesammelten Objekte nun registrieren
+                             registerMOMObjects(xmomObjectsToRegister, revision, gbcache);
+                           } catch (PersistenceLayerException ple) {
+                             logger.error("Unable to register xmom objects", ple);
+                           } catch (AssumedDeadlockException ade) {
+                             logger.error("Unable to register xmom objects", ade);
+                           }
 
-                  public void exec(final GenerationBase object, DeploymentMode mode) throws XPRC_DeploymentHandlerException {
-                    if (mode.shouldCopyXMLFromSavedToDeployed() || mode == DeploymentMode.codeUnchanged
-                        || mode == DeploymentMode.reloadWithXMOMDatabaseUpdate) {
-                      xmomObjectsToFinishLater.process(object.getRevision(), new ValueProcessor<XMOMObjectSet, Boolean>() {
+                           return true;
+                         }
+                       });
+                     } finally {
+                       finishLock.unlock(revision);
+                     }
+                   }
+                 }
 
-                        public Boolean exec(XMOMObjectSet finishLater) {
-                          finishLater.add(object.getOriginalFqName(), XMOMType.getXMOMTypeByGenerationInstance(object).getRootTag());
-                          return true;
-                        }
-                      });
-                    }
-                  }
-
-
-                  public void finish(boolean success) throws XPRC_DeploymentHandlerException {
-                    final GenerationBaseCache gbcache = new GenerationBaseCache();
-                    for (final Long revision : xmomObjectsToFinishLater.keySet()) {
-                      finishLock.lock(revision);
-                      try {
-                        xmomObjectsToFinishLater.process(revision, new ValueProcessor<XMOMObjectSet, Boolean>() {
-
-                          public Boolean exec(XMOMObjectSet xmomObjectsToRegister) {
-                            try {
-                              //alle eingesammelten Objekte nun registrieren
-                              registerMOMObjects(xmomObjectsToRegister, revision, gbcache);
-                            } catch (PersistenceLayerException ple) {
-                              logger.error("Unable to register xmom objects", ple);
-                            } catch (AssumedDeadlockException ade) {
-                              logger.error("Unable to register xmom objects", ade);
-                            }
-
-                            return true;
-                          }
-                        });
-                      } finally {
-                        finishLock.unlock(revision);
-                      }
-                    }
-                  }
-
-
-                  @Override
-                  public void begin() throws XPRC_DeploymentHandlerException {
-                  }
-                });
-
-
-            if (XynaProperty.XMOMDISCOVERY_ON_STARTUP.get()) {
-              //XMOMDiscovery ausführen
-              XynaExecutor.getInstance(false).executeRunnableWithUnprioritizedPlanningThreadpool(new XynaRunnable() {
-
-                public void run() {
-                  try {
-                    discovery();
-                    discoveryOnStartupValueAfterSchutdown = false; //Discovery war erfolgreich, daher muss es beim nächsten Server-Start nicht wiederholt werden
-                  } catch (XynaException e) {
-                    logger.warn("XMOM-Discovery failed, the command 'xmomdiscovery' can be used to manually trigger a discovery.", e);
-                  }
+                @Override
+                public void begin() throws XPRC_DeploymentHandlerException {
                 }
-              });
-            } else {
-              //beim nächsten Server-Start soll kein Discovery ausgeführt werden, falls das Shutdown durchgeführt wurde
-              discoveryOnStartupValueAfterSchutdown = false;
-            }
-
-            try {
-              XynaProperty.XMOMDISCOVERY_ON_STARTUP.set(true);
-            } catch (PersistenceLayerException e) {
-              logger.warn("Failed to set XynaProperty 'xyna.xfmg.xfctrl.xmomdatabase.discovery_on_startup'.", e);
-            }
-          }
-        });
+               });
+           
+           
+           if (XynaProperty.XMOMDISCOVERY_ON_STARTUP.get()) {
+             //XMOMDiscovery ausführen
+             XynaExecutor.getInstance(false)
+               .executeRunnableWithUnprioritizedPlanningThreadpool(new XynaRunnable() {
+                 
+                 public void run() {
+                   try {
+                     discovery();
+                     discoveryOnStartupValueAfterSchutdown = false; //Discovery war erfolgreich, daher muss es beim nächsten Server-Start nicht wiederholt werden
+                   } catch (XynaException e) {
+                     logger.warn("XMOM-Discovery failed, the command 'xmomdiscovery' can be used to manually trigger a discovery.",e);
+                   }
+                 }
+               });
+           } else {
+             //beim nächsten Server-Start soll kein Discovery ausgeführt werden, falls das Shutdown durchgeführt wurde
+             discoveryOnStartupValueAfterSchutdown = false;
+           }
+           
+           try {
+             XynaProperty.XMOMDISCOVERY_ON_STARTUP.set(true);
+           } catch (PersistenceLayerException e) {
+             logger.warn("Failed to set XynaProperty 'xyna.xfmg.xfctrl.xmomdatabase.discovery_on_startup'.",e);
+           }
+         }
+       });
   }
 
 
   private Task<XynaException> createInitTask(final Class<? extends Storable<?>> clazz, final String tableName) {
     return new Task<XynaException>() {
-
       public void run() throws XynaException {
         ods.registerStorable(clazz);
       }
@@ -563,9 +542,8 @@ public class XMOMDatabase extends FunctionGroup {
     // Execute all the tasks with some threads
     final DistributedWorkWithTasks<XynaException> workWithTasks = new DistributedWorkWithTasks<XynaException>(tasks);
     final ConcurrentLinkedQueue<XynaException> exceptions = new ConcurrentLinkedQueue<XynaException>();
-    for (int i = 0; i < numberOfExtraThreads; i++) {
+    for (int i=0; i<numberOfExtraThreads; i++) {
       Runnable r = new Runnable() {
-
         public void run() {
           try {
             workWithTasks.executeAndWaitForCompletion();
@@ -611,13 +589,11 @@ public class XMOMDatabase extends FunctionGroup {
   public void registerMOMObject(String originalFqName, Long revision) throws PersistenceLayerException, AssumedDeadlockException {
     registerMOMObject(originalFqName, revision, new GenerationBaseCache());
   }
-
-
-  private void registerMOMObject(String originalFqName, Long revision, GenerationBaseCache generationBaseCache)
-      throws PersistenceLayerException, AssumedDeadlockException {
+  
+  
+  private void registerMOMObject(String originalFqName, Long revision, GenerationBaseCache generationBaseCache) throws PersistenceLayerException, AssumedDeadlockException {
     try { // There might be invalid saved xmls, they can't be parsed so we don't cache them
-      registerMOMObject(originalFqName, GenerationBase.retrieveRootTag(originalFqName, revision, false, true), revision,
-                        generationBaseCache);
+      registerMOMObject(originalFqName, GenerationBase.retrieveRootTag(originalFqName, revision, false, true), revision, generationBaseCache);
     } catch (Ex_FileAccessException e) {
       logger.debug("Error during registerMOMObject", e);
       return;
@@ -627,53 +603,49 @@ public class XMOMDatabase extends FunctionGroup {
     }
   }
 
-
-  public XMOMDatabaseEntry registerGenerationBaseObject(GenerationBase object, XMOMObjectSet xmomObjectsToFinishLater)
-      throws PersistenceLayerException, AssumedDeadlockException {
+  
+  public XMOMDatabaseEntry registerGenerationBaseObject(GenerationBase object, XMOMObjectSet xmomObjectsToFinishLater) throws PersistenceLayerException, AssumedDeadlockException {
     XMOMDatabaseEntry entry = null;
     String rootTag;
     if (object instanceof WF) {
       rootTag = XMOMType.WORKFLOW.getRootTag();
-      entry = registerWorkflow((WF) object, xmomObjectsToFinishLater);
+      entry = registerWorkflow((WF)object, xmomObjectsToFinishLater);
     } else if (object instanceof ExceptionGeneration) {
       rootTag = XMOMType.EXCEPTION.getRootTag();
-      entry = registerException((ExceptionGeneration) object, xmomObjectsToFinishLater);
+      entry = registerException((ExceptionGeneration)object, xmomObjectsToFinishLater);
     } else if (object instanceof DOM) {
       rootTag = XMOMType.DATATYPE.getRootTag();
-      entry = registerDatatypeAndServiceGroup((DOM) object, xmomObjectsToFinishLater);
+      entry = registerDatatypeAndServiceGroup((DOM)object, xmomObjectsToFinishLater);
     } else {
       logger.error("Trying to register GenerationBaseObject of unknown Type");
       return null;
     }
-
+    
     xmomObjectsToFinishLater.remove(object.getOriginalFqName(), rootTag);
     return entry;
   }
 
 
-  public void registerMOMObject(String originalFqName, String rootTag, Long revision)
-      throws PersistenceLayerException, AssumedDeadlockException {
+  public void registerMOMObject(String originalFqName, String rootTag, Long revision) throws PersistenceLayerException,
+                  AssumedDeadlockException {
     registerMOMObject(originalFqName, rootTag, revision, new GenerationBaseCache());
   }
-
-
-  private void registerMOMObject(String originalFqName, String rootTag, Long revision, GenerationBaseCache generationBaseCache)
-      throws PersistenceLayerException, AssumedDeadlockException {
+  
+  private void registerMOMObject(String originalFqName, String rootTag, Long revision, GenerationBaseCache generationBaseCache) throws PersistenceLayerException,
+    AssumedDeadlockException {
     XMOMObjectSet xmomObjectsToRegister = new XMOMObjectSet();
     xmomObjectsToRegister.add(originalFqName, rootTag);
-
+    
     registerMOMObjects(xmomObjectsToRegister, revision, generationBaseCache);
   }
-
 
   /**
    * Registriert die übergebenen XMOMObjects. Falls ein hierzu in Beziehung stehendes Objekt noch
    * nicht in der XMOMDatabase vorhanden ist, wird es ebenfalls vollständig registriert.
    */
-  private void registerMOMObjects(XMOMObjectSet xmomObjectsToRegister, Long revision, GenerationBaseCache generationBaseCache)
-      throws PersistenceLayerException, AssumedDeadlockException {
+  private void registerMOMObjects(XMOMObjectSet xmomObjectsToRegister, Long revision, GenerationBaseCache generationBaseCache) throws PersistenceLayerException, AssumedDeadlockException {
     while (!xmomObjectsToRegister.isEmpty()) {
-      for (Pair<String, String> xmomObject : xmomObjectsToRegister.getXMOMObjects()) {
+      for (Pair<String,String> xmomObject : xmomObjectsToRegister.getXMOMObjects()) {
         String originalFqName = xmomObject.getFirst();
         XMOMType objectType = XMOMType.getXMOMTypeByRootTag(xmomObject.getSecond());
         switch (objectType) {
@@ -698,9 +670,8 @@ public class XMOMDatabase extends FunctionGroup {
   }
 
 
-  private void registerDatatypeAndServiceGroup(String originalFqName, Long revision, GenerationBaseCache generationBaseCache,
-                                               XMOMObjectSet xmomObjectsToFinishLater)
-      throws PersistenceLayerException, AssumedDeadlockException {
+  private void registerDatatypeAndServiceGroup(String originalFqName, Long revision, GenerationBaseCache generationBaseCache, XMOMObjectSet xmomObjectsToFinishLater) throws PersistenceLayerException,
+                  AssumedDeadlockException {
     if (logger.isDebugEnabled()) {
       logger.debug("registerDatatypeAndOrServiceGroup: " + originalFqName + " (revision " + revision + ")");
     }
@@ -711,7 +682,7 @@ public class XMOMDatabase extends FunctionGroup {
       logger.debug("Error during getOrCreateInstance on registerDatatypeAndServiceGroup", e);
       return;
     }
-
+    
     try {
       dom.parseGeneration(false, false, false);
     } catch (XPRC_MDMDeploymentException e) {
@@ -726,11 +697,10 @@ public class XMOMDatabase extends FunctionGroup {
   }
 
 
-  private XMOMDatabaseEntry registerDatatypeAndServiceGroup(DOM dom, XMOMObjectSet xmomObjectsToFinishLater)
-      throws PersistenceLayerException, AssumedDeadlockException {
+  private XMOMDatabaseEntry registerDatatypeAndServiceGroup(DOM dom, XMOMObjectSet xmomObjectsToFinishLater) throws PersistenceLayerException, AssumedDeadlockException {
     Map<String, XMOMOperationDatabaseEntry> previousOperations = new HashMap<String, XMOMOperationDatabaseEntry>();
     XMOMDatabaseEntry returnvalue = registerDatatype(dom, previousOperations, xmomObjectsToFinishLater);
-
+    
     Map<String, List<Operation>> serviceToOperationMap = dom.getServiceNameToOperationMap();
     for (Entry<String, List<Operation>> entry : serviceToOperationMap.entrySet()) {
       String serviceName = entry.getKey();
@@ -744,13 +714,11 @@ public class XMOMDatabase extends FunctionGroup {
   }
 
 
-  private XMOMDatabaseEntry registerDatatype(DOM dom, Map<String, XMOMOperationDatabaseEntry> previousOperations,
-                                             XMOMObjectSet xmomObjectsToFinishLater)
-      throws PersistenceLayerException, AssumedDeadlockException {
+  private XMOMDatabaseEntry registerDatatype(DOM dom, Map<String, XMOMOperationDatabaseEntry> previousOperations, XMOMObjectSet xmomObjectsToFinishLater) throws PersistenceLayerException, AssumedDeadlockException {
     if (logger.isDebugEnabled()) {
       logger.debug("registerDatatype: " + dom.getOriginalFqName() + " (revision " + dom.getRevision() + ")");
     }
-
+    
     XMOMDomDatabaseEntry entry = new XMOMDomDatabaseEntry(dom);
 
     writeLockCache();
@@ -794,9 +762,7 @@ public class XMOMDatabase extends FunctionGroup {
   }
 
 
-  private void registerException(String originalFqName, Long revision, GenerationBaseCache generationBaseCache,
-                                 XMOMObjectSet xmomObjectsToFinishLater)
-      throws AssumedDeadlockException, PersistenceLayerException {
+  private void registerException(String originalFqName, Long revision, GenerationBaseCache generationBaseCache, XMOMObjectSet xmomObjectsToFinishLater) throws AssumedDeadlockException, PersistenceLayerException {
     ExceptionGeneration excep;
     try {
       excep = ExceptionGeneration.getOrCreateInstance(originalFqName, generationBaseCache, revision);
@@ -807,7 +773,7 @@ public class XMOMDatabase extends FunctionGroup {
     if (logger.isDebugEnabled()) {
       logger.debug("registerException: " + originalFqName + " (revision " + revision + ")");
     }
-
+    
     try {
       excep.parseGeneration(false, false, false);
       // There might be invalid saved xmls, they can't be parsed so we don't cache them
@@ -823,8 +789,7 @@ public class XMOMDatabase extends FunctionGroup {
   }
 
 
-  private XMOMDatabaseEntry registerException(ExceptionGeneration excep, XMOMObjectSet xmomObjectsToFinishLater)
-      throws AssumedDeadlockException, PersistenceLayerException {
+  private XMOMDatabaseEntry registerException(ExceptionGeneration excep, XMOMObjectSet xmomObjectsToFinishLater) throws AssumedDeadlockException, PersistenceLayerException {
     XMOMExceptionDatabaseEntry entry = new XMOMExceptionDatabaseEntry(excep);
 
     writeLockCache();
@@ -859,23 +824,25 @@ public class XMOMDatabase extends FunctionGroup {
     } finally {
       writeUnlockCache();
     }
-
+    
     return entry;
   }
 
 
-  private StorageAction examineExistingEntry(ODSConnection con, XMOMDatabaseEntry newEntry) throws PersistenceLayerException {
+  private StorageAction examineExistingEntry(ODSConnection con, XMOMDatabaseEntry newEntry)
+                  throws PersistenceLayerException {
     XMOMDatabaseEntry previousEntry;
     try {
       previousEntry = newEntry.clone();
       try {
         con.queryOneRow(previousEntry);
-
-        if (previousEntry.getTimestamp() != null && previousEntry.getTimestamp().compareTo(newEntry.getTimestamp()) >= 0) {
+        
+        if (previousEntry.getTimestamp() != null 
+              && previousEntry.getTimestamp().compareTo(newEntry.getTimestamp()) >= 0) {
           //vorhandener Eintrag ist aktueller
           return StorageAction.discard;
         }
-
+        
         //alte Backward-Relations in neuen Eintrag übernehmen
         retrievePreviousBackwardRelations(previousEntry, newEntry);
       } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
@@ -885,13 +852,13 @@ public class XMOMDatabase extends FunctionGroup {
     } catch (CloneNotSupportedException e1) {
       // is supported for all XMOMCacheEntries
     }
-
+    
     return StorageAction.update;
   }
 
-
+  
   private void retrievePreviousBackwardRelations(XMOMDatabaseEntry previousEntry, XMOMDatabaseEntry newEntry)
-      throws PersistenceLayerException {
+                  throws PersistenceLayerException {
     switch (newEntry.getXMOMDatabaseType()) {
       case DATATYPE :
         ((XMOMDomDatabaseEntry) newEntry).setExtendedBy(((XMOMDomDatabaseEntry) previousEntry).getExtendedBy());
@@ -910,11 +877,10 @@ public class XMOMDatabase extends FunctionGroup {
         ((XMOMExceptionDatabaseEntry) newEntry).setInstancesUsedBy(((XMOMExceptionDatabaseEntry) previousEntry).getInstancesUsedBy());
         ((XMOMExceptionDatabaseEntry) newEntry).setUsedInImplOf(((XMOMExceptionDatabaseEntry) previousEntry).getUsedInImplOf());
         break;
-      case WORKFLOW :
-        ((XMOMWorkflowDatabaseEntry) newEntry)
-            .setInstanceServiceReferenceOf(((XMOMWorkflowDatabaseEntry) previousEntry).getInstanceServiceReferenceOf());
+      case WORKFLOW:
+        ((XMOMWorkflowDatabaseEntry) newEntry).setInstanceServiceReferenceOf(((XMOMWorkflowDatabaseEntry) previousEntry).getInstanceServiceReferenceOf());
         // fall through
-      case OPERATION :
+      case OPERATION:
       case SERVICE :
         ((XMOMServiceDatabaseEntry) newEntry).setCalledBy(((XMOMServiceDatabaseEntry) previousEntry).getCalledBy());
         ((XMOMServiceDatabaseEntry) newEntry).setGroupedBy(((XMOMServiceDatabaseEntry) previousEntry).getGroupedBy());
@@ -923,6 +889,7 @@ public class XMOMDatabase extends FunctionGroup {
         break;
     }
   }
+
 
 
   private void registerServiceGroup(DOM dom, String serviceName) throws PersistenceLayerException {
@@ -939,7 +906,7 @@ public class XMOMDatabase extends FunctionGroup {
         if (action == StorageAction.discard) {
           return;
         }
-
+        
         con.persistObject(entry);
         con.commit();
       } finally {
@@ -951,9 +918,8 @@ public class XMOMDatabase extends FunctionGroup {
   }
 
 
-  private void registerOperations(DOM dom, String serviceName, Collection<Operation> operations,
-                                  Map<String, XMOMOperationDatabaseEntry> previousEntries, XMOMObjectSet xmomObjectsToFinishLater)
-      throws PersistenceLayerException, AssumedDeadlockException {
+  private void registerOperations(DOM dom, String serviceName, Collection<Operation> operations, Map<String, XMOMOperationDatabaseEntry> previousEntries, XMOMObjectSet xmomObjectsToFinishLater)
+                  throws PersistenceLayerException, AssumedDeadlockException {
     if (logger.isDebugEnabled()) {
       logger.debug("registerOperations: " + dom.getOriginalFqName());
     }
@@ -967,12 +933,12 @@ public class XMOMDatabase extends FunctionGroup {
             logger.debug("operation: " + operation.getName());
           }
           XMOMOperationDatabaseEntry entry = new XMOMOperationDatabaseEntry(dom, serviceName, operation);
-
+          
           StorageAction action = examineExistingEntry(con, entry);
           if (action == StorageAction.discard) {
             continue;
           }
-
+          
           if (action == StorageAction.create) {
             XMOMOperationDatabaseEntry previousEntry = previousEntries.get(entry.getId());
             if (previousEntry != null) {
@@ -1016,9 +982,7 @@ public class XMOMDatabase extends FunctionGroup {
   }
 
 
-  private void registerWorkflow(String originalFqName, Long revision, GenerationBaseCache generationBaseCache,
-                                XMOMObjectSet xmomObjectsToFinishLater)
-      throws PersistenceLayerException, AssumedDeadlockException {
+  private void registerWorkflow(String originalFqName, Long revision, GenerationBaseCache generationBaseCache, XMOMObjectSet xmomObjectsToFinishLater) throws PersistenceLayerException, AssumedDeadlockException {
     if (logger.isDebugEnabled()) {
       logger.debug("registerWorkflow: " + originalFqName);
     }
@@ -1029,7 +993,7 @@ public class XMOMDatabase extends FunctionGroup {
       logger.debug("Error during getOrCreateInstance on registerWorkflow", e);
       return;
     }
-
+    
     try {
       wf.parseGeneration(false, false, false);
       // There might be invalid saved xmls, they can't be parsed so we don't cache them
@@ -1048,8 +1012,7 @@ public class XMOMDatabase extends FunctionGroup {
   }
 
 
-  private XMOMDatabaseEntry registerWorkflow(WF wf, XMOMObjectSet xmomObjectsToFinishLater)
-      throws PersistenceLayerException, AssumedDeadlockException {
+  private XMOMDatabaseEntry registerWorkflow(WF wf, XMOMObjectSet xmomObjectsToFinishLater) throws PersistenceLayerException, AssumedDeadlockException {
     XMOMWorkflowDatabaseEntry entry = new XMOMWorkflowDatabaseEntry(wf);
 
     writeLockCache();
@@ -1095,21 +1058,19 @@ public class XMOMDatabase extends FunctionGroup {
     } finally {
       writeUnlockCache();
     }
-
+    
     return entry;
   }
-
-
+  
+  
   private void registerForm(String originalFqName, Long revision) throws PersistenceLayerException {
     // TODO needs to be expanded once Form-Relations are to be extracted
     tryRegisterWithCommonValues(originalFqName, XMOMDatabaseType.FORMDEFINITION, revision, System.currentTimeMillis());
   }
-
-
-  private void tryRegisterWithCommonValues(String originalFqName, XMOMDatabaseType type, Long revision, Long timestamp)
-      throws PersistenceLayerException {
-    RuntimeContextDependencyManagement rcdm =
-        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
+  
+  
+  private void tryRegisterWithCommonValues(String originalFqName, XMOMDatabaseType type, Long revision, Long timestamp) throws PersistenceLayerException {
+    RuntimeContextDependencyManagement rcdm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
     Long revisionForEntry = rcdm.getRevisionDefiningXMOMObjectOrParent(originalFqName, revision);
     CommonValues values = XMOMCommonValueParser.tryParsingCommonValues(originalFqName, type, revisionForEntry);
     XMOMDatabaseEntry entry = type.generateInstanceOfArchiveStorableWithPrimaryKey(values.fqname, revisionForEntry);
@@ -1122,11 +1083,11 @@ public class XMOMDatabase extends FunctionGroup {
       ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
       try {
         StorageAction action = examineExistingEntry(con, entry);
-
+        
         if (action == StorageAction.discard) {
           return;
         }
-
+        
         // we don't unregister in this registration because we're missing all values for forward relations
         con.persistObject(entry);
         con.commit();
@@ -1154,8 +1115,8 @@ public class XMOMDatabase extends FunctionGroup {
   }
 
 
-  public void unregisterMOMObject(String originalFqName, String rootTag, Long revision)
-      throws PersistenceLayerException, AssumedDeadlockException {
+  public void unregisterMOMObject(String originalFqName, String rootTag, Long revision) throws PersistenceLayerException,
+                  AssumedDeadlockException {
     XMOMType objectType = XMOMType.getXMOMTypeByRootTag(rootTag);
 
     switch (objectType) {
@@ -1174,10 +1135,8 @@ public class XMOMDatabase extends FunctionGroup {
     }
   }
 
-
   public void unregisterXMOMObjects(Long revision) {
-    RevisionManagement revisionManagement =
-        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+    RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     boolean deployed = revisionManagement.isWorkspaceRevision(revision) ? false : true;
     String mdmDir = RevisionManagement.getPathForRevision(PathType.XMOM, revision, deployed);
     List<File> files = FileUtils.getMDMFiles(new File(mdmDir), new ArrayList<File>());
@@ -1201,9 +1160,8 @@ public class XMOMDatabase extends FunctionGroup {
     }
   }
 
-
-  private void unregisterDatatype(String originalFqName, Long revision, Map<String, XMOMOperationDatabaseEntry> previousOperations)
-      throws AssumedDeadlockException, PersistenceLayerException {
+  private void unregisterDatatype(String originalFqName, Long revision, Map<String, XMOMOperationDatabaseEntry> previousOperations) throws AssumedDeadlockException,
+                  PersistenceLayerException {
     if (logger.isDebugEnabled()) {
       logger.debug("unregisterDatatype: " + originalFqName + " (revision " + revision + ")");
     }
@@ -1237,17 +1195,17 @@ public class XMOMDatabase extends FunctionGroup {
         for (String serviceGroupName : wrappedServiceGroup) {
           if (XMOMDatabaseEntry.isValidFQName(serviceGroupName)) {
             XMOMServiceGroupDatabaseEntry serviceGroupEntry = new XMOMServiceGroupDatabaseEntry(serviceGroupName, entry.getRevision());
-
+    
             con = ods.openConnection(ODSConnectionType.HISTORY);
             try {
-
+    
               con.queryOneRow(serviceGroupEntry);
             } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
               logger.warn("ServiceGroup " + serviceGroupName + " could not be found.");
             } finally {
               con.closeConnection();
             }
-
+    
             unregisterServiceGroupAndOperations(serviceGroupEntry, previousOperations);
           }
         }
@@ -1258,20 +1216,18 @@ public class XMOMDatabase extends FunctionGroup {
   }
 
 
+
   public void unregisterDatatype(DOM dom) throws PersistenceLayerException, AssumedDeadlockException {
     unregisterDatatype(dom.getOriginalFqName(), dom.getRevision(), null);
   }
 
-
-  public void unregisterDatatype(DOM dom, Map<String, XMOMOperationDatabaseEntry> previousOperations)
-      throws PersistenceLayerException, AssumedDeadlockException {
+  public void unregisterDatatype(DOM dom, Map<String, XMOMOperationDatabaseEntry> previousOperations) throws PersistenceLayerException, AssumedDeadlockException {
     unregisterDatatype(dom.getOriginalFqName(), dom.getRevision(), previousOperations);
   }
 
 
-  private void unregisterServiceGroupAndOperations(XMOMServiceGroupDatabaseEntry entry,
-                                                   Map<String, XMOMOperationDatabaseEntry> previousOperations)
-      throws PersistenceLayerException, AssumedDeadlockException {
+  private void unregisterServiceGroupAndOperations(XMOMServiceGroupDatabaseEntry entry, Map<String, XMOMOperationDatabaseEntry> previousOperations) throws PersistenceLayerException,
+                  AssumedDeadlockException {
     writeLockCache();
     try {
       ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
@@ -1299,9 +1255,8 @@ public class XMOMDatabase extends FunctionGroup {
     }
   }
 
-
-  private void unregisterOperation(XMOMOperationDatabaseEntry entry, Map<String, XMOMOperationDatabaseEntry> previousOperations)
-      throws PersistenceLayerException, AssumedDeadlockException {
+  private void unregisterOperation(XMOMOperationDatabaseEntry entry, Map<String, XMOMOperationDatabaseEntry> previousOperations) throws PersistenceLayerException,
+                  AssumedDeadlockException {
     writeLockCache();
     try {
       ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
@@ -1323,12 +1278,13 @@ public class XMOMDatabase extends FunctionGroup {
         RelationManagementMethods.removeInstancesUsedByRelations.execute(con, entry, null);
         con.commit();
       } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-        logger.debug("Could not find entry for operation: " + entry.getFqname() + " some usedBy relations might not be properly removed");
+        logger.debug("Could not find entry for operation: " + entry.getFqname()
+                     + " some usedBy relations might not be properly removed");
         return;
       } finally {
         con.closeConnection();
       }
-
+      
     } finally {
       writeUnlockCache();
     }
@@ -1354,7 +1310,8 @@ public class XMOMDatabase extends FunctionGroup {
         RelationManagementMethods.removeExtendedByRelations.execute(con, entry, null);
         con.commit();
       } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-        logger.warn("Could not find entry for exception " + originalFqName + ", some relations might not be properly removed");
+        logger.warn("Could not find entry for exception " + originalFqName
+                        + ", some relations might not be properly removed");
       } finally {
         con.closeConnection();
       }
@@ -1399,7 +1356,8 @@ public class XMOMDatabase extends FunctionGroup {
         RelationManagementMethods.removeUsedInImplOfRelations.execute(con, entry, null);
         con.commit();
       } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-        logger.warn("Could not find entry for workflow " + originalFqName + ", some relations might not be properly removed");
+        logger.warn("Could not find entry for workflow " + originalFqName
+                        + ", some relations might not be properly removed");
       } finally {
         con.closeConnection();
       }
@@ -1411,21 +1369,20 @@ public class XMOMDatabase extends FunctionGroup {
 
   public void unregisterGenerationBaseObject(GenerationBase object) throws PersistenceLayerException, AssumedDeadlockException {
     if (object instanceof WF) {
-      unregisterWorkflow((WF) object);
+      unregisterWorkflow((WF)object);
     } else if (object instanceof ExceptionGeneration) {
-      unregisterException((ExceptionGeneration) object);
+      unregisterException((ExceptionGeneration)object);
     } else if (object instanceof DOM) {
-      unregisterDatatype((DOM) object);
+      unregisterDatatype((DOM)object);
     } else {
       logger.error("Trying to unregister GenerationBaseObject of unknown Type");
     }
   }
 
-
+  
   public void unregisterWorkflow(WF wf) throws PersistenceLayerException, AssumedDeadlockException {
     unregisterWorkflow(wf.getOriginalFqName(), wf.getRevision());
   }
-
 
   private void unregisterForm(String originalFqName, Long revision) throws PersistenceLayerException, AssumedDeadlockException {
     if (logger.isDebugEnabled()) {
@@ -1447,7 +1404,6 @@ public class XMOMDatabase extends FunctionGroup {
     }
   }
 
-
   public void unregisterDataModel(String dataModelName) throws PersistenceLayerException {
     if (logger.isDebugEnabled()) {
       logger.debug("unregisterDataModel: " + dataModelName);
@@ -1467,18 +1423,18 @@ public class XMOMDatabase extends FunctionGroup {
       writeUnlockCache();
     }
   }
-
-
+  
+  
   /**
    * Discovery für alle Workspaces.
    */
-  public void discovery()
-      throws PersistenceLayerException, Ex_FileAccessException, XPRC_XmlParsingException, XPRC_OBJECT_EXISTS_BUT_TYPE_DOES_NOT_MATCH,
-      XPRC_InvalidPackageNameException, XPRC_InheritedConcurrentDeploymentException, AssumedDeadlockException, XPRC_MDMDeploymentException,
-      XNWH_NoPersistenceLayerConfiguredForTableException, XNWH_PersistenceLayerInstanceIdUnknownException {
+  public void discovery() throws PersistenceLayerException, Ex_FileAccessException, XPRC_XmlParsingException,
+      XPRC_OBJECT_EXISTS_BUT_TYPE_DOES_NOT_MATCH, XPRC_InvalidPackageNameException,
+      XPRC_InheritedConcurrentDeploymentException, AssumedDeadlockException, XPRC_MDMDeploymentException,
+      XNWH_NoPersistenceLayerConfiguredForTableException,
+      XNWH_PersistenceLayerInstanceIdUnknownException {
     discovery(false);
   }
-
 
   /**
    * Alle XMOMEntries werden neu geparst und in der XMOMDatabase aktualisiert.
@@ -1488,13 +1444,14 @@ public class XMOMDatabase extends FunctionGroup {
    * 
    * @param all gibt an, ob nur workspaces (all=false) oder auch applications (all=true) aktualisiert werden
    */
-  public void discovery(boolean all)
-      throws PersistenceLayerException, Ex_FileAccessException, XPRC_XmlParsingException, XPRC_OBJECT_EXISTS_BUT_TYPE_DOES_NOT_MATCH,
-      XPRC_InvalidPackageNameException, XPRC_InheritedConcurrentDeploymentException, AssumedDeadlockException, XPRC_MDMDeploymentException,
-      XNWH_NoPersistenceLayerConfiguredForTableException, XNWH_PersistenceLayerInstanceIdUnknownException {
+  public void discovery(boolean all) throws PersistenceLayerException, Ex_FileAccessException, XPRC_XmlParsingException,
+  XPRC_OBJECT_EXISTS_BUT_TYPE_DOES_NOT_MATCH, XPRC_InvalidPackageNameException,
+  XPRC_InheritedConcurrentDeploymentException, AssumedDeadlockException, XPRC_MDMDeploymentException,
+  XNWH_NoPersistenceLayerConfiguredForTableException,
+  XNWH_PersistenceLayerInstanceIdUnknownException {
     //Zunächst alle Zeitstempel auf -1 setzen
     updateAllTimestamps(XMOMState.missing_xml.getTimestamp(), all);
-
+    
     //Dann das Discovery durchführen. Dabei werden alle Entries, deren xml noch existiert,
     //mit einem aktuellen Zeitstempel eingetragen.
     //Für alle Entries die nicht existieren, aber in die eine Backward-Relation eingetragen wird,
@@ -1513,21 +1470,21 @@ public class XMOMDatabase extends FunctionGroup {
         rediscover(revision, generationBaseCache, true);
       }
     }
-
+    
     //Nun können alle Einträge mit Zeitstempel -1 deregistriert werden (dabei werden auch die entsprechenden Backward-Relations entfernt)
     //und für alle Einträge mit Zeitstempel 0 das Label auf null gesetzt werden
-    handleNonExistingEntries();
+    handleNonExistingEntries();    
   }
-
-
-  public void rediscover(Long revision, GenerationBaseCache generationBaseCache, boolean deployed)
-      throws PersistenceLayerException, Ex_FileAccessException, XPRC_XmlParsingException, XPRC_OBJECT_EXISTS_BUT_TYPE_DOES_NOT_MATCH,
-      XPRC_InvalidPackageNameException, XPRC_InheritedConcurrentDeploymentException, AssumedDeadlockException, XPRC_MDMDeploymentException,
-      XNWH_NoPersistenceLayerConfiguredForTableException, XNWH_PersistenceLayerInstanceIdUnknownException {
+  
+  
+  public void rediscover(Long revision, GenerationBaseCache generationBaseCache, boolean deployed) throws PersistenceLayerException, Ex_FileAccessException, XPRC_XmlParsingException,
+                  XPRC_OBJECT_EXISTS_BUT_TYPE_DOES_NOT_MATCH, XPRC_InvalidPackageNameException,
+                  XPRC_InheritedConcurrentDeploymentException, AssumedDeadlockException, XPRC_MDMDeploymentException,
+                  XNWH_NoPersistenceLayerConfiguredForTableException, XNWH_PersistenceLayerInstanceIdUnknownException {
     if (logger.isDebugEnabled()) {
       logger.debug("Discovery started (revision " + revision + ")");
     }
-
+    
     Set<String> fqNames = discoverAllXMOMFqNames(revision, deployed);
     for (String fqName : fqNames) {
       try {
@@ -1538,8 +1495,7 @@ public class XMOMDatabase extends FunctionGroup {
       }
     }
   }
-
-
+  
   public static Set<String> discoverAllXMOMFqNames(long revision, boolean deployed) {
     String mdmDir = RevisionManagement.getPathForRevision(PathType.XMOM, revision, deployed);
     Set<String> originalNames = new HashSet<String>();
@@ -1560,8 +1516,7 @@ public class XMOMDatabase extends FunctionGroup {
     }
     return originalNames;
   }
-
-
+  
   private Collection<XMOMDatabaseEntry> getAllXMOMEntries(ODSConnection con) throws PersistenceLayerException {
     Collection<XMOMDatabaseEntry> allEntries = new ArrayList<XMOMDatabaseEntry>();
     allEntries.addAll(con.loadCollection(XMOMDomDatabaseEntry.class));
@@ -1570,14 +1525,13 @@ public class XMOMDatabase extends FunctionGroup {
     allEntries.addAll(con.loadCollection(XMOMServiceGroupDatabaseEntry.class));
     allEntries.addAll(con.loadCollection(XMOMOperationDatabaseEntry.class));
     allEntries.addAll(con.loadCollection(XMOMFormDefinitionDatabaseEntry.class));
-
+    
     return allEntries;
   }
-
-
+  
+  
   private void updateAllTimestamps(Long newTimestamp, boolean all) throws PersistenceLayerException {
-    RevisionManagement revisionManagement =
-        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+    RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     writeLockCache();
     try {
       ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
@@ -1597,17 +1551,17 @@ public class XMOMDatabase extends FunctionGroup {
       writeUnlockCache();
     }
   }
-
-
+  
+  
   private void handleNonExistingEntries() throws PersistenceLayerException, AssumedDeadlockException {
     writeLockCache();
     try {
       Collection<XMOMDatabaseEntry> allEntries = new ArrayList<XMOMDatabaseEntry>();
       ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
       try {
-
+        
         allEntries = getAllXMOMEntries(con);
-
+        
         for (XMOMDatabaseEntry entry : allEntries) {
           if (entry.getTimestamp() == null) {
             continue; //nicht existierender Eintrag
@@ -1617,12 +1571,12 @@ public class XMOMDatabase extends FunctionGroup {
             con.persistObject(entry);
           }
         }
-
+        
         con.commit();
       } finally {
         con.closeConnection();
       }
-
+      
       for (XMOMDatabaseEntry entry : allEntries) {
         if (entry.getTimestamp() == null) {
           continue; //nicht existierender Eintrag
@@ -1638,10 +1592,10 @@ public class XMOMDatabase extends FunctionGroup {
             unregisterWorkflow(entry.getFqname(), entry.getRevision());
           }
           if (entry instanceof XMOMServiceGroupDatabaseEntry) {
-            unregisterServiceGroupAndOperations((XMOMServiceGroupDatabaseEntry) entry, null);
+            unregisterServiceGroupAndOperations((XMOMServiceGroupDatabaseEntry)entry, null);
           }
           if (entry instanceof XMOMOperationDatabaseEntry) {
-            unregisterOperation((XMOMOperationDatabaseEntry) entry, null);
+            unregisterOperation((XMOMOperationDatabaseEntry)entry, null);
           }
           if (entry instanceof XMOMFormDefinitionDatabaseEntry) {
             unregisterForm(entry.getFqname(), entry.getRevision());
@@ -1652,20 +1606,19 @@ public class XMOMDatabase extends FunctionGroup {
       writeUnlockCache();
     }
   }
-
-
+  
+  
   public static class PreparedXMOMDatabaseSelect {
 
     public final List<Collection<XMOMDatabaseType>> archiveTypesPerSelect;
-
-
+    
     private PreparedXMOMDatabaseSelect(List<Collection<XMOMDatabaseType>> archiveTypesPerSelect) {
       this.archiveTypesPerSelect = archiveTypesPerSelect;
     }
-
+    
   }
 
-
+  
   /**
    * suche für mehrfache wiederverwendung vorbereiten. achtung: dabei sind die whereclauses der selects irrelevant.
    * wichtig sind nur die 
@@ -1709,33 +1662,28 @@ public class XMOMDatabase extends FunctionGroup {
     return new PreparedXMOMDatabaseSelect(archiveTypesPerSelect);
   }
 
-
-  public XMOMDatabaseSearchResult executePreparedSelect(PreparedXMOMDatabaseSelect prepared, List<XMOMDatabaseSelect> selects, int maxRows,
-                                                        Long revision) {
+  public XMOMDatabaseSearchResult executePreparedSelect(PreparedXMOMDatabaseSelect prepared, List<XMOMDatabaseSelect> selects, int maxRows, Long revision) {
     return executePreparedSelect(prepared, selects, maxRows, revision, false);
   }
-
-
-  private XMOMDatabaseSearchResult executePreparedSelect(PreparedXMOMDatabaseSelect prepared, List<XMOMDatabaseSelect> selects, int maxRows,
-                                                         Long revision, boolean searchDependentRevisions) {
+  
+  private XMOMDatabaseSearchResult executePreparedSelect(PreparedXMOMDatabaseSelect prepared, List<XMOMDatabaseSelect> selects, int maxRows, Long revision, boolean searchDependentRevisions) {
     Map<XMOMDatabaseType, Integer> counts = new HashMap<XMOMDatabaseType, Integer>();
     try {
       List<Collection<XMOMDatabaseType>> archiveTypesPerSelect = prepared.archiveTypesPerSelect;
-
+      
       List<XMOMDatabaseSearchResultEntry> results = new ArrayList<XMOMDatabaseSearchResultEntry>();
       int countAll = 0;
       readLockCache();
       try {
         Set<Long> allRelevantRevisions = new HashSet<Long>();
         if (searchDependentRevisions) {
-          RuntimeContextDependencyManagement rcdm =
-              XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
+          RuntimeContextDependencyManagement rcdm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
           rcdm.getDependenciesRecursivly(revision, allRelevantRevisions);
         }
         allRelevantRevisions.add(revision);
 
         XMOMDatabaseSelect currentSelect;
-        FutureCollection<List<XMOMDatabaseSearchResultEntry>> futureResults = new FutureCollection<List<XMOMDatabaseSearchResultEntry>>();
+        FutureCollection<List<XMOMDatabaseSearchResultEntry>> futureResults = new FutureCollection<List<XMOMDatabaseSearchResultEntry>>(); 
         for (int i = 0; i < archiveTypesPerSelect.size(); i++) {
           currentSelect = selects.get(i);
           for (XMOMDatabaseType archiveType : archiveTypesPerSelect.get(i)) {
@@ -1743,8 +1691,7 @@ public class XMOMDatabase extends FunctionGroup {
             //TODO zur Performance-Verbesserung wieder mit maxrows suchen und mit "select count(*)" zählen,
             //dabei muss aber die Selection dann aus den einzelnen selects richtig kombiniert werden
             for (Long relevantRevision : allRelevantRevisions) {
-              ArchiveSearchTask request =
-                  new ArchiveSearchTask(currentSelect, archiveType, ods, -1, relevantRevision, searchDependentRevisions);
+              ArchiveSearchTask request = new ArchiveSearchTask(currentSelect, archiveType, ods, -1, relevantRevision, searchDependentRevisions);
               futureResults.add(searchRequestPool.submit(request));
             }
           }
@@ -1760,11 +1707,11 @@ public class XMOMDatabase extends FunctionGroup {
           currentEntry = results.get(i);
           int indexOfAlreadyContainedObject = prunedResults.indexOf(currentEntry);
           if (indexOfAlreadyContainedObject > -1) {
-            prunedResults.get(indexOfAlreadyContainedObject)
-                .setWeigth(prunedResults.get(indexOfAlreadyContainedObject).getWeigth() + currentEntry.getWeigth());
+            prunedResults.get(indexOfAlreadyContainedObject).setWeigth(prunedResults.get(indexOfAlreadyContainedObject)
+                                                                           .getWeigth() + currentEntry.getWeigth());
           } else {
             prunedResults.add(currentEntry);
-
+            
             //neues Objekt zählen
             XMOMDatabaseType type = currentEntry.getType();
             //analog zu XMOMSearchDispatcher.searchDeploymentItemManagement
@@ -1779,13 +1726,13 @@ public class XMOMDatabase extends FunctionGroup {
             countAll++;
           }
         }
-
+        
         //Ergebnis auf maxRows begrenzen
         if (prunedResults.size() >= maxRows && maxRows > 0) {
           prunedResults = new ArrayList<XMOMDatabaseSearchResultEntry>(prunedResults.subList(0, maxRows));
         }
         results = sortResultList(prunedResults);
-
+        
       } finally {
         readUnlockCache();
       }
@@ -1804,8 +1751,8 @@ public class XMOMDatabase extends FunctionGroup {
       return new XMOMDatabaseSearchResult(new ArrayList<XMOMDatabaseSearchResultEntry>(), 0, counts);
     }
   }
-
-
+  
+  
   public XMOMDatabaseSearchResult searchXMOMDatabase(List<XMOMDatabaseSelect> selects, int maxRows, Long revision)
       throws XNWH_InvalidSelectStatementException, PersistenceLayerException {
 
@@ -1829,10 +1776,8 @@ public class XMOMDatabase extends FunctionGroup {
     private List<XMOMDatabaseSearchResultEntry> results = new ArrayList<XMOMDatabaseSearchResultEntry>();
     private Long revision;
     private final boolean substituteRevisionParameter;
-
-
-    ArchiveSearchTask(XMOMDatabaseSelect select, XMOMDatabaseType archive, ODS ods, int maxRows, Long revision,
-                      boolean substituteRevisionParameter) {
+    
+    ArchiveSearchTask(XMOMDatabaseSelect select, XMOMDatabaseType archive, ODS ods, int maxRows, Long revision, boolean substituteRevisionParameter) {
       this.select = select;
       this.archive = archive;
       this.ods = ods;
@@ -1840,12 +1785,12 @@ public class XMOMDatabase extends FunctionGroup {
       this.revision = revision;
       this.substituteRevisionParameter = substituteRevisionParameter;
     }
-
-
+    
     public List<XMOMDatabaseSearchResultEntry> call() throws Exception {
 
       List<? extends XMOMDatabaseEntry> searchResult = new ArrayList<XMOMDatabaseEntry>();
-      String selectString = select.getSelectString().replace(XMOMDatabaseSelect.ARCHIVEPLACEHOLDER, archive.getArchiveIdentifier());
+      String selectString = select.getSelectString().replace(XMOMDatabaseSelect.ARCHIVEPLACEHOLDER,
+                                                      archive.getArchiveIdentifier());
       ResultSetReader<? extends XMOMDatabaseEntry> reader = getReaderForArchive(archive, select.getSelection());
       ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
       try {
@@ -1861,9 +1806,8 @@ public class XMOMDatabase extends FunctionGroup {
         for (XMOMDatabaseEntry xmomCacheEntryBase : retrieveEntriesForSelection(con, select.getSelection(), searchResult)) {
           if (!excludeFromSearchResult(xmomCacheEntryBase)) {
             XMOMDatabaseSearchResultEntry entry = new XMOMDatabaseSearchResultEntry(xmomCacheEntryBase, 1);
-            entry.setRuntimeContext(XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement()
-                .getRuntimeContext(xmomCacheEntryBase.getRevision()));
-            entry.setLabel(xmomCacheEntryBase.getCaselabel());
+            entry.setRuntimeContext(XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().getRuntimeContext(xmomCacheEntryBase.getRevision()));
+            entry.setLabel( xmomCacheEntryBase.getCaselabel() );
             results.add(entry);
           }
         }
@@ -1873,11 +1817,10 @@ public class XMOMDatabase extends FunctionGroup {
       return results;
     }
 
-
     private Parameter substituteRevisionParameter(Parameter oldParas) {
       Parameter paras = select.getParameter();
       Object[] parasAsObject = new Object[paras.size()];
-      for (int i = 0; i < parasAsObject.length; i++) {
+      for (int i = 0; i<parasAsObject.length; i++) {
         parasAsObject[i] = paras.get(i);
       }
       parasAsObject[parasAsObject.length - 1] = revision;
@@ -1885,24 +1828,24 @@ public class XMOMDatabase extends FunctionGroup {
       return paras;
     }
   }
-
-
+  
+  
   private static boolean excludeFromSearchResult(XMOMDatabaseEntry entry) {
     if (entry.getFqname() == null) {
       return true;
     }
-    if (entry.getXMOMDatabaseType() == XMOMDatabaseType.DATATYPE && entry.getMetadata() != null) {
+    if (entry.getXMOMDatabaseType() == XMOMDatabaseType.DATATYPE &&
+                    entry.getMetadata() != null) {
       return entry.getMetadata().contains("<IsServiceGroupOnly>true</IsServiceGroupOnly>");
     } else {
       return false;
     }
   }
-
-
-  private static List<? extends XMOMDatabaseEntry> retrieveEntriesForSelection(ODSConnection con,
-                                                                               Collection<XMOMDatabaseEntryColumn> selection,
-                                                                               Collection<? extends XMOMDatabaseEntry> searchResult)
-      throws PersistenceLayerException {
+    
+  
+  private static List<? extends XMOMDatabaseEntry> retrieveEntriesForSelection(ODSConnection con, 
+                                                                     Collection<XMOMDatabaseEntryColumn> selection,
+                                                                     Collection<? extends XMOMDatabaseEntry> searchResult) throws PersistenceLayerException {
     List<XMOMDatabaseEntry> retrievedSelection = new ArrayList<XMOMDatabaseEntry>();
     for (XMOMDatabaseEntry xmomCacheEntry : searchResult) {
       boolean foundRelation = false;
@@ -1919,10 +1862,9 @@ public class XMOMDatabase extends FunctionGroup {
             String[] seperatedList = value.split(XMOMDatabaseEntry.SEPERATION_MARKER);
             pks : for (String fqName : seperatedList) {
               if (XMOMDatabaseEntry.isValidFQName(fqName)) {
-                RuntimeContextDependencyManagement rcdm =
-                    XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
+                RuntimeContextDependencyManagement rcdm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
                 Long revisionForEntry = rcdm.getRevisionDefiningXMOMObjectOrParent(fqName, xmomCacheEntry.getRevision());
-
+                
                 //for each entry generate appropriate XMOMCacheEntry with that primaryKey
                 for (XMOMDatabaseType archiveType : XMOMDatabaseType.getArchiveTypesForColumnLookup(column, true)) {
                   XMOMDatabaseEntry entry = archiveType.generateInstanceOfArchiveStorableWithPrimaryKey(fqName, revisionForEntry);
@@ -1944,10 +1886,10 @@ public class XMOMDatabase extends FunctionGroup {
         retrievedSelection.add(xmomCacheEntry);
       }
     }
-
+    
     return retrievedSelection;
   }
-
+  
 
   private static Collection<XMOMDatabaseType> retrieveArchiveTypesForRequest(XMOMDatabaseSelect select) {
     Set<XMOMDatabaseType> typesFromWhereClauses = new HashSet<XMOMDatabaseType>();
@@ -1959,7 +1901,7 @@ public class XMOMDatabase extends FunctionGroup {
         }
       }
     }
-
+    
     if (XMOMDatabaseType.areArchiveTypesInvalid(typesFromWhereClauses)) {
       typesFromWhereClauses.clear();
       return typesFromWhereClauses;
@@ -1981,13 +1923,16 @@ public class XMOMDatabase extends FunctionGroup {
     if (typesFromWhereClauses.size() > 0) {
       typesFromSelectionClauses.retainAll(typesFromWhereClauses);
     }
-
+    
     return typesFromSelectionClauses;
   }
 
 
+  
+
+
   private static ResultSetReader<? extends XMOMDatabaseEntry> getReaderForArchive(XMOMDatabaseType type,
-                                                                                  Set<XMOMDatabaseEntryColumn> selected) {
+                                                                               Set<XMOMDatabaseEntryColumn> selected) {
     switch (type) {
       case DATATYPE :
         return new XMOMDomDatabaseEntry.DynamicXMOMCacheReader(selected);
@@ -2002,8 +1947,8 @@ public class XMOMDatabase extends FunctionGroup {
       case FORMDEFINITION :
         // TODO dynamic reader once fields
         return XMOMFormDefinitionDatabaseEntry.reader;
-      default :
-        throw new RuntimeException("Readers for abstract archives '" + type.toString() + "' can not be retrieved!");
+      default: 
+        throw new RuntimeException("Readers for abstract archives '" +type.toString()+ "' can not be retrieved!");
     }
   }
 
@@ -2030,23 +1975,23 @@ public class XMOMDatabase extends FunctionGroup {
       cacheLock.writeLock().unlock();
     }
   }
-
-
+  
+  
   private static class ArchiveRequestThreadFactory implements ThreadFactory {
 
     public Thread newThread(Runnable r) {
       return new Thread(r, "ArchiveSearchRequest");
     }
-
+    
   }
 
-
+  
   public Collection<XMOMDatabaseEntry> getAllXMOMEntriesFromSingleUnknown(String fqName, boolean forwardRelations,
                                                                           boolean backwardRelations, Long revision)
       throws PersistenceLayerException {
 
     Collection<XMOMDatabaseEntry> result = new ArrayList<XMOMDatabaseEntry>();
-    if (fqName.contains("*")) {
+    if(fqName.contains("*")) {
       List<XMOMDatabaseSelect> selectList = new ArrayList<XMOMDatabaseSelect>();
       try {
         XMOMDatabaseSelect select = new XMOMDatabaseSelect();
@@ -2054,9 +1999,8 @@ public class XMOMDatabase extends FunctionGroup {
         select.addDesiredResultTypes(XMOMDatabaseType.GENERIC);
         selectList.add(select);
         XMOMDatabaseSearchResult searchResult = searchXMOMDatabase(selectList, Integer.MAX_VALUE, revision);
-        for (XMOMDatabaseSearchResultEntry entry : searchResult.getResult()) {
-          RuntimeContextDependencyManagement rcdm =
-              XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
+        for(XMOMDatabaseSearchResultEntry entry : searchResult.getResult()) {
+          RuntimeContextDependencyManagement rcdm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
           Long revisionForLookup = rcdm.getRevisionDefiningXMOMObjectOrParent(entry.getFqName(), revision);
           result.add(entry.getType().generateInstanceOfArchiveStorableWithPrimaryKey(entry.getFqName(), revisionForLookup));
         }
@@ -2064,10 +2008,10 @@ public class XMOMDatabase extends FunctionGroup {
         throw new XNWH_GeneralPersistenceLayerException("Failed to load xmomobjects", e);
       }
     }
-
+    
     ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
     try {
-      if (!fqName.contains("*")) {
+      if(!fqName.contains("*")) {
         XMOMDatabaseEntry entry;
         try {
           entry = new XMOMWorkflowDatabaseEntry(fqName, revision);
@@ -2087,7 +2031,7 @@ public class XMOMDatabase extends FunctionGroup {
         }
         result.add(entry);
       }
-
+      
       Collection<XMOMDatabaseEntryColumn> selection = buildSelectionFromFlags(forwardRelations, backwardRelations);
       if (selection == null) {
         return result;
@@ -2098,8 +2042,8 @@ public class XMOMDatabase extends FunctionGroup {
       con.closeConnection();
     }
   }
-
-
+  
+  
   private Collection<XMOMDatabaseEntryColumn> buildSelectionFromFlags(boolean forwardRelations, boolean backwardRelations) {
     if (!forwardRelations && !backwardRelations) {
       return null;
@@ -2114,18 +2058,17 @@ public class XMOMDatabase extends FunctionGroup {
       return selection;
     }
   }
-
-
-  private Collection<XMOMDatabaseEntry> followAllEntries(Collection<XMOMDatabaseEntry> entries,
-                                                         Collection<XMOMDatabaseEntryColumn> selectionToFollow, ODSConnection con)
-      throws PersistenceLayerException {
+  
+  
+  private Collection<XMOMDatabaseEntry> followAllEntries(Collection<XMOMDatabaseEntry> entries, 
+                                                         Collection<XMOMDatabaseEntryColumn> selectionToFollow,
+                                                         ODSConnection con) throws PersistenceLayerException {
     Collection<XMOMDatabaseEntry> result = new ArrayList<XMOMDatabaseEntry>();
     result.addAll(entries);
     Collection<XMOMDatabaseEntry> toFollow = new ArrayList<XMOMDatabaseEntry>(entries);
     Set<String> alreadyFollowed = new HashSet<String>();
     while (true) {
-      List<XMOMDatabaseEntry> objectsFromRelations =
-          (List<XMOMDatabaseEntry>) retrieveEntriesForSelection(con, selectionToFollow, toFollow);
+      List<XMOMDatabaseEntry> objectsFromRelations = (List<XMOMDatabaseEntry>) retrieveEntriesForSelection(con, selectionToFollow, toFollow);
       for (XMOMDatabaseEntry xmomDatabaseEntry : toFollow) {
         alreadyFollowed.add(xmomDatabaseEntry.getFqname());
       }
@@ -2145,9 +2088,9 @@ public class XMOMDatabase extends FunctionGroup {
     }
     return result;
   }
-
-
-  public String getDataModelUsedBy(String dataModelName) throws PersistenceLayerException {
+  
+  
+  public String getDataModelUsedBy (String dataModelName) throws PersistenceLayerException {
     XMOMDataModelDatabaseEntry entry = new XMOMDataModelDatabaseEntry(dataModelName);
     ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
     try {
@@ -2156,7 +2099,7 @@ public class XMOMDatabase extends FunctionGroup {
       //ok, DataModel wird es nicht verwendet
       return null;
     }
-
+    
     return entry.getUsedBy();
   }
 }

@@ -46,7 +46,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.VariableContextIdentification.Vari
 
 
 public class StepBasedVariable implements VariableInfo {
-
+  
   private static final Logger logger = CentralFactoryLogging.getLogger(StepBasedVariable.class);
 
   private final VariableIdentification vi;
@@ -62,7 +62,6 @@ public class StepBasedVariable implements VariableInfo {
     this.context = context;
     this.var = vi.getVariable();
   }
-
 
   /**
    * macht nichts mit der indexdef
@@ -140,7 +139,6 @@ public class StepBasedVariable implements VariableInfo {
     throw new XPRC_InvalidVariableMemberNameException(parent.getDomOrExceptionObject().getOriginalFqName(), memberVarName);
   }
 
-
   //FIXME diese methode ist in StepBasedIdentification kopiert
   public AVariable checkInstanceInvocation(DOM datatypeWithOperations, VariableInstanceFunctionIncovation instanceMethod) {
     String fqName = datatypeWithOperations.getOriginalFqName();
@@ -159,7 +157,7 @@ public class StepBasedVariable implements VariableInfo {
             }
             instanceMethod.setInputParameterTypes(typesOfInputVars);
             if (operation instanceof CodeOperation) {
-              instanceMethod.setRequiresXynaOrder(((CodeOperation) operation).requiresXynaOrder());
+              instanceMethod.setRequiresXynaOrder(((CodeOperation)operation).requiresXynaOrder());              
             }
             if (resultValues.size() > 1) {
               throw new RuntimeException("Instance methods with more than 1 result are not supported: " + instanceMethod.getName());
@@ -193,13 +191,12 @@ public class StepBasedVariable implements VariableInfo {
     public String getFqClassName() {
       return dom.getFqClassName();
     }
-
-
+    
     public String getFqXMLName() {
       return dom.getOriginalFqName();
     }
-
-
+    
+    
     public DomOrExceptionGenerationBase getGenerationType() {
       return dom;
     }
@@ -271,11 +268,11 @@ public class StepBasedVariable implements VariableInfo {
         var.setFQClassName(dom.getFqClassName());
       } else {
         var = new ExceptionVariable(context.step.creator);
-        ((ExceptionVariable) var).init(dom.getOriginalPath(), dom.getOriginalSimpleName());
+        ((ExceptionVariable)var).init(dom.getOriginalPath(), dom.getOriginalSimpleName());
       }
       var.children = new ArrayList<AVariable>();
       CodeBuffer cb = new CodeBuffer("");
-      var.generateConstructor(cb, Collections.<String> emptySet(), true);
+      var.generateConstructor(cb, Collections.<String>emptySet(), true);
       return cb.toString(false);
     }
 
@@ -288,7 +285,6 @@ public class StepBasedVariable implements VariableInfo {
     public Set<ModelledType> getSubTypesRecursivly() {
       GenerationBaseCache gba = new GenerationBaseCache();
       Set<StepBasedType> types = new TreeSet<>(new Comparator<StepBasedType>() {
-
         public int compare(StepBasedType o1, StepBasedType o2) {
           return o1.dom.getOriginalFqName().compareTo(o2.dom.getOriginalFqName());
         }
@@ -296,8 +292,7 @@ public class StepBasedVariable implements VariableInfo {
       getSubTypesRecursivlyInternaly(gba, types);
       return new HashSet<ModelledType>(types);
     }
-
-
+    
     private void getSubTypesRecursivlyInternaly(GenerationBaseCache gba, Set<StepBasedType> visitedTypes) {
       StepBasedType thisType = new StepBasedType(dom, context);
       if (visitedTypes.add(thisType)) {
@@ -316,8 +311,7 @@ public class StepBasedVariable implements VariableInfo {
 
     private final Operation operation;
     private final List<VariableInfo> resultTypes;
-
-
+    
     private StepBasedOperation(Operation operation, StepBasedIdentification context) {
       this.operation = operation;
       if (operation.getOutputVars().size() > 0) {
@@ -332,19 +326,16 @@ public class StepBasedVariable implements VariableInfo {
         resultTypes = Collections.emptyList();
       }
     }
-
-
+    
     public String getOperationName() {
       return operation.getName();
     }
 
-
     public List<VariableInfo> getResultTypes() {
       return resultTypes;
     }
-
+    
   }
-
 
   //FIXME diese methode ist in StepBasedIdentification kopiert
   private TypeInfo getTypeInfo(AVariable var, boolean ignoreList) {
@@ -386,11 +377,11 @@ public class StepBasedVariable implements VariableInfo {
     return result;
   }
 
-
+  
   public boolean isIdentifieableVariable() {
     return context.getPathTo(vi) != null;
   }
-
+  
 
   public AVariable getAVariable() {
     if (typeCast != null) {
@@ -408,13 +399,12 @@ public class StepBasedVariable implements VariableInfo {
 
   public void castTo(TypeInfo type) {
     if (var instanceof ExceptionVariable) {
-      typeCast = new ExceptionVariable((ExceptionVariable) var);
-      ((ExceptionVariable) typeCast)
-          .setExceptionGeneration((ExceptionGeneration) ((StepBasedType) type.getModelledType()).getGenerationType());
+      typeCast = new ExceptionVariable((ExceptionVariable)var);
+      ((ExceptionVariable)typeCast).setExceptionGeneration((ExceptionGeneration)((StepBasedType)type.getModelledType()).getGenerationType());
     } else {
-      typeCast = new DatatypeVariable((DatatypeVariable) var);
+      typeCast = new DatatypeVariable((DatatypeVariable)var);
     }
-    typeCast.domOrException = ((StepBasedType) type.getModelledType()).getGenerationType();
+    typeCast.domOrException = ((StepBasedType)type.getModelledType()).getGenerationType();
     if (typeCast.domOrException != null) {
       typeCast.setClassName(typeCast.domOrException.getSimpleClassName());
       typeCast.setFQClassName(typeCast.domOrException.getFqClassName());

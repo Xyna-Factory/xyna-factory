@@ -18,8 +18,6 @@
 
 package com.gip.xyna.xact.filter.xmom.datatypes.json;
 
-
-
 import com.gip.xyna.xact.filter.HasXoRepresentation;
 import com.gip.xyna.xact.filter.session.GenerationBaseObject;
 import com.gip.xyna.xact.filter.session.exceptions.UnknownObjectIdException;
@@ -50,9 +48,8 @@ import xmcp.processmodeller.datatypes.datatypemodeller.StaticMethod;
 import xmcp.yggdrasil.plugin.Context;
 
 
-
 public class DatatypeMethodXo implements HasXoRepresentation {
-
+  
   private final GenerationBaseObject gbo;
   private ObjectId methodId;
   private IdentifiedVariables identifiedVariables;
@@ -66,7 +63,6 @@ public class DatatypeMethodXo implements HasXoRepresentation {
   protected final GuiHttpPluginManagement pluginMgmt;
   protected final ExtendedContextBuilder contextBuilder;
 
-
   public DatatypeMethodXo(Operation operation, GenerationBaseObject gbo, String id, ExtendedContextBuilder contextBuilder) {
     this.gbo = gbo;
     try {
@@ -79,37 +75,36 @@ public class DatatypeMethodXo implements HasXoRepresentation {
     pluginMgmt = GuiHttpPluginManagement.getInstance();
 
     this.operation = operation;
-    if (operation.isAbstract()) {
+    if(operation.isAbstract()) {
       implementationType = GuiLabels.DT_LABEL_IMPL_TYPE_ABSTRACT;
     } else {
-      if (operation instanceof JavaOperation) {
+      if(operation instanceof JavaOperation) {
         implementationType = GuiLabels.DT_LABEL_IMPL_TYPE_CODED_SERVICE;
-        JavaOperation javaOperation = (JavaOperation) operation;
+        JavaOperation javaOperation = (JavaOperation)operation;
         implementation = javaOperation.getImpl();
-      } else if (operation instanceof PythonOperation) {
+      } else if(operation instanceof PythonOperation) {
         implementationType = GuiLabels.DT_LABEL_IMPL_TYPE_CODED_SERVICE_PYTHON;
-        PythonOperation pythonOperation = (PythonOperation) operation;
+        PythonOperation pythonOperation = (PythonOperation)operation;
         implementation = pythonOperation.getImpl();
-      } else if (operation instanceof WorkflowCall) {
+      } else if(operation instanceof WorkflowCall) {
         implementationType = GuiLabels.DT_LABEL_IMPL_TYPE_REFERENCE;
-        WorkflowCall workflowCall = (WorkflowCall) operation;
+        WorkflowCall workflowCall = (WorkflowCall)operation;
         reference = workflowCall.getWfFQClassName();
       }
     }
     this.contextBuilder = contextBuilder;
   }
 
-
   @Override
   public GeneralXynaObject getXoRepresentation() {
     Method method;
-    if (operation.isStatic()) {
+    if(operation.isStatic()) {
       StaticMethod staticMethod = new StaticMethod();
-
+      
       method = staticMethod;
     } else {
       DynamicMethod dynamicMethod = new DynamicMethod();
-      if (reference != null) {
+      if(reference != null) {
         dynamicMethod.setReference(reference);
       }
       method = dynamicMethod;
@@ -130,39 +125,34 @@ public class DatatypeMethodXo implements HasXoRepresentation {
     Integer methodNumber = ObjectId.parseMemberMethodNumber(methodId);
     method.addToAreas(createDocumentationArea());
     method.addToAreas(createImplementationArea());
-    method.addToAreas(ServiceUtils
-        .createVariableArea(gbo, ObjectId.createId(ObjectType.methodVarArea, String.valueOf(methodNumber), ObjectPart.input),
-                            VarUsageType.input, identifiedVariables, ServiceUtils.getServiceTag(VarUsageType.input),
-                            new String[] {MetaXmomContainers.DATA_FQN, MetaXmomContainers.EXCEPTION_FQN},
-                            identifiedVariables.isReadOnly()));
-    method.addToAreas(ServiceUtils
-        .createVariableArea(gbo, ObjectId.createId(ObjectType.methodVarArea, String.valueOf(methodNumber), ObjectPart.output),
-                            VarUsageType.output, identifiedVariables, ServiceUtils.getServiceTag(VarUsageType.output),
-                            new String[] {MetaXmomContainers.DATA_FQN, MetaXmomContainers.EXCEPTION_FQN},
-                            identifiedVariables.isReadOnly()));
-    method.addToAreas(ServiceUtils
-        .createVariableArea(gbo, ObjectId.createId(ObjectType.methodVarArea, String.valueOf(methodNumber), ObjectPart.thrown),
-                            VarUsageType.thrown, identifiedVariables, ServiceUtils.getServiceTag(VarUsageType.thrown),
-                            new String[] {MetaXmomContainers.EXCEPTION_FQN}, identifiedVariables.isReadOnly()));
+    method.addToAreas(ServiceUtils.createVariableArea(gbo, ObjectId.createId(ObjectType.methodVarArea, String.valueOf(methodNumber), ObjectPart.input), VarUsageType.input,
+                                                      identifiedVariables, ServiceUtils.getServiceTag(VarUsageType.input), 
+                                                      new String[] {MetaXmomContainers.DATA_FQN, MetaXmomContainers.EXCEPTION_FQN}, 
+                                                      identifiedVariables.isReadOnly()));
+    method.addToAreas(ServiceUtils.createVariableArea(gbo, ObjectId.createId(ObjectType.methodVarArea, String.valueOf(methodNumber), ObjectPart.output), VarUsageType.output,
+                                                      identifiedVariables, ServiceUtils.getServiceTag(VarUsageType.output), 
+                                                      new String[] {MetaXmomContainers.DATA_FQN, MetaXmomContainers.EXCEPTION_FQN}, 
+                                                      identifiedVariables.isReadOnly()));
+    method.addToAreas(ServiceUtils.createVariableArea(gbo, ObjectId.createId(ObjectType.methodVarArea, String.valueOf(methodNumber), ObjectPart.thrown), VarUsageType.thrown,
+                                                      identifiedVariables, ServiceUtils.getServiceTag(VarUsageType.thrown), 
+                                                      new String[] {MetaXmomContainers.EXCEPTION_FQN}, 
+                                                      identifiedVariables.isReadOnly()));
 
     return method;
   }
-
-
+  
   private TextArea createDocumentationArea() {
     TextArea area = new TextArea();
     area.setName(Tags.DATA_TYPE_DOCUMENTATION_AREA);
     area.setId(ObjectId.createOperationDocumentationAreaId(String.valueOf(ObjectId.parseMemberMethodNumber(methodId))));
     area.setText(operation.getDocumentation());
     area.setReadonly(inheritedFrom != null);
-    String pluginPath =
-        operation.isStatic() ? PluginPaths.location_servicegroup_method_documentation : PluginPaths.location_datatype_method_documentation;
+    String pluginPath = operation.isStatic() ? PluginPaths.location_servicegroup_method_documentation : PluginPaths.location_datatype_method_documentation;
     Context context = contextBuilder.instantiateContext(pluginPath, area.getId());
     area.unversionedSetPlugin(pluginMgmt.createPlugin(context));
     return area;
   }
-
-
+  
   private TextArea createImplementationArea() {
     TextArea area = new TextArea();
     area.setName(Tags.DATA_TYPE_IMPLEMENTATION);
@@ -170,54 +160,47 @@ public class DatatypeMethodXo implements HasXoRepresentation {
     area.setText(implementation);
     area.setReadonly(inheritedFrom != null);
     String pluginContextId = ObjectId.createMemberMethodId(ObjectId.parseMemberMethodNumber(methodId));
-    String pluginPath = operation
-        .isStatic() ? PluginPaths.location_servicegroup_method_implementation : PluginPaths.location_datatype_method_implementation;
+    String pluginPath = operation.isStatic() ? PluginPaths.location_servicegroup_method_implementation : PluginPaths.location_datatype_method_implementation;
     Context context = contextBuilder.instantiateContext(pluginPath, pluginContextId);
     area.unversionedSetPlugin(pluginMgmt.createPlugin(context));
     return area;
   }
 
-
   public boolean isStatic() {
     return operation.isStatic();
   }
-
-
+  
   public boolean isInherited() {
     return inheritedFrom != null;
   }
-
-
+  
   public boolean isMemberMethod() {
     return !isInherited() && !overrides();
   }
-
-
+  
   public boolean overrides() {
     return overrides;
   }
-
-
+  
   public Boolean getOverrides() {
     return overrides;
   }
 
-
+  
   public void setOverrides(Boolean overrides) {
     this.overrides = overrides;
   }
 
-
+  
   public DOM getInheritedFrom() {
     return inheritedFrom;
   }
 
-
+  
   public void setInheritedFrom(DOM inheritedFrom) {
     this.inheritedFrom = inheritedFrom;
   }
-
-
+  
   public Operation getOperation() {
     return operation;
   }

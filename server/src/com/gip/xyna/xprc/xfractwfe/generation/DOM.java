@@ -122,7 +122,7 @@ import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
 
 
 public class DOM extends DomOrExceptionGenerationBase {
-
+  
   private final static Logger logger = CentralFactoryLogging.getLogger(DOM.class);
   public final static String INIT_METHODNAME = "initImplementationOfInstanceMethods";
   public final static String INSTANCE_METHODS_IMPL_VAR = "implementationOfInstanceMethods";
@@ -132,6 +132,7 @@ public class DOM extends DomOrExceptionGenerationBase {
   public static final String FILLDIRECTMEMBERS_METHODNAME = "fillDirectMembers";
 
 
+  
   private ArrayList<AVariable> memberVars = new ArrayList<AVariable>();
   private Map<String, List<Operation>> serviceNameToOperationMap = new HashMap<String, List<Operation>>();
   private Map<String, String> serviceNameToServiceLabel = new HashMap<String, String>();
@@ -143,38 +144,35 @@ public class DOM extends DomOrExceptionGenerationBase {
 
   // used internally for getDependency()
   private Set<GenerationBase> additionalDependenciesSet = new HashSet<GenerationBase>();
-
+  
   private Set<String> additionalLibNames = new TreeSet<String>();
   private Set<String> sharedLibs = new HashSet<String>();
-
+  
   private PersistenceInformation persistenceInformation;
   private DataModelInformation dataModelInformation;
   private PathMapInformation pathMapInformation;
 
   private Boolean isServiceGroupOnly = null;
 
-
   private DOM(String originalName, String domInputNameFQ, Long revision) {
     super(originalName, domInputNameFQ, revision);
   }
-
-
-  DOM(String originalName, String domInputNameFQ, GenerationBaseCache cache, Long revision, String realType,
-      XMLSourceAbstraction inputSource) {
+  
+  DOM(String originalName, String domInputNameFQ, GenerationBaseCache cache, Long revision, String realType, XMLSourceAbstraction inputSource) {
     super(originalName, domInputNameFQ, cache, revision, realType, inputSource);
   }
 
-
-  public static DOM getInstance(String fqXmlName) throws XPRC_OBJECT_EXISTS_BUT_TYPE_DOES_NOT_MATCH, XPRC_InvalidPackageNameException {
+  public static DOM getInstance(String fqXmlName) throws XPRC_OBJECT_EXISTS_BUT_TYPE_DOES_NOT_MATCH,
+                        XPRC_InvalidPackageNameException {
     return getInstance(fqXmlName, RevisionManagement.REVISION_DEFAULT_WORKSPACE);
   }
-
 
   public static DOM getInstance(String fqXmlName, Long revision) throws XPRC_InvalidPackageNameException {
     String fqClassName = transformNameForJava(fqXmlName);
 
-    revision = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
-        .getRevisionDefiningXMOMObjectOrParent(fqXmlName, revision);
+    revision =
+        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
+            .getRevisionDefiningXMOMObjectOrParent(fqXmlName, revision);
 
     GenerationBase o = tryGetGlobalCachedInstance(fqXmlName, revision);
     if (o == null) {
@@ -196,15 +194,13 @@ public class DOM extends DomOrExceptionGenerationBase {
     }
     return (DOM) o;
   }
-
-
-  public static DOM getOrCreateInstance(String fqXmlName, GenerationBaseCache cache, Long revision)
-      throws XPRC_InvalidPackageNameException {
+  
+  public static DOM getOrCreateInstance(String fqXmlName, GenerationBaseCache cache, Long revision) throws XPRC_InvalidPackageNameException {
     return getOrCreateInstance(fqXmlName, cache, revision, new FactoryManagedRevisionXMLSource());
   }
 
-
-  public static DOM getOrCreateInstance(String fqXmlName, GenerationBaseCache cache, Long revision, XMLSourceAbstraction inputSource)
+  public static DOM getOrCreateInstance(String fqXmlName,
+                                        GenerationBaseCache cache, Long revision, XMLSourceAbstraction inputSource)
       throws XPRC_InvalidPackageNameException {
     revision = inputSource.getRevisionDefiningXMOMObjectOrParent(fqXmlName, revision);
     String fqClassName = GenerationBase.transformNameForJava(fqXmlName);
@@ -213,42 +209,41 @@ public class DOM extends DomOrExceptionGenerationBase {
       dom = new DOM(fqXmlName, fqClassName, cache, revision, null, inputSource);
       cache.insertIntoCache(dom);
     }
-
+    
     return dom;
   }
-
+  
 
   public static DOM generateUncachedInstance(String originalInputName, boolean fromDeploymentLocation, Long revision)
       throws XPRC_InvalidPackageNameException, XPRC_InheritedConcurrentDeploymentException, AssumedDeadlockException,
       XPRC_MDMDeploymentException {
-    revision = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
-        .getRevisionDefiningXMOMObjectOrParent(originalInputName, revision);
-
+    revision =
+        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
+            .getRevisionDefiningXMOMObjectOrParent(originalInputName, revision);
+    
     DOM dom = getOrCreateInstance(originalInputName, new GenerationBaseCache(), revision);
     dom.parseGeneration(fromDeploymentLocation, false, true);
     return dom;
   }
-
-
-  public static void deploy(List<String> objects, DeploymentMode mode, boolean inheritCodeChange, WorkflowProtectionMode remode,
-                            String comment)
-      throws MDMParallelDeploymentException, XPRC_DeploymentDuringUndeploymentException, XPRC_OBJECT_EXISTS_BUT_TYPE_DOES_NOT_MATCH,
-      XPRC_InvalidPackageNameException {
+  
+  
+  public static void deploy(List<String> objects, DeploymentMode mode, boolean inheritCodeChange, WorkflowProtectionMode remode, String comment)
+                  throws MDMParallelDeploymentException, XPRC_DeploymentDuringUndeploymentException, XPRC_OBJECT_EXISTS_BUT_TYPE_DOES_NOT_MATCH, XPRC_InvalidPackageNameException {
     List<GenerationBase> doms = new ArrayList<GenerationBase>();
     for (String fqXmlName : objects) {
       DOM d = getInstance(fqXmlName);
       d.setDeploymentComment(comment);
-      doms.add(d);
+      doms.add(d);  
     }
     GenerationBase.deploy(doms, mode, inheritCodeChange, remode);
   }
-
+  
 
   //false = serialisierte objektinstanzen der alten version können von der neuen version problemlos deserialisiert werden und alle methoden, die es in der alten
   //        version gab, können immer noch aufgerufen werden.
   @Override
   public boolean compareImplementation(GenerationBase oldVersion) {
-    DOM oldDOM = (DOM) oldVersion;
+    DOM oldDOM = (DOM)oldVersion;
     //super class 
     if (superClassDom != null) {
       if (oldDOM.superClassDom != null) {
@@ -288,7 +283,7 @@ public class DOM extends DomOrExceptionGenerationBase {
         } else {
           return true;
         }
-      } else {
+      } else  {
         if (oldV.isJavaBaseType) {
           return true;
         }
@@ -308,8 +303,8 @@ public class DOM extends DomOrExceptionGenerationBase {
       if (!serviceNameToOperationMap.containsKey(oldServiceToOperationMapEntry.getKey())) {
         return true;
       } else {
-        if (serviceNameToOperationMap.get(oldServiceToOperationMapEntry.getKey()).size() < oldServiceToOperationMapEntry.getValue()
-            .size()) {
+        if (serviceNameToOperationMap.get(oldServiceToOperationMapEntry.getKey()).size() < oldServiceToOperationMapEntry
+            .getValue().size()) {
           return true;
         }
         oldOperationLoop : for (Operation oldOperation : oldServiceToOperationMapEntry.getValue()) {
@@ -322,7 +317,7 @@ public class DOM extends DomOrExceptionGenerationBase {
         }
       }
     }
-
+ 
     return false;
   }
 
@@ -360,7 +355,7 @@ public class DOM extends DomOrExceptionGenerationBase {
 
     // add additional dependencies 
     result.addAll(additionalDependenciesSet);
-
+    
     return result;
   }
 
@@ -370,11 +365,14 @@ public class DOM extends DomOrExceptionGenerationBase {
     // TODO extract this mechanism since it is used in WF and DOM classes
 
     XynaObjectCodeGenerator xocg = new XynaObjectCodeGenerator(this);
-
+    
     xocg.generateJavaInternally(cb);
-
+    
     return new String[] {cb.toString()};
   }
+
+
+
 
 
   /**
@@ -393,6 +391,10 @@ public class DOM extends DomOrExceptionGenerationBase {
   }
 
 
+
+
+
+
   public static boolean foundCycle(DOM d, List<DOM> previousDoms) {
     for (DOM previous : previousDoms) {
       if (previous == d) {
@@ -404,7 +406,8 @@ public class DOM extends DomOrExceptionGenerationBase {
   }
 
 
-  public boolean isInheritedFromStorable(boolean directly) {
+
+  public  boolean isInheritedFromStorable(boolean directly) {
     if (superClassDom == null) {
       return false;
     }
@@ -463,8 +466,8 @@ public class DOM extends DomOrExceptionGenerationBase {
     }
     return false;
   }
-
-
+  
+  
   public DOM getBaseStorableType() {
     DOM current = this;
     DOM mostRecentValid = this;
@@ -482,16 +485,21 @@ public class DOM extends DomOrExceptionGenerationBase {
   }
 
 
+
+
+
   @Override
-  protected void parseXmlInternally(Element rootElement)
-      throws XPRC_InconsistentFileNameAndContentException, XPRC_InvalidPackageNameException {
+  protected void parseXmlInternally(Element rootElement) throws XPRC_InconsistentFileNameAndContentException,
+      XPRC_InvalidPackageNameException {
     // validierung, dass xml in einer sprach-version vorliegt, die der server versteht
-    validateClassName(rootElement.getAttribute(GenerationBase.ATT.TYPEPATH), rootElement.getAttribute(GenerationBase.ATT.TYPENAME));
+    validateClassName(rootElement.getAttribute(GenerationBase.ATT.TYPEPATH),
+                      rootElement.getAttribute(GenerationBase.ATT.TYPENAME));
     if (!isEmpty(rootElement.getAttribute(GenerationBase.ATT.BASETYPENAME))) {
       // FIXME hier müsste man eigentlich das super class dom auch parsen, um sicherzugehen, dass das nicht ein Exceptiontyp
       //       ist, den man hier zurückerhält...
-      superClassDom = getCachedDOMInstanceOrCreate(rootElement.getAttribute(GenerationBase.ATT.BASETYPEPATH) + "."
-          + rootElement.getAttribute(GenerationBase.ATT.BASETYPENAME), revision);
+      superClassDom =
+          getCachedDOMInstanceOrCreate(rootElement.getAttribute(GenerationBase.ATT.BASETYPEPATH) + "."
+              + rootElement.getAttribute(GenerationBase.ATT.BASETYPENAME), revision);
     }
     setIsAbstract(XMLUtils.isTrue(rootElement, ATT.ABSTRACT));
     setLabel(rootElement.getAttribute(GenerationBase.ATT.LABEL));
@@ -595,16 +603,20 @@ public class DOM extends DomOrExceptionGenerationBase {
       } else {
         isServiceGroupOnly = null;
       }
-
-      List<String> knownMetaTags = Arrays.asList(GenerationBase.EL.DOCUMENTATION, GenerationBase.EL.DATAMODEL, GenerationBase.EL.PATHMAP,
-                                                 GenerationBase.EL.IS_SERVICE_GROUP_ONLY, GenerationBase.EL.PERSISTENCE);
-      unknownMetaTagsComponent.parseUnknownMetaTags(rootElement, knownMetaTags);
+      
+      List<String> knownMetaTags = Arrays.asList(GenerationBase.EL.DOCUMENTATION, 
+                                                 GenerationBase.EL.DATAMODEL,
+                                                 GenerationBase.EL.PATHMAP,
+                                                 GenerationBase.EL.IS_SERVICE_GROUP_ONLY,
+                                                 GenerationBase.EL.PERSISTENCE);
+       unknownMetaTagsComponent.parseUnknownMetaTags(rootElement, knownMetaTags);
     }
 
     //pktype ist ggf aus supertype und wird erst später befüllt (validate)
     persistenceInformation = PersistenceInformation.parse(metaElement);
-
-    if (isStorableEquivalent() && persistenceInformation.hasTableRepresentation()) {
+    
+    if (isStorableEquivalent() && 
+        persistenceInformation.hasTableRepresentation()) {
       for (AVariable v : memberVars) {
         if (v.persistenceTypes != null) {
           v.persistenceTypes.clear();
@@ -613,11 +625,9 @@ public class DOM extends DomOrExceptionGenerationBase {
     }
   }
 
-
   public Set<String> getAdditionalLibraries() {
     return additionalLibNames;
   }
-
 
   public void addAdditionalLibrary(int index, String libName) {
     if (index != additionalLibNames.size()) {
@@ -626,7 +636,6 @@ public class DOM extends DomOrExceptionGenerationBase {
 
     additionalLibNames.add(libName);
   }
-
 
   public String deleteAdditionalLibrary(int index) {
     int libIdx = 0;
@@ -642,16 +651,13 @@ public class DOM extends DomOrExceptionGenerationBase {
     return null;
   }
 
-
   public void addSharedLib(String libName) {
     sharedLibs.add(libName);
   }
 
-
   public boolean deleteSharedLib(String libName) {
     return sharedLibs.remove(libName);
   }
-
 
   public static String getDeployedJarFilePathInDefaultMDM(String fqClassName) {
     return getDeployedJarFilePathInMDM(fqClassName, null);
@@ -662,12 +668,12 @@ public class DOM extends DomOrExceptionGenerationBase {
     if (revision == null) {
       revision = RevisionManagement.REVISION_DEFAULT_WORKSPACE;
     }
-    return RevisionManagement.getPathForRevision(PathType.SERVICE, revision) + Constants.fileSeparator + fqClassName
-        + Constants.fileSeparator;
+    return RevisionManagement.getPathForRevision(PathType.SERVICE, revision) + Constants.fileSeparator + fqClassName + Constants.fileSeparator;
   }
+  
 
-
-  private void parseAdditionalDependencies(Element s, Set<String> parsedSharedLibs) throws XPRC_InvalidPackageNameException {
+  private void parseAdditionalDependencies(Element s, Set<String> parsedSharedLibs)
+      throws XPRC_InvalidPackageNameException {
 
     Element meta = XMLUtils.getChildElementByName(s, EL.META);
     if (meta != null) {
@@ -680,7 +686,8 @@ public class DOM extends DomOrExceptionGenerationBase {
       for (String wfName : getAdditionalDependencies().getAdditionalDependencies(AdditionalDependencyType.WORKFLOW)) {
         additionalDependenciesSet.add(getCachedWFInstanceOrCreate(wfName, revision));
       }
-      for (String exceptionName : getAdditionalDependencies().getAdditionalDependencies(AdditionalDependencyType.EXCEPTION)) {
+      for (String exceptionName : getAdditionalDependencies()
+          .getAdditionalDependencies(AdditionalDependencyType.EXCEPTION)) {
         additionalDependenciesSet.add(getCachedExceptionInstanceOrCreate(exceptionName, revision));
       }
     }
@@ -694,15 +701,13 @@ public class DOM extends DomOrExceptionGenerationBase {
   /**
    * fügt ohne rekursion abhängige jars dazu
    */
-  public void getDependentJarsWithoutRecursion(Set<String> jars, boolean withSharedLibs, boolean tryFromSaved)
-      throws XPRC_JarFileForServiceImplNotFoundException, XFMG_SHARED_LIB_NOT_FOUND {
+  public void getDependentJarsWithoutRecursion(Set<String> jars, boolean withSharedLibs, boolean tryFromSaved) throws XPRC_JarFileForServiceImplNotFoundException, XFMG_SHARED_LIB_NOT_FOUND {
     if (XynaFactory.isFactoryServer()) {
       Set<String> ret = new HashSet<String>();
       for (String libName : additionalLibNames) {
         ret.add(getJarFileForServiceLocation(getFqClassName(), revision, libName, tryFromSaved, xmlInputSource).getPath());
       }
-      RuntimeContextDependencyManagement rcdm =
-          XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
+      RuntimeContextDependencyManagement rcdm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
       if (withSharedLibs) {
         for (String s : sharedLibs) {
           // FIXME abhängigkeit von sharedlibclassloader entfernen.
@@ -719,12 +724,9 @@ public class DOM extends DomOrExceptionGenerationBase {
       jars.addAll(ret);
     }
   }
-
-
-  public static File getJarFileForServiceLocation(String fqClassName, Long revision, String jarName, boolean tryFromSaved,
-                                                  XMLSourceAbstraction source)
-      throws XPRC_JarFileForServiceImplNotFoundException {
-    File jarFile;
+  
+  public static File getJarFileForServiceLocation(String fqClassName, Long revision, String jarName, boolean tryFromSaved, XMLSourceAbstraction source) throws XPRC_JarFileForServiceImplNotFoundException {
+  File jarFile;
     if (tryFromSaved && (revision == null || source.isOfRuntimeContextType(revision, RuntimeContextType.Workspace))) {
       jarFile = new File(GenerationBase.getFileLocationOfServiceLibsForSaving(fqClassName, revision) + Constants.fileSeparator + jarName);
       if (jarFile.exists()) {
@@ -765,14 +767,16 @@ public class DOM extends DomOrExceptionGenerationBase {
           for (AVariable v : ((CodeOperation) op).getInputVars()) {
             if (!(v.getDomOrExceptionObject() instanceof DOM))
               continue;
-            result
-                .addAll(((DOM) v.getDomOrExceptionObject()).getAdditionalLibsWithRecursion(withSharedLibs, workedOperations, tryFromSaved));
+            result.addAll(((DOM) v.getDomOrExceptionObject()).getAdditionalLibsWithRecursion(withSharedLibs,
+                                                                                             workedOperations,
+                                                                                             tryFromSaved));
           }
           for (AVariable v : ((CodeOperation) op).getOutputVars()) {
             if (!(v.getDomOrExceptionObject() instanceof DOM))
               continue;
-            result
-                .addAll(((DOM) v.getDomOrExceptionObject()).getAdditionalLibsWithRecursion(withSharedLibs, workedOperations, tryFromSaved));
+            result.addAll(((DOM) v.getDomOrExceptionObject()).getAdditionalLibsWithRecursion(withSharedLibs,
+                                                                                             workedOperations,
+                                                                                             tryFromSaved));
           }
         }
       }
@@ -795,7 +799,7 @@ public class DOM extends DomOrExceptionGenerationBase {
       XPRC_InvalidXmlMethodAbstractAndStaticException, XPRC_MEMBER_DATA_NOT_IDENTIFIED, XPRC_PrototypeDeployment {
 
     throwExceptionIfNotExists();
-
+    
     DOM nextSuperClassDOM = getSuperClassGenerationObject();
     while (nextSuperClassDOM != null) {
       // due to thread safety of the deployment we can just check the object references, this is faster than a string comparison
@@ -810,7 +814,7 @@ public class DOM extends DomOrExceptionGenerationBase {
         op.validate();
       }
     }
-
+    
     GenerationBase.checkUniqueVarNamesWithInherited(getAllMemberVarsIncludingInherited());
 
     boolean foundAbstractMethod = false;
@@ -828,7 +832,8 @@ public class DOM extends DomOrExceptionGenerationBase {
             for (Operation oSuper : nextSuperClassDOM.getOperations()) {
               if (oSuper.hasEqualSignature(o)) {
                 if (oSuper.isFinal()) {
-                  throw new XPRC_MayNotOverrideFinalOperationException(o.getName(), nextSuperClassDOM.getOriginalFqName(),
+                  throw new XPRC_MayNotOverrideFinalOperationException(o.getName(),
+                                                                       nextSuperClassDOM.getOriginalFqName(),
                                                                        getOriginalFqName());
                 }
               }
@@ -842,7 +847,7 @@ public class DOM extends DomOrExceptionGenerationBase {
         }
       }
     }
-
+    
     if (!isAbstract() && !foundAbstractMethod) {
       //nach abstrakten methoden in den oberklassen suchen, die hier nicht überschrieben werden
       OperationInformation[] operations = collectOperationsOfDOMHierarchy(false);
@@ -853,7 +858,7 @@ public class DOM extends DomOrExceptionGenerationBase {
         }
       }
     }
-
+    
     if (!isAbstract() && foundAbstractMethod) {
       //die gui sollte das verhindern
       throw new RuntimeException("Datatype " + getOriginalFqName() + " is not defined as abstract but has or inherits abstract methods.");
@@ -867,12 +872,12 @@ public class DOM extends DomOrExceptionGenerationBase {
         List<AVariable> inputVars = wop.getWf().getInputVars();
 
         if (!wop.getWf().exists()) {
-          throw new RuntimeException("Workflow " + wop.getWf().getOriginalFqName() + " referenced by operation " + o.getName()
-              + " in datatype " + getOriginalFqName() + " is missing.");
+          throw new RuntimeException("Workflow " + wop.getWf().getOriginalFqName() + " referenced by operation "
+              + o.getName() + " in datatype " + getOriginalFqName() + " is missing.");
         }
         if (inputVars.size() == 0) {
-          throw new RuntimeException("Workflow " + wop.getWf().getOriginalFqName() + " referenced by operation " + o.getName()
-              + " in datatype " + getOriginalFqName() + " has no input parameters.");
+          throw new RuntimeException("Workflow " + wop.getWf().getOriginalFqName() + " referenced by operation "
+              + o.getName() + " in datatype " + getOriginalFqName() + " has no input parameters.");
         }
 
         //ersten input entfernen //TODO validieren, dass der erste input einen passenden typ hat TODO outputvars validieren TODO beim validieren supertypen zulassen
@@ -887,19 +892,21 @@ public class DOM extends DomOrExceptionGenerationBase {
         }
 
         if (!Operation.parametersAreEqual(inputVarsCopy, o.getInputVars())) {
-          throw new RuntimeException("Workflow " + wop.getWf().getOriginalFqName() + " referenced by operation " + o.getName()
-              + " in datatype " + getOriginalFqName() + " has incompatible input parameters.");
+          throw new RuntimeException("Workflow " + wop.getWf().getOriginalFqName() + " referenced by operation "
+              + o.getName() + " in datatype " + getOriginalFqName() + " has incompatible input parameters.");
         }
       }
     }
-
-    if (isInheritedFromStorable() && !isStorableEquivalent()) {
+    
+    if (isInheritedFromStorable() && 
+        !isStorableEquivalent()) {
       //gibt es genau eine unique id?
       List<AVariable> allMemberVars = getAllMemberVarsIncludingInherited();
       int cntUnID = 0;
       for (AVariable var : allMemberVars) {
-        if (var.getPersistenceTypes() != null && var.getPersistenceTypes().contains(PersistenceTypeInformation.UNIQUE_IDENTIFIER)) {
-          cntUnID++;
+        if (var.getPersistenceTypes() != null && 
+            var.getPersistenceTypes().contains(PersistenceTypeInformation.UNIQUE_IDENTIFIER)) {
+          cntUnID ++;
         }
       }
       if (cntUnID != 1) {
@@ -909,15 +916,14 @@ public class DOM extends DomOrExceptionGenerationBase {
           throw new RuntimeException("Datatype " + getOriginalFqName() + " has defined more than one unique identifier.");
         }
       }
-
+      
       //sind historization metamarkierungen sinnvoll gesetzt etc
       persistenceInformation.validate(this);
 
       checkUniqueLowerCaseVarNamesForStorablesRecursively(this, this, "", new ArrayList<DOM>());
-
+      
       //automatisch flattening aktivieren, falls so konfiguriert TODO das passt eigtl nicht so gut ins validate... aber wohin sonst?
-      if (xmomStorableFlatteningMode.get() != FlatteningMode.NONE
-          && (mode == DeploymentMode.codeChanged || mode == DeploymentMode.codeNew)) {
+      if (xmomStorableFlatteningMode.get() != FlatteningMode.NONE && (mode == DeploymentMode.codeChanged || mode == DeploymentMode.codeNew)) {
         List<String> pathsToAutoFlat = new ArrayList<String>();
         List<String> pathsToAutoExclude = new ArrayList<String>();
         List<DOM> previousDoms = new ArrayList<DOM>();
@@ -928,14 +934,15 @@ public class DOM extends DomOrExceptionGenerationBase {
           GenerationBaseCache gbc = new GenerationBaseCache();
           collectPathToAutoFlat(this, this, "", previousDoms, pathsToAutoFlat, pathsToAutoExclude, false, gbc);
         }
-        if (pathsToAutoFlat.size() > 0 || pathsToAutoExclude.size() > 0) {
+        if (pathsToAutoFlat.size() > 0 ||
+            pathsToAutoExclude.size() > 0) {
           for (String pathToAutoFlat : pathsToAutoFlat) {
             persistenceInformation.getFlattened().add(pathToAutoFlat);
           }
           for (String pathToAutoExclude : pathsToAutoExclude) {
             persistenceInformation.getFlatExclusions().add(pathToAutoExclude);
           }
-
+          
           //im xml verewigen. sowohl im saved als auch im deployed-ordner
           //TODO achtung! bei xsd änderungen sind die xml anpassungen evtl auch anzupassen
           try {
@@ -943,7 +950,7 @@ public class DOM extends DomOrExceptionGenerationBase {
             Element docEl = d.getDocumentElement();
             Element metaEl = XMLUtils.getChildElementByName(docEl, GenerationBase.EL.META);
             if (metaEl == null) {
-              metaEl = d.createElement(GenerationBase.EL.META);
+              metaEl = d.createElement(GenerationBase.EL.META);              
               List<Element> childElements = XMLUtils.getChildElements(docEl);
               if (childElements.size() == 0) {
                 docEl.appendChild(metaEl);
@@ -974,7 +981,7 @@ public class DOM extends DomOrExceptionGenerationBase {
               Text flatTxt = d.createTextNode(pathToAutoExclude);
               flatEl.appendChild(flatTxt);
             }
-
+            
             XMLUtils.saveDom(new File(getFileLocationForDeploymentStaticHelper(getOriginalFqName(), getRevision()) + ".xml"), d);
             if (xmlInputSource.isOfRuntimeContextType(getRevision(), RuntimeContextType.Workspace)) {
               XMLUtils.saveDom(new File(getFileLocationForSavingStaticHelper(getOriginalFqName(), getRevision()) + ".xml"), d);
@@ -990,8 +997,7 @@ public class DOM extends DomOrExceptionGenerationBase {
   }
 
 
-  private void collectPathToAutoFlatForSingleVarTypes(DOM baseType, DOM dom, String path, List<DOM> previousDoms,
-                                                      List<String> pathsToAutoFlat, boolean isList) {
+  private void collectPathToAutoFlatForSingleVarTypes(DOM baseType, DOM dom, String path, List<DOM> previousDoms, List<String> pathsToAutoFlat, boolean isList) {
     int cntSimpleTypeMemberVars = 0;
     int cntNonSimpleTypeMemberVars = 0;
     for (AVariable var : dom.getAllMemberVarsIncludingInherited()) {
@@ -1004,7 +1010,7 @@ public class DOM extends DomOrExceptionGenerationBase {
       if (XMOMStorableStructureCache.isTransient(baseType, var, childPath)) {
         continue;
       }
-
+      
       if (var.isJavaBaseType()) {
         if (var.isList()) {
           //nichts zu tun -> extra tabelle
@@ -1041,10 +1047,9 @@ public class DOM extends DomOrExceptionGenerationBase {
       pathsToAutoFlat.add(path);
     }
   }
-
-
-  private void collectPathToAutoFlat(DOM baseType, DOM dom, String path, List<DOM> previousDoms, List<String> pathsToAutoFlat,
-                                     List<String> pathsToAutoExclude, boolean parentWasFlat, GenerationBaseCache gbc) {
+  
+  
+  private void collectPathToAutoFlat(DOM baseType, DOM dom, String path, List<DOM> previousDoms, List<String> pathsToAutoFlat, List<String> pathsToAutoExclude, boolean parentWasFlat, GenerationBaseCache gbc) {
     for (AVariable var : dom.getAllMemberVarsIncludingInherited()) {
       String childPath = path;
       if (childPath.length() > 0) {
@@ -1055,49 +1060,48 @@ public class DOM extends DomOrExceptionGenerationBase {
       if (XMOMStorableStructureCache.isTransient(baseType, var, childPath)) {
         continue;
       }
-
+      
       if (!var.isJavaBaseType()) {
         DomOrExceptionGenerationBase d = var.getDomOrExceptionObject();
         if (d instanceof DOM) {
           DOM childDom = (DOM) d;
           if (XMOMStorableStructureCache.isStorableReference(baseType, childPath)) {
-
+            
           } else if (foundCycle(childDom, previousDoms)) {
-
+            
           } else {
             boolean flat = true;
             if (var.isList()) {
               flat = false;
             } else {
-              if (childDom.hasSuperClassGenerationObject() && !childDom.getSuperClassGenerationObject().isStorableEquivalent()) {
+              if (childDom.hasSuperClassGenerationObject() &&
+                  !childDom.getSuperClassGenerationObject().isStorableEquivalent()) {
                 previousDoms.add(childDom.getSuperClassGenerationObject());
-                collectPathToAutoFlat(baseType, childDom.getSuperClassGenerationObject(), childPath, previousDoms, pathsToAutoFlat,
-                                      pathsToAutoExclude, parentWasFlat, gbc);
+                collectPathToAutoFlat(baseType, childDom.getSuperClassGenerationObject(), childPath, previousDoms, pathsToAutoFlat, pathsToAutoExclude, parentWasFlat, gbc);
                 previousDoms.remove(previousDoms.size() - 1);
                 if (xmomStorableFlatteningMode.get() == FlatteningMode.EXCLUDE_HIERARCHIES) {
                   flat = false;
-                  pathsToAutoExclude.add(childPath);
+                  pathsToAutoExclude.add(childPath); 
                 }
               }
-              Set<GenerationBase> subTypes = childDom.getSubTypes(gbc, false);
+              Set<GenerationBase> subTypes = childDom.getSubTypes(gbc,false);
               if (childDom.getSubTypes(gbc, false).size() > 0) {
                 flat = false;
                 pathsToAutoExclude.add(childPath);
                 for (GenerationBase subType : subTypes) {
-                  previousDoms.add((DOM) subType);
-                  collectPathToAutoFlat(baseType, (DOM) subType, childPath, previousDoms, pathsToAutoFlat, pathsToAutoExclude,
-                                        parentWasFlat, gbc);
+                  previousDoms.add((DOM)subType);
+                  collectPathToAutoFlat(baseType, (DOM)subType, childPath, previousDoms, pathsToAutoFlat, pathsToAutoExclude, parentWasFlat, gbc);
                   previousDoms.remove(previousDoms.size() - 1);
                 }
               }
             }
-
+           
             if (flat && !parentWasFlat) {
               if (!XMOMStorableStructureCache.isFlat(baseType, childPath)) {
-                pathsToAutoFlat.add(childPath);
+                pathsToAutoFlat.add(childPath);  
               }
             }
-
+            
             //expansiv oder expansivList
             previousDoms.add(childDom);
             collectPathToAutoFlat(baseType, childDom, childPath, previousDoms, pathsToAutoFlat, pathsToAutoExclude, flat, gbc);
@@ -1107,10 +1111,10 @@ public class DOM extends DomOrExceptionGenerationBase {
       }
     }
   }
-
+  
 
   private static final XynaPropertyEnum<FlatteningMode> xmomStorableFlatteningMode =
-      new XynaPropertyEnum<FlatteningMode>("xyna.xnwh.persistence.xmom.flattening.auto.mode", FlatteningMode.class, FlatteningMode.NONE);
+                  new XynaPropertyEnum<FlatteningMode>("xyna.xnwh.persistence.xmom.flattening.auto.mode", FlatteningMode.class, FlatteningMode.NONE);
   static {
     xmomStorableFlatteningMode
         .setDefaultDocumentation(DocumentationLanguage.EN,
@@ -1122,12 +1126,10 @@ public class DOM extends DomOrExceptionGenerationBase {
 
 
   private static enum FlatteningMode {
-
-    NONE("No auto flattening"), SINGLE_VAR_ONLY(
-        "Auto flattening of complex member variables (that do not have subtypes) that have only one primitive member variable (including members of super types)"), EXCLUDE_HIERARCHIES(
-            "Auto flattening of all members that have neither sub- nor super types"), EXCLUDE_TYPES_WITH_SUBTYPES(
-                "Auto flattening of all members that don't have subtypes");
-
+    NONE("No auto flattening"), 
+    SINGLE_VAR_ONLY("Auto flattening of complex member variables (that do not have subtypes) that have only one primitive member variable (including members of super types)"), 
+    EXCLUDE_HIERARCHIES("Auto flattening of all members that have neither sub- nor super types"), 
+    EXCLUDE_TYPES_WITH_SUBTYPES("Auto flattening of all members that don't have subtypes");
 
     private final String docEN;
 
@@ -1146,15 +1148,15 @@ public class DOM extends DomOrExceptionGenerationBase {
   /**
    * alle variablennamen müssen auch in lowercase eindeutig sein. auch für die verwendeten datentypen
    */
-  private static void checkUniqueLowerCaseVarNamesForStorablesRecursively(DOM rootXMOMStorable, DOM currentDom, String path,
-                                                                          List<DOM> previousDoms) {
+  private static void checkUniqueLowerCaseVarNamesForStorablesRecursively(DOM rootXMOMStorable, DOM currentDom,
+                                                                          String path, List<DOM> previousDoms) {
     if (foundCycle(currentDom, previousDoms)) {
       return;
     }
     previousDoms.add(currentDom);
     List<AVariable> allMemberVars = currentDom.getAllMemberVarsIncludingInherited();
     Set<String> lowerCaseVarNames = new HashSet<String>();
-    for (AVariable v : allMemberVars) {
+    for (AVariable v : allMemberVars) {      
       String localPath = path;
       if (path.length() > 0) {
         localPath += ".";
@@ -1168,7 +1170,8 @@ public class DOM extends DomOrExceptionGenerationBase {
         } else if (XMOMStorableStructureCache.isTransient(rootXMOMStorable, v, localPath)) {
           //ok next
         } else {
-          checkUniqueLowerCaseVarNamesForStorablesRecursively(rootXMOMStorable, (DOM) v.getDomOrExceptionObject(), localPath, previousDoms);
+          checkUniqueLowerCaseVarNamesForStorablesRecursively(rootXMOMStorable, (DOM) v.getDomOrExceptionObject(),
+                                                              localPath, previousDoms);
         }
       } else {
         //membervar die in einer storable-spalte resultiert
@@ -1177,8 +1180,8 @@ public class DOM extends DomOrExceptionGenerationBase {
         } else {
           if (!lowerCaseVarNames.add(v.getVarName().toLowerCase())) {
             //varName doppelt!
-            throw new RuntimeException("Root XMOM Storable " + rootXMOMStorable.getOriginalFqName() + " contains a member variable of type "
-                + currentDom.getOriginalFqName()
+            throw new RuntimeException("Root XMOM Storable " + rootXMOMStorable.getOriginalFqName()
+                + " contains a member variable of type " + currentDom.getOriginalFqName()
                 + " in its hierarchy. This datatype contains two membervars with the same case insensitive name: "
                 + v.getVarName().toLowerCase());
           }
@@ -1239,16 +1242,14 @@ public class DOM extends DomOrExceptionGenerationBase {
       return operation.isFinal();
     }
 
-
     /**
      * @deprecated use {@link #isAbstractInBaseType()} instead
      */
-    @Deprecated
+     @Deprecated
     public boolean IsAbstractInBaseType() {
       return isAbstractInBaseType();
     }
-
-
+    
     /**
      * ~ muss man also überschreiben, wenn man das objekt instanziieren will 
      */
@@ -1371,7 +1372,7 @@ public class DOM extends DomOrExceptionGenerationBase {
   /**
    * gibt es instance methoden in einem obertyp?
    */
-  public boolean hasSuperTypeWithInstanceMethods(InterfaceVersion versionFilter) {
+  public boolean hasSuperTypeWithInstanceMethods(InterfaceVersion versionFilter) { 
     DOM[] hierarchy = getDOMHierarchy();
     if (hierarchy.length == 1) {
       return false;
@@ -1388,7 +1389,6 @@ public class DOM extends DomOrExceptionGenerationBase {
     }
     return false;
   }
-
 
   /**
    * sind lokal methoden definiert, die in einem subtyp überschrieben werden können
@@ -1412,7 +1412,7 @@ public class DOM extends DomOrExceptionGenerationBase {
 
 
   public boolean isFirstTypeOfHierarchyWithJavaImpl(boolean onlyCountInstanceMethods, InterfaceVersion versionFilter) {
-    return !hasSuperTypeWithJavaImpl(onlyCountInstanceMethods, versionFilter) && hasJavaImpl(onlyCountInstanceMethods, versionFilter);
+    return !hasSuperTypeWithJavaImpl(onlyCountInstanceMethods, versionFilter) && hasJavaImpl(onlyCountInstanceMethods, versionFilter);    
   }
 
 
@@ -1451,14 +1451,13 @@ public class DOM extends DomOrExceptionGenerationBase {
     return false;
   }
 
-
   /**
    * impl lib wird verwendet
    */
   public boolean libraryExists() {
-    return getAdditionalLibraries().contains(getImplClassName() + ".jar") && XynaFactory.isFactoryServer(); // ignore libraries for script access
+    return getAdditionalLibraries().contains(getImplClassName() + ".jar") && 
+           XynaFactory.isFactoryServer(); // ignore libraries for script access
   }
-
 
   public DOM getNextSuperTypeWithJavaImpl(boolean onlyCountInstanceMethods, InterfaceVersion versionFilter) {
     DOM[] hierarchy = getDOMHierarchy();
@@ -1498,10 +1497,9 @@ public class DOM extends DomOrExceptionGenerationBase {
         }
       }
     }
-
+    
     return opMap.values().toArray(new OperationInformation[opMap.size()]);
   }
-
 
   public List<Operation> getOperations() {
     List<Operation> allOperations = new ArrayList<Operation>();
@@ -1510,7 +1508,6 @@ public class DOM extends DomOrExceptionGenerationBase {
     }
     return allOperations;
   }
-
 
   public void addOperation(int index, Operation operation) {
     String serviceName = getOriginalSimpleName();
@@ -1536,7 +1533,7 @@ public class DOM extends DomOrExceptionGenerationBase {
     }
 
     return true;
-  }
+}
 
 
   public Map<String, List<Operation>> getServiceNameToOperationMap() {
@@ -1571,21 +1568,20 @@ public class DOM extends DomOrExceptionGenerationBase {
     return superClassDom;
   }
 
-
   @Override
   public boolean hasSuperClassGenerationObject() {
     return superClassDom != null;
   }
 
-
   public Set<String> getImports() {
 
     Set<String> imports = getBasicImports();
-
+    
     for (AVariable v : memberVars) {
       if (!v.isJavaBaseType()) {
         if (v.getFQClassName() == null) {
-          throw new RuntimeException("variable " + v.getVarName() + " in type " + getFqClassName() + " has not specified its type."); //sollte beim parsen auftauchen!
+          throw new RuntimeException("variable " + v.getVarName() + " in type " + getFqClassName()
+              + " has not specified its type."); //sollte beim parsen auftauchen!
         }
         imports.add(v.getFQClassName());
       }
@@ -1609,13 +1605,13 @@ public class DOM extends DomOrExceptionGenerationBase {
         imports.add(superClassDom.getFqClassName());
       }
     }
-
+    
     if (getPathMapInformation() != null) {
       imports.add(Map.class.getName());
       imports.add(HashMap.class.getName());
       imports.add(DataModelInformation.class.getName());
     }
-
+    
     imports.remove(getFqClassName());
     imports.remove(null); //sollte eigtl nicht enthalten sein, aber dies ist nicht die richtige stelle, deshalb einen fehler zu werfen
 
@@ -1623,8 +1619,7 @@ public class DOM extends DomOrExceptionGenerationBase {
     return sortedImports;
 
   }
-
-
+  
   public static Set<String> getBasicImports() {
     HashSet<String> imports = new HashSet<String>();
     imports.add(XynaProcessing.class.getName());
@@ -1663,7 +1658,7 @@ public class DOM extends DomOrExceptionGenerationBase {
     imports.add(IllegalArgumentException.class.getName());
     imports.add(IllegalAccessException.class.getName());
     imports.add(XPRC_MDMDeploymentException.class.getName());
-
+    
     //serialisierung
     imports.add(IOException.class.getName());
     imports.add(ClassNotFoundException.class.getName());
@@ -1672,30 +1667,27 @@ public class DOM extends DomOrExceptionGenerationBase {
     imports.add(SerializableClassloadedException.class.getName());
     imports.add(SerializableClassloadedXynaObject.class.getName());
     imports.add(SerializableClassloadedObject.class.getName());
-
+    
     //reflection field cache
     imports.add(Class.class.getName());
     imports.add(Field.class.getName());
     imports.add(ConcurrentMap.class.getName());
     imports.add(ConcurrentHashMap.class.getName());
     imports.add(NoSuchFieldException.class.getName());
-
-
+    
+    
     //runtimeContext für audits
     imports.add(RevisionManagement.class.getName());
     return imports;
   }
-
-
+  
   public static String getNameForImport(Class<?> class1) {
     return class1.getCanonicalName();
   }
 
-
   public Operation getOperationByName(String operationName) throws XPRC_OperationUnknownException {
     return getOperationByName(operationName, false);
   }
-
 
   //FIXME mehrere operations mit dem gleichen namen unterstützen
   public Operation getOperationByName(String operationName, boolean includeParents) throws XPRC_OperationUnknownException {
@@ -1791,7 +1783,7 @@ public class DOM extends DomOrExceptionGenerationBase {
    * vorher sollte man parse aufgerufen haben
    */
   public TemplateGenerationResult generateServiceImplTemplate() {
-
+    
     /*
      * java-/class-files befinden sich wo?
      * 
@@ -1809,9 +1801,9 @@ public class DOM extends DomOrExceptionGenerationBase {
      *                                                                                StaticInterface
      *                                                                             or NonStaticInterface
      */
-    List<Pair<String, String>> filesForGeneratedAdditionalLib = new ArrayList<Pair<String, String>>();
-    List<Pair<String, String>> dependencies = new ArrayList<Pair<String, String>>();
-    List<Pair<String, String>> templateImplementationFiles = new ArrayList<Pair<String, String>>();
+    List<Pair<String, String>> filesForGeneratedAdditionalLib = new ArrayList<Pair<String,String>>();
+    List<Pair<String, String>> dependencies = new ArrayList<Pair<String,String>>();
+    List<Pair<String, String>> templateImplementationFiles = new ArrayList<Pair<String,String>>();    
 
     InterfaceVersion[] versions = getVersionsOfOperations(true);
     JavaServiceImplementation impl = new JavaServiceImplementation(this, null);
@@ -1841,44 +1833,40 @@ public class DOM extends DomOrExceptionGenerationBase {
       if (interfaceNonStaticCode != null) {
         filesForGeneratedAdditionalLib.add(new Pair<String, String>(impl.getInterfaceNonStaticFQClassName(), interfaceNonStaticCode));
       }
-
+      
       if (projectStaticImplCode != null) {
-        templateImplementationFiles.add(new Pair<String, String>(impl.getProjectStaticImplFQClassName(version), projectStaticImplCode));
+        templateImplementationFiles.add(new Pair<String, String>(impl.getProjectStaticImplFQClassName(version), projectStaticImplCode));  
       }
       if (projectNonStaticImplCode != null) {
-        templateImplementationFiles
-            .add(new Pair<String, String>(impl.getProjectNonStaticImplFQClassName(version), projectNonStaticImplCode));
+        templateImplementationFiles.add(new Pair<String, String>(impl.getProjectNonStaticImplFQClassName(version), projectNonStaticImplCode));  
       }
-
+      
       if (superProjectNonStaticImplCode != null) {
         dependencies.add(new Pair<String, String>(impl.getSuperProjectNonStaticImplFQClassName(version), superProjectNonStaticImplCode));
       }
     }
-
+    
     return new TemplateGenerationResult(filesForGeneratedAdditionalLib, templateImplementationFiles, dependencies);
   }
-
-
+  
   public static class InterfaceVersion {
 
     private static final Pattern p = Pattern.compile("[\\w_]+");
     public static final InterfaceVersion BASE = new InterfaceVersion();
     private static final String BASE_VERSION_NAME = "_internal_base_version";
-
+    
     private final String versionName;
     private final String suffix;
     private final String pkgName;
     private final boolean currentVersion;
-
-
+    
     private InterfaceVersion() {
       this.versionName = BASE_VERSION_NAME;
       this.suffix = "";
       this.pkgName = BASE_VERSION_NAME;
       this.currentVersion = true;
     }
-
-
+    
     public InterfaceVersion(String versionName, boolean currentVersion) {
       this.versionName = versionName;
       Matcher m = p.matcher(versionName);
@@ -1890,11 +1878,9 @@ public class DOM extends DomOrExceptionGenerationBase {
       this.currentVersion = currentVersion;
     }
 
-
     public String getSuffix() {
       return suffix;
     }
-
 
     public String getPackageName() {
       return pkgName;
@@ -1922,16 +1908,13 @@ public class DOM extends DomOrExceptionGenerationBase {
       return Objects.equals(versionName, other.versionName);
     }
 
-
     public boolean isCurrentVersion() {
       return currentVersion;
     }
 
-
     public String getName() {
       return versionName;
     }
-
 
     public String getNameCompatibleWithCurrentVersion() {
       if (currentVersion) {
@@ -1958,7 +1941,6 @@ public class DOM extends DomOrExceptionGenerationBase {
     }
     return versions.toArray(new InterfaceVersion[versions.size()]);
   }
-
 
   public final String getImplClassName() {
     return getSimpleClassName() + "Impl";
@@ -1990,7 +1972,7 @@ public class DOM extends DomOrExceptionGenerationBase {
     for (AVariable v : vars) {
       v.fillVariableContents();
     }
-
+    
     //persistenceinformation fertig befüllen falls nötig. kann in parsexml nicht gemacht werden, weil noch das geparsten super-objekt fehlt.
     PrimitiveType pktype = PersistenceInformation.detectPrimaryKeyType(getAllMemberVarsIncludingInherited());
     if (pktype != null) {
@@ -2017,13 +1999,12 @@ public class DOM extends DomOrExceptionGenerationBase {
     return additionalDependenciesSet;
   }
 
-
   /**
    * Add/Remove library tags to/from XML and include calls to impl class
    */
   public static void addLibraryTagAndCodeSnippetInXML(Document doc, DOM dom, boolean libraryTagOnly, boolean adjustDomAccordingly)
       throws XPRC_InvalidPackageNameException {
-
+    
     Element root = doc.getDocumentElement();
 
     List<Element> ss = XMLUtils.getChildElementsByName(root, GenerationBase.EL.SERVICE);
@@ -2087,17 +2068,18 @@ public class DOM extends DomOrExceptionGenerationBase {
       }
     }
   }
-
-
+  
+  
   public static class TemplateGenerationResult {
-
+    
     private final List<Pair<String, String>> filesForGeneratedAdditionalLib;
     private final List<Pair<String, String>> templateImplementationFiles;
     private final List<Pair<String, String>> dependencies;
 
 
     TemplateGenerationResult(List<Pair<String, String>> filesForGeneratedAdditionalLib,
-                             List<Pair<String, String>> templateImplementationFiles, List<Pair<String, String>> dependencies) {
+                             List<Pair<String, String>> templateImplementationFiles,
+                             List<Pair<String, String>> dependencies) {
       this.filesForGeneratedAdditionalLib = filesForGeneratedAdditionalLib;
       this.templateImplementationFiles = templateImplementationFiles;
       this.dependencies = dependencies;
@@ -2110,8 +2092,7 @@ public class DOM extends DomOrExceptionGenerationBase {
     public List<Pair<String, String>> getFilesForGeneratedAdditionalLib() {
       return filesForGeneratedAdditionalLib;
     }
-
-
+    
     /**
      * die files, die im eclipse projekt implementiert werden müssen 
      */
@@ -2119,18 +2100,16 @@ public class DOM extends DomOrExceptionGenerationBase {
       return templateImplementationFiles;
     }
 
-
     /**
      * fürs compile notwendige oberklasse-files, die man nicht aus den deploy-ten jars verwenden will.
      * problemfall ist z.b., dass in der oberklasse abstrakte methoden in der implklasse sind, die
      * der server nicht kennt
      */
-    public List<Pair<String, String>> getDependencies() {
+    public  List<Pair<String, String>>  getDependencies() {
       return dependencies;
     }
-
+    
   }
-
 
   public PersistenceInformation getPersistenceInformation() {
     return persistenceInformation;
@@ -2145,14 +2124,15 @@ public class DOM extends DomOrExceptionGenerationBase {
     //dependencyregister bemühen. 
 
     Set<GenerationBase> ret = new HashSet<GenerationBase>();
-
+    
     if (isInheritedFromStorable()) {
       ret.add(this);
     }
 
     //FIXME performance!!!! eigtl wäre es hier schön, wenn man die xmomdatabase verwenden könnte. man benötigt aber die informationen aus dem deployed ordner
-    Set<DependencyNode> dependencies = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getDependencyRegister()
-        .getDependencies(getOriginalFqName(), DependencySourceType.DATATYPE, revision, true);
+    Set<DependencyNode> dependencies =
+        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getDependencyRegister()
+            .getDependencies(getOriginalFqName(), DependencySourceType.DATATYPE, revision, true);
 
     for (DependencyNode dn : dependencies) {
       if (dn.getType() == DependencySourceType.DATATYPE && !dn.getUniqueName().equals(getOriginalFqName())) {
@@ -2170,28 +2150,30 @@ public class DOM extends DomOrExceptionGenerationBase {
         } catch (XPRC_MDMDeploymentException e) {
           throw new RuntimeException(e);
         }
-
-        if (dom.isInheritedFromStorable() && dom.usesInStorableHierarchy(this)) {
+        
+        if (dom.isInheritedFromStorable() &&
+            dom.usesInStorableHierarchy(this)) {
           ret.add(dom);
         }
       }
     }
-
+    
     visited.add(this);
-
+    
     Set<GenerationBase> subTypes = getSubTypes(parseAdditionalCache, false);
     for (GenerationBase subType : subTypes) {
       if (visited.add(subType)) {
         if (subType instanceof DOM) {
-          ret.addAll(((DOM) subType).getRootXMOMStorablesUsingThis(parseAdditionalCache, visited));
+          ret.addAll(((DOM)subType).getRootXMOMStorablesUsingThis(parseAdditionalCache, visited));
         }
       }
     }
     if (isInheritedFromStorable()) {
       ret.addAll(subTypes);
     }
-
-    if (superClassDom != null && !superClassDom.isStorableEquivalent()) {
+    
+    if (superClassDom != null &&
+        !superClassDom.isStorableEquivalent()) {
       if (visited.add(superClassDom)) {
         ret.addAll(superClassDom.getRootXMOMStorablesUsingThis(parseAdditionalCache, visited));
       }
@@ -2202,8 +2184,7 @@ public class DOM extends DomOrExceptionGenerationBase {
 
     return ret;
   }
-
-
+  
   /**
    * wenn man alle membervariablen von this rekursiv betrachtet (bis jeweils zu referenzierten anderen storablen 
    * oder transienten variablen), wird dort das übergebene dom irgendwo verwendet??
@@ -2215,7 +2196,8 @@ public class DOM extends DomOrExceptionGenerationBase {
   }
 
 
-  private static boolean usesInStorableHierarchyRecursively(DOM xmomStorableRoot, DOM currentDOM, DOM domToCheck, String path) {
+  private static boolean usesInStorableHierarchyRecursively(DOM xmomStorableRoot, DOM currentDOM, DOM domToCheck,
+                                                            String path) {
     for (AVariable v : currentDOM.getAllMemberVarsIncludingInherited()) {
       if (!v.isJavaBaseType() && v.getDomOrExceptionObject() instanceof DOM) {
         String localPath = path;
@@ -2227,9 +2209,10 @@ public class DOM extends DomOrExceptionGenerationBase {
           //ok next
         } else if (v.getDomOrExceptionObject().getFqClassName().equals(domToCheck.getFqClassName())) {
           return true;
-          /*} else if (isStorableReference(xmomStorableRoot, localPath)) {
+        /*} else if (isStorableReference(xmomStorableRoot, localPath)) {
           //ok next*/
-        } else if (usesInStorableHierarchyRecursively(xmomStorableRoot, (DOM) v.getDomOrExceptionObject(), domToCheck, localPath)) {
+        } else if (usesInStorableHierarchyRecursively(xmomStorableRoot, (DOM) v.getDomOrExceptionObject(), domToCheck,
+                                                      localPath)) {
           return true;
         }
       }
@@ -2243,16 +2226,13 @@ public class DOM extends DomOrExceptionGenerationBase {
     return GenerationBase.EL.DATATYPE;
   }
 
-
   public DataModelInformation getDataModelInformation() {
     return dataModelInformation;
   }
-
-
+  
   public PathMapInformation getPathMapInformation() {
     return pathMapInformation;
   }
-
 
   public String getClassName(Set<String> importedClassNames) {
     if (importedClassNames.contains(getFqClassName())) {
@@ -2261,22 +2241,20 @@ public class DOM extends DomOrExceptionGenerationBase {
     return getFqClassName();
   }
 
-
   public void replaceMemberVars(List<AVariable> newMembers) {
     this.memberVars.clear();
     this.memberVars.addAll(newMembers);
   }
 
-
   public void replaceParent(DOM dom) {
     this.superClassDom = dom;
   }
-
-
+  
   public static Method getPublicCloneMethodIfPresent(Class<?> clazz) {
     try {
       Method method = clazz.getDeclaredMethod("clone");
-      if (method != null && Modifier.isPublic(method.getModifiers())) {
+      if (method != null &&
+          Modifier.isPublic(method.getModifiers())) {
         return method;
       } else {
         return null;
@@ -2286,7 +2264,6 @@ public class DOM extends DomOrExceptionGenerationBase {
     }
   }
 
-
   public String getServiceName(Operation operation) {
     for (String curServiceName : serviceNameToOperationMap.keySet()) {
       for (Operation curOperation : serviceNameToOperationMap.get(curServiceName)) {
@@ -2295,33 +2272,28 @@ public class DOM extends DomOrExceptionGenerationBase {
         }
       }
     }
-
+    
     return null;
   }
-
 
   @Override
   protected DependencySourceType getDependencySourceType() {
     return DependencySourceType.DATATYPE;
   }
 
-
   public void createEmptyDT(String label) {
     setLabel(label);
   }
-
 
   public void createEmptySG(String label) {
     setLabel(label);
     createInitialService();
   }
 
-
   private void createInitialService() {
     serviceNameToOperationMap.put(getOriginalSimpleName(), new ArrayList<Operation>());
     serviceNameToServiceLabel.put(getOriginalSimpleName(), getLabel());
   }
-
 
   public boolean isServiceGroupOnly() {
     if (isServiceGroupOnly != null) {

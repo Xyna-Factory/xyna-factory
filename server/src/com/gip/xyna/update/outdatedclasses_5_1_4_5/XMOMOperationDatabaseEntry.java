@@ -45,24 +45,23 @@ import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 public class XMOMOperationDatabaseEntry extends XMOMServiceDatabaseEntry {
 
   public static final String TABLENAME = "xmomoperationcache";
-
+  
   private static final long serialVersionUID = -7301378884111678454L;
-
-
+  
+  
   public XMOMOperationDatabaseEntry() {
   }
 
-
+  
   public XMOMOperationDatabaseEntry(String fqname) {
     super(fqname);
   }
-
-
+  
+  
   //generate cache entry for operation
   public XMOMOperationDatabaseEntry(DOM dom, String serviceName, CodeOperation op) {
-    super(generateFqNameForOperation(dom, serviceName, op), op.getLabel(), dom.getOriginalPath(),
-          generateSimpleNameForOperation(dom, serviceName, op), "", "", generateFqNameForServiceGroup(dom, serviceName), op.getInputVars(),
-          op.getOutputVars(), op.getThrownExceptions(), dom.isXynaFactoryComponent());
+    super(generateFqNameForOperation(dom, serviceName, op), op.getLabel(), dom.getOriginalPath(), generateSimpleNameForOperation(dom, serviceName, op),
+          "", "", generateFqNameForServiceGroup(dom, serviceName), op.getInputVars(), op.getOutputVars(), op.getThrownExceptions(), dom.isXynaFactoryComponent());
   }
 
 
@@ -81,8 +80,8 @@ public class XMOMOperationDatabaseEntry extends XMOMServiceDatabaseEntry {
     }
 
   };
-
-
+  
+  
   @Override
   public ResultSetReader<? extends XMOMOperationDatabaseEntry> getReader() {
     return reader;
@@ -93,17 +92,15 @@ public class XMOMOperationDatabaseEntry extends XMOMServiceDatabaseEntry {
   public Object getPrimaryKey() {
     return getFqname();
   }
-
-
+  
+  
   public static class DynamicXMOMCacheReader implements ResultSetReader<XMOMOperationDatabaseEntry> {
 
     private Set<XMOMDatabaseEntryColumn> selectedCols;
 
-
     public DynamicXMOMCacheReader(Set<XMOMDatabaseEntryColumn> selected) {
       selectedCols = selected;
     }
-
 
     public XMOMOperationDatabaseEntry read(ResultSet rs) throws SQLException {
       XMOMOperationDatabaseEntry entry = new XMOMOperationDatabaseEntry();
@@ -122,16 +119,15 @@ public class XMOMOperationDatabaseEntry extends XMOMServiceDatabaseEntry {
       }
       if (selectedCols.contains(XMOMDatabaseEntryColumn.CALLEDBY)) {
         entry.calledBy = rs.getString(COL_CALLEDBY);
-      }
+      }     
       if (selectedCols.contains(XMOMDatabaseEntryColumn.USESINSTANCESOF)) {
         entry.usesInstancesOf = rs.getString(COL_USESINSTANCESOF);
       }
-
+      
       return entry;
     }
   }
-
-
+  
   @Override
   public XMOMOperationDatabaseEntry clone() throws CloneNotSupportedException {
     XMOMOperationDatabaseEntry clone = new XMOMOperationDatabaseEntry();
@@ -144,16 +140,15 @@ public class XMOMOperationDatabaseEntry extends XMOMServiceDatabaseEntry {
   public XMOMDatabaseType getXMOMDatabaseType() {
     return XMOMDatabaseType.OPERATION;
   }
-
-
+  
+  
   protected String retrieveBaseInstantiations(String originalOperationFqName) {
     String originalDomName = getDomOriginalFQNameFromOperationFqName(originalOperationFqName);
     Set<String> instatiationSet = new HashSet<String>();
     try {
       String xmlfilename = GenerationBase.getFileLocationOfXmlNameForSaving(originalDomName);
       Document d = XMLUtils.parse(xmlfilename + ".xml", true);
-      List<Element> additionalDependencyContainers =
-          XMLUtils.getChildElementsRecursively(d.getDocumentElement(), EL.ADDITIONALDEPENDENCIES); //there should be only one, but we won't complain
+      List<Element> additionalDependencyContainers = XMLUtils.getChildElementsRecursively(d.getDocumentElement(), EL.ADDITIONALDEPENDENCIES); //there should be only one, but we won't complain
       for (Element element : additionalDependencyContainers) {
         List<Element> relevantTypes = XMLUtils.getChildElementsRecursively(element, EL.DEPENDENCY_DATATYPE);
         relevantTypes.addAll(XMLUtils.getChildElementsRecursively(element, EL.DEPENDENCY_EXCEPTION));
@@ -162,39 +157,43 @@ public class XMOMOperationDatabaseEntry extends XMOMServiceDatabaseEntry {
         }
       }
     } catch (Throwable t) {
-      logger.debug("Error while retrieving baseInstantiations", t);
+      logger.debug("Error while retrieving baseInstantiations",t);
     }
-
-
+    
+    
     Set<XMOMDatabaseEntryColumn> relationsToAppendAsUsedInstances = new HashSet<XMOMDatabaseEntryColumn>();
     relationsToAppendAsUsedInstances.add(XMOMDatabaseEntryColumn.NEEDS);
     relationsToAppendAsUsedInstances.add(XMOMDatabaseEntryColumn.PRODUCES);
     relationsToAppendAsUsedInstances.add(XMOMDatabaseEntryColumn.EXCEPTIONS);
     for (XMOMDatabaseEntryColumn relationToAppendAsUsedInstances : relationsToAppendAsUsedInstances) {
       String otherRelation = getValueByColumn(relationToAppendAsUsedInstances);
-      if (otherRelation != null && !otherRelation.equals("") && !otherRelation.equals("null")) {
+      if (otherRelation != null &&
+          !otherRelation.equals("") &&
+          !otherRelation.equals("null")) {
         for (String entry : otherRelation.split(SEPERATION_MARKER)) {
           instatiationSet.add(entry);
         }
       }
     }
-
-
+    
+    
     StringBuilder instantiationBuilder = new StringBuilder();
     Iterator<String> instantiationIter = instatiationSet.iterator();
     while (instantiationIter.hasNext()) {
       String instantiation = instantiationIter.next();
-      if (instantiation != null && !instantiation.equals("") && !instantiation.equals("null")) {
+      if (instantiation != null &&
+          !instantiation.equals("") &&
+          !instantiation.equals("null")) {
         instantiationBuilder.append(instantiation);
         if (instantiationIter.hasNext()) {
           instantiationBuilder.append(SEPERATION_MARKER);
         }
       }
     }
-
-
+    
+    
     return instantiationBuilder.toString();
   }
-
+ 
 
 }
