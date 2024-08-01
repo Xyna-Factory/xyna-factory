@@ -19,17 +19,10 @@ package com.gip.xyna.xprc.xfractwfe.generation;
 
 
 
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
-import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
-import com.gip.xyna.xprc.xfractwfe.base.GenericInputAsContextStep;
-import com.gip.xyna.xprc.xfractwfe.base.StartVariableContextStep;
-import com.gip.xyna.xprc.xfractwfe.generation.AVariable.PrimitiveType;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.ATT;
-import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.SpecialPurposeIdentifier;
 
 
 
@@ -40,39 +33,6 @@ public class PythonOperation extends CodeOperation {
 
   public PythonOperation(DOM parent) {
     super(parent, ATT.PYTHON);
-  }
-
-
-  protected void getImports(Set<String> imports) {
-    for (AVariable v : getInputVars()) {
-      if (v.isJavaBaseType) {
-        if (v.getJavaTypeEnum() == PrimitiveType.ANYTYPE) {
-          imports.add(XynaObject.class.getName());
-        }
-      } else if (v.getFQClassName() != null) {
-        imports.add(v.getFQClassName());
-      }
-    }
-    for (AVariable v : getOutputVars()) {
-      if (v.isJavaBaseType) {
-        if (v.getJavaTypeEnum() == PrimitiveType.ANYTYPE) {
-          imports.add(XynaObject.class.getName());
-        }
-      } else if (v.getFQClassName() != null) {
-        imports.add(v.getFQClassName());
-      }
-    }
-    for (ExceptionVariable v : getThrownExceptions()) {
-      if (v.getFQClassName() != null) {
-        imports.add(v.getFQClassName());
-      }
-    }
-    if (isSpecialPurpose(SpecialPurposeIdentifier.STARTDOCUMENTCONTEXT, SpecialPurposeIdentifier.STOPDOCUMENTCONTEXT,
-                         SpecialPurposeIdentifier.RETRIEVEDOCUMENT)) {
-      imports.add(StartVariableContextStep.class.getName());
-    } else if (isSpecialPurpose(SpecialPurposeIdentifier.STARTGENERICCONTEXT, SpecialPurposeIdentifier.STOPGENERICCONTEXT)) {
-      imports.add(GenericInputAsContextStep.class.getName());
-    }
   }
 
 
