@@ -266,9 +266,9 @@ f_read_product_properties_fast() {
 
 # gets the path to the jep python module, if it is installed
 f_get_jep_module_path() {
-    jepPath=($(python3 -m inspect -d jep 2>&1))
+    jepPath=($(pip3 show jep 2>&1 | grep Location))
     if [ $? -eq 0 ] ; then
-      echo "${jepPath[3]}"
+      echo "${jepPath[1]}"
     else
       echo ""
     fi
