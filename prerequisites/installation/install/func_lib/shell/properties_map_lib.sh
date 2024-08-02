@@ -70,6 +70,7 @@ PRODUCT_PROPERTIES="\
                     default.monitoringlevel\
                     installation.folder\
                     java.home\
+                    jep.module.path\
                     jvm.maxheap.size\
                     jvm.minheap.size\
                     jvm.option.additional\
@@ -160,6 +161,7 @@ case ${PROPERTY} in
   geronimo)                                     echo "false";;
   installation.folder)                          echo "/opt/xyna/xyna_${PRODUCT_INSTANCE_STR}";;
   java.home)                                    echo "${JAVA_HOME}";;
+  jep.module.path)                              echo "$(f_get_jep_module_path)";;
   jvm.maxheap.size)                             echo "${TOMCAT_MEMORY}m";;
   jvm.minheap.size)                             echo "${TOMCAT_MEMORY}m";;
   jvm.option.additional)                        echo "-Dxnwh.securestorage.seedfile=${XYNA_ENVIRONMENT_DIR}/black_edition_${PRODUCT_INSTANCE_STR}.properties";;
@@ -262,6 +264,16 @@ f_read_product_properties_fast() {
   done < "${PROP_FILE}"
 }
 
+# gets the path to the jep python module, if it is installed
+f_get_jep_module_path() {
+    jepPath=($(python3 -m inspect -d jep 2>&1))
+    if [ $? -eq 0 ] ; then
+      echo "${jepPath[3]}"
+    else
+      echo ""
+    fi
+}
+
 f_map_current_property() {
   local i=${1}
   case ${i} in
@@ -270,6 +282,7 @@ f_map_current_property() {
     default.monitoringlevel)                          DEFAULT_MONITORINGLEVEL="${CURRENT_PROPERTY}";;
     installation.folder)      f_check_is_path "${i}";          INSTALL_PREFIX="${CURRENT_PROPERTY}";;
     java.home)                                        JAVA_HOME="${CURRENT_PROPERTY}";;
+    jep.module.path)                                  JEP_MODULE_PATH="${CURRENT_PROPERTY}";;
     jvm.maxheap.size)                                 JVM_OPTIONS_MAXHEAP_SIZE="${CURRENT_PROPERTY}";;
     jvm.minheap.size)                                 JVM_OPTIONS_MINHEAP_SIZE="${CURRENT_PROPERTY}";;
     jvm.option.additional)                            ADDITIONAL_OPTIONS="${CURRENT_PROPERTY}";;
