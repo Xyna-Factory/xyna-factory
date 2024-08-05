@@ -1450,8 +1450,8 @@ public class StepFunction extends Step implements Catchable, HasDocumentation {
         }
       }
       cb.add(operationName + "(");
-      if (ops instanceof JavaOperation) {
-        if (((JavaOperation) ops).requiresXynaOrder()) {
+      if (ops instanceof CodeOperation) {
+        if (((CodeOperation) ops).requiresXynaOrder()) {
           cb.addListElement(METHODNAME_GET_PROCESS + "()." + WF.METHODNAME_GET_CORRELATED_XYNA_ORDER + "()");
         }
       }
