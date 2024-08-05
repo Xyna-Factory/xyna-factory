@@ -268,7 +268,9 @@ f_read_product_properties_fast() {
 f_get_jep_module_path() {
     jepPath=($(pip3 show jep 2>&1 | grep Location))
     if [ $? -eq 0 ] ; then
-      echo "${jepPath[1]}"
+      jepPath="${jepPath[1]}/jep"
+      jepPath=($(find $jepPath -name "libjep.*"))
+      echo "${jepPath}"
     else
       echo ""
     fi
