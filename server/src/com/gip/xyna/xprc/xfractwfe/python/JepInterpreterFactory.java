@@ -41,7 +41,7 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
   @Override
   public void init() {
     try {
-      String jepModulePath = System.getenv("jep.module.path");
+      String jepModulePath = System.getProperty("jep.module.path");
       if (jepModulePath != null && !jepModulePath.isBlank()) {
         jep.MainInterpreter.setJepLibraryPath(jepModulePath);
         if (logger.isDebugEnabled()) {
