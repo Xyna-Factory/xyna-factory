@@ -104,7 +104,6 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.AssumedDeadlockExce
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.DeploymentMode;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.EL;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
-import com.gip.xyna.xprc.xfractwfe.generation.JavaOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.WF;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
