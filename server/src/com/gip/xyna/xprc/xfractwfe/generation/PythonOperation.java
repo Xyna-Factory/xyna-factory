@@ -17,12 +17,14 @@
  */
 package com.gip.xyna.xprc.xfractwfe.generation;
 
-
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.ATT;
+import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreter;
 
 
 
@@ -34,10 +36,46 @@ public class PythonOperation extends CodeOperation {
   public PythonOperation(DOM parent) {
     super(parent, ATT.PYTHON);
   }
+  
+  @Override
+  protected void getImports(Set<String> imports) {
+    super.getImports(imports);
+    imports.add("java.io.IOException");
+    imports.add("com.gip.xyna.XynaFactory");
+    imports.add("com.gip.xyna.xdev.xfractmod.xmdm.Container");
+    imports.add("com.gip.xyna.xprc.xfractwfe.python.PythonInterpreter");
+  }
 
 
   protected void generateJavaImplementationInternally(CodeBuffer cb) {
-    cb.add(getImpl().trim()).addLB();
+    
+    cb.addLine("try (PythonInterpreter interpreter = XynaFactory.getInstance().getProcessing().getXynaPythonSnippetManagement().createPythonInterpreter(getClass().getClassLoader())) {");
+    
+    for (AVariable var : getInputVars()) {
+      cb.addLine("interpreter.set(\"" + var.varName + "\", " + var.varName + ")");
+    }
+
+    String input = String.join(", ", getInputVars().stream().map(var -> var.varName).collect(Collectors.toList()));
+    cb.addLine("interpreter.exec(\"def " + getNameWithoutVersion() + "(" + input + "):\")");
+    String impl = getImpl().replaceAll("(?m)^", "  ");
+    cb.addLine("interpreter.exec(\"" + impl + "\")");
+    String output = String.join(", ", getOutputVars().stream().map(var -> var.varName).collect(Collectors.toList()));
+    cb.addLine("interpreter.exec(\"(" + output + ") = getNameWithoutVersion(" + input + ")\")");
+
+    cb.addLine("} catch (IOException e) {");
+    cb.addLine("} finally {");
+    for (AVariable var : getOutputVars()) {
+      cb.addLine(var.getFQClassName() + " " + var.varName + " = interpreter.get(\"" + var.varName + "\")");
+    }
+    
+    if (getOutputVars().size() > 1) {
+      cb.addLine("return new Container(" + output + ")");
+    } else if (getOutputVars().size() == 0) {
+      cb.addLine("return" + getOutputVars().get(0).getVarName());
+    } else {
+      cb.addLine("return");
+    }
+    cb.addLine("}");
   }
 
 }

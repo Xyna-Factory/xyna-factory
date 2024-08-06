@@ -296,6 +296,11 @@ public class XynaProcessing extends XynaProcessingBase {
   public XynaXmomSerialization getXmomSerialization() {
     return remotecallSerialization;
   }
+  
+  @Override
+  public XynaPythonSnippetManagement getXynaPythonSnippetManagement() {
+    return pythonCodeSnippetMgmt;
+  }
 
 
   /**
