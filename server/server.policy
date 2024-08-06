@@ -161,6 +161,12 @@ grant {
 	// http module
 	permission java.net.NetPermission "getProxySelector";
 
+
+	// python code snippets
+	//permission java.lang.RuntimePermission "loadLibrary.TOKEN_PATH_TO_LIB";
+
+
+
 	//this should always be the last permission in this file to guarantee it having no syntax errors.
 	permission com.gip.xyna.XynaUsagePermission "start";
 };
