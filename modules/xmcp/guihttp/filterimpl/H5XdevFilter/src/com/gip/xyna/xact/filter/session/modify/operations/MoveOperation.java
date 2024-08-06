@@ -69,6 +69,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.JavaOperation;
+import com.gip.xyna.xprc.xfractwfe.generation.PythonOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.ServiceVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.Step;
@@ -412,6 +413,13 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
         newJavaOperation.setActive(oldJavaOperation.isActive());
         newJavaOperation.setImpl(oldJavaOperation.getImpl());
         newJavaOperation.setLabel(oldJavaOperation.getLabel());
+      } else if(oldOperation instanceof PythonOperation) { // Override Method
+        newOperation = new PythonOperation(dom);
+        PythonOperation newPythonOperation = (PythonOperation)newOperation;
+        PythonOperation oldPythonOperation = (PythonOperation)oldOperation;
+        newPythonOperation.setActive(oldPythonOperation.isActive());
+        newPythonOperation.setImpl(oldPythonOperation.getImpl());
+        newPythonOperation.setLabel(oldPythonOperation.getLabel());
       } else if(oldOperation instanceof WorkflowCallInService) {
         newOperation = new WorkflowCallInService(dom);
         WorkflowCallInService newWorkflowCallInService = (WorkflowCallInService)newOperation;
