@@ -362,7 +362,7 @@ public class InsertOperation extends ModifyOperationBase<InsertJson> {
 
   private void insertVariableFromXml(GenerationBaseObject gbo) {
     AVariable avarToInsert = gbo.getWFStep().getInputVars().get(0);
-    avarToInsert.setId("" + object.getWorkflow().getNextXmlId());
+    avarToInsert.setId("" + object.getRoot().getWorkflow().getNextXmlId());
     DirectVarIdentification toInsert = DirectVarIdentification.of(avarToInsert);
 
     List<AVariableIdentification> listAdapter = findListAdapter(object);
