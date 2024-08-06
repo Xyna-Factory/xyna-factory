@@ -85,6 +85,7 @@ PRODUCT_PROPERTIES="\
                     os.locale\
                     pid.folder\
                     project.prefix.uppercase\
+                    python.venv.path\
                     scheduler.stop.timeout.offset\
                     securestorage.seed\
                     sipadapter.high.port\
@@ -178,6 +179,7 @@ case ${PROPERTY} in
   os.locale)                                    echo "";;
   pid.folder)                                   echo "$(f_get_property_installation_folder)/server";;
   project.prefix.uppercase)                     echo "MYPROJECT";;
+  python.venv.path)                             echo "$(f_get_venv_path)";;
   scheduler.stop.timeout.offset)                echo "20000";;
   securestorage.seed)                           echo "change me to some unique string";;
   sipadapter)                                   echo "false";;
@@ -269,8 +271,21 @@ f_get_jep_module_path() {
     jepPath=($(pip3 show jep 2>&1 | grep Location))
     if [ $? -eq 0 ] ; then
       jepPath="${jepPath[1]}/jep"
-      jepPath=($(find $jepPath -name "libjep.*"))
+      jepPath=($(find "${jepPath}" -name "libjep.*"))
       echo "${jepPath}"
+    else
+      echo ""
+    fi
+}
+
+
+f_get_venv_path() {
+    jepPath=($(pip3 show jep 2>&1 | grep Location))
+    if [ $? -eq 0 ] ; then
+      jepPath="${jepPath[1]}/jep"
+      jepPath=($(find $jepPath -name "libjep.*"))
+      venv_path=$(dirname $(dirname $(dirname $(dirname $(dirname "${jepPath}")))))
+      echo "${venv_path}"
     else
       echo ""
     fi
@@ -300,6 +315,7 @@ f_map_current_property() {
     os.locale)                                        OS_LOCALE="${CURRENT_PROPERTY}";;
     pid.folder)                                       PID_FOLDER="${CURRENT_PROPERTY}";;
     project.prefix.uppercase)                         PROJECT_PREFIX_UPPERCASE="${CURRENT_PROPERTY}";;
+    python.venv.path)                                 PYTHON_VENV_PATH="${CURRENT_PROPERTY}";;
     scheduler.stop.timeout.offset)                    SCHEDULER_STOP_TIMEOUT_OFFSET="${CURRENT_PROPERTY}";;
     svn.hookmanager.port)                             SVN_HOOKMANAGER_PORT="${CURRENT_PROPERTY}";;
     svn.server)                                       SVN_SERVER="${CURRENT_PROPERTY}";;

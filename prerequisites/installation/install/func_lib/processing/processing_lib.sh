@@ -497,6 +497,10 @@ j_start_xynafactory () {
   
   local JAVA_OPTIONS="-DBLACK_SERVER_HOME=${PWD} -Xms${JVM_OPTIONS_MINHEAP_SIZE} -Xmx${JVM_OPTIONS_MAXHEAP_SIZE} ${LOG4J_OPTIONS} ${EXCEPTION_OPTIONS} ${GC_OPTIONS} ${PROFILING_OPTIONS} ${DEBUG_OPTIONS} ${RMI_OPTIONS} ${XML_BACKUP_OPTIONS} $PID_FOLDER_OPTION $JEP_OPTION ${ADDITIONAL_OPTIONS}";
 
+  if [ -n "${PYTHON_VENV_PATH}" ]; then
+    source "${PYTHON_VENV_PATH}/bin/activate"
+  fi
+
   f_start_factory_internal ${JAVA_OPTIONS} com.gip.xyna.xmcp.xfcli.XynaFactoryCommandLineInterface "$@" >/dev/null 2>&1 &
 
   wait_for_factory_status start
