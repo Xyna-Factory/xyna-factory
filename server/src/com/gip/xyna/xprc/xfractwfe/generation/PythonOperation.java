@@ -24,12 +24,10 @@ import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.ATT;
-import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreter;
-
-
 
 public class PythonOperation extends CodeOperation {
 
+  @SuppressWarnings("unused")
   private static final Logger logger = CentralFactoryLogging.getLogger(PythonOperation.class);
 
 
@@ -49,33 +47,43 @@ public class PythonOperation extends CodeOperation {
 
   protected void generateJavaImplementationInternally(CodeBuffer cb) {
     
+    for (AVariable var : getOutputVars()) {
+      cb.addLine(var.getFQClassName() + " " + var.varName);
+    }
+    
     cb.addLine("try (PythonInterpreter interpreter = XynaFactory.getInstance().getProcessing().getXynaPythonSnippetManagement().createPythonInterpreter(getClass().getClassLoader())) {");
     
     for (AVariable var : getInputVars()) {
       cb.addLine("interpreter.set(\"" + var.varName + "\", " + var.varName + ")");
     }
-
+    
+    String pythonscript;
+    
     String input = String.join(", ", getInputVars().stream().map(var -> var.varName).collect(Collectors.toList()));
-    cb.addLine("interpreter.exec(\"def " + getNameWithoutVersion() + "(" + input + "):\")");
+    pythonscript = "def " + getNameWithoutVersion() + "(" + input + "):";
     String impl = getImpl().replaceAll("(?m)^", "  ");
-    cb.addLine("interpreter.exec(\"" + impl + "\")");
+    impl = impl.replaceAll("\"", "\\\\\\\"");
+    impl = impl.replaceAll("\n", "\\\\n");
+    pythonscript += "\\n" + impl;
     String output = String.join(", ", getOutputVars().stream().map(var -> var.varName).collect(Collectors.toList()));
-    cb.addLine("interpreter.exec(\"(" + output + ") = getNameWithoutVersion(" + input + ")\")");
-
-    cb.addLine("} catch (IOException e) {");
-    cb.addLine("} finally {");
-    for (AVariable var : getOutputVars()) {
-      cb.addLine(var.getFQClassName() + " " + var.varName + " = interpreter.get(\"" + var.varName + "\")");
+    if (getOutputVars().size() == 0) {
+      pythonscript += "\\n" + getNameWithoutVersion() + "(" + input + ")";
+    } else {
+      pythonscript += "\\n(" + output + ") = " + getNameWithoutVersion() + "(" + input + ")";
     }
+
+    cb.addLine("interpreter.exec(\"" + pythonscript + "\")");
+    for (AVariable var : getOutputVars()) {
+      cb.addLine(var.varName + " = (" + var.getFQClassName() + ") interpreter.get(\"" + var.varName + "\")");
+    }
+    cb.addLine("}");
     
     if (getOutputVars().size() > 1) {
       cb.addLine("return new Container(" + output + ")");
-    } else if (getOutputVars().size() == 0) {
-      cb.addLine("return" + getOutputVars().get(0).getVarName());
+    } else if (getOutputVars().size() == 1) {
+      cb.addLine("return " + getOutputVars().get(0).getVarName());
     } else {
       cb.addLine("return");
     }
-    cb.addLine("}");
   }
-
 }

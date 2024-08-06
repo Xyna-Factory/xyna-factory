@@ -17,8 +17,6 @@
  */
 package com.gip.xyna.xprc.xfractwfe.python;
 
-import java.io.IOException;
-
 import jep.Jep;
 import jep.JepConfig;
 
@@ -31,7 +29,7 @@ public class JepInterpreter implements PythonInterpreter {
   Jep jep;
   
   @Override
-  public void close() throws IOException {
+  public void close() {
     jep.close();
   }
 

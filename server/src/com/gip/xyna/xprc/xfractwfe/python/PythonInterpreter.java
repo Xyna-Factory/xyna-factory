@@ -17,9 +17,8 @@
  */
 package com.gip.xyna.xprc.xfractwfe.python;
 
-import java.io.Closeable;
 
-public interface PythonInterpreter extends Closeable {
+public interface PythonInterpreter extends AutoCloseable {
   public void exec(String script);
   
   public Object get(String variableName);
@@ -27,4 +26,7 @@ public interface PythonInterpreter extends Closeable {
   public void set(String variableName, Object value);
 
   public void runScript(String path);
+  
+  @Override
+  public void close() throws RuntimeException;
 }
