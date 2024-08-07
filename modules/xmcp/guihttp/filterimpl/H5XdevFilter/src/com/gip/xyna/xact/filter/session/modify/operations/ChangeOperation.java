@@ -599,9 +599,11 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
       } else if (GuiLabels.DT_LABEL_IMPL_TYPE_CODED_SERVICE.equals(implementationType)) {
         newOperation = new JavaOperation(dom);
         ((JavaOperation) newOperation).setImpl("");
+        newOperation.setStatic(operation.isStatic());
       } else if (GuiLabels.DT_LABEL_IMPL_TYPE_CODED_SERVICE_PYTHON.equals(implementationType)) {
         newOperation = new PythonOperation(dom);
         ((PythonOperation) newOperation).setImpl("");
+        newOperation.setStatic(operation.isStatic());
       } else if (GuiLabels.DT_LABEL_IMPL_TYPE_REFERENCE.equals(implementationType)) {
         newOperation = new WorkflowCallInService(dom);
         ((WorkflowCallInService)newOperation).setWf(change.getReference(), dom.getRevision());
