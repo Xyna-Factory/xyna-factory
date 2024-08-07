@@ -87,7 +87,7 @@ import xfmg.xfctrl.datamodel.json.parameter.XynaObjectDecider;
 public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploymentTask, JSONDatamodelServicesServiceOperation {
 
   private static final Logger logger = CentralFactoryLogging.getLogger(JSONDatamodelServicesServiceOperationImpl.class);
-  public static final XynaPropertyBoolean GENERIC_PROCESSING = new XynaPropertyBoolean("xfmg.json.GenericProcessing", true)
+  public static final XynaPropertyBoolean GENERIC_PROCESSING = new XynaPropertyBoolean("xfmg.json.GenericProcessing", false)
       .setDefaultDocumentation(DocumentationLanguage.EN, "If ProcessAllInputGenerically is set to null in JSONParsing or JSONWriting Options, this value is used.")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Wenn ProcessAllInputGenerically in JSONParsing oder JSONWriting Options nicht gesetzt ist, wird dieser Wert benutzt.");
 
