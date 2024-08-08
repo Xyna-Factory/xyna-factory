@@ -17,29 +17,45 @@
  */
 package com.gip.xyna.xprc.xfractwfe;
 
+
+
 import com.gip.xyna.Section;
 import com.gip.xyna.utils.exceptions.XynaException;
-import com.gip.xyna.xprc.xfractwfe.python.JepInterpreter;
+import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
+import com.gip.xyna.xprc.xfractwfe.python.JepInterpreterFactory;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreter;
+import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreterFactory;
+
 
 
 public class XynaPythonSnippetManagement extends Section {
 
+  private PythonInterpreterFactory factory;
+
+
   public XynaPythonSnippetManagement() throws XynaException {
     super();
   }
-  
+
+
   public PythonInterpreter createPythonInterpreter(ClassLoader classloader) {
-    return new JepInterpreter();
+    if (!(classloader instanceof ClassLoaderBase)) {
+      throw new RuntimeException("Unexpected createPythonInterpreter request. " + classloader + " does not inherit from ClassLoaderBase!");
+    }
+    return factory.createInterperter(((ClassLoaderBase) classloader).getRevision());
   }
+
 
   @Override
   public String getDefaultName() {
     return "XynaPythonSnippetManagement";
   }
 
+
   @Override
-  protected void init() throws XynaException {    
+  protected void init() throws XynaException {
+    factory = new JepInterpreterFactory();
+    factory.init();
   }
 
 }

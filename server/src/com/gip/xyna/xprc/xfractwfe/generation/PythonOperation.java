@@ -17,27 +17,73 @@
  */
 package com.gip.xyna.xprc.xfractwfe.generation;
 
-
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.ATT;
 
-
-
 public class PythonOperation extends CodeOperation {
 
+  @SuppressWarnings("unused")
   private static final Logger logger = CentralFactoryLogging.getLogger(PythonOperation.class);
 
 
   public PythonOperation(DOM parent) {
     super(parent, ATT.PYTHON);
   }
+  
+  @Override
+  protected void getImports(Set<String> imports) {
+    super.getImports(imports);
+    imports.add("java.io.IOException");
+    imports.add("com.gip.xyna.XynaFactory");
+    imports.add("com.gip.xyna.xdev.xfractmod.xmdm.Container");
+    imports.add("com.gip.xyna.xprc.xfractwfe.python.PythonInterpreter");
+  }
 
 
   protected void generateJavaImplementationInternally(CodeBuffer cb) {
-    cb.add(getImpl().trim()).addLB();
-  }
+    
+    for (AVariable var : getOutputVars()) {
+      cb.addLine(var.getFQClassName() + " " + var.varName);
+    }
+    
+    cb.addLine("try (PythonInterpreter interpreter = XynaFactory.getInstance().getProcessing().getXynaPythonSnippetManagement().createPythonInterpreter(getClass().getClassLoader())) {");
+    
+    for (AVariable var : getInputVars()) {
+      cb.addLine("interpreter.set(\"" + var.varName + "\", " + var.varName + ")");
+    }
+    
+    String pythonscript;
+    
+    String input = String.join(", ", getInputVars().stream().map(var -> var.varName).collect(Collectors.toList()));
+    pythonscript = "def " + getNameWithoutVersion() + "(" + input + "):";
+    String impl = getImpl().replaceAll("(?m)^", "  ");
+    impl = impl.replaceAll("\"", "\\\\\\\"");
+    impl = impl.replaceAll("\n", "\\\\n");
+    pythonscript += "\\n" + impl;
+    String output = String.join(", ", getOutputVars().stream().map(var -> var.varName).collect(Collectors.toList()));
+    if (getOutputVars().size() == 0) {
+      pythonscript += "\\n" + getNameWithoutVersion() + "(" + input + ")";
+    } else {
+      pythonscript += "\\n(" + output + ") = " + getNameWithoutVersion() + "(" + input + ")";
+    }
 
+    cb.addLine("interpreter.exec(\"" + pythonscript + "\")");
+    for (AVariable var : getOutputVars()) {
+      cb.addLine(var.varName + " = (" + var.getFQClassName() + ") interpreter.get(\"" + var.varName + "\")");
+    }
+    cb.addLine("}");
+    
+    if (getOutputVars().size() > 1) {
+      cb.addLine("return new Container(" + output + ")");
+    } else if (getOutputVars().size() == 1) {
+      cb.addLine("return " + getOutputVars().get(0).getVarName());
+    } else {
+      cb.addLine("return");
+    }
+  }
 }

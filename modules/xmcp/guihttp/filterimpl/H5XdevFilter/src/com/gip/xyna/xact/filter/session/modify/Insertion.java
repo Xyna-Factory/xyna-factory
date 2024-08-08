@@ -21,9 +21,6 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.collections.ListUtils;
 import com.gip.xyna.utils.collections.ListUtils.Position;
 import com.gip.xyna.utils.collections.Pair;
@@ -71,6 +68,7 @@ import com.gip.xyna.xact.filter.xmom.workflows.json.UpdateResponseJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.VariableJson;
 import com.gip.xyna.xprc.exceptions.XPRC_InvalidServiceIdException;
 import com.gip.xyna.xprc.xfractwfe.generation.Step;
+import com.gip.xyna.xprc.xfractwfe.generation.StepAssign;
 import com.gip.xyna.xprc.xfractwfe.generation.Step.Catchable;
 import com.gip.xyna.xprc.xfractwfe.generation.StepCatch;
 import com.gip.xyna.xprc.xfractwfe.generation.StepChoice;
@@ -83,8 +81,6 @@ import com.gip.xyna.xprc.xfractwfe.generation.StepSerial;
 import com.gip.xyna.xprc.xfractwfe.generation.StepThrow;
 
 public class Insertion {
-  
-  private static final Logger logger = CentralFactoryLogging.getLogger(Insertion.class);
   
   public static enum QueryInsertStep {
     mapping, function, mappingOutput;
@@ -404,7 +400,7 @@ public class Insertion {
     }
     
     
-    // special case condition mapping
+    // special case condition mapping and stepAssigns
     GBSubObject parentStepSerial = insideObject;
     while (parentStepSerial != null && parentStepSerial.getStep() != null && !(parentStepSerial.getStep() instanceof StepSerial)) {
       parentStepSerial = parentStepSerial.getParent();
@@ -414,7 +410,7 @@ public class Insertion {
       List<Step> children = stepSerial.getChildSteps();
       List<Step> guiList = new ArrayList<>(children);
       for (Step step : children) {
-        if (step instanceof StepMapping && ((StepMapping) step).isConditionMapping()) {
+        if (step instanceof StepMapping && ((StepMapping) step).isConditionMapping() || step instanceof StepAssign) {
           guiList.remove(step);
         }
       }

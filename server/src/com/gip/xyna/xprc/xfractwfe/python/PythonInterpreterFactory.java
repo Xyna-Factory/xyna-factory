@@ -17,42 +17,19 @@
  */
 package com.gip.xyna.xprc.xfractwfe.python;
 
-import jep.Jep;
-import jep.JepConfig;
 
-public class JepInterpreter implements PythonInterpreter {
 
-  public JepInterpreter() {
-    jep = new JepConfig().createSubInterpreter();
-  }
-  
-  Jep jep;
-  
-  @Override
-  public void close() {
-    jep.close();
-  }
+import java.util.Collection;
 
-  @Override
-  public void exec(String script) {
-    jep.exec(script);
-    
-  }
 
-  @Override
-  public Object get(String variableName) {
-    return jep.getValue(variableName);
-    
-  }
 
-  @Override
-  public void set(String variableName, Object value) {
-    jep.set(variableName, value);
-    
-  }
+public abstract class PythonInterpreterFactory {
 
-  @Override
-  public void runScript(String path) {
-    jep.runScript(path);    
-  }
+  public abstract PythonInterpreter createInterperter(Long revision);
+
+
+  public abstract void init();
+
+
+  public abstract void invalidateRevisions(Collection<Long> revisions);
 }

@@ -15,44 +15,24 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package com.gip.xyna.xprc.xfractwfe.python;
+package com.gip.xyna.xmcp.xfcli.impl;
 
-import jep.Jep;
-import jep.JepConfig;
+import java.io.OutputStream;
 
-public class JepInterpreter implements PythonInterpreter {
+import com.gip.xyna.XynaFactory;
+import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
+import com.gip.xyna.xmcp.xfcli.generated.Printrevision;
 
-  public JepInterpreter() {
-    jep = new JepConfig().createSubInterpreter();
-  }
-  
-  Jep jep;
-  
-  @Override
-  public void close() {
-    jep.close();
-  }
 
-  @Override
-  public void exec(String script) {
-    jep.exec(script);
+
+public class PrintrevisionImpl extends XynaCommandImplementation<Printrevision> {
+
+  public void execute(OutputStream statusOutputStream, Printrevision payload) throws XynaException {
+    Long revision = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement()
+        .getRevision(payload.getApplicationName(), payload.getVersionName(), payload.getWorkspaceName());
     
+    writeToCommandLine(statusOutputStream, revision);
   }
 
-  @Override
-  public Object get(String variableName) {
-    return jep.getValue(variableName);
-    
-  }
-
-  @Override
-  public void set(String variableName, Object value) {
-    jep.set(variableName, value);
-    
-  }
-
-  @Override
-  public void runScript(String path) {
-    jep.runScript(path);    
-  }
 }

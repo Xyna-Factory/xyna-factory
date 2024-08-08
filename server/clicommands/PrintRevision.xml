@@ -1,4 +1,4 @@
-/*
+<!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2024 Xyna GmbH, Germany
  *
@@ -14,45 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- */
-package com.gip.xyna.xprc.xfractwfe.python;
-
-import jep.Jep;
-import jep.JepConfig;
-
-public class JepInterpreter implements PythonInterpreter {
-
-  public JepInterpreter() {
-    jep = new JepConfig().createSubInterpreter();
-  }
-  
-  Jep jep;
-  
-  @Override
-  public void close() {
-    jep.close();
-  }
-
-  @Override
-  public void exec(String script) {
-    jep.exec(script);
-    
-  }
-
-  @Override
-  public Object get(String variableName) {
-    return jep.getValue(variableName);
-    
-  }
-
-  @Override
-  public void set(String variableName, Object value) {
-    jep.set(variableName, value);
-    
-  }
-
-  @Override
-  public void runScript(String path) {
-    jep.runScript(path);    
-  }
-}
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Name="printrevision" Groups="Runtime Context Dependency Management" Description="Print revision of given runtime context."/>  
+  <Argument Name="applicationName" Description="The name of the application." Optional="true"/>
+  <Argument Name="versionName" Description="The version of the application." Optional="true"/>
+  <Argument Name="workspaceName" Description="The name of the workspace." Optional="true"/>
+</XynaCommandLineCommand>

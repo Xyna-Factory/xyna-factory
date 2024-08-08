@@ -190,6 +190,7 @@ import com.gip.xyna.xprc.xfqctrl.FrequencyControlledTask;
 import com.gip.xyna.xprc.xfqctrl.FrequencyControlledTaskCreationParameter;
 import com.gip.xyna.xprc.xfqctrl.FrequencyControlledTaskInformation;
 import com.gip.xyna.xprc.xfqctrl.XynaFrequencyControl;
+import com.gip.xyna.xprc.xfractwfe.XynaPythonSnippetManagement;
 import com.gip.xyna.xprc.xfractwfe.base.DeploymentHandling;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
@@ -2297,6 +2298,11 @@ public class UpdateGeneratedClasses {
 
                   @Override
                   public XynaXmomSerialization getXmomSerialization() {
+                    return null;
+                  }
+                  
+                  @Override
+                  public XynaPythonSnippetManagement getXynaPythonSnippetManagement() {
                     return null;
                   }
                 };
