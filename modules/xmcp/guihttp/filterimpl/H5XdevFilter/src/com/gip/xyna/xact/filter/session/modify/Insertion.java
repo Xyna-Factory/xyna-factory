@@ -456,6 +456,9 @@ public class Insertion {
   
 
   private Integer adjustPositionForConditionalMappings(List<Step> guiList, List<Step> children, GBSubObject object) {
+    if(position.getInsideIndex() >= guiList.size()) {
+      return position.getInsideIndex();
+    }
     Step step = guiList.get(position.getInsideIndex());
     position.setInsideIndex(children.indexOf(step));
 
