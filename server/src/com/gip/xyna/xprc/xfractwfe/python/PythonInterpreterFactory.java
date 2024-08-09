@@ -42,5 +42,5 @@ public abstract class PythonInterpreterFactory {
 
   public abstract Object callService(Context context, Object... args);
 
-  public abstract Object callInstanceService(Object obj, Object... args);
+  public abstract Object callInstanceService(Context context, Object obj, Object... args);
 }

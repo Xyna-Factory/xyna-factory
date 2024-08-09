@@ -101,7 +101,7 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
   }
 
   @Override
-  public Object callInstanceService(Object obj, Object... args) {
+  public Object callInstanceService(Context context, Object obj, Object... args) {
     return null;
   }
   

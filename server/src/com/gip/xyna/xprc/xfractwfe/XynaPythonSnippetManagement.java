@@ -91,7 +91,7 @@ public class XynaPythonSnippetManagement extends Section {
     return factory.callService(context, args);
   }
 
-  public Object callInstanceService(Object obj, Object... args) {
+  public Object callInstanceService(Context context, Object obj, Object... args) {
     return factory.callInstanceService(obj, args);
   }
 
