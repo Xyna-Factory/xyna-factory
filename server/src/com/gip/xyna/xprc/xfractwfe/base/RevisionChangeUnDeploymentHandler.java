@@ -21,9 +21,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import org.apache.log4j.Logger;
-
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xact.trigger.FilterInstanceStorable;
 import com.gip.xyna.xact.trigger.FilterStorable;
@@ -40,9 +37,6 @@ import com.gip.xyna.xprc.xpce.planning.Capacity;
 
 
 public class RevisionChangeUnDeploymentHandler implements DeploymentHandler, UndeploymentHandler {
-
-  private static Logger logger = CentralFactoryLogging.getLogger(RevisionChangeUnDeploymentHandler.class);
-
   private final Set<Long> objects = new HashSet<Long>();
   private Consumer<Set<Long>> consumer;
 
@@ -68,7 +62,7 @@ public class RevisionChangeUnDeploymentHandler implements DeploymentHandler, Und
       return;
     }
 
-    this.consumer.accept(objects);
+    consumer.accept(objects);
     objects.clear();
   }
 
@@ -81,13 +75,12 @@ public class RevisionChangeUnDeploymentHandler implements DeploymentHandler, Und
 
   @Override
   public void finish() throws XPRC_UnDeploymentHandlerException {
-    // invalidate changed revisions
-    Set<Long> revisionsToInvalidate = new HashSet<Long>();
+    Set<Long> revisions = new HashSet<Long>();
     for (Long object : objects) {
-      XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement().getParentRevisionsRecursivly(object, revisionsToInvalidate);
+      XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement().getParentRevisionsRecursivly(object, revisions);
     }
    
-    this.consumer.accept(revisionsToInvalidate);
+    consumer.accept(revisions);
     objects.clear();
   }
 
