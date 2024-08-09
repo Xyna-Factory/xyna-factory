@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,16 +20,9 @@ package com.gip.xyna.xprc.xfractwfe.generation;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
-
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.ATT;
 
 public class PythonOperation extends CodeOperation {
-
-  @SuppressWarnings("unused")
-  private static final Logger logger = CentralFactoryLogging.getLogger(PythonOperation.class);
-
 
   public PythonOperation(DOM parent) {
     super(parent, ATT.PYTHON);
@@ -38,7 +31,6 @@ public class PythonOperation extends CodeOperation {
   @Override
   protected void getImports(Set<String> imports) {
     super.getImports(imports);
-    imports.add("java.io.IOException");
     imports.add("com.gip.xyna.XynaFactory");
     imports.add("com.gip.xyna.xdev.xfractmod.xmdm.Container");
     imports.add("com.gip.xyna.xprc.xfractwfe.python.PythonInterpreter");

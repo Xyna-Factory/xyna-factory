@@ -21,11 +21,13 @@ package com.gip.xyna.xprc.xfractwfe.python;
 
 import java.util.Collection;
 
+import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
+
 
 
 public abstract class PythonInterpreterFactory {
 
-  public abstract PythonInterpreter createInterperter(Long revision);
+  public abstract PythonInterpreter createInterperter(ClassLoaderBase classloader);
 
 
   public abstract void init();
