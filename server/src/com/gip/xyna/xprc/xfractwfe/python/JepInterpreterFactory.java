@@ -94,12 +94,12 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
   }
 
   @Override
-  public Object invokeService(Context context, Object... args) {
+  public Object invokeService(Context context, String serviceName, Object... args) {
     return null;
   }
 
   @Override
-  public Object invokeInstanceService(Context context, Object obj, Object... args) {
+  public Object invokeInstanceService(Context context, Object obj, String serviceName, Object... args) {
     return null;
   }
   
