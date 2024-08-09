@@ -40,7 +40,7 @@ public abstract class PythonInterpreterFactory {
 
   public abstract GeneralXynaObject convertToJava(Context context, Object obj);
 
-  public abstract Object callService(Context context, Object obj);
+  public abstract Object callService(Context context, Object... args);
 
-  public abstract Object callInstanceService(Context context, Object obj);
+  public abstract Object callInstanceService(Object obj, Object... args);
 }

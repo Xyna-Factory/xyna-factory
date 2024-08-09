@@ -87,12 +87,12 @@ public class XynaPythonSnippetManagement extends Section {
     return factory.convertToJava(context, obj);
   }
 
-  public Object callService(Context context, Object obj) {
-    return factory.callService(context, obj);
+  public Object callService(Context context, Object... args) {
+    return factory.callService(context, args);
   }
 
-  public Object callInstanceService(Context context, Object obj) {
-    return factory.callInstanceService(context, obj);
+  public Object callInstanceService(Object obj, Object... args) {
+    return factory.callInstanceService(obj, args);
   }
 
   public class Context {
