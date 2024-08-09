@@ -38,7 +38,7 @@ public abstract class PythonInterpreterFactory {
 
   public abstract GeneralXynaObject convertToJava(Context context, Object obj);
 
-  public abstract Object invokeService(Context context, String serviceName, Object... args);
+  public abstract Object invokeService(Context context, String fqn, String serviceName, Object... args);
 
   public abstract Object invokeInstanceService(Context context, Object obj, String serviceName, Object... args);
 }
