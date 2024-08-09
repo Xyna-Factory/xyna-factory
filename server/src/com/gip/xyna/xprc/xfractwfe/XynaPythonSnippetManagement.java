@@ -89,10 +89,10 @@ public class XynaPythonSnippetManagement extends Section {
   }
 
   public Object invokeService(Context context, String serviceName, Object... args) {
-    return factory.invokeService(context, args);
+    return factory.invokeService(context, serviceName, args);
   }
 
   public Object invokeInstanceService(Context context, Object obj, String serviceName, Object... args) {
-    return factory.invokeInstanceService(context, obj, args);
+    return factory.invokeInstanceService(context, obj, serviceName, args);
   }
 }
