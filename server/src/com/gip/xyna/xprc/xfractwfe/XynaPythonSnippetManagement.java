@@ -29,6 +29,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xprc.xfractwfe.base.DeploymentHandling;
 import com.gip.xyna.xprc.xfractwfe.base.RevisionChangeUnDeploymentHandler;
+import com.gip.xyna.xprc.xfractwfe.python.Context;
 import com.gip.xyna.xprc.xfractwfe.python.JepInterpreterFactory;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreter;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreterFactory;
@@ -87,23 +88,11 @@ public class XynaPythonSnippetManagement extends Section {
     return factory.convertToJava(context, obj);
   }
 
-  public Object callService(Context context, Object... args) {
-    return factory.callService(context, args);
+  public Object invokeService(Context context, Object... args) {
+    return factory.invokeService(context, args);
   }
 
-  public Object callInstanceService(Context context, Object obj, Object... args) {
-    return factory.callInstanceService(obj, args);
+  public Object invokeInstanceService(Context context, Object obj, Object... args) {
+    return factory.invokeInstanceService(context, obj, args);
   }
-
-  public class Context {
-    private Long revision;
-
-    public Long getRevision() {
-      return revision;
-    }
-
-    public void setRevision(Long revision) {
-      this.revision = revision;
-    }
-  }  
 }

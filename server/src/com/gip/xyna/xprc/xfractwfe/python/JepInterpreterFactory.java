@@ -37,8 +37,6 @@ import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabaseType;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResult;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResultEntry;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSelect;
-import com.gip.xyna.xprc.xfractwfe.XynaPythonSnippetManagement.Context;
-
 
 
 public class JepInterpreterFactory extends PythonInterpreterFactory {
@@ -96,12 +94,12 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
   }
 
   @Override
-  public Object callService(Context context, Object... args) {
+  public Object invokeService(Context context, Object... args) {
     return null;
   }
 
   @Override
-  public Object callInstanceService(Context context, Object obj, Object... args) {
+  public Object invokeInstanceService(Context context, Object obj, Object... args) {
     return null;
   }
   
