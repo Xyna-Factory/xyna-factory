@@ -19,9 +19,14 @@ package com.gip.xyna.xprc.xfractwfe;
 
 
 
+import java.util.Collection;
+
 import com.gip.xyna.Section;
+import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
+import com.gip.xyna.xprc.xfractwfe.base.DeploymentHandling;
+import com.gip.xyna.xprc.xfractwfe.base.RevisionChangeUnDeploymentHandler;
 import com.gip.xyna.xprc.xfractwfe.python.JepInterpreterFactory;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreter;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreterFactory;
@@ -36,13 +41,21 @@ public class XynaPythonSnippetManagement extends Section {
   public XynaPythonSnippetManagement() throws XynaException {
     super();
   }
-
+  
+  public void invalidateRevisions(Collection<Long> revisions) {
+    
+    if (logger.isDebugEnabled()) {
+      logger.debug("invalidating: " + revisions.size() + " revisions");
+    }
+    
+    factory.invalidateRevisions(revisions);
+  }
 
   public PythonInterpreter createPythonInterpreter(ClassLoader classloader) {
     if (!(classloader instanceof ClassLoaderBase)) {
       throw new RuntimeException("Unexpected createPythonInterpreter request. " + classloader + " does not inherit from ClassLoaderBase!");
     }
-    return factory.createInterperter(((ClassLoaderBase) classloader).getRevision());
+    return factory.createInterperter(((ClassLoaderBase) classloader));
   }
 
 
@@ -56,6 +69,12 @@ public class XynaPythonSnippetManagement extends Section {
   protected void init() throws XynaException {
     factory = new JepInterpreterFactory();
     factory.init();
+    XynaFactory.getInstance().getProcessing().getWorkflowEngine().getDeploymentHandling()
+      .addDeploymentHandler(DeploymentHandling.PRIORITY_REMOTESERIALIZATION, new RevisionChangeUnDeploymentHandler(this::invalidateRevisions));
+
+    XynaFactory.getInstance().getProcessing().getWorkflowEngine().getDeploymentHandling()
+      .addUndeploymentHandler(DeploymentHandling.PRIORITY_REMOTESERIALIZATION, new RevisionChangeUnDeploymentHandler(this::invalidateRevisions));
+
   }
 
 }
