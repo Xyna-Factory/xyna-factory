@@ -30,12 +30,14 @@ import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabaseType;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResult;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResultEntry;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSelect;
+import com.gip.xyna.xprc.xfractwfe.XynaPythonSnippetManagement.Context;
 
 
 
@@ -81,6 +83,26 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     for (Long rev: revisions) {
       packagesPerRevision.remove(rev);
     }
+  }
+  
+  @Override
+  public Map<String, Object> convertToPython(GeneralXynaObject obj) {
+    return null;
+  }
+
+  @Override
+  public GeneralXynaObject convertToJava(Context context, Object obj) {
+    return null;
+  }
+
+  @Override
+  public Object callService(Context context, Object obj) {
+    return null;
+  }
+
+  @Override
+  public Object callInstanceService(Context context, Object obj) {
+    return null;
   }
   
 

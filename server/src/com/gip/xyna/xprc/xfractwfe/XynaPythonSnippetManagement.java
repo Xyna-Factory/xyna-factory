@@ -20,10 +20,12 @@ package com.gip.xyna.xprc.xfractwfe;
 
 
 import java.util.Collection;
+import java.util.Map;
 
 import com.gip.xyna.Section;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xprc.xfractwfe.base.DeploymentHandling;
 import com.gip.xyna.xprc.xfractwfe.base.RevisionChangeUnDeploymentHandler;
@@ -41,13 +43,13 @@ public class XynaPythonSnippetManagement extends Section {
   public XynaPythonSnippetManagement() throws XynaException {
     super();
   }
-  
+
   public void invalidateRevisions(Collection<Long> revisions) {
-    
+
     if (logger.isDebugEnabled()) {
       logger.debug("invalidating: " + revisions.size() + " revisions");
     }
-    
+
     factory.invalidateRevisions(revisions);
   }
 
@@ -70,11 +72,38 @@ public class XynaPythonSnippetManagement extends Section {
     factory = new JepInterpreterFactory();
     factory.init();
     XynaFactory.getInstance().getProcessing().getWorkflowEngine().getDeploymentHandling()
-      .addDeploymentHandler(DeploymentHandling.PRIORITY_REMOTESERIALIZATION, new RevisionChangeUnDeploymentHandler(this::invalidateRevisions));
+    .addDeploymentHandler(DeploymentHandling.PRIORITY_REMOTESERIALIZATION, new RevisionChangeUnDeploymentHandler(this::invalidateRevisions));
 
     XynaFactory.getInstance().getProcessing().getWorkflowEngine().getDeploymentHandling()
-      .addUndeploymentHandler(DeploymentHandling.PRIORITY_REMOTESERIALIZATION, new RevisionChangeUnDeploymentHandler(this::invalidateRevisions));
+    .addUndeploymentHandler(DeploymentHandling.PRIORITY_REMOTESERIALIZATION, new RevisionChangeUnDeploymentHandler(this::invalidateRevisions));
 
   }
 
+  public Map<String, Object> convertToPython(GeneralXynaObject obj) {
+    return factory.convertToPython(obj);
+  }
+
+  public GeneralXynaObject convertToJava(Context context, Object obj) {
+    return factory.convertToJava(context, obj);
+  }
+
+  public Object callService(Context context, Object obj) {
+    return factory.callService(context, obj);
+  }
+
+  public Object callInstanceService(Context context, Object obj) {
+    return factory.callInstanceService(context, obj);
+  }
+
+  public class Context {
+    private Long revision;
+
+    public Long getRevision() {
+      return revision;
+    }
+
+    public void setRevision(Long revision) {
+      this.revision = revision;
+    }
+  }  
 }
