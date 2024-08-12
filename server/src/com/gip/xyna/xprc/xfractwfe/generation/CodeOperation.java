@@ -23,10 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xprc.exceptions.XPRC_InvalidPackageNameException;
@@ -52,8 +50,6 @@ import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
 
 
 public abstract class CodeOperation extends Operation {
-
-  private static Logger logger = CentralFactoryLogging.getLogger(JavaOperation.class);
 
   // used for manual interaction
   public static final String CORRELATED_XYNA_ORDER_VAR_NAME = "correlatedXynaOrder";
