@@ -119,8 +119,6 @@
     <!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
     <target name="deploy" depends="updateServiceDefinition, build" description="Deploy jar file to xyna server.">
         <fail message="No server properties specified. Unable to deploy." unless="server.available" />
-        <!-- clean directory on xyna server -->
-        <!--<custom-ssh-exec host="${server.host}" username="${server.userid}" command="rm -rf ${server.mdm.path}" /> -->
         <!-- create directory on xyna server -->
         <custom-ssh-exec host="${server.host}" username="${server.userid}" command="mkdir -p ${server.mdm.path}" />
         <!-- copy xml file to server -->
@@ -128,11 +126,11 @@
             <equals arg1="${server.transmitXml}" arg2="yes" />
             <then>
                 <echo message="Copying XML file ${local.xml.dir}/${mdm.xml.filename} to server" />
-                <custom-scp-to-remote fromdir="${local.xml.dir}" frominclude="${mdm.xml.filename}" todir="${server.userid}@${server.host}:${server.mdm.xml.path}" />
+                <default-scp-to-remote fromdir="${local.xml.dir}" frominclude="${mdm.xml.filename}" todir="${server.mdm.xml.path}" />
             </then>
         </if>
         <!-- copy libraries and licences to xyna server -->
-        <custom-scp-to-remote fromdir="${target.dir}" frominclude="**/*" todir="${server.userid}@${server.host}:${server.mdm.path}" />
+        <default-scp-to-remote fromdir="${target.dir}" frominclude="**/*" todir="${server.mdm.path}" />
 
         <!-- deploy datatype -->
         <custom-ssh-exec host="${server.host}" username="${server.userid}" command="cd ${server.path}; ./xynafactory.sh ${deploy.template}" />
@@ -229,9 +227,12 @@
         <!-- build mdm.jar -->
         <custom-ssh-exec host="${server.host}" username="${server.userid}" command="cd ${server.path}; ./xynafactory.sh buildmdmjar -workspaceName '${workspacename}' -r " />
         <!-- copy mdm.jar from xyna server -->
-        <custom-scp-from-remote fromfile="${server.userid}@${server.host}:${server.path}/mdm.jar" todir="${base.lib.dir}/xyna" />
+        <default-scp-from-remote fromfile="${server.path}/mdm.jar" todir="${base.lib.dir}/xyna" />
         <!-- copy xynafactory.jar from xyna server -->
-        <custom-scp-from-remote fromfile="${server.userid}@${server.host}:${server.path}/lib/xynafactory.jar" todir="${common.xyna.lib.dir}" />
+        <mkdir dir="${common.xyna.lib.dir}" />
+        <local name="factoryjar" />
+        <custom-ssh-exec host="${server.host}" username="${server.userid}" command="ls ${server.path}/lib | grep xynafactory*.jar" outputproperty="factoryjar" />
+        <default-scp-from-remote fromfile="${server.path}/lib/${factoryjar}" todir="${common.xyna.lib.dir}" />
     </target>
 
     <!-- ================================= 
@@ -246,7 +247,7 @@
         </tstamp>
         <custom-ssh-exec host="${server.host}" username="${server.userid}" command="cd ${server.path}; ./xynafactory.sh buildservicedefinitionjar -fqDatatypeName ${fqclassname} -workspaceName '${workspacename}' -targetDirectory ${project.name}_${current.millis}" />
         <!-- generate lib to temp folder -->
-        <custom-scp-from-remote fromfile="${server.userid}:${server.password}@${server.host}:${server.path}/${project.name}_${current.millis}/serviceDefinition.jar" todir="${base.lib.dir}/xyna" />
+        <default-scp-from-remote fromfile="${server.path}/${project.name}_${current.millis}/serviceDefinition.jar" todir="${base.lib.dir}/xyna" />
         <!-- delete temp folder -->
         <custom-ssh-exec host="${server.host}" username="${server.userid}" command="rm -rf ${server.path}/${project.name}_${current.millis}" />
     </target>
