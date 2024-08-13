@@ -18,27 +18,6 @@
 package com.gip.xyna.xprc.xfractwfe.python;
 
 
-
-import java.util.Collection;
-import java.util.Map;
-
-import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
-import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
-
-
-public abstract class PythonInterpreterFactory {
-
-  public abstract PythonInterpreter createInterperter(ClassLoaderBase classloader);
-
-  public abstract void init();
-
-  public abstract void invalidateRevisions(Collection<Long> revisions);
-  
-  public abstract Map<String, Object> convertToPython(GeneralXynaObject obj);
-
-  public abstract GeneralXynaObject convertToJava(Context context, Object obj);
-
-  public abstract Object invokeService(Context context, String fqn, String serviceName, Object... args);
-
-  public abstract Object invokeInstanceService(Context context, Object obj, String serviceName, Object... args);
+public class Context {
+  public Long revision;
 }
