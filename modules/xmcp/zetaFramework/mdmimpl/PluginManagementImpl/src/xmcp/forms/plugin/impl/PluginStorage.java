@@ -102,6 +102,10 @@ public class PluginStorage {
 
 
   public void unregisterPlugin(Plugin plugin) {
+    if (XynaFactory.getInstance().isShuttingDown()) {
+      logger.debug("skip unregister process of " + plugin.getNavigationEntryName() + " because factory is shutting down.");
+      return;
+    }
     PluginStorable storable = convertToStorable(plugin);
     try {
       buildExecutor().execute(new UnregisterPlugin(storable));
@@ -212,16 +216,22 @@ public class PluginStorage {
     public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
       PluginStorable oldEntry = new PluginStorable();
       oldEntry.setId(toRegister.getId());
-      
+
       try {
         con.queryOneRow(oldEntry);
-        if(oldEntry.equals(toRegister)) {
+        if (oldEntry.equals(toRegister)) {
+          if (logger.isDebugEnabled()) {
+            logger.debug("skipping registration of " + toRegister.getId() + " becuase it exists already");
+          }
           return; //PluginStorable exists already
         }
       } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
         //register new PluginStorable
       }
-      
+
+      if (logger.isDebugEnabled()) {
+        logger.debug("register new plugin: " + toRegister.getId());
+      }
       con.persistObject(toRegister);
     }
 
