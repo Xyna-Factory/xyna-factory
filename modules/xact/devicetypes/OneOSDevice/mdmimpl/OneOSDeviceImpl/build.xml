@@ -39,6 +39,7 @@
         <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/../../../SSHTools/sharedlib/SSHTools">
             <property name="target.dir" value="${basedir}/lib/xyna" />
         </ant>
+	<ant antfile="build.xml" target="prepare-mdm-jar-if-missing" inheritAll="false" dir="${basedir}/../../../../connection/connection" />
         <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/../../../../connection/connection/mdmimpl/RuleBasedDeviceTypeImpl">
             <property name="target.dir" value="${basedir}/lib/xyna" />
         </ant>

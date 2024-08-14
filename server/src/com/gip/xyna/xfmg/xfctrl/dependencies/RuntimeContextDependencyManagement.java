@@ -865,6 +865,9 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
 
         //invalidate serialization for changed revisions (owner + parents)
         XynaFactory.getInstance().getProcessing().getXmomSerialization().invalidateRevisions(parentRevs);
+        
+        //invalidate pythonCodeSnippetManagement for changed revisions (owner + parents)
+        XynaFactory.getInstance().getProcessing().getXynaPythonSnippetManagement().invalidateRevisions(parentRevs);
       } else { 
         if (owner instanceof ApplicationDefinition) {
           addDependenciesToParentWorkspace((ApplicationDefinition)owner, newDependencies, user, force, publishChanges);
@@ -1121,6 +1124,9 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
       
       //invalidate serialization for changed revisions (owner + parents)
       XynaFactory.getInstance().getProcessing().getXmomSerialization().invalidateRevisions(parentRevisions);
+      
+      //invalidate pythonCodeSnippetManagement for changed revisions (owner + parents)
+      XynaFactory.getInstance().getProcessing().getXynaPythonSnippetManagement().invalidateRevisions(parentRevisions);
 
         if (publishChanges) {
           for (RuntimeContextDependencyChange change : changes) {
