@@ -553,7 +553,7 @@
           <Data ID="39211" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory39211"/>
           <Target RefID="39212"/>
         </Output>
-        <Mapping>%3%.date0=%1%.date0</Mapping>
+        <Mapping>%3%.date0=%1%.date</Mapping>
         <Mapping>%3%.errorMessage=%0%.text</Mapping>
         <Mapping>%3%.importStatus="Error"</Mapping>
         <Mapping>%3%.fileName=%2%.name</Mapping>
