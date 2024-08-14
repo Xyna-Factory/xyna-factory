@@ -328,7 +328,7 @@ public class PythonMdmGeneration {
     if (info.returnType != null) {
       sb.append("return convert_to_python_value(");
     }
-    sb.append("XynaFactory.getInstance().getXynaProcessing().getXynaPythonSnippetManagement().");
+    sb.append("XynaFactory.getInstance().getProcessing().getXynaPythonSnippetManagement().");
     if (info.isStatic) {
       sb.append("invokeService(");
     } else {
