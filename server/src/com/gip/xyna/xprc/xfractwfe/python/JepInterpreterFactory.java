@@ -19,24 +19,33 @@ package com.gip.xyna.xprc.xfractwfe.python;
 
 
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
+import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderDispatcher;
+import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderType;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabaseType;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResult;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResultEntry;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSelect;
+
+import jep.python.PyObject;
 
 
 public class JepInterpreterFactory extends PythonInterpreterFactory {
@@ -93,16 +102,102 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     return null;
   }
 
+
   @Override
   public Object invokeService(Context context, String fqn, String serviceName, Object... args) {
-    return null;
+    return invokeMethod(context, fqn, null, serviceName, args);
   }
+
+
+  private Object invokeMethod(Context context, String fqn, Object instance, String serviceName, Object... args) {
+    return invokeMethod(context, fqn, instance, serviceName, args);
+  }
+
+
+  private Object[] convertArguments(Context context, Object... args) {
+    List<Object> result = new ArrayList<Object>();
+    for (Object input : args) {
+      result.add(convertPythonValue(context, input));
+    }
+    return result.toArray();
+  }
+
 
   @Override
   public Object invokeInstanceService(Context context, Object obj, String serviceName, Object... args) {
-    return null;
+    Object instance = convertToJava(context, obj);
+    Object result = null;
+    Method method = findMethod(context, instance.getClass().getCanonicalName(), serviceName, args);
+    try {
+      Object[] inputs = convertArguments(context, args);
+      result = method.invoke(instance, inputs);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    if (result != null) {
+      result = convertJavaValue(result);
+    }
+    return result;
   }
-  
+
+
+  private Object convertJavaValue(Object value) {
+    if (value instanceof Container) {
+      List<Object> asList = new ArrayList<Object>();
+      Container container = (Container) value;
+      for (int i = 0; i < container.size(); i++) {
+        asList.add(container.get(i));
+      }
+      return convertJavaValue(asList);
+    }
+    if (value instanceof List) {
+      List<Object> result = new ArrayList<Object>();
+      List<?> asList = (List<?>) value;
+      for (Object o : asList) {
+        result.add(convertJavaValue(o));
+      }
+      return result;
+    }
+    if (value instanceof GeneralXynaObject) {
+      return convertToPython((GeneralXynaObject) value);
+    }
+    //primitive
+    return value;
+  }
+
+
+  private Object convertPythonValue(Context context, Object value) {
+    if (value instanceof PyObject) {
+      return convertToJava(context, value);
+    }
+    if (value instanceof List<?>) {
+      List<Object> result = new ArrayList<Object>();
+      for (Object entry : (List<?>) value) {
+        result.add(convertPythonValue(context, entry));
+      }
+      return result;
+    }
+    //primitive
+    return value;
+  }
+
+
+  private Method findMethod(Context context, String canonicalName, String serviceName, Object[] args) {
+    ClassLoaderDispatcher cld = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getClassLoaderDispatcher();
+    ClassLoaderBase cl = cld.getClassLoaderByType(ClassLoaderType.MDM, canonicalName, context.revision);
+    Class<?> c = null;
+    Method result = null;
+    try {
+      c = cl.loadClass(canonicalName);
+      Class<?>[] parameterClasses = (Class<?>[]) List.of(args).stream().map(x -> x.getClass()).collect(Collectors.toList()).toArray();
+      result = c.getMethod(serviceName, parameterClasses);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+
+    return result;
+  }
+
 
   private Set<String> searchPackages(Long revision) {
     XMOMDatabase xmomDB = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getXMOMDatabase();
