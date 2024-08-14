@@ -28,7 +28,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -52,6 +51,24 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
 
   private static final Logger logger = CentralFactoryLogging.getLogger(JepInterpreterFactory.class);
   private Map<Long, Set<String>> packagesPerRevision = new HashMap<>();
+  private static final Map<String, Class<?>> typeConversionMap = createTypeConversionMap();
+  
+  private static Map<String, Class<?>> createTypeConversionMap() {
+    Map<String, Class<?>> result = new HashMap<>();
+    result.put("boolean", boolean.class);
+    result.put("Boolean", Boolean.class);
+    result.put("byte", byte.class);
+    result.put("Byte", Byte.class);
+    result.put("double", double.class);
+    result.put("Double", Double.class);
+    result.put("int", int.class);
+    result.put("Integer", Integer.class);
+    result.put("log", long.class);
+    result.put("Long", Long.class);
+    result.put("Sting", String.class);
+    return result;
+  }
+  
   
   @Override
   public PythonInterpreter createInterperter(ClassLoaderBase classLoader) {
@@ -104,13 +121,24 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
 
 
   @Override
-  public Object invokeService(Context context, String fqn, String serviceName, Object... args) {
-    return invokeMethod(context, fqn, null, serviceName, args);
+  public Object invokeService(Context context, String fqn, String serviceName, List<String> types, Object... args) {
+    return invokeMethod(context, fqn, null, serviceName, types, args);
   }
 
 
-  private Object invokeMethod(Context context, String fqn, Object instance, String serviceName, Object... args) {
-    return invokeMethod(context, fqn, instance, serviceName, args);
+  private Object invokeMethod(Context context, String fqn, Object instance, String serviceName, List<String> types, Object... args) {
+    Object result = null;
+    Method method = findMethod(context, fqn, serviceName, types, args);
+    try {
+      Object[] inputs = convertArguments(context, args);
+      result = method.invoke(instance, inputs);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    if (result != null) {
+      result = convertJavaValue(result);
+    }
+    return result;
   }
 
 
@@ -124,20 +152,9 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
 
 
   @Override
-  public Object invokeInstanceService(Context context, Object obj, String serviceName, Object... args) {
-    Object instance = convertToJava(context, obj);
-    Object result = null;
-    Method method = findMethod(context, instance.getClass().getCanonicalName(), serviceName, args);
-    try {
-      Object[] inputs = convertArguments(context, args);
-      result = method.invoke(instance, inputs);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-    if (result != null) {
-      result = convertJavaValue(result);
-    }
-    return result;
+  public Object invokeInstanceService(Context context, Object obj, String serviceName, List<String> types, Object... args) {
+    GeneralXynaObject xo = convertToJava(context, obj);
+    return invokeMethod(context, xo.getClass().getCanonicalName(), xo, serviceName, types, args);
   }
 
 
@@ -182,20 +199,32 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
   }
 
 
-  private Method findMethod(Context context, String canonicalName, String serviceName, Object[] args) {
+  private Method findMethod(Context context, String canonicalName, String serviceName, List<String> types, Object[] args) {
     ClassLoaderDispatcher cld = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getClassLoaderDispatcher();
     ClassLoaderBase cl = cld.getClassLoaderByType(ClassLoaderType.MDM, canonicalName, context.revision);
     Class<?> c = null;
     Method result = null;
     try {
       c = cl.loadClass(canonicalName);
-      Class<?>[] parameterClasses = (Class<?>[]) List.of(args).stream().map(x -> x.getClass()).collect(Collectors.toList()).toArray();
+      Class<?>[] parameterClasses = new Class<?>[args.length];
+      for(int i=0; i< args.length; i++) {
+        parameterClasses[i] = loadType(cl, types.get(i));
+      }
       result = c.getMethod(serviceName, parameterClasses);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
 
     return result;
+  }
+  
+
+  private Class<?> loadType(ClassLoaderBase cl, String name) {
+    try {
+      return typeConversionMap.getOrDefault(name, cl.loadClass(name));
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
   }
 
 
