@@ -53,6 +53,7 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
   private Map<Long, Set<String>> packagesPerRevision = new HashMap<>();
   private static final Map<String, Class<?>> typeConversionMap = createTypeConversionMap();
   
+
   private static Map<String, Class<?>> createTypeConversionMap() {
     Map<String, Class<?>> result = new HashMap<>();
     result.put("boolean", boolean.class);
@@ -66,6 +67,7 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     result.put("log", long.class);
     result.put("Long", Long.class);
     result.put("Sting", String.class);
+    result.put("List", List.class);
     return result;
   }
   
@@ -121,16 +123,16 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
 
 
   @Override
-  public Object invokeService(Context context, String fqn, String serviceName, List<String> types, Object... args) {
-    return invokeMethod(context, fqn, null, serviceName, types, args);
+  public Object invokeService(Context context, String fqn, String serviceName, List<Object> args) {
+    return invokeMethod(context, fqn, null, serviceName, args);
   }
 
 
-  private Object invokeMethod(Context context, String fqn, Object instance, String serviceName, List<String> types, Object... args) {
+  private Object invokeMethod(Context context, String fqn, Object instance, String serviceName, List<Object> args) {
     Object result = null;
-    Method method = findMethod(context, fqn, serviceName, types, args);
+    Method method = findMethod(context, fqn, serviceName);
     try {
-      Object[] inputs = convertArguments(context, args);
+      Object[] inputs = convertArguments(context, method, args);
       result = method.invoke(instance, inputs);
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -142,19 +144,25 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
   }
 
 
-  private Object[] convertArguments(Context context, Object... args) {
+  private Object[] convertArguments(Context context, Method method, List<Object> args) {
     List<Object> result = new ArrayList<Object>();
-    for (Object input : args) {
-      result.add(convertPythonValue(context, input));
+    for (int i = 0; i < args.size(); i++) {
+      Object input = args.get(i);
+      String type = method.getParameters()[i].getParameterizedType().getTypeName();
+      if (type.startsWith("java.util.List")) {
+        type = type.substring("java.util.".length());
+        type = type.replace("<? extends ", "<");
+      }
+      result.add(convertPythonValue(context, type, input));
     }
     return result.toArray();
   }
 
 
   @Override
-  public Object invokeInstanceService(Context context, Object obj, String serviceName, List<String> types, Object... args) {
+  public Object invokeInstanceService(Context context, Object obj, String serviceName, List<Object> args) {
     GeneralXynaObject xo = convertToJava(context, obj);
-    return invokeMethod(context, xo.getClass().getCanonicalName(), xo, serviceName, types, args);
+    return invokeMethod(context, xo.getClass().getCanonicalName(), xo, serviceName, args);
   }
 
 
@@ -183,46 +191,46 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
   }
 
 
-  private Object convertPythonValue(Context context, Object value) {
+  private Object convertPythonValue(Context context, String type, Object value) {
+    if (value == null) {
+      return null;
+    }
     if (value instanceof PyObject) {
       return convertToJava(context, value);
     }
     if (value instanceof List<?>) {
       List<Object> result = new ArrayList<Object>();
       for (Object entry : (List<?>) value) {
-        result.add(convertPythonValue(context, entry));
+        result.add(convertPythonValue(context, removeListFromType(type), entry));
       }
       return result;
     }
     //primitive
+    Class<?> c = typeConversionMap.get(type);
+    if (c != null && !(c.isAssignableFrom(value.getClass()))) {
+      if (value.getClass() == Double.class && c == Float.class) {
+        value = (float) ((double) value);
+      }
+      if (value.getClass() == Long.class && c == int.class) {
+        value = (int) ((long) value);
+      }
+    }
     return value;
   }
 
 
-  private Method findMethod(Context context, String canonicalName, String serviceName, List<String> types, Object[] args) {
+  private String removeListFromType(String type) {
+    return type.substring(5, type.length() - 1);
+  }
+
+
+  private Method findMethod(Context context, String canonicalName, String serviceName) {
     ClassLoaderDispatcher cld = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getClassLoaderDispatcher();
     ClassLoaderBase cl = cld.getClassLoaderByType(ClassLoaderType.MDM, canonicalName, context.revision);
-    Class<?> c = null;
-    Method result = null;
     try {
-      c = cl.loadClass(canonicalName);
-      Class<?>[] parameterClasses = new Class<?>[args.length];
-      for(int i=0; i< args.length; i++) {
-        parameterClasses[i] = loadType(cl, types.get(i));
-      }
-      result = c.getMethod(serviceName, parameterClasses);
+      Class<?> c = cl.loadClass(canonicalName);
+      return Arrays.asList(c.getDeclaredMethods()).stream().filter(x -> x.getName().equals(serviceName)).findAny().get();
     } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-
-    return result;
-  }
-  
-
-  private Class<?> loadType(ClassLoaderBase cl, String name) {
-    try {
-      return typeConversionMap.getOrDefault(name, cl.loadClass(name));
-    } catch (ClassNotFoundException e) {
       throw new RuntimeException(e);
     }
   }
@@ -233,9 +241,10 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     Set<String> result = new HashSet<String>();
     try {
       XMOMDatabaseSelect selectStatement = new XMOMDatabaseSelect();
-      selectStatement.addAllDesiredResultTypes(Arrays.asList(XMOMDatabaseType.DATATYPE, XMOMDatabaseType.EXCEPTION, XMOMDatabaseType.SERVICEGROUP));
+      selectStatement
+          .addAllDesiredResultTypes(Arrays.asList(XMOMDatabaseType.DATATYPE, XMOMDatabaseType.EXCEPTION, XMOMDatabaseType.SERVICEGROUP));
       XMOMDatabaseSearchResult xmoms = xmomDB.searchXMOMDatabase(Arrays.asList(selectStatement), Integer.MAX_VALUE, revision);
-      for (XMOMDatabaseSearchResultEntry searchEntry: xmoms.getResult()) {
+      for (XMOMDatabaseSearchResultEntry searchEntry : xmoms.getResult()) {
         String fqn = searchEntry.getFqName();
         String[] split = fqn.split("\\.");
         result.add(split[0]);
