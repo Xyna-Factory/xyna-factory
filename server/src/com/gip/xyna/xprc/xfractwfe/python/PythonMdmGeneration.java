@@ -342,14 +342,15 @@ public class PythonMdmGeneration {
       sb.append("self, ");
     }
     sb.append("\"" + info.name + "\"");
+    sb.append(", [");
     if (info.argumentsWithTypes != null && !info.argumentsWithTypes.isEmpty()) {
-      sb.append(", ");
       for (Pair<String, String> argument : info.argumentsWithTypes) {
         sb.append(argument.getFirst());
         sb.append(", ");
       }
       sb.setLength(sb.length() - 2); //remove last ", "
     }
+    sb.append("]");
     if (info.returnType != null) {
       sb.append("), ");
       sb.append(info.returnType.startsWith("tuple[") ? "True" : "False");
