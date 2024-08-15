@@ -44,7 +44,7 @@ public class BuildmdmpyImpl extends XynaCommandImplementation<Buildmdmpy> {
     File dir = defaultDir;
     if (payload.getTargetDirectory() == null) {
       writeLineToCommandLine(statusOutputStream,
-                             "No folder given to store MDM jar to. Using default (" + defaultDir.getPath() + ")");
+                             "No folder given to store MDM python file to. Using default (" + defaultDir.getPath() + ")");
     } else {
       dir = new File(payload.getTargetDirectory());
     }

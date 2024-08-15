@@ -119,7 +119,7 @@ public class PythonMdmGeneration {
           throw new RuntimeException("Could not order objects. " + i + " of " + objects.size() + " ordered. Current object: " + obj.fqn);
         }
       } else {
-        availableClasses.add(obj.fqn.replace('.', '_'));
+        availableClasses.add(convertToPythonFqn(obj.fqn));
         breaker = 0;
       }
     }
@@ -266,9 +266,9 @@ public class PythonMdmGeneration {
 
   private void addXynaObjectToMdm(StringBuilder sb, XynaObjectInformation info, boolean withImpl, boolean typeHints) {
     sb.append("class ");
-    sb.append(info.fqn.replace('.', '_'));
+    sb.append(convertToPythonFqn(info.fqn));
     sb.append("(");
-    sb.append(info.parent);
+    sb.append(convertToPythonFqn(info.parent));
     sb.append("):\n");
     sb.append("  def __init__(self):\n");
     sb.append("    super().__init__(\"");
@@ -380,8 +380,6 @@ public class PythonMdmGeneration {
 
     if (result.parent == null) {
       result.parent = isException ? "XynaException" : "XynaObject";
-    } else {
-      result.parent = result.parent.replace('.', '_');
     }
     
     //special case XynaException (inherits from java.lang.Exception
@@ -432,8 +430,7 @@ public class PythonMdmGeneration {
     if (avar.isJavaBaseType()) {
       type = primitive_types_mapping.getOrDefault(avar.getJavaTypeEnum(), "any");
     } else {
-      
-      type = "'" +avar.getOriginalPath().replace('.', '_') + "_" + avar.getOriginalName() + "'";
+      type = "'" + convertToPythonFqn(avar.getOriginalPath() + "." + avar.getOriginalName()) + "'";
     }
     if(avar.isList()) {
       type = "list[" + type + "]";
@@ -465,6 +462,9 @@ public class PythonMdmGeneration {
     }
   }
 
+  private String convertToPythonFqn(String fqn) {
+    return fqn.replace('.', '_');
+  }
 
   public void exportPythonMdm(Long revision, String destination) throws Exception {
     String data = createPythonMdm(revision, false, true);
@@ -477,7 +477,7 @@ public class PythonMdmGeneration {
   private static class XynaObjectInformation {
 
     private String fqn; //original
-    private String parent;
+    private String parent; //original
     private List<Pair<String, String>> members;
     private List<MethodInformation> methods;
   }

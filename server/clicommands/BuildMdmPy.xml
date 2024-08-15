@@ -16,8 +16,8 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <XynaCommandLineCommand>
-  <CommandDefinition Name="buildmdmpy" Groups="Support for Eclipse" Description="Create py file containing all MDM class files for development purposes."/>
-  <Argument Name="targetDirectory" Description="The directory within which the jar file is created" Optional="true"/>
+  <CommandDefinition Name="buildmdmpy" Groups="Support for Eclipse" Description="Create py file containing all MDM definitions for a given runtime context including dependencies."/>
+  <Argument Name="targetDirectory" Description="The directory within which the python file is created" Optional="true"/>
   <Argument Name="applicationName" Description="The name of the application." Optional="true"/>
   <Argument Name="versionName" Description="The name of the version." Optional="true"/>
   <Argument Name="workspaceName" Description="The name of the workspace." Optional="true"/>
