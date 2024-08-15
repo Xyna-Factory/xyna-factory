@@ -118,7 +118,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
       .setDefaultDocumentation(DocumentationLanguage.EN, "compress response of requests using gzip, if supported by caller")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Komprimiere Antworten mit gzip, wenn es vom Aufrufer unterstützt wird");
   
-  public static final XynaPropertyBoolean STRICT_TRANSPORT_SECURITY = new XynaPropertyBoolean("xmcp.guihttp.sts", false)
+  public static final XynaPropertyBoolean STRICT_TRANSPORT_SECURITY = new XynaPropertyBoolean("xmcp.guihttp.sts", true)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Send Session Cookie as __Secure- and add Strict-Transport-Security header")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Sende Session Cookie als __Secure- und füge Strict-Transport-Security header ein");
 

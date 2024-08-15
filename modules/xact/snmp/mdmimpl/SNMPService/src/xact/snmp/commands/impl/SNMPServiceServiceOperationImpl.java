@@ -101,13 +101,13 @@ public class SNMPServiceServiceOperationImpl implements ExtendedDeploymentTask, 
   private static final String SECURE_STORAGE_KEY_PRIVPASSWORD = "xact.snmp.v3.privpassword";
 
   private static final XynaPropertyEnum<AUTH_ALGO> XYNAPROPERTY_AUTH_ALGO = new XynaPropertyEnum<AUTH_ALGO>(
-      "xact.snmp.v3.authalgorithm", AUTH_ALGO.class, AUTH_ALGO.MD5)
+      "xact.snmp.v3.authalgorithm", AUTH_ALGO.class, AUTH_ALGO.SHA256)
       .setDefaultDocumentation(DocumentationLanguage.DE,
           "Mögliche authentifizierungs Algorithmen: MD5, SHA1, SHA224, SHA256, SHA384, SHA512")
       .setDefaultDocumentation(DocumentationLanguage.EN,
           "Available authentification algorithms: MD5, SHA1, SHA224, SHA256, SHA384, SHA512");
   private static final XynaPropertyEnum<PRIV_ALGO> XYNAPROPERTY_PRIV_ALGO = new XynaPropertyEnum<PRIV_ALGO>(
-      "xact.snmp.v3.privalgorithm", PRIV_ALGO.class, PRIV_ALGO.DES)
+      "xact.snmp.v3.privalgorithm", PRIV_ALGO.class, PRIV_ALGO.AES128)
       .setDefaultDocumentation(DocumentationLanguage.DE,
           "Mögliche verschlüsselungs Algorithmen: DES, DESEDE, AES128, AES192, AES256")
       .setDefaultDocumentation(DocumentationLanguage.EN,
