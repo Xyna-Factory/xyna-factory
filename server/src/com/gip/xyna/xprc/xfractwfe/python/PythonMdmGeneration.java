@@ -23,15 +23,11 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
-
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase;
@@ -52,7 +48,6 @@ import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 
 public class PythonMdmGeneration {
 
-  private static final Logger logger = CentralFactoryLogging.getLogger(PythonMdmGeneration.class);
   private static final Map<PrimitiveType, String> primitive_types_mapping = setupPrimitiveTypes();
 
 
@@ -79,58 +74,70 @@ public class PythonMdmGeneration {
     StringBuilder sb = new StringBuilder();
     fillDefaults(sb, withImpl, typeHints);
     XMOMDatabaseSearchResult objects = searchXmomDbForObjects(revision);
-    List<XynaObjectInformation> objectsSorted = sortResults(objects.getResult(), revision);
+    List<XynaObjectInformation> objectsSorted = convertAndSortSearchResult(objects.getResult(), revision);
     for (XynaObjectInformation object : objectsSorted) {
       addXynaObjectToMdm(sb, object, withImpl, typeHints);
     }
     return sb.toString();
   }
   
-  private List<XynaObjectInformation> sortResults(List<XMOMDatabaseSearchResultEntry> objects, Long revision) {
+
+  private Map<String, XynaObjectInformation> loadObjects(List<XMOMDatabaseSearchResultEntry> objects, Long revision) {
     GenerationBaseCache cache = new GenerationBaseCache();
-    List<XynaObjectInformation> result = new ArrayList<XynaObjectInformation>(objects.size());
+    Map<String, XynaObjectInformation> map = new HashMap<>();
+    map.put("XynaObject", null);
+    map.put("XynaException", null);
     for (XMOMDatabaseSearchResultEntry obj : objects) {
-      if(obj.getType().equals(XMOMDatabaseType.SERVICEGROUP)) {
+      if (obj.getType().equals(XMOMDatabaseType.SERVICEGROUP)) {
         String dtFqn = obj.getFqName().substring(0, obj.getFqName().lastIndexOf('.'));
-        if(objects.stream().anyMatch(x -> x.getFqName().equals(dtFqn))) {
+        if (objects.stream().anyMatch(x -> x.getFqName().equals(dtFqn))) {
           continue; // we discover all methods by examining the datatype
         } else {
           obj.setFqName(dtFqn);
         }
       }
       XynaObjectInformation info = loadXynaObjectInfo(revision, obj.getFqName(), obj.getType().equals(XMOMDatabaseType.EXCEPTION), cache);
-      result.add(info);
+      map.put(info.fqn, info);
+    }
+    return map;
+  }
+  
+  private List<XynaObjectInformation> convertAndSortSearchResult(List<XMOMDatabaseSearchResultEntry> objects, Long revision) {
+    Map<String, XynaObjectInformation> map = loadObjects(objects, revision);
+    List<XynaObjectInformation> result = new ArrayList<XynaObjectInformation>(objects.size());
+
+    for (String fqn: map.keySet()) {
+      XynaObjectInformation obj = map.get(fqn);
+      if (obj == null) {
+        continue;
+      }
+      addObjectToResult(obj, map, result);
     }
 
-    Set<String> availableClasses = new HashSet<String>();
-    availableClasses.add("XynaObject");
-    availableClasses.add("XynaException");
-    //sort - start with Objects without parent
-    int reorders = 0;
-    int breaker = 0;
-    for (int i = 0; i < result.size(); i++) {
-      XynaObjectInformation obj = result.get(i);
-      if(!availableClasses.contains(obj.parent)) {
-        result.remove(i);
-        result.add(obj);
-        i--;
-        breaker++;
-        reorders++;
-        if(breaker >= result.size()) {
-          throw new RuntimeException("Could not order objects. " + i + " of " + objects.size() + " ordered. Current object: " + obj.fqn);
-        }
-      } else {
-        availableClasses.add(convertToPythonFqn(obj.fqn));
-        breaker = 0;
-      }
-    }
-    
-    if(logger.isDebugEnabled()) {
-      logger.debug("sorted through " + objects.size() + " objects and reordered " + reorders + " times.");
-    }
-    
     return result;
   }
+  
+
+  private void addObjectToResult(XynaObjectInformation obj, Map<String, XynaObjectInformation> map, List<XynaObjectInformation> result) {
+    Stack<XynaObjectInformation> hierarchy = new Stack<>();
+    hierarchy.push(obj);
+
+    while (map.containsKey(hierarchy.peek().parent) && map.get(hierarchy.peek().parent) != null) {
+      hierarchy.push(map.get(hierarchy.peek().parent));
+    }
+
+    if (!map.containsKey(hierarchy.peek().parent)) {
+      throw new RuntimeException("Unknown Object reference in " + hierarchy.peek().fqn + " to object: " + hierarchy.peek().parent);
+    }
+
+    while(!hierarchy.isEmpty()) {
+      XynaObjectInformation info = hierarchy.pop();
+      result.add(info);
+      map.put(info.fqn, null);
+      
+    }
+  }
+
 
   private void fillDefaults(StringBuilder sb, boolean withImpl, boolean typeHints) {
     fillImports(sb);
@@ -239,7 +246,7 @@ public class PythonMdmGeneration {
     sb.append("        result.append(_convert_list(value))\n");
     sb.append("      case _:\n");
     sb.append("        result.append(value)\n\n");
-    sb.append("  return result");
+    sb.append("  return result\n\n");
   }
 
 
