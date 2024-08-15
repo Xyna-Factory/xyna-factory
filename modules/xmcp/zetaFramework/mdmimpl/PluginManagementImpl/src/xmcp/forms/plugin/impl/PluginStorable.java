@@ -21,6 +21,7 @@ package xmcp.forms.plugin.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 import com.gip.xyna.xnwh.persistence.Column;
 import com.gip.xyna.xnwh.persistence.Persistable;
@@ -192,6 +193,28 @@ public class PluginStorable extends Storable<PluginStorable> {
 
   public void setPath(String path) {
     this.path = path;
+  }
+  
+
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof PluginStorable)) {
+      return false;
+    }
+    PluginStorable other = (PluginStorable) obj;
+    return Objects.equals(id, other.id) &&
+        Objects.equals(navigationentrylabel, other.navigationentrylabel) &&
+        Objects.equals(navigationentryname, other.navigationentryname) &&
+        Objects.equals(navigationiconname, other.navigationiconname) && 
+        Objects.equals(definitionworkflowfqn, other.definitionworkflowfqn) &&
+        Objects.equals(pluginrtc, other.pluginrtc) &&
+        Objects.equals(path, other.path);
+  }
+
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, navigationentrylabel, navigationentryname, navigationiconname, definitionworkflowfqn, pluginrtc, path);
   }
 
 }
