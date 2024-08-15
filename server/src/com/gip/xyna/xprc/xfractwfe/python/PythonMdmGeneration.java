@@ -122,7 +122,7 @@ public class PythonMdmGeneration {
     Stack<XynaObjectInformation> hierarchy = new Stack<>();
     hierarchy.push(obj);
 
-    while (map.containsKey(hierarchy.peek().parent) && map.get(hierarchy.peek().parent) != null) {
+    while (map.get(hierarchy.peek().parent) != null) {
       hierarchy.push(map.get(hierarchy.peek().parent));
     }
 
