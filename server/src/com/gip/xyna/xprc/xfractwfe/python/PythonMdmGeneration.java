@@ -43,6 +43,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable.PrimitiveType;
 
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
+import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
@@ -363,17 +364,12 @@ public class PythonMdmGeneration {
     XynaObjectInformation result = new XynaObjectInformation();
     result.fqn = fqn;
     try {
-      if (isException) {
-        ExceptionGeneration obj = ExceptionGeneration.getOrCreateInstance(fqn, cache, revision);
-        obj.parse(false);
-        result.parent = obj.getSuperClassGenerationObject() != null ? obj.getSuperClassGenerationObject().getOriginalFqName() : null;
-        result.members = obj.getMemberVars().stream().map(this::toMemberInfo).collect(Collectors.toList());
-      } else {
-        DOM obj = DOM.getOrCreateInstance(fqn, cache, revision);
-        obj.parse(false);
-        result.parent = obj.getSuperClassGenerationObject() != null ? obj.getSuperClassGenerationObject().getOriginalFqName() : null;
-        result.members = obj.getMemberVars().stream().map(this::toMemberInfo).collect(Collectors.toList());
-        result.methods = loadOperations(obj.getOperations());
+      DomOrExceptionGenerationBase doe =  isException ? ExceptionGeneration.getOrCreateInstance(fqn, cache, revision) : DOM.getOrCreateInstance(fqn, cache, revision);
+      doe.parse(false);
+      result.parent = doe.getSuperClassGenerationObject() != null ? doe.getSuperClassGenerationObject().getOriginalFqName() : null;
+      result.members = doe.getMemberVars().stream().map(this::toMemberInfo).collect(Collectors.toList());
+      if (!isException) {
+        result.methods = loadOperations(((DOM) doe).getOperations());
       }
     } catch (Exception e) {
       throw new RuntimeException(e);
