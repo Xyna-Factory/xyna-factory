@@ -20,6 +20,7 @@ package com.gip.xyna.xprc.xfractwfe;
 
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import com.gip.xyna.Section;
@@ -89,11 +90,11 @@ public class XynaPythonSnippetManagement extends Section {
     return factory.convertToJava(context, obj);
   }
 
-  public Object invokeService(Context context, String fqn, String serviceName, Object... args) {
+  public Object invokeService(Context context, String fqn, String serviceName, List<Object> args) {
     return factory.invokeService(context, fqn, serviceName, args);
   }
 
-  public Object invokeInstanceService(Context context, Object obj, String serviceName, Object... args) {
+  public Object invokeInstanceService(Context context, Object obj, String serviceName, List<Object> args) {
     return factory.invokeInstanceService(context, obj, serviceName, args);
   }
   
