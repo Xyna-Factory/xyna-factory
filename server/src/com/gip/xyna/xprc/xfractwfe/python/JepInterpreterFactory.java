@@ -17,26 +17,28 @@
  */
 package com.gip.xyna.xprc.xfractwfe.python;
 
-
-
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.List;
-import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaExceptionBase;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
+import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderDispatcher;
+import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderType;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabaseType;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResult;
@@ -44,13 +46,12 @@ import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResultEntr
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSelect;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 
-
+import jep.python.PyObject;
 
 public class JepInterpreterFactory extends PythonInterpreterFactory {
 
   private static final Logger logger = CentralFactoryLogging.getLogger(JepInterpreterFactory.class);
   private Map<Long, Set<String>> packagesPerRevision = new HashMap<>();
-
 
   @Override
   public PythonInterpreter createInterperter(ClassLoaderBase classLoader) {
@@ -60,7 +61,6 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     }
     return new JepInterpreter(classLoader, packagesPerRevision.get(revision));
   }
-
 
   @Override
   public void init() {
@@ -83,14 +83,12 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     }
   }
 
-
   @Override
   public void invalidateRevisions(Collection<Long> revisions) {
-    for (Long rev: revisions) {
+    for (Long rev : revisions) {
       packagesPerRevision.remove(rev);
     }
   }
-
 
   @Override
   public Map<String, Object> convertToPython(GeneralXynaObject obj) {
@@ -114,8 +112,7 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
         }
       }
     } else {
-      //throw new UnsupportedOperationException();
-      return new HashMap<>();
+      throw new UnsupportedOperationException();
     }
 
     for (String i : varNames) {
@@ -149,12 +146,63 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     return resultMap;
   }
 
-
   @Override
   public GeneralXynaObject convertToJava(Context context, Object obj) {
-    return null;
-  }
+    PyObject pyObj = (PyObject) obj;
+    String fqn = (String) pyObj.getAttr("_fqn");
+    String xynatype = (String) pyObj.getAttr("_xynatype");
 
+    ClassLoaderDispatcher cld = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl()
+        .getClassLoaderDispatcher();
+    ClassLoaderBase cl;
+    if (xynatype.equals("DATATYPE")) {
+      cl = cld.findClassLoaderByType(fqn, context.revision, ClassLoaderType.MDM, true);
+    } else if (xynatype.equals("EXEPTION")) {
+      cl = cld.findClassLoaderByType(fqn, context.revision, ClassLoaderType.Exception, true);
+    } else {
+      throw new UnsupportedOperationException();
+    }
+
+    GeneralXynaObject resultObj = null;
+    try {
+      @SuppressWarnings("unchecked")
+      Class<? extends GeneralXynaObject> clazz = (Class<? extends GeneralXynaObject>) cl.loadClass(fqn);
+      resultObj = clazz.getDeclaredConstructor().newInstance();
+
+      for (Field f : clazz.getDeclaredFields()) {
+        if (f.getModifiers() == 2) { // private members
+          String fieldName = f.getName();
+          Object memberAttr = pyObj.getAttr(fieldName);
+          if (memberAttr instanceof PyObject) {
+            resultObj.set(fieldName, convertToJava(context, memberAttr));
+          } else if (memberAttr instanceof List) {
+            List<?> memberAttrList = (List<?>) memberAttr;
+            if (memberAttrList.size() > 0) {
+              if (memberAttrList.get(0) instanceof PyObject) {
+                List<Object> resultList = new ArrayList<Object>();
+                for (Object o : memberAttrList) {
+                  resultList.add(convertToJava(context, o));
+                }
+                resultObj.set(fieldName, resultList);
+              } else {
+                resultObj.set(fieldName, memberAttrList);
+              }
+            }
+          } else {
+            resultObj.set(fieldName, memberAttr);
+          }
+        }
+      }
+
+    } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException
+        | InstantiationException e) {
+      throw new RuntimeException("Could not create instance of class " + fqn, e);
+    } catch (XDEV_PARAMETER_NAME_NOT_FOUND e) {
+      throw new RuntimeException("Could not set member variables in " + resultObj, e);
+    }
+
+    return resultObj;
+  }
 
   @Override
   public Object invokeService(Context context, String fqn, String serviceName, Object... args) {
