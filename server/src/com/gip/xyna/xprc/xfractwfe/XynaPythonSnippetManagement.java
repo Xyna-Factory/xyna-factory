@@ -34,6 +34,7 @@ import com.gip.xyna.xprc.xfractwfe.python.Context;
 import com.gip.xyna.xprc.xfractwfe.python.JepInterpreterFactory;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreter;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreterFactory;
+import com.gip.xyna.xprc.xfractwfe.python.PythonMdmGeneration;
 
 
 
@@ -95,5 +96,13 @@ public class XynaPythonSnippetManagement extends Section {
 
   public Object invokeInstanceService(Context context, Object obj, String serviceName, List<Object> args) {
     return factory.invokeInstanceService(context, obj, serviceName, args);
+  }
+  
+  public String createPythonMdm(Long revision, boolean withImpl, boolean typeHints) {
+    return new PythonMdmGeneration().createPythonMdm(revision, withImpl, typeHints);
+  }
+  
+  public void exportPythonMdm(Long revision, String destination) throws Exception {
+    new PythonMdmGeneration().exportPythonMdm(revision, destination);
   }
 }
