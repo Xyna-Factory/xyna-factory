@@ -20,6 +20,7 @@ package com.gip.xyna.xprc.xfractwfe;
 
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import com.gip.xyna.Section;
@@ -33,6 +34,7 @@ import com.gip.xyna.xprc.xfractwfe.python.Context;
 import com.gip.xyna.xprc.xfractwfe.python.JepInterpreterFactory;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreter;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreterFactory;
+import com.gip.xyna.xprc.xfractwfe.python.PythonMdmGeneration;
 
 
 
@@ -88,11 +90,19 @@ public class XynaPythonSnippetManagement extends Section {
     return factory.convertToJava(context, obj);
   }
 
-  public Object invokeService(Context context, String fqn, String serviceName, Object... args) {
+  public Object invokeService(Context context, String fqn, String serviceName, List<Object> args) {
     return factory.invokeService(context, fqn, serviceName, args);
   }
 
-  public Object invokeInstanceService(Context context, Object obj, String serviceName, Object... args) {
+  public Object invokeInstanceService(Context context, Object obj, String serviceName, List<Object> args) {
     return factory.invokeInstanceService(context, obj, serviceName, args);
+  }
+  
+  public String createPythonMdm(Long revision, boolean withImpl, boolean typeHints) {
+    return new PythonMdmGeneration().createPythonMdm(revision, withImpl, typeHints);
+  }
+  
+  public void exportPythonMdm(Long revision, String destination) throws Exception {
+    new PythonMdmGeneration().exportPythonMdm(revision, destination);
   }
 }
