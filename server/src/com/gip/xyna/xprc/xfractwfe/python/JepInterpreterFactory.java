@@ -56,9 +56,9 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
 
   private static final Logger logger = CentralFactoryLogging.getLogger(JepInterpreterFactory.class);
   private Map<Long, Set<String>> packagesPerRevision = new HashMap<>();
-  
+
   private static final Map<String, Class<?>> typeConversionMap = createTypeConversionMap();
-  
+
 
   private static Map<String, Class<?>> createTypeConversionMap() {
     Map<String, Class<?>> result = new HashMap<>();
@@ -76,8 +76,8 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     result.put("List", List.class);
     return result;
   }
-  
-  
+
+
   @Override
   public PythonInterpreter createInterperter(ClassLoaderBase classLoader) {
     Long revision = classLoader.getRevision();
@@ -143,26 +143,7 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     for (String i : varNames) {
       try {
         Object memberObj = convertObj.get(i);
-        if (memberObj instanceof XynaObject) {
-          resultMap.put(i, convertToPython((XynaObject) memberObj));
-        } else if (memberObj instanceof XynaExceptionBase) {
-          resultMap.put(i, convertToPython((XynaExceptionBase) memberObj));
-        } else if (memberObj instanceof List) {
-          List<?> memberObjList = (List<?>) memberObj;
-          if (memberObjList.size() > 0) {
-            if (memberObjList.get(0) instanceof GeneralXynaObject) {
-              List<Object> resultList = new ArrayList<Object>();
-              for (Object o : memberObjList) {
-                resultList.add(convertToPython((GeneralXynaObject) o));
-              }
-              resultMap.put(i, resultList);
-            } else {
-              resultMap.put(i, memberObjList);
-            }
-          }
-        } else {
-          resultMap.put(i, memberObj);
-        }
+        resultMap.put(i, convertJavaValue(memberObj));
       } catch (InvalidObjectPathException e) {
         throw new RuntimeException("Could not load variable names from " + convertObj, e);
       }
@@ -198,27 +179,9 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
         if (f.getModifiers() == 2) { // private members
           String fieldName = f.getName();
           Object memberAttr = pyObj.getAttr(fieldName);
-          if (memberAttr instanceof PyObject) {
-            resultObj.set(fieldName, convertToJava(context, memberAttr));
-          } else if (memberAttr instanceof List) {
-            List<?> memberAttrList = (List<?>) memberAttr;
-            if (memberAttrList.size() > 0) {
-              if (memberAttrList.get(0) instanceof PyObject) {
-                List<Object> resultList = new ArrayList<Object>();
-                for (Object o : memberAttrList) {
-                  resultList.add(convertToJava(context, o));
-                }
-                resultObj.set(fieldName, resultList);
-              } else {
-                resultObj.set(fieldName, memberAttrList);
-              }
-            }
-          } else {
-            resultObj.set(fieldName, memberAttr);
-          }
+          resultObj.set(fieldName, convertPythonValue(context, f.getGenericType().getTypeName(), memberAttr));
         }
       }
-
     } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException
         | InstantiationException e) {
       throw new RuntimeException("Could not create instance of class " + fqn, e);
