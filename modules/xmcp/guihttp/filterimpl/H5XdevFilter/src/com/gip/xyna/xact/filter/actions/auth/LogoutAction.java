@@ -66,6 +66,9 @@ public class LogoutAction implements FilterAction {
     List<String> list = new ArrayList<>();
     list.add(AuthUtils.generateCookie(sessionId, "-", request.getPath(), tc, false) + "; " + AuthUtils.COOKIE_MARKER_EXPIRED);
     jfai.setProperty("Set-Cookie", list); //Liste wird dann spaeter (in httptriggerconnection) umgewandelt in mehrere Set-Cookie Headerzeilen
+    if(!AuthUtils.USE_CSRF_TOKEN.get()) {
+      list.add(AuthUtils.generateCookie(AuthUtils.COOKIE_FIELD_TOKEN, "-", request.getPath(), tc, false) + "; " + AuthUtils.COOKIE_MARKER_EXPIRED);
+    }
     jfai.sendJson(tc, "");
     return jfai;
   }
