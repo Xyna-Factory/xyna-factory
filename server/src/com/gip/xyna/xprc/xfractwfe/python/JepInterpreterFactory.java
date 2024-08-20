@@ -17,8 +17,8 @@
  */
 package com.gip.xyna.xprc.xfractwfe.python;
 
-
-
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,8 +33,11 @@ import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
+import com.gip.xyna.xdev.xfractmod.xmdm.XynaExceptionBase;
+import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderDispatcher;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderType;
@@ -43,16 +46,19 @@ import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabaseType;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResult;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResultEntry;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSelect;
+import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 
 import jep.python.PyObject;
+
 
 
 public class JepInterpreterFactory extends PythonInterpreterFactory {
 
   private static final Logger logger = CentralFactoryLogging.getLogger(JepInterpreterFactory.class);
   private Map<Long, Set<String>> packagesPerRevision = new HashMap<>();
+
   private static final Map<String, Class<?>> typeConversionMap = createTypeConversionMap();
-  
+
 
   private static Map<String, Class<?>> createTypeConversionMap() {
     Map<String, Class<?>> result = new HashMap<>();
@@ -70,8 +76,8 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     result.put("List", List.class);
     return result;
   }
-  
-  
+
+
   @Override
   public PythonInterpreter createInterperter(ClassLoaderBase classLoader) {
     Long revision = classLoader.getRevision();
@@ -80,7 +86,6 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     }
     return new JepInterpreter(classLoader, packagesPerRevision.get(revision));
   }
-
 
   @Override
   public void init() {
@@ -103,22 +108,88 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     }
   }
 
-
   @Override
   public void invalidateRevisions(Collection<Long> revisions) {
-    for (Long rev: revisions) {
+    for (Long rev : revisions) {
       packagesPerRevision.remove(rev);
     }
   }
-  
+
   @Override
   public Map<String, Object> convertToPython(GeneralXynaObject obj) {
-    return null;
+    Set<String> varNames = new HashSet<String>();
+    Map<String, Object> resultMap = new HashMap<String, Object>();
+
+    GeneralXynaObject convertObj = null;
+
+    if (obj instanceof XynaObject) {
+      convertObj = (XynaObject) obj;
+      resultMap.put("_xynatype", "DATATYPE");
+      resultMap.put("_fqn", obj.getClass().getCanonicalName());
+      varNames = ((XynaObject) obj).getVariableNames();
+    } else if (obj instanceof XynaExceptionBase) {
+      convertObj = (XynaExceptionBase) obj;
+      resultMap.put("_xynatype", "EXCEPTION");
+      resultMap.put("_fqn", convertObj.getClass().getCanonicalName());
+      for (Field f : convertObj.getClass().getDeclaredFields()) {
+        if (f.getModifiers() == 2) { // private members
+          varNames.add(f.getName());
+        }
+      }
+    } else {
+      throw new UnsupportedOperationException();
+    }
+
+    for (String i : varNames) {
+      try {
+        Object memberObj = convertObj.get(i);
+        resultMap.put(i, convertJavaValue(memberObj));
+      } catch (InvalidObjectPathException e) {
+        throw new RuntimeException("Could not load variable names from " + convertObj, e);
+      }
+    }
+
+    return resultMap;
   }
 
   @Override
   public GeneralXynaObject convertToJava(Context context, Object obj) {
-    return null;
+    PyObject pyObj = (PyObject) obj;
+    String fqn = (String) pyObj.getAttr("_fqn");
+    String xynatype = (String) pyObj.getAttr("_xynatype");
+
+    ClassLoaderDispatcher cld = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl()
+        .getClassLoaderDispatcher();
+    ClassLoaderBase cl;
+    if (xynatype.equals("DATATYPE")) {
+      cl = cld.findClassLoaderByType(fqn, context.revision, ClassLoaderType.MDM, true);
+    } else if (xynatype.equals("EXEPTION")) {
+      cl = cld.findClassLoaderByType(fqn, context.revision, ClassLoaderType.Exception, true);
+    } else {
+      throw new UnsupportedOperationException();
+    }
+
+    GeneralXynaObject resultObj = null;
+    try {
+      @SuppressWarnings("unchecked")
+      Class<? extends GeneralXynaObject> clazz = (Class<? extends GeneralXynaObject>) cl.loadClass(fqn);
+      resultObj = clazz.getDeclaredConstructor().newInstance();
+
+      for (Field f : clazz.getDeclaredFields()) {
+        if (f.getModifiers() == 2) { // private members
+          String fieldName = f.getName();
+          Object memberAttr = pyObj.getAttr(fieldName);
+          resultObj.set(fieldName, convertPythonValue(context, f.getGenericType().getTypeName(), memberAttr));
+        }
+      }
+    } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException
+        | InstantiationException e) {
+      throw new RuntimeException("Could not create instance of class " + fqn, e);
+    } catch (XDEV_PARAMETER_NAME_NOT_FOUND e) {
+      throw new RuntimeException("Could not set member variables in " + resultObj, e);
+    }
+
+    return resultObj;
   }
 
 
