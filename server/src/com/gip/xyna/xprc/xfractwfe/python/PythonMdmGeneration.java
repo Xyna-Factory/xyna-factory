@@ -202,7 +202,7 @@ public class PythonMdmGeneration {
     }
     
     //can't use match yet - python version might be too old
-    sb.append("    if type(value) is dict:\n");
+    sb.append("    if type(value).__name__ == \"HashMap\":\n");
     sb.append("      return convert_to_python_object(value)\n");
     sb.append("    if type(value) is list: \n");
     sb.append("      if multiple:\n");
@@ -267,7 +267,7 @@ public class PythonMdmGeneration {
       sb.append("  pass\n\n");
       return;
     }
-    sb.append("  fqn = obj[\"_fqn\"]\n");
+    sb.append("  fqn = obj[\"_fqn\"].replace('.', '_')\n");
     sb.append("  result = eval(f\"{fqn}()\")\n");
     sb.append("  for f in obj:\n");
     sb.append("    _set_field(result, f, obj)\n");
@@ -280,9 +280,9 @@ public class PythonMdmGeneration {
     sb.append("def _convert_list(values):\n");
     sb.append("  result = []\n");
     sb.append("  for value in values:\n");
-    sb.append("    if type(value) is dict:\n");
+    sb.append("    if type(value).__name__ == \"HashMap\":\n");
     sb.append("      result.append(convert_to_python_object(value))\n");
-    sb.append("    if type(value) is list:\n");
+    sb.append("    elif type(value) is list:\n");
     sb.append("      result.append(_convert_list(value))\n");
     sb.append("    else:\n");
     sb.append("      result.append(value)\n\n");
@@ -295,9 +295,9 @@ public class PythonMdmGeneration {
     fillConvertList(sb);
     sb.append("def _set_field(object_to_set, fieldName, data):\n");
     sb.append("  value = data[fieldName]\n");
-    sb.append("  if type(value) is dict:\n");
+    sb.append("  if type(value).__name__ == \"HashMap\":\n");
     sb.append("    object_to_set.set(fieldName, convert_to_python_object(value))\n");
-    sb.append("  if type(value) is list:\n");
+    sb.append("  elif type(value) is list:\n");
     sb.append("    object_to_set.set(fieldName, _convert_list(value))\n");
     sb.append("  else:\n");
     sb.append("    object_to_set.set(fieldName, value)\n\n");

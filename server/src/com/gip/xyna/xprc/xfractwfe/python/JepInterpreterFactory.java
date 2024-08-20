@@ -179,7 +179,7 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
         if (f.getModifiers() == 2) { // private members
           String fieldName = f.getName();
           Object memberAttr = pyObj.getAttr(fieldName);
-          resultObj.set(fieldName, convertPythonValue(context, f.getGenericType().getTypeName(), memberAttr));
+          resultObj.set(fieldName, convertToJava(context, f.getGenericType().getTypeName(), memberAttr));
         }
       }
     } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException

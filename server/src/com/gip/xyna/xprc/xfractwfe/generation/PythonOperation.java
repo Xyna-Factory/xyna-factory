@@ -43,7 +43,12 @@ public class PythonOperation extends CodeOperation {
     String type = var.isList ? "List<" : "";
     type += var.isJavaBaseType ? var.getJavaTypeEnum().getJavaTypeName() : var.getOriginalPath() + "." + var.getOriginalName();
     type += var.isList ? ">" : "";
-    return "(" + type + ")pyMgmt.convertToJava(context, \"" + type + "\", " + var.getVarName() + ")";
+    String result = "(" + type + ")pyMgmt.convertToJava(context, \"" + type + "\", " + var.getVarName() + ")";
+    if(var.isList) {
+      String fqn = var.getOriginalPath() + "." + var.getOriginalName();
+      result = "new com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObjectList("+ result + ", " + fqn + ".class)";
+    }
+    return result;
   }
   
 
@@ -110,7 +115,12 @@ public class PythonOperation extends CodeOperation {
     
     
     for (AVariable var : getInputVars()) {
-      cb.addLine("interpreter.set(\"" + var.varName + "\", " + convertVariableToPython(var) + ");");
+      cb.addLine("interpreter.set(\"" + var.varName + "\", " + convertVariableToPython(var) + ")");
+      if (var.isList) {
+        cb.addLine("interpreter.exec(\"" + var.varName + " = mdm._convert_list(" + var.varName + ")\")");
+      } else if (!var.isJavaBaseType()) {
+        cb.addLine("interpreter.exec(\"" + var.varName + " = mdm.convert_to_python_object(" + var.varName + ")\")");
+      }
     }
 
     addExecuteScript(cb);
@@ -118,7 +128,7 @@ public class PythonOperation extends CodeOperation {
     for (AVariable var : getOutputVars()) {
       cb.addLine(var.varName + " = interpreter.get(\"" + var.varName + "\")");
     }
-    cb.addLine("}");
     addSetReturn(cb);
+    cb.addLine("}");
   }
 }
