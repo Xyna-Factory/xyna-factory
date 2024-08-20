@@ -86,6 +86,9 @@ public class PythonOperation extends CodeOperation {
   private void addExecuteScript(CodeBuffer cb) {
     StringBuilder pythonscript = new StringBuilder();
     String input = String.join(", ", getInputVars().stream().map(var -> var.varName).collect(Collectors.toList()));
+    if(!isStatic()) {
+      input = "this" + (input.length() > 0 ? ", " : "");
+    }
     pythonscript.append("def ").append(getNameWithoutVersion()).append("(").append(input).append("):");
     String impl = getImpl().replaceAll("(?m)^", "  ");
     impl = impl.replaceAll("\"", "\\\\\\\"");
@@ -113,6 +116,10 @@ public class PythonOperation extends CodeOperation {
     addLoadMdm(cb);
     cb.addLine("interpreter.exec(\"mdm.XynaObject._context = _context\")");
     
+    if(!isStatic()) {
+      cb.addLine("interpreter.set(\"this\", pyMgmt.convertToPython(this))");
+      cb.addLine("interpreter.exec(\"this = mdm.convert_to_python_object(this)\")");
+    }
     
     for (AVariable var : getInputVars()) {
       cb.addLine("interpreter.set(\"" + var.varName + "\", " + convertVariableToPython(var) + ")");
