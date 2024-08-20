@@ -68,6 +68,46 @@ public class PythonMdmGeneration {
     result.put(PrimitiveType.VOID, "None");
     return result;
   }
+  
+  public static final String LOAD_MODULE_SNIPPET = setupLoadModuleSnippet();
+
+
+  private static String setupLoadModuleSnippet() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("import importlib\n");
+    sb.append("import sys\n");
+    sb.append("import types\n");
+    setupStringLoader(sb);
+    setupStringFinder(sb);
+    sb.append("def _load_module(modules): \n");
+    sb.append("  finder = StringFinder(StringLoader(modules))\n");
+    sb.append("  sys.meta_path.append(finder)\n");
+    return sb.toString();
+  }
+
+  private static void setupStringLoader(StringBuilder sb) {
+    sb.append("class StringLoader(importlib.abc.Loader):\n");
+    sb.append("  def __init__(self, modules):\n");
+    sb.append("    self._modules = modules\n");
+    sb.append("  def has_module(self, fullname):\n");
+    sb.append("    return (fullname in self._modules)\n");
+    sb.append("  def create_module(self, spec):\n");
+    sb.append("    if self.has_module(spec.name):\n");
+    sb.append("      module = types.ModuleType(spec.name)\n");
+    sb.append("      exec(self._modules[spec.name], module.__dict__)\n");
+    sb.append("      return module\n");
+    sb.append("  def exec_module(self, module):\n");
+    sb.append("    pass\n\n");
+  }
+  
+  private static void setupStringFinder(StringBuilder sb) {
+    sb.append("class StringFinder(importlib.abc.MetaPathFinder):\n");
+    sb.append("  def __init__(self, loader):\n");
+    sb.append("    self._loader = loader\n");
+    sb.append("  def find_spec(self, fullname, path, target=None):\n");
+    sb.append("    if self._loader.has_module(fullname):\n");
+    sb.append("      return importlib.machinery.ModuleSpec(fullname, self._loader)\n\n");
+  }
 
 
   public String createPythonMdm(Long revision, boolean withImpl, boolean typeHints) {
@@ -80,7 +120,7 @@ public class PythonMdmGeneration {
     }
     return sb.toString();
   }
-  
+
 
   private Map<String, XynaObjectInformation> loadObjects(List<XMOMDatabaseSearchResultEntry> objects, Long revision) {
     GenerationBaseCache cache = new GenerationBaseCache();
@@ -161,19 +201,19 @@ public class PythonMdmGeneration {
       return;
     }
     
-    sb.append("    match(value):\n");
-    sb.append("      case dict():\n");
-    sb.append("        return convert_to_python_object(value)\n");
-    sb.append("      case list():\n");
-    sb.append("        if multiple:\n");
-    sb.append("          result = ()\n");
-    sb.append("          for v in value:\n");
-    sb.append("            result = result + (v,)\n");
-    sb.append("          return result\n");
-    sb.append("        else:\n");
-    sb.append("          return _convert_list(value)\n");
-    sb.append("      case _:\n");
-    sb.append("        return value\n\n");
+    //can't use match yet - python version might be too old
+    sb.append("    if type(value).__name__ == \"HashMap\":\n");
+    sb.append("      return convert_to_python_object(value)\n");
+    sb.append("    if type(value) is list: \n");
+    sb.append("      if multiple:\n");
+    sb.append("        result = ()\n");
+    sb.append("        for v in value:\n");
+    sb.append("          result = result + (v,)\n");
+    sb.append("        return result\n");
+    sb.append("      else:\n");
+    sb.append("        return _convert_list(value)\n");
+    sb.append("    else:\n");
+    sb.append("      return value\n\n");
     
   }
 
@@ -227,7 +267,7 @@ public class PythonMdmGeneration {
       sb.append("  pass\n\n");
       return;
     }
-    sb.append("  fqn = obj[\"_fqn\"]\n");
+    sb.append("  fqn = obj[\"_fqn\"].replace('.', '_')\n");
     sb.append("  result = eval(f\"{fqn}()\")\n");
     sb.append("  for f in obj:\n");
     sb.append("    _set_field(result, f, obj)\n");
@@ -235,32 +275,32 @@ public class PythonMdmGeneration {
   }
 
 
+  //can't use match yet - python version might be too old
   private void fillConvertList(StringBuilder sb) {
     sb.append("def _convert_list(values):\n");
     sb.append("  result = []\n");
     sb.append("  for value in values:\n");
-    sb.append("    match(value):\n");
-    sb.append("      case dict():\n");
-    sb.append("        result.append(convert_to_python_object(value))\n");
-    sb.append("      case list():\n");
-    sb.append("        result.append(_convert_list(value))\n");
-    sb.append("      case _:\n");
-    sb.append("        result.append(value)\n\n");
+    sb.append("    if type(value).__name__ == \"HashMap\":\n");
+    sb.append("      result.append(convert_to_python_object(value))\n");
+    sb.append("    elif type(value) is list:\n");
+    sb.append("      result.append(_convert_list(value))\n");
+    sb.append("    else:\n");
+    sb.append("      result.append(value)\n\n");
     sb.append("  return result\n\n");
   }
 
 
+  //can't use match yet - python version might be too old
   private void fillSetField(StringBuilder sb) {
     fillConvertList(sb);
     sb.append("def _set_field(object_to_set, fieldName, data):\n");
     sb.append("  value = data[fieldName]\n");
-    sb.append("  match value:\n");
-    sb.append("    case dict():\n");
-    sb.append("      object_to_set.set(fieldName, convert_to_python_object(value))\n");
-    sb.append("    case list():\n");
-    sb.append("      object_to_set.set(fieldName, _convert_list(value))\n");
-    sb.append("    case _:\n");
-    sb.append("      object_to_set.set(fieldName, value)\n\n");
+    sb.append("  if type(value).__name__ == \"HashMap\":\n");
+    sb.append("    object_to_set.set(fieldName, convert_to_python_object(value))\n");
+    sb.append("  elif type(value) is list:\n");
+    sb.append("    object_to_set.set(fieldName, _convert_list(value))\n");
+    sb.append("  else:\n");
+    sb.append("    object_to_set.set(fieldName, value)\n\n");
   }
 
 

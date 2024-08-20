@@ -38,6 +38,10 @@ public abstract class PythonInterpreterFactory {
   public abstract Map<String, Object> convertToPython(GeneralXynaObject obj);
 
   public abstract GeneralXynaObject convertToJava(Context context, Object obj);
+  
+  public abstract Object convertToJava(Context context, String type, Object value);
+
+  public abstract Object convertToPython(Object value);
 
   public abstract Object invokeService(Context context, String fqn, String serviceName, List<Object> args);
 

@@ -21,12 +21,9 @@ package com.gip.xyna.xprc.xfractwfe;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-
 import com.gip.xyna.Section;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
-import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xprc.xfractwfe.base.DeploymentHandling;
 import com.gip.xyna.xprc.xfractwfe.base.RevisionChangeUnDeploymentHandler;
@@ -82,12 +79,12 @@ public class XynaPythonSnippetManagement extends Section {
 
   }
 
-  public Map<String, Object> convertToPython(GeneralXynaObject obj) {
+  public Object convertToPython(Object obj) {
     return factory.convertToPython(obj);
   }
 
-  public GeneralXynaObject convertToJava(Context context, Object obj) {
-    return factory.convertToJava(context, obj);
+  public Object convertToJava(Context context, String type, Object obj) {
+    return factory.convertToJava(context, type, obj);
   }
 
   public Object invokeService(Context context, String fqn, String serviceName, List<Object> args) {
@@ -104,5 +101,9 @@ public class XynaPythonSnippetManagement extends Section {
   
   public void exportPythonMdm(Long revision, String destination) throws Exception {
     new PythonMdmGeneration().exportPythonMdm(revision, destination);
+  }
+  
+  public String getLoaderSnippet() {
+    return PythonMdmGeneration.LOAD_MODULE_SNIPPET;
   }
 }
