@@ -61,12 +61,6 @@ public class AuthUtils {
   public final static String COOKIE_FIELD_SESSION_ID = "sessionId";
   public final static String COOKIE_FIELD_SESSION_ID_STS = "__Secure-sessionId";
   
-  /**
-   * @deprecated
-   * deprecated with v9.0.3.0
-   * XynaProperty: xmcp.guihttp.csrf
-   */
-  @Deprecated
   public final static String COOKIE_FIELD_TOKEN = "token";
   public final static String HEADER_FILED_CSRF_TOKEN = "xyna-csrf-token";
   public final static String COOKIE_MARKER_SECURE = "Secure";
