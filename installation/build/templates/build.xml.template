@@ -5,7 +5,14 @@
     <pathconvert property="root.dir">
         <path location="{{ROOTDIRPATH}}" />
     </pathconvert>
+
+    <pathconvert property="project.root.dir">
+        <path location="{{PROJECTROOTPATH}}" />
+    </pathconvert>
+
     <property name="target.dir" value="${basedir}/deploy/" />
+    <property file="workspace.properties" />
+    <property file="${project.root.dir}/server.properties" />
  
     <target name="build">
         <antcall target="prepare-mdm-jar-if-missing" />
