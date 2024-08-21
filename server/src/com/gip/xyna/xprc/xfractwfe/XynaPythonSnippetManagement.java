@@ -19,6 +19,7 @@ package com.gip.xyna.xprc.xfractwfe;
 
 
 
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,7 @@ import com.gip.xyna.xprc.xfractwfe.python.JepInterpreterFactory;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreter;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreterFactory;
 import com.gip.xyna.xprc.xfractwfe.python.PythonMdmGeneration;
+import com.gip.xyna.xprc.xfractwfe.python.PythonProjectGeneration;
 
 
 
@@ -104,5 +106,12 @@ public class XynaPythonSnippetManagement extends Section {
   
   public void exportPythonMdm(Long revision, String destination) throws Exception {
     new PythonMdmGeneration().exportPythonMdm(revision, destination);
+  }
+
+
+  public InputStream getPythonServiceImplTemplate(String baseDir, String fqClassNameDOM, Long revision,
+                                                  boolean deleteServiceImplAfterStreamClose)
+      throws XynaException {
+    return new PythonProjectGeneration().getPythonServiceImplTemplate(baseDir, fqClassNameDOM, revision, deleteServiceImplAfterStreamClose);
   }
 }
