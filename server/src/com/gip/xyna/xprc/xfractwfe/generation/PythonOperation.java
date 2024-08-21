@@ -35,6 +35,7 @@ public class PythonOperation extends CodeOperation {
     imports.add("com.gip.xyna.XynaFactory");
     imports.add("com.gip.xyna.xdev.xfractmod.xmdm.Container");
     imports.add("com.gip.xyna.xprc.xfractwfe.python.PythonInterpreter");
+    imports.add("com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType");
   }
 
   
@@ -111,10 +112,15 @@ public class PythonOperation extends CodeOperation {
     }
     cb.addLine("com.gip.xyna.xprc.xfractwfe.python.Context context = new com.gip.xyna.xprc.xfractwfe.python.Context()");
     cb.addLine("context.revision = ((com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase)getClass().getClassLoader()).getRevision()");
+    String servicePath = getParent().getOriginalFqName();
+    cb.addLine("context.servicePath = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().getPathForRevision(PathType.SERVICE, context.revision)"
+        + " + \"/" + servicePath + "\"");
     cb.addLine("try (PythonInterpreter interpreter = pyMgmt.createPythonInterpreter(getClass().getClassLoader())) {");
     cb.addLine("interpreter.set(\"_context\", context)");
     addLoadMdm(cb);
     cb.addLine("interpreter.exec(\"mdm.XynaObject._context = _context\")");
+
+    cb.addLine("interpreter.exec(\"sys.path.append(_context.servicePath)\")");
     
     if(!isStatic()) {
       cb.addLine("interpreter.set(\"this\", pyMgmt.convertToPython(this))");

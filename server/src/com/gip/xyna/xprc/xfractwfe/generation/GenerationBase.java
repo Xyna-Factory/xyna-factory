@@ -679,6 +679,7 @@ public abstract class GenerationBase {
     public static final String PREFERED_EXCEPTION_TYPE = "PreferedExceptionType";
     public static final String EXCEPTION = "Exception";
     public static final String LIBRARIES = "Libraries";
+    public static final String PYTHONLIBRARIES = "PythonLibraries";
     public static final String VALUE = "Value";
     public static final String SHAREDLIB = "SharedLibraries";
     public static final String PARAMETER = "Parameter";
