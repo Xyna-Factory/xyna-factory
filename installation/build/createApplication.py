@@ -49,12 +49,12 @@ class AppCreator:
   def createApp(self, projectDir: str, appDir: str, appName: str, appVersion: str):
     next_steps = []
     app_dir = os.path.join(projectDir, appDir)
-    print(f"creating application {appName}/{appVersion} at app_dir")
+    print(f"creating application {appName}/{appVersion} at {app_dir}")
     if not os.path.isdir(projectDir):
       print("project directory does not exist. Creating it and placing server.properties and pom.xml in it.")
       os.makedirs(projectDir, exist_ok= True)
       self.copy_template(projectDir, "server.properties" )
-      self.copy_and_set_project_bom_xml(self, projectDir, "myproject")
+      self.copy_and_set_project_bom_xml(projectDir, "myproject")
       next_steps.append("* set server.properties")
       next_steps.append("* set groupId in pom.xml")
     else:
@@ -71,7 +71,7 @@ class AppCreator:
     self.copy_template(app_dir, "application.properties" )
     self.copy_and_set(app_dir, "application.xml", [("{{APPNAME}}", appName),("{{VERSIONNAME}}", appVersion)])
     self.copy_and_set(app_dir, "build.xml", [("{{ROOTDIRPATH}}", relpath)])
-      next_steps.append("* set application.properties")
+    next_steps.append("* set application.properties")
     print("Done. Next steps:")
     for step in next_steps:
       print(step)

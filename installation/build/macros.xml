@@ -307,26 +307,4 @@
         </sequential>
     </macrodef>
 
-    <!-- ================================= 
-        macro: get-revision        
-        ================================= -->
-    <macrodef name="get-revision">
-        <attribute name="workspacename" default="" />
-        <attribute name="applicationname" default="" />
-        <attribute name="applicationversion" default="" />
-        <attribute name="outputproperty" />
-        <sequential>
-            <local name="command" />
-            <local name="revision" />
-            <property name="command" value="cd ${server.path}; ./xynafactory.sh printrevision -workspacename '@{workspacename}' -applicationname = '@{applicationname}' -versionname '@{applicationversion}'" />
-            <echo message="executing command: ${command}" />
-            <custom-ssh-exec host="${server.host}" username="${server.userid}" command="${command}" outputproperty="revision" />
-            <script language="javascript">
-                var revision = project.getProperty("revision").trim();
-                project.setProperty(project.getProperty("outputproperty"), revision);
-            </script>
-            <echo message="got revision: ${outputproperty}" />
-        </sequential>
-    </macrodef>
-
 </project>

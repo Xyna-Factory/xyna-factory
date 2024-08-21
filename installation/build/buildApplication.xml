@@ -283,17 +283,11 @@
 		<property name="command" value="cd ${server.path}; ./xynafactory.sh printrevision ${where}" />
 		<echo message="executing command: ${command}" />
 		<custom-ssh-exec host="${server.host}" username="${server.userid}" command="${command}" outputproperty="revision" />
-		<!-- ersetze zeilenumbruch am ende -->
-		<script language="javascript">
-            var revision = project.getProperty("revision").trim();
-            project.setProperty("revision", revision);
-		</script>
 		<echo message="got revision=${revision}" />
 		<mkdir dir="XMOM" />
 		<delete verbose="true" dir="XMOM" />
 		<echo message="copying ${server.userid}@${server.host}:${server.path}/../revisions/rev_${revision}/${saved}XMOM/" />
 		<default-scp-from-remote fromfile="${server.path}/../revisions/rev_${revision}/${saved}XMOM" todir="." />
-
     </target>
 	
 	<!-- =================================
