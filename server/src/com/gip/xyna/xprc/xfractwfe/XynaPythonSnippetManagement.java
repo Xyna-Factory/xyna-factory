@@ -107,7 +107,7 @@ public class XynaPythonSnippetManagement extends Section {
   
   public String getLoaderSnippet() {
     return PythonMdmGeneration.LOAD_MODULE_SNIPPET;
-
+  }
 
   public InputStream getPythonServiceImplTemplate(String baseDir, String fqClassNameDOM, Long revision,
                                                   boolean deleteServiceImplAfterStreamClose)
