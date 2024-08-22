@@ -397,6 +397,7 @@ public abstract class Operation implements HasDocumentation {
     cb.addLine("}").addLB();
   } 
   
+  // TODO Umbenennen in implementedInLib()
   /**
    * true, falls weder normales codesnippet noch workflowcall, sondern einfach eine delegation ins impl.jar
    */
