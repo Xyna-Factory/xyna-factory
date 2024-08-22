@@ -70,7 +70,7 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     result.put("Double", Double.class);
     result.put("int", int.class);
     result.put("Integer", Integer.class);
-    result.put("log", long.class);
+    result.put("long", long.class);
     result.put("Long", Long.class);
     result.put("Sting", String.class);
     result.put("List", List.class);
@@ -179,7 +179,7 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
         if (f.getModifiers() == 2) { // private members
           String fieldName = f.getName();
           Object memberAttr = pyObj.getAttr(fieldName);
-          resultObj.set(fieldName, convertPythonValue(context, f.getGenericType().getTypeName(), memberAttr));
+          resultObj.set(fieldName, convertToJava(context, f.getGenericType().getTypeName(), memberAttr));
         }
       }
     } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException
@@ -224,7 +224,7 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
         type = type.substring("java.util.".length());
         type = type.replace("<? extends ", "<");
       }
-      result.add(convertPythonValue(context, type, input));
+      result.add(convertToJava(context, type, input));
     }
     return result.toArray();
   }
@@ -262,7 +262,8 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
   }
 
 
-  private Object convertPythonValue(Context context, String type, Object value) {
+  @Override
+  public Object convertToJava(Context context, String type, Object value) {
     if (value == null) {
       return null;
     }
@@ -272,7 +273,7 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     if (value instanceof List<?>) {
       List<Object> result = new ArrayList<Object>();
       for (Object entry : (List<?>) value) {
-        result.add(convertPythonValue(context, removeListFromType(type), entry));
+        result.add(convertToJava(context, removeListFromType(type), entry));
       }
       return result;
     }
@@ -289,6 +290,22 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     return value;
   }
 
+  @Override
+  public Object convertToPython(Object value) {
+    if(value instanceof List) {
+      List<Object> result = new ArrayList<Object>();
+      for(Object entry: (List<?>)value) {
+        result.add(convertToPython(entry));
+      }
+      return result;
+    }
+    if(value instanceof GeneralXynaObject) {
+      return convertToPython((GeneralXynaObject)value);
+    }
+    
+    //primitive
+    return value;
+  }
 
   private String removeListFromType(String type) {
     return type.substring(5, type.length() - 1);
