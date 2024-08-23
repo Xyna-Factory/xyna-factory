@@ -52,13 +52,11 @@ public class BuildserviceprojectjavaImpl extends XynaCommandImplementation<Build
 
         CommandControl.tryLock(CommandControl.Operation.BUILD_SERVICETEMPLATE, revision);
         File f;
-        try {
-            InputStream is = factory.getXynaMultiChannelPortalPortal()
-                    .getServiceImplTemplate(FileUtils.generateRandomFilename(targetString, "t", ""), implementationString, revision, true,
-                                            true);
+        try (InputStream is =
+                factory.getXynaMultiChannelPortalPortal().getServiceImplTemplate(FileUtils.generateRandomFilename(targetString, "t", ""),
+                                                                                 implementationString, revision, true, true)) {
             f = FileUtils.generateUniqueFileIncrementally(targetString, payload.getFqDatatypeName(), ".zip");
             FileUtils.saveToFile(is, f);
-            is.close();
         } catch (IOException e) {
             throw new Ex_FileAccessException(targetString, e);
         } finally {
