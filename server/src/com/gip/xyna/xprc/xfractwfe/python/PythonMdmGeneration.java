@@ -114,7 +114,9 @@ public class PythonMdmGeneration {
         }
       }
       XynaObjectInformation info = loadXynaObjectInfo(revision, obj.getFqName(), obj.getType().equals(XMOMDatabaseType.EXCEPTION), cache);
-      map.put(info.fqn, info);
+      if (info != null) {
+        map.put(info.fqn, info);
+      }
     }
     return map;
   }
@@ -396,7 +398,7 @@ public class PythonMdmGeneration {
         result.methods = PythonGeneration.loadOperations(((DOM) doe).getOperations());
       }
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      return null;
     }
 
     if (result.parent == null) {
