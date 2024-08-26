@@ -97,6 +97,9 @@ public class LoginAction implements FilterAction {
     xmomgui.getOrCreateSessionBasedData(new XmomGuiSession(creds.getSessionId(), creds.getToken()));
     List<String> list = new ArrayList<>();
     list.add(AuthUtils.generateCookie(sessionId, creds.getSessionId(), path, tc, true));
+    if(!AuthUtils.USE_CSRF_TOKEN.get()) {
+      list.add(AuthUtils.generateCookie(AuthUtils.COOKIE_FIELD_TOKEN, creds.getToken(), path, tc, true));
+    }
     jfai.setProperty("Set-Cookie", list); //Liste wird dann spaeter (in httptriggerconnection) umgewandelt in mehrere Set-Cookie Headerzeilen
     jfai.sendJson(tc, sdj);
     return jfai;
