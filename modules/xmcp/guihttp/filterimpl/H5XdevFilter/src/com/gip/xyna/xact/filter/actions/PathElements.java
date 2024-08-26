@@ -92,4 +92,5 @@ public class PathElements {
   public static final String KILL                 = "kill";
   public static final String ISSUES               = "issues";
   public static final String WARNINGS             = "warnings";
+  public static final String PYTHONLIB            = "pythonlib";
 }
