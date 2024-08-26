@@ -47,6 +47,8 @@ import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResult;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResultEntry;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSelect;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
+import com.gip.xyna.xprc.xfractwfe.python.jep.JepThreadManagement;
+import com.gip.xyna.xprc.xfractwfe.python.jep.JepThreadManagement.JepThread;
 
 import jep.python.PyObject;
 
@@ -204,7 +206,14 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     Method method = findMethod(context, fqn, serviceName);
     try {
       Object[] inputs = convertArguments(context, method, args);
-      result = method.invoke(instance, inputs);
+      JepThread thread = JepThreadManagement.createJepThread(method, instance, inputs);
+      thread.start();
+      thread.join();
+      if(thread.wasSuccessful()) {
+        result = thread.getResult();
+      } else {
+        throw new RuntimeException(thread.getException());
+      }
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
