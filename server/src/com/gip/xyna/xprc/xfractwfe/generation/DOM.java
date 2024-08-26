@@ -146,6 +146,7 @@ public class DOM extends DomOrExceptionGenerationBase {
   private Set<GenerationBase> additionalDependenciesSet = new HashSet<GenerationBase>();
   
   private Set<String> additionalLibNames = new TreeSet<String>();
+  private List<String> pythonLibNames = new ArrayList<String>();
   private Set<String> sharedLibs = new HashSet<String>();
   
   private PersistenceInformation persistenceInformation;
@@ -539,6 +540,15 @@ public class DOM extends DomOrExceptionGenerationBase {
         }
       }
     }
+    List<Element> pythonLibElements = XMLUtils.getChildElementsByName(rootElement, EL.PYTHONLIBRARIES);
+    if (pythonLibElements != null) {
+      for (Element element : pythonLibElements) {
+        String content = XMLUtils.getTextContent(element);
+        if (!GenerationBase.isEmpty(content)) {
+          pythonLibNames.add(content.trim());
+        }
+      }
+    }
 
     // parse operations
     List<Element> ss = XMLUtils.getChildElementsByName(rootElement, GenerationBase.EL.SERVICE);
@@ -649,6 +659,21 @@ public class DOM extends DomOrExceptionGenerationBase {
     }
 
     return null;
+  }
+  
+  public List<String> getPythonLibraries() {
+    return pythonLibNames;
+  }
+
+  public void addPythonLibrary(int index, String libName) {
+    pythonLibNames.add(index, libName);
+  }
+
+  public String deletePythonLibrary(int index) {
+    if (index < 0 || index >= pythonLibNames.size()) {
+      return null;
+    }
+    return pythonLibNames.remove(index);
   }
 
   public void addSharedLib(String libName) {

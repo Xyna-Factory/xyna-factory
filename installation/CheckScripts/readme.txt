@@ -1,1 +1,0 @@
-Starten der Skripte mit python <Skriptdatei>. Die Skripte sind mit Python 2.6 auf RHEL6 und 7 und SLES11 ausprobiert worden. Bisher wird nur die erste Instanz einer Xyna Umgebung unterstützt. Beim Logging wird nach der konfigurierten Property xyna.syslog.file aus black_edition_001.properties gesucht.

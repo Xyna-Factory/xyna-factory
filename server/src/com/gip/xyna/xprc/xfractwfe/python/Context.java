@@ -20,4 +20,5 @@ package com.gip.xyna.xprc.xfractwfe.python;
 
 public class Context {
   public Long revision;
+  public String servicePath;
 }

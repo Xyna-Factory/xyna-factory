@@ -1077,6 +1077,14 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
     return getServiceImplTemplate(getTempDir(), fqClassNameDOM, revision, deleteServiceImplAfterStreamClose, true);
   }
 
+
+  public InputStream getPythonServiceImplTemplate(String fqClassNameDOM, Long revision, boolean deleteServiceImplAfterStreamClose)
+      throws XynaException {
+    return XynaFactory.getInstance().getProcessing().getXynaPythonSnippetManagement()
+        .getPythonServiceImplTemplate(getTempDir(), fqClassNameDOM, revision, deleteServiceImplAfterStreamClose);
+  }
+
+
   @Deprecated
   public InputStream getTriggerImplTemplate(String baseDir, String triggerName,
                                             boolean deleteTriggerImplAfterStreamClose, boolean deleteBaseDir)

@@ -36,37 +36,54 @@ import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResult;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResultEntry;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSelect;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
-import com.gip.xyna.xprc.xfractwfe.generation.AVariable.PrimitiveType;
-
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
-import com.gip.xyna.xprc.xfractwfe.generation.Operation;
-
-
+import com.gip.xyna.xprc.xfractwfe.python.PythonGeneration.MethodInformation;
+import com.gip.xyna.xprc.xfractwfe.python.PythonGeneration.XynaObjectInformation;;
 
 public class PythonMdmGeneration {
 
-  private static final Map<PrimitiveType, String> primitive_types_mapping = setupPrimitiveTypes();
+  
+  public static final String LOAD_MODULE_SNIPPET = setupLoadModuleSnippet();
 
 
-  private static Map<PrimitiveType, String> setupPrimitiveTypes() {
-    Map<PrimitiveType, String> result = new HashMap<>();
-    result.put(PrimitiveType.BOOLEAN, "bool");
-    result.put(PrimitiveType.BOOLEAN_OBJ, "bool");
-    result.put(PrimitiveType.BYTE, "bytes");
-    result.put(PrimitiveType.BYTE_OBJ, "bytes");
-    result.put(PrimitiveType.DOUBLE, "decimal.Decimal");
-    result.put(PrimitiveType.DOUBLE_OBJ, "decimal.Decimal");
-    result.put(PrimitiveType.EXCEPTION, "XynaException");
-    result.put(PrimitiveType.INT, "int");
-    result.put(PrimitiveType.INTEGER, "int");
-    result.put(PrimitiveType.LONG, "int");
-    result.put(PrimitiveType.LONG_OBJ, "int");
-    result.put(PrimitiveType.STRING, "str");
-    result.put(PrimitiveType.VOID, "None");
-    return result;
+  private static String setupLoadModuleSnippet() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("import importlib\n");
+    sb.append("import sys\n");
+    sb.append("import types\n");
+    setupStringLoader(sb);
+    setupStringFinder(sb);
+    sb.append("def _load_module(modules): \n");
+    sb.append("  finder = StringFinder(StringLoader(modules))\n");
+    sb.append("  sys.meta_path.append(finder)\n");
+    return sb.toString();
+  }
+
+  private static void setupStringLoader(StringBuilder sb) {
+    sb.append("class StringLoader(importlib.abc.Loader):\n");
+    sb.append("  def __init__(self, modules):\n");
+    sb.append("    self._modules = modules\n");
+    sb.append("  def has_module(self, fullname):\n");
+    sb.append("    return (fullname in self._modules)\n");
+    sb.append("  def create_module(self, spec):\n");
+    sb.append("    if self.has_module(spec.name):\n");
+    sb.append("      module = types.ModuleType(spec.name)\n");
+    sb.append("      exec(self._modules[spec.name], module.__dict__)\n");
+    sb.append("      return module\n");
+    sb.append("  def exec_module(self, module):\n");
+    sb.append("    pass\n\n");
+  }
+  
+  private static void setupStringFinder(StringBuilder sb) {
+    sb.append("class StringFinder(importlib.abc.MetaPathFinder):\n");
+    sb.append("  def __init__(self, loader):\n");
+    sb.append("    self._loader = loader\n");
+    sb.append("  def find_spec(self, fullname, path, target=None):\n");
+    sb.append("    if self._loader.has_module(fullname):\n");
+    sb.append("      return importlib.machinery.ModuleSpec(fullname, self._loader)\n\n");
   }
 
 
@@ -80,7 +97,7 @@ public class PythonMdmGeneration {
     }
     return sb.toString();
   }
-  
+
 
   private Map<String, XynaObjectInformation> loadObjects(List<XMOMDatabaseSearchResultEntry> objects, Long revision) {
     GenerationBaseCache cache = new GenerationBaseCache();
@@ -97,7 +114,9 @@ public class PythonMdmGeneration {
         }
       }
       XynaObjectInformation info = loadXynaObjectInfo(revision, obj.getFqName(), obj.getType().equals(XMOMDatabaseType.EXCEPTION), cache);
-      map.put(info.fqn, info);
+      if (info != null) {
+        map.put(info.fqn, info);
+      }
     }
     return map;
   }
@@ -161,19 +180,19 @@ public class PythonMdmGeneration {
       return;
     }
     
-    sb.append("    match(value):\n");
-    sb.append("      case dict():\n");
-    sb.append("        return convert_to_python_object(value)\n");
-    sb.append("      case list():\n");
-    sb.append("        if multiple:\n");
-    sb.append("          result = ()\n");
-    sb.append("          for v in value:\n");
-    sb.append("            result = result + (v,)\n");
-    sb.append("          return result\n");
-    sb.append("        else:\n");
-    sb.append("          return _convert_list(value)\n");
-    sb.append("      case _:\n");
-    sb.append("        return value\n\n");
+    //can't use match yet - python version might be too old
+    sb.append("    if type(value).__name__ == \"HashMap\":\n");
+    sb.append("      return convert_to_python_object(value)\n");
+    sb.append("    if type(value) is list: \n");
+    sb.append("      if multiple:\n");
+    sb.append("        result = ()\n");
+    sb.append("        for v in value:\n");
+    sb.append("          result = result + (v,)\n");
+    sb.append("        return result\n");
+    sb.append("      else:\n");
+    sb.append("        return _convert_list(value)\n");
+    sb.append("    else:\n");
+    sb.append("      return value\n\n");
     
   }
 
@@ -227,7 +246,7 @@ public class PythonMdmGeneration {
       sb.append("  pass\n\n");
       return;
     }
-    sb.append("  fqn = obj[\"_fqn\"]\n");
+    sb.append("  fqn = obj[\"_fqn\"].replace('.', '_')\n");
     sb.append("  result = eval(f\"{fqn}()\")\n");
     sb.append("  for f in obj:\n");
     sb.append("    _set_field(result, f, obj)\n");
@@ -235,32 +254,32 @@ public class PythonMdmGeneration {
   }
 
 
+  //can't use match yet - python version might be too old
   private void fillConvertList(StringBuilder sb) {
     sb.append("def _convert_list(values):\n");
     sb.append("  result = []\n");
     sb.append("  for value in values:\n");
-    sb.append("    match(value):\n");
-    sb.append("      case dict():\n");
-    sb.append("        result.append(convert_to_python_object(value))\n");
-    sb.append("      case list():\n");
-    sb.append("        result.append(_convert_list(value))\n");
-    sb.append("      case _:\n");
-    sb.append("        result.append(value)\n\n");
+    sb.append("    if type(value).__name__ == \"HashMap\":\n");
+    sb.append("      result.append(convert_to_python_object(value))\n");
+    sb.append("    elif type(value) is list:\n");
+    sb.append("      result.append(_convert_list(value))\n");
+    sb.append("    else:\n");
+    sb.append("      result.append(value)\n\n");
     sb.append("  return result\n\n");
   }
 
 
+  //can't use match yet - python version might be too old
   private void fillSetField(StringBuilder sb) {
     fillConvertList(sb);
     sb.append("def _set_field(object_to_set, fieldName, data):\n");
     sb.append("  value = data[fieldName]\n");
-    sb.append("  match value:\n");
-    sb.append("    case dict():\n");
-    sb.append("      object_to_set.set(fieldName, convert_to_python_object(value))\n");
-    sb.append("    case list():\n");
-    sb.append("      object_to_set.set(fieldName, _convert_list(value))\n");
-    sb.append("    case _:\n");
-    sb.append("      object_to_set.set(fieldName, value)\n\n");
+    sb.append("  if type(value).__name__ == \"HashMap\":\n");
+    sb.append("    object_to_set.set(fieldName, convert_to_python_object(value))\n");
+    sb.append("  elif type(value) is list:\n");
+    sb.append("    object_to_set.set(fieldName, _convert_list(value))\n");
+    sb.append("  else:\n");
+    sb.append("    object_to_set.set(fieldName, value)\n\n");
   }
 
 
@@ -274,9 +293,9 @@ public class PythonMdmGeneration {
 
   private void addXynaObjectToMdm(StringBuilder sb, XynaObjectInformation info, boolean withImpl, boolean typeHints) {
     sb.append("class ");
-    sb.append(convertToPythonFqn(info.fqn));
+    sb.append(PythonGeneration.convertToPythonFqn(info.fqn));
     sb.append("(");
-    sb.append(convertToPythonFqn(info.parent));
+    sb.append(PythonGeneration.convertToPythonFqn(info.parent));
     sb.append("):\n");
     sb.append("  def __init__(self):\n");
     sb.append("    super().__init__(\"");
@@ -376,10 +395,10 @@ public class PythonMdmGeneration {
       result.parent = doe.getSuperClassGenerationObject() != null ? doe.getSuperClassGenerationObject().getOriginalFqName() : null;
       result.members = doe.getMemberVars().stream().map(this::toMemberInfo).collect(Collectors.toList());
       if (!isException) {
-        result.methods = loadOperations(((DOM) doe).getOperations());
+        result.methods = PythonGeneration.loadOperations(((DOM) doe).getOperations());
       }
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      return null;
     }
 
     if (result.parent == null) {
@@ -396,62 +415,7 @@ public class PythonMdmGeneration {
 
 
   private Pair<String, String> toMemberInfo(AVariable avar) {
-    return new Pair<String, String>(avar.getVarName(), getPythonTypeOfVariable(avar));
-  }
-
-
-  private List<MethodInformation> loadOperations(List<Operation> operations) {
-    if (operations == null || operations.isEmpty()) {
-      return null;
-    }
-    List<MethodInformation> result = new ArrayList<MethodInformation>();
-    for (Operation op : operations) {
-      MethodInformation info = new MethodInformation();
-      info.isStatic = op.isStatic();
-      info.name = op.getNameWithoutVersion();
-      info.returnType = createReturnTypeFromOutputVars(op.getOutputVars());
-      info.argumentsWithTypes = createArgumentsWithTypes(op.getInputVars());
-      result.add(info);
-    }
-    return result;
-  }
-
-
-  private List<Pair<String, String>> createArgumentsWithTypes(List<AVariable> inputVars) {
-    List<Pair<String, String>> result = new ArrayList<Pair<String, String>>();
-    if (inputVars == null || inputVars.isEmpty()) {
-      return null;
-    }
-    for (AVariable avar : inputVars) {
-      result.add(new Pair<String, String>(avar.getVarName(), getPythonTypeOfVariable(avar)));
-    }
-    return result;
-  }
-
-
-  private String getPythonTypeOfVariable(AVariable avar) {
-    String type;
-    if (avar.isJavaBaseType()) {
-      type = primitive_types_mapping.getOrDefault(avar.getJavaTypeEnum(), "any");
-    } else {
-      type = "'" + convertToPythonFqn(avar.getOriginalPath() + "." + avar.getOriginalName()) + "'";
-    }
-    if(avar.isList()) {
-      type = "list[" + type + "]";
-    }
-    return type;
-  }
-
-
-  private String createReturnTypeFromOutputVars(List<AVariable> vars) {
-    if (vars.isEmpty()) {
-      return null;
-    }
-    if (vars.size() == 1) {
-      AVariable avar = vars.get(0);
-      return getPythonTypeOfVariable(avar);
-    }
-    return String.format("tuple[%s]", String.join(", ", vars.stream().map(this::getPythonTypeOfVariable).collect(Collectors.toList())));
+    return new Pair<String, String>(avar.getVarName(), PythonGeneration.getPythonTypeOfVariable(avar));
   }
 
 
@@ -466,31 +430,11 @@ public class PythonMdmGeneration {
     }
   }
 
-  private String convertToPythonFqn(String fqn) {
-    return fqn.replace('.', '_');
-  }
 
   public void exportPythonMdm(Long revision, String destination) throws Exception {
     String data = createPythonMdm(revision, false, true);
     try (PrintWriter bos = new PrintWriter(destination + "/mdm.py")) {
       bos.write(data);
     }
-  }
-
-
-  private static class XynaObjectInformation {
-
-    private String fqn; //original
-    private String parent; //original
-    private List<Pair<String, String>> members;
-    private List<MethodInformation> methods;
-  }
-
-  private static class MethodInformation {
-
-    private String name;
-    private String returnType;
-    private boolean isStatic;
-    private List<Pair<String, String>> argumentsWithTypes;
   }
 }
