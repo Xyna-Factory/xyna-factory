@@ -34,11 +34,11 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.GuiRight;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.Rights;
 
-public class PythonLibDeleteAction extends RuntimeContextDependendAction {
+public class JavaLibDeleteAction extends RuntimeContextDependendAction {
 
   private XMOMGui xmomGui;
   
-  public PythonLibDeleteAction(XMOMGui xmomGui) {
+  public JavaLibDeleteAction(XMOMGui xmomGui) {
     this.xmomGui = xmomGui;
   }
   
@@ -48,7 +48,7 @@ public class PythonLibDeleteAction extends RuntimeContextDependendAction {
         && url.getPathElement(0).equals(PathElements.XMOM)
         && (url.getPathElement(1).equals(PathElements.DATA_TYPES)
          || url.getPathElement(1).equals(PathElements.SERVICES_GROUPS))
-        && url.getPathElement(4).equals(PathElements.PYTHONLIB)
+        && url.getPathElement(4).equals(PathElements.JAVALIB)
         && method == Method.DELETE;
   }
   
@@ -63,7 +63,7 @@ public class PythonLibDeleteAction extends RuntimeContextDependendAction {
     
     GenerationBaseObject gbo = getGbo(rc, revision, url, tc);
     int index = Integer.valueOf(tc.getFirstValueOfParameterOrDefault("index", "-1"));
-    gbo.getDOM().deletePythonLibrary(index);
+    gbo.getDOM().deleteAdditionalLibrary(index);
     actionInstance.sendOk(tc);
     return actionInstance;
   }

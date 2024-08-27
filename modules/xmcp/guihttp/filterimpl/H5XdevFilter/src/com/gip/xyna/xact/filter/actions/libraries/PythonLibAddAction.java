@@ -30,7 +30,6 @@ import com.gip.xyna.xact.filter.session.XmomGuiSession;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
 import com.gip.xyna.xact.filter.RuntimeContextDependendAction;
 import com.gip.xyna.xact.filter.URLPath;
-import com.gip.xyna.xact.filter.FilterAction.FilterActionInstance;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
 import com.gip.xyna.xfmg.xfctrl.filemgmt.FileManagement;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,12 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Item" BaseTypePath="xmcp.processmodeller.datatypes" Label="Java Library" TypeName="JavaLibrary" TypePath="xmcp.processmodeller.datatypes.servicegroupmodeller" Version="1.8">
-  <Data Label="Name" VariableName="name">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="ContainerArea" BaseTypePath="xmcp.processmodeller.datatypes" IsAbstract="false" Label="Libraries Area" TypeName="LibrariesArea" TypePath="xmcp.processmodeller.datatypes.servicegroupmodeller" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data IsList="true" Label="Java Libraries" ReferenceName="Library" ReferencePath="xmcp.processmodeller.datatypes.servicegroupmodeller" VariableName="javaLibraries"/>
+  <Data IsList="true" Label="Python Libraries" ReferenceName="Library" ReferencePath="xmcp.processmodeller.datatypes.servicegroupmodeller" VariableName="pythonLibraries"/>
 </DataType>
+
