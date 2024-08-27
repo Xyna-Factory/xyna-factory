@@ -136,22 +136,38 @@
     </macrodef>
 
     <!-- ================================= 
-      macro: ssh-exec         
+      macro: custom-ssh-exec         
       ================================= -->
     <macrodef name="custom-ssh-exec">
         <attribute name="host" />
         <attribute name="username" />
         <attribute name="command" />
+        <attribute name="outputproperty" default="_ssh.out" />
         <sequential>
             <if>
-                <isset property="server.keyfile" />
-                <!-- authenticate with key -->
+                <!-- exec into container -->
+                <isset property="server.containername" />
                 <then>
-                    <sshexec host="@{host}" username="@{username}" command="@{command}" trust="true" failonerror="true" keyfile="${server.keyfile}" />
+                    <exec executable="docker" failonerror="true">
+                        <arg value="exec"/>
+                        <arg value="-t"/>
+                        <arg value="--user"/>
+                        <arg value="@{username}"/>
+                        <arg value="${server.containername}" />
+                        <arg line="bash -c '@{command}'"/>
+                        <redirector outputproperty="@{outputproperty}" />
+                    </exec>
                 </then>
+                <elseif>
+                <!-- authenticate with key -->
+                <isset property="server.keyfile" />
+                <then>
+                    <sshexec host="@{host}" username="@{username}" command="@{command}" trust="true" failonerror="true" keyfile="${server.keyfile}" outputproperty="@{outputproperty}" />
+                </then>
+                </elseif>
                 <!-- authenticate with password -->
                 <else>
-                    <sshexec host="@{host}" username="@{username}" command="@{command}" trust="true" failonerror="true" password="${server.password}" />
+                    <sshexec host="@{host}" username="@{username}" command="@{command}" trust="true" failonerror="true" password="${server.password}" outputproperty="@{outputproperty}" />
                 </else>
             </if>
         </sequential>
@@ -166,6 +182,16 @@
         <attribute name="todir" />
         <sequential>
             <if>
+                <!-- exec into container -->
+                <isset property="server.containername" />
+                <then>
+                    <exec executable="docker" failonerror="true">
+                        <arg value="cp"/>
+                        <arg value="@{fromdir}" />
+                        <arg value="${server.containername}:@{todir}" />
+                    </exec>
+                </then>
+                <elseif>
                 <isset property="server.keyfile" />
                 <!-- authenticate with key -->
                 <then>
@@ -175,6 +201,8 @@
                         </fileset>
                     </scp>
                 </then>
+                </elseif>
+                <!-- authenticate with password -->
                 <else>
                     <scp todir="@{todir}" trust="true" verbose="false" password="${server.password}">
                         <fileset dir="@{fromdir}">
@@ -186,6 +214,30 @@
         </sequential>
     </macrodef>
 
+
+    <!-- ================================= 
+        macro: default-scp-to-remote        
+        ================================= -->
+    <macrodef name="default-scp-to-remote">
+        <attribute name="fromdir" />
+        <attribute name="frominclude" />
+        <attribute name="todir" />
+        <sequential>
+            <if>
+                <!-- exec into container -->
+                <isset property="server.containername" />
+                <then>
+                    <custom-scp-to-remote fromdir="${fromdir}" todir="${server.containername}:${todir}" frominclude="${frominclude}" />
+                </then>
+                <!-- password or key -->
+                <else>
+                    <custom-scp-to-remote fromdir="${fromdir}" todir="${server.userid}@${server.host}:${todir}" frominclude="${frominclude}" />
+                </else>
+            </if>
+        </sequential>
+    </macrodef>
+
+
     <!-- ================================= 
         macro: custom-scp-from-remote        
         ================================= -->
@@ -194,13 +246,45 @@
         <attribute name="todir" />
         <sequential>
             <if>
+                <!-- exec into container -->
+                <isset property="server.containername" />
+                <then>
+                    <exec executable="docker" failonerror="true">
+                        <arg value="cp"/>
+                        <arg value="@{fromFile}" />
+                        <arg value="@{todir}" />
+                    </exec>
+                </then>
+                <elseif>
                 <isset property="server.keyfile" />
                 <!-- authenticate with key -->
                 <then>
                     <scp todir="@{todir}" file="@{fromFile}" trust="true" verbose="false" keyfile="${server.keyfile}" />
                 </then>
+                </elseif>
                 <else>
                     <scp todir="@{todir}" file="@{fromFile}" trust="true" verbose="false" password="${server.password}" />
+                </else>
+            </if>
+        </sequential>
+    </macrodef>
+
+    <!-- ================================= 
+        macro: default-scp-from-remote        
+        ================================= -->
+    <macrodef name="default-scp-from-remote">
+        <attribute name="fromFile" />
+        <attribute name="todir" />
+        <sequential>
+            <if>
+                <!-- exec into container -->
+                <isset property="server.containername" />
+                <then>
+                    <custom-scp-from-remote fromFile="${server.containername}:@{fromFile}" todir="@{todir}" />
+                </then>
+                <!-- password or key -->
+                <else>
+                    <custom-scp-from-remote fromFile="@{server.userid}@@{server.host}:@{fromFile}" todir="@{todir}" />
                 </else>
             </if>
         </sequential>
