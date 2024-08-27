@@ -16,7 +16,6 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="ContainerArea" BaseTypePath="xmcp.processmodeller.datatypes" IsAbstract="false" Label="Libraries Area" TypeName="LibrariesArea" TypePath="xmcp.processmodeller.datatypes.servicegroupmodeller" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
