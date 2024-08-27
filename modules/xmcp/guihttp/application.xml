@@ -17,7 +17,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <!--                                               ################# Version auch in blackedition_lib.sh updaten ########### -->
-<Application applicationName="GuiHttp" comment="" factoryVersion="" versionName="1.2.5" xmlVersion="1.1">
+<Application applicationName="GuiHttp" comment="" factoryVersion="" versionName="1.2.8" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">GuiHTTPFilter</Description>
     <Description Lang="EN">GuiHTTPFilter</Description>
@@ -29,7 +29,7 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>ZetaFramework</ApplicationName>
-        <VersionName>0.6.53</VersionName>
+        <VersionName>0.6.54</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>XynaPropertyMgmt</ApplicationName>

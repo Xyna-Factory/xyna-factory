@@ -20,6 +20,7 @@ package com.gip.xyna.xprc.xfractwfe.python;
 
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
@@ -37,8 +38,12 @@ public abstract class PythonInterpreterFactory {
   public abstract Map<String, Object> convertToPython(GeneralXynaObject obj);
 
   public abstract GeneralXynaObject convertToJava(Context context, Object obj);
+  
+  public abstract Object convertToJava(Context context, String type, Object value);
 
-  public abstract Object invokeService(Context context, String fqn, String serviceName, Object... args);
+  public abstract Object convertToPython(Object value);
 
-  public abstract Object invokeInstanceService(Context context, Object obj, String serviceName, Object... args);
+  public abstract Object invokeService(Context context, String fqn, String serviceName, List<Object> args);
+
+  public abstract Object invokeInstanceService(Context context, Object obj, String serviceName, List<Object> args);
 }
