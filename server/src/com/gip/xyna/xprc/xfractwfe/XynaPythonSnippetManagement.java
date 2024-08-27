@@ -40,6 +40,7 @@ import com.gip.xyna.xprc.xfractwfe.python.PythonProjectGeneration;
 public class XynaPythonSnippetManagement extends Section {
 
   private PythonInterpreterFactory factory;
+  private PythonMdmGeneration mdmGeneration;
 
 
   public XynaPythonSnippetManagement() throws XynaException {
@@ -53,6 +54,7 @@ public class XynaPythonSnippetManagement extends Section {
     }
 
     factory.invalidateRevisions(revisions);
+    mdmGeneration.invalidateRevision(revisions);
   }
 
   public PythonInterpreter createPythonInterpreter(ClassLoader classloader) {
@@ -73,6 +75,7 @@ public class XynaPythonSnippetManagement extends Section {
   protected void init() throws XynaException {
     factory = new JepInterpreterFactory();
     factory.init();
+    mdmGeneration = new PythonMdmGeneration();
     XynaFactory.getInstance().getProcessing().getWorkflowEngine().getDeploymentHandling()
     .addDeploymentHandler(DeploymentHandling.PRIORITY_REMOTESERIALIZATION, new RevisionChangeUnDeploymentHandler(this::invalidateRevisions));
 
@@ -98,11 +101,11 @@ public class XynaPythonSnippetManagement extends Section {
   }
   
   public String createPythonMdm(Long revision, boolean withImpl, boolean typeHints) {
-    return new PythonMdmGeneration().createPythonMdm(revision, withImpl, typeHints);
+    return mdmGeneration.createPythonMdm(revision, withImpl, typeHints);
   }
   
   public void exportPythonMdm(Long revision, String destination) throws Exception {
-    new PythonMdmGeneration().exportPythonMdm(revision, destination);
+    mdmGeneration.exportPythonMdm(revision, destination);
   }
   
   public String getLoaderSnippet() {
