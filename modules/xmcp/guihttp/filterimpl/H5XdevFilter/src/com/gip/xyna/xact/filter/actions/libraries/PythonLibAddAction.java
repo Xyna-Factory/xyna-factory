@@ -82,6 +82,9 @@ public class PythonLibAddAction extends RuntimeContextDependendAction {
     }
 
     gbo.addSgLibToUpload(fileId);
+    if (index == -1) {
+      index = gbo.getDOM().getPythonLibraries().size();
+    }
     gbo.getDOM().addPythonLibrary(index, file.getOriginalFilename());
     actionInstance.sendJson(tc, gbo.buildXMOMGuiReply().getJson());
     return actionInstance;

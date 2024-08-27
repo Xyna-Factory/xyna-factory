@@ -82,6 +82,9 @@ public class JavaLibAddAction extends RuntimeContextDependendAction {
     }
 
     gbo.addSgLibToUpload(fileId);
+    if (index == -1) {
+      index = gbo.getDOM().getAdditionalLibraries().size();
+    }
     gbo.getDOM().addAdditionalLibrary(index, file.getOriginalFilename());
     actionInstance.sendJson(tc, gbo.buildXMOMGuiReply().getJson());
     return actionInstance;
