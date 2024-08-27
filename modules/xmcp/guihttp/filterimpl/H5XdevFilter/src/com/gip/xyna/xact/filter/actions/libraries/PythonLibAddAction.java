@@ -48,7 +48,7 @@ public class PythonLibAddAction extends RuntimeContextDependendAction {
   
   @Override
   protected boolean matchRuntimeContextIndependent( URLPath url, Method method) {
-    return url.getPathLength() == 7 
+    return url.getPathLength() == 5
         && url.getPathElement(0).equals(PathElements.XMOM)
         && (url.getPathElement(1).equals(PathElements.DATA_TYPES)
          || url.getPathElement(1).equals(PathElements.SERVICES_GROUPS))

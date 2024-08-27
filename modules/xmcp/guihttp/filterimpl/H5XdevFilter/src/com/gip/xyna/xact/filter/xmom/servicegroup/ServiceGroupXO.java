@@ -20,7 +20,6 @@ package com.gip.xyna.xact.filter.xmom.servicegroup;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.gip.xyna.xact.filter.HasXoRepresentation;
 import com.gip.xyna.xact.filter.session.GenerationBaseObject;
