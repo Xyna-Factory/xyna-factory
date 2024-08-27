@@ -61,19 +61,11 @@ public class JavaLibDeleteAction extends RuntimeContextDependendAction {
       return actionInstance;
     }
     
-    GenerationBaseObject gbo = getGbo(rc, revision, url, tc);
+    GenerationBaseObject gbo = xmomGui.getGbo(getSession(tc), rc, revision, url);
     int index = Integer.valueOf(tc.getFirstValueOfParameterOrDefault("index", "-1"));
     gbo.getDOM().deleteAdditionalLibrary(index);
-    actionInstance.sendOk(tc);
+    actionInstance.sendJson(tc, gbo.buildXMOMGuiReply().getJson());
     return actionInstance;
-  }
-  
-  private GenerationBaseObject getGbo(RuntimeContext rc, Long revision, URLPath url, HTTPTriggerConnection tc) throws XynaException {
-    XmomGuiSession session = getSession(tc);
-    SessionBasedData sessionData = xmomGui.getSessionBasedData(session.getId());
-    FQName fqName = new FQName(revision, rc, url.getPathElement(2), url.getPathElement(3));
-    return sessionData.load(fqName);
-    
   }
 
   @Override

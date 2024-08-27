@@ -64,7 +64,7 @@ public class PythonLibAddAction extends RuntimeContextDependendAction {
       return actionInstance;
     }
 
-    GenerationBaseObject gbo = getGbo(rc, revision, url, tc);
+    GenerationBaseObject gbo = xmomGui.getGbo(getSession(tc), rc, revision, url);
     
     int index;
     String fileId;
@@ -83,21 +83,13 @@ public class PythonLibAddAction extends RuntimeContextDependendAction {
 
     gbo.addSgLibToUpload(fileId);
     gbo.getDOM().addPythonLibrary(index, file.getOriginalFilename());
-    actionInstance.sendOk(tc);
+    actionInstance.sendJson(tc, gbo.buildXMOMGuiReply().getJson());
     return actionInstance;
   }
   
   private TransientFile uploadFile(String fileId) {
     FileManagement fileManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getFileManagement();
     return fileManagement.retrieve(fileId);
-  }
-  
-  private GenerationBaseObject getGbo(RuntimeContext rc, Long revision, URLPath url, HTTPTriggerConnection tc) throws XynaException {
-    XmomGuiSession session = getSession(tc);
-    SessionBasedData sessionData = xmomGui.getSessionBasedData(session.getId());
-    FQName fqName = new FQName(revision, rc, url.getPathElement(2), url.getPathElement(3));
-    return sessionData.load(fqName);
-    
   }
 
   @Override

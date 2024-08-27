@@ -17,6 +17,8 @@
  */
 package com.gip.xyna.xact.filter.actions.libraries;
 
+import java.util.List;
+
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.filter.HTMLBuilder.HTMLPart;
 import com.gip.xyna.xact.filter.actions.PathElements;
@@ -24,6 +26,7 @@ import com.gip.xyna.xact.filter.session.FQName;
 import com.gip.xyna.xact.filter.session.GenerationBaseObject;
 import com.gip.xyna.xact.filter.session.SessionBasedData;
 import com.gip.xyna.xact.filter.session.XMOMGui;
+import com.gip.xyna.xact.filter.session.XMOMGuiReply;
 import com.gip.xyna.xact.filter.session.XmomGuiSession;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
 import com.gip.xyna.xact.filter.RuntimeContextDependendAction;
@@ -33,6 +36,8 @@ import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.GuiRight;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.Rights;
+
+import xmcp.processmodeller.datatypes.response.UpdateXMOMItemResponse;
 
 public class PythonLibDeleteAction extends RuntimeContextDependendAction {
 
@@ -61,19 +66,13 @@ public class PythonLibDeleteAction extends RuntimeContextDependendAction {
       return actionInstance;
     }
     
-    GenerationBaseObject gbo = getGbo(rc, revision, url, tc);
+    GenerationBaseObject gbo = xmomGui.getGbo(getSession(tc), rc, revision, url);
     int index = Integer.valueOf(tc.getFirstValueOfParameterOrDefault("index", "-1"));
     gbo.getDOM().deletePythonLibrary(index);
-    actionInstance.sendOk(tc);
-    return actionInstance;
-  }
-  
-  private GenerationBaseObject getGbo(RuntimeContext rc, Long revision, URLPath url, HTTPTriggerConnection tc) throws XynaException {
-    XmomGuiSession session = getSession(tc);
-    SessionBasedData sessionData = xmomGui.getSessionBasedData(session.getId());
-    FQName fqName = new FQName(revision, rc, url.getPathElement(2), url.getPathElement(3));
-    return sessionData.load(fqName);
     
+    gbo.createXoRepresentation();
+    actionInstance.sendJson(tc, gbo.buildXMOMGuiReply().getJson());
+    return actionInstance;
   }
 
   @Override

@@ -63,6 +63,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.WF;
 import com.gip.xyna.xprc.xfractwfe.generation.WF.WFStep;
 
 import xmcp.processmodeller.datatypes.Item;
+import xmcp.processmodeller.datatypes.response.UpdateXMOMItemResponse;
 
 public class GenerationBaseObject {
   
@@ -467,5 +468,14 @@ public class GenerationBaseObject {
     }
     df.setWorkflowWarningsHandler(workflowWarningsHandler);
   }
-
+  
+  public XMOMGuiReply buildXMOMGuiReply() {
+    UpdateXMOMItemResponse response = new UpdateXMOMItemResponse.Builder()
+        .updates(List.of(createXoRepresentation()))
+        .revision(getRevision())
+        .instance();    
+    XMOMGuiReply reply = new XMOMGuiReply();
+    reply.setXynaObject(response);
+    return reply;
+  }
 }
