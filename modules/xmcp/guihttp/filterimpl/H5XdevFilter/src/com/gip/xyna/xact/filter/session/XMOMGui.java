@@ -214,9 +214,9 @@ public class XMOMGui {
     return xmomLoader;
   }
   
-  public GenerationBaseObject getGbo(XmomGuiSession session, RuntimeContext rc, Long revision, URLPath url) throws XynaException {
+  public GenerationBaseObject getGbo(XmomGuiSession session, RuntimeContext rc, Long revision, String path, String name) throws XynaException {
     SessionBasedData sessionData = this.getSessionBasedData(session.getId());
-    FQName fqName = new FQName(revision, rc, url.getPathElement(2), url.getPathElement(3));
+    FQName fqName = new FQName(revision, rc, path, name);
     return sessionData.load(fqName);
     
   }

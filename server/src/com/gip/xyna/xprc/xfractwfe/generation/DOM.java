@@ -666,7 +666,10 @@ public class DOM extends DomOrExceptionGenerationBase {
   }
 
   public void addPythonLibrary(int index, String libName) {
-    pythonLibNames.add(index, libName);
+    int currentIndex = pythonLibNames.indexOf(libName);
+    if (currentIndex == -1) {
+      pythonLibNames.add(index, libName);
+    }
   }
 
   public String deletePythonLibrary(int index) {

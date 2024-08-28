@@ -64,7 +64,7 @@ public class JavaLibAddAction extends RuntimeContextDependendAction {
       return actionInstance;
     }
 
-    GenerationBaseObject gbo = xmomGui.getGbo(getSession(tc), rc, revision, url);
+    GenerationBaseObject gbo = xmomGui.getGbo(getSession(tc), rc, revision, url.getPathElement(2), url.getPathElement(3));
     
     int index;
     String fileId;

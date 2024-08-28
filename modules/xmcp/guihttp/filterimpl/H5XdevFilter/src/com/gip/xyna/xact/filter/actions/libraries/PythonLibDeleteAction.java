@@ -66,7 +66,7 @@ public class PythonLibDeleteAction extends RuntimeContextDependendAction {
       return actionInstance;
     }
     
-    GenerationBaseObject gbo = xmomGui.getGbo(getSession(tc), rc, revision, url);
+    GenerationBaseObject gbo = xmomGui.getGbo(getSession(tc), rc, revision, url.getPathElement(2), url.getPathElement(3));
     int index = Integer.valueOf(tc.getFirstValueOfParameterOrDefault("index", "-1"));
     gbo.getDOM().deletePythonLibrary(index);
     

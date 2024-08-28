@@ -473,6 +473,9 @@ public class GenerationBaseObject {
     UpdateXMOMItemResponse response = new UpdateXMOMItemResponse.Builder()
         .updates(List.of(createXoRepresentation()))
         .revision(getRevision())
+        .deploymentState(getDeploymentState())
+        .saveState(getSaveState())
+        .modified(hasBeenModified())
         .instance();    
     XMOMGuiReply reply = new XMOMGuiReply();
     reply.setXynaObject(response);
