@@ -887,8 +887,10 @@ public class SessionBasedData {
 
 
   private void copyLibs(GenerationBaseObject source, GenerationBaseObject destination) throws XPRC_JarFileForServiceImplNotFoundException {
-    Set<String> libNames = source.getDOM().getAdditionalLibraries();
-    for (String libName : libNames) {
+    List<String> allLibs = new LinkedList<>();
+    allLibs.addAll(source.getDOM().getAdditionalLibraries());
+    allLibs.addAll(source.getDOM().getPythonLibraries());
+    for (String libName : allLibs) {
       String sourceFilePathAndName = DOM.getJarFileForServiceLocation(source.getFQName().getFqName(), source.getFQName().getRevision(), libName, true, new FactoryManagedRevisionXMLSource()).getPath();
       File sourceFile = new File(sourceFilePathAndName);
       if(!sourceFile.canRead()) {
