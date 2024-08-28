@@ -455,7 +455,6 @@ public class Persistence {
       FileOutputStream fos = new FileOutputStream(destinationPath + "/" + tFile.getOriginalFilename());
       try {
         StreamUtils.copy(is, fos);
-        gbo.getDOM().getAdditionalLibraries().add(tFile.getOriginalFilename());
       } finally {
         fos.close();
       }
