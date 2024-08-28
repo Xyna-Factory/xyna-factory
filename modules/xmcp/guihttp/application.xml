@@ -453,11 +453,11 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
   	<XMOMEntry implicitDependency="false">
-      <FqName>xmcp.processmodeller.datatypes.servicegroupmodeller.JavaLibrariesArea</FqName>
+      <FqName>xmcp.processmodeller.datatypes.servicegroupmodeller.LibrariesArea</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
   	<XMOMEntry implicitDependency="false">
-      <FqName>xmcp.processmodeller.datatypes.servicegroupmodeller.JavaLibrary</FqName>
+      <FqName>xmcp.processmodeller.datatypes.servicegroupmodeller.Library</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
   	<XMOMEntry implicitDependency="false">

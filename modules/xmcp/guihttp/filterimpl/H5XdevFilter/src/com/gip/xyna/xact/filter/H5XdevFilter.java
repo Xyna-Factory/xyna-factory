@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,10 @@ import com.gip.xyna.xact.filter.actions.auth.LogoutAction;
 import com.gip.xyna.xact.filter.actions.auth.SharedLoginAction;
 import com.gip.xyna.xact.filter.actions.auth.utils.AuthUtils;
 import com.gip.xyna.xact.filter.actions.generateinput.GenerateinputAction;
+import com.gip.xyna.xact.filter.actions.libraries.JavaLibAddAction;
+import com.gip.xyna.xact.filter.actions.libraries.JavaLibDeleteAction;
+import com.gip.xyna.xact.filter.actions.libraries.PythonLibAddAction;
+import com.gip.xyna.xact.filter.actions.libraries.PythonLibDeleteAction;
 import com.gip.xyna.xact.filter.actions.listpaths.DatatypesAction;
 import com.gip.xyna.xact.filter.actions.listpaths.ExceptionsAction;
 import com.gip.xyna.xact.filter.actions.listpaths.WorkflowsAction;
@@ -388,6 +392,11 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     
     allFilterActions.add( new EncodeAction() );
     allFilterActions.add( new DecodeAction() );
+    
+    allFilterActions.add( new JavaLibAddAction(xmomGui) );
+    allFilterActions.add( new JavaLibDeleteAction(xmomGui) );    
+    allFilterActions.add( new PythonLibAddAction(xmomGui) );
+    allFilterActions.add( new PythonLibDeleteAction(xmomGui) );
     
     List<Endpoint> endpoints = new ArrayList<>();
     for(FilterAction fa : allFilterActions) {
