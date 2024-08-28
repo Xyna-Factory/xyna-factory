@@ -22,6 +22,7 @@ package com.gip.xyna.xprc.xfractwfe.python;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,18 @@ public class PythonMdmGeneration {
 
   
   public static final String LOAD_MODULE_SNIPPET = setupLoadModuleSnippet();
+  
+  /**
+   * contains mdm.py with implementations, but without typeHints
+   */
+  private Map<Long, String> cache = new HashMap<Long, String>();
+  
+  
+  public void invalidateRevision(Collection<Long> revisions) {
+    for(Long revision : revisions) {
+      cache.remove(revision);
+    }
+  }
 
 
   private static String setupLoadModuleSnippet() {
@@ -88,6 +101,13 @@ public class PythonMdmGeneration {
 
 
   public String createPythonMdm(Long revision, boolean withImpl, boolean typeHints) {
+    if(withImpl == true && typeHints == false ) {
+      return cache.computeIfAbsent(revision, x -> this.createPythonMdmString(x, withImpl, typeHints));
+    }
+    return createPythonMdmString(revision, withImpl, typeHints);
+  }
+  
+  private String createPythonMdmString(Long revision, boolean withImpl, boolean typeHints) {
     StringBuilder sb = new StringBuilder();
     fillDefaults(sb, withImpl, typeHints);
     XMOMDatabaseSearchResult objects = searchXmomDbForObjects(revision);
