@@ -643,7 +643,7 @@ public class DOM extends DomOrExceptionGenerationBase {
     if (index != additionalLibNames.size()) {
       throw new RuntimeException("Only inserting a new lib at the end of the list is supported, right now.");
     }
-
+    pythonLibNames.remove(libName);
     additionalLibNames.add(libName);
   }
 
@@ -666,6 +666,7 @@ public class DOM extends DomOrExceptionGenerationBase {
   }
 
   public void addPythonLibrary(int index, String libName) {
+    additionalLibNames.remove(libName);
     int currentIndex = pythonLibNames.indexOf(libName);
     if (currentIndex == -1) {
       pythonLibNames.add(index, libName);
