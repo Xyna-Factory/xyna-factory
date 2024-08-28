@@ -88,13 +88,13 @@ public class PythonOperation extends CodeOperation {
     StringBuilder pythonscript = new StringBuilder();
     String input = String.join(", ", getInputVars().stream().map(var -> var.varName).collect(Collectors.toList()));
     if(!isStatic()) {
-      input = "this" + (input.length() > 0 ? ", " : "");
+      input = "this" + (input.length() > 0 ? ", " : "") + input;
     }
     pythonscript.append("def ").append(getNameWithoutVersion()).append("(").append(input).append("):");
     String impl = getImpl().replaceAll("(?m)^", "  ");
     impl = impl.replaceAll("\"", "\\\\\\\"");
     impl = impl.replaceAll("\n", "\\\\n");
-    pythonscript.append("\\n").append(impl);
+    pythonscript.append("\\n").append(impl).append("\\n");
     String output = String.join(", ", getOutputVars().stream().map(var -> var.varName).collect(Collectors.toList()));
     if (getOutputVars().size() > 0) {
       pythonscript.append("\\n(").append(output).append(") = ");

@@ -231,7 +231,7 @@
 	   </if>
 
         <!-- copy application.xml from xyna server-->
-        <custom-scp-from-remote fromfile="${server.userid}@${server.host}:/tmp/application.xml" todir="${basedir}" />
+        <default-scp-from-remote fromfile="/tmp/application.xml" todir="${basedir}" />
 
     </target>
 	
@@ -255,7 +255,7 @@
 		</if>
 
         <!-- copy application-stub.xml from xyna server-->
-        <custom-scp-from-remote fromfile="${server.userid}@${server.host}:/tmp/application-stub.xml" todir="${basedir}" />
+        <default-scp-from-remote fromfile="/tmp/application-stub.xml" todir="${basedir}" />
     </target>
 	
 	<!-- ================================= 
@@ -271,41 +271,23 @@
 		<if>
 			<equals arg1="${workspacename}" arg2="$${workspacename}"/>
 			<then>
-				<property name="where" value="application='${applicationname}' and workspace is null and versionName='${applicationversion}'" />
+				<property name="where" value="-applicationName '${applicationname}'  -versionName='${applicationversion}'" />
                         <property name="saved" value="" />
 			</then>
 			<else> 
-				<property name="where" value="workspace = '${workspacename}'" />    
+				<property name="where" value="-workspaceName '${workspacename}'" />    
 				<property name="saved" value="saved/" />
 			</else>
 		</if>
 		<local name="command" />
-		<property name="command" value="cd ${server.path}; ./xynafactory.sh sql &quot;select * from xmomversion where ${where}&quot; |grep revision |awk '{print $3}';"/>
-		<echo message="${server.userid}@:${server.host}${command}" />
-		<if>
-			<isset property="server.keyfile" />
-			<then>
-				<sshexec host="${server.host}" username="${server.userid}" keyfile="${server.keyfile}"
-				command="${command}" outputproperty="revision" trust="true" />
-			</then>
-			<else>
-				<sshexec host="${server.host}" username="${server.userid}" password="${server.password}"
-                                command="${command}" outputproperty="revision" trust="true" />
-			</else>
-		</if>
-		<!-- ersetze zeilenumbruch am ende -->
-		<script language="javascript">
-            var revision = project.getProperty("revision").trim();
-            project.setProperty("revision", revision);
-		</script>
+		<property name="command" value="cd ${server.path}; ./xynafactory.sh printrevision ${where}" />
+		<echo message="executing command: ${command}" />
+		<custom-ssh-exec host="${server.host}" username="${server.userid}" command="${command}" outputproperty="revision" />
 		<echo message="got revision=${revision}" />
 		<mkdir dir="XMOM" />
-		<delete verbose="true">
-			<fileset dir="XMOM" includes="**/*.xml" />
-		</delete>
-		<echo message="copying ${server.userid}@${server.host}:${server.path}/../revisions/rev_${revision}/${saved}XMOM/*" />
-		<custom-scp-from-remote fromfile="${server.userid}@${server.host}:${server.path}/../revisions/rev_${revision}/${saved}XMOM/*" todir="XMOM/" />
-
+		<delete verbose="true" dir="XMOM" />
+		<echo message="copying ${server.userid}@${server.host}:${server.path}/../revisions/rev_${revision}/${saved}XMOM/" />
+		<default-scp-from-remote fromfile="${server.path}/../revisions/rev_${revision}/${saved}XMOM" todir="." />
     </target>
 	
 	<!-- =================================
@@ -321,7 +303,7 @@
 		<custom-ssh-exec host="${server.host}" username="${server.userid}" command="${server.path}/xynafactory.sh exportdatamodels -datamodelfqname ${dollar}(${server.path}/xynafactory.sh sql &quot;select * from datamodel where label='${applicationname}' and version='${applicationversion}'&quot; HISTORY | grep -e '\sfqname =' | awk '{print $3}' | tr -d &quot;'&quot; ) -filename /tmp/datamodelarchive.zip" />
 
         <!-- copy datamodelarchive from xyna server-->
-        <custom-scp-from-remote fromfile="${server.userid}@${server.host}:/tmp/datamodelarchive.zip" todir="${basedir}" />
+        <default-scp-from-remote fromfile="/tmp/datamodelarchive.zip" todir="${basedir}" />
 
 		<mkdir dir="${basedir}/datamodel" />
 		<unzip src="${basedir}/datamodelarchive.zip" dest="${basedir}/datamodel"/>
@@ -408,4 +390,41 @@
         </java>
 
     </target>
+
+    <!-- ================================= 
+         target: add-service         
+         ================================= -->
+    <target name="add-service" description="Load service from server and add it to a project. Call with -DServiceFqn">
+        <fail message="ServiceFqn required">
+            <condition>
+                <not>
+                    <isset property="ServiceFqn" />
+                </not>
+            </condition>
+        </fail>
+        <fail message="workspacename required">
+            <condition>
+                <not>
+                    <isset property="workspacename" />
+                </not>
+            </condition>
+        </fail>
+        <local name="command" />
+        <property name="command" value="${server.path}/xynafactory.sh buildserviceproject -fqDatatypeName ${ServiceFqn} -targetDirectory /tmp -workspaceName '${workspacename}'" />
+        <custom-ssh-exec host="${server.host}" username="${server.userid}" command="${command}" />
+        <mkdir dir="${basedir}/mdmimpl/tmp" />
+        <default-scp-from-remote fromfile="/tmp/${ServiceFqn}.zip" todir="${basedir}/mdmimpl/tmp" />
+        <unzip src="${basedir}/mdmimpl/tmp/${ServiceFqn}.zip" dest="${basedir}/mdmimpl/tmp/" />
+        
+        <dirset id="tmp_service_name" dir="${basedir}/mdmimpl/tmp">
+            <include name="${ServiceFqn}*/mdmimpl"/>
+        </dirset>
+        <pathconvert property="tmp_service" refid="tmp_service_name" pathsep=","/>
+
+        <move file="${tmp_service}" tofile="${basedir}/mdmimpl" />
+        <delete dir="${basedir}/mdmimpl/tmp" />
+
+    </target>
+
+
 </project>

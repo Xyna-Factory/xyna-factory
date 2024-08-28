@@ -41,12 +41,9 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderDispatcher;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderType;
-import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase;
-import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabaseType;
-import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResult;
-import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResultEntry;
-import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSelect;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
+import com.gip.xyna.xprc.xfractwfe.python.jep.JepThreadManagement;
+import com.gip.xyna.xprc.xfractwfe.python.jep.JepThreadManagement.JepThread;
 
 import jep.python.PyObject;
 
@@ -55,7 +52,6 @@ import jep.python.PyObject;
 public class JepInterpreterFactory extends PythonInterpreterFactory {
 
   private static final Logger logger = CentralFactoryLogging.getLogger(JepInterpreterFactory.class);
-  private Map<Long, Set<String>> packagesPerRevision = new HashMap<>();
 
   private static final Map<String, Class<?>> typeConversionMap = createTypeConversionMap();
 
@@ -80,11 +76,7 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
 
   @Override
   public PythonInterpreter createInterperter(ClassLoaderBase classLoader) {
-    Long revision = classLoader.getRevision();
-    if (!packagesPerRevision.containsKey(revision)) {
-      packagesPerRevision.put(revision, searchPackages(revision));
-    }
-    return new JepInterpreter(classLoader, packagesPerRevision.get(revision));
+    return new JepInterpreter(classLoader);
   }
 
   @Override
@@ -110,9 +102,7 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
 
   @Override
   public void invalidateRevisions(Collection<Long> revisions) {
-    for (Long rev : revisions) {
-      packagesPerRevision.remove(rev);
-    }
+    //ntbd
   }
 
   @Override
@@ -204,7 +194,14 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     Method method = findMethod(context, fqn, serviceName);
     try {
       Object[] inputs = convertArguments(context, method, args);
-      result = method.invoke(instance, inputs);
+      JepThread thread = JepThreadManagement.createJepThread(method, instance, inputs);
+      thread.start();
+      thread.join();
+      if(thread.wasSuccessful()) {
+        result = thread.getResult();
+      } else {
+        throw new RuntimeException(thread.getException());
+      }
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -321,27 +318,5 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-  }
-
-
-  private Set<String> searchPackages(Long revision) {
-    XMOMDatabase xmomDB = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getXMOMDatabase();
-    Set<String> result = new HashSet<String>();
-    try {
-      XMOMDatabaseSelect selectStatement = new XMOMDatabaseSelect();
-      selectStatement
-          .addAllDesiredResultTypes(Arrays.asList(XMOMDatabaseType.DATATYPE, XMOMDatabaseType.EXCEPTION, XMOMDatabaseType.SERVICEGROUP));
-      XMOMDatabaseSearchResult xmoms = xmomDB.searchXMOMDatabase(Arrays.asList(selectStatement), Integer.MAX_VALUE, revision);
-      for (XMOMDatabaseSearchResultEntry searchEntry : xmoms.getResult()) {
-        String fqn = searchEntry.getFqName();
-        String[] split = fqn.split("\\.");
-        result.add(split[0]);
-      }
-    } catch (Exception e) {
-      if (logger.isErrorEnabled()) {
-        logger.error("Error during searching in xmom Database. ", e);
-      }
-    }
-    return result;
   }
 }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build" default="build" basedir=".">
+
+    <!-- this is the absolute path to the root -->
+    <pathconvert property="root.dir">
+        <path location="{{ROOTDIRPATH}}" />
+    </pathconvert>
+
+    <pathconvert property="project.root.dir">
+        <path location="{{PROJECTROOTPATH}}" />
+    </pathconvert>
+
+    <property name="target.dir" value="${basedir}/deploy/" />
+    <property file="workspace.properties" />
+    <property file="${project.root.dir}/server.properties" />
+ 
+    <target name="build">
+        <antcall target="prepare-mdm-jar-if-missing" />
+
+        <antcall target="build-application" />
+    </target>
+
+    <target name="prepare-mdm-jar">
+        <antcall target="create-mdm-jar" />
+        <delete file="${basedir}/mdm.jar" />
+    </target>
+
+    <import file="${root.dir}/installation/build/buildApplication.xml" />
+
+</project>
