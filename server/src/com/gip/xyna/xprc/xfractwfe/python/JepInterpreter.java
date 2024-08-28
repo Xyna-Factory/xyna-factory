@@ -17,20 +17,13 @@
  */
 package com.gip.xyna.xprc.xfractwfe.python;
 
-import java.util.Set;
-
 import jep.Jep;
 import jep.JepConfig;
-import jep.NamingConventionClassEnquirer;
 
 public class JepInterpreter implements PythonInterpreter {
 
-  public JepInterpreter(ClassLoader classloader, Set<String> javaPackages) {
-    NamingConventionClassEnquirer enquirer = new NamingConventionClassEnquirer(true);
-    for (String javaPackage: javaPackages) {
-      enquirer.addTopLevelPackageName(javaPackage);
-    }
-    jep = new JepConfig().setClassLoader(classloader).setClassEnquirer(enquirer).createSubInterpreter();
+  public JepInterpreter(ClassLoader classloader) {
+    jep = new JepConfig().setClassLoader(classloader).createSubInterpreter();
   }
   
   Jep jep;
@@ -60,6 +53,6 @@ public class JepInterpreter implements PythonInterpreter {
 
   @Override
   public void runScript(String path) {
-    jep.runScript(path);    
+    jep.runScript(path);
   }
 }
