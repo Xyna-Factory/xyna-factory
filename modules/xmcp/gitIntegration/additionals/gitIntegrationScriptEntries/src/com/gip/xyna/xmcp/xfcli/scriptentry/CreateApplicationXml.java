@@ -67,7 +67,11 @@ public class CreateApplicationXml {
     boolean fromSaved = Boolean.valueOf(args[5]);
     String factoryVersion = args[6];
     
-    System.out.println("Creating application.xml for " + applicationName + " from " + workspaceXmlFile + " and " + factoryXmlFile);
+    System.out.println("Creating application.xml for " + applicationName + "/" + versionName + " from " + workspaceXmlFile);
+    System.out.println("  factoryXml: " + factoryXmlFile);
+    System.out.println("  isStub: " + isStub);
+    System.out.println("  fromSaved: " + fromSaved);
+    System.out.println("  factoryVersion: " + factoryVersion);
     
     WorkspaceContentCreator creator = new WorkspaceContentCreator();
     WorkspaceContent workspaceContent = creator.createWorkspaceContentFromFile(new File(workspaceXmlFile)); 

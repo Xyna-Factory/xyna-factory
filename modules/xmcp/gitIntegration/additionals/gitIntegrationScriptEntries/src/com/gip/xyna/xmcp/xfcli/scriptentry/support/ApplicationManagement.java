@@ -137,13 +137,12 @@ public class ApplicationManagement extends ApplicationManagementImpl {
   }
   
   public ApplicationXmlEntry createApplicationDefinitionXml(CreateApplicationDefinitionXmlParameter parameter) throws XynaException {
-    WorkspaceContent content = parameter.getContent();
+    String workspaceName = parameter.getContent().getWorkspaceName();
     String applicationName = parameter.getApplicationName();
     String versionName = parameter.getVersionName();
     boolean createStub = parameter.isCreateStub();
-    
     DataProvider provider = createDataProviderFromWorkspaceContent(parameter);
-    return createApplicationXml(applicationName, versionName, content.getWorkspaceName(), createStub, provider);
+    return createApplicationXml(applicationName, versionName, workspaceName, createStub, provider);
   }
 
 

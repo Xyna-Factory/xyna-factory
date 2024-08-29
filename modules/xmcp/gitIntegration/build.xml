@@ -57,6 +57,7 @@
         <supply-mdm-jar type="mdmimpl" name="FactoryObjectManagementImpl" />
         <supply-mdm-jar type="mdmimpl" name="RepositoryManagementImpl" />
         <supply-mdm-jar type="mdmimpl" name="ReferenceManagementImpl" />
+        <supply-mdm-jar type="additionals" name="gitIntegrationScriptEntries" />
         <delete file="${basedir}/mdm.jar" />
     </target>
 
