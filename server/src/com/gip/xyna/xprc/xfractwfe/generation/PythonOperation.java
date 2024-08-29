@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.ATT;
+import com.gip.xyna.xprc.xfractwfe.python.PythonGeneration;
 
 public class PythonOperation extends CodeOperation {
 
@@ -148,11 +149,11 @@ public class PythonOperation extends CodeOperation {
 
   public String createImplCallSnippet(boolean andSet) {
     CodeBuffer cb = new CodeBuffer("temp");
-    cb.add("interpreter.exec(\"impl = ").add("TODO").addLine("Impl())");
+    cb.add("impl = ").add(PythonGeneration.convertToPythonFqn(parent.getOriginalFqName())).add("Impl(");
     if (!isStatic()) {
-      cb.addLine("interpreter.exec(\"impl.this = this\")");
+      cb.add("this");
     }
-    cb.add("interpreter.exec(\"");
+    cb.addLine(")");
     if (getOutputVars() != null && !getOutputVars().isEmpty()) {
       cb.add("return ");
     }
@@ -164,7 +165,7 @@ public class PythonOperation extends CodeOperation {
       }
     }
     cb.add(String.join(", ", getInputVars().stream().map(x -> x.getVarName()).collect(Collectors.toList())));
-    cb.addLine(")");
+    cb.addLine("))");
 
     String impl = cb.toString(false).trim();
     if (andSet) {
