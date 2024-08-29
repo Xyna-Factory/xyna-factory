@@ -141,6 +141,21 @@ public class TriggerInformation implements Serializable {
     private final long revision;
     private final RuntimeContext runtimeContext;
 
+
+    public TriggerInstanceInformation(String triggerInstanceName, String triggerName, String description, TriggerInstanceState state,
+                                      List<String> startParameter, String startParameterAsString,
+                                      String errorCause, RuntimeContext rtc, long revision) {
+      this.triggerName = triggerName;
+      this.triggerInstanceName = triggerInstanceName;
+      this.description = description;
+      this.state = state;
+      this.startParameter = startParameter;
+      this.startParameterAsString = startParameterAsString;
+      this.errorCause = errorCause;
+      this.runtimeContext = rtc;
+      this.revision = revision; 
+    }
+    
     TriggerInstanceInformation(String triggerInstanceName, String triggerName, String description, TriggerInstanceState state,
                                List<String> startParameter, String startParameterAsString,
                                String errorCause, long revision) {

@@ -52,6 +52,7 @@ import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -197,6 +198,7 @@ import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry.XMOMXmlEntry;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry.XynaPropertyXmlEntry;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ClearWorkingSet.RevisionContentBlackWhiteList;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ClearWorkingSet.RevisionContentBlackWhiteListBean;
+import com.gip.xyna.xfmg.xfctrl.appmgmt.DataProvider.XynaDispatcherProvider;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.OrderEntrance.OrderEntranceType;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.RevisionOrderControl.OrderEntryInterfacesCouldNotBeClosedException;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.events.AppMgmtEvent;
@@ -335,6 +337,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.AssumedDeadlockExce
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.DeploymentMode;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.MDMParallelDeploymentException;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.WorkflowProtectionMode;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.XMLSourceAbstraction;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.generation.WF;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
@@ -360,6 +363,7 @@ import com.gip.xyna.xprc.xsched.cronlikescheduling.CronLikeOrder;
 import com.healthmarketscience.rmiio.RemoteInputStream;
 import com.healthmarketscience.rmiio.RemoteInputStreamClient;
 import com.healthmarketscience.rmiio.SimpleRemoteInputStream;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.FactoryManagedRevisionXMLSource;
 
 
 
@@ -461,7 +465,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
                   new XynaPropertyBoolean("xfmg.xfctrl.appmgmt.useApplicationEntryCache", true);
 
   private static final String EXCLUDED_SUBTYPES_OF_PREFIX = "xfmg.xfctrl.appmgmt.excludedsubtypesof";
-  private static Map<Long, XynaPropertyString> excludedSubtypesOfProperties;
+  protected static Map<Long, XynaPropertyString> excludedSubtypesOfProperties;
   
 
 
@@ -4818,6 +4822,16 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       throws PersistenceLayerException, XPRC_DESTINATION_NOT_FOUND, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY, Ex_FileAccessException,
       XPRC_XmlParsingException, XPRC_InvalidXmlMissingRequiredElementException, XFMG_WrongDeploymentState,
       XFMG_ObjectUnkownInDeploymentItemStateManagement {
+    DataProvider provider = createDefaultDataProvider();
+    return createApplicationXmlEntry(applicationName, versionName, revision, parentRevision, ignoreExceptions, createStub, provider);
+  }
+
+
+  public ApplicationXmlEntry createApplicationXmlEntry(String applicationName, String versionName, Long revision, Long parentRevision, boolean ignoreExceptions, boolean createStub, DataProvider provider)
+      throws PersistenceLayerException, XPRC_DESTINATION_NOT_FOUND, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY, Ex_FileAccessException,
+      XPRC_XmlParsingException, XPRC_InvalidXmlMissingRequiredElementException, XFMG_WrongDeploymentState,
+      XFMG_ObjectUnkownInDeploymentItemStateManagement {
+
     ApplicationXmlEntry applicationXmlEntry = new ApplicationXmlEntry(applicationName, WORKINGSET_VERSION_NAME, null);
     List<ApplicationEntryStorable> appEntries = listApplicationDetails(applicationName, versionName, false, null, parentRevision);
     Long rev = revision != null ? revision : parentRevision;
@@ -4849,33 +4863,27 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
                                 ApplicationXmlEntry applicationXmlEntry, Long revision, boolean isImplicitDependency,
                                 boolean ignoreExeptions, boolean createStub) throws PersistenceLayerException, XPRC_DESTINATION_NOT_FOUND,
       XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY, XFMG_WrongDeploymentState, XFMG_ObjectUnkownInDeploymentItemStateManagement {
+    DataProvider provider = createDefaultDataProvider();
+    createXMLEntries(appEntries, verbose, statusOutputStream, applicationXmlEntry, revision, isImplicitDependency, ignoreExeptions, createStub, provider);
+  }
 
-    XynaActivationTrigger xynaActivationTrigger = XynaFactory.getInstance().getActivation().getActivationTrigger();
-    PriorityManagement priorityManagement =
-        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryManagementODS().getPriorityManagement();
-    CapacityMappingDatabase capacityMappingDatabase =
-        XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getCapacityMappingDatabase();
-    MonitoringDispatcher monitoringDispatcher =
-        XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getMonitoringDispatcher();
-    PlanningDispatcher planningDispatcher =
-        XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getXynaPlanning().getPlanningDispatcher();
-    ExecutionDispatcher executionDispatcher =
-        XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getXynaExecution().getExecutionEngineDispatcher();
-    CleanupDispatcher cleanupDispatcher =
-        XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getXynaCleanup().getCleanupEngineDispatcher();
-    ParameterInheritanceManagement parameterInheritanceMgmt =
-        XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getParameterInheritanceManagement();
+  private void createXMLEntries(Collection<? extends ApplicationEntryStorable> appEntries, boolean verbose, PrintStream statusOutputStream,
+                                ApplicationXmlEntry applicationXmlEntry, Long revision, boolean isImplicitDependency,
+                                boolean ignoreExeptions, boolean createStub, DataProvider provider) throws PersistenceLayerException, XPRC_DESTINATION_NOT_FOUND,
+      XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY, XFMG_WrongDeploymentState, XFMG_ObjectUnkownInDeploymentItemStateManagement {
+
+
 
     for (ApplicationEntryStorable entry : appEntries) {
       XMOMType xmomType = convertApplicationEntryTypeToXMOMType(entry.getTypeAsEnum());
-      checkDeploymentItemState(entry.getName(), xmomType, revision, false);
+      provider.getGetCheckDeploymentItemState().checkDeploymentItemState(entry.getName(), xmomType, revision, false);
 
       if (verbose) {
         output(statusOutputStream, "Exporting " + entry.getType() + " " + entry.getName());
       }
       switch (entry.getTypeAsEnum()) {
         case DATATYPE :
-          Collection<XMOMODSMapping> mappings = XMOMODSMappingUtils.getAllMappingsForRootType(entry.getName(), revision);
+          Collection<XMOMODSMapping> mappings = provider.getGetAllMappingsForRootType().getAllMappingsForRootType(entry.getName(), revision);
           for (XMOMODSMapping mapping : mappings) {
             applicationXmlEntry.getXmomStorableEntries().add(new XMOMStorableXmlEntry(mapping.getFqxmlname(),
                                                                                       mapping.getPath(),
@@ -4893,7 +4901,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
             break;
           }
           try {
-            Filter filter = xynaActivationTrigger.getFilter(revision, entry.getName(), false);
+            Filter filter = provider.getActivationTriggerProvider().getFilter(revision, entry.getName(), false);
             applicationXmlEntry.getFilters().add(new FilterXmlEntry(isImplicitDependency, filter.getName(), wrapArray(filter.getJarFiles(),
                                                                                                                       "/filter/"), filter
                                                      .getFQFilterClassName(), filter.getTriggerName(), wrapArray(filter.getSharedLibs())));
@@ -4905,7 +4913,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
           if (createStub) {
             break;
           }
-          FilterInstanceInformation filterinstance = xynaActivationTrigger.getFilterInstanceInformation(entry.getName(), revision);
+          FilterInstanceInformation filterinstance = provider.getActivationTriggerProvider().getFilterInstanceInformation(entry.getName(), revision);
           if (filterinstance != null) {
             applicationXmlEntry.getFilterInstances().add(new FilterInstanceXmlEntry(isImplicitDependency, 
                 filterinstance.getFilterInstanceName(), filterinstance.getFilterName(), 
@@ -4926,7 +4934,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
             break;
           }
           try {
-            Trigger trigger = xynaActivationTrigger.getTrigger(revision, entry.getName(), false);
+            Trigger trigger = provider.getActivationTriggerProvider().getTrigger(revision, entry.getName(), false);
             applicationXmlEntry.getTriggers().add(new TriggerXmlEntry(isImplicitDependency, trigger.getTriggerName(), wrapArray(trigger
                                                       .getJarFiles(), "/trigger/"), trigger.getFQTriggerClassName(), wrapArray(trigger
                                                       .getSharedLibs())));
@@ -4938,10 +4946,10 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
           if (createStub) {
             break;
           }
-          TriggerInstanceInformation triggerinstance = xynaActivationTrigger.getTriggerInstanceInformation(entry.getName(), revision);
+          TriggerInstanceInformation triggerinstance = provider.getActivationTriggerProvider().getTriggerInstanceInformation(entry.getName(), revision);
           if (triggerinstance != null) {
             Pair<Long, Boolean> triggerConfig =
-                xynaActivationTrigger.getTriggerConfiguration(triggerinstance);
+                provider.getActivationTriggerProvider().getTriggerConfiguration(triggerinstance);
 
             applicationXmlEntry.getTriggerInstances().add(new TriggerInstanceXmlEntry(isImplicitDependency, triggerinstance
                                                               .getTriggerInstanceName(), triggerinstance.getTriggerName(), triggerinstance
@@ -4951,13 +4959,13 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
           }
           break;
         case ORDERTYPE :
-          RuntimeContext runtimeContext = revisionManagement.getRuntimeContext(revision);
+          RuntimeContext runtimeContext = provider.getGetRuntimeContext().apply(revision);
           DestinationKey dk = new DestinationKey(entry.getName(), runtimeContext);
           if (createStub) {
-            DestinationValue dv_execution = executionDispatcher.getDestination(dk);
+            DestinationValue dv_execution = provider.getExecutionDispatcher().getDestination(dk);
             if (dv_execution instanceof FractalWorkflowDestination) {
               applicationXmlEntry.getOrdertypes()
-                  .add(new OrdertypeXmlEntry(false, null, executionDispatcher.isCustom(dk) ? dv_execution.getFQName() : null, null,
+                  .add(new OrdertypeXmlEntry(false, null, provider.getExecutionDispatcher().isCustom(dk) ? dv_execution.getFQName() : null, null,
                                              entry.getName(), false));
             }
             //restliche konfiguration ist auf dem zielsystem
@@ -4965,9 +4973,9 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
           }
           //TODO ordertypemanagement verwenden?!
           try {
-            DestinationValue dv_planning = planningDispatcher.getDestination(dk);
-            DestinationValue dv_execution = executionDispatcher.getDestination(dk);
-            DestinationValue dv_cleanup = cleanupDispatcher.getDestination(dk);
+            DestinationValue dv_planning = provider.getPlanningDispatcher().getDestination(dk);
+            DestinationValue dv_execution = provider.getExecutionDispatcher().getDestination(dk);
+            DestinationValue dv_cleanup = provider.getCleanupDispatcher().getDestination(dk);
             boolean hasOrdercontextMapping =
                 XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getOrderContextConfiguration()
                     .isDestinationKeyConfiguredForOrderContextMapping(dk, true);
@@ -4975,27 +4983,30 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
                 && dv_cleanup instanceof FractalWorkflowDestination) {
 
               applicationXmlEntry.getOrdertypes()
-                  .add(new OrdertypeXmlEntry(isImplicitDependency, planningDispatcher.isCustom(dk) ? dv_planning.getFQName() : null,
-                                             executionDispatcher.isCustom(dk) ? dv_execution.getFQName() : null, cleanupDispatcher
-                                                 .isCustom(dk) ? dv_cleanup.getFQName() : null, entry.getName(), hasOrdercontextMapping));
+                  .add(new OrdertypeXmlEntry(isImplicitDependency, 
+                      provider.getPlanningDispatcher().isCustom(dk) ? dv_planning.getFQName() : null,
+                      provider.getExecutionDispatcher().isCustom(dk) ? dv_execution.getFQName() : null, 
+                      provider.getCleanupDispatcher().isCustom(dk) ? dv_cleanup.getFQName() : null, 
+                      entry.getName(), 
+                      hasOrdercontextMapping));
             }
 
-            Integer prio = priorityManagement.getPriority(entry.getName(), revision);
+            Integer prio = provider.getGetPriority().getPriority(entry.getName(), revision);
             if (prio != null) {
               applicationXmlEntry.getPriorities().add(new PriorityXmlEntry(entry.getName(), prio));
             }
-            List<Capacity> capacityList = capacityMappingDatabase.getCapacities(dk);
+            List<Capacity> capacityList = provider.getGetCapacities().getCapacities(dk);
             for (Capacity cap : capacityList) {
               applicationXmlEntry.getCapacityRequirements().add(new CapacityRequirementXmlEntry(entry.getName(), cap.getCapName(), cap
                                                                     .getCardinality()));
             }
-            Integer monitoringLevel = monitoringDispatcher.getMonitoringLevel(dk);
+            Integer monitoringLevel = provider.getGetMonitoringLevel().getMonitoringLevel(dk);
             if (monitoringLevel != null) {
               applicationXmlEntry.getMonitoringLevels().add(new MonitoringLevelXmlEntry(entry.getName(), monitoringLevel));
             }
 
             //Parameter Inheritance Rules
-            Map<ParameterType, List<InheritanceRule>> inheritanceRules = parameterInheritanceMgmt.listInheritanceRules(dk);
+            Map<ParameterType, List<InheritanceRule>> inheritanceRules = provider.getGetListInheritanceRules().listInheritanceRules(dk);
             for (Entry<ParameterType, List<InheritanceRule>> rules : inheritanceRules.entrySet()) {
               for (InheritanceRule rule : rules.getValue()) {
                 applicationXmlEntry.getParameterInheritanceRules().add(new InheritanceRuleXmlEntry(entry.getName(), rules.getKey(), rule
@@ -5026,9 +5037,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
           }
           boolean found = false;
           try {
-            CapacityInformation capInfo =
-                XynaFactory.getInstance().getProcessing().getXynaScheduler().getCapacityManagement()
-                    .getCapacityInformation(entry.getName());
+            CapacityInformation capInfo = provider.getGetGlobalCapacities().getCapacity(entry.getName());
             found = true;
             applicationXmlEntry.getCapacities().add(new CapacityXmlEntry(isImplicitDependency, capInfo.getName(), capInfo.getCardinality(),
                                                                          capInfo.getState()));
@@ -5598,6 +5607,10 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
     }
   }
 
+  protected static Set<String> getSubTypesOfOutputVars(Long parentRevision, Collection<ApplicationEntryStorable> appEntries,
+                                                       List<String> excludeSubtypesOf) {
+    return getSubTypesOfOutputVars(parentRevision, appEntries, excludeSubtypesOf, ApplicationManagementImpl::isDeployed, new FactoryManagedRevisionXMLSource());
+  }
 
   /**
    * Liefert die Subtypen der Output-Parameter der Services, deren Basistypen nicht in exludeSubtypesOf enthalten sind.
@@ -5606,8 +5619,8 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
    * @param excludeSubtypesOf
    * @return
    */
-  private static Set<String> getSubTypesOfOutputVars(Long parentRevision, Collection<ApplicationEntryStorable> appEntries,
-                                                     List<String> excludeSubtypesOf) {
+  protected static Set<String> getSubTypesOfOutputVars(Long parentRevision, Collection<ApplicationEntryStorable> appEntries,
+                                                       List<String> excludeSubtypesOf, BiFunction<String, Long, Boolean> provider, XMLSourceAbstraction inputSource) {
     Set<String> subTypes = new HashSet<String>();
 
     List<String> exclude = new ArrayList<String>();
@@ -5629,12 +5642,11 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
     for (ApplicationEntryStorable entry : appEntries) {
       if (entry.getTypeAsEnum() == ApplicationEntryType.DATATYPE) {
-        File deployedFile = new File(GenerationBase.getFileLocationForDeploymentStaticHelper(entry.getName(), parentRevision) + ".xml");
-        if (!deployedFile.exists()) {
+        if (!provider.apply(entry.getName(), parentRevision)) {
           continue; //Entry ist nicht deployed, daher müssen auch keine Subtypen bestimmt werden (implizite ApplicationEntries werden auf dem Deployed-Stand ermittelt)
         }
         try {
-          DOM dom = DOM.getOrCreateInstance(entry.getName(), cache, parentRevision);
+          DOM dom = DOM.getOrCreateInstance(entry.getName(), cache, parentRevision, inputSource);
           dom.parseGeneration(true, false, false);
           //alle Operations bestimmen
           List<com.gip.xyna.xprc.xfractwfe.generation.Operation> operations = dom.getOperations();
@@ -5651,6 +5663,11 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       }
     }
     return subTypes;
+  }
+  
+  private static boolean isDeployed(String fqn, Long revision) {
+    File deployedFile = new File(GenerationBase.getFileLocationForDeploymentStaticHelper(fqn, revision) + ".xml");
+    return deployedFile.exists();
   }
 
 
@@ -10210,68 +10227,58 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
   }
 
 
-  public ApplicationXmlEntry createApplicationXml(String applicationName, String versionName, String workspaceName,
-                                                            boolean createStub) throws XynaException {
- 
-    
+  protected ApplicationXmlEntry createApplicationXmlEntry(String applicationName, String versionName, boolean createStub) throws XynaException {
     ApplicationXmlEntry applicationXmlEntry = new ApplicationXmlEntry(applicationName, versionName, null);
     applicationXmlEntry.setFactoryVersion();
-    applicationXmlEntry.getApplicationInfo().setIsRemoteStub(createStub);
-    Long revision;
+    return applicationXmlEntry;
+  }
+  
+  private Long getRevisionFromProvider(String applicationName, String versionName, String workspaceName, DataProvider provider) throws XynaException {
     if (workspaceName != null) {
-      revision = revisionManagement.getRevision(null, null, workspaceName);
-    } else {
-      revision = revisionManagement.getRevision(applicationName, versionName, null);
+      return provider.getRevision(null, null, workspaceName);
+    } 
+    return provider.getRevision(applicationName, versionName, null);
+  }
+  
+  private Collection<ApplicationEntryStorable> loadStubEntries(Long revision, String appName, String verName, DataProvider provider) throws XynaException{
+    if (revision != null) {
+      return provider.queryAppDefStorables(appName, revision);
     }
+    return provider.queryAllRuntimeApplicationStorables(appName, verName);
+  }
 
+  public ApplicationXmlEntry createApplicationXml(String applicationName, String versionName, String workspaceName,
+                                                            boolean createStub, DataProvider provider) throws XynaException {
+    ApplicationXmlEntry applicationXmlEntry = createApplicationXmlEntry(applicationName, versionName, createStub);
+    applicationXmlEntry.getApplicationInfo().setIsRemoteStub(createStub);
+    Long revision = getRevisionFromProvider(applicationName, versionName, workspaceName, provider);
     Collection<ApplicationEntryStorable> implicitDependencies;
     Collection<ApplicationEntryStorable> appEntries;
+    Collection<RuntimeDependencyContext> dependentRuntimeContexts = new HashSet<RuntimeDependencyContext>();
+    
     if (createStub) {
-      ODSConnection con = ods.openConnection();
-      try {
-        if (workspaceName != null) {
-          appEntries = (List<ApplicationEntryStorable>) queryAllApplicationDefinitionStorables(applicationName, revision, con);
-        } else {
-          appEntries = queryAllRuntimeApplicationStorables(applicationName, versionName, con);
-        }
-      } finally {
-        con.closeConnection();
-      }
+      appEntries = loadStubEntries(workspaceName != null ? null: revision, applicationName, versionName, provider);
       Set<Long> revisions = new HashSet<Long>();
       Application app = new Application(applicationName, versionName);
-      Collection<RuntimeDependencyContext> dependentRuntimeContexts = new HashSet<RuntimeDependencyContext>();
-      implicitDependencies = findDependenciesForStub(null, (List<ApplicationEntryStorable>) appEntries, revision, revisions, app, false);
+      implicitDependencies = provider.findDependenciesForStub((List<ApplicationEntryStorable>) appEntries, revision, revisions, app);
       for (Long rev : revisions) {
-        dependentRuntimeContexts
-            .add(RuntimeContextDependencyManagement.asRuntimeDependencyContext(revisionManagement.getRuntimeContext(rev)));
+        RuntimeContext rtc = provider.getRuntimeContext(rev);
+        dependentRuntimeContexts.add(RuntimeContextDependencyManagement.asRuntimeDependencyContext(rtc));
       }
-
       createXMLEntries(implicitDependencies, false, null, applicationXmlEntry, revision, false, false, createStub);
-
-      addRuntimeContextRequirementXMLEntries(dependentRuntimeContexts, applicationXmlEntry, false, null);
-
     } else {
       RuntimeDependencyContext rtc;
       if (workspaceName != null) {
         appEntries = new TreeSet<>(ApplicationEntryStorable.COMPARATOR);
-        List<ApplicationEntryStorable> plainEntries = listApplicationDetails(applicationName, null, false, null, revision);
-        if (plainEntries != null) {
-          appEntries.addAll(plainEntries);
-        }
+        List<ApplicationEntryStorable> plainEntries = provider.listApplicationDetails(applicationName, null, false, null, revision);
+        appEntries.addAll(plainEntries != null ? plainEntries : Collections.emptyList());
         implicitDependencies = new TreeSet<>(ApplicationEntryStorable.COMPARATOR);
-        List<ApplicationEntryStorable> includingDeps = listApplicationDetails(applicationName, null, true, null, revision);
-        if (includingDeps != null) {
-          implicitDependencies.addAll(includingDeps);
-        }
+        List<ApplicationEntryStorable> includingDeps = provider.listApplicationDetails(applicationName, null, true, null, revision);
+        implicitDependencies.addAll(includingDeps != null ? includingDeps : Collections.emptyList());
         implicitDependencies.removeAll(appEntries);
         rtc = new ApplicationDefinition(applicationName, new Workspace(workspaceName));
       } else {
-        ODSConnection con = ods.openConnection();
-        try {
-          appEntries = queryAllRuntimeApplicationStorables(applicationName, versionName, con);
-        } finally {
-          con.closeConnection();
-        }
+        appEntries = provider.queryAllRuntimeApplicationStorables(applicationName, versionName);
         implicitDependencies = findDependencies((List<ApplicationEntryStorable>) appEntries, revision);
         rtc = new Application(applicationName, versionName);
       }
@@ -10279,14 +10286,125 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       createXMLEntries(appEntries, false, null, applicationXmlEntry, revision, false, false, createStub);
       createXMLEntries(implicitDependencies, false, null, applicationXmlEntry, revision, true, false, createStub);
 
-      Collection<RuntimeDependencyContext> dependentRuntimeContexts;
-      RuntimeContextDependencyManagement rcdMgmt =
-          XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
-      dependentRuntimeContexts = rcdMgmt.getRequirements(rtc);
-      addRuntimeContextRequirementXMLEntries(dependentRuntimeContexts, applicationXmlEntry, false, null);
+      dependentRuntimeContexts = provider.getRequirements(rtc);
     }
+    addRuntimeContextRequirementXMLEntries(dependentRuntimeContexts, applicationXmlEntry, false, null);
 
     return applicationXmlEntry;
+  }
+  
+  public ApplicationXmlEntry createApplicationXml(String applicationName, String versionName, String workspaceName,
+                                                            boolean createStub) throws XynaException {
+ 
+    DataProvider provider = createDefaultDataProvider();
+    return createApplicationXml(applicationName, versionName, workspaceName, createStub, provider);
+  }
+  
+  private List<ApplicationEntryStorable> executeQueryAppDefStorables(String applicationName, Long parentRevision) throws PersistenceLayerException {
+    ODSConnection con = ods.openConnection();
+    List<ApplicationEntryStorable> appEntries;
+    try {
+      appEntries = (List<ApplicationEntryStorable>) queryAllApplicationDefinitionStorables(applicationName, parentRevision, con);
+    } finally {
+      con.closeConnection();
+    }
+    return appEntries;
+  }
+  
+  private Collection<ApplicationEntryStorable> findDependenciesForStub(List<? extends ApplicationEntryStorable> appEntries, Long revision, Set<Long> revisionsToKeep, Application app) {
+    return findDependenciesForStub(null, appEntries, revision, revisionsToKeep, app, false);
+  }
+  
+  
+  private List<ApplicationEntryStorable> executeQueryRuntimeAppStorables(String applicationName, String versionName) throws PersistenceLayerException {
+    ODSConnection con = ods.openConnection();
+    List<ApplicationEntryStorable> appEntries;
+    try {
+      appEntries = (List<ApplicationEntryStorable>) queryAllRuntimeApplicationStorables(applicationName, versionName, con);
+    } finally {
+      con.closeConnection();
+    }
+    return appEntries;
+  }
+
+  
+  
+  private DataProvider createDefaultDataProvider() {
+    DataProvider provider = new DataProvider();
+    provider.setGetRevision(revisionManagement::getRevision);
+    provider.setGetRuntimeContext(revisionManagement::getRuntimeContext);
+    provider.setQueryAppDefStorables(this::executeQueryAppDefStorables);
+    provider.setGlobalRuntimeAppStorablesProvider(this::executeQueryRuntimeAppStorables);
+    provider.setFindDependenciesForStub(this::findDependenciesForStub);
+    provider.setActivationTriggerProvider(new DataProvider.DefaultXynaActivationTriggerProvider());
+    provider.setGetPriority(XynaFactory.getInstance().getFactoryManagement().getXynaFactoryManagementODS().getPriorityManagement()::getPriority);
+    provider.setGetCapacities(XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getCapacityMappingDatabase()::getCapacities);
+    provider.setGetMonitoringLevel(XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getMonitoringDispatcher()::getMonitoringLevel);
+    setDispatcher(provider);
+    provider.setGetListInheritanceRules(XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getParameterInheritanceManagement()::listInheritanceRules);
+    provider.setGetListApplicationDetails(this::listApplicationDetails);
+    provider.setGetRequirements(XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()::getRequirements);
+    provider.setGetCheckDeploymentItemState(this::checkDeploymentItemState);
+    provider.setGetAllMappingsForRootType(XMOMODSMappingUtils::getAllMappingsForRootType);
+    provider.setGetIsDestinationKeyConfiguredForOrderContextMapping(XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getOrderContextConfiguration()::isDestinationKeyConfiguredForOrderContextMapping);
+    provider.setGetGlobalCapacities(XynaFactory.getInstance().getProcessing().getXynaScheduler().getCapacityManagement()::getCapacityInformation);
+    provider.validate();
+    return provider;
+  }
+  
+  
+  private void setDispatcher(DataProvider provider) {
+    XynaDispatcherProvider planningDispatcherProvider = new XynaDispatcherProvider() {
+      
+      PlanningDispatcher planningDispatcher =
+          XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getXynaPlanning().getPlanningDispatcher();
+      
+      @Override
+      public DestinationValue getDestination(DestinationKey dk) throws XPRC_DESTINATION_NOT_FOUND {
+        return planningDispatcher.getDestination(dk);
+      }
+
+      @Override
+      public boolean isCustom(DestinationKey key) {
+        return planningDispatcher.isCustom(key);
+      }
+    };
+    provider.setPlanningDispatcher(planningDispatcherProvider);
+    
+    XynaDispatcherProvider executionDispatcherProvider = new XynaDispatcherProvider() {
+      
+      ExecutionDispatcher executionDispatcher =
+          XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getXynaExecution().getExecutionEngineDispatcher();
+      
+      @Override
+      public DestinationValue getDestination(DestinationKey dk) throws XPRC_DESTINATION_NOT_FOUND {
+        return executionDispatcher.getDestination(dk);
+      }
+
+      @Override
+      public boolean isCustom(DestinationKey key) {
+        return executionDispatcher.isCustom(key);
+      }
+    };
+    provider.setExecutionDispatcher(executionDispatcherProvider);
+    
+    XynaDispatcherProvider cleanupDispatcherProvider = new XynaDispatcherProvider() {
+      
+      CleanupDispatcher cleanupDispatcher =
+          XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getXynaCleanup().getCleanupEngineDispatcher();
+      
+      @Override
+      public DestinationValue getDestination(DestinationKey dk) throws XPRC_DESTINATION_NOT_FOUND {
+        return cleanupDispatcher.getDestination(dk);
+      }
+
+      @Override
+      public boolean isCustom(DestinationKey key) {
+        return cleanupDispatcher.isCustom(key);
+      }
+    };
+    provider.setCleanupDispatcher(cleanupDispatcherProvider);
+    
   }
 
 }

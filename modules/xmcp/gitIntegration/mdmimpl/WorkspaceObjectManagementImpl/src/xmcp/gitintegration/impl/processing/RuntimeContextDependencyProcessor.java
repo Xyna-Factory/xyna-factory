@@ -48,8 +48,8 @@ import xmcp.gitintegration.impl.TmpSessionAuthWrapper;
 
 public class RuntimeContextDependencyProcessor implements WorkspaceContentProcessor<RuntimeContextDependency> {
 
-  private static final String DEP_TYPE_WORSPACE = "Workspace";
-  private static final String DEP_TYPE_APPLICATION = "Application";
+  public static final String DEP_TYPE_WORSPACE = "Workspace";
+  public static final String DEP_TYPE_APPLICATION = "Application";
 
   private static final String TAG_RUNTIMECONTEXTDEPENDENCY = "runtimecontextdependency";
   private static final String TAG_DEPTYPE = "depType";

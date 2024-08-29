@@ -135,6 +135,18 @@ public class FilterInformation implements Serializable {
     private final RuntimeContext runtimeContext;
     private List<String> configuration;
     
+    public FilterInstanceInformation(FilterInstanceStorable storable, RuntimeContext rtc) {
+      this.filterName = storable.getFilterName();
+      this.filterInstanceName = storable.getFilterInstanceName();
+      this.triggerInstanceName = storable.getTriggerInstanceName();
+      this.description = storable.getDescription();
+      this.state = storable.getStateAsEnum();
+      this.errorCause = storable.getErrorCause();
+      this.optional = storable.isOptional();
+      this.revision = storable.getRevision();
+      this.configuration = storable.getConfiguration();
+      this.runtimeContext = rtc;
+    }
 
     public FilterInstanceInformation(FilterInstanceStorable filterInstanceStorable) {
       this.filterName = filterInstanceStorable.getFilterName();
