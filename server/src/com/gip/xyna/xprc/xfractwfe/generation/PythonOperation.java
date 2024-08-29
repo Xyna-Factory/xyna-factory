@@ -144,4 +144,32 @@ public class PythonOperation extends CodeOperation {
     addSetReturn(cb);
     cb.addLine("}");
   }
+  
+
+  public String createImplCallSnippet(boolean andSet) {
+    CodeBuffer cb = new CodeBuffer("temp");
+    cb.add("interpreter.exec(\"impl = ").add("TODO").addLine("Impl())");
+    if (!isStatic()) {
+      cb.addLine("interpreter.exec(\"impl.this = this\")");
+    }
+    cb.add("interpreter.exec(\"");
+    if (getOutputVars() != null && !getOutputVars().isEmpty()) {
+      cb.add("return ");
+    }
+    cb.add("impl.").add(getNameWithoutVersion()).add("(");
+    if (requiresXynaOrder()) {
+      cb.add("correlatedXynaOrder");
+      if (!getInputVars().isEmpty()) {
+        cb.add(", ");
+      }
+    }
+    cb.add(String.join(", ", getInputVars().stream().map(x -> x.getVarName()).collect(Collectors.toList())));
+    cb.addLine(")");
+
+    String impl = cb.toString(false).trim();
+    if (andSet) {
+      setImpl(impl);
+    }
+    return impl;
+  }
 }
