@@ -148,26 +148,28 @@ public class PythonOperation extends CodeOperation {
   
 
   public String createImplCallSnippet(boolean andSet) {
-    CodeBuffer cb = new CodeBuffer("temp");
-    cb.add("impl = ").add(PythonGeneration.convertToPythonFqn(parent.getOriginalFqName())).add("Impl(");
+    StringBuilder cb = new StringBuilder();
+    String fqnPython = PythonGeneration.convertToPythonFqn(parent.getOriginalFqName());
+    cb.append("from ").append(fqnPython).append("Impl import ").append(fqnPython).append("Impl\n");
+    cb.append("impl = ").append(fqnPython).append("Impl(");
     if (!isStatic()) {
-      cb.add("this");
+      cb.append("this");
     }
-    cb.addLine(")");
+    cb.append(")\n");
     if (getOutputVars() != null && !getOutputVars().isEmpty()) {
-      cb.add("return ");
+      cb.append("return ");
     }
-    cb.add("impl.").add(getNameWithoutVersion()).add("(");
+    cb.append("impl.").append(getNameWithoutVersion()).append("(");
     if (requiresXynaOrder()) {
-      cb.add("correlatedXynaOrder");
+      cb.append("correlatedXynaOrder");
       if (!getInputVars().isEmpty()) {
-        cb.add(", ");
+        cb.append(", ");
       }
     }
-    cb.add(String.join(", ", getInputVars().stream().map(x -> x.getVarName()).collect(Collectors.toList())));
-    cb.addLine("))");
+    cb.append(String.join(", ", getInputVars().stream().map(x -> x.getVarName()).collect(Collectors.toList())));
+    cb.append(")");
 
-    String impl = cb.toString(false).trim();
+    String impl = cb.toString().trim();
     if (andSet) {
       setImpl(impl);
     }
