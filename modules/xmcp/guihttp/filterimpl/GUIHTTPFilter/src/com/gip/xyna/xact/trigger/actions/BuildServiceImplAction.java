@@ -65,6 +65,8 @@ public class BuildServiceImplAction implements FilterAction {
     logger.info("got service implementation template request");
     String fqClassNameDOM = tc.getFirstValueOfParameter("datatype");
     String workspaceName = tc.getFirstValueOfParameter("workspace");
+    String language = tc.getFirstValueOfParameter("language");
+    boolean isJava = language == "java";
 
     RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     Long revision = revisionManagement.getRevision(null, null, workspaceName);
@@ -72,6 +74,32 @@ public class BuildServiceImplAction implements FilterAction {
     GenerationBase gb = GenerationBase.getOrCreateInstance(fqClassNameDOM, new GenerationBaseCache(), revision);
     gb.parseGeneration(false/*saved*/, false, false);
     
+    if (isJava && !validateJava(gb)) {
+      String log = "Datatype " + fqClassNameDOM + " has no member service with service call implementation.";
+      tc.sendError(log);
+      logger.error(log);
+      return FilterResponse.responsibleWithoutXynaorder();
+    }
+
+    InputStream is;
+    if (isJava) {
+      is = XynaFactory.getInstance().getXynaMultiChannelPortal().getServiceImplTemplate(fqClassNameDOM, revision, true);
+    } else {
+      is = XynaFactory.getInstance().getXynaMultiChannelPortal().getPythonServiceImplTemplate(fqClassNameDOM, revision, true);
+    }
+
+    try(is) {
+      logger.debug("sending built service implementation template");
+      tc.sendResponse(HTTPTriggerConnection.HTTP_OK, HTTPTriggerConnection.MIME_DEFAULT_BINARY, new Properties(), is);
+    } catch (IOException e) {
+      logger.error(e.getMessage(), e);
+      throw new Ex_FileAccessException("unknown", e);
+    }    
+
+    return FilterResponse.responsibleWithoutXynaorder();
+  }
+  
+  private boolean validateJava(GenerationBase gb) {
     if(gb instanceof DOM) {
       boolean containsServiceCall = false;
       boolean hasJavaInstanceMethod = false;
@@ -87,22 +115,8 @@ public class BuildServiceImplAction implements FilterAction {
           }
         }
       }
-      if(hasJavaInstanceMethod && !containsServiceCall) {
-        String log = "Datatype " + fqClassNameDOM + " has no member service with service call implementation.";
-        tc.sendError(log);
-        logger.error(log);
-        return FilterResponse.responsibleWithoutXynaorder();
-      }
+      return !hasJavaInstanceMethod || containsServiceCall;
     }
-    try (InputStream is = XynaFactory.getInstance().getXynaMultiChannelPortal().getServiceImplTemplate(fqClassNameDOM, revision, true)){
-      logger.debug("sending built service implementation template");
-      tc.sendResponse(HTTPTriggerConnection.HTTP_OK, HTTPTriggerConnection.MIME_DEFAULT_BINARY, new Properties(), is);
-    } catch (IOException e) {
-      logger.error(e.getMessage(), e);
-      throw new Ex_FileAccessException("unknown", e);
-    }
-
-    return FilterResponse.responsibleWithoutXynaorder();
+    return true;
   }
-
 }
