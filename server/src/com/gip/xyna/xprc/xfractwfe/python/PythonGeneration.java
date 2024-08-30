@@ -21,6 +21,7 @@ package com.gip.xyna.xprc.xfractwfe.python;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -82,7 +83,7 @@ public class PythonGeneration {
 
   public static List<MethodInformation> loadOperations(List<Operation> operations, boolean addMdmPath) {
     if (operations == null || operations.isEmpty()) {
-      return null;
+      return Collections.emptyList();
     }
     List<MethodInformation> result = new ArrayList<MethodInformation>();
     for (Operation op : operations) {

@@ -32,6 +32,7 @@ import com.gip.xyna.xact.trigger.GUIHTTPFilter;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xdev.xfractmod.xmdm.ConnectionFilter.FilterResponse;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
+import com.gip.xyna.xmcp.XynaMultiChannelPortalBase;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
@@ -71,24 +72,21 @@ public class BuildServiceImplAction implements FilterAction {
     RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     Long revision = revisionManagement.getRevision(null, null, workspaceName);
     
-    GenerationBase gb = GenerationBase.getOrCreateInstance(fqClassNameDOM, new GenerationBaseCache(), revision);
-    gb.parseGeneration(false/*saved*/, false, false);
+    DOM dom = DOM.getOrCreateInstance(fqClassNameDOM, new GenerationBaseCache(), revision);
+    dom.parseGeneration(false/*saved*/, false, false);
     
-    if (isJava && !validateJava(gb)) {
+    if (isJava && !validateJava(dom)) {
       String log = "Datatype " + fqClassNameDOM + " has no member service with service call implementation.";
       tc.sendError(log);
       logger.error(log);
       return FilterResponse.responsibleWithoutXynaorder();
     }
+    
+    XynaMultiChannelPortalBase multiChanelPortal = XynaFactory.getInstance().getXynaMultiChannelPortal();
 
-    InputStream is;
-    if (isJava) {
-      is = XynaFactory.getInstance().getXynaMultiChannelPortal().getServiceImplTemplate(fqClassNameDOM, revision, true);
-    } else {
-      is = XynaFactory.getInstance().getXynaMultiChannelPortal().getPythonServiceImplTemplate(fqClassNameDOM, revision, true);
-    }
-
-    try(is) {
+    try(InputStream is = isJava ?
+        multiChanelPortal.getServiceImplTemplate(fqClassNameDOM, revision, true) :
+        multiChanelPortal.getPythonServiceImplTemplate(fqClassNameDOM, revision, true)) {
       logger.debug("sending built service implementation template");
       tc.sendResponse(HTTPTriggerConnection.HTTP_OK, HTTPTriggerConnection.MIME_DEFAULT_BINARY, new Properties(), is);
     } catch (IOException e) {
@@ -99,24 +97,18 @@ public class BuildServiceImplAction implements FilterAction {
     return FilterResponse.responsibleWithoutXynaorder();
   }
   
-  private boolean validateJava(GenerationBase gb) {
-    if(gb instanceof DOM) {
-      boolean containsServiceCall = false;
-      boolean hasJavaInstanceMethod = false;
-      DOM dom = (DOM)gb;
-      List<Operation> operations = dom.getOperations();
-      for (Operation op : operations) {
-        if(op instanceof JavaOperation && !op.isStatic()) {
-          hasJavaInstanceMethod = true;
-          JavaOperation jop = (JavaOperation)op;
-          if(jop.getImpl() != null && jop.getImpl().contains("getImplementationOfInstanceMethods()")) {
-            containsServiceCall = true;
-            break;
-          }
+  private boolean validateJava(DOM dom) {
+    boolean hasJavaInstanceMethod = false;
+    List<Operation> operations = dom.getOperations();
+    for (Operation op : operations) {
+      if(op instanceof JavaOperation && !op.isStatic()) {
+        hasJavaInstanceMethod = true;
+        JavaOperation jop = (JavaOperation)op;
+        if (jop.implementedInJavaLib()) {
+          return true;
         }
       }
-      return !hasJavaInstanceMethod || containsServiceCall;
     }
-    return true;
+    return !hasJavaInstanceMethod;
   }
 }
