@@ -66,7 +66,7 @@ public class BuildServiceImplAction implements FilterAction {
     String fqClassNameDOM = tc.getFirstValueOfParameter("datatype");
     String workspaceName = tc.getFirstValueOfParameter("workspace");
     String language = tc.getFirstValueOfParameter("language");
-    boolean isJava = language == "java";
+    boolean isJava = "java".equals(language);
 
     RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     Long revision = revisionManagement.getRevision(null, null, workspaceName);
