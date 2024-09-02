@@ -32,6 +32,7 @@ import com.gip.xyna.xact.trigger.GUIHTTPFilter;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xdev.xfractmod.xmdm.ConnectionFilter.FilterResponse;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
+import com.gip.xyna.xmcp.XynaMultiChannelPortalBase;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
@@ -65,44 +66,49 @@ public class BuildServiceImplAction implements FilterAction {
     logger.info("got service implementation template request");
     String fqClassNameDOM = tc.getFirstValueOfParameter("datatype");
     String workspaceName = tc.getFirstValueOfParameter("workspace");
+    String language = tc.getFirstValueOfParameter("language");
+    boolean isJava = "java".equals(language);
 
     RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     Long revision = revisionManagement.getRevision(null, null, workspaceName);
     
-    GenerationBase gb = GenerationBase.getOrCreateInstance(fqClassNameDOM, new GenerationBaseCache(), revision);
-    gb.parseGeneration(false/*saved*/, false, false);
+    DOM dom = DOM.getOrCreateInstance(fqClassNameDOM, new GenerationBaseCache(), revision);
+    dom.parseGeneration(false/*saved*/, false, false);
     
-    if(gb instanceof DOM) {
-      boolean containsServiceCall = false;
-      boolean hasJavaInstanceMethod = false;
-      DOM dom = (DOM)gb;
-      List<Operation> operations = dom.getOperations();
-      for (Operation op : operations) {
-        if(op instanceof JavaOperation && !op.isStatic()) {
-          hasJavaInstanceMethod = true;
-          JavaOperation jop = (JavaOperation)op;
-          if(jop.getImpl() != null && jop.getImpl().contains("getImplementationOfInstanceMethods()")) {
-            containsServiceCall = true;
-            break;
-          }
-        }
-      }
-      if(hasJavaInstanceMethod && !containsServiceCall) {
-        String log = "Datatype " + fqClassNameDOM + " has no member service with service call implementation.";
-        tc.sendError(log);
-        logger.error(log);
-        return FilterResponse.responsibleWithoutXynaorder();
-      }
+    if (isJava && !validateJava(dom)) {
+      String log = "Datatype " + fqClassNameDOM + " has no member service with service call implementation.";
+      tc.sendError(log);
+      logger.error(log);
+      return FilterResponse.responsibleWithoutXynaorder();
     }
-    try (InputStream is = XynaFactory.getInstance().getXynaMultiChannelPortal().getServiceImplTemplate(fqClassNameDOM, revision, true)){
+    
+    XynaMultiChannelPortalBase multiChanelPortal = XynaFactory.getInstance().getXynaMultiChannelPortal();
+
+    try(InputStream is = isJava ?
+        multiChanelPortal.getServiceImplTemplate(fqClassNameDOM, revision, true) :
+        multiChanelPortal.getPythonServiceImplTemplate(fqClassNameDOM, revision, true)) {
       logger.debug("sending built service implementation template");
       tc.sendResponse(HTTPTriggerConnection.HTTP_OK, HTTPTriggerConnection.MIME_DEFAULT_BINARY, new Properties(), is);
     } catch (IOException e) {
       logger.error(e.getMessage(), e);
       throw new Ex_FileAccessException("unknown", e);
-    }
+    }    
 
     return FilterResponse.responsibleWithoutXynaorder();
   }
-
+  
+  private boolean validateJava(DOM dom) {
+    boolean hasJavaInstanceMethod = false;
+    List<Operation> operations = dom.getOperations();
+    for (Operation op : operations) {
+      if(op instanceof JavaOperation && !op.isStatic()) {
+        hasJavaInstanceMethod = true;
+        JavaOperation jop = (JavaOperation)op;
+        if (jop.implementedInJavaLib()) {
+          return true;
+        }
+      }
+    }
+    return !hasJavaInstanceMethod;
+  }
 }
