@@ -554,6 +554,11 @@
                 <artifactId>jep</artifactId>
                 <version>4.2.0</version>
             </dependency>
+            <dependency>
+                <groupId>io.github.yang-central.yangkit</groupId>
+                <artifactId>yangkit-parser</artifactId>
+                <version>1.4.5</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>
