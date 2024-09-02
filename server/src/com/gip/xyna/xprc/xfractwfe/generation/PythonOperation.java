@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.ATT;
+import com.gip.xyna.xprc.xfractwfe.python.PythonGeneration;
 
 public class PythonOperation extends CodeOperation {
 
@@ -143,5 +144,35 @@ public class PythonOperation extends CodeOperation {
     }
     addSetReturn(cb);
     cb.addLine("}");
+  }
+  
+
+  public String createImplCallSnippet(boolean andSet) {
+    StringBuilder cb = new StringBuilder();
+    String fqnPython = PythonGeneration.convertToPythonFqn(parent.getOriginalFqName());
+    cb.append("from ").append(fqnPython).append("Impl import ").append(fqnPython).append("Impl\n");
+    cb.append("impl = ").append(fqnPython).append("Impl(");
+    if (!isStatic()) {
+      cb.append("this");
+    }
+    cb.append(")\n");
+    if (getOutputVars() != null && !getOutputVars().isEmpty()) {
+      cb.append("return ");
+    }
+    cb.append("impl.").append(getNameWithoutVersion()).append("(");
+    if (requiresXynaOrder()) {
+      cb.append("correlatedXynaOrder");
+      if (!getInputVars().isEmpty()) {
+        cb.append(", ");
+      }
+    }
+    cb.append(String.join(", ", getInputVars().stream().map(x -> x.getVarName()).collect(Collectors.toList())));
+    cb.append(")");
+
+    String impl = cb.toString().trim();
+    if (andSet) {
+      setImpl(impl);
+    }
+    return impl;
   }
 }
