@@ -86,7 +86,6 @@
       <target name="resolve">
         <resolver:resolve>
           <resolver:dependencies pomRef="pom"/>
-          <resolver:remoterepos refid="xyna.repository"/>
           <resolver:files refid="files" dir="${basedir}/lib/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
           <resolver:files refid="files" dir="${basedir}/lib.test" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="test"/>
           <!--resolver:files refid="files" dir="${basedir}/lib" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/-->
