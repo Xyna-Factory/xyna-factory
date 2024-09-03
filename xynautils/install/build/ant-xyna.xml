@@ -222,13 +222,6 @@
     </classpath>
   </taskdef>
 
-  <!-- TODO switch on current os-family and only contain one? -->
-  <resolver:remoterepos id="xyna.repository">
-    <remoterepo refid="xyna.repository.win"/>
-    <remoterepo refid="xyna.repository.unix"/>
-    <remoterepo refid="central.maven.repository"/>
-  </resolver:remoterepos>
-
   <resolver:pom file="${basedir}/pom.xml" id="pom"/>
 
   <!-- macro for downloading license files -->
