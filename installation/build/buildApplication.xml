@@ -410,7 +410,7 @@
             </condition>
         </fail>
         <local name="command" />
-        <property name="command" value="${server.path}/xynafactory.sh buildserviceproject -fqDatatypeName ${ServiceFqn} -targetDirectory /tmp -workspaceName '${workspacename}'" />
+        <property name="command" value="${server.path}/xynafactory.sh buildserviceprojectjava -fqDatatypeName ${ServiceFqn} -targetDirectory /tmp -workspaceName '${workspacename}'" />
         <custom-ssh-exec host="${server.host}" username="${server.userid}" command="${command}" />
         <mkdir dir="${basedir}/mdmimpl/tmp" />
         <default-scp-from-remote fromfile="/tmp/${ServiceFqn}.zip" todir="${basedir}/mdmimpl/tmp" />
