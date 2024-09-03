@@ -552,6 +552,14 @@
       <FqName>xmcp.processmodeller.datatypes.Warning</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.MetaTag</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.MetaTagArea</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
     <!-- // ProcessModeller -->
 
     <!-- // MultiUser -->
