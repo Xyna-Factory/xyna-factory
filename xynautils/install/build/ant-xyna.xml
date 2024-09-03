@@ -223,6 +223,8 @@
   </taskdef>
 
   <resolver:pom file="${basedir}/pom.xml" id="pom"/>
+  
+  <resolver:remoterepos id="xyna.repository" />
 
   <!-- macro for downloading license files -->
   <macrodef name="loadLicenses">

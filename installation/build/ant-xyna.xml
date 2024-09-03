@@ -233,6 +233,8 @@
     </classpath>
   </taskdef>
 
+  <resolver:remoterepos id="xyna.repository" />
+
   <!-- macro for downloading license files -->
   <macrodef name="loadLicenses">
     <attribute name="targetDir"/>
