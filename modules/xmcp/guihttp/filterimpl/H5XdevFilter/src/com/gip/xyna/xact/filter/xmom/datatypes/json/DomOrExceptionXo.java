@@ -18,6 +18,7 @@
 
 package com.gip.xyna.xact.filter.xmom.datatypes.json;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,6 +37,8 @@ import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
 
 import xmcp.processmodeller.datatypes.DataTypeTypeLabelArea;
 import xmcp.processmodeller.datatypes.Item;
+import xmcp.processmodeller.datatypes.MetaTag;
+import xmcp.processmodeller.datatypes.MetaTagArea;
 import xmcp.processmodeller.datatypes.TextArea;
 import xmcp.processmodeller.datatypes.datatypemodeller.MemberVariable;
 import xmcp.processmodeller.datatypes.datatypemodeller.MemberVariableArea;
@@ -136,6 +139,29 @@ public abstract class DomOrExceptionXo implements HasXoRepresentation {
 
     return area;
   }
+  
+  public static MetaTagArea createEmptyMetaTagArea() {
+    MetaTagArea area = new MetaTagArea();
+    area.unversionedSetName(Tags.META_TAG_AREA);
+    return area;
+  }
+
+
+  public static MetaTagArea createMetaTagArea(List<String> unknownMetaTags) {
+    MetaTagArea result = createEmptyMetaTagArea();
+    List<Item> list = new ArrayList<Item>();
+    for (int i = 0; i < unknownMetaTags.size(); i++) {
+      MetaTag tag = new MetaTag.Builder()
+          .id(ObjectId.createMetaTagId(i))
+          .tag(unknownMetaTags.get(i))
+          .instance();
+      list.add(tag);
+    }
+    result.unversionedSetItems(list);
+    result.unversionedSetItemTypes(List.of(MetaTag.class.getCanonicalName()));
+    return result;
+  }
+  
   
   public List<DatatypeMemberXo> getVariables() {
     return variables;

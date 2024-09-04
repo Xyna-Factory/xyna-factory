@@ -198,6 +198,8 @@ public class DatatypeMemberXo implements HasXoRepresentation {
     if (isStorable && pi != null && !isUniqueIdentifier) {
       v.addToAreas(getStorablePropertyArea());
     }
+    
+    v.addToAreas(DomOrExceptionXo.createMetaTagArea(var.getUnknownMetaTags()));
 
     return v;
   }
