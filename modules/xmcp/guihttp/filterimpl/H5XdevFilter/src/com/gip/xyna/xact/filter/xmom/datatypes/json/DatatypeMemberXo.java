@@ -199,7 +199,7 @@ public class DatatypeMemberXo implements HasXoRepresentation {
       v.addToAreas(getStorablePropertyArea());
     }
     
-    v.addToAreas(DomOrExceptionXo.createMetaTagArea(var.getUnknownMetaTags()));
+    v.addToAreas(DomOrExceptionXo.createMetaTagArea(var.getUnknownMetaTags(), inheritedFrom != null));
 
     return v;
   }

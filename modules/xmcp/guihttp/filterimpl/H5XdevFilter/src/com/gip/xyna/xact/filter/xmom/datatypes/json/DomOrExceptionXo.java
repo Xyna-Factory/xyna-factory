@@ -147,7 +147,7 @@ public abstract class DomOrExceptionXo implements HasXoRepresentation {
   }
 
 
-  public static MetaTagArea createMetaTagArea(List<String> unknownMetaTags) {
+  public static MetaTagArea createMetaTagArea(List<String> unknownMetaTags, boolean readonly) {
     MetaTagArea result = createEmptyMetaTagArea();
     result.unversionedSetItemTypes(List.of(MetaTag.class.getCanonicalName()));
     List<Item> list = new ArrayList<Item>();
@@ -162,6 +162,7 @@ public abstract class DomOrExceptionXo implements HasXoRepresentation {
       list.add(tag);
     }
     result.unversionedSetItems(list);
+    result.unversionedSetReadonly(readonly);
     return result;
   }
   
