@@ -591,8 +591,6 @@ compose_modeller() {
 prepare_build() {
   mkdir -p /opt/common
   cd $SCRIPT_DIR/build
-  sed -i "s#<url>file:\/\/.*<\/url>#<url>file://$HOME/.m2/repository<\/url>#" $SCRIPT_DIR/build/defaultMavenSettings.xml #TODO: allow config
-  sed -i "s#<localRepository>.*</localRepository>#<localRepository>//$HOME/.m2/repository</localRepository>#" $SCRIPT_DIR/build/defaultMavenSettings.xml
   mvn install
 }
 
