@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Use Case Definition" TypeName="UseCaseDefinition" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Use Case Definition" Name="UseCaseDefinition">
+    <Input/>
+    <Output>
+      <Data ID="46" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition46"/>
+      <Data ID="1904" IsList="true" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace1904"/>
+    </Output>
+    <ServiceReference ID="1560" Label="Get Yang Workspaces" ReferenceName="GetYangWorkspaces" ReferencePath="xmcp.yang.fman">
+      <Source RefID="1559"/>
+      <Target RefID="1559"/>
+    </ServiceReference>
+    <ServiceReference ID="2079" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="2078"/>
+      <Target RefID="2078"/>
+    </ServiceReference>
+    <Mappings ID="17" Label="Use Case">
+      <Output>
+        <Data ID="18" Label="Dropdown Definition" ReferenceName="DropdownDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="dropdownDefinition18"/>
+        <Target RefID="14"/>
+      </Output>
+      <Output>
+        <Data ID="1135" Label="Open Dialog Button Definition" ReferenceName="OpenDialogButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDialogButtonDefinition1135">
+          <Source RefID="17"/>
+        </Data>
+        <Target RefID="1136"/>
+      </Output>
+      <Output>
+        <Data ID="20" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition20"/>
+        <Target RefID="16"/>
+      </Output>
+      <Mapping>%0%.placeholder="Workspaces"</Mapping>
+      <Mapping>%0%.possibleValues.listItemLabelPath="name"</Mapping>
+      <Mapping>%0%.possibleValues.listItemValuePath="name"</Mapping>
+      <Mapping>%0%.possibleValues.dataPath="%0%"</Mapping>
+      <Mapping>%1%.label="add"</Mapping>
+      <Mapping>%2%.label="delete"</Mapping>
+      <Mapping>%2%.serviceFQN="xmcp.yang.fman.DeleteUseCase"</Mapping>
+    </Mappings>
+    <Function ID="2078" Label="get Own RuntimeContext">
+      <Source RefID="2079"/>
+      <Target RefID="2079"/>
+      <Target RefID="2455"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="2079"/>
+      <Receive ServiceID="2079">
+        <Target RefID="2455"/>
+      </Receive>
+    </Function>
+    <Mappings ID="979" Label="Mapping">
+      <Input>
+        <Data ID="2480" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext2480">
+          <Source RefID="979"/>
+        </Data>
+        <Source RefID="2455"/>
+      </Input>
+      <Output>
+        <Data ID="988" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow988">
+          <Source RefID="979"/>
+        </Data>
+        <Target RefID="989"/>
+      </Output>
+      <Mapping>%1%.fQN="xmcp.yang.fman.UseCaseRootAssignementsDefinition"</Mapping>
+      <Mapping>%1%.rTC=%0%</Mapping>
+    </Mappings>
+    <Mappings ID="30" Label="Use Case">
+      <Input>
+        <Data ID="32" Label="workspaces" ReferenceName="DropdownDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="dropdownDefinition32"/>
+        <Source RefID="14"/>
+      </Input>
+      <Input>
+        <Data ID="1067" Label="add use case" ReferenceName="OpenDialogButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDialogButtonDefinition1067">
+          <Source RefID="17"/>
+        </Data>
+        <Source RefID="1136"/>
+      </Input>
+      <Input>
+        <Data ID="1205" Label="delete use case" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1205">
+          <Source RefID="30"/>
+        </Data>
+        <Source RefID="16"/>
+      </Input>
+      <Input>
+        <Data ID="1030" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow1030">
+          <Source RefID="30"/>
+        </Data>
+        <Source RefID="989"/>
+      </Input>
+      <Input>
+        <Data ID="2106" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext2106">
+          <Source RefID="30"/>
+        </Data>
+        <Source RefID="2455"/>
+      </Input>
+      <Output>
+        <Data ID="37" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition37"/>
+        <Target RefID="29"/>
+      </Output>
+      <Mapping>%5%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.DropdownDefinition")=%0%</Mapping>
+      <Mapping>%5%.header.rightArea.children["1"]=%1%</Mapping>
+      <Mapping>%5%.footer.rightArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%2%</Mapping>
+      <Mapping>%5%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%3%</Mapping>
+      <Mapping>%5%.tableWorkflowFQN="xmcp.yang.fman.UseCaseTableInfo"</Mapping>
+      <Mapping>%5%.tableWorkflowRTC=%4%</Mapping>
+      <Mapping>%5%.dataPath="%%"</Mapping>
+    </Mappings>
+    <Function ID="1559" Label="Get Yang Workspaces">
+      <Source RefID="1560"/>
+      <Target RefID="1560"/>
+      <Target RefID="1562"/>
+      <Invoke Operation="GetYangWorkspaces" ServiceID="1560"/>
+      <Receive ServiceID="1560">
+        <Target RefID="1562"/>
+      </Receive>
+    </Function>
+    <Data ID="14" Label="Dropdown Definition" ReferenceName="DropdownDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="dropdownDefinition14"/>
+    <Data ID="16" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition16"/>
+    <Data ID="29" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition29"/>
+    <Data ID="989" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow989">
+      <Source RefID="979"/>
+    </Data>
+    <Data ID="1136" Label="Open Dialog Button Definition" ReferenceName="OpenDialogButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDialogButtonDefinition1136">
+      <Source RefID="17"/>
+    </Data>
+    <Data ID="1562" IsList="true" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace1562">
+      <Source RefID="1559"/>
+    </Data>
+    <Data ID="2455" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext2455">
+      <Source RefID="2078"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="29"/>
+      <Source RefID="1562"/>
+      <Target RefID="46"/>
+      <Target RefID="1904"/>
+      <Copy>
+        <Source RefID="29"/>
+        <Target RefID="46"/>
+      </Copy>
+      <Copy>
+        <Source RefID="1562"/>
+        <Target RefID="1904"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Yang Workspaces" TypeName="GetYangWorkspaces" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Get Yang Workspaces" Name="GetYangWorkspaces">
+    <Input/>
+    <Output>
+      <Data ID="14" IsList="true" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace14"/>
+    </Output>
+    <Mappings ID="51" Label="Mapping">
+      <Output>
+        <Data ID="60" IsList="true" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace60">
+          <Source RefID="51"/>
+        </Data>
+        <Target RefID="61"/>
+      </Output>
+      <Mapping>%0%["0"].name="dummy"</Mapping>
+      <Mapping>%0%["1"].name="dummy2"</Mapping>
+    </Mappings>
+    <Data ID="61" IsList="true" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace61">
+      <Source RefID="51"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="61"/>
+      <Target RefID="14"/>
+      <Copy>
+        <Source RefID="61"/>
+        <Target RefID="14"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

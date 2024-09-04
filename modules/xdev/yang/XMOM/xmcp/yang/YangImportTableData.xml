@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Yang Import Table Data" TypeName="YangImportTableData" TypePath="xmcp.yang" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Application Name" VariableName="applicationName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Application Type" VariableName="applicationType">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Order Id" VariableName="orderId">
+    <Meta>
+      <Type>long</Type>
+    </Meta>
+  </Data>
+</DataType>

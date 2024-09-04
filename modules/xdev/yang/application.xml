@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="YangAppGenerator" comment="" factoryVersion="" versionName="9.0.0" xmlVersion="1.1">
+--><Application applicationName="YangAppGenerator" comment="" factoryVersion="" versionName="0.1.0" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -29,4 +29,62 @@
       <SharedLib>yangkit</SharedLib>
     </SharedLib>
   </SharedLibs>
+  <XMOMEntries>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.UseCaseAssignementTableData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.UseCaseTableData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.YangImportTableData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.AddUseCase</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.DeleteUseCase</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.GetYangWorkspaces</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.SaveUseCaseAssignement</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.UseCaseAssignementsDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.UseCaseAssignementTableInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.UseCaseDefinition</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.UseCaseRootAssignementsDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.UseCaseTableInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.YangImportDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.YangImportTableInfo</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+  </XMOMEntries>
 </Application>

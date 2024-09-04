@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Delete Use Case" TypeName="DeleteUseCase" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Delete Use Case" Name="DeleteUseCase">
+    <Input>
+      <Data ID="18" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData18"/>
+    </Input>
+    <Output/>
+    <Assign ID="1"/>
+  </Operation>
+</Service>

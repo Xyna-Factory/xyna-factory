@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Use Case root assignements Definition" TypeName="UseCaseRootAssignementsDefinition" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Use Case root assignements Definition" Name="UseCaseRootAssignementsDefinition">
+    <Input>
+      <Data ID="446" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData446"/>
+    </Input>
+    <Output>
+      <Data ID="344" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition344"/>
+      <Data ID="485" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData485"/>
+    </Output>
+    <ServiceReference ID="376" Label="Use Case assignements Definition" ReferenceName="UseCaseAssignementsDefinition" ReferencePath="xmcp.yang.fman">
+      <Source RefID="375"/>
+      <Target RefID="375"/>
+    </ServiceReference>
+    <Mappings ID="411" Label="Mapping">
+      <Input>
+        <Data ID="467" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData467">
+          <Source RefID="411"/>
+        </Data>
+        <Source RefID="446"/>
+      </Input>
+      <Output>
+        <Data ID="428" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData428">
+          <Source RefID="411"/>
+        </Data>
+        <Target RefID="429"/>
+      </Output>
+      <Mapping>%1%.type="Not a leaf"</Mapping>
+      <Mapping>%1%.totalYangPath="root"</Mapping>
+    </Mappings>
+    <Function ID="375" Label="Use Case assignements Definition">
+      <Source RefID="376"/>
+      <Source RefID="429"/>
+      <Target RefID="376"/>
+      <Target RefID="378"/>
+      <Target RefID="468"/>
+      <Invoke Operation="UseCaseAssignementsDefinition" ServiceID="376">
+        <Source RefID="429"/>
+      </Invoke>
+      <Receive ServiceID="376">
+        <Target RefID="378"/>
+        <Target RefID="468"/>
+      </Receive>
+    </Function>
+    <Data ID="378" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition378">
+      <Source RefID="375"/>
+    </Data>
+    <Data ID="429" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData429">
+      <Source RefID="411"/>
+    </Data>
+    <Data ID="468" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData468"/>
+    <Assign ID="1">
+      <Source RefID="378"/>
+      <Source RefID="468"/>
+      <Target RefID="344"/>
+      <Target RefID="485"/>
+      <Copy>
+        <Source RefID="378"/>
+        <Target RefID="344"/>
+      </Copy>
+      <Copy>
+        <Source RefID="468">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="485"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

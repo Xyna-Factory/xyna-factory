@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Save Use Case Assignement" TypeName="SaveUseCaseAssignement" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Save Use Case Assignement" Name="SaveUseCaseAssignement">
+    <Input>
+      <Data ID="14" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData14"/>
+    </Input>
+    <Output/>
+    <Assign ID="1"/>
+  </Operation>
+</Service>
