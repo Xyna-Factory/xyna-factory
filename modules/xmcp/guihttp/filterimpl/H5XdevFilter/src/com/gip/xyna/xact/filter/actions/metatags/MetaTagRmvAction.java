@@ -46,6 +46,7 @@ import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.GuiRight;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.Rights;
 
 import xmcp.processmodeller.datatypes.MetaTag;
+import xmcp.processmodeller.datatypes.request.MetaTagRequest;
 
 
 
@@ -101,7 +102,7 @@ public class MetaTagRmvAction extends RuntimeContextDependendAction implements E
     }
 
     try {
-      MetaTag metaTag = (MetaTag) Utils.convertJsonToGeneralXynaObject(tc.getPayload(), revision);
+      MetaTag metaTag = ((MetaTagRequest) Utils.convertJsonToGeneralXynaObject(tc.getPayload(), revision)).getMetaTag();
       addMetaTag(getSession(tc).getId(), revision, url, metaTag);
     } catch (Exception e) {
       AuthUtils.replyError(tc, actionInstance, e);
@@ -114,7 +115,7 @@ public class MetaTagRmvAction extends RuntimeContextDependendAction implements E
   public GeneralXynaObject execute(XynaPlainSessionCredentials creds, URLPath url, Method method, String payload) {
     try {
       RTCInfo info = extractRTCInfo(url);
-      MetaTag metaTag = (MetaTag) Utils.convertJsonToGeneralXynaObject(payload, info.revision);
+      MetaTag metaTag = ((MetaTagRequest) Utils.convertJsonToGeneralXynaObject(payload, info.revision)).getMetaTag();
       addMetaTag(creds.getSessionId(), info.revision, url, metaTag);
     } catch (Exception e) {
     }
