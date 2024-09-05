@@ -103,7 +103,7 @@ public class MetaTagRmvAction extends RuntimeContextDependendAction implements E
 
     try {
       MetaTag metaTag = ((MetaTagRequest) Utils.convertJsonToGeneralXynaObject(tc.getPayload(), revision)).getMetaTag();
-      addMetaTag(getSession(tc).getId(), revision, url, metaTag);
+      rmvMetaTag(getSession(tc).getId(), revision, url, metaTag);
     } catch (Exception e) {
       AuthUtils.replyError(tc, actionInstance, e);
     }
@@ -117,14 +117,14 @@ public class MetaTagRmvAction extends RuntimeContextDependendAction implements E
       RTCInfo info = extractRTCInfo(url);
       Long guiHttpRevision = Utils.getGuiHttpApplicationRevision();
       MetaTag metaTag = ((MetaTagRequest) Utils.convertJsonToGeneralXynaObject(payload, guiHttpRevision)).getMetaTag();
-      addMetaTag(creds.getSessionId(), info.revision, url, metaTag);
+      rmvMetaTag(creds.getSessionId(), info.revision, url, metaTag);
     } catch (Exception e) {
     }
     return null;
   }
 
 
-  private void addMetaTag(String sessionId, Long revision, URLPath url, MetaTag metaTag) throws Exception {
+  private void rmvMetaTag(String sessionId, Long revision, URLPath url, MetaTag metaTag) throws Exception {
     MetaTagProcessingInfoContainer data = MetaTagActionUtils.createProcessingInfoContainer(url, sessionId, xmomGui, revision);
     int index = Integer.valueOf(ObjectIdPrefix.metaTag.getBaseId(metaTag.getId()));
     MetaTagRmvFunction func = metaTagRmvFunctions.get(data.getType());
