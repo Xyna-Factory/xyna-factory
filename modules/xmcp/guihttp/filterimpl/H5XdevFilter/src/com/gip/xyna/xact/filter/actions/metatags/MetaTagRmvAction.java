@@ -115,7 +115,8 @@ public class MetaTagRmvAction extends RuntimeContextDependendAction implements E
   public GeneralXynaObject execute(XynaPlainSessionCredentials creds, URLPath url, Method method, String payload) {
     try {
       RTCInfo info = extractRTCInfo(url);
-      MetaTag metaTag = ((MetaTagRequest) Utils.convertJsonToGeneralXynaObject(payload, info.revision)).getMetaTag();
+      Long guiHttpRevision = Utils.getGuiHttpApplicationRevision();
+      MetaTag metaTag = ((MetaTagRequest) Utils.convertJsonToGeneralXynaObject(payload, guiHttpRevision)).getMetaTag();
       addMetaTag(creds.getSessionId(), info.revision, url, metaTag);
     } catch (Exception e) {
     }

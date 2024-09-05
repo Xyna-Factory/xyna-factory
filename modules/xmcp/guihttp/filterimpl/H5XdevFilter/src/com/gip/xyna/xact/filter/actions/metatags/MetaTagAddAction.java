@@ -19,7 +19,9 @@ package com.gip.xyna.xact.filter.actions.metatags;
 
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -114,7 +116,8 @@ public class MetaTagAddAction extends RuntimeContextDependendAction implements E
   public GeneralXynaObject execute(XynaPlainSessionCredentials creds, URLPath url, Method method, String payload) {
     try {
       RTCInfo info = extractRTCInfo(url);
-      MetaTag metaTag = ((MetaTagRequest) Utils.convertJsonToGeneralXynaObject(payload, info.revision)).getMetaTag();
+      Long guiHttpRevision = Utils.getGuiHttpApplicationRevision();
+      MetaTag metaTag = ((MetaTagRequest) Utils.convertJsonToGeneralXynaObject(payload, guiHttpRevision)).getMetaTag();
       addMetaTag(creds.getSessionId(), info.revision, url, metaTag);
     } catch (Exception e) {
     }
@@ -132,13 +135,17 @@ public class MetaTagAddAction extends RuntimeContextDependendAction implements E
 
   private static void addMemberMetaTag(GenerationBaseObject gbo, String objectName, String content) {
     AVariable member = gbo.getDOM().getMemberVars().stream().filter(x -> x.getVarName().equals(objectName)).findFirst().get();
-    member.getUnknownMetaTags().add(content);
+    List<String> unknownMetaTags = member.getUnknownMetaTags() != null ? member.getUnknownMetaTags() : new ArrayList<String>();
+    unknownMetaTags.add(content);
+    member.setUnknownMetaTags(unknownMetaTags);
   }
 
 
   private static void addMethodMetaTag(GenerationBaseObject gbo, String objectName, String content) throws XynaException {
     Operation method = gbo.getDOM().getOperationByName(objectName);
-    method.getUnknownMetaTags().add(content);
+    List<String> unknownMetaTags = method.getUnknownMetaTags() != null ? method.getUnknownMetaTags() : new ArrayList<String>();
+    unknownMetaTags.add(content);
+    method.setUnknownMetaTags(unknownMetaTags);
   }
 
 
