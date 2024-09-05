@@ -560,6 +560,10 @@
       <FqName>xmcp.processmodeller.datatypes.MetaTagArea</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.request.MetaTagRequest</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
     <!-- // ProcessModeller -->
 
     <!-- // MultiUser -->
