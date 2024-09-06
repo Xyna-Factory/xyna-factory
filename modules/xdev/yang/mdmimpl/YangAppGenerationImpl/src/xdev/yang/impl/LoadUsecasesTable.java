@@ -26,8 +26,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import com.gip.xyna.XynaFactory;
-import com.gip.xyna.utils.exceptions.utils.InvalidXMLException;
-import com.gip.xyna.utils.exceptions.utils.XMLUtils;
+import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.WorkspaceInformation;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.workspacemgmt.WorkspaceManagement;
@@ -93,7 +92,7 @@ public class LoadUsecasesTable {
     }
     for (String unknownMetaTag : operation.getUnknownMetaTags()) {
       try {
-        Document xml = XMLUtils.parse(unknownMetaTag, false);
+        Document xml = XMLUtils.parseString(unknownMetaTag, false);
         if (!xml.getNodeName().equals(Constants.TAG_YANG)) {
           continue;
         }
@@ -102,7 +101,7 @@ public class LoadUsecasesTable {
           continue;
         }
         return yangTypeNode.getChildNodes().getLength();
-      } catch (InvalidXMLException e) {
+      } catch (Exception e) {
         return -1;
       }
     }
