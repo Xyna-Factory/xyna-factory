@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.gip.xyna.XynaFactory;
@@ -93,14 +94,15 @@ public class LoadUsecasesTable {
     for (String unknownMetaTag : operation.getUnknownMetaTags()) {
       try {
         Document xml = XMLUtils.parseString(unknownMetaTag, false);
-        if (!xml.getNodeName().equals(Constants.TAG_YANG)) {
+        if (!xml.getDocumentElement().getNodeName().equals(Constants.TAG_YANG)) {
           continue;
         }
-        Node yangTypeNode = xml.getAttributes().getNamedItem(Constants.ATT_YANG_TYPE);
+        Node yangTypeNode = xml.getDocumentElement().getAttributes().getNamedItem(Constants.ATT_YANG_TYPE);
         if (yangTypeNode == null || !Constants.VAL_USECASE.equals(yangTypeNode.getNodeValue())) {
           continue;
         }
-        return yangTypeNode.getChildNodes().getLength();
+        Element mappingsNode = XMLUtils.getChildElementByName(xml.getDocumentElement(), Constants.TAG_MAPPINGS);
+        return XMLUtils.getChildElementsByName(mappingsNode, Constants.TAG_MAPPING).size();
       } catch (Exception e) {
         return -1;
       }

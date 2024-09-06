@@ -21,6 +21,8 @@ package xdev.yang.impl;
 public class Constants {
 
   public static final String ATT_YANG_TYPE = "type";
-  public static final String TAG_YANG = "yang";
+  public static final String TAG_YANG = "Yang";
+  public static final String TAG_MAPPINGS = "Mappings";
+  public static final String TAG_MAPPING = "Mapping";
   public static final String VAL_USECASE = "Usecase";
 }
