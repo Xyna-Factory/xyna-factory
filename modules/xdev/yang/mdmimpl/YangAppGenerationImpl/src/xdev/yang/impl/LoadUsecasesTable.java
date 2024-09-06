@@ -45,21 +45,26 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 
 import xmcp.yang.UseCaseTableData;
+import xmcp.yang.YangUsecaseImplementation;
 
 
 
 public class LoadUsecasesTable {
 
 
-  public List<UseCaseTableData> loadUsecases() throws Exception {
-    List<UseCaseTableData> result = new ArrayList<>();
-    List<UseCaseGroupDt> usecaseGroupDts = determineUsecaseGroupDatatypes();
-    for (UseCaseGroupDt usecaseGroupDt : usecaseGroupDts) {
-      List<UseCaseTableData> data = determineUsecasesOfGroup(usecaseGroupDt);
-      result.addAll(data);
-    }
+  public List<UseCaseTableData> loadUsecases() {
+    try {
+      List<UseCaseTableData> result = new ArrayList<>();
+      List<UseCaseGroupDt> usecaseGroupDts = determineUsecaseGroupDatatypes();
+      for (UseCaseGroupDt usecaseGroupDt : usecaseGroupDts) {
+        List<UseCaseTableData> data = determineUsecasesOfGroup(usecaseGroupDt);
+        result.addAll(data);
+      }
 
-    return result;
+      return result;
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
 
@@ -128,8 +133,7 @@ public class LoadUsecasesTable {
     XMOMDatabaseSelect select = new XMOMDatabaseSelect();
     select.addAllDesiredResultTypes(List.of(XMOMDatabaseType.DATATYPE));
     try {
-      //TODO: class of xmcp.yang.YangUsecaseImplementation
-      select.where(XMOMDatabaseEntryColumn.EXTENDS).isEqual("xmcp.yang.YangUsecaseImplementation");
+      select.where(XMOMDatabaseEntryColumn.EXTENDS).isEqual(YangUsecaseImplementation.class.getCanonicalName());
     } catch (XNWH_WhereClauseBuildException e) {
       throw new RuntimeException(e);
     }

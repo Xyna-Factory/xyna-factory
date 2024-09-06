@@ -68,6 +68,7 @@ import java.util.concurrent.ConcurrentMap;
 import org.apache.log4j.Logger;
 
 import xdev.yang.YangAppGenerationServiceOperation;
+import xmcp.yang.UseCaseTableData;
 
 
 public class YangAppGenerationServiceOperationImpl implements ExtendedDeploymentTask, YangAppGenerationServiceOperation {
@@ -102,7 +103,7 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   }
 
   @Override
-  public void loadUsecases() {
-    
+  public List<? extends UseCaseTableData> loadUsecases() {
+    return new LoadUsecasesTable().loadUsecases();
   }
 }

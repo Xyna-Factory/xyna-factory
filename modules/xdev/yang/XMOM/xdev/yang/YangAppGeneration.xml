@@ -21,13 +21,13 @@
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
   <Service Label="Yang App Generation" TypeName="YangAppGeneration">
-    <Operation Label="Load Usecases" Name="loadUsecases" IsStatic="true">
-      <Input>
-      </Input>
+    <Operation IsStatic="true" Label="Load Usecases" Name="loadUsecases">
+      <Input/>
       <Output>
+        <Data ID="1" IsList="true" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData1"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.loadUsecases();</CodeSnippet>
+        <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadUsecases();</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
