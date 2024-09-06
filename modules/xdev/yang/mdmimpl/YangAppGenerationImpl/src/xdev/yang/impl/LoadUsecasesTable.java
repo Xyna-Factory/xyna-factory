@@ -131,12 +131,13 @@ public class LoadUsecasesTable {
   private List<XMOMDatabaseSelect> buildSelects() {
     List<XMOMDatabaseSelect> selects = new ArrayList<>();
     XMOMDatabaseSelect select = new XMOMDatabaseSelect();
-    select.addAllDesiredResultTypes(List.of(XMOMDatabaseType.DATATYPE));
+    select.addAllDesiredResultTypes(List.of(XMOMDatabaseType.SERVICEGROUP));
     try {
       select.where(XMOMDatabaseEntryColumn.EXTENDS).isEqual(YangUsecaseImplementation.class.getCanonicalName());
     } catch (XNWH_WhereClauseBuildException e) {
       throw new RuntimeException(e);
     }
+    selects.add(select);
 
     return selects;
   }
