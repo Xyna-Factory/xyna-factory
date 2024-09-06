@@ -91,7 +91,7 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.YangAppGeneration</FqName>
+      <FqName>xdev.yang.YangAppGeneration</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
   </XMOMEntries>
