@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
+/*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2024 Xyna GmbH, Germany
  *
@@ -15,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Add Use Case" TypeName="AddUseCase" TypePath="xmcp.yang.fman" Version="1.8">
-  <Operation ID="0" IsStatic="false" Label="Add Use Case" Name="AddUseCase">
-    <Input>
-      <Data ID="22" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData22"/>
-    </Input>
-    <Output/>
-    <Assign ID="1"/>
-  </Operation>
-</Service>
+ */
+package xdev.yang.impl;
+
+
+public class Constants {
+
+  public static final String ATT_YANG_TYPE = "type";
+  public static final String TAG_YANG = "yang";
+  public static final String VAL_USECASE = "Usecase";
+}

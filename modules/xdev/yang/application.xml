@@ -19,8 +19,12 @@
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
-        <ApplicationName>Processing</ApplicationName>
-        <VersionName>1.0.21</VersionName>
+        <ApplicationName>YangBase</ApplicationName>
+        <VersionName>1.0.0</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>Http</ApplicationName>
+        <VersionName>1.2.8</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
@@ -84,6 +88,10 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yang.fman.YangImportTableInfo</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.YangAppGeneration</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
   </XMOMEntries>

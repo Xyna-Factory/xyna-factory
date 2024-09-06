@@ -16,12 +16,19 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Add Use Case" TypeName="AddUseCase" TypePath="xmcp.yang.fman" Version="1.8">
-  <Operation ID="0" IsStatic="false" Label="Add Use Case" Name="AddUseCase">
-    <Input>
-      <Data ID="22" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData22"/>
-    </Input>
-    <Output/>
-    <Assign ID="1"/>
-  </Operation>
-</Service>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Yang App Generation" TypeName="YangAppGeneration" TypePath="xdev.yang" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="Yang App Generation" TypeName="YangAppGeneration">
+    <Operation IsStatic="true" Label="Import Module Collection Application" Name="importModuleCollectionApplication">
+      <Input>
+        <Data ID="1" Label="Module Collection Generation Parameter" ReferenceName="ModuleCollectionGenerationParameter" ReferencePath="xdev.yang" VariableName="moduleCollectionGenerationParameter1"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">return;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
