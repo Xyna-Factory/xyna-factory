@@ -100,10 +100,4 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
     // If null is returned, the factory default <IGNORE> will be used.
     return null;
   }
-
-  public void importModuleCollectionApplication(ModuleCollectionGenerationParameter moduleCollectionGenerationParameter2) {
-    //TODO implementation
-    //TODO update dependency XML
-  }
-
 }
