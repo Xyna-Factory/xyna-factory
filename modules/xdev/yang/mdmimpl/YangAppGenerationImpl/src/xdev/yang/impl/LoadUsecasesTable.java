@@ -114,9 +114,9 @@ public class LoadUsecasesTable {
   private List<UseCaseGroupDt> determineUsecaseGroupDatatypes() throws Exception {
     List<UseCaseGroupDt> result = new ArrayList<>();
     XMOMDatabase xmomDb = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getXMOMDatabase();
-    List<XMOMDatabaseSelect> selects = buildSelects();
     List<Long> revisions = determineWorkspaceRevisions();
     for (Long revision : revisions) {
+      List<XMOMDatabaseSelect> selects = buildSelects(); // new selects are required for every XMOM database search
       XMOMDatabaseSearchResult xmomDbSearchResult = xmomDb.searchXMOMDatabase(selects, -1, revision);
       List<XMOMDatabaseSearchResultEntry> xmomDbResults = xmomDbSearchResult.getResult();
       for (XMOMDatabaseSearchResultEntry entry : xmomDbResults) {
