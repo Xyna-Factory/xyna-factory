@@ -39,7 +39,6 @@ import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResultEntr
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSelect;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.exceptions.XNWH_WhereClauseBuildException;
-import com.gip.xyna.xprc.exceptions.XPRC_InvalidPackageNameException;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
@@ -72,6 +71,7 @@ public class LoadUsecasesTable {
     List<UseCaseTableData> result = new ArrayList<>();
     try {
       DOM datatype = DOM.getOrCreateInstance(dt.getFqn(), new GenerationBaseCache(), dt.getRevision());
+      datatype.parseGeneration(false, false);
       List<Operation> operations = datatype.getOperations();
       for (Operation operation : operations) {
         int mappingCount = countMappings(operation);
@@ -79,7 +79,7 @@ public class LoadUsecasesTable {
         data.usecaseGroup(dt.getFqn()).useCase(operation.getName()).mappingCount(mappingCount);
         result.add(data.instance());
       }
-    } catch (XPRC_InvalidPackageNameException e) {
+    } catch (Exception e) {
       throw new RuntimeException(e);
     }
 
@@ -131,7 +131,7 @@ public class LoadUsecasesTable {
   private List<XMOMDatabaseSelect> buildSelects() {
     List<XMOMDatabaseSelect> selects = new ArrayList<>();
     XMOMDatabaseSelect select = new XMOMDatabaseSelect();
-    select.addAllDesiredResultTypes(List.of(XMOMDatabaseType.SERVICEGROUP));
+    select.addAllDesiredResultTypes(List.of(XMOMDatabaseType.SERVICEGROUP, XMOMDatabaseType.DATATYPE));
     try {
       select.where(XMOMDatabaseEntryColumn.EXTENDS).isEqual(YangUsecaseImplementation.class.getCanonicalName());
     } catch (XNWH_WhereClauseBuildException e) {
