@@ -21,14 +21,5 @@
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
   <Service Label="Yang App Generation" TypeName="YangAppGeneration">
-    <Operation IsStatic="true" Label="Import Module Collection Application" Name="importModuleCollectionApplication">
-      <Input>
-        <Data ID="1" Label="Module Collection Generation Parameter" ReferenceName="ModuleCollectionGenerationParameter" ReferencePath="xdev.yang" VariableName="moduleCollectionGenerationParameter1"/>
-      </Input>
-      <Output/>
-      <SourceCode>
-        <CodeSnippet Type="Java">return;</CodeSnippet>
-      </SourceCode>
-    </Operation>
   </Service>
 </DataType>
