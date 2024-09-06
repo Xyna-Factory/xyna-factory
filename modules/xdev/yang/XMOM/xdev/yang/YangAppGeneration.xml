@@ -21,5 +21,14 @@
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
   <Service Label="Yang App Generation" TypeName="YangAppGeneration">
+    <Operation Label="Load Usecases" Name="loadUsecases" IsStatic="true">
+      <Input>
+      </Input>
+      <Output>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.loadUsecases();</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>
