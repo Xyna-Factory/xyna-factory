@@ -66,7 +66,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.log4j.Logger;
-import xdev.yang.ModuleCollectionGenerationParameter;
 import xdev.yang.YangAppGenerationSuperProxy;
 import xdev.yang.YangAppGeneration;
 
