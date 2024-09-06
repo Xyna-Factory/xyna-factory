@@ -26,6 +26,10 @@
         <ApplicationName>Http</ApplicationName>
         <VersionName>1.2.8</VersionName>
       </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>ZetaFramework</ApplicationName>
+        <VersionName>0.6.54</VersionName>
+      </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
   <SharedLibs>
