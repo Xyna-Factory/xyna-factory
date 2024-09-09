@@ -55,7 +55,7 @@ public class AddUsecase {
       RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
       Long revision = revMgmt.getRevision(null, null, workspaceName);
       DOM dom = DOM.getOrCreateInstance(fqn, new GenerationBaseCache(), revision);
-      String label = fqn.substring(fqn.lastIndexOf("."));
+      String label = fqn.substring(fqn.lastIndexOf(".") + 1);
       String path = fqn.substring(0, fqn.lastIndexOf("."));
       String currentPath = path;
       if (logger.isDebugEnabled()) {
