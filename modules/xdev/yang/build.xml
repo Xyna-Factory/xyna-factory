@@ -40,7 +40,7 @@
 
     <target name="prepare-mdm-jar">
         <antcall target="create-mdm-jar" />	
-        <!-- <supply-mdm-jar type="" name="" /> -->
+        <supply-mdm-jar type="mdmimpl" name="YangAppGenerationImpl" />
         <delete file="${basedir}/mdm.jar" />
     </target>
 

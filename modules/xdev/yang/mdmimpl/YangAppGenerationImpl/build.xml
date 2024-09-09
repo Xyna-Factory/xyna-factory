@@ -28,7 +28,7 @@
     <property name="fqclassname" value="xdev.yang.YangAppGeneration" />
     <property name="mdm.xml.path" value="xdev/yang" />
     <property name="mdm.xml.filename" value="YangAppGeneration.xml" />
-    <property name="mdm.service.path" value="dev.yang.YangAppGeneration" />
+    <property name="mdm.service.path" value="xdev.yang.YangAppGeneration" />
 
     <property name="cli.command.java.path" value="xdev.yang.cli" />
     <property name="cli.command.path" value="xdev/yang/cli" />

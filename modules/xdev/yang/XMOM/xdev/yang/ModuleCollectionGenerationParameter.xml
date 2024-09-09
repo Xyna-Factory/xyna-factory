@@ -34,9 +34,6 @@
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Directory Path" VariableName="directoryPath">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
+  <Data Label="File ID" VariableName="fileID" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt">
   </Data>
 </DataType>
