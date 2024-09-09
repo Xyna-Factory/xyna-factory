@@ -37,6 +37,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import xact.http.URLPath;
 import xact.http.enums.httpmethods.HTTPMethod;
 import xact.http.enums.httpmethods.POST;
+import xmcp.processmodeller.datatypes.response.GetDataTypeResponse;
 import xprc.xpce.Workspace;
 
 
@@ -120,23 +121,17 @@ public class AddUsecase {
     URLPath url = new URLPath("/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes", null, null);
     HTTPMethod method = new POST();
     String payload = "{\"label\":\"" + label + "\"}";
-    String json = "";
+    GetDataTypeResponse json;
     try {
-      json = (String) runnable.execute(url, method, payload);
+      json = (GetDataTypeResponse) runnable.execute(url, method, payload);
       if (json == null) {
         throw new RuntimeException("Could not create datatype.");
       }
-      return readDtPathFromJson(json);
+      String fqn = json.getXmomItem().getFqn();
+      return fqn.substring(0, fqn.lastIndexOf("."));
     } catch (XynaException e) {
       throw new RuntimeException(e);
     }
-  }
-
-
-  private String readDtPathFromJson(String json) {
-    int pathStartIndex = json.indexOf("\"new_");
-    int pathEndIndex = json.indexOf(".", pathStartIndex);
-    return json.substring(pathStartIndex, pathEndIndex);
   }
 
 
