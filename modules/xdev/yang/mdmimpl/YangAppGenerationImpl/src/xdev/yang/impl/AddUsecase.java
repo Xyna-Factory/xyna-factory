@@ -70,7 +70,8 @@ public class AddUsecase {
         if (logger.isDebugEnabled()) {
           logger.debug(order.getId() + ": Adding service to datatype. Current datatype path: " + currentPath);
         }
-        addServiceToDatatype(currentPath, path, label, usecaseName, workspaceName, order);
+        addServiceToDatatype(currentPath, label, usecaseName, workspaceName, order);
+        saveDatatype(currentPath, path, label, workspaceName, order);
       } finally {
         if (logger.isDebugEnabled()) {
           logger.debug(order.getId() + ": Closing datatype.");
@@ -134,8 +135,22 @@ public class AddUsecase {
     }
   }
 
+  private void addServiceToDatatype(String path, String label, String service, String workspace, XynaOrderServerExtension order) {
+    RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
+    String workspaceNameEscaped = urlEncode(workspace);
+    String endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + 
+        path + "/" + label + "/objects/memberMethodsArea/insert";
+    URLPath url = new URLPath(endPoint, null, null);
+    HTTPMethod method = new POST();
+    String payload = "{\"index\":-1,\"content\":{\"type\":\"memberMethod\",\"label\":\"" +  service + "\"},\"revision\":0}";
+    try {
+      runnable.execute(url, method, payload);
+    } catch (XynaException e) {
+      throw new RuntimeException("Could not add service to Datatype.", e);
+    }
+  }
 
-  private void addServiceToDatatype(String path, String targetPath, String label, String service, String workspace, XynaOrderServerExtension order) {
+  private void saveDatatype(String path, String targetPath, String label, String workspace, XynaOrderServerExtension order) {
     RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
     String workspaceNameEscaped = urlEncode(workspace);
     URLPath url = new URLPath("/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + path + "/" + label + "/save", null, null);
@@ -144,7 +159,7 @@ public class AddUsecase {
     try {
       runnable.execute(url, method, payload);
     } catch (XynaException e) {
-      throw new RuntimeException("Could not add service to Datatype.", e);
+      throw new RuntimeException("Could not save Datatype.", e);
     }
   }
 
