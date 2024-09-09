@@ -233,19 +233,6 @@
     </classpath>
   </taskdef>
 
-  <condition property="mavenSettingFile" value="${user.home}/mavenSettings.xml" else="${ant.file.ant-xyna.dir}/defaultMavenSettings.xml">
-    <available file="${user.home}/mavenSettings.xml" />
-  </condition>
-
-  <resolver:settings file="${mavenSettingFile}"/>
-
-  <!-- TODO switch on current os-family and only contain one? -->
-  <resolver:remoterepos id="xyna.repository">
-    <remoterepo refid="xyna.repository.win"/>
-    <remoterepo refid="xyna.repository.unix"/>
-    <remoterepo refid="central.maven.repository"/>
-  </resolver:remoterepos>
-
   <!-- macro for downloading license files -->
   <macrodef name="loadLicenses">
     <attribute name="targetDir"/>
@@ -256,8 +243,6 @@
         <arg value="mvn"/>
         <arg value="-f" />
         <arg value="@{pom}" />
-        <arg value="-s" />
-        <arg value="@{mavenSettingFile}" />
         <arg value="license:download-licenses" />
         <arg value="-DlicensesOutputDirectory=@{targetDir}" />
         <arg value="-DlicensesOutputFile=@{targetDir}\licenses.xml" />
@@ -267,8 +252,6 @@
       <exec osfamily="unix" executable="mvn" outputproperty="exec.output">
         <arg value="-f" />
         <arg value="@{pom}" />
-        <arg value="-s" />
-        <arg value="${mavenSettingFile}" />
         <arg value="license:download-licenses" />
         <arg value="-DlicensesOutputDirectory=@{targetDir}" />
         <arg value="-DlicensesOutputFile=@{targetDir}/licenses.xml" />
@@ -286,15 +269,11 @@
         <arg value="mvn"/>
         <arg value="-f" />
         <arg value="@{pom}" />
-        <arg value="-s" />
-        <arg value="${mavenSettingFile}" />
         <arg value="install" />
       </exec>
       <exec osfamily="unix" executable="mvn" outputproperty="exec.output">
         <arg value="-f" />
         <arg value="@{pom}" />
-        <arg value="-s" />
-        <arg value="${mavenSettingFile}" />
         <arg value="install" />
       </exec>
       <echo message="${exec.output}" />
