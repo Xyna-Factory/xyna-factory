@@ -44,6 +44,8 @@ import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventHandling;
 import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventSource;
 
+import base.Text;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -69,6 +71,7 @@ import org.apache.log4j.Logger;
 
 import xdev.yang.YangAppGenerationServiceOperation;
 import xmcp.yang.UseCaseTableData;
+import xprc.xpce.Workspace;
 
 
 public class YangAppGenerationServiceOperationImpl implements ExtendedDeploymentTask, YangAppGenerationServiceOperation {
@@ -105,5 +108,11 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   @Override
   public List<? extends UseCaseTableData> loadUsecases() {
     return new LoadUsecasesTable().loadUsecases();
+  }
+
+  @Override
+  public void addUsecase(XynaOrderServerExtension order, Text usecaseGroupFqn, Text usecaseName, Workspace workspace) {
+      new AddUsecase().addUsecase(usecaseGroupFqn.getText(), usecaseName.getText(), workspace, order);
+    
   }
 }

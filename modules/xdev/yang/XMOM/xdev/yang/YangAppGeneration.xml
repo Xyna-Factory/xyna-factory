@@ -31,5 +31,20 @@
         <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadUsecases();</CodeSnippet>
       </SourceCode>
     </Operation>
+   <Operation Label="Add Usecase" Name="addUsecase" IsStatic="true" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="2" Label="UsecaseGroupFqn" VariableName="text2" ReferenceName="Text" ReferencePath="base">
+        </Data>
+        <Data ID="3" Label="UsecaseName" VariableName="text3" ReferenceName="Text" ReferencePath="base">
+        </Data>
+        <Data ID="5" Label="Workspace" VariableName="workspace5" ReferenceName="Workspace" ReferencePath="xprc.xpce">
+        </Data>
+      </Input>
+      <Output>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.addUsecase(correlatedXynaOrder, text2, text3, workspace5);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>
