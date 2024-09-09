@@ -15,12 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="YangAppGenerator" comment="" factoryVersion="" versionName="9.0.0" xmlVersion="1.1">
+--><Application applicationName="YangAppGenerator" comment="" factoryVersion="" versionName="test_version" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Processing</ApplicationName>
         <VersionName>1.0.21</VersionName>
+      </RuntimeContextRequirement>
+      <RuntimeContextRequirement>
+        <ApplicationName>YangBase</ApplicationName>
+        <VersionName>1.0.0</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
@@ -29,4 +33,14 @@
       <SharedLib>yangkit</SharedLib>
     </SharedLib>
   </SharedLibs>
+  <XMOMEntries>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.yang.YangAppGeneration</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xdev.yang.ModuleCollectionGenerationParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+  </XMOMEntries>
 </Application>
