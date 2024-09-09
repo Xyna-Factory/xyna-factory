@@ -30,6 +30,7 @@ import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.trigger.RunnableForFilterAccess;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
+import com.gip.xyna.xprc.exceptions.XPRC_XMOMObjectDoesNotExist;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 
@@ -61,15 +62,8 @@ public class AddUsecase {
         logger.debug(order.getId() + ": Read from input: Workspace revision: " + revision + ", label: " + label + ", path: " + path);
       }
       try {
-        if (!dom.exists()) {
-          if (logger.isDebugEnabled()) {
-            logger.debug(order.getId() + ": Datatype does not exist");
-          }
+        if (!doesDomExist(dom)) {
           currentPath = createDatatype(label, workspaceName, order);
-
-          if (logger.isDebugEnabled()) {
-            logger.debug(order.getId() + ": Datatype created. Temporary path: " + currentPath);
-          }
         }
 
         if (logger.isDebugEnabled()) {
@@ -87,8 +81,21 @@ public class AddUsecase {
     }
   }
 
+  private boolean doesDomExist(DOM dom) {
+    try {
+      dom.parseGeneration(false, false);
+      return dom.exists();
+    } catch(XPRC_XMOMObjectDoesNotExist e) {
+      return false;
+    } catch(Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
 
   private void closeDatatype(String currentPath, String label, String workspaceName, XynaOrderServerExtension order) {
+    if (logger.isDebugEnabled()) {
+      logger.debug(order.getId() + ": Datatype does not exist");
+    }
     RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
     String workspaceNameEscaped = urlEncode(workspaceName);
     String endpoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + currentPath + "/" + label + "/close";
@@ -99,6 +106,10 @@ public class AddUsecase {
       runnable.execute(url, method, payload);
     } catch (Exception e) {
 
+    }
+
+    if (logger.isDebugEnabled()) {
+      logger.debug(order.getId() + ": Datatype created. Temporary path: " + currentPath);
     }
   }
 
