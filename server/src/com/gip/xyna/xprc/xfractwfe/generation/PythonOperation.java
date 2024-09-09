@@ -112,7 +112,13 @@ public class PythonOperation extends CodeOperation {
       cb.addLine("Object " + var.varName);
     }
     cb.addLine("com.gip.xyna.xprc.xfractwfe.python.Context context = new com.gip.xyna.xprc.xfractwfe.python.Context()");
-    cb.addLine("context.revision = ((com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase)getClass().getClassLoader()).getRevision()");
+    
+    cb.add("context.revision = ");
+    if(!isStatic()) {
+      cb.addLine("((com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase)getClass().getClassLoader()).getRevision()");
+    } else {
+      cb.addLine("(com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase)" + parent.getFqClassName() + ".class.getClassLoader()).getRevision()");
+    }
     String servicePath = getParent().getOriginalFqName();
     cb.addLine("context.servicePath = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().getPathForRevision(PathType.SERVICE, context.revision)"
         + " + \"/" + servicePath + "\"");
