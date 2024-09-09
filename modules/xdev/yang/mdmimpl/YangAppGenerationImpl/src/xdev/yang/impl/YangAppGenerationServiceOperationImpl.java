@@ -25,10 +25,10 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
-import com.gip.xyna.xmcp.xfcli.generated.OverallInformationProvider;
 
 import xdev.yang.ModuleCollectionGenerationParameter;
 import xdev.yang.YangAppGenerationServiceOperation;
+import xdev.yang.cli.generated.OverallInformationProvider;
 
 
 

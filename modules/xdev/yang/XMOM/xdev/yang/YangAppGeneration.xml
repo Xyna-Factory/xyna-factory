@@ -22,7 +22,7 @@
   <Libraries>YangAppGenerationImpl.jar</Libraries>
   <SharedLibraries>yangkit</SharedLibraries>
   <Service Label="Yang App Generation" TypeName="YangAppGeneration">
-    <Operation Label="Import Yang Modules" Name="importYangModules" IsStatic="true">
+    <Operation Label="Import Module Collection Application" Name="importModuleCollectionApplication" IsStatic="true">
       <Input>
         <Data ID="2" Label="Module Collection Generation Parameter" VariableName="moduleCollectionGenerationParameter2" ReferenceName="ModuleCollectionGenerationParameter" ReferencePath="xdev.yang">
         </Data>
