@@ -21,6 +21,7 @@
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
   <Libraries>YangAppGenerationImpl.jar</Libraries>
+  <SharedLibraries>yangkit</SharedLibraries>
   <Service Label="Yang App Generation" TypeName="YangAppGeneration">
     <Operation IsStatic="true" Label="Load Usecases" Name="loadUsecases">
       <Input/>

@@ -69,7 +69,7 @@ public class DetermineUseCaseAssignments {
     if(rpcElement == null) {
       return null;
     }
-    return rpcElement.getNodeValue();
+    return rpcElement.getTextContent();
   }
 
 
