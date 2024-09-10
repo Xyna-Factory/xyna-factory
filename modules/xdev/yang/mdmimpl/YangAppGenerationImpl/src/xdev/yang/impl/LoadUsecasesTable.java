@@ -31,14 +31,8 @@ import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.WorkspaceInformation;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.workspacemgmt.WorkspaceManagement;
-import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase;
-import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabaseEntryColumn;
-import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabaseType;
-import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResult;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResultEntry;
-import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSelect;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
-import com.gip.xyna.xnwh.exceptions.XNWH_WhereClauseBuildException;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
@@ -114,35 +108,17 @@ public class LoadUsecasesTable {
 
   private List<UseCaseGroupDt> determineUsecaseGroupDatatypes() throws Exception {
     List<UseCaseGroupDt> result = new ArrayList<>();
-    XMOMDatabase xmomDb = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getXMOMDatabase();
+    RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     List<Long> revisions = determineWorkspaceRevisions();
-    for (Long revision : revisions) {
-      List<XMOMDatabaseSelect> selects = buildSelects(); // new selects are required for every XMOM database search
-      XMOMDatabaseSearchResult xmomDbSearchResult = xmomDb.searchXMOMDatabase(selects, -1, revision);
-      List<XMOMDatabaseSearchResultEntry> xmomDbResults = xmomDbSearchResult.getResult();
+    XmomDbInteraction interaction = new XmomDbInteraction();
+    List<XMOMDatabaseSearchResultEntry> xmomDbResults = interaction.searchYangDTs(YangUsecaseImplementation.class.getCanonicalName(), revisions);
       for (XMOMDatabaseSearchResultEntry entry : xmomDbResults) {
+        Long revision = revMgmt.getRevision(entry.getRuntimeContext());
         UseCaseGroupDt useCaseGroup = new UseCaseGroupDt(entry.getFqName(), revision);
         result.add(useCaseGroup);
       }
-    }
     return result;
   }
-
-
-  private List<XMOMDatabaseSelect> buildSelects() {
-    List<XMOMDatabaseSelect> selects = new ArrayList<>();
-    XMOMDatabaseSelect select = new XMOMDatabaseSelect();
-    select.addAllDesiredResultTypes(List.of(XMOMDatabaseType.SERVICEGROUP, XMOMDatabaseType.DATATYPE));
-    try {
-      select.where(XMOMDatabaseEntryColumn.EXTENDS).isEqual(YangUsecaseImplementation.class.getCanonicalName());
-    } catch (XNWH_WhereClauseBuildException e) {
-      throw new RuntimeException(e);
-    }
-    selects.add(select);
-
-    return selects;
-  }
-
 
   private List<Long> determineWorkspaceRevisions() throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
     List<Long> result = new ArrayList<>();

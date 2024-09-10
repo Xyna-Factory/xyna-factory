@@ -46,5 +46,16 @@
         <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.addUsecase(correlatedXynaOrder, text2, text3, workspace5);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Load Assignments" Name="loadAssignments">
+      <Input>
+        <Data ID="7" Label="Load Yang Assignments Data" ReferenceName="LoadYangAssignmentsData" ReferencePath="xmcp.yang" VariableName="loadYangAssignmentsData7"/>
+      </Input>
+      <Output>
+        <Data ID="6" IsList="true" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData6"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadAssignments(loadYangAssignmentsData7);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>
