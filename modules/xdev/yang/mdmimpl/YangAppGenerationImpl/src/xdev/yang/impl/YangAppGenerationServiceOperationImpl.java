@@ -70,6 +70,8 @@ import java.util.concurrent.ConcurrentMap;
 import org.apache.log4j.Logger;
 
 import xdev.yang.YangAppGenerationServiceOperation;
+import xmcp.yang.LoadYangAssignmentsData;
+import xmcp.yang.UseCaseAssignementTableData;
 import xmcp.yang.UseCaseTableData;
 import xprc.xpce.Workspace;
 
@@ -114,5 +116,11 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   public void addUsecase(XynaOrderServerExtension order, Text usecaseGroupFqn, Text usecaseName, Workspace workspace) {
       new AddUsecase().addUsecase(usecaseGroupFqn.getText(), usecaseName.getText(), workspace, order);
     
+  }
+
+  @Override
+  public List<? extends UseCaseAssignementTableData> loadAssignments(LoadYangAssignmentsData data) {
+    DetermineUseCaseAssignments executor = new DetermineUseCaseAssignments();
+    return executor.determineUseCaseAssignments(data.getYangPath(), data.getFqn(), data.getUsecase(), data.getWorkspaceName());
   }
 }
