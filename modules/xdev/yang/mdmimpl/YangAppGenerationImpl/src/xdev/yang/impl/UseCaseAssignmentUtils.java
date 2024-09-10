@@ -43,6 +43,8 @@ import org.yangcentral.yangkit.model.api.stmt.YangStatement;
 import org.yangcentral.yangkit.parser.YinParser;
 
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.xfmg.xfctrl.XynaFactoryControl;
+import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResultEntry;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
@@ -51,7 +53,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 import xmcp.yang.UseCaseAssignementTableData;
-import xmcp.yang.YangUsecaseImplementation;
+import xmcp.yang.YangModuleCollection;
 
 public class UseCaseAssignmentUtils {
 
@@ -134,15 +136,21 @@ public class UseCaseAssignmentUtils {
 
   public static List<Module> loadModules(String workspaceName) {
     List<Module> result = new ArrayList<>();
+    XynaFactoryControl xynaFactoryCtrl = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl();
     XmomDbInteraction interaction = new XmomDbInteraction();
-    RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+    RevisionManagement revMgmt = xynaFactoryCtrl.getRevisionManagement();
+    RuntimeContextDependencyManagement rtcDepMgmt = xynaFactoryCtrl.getRuntimeContextDependencyManagement();
     Long revision;
     try {
       revision = revMgmt.getRevision(null, null, workspaceName);
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       throw new RuntimeException(e);
     }
-    List<XMOMDatabaseSearchResultEntry> xmomDbResult = interaction.searchYangDTs(YangUsecaseImplementation.class.getCanonicalName(), List.of(revision));
+    Set<Long> revisions = new HashSet<Long>();
+    revisions.add(revision);
+    rtcDepMgmt.getDependenciesRecursivly(revision, revisions);
+    List<Long> revisionsList = new ArrayList<>(revisions);
+    List<XMOMDatabaseSearchResultEntry> xmomDbResult = interaction.searchYangDTs(YangModuleCollection.class.getCanonicalName(), revisionsList);
     for(XMOMDatabaseSearchResultEntry entry : xmomDbResult) {
       Long entryRevision;
       try {
