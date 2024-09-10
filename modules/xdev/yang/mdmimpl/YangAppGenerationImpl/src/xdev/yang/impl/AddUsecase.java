@@ -138,8 +138,8 @@ public class AddUsecase {
   private void addServiceToDatatype(String path, String label, String service, String workspace, XynaOrderServerExtension order) {
     RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
     String workspaceNameEscaped = urlEncode(workspace);
-    String endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + 
-        path + "/" + label + "/objects/memberMethodsArea/insert";
+    String fqnUrl = path + "/" + label;
+    String endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + fqnUrl + "/objects/memberMethodsArea/insert";
     URLPath url = new URLPath(endPoint, null, null);
     HTTPMethod method = new POST();
     String payload = "{\"index\":-1,\"content\":{\"type\":\"memberMethod\",\"label\":\"" +  service + "\"},\"revision\":0}";
