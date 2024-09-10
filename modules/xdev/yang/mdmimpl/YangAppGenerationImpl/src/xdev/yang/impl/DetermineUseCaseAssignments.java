@@ -78,8 +78,13 @@ public class DetermineUseCaseAssignments {
       RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
       Long revision = revMgmt.getRevision(null, null, workspaceName);
       DOM dom = DOM.getOrCreateInstance(fqn, new GenerationBaseCache(), revision);
+      dom.parseGeneration(false, false);
       Operation operation = dom.getOperationByName(usecase);
-      for(String unknownMetaTag : operation.getUnknownMetaTags()) {
+      List<String> unknownMetaTags = operation.getUnknownMetaTags();
+      if(unknownMetaTags == null) {
+        return null;
+      }
+      for(String unknownMetaTag : unknownMetaTags) {
         Document d = XMLUtils.parseString(unknownMetaTag);
         boolean isYang = d.getDocumentElement().getTagName().equals(Constants.TAG_YANG);
         boolean isUseCase = Constants.VAL_USECASE.equals(d.getDocumentElement().getAttribute(Constants.ATT_YANG_TYPE));
