@@ -107,19 +107,17 @@ public class PythonOperation extends CodeOperation {
   
 
   protected void generateJavaImplementationInternally(CodeBuffer cb) {
+    String getClassString = !isStatic() ? "getClass()": parent.getFqClassName() + ".class";
     cb.addLine("com.gip.xyna.xprc.xfractwfe.XynaPythonSnippetManagement pyMgmt = com.gip.xyna.XynaFactory.getInstance().getProcessing().getXynaPythonSnippetManagement()");
     for (AVariable var : getOutputVars()) {
       cb.addLine("Object " + var.varName);
     }
     cb.addLine("com.gip.xyna.xprc.xfractwfe.python.Context context = new com.gip.xyna.xprc.xfractwfe.python.Context()");
-    
-    cb.add("context.revision = ((com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase)");
-    cb.add(!isStatic() ? "getClass()": parent.getFqClassName() + ".class");
-    cb.addLine(".getClassLoader()).getRevision()");
+    cb.addLine("context.revision = ((com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase)" + getClassString + ".getClassLoader()).getRevision()");
     String servicePath = getParent().getOriginalFqName();
     cb.addLine("context.servicePath = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().getPathForRevision(PathType.SERVICE, context.revision)"
         + " + \"/" + servicePath + "\"");
-    cb.addLine("try (PythonInterpreter interpreter = pyMgmt.createPythonInterpreter(getClass().getClassLoader())) {");
+    cb.addLine("try (PythonInterpreter interpreter = pyMgmt.createPythonInterpreter(" + getClassString + ".getClassLoader())) {");
     cb.addLine("interpreter.set(\"_context\", context)");
     addLoadMdm(cb);
     cb.addLine("interpreter.exec(\"mdm.XynaObject._context = _context\")");
