@@ -29,7 +29,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipOutputStream;
 
+import org.dom4j.DocumentException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.yangcentral.yangkit.model.api.schema.YangSchemaContext;
+import org.yangcentral.yangkit.parser.YangParserException;
+import org.yangcentral.yangkit.parser.YangYinParser;
+import org.yangcentral.yangkit.writter.YinWriter;
 
 import com.gip.xyna.FileUtils;
 import com.gip.xyna.XynaFactory;
@@ -49,21 +55,22 @@ public class ModuleCollectionApp {
 
   public static YangModuleApplicationData createModuleCollectionApp(ModuleCollectionGenerationParameter genParameter) {
     FileManagement fileMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getFileManagement();
-    String yangDir = fileMgmt.retrieve(genParameter.getFileID().getId()).getOriginalFilename();
-    if (yangDir.endsWith(".zip")) {
-      yangDir = decompressArchive(yangDir);
-    }
-    String appName = genParameter.getApplicationName();
-    File unzipedApp = new File("/tmp/" + appName);
-
     // temporary files to remove when finished
     List<File> files = new ArrayList<>();
+
+    // directory with yang modules
+    String yangModulesDir = fileMgmt.retrieve(genParameter.getFileID().getId()).getOriginalFilename();
+    if (yangModulesDir.endsWith(".zip")) {
+      yangModulesDir = decompressArchive(yangModulesDir);
+      files.add(new File(yangModulesDir));
+    }
+
+    // directory to create the application
+    String appName = genParameter.getApplicationName();
+    File unzipedApp = new File("/tmp/" + appName);
     files.add(unzipedApp);
 
-
-    // collect yang files
-    // parse yang files
-    createCollectionDatatype(genParameter.getDataTypeFQN(), unzipedApp.getAbsolutePath());
+    createCollectionDatatype(genParameter.getDataTypeFQN(), yangModulesDir, unzipedApp.getAbsolutePath());
     createApplicationXML(genParameter, unzipedApp.getAbsolutePath());
 
     // build application
@@ -79,7 +86,6 @@ public class ModuleCollectionApp {
       throw new RuntimeException(e);
     }
 
-
     String id;
     try (FileInputStream is = new FileInputStream(tmpFile)) {
       id = fileMgmt.store("yang", tmpFile.getAbsolutePath(), is);
@@ -91,6 +97,50 @@ public class ModuleCollectionApp {
   }
 
 
+  private static void createCollectionDatatype(String fqDatatypeName, String yangModulesDir, String target) {
+    StringBuilder collectionDatatype = new StringBuilder();
+    collectionDatatype.append("<DataType xmlns=\"http://www.gip.com/xyna/xdev/xfractmod\" Version=\"1.8\"");
+    collectionDatatype.append(" TypeName=\"\" TypePath=\"\" Label=\"\" IsAbstract=\"false\">");
+    collectionDatatype.append(" BaseTypeName=\"YangModuleCollection\" BaseTypePath=\"xdev.yang\">\n");
+    collectionDatatype.append("<Meta>\n<IsServiceGroupOnly>false</IsServiceGroupOnly>\n</Meta>");
+    collectionDatatype.append("</DataType>\n");
+
+    String xmomPath = fqDatatypeName.substring(0, fqDatatypeName.lastIndexOf("."));
+    String datatypeName = fqDatatypeName.substring(fqDatatypeName.lastIndexOf(".") + 1);
+    Document yinDocument = parseYangModules(yangModulesDir);
+    try {
+      Document datatypeDocument = XMLUtils.parseString(collectionDatatype.toString());
+      datatypeDocument.getDocumentElement().setAttribute("TypeName", datatypeName);
+      datatypeDocument.getDocumentElement().setAttribute("TypePath", xmomPath);
+      datatypeDocument.getDocumentElement().setAttribute("Label", datatypeName);
+      datatypeDocument.getElementsByTagName("Meta").item(0)
+          .appendChild(datatypeDocument.importNode(yinDocument.getDocumentElement(), true));
+      String filePath = "XMOM/" + fqDatatypeName.replace(".", "/") + ".xml";
+      XMLUtils.saveDom(new File(target + "/" + filePath), datatypeDocument);
+    } catch (XPRC_XmlParsingException | Ex_FileAccessException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
+  private static Document parseYangModules(String yangModulesDir) {
+    try {
+      Document yinDocument = XMLUtils.parseString("<Yang type=\"ModuleCollection\"></Yang>");
+      Element rootElement = yinDocument.getDocumentElement();
+      YangSchemaContext schemaContext = YangYinParser.parse(yangModulesDir);
+      for (var entry : schemaContext.getParseResult().entrySet()) {
+        Document doc = XMLUtils.parseString(YinWriter.serialize(entry.getValue()).asXML());
+        rootElement.appendChild(yinDocument.importNode(doc.getDocumentElement(), true));
+      }
+
+      return yinDocument;
+
+    } catch (IOException | YangParserException | DocumentException | XPRC_XmlParsingException e) {
+      throw new RuntimeException("Could not parse Yang modules", e);
+    }
+  }
+
+
   private static void createApplicationXML(ModuleCollectionGenerationParameter genParameter, String target) {
     StringBuilder applicationXML = new StringBuilder();
     applicationXML.append("<Application applicationName=\"\" factoryVersion=\"\" versionName=\"\" xmlVersion=\"1.1\">\n");
@@ -99,7 +149,7 @@ public class ModuleCollectionApp {
     applicationXML.append("</RuntimeContextRequirement>\n</RuntimeContextRequirements>\n</ApplicationInfo>\n");
     applicationXML.append("<XMOMEntries>\n<XMOMEntry implicitDependency=\"false\">\n<FqName></FqName>\n");
     applicationXML.append("<Type>DATATYPE</Type>\n</XMOMEntry>\n</XMOMEntries>\n</Application>\n");
-    Long revision = ((ClassLoaderBase) ModuleCollectionApp.class.getClass().getClassLoader()).getRevision();
+    Long revision = ((ClassLoaderBase) ModuleCollectionApp.class.getClassLoader()).getRevision();
 
     Set<Long> dependencyRevisions = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl()
         .getRuntimeContextDependencyManagement().getDependencies(revision);
@@ -129,42 +179,14 @@ public class ModuleCollectionApp {
   }
 
 
-  private static void createCollectionDatatype(String fqDatatypeName, String target) {
-    StringBuilder collectionDatatype = new StringBuilder();
-    collectionDatatype.append("<DataType xmlns=\"http://www.gip.com/xyna/xdev/xfractmod\" Version=\"1.8\"");
-    collectionDatatype.append(" TypeName=\"\" TypePath=\"\" Label=\"\" IsAbstract=\"false\">");
-    collectionDatatype.append(" BaseTypeName=\"YangModuleCollection\" BaseTypePath=\"xdev.yang\">\n");
-    collectionDatatype.append("<Meta>\n<IsServiceGroupOnly>false</IsServiceGroupOnly>\n</Meta>");
-    collectionDatatype.append("</DataType>\n");
-
-    String xmomPath = fqDatatypeName.substring(0, fqDatatypeName.lastIndexOf("."));
-    String datatypeName = fqDatatypeName.substring(fqDatatypeName.lastIndexOf(".") + 1);
-    try {
-      Document datatypeDocument = XMLUtils.parseString(collectionDatatype.toString());
-      datatypeDocument.getDocumentElement().setAttribute("TypeName", datatypeName);
-      datatypeDocument.getDocumentElement().setAttribute("TypePath", xmomPath);
-      datatypeDocument.getDocumentElement().setAttribute("Label", datatypeName);
-      String filePath = "XMOM/" + fqDatatypeName.replace(".", "/") + ".xml";
-      XMLUtils.saveDom(new File(target + "/" + filePath), datatypeDocument);
-    } catch (XPRC_XmlParsingException | Ex_FileAccessException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-
   public static String decompressArchive(String zipFile) {
-    String unzipDir = "/tmp/" + new File(zipFile).getName() + "_unzipped";
-    FileUtils.deleteDirectoryRecursively(new File(unzipDir));
+    String unzipDir = "/tmp/" + new File(zipFile).getName().replace(".zip", "_unzipped");
     try {
       FileUtils.unzip(zipFile, unzipDir, (path) -> true);
     } catch (Ex_FileAccessException e) {
       throw new RuntimeException("Could not unzip " + zipFile, e);
     }
-    File[] files = new File(unzipDir).listFiles((path) -> path.isFile());
-    if (files.length != 1) {
-      throw new RuntimeException("Could not find specification file in zip.");
-    }
-    return files[0].getAbsolutePath();
+    return unzipDir;
   }
 
 

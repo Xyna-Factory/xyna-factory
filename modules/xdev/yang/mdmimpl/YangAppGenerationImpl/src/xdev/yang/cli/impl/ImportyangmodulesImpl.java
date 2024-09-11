@@ -34,6 +34,8 @@ import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xfmg.xfctrl.filemgmt.FileManagement;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
+import com.gip.xyna.xmcp.xfcli.generated.Importapplication;
+import com.gip.xyna.xmcp.xfcli.impl.ImportapplicationImpl;
 
 import xdev.yang.ModuleCollectionGenerationParameter;
 import xdev.yang.cli.generated.Importyangmodules;
@@ -64,9 +66,9 @@ public class ImportyangmodulesImpl extends XynaCommandImplementation<Importyangm
     }
 
     FileManagement fileMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getFileManagement();
-    String id = null;
+    String tmpFileId = null;
     try (FileInputStream is = new FileInputStream(tmpFile)) {
-      id = fileMgmt.store("yang", tmpFile.getAbsolutePath(), is);
+      tmpFileId = fileMgmt.store("yang", tmpFile.getAbsolutePath(), is);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -76,16 +78,25 @@ public class ImportyangmodulesImpl extends XynaCommandImplementation<Importyangm
     genParameter.setApplicationName(appName);
     genParameter.setApplicationVersion(payload.getApplicationVersion());
     genParameter.setDataTypeFQN(payload.getFqDatatypeName());
-    genParameter.setFileID(new ManagedFileId(id));
+    genParameter.setFileID(new ManagedFileId(tmpFileId));
+    
+    String appFileId = null;
     try (YangModuleApplicationData appData = ModuleCollectionApp.createModuleCollectionApp(genParameter)) {
       writeToCommandLine(statusOutputStream, appName + " ManagedFileId: " + appData.getId() + " ");
+      appFileId = appData.getId();
     } catch (IOException e) {
-      writeToCommandLine(statusOutputStream, "Could not clean up temporary files for " + appName);
+      writeToCommandLine(statusOutputStream, "Could not clean up temporary files for " + appName + "\n");
       if (logger.isWarnEnabled()) {
-        logger.warn("Could not clean up temporary files for " + appName, e);
+        logger.warn("Could not clean up temporary files for " + appName + "\n", e);
       }
     }
+    fileMgmt.remove(tmpFileId);
+    tmpFile.delete();
 
+    ImportapplicationImpl importApp = new ImportapplicationImpl();
+    Importapplication importPayload = new Importapplication();
+    importPayload.setFilename(fileMgmt.retrieve(appFileId).getOriginalFilename());
+    importApp.execute(statusOutputStream, importPayload);
     writeToCommandLine(statusOutputStream, "Done.");
   }
 }
