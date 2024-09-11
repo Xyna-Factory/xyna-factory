@@ -51,30 +51,5 @@
             <groupId>com.gip.xyna</groupId>
             <artifactId>xynautils-exceptions</artifactId>
         </dependency>
-        <dependency>
-            <groupId>mdmLocal</groupId>
-            <artifactId>mdm</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/lib/xyna/mdm.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>serviceDefinitionLocal</groupId>
-            <artifactId>serviceDefinition</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/lib/xyna/serviceDefinition.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>yangkit-parserLocal</groupId>
-            <artifactId>yangkit-parserLocal</artifactId>
-            <version>1.4.5</version>
-            <scope>system</scope>
-            <systemPath>${pom.basedir}/lib/xyna/yangkit-parser-1.4.5.jar</systemPath>
-        </dependency>
     </dependencies>
-    <build>
-        <sourceDirectory>src</sourceDirectory>
-        <testSourceDirectory>test</testSourceDirectory>
-    </build>
 </project>

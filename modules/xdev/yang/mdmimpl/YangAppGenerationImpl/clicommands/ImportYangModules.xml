@@ -19,6 +19,6 @@
   <CommandDefinition Groups="Yang" Name="importyangmodules" Description="Write the information of Yang modules to a xyna data type" />
   <Argument Name="path" Description="Path to directory containing the Yang modules" />
   <Argument Name="applicationName" Description="Name of the application to generate" />
-  <Argument Name="applicationVersion" Description="Version of the application to generate" />
+  <Argument Name="versionName" Description="Version of the application to generate" />
   <Argument Name="fqDatatypeName" Description="FQN of the data type conatining the information of the Yang modules" />
 </XynaCommandLineCommand>

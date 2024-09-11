@@ -76,7 +76,7 @@ public class ImportyangmodulesImpl extends XynaCommandImplementation<Importyangm
     String appName = payload.getApplicationName();
     ModuleCollectionGenerationParameter genParameter = new ModuleCollectionGenerationParameter();
     genParameter.setApplicationName(appName);
-    genParameter.setApplicationVersion(payload.getApplicationVersion());
+    genParameter.setApplicationVersion(payload.getVersionName());
     genParameter.setDataTypeFQN(payload.getFqDatatypeName());
     genParameter.setFileID(new ManagedFileId(tmpFileId));
     
