@@ -54,9 +54,8 @@ public class Main implements DemonWorker {
   public static final OID OID_STATE = new OID(".1.3.6.1.4.1.28747.1.11.4.1.2.1");
   
   private static final String PROPERTY_FILENAME = "networkAvailability.properties";
-  private static final String LOGFILE_DEFAULT = "log4j2.xml";
   private static final String DEMON_PREFIX = "demon";
-  static Logger logger = LogManager.getLogger(NetworkAvailability.class.getName());
+  static Logger logger = Logger.getLogger(NetworkAvailability.class.getName());
 
 
   private static final String PROP_LOCALPORT_RECEIVE = "port.local.receive";
@@ -82,17 +81,10 @@ public class Main implements DemonWorker {
   public static void main(String[] args) throws IOException {
     String pathToProperties = (args.length > 0 ? args[0] : "./config") + "/";
 
-    //PropertyConfigurator.configure(pathToProperties + LOGFILE_DEFAULT);
-
     propertiesPath = pathToProperties + PROPERTY_FILENAME;
     DemonProperties.readProperties(propertiesPath);
 
-    System.out.println("jetzt starte ich den logger");
-    logger = LogManager.getRootLogger();
-    System.out.println(logger.getEffectiveLevel()+"##"+logger.getName()+"##"+logger.isDebugEnabled());
-    System.out.println("nun kommt gleich die erste Log Meldung");
     logger.debug("Initializing Demon");
-    System.out.println("jetzt muesste sie geschrieben sein");
     Demon demon = Demon.createDemon(DEMON_PREFIX);
     demon.startDemon();
     logger.info("Demon started");
