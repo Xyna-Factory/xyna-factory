@@ -52,12 +52,6 @@
             <artifactId>xynautils-exceptions</artifactId>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>mdmLocal</groupId>
             <artifactId>mdm</artifactId>
             <version>1.0</version>
@@ -70,6 +64,13 @@
             <version>1.0</version>
             <scope>system</scope>
             <systemPath>${pom.basedir}/lib/xyna/serviceDefinition.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>yangkit-parserLocal</groupId>
+            <artifactId>yangkit-parserLocal</artifactId>
+            <version>1.4.5</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/lib/xyna/yangkit-parser-1.4.5.jar</systemPath>
         </dependency>
     </dependencies>
     <build>
