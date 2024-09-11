@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.FileUtils;
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xfmg.xfctrl.filemgmt.FileManagement;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
@@ -52,23 +53,13 @@ public class ImportyangmodulesImpl extends XynaCommandImplementation<Importyangm
 
   public void execute(OutputStream statusOutputStream, Importyangmodules payload) throws XynaException {
 
-    File tmpFile;
-    File yangDir = new File(payload.getPath());
-    try {
-      tmpFile = File.createTempFile("/tmp/yang_modules_", ".zip");
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(tmpFile))) {
-      FileUtils.zipDir(yangDir, zos, yangDir);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+    Boolean inputIsZip = payload.getPath().endsWith(".zip");
+    File inputFile = inputIsZip ? new File(payload.getPath()) : createTempZipFile(payload.getPath());
 
     FileManagement fileMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getFileManagement();
-    String tmpFileId = null;
-    try (FileInputStream is = new FileInputStream(tmpFile)) {
-      tmpFileId = fileMgmt.store("yang", tmpFile.getAbsolutePath(), is);
+    String inputFileId = null;
+    try (FileInputStream is = new FileInputStream(inputFile)) {
+      inputFileId = fileMgmt.store("yang", inputFile.getAbsolutePath(), is);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -78,8 +69,8 @@ public class ImportyangmodulesImpl extends XynaCommandImplementation<Importyangm
     genParameter.setApplicationName(appName);
     genParameter.setApplicationVersion(payload.getVersionName());
     genParameter.setDataTypeFQN(payload.getFqDatatypeName());
-    genParameter.setFileID(new ManagedFileId(tmpFileId));
-    
+    genParameter.setFileID(new ManagedFileId(inputFileId));
+
     String appFileId = null;
     try (YangModuleApplicationData appData = ModuleCollectionApp.createModuleCollectionApp(genParameter)) {
       writeToCommandLine(statusOutputStream, appName + " ManagedFileId: " + appData.getId() + " ");
@@ -90,13 +81,37 @@ public class ImportyangmodulesImpl extends XynaCommandImplementation<Importyangm
         logger.warn("Could not clean up temporary files for " + appName + "\n", e);
       }
     }
-    fileMgmt.remove(tmpFileId);
-    tmpFile.delete();
+
+    fileMgmt.remove(inputFileId);
+    if (!inputIsZip) {
+      inputFile.delete();
+    }
 
     ImportapplicationImpl importApp = new ImportapplicationImpl();
     Importapplication importPayload = new Importapplication();
     importPayload.setFilename(fileMgmt.retrieve(appFileId).getOriginalFilename());
     importApp.execute(statusOutputStream, importPayload);
     writeToCommandLine(statusOutputStream, "Done.");
+  }
+
+
+  /*
+   * create zip file of input dir
+   */
+  private File createTempZipFile(String yangModulesPath) {
+    File yangModulesDir = new File(yangModulesPath);
+    File tmpFile = null;
+    try {
+      tmpFile = File.createTempFile("/tmp/yang_modules_", ".zip");
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(tmpFile))) {
+      FileUtils.zipDir(yangModulesDir, zos, yangModulesDir);
+    } catch (Ex_FileAccessException | IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    return tmpFile;
   }
 }
