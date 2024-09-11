@@ -177,7 +177,7 @@ public class UseCaseAssignmentUtils {
       if (yangTypeNode == null || !Constants.VAL_MODULECOLLECTION.equals(yangTypeNode.getNodeValue())) {
         continue;
       }
-      List<Element> modules = XMLUtils.getChildElementsByName((Element)yangTypeNode, "module");
+      List<Element> modules = XMLUtils.getChildElementsByName(xml.getDocumentElement(), "module");
       for(Element module : modules) {
         addModulesFromTag(module, result);
       }
