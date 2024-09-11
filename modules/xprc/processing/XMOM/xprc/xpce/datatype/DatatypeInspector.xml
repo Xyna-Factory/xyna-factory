@@ -173,5 +173,17 @@
         <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getSubtypes();</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="false" Label="Is Abstract" Name="isAbstract">
+      <Output>
+        <Data Label="is abstract" VariableName="isAbstract">
+          <Meta>
+            <Type>Boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().isAbstract();</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

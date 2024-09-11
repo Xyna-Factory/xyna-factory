@@ -80,7 +80,6 @@
   <target name="resolve">
     <resolver:resolve>
       <resolver:dependencies pomRef="pom"/>
-      <resolver:remoterepos refid="xyna.repository"/>
       <resolver:files refid="files" dir="${basedir}/lib/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
     </resolver:resolve>
     <loadLicenses targetDir="${basedir}/lib" />
