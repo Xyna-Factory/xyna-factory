@@ -56,7 +56,7 @@ public class Main implements DemonWorker {
   private static final String PROPERTY_FILENAME = "networkAvailability.properties";
   private static final String LOGFILE_DEFAULT = PROPERTY_FILENAME;
   private static final String DEMON_PREFIX = "demon";
-  static Logger logger = Logger.getLogger(NetworkAvailability.class.getName());
+  static Logger logger = LogManager.getLogger(NetworkAvailability.class.getName());
 
 
   private static final String PROP_LOCALPORT_RECEIVE = "port.local.receive";
@@ -86,7 +86,8 @@ public class Main implements DemonWorker {
 
     propertiesPath = pathToProperties + PROPERTY_FILENAME;
     DemonProperties.readProperties(propertiesPath);
-
+    
+    logger = LogManager.getRootLogger();
     logger.debug("Initializing Demon");
     Demon demon = Demon.createDemon(DEMON_PREFIX);
     demon.startDemon();
