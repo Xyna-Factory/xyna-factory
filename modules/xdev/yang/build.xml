@@ -27,17 +27,20 @@
     <target name="build">
         <antcall target="prepare-mdm-jar-if-missing" />
 
-
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="${root.dir}/modules/xdev/yang/sharedlib/yangkit">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
 
-        <antcall target="build-application" />
+	<ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/YangAppGenerationImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+
+	<antcall target="build-application" />
     </target>
 
     <target name="prepare-mdm-jar">
         <antcall target="create-mdm-jar" />	
-        <!-- <supply-mdm-jar type="" name="" /> -->
+        <supply-mdm-jar type="mdmimpl" name="YangAppGenerationImpl" />
         <delete file="${basedir}/mdm.jar" />
     </target>
 
