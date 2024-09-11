@@ -82,7 +82,7 @@ public class Main implements DemonWorker {
   public static void main(String[] args) throws IOException {
     String pathToProperties = (args.length > 0 ? args[0] : "./config") + "/";
 
-    PropertyConfigurator.configure(pathToProperties + LOGFILE_DEFAULT);
+    //PropertyConfigurator.configure(pathToProperties + LOGFILE_DEFAULT);
 
     propertiesPath = pathToProperties + PROPERTY_FILENAME;
     DemonProperties.readProperties(propertiesPath);
