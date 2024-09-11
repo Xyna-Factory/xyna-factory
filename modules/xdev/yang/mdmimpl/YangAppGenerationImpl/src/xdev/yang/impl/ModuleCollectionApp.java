@@ -100,8 +100,8 @@ public class ModuleCollectionApp {
   private static void createCollectionDatatype(String fqDatatypeName, String yangModulesDir, String target) {
     StringBuilder collectionDatatype = new StringBuilder();
     collectionDatatype.append("<DataType xmlns=\"http://www.gip.com/xyna/xdev/xfractmod\" Version=\"1.8\"");
-    collectionDatatype.append(" TypeName=\"\" TypePath=\"\" Label=\"\" IsAbstract=\"false\">");
-    collectionDatatype.append(" BaseTypeName=\"YangModuleCollection\" BaseTypePath=\"xdev.yang\">\n");
+    collectionDatatype.append(" TypeName=\"\" TypePath=\"\" Label=\"\" IsAbstract=\"false\"");
+    collectionDatatype.append(" BaseTypeName=\"YangModuleCollection\" BaseTypePath=\"xmcp.yang\">\n");
     collectionDatatype.append("<Meta>\n<IsServiceGroupOnly>false</IsServiceGroupOnly>\n</Meta>");
     collectionDatatype.append("</DataType>\n");
 
