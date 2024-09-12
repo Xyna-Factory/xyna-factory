@@ -106,6 +106,8 @@ public class MetaTagRmvAction extends RuntimeContextDependendAction implements E
     } catch (Exception e) {
       AuthUtils.replyError(tc, actionInstance, e);
     }
+    GenerationBaseObject gbo = xmomGui.getGbo(getSession(tc), rc, revision, url.getPathElement(2), url.getPathElement(3));
+    actionInstance.sendJson(tc, gbo.buildXMOMGuiReply().getJson());
     return actionInstance;
   }
 
