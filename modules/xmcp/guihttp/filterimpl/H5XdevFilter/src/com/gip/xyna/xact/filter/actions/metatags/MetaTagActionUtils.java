@@ -39,9 +39,9 @@ public class MetaTagActionUtils {
   }
   
   public static MetaTagProcessingInfoContainer createProcessingInfoContainer(URLPath url, String sessionId, XMOMGui xmomGui, Long revision)  throws Exception {
-    String fqn = url.getPathElement(4) + "." + url.getPathElement(5);
-    String type = url.getPathElement(6);
-    String elementName = url.getPathElement(7);
+    String fqn = url.getPathElement(2) + "." + url.getPathElement(3);
+    String type = url.getPathElement(4);
+    String elementName = url.getPathElement(5);
     FQName fqName = new FQName(revision, fqn);
     GenerationBaseObject gbo = xmomGui.getSessionBasedData(sessionId).load(fqName);
     return new MetaTagProcessingInfoContainer(type, elementName, gbo);
