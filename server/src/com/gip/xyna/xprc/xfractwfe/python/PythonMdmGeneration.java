@@ -50,23 +50,22 @@ public class PythonMdmGeneration {
 
 
   public static final String LOAD_MODULE_SNIPPET = setupLoadModuleSnippet();
-
-  public static final ArrayList<String> pythonKeywords = createPythonKeywordsList();
-
-
-  private static ArrayList<String> createPythonKeywordsList() {
-    ArrayList<String> keywords =
-        new ArrayList<>(Arrays.asList("False", "None", "True", "and", "as", "assert", "async", "await", "break", "class", "continue", "def",
-                                      "del", "elif", "else", "except", "finally", "for", "from", "global", "if", "import", "in", "is",
-                                      "lambda", "nonlocal", "not", "or", "pass", "raise", "return", "try", "while", "with", "yield"));
-    return keywords;
-  }
+  public final ArrayList<String> pythonKeywords;
 
 
   /**
    * contains mdm.py with implementations, but without typeHints
    */
   private Map<Long, String> cache = new HashMap<Long, String>();
+
+
+  @SuppressWarnings("unchecked")
+  public PythonMdmGeneration() {
+    JepInterpreter jepInterpreter = new JepInterpreter(PythonMdmGeneration.class.getClassLoader());
+    jepInterpreter.exec("import keyword");
+    this.pythonKeywords = (ArrayList<String>) jepInterpreter.get("keyword.kwlist");
+    jepInterpreter.close();
+  }
 
 
   public void invalidateRevision(Collection<Long> revisions) {
