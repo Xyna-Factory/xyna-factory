@@ -44,6 +44,8 @@ import com.gip.xyna.xact.filter.actions.libraries.PythonLibDeleteAction;
 import com.gip.xyna.xact.filter.actions.listpaths.DatatypesAction;
 import com.gip.xyna.xact.filter.actions.listpaths.ExceptionsAction;
 import com.gip.xyna.xact.filter.actions.listpaths.WorkflowsAction;
+import com.gip.xyna.xact.filter.actions.metatags.MetaTagAddAction;
+import com.gip.xyna.xact.filter.actions.metatags.MetaTagRmvAction;
 import com.gip.xyna.xact.filter.actions.monitor.AuditsOrderIdDownloadAction;
 import com.gip.xyna.xact.filter.actions.monitor.ImportedAuditsAction;
 import com.gip.xyna.xact.filter.actions.monitor.OpenAuditAction;
@@ -397,6 +399,9 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add( new JavaLibDeleteAction(xmomGui) );    
     allFilterActions.add( new PythonLibAddAction(xmomGui) );
     allFilterActions.add( new PythonLibDeleteAction(xmomGui) );
+    
+    allFilterActions.add( new MetaTagAddAction(xmomGui) );
+    allFilterActions.add( new MetaTagRmvAction(xmomGui) );
     
     List<Endpoint> endpoints = new ArrayList<>();
     for(FilterAction fa : allFilterActions) {
