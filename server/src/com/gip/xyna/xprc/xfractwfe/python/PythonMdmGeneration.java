@@ -42,19 +42,33 @@ import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.python.PythonGeneration.MethodInformation;
-import com.gip.xyna.xprc.xfractwfe.python.PythonGeneration.XynaObjectInformation;;
+import com.gip.xyna.xprc.xfractwfe.python.PythonGeneration.XynaObjectInformation;
+
+
 
 public class PythonMdmGeneration {
 
-  
+
   public static final String LOAD_MODULE_SNIPPET = setupLoadModuleSnippet();
-  
+
+  public static final ArrayList<String> pythonKeywords = createPythonKeywordsList();
+
+
+  private static ArrayList<String> createPythonKeywordsList() {
+    ArrayList<String> keywords =
+        new ArrayList<>(Arrays.asList("False", "None", "True", "and", "as", "assert", "async", "await", "break", "class", "continue", "def",
+                                      "del", "elif", "else", "except", "finally", "for", "from", "global", "if", "import", "in", "is",
+                                      "lambda", "nonlocal", "not", "or", "pass", "raise", "return", "try", "while", "with", "yield"));
+    return keywords;
+  }
+
+
   /**
    * contains mdm.py with implementations, but without typeHints
    */
   private Map<Long, String> cache = new HashMap<Long, String>();
-  
-  
+
+
   public void invalidateRevision(Collection<Long> revisions) {
     for(Long revision : revisions) {
       cache.remove(revision);
@@ -326,6 +340,9 @@ public class PythonMdmGeneration {
       for (Pair<String, String> member : info.members) {
         sb.append("    self.");
         sb.append(member.getFirst());
+        if (pythonKeywords.contains(member.getFirst())) {
+          sb.append("_");  // append _ if the member variable is a python keyword
+        }
         typeHint(sb, ": " + member.getSecond(), typeHints);
         sb.append(" = None\n");
       }
