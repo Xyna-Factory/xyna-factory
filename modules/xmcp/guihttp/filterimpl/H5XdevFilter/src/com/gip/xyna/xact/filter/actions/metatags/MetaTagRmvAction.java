@@ -27,6 +27,7 @@ import com.gip.xyna.xact.filter.HTMLBuilder.HTMLPart;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
 import com.gip.xyna.xact.filter.RuntimeContextDependendAction;
 import com.gip.xyna.xact.filter.URLPath;
+import com.gip.xyna.xact.filter.URLPath.URLPathQuery;
 import com.gip.xyna.xact.filter.actions.PathElements;
 import com.gip.xyna.xact.filter.actions.auth.utils.AuthUtils;
 import com.gip.xyna.xact.filter.actions.metatags.MetaTagActionUtils.MetaTagProcessingInfoContainer;
@@ -34,7 +35,6 @@ import com.gip.xyna.xact.filter.actions.startorder.Endpoint;
 import com.gip.xyna.xact.filter.session.GenerationBaseObject;
 import com.gip.xyna.xact.filter.session.XMOMGui;
 import com.gip.xyna.xact.filter.session.gb.ObjectId.ObjectIdPrefix;
-import com.gip.xyna.xact.filter.util.Utils;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
@@ -44,9 +44,6 @@ import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.GuiRight;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.Rights;
-
-import xmcp.processmodeller.datatypes.MetaTag;
-import xmcp.processmodeller.datatypes.request.MetaTagRequest;
 
 
 
@@ -102,7 +99,7 @@ public class MetaTagRmvAction extends RuntimeContextDependendAction implements E
     }
 
     try {
-      rmvMetaTag(getSession(tc).getId(), revision, url, tc.getPayload());
+      rmvMetaTag(getSession(tc).getId(), revision, url);
     } catch (Exception e) {
       AuthUtils.replyError(tc, actionInstance, e);
     }
@@ -117,18 +114,17 @@ public class MetaTagRmvAction extends RuntimeContextDependendAction implements E
     try {
       RTCInfo info = extractRTCInfo(url);
       URLPath urlNoRtc = url.subURL(2);
-      rmvMetaTag(creds.getSessionId(), info.revision, urlNoRtc, payload);
+      rmvMetaTag(creds.getSessionId(), info.revision, urlNoRtc);
     } catch (Exception e) {
     }
     return null;
   }
 
 
-  private void rmvMetaTag(String sessionId, Long revision, URLPath url, String payload) throws Exception {
-    Long guiHttpRevision = Utils.getGuiHttpApplicationRevision();
-    MetaTag metaTag = ((MetaTagRequest) Utils.convertJsonToGeneralXynaObject(payload, guiHttpRevision)).getMetaTag();
+  private void rmvMetaTag(String sessionId, Long revision, URLPath url) throws Exception {
+    URLPathQuery id = url.getQuery("metaTagId");
     MetaTagProcessingInfoContainer data = MetaTagActionUtils.createProcessingInfoContainer(url, sessionId, xmomGui, revision);
-    int index = Integer.valueOf(ObjectIdPrefix.metaTag.getBaseId(metaTag.getId()));
+    int index = Integer.valueOf(ObjectIdPrefix.metaTag.getBaseId(id.getValue()));
     MetaTagRmvFunction func = metaTagRmvFunctions.get(data.getType());
     func.rmvMetaTag(data.getGbo(), data.getElementName(), index);
   }
