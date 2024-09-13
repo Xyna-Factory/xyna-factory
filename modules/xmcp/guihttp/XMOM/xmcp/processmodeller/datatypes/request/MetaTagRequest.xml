@@ -14,20 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Encryption Data" TypeName="EncryptionData" TypePath="xmcp" Version="1.8">
+ -->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Request" BaseTypePath="xmcp.processmodeller.datatypes.request" IsAbstract="false" Label="MetaTagRequest" TypeName="MetaTagRequest" TypePath="xmcp.processmodeller.datatypes.request" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data IsList="true" Label="Values" VariableName="values">
-    <Meta>
-      <Type>String</Type>
-      <Documentation>List of encrypted values or values to encrypt, depending on the state of the "Encrypted" flag.</Documentation>
-    </Meta>
-  </Data>
-  <Data Label="Encrypted" VariableName="encrypted">
-    <Meta>
-      <Type>boolean</Type>
-      <Documentation>True if values are currently encrypted.</Documentation>
-    </Meta>
-  </Data>
+  <Data Label="MetaTag" ReferenceName="MetaTag" ReferencePath="xmcp.processmodeller.datatypes" VariableName="metaTag"/>
 </DataType>

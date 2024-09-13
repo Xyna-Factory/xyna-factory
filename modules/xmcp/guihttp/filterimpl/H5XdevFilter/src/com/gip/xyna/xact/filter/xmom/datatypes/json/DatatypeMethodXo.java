@@ -137,7 +137,7 @@ public class DatatypeMethodXo implements HasXoRepresentation {
                                                       identifiedVariables, ServiceUtils.getServiceTag(VarUsageType.thrown), 
                                                       new String[] {MetaXmomContainers.EXCEPTION_FQN}, 
                                                       identifiedVariables.isReadOnly()));
-
+    method.addToAreas(DomOrExceptionXo.createMetaTagArea(operation.getUnknownMetaTags(), identifiedVariables.isReadOnly()));
     return method;
   }
   
