@@ -39,8 +39,7 @@
   
   <target name="resolve">
     <resolver:resolve>
-        <resolver:dependencies pomRef="pom"/>
-      <resolver:remoterepos refid="xyna.repository"/>
+      <resolver:dependencies pomRef="pom"/>
       <resolver:files refid="files" dir="${target.dir}" layout="{artifactId}-{classifier}-{version}.{extension}" /> <!--scopes="compile"-->
       <resolver:files refid="internalFiles" dir="${target.dir}/internal_xyna" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/>
     </resolver:resolve>

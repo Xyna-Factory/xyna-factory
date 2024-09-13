@@ -54,7 +54,6 @@ public class Main implements DemonWorker {
   public static final OID OID_STATE = new OID(".1.3.6.1.4.1.28747.1.11.4.1.2.1");
   
   private static final String PROPERTY_FILENAME = "networkAvailability.properties";
-  private static final String LOGFILE_DEFAULT = PROPERTY_FILENAME;
   private static final String DEMON_PREFIX = "demon";
   static Logger logger = Logger.getLogger(NetworkAvailability.class.getName());
 
@@ -81,8 +80,6 @@ public class Main implements DemonWorker {
 
   public static void main(String[] args) throws IOException {
     String pathToProperties = (args.length > 0 ? args[0] : "./config") + "/";
-
-    PropertyConfigurator.configure(pathToProperties + LOGFILE_DEFAULT);
 
     propertiesPath = pathToProperties + PROPERTY_FILENAME;
     DemonProperties.readProperties(propertiesPath);

@@ -87,7 +87,6 @@
         </if>
         <resolver:resolve>
           <resolver:dependencies pomRef="pom"/>
-          <resolver:remoterepos refid="xyna.repository"/>
           <resolver:files refid="files" dir="${base.lib.dir}/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
           <resolver:files refid="files" dir="${base.lib.dir}" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/>
         </resolver:resolve>
