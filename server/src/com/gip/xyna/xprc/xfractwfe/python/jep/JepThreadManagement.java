@@ -91,6 +91,7 @@ public class JepThreadManagement {
         jepInterpreter.exec("import keyword");
         result = (List<String>) jepInterpreter.get("keyword.kwlist");
         jepInterpreter.close();
+        success = true;
       } catch (Exception e) {
         exception = e;
         success = false;
