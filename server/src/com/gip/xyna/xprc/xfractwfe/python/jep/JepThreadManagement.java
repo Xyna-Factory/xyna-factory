@@ -18,6 +18,9 @@
 package com.gip.xyna.xprc.xfractwfe.python.jep;
 
 import java.lang.reflect.Method;
+import java.util.List;
+
+import com.gip.xyna.xprc.xfractwfe.python.JepInterpreter;
 
 public class JepThreadManagement {
 
@@ -26,6 +29,9 @@ public class JepThreadManagement {
     return new JepThread(method, instance, inputs);
   }
   
+  public static JepKeywordsThread createJepKeywordThread(ClassLoader classloader) {
+    return new JepKeywordsThread(classloader);
+  }
   
   public static class JepThread extends Thread {
     
@@ -61,6 +67,45 @@ public class JepThreadManagement {
       return exception;
     }
     
+    public boolean wasSuccessful() {
+      return success;
+    }
+  }
+
+  public static class JepKeywordsThread extends Thread {
+
+    private ClassLoader classloader;
+    
+    private List<String> result;
+    private Exception exception;
+    private boolean success;
+
+    public JepKeywordsThread(ClassLoader classloader) {
+      this.classloader = classloader;
+    }
+
+    @SuppressWarnings("unchecked")
+    public void run() {
+      try {
+        JepInterpreter jepInterpreter = new JepInterpreter(classloader);
+        jepInterpreter.exec("import keyword");
+        result = (List<String>) jepInterpreter.get("keyword.kwlist");
+        jepInterpreter.close();
+        success = true;
+      } catch (Exception e) {
+        exception = e;
+        success = false;
+      }
+    }
+
+    public List<String> getResult() {
+      return result;
+    }
+
+    public Exception getException() {
+      return exception;
+    }
+
     public boolean wasSuccessful() {
       return success;
     }
