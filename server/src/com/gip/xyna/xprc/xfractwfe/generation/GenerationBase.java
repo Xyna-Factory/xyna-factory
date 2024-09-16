@@ -5398,8 +5398,7 @@ public abstract class GenerationBase {
       return gb;
     }
 
-    long rev = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
-        .getRevisionDefiningXMOMObjectOrParent(originalXmlName, revision);
+    long rev = xmlInputSource.getRevisionDefiningXMOMObjectOrParent(originalXmlName, revision);
     return cacheReference.getFromCache(originalXmlName, rev);
   }
 
