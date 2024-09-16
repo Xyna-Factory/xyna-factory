@@ -43,6 +43,8 @@ import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.python.PythonGeneration.MethodInformation;
 import com.gip.xyna.xprc.xfractwfe.python.PythonGeneration.XynaObjectInformation;
+import com.gip.xyna.xprc.xfractwfe.python.jep.JepThreadManagement;
+import com.gip.xyna.xprc.xfractwfe.python.jep.JepThreadManagement.JepKeywordsThread;
 
 
 
@@ -67,11 +69,20 @@ public class PythonMdmGeneration {
   
   @SuppressWarnings("unchecked")
   private void loadPythonKeywords() {
-    JepInterpreter jepInterpreter = new JepInterpreter(PythonMdmGeneration.class.getClassLoader());
-    jepInterpreter.exec("import keyword");
-    pythonKeywords.clear();
-    pythonKeywords.addAll((ArrayList<String>) jepInterpreter.get("keyword.kwlist"));
-    jepInterpreter.close();
+    try {
+      JepInterpreter jepInterpreter = new JepInterpreter(PythonMdmGeneration.class.getClassLoader());
+      JepKeywordsThread thread = JepThreadManagement.createJepKeywordThread(jepInterpreter);
+      thread.start();
+      thread.join();
+      if (thread.wasSuccessful()) {
+        pythonKeywords.clear();
+        pythonKeywords.addAll(thread.getResult());
+      } else {
+        throw new RuntimeException(thread.getException());
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
 
