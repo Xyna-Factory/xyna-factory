@@ -29,8 +29,8 @@ public class JepThreadManagement {
     return new JepThread(method, instance, inputs);
   }
   
-  public static JepKeywordsThread createJepKeywordThread(JepInterpreter jepInterpreter) {
-    return new JepKeywordsThread(jepInterpreter);
+  public static JepKeywordsThread createJepKeywordThread(ClassLoader classloader) {
+    return new JepKeywordsThread(classloader);
   }
   
   public static class JepThread extends Thread {
@@ -74,19 +74,20 @@ public class JepThreadManagement {
 
   public static class JepKeywordsThread extends Thread {
 
-    private JepInterpreter jepInterpreter;
+    private ClassLoader classloader;
     
     private List<String> result;
     private Exception exception;
     private boolean success;
 
-    public JepKeywordsThread(JepInterpreter jepInterpreter) {
-      this.jepInterpreter = jepInterpreter;
+    public JepKeywordsThread(ClassLoader classloader) {
+      this.classloader = classloader;
     }
 
     @SuppressWarnings("unchecked")
     public void run() {
       try {
+        JepInterpreter jepInterpreter = new JepInterpreter(classloader);
         jepInterpreter.exec("import keyword");
         result = (List<String>) jepInterpreter.get("keyword.kwlist");
         jepInterpreter.close();

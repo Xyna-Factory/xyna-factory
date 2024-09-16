@@ -67,11 +67,9 @@ public class PythonMdmGeneration {
     }
   }
   
-  @SuppressWarnings("unchecked")
   private void loadPythonKeywords() {
     try {
-      JepInterpreter jepInterpreter = new JepInterpreter(PythonMdmGeneration.class.getClassLoader());
-      JepKeywordsThread thread = JepThreadManagement.createJepKeywordThread(jepInterpreter);
+      JepKeywordsThread thread = JepThreadManagement.createJepKeywordThread(PythonMdmGeneration.class.getClassLoader());
       thread.start();
       thread.join();
       if (thread.wasSuccessful()) {
