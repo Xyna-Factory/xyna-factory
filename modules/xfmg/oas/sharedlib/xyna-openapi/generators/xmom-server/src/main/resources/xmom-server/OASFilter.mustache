@@ -417,16 +417,16 @@ class PathParameter {
   }
 
   public void registerMethod(Method method, String instanceDatatype, String ordertype) {
-    methodOrdertypeMapping.put(method.toString().toUpperCase(), Pair.of(instanceDatatype, ordertype));
+    methodInputOrdertypeMapping.put(method.toString().toUpperCase(), Pair.of(instanceDatatype, ordertype));
     allInstanceDatatypes.add(instanceDatatype);
   }
 
   public String getInstanceDatatype(String method) {
-    return methodOrdertypeMapping.get(method.toUpperCase()).getFirst();
+    return methodInputOrdertypeMapping.get(method.toUpperCase()).getFirst();
   }
 
   public String getOrdertype(String method) {
-    return methodOrdertypeMapping.get(method.toUpperCase()).getSecond();
+    return methodInputOrdertypeMapping.get(method.toUpperCase()).getSecond();
   }
 
   public Set<String> getAllInstanceDatatypes() {
