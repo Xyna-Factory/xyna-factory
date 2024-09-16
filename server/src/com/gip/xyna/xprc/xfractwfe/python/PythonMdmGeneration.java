@@ -50,7 +50,7 @@ public class PythonMdmGeneration {
 
 
   public static final String LOAD_MODULE_SNIPPET = setupLoadModuleSnippet();
-  public final ArrayList<String> pythonKeywords;
+  public final List<String> pythonKeywords = new ArrayList<String>();
 
 
   /**
@@ -59,19 +59,19 @@ public class PythonMdmGeneration {
   private Map<Long, String> cache = new HashMap<Long, String>();
 
 
-  @SuppressWarnings("unchecked")
-  public PythonMdmGeneration() {
-    JepInterpreter jepInterpreter = new JepInterpreter(PythonMdmGeneration.class.getClassLoader());
-    jepInterpreter.exec("import keyword");
-    this.pythonKeywords = (ArrayList<String>) jepInterpreter.get("keyword.kwlist");
-    jepInterpreter.close();
-  }
-
-
   public void invalidateRevision(Collection<Long> revisions) {
     for(Long revision : revisions) {
       cache.remove(revision);
     }
+  }
+  
+  @SuppressWarnings("unchecked")
+  private void loadPythonKeywords() {
+    JepInterpreter jepInterpreter = new JepInterpreter(PythonMdmGeneration.class.getClassLoader());
+    jepInterpreter.exec("import keyword");
+    pythonKeywords.clear();
+    pythonKeywords.addAll((ArrayList<String>) jepInterpreter.get("keyword.kwlist"));
+    jepInterpreter.close();
   }
 
 
@@ -115,12 +115,15 @@ public class PythonMdmGeneration {
 
   public String createPythonMdm(Long revision, boolean withImpl, boolean typeHints) {
     if(withImpl == true && typeHints == false ) {
-      return cache.computeIfAbsent(revision, x -> this.createPythonMdmString(x, withImpl, typeHints));
+      return cache.computeIfAbsent(revision, x -> createPythonMdmString(x, withImpl, typeHints));
     }
     return createPythonMdmString(revision, withImpl, typeHints);
   }
   
   private String createPythonMdmString(Long revision, boolean withImpl, boolean typeHints) {
+    if (pythonKeywords.isEmpty()) {
+      loadPythonKeywords();
+    }
     StringBuilder sb = new StringBuilder();
     fillDefaults(sb, withImpl, typeHints);
     XMOMDatabaseSearchResult objects = searchXmomDbForObjects(revision);
