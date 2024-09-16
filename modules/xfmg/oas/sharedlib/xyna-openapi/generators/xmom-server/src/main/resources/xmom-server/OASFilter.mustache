@@ -130,11 +130,11 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
         logger.debug("Checking URI " + pathPara.toString());
         if (pathPara.matchPath(uri)) {
           String ordertype = pathPara.getOrdertype(tc.getMethod());
-          GeneralXynaObject implDatatype = fqnInstanceDatatypeMapSucceed.get(new Pair<>(pathPara.getInstanceDatatype(), getRevision()));
+          GeneralXynaObject implDatatype = fqnInstanceDatatypeMapSucceed.get(new Pair<>(pathPara.getInstanceDatatype(tc.getMethod()), getRevision()));
 
           if (isInWorkspace() && !checkClassLoader(implDatatype)) {
-            implDatatype = searchAndInstanciateFirstSucceed(pathPara.getInstanceDatatype());
-            fqnInstanceDatatypeMapSucceed.put(new Pair<>(pathPara.getInstanceDatatype(), getRevision()), implDatatype);
+            implDatatype = searchAndInstanciateFirstSucceed(pathPara.getInstanceDatatype(tc.getMethod()));
+            fqnInstanceDatatypeMapSucceed.put(new Pair<>(pathPara.getInstanceDatatype(tc.getMethod()), getRevision()), implDatatype);
           }
 
           if (ordertype != null && implDatatype != null) {
@@ -327,8 +327,10 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
   public void onDeployment(EventListener triggerInstance) {
 
     for (PathParameter pathPara: pathParameter) {
-      GeneralXynaObject succeed = searchAndInstanciateFirstSucceed(pathPara.getInstanceDatatype());
-      fqnInstanceDatatypeMapSucceed.put(new Pair<>(pathPara.getInstanceDatatype(), getRevision()), succeed);
+      for (String instanceDatatype: pathPara.getAllInstanceDatatypes()) {
+        GeneralXynaObject succeed = searchAndInstanciateFirstSucceed(instanceDatatype);
+        fqnInstanceDatatypeMapSucceed.put(new Pair<>(instanceDatatype, getRevision()), succeed);
+      }
     }
     super.onDeployment(triggerInstance);
   }
@@ -404,23 +406,31 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
 
 class PathParameter {
 
-  private final HashMap<String, String> methodOrdertypeMapping = new HashMap<>();
-  private String fqnOfInstanceDatatype;
+  private final HashMap<String, Pair<String, String>> methodInputOrdertypeMapping = new HashMap<>();
+  private final Set<String> allInstanceDatatypes = new HashSet<>();
   private Pattern pathRegEx;
   private String[] attributeNames;
 
-  public PathParameter(String instanceDatatype, String path, String... attributes) {
-    fqnOfInstanceDatatype = instanceDatatype;
+  public PathParameter(String path, String... attributes) {
     pathRegEx = Pattern.compile("^" + path + "$");
     attributeNames = attributes;
   }
 
-  public void registerMethod(Method method, String ordertype) {
-    methodOrdertypeMapping.put(method.toString().toUpperCase(), ordertype);
+  public void registerMethod(Method method, String instanceDatatype, String ordertype) {
+    methodOrdertypeMapping.put(method.toString().toUpperCase(), Pair.of(instanceDatatype, ordertype));
+    allInstanceDatatypes.add(instanceDatatype);
+  }
+
+  public String getInstanceDatatype(String method) {
+    return methodOrdertypeMapping.get(method.toUpperCase()).getFirst();
   }
 
   public String getOrdertype(String method) {
-    return methodOrdertypeMapping.get(method.toUpperCase());
+    return methodOrdertypeMapping.get(method.toUpperCase()).getSecond();
+  }
+
+  public Set<String> getAllInstanceDatatypes() {
+    return allInstanceDatatypes;
   }
 
   public boolean matchPath(String path) {
@@ -441,10 +451,6 @@ class PathParameter {
 
   public boolean hasPath(String path) {
     return pathRegEx.pattern().equals("^" + path + "$");
-  }
-
-  public String getInstanceDatatype() {
-    return fqnOfInstanceDatatype;
   }
 
   public String toString() {
