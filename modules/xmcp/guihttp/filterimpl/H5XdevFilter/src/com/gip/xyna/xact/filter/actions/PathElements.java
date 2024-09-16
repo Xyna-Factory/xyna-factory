@@ -94,4 +94,7 @@ public class PathElements {
   public static final String WARNINGS             = "warnings";
   public static final String JAVALIB              = "javalib";
   public static final String PYTHONLIB            = "pythonlib";
+  public static final String MEMBERS              = "members";
+  public static final String SERVICES             = "services";
+  public static final String META                 = "meta";
 }

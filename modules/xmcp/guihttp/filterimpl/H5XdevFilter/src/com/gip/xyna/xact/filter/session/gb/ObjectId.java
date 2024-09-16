@@ -436,6 +436,10 @@ public class ObjectId {
     return ObjectIdPrefix.implementationArea.getPrefix() + emptyIfNull(baseId);
   }
   
+  public static String createMetaTagId(int idx) {
+    return ObjectIdPrefix.metaTag.getPrefix() + idx;
+  }
+  
   public static String createIdForCase(String baseId, String branchId, String caseId) {
     return baseId + SEPARATOR + ObjectIdPrefix.distinctionBranch +  branchId + SEPARATOR + ObjectIdPrefix.distinctionCase + caseId;
   }
@@ -924,6 +928,14 @@ public class ObjectId {
       }
     },
     reference("reference"){
+      public boolean match(String objectId) {
+        return objectId.startsWith(prefix);
+      }
+      public String getBaseId(String id) {
+        return id.substring(prefix.length());
+      }
+    },
+    metaTag("metaTag"){
       public boolean match(String objectId) {
         return objectId.startsWith(prefix);
       }
