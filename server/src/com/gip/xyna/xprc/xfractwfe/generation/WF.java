@@ -956,7 +956,7 @@ public class WF extends GenerationBase implements HasDocumentation, HasMetaTags 
     }
 
     // if we havent parsed before but want to cleanup, wfAsStep is null
-    if (wfAsStep != null) {
+    if (wfAsStep != null && XynaFactory.hasInstance()) {
       for (Step s : wfAsStep.getAllStepsRecursively()) {
         List<GenerationBase> deps = s.getDependencies();
         if (deps != null) {
