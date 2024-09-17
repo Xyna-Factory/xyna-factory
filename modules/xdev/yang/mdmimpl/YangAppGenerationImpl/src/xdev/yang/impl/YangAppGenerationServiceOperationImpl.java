@@ -19,14 +19,11 @@ package xdev.yang.impl;
 
 
 
-import org.apache.log4j.Logger;
-
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 
-import xdev.yang.ModuleCollectionGenerationParameter;
+import xdev.yang.YangAppGenerationInputParameter;
 import xdev.yang.YangAppGenerationServiceOperation;
 import xdev.yang.cli.generated.OverallInformationProvider;
 
@@ -34,11 +31,7 @@ import xdev.yang.cli.generated.OverallInformationProvider;
 
 public class YangAppGenerationServiceOperationImpl implements ExtendedDeploymentTask, YangAppGenerationServiceOperation {
 
-  private static Logger logger = CentralFactoryLogging.getLogger(YangAppGenerationServiceOperationImpl.class);
-
-
   public void onDeployment() throws XynaException {
-    logger.debug("onDeployment");
     OverallInformationProvider.onDeployment();
   }
 
@@ -67,8 +60,12 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   }
 
 
-  public void importModuleCollectionApplication(ModuleCollectionGenerationParameter moduleCollectionGenerationParameter2) {
-    ModuleCollectionApp.createModuleCollectionApp(moduleCollectionGenerationParameter2);
-  }
+public void createYangDeviceApp(YangAppGenerationInputParameter yangAppGenerationInputParameter2) {
+  YangApplicationGeneration.createDeviceApp(yangAppGenerationInputParameter2);
+}
+
+public void importModuleCollectionApplication(YangAppGenerationInputParameter yangAppGenerationInputParameter1) {
+  YangApplicationGeneration.createModuleCollectionApp(yangAppGenerationInputParameter1);
+}
 
 }
