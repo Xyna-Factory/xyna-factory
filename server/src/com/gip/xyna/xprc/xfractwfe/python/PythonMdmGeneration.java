@@ -42,22 +42,44 @@ import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.python.PythonGeneration.MethodInformation;
-import com.gip.xyna.xprc.xfractwfe.python.PythonGeneration.XynaObjectInformation;;
+import com.gip.xyna.xprc.xfractwfe.python.PythonGeneration.XynaObjectInformation;
+import com.gip.xyna.xprc.xfractwfe.python.jep.JepThreadManagement;
+import com.gip.xyna.xprc.xfractwfe.python.jep.JepThreadManagement.JepKeywordsThread;
+
+
 
 public class PythonMdmGeneration {
 
-  
+
   public static final String LOAD_MODULE_SNIPPET = setupLoadModuleSnippet();
-  
+  public final List<String> pythonKeywords = new ArrayList<String>();
+
+
   /**
    * contains mdm.py with implementations, but without typeHints
    */
   private Map<Long, String> cache = new HashMap<Long, String>();
-  
-  
+
+
   public void invalidateRevision(Collection<Long> revisions) {
     for(Long revision : revisions) {
       cache.remove(revision);
+    }
+  }
+  
+  private void loadPythonKeywords() {
+    try {
+      JepKeywordsThread thread = JepThreadManagement.createJepKeywordThread(PythonMdmGeneration.class.getClassLoader());
+      thread.start();
+      thread.join();
+      if (thread.wasSuccessful()) {
+        pythonKeywords.clear();
+        pythonKeywords.addAll(thread.getResult());
+      } else {
+        throw new RuntimeException(thread.getException());
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
   }
 
@@ -102,12 +124,15 @@ public class PythonMdmGeneration {
 
   public String createPythonMdm(Long revision, boolean withImpl, boolean typeHints) {
     if(withImpl == true && typeHints == false ) {
-      return cache.computeIfAbsent(revision, x -> this.createPythonMdmString(x, withImpl, typeHints));
+      return cache.computeIfAbsent(revision, x -> createPythonMdmString(x, withImpl, typeHints));
     }
     return createPythonMdmString(revision, withImpl, typeHints);
   }
   
   private String createPythonMdmString(Long revision, boolean withImpl, boolean typeHints) {
+    if (pythonKeywords.isEmpty()) {
+      loadPythonKeywords();
+    }
     StringBuilder sb = new StringBuilder();
     fillDefaults(sb, withImpl, typeHints);
     XMOMDatabaseSearchResult objects = searchXmomDbForObjects(revision);
@@ -326,6 +351,9 @@ public class PythonMdmGeneration {
       for (Pair<String, String> member : info.members) {
         sb.append("    self.");
         sb.append(member.getFirst());
+        if (pythonKeywords.contains(member.getFirst())) {
+          sb.append("_");  // append _ if the member variable is a python keyword
+        }
         typeHint(sb, ": " + member.getSecond(), typeHints);
         sb.append(" = None\n");
       }
