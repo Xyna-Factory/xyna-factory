@@ -82,12 +82,12 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
   static void addPathParameter(String fqnInstanceDatatype, Method method, String ordertype, String path, String... attributes) {
     for (PathParameter para: pathParameter) {
       if (para.hasPath(path)) {
-        para.registerMethod(method, ordertype);
+        para.registerMethod(method, fqnInstanceDatatype, ordertype);
         return;
       }
     }
-    PathParameter pathPara = new PathParameter(fqnInstanceDatatype, path, attributes);
-    pathPara.registerMethod(method, ordertype);
+    PathParameter pathPara = new PathParameter(path, attributes);
+    pathPara.registerMethod(method, fqnInstanceDatatype, ordertype);
     pathParameter.add(pathPara);
   }
 
