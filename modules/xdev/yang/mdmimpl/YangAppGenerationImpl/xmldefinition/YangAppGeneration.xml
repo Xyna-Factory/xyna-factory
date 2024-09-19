@@ -15,22 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="YangAppGeneration" TypePath="xdev.yang" Label="Yang App Generation" IsAbstract="false">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Yang App Generation" TypeName="YangAppGeneration" TypePath="xdev.yang" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
   <Libraries>YangAppGenerationImpl.jar</Libraries>
   <SharedLibraries>yangkit</SharedLibraries>
   <Service Label="Yang App Generation" TypeName="YangAppGeneration">
-    <Operation Label="Import Module Collection Application" Name="importModuleCollectionApplication" IsStatic="true">
+    <Operation IsStatic="true" Label="Import Module Collection Application" Name="importModuleCollectionApplication">
       <Input>
-        <Data ID="2" Label="Module Collection Generation Parameter" VariableName="moduleCollectionGenerationParameter2" ReferenceName="ModuleCollectionGenerationParameter" ReferencePath="xdev.yang">
-        </Data>
+        <Data ID="1" Label="Yang App Generation Input Parameter" ReferenceName="YangAppGenerationInputParameter" ReferencePath="xdev.yang" VariableName="yangAppGenerationInputParameter1"/>
       </Input>
-      <Output>
-      </Output>
+      <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.importModuleCollectionApplication(moduleCollectionGenerationParameter2);</CodeSnippet>
+        <CodeSnippet Type="Java">YangAppGenerationImpl.importModuleCollectionApplication(yangAppGenerationInputParameter1);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Create Yang Device App" Name="createYangDeviceApp">
+      <Input>
+        <Data ID="2" Label="Yang App Generation Input Parameter" ReferenceName="YangAppGenerationInputParameter" ReferencePath="xdev.yang" VariableName="yangAppGenerationInputParameter2"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">YangAppGenerationImpl.createYangDeviceApp(yangAppGenerationInputParameter2);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
