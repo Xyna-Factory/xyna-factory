@@ -1803,7 +1803,7 @@ public class Updater implements UpdaterInterface {
       ud = new UpdateJustVersion(v471, v472);
       ud.addFollowingBranchVersionsAsAllowedForUpdate(3); //10.0.x.x darf hier drauf updaten
       updates.add(ud);
-  
+
       // 10.1.0.1
       Version v473 = new Version(v472).increaseToMajorVersion(4, 1);
       ud = new UpdateJustVersion(v472, v473);
