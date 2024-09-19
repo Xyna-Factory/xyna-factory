@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,17 +21,13 @@ package xdev.yang.cli.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.zip.ZipOutputStream;
 
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
-import com.gip.xyna.FileUtils;
 import com.gip.xyna.XynaFactory;
-import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xfmg.xfctrl.filemgmt.FileManagement;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
@@ -39,22 +35,21 @@ import com.gip.xyna.xmcp.xfcli.generated.Importapplication;
 import com.gip.xyna.xmcp.xfcli.impl.ImportapplicationImpl;
 
 import xdev.yang.YangAppGenerationInputParameter;
-import xdev.yang.cli.generated.Importyangmodules;
+import xdev.yang.cli.generated.Createyangdeviceapp;
 import xdev.yang.impl.YangApplicationGeneration;
 import xdev.yang.impl.YangApplicationGeneration.YangApplicationGenerationData;
 import xfmg.xfctrl.filemgmt.ManagedFileId;
 
 
 
-public class ImportyangmodulesImpl extends XynaCommandImplementation<Importyangmodules> {
+public class CreateyangdeviceappImpl extends XynaCommandImplementation<Createyangdeviceapp> {
 
-  private static Logger logger = CentralFactoryLogging.getLogger(ImportyangmodulesImpl.class);
+  private static Logger logger = CentralFactoryLogging.getLogger(CreateyangdeviceappImpl.class);
 
 
-  public void execute(OutputStream statusOutputStream, Importyangmodules payload) throws XynaException {
+  public void execute(OutputStream statusOutputStream, Createyangdeviceapp payload) throws XynaException {
     FileManagement fileMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getFileManagement();
-    Boolean inputIsZip = payload.getPath().endsWith(".zip");
-    File inputFile = inputIsZip ? new File(payload.getPath()) : createTempZipFile(payload.getPath());
+    File inputFile = new File(payload.getPath());
     String inputFileId = null;
     try (FileInputStream is = new FileInputStream(inputFile)) {
       inputFileId = fileMgmt.store("yang", inputFile.getAbsolutePath(), is);
@@ -67,7 +62,7 @@ public class ImportyangmodulesImpl extends XynaCommandImplementation<Importyangm
         new YangAppGenerationInputParameter(appName, payload.getVersionName(), payload.getFqDatatypeName(), new ManagedFileId(inputFileId));
 
     String appFileId = null;
-    try (YangApplicationGenerationData appData = YangApplicationGeneration.createModuleCollectionApp(genParameter)) {
+    try (YangApplicationGenerationData appData = YangApplicationGeneration.createDeviceApp(genParameter)) {
       writeToCommandLine(statusOutputStream, appName + " ManagedFileId: " + appData.getId() + " ");
       appFileId = appData.getId();
     } catch (IOException e) {
@@ -78,9 +73,6 @@ public class ImportyangmodulesImpl extends XynaCommandImplementation<Importyangm
     }
 
     fileMgmt.remove(inputFileId);
-    if (!inputIsZip) {
-      inputFile.delete();
-    }
 
     ImportapplicationImpl importApp = new ImportapplicationImpl();
     Importapplication importPayload = new Importapplication();
@@ -89,24 +81,4 @@ public class ImportyangmodulesImpl extends XynaCommandImplementation<Importyangm
     writeToCommandLine(statusOutputStream, "Done.");
   }
 
-
-  /*
-   * create zip file of input dir
-   */
-  private File createTempZipFile(String yangModulesPath) {
-    File yangModulesDir = new File(yangModulesPath);
-    File tmpFile = null;
-    try {
-      tmpFile = File.createTempFile("/tmp/yang_modules_", ".zip");
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(tmpFile))) {
-      FileUtils.zipDir(yangModulesDir, zos, yangModulesDir);
-    } catch (Ex_FileAccessException | IOException e) {
-      throw new RuntimeException(e);
-    }
-
-    return tmpFile;
-  }
 }
