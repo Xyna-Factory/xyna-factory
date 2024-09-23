@@ -284,7 +284,7 @@
                 </then>
                 <!-- password or key -->
                 <else>
-                    <custom-scp-from-remote fromFile="@{server.userid}@@{server.host}:@{fromFile}" todir="@{todir}" />
+                    <custom-scp-from-remote fromFile="${server.userid}@${server.host}:@{fromFile}" todir="@{todir}" />
                 </else>
             </if>
         </sequential>
