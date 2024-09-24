@@ -289,7 +289,7 @@
 			<fileset dir="XMOM" includes="**/*.xml" />
 		</delete>
 		<echo message="copying ${server.userid}@${server.host}:${server.path}/../revisions/rev_${revision}/${saved}XMOM/" />
-		<default-scp-from-remote fromfile="${server.path}/../revisions/rev_${revision}/${saved}XMOM" todir="." />
+		<default-scp-from-remote fromfile="${server.path}/../revisions/rev_${revision}/${saved}XMOM/*" todir="XMOM" />
     </target>
 	
 	<!-- =================================
