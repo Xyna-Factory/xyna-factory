@@ -4976,8 +4976,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
             DestinationValue dv_planning = provider.getPlanningDispatcher().getDestination(dk);
             DestinationValue dv_execution = provider.getExecutionDispatcher().getDestination(dk);
             DestinationValue dv_cleanup = provider.getCleanupDispatcher().getDestination(dk);
-            boolean hasOrdercontextMapping =
-                XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getOrderContextConfiguration()
+            boolean hasOrdercontextMapping = provider.getGetIsDestinationKeyConfiguredForOrderContextMapping()
                     .isDestinationKeyConfiguredForOrderContextMapping(dk, true);
             if (dv_planning instanceof FractalWorkflowDestination && dv_execution instanceof FractalWorkflowDestination
                 && dv_cleanup instanceof FractalWorkflowDestination) {
@@ -5026,7 +5025,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
           if (createStub) {
             break;
           }
-          String propertyValue = XynaFactory.getInstance().getFactoryManagement().getProperty(entry.getName());
+          String propertyValue = provider.getXynaPropertyValue(entry.getName());
           if (propertyValue != null) {
             applicationXmlEntry.getXynaProperties().add(new XynaPropertyXmlEntry(isImplicitDependency, entry.getName(), propertyValue));
           }
@@ -5037,7 +5036,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
           }
           boolean found = false;
           try {
-            CapacityInformation capInfo = provider.getGetGlobalCapacities().getCapacity(entry.getName());
+            CapacityInformation capInfo = provider.getCapacity(entry.getName());
             found = true;
             applicationXmlEntry.getCapacities().add(new CapacityXmlEntry(isImplicitDependency, capInfo.getName(), capInfo.getCardinality(),
                                                                          capInfo.getState()));
@@ -10283,8 +10282,8 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
         rtc = new Application(applicationName, versionName);
       }
 
-      createXMLEntries(appEntries, false, null, applicationXmlEntry, revision, false, false, createStub);
-      createXMLEntries(implicitDependencies, false, null, applicationXmlEntry, revision, true, false, createStub);
+      createXMLEntries(appEntries, false, null, applicationXmlEntry, revision, false, false, createStub, provider);
+      createXMLEntries(implicitDependencies, false, null, applicationXmlEntry, revision, true, false, createStub, provider);
 
       dependentRuntimeContexts = provider.getRequirements(rtc);
     }
@@ -10348,6 +10347,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
     provider.setGetAllMappingsForRootType(XMOMODSMappingUtils::getAllMappingsForRootType);
     provider.setGetIsDestinationKeyConfiguredForOrderContextMapping(XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getOrderContextConfiguration()::isDestinationKeyConfiguredForOrderContextMapping);
     provider.setGetGlobalCapacities(XynaFactory.getInstance().getProcessing().getXynaScheduler().getCapacityManagement()::getCapacityInformation);
+    provider.setXynaPropertyProvider(XynaFactory.getInstance().getFactoryManagement()::getProperty);
     provider.validate();
     return provider;
   }

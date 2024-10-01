@@ -116,7 +116,7 @@ public class SingleRevisionFileSystemXMLSource implements XMLSourceAbstraction {
       return null;
     }
     
-    String fqPath = "saved/XMOM/" + fqName.replaceAll("\\.", Constants.fileSeparator) + ".xml"; //TODO: saved/XMOM
+    String fqPath = fqName.replaceAll("\\.", Constants.fileSeparator) + ".xml";
     return new File(basePath, fqPath);
   }
 

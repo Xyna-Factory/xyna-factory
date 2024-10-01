@@ -73,9 +73,17 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
   private static final String TAG_TRIGGERNAME = "triggername";
   private static final String TAG_SHAREDLIBS = "sharedlibs";
 
-  private static final XynaActivationPortal xynaActivationPortal = XynaFactory.getInstance().getActivationPortal();
+  private static XynaActivationPortal xynaActivationPortal;
   private static RevisionManagement revisionManagement;
   private static XynaActivationBase xynaActivation;
+
+  private XynaActivationPortal getXynaActivationPortal() {
+    if(xynaActivationPortal == null) {
+      xynaActivationPortal = XynaFactory.getInstance().getActivationPortal();
+    }
+    return xynaActivationPortal;
+  }
+  
   private RevisionManagement getRevisionManagement() {
     if(revisionManagement == null) {
       revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
@@ -297,7 +305,7 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
   private List<FilterInformation> getFilterInformationList(Long revision)
       throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
     List<FilterInformation> resultList = new ArrayList<FilterInformation>();
-    List<FilterInformation> filterInfoList = xynaActivationPortal.listFilterInformation();
+    List<FilterInformation> filterInfoList = getXynaActivationPortal().listFilterInformation();
 
     for (FilterInformation filterInfo : filterInfoList) {
       if (revision == getRevisionManagement().getRevision(filterInfo.getRuntimeContext())) {

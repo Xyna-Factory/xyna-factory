@@ -52,8 +52,22 @@ public class FilterInstanceProcessor implements WorkspaceContentProcessor<Filter
   private static final String TAG_FILTERNAME = "filtername";
   private static final String TAG_TRIGGERINSTANCENAME = "triggerinstancename";
 
-  private static final XynaActivationPortal xynaActivationPortal = XynaFactory.getInstance().getActivationPortal();
-  private static final XynaActivationBase xynaActivation = XynaFactory.getInstance().getActivation();
+  private static XynaActivationPortal xynaActivationPortal;
+  private static XynaActivationBase xynaActivation;
+
+  private static XynaActivationPortal getXynaActivationPortal() {
+    if(xynaActivationPortal == null) {
+      xynaActivationPortal = XynaFactory.getInstance().getActivationPortal();
+    }
+    return xynaActivationPortal;
+  }
+  
+  private static XynaActivationBase getXynaActivation() {
+    if(xynaActivation == null) {
+      xynaActivation = XynaFactory.getInstance().getActivation();
+    }
+    return xynaActivation;
+  }
 
 
   @Override
@@ -183,7 +197,7 @@ public class FilterInstanceProcessor implements WorkspaceContentProcessor<Filter
 
   private List<FilterInstanceInformation> getFilterInstanceInformationList(Long revision) throws PersistenceLayerException {
     List<FilterInstanceInformation> resultList = new ArrayList<FilterInstanceInformation>();
-    List<FilterInformation> filterInfoList = xynaActivationPortal.listFilterInformation();
+    List<FilterInformation> filterInfoList = getXynaActivationPortal().listFilterInformation();
     for (FilterInformation filterInfo : filterInfoList) {
       List<FilterInstanceInformation> filterInstInfoList = filterInfo.getFilterInstances();
       for (FilterInstanceInformation filterInstInfo : filterInstInfoList) {
@@ -203,7 +217,7 @@ public class FilterInstanceProcessor implements WorkspaceContentProcessor<Filter
       DeployFilterParameter deployFilterParameter =
           new DeployFilterParameter.Builder().filterName(item.getFilterName()).instanceName(item.getFilterInstanceName())
               .triggerInstanceName(item.getTriggerInstanceName()).revision(revision).optional(false).build();
-      xynaActivation.getActivationTrigger().deployFilter(deployFilterParameter);
+      getXynaActivation().getActivationTrigger().deployFilter(deployFilterParameter);
     } catch (Exception e) {
       throw new RuntimeException(e);
     } finally {
@@ -223,7 +237,7 @@ public class FilterInstanceProcessor implements WorkspaceContentProcessor<Filter
   public void delete(FilterInstance item, long revision) {
     CommandControl.tryLock(CommandControl.Operation.FILTER_UNDEPLOY, revision);
     try {
-      xynaActivation.getActivationTrigger().undeployFilter(item.getFilterInstanceName(), revision);
+      getXynaActivation().getActivationTrigger().undeployFilter(item.getFilterInstanceName(), revision);
     } catch (Exception e) {
       throw new RuntimeException(e);
     } finally {

@@ -56,6 +56,7 @@ import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.DataProvider;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.DataProvider.ActivationTriggerProvider;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.DataProvider.XynaDispatcherProvider;
+import com.gip.xyna.xfmg.xfctrl.appmgmt.DataProvider.XynaPropertiesProvider;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeDependencyContext;
@@ -95,6 +96,7 @@ import xmcp.gitintegration.DispatcherDestination;
 import xmcp.gitintegration.FactoryCapacity;
 import xmcp.gitintegration.FactoryContent;
 import xmcp.gitintegration.FactoryContentItem;
+import xmcp.gitintegration.FactoryXynaProperty;
 import xmcp.gitintegration.OrderType;
 import xmcp.gitintegration.RuntimeContextDependency;
 import xmcp.gitintegration.TriggerInstance;
@@ -170,6 +172,7 @@ public class ApplicationManagement extends ApplicationManagementImpl {
     RtcRequirementsMgmt rtcMgmt = new RtcRequirementsMgmt(parameter);
     XmomOdsMgmt odsMgmt = new XmomOdsMgmt(parameter);
     FactoryConfigProvider factoryConfigProvider = new FactoryConfigProvider(parameter);
+    XynaPropertyManagement xynaPropertyManagement = new XynaPropertyManagement(parameter);
     
     
     result.setGetRevision(revMgmt::getRevision);
@@ -191,6 +194,7 @@ public class ApplicationManagement extends ApplicationManagementImpl {
     result.setGetIsDestinationKeyConfiguredForOrderContextMapping(this::emptyDestinationKeyContextMappingCheck);
     result.setGetGlobalCapacities(factoryConfigProvider::getCapacity);
     result.setGlobalRuntimeAppStorablesProvider(this::emtpyQueryAllRuntimeApplicationStorables);
+    result.setXynaPropertyProvider(xynaPropertyManagement::getPropertyValue);
     result.validate();
     return result;
   }
@@ -385,6 +389,13 @@ public class ApplicationManagement extends ApplicationManagementImpl {
     return content.getWorkspaceContentItems().stream().filter(x -> x instanceof OrderType).map(x -> (OrderType)x).collect(Collectors.toList());
   }
   
+  public static List<FactoryXynaProperty> getXynaProperties(FactoryContent content) {
+    if(content.getFactoryContentItems() == null) {
+      return Collections.emptyList();
+    }
+    return content.getFactoryContentItems().stream().filter(x -> x instanceof FactoryXynaProperty).map(x -> (FactoryXynaProperty)x).collect(Collectors.toList());
+  }
+  
   private static class Dispatcher {
     
     private Map<String, String> plannings;
@@ -512,6 +523,24 @@ public class ApplicationManagement extends ApplicationManagementImpl {
     }
   }
   
+  
+  private static class XynaPropertyManagement {
+    
+    Map<String, String> map;
+    
+    public XynaPropertyManagement(CreateApplicationDefinitionXmlParameter parameter) {
+      map = new HashMap<String, String>();
+      List<FactoryXynaProperty> properties = getXynaProperties(parameter.getFactoryContent());
+      for(FactoryXynaProperty property : properties) {
+        map.put(property.getKey(), property.getValue());
+      }
+    }
+    
+    
+    public String getPropertyValue(String propertyName) {
+      return map.get(propertyName);
+    }
+  }
   
   private static class PrioManagement {
     
@@ -658,6 +687,7 @@ public class ApplicationManagement extends ApplicationManagementImpl {
     private CapMapping capMapping;
     
     public ObjectMgmt(WorkspaceContent content, String basePath, boolean fromSaved, Dispatcher dispatcher, RevMgmt revMgmt, String applicationName, LocalFileActivationTriggerProvider activation, CapMapping capMapping) {
+      basePath += "/XMOM";
       this.basePath = new File(basePath);
       this.cache = new GenerationBaseCache();
       this.fromSaved = fromSaved;
@@ -733,8 +763,7 @@ public class ApplicationManagement extends ApplicationManagementImpl {
       if(fromSaved) {
         fqName = fqName.substring("saved.".length());
       }
-      
-      fqName = fqName.substring("XMOM.".length());     
+
       return fqName;
     }
     

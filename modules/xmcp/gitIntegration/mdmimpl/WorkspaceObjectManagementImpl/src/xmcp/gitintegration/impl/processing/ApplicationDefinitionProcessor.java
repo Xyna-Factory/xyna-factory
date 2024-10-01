@@ -69,10 +69,26 @@ public class ApplicationDefinitionProcessor implements WorkspaceContentProcessor
 
   private static final String TEMPORARY_SESSION_AUTHENTICATION_USERNAME_CREATE = "ApplicationDefinitionProcessor.create";
 
-  private static final RevisionManagement revisionManagement =
-      XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
-  private static final ApplicationManagementImpl applicationManagement =
-      (ApplicationManagementImpl) XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getApplicationManagement();
+  private static RevisionManagement revisionManagement;
+  private static ApplicationManagementImpl applicationManagement;
+
+  private static RevisionManagement getRevisionManagement() {
+    if(revisionManagement == null) {
+      revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+    }
+    return revisionManagement;
+  }
+  
+  private static ApplicationManagementImpl getAppMgmt() {
+    if(applicationManagement == null) {
+      applicationManagement =
+          (ApplicationManagementImpl) XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getApplicationManagement();
+
+    }
+    return applicationManagement;
+  }
+
+
 
   private static final Set<ApplicationEntryType> xmomType =
       Set.of(ApplicationEntryType.WORKFLOW, ApplicationEntryType.DATATYPE, ApplicationEntryType.EXCEPTION);
@@ -354,7 +370,7 @@ public class ApplicationDefinitionProcessor implements WorkspaceContentProcessor
   @Override
   public List<ApplicationDefinition> createItems(Long revision) {
     List<ApplicationDefinition> adList = new ArrayList<ApplicationDefinition>();
-    List<ApplicationDefinitionInformation> adiList = applicationManagement.listApplicationDefinitions(revision);
+    List<ApplicationDefinitionInformation> adiList = getAppMgmt().listApplicationDefinitions(revision);
     for (ApplicationDefinitionInformation adi : adiList) {
       ApplicationDefinition.Builder adBuilder = new ApplicationDefinition.Builder();
       adBuilder.name(adi.getName());
@@ -373,7 +389,7 @@ public class ApplicationDefinitionProcessor implements WorkspaceContentProcessor
       }
       List<ContentEntry> ceList = new ArrayList<ContentEntry>();
       adBuilder.contentEntries(ceList);
-      List<ApplicationEntryStorable> aesList = applicationManagement.listApplicationDetails(adi.getName(), null, false, null, revision);
+      List<ApplicationEntryStorable> aesList = getAppMgmt().listApplicationDetails(adi.getName(), null, false, null, revision);
       for (ApplicationEntryStorable aes : aesList) {
         ContentEntry.Builder ceBuilder = new ContentEntry.Builder();
         ceBuilder.type(aes.getType());
@@ -389,9 +405,9 @@ public class ApplicationDefinitionProcessor implements WorkspaceContentProcessor
   @Override
   public void create(ApplicationDefinition item, long revision) {
     try {
-      applicationManagement.defineApplication(item.getName(), item.getDocumentation(), revision);
+      getAppMgmt().defineApplication(item.getName(), item.getDocumentation(), revision);
 
-      Workspace ws = revisionManagement.getWorkspace(revision);
+      Workspace ws = getRevisionManagement().getWorkspace(revision);
       RuntimeDependencyContext owner = new com.gip.xyna.xfmg.xfctrl.revisionmgmt.ApplicationDefinition(item.getName(), ws);
       for (RuntimeContextDependency rcd : item.getRuntimeContextDependencies()) {
         rcdp.create(owner, rcd);
@@ -408,10 +424,10 @@ public class ApplicationDefinitionProcessor implements WorkspaceContentProcessor
   @Override
   public void modify(ApplicationDefinition from, ApplicationDefinition to, long revision) {
     try {
-      Workspace ws = revisionManagement.getWorkspace(revision);
+      Workspace ws = getRevisionManagement().getWorkspace(revision);
       RuntimeDependencyContext owner = new com.gip.xyna.xfmg.xfctrl.revisionmgmt.ApplicationDefinition(to.getName(), ws);
 
-      applicationManagement.changeApplicationDefinitionComment(to.getName(), revision, to.getDocumentation());
+      getAppMgmt().changeApplicationDefinitionComment(to.getName(), revision, to.getDocumentation());
       for (WorkspaceContentDifference wcd : compareRuntimeContextDependencies(from, to)) {
         String actualResolution = wcd.getDifferenceType().getClass().getSimpleName();
         if (actualResolution.equals(CREATE.class.getSimpleName())) {
@@ -425,7 +441,7 @@ public class ApplicationDefinitionProcessor implements WorkspaceContentProcessor
 
       for (ContentEntry ce : getNewContentEntries(to, from)) {
         ApplicationEntryType aet = ApplicationEntryType.valueOf(ce.getType());
-        applicationManagement.removeObjectFromApplication(to.getName(), ce.getFQName(), aet, revision, emptyEvent, false, null);
+        getAppMgmt().removeObjectFromApplication(to.getName(), ce.getFQName(), aet, revision, emptyEvent, false, null);
       }
 
       for (ContentEntry ce : getNewContentEntries(from, to)) {
@@ -441,11 +457,11 @@ public class ApplicationDefinitionProcessor implements WorkspaceContentProcessor
   private void addEntryToAppDef(ContentEntry ce, String appDefName, long revision) throws XFMG_FailedToAddObjectToApplication {
     ApplicationEntryType aet = ApplicationEntryType.valueOf(ce.getType());
     if (xmomType.contains(aet)) {
-      applicationManagement.addXMOMObjectToApplication(ce.getFQName(), appDefName, revision, emptyEvent, false, null);
+      getAppMgmt().addXMOMObjectToApplication(ce.getFQName(), appDefName, revision, emptyEvent, false, null);
     } else if (triggerFilterType.contains(aet)) {
-      applicationManagement.addObjectToApplicationDefinition(ce.getFQName(), aet, appDefName, revision, false, null, emptyEvent);
+      getAppMgmt().addObjectToApplicationDefinition(ce.getFQName(), aet, appDefName, revision, false, null, emptyEvent);
     } else {
-      applicationManagement.addNonModelledObjectToApplication(ce.getFQName(), appDefName, null, aet, revision, false, null);
+      getAppMgmt().addNonModelledObjectToApplication(ce.getFQName(), appDefName, null, aet, revision, false, null);
     }
   }
 
@@ -455,10 +471,10 @@ public class ApplicationDefinitionProcessor implements WorkspaceContentProcessor
     try (TmpSessionAuthWrapper wrapper = new TmpSessionAuthWrapper(TEMPORARY_SESSION_AUTHENTICATION_USERNAME_CREATE,
                                                                    TemporarySessionAuthentication.TEMPORARY_CLI_USER_ROLE)) {
       RemoveApplicationParameters params = new RemoveApplicationParameters();
-      params.setParentWorkspace(revisionManagement.getWorkspace(revision));
+      params.setParentWorkspace(getRevisionManagement().getWorkspace(revision));
       params.setUser(wrapper.getTSA().getUsername());
 
-      applicationManagement.removeApplicationVersion(item.getName(), null, params, emptyEvent);
+      getAppMgmt().removeApplicationVersion(item.getName(), null, params, emptyEvent);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

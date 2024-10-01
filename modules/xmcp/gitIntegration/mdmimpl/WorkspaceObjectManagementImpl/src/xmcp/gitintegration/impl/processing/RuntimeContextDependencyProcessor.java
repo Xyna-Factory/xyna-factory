@@ -61,11 +61,22 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
   private static final String TEMPORARY_SESSION_AUTHENTICATION_USERNAME_DELETE = "RuntimeContextDependencyProcessor.delete";
 
 
-  private static final RevisionManagement revisionManagement =
-      XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
-  private static final RuntimeContextDependencyManagement rtcDependencyManagement =
-      XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
+  private static RevisionManagement revisionManagement;
+  private static RuntimeContextDependencyManagement rtcDependencyManagement;
 
+  private static RevisionManagement getRevisionManagement() {
+    if (revisionManagement == null) {
+      revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+    }
+    return revisionManagement;
+  }
+  
+  private static RuntimeContextDependencyManagement getRuntimeContextDependencyManagement() {
+    if(rtcDependencyManagement == null) {
+      rtcDependencyManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
+    }
+    return rtcDependencyManagement;
+  }
 
   @Override
   public String getTagName() {
@@ -126,8 +137,8 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
   public List<RuntimeContextDependency> createItems(Long revision) {
     List<RuntimeContextDependency> rcdList = new ArrayList<RuntimeContextDependency>();
     try {
-      Workspace ws = revisionManagement.getWorkspace(revision);
-      Collection<RuntimeDependencyContext> dependencies = rtcDependencyManagement.getDependencies(ws);
+      Workspace ws = getRevisionManagement().getWorkspace(revision);
+      Collection<RuntimeDependencyContext> dependencies = getRuntimeContextDependencyManagement().getDependencies(ws);
       for (RuntimeDependencyContext rdc : dependencies) {
         RuntimeContextDependency rcd = new RuntimeContextDependency();
         rcd.setDepType(rdc.getRuntimeDependencyContextType().toString());
@@ -200,7 +211,7 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
   @Override
   public void create(RuntimeContextDependency item, long revision) {
     try {
-      create(revisionManagement.getWorkspace(revision), item);
+      create(getRevisionManagement().getWorkspace(revision), item);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -211,7 +222,7 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
     try (TmpSessionAuthWrapper wrapper = new TmpSessionAuthWrapper(TEMPORARY_SESSION_AUTHENTICATION_USERNAME_CREATE,
                                                                    TemporarySessionAuthentication.TEMPORARY_CLI_USER_ROLE)) {
       RuntimeDependencyContext dependency = createRuntimeDependencyContext(item);
-      rtcDependencyManagement.addDependency(owner, dependency, wrapper.getTSA().getUsername(), true);
+      getRuntimeContextDependencyManagement().addDependency(owner, dependency, wrapper.getTSA().getUsername(), true);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -221,7 +232,7 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
   @Override
   public void modify(RuntimeContextDependency from, RuntimeContextDependency to, long revision) {
     try {
-      modify(revisionManagement.getWorkspace(revision), from, to);
+      modify(getRevisionManagement().getWorkspace(revision), from, to);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -232,7 +243,7 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
     try (TmpSessionAuthWrapper wrapper = new TmpSessionAuthWrapper(TEMPORARY_SESSION_AUTHENTICATION_USERNAME_MODIFY,
                                                                    TemporarySessionAuthentication.TEMPORARY_CLI_USER_ROLE)) {
       // get all current workspace dependencies
-      Collection<RuntimeDependencyContext> dependencies = rtcDependencyManagement.getRequirements(owner);
+      Collection<RuntimeDependencyContext> dependencies = getRuntimeContextDependencyManagement().getRequirements(owner);
 
       // remove from-runtimeContextDepencency from workspace dependency list 
       String fromStr = format(from);
@@ -254,7 +265,7 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
       // add to-Element to the updated newDepencencyList
       newDependenyList.add(createRuntimeDependencyContext(to));
 
-      rtcDependencyManagement.modifyDependencies(owner, newDependenyList, wrapper.getTSA().getUsername());
+      getRuntimeContextDependencyManagement().modifyDependencies(owner, newDependenyList, wrapper.getTSA().getUsername());
 
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -265,7 +276,7 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
   @Override
   public void delete(RuntimeContextDependency item, long revision) {
     try {
-      delete(revisionManagement.getWorkspace(revision), item);
+      delete(getRevisionManagement().getWorkspace(revision), item);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -276,7 +287,7 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
     try (TmpSessionAuthWrapper wrapper = new TmpSessionAuthWrapper(TEMPORARY_SESSION_AUTHENTICATION_USERNAME_DELETE,
                                                                    TemporarySessionAuthentication.TEMPORARY_CLI_USER_ROLE)) {
       RuntimeDependencyContext dependency = createRuntimeDependencyContext(item);
-      rtcDependencyManagement.removeDependency(owner, dependency, wrapper.getTSA().getUsername());
+      getRuntimeContextDependencyManagement().removeDependency(owner, dependency, wrapper.getTSA().getUsername());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

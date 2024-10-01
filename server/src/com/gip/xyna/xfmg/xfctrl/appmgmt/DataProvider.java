@@ -73,6 +73,7 @@ public class DataProvider {
   private GetIsDestinationKeyConfiguredForOrderContextMapping getIsDestinationKeyConfiguredForOrderContextMapping;
   private GetGlobalCapacities globaleCapacities;
   private QueryRuntimeAppStorablesProvider queryRuntimeAppStorablesProvider;
+  private XynaPropertiesProvider xynaPropertiesProvider;
 
 
   public void validate() {
@@ -81,13 +82,17 @@ public class DataProvider {
         || executionDispatcher == null || cleanupDispatcher == null || getListInheritanceRules == null || getListApplicationDetails == null
         || getAllMappingsForRootType == null || getCheckDeploymentItemState == null
         || getIsDestinationKeyConfiguredForOrderContextMapping == null || activationTriggerProvider == null || globaleCapacities == null 
-        || queryRuntimeAppStorablesProvider == null) {
+        || queryRuntimeAppStorablesProvider == null || xynaPropertiesProvider == null) {
       throw new RuntimeException();
     }
   }
 
-  public QueryRuntimeAppStorablesProvider getGlobalRuntimeAppStorablesProvider() {
-    return queryRuntimeAppStorablesProvider;
+  public String getXynaPropertyValue(String propertyName) {
+    return xynaPropertiesProvider.getPropertyValue(propertyName);
+  }
+  
+  public void setXynaPropertyProvider(XynaPropertiesProvider xynaPropertiesProvider) {
+    this.xynaPropertiesProvider = xynaPropertiesProvider;
   }
   
   public void setGlobalRuntimeAppStorablesProvider(QueryRuntimeAppStorablesProvider queryRuntimeAppStorablesProvider) {
@@ -102,6 +107,9 @@ public class DataProvider {
     return globaleCapacities;
   }
 
+  public CapacityInformation getCapacity(String capacityName) {
+    return globaleCapacities.getCapacity(capacityName);
+  }
 
   public void setGetGlobalCapacities(GetGlobalCapacities globaleCapacities) {
     this.globaleCapacities = globaleCapacities;
@@ -249,12 +257,6 @@ public class DataProvider {
   public void setGetListInheritanceRules(GetListInheritanceRules getListInheritanceRules) {
     this.getListInheritanceRules = getListInheritanceRules;
   }
-
-
-  public GetlistApplicationDetails getGetListApplicationDetails() {
-    return getListApplicationDetails;
-  }
-  
 
   public List<ApplicationEntryStorable> listApplicationDetails(String appName, String version, boolean includingDependencies,
                                                                List<String> excludeSubtypesOf, Long parentRev) {
@@ -409,6 +411,10 @@ public class DataProvider {
     List<ApplicationEntryStorable> queryAllRuntimeApplicationStorables(String application, String version) throws PersistenceLayerException;
   }
 
+  @FunctionalInterface
+  public interface XynaPropertiesProvider {
+    String getPropertyValue(String propertyName);
+  }
 
   public interface ActivationTriggerProvider {
 
