@@ -379,6 +379,7 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
 
   public void onNoFilterFound(HTTPTriggerConnection con) {
     try {
+      logger.warn("No filter responsible for " + con.getMethod().toString() + " " + con.getUri() + ". Returning " + HTTPTriggerConnection.HTTP_NOTFOUND);
       if (logger.isTraceEnabled()) {
         logger.trace("No filter found for connection " + con);
       }
