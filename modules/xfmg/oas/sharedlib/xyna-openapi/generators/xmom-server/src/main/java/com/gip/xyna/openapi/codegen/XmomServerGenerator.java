@@ -109,7 +109,6 @@ public class XmomServerGenerator extends DefaultCodegen {
       "filter/OASFilter",                                                // the destination folder, relative `outputFolder`
       "OASFilter.java")                                     // the output file
     );
-    supportingFiles.add(new SupportingFile("OASDecider.mustache", "XMOM/" + GeneratorProperty.getProviderPath(this).replace('.', '/') + "/decider", "OASDecider.xml"));
     supportingFiles.add(new SupportingFile("application.mustache", "", "application.xml"));
   }
 

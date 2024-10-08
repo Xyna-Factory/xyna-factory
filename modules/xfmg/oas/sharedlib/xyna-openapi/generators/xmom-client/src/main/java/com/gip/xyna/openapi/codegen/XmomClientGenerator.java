@@ -109,7 +109,6 @@ public class XmomClientGenerator extends DefaultCodegen {
      * it will be processed by the template engine.  Otherwise, it will be copied
      */
     supportingFiles.add(new SupportingFile("application.mustache", "", "application.xml"));
-    supportingFiles.add(new SupportingFile("OASDecider.mustache", "XMOM/" + GeneratorProperty.getClientPath(this).replace('.', '/') + "/decider", "OASDecider.xml"));
   }
   
   @Override
