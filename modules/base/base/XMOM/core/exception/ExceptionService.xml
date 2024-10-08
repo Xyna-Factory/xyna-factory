@@ -135,5 +135,16 @@ public static class Rethrower  {
         <CodeSnippet Type="Java">return new ExceptionHolder(exception);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Get Exception" Name="getException">
+      <Input>
+        <Data ID="1" Label="Exception Holder" ReferenceName="ExceptionHolder" ReferencePath="core.exception" VariableName="exceptionHolder"/>
+      </Input>
+      <Output>
+        <Exception ID="2" Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return exceptionHolder.getException();</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>
