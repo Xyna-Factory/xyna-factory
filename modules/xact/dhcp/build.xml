@@ -21,9 +21,7 @@
     <property name="target.dir" value="${basedir}/deploy/" />
 
     <target name="build-all">
-        <ant antfile="build.xml" target="build" inheritAll="false" dir="client">
-            <property name="target.dir" value="${target.dir}" />
-        </ant>
+
     </target>
 
 </project>
