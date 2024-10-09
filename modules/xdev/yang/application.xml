@@ -95,6 +95,10 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
+      <FqName>xdev.yang.YangAppGenerationInputParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yang.LoadYangAssignmentsData</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>

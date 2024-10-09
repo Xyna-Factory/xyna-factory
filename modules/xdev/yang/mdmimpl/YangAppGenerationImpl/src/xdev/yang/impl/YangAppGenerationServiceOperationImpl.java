@@ -107,6 +107,14 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
     return null;
   }
 
+  public void createYangDeviceApp(YangAppGenerationInputParameter yangAppGenerationInputParameter2) {
+    YangApplicationGeneration.createDeviceApp(yangAppGenerationInputParameter2);
+  }
+
+  public void importModuleCollectionApplication(YangAppGenerationInputParameter yangAppGenerationInputParameter1) {
+    YangApplicationGeneration.createModuleCollectionApp(yangAppGenerationInputParameter1);
+  }
+
   @Override
   public List<? extends UseCaseTableData> loadUsecases() {
     return new LoadUsecasesTable().loadUsecases();
