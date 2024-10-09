@@ -141,5 +141,40 @@ try {
         </CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation Label="Write" Name="write" IsStatic="false">
+      <Input>
+        <Data ID="6" Label="OAS Base Type" VariableName="oASBaseType6" ReferenceName="OASBaseType" ReferencePath="xmcp.oas.datatype">
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="7" Label="Document" VariableName="document7" ReferenceName="Document" ReferencePath="xact.templates">
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
+jsonOptions.setUseLabels(true);
+
+return xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(oASBaseType6, jsonOptions);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="Parse" Name="parse" IsStatic="false">
+      <Input>
+        <Data ID="3" Label="Document" VariableName="document3" ReferenceName="Document" ReferencePath="xact.templates">
+        </Data>
+        <Data ID="4" Label="OAS Base Type" VariableName="oASBaseType4" ReferenceName="OASBaseType" ReferencePath="xmcp.oas.datatype">
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="5" Label="OAS Base Type" VariableName="oASBaseType5" ReferenceName="OASBaseType" ReferencePath="xmcp.oas.datatype">
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
+jsonOptions.setUseLabels(true);
+jsonOptions.setObjectDecider(this);
+
+return (xmcp.oas.datatype.OASBaseType) xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document3, oASBaseType4, jsonOptions);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>
