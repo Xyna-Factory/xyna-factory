@@ -94,7 +94,7 @@ jsonOptions.setListWrapper((List){{listWrapperPath}}.ListWrapperProvider.getList
 xact.templates.Document document = httpRequest1.getBody();
   {{#bodyParams}}
     {{^isPrimitive}}
-jsonOptions.setObjectDecider(new {{apiRefPath}}.decider.OASDecider());
+jsonOptions.setObjectDecider(new {{propRefPath}}.decider.OASDecider());
       {{^isList}}
 {{propFQN}} {{propVarName}} = ({{propFQN}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{propFQN}}(), jsonOptions);
       {{/isList}}
