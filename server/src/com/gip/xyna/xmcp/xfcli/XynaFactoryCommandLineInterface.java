@@ -547,11 +547,14 @@ public class XynaFactoryCommandLineInterface extends Thread {
           message = " is in unexpected state:";
       }
       System.out.println(XYNA_FACTORY + message + " (Status '"+rc.getMessage()+"')");
+      logger.log(XynaFactoryLogLevel.Factory, XYNA_FACTORY + message + " (Status '"+rc.getMessage()+"')");
       System.exit(code);
     }
     if (!quiet) {
       System.out.println(XYNA_FACTORY + " is starting...");
     }
+    logger.log(XynaFactoryLogLevel.Factory, XYNA_FACTORY + " is starting...");
+
     savePidToFile();
             
     if (containsArg(args, "-Xthreadtime")) {
