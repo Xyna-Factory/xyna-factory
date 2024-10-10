@@ -17,7 +17,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <!--                                               ################# Version auch in blackedition_lib.sh updaten ########### -->
-<Application applicationName="GuiHttp" comment="" factoryVersion="" versionName="1.2.10" xmlVersion="1.1">
+<Application applicationName="GuiHttp" comment="" factoryVersion="" versionName="1.2.11" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">GuiHTTPFilter</Description>
     <Description Lang="EN">GuiHTTPFilter</Description>
@@ -25,7 +25,7 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Http</ApplicationName>
-        <VersionName>1.2.8</VersionName>
+        <VersionName>1.2.9</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>ZetaFramework</ApplicationName>
@@ -2636,7 +2636,7 @@
   <Filters>
     <Filter implicitDependency="true">
       <Name>GUIHTTP</Name>
-      <JarFiles>GUIHTTPFilter/commons-fileupload-1.5.jar:GUIHTTPFilter/commons-io-2.7.jar:GUIHTTPFilter/GUIHTTPFilter.jar:</JarFiles>
+      <JarFiles>GUIHTTPFilter/commons-fileupload-1.5.jar:GUIHTTPFilter/commons-io-2.17.0.jar:GUIHTTPFilter/GUIHTTPFilter.jar:</JarFiles>
       <FqFilterClassname>com.gip.xyna.xact.trigger.GUIHTTPFilter</FqFilterClassname>
       <TriggerName>Http</TriggerName>
       <SharedLibs/>
