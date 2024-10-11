@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Yang Import Definition" TypeName="YangImportDefinition" TypePath="xmcp.yang.fman" Version="1.8">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Yang Import Definition" TypeName="YangImportDefinition" TypePath="xmcp.yang.fman" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Yang Import Definition" Name="YangImportDefinition">
     <Input/>
     <Output>

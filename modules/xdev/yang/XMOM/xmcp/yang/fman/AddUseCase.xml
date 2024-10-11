@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Add Use Case" TypeName="AddUseCase" TypePath="xmcp.yang.fman" Version="1.8">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Add Use Case" TypeName="AddUseCase" TypePath="xmcp.yang.fman" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Add Use Case" Name="AddUseCase">
     <Input>
       <Data ID="37" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text37"/>

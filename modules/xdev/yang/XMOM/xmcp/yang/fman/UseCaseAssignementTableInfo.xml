@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Use Case Assignement TableInfo" TypeName="UseCaseAssignementTableInfo" TypePath="xmcp.yang.fman" Version="1.8">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Use Case Assignement TableInfo" TypeName="UseCaseAssignementTableInfo" TypePath="xmcp.yang.fman" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Use Case Assignement TableInfo" Name="UseCaseAssignementTableInfo">
     <Input>
       <Data ID="10" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo10"/>
