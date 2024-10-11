@@ -22,6 +22,7 @@
       <Data ID="37" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text37"/>
       <Data ID="58" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text58"/>
       <Data ID="111" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace111"/>
+      <Data ID="112" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text112"/>
     </Input>
     <Output/>
     <ServiceReference ID="19" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
@@ -33,6 +34,7 @@
       <Source RefID="37"/>
       <Source RefID="58"/>
       <Source RefID="111"/>
+      <Source RefID="112"/>
       <Target RefID="19"/>
       <Invoke Operation="addUsecase" ServiceID="19">
         <Source RefID="37">
@@ -46,6 +48,11 @@
           </Meta>
         </Source>
         <Source RefID="111"/>
+        <Source RefID="112">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
       </Invoke>
       <Receive ServiceID="19"/>
     </Function>
