@@ -64,12 +64,13 @@ public class YangApplicationGeneration {
     files.add(unzipedApp);
 
     // directory with yang modules
-    String yangModulesDir = fileMgmt.retrieve(genParameter.getFileID().getId()).getOriginalFilename();
-    if (yangModulesDir.endsWith(".zip")) {
-      yangModulesDir = decompressArchive(yangModulesDir);
-      files.add(new File(yangModulesDir));
+    String originalFileName = fileMgmt.retrieve(genParameter.getFileID().getId()).getOriginalFilename();
+    String fileAbsPath = fileMgmt.getAbsolutePath(genParameter.getFileID().getId());
+    if (originalFileName.endsWith(".zip")) {
+      fileAbsPath = decompressArchive(fileAbsPath);
+      files.add(new File(fileAbsPath));
     }
-    Document yinDocument = parseYangModules(yangModulesDir);
+    Document yinDocument = parseYangModules(fileAbsPath);
 
     createDatatype(genParameter.getDataTypeFQN(), "YangModuleCollection", yinDocument, unzipedApp.getAbsolutePath());
     createApplicationXML(genParameter, unzipedApp.getAbsolutePath());

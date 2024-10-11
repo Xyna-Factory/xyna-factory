@@ -18,17 +18,27 @@
 package xdev.yang.impl;
 
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
+import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
+import com.gip.xyna.xfmg.xfctrl.filemgmt.FileManagement;
+import com.gip.xyna.xmcp.xfcli.generated.Importapplication;
+import com.gip.xyna.xmcp.xfcli.impl.ImportapplicationImpl;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 
 import base.Text;
 import xdev.yang.YangAppGenerationInputParameter;
 import xdev.yang.YangAppGenerationServiceOperation;
 import xdev.yang.cli.generated.OverallInformationProvider;
+import xdev.yang.impl.YangApplicationGeneration.YangApplicationGenerationData;
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.UseCaseAssignementTableData;
 import xmcp.yang.UseCaseTableData;
@@ -37,6 +47,8 @@ import xprc.xpce.Workspace;
 
 public class YangAppGenerationServiceOperationImpl implements ExtendedDeploymentTask, YangAppGenerationServiceOperation {
 
+  private static final Logger logger = CentralFactoryLogging.getLogger(YangAppGenerationServiceOperationImpl.class);
+  
   public void onDeployment() throws XynaException {
     OverallInformationProvider.onDeployment();
     PluginManagement.registerPlugin(this.getClass());
@@ -70,7 +82,23 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   }
 
   public void importModuleCollectionApplication(YangAppGenerationInputParameter yangAppGenerationInputParameter1) {
-    YangApplicationGeneration.createModuleCollectionApp(yangAppGenerationInputParameter1);
+    FileManagement fileMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getFileManagement();
+    String id = null;
+    try (YangApplicationGenerationData appData = YangApplicationGeneration.createModuleCollectionApp(yangAppGenerationInputParameter1)) {
+      id = appData.getId();
+    } catch (IOException e) {
+      if (logger.isWarnEnabled()) {
+        logger.warn("Could not clean up temporary files for " + yangAppGenerationInputParameter1.getApplicationName(), e);
+      }
+    }
+    ImportapplicationImpl importApp = new ImportapplicationImpl();
+    Importapplication importPayload = new Importapplication();
+    importPayload.setFilename(fileMgmt.retrieve(id).getOriginalFilename());
+    try (ByteArrayOutputStream stream = new ByteArrayOutputStream()){
+      importApp.execute(stream, importPayload);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
