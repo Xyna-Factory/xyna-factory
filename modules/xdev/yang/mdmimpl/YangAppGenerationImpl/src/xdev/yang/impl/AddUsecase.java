@@ -34,6 +34,7 @@ import com.gip.xyna.xprc.exceptions.XPRC_XMOMObjectDoesNotExist;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 
+import base.Text;
 import xact.http.URLPath;
 import xact.http.enums.httpmethods.HTTPMethod;
 import xact.http.enums.httpmethods.POST;
@@ -47,7 +48,7 @@ public class AddUsecase {
   private static final Logger logger = CentralFactoryLogging.getLogger(AddUsecase.class);
 
 
-  public void addUsecase(String fqn, String usecaseName, Workspace workspace, XynaOrderServerExtension order) {
+  public void addUsecase(String fqn, String usecaseName, Workspace workspace, XynaOrderServerExtension order, Text rpc) {
     try {
       String workspaceName = workspace.getName();
       if (logger.isDebugEnabled()) {
@@ -70,7 +71,7 @@ public class AddUsecase {
         if (logger.isDebugEnabled()) {
           logger.debug(order.getId() + ": Adding service to datatype. Current datatype path: " + currentPath);
         }
-        addServiceToDatatype(currentPath, label, usecaseName, workspaceName, order);
+        addServiceToDatatype(currentPath, label, usecaseName, workspaceName, order, rpc);
         saveDatatype(currentPath, path, label, workspaceName, order);
       } finally {
         if (logger.isDebugEnabled()) {
@@ -135,7 +136,7 @@ public class AddUsecase {
     }
   }
 
-  private void addServiceToDatatype(String path, String label, String service, String workspace, XynaOrderServerExtension order) {
+  private void addServiceToDatatype(String path, String label, String service, String workspace, XynaOrderServerExtension order, Text rpc) {
     RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
     String workspaceNameEscaped = urlEncode(workspace);
     String fqnUrl = path + "/" + label;
@@ -148,6 +149,8 @@ public class AddUsecase {
     } catch (XynaException e) {
       throw new RuntimeException("Could not add service to Datatype.", e);
     }
+    
+    //TODO: set RPC as meta tag
   }
 
   private void saveDatatype(String path, String targetPath, String label, String workspace, XynaOrderServerExtension order) {

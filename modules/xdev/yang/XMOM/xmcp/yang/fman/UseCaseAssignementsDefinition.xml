@@ -29,14 +29,18 @@
       <Source RefID="510"/>
       <Target RefID="510"/>
     </ServiceReference>
-    <ServiceReference ID="1882" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
-      <Source RefID="1881"/>
-      <Target RefID="1881"/>
-    </ServiceReference>
+    <Function ID="510" Label="get Own RuntimeContext">
+      <Source RefID="511"/>
+      <Target RefID="511"/>
+      <Target RefID="2753"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="511"/>
+      <Receive ServiceID="511">
+        <Target RefID="2753"/>
+      </Receive>
+    </Function>
     <Choice ID="237" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="357"/>
       <Target RefID="2354"/>
-      <Target RefID="1884"/>
       <Input>
         <Data ID="382" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData382">
           <Source RefID="237"/>
@@ -44,19 +48,10 @@
         <Source RefID="357"/>
       </Input>
       <Case ID="238" Label="true" Premise="%0%.type!=&quot;leaf&quot;">
-        <Function ID="510" Label="get Own RuntimeContext">
-          <Source RefID="511"/>
-          <Target RefID="511"/>
-          <Target RefID="1710"/>
-          <Invoke Operation="getOwnRuntimeContext" ServiceID="511"/>
-          <Receive ServiceID="511">
-            <Target RefID="1710"/>
-          </Receive>
-        </Function>
         <Mappings ID="489" Label="Mapping">
           <Input>
             <Data ID="491" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext491"/>
-            <Source RefID="1710"/>
+            <Source RefID="2753"/>
           </Input>
           <Output>
             <Data ID="492" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow492"/>
@@ -76,7 +71,7 @@
             <Data ID="642" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext642">
               <Source RefID="26"/>
             </Data>
-            <Source RefID="1710"/>
+            <Source RefID="2753"/>
           </Input>
           <Input>
             <Data ID="1296" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData1296">
@@ -98,42 +93,24 @@
         </Mappings>
         <Assign ID="241">
           <Source RefID="252"/>
-          <Source RefID="1710"/>
           <Target RefID="2354"/>
-          <Target RefID="1884"/>
           <Copy>
             <Source RefID="252"/>
             <Target RefID="2354"/>
-          </Copy>
-          <Copy>
-            <Source RefID="1710"/>
-            <Target RefID="1884"/>
           </Copy>
         </Assign>
         <Data ID="252" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition252">
           <Source RefID="26"/>
         </Data>
         <Data ID="488" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow488"/>
-        <Data ID="1710" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1710">
-          <Source RefID="510"/>
-        </Data>
       </Case>
       <Case ID="239" Label="false">
-        <Function ID="1881" Label="get Own RuntimeContext">
-          <Source RefID="1882"/>
-          <Target RefID="1882"/>
-          <Target RefID="1880"/>
-          <Invoke Operation="getOwnRuntimeContext" ServiceID="1882"/>
-          <Receive ServiceID="1882">
-            <Target RefID="1880"/>
-          </Receive>
-        </Function>
         <Mappings ID="2327" Label="Mapping">
           <Input>
             <Data ID="2704" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext2704">
               <Source RefID="2327"/>
             </Data>
-            <Source RefID="1880"/>
+            <Source RefID="2753"/>
           </Input>
           <Output>
             <Data ID="2352" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition2352">
@@ -149,7 +126,7 @@
         <Mappings ID="1911" Label="Mapping">
           <Input>
             <Data ID="1913" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1913"/>
-            <Source RefID="1880"/>
+            <Source RefID="2753"/>
           </Input>
           <Output>
             <Data ID="1914" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition1914"/>
@@ -190,25 +167,18 @@
             </Data>
             <Target RefID="281"/>
           </Output>
-          <Mapping>%3%.children["0"]=%0%</Mapping>
-          <Mapping>%3%.children["1"]=%1%</Mapping>
-          <Mapping>%3%.children["2"]=%2%</Mapping>
+          <Mapping>%3%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
+          <Mapping>%3%.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
+          <Mapping>%3%.children["2"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%2%</Mapping>
         </Mappings>
         <Assign ID="243">
           <Source RefID="281"/>
-          <Source RefID="1880"/>
           <Target RefID="2354"/>
-          <Target RefID="1884"/>
           <Copy>
             <Source RefID="281"/>
             <Target RefID="2354"/>
           </Copy>
-          <Copy>
-            <Source RefID="1880"/>
-            <Target RefID="1884"/>
-          </Copy>
         </Assign>
-        <Data ID="1880" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1880"/>
         <Data ID="1909" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition1909"/>
         <Data ID="1910" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1910"/>
       </Case>
@@ -216,14 +186,14 @@
     <Data ID="281" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition281">
       <Source RefID="271"/>
     </Data>
-    <Data ID="1884" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1884">
-      <Source RefID="237"/>
-    </Data>
     <Data ID="2353" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition2353">
       <Source RefID="2327"/>
     </Data>
     <Data ID="2354" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition2354">
       <Source RefID="237"/>
+    </Data>
+    <Data ID="2753" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext2753">
+      <Source RefID="510"/>
     </Data>
     <Assign ID="1">
       <Source RefID="2354"/>

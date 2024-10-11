@@ -25,6 +25,10 @@
       <Data ID="35" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo35"/>
       <Data ID="48" IsList="true" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData48"/>
     </Output>
+    <ServiceReference ID="535" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
+      <Source RefID="534"/>
+      <Target RefID="534"/>
+    </ServiceReference>
     <ServiceReference ID="214" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
       <Source RefID="213"/>
       <Target RefID="213"/>
@@ -41,7 +45,7 @@
           <Source RefID="214"/>
           <Source RefID="22"/>
           <Source RefID="415"/>
-          <Source RefID="366"/>
+          <Source RefID="670"/>
           <Target RefID="214"/>
           <Target RefID="212"/>
           <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="214">
@@ -52,7 +56,7 @@
                 <ExpectedType>xmcp.yang.UseCaseTableData</ExpectedType>
               </Meta>
             </Source>
-            <Source RefID="366">
+            <Source RefID="670">
               <Meta>
                 <LinkType>Constant</LinkType>
               </Meta>
@@ -94,204 +98,17 @@
         </Assign>
       </Case>
     </Choice>
-    <Mappings ID="443" Label="Mapping">
-      <Output>
-        <Data ID="489" IsList="true" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData489">
-          <Source RefID="443"/>
-        </Data>
-        <Target RefID="490"/>
-      </Output>
-      <Mapping>%0%["0"].usecaseGroup="Not Implemented"</Mapping>
-      <Mapping>%0%["0"].useCase="Not Implemented"</Mapping>
-      <Mapping>%0%["0"].mappingCount="-1"</Mapping>
-    </Mappings>
+    <Function ID="534" Label="Load Usecases">
+      <Source RefID="535"/>
+      <Target RefID="535"/>
+      <Target RefID="537"/>
+      <Invoke Operation="loadUsecases" ServiceID="535"/>
+      <Receive ServiceID="535">
+        <Target RefID="537"/>
+      </Receive>
+    </Function>
     <Data ID="116" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo116"/>
     <Data ID="117" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo117"/>
-    <Data ID="366" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="const_TableColumn366">
-      <Value>
-        <Data ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes">
-          <Data VariableName="name">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-            <Value>Use Case Group</Value>
-          </Data>
-          <Data VariableName="path">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-            <Value>usecaseGroup</Value>
-          </Data>
-          <Data VariableName="sort">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-          </Data>
-          <Data VariableName="filter">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-          </Data>
-          <Data VariableName="disableSort">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="disableFilter">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="shrink">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="break0">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="pre">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="filterTooltip">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-          </Data>
-        </Data>
-      </Value>
-      <Value>
-        <Data ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes">
-          <Data VariableName="name">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-            <Value>Use Case</Value>
-          </Data>
-          <Data VariableName="path">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-            <Value>useCase</Value>
-          </Data>
-          <Data VariableName="sort">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-          </Data>
-          <Data VariableName="filter">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-          </Data>
-          <Data VariableName="disableSort">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="disableFilter">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="shrink">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="break0">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="pre">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="filterTooltip">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-          </Data>
-        </Data>
-      </Value>
-      <Value>
-        <Data ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes">
-          <Data VariableName="name">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-            <Value>Mapping Count</Value>
-          </Data>
-          <Data VariableName="path">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-            <Value>mappingCount</Value>
-          </Data>
-          <Data VariableName="sort">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-          </Data>
-          <Data VariableName="filter">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-          </Data>
-          <Data VariableName="disableSort">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="disableFilter">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="shrink">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="break0">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="pre">
-            <Meta>
-              <Type>boolean</Type>
-            </Meta>
-            <Value>false</Value>
-          </Data>
-          <Data VariableName="filterTooltip">
-            <Meta>
-              <Type>String</Type>
-            </Meta>
-          </Data>
-        </Data>
-      </Value>
-    </Data>
     <Data ID="415" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="const_UseCaseTableData415">
       <Data VariableName="usecaseGroup">
         <Meta>
@@ -310,12 +127,168 @@
         <Value>0</Value>
       </Data>
     </Data>
-    <Data ID="490" IsList="true" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData490">
-      <Source RefID="443"/>
+    <Data ID="537" IsList="true" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData537">
+      <Source RefID="534"/>
+    </Data>
+    <Data ID="670" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="const_TableColumn670">
+      <Value>
+        <Data ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
+          <Data VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>usecaseGroup</Value>
+          </Data>
+          <Data VariableName="break0">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="pre">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="shrink">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>Use Case Group</Value>
+          </Data>
+          <Data VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
+          <Data VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>useCase</Value>
+          </Data>
+          <Data VariableName="break0">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="pre">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="shrink">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>Use Case</Value>
+          </Data>
+          <Data VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
+          <Data VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>runtimeContext</Value>
+          </Data>
+          <Data VariableName="break0">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="pre">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="shrink">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>Runtime Context</Value>
+          </Data>
+          <Data VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
+          <Data VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>mappingCount</Value>
+          </Data>
+          <Data VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>Mapping Count</Value>
+          </Data>
+        </Data>
+      </Value>
     </Data>
     <Assign ID="1">
       <Source RefID="117"/>
-      <Source RefID="490"/>
+      <Source RefID="537"/>
       <Target RefID="35"/>
       <Target RefID="48"/>
       <Copy>
@@ -327,7 +300,7 @@
         <Target RefID="35"/>
       </Copy>
       <Copy>
-        <Source RefID="490"/>
+        <Source RefID="537"/>
         <Target RefID="48"/>
       </Copy>
     </Assign>

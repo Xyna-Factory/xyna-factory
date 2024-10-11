@@ -28,6 +28,7 @@ import com.gip.xyna.xprc.XynaOrderServerExtension;
 import base.Text;
 import xdev.yang.YangAppGenerationInputParameter;
 import xdev.yang.YangAppGenerationServiceOperation;
+import xdev.yang.cli.generated.OverallInformationProvider;
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.UseCaseAssignementTableData;
 import xmcp.yang.UseCaseTableData;
@@ -37,15 +38,14 @@ import xprc.xpce.Workspace;
 public class YangAppGenerationServiceOperationImpl implements ExtendedDeploymentTask, YangAppGenerationServiceOperation {
 
   public void onDeployment() throws XynaException {
-    // TODO do something on deployment, if required
-    // This is executed again on each classloader-reload, that is each
-    // time a dependent object is redeployed, for example a type of an input parameter.
+    OverallInformationProvider.onDeployment();
+    PluginManagement.registerPlugin(this.getClass());
   }
 
+
   public void onUndeployment() throws XynaException {
-    // TODO do something on undeployment, if required
-    // This is executed again on each classloader-unload, that is each
-    // time a dependent object is redeployed, for example a type of an input parameter.
+    OverallInformationProvider.onUndeployment();
+    PluginManagement.unregisterPlugin(this.getClass());
   }
 
   public Long getOnUnDeploymentTimeout() {
@@ -79,8 +79,8 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   }
 
   @Override
-  public void addUsecase(XynaOrderServerExtension order, Text usecaseGroupFqn, Text usecaseName, Workspace workspace) {
-      new AddUsecase().addUsecase(usecaseGroupFqn.getText(), usecaseName.getText(), workspace, order);
+  public void addUsecase(XynaOrderServerExtension order, Text usecaseGroupFqn, Text usecaseName, Workspace workspace, Text rpc) {
+      new AddUsecase().addUsecase(usecaseGroupFqn.getText(), usecaseName.getText(), workspace, order, rpc);
     
   }
 

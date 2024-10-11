@@ -19,9 +19,36 @@
 <Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Add Use Case" TypeName="AddUseCase" TypePath="xmcp.yang.fman" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Add Use Case" Name="AddUseCase">
     <Input>
-      <Data ID="22" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData22"/>
+      <Data ID="37" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text37"/>
+      <Data ID="58" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text58"/>
+      <Data ID="111" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace111"/>
     </Input>
     <Output/>
+    <ServiceReference ID="19" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
+      <Source RefID="18"/>
+      <Target RefID="18"/>
+    </ServiceReference>
+    <Function ID="18" Label="Add Usecase">
+      <Source RefID="19"/>
+      <Source RefID="37"/>
+      <Source RefID="58"/>
+      <Source RefID="111"/>
+      <Target RefID="19"/>
+      <Invoke Operation="addUsecase" ServiceID="19">
+        <Source RefID="37">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="58">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="111"/>
+      </Invoke>
+      <Receive ServiceID="19"/>
+    </Function>
     <Assign ID="1"/>
   </Operation>
 </Service>

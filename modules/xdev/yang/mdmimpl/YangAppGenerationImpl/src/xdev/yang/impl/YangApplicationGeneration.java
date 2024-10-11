@@ -217,13 +217,13 @@ public class YangApplicationGeneration {
       Element rootElement = yinDocument.getDocumentElement();
       YangSchemaContext schemaContext = YangYinParser.parse(yangModulesDir);
       for (var entry : schemaContext.getParseResult().entrySet()) {
-        Document doc = XMLUtils.parseString(YinWriter.serialize(entry.getValue()).asXML());
+        Document doc = XMLUtils.parseString(YinWriter.serialize(entry.getValue()).asXML(), true);
         rootElement.appendChild(yinDocument.importNode(doc.getDocumentElement(), true));
       }
 
       return yinDocument;
 
-    } catch (IOException | YangParserException | DocumentException | XPRC_XmlParsingException e) {
+    } catch (IOException | YangParserException | DocumentException | XPRC_XmlParsingException | Ex_FileAccessException e) {
       throw new RuntimeException("Could not parse Yang modules", e);
     }
   }

@@ -30,6 +30,11 @@
       <Type>String</Type>
     </Meta>
   </Data>
+  <Data Label="Runtime Context" VariableName="runtimeContext">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
   <Data Label="Mapping Count" VariableName="mappingCount">
     <Meta>
       <Type>int</Type>

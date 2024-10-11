@@ -126,7 +126,7 @@ public class UseCaseAssignmentUtils {
 
   private static Rpc findRpc(List<Module> modules, String rpcName) {
     for(Module module : modules) {
-      Rpc result = module.getRpc(rpcName);
+      Rpc result = module.getRpc(rpcName); //TODO:
       if(result != null) {
         return result;
       }
@@ -169,7 +169,7 @@ public class UseCaseAssignmentUtils {
     List<String> metaTags = dom.getUnknownMetaTags();
     List<Module> result = new ArrayList<Module>();
     for(String meta : metaTags) {
-      Document xml = XMLUtils.parseString(meta, false);
+      Document xml = XMLUtils.parseString(meta, true);
       if (!xml.getDocumentElement().getNodeName().equals(Constants.TAG_YANG)) {
         continue;
       }
@@ -186,8 +186,9 @@ public class UseCaseAssignmentUtils {
   }
   
   private static void addModulesFromTag(Element module, List<Module> modules) throws Exception {
-    YinParser parser = new YinParser("tmp");
     org.dom4j.Document document = convertMetaTagToDocument(module);
+    YinParser parser = new YinParser("module.yin");
+    parser.parse(document);
     List<YangElement> elements = parser.parse(document);
     for(YangElement element : elements) {
       if(element instanceof Module) {
@@ -201,12 +202,12 @@ public class UseCaseAssignmentUtils {
     DOMImplementationLS domImplLS = (DOMImplementationLS) document.getImplementation();
     LSSerializer serializer = domImplLS.createLSSerializer();
     String str = serializer.writeToString(node);
-    org.dom4j.Document result;
+    org.dom4j.Document doc = null;
     try {
-      result = DocumentHelper.parseText(str);
-      return result;
+      doc = DocumentHelper.parseText(str);
     } catch (DocumentException e) {
       throw new RuntimeException(e);
     }
+    return doc;
   }
 }

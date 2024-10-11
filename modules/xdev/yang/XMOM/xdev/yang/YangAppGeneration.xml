@@ -61,19 +61,16 @@
         <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadUsecases();</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation Label="Add Usecase" Name="addUsecase" IsStatic="true" RequiresXynaOrder="true">
+    <Operation IsStatic="true" Label="Add Usecase" Name="addUsecase" RequiresXynaOrder="true">
       <Input>
-        <Data ID="2" Label="UsecaseGroupFqn" VariableName="text2" ReferenceName="Text" ReferencePath="base">
-        </Data>
-        <Data ID="3" Label="UsecaseName" VariableName="text3" ReferenceName="Text" ReferencePath="base">
-        </Data>
-        <Data ID="5" Label="Workspace" VariableName="workspace5" ReferenceName="Workspace" ReferencePath="xprc.xpce">
-        </Data>
+        <Data ID="2" Label="UsecaseGroupFqn" ReferenceName="Text" ReferencePath="base" VariableName="text2"/>
+        <Data ID="3" Label="UsecaseName" ReferenceName="Text" ReferencePath="base" VariableName="text3"/>
+        <Data ID="5" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace5"/>
+        <Data ID="8" Label="RPC" ReferenceName="Text" ReferencePath="base" VariableName="text8"/>
       </Input>
-      <Output>
-      </Output>
+      <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.addUsecase(correlatedXynaOrder, text2, text3, workspace5);</CodeSnippet>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.addUsecase(correlatedXynaOrder, text2, text3, workspace5, text8);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
