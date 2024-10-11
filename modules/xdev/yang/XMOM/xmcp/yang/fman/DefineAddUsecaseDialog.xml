@@ -23,6 +23,7 @@
       <Data ID="531" Label="UC Group - Text" ReferenceName="Text" ReferencePath="base" VariableName="text531"/>
       <Data ID="561" Label="UC Name - Text" ReferenceName="Text" ReferencePath="base" VariableName="text561"/>
       <Data ID="636" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace636"/>
+      <Data ID="812" Label="RPC - Text" ReferenceName="Text" ReferencePath="base" VariableName="text812"/>
     </Output>
     <ServiceReference ID="752" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="751"/>
@@ -63,6 +64,12 @@
         <Target RefID="351"/>
       </Output>
       <Output>
+        <Data ID="866" Label="RPC - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition866">
+          <Source RefID="102"/>
+        </Data>
+        <Target RefID="1110"/>
+      </Output>
+      <Output>
         <Data ID="457" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition457">
           <Source RefID="102"/>
         </Data>
@@ -74,11 +81,13 @@
       <Mapping>%2%.dataPath="%1%.text"</Mapping>
       <Mapping>%3%.label="Workspace"</Mapping>
       <Mapping>%3%.dataPath="%2%.name"</Mapping>
-      <Mapping>%4%.dataPath="%0%, %1%, %2%"</Mapping>
-      <Mapping>%4%.label="Add Usecase"</Mapping>
-      <Mapping>%4%.serviceRTC=%0%</Mapping>
-      <Mapping>%4%.serviceFQN="xmcp.yang.fman.AddUsecase"</Mapping>
-      <Mapping>%4%.synchronously="true"</Mapping>
+      <Mapping>%4%.label="RPC"</Mapping>
+      <Mapping>%4%.dataPath="%3%.text"</Mapping>
+      <Mapping>%5%.dataPath="%0%, %1%, %2%, %3%"</Mapping>
+      <Mapping>%5%.label="Add Usecase"</Mapping>
+      <Mapping>%5%.serviceRTC=%0%</Mapping>
+      <Mapping>%5%.serviceFQN="xmcp.yang.fman.AddUseCase"</Mapping>
+      <Mapping>%5%.synchronously="true"</Mapping>
     </Mappings>
     <Mappings ID="27" Label="Mapping">
       <Input>
@@ -112,6 +121,16 @@
         </Source>
       </Input>
       <Input>
+        <Data ID="900" Label="RPC - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition900">
+          <Source RefID="27"/>
+        </Data>
+        <Source RefID="1110">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
         <Data ID="448" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition448">
           <Source RefID="27"/>
         </Data>
@@ -123,11 +142,12 @@
         </Data>
         <Target RefID="37"/>
       </Output>
-      <Mapping>%4%.label="Add Usecase"</Mapping>
-      <Mapping>%4%.children["0"]=%0%</Mapping>
-      <Mapping>%4%.children["1"]=%1%</Mapping>
-      <Mapping>%4%.children["2"]=%2%</Mapping>
-      <Mapping>%4%.children["3"]=%3%</Mapping>
+      <Mapping>%5%.label="Add Usecase"</Mapping>
+      <Mapping>%5%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
+      <Mapping>%5%.children["1"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%1%</Mapping>
+      <Mapping>%5%.children["2"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%2%</Mapping>
+      <Mapping>%5%.children["3"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%3%</Mapping>
+      <Mapping>%5%.children["4"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%4%</Mapping>
     </Mappings>
     <Data ID="37" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition37">
       <Source RefID="27"/>
@@ -150,15 +170,21 @@
     <Data ID="754" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext754">
       <Source RefID="751"/>
     </Data>
+    <Data ID="849" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="const_Text849"/>
+    <Data ID="1110" Label="RPC - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition1110">
+      <Source RefID="102"/>
+    </Data>
     <Assign ID="1">
       <Source RefID="37"/>
       <Source RefID="544"/>
       <Source RefID="582"/>
       <Source RefID="649"/>
+      <Source RefID="849"/>
       <Target RefID="14"/>
       <Target RefID="531"/>
       <Target RefID="561"/>
       <Target RefID="636"/>
+      <Target RefID="812"/>
       <Copy>
         <Source RefID="37"/>
         <Target RefID="14"/>
@@ -186,6 +212,14 @@
           </Meta>
         </Source>
         <Target RefID="636"/>
+      </Copy>
+      <Copy>
+        <Source RefID="849">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="812"/>
       </Copy>
     </Assign>
   </Operation>

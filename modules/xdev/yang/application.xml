@@ -106,5 +106,21 @@
       <FqName>xmcp.yang.fman.DefineAddUsecaseDialog</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.DefineImportModuleCollectionDialog</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.DefineImportYangDeviceDialog</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.ImportYangDeviceApplication</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.ImportYangModuleCollectionApplication</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
   </XMOMEntries>
 </Application>

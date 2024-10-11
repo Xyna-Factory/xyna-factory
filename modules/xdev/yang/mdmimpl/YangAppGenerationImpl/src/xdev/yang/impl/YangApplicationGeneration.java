@@ -91,7 +91,7 @@ public class YangApplicationGeneration {
     File unzipedApp = new File("/tmp/" + appName);
     files.add(unzipedApp);
 
-    String capabilitiesFile = fileMgmt.retrieve(genParameter.getFileID().getId()).getOriginalFilename();
+    String capabilitiesFile = fileMgmt.getAbsolutePath(genParameter.getFileID().getId());
     Document capabilities;
     try {
       capabilities = XMLUtils.parse(capabilitiesFile);

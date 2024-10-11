@@ -78,11 +78,19 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   }
 
   public void createYangDeviceApp(YangAppGenerationInputParameter yangAppGenerationInputParameter2) {
-    YangApplicationGeneration.createDeviceApp(yangAppGenerationInputParameter2);
+    String id = null;
+    try (YangApplicationGenerationData appData = YangApplicationGeneration.createDeviceApp(yangAppGenerationInputParameter2)) {
+      id = appData.getId();
+    } catch (IOException e) {
+      if (logger.isWarnEnabled()) {
+        logger.warn("Could not clean up temporary files for " + yangAppGenerationInputParameter2.getApplicationName(), e);
+      }
+    }
+    importApplication(id);
+
   }
 
   public void importModuleCollectionApplication(YangAppGenerationInputParameter yangAppGenerationInputParameter1) {
-    FileManagement fileMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getFileManagement();
     String id = null;
     try (YangApplicationGenerationData appData = YangApplicationGeneration.createModuleCollectionApp(yangAppGenerationInputParameter1)) {
       id = appData.getId();
@@ -91,6 +99,11 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
         logger.warn("Could not clean up temporary files for " + yangAppGenerationInputParameter1.getApplicationName(), e);
       }
     }
+    importApplication(id);
+  }
+  
+  private void importApplication(String id) {
+    FileManagement fileMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getFileManagement();
     ImportapplicationImpl importApp = new ImportapplicationImpl();
     Importapplication importPayload = new Importapplication();
     importPayload.setFilename(fileMgmt.retrieve(id).getOriginalFilename());
