@@ -50,7 +50,7 @@ xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.x
 jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
 jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
 jsonOptions.setUseLabels(true);
-jsonOptions.setObjectDecider(new {{apiPackage}}.decider.OASDecider());
+jsonOptions.setObjectDecider(new {{modelPackage}}.decider.OASDecider());
 jsonOptions.setProcessAllInputGenerically(false);
 jsonOptions.setListWrapper((List){{listWrapperPath}}.ListWrapperProvider.getListWrapper());
 xact.templates.Document document = document8;
