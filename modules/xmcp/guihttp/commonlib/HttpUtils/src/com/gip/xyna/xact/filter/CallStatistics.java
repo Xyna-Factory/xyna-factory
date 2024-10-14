@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
 public class CallStatistics {
 
   private RingbufferBlockingQueue<StatisticsEntry> allRingBuffer; //alle Requests
-  private RingbufferBlockingQueue<StatisticsEntry> orderRingBuffer; //nur Requests, die zu XynaOrder fÃ¼hrten
+  private RingbufferBlockingQueue<StatisticsEntry> orderRingBuffer; //nur Requests, die zu XynaOrder führten
   
   
   private int allCounter;

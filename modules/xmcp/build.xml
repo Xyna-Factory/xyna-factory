@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,9 @@
         <buildModule target="build" dir="guihttp"       target.dir="${target.dir}/xmcp" />
         <buildModule target="build" dir="zetaFramework" target.dir="${target.dir}/xmcp" />
         <buildModule target="build" dir="multirole" target.dir="${target.dir}/xmcp" />
+        <buildModule target="build" dir="xypilot" target.dir="${target.dir}/xmcp" />
+        <buildModule target="build" dir="xypilotMetrics" target.dir="${target.dir}/xmcp" />
+        <buildModule target="build" dir="xypilotMetricsDefaults" target.dir="${target.dir}/xmcp" />
     </target>
     
 </project>

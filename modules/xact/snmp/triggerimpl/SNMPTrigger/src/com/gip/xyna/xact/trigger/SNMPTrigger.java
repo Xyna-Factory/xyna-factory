@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import org.snmp4j.CommandResponder;
 import org.snmp4j.CommandResponderEvent;
 import org.snmp4j.MessageDispatcher;
 import org.snmp4j.MessageDispatcherImpl;
+import org.snmp4j.SNMP4JSettings;
 import org.snmp4j.Snmp;
 import org.snmp4j.TransportMapping;
 import org.snmp4j.log.Log4jLogFactory;
@@ -138,7 +139,7 @@ public class SNMPTrigger extends EventListener<SNMPTriggerConnection, SNMPStartP
 
       MPv3 mpv3 = new MPv3(usm);
       if (logger.isDebugEnabled()) {      
-        logger.debug("enterpriseid=" + MPv3.getEnterpriseID());
+        logger.debug("enterpriseid=" + SNMP4JSettings.getEnterpriseID());
       }
       mtDispatcher.addMessageProcessingModel(mpv3);
 

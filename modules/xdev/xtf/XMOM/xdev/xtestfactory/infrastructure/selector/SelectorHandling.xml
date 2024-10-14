@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="selectorHandling" TypeName="SelectorHandling" TypePath="xdev.xtestfactory.infrastructure.selector" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="selectorHandling" TypeName="SelectorHandling">
+    <Operation IsStatic="true" Label="removeSelectorInstance" Name="removeSelectorInstance">
+      <Meta>
+        <Abstract.UID>C8B7DB5D-ADC4-5EA5-BCE8-2CEC579BF0A4</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data IsList="true" Label="Test Data Selector Instance" ReferenceName="TestDataSelectorInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDataSelectorInstance"/>
+        <Data Label="Test Data Selector Instance" ReferenceName="TestDataSelectorInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDataSelectorInstance2"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Test Data Selector Instance" ReferenceName="TestDataSelectorInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDataSelectorInstance3"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">//return xdev.xtestfactory.infrastructure.selector.SelectorHandlingImpl.removeSelectorInstance(testDataSelectorInstance, testDataSelectorInstance2);
+
+for(TestDataSelectorInstance tdsi : testDataSelectorInstance){
+
+ if(tdsi.getName().equals(testDataSelectorInstance2.getName())
+    &amp;&amp; tdsi.getType().equals(testDataSelectorInstance2.getType())
+    &amp;&amp; tdsi.getValue().equals(testDataSelectorInstance2.getValue())
+    &amp;&amp; tdsi.getTestDataListRef().equals(testDataSelectorInstance2.getTestDataListRef())){
+   
+   testDataSelectorInstance.remove(tdsi); 
+   break;
+ }
+
+}
+
+return testDataSelectorInstance;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

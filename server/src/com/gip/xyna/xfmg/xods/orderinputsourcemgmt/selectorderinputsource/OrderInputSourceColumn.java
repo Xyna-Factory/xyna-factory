@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,13 +30,20 @@ public enum OrderInputSourceColumn {
   VERSIONNAME(OrderInputSourceStorable.COL_VERSIONNAME, new String[] {"version"}),
   WORKSPACENAME(OrderInputSourceStorable.COL_WORKSPACENAME, new String[] {"workspace"}),
   DOCUMENTATION(OrderInputSourceStorable.COL_DOCUMENTATION),
-  PARAMETER("parameters"),
-  REFERENCE_COUNT("refcnt"), 
-  STATE("state");
+  PARAMETER("parameters", true),
+  REFERENCE_COUNT("refcnt", true),
+  STATE("state", true);
 
   
   private String columnName;
   private String[] aliases;
+  private boolean transientColumn;
+
+  private OrderInputSourceColumn(String columnName, boolean transientColumn) {
+    this.columnName = columnName;
+    this.aliases = new String[0];
+    this.transientColumn = transientColumn;
+  }
   
   private OrderInputSourceColumn(String columnName) {
     this(columnName, new String[0]);
@@ -54,6 +61,11 @@ public enum OrderInputSourceColumn {
   
   public String[] getAliases() {
     return aliases;
+  }
+  
+
+  public boolean isTransient() {
+     return transientColumn;
   }
   
   public static OrderInputSourceColumn getColumnByName(String columnName) {

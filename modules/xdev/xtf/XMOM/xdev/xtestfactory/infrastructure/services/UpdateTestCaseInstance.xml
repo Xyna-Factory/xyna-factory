@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="2" Label="Update Test Case Instance" TypeName="UpdateTestCaseInstance" TypePath="xdev.xtestfactory.infrastructure.services" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,useWidth</FixedDetailOptions>
+  </Meta>
+  <Operation ID="1" Label="Update Test Case Instance" Name="UpdateTestCaseInstance">
+    <Meta>
+      <Abstract.UID>9A202F1B-6DCE-AA6A-2A4C-B778E73B123F</Abstract.UID>
+    </Meta>
+    <Input>
+      <Data ID="0" Label="Exception Count" ReferenceName="ExceptionCount" ReferencePath="xdev.xtestfactory.infrastructure.services" VariableName="exceptionCount">
+        <Target RefID="28"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <Exception ID="9" Label="Failed To Determine Test Case Instance" ReferenceName="FailedToDetermineTestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestCaseInstance">
+      <Source RefID="11"/>
+    </Exception>
+    <ServiceReference ID="10" Label="Update Test Case Instance Status" ReferenceName="UpdateTestCaseInstanceStatus" ReferencePath="xdev.xtestfactory.infrastructure.util">
+      <Source RefID="11"/>
+      <Source RefID="22"/>
+      <Target RefID="11"/>
+      <Target RefID="22"/>
+    </ServiceReference>
+    <Choice ID="28" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="0"/>
+      <Input>
+        <Data ID="35" Label="Exception Count" ReferenceName="ExceptionCount" ReferencePath="xdev.xtestfactory.infrastructure.services" VariableName="exceptionCount35"/>
+        <Source RefID="0">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="26" Label="true" Premise="%0%.count&lt;=&quot;0&quot;">
+        <Function ID="11" Label="Update Test Case Instance Status">
+          <Source RefID="10"/>
+          <Source RefID="30"/>
+          <Target RefID="9"/>
+          <Target RefID="10"/>
+          <Meta>
+            <Documentation>TODO a check if testcase is part of a test case chain would be nice</Documentation>
+          </Meta>
+          <Invoke Operation="UpdateTestCaseInstanceStatus" ServiceID="10">
+            <Source RefID="30">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="10"/>
+          <Catch ExceptionID="9" ID="14">
+            <Assign ID="37"/>
+          </Catch>
+        </Function>
+        <Assign ID="38"/>
+      </Case>
+      <Case ID="27" Label="false">
+        <Function ID="22" Label="Update Test Case Instance Status">
+          <Source RefID="10"/>
+          <Source RefID="32"/>
+          <Target RefID="20"/>
+          <Target RefID="10"/>
+          <Meta>
+            <Documentation>TODO a check if testcase is part of a test case chain would be nice</Documentation>
+          </Meta>
+          <Invoke Operation="UpdateTestCaseInstanceStatus" ServiceID="10">
+            <Source RefID="32">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="10"/>
+          <Catch ExceptionID="20" ID="25">
+            <Assign ID="40"/>
+          </Catch>
+        </Function>
+        <Assign ID="41"/>
+      </Case>
+    </Choice>
+    <Exception ID="20" Label="Failed To Determine Test Case Instance" ReferenceName="FailedToDetermineTestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestCaseInstance20">
+      <Source RefID="22"/>
+    </Exception>
+    <Data ID="30" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="const_Text">
+      <Target RefID="11"/>
+      <Data ID="42" Label="text" VariableName="text">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>Finished</Value>
+      </Data>
+    </Data>
+    <Data ID="32" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text">
+      <Target RefID="22"/>
+      <Data ID="43" Label="text" VariableName="text">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>Failed</Value>
+      </Data>
+    </Data>
+    <Assign ID="3"/>
+  </Operation>
+</Service>

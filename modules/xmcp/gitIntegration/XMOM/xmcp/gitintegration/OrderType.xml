@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2023 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="WorkspaceContentItem" BaseTypePath="xmcp.gitintegration" IsAbstract="false" Label="Order Type" TypeName="OrderType" TypePath="xmcp.gitintegration" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Documentation" VariableName="documentation">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="Dispatcher Destinations" ReferenceName="DispatcherDestination" ReferencePath="xmcp.gitintegration" VariableName="dispatcherDestinations"/>
+  <Data IsList="true" Label="Inheritance Rules" ReferenceName="InheritanceRule" ReferencePath="xmcp.gitintegration" VariableName="inheritanceRules"/>
+  <Data IsList="true" Label="Capacities" ReferenceName="Capacity" ReferencePath="xmcp.gitintegration" VariableName="capacities"/>
+  <Data Label="Priority Setting" ReferenceName="PrioritySetting" ReferencePath="xmcp.gitintegration" VariableName="prioritySetting"/>
+  <Data Label="Monitoring Level" VariableName="monitoringLevel">
+    <Meta>
+      <Type>Integer</Type>
+    </Meta>
+  </Data>
+</DataType>

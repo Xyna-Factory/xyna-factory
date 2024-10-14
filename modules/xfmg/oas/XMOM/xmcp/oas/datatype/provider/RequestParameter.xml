@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="true" Label="Request Parameter" TypeName="RequestParameter" TypePath="xmcp.oas.datatype.provider" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="HTTP Request" VariableName="hTTPRequest" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype"/>
+  <Service Label="Request Parameter" TypeName="RequestParameter">
+    <Operation IsStatic="false" Label="parse Parameter" Name="parseParameter">
+      <Input>
+        <Data ID="5" Label="Http Request" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype" VariableName="httpRequest5"/>
+      </Input>
+      <Output>
+        <Data ID="3" Label="Request Parameter" ReferenceName="RequestParameter" ReferencePath="xmcp.oas.datatype.provider" VariableName="requestParameter3"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return this;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsAbstract="true" IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="7" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult7"/>
+      </Output>
+    </Operation>
+  </Service>
+</DataType>

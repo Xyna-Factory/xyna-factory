@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -480,11 +480,18 @@ public class XMOMODSMappingUtils {
         mapping.setColumnname(uniqueName);
         break;
       default :
-        new IllegalArgumentException("Unextpacted NameType: " + nameType);
+        new IllegalArgumentException("Unexpected NameType: " + nameType);
     }
     mapping.setUserdefined(false);
+    mapping.setUserdefined(false);
+    XMOMODSMappingUtils.storeMapping(mapping);
+  }
+
+
+  public static void storeMapping(XMOMODSMapping mapping) throws PersistenceLayerException {
     ODS ods = ODSImpl.getInstance();
     ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
+    XMOMPersistenceManagement persistenceMgmt = XynaFactory.getInstance().getXynaNetworkWarehouse().getXMOMPersistence().getXMOMPersistenceManagement();
     try {
       persistenceMgmt.storeConfigAndSetPersistenceLayers(mapping, con);
     } finally {
@@ -495,8 +502,8 @@ public class XMOMODSMappingUtils {
       }
     }
   }
-  
-  
+
+
   public static Set<String> discoverPaths(Set<DOM> domsThatCacheSubtypes, DOM dom, GenerationBaseCache parseAdditionalCache) {
     DOM currentRoot = getSuperRoot(dom);
     Set<String> paths = new HashSet<String>();
@@ -727,6 +734,21 @@ public class XMOMODSMappingUtils {
         return result.get(0);
       } else {
         return null;
+      }
+    } finally {
+      con.closeConnection();
+    }
+  }
+
+
+  public static void removeForRevisionNameAndFqPath(Long revision, String name, String fqPath) throws PersistenceLayerException {
+    ODS ods = ODSImpl.getInstance();
+    ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
+    try {
+      List<XMOMODSMapping> result = executeQuery(con, ROOTNAME_REVISION_AND_FQPATH_QUERY, new Parameter(name, revision, fqPath));
+      if (result.size() > 0) {
+        con.delete(result);
+        con.commit();
       }
     } finally {
       con.closeConnection();

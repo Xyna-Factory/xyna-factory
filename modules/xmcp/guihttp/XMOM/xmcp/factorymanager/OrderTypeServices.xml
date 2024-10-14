@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,6 +86,7 @@
       </Meta>
       <Input>
         <Data Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+        <Data Label="Order Type Table Filter" ReferenceName="OrderTypeTableFilter" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="orderTypeTableFilter1"/>
       </Input>
       <Output>
         <Data IsList="true" Label="Order Type" ReferenceName="OrderType" ReferencePath="xmcp.factorymanager.ordertypes" VariableName="orderTypeParameter"/>
@@ -94,7 +95,7 @@
         <Exception Label="Load Order Types Exception" ReferenceName="LoadOrderTypesException" ReferencePath="xmcp.factorymanager.ordertypes.exception" VariableName="loadOrderTypesException"/>
       </Throws>
       <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.factorymanager.OrderTypeServicesImpl.getListEntries(tableInfo);</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.OrderTypeServicesImpl.getListEntries(tableInfo, orderTypeTableFilter1);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Get order type details" Name="getOrderTypeDetails">

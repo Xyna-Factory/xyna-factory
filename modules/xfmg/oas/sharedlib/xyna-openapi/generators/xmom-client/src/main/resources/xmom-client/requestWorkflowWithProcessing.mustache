@@ -1,0 +1,352 @@
+{{!
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+}}
+{{#operations}}
+{{#xynaOperation}}
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="{{requestWorkflowWithProcessingTypeName}}" TypePath="{{requestWorkflowWithProcessingPath}}" Label="{{requestWorkflowWithProcessingLabel}}">
+  <Operation ID="0" Label="{{requestWorkflowWithProcessingLabel}}" Name="{{requestWorkflowWithProcessingTypeName}}" IsStatic="false">
+    <Input>
+      <Data ID="10" Label="Connect Parameter" VariableName="connectParameter10" ReferenceName="ConnectParameter" ReferencePath="xact.http" />
+      <Data ID="11" Label="{{sendLabel}}" VariableName="{{sendVarName}}11" ReferenceName="{{sendRefName}}" ReferencePath="{{sendRefPath}}" />
+      <Data ID="13362" Label="Client Processing Hook" VariableName="clientProcessingHook13362" ReferenceName="ClientProcessingHook" ReferencePath="xmcp.oas.datatype.client" />
+    </Input>
+    <Output>
+      <Data ID="15" Label="{{responseLabel}}" VariableName="{{responseVarName}}15" ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}" />
+    </Output>
+    <Throws>
+      <Exception Label="Connect Exception" VariableName="connectException16703" ReferenceName="ConnectException" ReferencePath="xact.http.exceptions" />
+      <Exception Label="Connection Already Closed Exception" VariableName="connectionAlreadyClosedException16704" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions" />
+      <Exception Label="Http Exception" VariableName="httpException16705" ReferenceName="HttpException" ReferencePath="xact.http.exceptions" />
+      <Exception Label="Timeout Exception" VariableName="timeoutException16706" ReferenceName="TimeoutException" ReferencePath="xact.http.exceptions" />
+      <Exception Label="Unexpected HTTP Response Exception" VariableName="unexpectedHTTPResponseException16707" ReferenceName="UnexpectedHTTPResponseException" ReferencePath="xact.http.exceptions" />
+      <Exception Label="Client Processing Hook Exception" VariableName="clientProcessingHookException16708" ReferenceName="ClientProcessingHookException" ReferencePath="xmcp.oas.exception" />
+      <Exception Label="ValidationException" VariableName="validationException16709" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception" />
+    </Throws>
+    <ServiceReference ID="8" Label="HTTP Service" ReferenceName="HTTPService.HTTPService" ReferencePath="xact.http">
+      <Source RefID="7"/>
+      <Target RefID="7"/>
+    </ServiceReference>
+    <ServiceReference ID="17" Label="{{parseResponseLabel}}" ReferenceName="{{parseResponseRefName}}.{{parseResponseRefName}}" ReferencePath="{{parseResponseRefPath}}">
+      <Source RefID="16"/>
+      <Target RefID="16"/>
+    </ServiceReference>
+    <ServiceReference ID="3" Label="HTTP Service" ReferenceName="HTTPService.HTTPService" ReferencePath="xact.http">
+      <Source RefID="2"/>
+      <Target RefID="2"/>
+    </ServiceReference>
+    <ServiceReference ID="27" Label="OAS Type Validation" ReferenceName="OASTypeValidation" ReferencePath="xmcp.oas.wf">
+      <Source RefID="26"/>
+      <Target RefID="26"/>
+    </ServiceReference>
+    <ServiceReference ID="15175" Label="Client Processing Hook" ReferenceName="ClientProcessingHook.ClientProcessingHook" ReferencePath="xmcp.oas.datatype.client">
+      <Source RefID="15174"/>
+      <Target RefID="15174"/>
+    </ServiceReference>
+    <ServiceReference ID="22" Label="{{sendLabel}}" ReferenceName="{{sendRefName}}.{{sendRefName}}" ReferencePath="{{sendRefPath}}">
+      <Source RefID="21"/>
+      <Target RefID="21"/>
+    </ServiceReference>
+    <ServiceReference ID="24" Label="OAS Type Validation" ReferenceName="OASTypeValidation" ReferencePath="xmcp.oas.wf">
+      <Source RefID="23"/>
+      <Target RefID="23"/>
+    </ServiceReference>
+    <ServiceReference ID="12937" Label="HTTP Service" ReferenceName="HTTPService.HTTPService" ReferencePath="xact.http">
+      <Source RefID="12936"/>
+      <Target RefID="12936"/>
+    </ServiceReference>
+    <ServiceReference ID="13936" Label="Client Processing Hook" ReferenceName="ClientProcessingHook.ClientProcessingHook" ReferencePath="xmcp.oas.datatype.client">
+      <Source RefID="13935"/>
+      <Target RefID="13935"/>
+    </ServiceReference>
+    <Function ID="23" Label="OAS Type Validation">
+      <Source RefID="24" />
+      <Source RefID="11" />
+      <Source RefID="25" />
+      <Target RefID="24">
+      </Target>
+      <Invoke ServiceID="24" Operation="OASTypeValidation">
+        <Source RefID="11">
+          <Meta>
+            <ExpectedType>{{sendFQN}}</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="25">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="24">
+      </Receive>
+    </Function>
+    <Mappings ID="5" Label="Build Payload">
+      <Input>
+        <Data ID="12" VariableName="{{#lambda.camelcase}}{{httpMethod}}{{/lambda.camelcase}}12" Label="{{httpMethod}}" ReferenceName="{{httpMethod}}" ReferencePath="xact.http.enums.httpmethods">
+          <Source RefID="5"/>
+        </Data>
+        <Source RefID="13">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="14" VariableName="{{sendVarName}}14" Label="{{sendLabel}}" ReferenceName="{{sendRefName}}" ReferencePath="{{sendRefPath}}">
+          <Source RefID="5"/>
+        </Data>
+        <Source RefID="11">
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="6" VariableName="sendParameter6" Label="Send Parameter" ReferenceName="SendParameter" ReferencePath="xact.http">
+          <Source RefID="5"/>
+        </Data>
+        <Target RefID="9">
+        </Target>
+      </Output>
+      {{#responses}}
+      <Mapping>%2%.expectedHTTPStatusCode["{{index}}"].code="{{code}}"</Mapping>
+      <Mapping>%2%.expectedHTTPStatusCode["{{index}}"].reason="{{message}}"</Mapping>
+      {{/responses}}
+      <Mapping>%2%.hTTPMethod#cast("xact.http.enums.httpmethods.{{httpMethod}}")=%0%</Mapping>
+      <Mapping>%2%.header.contentType.mediaType="application/json"</Mapping>
+      <Mapping>%2%.uRLPath.path=concat("{{basePathWithoutHost}}", {{{requestWorkflowURLPath}}})</Mapping>
+      <Mapping>%2%.uRLPath.query=%1%.buildQuery()</Mapping>
+      <Mapping>%2%.header.headerField=%1%.buildHeaderFields()</Mapping>
+    </Mappings>
+    <Function ID="15174" Label="Preprocess Request">
+      <Source RefID="15175" />
+      <Source RefID="13362" />
+      <Source RefID="9" />
+      <Target RefID="15175" />
+      <Target RefID="15177" />
+      <Invoke ServiceID="15175" Operation="preprocessRequest">
+        <Source RefID="13362" />
+        <Source RefID="9" />
+      </Invoke>
+      <Receive ServiceID="15175">
+        <Target RefID="15177" />
+      </Receive>
+    </Function>
+    <Function ID="2" Label="Get HTTP Connection">
+      <Source RefID="3" />
+      <Source RefID="10" />
+      <Target RefID="3" />
+      <Target RefID="4" />
+      <Invoke ServiceID="3" Operation="getHTTPConnection">
+        <Source RefID="10" />
+      </Invoke>
+      <Receive ServiceID="3">
+        <Target RefID="4" />
+      </Receive>
+    </Function>
+    <Function ID="21" Label="sendRequest">
+      <Source RefID="22" />
+      <Source RefID="11" />
+      <Source RefID="4" />
+      <Source RefID="15177" />
+      <Target RefID="22" />
+      <Target RefID="19" />
+      <Target RefID="20" />
+      <Invoke ServiceID="22" Operation="sendRequest">
+        <Source RefID="11" />
+        <Source RefID="4" />
+        <Source RefID="15177">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="22">
+        <Target RefID="19" />
+        <Target RefID="20" />
+      </Receive>
+    </Function>
+    <Function ID="12936" Label="Receive Document">
+      <Source RefID="12937" />
+      <Source RefID="4" />
+      <Target RefID="12937" />
+      <Target RefID="12939" />
+      <Invoke ServiceID="12937" Operation="receiveDocument">
+        <Source RefID="4" />
+      </Invoke>
+      <Receive ServiceID="12937">
+        <Target RefID="12939" />
+      </Receive>
+    </Function>
+    <Function ID="13935" Label="Postprocess Response">
+      <Source RefID="13936" />
+      <Source RefID="13362" />
+      <Source RefID="20" />
+      <Source RefID="19" />
+      <Source RefID="12939" />
+      <Target RefID="13936" />
+      <Target RefID="13938" />
+      <Target RefID="13939" />
+      <Target RefID="13940" />
+      <Invoke ServiceID="13936" Operation="postprocessResponse">
+        <Source RefID="13362" />
+        <Source RefID="20" />
+        <Source RefID="19" />
+        <Source RefID="12939" />
+      </Invoke>
+      <Receive ServiceID="13936">
+        <Target RefID="13938" />
+        <Target RefID="13939" />
+        <Target RefID="13940" />
+      </Receive>
+    </Function>
+    <Function ID="16" Label="parseResponse">
+      <Source RefID="17" />
+      <Source RefID="4" />
+      <Source RefID="13939" />
+      <Source RefID="13938" />
+      <Source RefID="13940" />
+      <Target RefID="17" />
+      <Target RefID="18" />
+      <Invoke ServiceID="17" Operation="parseResponse">
+        <Source RefID="4" />
+        <Source RefID="13939">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="13938">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="13940">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="17">
+        <Target RefID="18" />
+      </Receive>
+    </Function>
+    <Function ID="7" Label="Close Connection">
+      <Source RefID="8">
+      </Source>
+      <Source RefID="4">
+      </Source>
+      <Target RefID="8">
+      </Target>
+      <Invoke ServiceID="8" Operation="closeConnection">
+        <Source RefID="4" />
+      </Invoke>
+      <Receive ServiceID="8" />
+    </Function>
+    <Function ID="26" Label="OAS Type Validation">
+      <Source RefID="27" />
+      <Source RefID="18" />
+      <Source RefID="28" />
+      <Target RefID="27" />
+      <Invoke ServiceID="27" Operation="OASTypeValidation">
+        <Source RefID="18">
+          <Meta>
+            <ExpectedType>{{responseFQN}}</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="28">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="27">
+      </Receive>
+    </Function>
+    <Data ID="4" VariableName="hTTPConnection4" Label="HTTP Connection" ReferenceName="HTTPConnection" ReferencePath="xact.http">
+      <Source RefID="2"/>
+    </Data>
+    <Data ID="9" VariableName="sendParameter9" Label="Send Parameter" ReferenceName="SendParameter" ReferencePath="xact.http">
+      <Source RefID="5"/>
+    </Data>
+    <Data ID="13" VariableName="const_{{httpMethod}}13" Label="{{httpMethod}}" ReferenceName="{{httpMethod}}" ReferencePath="xact.http.enums.httpmethods">
+    </Data>
+    <Data ID="18" VariableName="{{responseVarName}}18" Label="{{responseLabel}}" ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}">
+      <Source RefID="16"/>
+    </Data>
+    <Data ID="19" VariableName="hTTPStatusCode19" Label="HTTP Status Code" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode">
+    </Data>
+    <Data ID="20" VariableName="header20" Label="Header" ReferenceName="Header" ReferencePath="xact.http">
+    </Data>
+    <Data ID="25" VariableName="const_XynaPropertyString25" Label="Xyna Property String" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration">
+      <Data VariableName="propertyName">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>xmcp.oas.validation.request_validation</Value>
+      </Data>
+      <Data VariableName="value">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value></Value>
+      </Data>
+      <Data VariableName="behaviourIfPropertyNotSet" ReferenceName="UseValue" ReferencePath="xfmg.xods.configuration.parameter">
+      </Data>
+    </Data>
+    <Data ID="28" VariableName="const_XynaPropertyString28" Label="Xyna Property String" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration">
+      <Data VariableName="propertyName">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>xmcp.oas.validation.response_validation</Value>
+      </Data>
+      <Data VariableName="value">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value></Value>
+      </Data>
+      <Data VariableName="behaviourIfPropertyNotSet" ReferenceName="UseValue" ReferencePath="xfmg.xods.configuration.parameter">
+      </Data>
+    </Data>
+    <Data ID="12939" VariableName="document12939" Label="Document" ReferenceName="Document" ReferencePath="xact.templates">
+      <Source RefID="12936"/>
+    </Data>
+    <Data ID="13938" VariableName="header13938" Label="Header" ReferenceName="Header" ReferencePath="xact.http">
+      <Source RefID="13935"/>
+    </Data>
+    <Data ID="13939" VariableName="hTTPStatusCode13939" Label="HTTP Status Code" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode">
+      <Source RefID="13935"/>
+    </Data>
+    <Data ID="13940" VariableName="document13940" Label="Document" ReferenceName="Document" ReferencePath="xact.templates">
+      <Source RefID="13935"/>
+    </Data>
+    <Data ID="15177" VariableName="sendParameter15177" Label="Send Parameter" ReferenceName="SendParameter" ReferencePath="xact.http">
+      <Source RefID="15174"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="18">
+      </Source>
+      <Target RefID="15">
+      </Target>
+      <Copy>
+        <Source RefID="18">
+        </Source>
+        <Target RefID="15">
+        </Target>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
+{{/xynaOperation}}
+{{/operations}}

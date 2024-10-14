@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,6 +100,10 @@ public class TimeoutMap<K,V> implements Map<K,V> {
       timeouts.add(key, timeToLive);
     }
     return map.put(key, value);
+  }  
+
+  public V replace2(K key, V value, long timeToLive) { //if V==Long, then replace is ambiguous
+    return replace(key, value, timeToLive);
   }
   
   public void setDefaultDelay(long defaultDelay) {

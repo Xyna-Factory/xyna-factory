@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@ import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -769,6 +768,16 @@ public class QueryGenerator {
     return queryBuilder.toString();
   }
   
+  private boolean checkForListAccess(Collection<QualifiedStorableColumnInformation> columnsWithConditions) {
+    for (QualifiedStorableColumnInformation column : columnsWithConditions) {
+      for (StorableColumnInformation pathPart : column.getAccessPath()) {
+        if(pathPart.isList()) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
   
   String buildConditionQuery(XMOMStorableStructureInformation rootInfo, Collection<QualifiedStorableColumnInformation> columnsWithConditions, AliasDictionary dictionary, boolean count, QueryParameter queryParameter) {
     StringBuilder queryBuilder = new StringBuilder();
@@ -778,6 +787,9 @@ public class QueryGenerator {
         queryBuilder.append("COUNT(*) FROM ( SELECT ");
       } else {
         queryBuilder.append("COUNT( ");
+        if(checkForListAccess(columnsWithConditions)) {
+          queryBuilder.append("DISTINCT ");
+        }
       }
     }
     queryBuilder.append(rootInfo.getTableName()).append(".").append(rootInfo.getPrimaryKeyName());

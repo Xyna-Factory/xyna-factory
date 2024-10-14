@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -157,7 +157,7 @@ public class MIBTools {
 
     String[] parts = linebreaks.split(description);
 
-    //minimum fÃ¼hrender whitespaces bestimmen. tabs als 8 leerzeichen behandeln
+    //minimum führender whitespaces bestimmen. tabs als 8 leerzeichen behandeln
     boolean first = true;
     int minimumWhiteSpaces = Integer.MAX_VALUE;    
     for (String part : parts) {
@@ -191,8 +191,8 @@ public class MIBTools {
 
     if (minimumWhiteSpaces > 0 && minimumWhiteSpaces != Integer.MAX_VALUE) {
       /*
-       * gemeinsam fÃ¼hrende whitespaces entfernen, aber tabs nicht durch leerzeichen ersetzen.
-       * wenn man das noch machen wÃ¼rde, wÃ¼rde das entfernen der einrÃ¼ckung bei mischung von
+       * gemeinsam führende whitespaces entfernen, aber tabs nicht durch leerzeichen ersetzen.
+       * wenn man das noch machen würde, würde das entfernen der einrückung bei mischung von
        * tabs und leerzeichen noch besser funktionieren. 
        */
       StringBuilder sb = new StringBuilder();

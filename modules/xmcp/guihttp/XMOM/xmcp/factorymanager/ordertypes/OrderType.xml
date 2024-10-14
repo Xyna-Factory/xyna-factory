@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,16 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Order Type" TypeName="OrderType" TypePath="xmcp.factorymanager.ordertypes" Version="1.8">
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Order Type" TypeName="OrderType" TypePath="xmcp.factorymanager.ordertypes" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
   <Data Label="Name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Full qualified name" VariableName="fullQualifiedName">
     <Meta>
       <Type>String</Type>
     </Meta>
@@ -49,9 +54,14 @@
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Monitoring Level" VariableName="monitoringLevel">
+  <Data Label="Evaluated Monitoring Level" VariableName="evaluatedMonitoringLevel">
     <Meta>
       <Type>Integer</Type>
+    </Meta>
+  </Data>
+  <Data Label="Monitoring Level" VariableName="monitoringLevel">
+    <Meta>
+      <Type>String</Type>
     </Meta>
   </Data>
   <Data Label="Monitoring Level Is Custom" VariableName="monitoringLevelIsCustom">

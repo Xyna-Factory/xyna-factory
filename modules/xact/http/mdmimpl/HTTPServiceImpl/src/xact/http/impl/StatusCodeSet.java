@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import com.gip.xyna.xact.StatusCode;
 
 public class StatusCodeSet {
   
-  private static StatusCodeSet Set_OK = new StatusCodeSet(StatusCode.OK); //h√§ufigster Fall
+  private static StatusCodeSet Set_OK = new StatusCodeSet(StatusCode.OK); //h‰ufigster Fall
   
   public static StatusCodeSet parseExpectedList(List<? extends HTTPStatusCode> expectedHTTPStatusCode) {
    

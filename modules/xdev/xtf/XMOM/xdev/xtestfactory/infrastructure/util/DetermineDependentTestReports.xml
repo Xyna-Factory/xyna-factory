@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="3" Label="Determine Dependent Test Reports" TypeName="DetermineDependentTestReports" TypePath="xdev.xtestfactory.infrastructure.util" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="2" Label="Determine Dependent Test Reports" Name="DetermineDependentTestReports">
+    <Meta>
+      <Abstract.UID>BD5F91B8-1760-CE06-8886-195D54CFAAAF</Abstract.UID>
+    </Meta>
+    <Input>
+      <Data ID="0" Label="Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport0">
+        <Target RefID="9"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="1" IsList="true" Label="Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport">
+        <Source RefID="4"/>
+      </Data>
+    </Output>
+    <Mappings ID="9" Label="TODO: Replace by dependency analysis">
+      <Source RefID="0"/>
+      <Target RefID="7"/>
+      <Meta>
+        <FixedDetailOptions>openConfiguration</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="8" Label="Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport8"/>
+        <Source RefID="0"/>
+      </Input>
+      <Output>
+        <Data ID="10" IsList="true" Label="Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport10"/>
+        <Target RefID="7"/>
+      </Output>
+      <Mapping>%1%["0"]~=%0%</Mapping>
+    </Mappings>
+    <Data ID="7" IsList="true" Label="Test Report" ReferenceName="TestReport" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testReport7">
+      <Source RefID="9"/>
+      <Target RefID="4"/>
+    </Data>
+    <Assign ID="4">
+      <Source RefID="7"/>
+      <Target RefID="1"/>
+      <Copy>
+        <Source RefID="7"/>
+        <Target RefID="1"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

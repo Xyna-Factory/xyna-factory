@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,28 +92,6 @@
                     </touch>
                 </then>
             </if>
-        </sequential>
-    </macrodef>
-
-
-    <!-- ================================= 
-         macro: checkJavaVersion
-         ================================= -->
-    <macrodef name="checkJavaVersion">
-        <sequential>
-            <fail message="Unsupported Java version: ${java.version}. Expected 1.5.0, 1.6.0, 1.7.0, 1.8.0 or 11.0">
-                <condition>
-                    <not>
-                        <or>
-                            <contains string="${java.version}" substring="1.5.0" />
-                            <contains string="${java.version}" substring="1.6.0" />
-                            <contains string="${java.version}" substring="1.7.0" />
-                            <contains string="${java.version}" substring="1.8.0" />
-                            <contains string="${java.version}" substring="11.0" />
-                        </or>
-                    </not>
-                </condition>
-            </fail>
         </sequential>
     </macrodef>
 

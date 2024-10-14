@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Services" TypeName="Services" TypePath="xdev.xtestfactory.infrastructure.selector" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="Services" TypeName="Services">
+    <Operation IsStatic="true" Label="Adjust Columns" Name="adjustColumns">
+      <Meta>
+        <Abstract.UID>43F32171-A14B-5280-9B60-F53338EA3D48</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn2"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">//tableColumn
+
+List&lt;TableColumn&gt; list = new ArrayList&lt;TableColumn&gt;();
+
+for (int i = 0; i &lt; tableColumn.size(); i++) {
+ 
+  if (i &gt; 3) {
+    list.add(tableColumn.get(i));
+  }
+
+}
+
+return list;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="6" IsStatic="true" Label="Get First Column Of List" Name="getFirstColumnOfList">
+      <Meta>
+        <Abstract.UID>03EB616A-45F4-EDAF-1972-062337F6FC60</Abstract.UID>
+      </Meta>
+      <Input>
+        <Data ID="3" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+        <Data ID="4" IsList="true" Label="Test Data" ReferenceName="TestData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testData"/>
+      </Input>
+      <Output>
+        <Data ID="5" IsList="true" Label="Simple Test Data Instance" ReferenceName="SimpleTestDataInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="simpleTestDataInstance"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">//(text, testData);
+
+List &lt; SimpleTestDataInstance &gt; stdi = new ArrayList &lt; SimpleTestDataInstance &gt; ();
+
+SimpleTestDataInstance tmp = new SimpleTestDataInstance();
+
+for (TestData td: testData) {
+
+    tmp.setId(td.getID());
+
+    try {
+        tmp.setLabel((String) td.get(text.getText()));
+    } catch (InvalidObjectPathException e) {
+        throw new RuntimeException(e);
+    }
+    stdi.add(tmp);
+    tmp = new SimpleTestDataInstance();
+
+}
+
+return stdi;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

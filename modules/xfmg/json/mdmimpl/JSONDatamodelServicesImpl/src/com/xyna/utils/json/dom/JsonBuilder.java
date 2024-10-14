@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,12 @@
 package com.xyna.utils.json.dom;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONObject;
-import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONValue;
-import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONValueType;
+import xfmg.xfctrl.datamodel.json.JSONKeyValue;
+import xfmg.xfctrl.datamodel.json.JSONObject;
+import xfmg.xfctrl.datamodel.json.JSONValue;
+import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONVALTYPES;
 
 
 /**
@@ -32,22 +34,21 @@ public class JsonBuilder {
 
   public JSONValue buildEmptyObject() {
     JSONValue ret = new JSONValue();
-    ret.type = JSONValueType.OBJECT;
-    ret.objectValue = new JSONObject();
+    ret.unversionedSetType(JSONVALTYPES.OBJECT);
+    ret.unversionedSetObjectValue(new JSONObject());
     return ret;
   }
 
   public JSONValue buildEmptyArray() {
     JSONValue child = new JSONValue();
-    child.type = JSONValueType.ARRAY;
-    child.arrayValue = new ArrayList<JSONValue>();
+    child.unversionedSetType(JSONVALTYPES.ARRAY);
+    child.unversionedSetArrayValue(new ArrayList<JSONValue>());
     return child;
   }
 
   public JSONValue buildNullValue() {
     JSONValue child = new JSONValue();
-    child.type = JSONValueType.NULL;
-    child.stringOrNumberValue = null;
+    child.unversionedSetType(JSONVALTYPES.NULL);
     return child;
   }
 
@@ -57,15 +58,15 @@ public class JsonBuilder {
       return buildNullValue();
     }
     JSONValue child = new JSONValue();
-    child.type = JSONValueType.STRING;
-    child.stringOrNumberValue = val;
+    child.unversionedSetType(JSONVALTYPES.STRING);
+    child.unversionedSetStringOrNumberValue(val);
     return child;
   }
 
   public JSONValue buildBooleanValue(boolean val) {
     JSONValue child = new JSONValue();
-    child.type = JSONValueType.BOOLEAN;
-    child.booleanValue = val;
+    child.unversionedSetType(JSONVALTYPES.BOOLEAN);
+    child.unversionedSetBooleanValue(val);
     return child;
   }
 
@@ -74,8 +75,8 @@ public class JsonBuilder {
       return buildNullValue();
     }
     JSONValue child = new JSONValue();
-    child.type = JSONValueType.BOOLEAN;
-    child.booleanValue = ("true".equals(val));
+    child.unversionedSetType(JSONVALTYPES.BOOLEAN);
+    child.unversionedSetBooleanValue("true".equals(val));
     return child;
   }
 
@@ -84,8 +85,8 @@ public class JsonBuilder {
       return buildNullValue();
     }
     JSONValue child = new JSONValue();
-    child.type = JSONValueType.NUMBER;
-    child.stringOrNumberValue = val.toString();
+    child.unversionedSetType(JSONVALTYPES.NUMBER);
+    child.unversionedSetStringOrNumberValue(val.toString());
     return child;
   }
 
@@ -95,8 +96,8 @@ public class JsonBuilder {
       return buildNullValue();
     }
     JSONValue child = new JSONValue();
-    child.type = JSONValueType.NUMBER;
-    child.stringOrNumberValue = val.toString();
+    child.unversionedSetType(JSONVALTYPES.NUMBER);
+    child.unversionedSetStringOrNumberValue(val.toString());
     return child;
   }
 
@@ -106,8 +107,8 @@ public class JsonBuilder {
       return buildNullValue();
     }
     JSONValue child = new JSONValue();
-    child.type = JSONValueType.NUMBER;
-    child.stringOrNumberValue = val.toString();
+    child.unversionedSetType(JSONVALTYPES.NUMBER);
+    child.unversionedSetStringOrNumberValue(val.toString());
     return child;
   }
 
@@ -117,31 +118,34 @@ public class JsonBuilder {
       return buildNullValue();
     }
     JSONValue child = new JSONValue();
-    child.type = JSONValueType.NUMBER;
-    child.stringOrNumberValue = val;
+    child.unversionedSetType(JSONVALTYPES.NUMBER);
+    child.unversionedSetStringOrNumberValue(val.toString());
     return child;
   }
 
 
   public void addToObject(JSONValue value, String name, JSONValue child) {
-    if ((value == null) || (value.type != JSONValueType.OBJECT)) {
+    if ((value == null) || (value.getType() != JSONVALTYPES.OBJECT)) {
       throw new RuntimeException("JsonValue does not contain a json object.");
     }
-    if (value.objectValue == null) {
-      value.objectValue = new JSONObject();
+    if (value.getObjectValue() == null) {
+      value.unversionedSetObjectValue(new JSONObject());
     }
-    value.objectValue.objects.put(name, child);
+    List<? extends JSONKeyValue> oldList = value.getObjectValue().getMembers();
+    List<JSONKeyValue> list = oldList == null ? new ArrayList<>() : new ArrayList<>(oldList);
+    list.add(new JSONKeyValue(name, child));
+    value.getObjectValue().unversionedSetMembers(list);
   }
 
 
   public void addToArray(JSONValue value, JSONValue child) {
-    if ((value == null) || (value.type != JSONValueType.ARRAY)) {
+    if ((value == null) || (value.getType() != JSONVALTYPES.ARRAY)) {
       throw new RuntimeException("JsonValue does not contain a json array.");
     }
-    if (value.arrayValue == null) {
-      value.arrayValue = new ArrayList<JSONValue>();
-    }
-    value.arrayValue.add(child);
+    List<? extends JSONValue> oldList = value.getArrayValue();
+    List<JSONValue> list = oldList == null ? new ArrayList<>() : new ArrayList<>(oldList);
+    list.add(child);
+    value.unversionedSetArrayValue(list);
   }
 
 }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@
 package xfmg.xfctrl.datamodel.json.dom;
 
 import xfmg.xfctrl.datamodel.json.impl.JSONParser;
-import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONValue;
-import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONValueType;
+import xfmg.xfctrl.datamodel.json.JSONValue;
+import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONVALTYPES;
 import xfmg.xfctrl.datamodel.json.impl.JSONTokenizer;
-import xfmg.xfctrl.datamodel.json.impl.JSONParser.JSONObject;
+import xfmg.xfctrl.datamodel.json.JSONObject;
 
 @Deprecated
 public class JsonDom {
@@ -31,8 +31,8 @@ public class JsonDom {
 
   public JsonDom() {
     JSONValue val = new JSONValue();
-    val.type = JSONValueType.OBJECT;
-    val.objectValue = new JSONObject();
+    val.unversionedSetType(JSONVALTYPES.OBJECT);
+    val.unversionedSetObjectValue(new JSONObject());
     _root = new JsonDomElement(val);
   }
 
@@ -41,8 +41,8 @@ public class JsonDom {
     JSONObject obj = new JSONObject();
     parser.fillObject(new JSONTokenizer().tokenize(json), 0, obj);
     JSONValue value = new JSONValue();
-    value.objectValue = obj;
-    value.type = JSONValueType.OBJECT;
+    value.unversionedSetObjectValue(obj);
+    value.unversionedSetType(JSONVALTYPES.OBJECT);
     _root = new JsonDomElement(value);
   }
 

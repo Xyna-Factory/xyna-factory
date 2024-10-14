@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Delete Test Data Meta Data Without Delete Parameter" TypeName="DeleteTestDataMetaDataWithoutDeleteParameter" TypePath="xdev.xtestfactory.infrastructure.actions" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Delete Test Data Meta Data Without Delete Parameter" Name="DeleteTestDataMetaDataWithoutDeleteParameter">
+    <Input>
+      <Data ID="12" Label="Test Data Meta Data ID" ReferenceName="TestDataMetaDataID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDataMetaDataID">
+        <Target RefID="11"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Failed To Determine Test Project" ReferenceName="FailedToDetermineTestProject" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestProject"/>
+      <Exception Label="Unknown Test Data Meta Data ID" ReferenceName="UnknownTestDataMetaDataID" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="unknownTestDataMetaDataID"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="4" Label="Delete Test Data Meta Data" ReferenceName="DeleteTestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.actions">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Function ID="11" Label="Get Test Data Meta Data">
+      <Source RefID="10"/>
+      <Source RefID="12"/>
+      <Target RefID="10"/>
+      <Target RefID="13"/>
+      <Invoke Operation="GetTestDataMetaData" ServiceID="10">
+        <Source RefID="12"/>
+      </Invoke>
+      <Receive ServiceID="10">
+        <Target RefID="13"/>
+      </Receive>
+    </Function>
+    <Function ID="5" Label="Delete Test Data Meta Data">
+      <Source RefID="4"/>
+      <Source RefID="7"/>
+      <Source RefID="13"/>
+      <Target RefID="4"/>
+      <Invoke Operation="DeleteTestDataMetaData" ServiceID="4">
+        <Source RefID="13"/>
+        <Source RefID="7">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="4"/>
+    </Function>
+    <Data ID="7" Label="Delete parameter" ReferenceName="DeleteParameter" ReferencePath="xnwh.persistence" VariableName="const_DeleteParameter">
+      <Target RefID="5"/>
+      <Data Label="Including history" VariableName="includingHistory">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data Label="Reference handling" ReferenceName="ReferenceHandling" ReferencePath="xnwh.persistence" VariableName="referenceHandling">
+        <Data Label="Backward" VariableName="backward">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data Label="Forward" VariableName="forward">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Data>
+    </Data>
+    <ServiceReference ID="10" Label="Get Test Data Meta Data" ReferenceName="GetTestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.actions">
+      <Source RefID="11"/>
+      <Target RefID="11"/>
+    </ServiceReference>
+    <Data ID="13" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData">
+      <Source RefID="11"/>
+      <Target RefID="5"/>
+    </Data>
+    <Assign/>
+  </Operation>
+</Service>

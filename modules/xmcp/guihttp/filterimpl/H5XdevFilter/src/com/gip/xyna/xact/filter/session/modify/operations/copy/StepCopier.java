@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -250,20 +250,24 @@ public class StepCopier {
 
 
   /*package*/ static AVariable copyVariable(AVariable sourceVar, WF parentWFObject, CopyData cpyData) {
-    Map<String, String> idMap = cpyData.getVariableIdMap();
-    String idOfCopy = null;
     String idOfOriginal = sourceVar.getId();
     if (idOfOriginal == null) {
       return copyVariableInternal(null, sourceVar, parentWFObject, cpyData);
     }
 
-    idOfCopy = idMap.get(idOfOriginal);
+    String idOfCopy = getOrAddIdOfVarCopy(idOfOriginal, parentWFObject, cpyData);
+    return copyVariableInternal(idOfCopy, sourceVar, parentWFObject, cpyData);
+  }
+
+
+  /* package*/ static String getOrAddIdOfVarCopy(String idOfOriginal, WF parentWFObject, CopyData cpyData) {
+    Map<String, String> idMap = cpyData.getVariableIdMap();
+    String idOfCopy = idMap.get(idOfOriginal);
     if (idOfCopy == null) {
-      idOfCopy = "" + parentWFObject.getNextXmlId();
+      idOfCopy = String.valueOf(parentWFObject.getNextXmlId());
       idMap.put(idOfOriginal, idOfCopy);
     }
-
-    return copyVariableInternal(idOfCopy, sourceVar, parentWFObject, cpyData);
+    return idOfCopy;
   }
 
 

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Export System Under Test" TypeName="ExportSystemUnderTest" TypePath="xdev.xtestfactory.infrastructure.actions" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,vScroll(325)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Export System Under Test" Name="ExportSystemUnderTest">
+    <Input>
+      <Data ID="6" Label="System Under Test" ReferenceName="SystemUnderTest" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTest">
+        <Target RefID="11"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="3" Label="Managed File ID" ReferenceName="ManagedFileID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="managedFileID">
+        <Source RefID="2"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="No SystemUnderTest With This ID" ReferenceName="NoSystemUnderTestWithThisID" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="noSystemUnderTestWithThisID"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="4" Label="TestFactoryIntegration" ReferenceName="TestFactoryIntegration.TestFactoryIntegration" ReferencePath="xdev.xtestfactory.infrastructure.services">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Mappings ID="11">
+      <Source RefID="6"/>
+      <Target RefID="10"/>
+      <Meta>
+        <IsCondition>true</IsCondition>
+      </Meta>
+      <Input>
+        <Data ID="17" Label="System Under Test" ReferenceName="SystemUnderTest" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTest17"/>
+        <Source RefID="6">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="12" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition12"/>
+        <Target RefID="10"/>
+      </Output>
+      <Mapping>%1%.formula=concat("(%0%.iD==\"",replaceall(replaceall(%0%.iD,"\\\\","\\\\\\\\"),"\"","\\\\\""),"\")")</Mapping>
+    </Mappings>
+    <Function ID="9" Label="Query">
+      <Source RefID="8"/>
+      <Source RefID="10"/>
+      <Source RefID="13"/>
+      <Source RefID="14"/>
+      <Target RefID="8"/>
+      <Target RefID="16"/>
+      <Meta>
+        <QueryFilter>
+          <Condition>%0%.iD==%1%.iD</Condition>
+        </QueryFilter>
+        <FixedDetailOptions>openConfiguration</FixedDetailOptions>
+      </Meta>
+      <Invoke Operation="query" ServiceID="8">
+        <Source RefID="13">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="10">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="14">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="8">
+        <Target RefID="16"/>
+      </Receive>
+    </Function>
+    <Choice ID="18" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="16"/>
+      <Target RefID="37"/>
+      <Target RefID="38"/>
+      <Input>
+        <Data ID="26" IsList="true" Label="System Under Test" ReferenceName="SystemUnderTest" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTest26"/>
+        <Source RefID="16"/>
+      </Input>
+      <Case ID="29" Label="true" Premise="length(%0%)&gt;&quot;0&quot;">
+        <Mappings ID="24" Label="get first Element">
+          <Source RefID="16"/>
+          <Target RefID="22"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="23" IsList="true" Label="System Under Test" ReferenceName="SystemUnderTest" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTest23"/>
+            <Source RefID="16"/>
+          </Input>
+          <Output>
+            <Data ID="27" Label="System Under Test" ReferenceName="SystemUnderTest" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTest0"/>
+            <Target RefID="22"/>
+          </Output>
+          <Mapping>%1%~=%0%["0"]</Mapping>
+        </Mappings>
+        <Function ID="5" Label="Export System Under Test">
+          <Source RefID="4"/>
+          <Source RefID="22"/>
+          <Target RefID="7"/>
+          <Target RefID="4"/>
+          <Invoke Operation="exportSystemUnderTest" ServiceID="4">
+            <Source RefID="22">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="4">
+            <Target RefID="7"/>
+          </Receive>
+        </Function>
+        <Assign ID="28">
+          <Source RefID="22"/>
+          <Source RefID="7"/>
+          <Target RefID="37"/>
+          <Target RefID="38"/>
+          <Copy>
+            <Source RefID="22"/>
+            <Target RefID="37"/>
+          </Copy>
+          <Copy>
+            <Source RefID="7"/>
+            <Target RefID="38"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="31" Label="false">
+        <Throw ExceptionID="40" ID="39" Label="Throw No SystemUnderTest With This ID">
+          <Source RefID="40">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+        </Throw>
+        <Assign ID="30"/>
+      </Case>
+    </Choice>
+    <Data ID="7" Label="Managed File ID" ReferenceName="ManagedFileID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="managedFileID7">
+      <Source RefID="5"/>
+      <Target RefID="28"/>
+    </Data>
+    <ServiceReference ID="8" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="9"/>
+      <Target RefID="9"/>
+    </ServiceReference>
+    <Data ID="10" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition">
+      <Source RefID="11"/>
+      <Target RefID="9"/>
+    </Data>
+    <Data ID="13" Label="Selection mask" ReferenceName="SelectionMask" ReferencePath="xnwh.persistence" VariableName="const_SelectionMask">
+      <Target RefID="9"/>
+      <Data ID="32" Label="Root type" VariableName="rootType">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>xdev.xtestfactory.infrastructure.storables.SystemUnderTest</Value>
+      </Data>
+    </Data>
+    <Data ID="14" Label="Query parameter" ReferenceName="QueryParameter" ReferencePath="xnwh.persistence" VariableName="const_QueryParameter">
+      <Target RefID="9"/>
+      <Data ID="33" Label="Max objects" VariableName="maxObjects">
+        <Meta>
+          <Type>int</Type>
+        </Meta>
+        <Value>-1</Value>
+      </Data>
+      <Data ID="34" Label="Query history" VariableName="queryHistory">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="35" IsList="true" Label="Sort criterion" ReferenceName="SortCriterion" ReferencePath="xnwh.persistence" VariableName="sortCriterion"/>
+    </Data>
+    <Data ID="16" IsList="true" Label="System Under Test" ReferenceName="SystemUnderTest" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTest16">
+      <Source RefID="9"/>
+      <Target RefID="18"/>
+      <Target RefID="24"/>
+    </Data>
+    <Data ID="22" Label="System Under Test" ReferenceName="SystemUnderTest" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTest22">
+      <Source RefID="24"/>
+      <Target RefID="5"/>
+      <Target RefID="28"/>
+    </Data>
+    <Data ID="37" Label="System Under Test" ReferenceName="SystemUnderTest" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTest37">
+      <Source RefID="18"/>
+      <Source RefID="28"/>
+    </Data>
+    <Data ID="38" Label="Managed File ID" ReferenceName="ManagedFileID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="managedFileID38">
+      <Source RefID="18"/>
+      <Source RefID="28"/>
+      <Target RefID="2"/>
+    </Data>
+    <Exception ID="40" Label="No SystemUnderTest With This ID" ReferenceName="NoSystemUnderTestWithThisID" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="const_NoSystemUnderTestWithThisID">
+      <Target RefID="39"/>
+    </Exception>
+    <Assign ID="2">
+      <Source RefID="38"/>
+      <Target RefID="3"/>
+      <Copy>
+        <Source RefID="38"/>
+        <Target RefID="3"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

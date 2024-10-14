@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,9 +26,12 @@
 	<property name="exceptionsxml.components.token" value="&lt;!-- Components (do not modify this line. it is used by the buildscripts to include dynamic components) -->" />
 
 	<property name="server.dir" value="${root.dir}/server" />
+	<property name="mdm.dir" value="${root.dir}/saved/XMOM" />
 	<property name="trigger.dir" value="${root.dir}/triggerimpl" />
 	<property name="persistencelayers.dir" value="${root.dir}/persistencelayers" />
 	<property name="clusterproviders.dir" value="${root.dir}/clusterproviders" />
+	<property name="filter.dir" value="${root.dir}/filterimpl" />
+	<property name="services.dir" value="${root.dir}/mdmimpl" />
 	
 	<property name="components.dir" value="${root.dir}/components" />
 	<property name="configserver.dir" value="${root.dir}/modules/xact/velocity/mdmimpl" />
@@ -47,7 +50,7 @@
 
 	<property name="coherence.dir" value="${root.dir}/coherence/" />
 
-	<property name="components.xnwh.pooltypes.dir" value="${root.dir}/components/xnwh/pools/DefaultConnectionPoolTypes" />
+	<property name="components.xnwh.pooltypes.dir" value="${root.dir}/components/xnwh/pools" />
 
 
 	<!--- - - - - - - - - - - - - - - - -
@@ -94,23 +97,43 @@
 			<doctitle>
 				<![CDATA[<h1>Xyna Factory API</h1>]]></doctitle>
 		<bottom>
-			<![CDATA[<i>Copyright 2022 GIP SmartMercial GmbH, Germany</i>]]></bottom>
+			<![CDATA[<i>Copyright 2022 Xyna GmbH, Germany</i>]]></bottom>
 </javadoc>
 <jar destfile="${build.dir}/server/lib/xynafactory-javadoc.jar" basedir="${build.dir}/doc/api"/>
 <delete dir="${build.dir}/doc/api">
 </delete>
 </target>
 
+<target name="copy-jars-from-server-lib-to-installation-lib" description="copy-jars-from-server-lib-to-installation-lib">
+<!-- copy jars from server/lib to installation/build/lib/factory => contains xynafactory.jar -->
+<copy todir="${root.dir}/installation/build/lib/factory" flatten="true" >
+    <fileset dir="${build.dir}/..">
+        <include name="server/lib/**/*.jar" />
+        <include name="server/deploy/**/*.jar" />
+    </fileset>
+</copy>
+</target>
+
 <!-- - - - - - - - - - - - - - - - - -
             target: buildModules  
            - - - - - - - - - - - - - - - - - -->
-<target name="buildModules" description="build Modules" depends="buildServer, checkModules" >
-<ant dir="${root.dir}/modules" target="build-all">
-	<property name="target.dir"        value="${build.dir}/components" />
-	<property name="third_parties.dir" value="${build.dir}/third_parties" />
-</ant>
-</target>
+<target name="buildModules" description="build Modules" depends="buildServer, checkModules">
 
+<!-- copy jars from server/lib to installation/build/lib/factory => contains xynafactory.jar -->
+<copy todir="${root.dir}/installation/build/lib/factory">
+    <fileset dir="${build.dir}/server/lib">
+        <include name="**/*.jar" />
+    </fileset>
+</copy>
+
+<ant dir="${root.dir}/modules" target="build-all">
+    <property name="target.dir" value="${build.dir}/components" />
+    <property name="third_parties.dir" value="${build.dir}/third_parties" />
+</ant>
+
+<!-- remove jars from installation/build/lib/factory -->
+<delete dir="${root.dir}/installation/build/lib/factory" />
+</target>
   <target name="checkModules" >
       <exec executable="${root.dir}/installation/build/findduplicateexceptioncodes.sh" inputstring="" outputproperty="errors" >
         <arg value="${root.dir}/modules" /> 

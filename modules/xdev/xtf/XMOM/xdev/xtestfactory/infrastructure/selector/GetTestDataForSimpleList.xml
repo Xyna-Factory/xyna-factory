@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get Test Data For Simple List" TypeName="GetTestDataForSimpleList" TypePath="xdev.xtestfactory.infrastructure.selector" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,openDocumentation,vScroll(559)</FixedDetailOptions>
+    <Documentation>Sortieren und Filtern von Einträgen wird nicht unterstützt.</Documentation>
+  </Meta>
+  <Operation ID="0" Label="Get Test Data For Simple List" Name="GetTestDataForSimpleList">
+    <Input>
+      <Data ID="8" Label="Test Data Selector Instance" ReferenceName="TestDataSelectorInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDataSelectorInstance">
+        <Target RefID="48"/>
+        <Target RefID="76"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="174" IsList="true" Label="Simple Test Data Instance" ReferenceName="SimpleTestDataInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="simpleTestDataInstance174">
+        <Source RefID="9"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Test Data Type Has Not Enough Columns" ReferenceName="TestDataTypeHasNotEnoughColumns" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="testDataTypeHasNotEnoughColumns"/>
+    </Throws>
+    <ServiceReference ID="39" Label="Query" ReferenceName="Query" ReferencePath="xnwh.persistence">
+      <Source RefID="40"/>
+      <Target RefID="40"/>
+    </ServiceReference>
+    <Mappings ID="48" Label="Mapping">
+      <Source RefID="8"/>
+      <Target RefID="46"/>
+      <Meta>
+        <FixedDetailOptions>FillMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="6" Label="Test Data Selector Instance" ReferenceName="TestDataSelectorInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDataSelectorInstance6"/>
+        <Source RefID="8"/>
+      </Input>
+      <Output>
+        <Data ID="47" Label="Selection mask" ReferenceName="SelectionMask" ReferencePath="xnwh.persistence" VariableName="selectionMask47"/>
+        <Target RefID="46"/>
+      </Output>
+      <Mapping>%1%.rootType=%0%.testDataListRef</Mapping>
+    </Mappings>
+    <Mappings ID="76" Label="Mapping">
+      <Source RefID="8"/>
+      <Target RefID="77"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,VisualMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="75" Label="Test Data Selector Instance" ReferenceName="TestDataSelectorInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDataSelectorInstance75"/>
+        <Source RefID="8"/>
+      </Input>
+      <Output>
+        <Data ID="109" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+        <Target RefID="77"/>
+      </Output>
+      <Mapping>%1%.text=%0%.testDataListRef</Mapping>
+    </Mappings>
+    <Function ID="143" Label="Inspect Datatype by Name">
+      <Source RefID="142"/>
+      <Source RefID="77"/>
+      <Target RefID="142"/>
+      <Target RefID="144"/>
+      <Invoke Operation="inspectDatatypeByName" ServiceID="142">
+        <Source RefID="77"/>
+      </Invoke>
+      <Receive ServiceID="142">
+        <Target RefID="144"/>
+      </Receive>
+    </Function>
+    <Mappings ID="150" Label="Mapping">
+      <Source RefID="144"/>
+      <Target RefID="152"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="149" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector149"/>
+        <Source RefID="144"/>
+      </Input>
+      <Output>
+        <Data ID="168" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember"/>
+        <Target RefID="152"/>
+      </Output>
+      <Mapping>%1%=%0%.listAllVariableMembers()</Mapping>
+    </Mappings>
+    <Choice ID="177" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="152"/>
+      <Target RefID="181"/>
+      <Input>
+        <Data ID="178" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember178"/>
+        <Source RefID="152">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="175" Label="true" Premise="length(%0%)&gt;&quot;4&quot;">
+        <Mappings ID="158" Label="Get First Column">
+          <Source RefID="152"/>
+          <Target RefID="163"/>
+          <Meta>
+            <FixedDetailOptions>FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="157" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember157"/>
+            <Source RefID="152"/>
+          </Input>
+          <Output>
+            <Data ID="162" Label="Name Of First Column" ReferenceName="Text" ReferencePath="base" VariableName="text162"/>
+            <Target RefID="163"/>
+          </Output>
+          <Mapping>%1%.text=%0%["4"].varName</Mapping>
+        </Mappings>
+        <Assign ID="179">
+          <Source RefID="163"/>
+          <Target RefID="181"/>
+          <Copy>
+            <Source RefID="163"/>
+            <Target RefID="181"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="176" Label="false">
+        <Throw ExceptionID="183" ID="182" Label="Throw Test Data Type Has Not Enough Columns">
+          <Source RefID="183">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+        </Throw>
+        <Assign ID="180"/>
+      </Case>
+    </Choice>
+    <Function ID="40" Label="Query">
+      <Source RefID="39"/>
+      <Source RefID="46"/>
+      <Source RefID="49"/>
+      <Source RefID="50"/>
+      <Target RefID="39"/>
+      <Target RefID="65"/>
+      <Invoke Operation="Query" ServiceID="39">
+        <Source RefID="46"/>
+        <Source RefID="49">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="50">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="39">
+        <Target RefID="65">
+          <Meta>
+            <ExpectedType>xnwh.persistence.Storable</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
+    <Data ID="46" Label="Selection mask" ReferenceName="SelectionMask" ReferencePath="xnwh.persistence" VariableName="selectionMask">
+      <Source RefID="48"/>
+      <Target RefID="40"/>
+    </Data>
+    <Data ID="49" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="const_FilterCondition">
+      <Target RefID="40"/>
+      <Data ID="54" Label="formula" VariableName="formula">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="50" Label="Query parameter" ReferenceName="QueryParameter" ReferencePath="xnwh.persistence" VariableName="const_QueryParameter">
+      <Target RefID="40"/>
+      <Data ID="55" Label="Max objects" VariableName="maxObjects">
+        <Meta>
+          <Type>int</Type>
+        </Meta>
+        <Value>-1</Value>
+      </Data>
+      <Data ID="56" Label="Query history" VariableName="queryHistory">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="57" IsList="true" Label="Sort criterion" ReferenceName="SortCriterion" ReferencePath="xnwh.persistence" VariableName="sortCriterion"/>
+    </Data>
+    <Data ID="65" IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable8">
+      <Source RefID="40"/>
+      <Target RefID="132"/>
+    </Data>
+    <Data ID="77" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text77">
+      <Source RefID="76"/>
+      <Target RefID="143"/>
+    </Data>
+    <Mappings ID="132" Label="Mapping">
+      <Source RefID="65"/>
+      <Target RefID="135"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="131" IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable131"/>
+        <Source RefID="65"/>
+      </Input>
+      <Output>
+        <Data ID="169" IsList="true" Label="Test Data" ReferenceName="TestData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testData"/>
+        <Target RefID="135"/>
+      </Output>
+      <Mapping>%1%=%0%</Mapping>
+    </Mappings>
+    <Function ID="167" Label="Get First Column Of Test Data">
+      <Source RefID="171"/>
+      <Source RefID="135"/>
+      <Source RefID="181"/>
+      <Target RefID="171"/>
+      <Target RefID="173"/>
+      <Invoke Operation="getFirstColumnOfList" ServiceID="171">
+        <Source RefID="181">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="135"/>
+      </Invoke>
+      <Receive ServiceID="171">
+        <Target RefID="173"/>
+      </Receive>
+    </Function>
+    <Data ID="135" IsList="true" Label="Test Data" ReferenceName="TestData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testData135">
+      <Source RefID="132"/>
+      <Target RefID="167"/>
+    </Data>
+    <ServiceReference ID="142" Label="DOMInspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="143"/>
+      <Target RefID="143"/>
+    </ServiceReference>
+    <Data ID="144" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector">
+      <Source RefID="143"/>
+      <Target RefID="150"/>
+    </Data>
+    <Data ID="152" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember152">
+      <Source RefID="150"/>
+      <Target RefID="158"/>
+      <Target RefID="177"/>
+    </Data>
+    <Data ID="163" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text163">
+      <Source RefID="158"/>
+      <Target RefID="179"/>
+    </Data>
+    <ServiceReference ID="171" Label="Services" ReferenceName="Services.Services" ReferencePath="xdev.xtestfactory.infrastructure.selector">
+      <Source RefID="167"/>
+      <Target RefID="167"/>
+    </ServiceReference>
+    <Data ID="173" IsList="true" Label="Simple Test Data Instance" ReferenceName="SimpleTestDataInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="simpleTestDataInstance173">
+      <Source RefID="167"/>
+      <Target RefID="9"/>
+    </Data>
+    <Data ID="181" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text181">
+      <Source RefID="177"/>
+      <Source RefID="179"/>
+      <Target RefID="167"/>
+    </Data>
+    <Exception ID="183" Label="Test Data Type Has Not Enough Columns" ReferenceName="TestDataTypeHasNotEnoughColumns" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="const_TestDataTypeHasNotEnoughColumns">
+      <Target RefID="182"/>
+    </Exception>
+    <Assign ID="9">
+      <Source RefID="173"/>
+      <Target RefID="174"/>
+      <Copy>
+        <Source RefID="173"/>
+        <Target RefID="174"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

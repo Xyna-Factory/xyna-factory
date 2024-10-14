@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,7 +83,7 @@ public class StepChoice extends Step implements Distinction, FormulaContainer {
   protected static final String METHODNAME_DECIDE;
   
   static {
-    //methoden namen auf diese art gespeichert kÃ¶nnen von obfuscation tools mit "refactored" werden.
+    //methoden namen auf diese art gespeichert können von obfuscation tools mit "refactored" werden.
     try {
       METHODNAME_DECIDE = SubclassChoiceObject.class.getDeclaredMethod(_METHODNAME_DECIDE_ORIG, Object.class, Class[].class, ChoiceLane[].class).getName();
     } catch (Exception e) {
@@ -480,7 +480,7 @@ public class StepChoice extends Step implements Distinction, FormulaContainer {
       throws XPRC_InvalidVariableIdException, XPRC_InvalidVariableMemberNameException,
       XPRC_ParsingModelledExpressionException {
 
-    // TODO code in StepParallel etc Ã¤hnlich => extraktion von teilcode
+    // TODO code in StepParallel etc ähnlich => extraktion von teilcode
 
     cb.addLine("private static class " + getClassName() + " extends " + FractalProcessStep.class.getSimpleName() + "<"
                    + getParentScope().getClassName() + "> {").addLB();
@@ -494,9 +494,9 @@ public class StepChoice extends Step implements Distinction, FormulaContainer {
       }
     }
 
-    //nun noch die ChoiceLanes fÃ¼r Cases mit Alias generieren (diese erst nach den anderen Cases
-    //generieren, damit sich fÃ¼r im alten Format serialisierte Workflows (Alias als Referenz)
-    //die Reihenfolge der ChoiceLane-Klassen nicht Ã¤ndert)
+    //nun noch die ChoiceLanes für Cases mit Alias generieren (diese erst nach den anderen Cases
+    //generieren, damit sich für im alten Format serialisierte Workflows (Alias als Referenz)
+    //die Reihenfolge der ChoiceLane-Klassen nicht ändert)
     for (int i = 0; i < cases.size(); i++) {
       if (cases.get(i).getAlias() != null) {
         generateChoiceLane(cb, i);
@@ -609,7 +609,7 @@ public class StepChoice extends Step implements Distinction, FormulaContainer {
       
       String alias = "";
       if (cases.get(i).getAlias() != null) {
-        //fÃ¼r Cases, die einen anderen Step referenzieren, den Alias-Step verwenden
+        //für Cases, die einen anderen Step referenzieren, den Alias-Step verwenden
         alias = "alias";
       }
       
@@ -660,7 +660,7 @@ public class StepChoice extends Step implements Distinction, FormulaContainer {
             cb.addLine("}");
           }
         } else {
-          //im complexname jeder lane (cases[i]) steht eine formel. wenn diese true auswertet, soll die lane ausgefÃ¼hrt werden
+          //im complexname jeder lane (cases[i]) steht eine formel. wenn diese true auswertet, soll die lane ausgeführt werden
           //ansonsten nicht
           cb.addLine("if (evalFormula()) {");
           for (int i = 0; i < cases.size(); i++) {
@@ -671,7 +671,7 @@ public class StepChoice extends Step implements Distinction, FormulaContainer {
             }
           }
           cb.addLine("} else {");
-          // es gibt zweite choicelane fÃ¼r false-fall
+          // es gibt zweite choicelane für false-fall
           for (int i = 0; i < cases.size(); i++) {
             CaseInfo ci = cases.get(i);
             if (ci.getName().equals("false")) {
@@ -1077,7 +1077,7 @@ public class StepChoice extends Step implements Distinction, FormulaContainer {
   }
   
   /**
-   * FÃ¼r jeden Step, der einen anderen Step referenziert wird eine Alias-Step Variable generiert.
+   * Für jeden Step, der einen anderen Step referenziert wird eine Alias-Step Variable generiert.
    * @param cb
    */
   protected void generateAliasSteps(CodeBuffer cb) {
@@ -1093,8 +1093,8 @@ public class StepChoice extends Step implements Distinction, FormulaContainer {
           }
         }
         
-        //Variable fÃ¼r Alias-Step (vom Typ des referenzierten Steps) generieren.
-        //Die eigene xmlId dem Konstruktor der referenzierten Step-Klasse Ã¼bergeben.
+        //Variable für Alias-Step (vom Typ des referenzierten Steps) generieren.
+        //Die eigene xmlId dem Konstruktor der referenzierten Step-Klasse übergeben.
         if (aliasStepId > -1) {
           cb.addLine("private ", children.get(aliasStepId).getClassName(), " ", children.get(i).getVarName(), "alias = new ", children.get(aliasStepId).getClassName(), "(", String.valueOf(children.get(i).getXmlId()), ");");
           
@@ -1108,7 +1108,7 @@ public class StepChoice extends Step implements Distinction, FormulaContainer {
   }
   
   /**
-   * FÃ¼gt alle Alias-Step-Variablennamen hinzu.
+   * Fügt alle Alias-Step-Variablennamen hinzu.
    */
   protected void addAliasStepVarNames(CodeBuffer cb) {
     for (int i = 0; i < cases.size(); i++) {

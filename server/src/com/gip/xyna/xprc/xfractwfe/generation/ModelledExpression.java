@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -820,7 +820,7 @@ public class ModelledExpression {
     private Object transformation_prefix(TypeInfo toType) {
       if (toType == null ||
           !toType.isBaseType()) {
-        return Functions.class.getName()+"."+Functions.ADJUST_VALUE_METHOD_NAME+"(Object.class, ";
+        return Functions.class.getName()+"."+Functions.ADJUST_VALUE_METHOD_NAME+"(java.lang.Object.class, ";
       } else {
         return Functions.class.getName()+"."+Functions.ADJUST_VALUE_METHOD_NAME+"("+toType.getJavaName()+".class, ";
       }
@@ -1186,7 +1186,9 @@ public class ModelledExpression {
     }
     
     private boolean qualifiesForDynamicAdjustment(Expression expression) {
-      if (expression instanceof FunctionExpression) {
+      if (expression instanceof CastExpression) {
+        return false;
+      } else if (expression instanceof FunctionExpression) {
         return ((FunctionExpression)expression).getParts().size() > 0;
       } else if (expression instanceof LiteralExpression) {
         return false;

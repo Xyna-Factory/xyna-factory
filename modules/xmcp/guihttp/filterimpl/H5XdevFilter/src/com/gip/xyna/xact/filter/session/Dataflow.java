@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
@@ -240,6 +241,17 @@ public class Dataflow {
       return iv.getIdentifiedVariable().isList();
     }
 
+
+    @Override
+    public String toString() {
+      String ids = String.join(",", inputVars.stream().map(x -> mapToId(x)).collect(Collectors.toList()));
+      return "SimpleConnection[" + linkstate.toString() + " - " + ids + "]";
+    }
+    
+    private String mapToId(AVariableIdentification avarIdent) {
+      return avarIdent.idprovider != null && !(avarIdent.idprovider instanceof ThrowExceptionIdProvider) ? avarIdent.idprovider.getId() : "null";
+    }
+
   }
 
 
@@ -310,18 +322,11 @@ public class Dataflow {
 
     public SimpleConnection getSimpleConnectionByBranchId(String branchId) {
       for (int i = 0; i < branchIds.size(); i++) {
-        if (eq(branchIds.get(i), branchId)) {
+        if (Objects.equals(branchIds.get(i), branchId)) {
           return connectionsPerLane.get(i);
         }
       }
       return null;
-    }
-
-    private boolean eq(String s1, String s2) {
-      if (s1 == null) {
-        return s2 == null;
-      }
-      return s1.equals(s2);
     }
 
     public boolean removeBranch(String branchId) {
@@ -3491,13 +3496,7 @@ public class Dataflow {
       
       //set connection to user, if it used to be of type user
       List<SimpleConnection> con = allConnections.get(resolutions.get(resolutionNr).getFirst()).getConnectionsPerLane();
-      if(resolutions.get(resolutionNr).getSecond() != null) {
-        for(SimpleConnection sCon : con) {
-          if(sCon.getLinkState() == LinkstateIn.AUTO && resolutions.get(resolutionNr).getFirst().connectedness.isUserConnected()) {
-            sCon.setLinkState(LinkstateIn.USER);
-          }
-        }
-      }
+      updateLinkstateToUser(resolutions.get(resolutionNr), con);
       
       //Warnings
       for (SimpleConnection sCon : con) {
@@ -3511,8 +3510,6 @@ public class Dataflow {
         warningsManagement.processNewProvidersForConnection(data);
       }      
       
-      
-      
       if(logger.isDebugEnabled()) {
         logger.debug("Calced Link for assign (" + assign.getStepId() + "["+resolutionNr+"]): " + resolutions.get(resolutionNr).getFirst().getIdentifiedVariable().getId() + "->");
         for (SimpleConnection sCon : allConnections.get(resolutions.get(resolutionNr).getFirst()).getConnectionsPerLane()) {
@@ -3521,7 +3518,25 @@ public class Dataflow {
       }
     }   
   }
-  
+
+
+  private void updateLinkstateToUser(Pair<AVariableIdentification, AVariableIdentification> resolution, List<SimpleConnection> con) {
+    if (resolution.getSecond() == null || resolution.getFirst() == null) {
+      return;
+    }
+    Connectedness connectedness = resolution.getFirst().connectedness;
+    if (connectedness == null || !connectedness.isUserConnected() || connectedness.getConnectedVariableId() == null) {
+      return;
+    }
+    for (SimpleConnection sCon : con) {
+      if (sCon.getLinkState() == LinkstateIn.AUTO && sCon.inputVars.get(0).getIdentifiedVariable() != null
+          && connectedness.getConnectedVariableId().equals(sCon.inputVars.get(0).getIdentifiedVariable().getId())) {
+        sCon.setLinkState(LinkstateIn.USER);
+      }
+    }
+  }
+
+
   private void rewriteDataflow() {
     dataflow.clear();
     Set<AVariableIdentification> toRemove = new HashSet<AVariableIdentification>();

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="delivery" default="localbuild" basedir=".">
+<project name="delivery" default="build" basedir=".">
 
   <tstamp>
     <format property="timestamp" pattern="yyyyMMdd_HHmm" locale="de,DE" />
@@ -45,25 +45,16 @@
              token="TOKEN_RELEASE_NUMBER"
              value="${release.number}" />
     <zipDeliveryItemsSrc nameSrc="${delivery.name}_${release.number}_${timestamp}"
-                         nameZip="${delivery.name}_${release.number}_${timestamp}${zipName}" />
+                         nameZip="${delivery.name}_${release.number}${zipName}" />
     <delete dir="${delivery.build.dir}" />
   </target>
-
+    
+    
   <!-- - - - - - - - - - - - - - - - - -
-       target: localbuild_basics
+       target: build_basics
        - - - - - - - - - - - - - - - - - -->
-  <target name="localbuild_basics" description="">
+  <target name="build_basics" description="">
     <property name="checkout.dir" value="${basedir}/../.." />
-    <property name="buildTarget" value="build_basics" />
-    <property name="zipName" value="_localbuild" />
-    <ant antfile="delivery.xml" target="delivery_os" inheritall="true" inheritrefs="true"/>
-  </target>
-
-  <!-- - - - - - - - - - - - - - - - - -
-       target: delivery_basics
-       - - - - - - - - - - - - - - - - - -->
-  <target name="delivery_basics">
-    <property name="checkout.dir" value="${basedir}/../../checkout" />
     <property name="buildTarget" value="build_basics" />
     <property name="zipName" value="" />
     <ant antfile="delivery.xml" target="delivery_os" inheritall="true" inheritrefs="true"/>
@@ -72,9 +63,9 @@
   <!-- - - - - - - - - - - - - - - - - -
        target: localbuild
        - - - - - - - - - - - - - - - - - -->
-  <target name="localbuild" description="build a delivery for all systems from local repository">
+  <target name="build" description="build a delivery for all systems from local repository">
     <property name="checkout.dir" value="${basedir}/../.." />
-    <ant antfile="delivery.xml" target="localbuild_basics" inheritall="true" inheritrefs="true"/>
+    <ant antfile="delivery.xml" target="build_basics" inheritall="true" inheritrefs="true"/>
   </target>
 
 </project>

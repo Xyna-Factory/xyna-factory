@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xnwh.selection.parsing.SelectionParser;
-import com.gip.xyna.xnwh.selection.parsing.SelectionParser.EscapeParams;
+import com.gip.xyna.xnwh.selection.parsing.SelectionParser.EscapeParameters;
 
 
 public class GrepCommand implements Runnable {
@@ -438,14 +438,20 @@ public class GrepCommand implements Runnable {
   }
 
 
-  public static class EscapeForXMLShell implements EscapeParams {
+  public static class EscapeForXMLShell implements EscapeParameters {
 
     public String escapeForLike(String toEscape) {
       return toEscape;
     }
 
-    public String getWildcard() {
+    @Override
+    public String getMultiCharacterWildcard() {
       return ".*";
+    }
+
+    @Override
+    public String getSingleCharacterWildcard() {
+      return ".";
     }
     
   }

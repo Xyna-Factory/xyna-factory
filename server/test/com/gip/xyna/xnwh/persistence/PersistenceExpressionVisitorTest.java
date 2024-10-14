@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,6 @@ public class PersistenceExpressionVisitorTest extends TestCase {
     execute("%", "\\%");
     execute("\\\\%", "\\\\\\\\\\%");
     execute("\\\\\\\\%", "\\\\\\\\\\\\\\\\\\%");
-
   }
 
 
@@ -82,6 +81,31 @@ public class PersistenceExpressionVisitorTest extends TestCase {
     execute("\\%", "\\%");
     execute("\\\\\\%", "\\\\\\\\\\%");
     execute("\\\\\\\\\\%", "\\\\\\\\\\\\\\\\\\%");
+  }
+  
+  public void testUnescapedQuestionMark() {
+    execute("?", "_");
+    execute("?a", "_a");
+    execute("\\\\?", "\\\\\\\\_");
+    execute("\\\\\\\\?", "\\\\\\\\\\\\\\\\_");
+  }
+  
+  public void testEscapedQuestionMark() {
+    execute("\\?", "?");
+    execute("\\\\\\?", "\\\\\\\\?");
+    execute("\\\\\\\\\\?", "\\\\\\\\\\\\\\\\?");
+  }
+  
+  public void testUnescapedUnderscore() {
+    execute("_", "\\_");
+    execute("\\\\_", "\\\\\\\\\\_");
+    execute("\\\\\\\\_", "\\\\\\\\\\\\\\\\\\_");
+  }
+  
+  public void testEscapedUnderscore() {
+    execute("\\_", "\\_");
+    execute("\\\\\\_", "\\\\\\\\\\_");
+    execute("\\\\\\\\\\_", "\\\\\\\\\\\\\\\\\\_");
   }
 
 

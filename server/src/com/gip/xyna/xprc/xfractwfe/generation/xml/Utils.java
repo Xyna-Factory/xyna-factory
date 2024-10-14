@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
+import com.gip.xyna.xprc.xfractwfe.generation.CodeOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.DatatypeVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
@@ -29,6 +30,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.JavaOperation;
+import com.gip.xyna.xprc.xfractwfe.generation.PythonOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.WorkflowCallInService;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.SnippetOperation.SnippetOperationBuilder;
@@ -75,7 +77,7 @@ public class Utils {
       vb.complexType( getXmomType(var.getDomOrExceptionObject()) );
     }
 
-    // TODO: unknownMetaTags?
+    vb.meta(Meta.unknownMetaTags(var.getUnknownMetaTags()));
 
     if (var instanceof DatatypeVariable) {
       DatatypeVariable dtVar = (DatatypeVariable)var;
@@ -96,7 +98,8 @@ public class Utils {
        .isFinal(operation.isFinal())
        .isAbstract(operation.isAbstract())
        .documentation(operation.getDocumentation())
-       .hasBeenPersisted(operation.hasBeenPersisted());
+       .hasBeenPersisted(operation.hasBeenPersisted())
+       .unknownMetaTags(operation.getUnknownMetaTags());
 
     for (AVariable inputVar : operation.getInputVars()) {
       sob.input(createVariable(inputVar));
@@ -108,22 +111,23 @@ public class Utils {
       sob.exception(createVariable(exceptionVar));
     }
 
-    if (operation instanceof JavaOperation) {
-      JavaOperation javaOperation = (JavaOperation)operation;
-      if (javaOperation.requiresXynaOrder()) {
+    if (operation instanceof CodeOperation) {
+      CodeOperation codeOperation = (CodeOperation) operation;
+      sob.codeLanguage(codeOperation.getCodeLanguage());
+      if (codeOperation.requiresXynaOrder()) {
         sob.requiresXynaOrder();
       }
 
       String sourceCode;
       if (escapeSourceCode) {
-        String strippedImpl = javaOperation.getImpl() != null ? javaOperation.getImpl().strip() : null;
+        String strippedImpl = codeOperation.getImpl() != null ? codeOperation.getImpl().strip() : null;
         sourceCode = XMLUtils.escapeXMLValueAndInvalidChars(strippedImpl, false, false);
       } else {
-        sourceCode = javaOperation.getImpl();
+        sourceCode = codeOperation.getImpl();
       }
 
       sob.sourceCode(sourceCode)
-         .isCancelable(javaOperation.isStepEventListener());
+         .isCancelable(codeOperation.isStepEventListener());
     }
 
     if (operation instanceof WorkflowCallInService) {
@@ -136,7 +140,8 @@ public class Utils {
   public static Meta createMeta(DomOrExceptionGenerationBase dtOrException) {
     Meta meta = new Meta();
     meta.setDocumentation(dtOrException.getDocumentation());
-
+    meta.setUnknownMetaTags(dtOrException.getUnknownMetaTags());
+    
     if (dtOrException instanceof DOM) {
       DOM dom = (DOM)dtOrException;
       meta.setIsServiceGroupOnly(dom.isServiceGroupOnly());

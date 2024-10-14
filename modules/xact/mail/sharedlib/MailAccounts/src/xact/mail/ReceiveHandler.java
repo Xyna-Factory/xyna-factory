@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@ import javax.mail.MessagingException;
 
 
 /**
- * Die vom MailServer empfangenen Messages mÃ¼ssen schnell weiterverabeitet werden, nach dem SchlieÃŸen 
- * der Verbindung sind die Messages invalide. Ãœber dieses Interface kÃ¶nnen sie in eine dauerhaftere 
- * Form Ã¼bertragen werden, beispielsweise in ein xact.mail.impl.Mail-Objekt.
+ * Die vom MailServer empfangenen Messages müssen schnell weiterverabeitet werden, nach dem Schließen 
+ * der Verbindung sind die Messages invalide. Über dieses Interface können sie in eine dauerhaftere 
+ * Form übertragen werden, beispielsweise in ein xact.mail.impl.Mail-Objekt.
  *
  * @param <M>
  */

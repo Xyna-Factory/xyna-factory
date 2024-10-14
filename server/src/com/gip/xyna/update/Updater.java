@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -570,7 +570,7 @@ public class Updater implements UpdaterInterface {
       updates.add(ud);
       
       // 6.1.2.3
-      //codegen Änderungen für objekt-versionierung, xml referenzen in toXml-darstellung, und deep-equals möglichkeiten. xynaobjectlist ist nicht serialisierungskompatibel
+      //codegen Änderungen für objekt-versionierung, xml referenzen in toXml-darstellung, und deep-equals Möglichkeiten. xynaobjectlist ist nicht serialisierungskompatibel
       Version v236 = new Version(v235).increaseToMajorVersion(4, 1);
       ud = new UpdateOrderBackupNewXynaObjectList(v235, v236); 
       updates.add(ud);
@@ -1762,7 +1762,53 @@ public class Updater implements UpdaterInterface {
       ud = new UpdateJustVersion(v464, v465, true);
       ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //8.2.11.x darf hier drauf updaten
       updates.add(ud);
+      
+      // 9.0.1.0
+      Version v466 = new Version(v465).increaseToMajorVersion(3, 1);
+      ud = new UpdateJustVersion(v465, v466, true);
+      updates.add(ud);
 
+      // 9.0.2.0
+      Version v467 = new Version(v466).increaseToMajorVersion(3, 1);
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //9.0.1.x darf hier drauf updaten
+      ud = new UpdateJustVersion(v466, v467, true);
+      updates.add(ud);
+
+      // 9.0.3.0
+      Version v468 = new Version(v467).increaseToMajorVersion(3, 1);
+      ud = new UpdateJustVersion(v467, v468);
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //9.0.2.x darf hier drauf updaten  
+      updates.add(ud);
+
+      // 9.0.4.0
+      Version v469 = new Version(v468).increaseToMajorVersion(3, 1);
+      ud = new UpdateJustVersion(v468, v469);
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(4); //9.0.3.x darf hier drauf updaten  
+      updates.add(ud);
+
+      // 9.1.0.0
+      Version v470 = new Version(v469).increaseToMajorVersion(2, 1);
+      ud = new UpdateJustVersion(v469, v470);
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(3); //9.0.x.x darf hier drauf updaten
+      updates.add(ud);
+
+      // 10.0.0.0
+      Version v471 = new Version(v470).increaseToMajorVersion(1, 1);
+      ud = new UpdateJustVersion(v470, v471);
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(2); //9.x.x.x darf hier drauf updaten
+      updates.add(ud);
+
+      // 10.1.0.0
+      Version v472 = new Version(v471).increaseToMajorVersion(2, 1);
+      ud = new UpdateJustVersion(v471, v472);
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(3); //10.0.x.x darf hier drauf updaten
+      updates.add(ud);
+
+      // 10.2.0.0
+      Version v473 = new Version(v472).increaseToMajorVersion(2, 1);
+      ud = new UpdateJustVersion(v472, v473);
+      ud.addFollowingBranchVersionsAsAllowedForUpdate(3); //10.1.x.x darf hier drauf updaten
+      updates.add(ud);
 
       //ACHTUNG: bei updates in einem branch muss gewährleistet werden, dass alle späteren versionen (trunk, spätere branches)
       //         auf dem branch updaten können. bei updates, die in späteren versionen dann sonderbehandlungen im update-

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package com.gip.xyna.xact.filter.session;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -397,6 +398,7 @@ public class Modification implements HasXoRepresentation {
     checkRevision(saveRequest.getRevision());
     Persistence persistence = new Persistence(gbo, revision, saveRequest, session.getSession());
     persistence.save();
+    focusCandidateId = null;
 
     return persistence.getSaveFqn();
   }
@@ -404,7 +406,7 @@ public class Modification implements HasXoRepresentation {
   public String deploy(PersistJson deployRequest, Long revision) throws InvalidRevisionException, XynaException {
     checkRevision(deployRequest.getRevision());
     if(XMOMType.DATATYPE == gbo.getType()) {
-      cleanJavaLibraries(gbo);
+      cleanLibraries(gbo);
     }
     try {
       Persistence persistence = new Persistence(gbo, revision, deployRequest, session.getSession());
@@ -417,17 +419,19 @@ public class Modification implements HasXoRepresentation {
     }
   }
   
-  private void cleanJavaLibraries(GenerationBaseObject gbo) {
+  private void cleanLibraries(GenerationBaseObject gbo) {
     if(XMOMType.DATATYPE != gbo.getType()) {
       return;
     }
     String savePath = GenerationBase.getFileLocationOfServiceLibsForSaving(gbo.getDOM().getFqClassName(), gbo.getDOM().getRevision());
-    Set<String> xmlLibs = gbo.getDOM().getAdditionalLibraries();
+    Set<String> allLibs = new HashSet<>();
+    allLibs.addAll(gbo.getDOM().getAdditionalLibraries());
+    allLibs.addAll(gbo.getDOM().getPythonLibraries());
     File saveFolder = new File(savePath);
     if(saveFolder.canRead()) {
       String[] fileNames = saveFolder.list();
       for (String fileName : fileNames) {
-        if(!xmlLibs.contains(fileName)) {
+        if(!allLibs.contains(fileName)) {
           gbo.addSgLibToDelete(fileName);
         }
       }

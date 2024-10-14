@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,7 +106,7 @@ import com.gip.xyna.xnwh.pools.OraclePoolType;
 import com.gip.xyna.xnwh.pools.PoolDefinition;
 import com.gip.xyna.xnwh.pools.TypedConnectionPoolParameter;
 import com.gip.xyna.xnwh.selection.parsing.SelectionParser;
-import com.gip.xyna.xnwh.selection.parsing.SelectionParser.EscapeParams;
+import com.gip.xyna.xnwh.selection.parsing.SelectionParser.EscapeParameters;
 import com.gip.xyna.xnwh.utils.SQLErrorHandling;
 import com.gip.xyna.xnwh.utils.SQLErrorHandlingLogger;
 import com.gip.xyna.xnwh.utils.SQLErrorHandlingLogger.ErrorCodeHandlingElement;
@@ -1318,9 +1318,11 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
     }
 
     private String createIndexName(String tableName, String columnName, boolean pk) {
+      // Oracle Database prior to version 12.2 limit identifier names, such as table names, column names, and primary key names, to 30 characters. 
+      // Oracle Database 12.2 and higher have a default limit of 128 characters.
       // Workaround for "ORA-00972: identifier is too long" with "CONSTRAINT fqctrltaskinformation_taskid_pk PRIMARY KEY(taskid)"
-      // Identifiers have to be <= 30 signs 
-      final int MAX_IDENTIFIER_LENGTH = 30;
+      // Identifiers have to be <= 128 signs 
+      final int MAX_IDENTIFIER_LENGTH = 128;
       String indexName = tableName.replace('.', '_')+"_"+columnName+(pk? "_pk" : "_idx");
       if( indexName.length() > MAX_IDENTIFIER_LENGTH ) {
         int endOfTableName = tableName.length();
@@ -2302,7 +2304,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
 
   }
   
-  private static class EscapeForOracle implements EscapeParams {
+  private static class EscapeForOracle implements EscapeParameters {
 
     public String escapeForLike(String toEscape) {
       if (toEscape == null) {
@@ -2314,8 +2316,14 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
       return toEscape;
     }
 
-    public String getWildcard() {
+    @Override
+    public String getMultiCharacterWildcard() {
       return "%";
+    }
+
+    @Override
+    public String getSingleCharacterWildcard() {
+      return "_";
     }
     
   }

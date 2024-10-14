@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
+ -->
 <project name="buildTrigger" default="deploy" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
 
     <property name="root.dir" value="${basedir}/../.." />
 
     <import file="./ant-xyna.xml" />
+    <!--import file="${root.dir}/installation/build/ant-xyna.xml" /-->
+
+    <property name="common.lib.dir" value="${root.dir}/installation/build/lib/factory" />
+    <property name="common.xyna.lib.dir" value="${root.dir}/common/lib/xyna" />
+
     <import file="./macros.xml" />
 
     <property name="base.lib.dir" value="${basedir}/lib" />
@@ -38,13 +43,17 @@
 
     <resolver:pom file="${basedir}/pom.xml" id="pom"/>
 
-    <checkJavaVersion />
+    <property name="third_parties.pom" value="${basedir}/third_parties.pom.xml" />
+
     <checkServerProperties />
 
     <condition property="exceptions.available">
         <available file="${basedir}/Exceptions.xml" />
     </condition>
 
+    <condition property="third_parties.available">
+        <available file="${third_parties.pom}" />
+    </condition>
 
     <!-- =================================
          target: build-app
@@ -63,42 +72,41 @@
     <target name="deploy" depends="build" description="Deploy jar file to xyna server.">
         <fail message="No server properties specified. Unable to deploy." unless="server.available" />
         <!-- clean directory on xyna server -->
-        <!--sshexec host="${server.host}" username="${server.userid}" password="${server.password}" command="rm -rf ${server.mdm.path}" trust="true" failonerror="false" /-->
+        <!--<custom-ssh-exec host="${server.host}" username="${server.userid}" command="rm -rf ${server.mdm.path}" /> -->
         <!-- create directory on xyna server -->
-        <sshexec host="${server.host}" username="${server.userid}" password="${server.password}" command="mkdir -p ${server.mdm.path}" trust="true" failonerror="false" />
+        <custom-ssh-exec host="${server.host}" username="${server.userid}" command="mkdir -p ${server.mdm.path}" />
         <!-- copy xml file to server -->
         <if>
             <equals arg1="${server.transmitXml}" arg2="yes" />
             <then>
                 <echo message="Copying XML file ${local.xml.dir}/${server.mdm.xml.filename} to server ${server.host}:${server.mdm.xml.path}" />
-                <scp todir="${server.userid}:${server.password}@${server.host}:${server.mdm.xml.path}" trust="true" verbose="true">
-                    <fileset dir="${local.xml.dir}">
-                        <include name="${server.mdm.xml.filename}" />
-                    </fileset>
-                </scp>
+                <custom-scp-to-remote fromdir="${local.xml.dir}" frominclude="${server.mdm.xml.filename}" todir="${server.userid}@${server.host}:${server.mdm.xml.path}" />
             </then>
         </if>
         <!-- copy libraries and licences to xyna server -->
-        <scp todir="${server.userid}:${server.password}@${server.host}:${server.mdm.path}" trust="true" verbose="true">
-            <fileset dir="${target.dir}">
-                <include name="**/*" />
-            </fileset>
-        </scp>
+        <custom-scp-to-remote fromdir="${target.dir}" frominclude="**/*" todir="${server.userid}@${server.host}:${server.mdm.path}" />
+
         <!-- deploy trigger -->
-        <sshexec host="${server.host}" username="${server.userid}" password="${server.password}" command="cd ${server.path}; ./xynafactory.sh ${deploy.template}" trust="true" failonerror="true" />
+        <custom-ssh-exec host="${server.host}" username="${server.userid}" command="cd ${server.path}; ./xynafactory.sh ${deploy.template}" />
     </target>
 
-    <!-- ================================= 
+    <!-- =================================
                target: resolve             
           =================================  -->
       <target name="resolve">
+
+        <if>
+            <equals arg1="${third_parties.available}" arg2="true" />
+            <then>
+                <installPom pom="${third_parties.pom}" />
+                <loadLicenses targetDir="${base.lib.dir}" pom="${third_parties.pom}" />
+            </then>
+        </if>
         <resolver:resolve>
           <resolver:dependencies pomRef="pom"/>
-          <resolver:remoterepos refid="xyna.repository"/>
           <resolver:files refid="files" dir="${base.lib.dir}/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
           <resolver:files refid="files" dir="${base.lib.dir}" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/>
         </resolver:resolve>
-        <loadLicenses targetDir="${base.lib.dir}" />
         <!-- delete generated-resources ? -->
       </target>
 
@@ -159,17 +167,17 @@
     <target name="updateMDMandXynaFactoryJar" description="Receive new mdm.jar and xynafactory.jar from Xyna Factory">
         <fail message="No server properties specified. Unable to deploy." unless="server.available" />
         <!-- build mdm.jar -->
-        <sshexec host="${server.host}" username="${server.userid}" password="${server.password}" command="cd ${server.path}; ./xynafactory.sh buildmdmjar" trust="true" failonerror="true" />
+        <custom-ssh-exec host="${server.host}" username="${server.userid}" command="cd ${server.path}; ./xynafactory.sh buildmdmjar" />
         <!-- copy mdm.jar from xyna server -->
-        <scp file="${server.userid}:${server.password}@${server.host}:${server.path}/mdm.jar" todir="${common.xyna.lib.dir}" trust="true" verbose="true" />
+        <custom-scp-from-remote fromfile="${server.userid}@${server.host}:${server.path}/mdm.jar" todir="${base.lib.dir}/xyna" />
         <!-- copy xynafactory.jar from xyna server -->
-        <scp file="${server.userid}:${server.password}@${server.host}:${server.path}/lib/xynafactory.jar" todir="${common.xyna.lib.dir}" trust="true" verbose="true" />
+        <custom-scp-from-remote fromfile="${server.userid}@${server.host}:${server.path}/lib/xynafactory.jar" todir="${common.xyna.lib.dir}" />
     </target>
 
     <!-- ================================= 
          target: genExceptionClass
          ================================= -->
-    <target name="genExceptionClass" description="Generate code class for exceptions." if="${exceptions.available}" >
+    <target name="genExceptionClass" description="Generate code class for exceptions." if="${exceptions.available}">
         <java fork="true" failonerror="yes" classname="com.gip.xyna.utils.exceptions.ExceptionStorage">
             <sysproperty key="BLACK_SERVER_HOME" value="${root.dir}/server" />
             <classpath>
@@ -183,3 +191,4 @@
         </java>
     </target>
 </project>
+

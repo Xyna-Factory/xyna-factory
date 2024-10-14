@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,6 +60,8 @@ public class OSMRemoteProxyImpl implements OSMRemoteInterface {
   private ClusterContext rmiClusterContext;
   private Timer retryLaterTimer;
   
+  private static final String TIMER_NAME = "OSMRemoteProxyImpl-retryLaterTimer";
+  
   /**
    * @param rmiClusterContext 
    * @param osmRemoteEndpointImpl
@@ -69,7 +71,7 @@ public class OSMRemoteProxyImpl implements OSMRemoteInterface {
     this.osmRemoteEndpointImpl = osmRemoteEndpointImpl;
     this.queue = queue;
     this.osmCache = osmCache;
-    this.retryLaterTimer = new Timer("OSMRemoteProxyImpl-retryLaterTimer");
+    this.retryLaterTimer = new Timer(TIMER_NAME);
   }
 
   /**
@@ -173,7 +175,12 @@ public class OSMRemoteProxyImpl implements OSMRemoteInterface {
     //a) kurzfristiger Ausfall der RMI-Verbindung
     //b) Ordermigration: Predecessor ist bereits migriert, und möchte nun updateSuccessor ausführen,
     //dieser ist aber noch nicht migriert
-    retryLaterTimer.schedule( new Later(queue, osmTask), 500); //TODO delay konfigurierbar
+    try {
+      retryLaterTimer.schedule( new Later(queue, osmTask), 500); //TODO delay konfigurierbar
+    } catch(IllegalStateException e) {
+      retryLaterTimer.cancel();
+      retryLaterTimer = new Timer(TIMER_NAME);
+    }
     return Result.Later; 
   }
 

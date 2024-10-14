@@ -1,0 +1,104 @@
+{{!
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+}}
+{{#operations}}
+{{#xynaOperation}}
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8"
+ TypeName="{{requestWorkflowTypeName}}" TypePath="{{requestWorkflowPath}}" Label="{{requestWorkflowLabel}}">
+  <Operation ID="0" Label="{{requestWorkflowLabel}}" Name="{{requestWorkflowTypeName}}" IsStatic="false">
+    <Input>
+      <Data ID="10" Label="Connect Parameter" VariableName="connectParameter10" ReferenceName="ConnectParameter" ReferencePath="xact.http" />
+      <Data ID="11" Label="{{sendLabel}}" VariableName="{{sendVarName}}11" ReferenceName="{{sendRefName}}" ReferencePath="{{sendRefPath}}" />
+    </Input>
+    <Output>
+      <Data ID="15" Label="{{responseLabel}}" VariableName="{{responseVarName}}15" ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}"/>
+    </Output>
+    <Throws>
+      <Exception Label="Connect Exception" VariableName="connectException1994" ReferenceName="ConnectException" ReferencePath="xact.http.exceptions">
+      </Exception>
+      <Exception Label="Connection Already Closed Exception" VariableName="connectionAlreadyClosedException1995" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions">
+      </Exception>
+      <Exception Label="Http Exception" VariableName="httpException1996" ReferenceName="HttpException" ReferencePath="xact.http.exceptions">
+      </Exception>
+      <Exception Label="Timeout Exception" VariableName="timeoutException1997" ReferenceName="TimeoutException" ReferencePath="xact.http.exceptions">
+      </Exception>
+      <Exception Label="Unexpected HTTP Response Exception" VariableName="unexpectedHTTPResponseException1998" ReferenceName="UnexpectedHTTPResponseException" ReferencePath="xact.http.exceptions">
+      </Exception>
+      <Exception Label="ValidationException" VariableName="validationException1999" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception">
+      </Exception>
+    </Throws>
+    <ServiceReference ID="1090" Label="{{requestWorkflowWithProcessingLabel}}" ReferenceName="{{requestWorkflowWithProcessingTypeName}}" ReferencePath="{{requestWorkflowWithProcessingPath}}">
+      <Source RefID="1089"/>
+      <Target RefID="1089"/>
+    </ServiceReference>
+    <Mappings ID="1209" Label="Mapping">
+      <Output>
+        <Data ID="1326" VariableName="clientProcessingHook1326" Label="ClientProcessingHook" ReferenceName="ClientProcessingHook" ReferencePath="xmcp.oas.datatype.client">
+          <Source RefID="1209"/>
+        </Data>
+        <Target RefID="1327">
+        </Target>
+      </Output>
+    </Mappings>
+    <Function ID="1089" Label="{{requestWorkflowWithProcessingLabel}}">
+      <Source RefID="1090">
+      </Source>
+      <Source RefID="10">
+      </Source>
+      <Source RefID="11">
+      </Source>
+      <Source RefID="1327">
+      </Source>
+      <Target RefID="1090">
+      </Target>
+      <Target RefID="1092">
+      </Target>
+      <Invoke ServiceID="1090" Operation="{{requestWorkflowWithProcessingTypeName}}">
+        <Source RefID="10">
+        </Source>
+        <Source RefID="11">
+        </Source>
+        <Source RefID="1327">
+        </Source>
+      </Invoke>
+      <Receive ServiceID="1090">
+        <Target RefID="1092">
+        </Target>
+      </Receive>
+    </Function>
+    <Data ID="1092" VariableName="{{responseVarName}}1092" Label="{{responseLabel}}" ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}">
+      <Source RefID="1089"/>
+    </Data>
+    <Data ID="1327" VariableName="clientProcessingHook1327" Label="ClientProcessingHook" ReferenceName="ClientProcessingHook" ReferencePath="xmcp.oas.datatype.client">
+      <Source RefID="1209"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="1092">
+      </Source>
+      <Target RefID="15">
+      </Target>
+      <Copy>
+        <Source RefID="1092">
+        </Source>
+        <Target RefID="15">
+        </Target>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
+{{/xynaOperation}}
+{{/operations}}

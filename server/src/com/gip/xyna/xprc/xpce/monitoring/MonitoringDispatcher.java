@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import com.gip.xyna.FunctionGroup;
 import com.gip.xyna.FutureExecution;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.XynaFactoryPath;
+import com.gip.xyna.utils.collections.maps.TimeoutMap;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xfmg.XynaFactoryManagement;
 import com.gip.xyna.xfmg.exceptions.XFMG_NoSuchRevision;
@@ -74,6 +75,7 @@ import com.gip.xyna.xprc.xpce.monitoring.EngineSpecificStepHandlerManager.Dynami
 import com.gip.xyna.xprc.xpce.parameterinheritance.ParameterInheritanceManagement;
 import com.gip.xyna.xprc.xpce.parameterinheritance.ParameterInheritanceManagement.ParameterType;
 import com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule;
+import com.gip.xyna.xprc.xpce.parameterinheritance.rules.XynaPropertyInheritanceRule;
 import com.gip.xyna.xprc.xprcods.orderarchive.OrderArchive;
 import com.gip.xyna.xprc.xprcods.orderarchive.OrderArchive.ProcessStepHandlerType;
 import com.gip.xyna.xprc.xprcods.workflowdb.WorkflowDatabase;
@@ -217,8 +219,10 @@ public class MonitoringDispatcher extends FunctionGroup {
     logger.info("Shutting down FunctionGroup " + getClass().getSimpleName());
     storeDestinations();
   }
-
-
+  
+  //propertyname -> lastlogmessage-timestamp. timeoutmap damit kein memoryleak entsteht
+  private final TimeoutMap<String, Long> invalidPropertyValuesLogs = new TimeoutMap<>();
+  
   /**
    * Sets monitoring settings for the passed XynaOrder according to specific configuration (per destination key) or
    * according to the default settings
@@ -234,19 +238,38 @@ public class MonitoringDispatcher extends FunctionGroup {
     ParameterInheritanceManagement parameterInheritanceMgmt = XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getParameterInheritanceManagement();
     InheritanceRule rule = parameterInheritanceMgmt.getPreferredMonitoringLevelRule(xo);
 
-    if (rule == null || rule.getValueAsInt() == null) {
-      xo.setMonitoringLevel(XynaProperty.XYNA_DEFAULT_MONITORING_LEVEL.get());
-      if (logger.isDebugEnabled()) {
-        logger.debug("No monitoring code found for order type " + key.getOrderType() + ", using default <"
-            + xo.getMonitoringCode() + ">.");
+    try {
+      if (rule == null || rule.getValueAsInt() == null) {
+        xo.setMonitoringLevel(XynaProperty.XYNA_DEFAULT_MONITORING_LEVEL.get());
+        if (logger.isDebugEnabled()) {
+          logger
+              .debug("No monitoring code found for order type " + key.getOrderType() + ", using default <" + xo.getMonitoringCode() + ">.");
+        }
+      } else {
+        Integer monitoringLevel = rule.getValueAsInt();
+        if (logger.isDebugEnabled()) {
+          logger.debug("Using monitoring code <" + monitoringLevel + "> for order type " + key.getOrderType());
+        }
+        xo.setMonitoringLevel(monitoringLevel);
       }
-    } else {
-      Integer monitoringLevel = rule.getValueAsInt();
-      if (logger.isDebugEnabled()) {
-        logger.debug("Using monitoring code <" + monitoringLevel + "> for order type " + key.getOrderType());
+    } catch (NumberFormatException e) {
+      if (rule instanceof XynaPropertyInheritanceRule) {
+        String propertyName = ((XynaPropertyInheritanceRule) rule).getPropertyName();
+        Long last = invalidPropertyValuesLogs.get(propertyName);
+        if (last == null) {
+          last = 0L;
+        }
+        long now = System.currentTimeMillis();
+        long maxLogInterval = 3600L * 1000 * 6;
+        if (now - last > maxLogInterval) {
+          invalidPropertyValuesLogs.replace2(propertyName, now, 2 * maxLogInterval);
+          logger.warn("Could not use value of Xyna Property " + propertyName + " as a Monitoring Level used by "
+              + xo.getDestinationKey().getOrderType() + ", because it is not a number (logmessage will not repeat for some time).");
+        }
+        xo.setMonitoringLevel(XynaProperty.XYNA_DEFAULT_MONITORING_LEVEL.get());
+      } else {
+        throw e; //not expected
       }
-      xo.setMonitoringLevel(monitoringLevel);
-      //hier müssen keine handler registriert werden, das ist bereits bei der konfiguration des monitoringcodes passiert
     }
 
     xo.setMonitoringLevelAlreadyDiscovered(true);

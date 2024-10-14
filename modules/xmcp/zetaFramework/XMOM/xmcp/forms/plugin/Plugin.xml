@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Storable" BaseTypePath="xnwh.persistence" IsAbstract="false" Label="Plugin" TypeName="Plugin" TypePath="xmcp.forms.plugin" Version="1.8">
+ --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Plugin" TypeName="Plugin" TypePath="xmcp.forms.plugin" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
@@ -39,12 +39,9 @@
     </Meta>
   </Data>
   <Data Label="Plugin RTC" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="pluginRTC"/>
-  <Data Label="Unique Identifier" VariableName="uniqueIdentifier">
+  <Data Label="Path" VariableName="path">
     <Meta>
-      <Persistence>
-        <Type>UniqueIdentifier</Type>
-      </Persistence>
-      <Type>long</Type>
+      <Type>String</Type>
     </Meta>
   </Data>
 </DataType>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="4" Label="Build TableInfo" TypeName="BuildTableInfo" TypePath="xdev.xtestfactory.infrastructure.gui" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,vScroll(534)</FixedDetailOptions>
+    <Documentation>Falls TableInfo leer, befüllen.</Documentation>
+  </Meta>
+  <Operation ID="3" Label="Build TableInfo" Name="BuildTableInfo">
+    <Meta>
+      <FixedDetailOptions>openDocumentation</FixedDetailOptions>
+      <Abstract.UID>EBB59605-9687-9B2E-C8B6-6506F44A2A3A</Abstract.UID>
+    </Meta>
+    <Input>
+      <Data ID="139" Label="Entry" ReferenceName="Entry" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="entry">
+        <Target RefID="137"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="0" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo202">
+        <Source RefID="5"/>
+      </Data>
+    </Output>
+    <Function ID="137" Label="Inspect Datatype">
+      <Source RefID="139"/>
+      <Source RefID="19"/>
+      <Target RefID="138"/>
+      <Target RefID="19"/>
+      <Invoke Operation="inspectDatatype" ServiceID="19">
+        <Source RefID="139"/>
+      </Invoke>
+      <Receive ServiceID="19">
+        <Target RefID="138"/>
+      </Receive>
+    </Function>
+    <Mappings ID="10" Label="Mapping">
+      <Source RefID="138"/>
+      <Target RefID="22"/>
+      <Meta>
+        <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="99" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector"/>
+        <Source RefID="138"/>
+      </Input>
+      <Output>
+        <Data ID="100" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember"/>
+        <Target RefID="22"/>
+      </Output>
+      <Mapping>%1%=%0%.listAllVariableMembers()</Mapping>
+    </Mappings>
+    <ServiceReference ID="19" Label="DOMInspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="137"/>
+      <Target RefID="137"/>
+    </ServiceReference>
+    <Data ID="22" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember22">
+      <Source RefID="10"/>
+      <Target RefID="79"/>
+    </Data>
+    <Foreach ID="79">
+      <Source RefID="22"/>
+      <Target RefID="104"/>
+      <InputList RefID="22">
+        <Data ID="78" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember78">
+          <Target RefID="40"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="104">
+        <Data ID="103" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn103">
+          <Source RefID="40"/>
+        </Data>
+      </OutputList>
+      <Mappings ID="40" Label="Mapping">
+        <Source RefID="78"/>
+        <Target RefID="103"/>
+        <Meta>
+          <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+        </Meta>
+        <Input>
+          <Data ID="41" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember41"/>
+          <Source RefID="78"/>
+        </Input>
+        <Output>
+          <Data ID="101" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn"/>
+          <Target RefID="103"/>
+        </Output>
+        <Mapping>%1%.name=%0%.label</Mapping>
+        <Mapping>%1%.path=%0%.varName</Mapping>
+      </Mappings>
+    </Foreach>
+    <Data ID="104" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn104">
+      <Source RefID="79"/>
+      <Target RefID="112"/>
+    </Data>
+    <Mappings ID="112" Label="Mapping">
+      <Source RefID="104"/>
+      <Target RefID="113"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="109" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn109"/>
+        <Source RefID="104"/>
+      </Input>
+      <Output>
+        <Data ID="118" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+        <Target RefID="113"/>
+      </Output>
+      <Mapping>%1%.columns=%0%</Mapping>
+    </Mappings>
+    <Data ID="113" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo113">
+      <Source RefID="112"/>
+      <Target RefID="125"/>
+    </Data>
+    <Mappings ID="125" Label="Mapping">
+      <Source RefID="113"/>
+      <Target RefID="127"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="124" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo124"/>
+        <Source RefID="113"/>
+      </Input>
+      <Output>
+        <Data ID="126" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo126"/>
+        <Target RefID="127"/>
+      </Output>
+      <Mapping>%1%=%0%</Mapping>
+      <Mapping>%1%.bootstrap="false"</Mapping>
+    </Mappings>
+    <Data ID="127" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo127">
+      <Source RefID="125"/>
+      <Target RefID="5"/>
+    </Data>
+    <Data ID="138" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector138">
+      <Source RefID="137"/>
+      <Target RefID="10"/>
+    </Data>
+    <Assign ID="5">
+      <Source RefID="127"/>
+      <Target RefID="0"/>
+      <Copy>
+        <Source RefID="127">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="0"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

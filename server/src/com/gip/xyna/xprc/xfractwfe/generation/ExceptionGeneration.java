@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -431,6 +431,9 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
       if (documentationElement != null) {
         setDocumentation(XMLUtils.getTextContent(documentationElement));
       }
+      
+      List<String> knownMetaTags = Arrays.asList(GenerationBase.EL.DOCUMENTATION);
+      unknownMetaTagsComponent.parseUnknownMetaTags(rootElement, knownMetaTags);
     }
   }
 

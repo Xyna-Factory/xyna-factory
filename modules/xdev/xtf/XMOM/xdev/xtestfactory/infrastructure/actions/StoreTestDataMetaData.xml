@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="674" Label="Store Test Data Meta Data" TypeName="StoreTestDataMetaData" TypePath="xdev.xtestfactory.infrastructure.actions" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,hideDetailAreas,vScroll(159)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Store Test Data Meta Data" Name="StoreTestDataMetaData">
+    <Input>
+      <Data ID="44" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData44">
+        <Target RefID="6"/>
+        <Target RefID="27"/>
+        <Target RefID="9"/>
+        <Target RefID="49"/>
+        <Target RefID="57"/>
+      </Data>
+      <Data ID="4" Label="Store parameter" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="storeParameter">
+        <Target RefID="6"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Failed To Determine Test Project" ReferenceName="FailedToDetermineTestProject" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestProject"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="52" Label="TestFactoryIntegration" ReferenceName="TestFactoryIntegration.TestFactoryIntegration" ReferencePath="xdev.xtestfactory.infrastructure.services">
+      <Source RefID="49"/>
+      <Target RefID="49"/>
+    </ServiceReference>
+    <ServiceReference ID="5" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="6"/>
+      <Source RefID="25"/>
+      <Target RefID="6"/>
+      <Target RefID="25"/>
+    </ServiceReference>
+    <ServiceReference ID="19" Label="Determine Current Test Project" ReferenceName="DetermineCurrentTestProject" ReferencePath="xdev.xtestfactory.infrastructure.util">
+      <Source RefID="20"/>
+      <Target RefID="20"/>
+    </ServiceReference>
+    <Choice ID="9" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="44"/>
+      <Input>
+        <Data ID="47" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData47"/>
+        <Source RefID="44"/>
+      </Input>
+      <Case ID="34" Label="true" Premise="%0%.iD&gt;&quot;0&quot;">
+        <Function ID="6" Label="Store">
+          <Source RefID="5"/>
+          <Source RefID="44"/>
+          <Source RefID="4"/>
+          <Target RefID="5"/>
+          <Invoke Operation="store" ServiceID="5">
+            <Source RefID="44"/>
+            <Source RefID="4"/>
+          </Invoke>
+          <Receive ServiceID="5"/>
+        </Function>
+        <Data ID="336" IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable336">
+          <Source RefID="9"/>
+        </Data>
+        <Assign ID="33"/>
+      </Case>
+      <Case ID="37" Label="false">
+        <Function ID="20" Label="Determine Current Test Project">
+          <Source RefID="19"/>
+          <Target RefID="19"/>
+          <Target RefID="21"/>
+          <Invoke Operation="DetermineCurrentTestProject" ServiceID="19"/>
+          <Receive ServiceID="19">
+            <Target RefID="21"/>
+          </Receive>
+        </Function>
+        <Mappings ID="27" Label="Mapping">
+          <Source RefID="21"/>
+          <Source RefID="44"/>
+          <Target RefID="24"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="35" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject"/>
+            <Source RefID="21"/>
+          </Input>
+          <Input>
+            <Data ID="43" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData"/>
+            <Source RefID="44"/>
+          </Input>
+          <Output>
+            <Data ID="29" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject29"/>
+            <Target RefID="24"/>
+          </Output>
+          <Mapping>%2%~=%0%</Mapping>
+          <Mapping>%2%.testDataMetaData~=append(%0%.testDataMetaData,%1%)</Mapping>
+        </Mappings>
+        <Function ID="25" Label="Store">
+          <Source RefID="5"/>
+          <Source RefID="24"/>
+          <Source RefID="26"/>
+          <Target RefID="5"/>
+          <Invoke Operation="store" ServiceID="5">
+            <Source RefID="24">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+            <Source RefID="26">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="5"/>
+        </Function>
+        <Assign ID="36"/>
+      </Case>
+    </Choice>
+    <Choice ID="57" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="44"/>
+      <Input>
+        <Data ID="665" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData665"/>
+        <Source RefID="44"/>
+      </Input>
+      <Case ID="55" Label="true" Premise="length(%0%.testDataFullQualifiedStorableName)&gt;&quot;0&quot;&amp;&amp;&quot;false&quot;">
+        <Function ID="49" Label="Configure ODS Name">
+          <Source RefID="52"/>
+          <Source RefID="44"/>
+          <Target RefID="52"/>
+          <Meta>
+            <FixedDetailOptions>openDocumentation</FixedDetailOptions>
+            <FixedWidth>132</FixedWidth>
+            <FixedHeight>32</FixedHeight>
+            <Documentation>This action has been deactivated due to issue OP-3706.</Documentation>
+          </Meta>
+          <Invoke Operation="configureODSName" ServiceID="52">
+            <Source RefID="44"/>
+          </Invoke>
+          <Receive ServiceID="52"/>
+        </Function>
+        <Assign ID="666"/>
+      </Case>
+      <Case ID="56" Label="false">
+        <Assign ID="667"/>
+      </Case>
+    </Choice>
+    <Data ID="21" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject38">
+      <Source RefID="20"/>
+      <Target RefID="27"/>
+    </Data>
+    <Data ID="24" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject0">
+      <Source RefID="27"/>
+      <Target RefID="25"/>
+    </Data>
+    <Data ID="26" Label="Store parameter" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="storeParameter26">
+      <Target RefID="25"/>
+      <Data ID="38" Label="Historize previous object" VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="39" Label="Keep meta field data" VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="40" Label="Force recursive store" VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+    </Data>
+    <Assign ID="2"/>
+  </Operation>
+</Service>

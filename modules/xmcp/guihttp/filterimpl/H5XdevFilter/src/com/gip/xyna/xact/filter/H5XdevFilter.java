@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,10 +38,20 @@ import com.gip.xyna.xact.filter.actions.auth.LogoutAction;
 import com.gip.xyna.xact.filter.actions.auth.SharedLoginAction;
 import com.gip.xyna.xact.filter.actions.auth.utils.AuthUtils;
 import com.gip.xyna.xact.filter.actions.generateinput.GenerateinputAction;
+import com.gip.xyna.xact.filter.actions.libraries.JavaLibAddAction;
+import com.gip.xyna.xact.filter.actions.libraries.JavaLibDeleteAction;
+import com.gip.xyna.xact.filter.actions.libraries.PythonLibAddAction;
+import com.gip.xyna.xact.filter.actions.libraries.PythonLibDeleteAction;
+import com.gip.xyna.xact.filter.actions.listpaths.DatatypesAction;
+import com.gip.xyna.xact.filter.actions.listpaths.ExceptionsAction;
+import com.gip.xyna.xact.filter.actions.listpaths.WorkflowsAction;
+import com.gip.xyna.xact.filter.actions.metatags.MetaTagAddAction;
+import com.gip.xyna.xact.filter.actions.metatags.MetaTagRmvAction;
 import com.gip.xyna.xact.filter.actions.monitor.AuditsOrderIdDownloadAction;
 import com.gip.xyna.xact.filter.actions.monitor.ImportedAuditsAction;
 import com.gip.xyna.xact.filter.actions.monitor.OpenAuditAction;
 import com.gip.xyna.xact.filter.actions.orderinputdetails.OrderinputdetailsAction;
+import com.gip.xyna.xact.filter.actions.startorder.Endpoint;
 import com.gip.xyna.xact.filter.actions.startorder.StartorderAction;
 import com.gip.xyna.xact.filter.actions.starttestcase.StarttestcaseAction;
 import com.gip.xyna.xact.filter.actions.xacm.CreateUserAction;
@@ -52,6 +62,7 @@ import com.gip.xyna.xact.filter.util.Utils;
 import com.gip.xyna.xact.filter.util.xo.DomOrExceptionStructure;
 import com.gip.xyna.xact.filter.util.xo.DomOrExceptionSubtypes;
 import com.gip.xyna.xact.filter.util.xo.ServiceSignature;
+import com.gip.xyna.xact.filter.xmom.datatypes.json.GuiHttpPluginManagement;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
 import com.gip.xyna.xdev.xfractmod.xmdm.ConnectionFilter;
@@ -67,6 +78,7 @@ import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.UserType;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBuilds;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyDuration;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyInt;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyString;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
@@ -113,6 +125,22 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
       .setDefaultDocumentation(DocumentationLanguage.EN, "compress response of requests using gzip, if supported by caller")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Komprimiere Antworten mit gzip, wenn es vom Aufrufer unterst�tzt wird");
   
+  public static final XynaPropertyBoolean STRICT_TRANSPORT_SECURITY = new XynaPropertyBoolean("xmcp.guihttp.sts", true)
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Send Session Cookie as __Secure- and add Strict-Transport-Security header")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Sende Session Cookie als __Secure- und f�ge Strict-Transport-Security header ein");
+
+  public static final XynaPropertyDuration STRICT_TRANSPORT_SECURITY_MAX_AGE = new XynaPropertyDuration("xmcp.guihttp.sts.maxage", "730 d" )
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Max-age of Strict-Transport-Security header.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Max-age des Strict-Transport-Security header.");
+
+  public static final XynaPropertyString VALIDATION_WORKFLOW = new XynaPropertyString("xmcp.guihttp.startorder.preprocess_workflow", "")
+      .setDefaultDocumentation(DocumentationLanguage.EN,
+                               "If set, all startorder Requests outside of guihttp are first processed by the given workflow. Inputs are Document and OrderType, output is Document. Format: <fqn>@<rtc>. <rtc> is either workspaceName or applicationName/versionName.")
+      .setDefaultDocumentation(DocumentationLanguage.DE,
+                               "Wenn gesetzt, werden alle startorder Requests au�erhalb von guihttp zuerst vom angegebenen Workflow verarbeitet. Inputs sind Document und Ordertype, Output ist Document. Format: <fqn>@<rtc>. <rtc> ist entweder workspaceName oder applicationName/versionName");
+
+
+
   private static class WorkspaceRevisionBuilder implements XynaPropertyBuilds.Builder<Long> {
 
     private RevisionManagement rm;
@@ -219,6 +247,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add(new DatatypesPathNameSaveAction(xmomGui));
     allFilterActions.add(new DatatypesPathNameDeployAction(xmomGui));
     allFilterActions.add(new DatatypesPathNameDeleteAction(xmomGui));
+    allFilterActions.add(new DatatypesPathNameReplaceAction(xmomGui));
     allFilterActions.add(new DatatypesPathNameRefactorAction(xmomGui));
     allFilterActions.add(new DatatypesPathNameObjectsIdRefactorAction(xmomGui));
     allFilterActions.add(new DatatypesPathNameUploadAction(xmomGui));
@@ -321,10 +350,16 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add(new WorkflowsPathNameObjectsIdConstant(xmomGui));
     allFilterActions.add(new WorkflowsPathNameObjectsIdConstantDelete(xmomGui));
     
+
+    allFilterActions.add(new WorkflowsPathNameObjectsIdModelledExpressions(xmomGui));
+    
     allFilterActions.add(new ClipboardAction(xmomGui));
     allFilterActions.add(new ClipboardClearAction(xmomGui));
 
     allFilterActions.add(new EventsUUIDAction(xmomGui));
+    allFilterActions.add(new ProjectEventsUUIDAction(xmomGui));
+    allFilterActions.add(new SubscribeProjectEventsAction(xmomGui));
+    allFilterActions.add(new UnsubscribeProjectEventsAction(xmomGui));
 
     allFilterActions.add(new RemoteDestinationsAction());
     
@@ -333,16 +368,17 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add(new OptionsAction(ACCESS_CONTROL_ALLOW_ORIGIN));
     allFilterActions.add(new IndexAction(allFilterActions, applicationVersion, NAME, BASE_PATH));
 
-    allFilterActions.add(new LoginAction());
-    allFilterActions.add(new InfoAction());
+    allFilterActions.add(new LoginAction(xmomGui));
+    allFilterActions.add(new InfoAction(xmomGui));
     allFilterActions.add(new LogoutAction());
     allFilterActions.add(new ExternalUserLoginInformationAction());
-    allFilterActions.add(new ExternalUserLoginAction());
+    allFilterActions.add(new ExternalUserLoginAction(xmomGui));
     allFilterActions.add(new ExternalCredentialsLoginAction());
-    allFilterActions.add(new SharedLoginAction());
+    allFilterActions.add(new SharedLoginAction(xmomGui));
     allFilterActions.add(new ChangePasswordAction());
 
-    allFilterActions.add(new StartorderAction());
+    StartorderAction soa = new StartorderAction();
+    allFilterActions.add(soa);
     allFilterActions.add(new StarttestcaseAction());
     allFilterActions.add(new OrderinputdetailsAction());
     allFilterActions.add(new GenerateinputAction());
@@ -357,6 +393,27 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add( new OpenAuditAction() );
     allFilterActions.add( new ImportedAuditsAction() );
     allFilterActions.add( new AuditsOrderIdDownloadAction() );
+    
+    allFilterActions.add( new EncodeAction() );
+    allFilterActions.add( new DecodeAction() );
+    
+    allFilterActions.add( new JavaLibAddAction(xmomGui) );
+    allFilterActions.add( new JavaLibDeleteAction(xmomGui) );    
+    allFilterActions.add( new PythonLibAddAction(xmomGui) );
+    allFilterActions.add( new PythonLibDeleteAction(xmomGui) );
+    
+    allFilterActions.add( new MetaTagAddAction(xmomGui) );
+    allFilterActions.add( new MetaTagRmvAction(xmomGui) );
+    
+    List<Endpoint> endpoints = new ArrayList<>();
+    for(FilterAction fa : allFilterActions) {
+      if(fa instanceof Endpoint) {
+        endpoints.add((Endpoint)fa);
+      }
+    }
+    
+    soa.setEndpoints(endpoints);
+    GuiHttpPluginManagement.getInstance().start();
 
     STATIC_FILES.registerDependency(UserType.Filter, NAME);
     ACCESS_CONTROL_ALLOW_ORIGIN.registerDependency(UserType.Filter, NAME);
@@ -364,6 +421,8 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     GENERATION_BASE_CACHE_SIZE.registerDependency(UserType.Filter, NAME);
     USE_CACHE.registerDependency(UserType.Filter, NAME);
     AVARCONSTANTS.registerDependency(UserType.Filter, NAME);
+    STRICT_TRANSPORT_SECURITY.registerDependency(UserType.Filter, NAME);
+    STRICT_TRANSPORT_SECURITY_MAX_AGE.registerDependency(UserType.Filter, NAME);
     
     super.onDeployment(triggerInstance);
   }
@@ -384,6 +443,8 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
       }
     }
     
+    GuiHttpPluginManagement.getInstance().stop();
+    
     super.onUndeployment(triggerInstance);
     
     STATIC_FILES.unregister();
@@ -392,6 +453,8 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     GENERATION_BASE_CACHE_SIZE.unregister();
     USE_CACHE.unregister();
     AVARCONSTANTS.unregister();
+    STRICT_TRANSPORT_SECURITY.unregister();
+    STRICT_TRANSPORT_SECURITY_MAX_AGE.unregister();
   }
 
 

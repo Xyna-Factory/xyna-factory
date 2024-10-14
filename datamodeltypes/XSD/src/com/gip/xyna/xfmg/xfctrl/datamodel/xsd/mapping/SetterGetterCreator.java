@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,6 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xfmg.xfctrl.datamodel.xsd.Constants;
-import com.gip.xyna.xfmg.xfctrl.datamodel.xsd.generation.XercesUtils;
 import com.gip.xyna.xfmg.xfctrl.datamodel.xsd.mapping.TypeConverterFactory.TypeConverter;
 import com.gip.xyna.xfmg.xfctrl.datamodel.xsd.mapping.exceptions.SetterGetterException;
 import com.gip.xyna.xfmg.xfctrl.datamodel.xsd.mapping.exceptions.SetterGetterException.SetterGetterFailure;
@@ -571,7 +570,7 @@ public class SetterGetterCreator {
           //Ansonsten Schreiben der String-Representation
           if( stringValue.contains("<") ) {
             try {
-              Document doc = XercesUtils.parseXml(stringValue);
+              Document doc = XMLUtils.parseString(stringValue);
               Element elVal = doc.getDocumentElement();
               //TODO namespaces umtragen?
               for( Element ev : XMLUtils.getChildElements(elVal) ) {

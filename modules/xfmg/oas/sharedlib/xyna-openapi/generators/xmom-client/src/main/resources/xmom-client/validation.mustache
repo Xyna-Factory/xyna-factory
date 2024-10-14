@@ -1,0 +1,63 @@
+{{!
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+}}
+// validate {{propClassName}}.{{propVarName}} of type {{#isPrimitive}}{{javaType}}{{/isPrimitive}}{{^isPrimitive}}{{propRefType}}{{/isPrimitive}}
+try {
+{{#isPrimitive}}
+    var validator_{{propVarName}} = {{validatorClassConstructor}};
+  {{#validatorConfig}}
+    validator_{{propVarName}}.{{.}};
+  {{/validatorConfig}}
+    result.getErrorMessages().addAll(validator_{{propVarName}}.checkValid());
+{{/isPrimitive}}
+{{^isPrimitive}}
+  {{^isList}}
+    {{propFQN}} {{propVarName}} = {{getPropVarName}};
+    if ({{propVarName}} != null) {
+      {{^isGenericJsonObject}}
+        result.getErrorMessages().addAll({{propVarName}}.validate().getErrorMessages());
+      {{/isGenericJsonObject}}
+    }{{#isRequired}} else {
+        result.getErrorMessages().add("{{propClassName}}.{{propVarName}}: Object of type {{propRefType}} is required but is null");
+    }{{/isRequired}}
+  {{/isList}}
+  {{#isList}}
+    List&lt;? extends {{propFQN}}&gt; {{propVarName}} = {{getPropVarName}};
+    if ({{propVarName}} != null) {
+        {{#minItems}}
+        if ({{propVarName}}.size() &lt; {{minItems}}) {
+          result.getErrorMessages().add("{{propClassName}}.{{propVarName}}: List of type {{propRefType}} must have at least {{minItems}} items but has fewer");
+        }
+        {{/minItems}}
+        {{#maxItems}}
+        if ({{propVarName}}.size() &gt; {{maxItems}}) {
+          result.getErrorMessages().add("{{propClassName}}.{{propVarName}}: List of type {{propRefType}} must not exceed {{maxItems}} items but has more");
+        }
+        {{/maxItems}}
+        {{^isGenericJsonList}}
+        for ({{propFQN}} obj : {{propVarName}}) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+        {{/isGenericJsonList}}
+    }{{#isRequired}} else {
+        result.getErrorMessages().add("{{propClassName}}.{{propVarName}}: List of type {{propRefType}} is required, but is null.");
+    }{{/isRequired}}
+  {{/isList}}
+{{/isPrimitive}}
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate {{propClassName}}.{{propVarName}}");
+}

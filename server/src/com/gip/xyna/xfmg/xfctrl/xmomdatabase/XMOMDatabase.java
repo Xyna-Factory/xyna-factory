@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package com.gip.xyna.xfmg.xfctrl.xmomdatabase;
 
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -103,7 +104,6 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.AssumedDeadlockExce
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.DeploymentMode;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.EL;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
-import com.gip.xyna.xprc.xfractwfe.generation.JavaOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.WF;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
@@ -206,6 +206,15 @@ public class XMOMDatabase extends FunctionGroup {
           return WORKFLOW;
         default :
           throw new IllegalArgumentException(type + " is not a XMOMType");
+      }
+    }
+
+
+    public static XMOMType getXMOMTypeByFile(File file) {
+      try (FileInputStream fis = new FileInputStream(file)) {
+        return XMOMType.getXMOMTypeByRootTag(XMLUtils.getRootElementName(fis));
+      } catch (Exception e) {
+        throw new RuntimeException(e);
       }
     }
   }
@@ -698,15 +707,7 @@ public class XMOMDatabase extends FunctionGroup {
       registerServiceGroup(dom, serviceName);
       List<Operation> operations = entry.getValue();
       if (operations != null) {
-        List<JavaOperation> javaOps = new ArrayList<JavaOperation>();
-        for (Operation op : operations) {
-          if (op instanceof JavaOperation) { // we're missing out on WorkflowCallInService
-            javaOps.add((JavaOperation)op);
-          }
-        }
-        if (javaOps.size() > 0) {
-          registerOperations(dom, serviceName, javaOps, previousOperations, xmomObjectsToFinishLater);
-        }
+        registerOperations(dom, serviceName, operations, previousOperations, xmomObjectsToFinishLater);
       }
     }
     return returnvalue;
@@ -917,7 +918,7 @@ public class XMOMDatabase extends FunctionGroup {
   }
 
 
-  private void registerOperations(DOM dom, String serviceName, Collection<JavaOperation> operations, Map<String, XMOMOperationDatabaseEntry> previousEntries, XMOMObjectSet xmomObjectsToFinishLater)
+  private void registerOperations(DOM dom, String serviceName, Collection<Operation> operations, Map<String, XMOMOperationDatabaseEntry> previousEntries, XMOMObjectSet xmomObjectsToFinishLater)
                   throws PersistenceLayerException, AssumedDeadlockException {
     if (logger.isDebugEnabled()) {
       logger.debug("registerOperations: " + dom.getOriginalFqName());
@@ -931,7 +932,7 @@ public class XMOMDatabase extends FunctionGroup {
           if (logger.isDebugEnabled()) {
             logger.debug("operation: " + operation.getName());
           }
-          XMOMOperationDatabaseEntry entry = new XMOMOperationDatabaseEntry(dom, serviceName, (JavaOperation) operation);
+          XMOMOperationDatabaseEntry entry = new XMOMOperationDatabaseEntry(dom, serviceName, operation);
           
           StorageAction action = examineExistingEntry(con, entry);
           if (action == StorageAction.discard) {

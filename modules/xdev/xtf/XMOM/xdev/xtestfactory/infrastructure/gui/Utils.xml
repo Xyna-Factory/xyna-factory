@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Utils" TypeName="Utils" TypePath="xdev.xtestfactory.infrastructure.gui" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>UtilsImpl.jar</Libraries>
+  <SharedLibraries>ZetaTools</SharedLibraries>
+  <Service Label="Utils" TypeName="Utils">
+    <Operation IsStatic="true" Label="Filter, limit and sort Storable" Name="filterLimitAndSortStorable">
+      <Input>
+        <Data IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable"/>
+        <Data Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable29"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return UtilsImpl.filterLimitAndSortStorable(storable, tableInfo);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Filter Storable" Name="filterStorable">
+      <Input>
+        <Data IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable11"/>
+        <Data Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return UtilsImpl.filterStorable(storable11, tableInfo);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Filter Variable Members" Name="filterVariableMembers">
+      <Input>
+        <Data IsList="true" Label="Variable Members" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember"/>
+        <Data IsList="true" Label="Names to remove" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Filtered Variable Members" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember30"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return UtilsImpl.filterVariableMembers(namedVariableMember, text);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Label to Java Name" Name="labelToJavaName">
+      <Input>
+        <Data Label="Label" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
+      </Input>
+      <Output>
+        <Data Label="Label" ReferenceName="Text" ReferencePath="base" VariableName="text35"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdev.xtestfactory.infrastructure.gui.UtilsImpl.labelToJavaName(text);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Limit Storable" Name="limitStorable">
+      <Input>
+        <Data IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable24"/>
+        <Data Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return UtilsImpl.limitStorable(storable24, tableInfo);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Sort Storable" Name="sortStorable">
+      <Input>
+        <Data IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable"/>
+        <Data Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable17"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return UtilsImpl.sortStorable(storable, tableInfo);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

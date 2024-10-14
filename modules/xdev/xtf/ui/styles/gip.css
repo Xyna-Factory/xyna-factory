@@ -1,0 +1,5329 @@
+/*
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ */
+/*
+Inhaltsverzeichnis:
+
+  1. Einleitung
+  2. Bildschirmschriftarten
+  3. - (Spare)
+  4. - (Spare)
+  5. XynaUtils-Flex
+    5.1 Button-Symbole
+    5.2 DataGrid
+  6. Allgemeine Komponenten
+    6.1 Flex-Komponenten
+    6.2 Farben und Kontraste
+    6.3 ApplicationWrapper
+    6.4 Popupfenster
+    6.5 TriptychonMouseOverLabel
+    6.6 Anwendungsknoepfe
+    6.7 Menueknoepfe
+    6.8 Kontextmenoeknoepfe
+    6.9 Menueleisten
+    6.10 Kontextmenueleisten
+    6.11 Tabellen
+    6.12 TabNavigator-basierte Applikation
+    6.13 TabNavigator/TabBar in Dialogen
+    6.14 Suchen-Knopf
+  7. Process Modeller
+    7.1 Modellierungsobjekte
+    7.2 Workflow Modeller
+    7.3 Data Type Modeller
+    7.4 Service Group Modeller
+    7.5 Coded Service Modeller
+    7.6 Mapping Modeller
+    7.7 Factory
+    7.8 Suche
+    7.9 Fabriknavigation
+    7.10 Drop Zone
+    7.11 Reporting
+    7.12 Sontiges
+  8. Process Monitor
+    8.1 Menueeintraege
+    8.2 Buttons und Symbole
+    8.3 Audit Trail
+  9. User Management
+    9.1 allgemein
+    9.2 Buttons und Symbole
+  10. Sequence Modeller
+    10.1 allgemein
+    10.2 Toolbarsymole
+    10.3 Zeichenflaeche
+  11. Topology Modeller 2
+    11.1 Zeichenflaeche
+    11.2 Palette
+    11.3 Overlays
+    11.4 Headers
+  12. Factory Manager
+    12.1 Menueeintraege
+    12.2 Order Type Manager
+    12.3 Capacity Manager
+    12.4 Administrative Veto Manager    
+    12.5 Workflow Manager 
+    12.6 Cron Like Orders Manager 
+    12.7 Time-Controlled Order Manager
+    12.8 Xyna Property Manager
+    12.9 Storable Instances Manager
+    12.10 Application Manager
+  13. Formulare
+    13.1 allgemein
+    13.2 Panels
+    13.3 Sub-Forms
+    13.4 Detailbereich in Applikationen
+    13.5 kompakter Detailbereich
+  14. Login
+  D. Deprecated
+	X. Testgebiet
+*/
+
+/******************************************************************************************************/
+/*** 0. Revision **************************************************************************************/
+/******************************************************************************************************/
+
+/*Bindet die Dateiinformationen zur SVN-Revision und Datum in das Stylesheet ein*/
+.XynaApplicationRevisionCloneProperty
+{
+  revision: "$Revision: 307436 $";
+  date: "$Date: 2022-02-16 10:17:45 +0100 (Mi, 16. Feb 2022) $";
+}
+
+/******************************************************************************************************/
+/*** 1. Einleitung ************************************************************************************/
+/******************************************************************************************************/
+/*
+Diese Datei bietet eine Reihe von Einstellungsmoeglichkeiten zum Veraendern des Aussehens der Anwendung.
+
+Die nachfolgende Liste fasst die wichtigsten Anpassungsmoeglichkeiten fuer Komponenten (z.B. Knoepfe,
+Beschriftungen) zusammen:
+  - Farben (standard, Mouseover, ausgewaehlt, etc.)
+  - Alphawerte
+  - Schriftfarben, -typen, -groessen, etc.
+  - Formen (abgerundete Ecken)
+  - uvm.
+  
+Einige Schaltflaechen nehmen kleine Bilddateien, sogenannte Icons, auf. Diese koennen ebenfalls
+ausgetauscht werden. 
+Namenskonvention der einzubindenden Dateien:
+  Stylename_styleEigenschaft.endung
+Der Stylename entspricht dabei fast immer dem Programminternen Klassennamen einer Komponente.
+Beispiel:
+  Application
+  {
+    logoImage: Embed(source="Application_logoImage.png");
+  }
+Die Klasse InterfaceTab weist einem ihrer Buttons den nachfolgenden Style zu:
+  Button.InterfaceTabAdd
+  {
+    icon: Embed(source="InterfaceTabAdd_icon.svg");
+  }
+
+Komponenten lassen sich mit benutzerdefinierten Effekten ausstatten (z.B. Einblendeffekte).
+Beispiel:
+  InterfaceTab
+  {
+    creationCompleteEffect: Fade;
+  }
+
+Es koennen Bildschirmschriftarten fest in ein Stylesheet eingebunden werden, so dass diese nicht auf
+dem Zielbetriebssystem installiert sein muessen (siehe auch Kapitel 2).
+*/
+
+
+/******************************************************************************************************/
+/*** 2. Bildschirmschriftarten ************************************************************************/
+/******************************************************************************************************/
+/*
+Es ist moeglich, Bildschirmschriftarten in ein Stylesheet fest einzubetten, so dass diese nicht auf dem
+Zielbetriebssystem installiert sein muessen. Eingebettete Schriftarten werden von Adobe Flash gerendert,
+whrend alle anderen vom Betriebssystem gerendert werden. Damit man mit Flash Dinge wie halbtransparente
+oder gedrehte Schriftzuege realisieren kann, muessen diese durch Flash gerendert, also eingebettet werden.
+
+Die folgenden Befehle definieren eine sogenannte Schriftart-Familie, bestehend aus einer Schriftart mit
+dicker und einer mit duenner Schrift (fontWeight). Mit src:local bettet man Systemschriftarten ein.
+Mit src:url kann man aber auch von einer URL oder aus dem Dateisystem Schriften einbetten. 
+*/
+
+@font-face
+{
+  src:url("tahoma.ttf");
+  fontFamily: commonFontFamily;
+  fontWeight: normal;
+  advancedAntiAliasing: true;
+}
+
+@font-face
+{ 
+  src:url("tahomabd.ttf");
+  fontFamily: commonFontFamily;
+  fontWeight: bold;
+  advancedAntiAliasing: true;
+}
+
+@font-face
+{
+  src:url("resource.ttf");
+  fontFamily: pixelFontFamily;
+  fontWeight: normal;
+  advancedAntiAliasing: false;
+}
+
+@font-face
+{
+  src:url("consola.ttf");
+  fontFamily: ConsolasEmbedded;
+  fontWeight: normal;
+  advancedAntiAliasing: false;
+}
+
+@font-face
+{ 
+  src:url("consolab.ttf");
+  fontFamily: ConsolasEmbedded;
+  fontWeight: bold;
+  advancedAntiAliasing: false;
+}
+
+
+/*
+Anti-Aliasing bei Bildschirmschriften:
+
+Beim Rendern von Schriftzeichen durch Adobe Flash findet stets eine Kantenglttung (Anti-Aliasing) statt,
+die sich, anders als bei Kantenglttungen durch das Betriebssystem, nicht deaktivieren lsst. Da die
+Kantenglttung durch Flash je nach Schriftart mehr oder weniger gut aussieht, sollte man diese nicht
+pauschal fuer alle Komponenten aktivieren, bzw. die Darstellung mittels Vernderung von Parametern wie
+fontSharpness und fontThickness optimieren.
+
+Im Folgenden sind verschiedene Einstellungsvarianten fuer die Schriftart Tahoma aufgelistet: 
+- Schriften werden durch das Betriebssystem gerendert:
+  fontFamily: Tahoma;
+  fontAntiAliasType: normal;
+
+- Schriften mit Anti-Aliasing (durch Flash gerendert):
+  fontFamily: commonFontFamily;
+  fontAntiAliasType: normal;
+
+- Schriften mit optimiertem Anti-Aliasing (durch Flash gerendert):
+  fontFamily: commonFontFamily;
+  fontAntiAliasType: advanced;
+  fontSharpness: 100;
+  fontThickness: -100;
+  kerning: true;
+  letterSpacing: 0.25;
+  leading: 0;
+  
+Diese Einstellungen koennen fuer die jeweiligen Komponenten, aber NICHT im "@font-face"-Teil vorgenommen werden.
+Beispiel fuer einen Knopf mit schwarzer Tahoma-Schrift und optimierter Kantenglttung:
+  Button
+  {
+    fontFamily: commonFontFamily;
+    fontSize: 11;
+    fontWeight: bold;
+    color: #000000;
+    fontAntiAliasType: advanced;
+    fontSharpness: 100;
+    fontThickness: -100;
+    kerning: true;
+    letterSpacing: 0.25;
+    leading: 0;
+  }
+*/
+
+
+/******************************************************************************************************/
+/*** 5. XynaUtils-Flex ********************************************************************************/
+/******************************************************************************************************/
+
+/*** 5.1 Button-Symbole *******************************************************************************/
+/*Hier wird das Aussehen von Knoepfen definiert, die bestimmte Standardaufgaben ausfuehren sollen, z.B.
+Schliessen, Loeschen, etc.*/
+
+/*Pfeil-Knopf (nach Osten)*/
+ButtonArrowE
+{
+  icon: Embed(source="/common/ButtonArrowE_icon.svg");
+}
+
+/*Pfeil-Knopf (nach Norden)*/
+ButtonArrowN
+{
+  icon: Embed(source="/common/ButtonArrowN_icon.svg");
+}
+
+/*Pfeil-Knopf (nach Sueden)*/
+ButtonArrowS
+{
+  icon: Embed(source="/common/ButtonArrowS_icon.svg");
+}
+
+/*Pfeil-Knopf (nach Westen)*/
+ButtonArrowW
+{
+  icon: Embed(source="/common/ButtonArrowW_icon.svg");
+}
+
+/*** 5.2 DataGrid *************************************************************************************/
+/*Alle Definitionen rund um DataGrids (Tabelle-Komponenten und Tabellen-Elemente) in den XynaUtils-Flex
+Package: com.gip.xyna.utils.flex.gui.datagrid
+*/
+
+/*Ankreuzbox in einer Tabelle*/
+CheckBox.checkBoxTable
+{
+  fillAlphas: 1.0, 1.0;
+  fillColors: #FFFFFF, #C5C5C5;
+  borderColor: #000000;
+}
+
+
+/******************************************************************************************************/
+/*** 6. Allgemeine Komponenten ************************************************************************/
+/******************************************************************************************************/
+
+/*** 6.1 Flex-Komponenten *****************************************************************************/
+/*Definitionen zur Vernderung des Aussehens von Komponenten des Flex-Frameworks.*/
+
+/*Anwendungsfenster*/
+Application
+{
+  /*Hintergrundfarb- und Alphawerte*/
+  backgroundGradientColors: #5f5f5f, #000000;
+  backgroundGradientAlphas: 1.0, 1.0;
+  
+  fontSize: 12;
+  color: #000000;
+  themeColor: #FABB00;
+  
+  fontFamily: commonFontFamily;
+}
+
+/*Knopfleiste*/
+ApplicationControlBar
+{
+  fillAlphas: 0.5, 1.0;
+  fillColors: #9CC0E2, #97BADA;
+}
+
+Alert, Panel
+{
+  color: #000000;
+  backgroundColor: #959595;
+  backgroundAlpha: 1;
+  borderColor: #959595;
+  borderAlpha: 1;
+  dropShadowEnabled: false;
+}
+
+Alert
+{
+  backgroundColor: #FFFFFF;
+  
+  fontGridFitType: subpixel;
+  fontSharpness: 200;
+  letterSpacing: 0.04;
+}
+
+/*Knopf*/
+Button, Button2, ButtonBarButton, ComboBox, Tab, Alert.alertButtonStyle
+{
+  /*
+  Lighter
+  color: #2D2D2E;*/
+  color: #000000;
+  disabledColor: #76767A;
+  textRollOverColor: #000000;
+  textSelectedColor: #000000;
+  
+  fontSize: 11;
+  fontWeight: normal;
+  fontSharpness: 300;
+  leading: 0;
+  horizontalGap: 1;
+  letterSpacing: 0.04;
+  
+  cornerRadius: 4;
+  borderColorUp: #76767A;
+  borderColorOver: #2D2D2E;
+  borderColorDown: #76767A;
+  borderColorDisabled: #8B8B8C;
+  /*
+Lighter
+	backgroundColorUp: #959595;
+  backgroundColorOver: #BABABA;
+  backgroundColorDown: #959595;
+  backgroundColorDisabled: #959595;*/
+  themeColor: #959595;
+  textToggleSelectedColor: #959595;
+  backgroundColorUp: #CDCDCD;
+  backgroundColorOver: #FFFFFF;
+  backgroundColorDown: #CDCDCD;
+  backgroundColorDisabled: #CDCDCD;
+  
+  
+  paddingTop: 0;
+  paddingBottom: 0;
+  paddingLeft: 8;
+  paddingRight: 8;
+  
+  skin: ClassReference("skins.ButtonSkin");
+  
+  /*Alphawert des Fokusindikators*/
+  focusAlpha: 1;
+  focusThickness: 1;
+  
+}
+
+/*Tab
+ACHTUNG: Diese Styledefinition muss nach der von
+Button stehen, da hier ebenfalls Tab noch definiert wurde*/
+Tab, Tab.activeTabStyle
+{
+  fontWeight: normal;
+  skin: ClassReference("skins.TabSkin");
+}
+
+/*Buttons with icons*/
+Button.toggleButtonBarUserManLockingFirstButton,
+Button.toggleButtonBarUserManLockingLastButton
+{
+  paddingLeft: 5;
+}
+
+/*Knopfleiste*/
+ButtonBarButton
+{
+  skin: ClassReference("skins.ButtonBarButtonSkin");
+}
+
+ButtonBar, TabBar, ToggleButtonBar
+{
+  fontWeight: normal;
+  horizontalGap: 0;
+  selectedTabTextStyleName: activeTabStyle;
+}
+
+/* Container-Komponente und/oder Zeichenflche*/
+Canvas
+{
+  /*Farbe des Randes eines Canvas (sofern aktiviert)*/
+  borderColor: #ffffff;
+}
+
+/*Diagramme-Grundklasse*/
+ChartBase
+{
+  color: #FFFFFF;
+}
+
+/*Ankreuzbox (uebernimmt zunaechst auch die Styleeigenschaften von Button)*/
+CheckBox
+{
+  fontSize: 12;
+  
+  fillAlphas: 1.0, 1.0;
+  fillColors: #FFFFFF, #C5C5C5;
+  borderColor: #000000;
+  textSelectedColor: #FABB00;
+  textRollOverColor: #000000;
+  
+  fontSharpness: 0;
+  leading: 2;
+  letterSpacing: 0;
+  horizontalGap: 2;
+}
+
+CheckBox.brightCheckBox
+{
+  color: #FFFFFF;
+  textSelectedColor: #FFFFFF;
+  textRollOverColor: #FFFFFF;
+}
+
+/*herunterklappendes Auswahlmenue mit Knopf zum herunterklappen*/
+ComboBox
+{
+  fontSize: 12;
+  
+  cornerRadius: 5;
+  paddingTop: -3;
+  paddingBottom: -2;
+  paddingLeft: 4;
+  paddingRight: 4;
+  
+  textInputStyleName: comboBoxTextInput;
+  skin: ClassReference("skins.ComboBoxSkin");
+}
+
+ComboBox.brightComboBox
+{
+  backgroundColorUp: #FFFFFF;
+  backgroundColorOver: #FFFFFF;
+  backgroundColorDown: #FFFFFF;
+}
+
+/*angezeigtes Auswahlmenue*/
+List.comboBoxDropdown
+{
+  backgroundColor: #2D2D2E;
+  fontWeight: normal;
+  color: #FFFFFF;
+  
+  selectionColor: #C6C6C6;
+  rollOverColor: #ffffff;
+  textRollOverColor: #2D2D2E;
+  
+  alternatingItemColors: #2D2D2E, #2D2D2E;
+}
+
+AutocompletionInput
+{
+  dropdownStyleName: comboBoxDropdown;
+}
+
+TextInput.comboBoxTextInput
+{
+  borderSides: "left top bottom";
+  cornerRadius: 0;
+  disabledColor: 000000;
+}
+
+FormHeading
+{
+  fontSize: 15;
+}
+
+/*Beschriftungstext*/
+Label
+{
+  /*Alphawert des Fokusindikators (gilt nur, falls ein Label selectable ist)*/
+  focusAlpha: 1;
+  focusThickness: 1;
+}
+
+LinkButton
+{
+  fontSize: 15;
+}
+
+NumericStepper
+{
+  cornerRadius: 0;
+  
+  /*Alphawert des Fokusindikators*/
+  focusAlpha: 1;
+  focusThickness: 1;
+}
+
+/*Punkte-Diagramm*/
+PlotChart
+{
+  color: #000000;
+  itemSelectionColor: #CF223F;
+  axisTitleStyleName: axisTitle;
+}
+
+/*Punkte-Diagramm*/
+PlotChart.printPlotChart
+{
+  color: #000000;
+  itemSelectionColor: #CF223F;
+  axisTitleStyleName: axisTitle;
+}
+
+.axisTitle
+{
+  fontSize: 14;
+}
+
+/*Fortschrittsbalken*/
+ProgressBar
+{
+  /*Farbe des Fortschritts*/
+  barColor: #959595;
+  
+  /*Farbverlauf des noch zurueckzulegenden Wegs (oberer Farbwert, unterer Farbwert)*/
+  trackColors: #2D2D2E, #2D2D2E;
+  borderColor: #76767A;
+}
+
+/*Auswahlknopf*/
+RadioButton
+{
+  fillAlphas: 1.0, 1.0;
+  fillColors: #dddddd, #888888;
+  textRollOverColor: #FFFFFF;
+  textSelectedColor: #FFFFFF;
+}
+
+ScrollBar
+{
+  thumbColorUp: #535353;
+  thumbColorOver: #000000;
+  thumbColorDown: #535353;
+  thumbColorDisabled: #8B8B8C;
+  trackColor: #ABABAB;
+  cornerRadius: 5;
+  
+  thumbDownSkin: ClassReference("skins.ScrollThumbSkin");
+  thumbOverSkin: ClassReference("skins.ScrollThumbSkin");
+  thumbUpSkin: ClassReference("skins.ScrollThumbSkin");
+  thumbDisabledSkin: ClassReference("skins.ScrollThumbSkin");
+  
+  trackSkin: ClassReference("skins.ScrollTrackSkin");
+  downArrowSkin: ClassReference("skins.ScrollArrowSkin");
+  upArrowSkin: ClassReference("skins.ScrollArrowSkin");
+}
+
+TabNavigator
+{
+  backgroundColor: #959595;
+  horizontalGap: 0;
+  selectedTabTextStyleName: activeTabStyle;
+  tabStyleName: activeTabStyle;
+}
+
+/*TextArea: mehrzeiliges Texteingabefeld*/
+/*TextInput: einzeiliges Texteingabefeld*/
+TextArea,
+TextInput
+{
+  fontWeight: normal;
+  fontSharpness: 300;
+  leading: 0;
+  
+  cornerRadius: 5;
+  paddingTop: -1;
+  paddingBottom: -1;
+  paddingLeft: 2;
+  paddingRight: 2;
+  
+  color: #000000;
+  backgroundColor: #FFFFFF;
+  borderColor: #2D2D2E;
+  borderStyle: solid;
+  borderThickness: 1;
+  disabledColor: #76767A;
+  
+  /*Alphawert des Fokusindikators*/
+  focusAlpha: 1;
+  focusThickness: 1;
+}
+
+TextInput.filterEmpty
+{
+  color: #2D2D2E;
+  backgroundColor: #959595;
+  borderColor: #76767A;
+}
+
+TextInput.filterFilled
+{
+  color: #000000;
+  backgroundColor: #CDCDCD;
+  borderColor: #76767A;
+  disabledColor: #AAAAAA;
+}
+
+
+/*** 6.2 Farben und Kontraste *************************************************************************/
+/*Hier werden Farbwerte definiert die sich vom Anwendungshintergrund kontrastlich abheben sollen. Es wird 
+unterschieden zwischen dem Standard-Hintergrund einer Anwendung/Komponente oder einer kontrastlich
+invertierten Farbgebung des Hintergrundes.
+Beispiel: Der normale Anwendungshintergrund ist schwarz. Damit man Text lesen kann definiert man ihn
+          z.B. weiss. Ein Anwendungsteil hat eine hellgrau unterlegte Flaeche mit Test. Hierfuer
+          wird dann die Kontrast-Variante der Textfarbe gewaehlt, z.B. schwarz.
+*/
+
+CheckBox.TableCheckBox
+{
+  fontSize: 10;
+  color: #000000;
+  fillAlphas: 1.0, 1.0, 1.0, 1.0;
+  fillColors: #FFFFFF, #FFFFFF, #959595, #959595;
+  
+  textSelectedColor: #000000;
+  textRollOverColor: #000000;
+  
+  borderColor: #000000;
+}
+
+CheckBox.CheckBoxContrast
+{
+  color: #000000;
+  textSelectedColor: #000000;
+  textRollOverColor: #000000;
+}
+
+/*Schrift neben Checkboxen in Filterleisten-Dropdowns*/
+Label.comboBoxCheckBoxUpLabel
+{
+  fontSize: 10;
+  color: #000000;
+}
+
+/*Schrift neben Checkboxen in Filterleisten-Dropdowns*/
+Label.comboBoxCheckBoxOverLabel
+{
+  fontSize: 10;
+  color: #000000;
+}
+
+/*Farbe von Text im Druckmodus*/
+.TextColorPrint
+{
+  color: #000000;
+}
+
+
+/*** 6.3 ApplicationWrapper ***************************************************************************/
+
+.backgroundHeaderLogo
+{
+  backgroundImage: Embed(source="gip_iconlibrary.swf#giplogo_white");
+}
+
+.backgroundHeader
+{
+  backgroundColor: #2D2D2E;
+}
+
+.backgroundHeaderAndMenu
+{
+  backgroundImage: Embed(source="/background/Xyna-Development-Factory_layout_backgroundHeaderAndMenu.png");
+}
+
+.backgroundWallpaper
+{
+  /* Lighter
+  backgroundColor: #CDCDCD;*/
+  backgroundColor: #FFFFFF;
+}
+
+.backgroundFooter
+{
+}
+
+Label.labelHeaderTitle
+{
+  color: #ffffff;
+  fontSize: 18;
+  fontWeight: normal;
+}
+
+Button.buttonMainMenu
+{
+  upSkin: Embed(source="/menu/btn_mainmenu_out.png");
+  overSkin: Embed(source="/menu/btn_mainmenu_over.png");
+  downSkin: Embed(source="/menu/btn_mainmenu_over.png");
+}
+
+Button.buttonUserMenu
+{
+  color: #76767A;
+  textRollOverColor: #FFFFFF;
+  textSelectedColor: #FFFFFF;
+  
+  cornerRadius: 3;
+  
+  backgroundColorUp: #2D2D2E;
+  backgroundColorDown: #2D2D2E;
+  backgroundColorOver: #5A5A5D;
+  
+  borderThickness: 1;
+  borderColorUp: #76767A;
+  borderColorDown: #FFFFFF;
+  borderColorOver: #FFFFFF;
+  
+  icon: Embed(source="gip_iconlibrary.swf#but_user");
+  invertIcon: true;
+}
+
+/*** 6.4 Popupfenster *********************************************************************************/
+
+/*Aussehen eines Standard-Popup-Fensters*/
+Canvas.popupWindowCanvas
+{
+  cornerRadius: 6;
+  backgroundColor: #959595;
+  borderStyle: solid;
+  borderThickness: 1;
+  borderColor: #2D2D2E;
+}
+
+/*** 6.5 TriptychonMouseOverLabel *********************************************************************/
+
+HBox.TriptychonMouseOverLabel
+{
+  color: #ffffff;
+  fontSize: 18;
+  fontWeight: bold;
+  verticalAlign: middle;
+  
+  backgroundImageSource: Embed(source="/applicationicons/image_labelBackground.png");
+}
+
+.TriptychonMouseOverLabelProcessModeller
+{
+  icon: Embed(source="/applicationicons/icon_processmodeller.png");
+}
+
+.TriptychonMouseOverLabelProcessMonitor
+{
+  icon: Embed(source="/applicationicons/icon_processmonitor.png");
+}
+
+.TriptychonMouseOverLabelTopologyModeller
+{
+  icon: Embed(source="/applicationicons/icon_topologymodeller.png");
+}
+
+.TriptychonMouseOverLabelSequenceModeller
+{
+  icon: Embed(source="/applicationicons/icon_sequencemodeller.png");
+}
+
+.TriptychonMouseOverLabelFactoryManager
+{
+  icon: Embed(source="/applicationicons/icon_factorymanager.png");
+}
+
+.TriptychonMouseOverLabelUserManager
+{
+  icon: Embed(source="/applicationicons/icon_usermanager.png");
+}
+
+.TriptychonMouseOverLabelTestFactory
+{
+  icon: Embed(source="/applicationicons/icon_testfactory.png");
+}
+
+/*** 6.6 Anwendungsknoepfe ****************************************************************************/
+
+Button.buttonAdd
+{
+  icon: Embed(source="gip_iconlibrary.swf#but_add");
+}
+
+Button.buttonDelete
+{
+  icon: Embed(source="gip_iconlibrary.swf#but_delete");
+}
+
+Button.buttonDuplicate
+{
+  icon: Embed(source="gip_iconlibrary.swf#but_duplicate");
+}
+
+Button.buttonEdit
+{
+  icon: Embed(source="gip_iconlibrary.swf#but_edit");
+}
+
+Button.buttonRefresh
+{
+  icon: Embed(source="gip_iconlibrary.swf#but_refresh");
+}
+
+Button.buttonReset
+{
+  icon: Embed(source="gip_iconlibrary.swf#but_cancel");
+}
+
+Button.buttonResetFilter
+{
+  icon: Embed(source="gip_iconlibrary.swf#but_cancel");
+}
+
+Button.buttonImport
+{
+  icon: Embed(source="gip_iconlibrary.swf#but_upload");
+}
+
+Button.buttonExport
+{
+  icon: Embed(source="gip_iconlibrary.swf#but_download");
+}
+
+Button.buttonDetails
+{
+  icon: Embed(source="gip_iconlibrary.swf#but_infos");
+}
+
+Button.buttonPlay
+{
+  icon: Embed(source="gip_iconlibrary.swf#but_play");
+}
+
+Button.buttonStop
+{
+  icon: Embed(source="gip_iconlibrary.swf#but_stop");
+}
+
+Button.buttonDeploy
+{
+  icon: Embed(source="gip_iconlibrary.swf#but_deploy");
+}
+
+Button.buttonUndeploy
+{
+  icon: Embed(source="gip_iconlibrary.swf#but_stop");
+}
+
+Button.buttonChecked
+{
+  icon: Embed(source="gip_iconlibrary.swf#but_checked");
+}
+
+/*** 6.7 Menueknoepfe *******************************************************************************/
+
+/*Menueleistenknoepfe*/
+Button.buttonNewDocument,
+Button.buttonOpenDocument,
+Button.buttonSaveDocument,
+Button.buttonSaveAsDocument,
+Button.buttonDeployDocument,
+Button.buttonExportADL,
+Button.buttonUseLibrary,
+Button.buttonDownloadTemplate,
+Button.buttonAddAttribute,
+Button.buttonAddMethod,
+Button.buttonClose,
+Button.buttonUndo,
+Button.buttonRedo,
+Button.buttonCopy,
+Button.buttonPaste,
+Button.buttonSolveAmbiguities,
+Button.buttonPrint,
+Button.buttonPrintScreen,
+Button.buttonPrintPortrait,
+Button.buttonPrintLandscape,
+Button.buttonPrintScaleToWidth,
+Button.buttonPrintScaleToHeight,
+Button.buttonLeftArrow,
+Button.buttonRightArrow,
+Button.buttonAlign,
+Button.buttonMinimize,
+Button.buttonMaximize,
+{
+  themeColor: #FABB00;
+}
+
+Button.buttonNewDocument
+{
+  skin: Embed(source="gip_iconlibrary.swf#procmod_tb_newdocument");
+}
+
+Button.buttonOpenDocument
+{
+  upSkin: Embed(source="/menu/btn_open_out.png");
+  overSkin: Embed(source="/menu/btn_open_over.png");
+  downSkin: Embed(source="/menu/btn_open_over.png");
+  disabledSkin: Embed(source="/menu/btn_open_off.png");
+}
+
+Button.buttonSaveDocument
+{
+  skin: Embed(source="gip_iconlibrary.swf#procmod_tb_save");
+}
+
+Button.buttonSaveAsDocument
+{
+  skin: Embed(source="gip_iconlibrary.swf#procmod_tb_saveas");
+}
+
+Button.buttonDeployDocument
+{
+  skin: Embed(source="gip_iconlibrary.swf#procmod_tb_deploy");
+}
+
+Button.buttonExportADL
+{
+  skin: Embed(source="gip_iconlibrary.swf#procmod_tb_exportadl");
+}
+
+Button.buttonUseLibrary
+{
+  skin: Embed(source="gip_iconlibrary.swf#procmod_tb_library");
+}
+
+Button.buttonDownloadTemplate
+{
+  skin: Embed(source="gip_iconlibrary.swf#procmod_tb_downloadtemplate");
+}
+
+Button.buttonAddAttribute
+{
+  skin: Embed(source="gip_iconlibrary.swf#procmod_tb_member");
+}
+
+Button.buttonAddMethod
+{
+  skin: Embed(source="gip_iconlibrary.swf#procmod_tb_addinstanceservice");
+}
+
+Button.buttonClose
+{
+  skin: Embed(source="gip_iconlibrary.swf#procmod_tb_close");
+}
+
+Button.buttonUndo
+{
+  skin: Embed(source="gip_iconlibrary.swf#procmod_tb_undo");
+}
+
+Button.buttonRedo
+{
+  skin: Embed(source="gip_iconlibrary.swf#procmod_tb_redo");
+}
+
+Button.buttonCopy
+{
+  overSkin: Embed(source="/menu/btn_copy_over.png");
+  upSkin: Embed(source="/menu/btn_copy_out.png");
+  downSkin: Embed(source="/menu/btn_copy_over.png");
+  disabledSkin: Embed(source="/menu/btn_copy_off.png");
+}
+
+Button.buttonPaste
+{
+  overSkin: Embed(source="/menu/btn_paste_over.png");
+  upSkin: Embed(source="/menu/btn_paste_out.png");
+  downSkin: Embed(source="/menu/btn_paste_over.png");
+  disabledSkin: Embed(source="/menu/btn_paste_off.png");
+}
+
+Button.buttonSolveAmbiguities
+{
+  skin: Embed(source="gip_iconlibrary.swf#procmod_tb_issues");
+}
+
+Button.buttonPrint
+{
+  skin: Embed(source="gip_iconlibrary.swf#procmod_tb_print");
+}
+
+Button.buttonPrintScreen
+{
+  skin: Embed(source="gip_iconlibrary.swf#procmod_tb_screen");
+}
+
+Button.buttonPrintPortrait
+{
+  skin: Embed(source="gip_iconlibrary.swf#procmod_tb_portrait");
+}
+
+Button.buttonPrintLandscape
+{
+  skin: Embed(source="gip_iconlibrary.swf#procmod_tb_landscape");
+}
+
+Button.buttonPrintScaleToWidth
+{
+  skin: Embed(source="gip_iconlibrary.swf#procmod_tb_scalewidth");
+}
+
+Button.buttonPrintScaleToHeight
+{
+  skin: Embed(source="gip_iconlibrary.swf#procmod_tb_scaleheight");
+}
+
+Button.buttonLeftArrow
+{
+  overSkin: Embed(source="/menu/btn_left_over.png");
+  upSkin: Embed(source="/menu/btn_left_out.png");
+  downSkin: Embed(source="/menu/btn_left_over.png");
+  disabledSkin: Embed(source="/menu/btn_left_disable.png");
+}
+
+Button.buttonRightArrow
+{
+  overSkin: Embed(source="/menu/btn_right_over.png");
+  upSkin: Embed(source="/menu/btn_right_out.png");
+  downSkin: Embed(source="/menu/btn_right_over.png");
+  disabledSkin: Embed(source="/menu/btn_right_disable.png");
+}
+
+Button.buttonAlign
+{
+  overSkin: Embed(source="/menu/btn_align_over.png");
+  upSkin: Embed(source="/menu/btn_align_out.png");
+  downSkin: Embed(source="/menu/btn_align_over.png");
+  disabledSkin: Embed(source="/menu/btn_align_off.png");
+}
+
+Button.buttonMinimize
+{
+  icon: Embed(source="/common/iconBtn_minimize_out.png");
+  overIcon: Embed(source="/common/iconBtn_minimize_over.png");
+  downIcon: Embed(source="/common/iconBtn_minimize_disable.png");
+  paddingTop: 0;
+  paddingBottom: 0;
+  cornerRadius: 11;
+}
+
+Button.buttonMaximize
+{
+  icon: Embed(source="/common/iconBtn_maximize_out.png");
+  overIcon: Embed(source="/common/iconBtn_maximize_over.png");
+  downIcon: Embed(source="/common/iconBtn_maximize_disable.png");
+  paddingTop: 0;
+  paddingBottom: 0;
+  cornerRadius: 11;
+}
+
+/*rechte Menuesymbole im Process Modeller*/
+Button.menuFactoryButton,
+Button.menuSearchButton,
+Button.menuDetailsButton,
+Button.menuLauncherButton,
+Button.menuDeploymentStatusButton,
+Button.menuFavoritesButton,
+Button.menuGraphButton,
+Button.menuDataModelButton,
+Button.menuDebugButton
+{
+  themeColor: #FABB00;
+}
+
+Button.menuFactoryButton
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_nb_factory");
+}
+
+Button.menuSearchButton
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_nb_search");
+}
+
+Button.menuDetailsButton
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_nb_details");
+}
+
+Button.menuLauncherButton
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_nb_workflowtester");
+}
+
+Button.menuDeploymentStatusButton
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_deploy");
+}
+
+Button.menuFavoritesButton
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_nb_favorites");
+}
+
+Button.menuGraphButton
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_nb_depmap");
+}
+
+Button.menuDataModelButton
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_nb_schematic");
+}
+
+Button.menuDebugButton
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_portrait");
+}
+
+/*info, warning and error button icons*/
+Button.buttonInfo
+{
+  skin: Embed(source="gip_iconlibrary.swf#but_infos");
+}
+
+Button.buttonWarning
+{
+  skin: Embed(source="gip_iconlibrary.swf#but_warning");
+}
+
+Button.buttonError
+{
+  skin: Embed(source="gip_iconlibrary.swf#but_error");
+}
+
+Button.buttonGoTo
+{
+  skin: Embed(source="gip_iconlibrary.swf#but_goto");
+}
+
+Button.buttonDeleteSkin
+{
+  skin: Embed(source="gip_iconlibrary.swf#but_delete");
+}
+
+/*dragbare Menueleistenknoepfe im Process Modeller*/
+Button.buttonInsertAbstractService,
+Button.buttonInsertAbstractDataType,
+Button.buttonInsertTemplate,
+Button.buttonInsertStart,
+Button.buttonInsertSend,
+Button.buttonInsertRetrieve,
+Button.buttonInsertStop,
+Button.buttonInsertChoice,
+Button.buttonInsertChoiceFormula,
+Button.buttonInsertChoiceBranch,
+Button.buttonInsertThrow,
+Button.buttonInsertWait,
+Button.buttonInsertRetry,
+Button.buttonInsertOperator,
+Button.buttonInsertAwait,
+Button.buttonInsertNotify,
+Button.buttonInsertMI,
+Button.buttonInsertQuery,
+Button.buttonInsertQueryDelete,
+Button.buttonInsertQuerySave
+{
+  themeColor: #FABB00;
+  
+  borderColorUp: #76767A;
+  borderColorOver: #959595;
+  borderColorDown: #959595;
+  borderColorDisabled: #68686C;
+  backgroundColorUp: #5A5A5D;
+  backgroundColorOver: #5A5A5D;
+  backgroundColorDown: #5A5A5D;
+  backgroundColorDisabled: #5A5A5D;
+}
+
+Button.buttonInsertAbstractService
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_abstractservice");
+}
+
+Button.buttonInsertAbstractDataType
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_datatype");
+}
+
+Button.buttonInsertTemplate
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_template");
+}
+
+Button.buttonInsertStart
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_begindocument");
+}
+
+Button.buttonInsertSend
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_retrievedocument");
+}
+
+Button.buttonInsertRetrieve
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_retrievedocument");
+}
+
+Button.buttonInsertStop
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_enddocument");
+}
+
+Button.buttonInsertChoice
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_choice");
+}
+
+Button.buttonInsertChoiceFormula
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_conditionalchoice");
+}
+
+Button.buttonInsertChoiceBranch
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_choiceoptions");
+}
+
+Button.buttonInsertThrow
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_throw");
+}
+
+Button.buttonInsertWait
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_wait");
+}
+
+Button.buttonInsertRetry
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_retry");
+}
+
+Button.buttonInsertOperator
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_operator");
+}
+
+Button.buttonInsertAwait
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_await");
+}
+
+Button.buttonInsertNotify
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_notify");
+}
+
+Button.buttonInsertMI
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_manual");
+}
+
+Button.buttonInsertQuery
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_querystorable");
+}
+
+Button.buttonInsertQueryDelete
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_deletestorable");
+}
+
+Button.buttonInsertQuerySave
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_savestorable");
+}
+
+/*** 6.8 Kontextmenoeknoepfe ************************************************************************/
+
+Button.defaultMenuButton,
+Button.menuOpenButton,
+Button.menuCloseButton,
+Button.menuConvertButton,
+Button.menuDeleteButton, 
+Button.menuRefreshButton,
+Button.menuImportButton,
+Button.menuExportButton,
+Button.menuComboBoxButton
+{
+  cornerRadius: 3;
+  fillAlphas: 1.0, 1.0;
+  fillColors: #5B5A5A, #5B5A5A, #FFFFFF, #FFFAEF;
+  textSelectedColor: #2D2D2E;
+  highlightAlphas: 0, 0;
+  borderColor: #A09F9F;
+  textRollOverColor: #2D2D2E;
+  color: #FFFFFD;
+  
+  borderColorUp: #4D4C4E;
+  backgroundColorUp: #7B7A7C;
+  
+  themeColor: #FFFFFF;
+  
+  paddingLeft: 7;
+  paddingRight: 7;
+}
+
+Button.menuOpenButton
+{
+  icon: Embed(source="/menu/btn_open_out.png");
+}
+
+Button.menuCloseButton
+{
+  icon: Embed(source="/common/ButtonClose_icon.svg");
+}
+
+Button.menuConvertButton
+{
+  icon: Embed(source="/processmodeller/btn_convertobject.png");
+}
+
+Button.menuDeleteButton
+{
+  icon: Embed(source="gip_iconlibrary.swf#but_delete");
+}
+
+Button.menuRefreshButton
+{
+  icon: Embed(source="gip_iconlibrary.swf#but_refresh");
+}
+
+Button.menuImportButton
+{
+  themeColor: #FFFFFF;
+  
+  overSkin: Embed(source="/menu/btn_import_over.png");
+  upSkin: Embed(source="/menu/btn_import_out.png");
+  downSkin: Embed(source="/menu/btn_import_over.png");
+  disabledSkin: Embed(source="/menu/btn_import_out.png");
+}
+
+Button.menuExportButton
+{
+  themeColor: #FFFFFF;
+  
+  overSkin: Embed(source="/menu/btn_export_over.png");
+  upSkin: Embed(source="/menu/btn_export_out.png");
+  downSkin: Embed(source="/menu/btn_export_over.png");
+  disabledSkin: Embed(source="/menu/btn_export_off.png");
+}
+
+Button.menuComboBoxButton
+{
+  themeColor: #FABB00;
+  
+  color: #2D2D2E;
+  disabledColor: #76767A;
+  textRollOverColor: #000000;
+  textSelectedColor: #000000;
+
+  borderColorUp: #4D4C4E;
+  backgroundColorUp: #5a5a5d;
+  borderColorDisabled: #4D4C4E;
+  backgroundColorDisabled: #2D2D2E;
+}
+
+/*** 6.9 Menueleisten *********************************************************************************/
+
+/*Menueleiste*/
+Box.MenuBarHalfSideBox
+{
+  menuBackgroundColor: #5a5a5d;
+  menuBorderColor: #2d2d2e;
+  menuCornerRadius: 10;
+  
+  verticalGap: 6;
+}
+
+/*unsichbare Teilsegmente von Menueleisten*/
+Box.MenuBarSubMenuBox
+{
+  verticalGap: 6;
+}
+
+/*Toolbar-artige Untermenueleiste (klappt nach rechts aus)*/
+Box.defaultMenuPopupBar
+{
+  backgroundColor: #2D2D2E;
+}
+
+/*Untermenueeintrag einer ausgeklappten Menueleiste*/
+MenuEntry
+{
+  color: #000000;
+  textRollOverColor: #FFFFFF;
+  textSelectedColor: #FFFFFF;
+  textToggleSelectedColor: #FFFFFF;
+  /*themeColor: #FABB00*/
+  
+  skin: ClassReference("mx.skins.Border");
+  
+  paddingLeft: 0;
+  paddingRight: 0;
+  paddingTop: 0;
+  paddingBottom: 0;
+  textAlign: left;
+}
+
+/*PopupMenuButton:   Menue-Eintraege auf Top-Level mit Mouse-Over-Funktion (bei eingeklappter Menueleiste)*/
+/*LabeledMenuButton: Menue-Eintraege auf Top-Level mit Text (bei ausgeklappter Menueleiste)*/
+PopupMenuButton
+{
+  themeColor: #FFFFFF;
+}
+
+PopupMenuButton, LabeledMenuButton
+{
+  color: #C5C5C5;
+  textRollOverColor: #FFFFFF;
+  textSelectedColor: #FFFFFF;
+  textToggleSelectedColor: #FFFFFF;
+  /*themeColor: #FABB00*/
+  
+  skin: ClassReference("mx.skins.Border");
+  
+  paddingLeft: 0;
+  paddingRight: 0;
+  paddingTop: 0;
+  paddingBottom: 0;
+  textAlign: left;
+}
+
+/*Toolbar innerhalb von Menueleisten*/
+Box.toolBarPopupContainer
+{
+  backgroundColor: #5A5A5D;
+  borderColor: #2D2D2E;
+  borderStyle: solid;
+  borderSides: "right top bottom";
+}
+
+/*Hintergrund der Mouse-Over-Funktion von Menue-Eintraegen auf Top-Level*/
+Box.labeledPopupButtonBackgroundBox
+{
+  backgroundColor: #2D2D2E;
+  borderColor: #76767A;
+  borderStyle: solid;
+  borderThickness: 1;
+  cornerRadius: 6;
+  
+  horizontalGap: 6;
+  paddingLeft: 3;
+  paddingRight: 6;
+  paddingTop: 2;
+  paddingBottom: 2;
+}
+
+Box.labeledPopupButtonLeftBackgroundBox
+{
+  backgroundColor: #2D2D2E;
+  borderColor: #76767A;
+  borderStyle: solid;
+  borderThickness: 1;
+  cornerRadius: 6;
+  
+  horizontalGap: 6;
+  paddingLeft: 6;
+  paddingRight: 3;
+  paddingTop: 2;
+  paddingBottom: 2;
+}
+
+/*Untermenue einer ausgeklappten Menueleiste*/
+SubMenu
+{
+  borderColor: #000000;
+  /* Lighter 
+  backgroundColor: #76767A; */
+  backgroundColor: #959595;
+}
+
+/*ComboBox in der Menueleiste*/
+ComboBox.defaultMenuComboBox
+{
+  cornerRadius: 3;
+  fillAlphas: 1.0, 1.0;
+  fillColors: #5B5A5A, #5B5A5A, #FFFFFF, #FFFAEF;
+  textSelectedColor: #2D2D2E;
+  highlightAlphas: 0, 0;
+  borderColor: #A0A0A0;
+  
+  
+  textRollOverColor: #2D2D2E;
+  color: #FFFFFF;
+  
+  themeColor: #FFFFFF;
+  
+  paddingLeft: 7;
+  paddingRight: 7;
+  
+  fontSize: 16;
+  fontFamily: pixelFontFamily;
+  fontWeight: normal;
+  
+  fontAntiAliasType:normal;
+  kerning: false;
+  letterSpacing: 0;
+  
+  dropdownStyleName: defaultMenuComboBoxDropdown;
+}
+
+/*ausgeklapptes ComboBox-Auswahlmenue in der Menueleiste*/
+List.defaultMenuComboBoxDropdown
+{
+  backgroundColor: #2D2D2E;
+  fontWeight: normal;
+  color: #FFFFFF;
+  borderColor: #2D2D2E;
+  borderStyle: solid;
+  
+  selectionColor: #C6C6C6;
+  rollOverColor: #ffffff;
+  textRollOverColor: #2D2D2E;
+  
+  paddingTop: 0;
+  paddingBottom: -2;
+}
+
+/*Kontextmenueleiste*/
+Box.ContextMenuBarBox
+{
+  backgroundColor: #2D2D2E;
+  
+  borderThickness: 0;
+  borderStyle: none;
+  
+  cornerRadius: 3;
+  
+  paddingLeft: 1;
+  paddingRight: 1;
+  paddingTop: 1;
+  paddingBottom: 1;
+}
+
+/*Menueleisten-artiges Aussehen einer Box*/
+Box.MenuBarBox
+{
+  backgroundColor: #5A5A5B;
+  
+  borderColor: #aaaaaa;
+  borderStyle: solid;
+  borderThickness: 1;
+  
+  cornerRadius: 10;
+  
+  verticalGap: 6;
+}
+
+/*Batch von Menupunkten*/
+Canvas.MenuBarBatch
+{
+  color: #ffffff;
+  fontSize: 8;
+  backgroundColor: #000000;
+}
+
+/*** 6.10 Kontextmenueleisten **************************************************************************/
+
+List.ContextMenuList
+{
+  backgroundColor: #5D5D5E;
+  borderStyle: solid;
+  borderColor: #FFFFFF;
+  cornerRadius: 6;
+  
+  color: #FFFFFF;
+  rollOverColor: #FABB00;
+  disabledColor: #76767A;
+  selectionColor: #FABB00;
+  dividerColor: #76767A;
+  dividerThickness: 1;
+  
+  paddingLeft: 5;
+  paddingRight: 5;
+  paddingTop: 3;
+  paddingBottom: 1;
+}
+
+/*** 6.11 Tabellen *************************************************************************************/
+
+/*Tabelle*/
+AdvancedDataGrid, DataGrid, TableAdvancedDataGrid, Tree
+{
+  fontSize: 11;
+  color: #000000;
+  
+  selectionColor: #FABB00;
+  rollOverColor: #CDCDCD;
+
+  selectionDuration: 0;
+  
+  headerStyleName: dataGridHeader; 
+  
+  focusAlpha: 1;
+  focusThickness: 1;
+}
+
+Tree
+{
+  fontSize: 12;
+}
+
+/*Beschriftungszeile der Tabelle*/
+.dataGridHeader
+{
+  color: #000000;
+  paddingLeft: 2;
+  paddingRight: 2;
+  fontWeight: bold;
+}
+
+/*Farbe von Listen- oder Tabellentext*/
+.TableText
+{
+  fontSize: 10;
+  color: #000000;
+}
+
+.DarkTableText
+{
+  fontSize: 10;
+  color: #76767A;
+}
+
+/*Farbe von Listen- oder Tabellentext (monotyped)*/
+.FixedTableText
+{
+  fontSize: 12;
+  color: #000000;
+  fontFamily: "Courier New", "_typewriter";
+}
+
+/*** 6.12 TabNavigator-basierte Applikation **************************************************************************/
+
+TabNavigator.TableBasedApplicationTabNavigator
+{
+  tabHeight: 23;
+  paddingLeft: 6;
+  paddingRight: 6;
+  paddingBottom: 6;
+  paddingTop: 6;
+  borderStyle: solid;
+  borderColor: #2D2D2E;
+  
+  backgroundColor: #959595;
+  backgroundAlpha: 1;
+  
+  cornerRadius: 6;
+  tabOffset: 7;
+  horizontalGap: 0;
+  
+  tabStyleName: tableBasedApplicationTabNavigatorButton;
+}
+
+Button.tableBasedApplicationTabNavigatorButton
+{
+/*  borderColor: #aaaaaa;
+  textRollOverColor: #FFFFFF;*/
+  
+  upCloseIcon: Embed(source="/processmodeller/iconBtn_tabclose_up.png");
+  overCloseIcon: Embed(source="/processmodeller/iconBtn_tabclose_over.png");
+  downCloseIcon: Embed(source="/processmodeller/iconBtn_tabclose_down.png");
+}
+
+/*** 6.13 TabNavigator/TabBar in Dialogen *************************************************************/
+
+/*
+TabNavigator.DialogTabNavigator
+{
+  backgroundColor: #2D2D2E;
+  backgroundAlpha: 1;
+  tabStyleName: dialogTabNavigatorButton;
+}
+
+Button.dialogTabNavigatorButton
+{
+  textRollOverColor: #FFFFFF;
+}
+*/
+
+/*** 6.14 Suchen-Knopf ********************************************************************************/
+
+Button.SearchTextInputSearchButton
+{
+  skin: Embed(source="/menu/btn_search.png");
+  focusAlpha: 0;
+}
+
+Button.SearchTextInputClearButton
+{
+  skin: Embed(source="/menu/btn_clearsearch.png");
+  themeColor: #FFFFFF;
+}
+
+
+/******************************************************************************************************/
+/*** 7. Process Modeller ******************************************************************************/
+/******************************************************************************************************/
+
+/*Modellerierungsumgebung des Process Modeller*/
+XMOMModeller.XMOMModeller
+{
+  /*Farbe des Focusrahmens*/
+  focusColor: #FFFFFF;
+}
+
+.XFMDDetailPopupBox
+{
+  backgroundColor: #959595;
+  paddingTop: 2;
+  paddingBottom: 2;
+  paddingLeft: 2;
+  paddingRight: 2;
+}
+
+/*** 7.1 Modellierungsobjekte  ************************************************************************/
+
+/*Gesmatworkflow*/
+.XFMDWorkflow
+{
+  /*Hintergrundfarbe des Modellierungsbereichs*/
+  workingAreaBackgroundColor: #ffffff;
+  
+  /*Randfarbe des Gesmatworkflows*/
+  modellerBorderColor: #959595;
+  
+  /*zusaetzliche Randfarbe des Gesmatworkflows*/
+  modellerAdditionalBorderColor: #2D2D2E;
+  
+  /*Hintergrundfarbe der Parameterleisten*/
+  parameterBarBackgroundColor: #e6e6e6;
+  
+  /*Hintergrundfarbe des Labelbereichs*/
+  labelAreaBackgroundColor: #000000;
+  
+  /*Hintergrundfarbe des Dokumentationsbereichs*/
+  documentationAreaBackgroundColor: #ffffff;
+  
+  /*Hintergrundfarbe des Detailbereichs*/
+  detailsAreaBackgroundColor: #959595;
+  
+  /*Aplhawert von ausgeblendeten Worksteps (nachdem ein Input-/Output-Parameter selektiert wurde)*/
+  inactiveWorkstepsAlpha: 0.666;
+  
+  /*Farbe des Focusrahmens*/
+  focusColor: #FABB00;
+}
+
+ScrollBar.XFMDWorkflowScrollBar
+{
+  backgroundColor: #959595;
+}
+
+/*Text in Detailbereichen von Modellierungsobjekten*/
+Label.xfmdCommonDetailLabel
+{
+  color: #000000;
+  fontSize: 10;
+}
+
+/*ComboBox in Detailbereichen von Modellierungsobjekten*/
+ComboBox.xfmdCommonDetailComboBox
+{
+  color: #000000;
+  fontSize: 10;
+  paddingTop: -2;
+  paddingBottom: -4;
+}
+
+/*Service-Objekt*/
+.XFMDService
+{
+  /*Hintergrundfarbe des Labelbereichs*/
+  labelBackgroundColor: #000000;
+  
+  /*Hintergrundfarbe des Detailbereichs*/
+  detailsBackgroundColor: #959595;
+  
+  /*Randfarbe der Parameterleisten*/
+  parameterBarBorderColor: #959595;
+  
+  /*Hintergrundfarbe der Parameterleisten*/
+  parameterBarBackgroundColor: #e6e6e6;
+  
+  /*Farbe der Streifen abstrakter Services*/
+  abstractStripeColor: #414141;
+  
+  /*Farbe des Resizeindikators*/
+  grabColor: #e6e6e6;
+}
+
+/*Hauptbeschriftung des Service-Objekts*/
+Label.xfmdServiceLabel
+{
+  color: #FFFFFF;
+  fontSize: 12;
+  fontWeight: bold;
+}
+
+/*Label mit dem Namen des Services, den das Service-Objekt verwendet*/
+Label.xfmdServiceOperationNameLabel
+{
+  color: #000000;
+  fontSize: 10;
+}
+
+/*Label mit dem qualifizierten Pfad bzw. der Service Group des Service-Objekts*/
+Label.xfmdServiceNameLabel
+{
+  color: #000000;
+  fontSize: 10;
+}
+
+/*Symbol einer Service Group*/
+Button.xfmdServiceGroupIcon
+{
+  skin: Embed(source="/objects/servicegroup.swf");
+}
+
+/*Symbol einer Member Function Group*/
+Button.xfmdMemberFunctionGroupIcon
+{
+  skin: Embed(source="/objects/memberfunctiongroup.swf");
+}
+
+/*Input- bzw. Output-Parameter*/
+.XFMDParameter
+{
+  fontSize: 11;
+  
+  parameterBorderColor: #959595;
+  parameterBackgroundColor: #ffffff;
+  abstractStripeColor: #e6e6e6;
+  
+  /*Farben des vertikal verlaufenden Farbverlaufs abhaengig von der
+  Art der Verbindung zu anderen Parametern (Autosnapping)*/
+  defaultColors:       #ffffff, #959595;
+  autoConnectedColors: #ffffff, #959595;
+  userConnectedColors: #ffffff, #959595;
+  userConstColors:     #000000, #959595;
+  notConnectedColors:  #ff0000, #959595;
+  ambigouosColors:     #FABB00, #959595;
+  detachedColors:      #ffffff, #ffffff;
+  abstractColors:      #ffffff, #959595;
+}
+
+/*Label mit dem Variablennamen eines Input- oder Output-Parameters*/
+Label.xfmdParameterLabel
+{
+  color: #000000;
+  fontSharpness: 300;
+  fontThickness: 25;
+  fontGridFitType: subpixel;
+  letterSpacing: 0.06;
+}
+
+/*Beschriftung der Listenwertigkeit von Input- oder Output-Parametern*/
+Label.xfmdParameterCounter
+{
+  color: #FFFFFF;
+}
+
+.XFMDParameterInverted
+{
+  fontSize: 11;
+
+  parameterBorderColor: #6b6b6b;
+  parameterBackgroundColor: #000000;
+  abstractStripeColor: #191919;
+  
+  /*Farben des vertikal verlaufenden Farbverlaufs abhaengig von der
+  Art der Verbindung zu anderen Parametern (Autosnapping)*/
+  defaultColors:       #000000, #6b6b6b;
+  autoConnectedColors: #000000, #6b6b6b;
+  userConnectedColors: #000000, #6b6b6b;
+  userConstColors:     #ffffff, #6b6b6b;
+  notConnectedColors:  #00ffff, #6b6b6b;
+  ambigouosColors:     #001fff, #6b6b6b;
+  detachedColors:      #000000, #000000;
+  abstractColors:      #000000, #6b6b6b;
+}
+
+/*Label mit dem Variablennamen eines Input- oder Output-Parameters*/
+Label.xfmdParameterLabelInverted
+{
+  color: #ffffff;
+  fontSharpness: 300;
+  fontThickness: 25;
+  fontGridFitType: subpixel;
+  letterSpacing: 0.06;
+}
+
+Label.xfmdParameterCounterInverted
+{
+  color: #000000;
+}
+
+.XFMDParameterInvertedAsThisVariable
+{
+  parameterBorderColor: #959595;
+  parameterBackgroundColor: #000000;
+  abstractStripeColor: #191919;
+  
+  /*Farben des vertikal verlaufenden Farbverlaufs abhaengig von der
+  Art der Verbindung zu anderen Parametern (Autosnapping)*/
+  defaultColors:       #ffffff, #959595;
+  autoConnectedColors: #ffffff, #959595;
+  userConnectedColors: #ffffff, #959595;
+  userConstColors:     #000000, #959595;
+  notConnectedColors:  #ff0000, #959595;
+  ambigouosColors:     #FABB00, #959595;
+  detachedColors:      #ffffff, #ffffff;
+  abstractColors:      #ffffff, #959595;
+}
+
+/*Label mit dem Variablennamen eines Input- oder Output-Parameters*/
+Label.xfmdParameterLabelInvertedAsThisVariable
+{
+  color: #ffffff;
+  fontSharpness: 300;
+  fontThickness: 25;
+  fontGridFitType: subpixel;
+  letterSpacing: 0.06;
+}
+
+Label.xfmdParameterCounterInvertedAsThisVariable
+{
+  color: #ffffff;
+}
+
+/*Label mit dem Variablennamen eines Input- oder Output-Parameters*/
+TextArea.xfmdEditLabelTextArea
+{
+  fontSize: 11;
+  textAlign: center;
+  cornerRadius: 6;
+  paddingTop: 0;
+  paddingBottom: 0;
+}
+
+/*Parallel-Objekt*/
+.XFMDParallel
+{
+  /*Farbe der Barriere des Parallel-Objekts*/
+  barColor: #959595;
+  
+  /*Alphawert der Barriere des Parallel-Objekts*/
+  barAlpha: 1;
+}
+
+/*Hinweislabel in Parameterleisten*/
+Label.XFMDParameterScrollBoxLabel
+{
+  color: #76767A;
+  fontSize: 13;
+}
+
+/*Knopf zum Anzeigen von Parameterleisten*/
+Button.XFMDParameterBoxInputClosedButton
+{
+  upSkin: Embed(source="/objects/iconBtn_arrow_up_off.png");
+  overSkin: Embed(source="/objects/iconBtn_arrow_up_over.png");
+  downSkin: Embed(source="/objects/iconBtn_arrow_up_active.png");
+  disabledSkin: Embed(source="/objects/iconBtn_arrow_up_off.png");
+  /*upSkin: Embed(source="/objects/arrow_up_out.swf");
+  overSkin: Embed(source="/objects/arrow_up_over.swf");
+  downSkin: Embed(source="/objects/arrow_up_down.swf");*/
+}
+
+Button.XFMDParameterBoxInputOpenedButton
+{
+  upSkin: Embed(source="/objects/iconBtn_arrow_down_off.png");
+  overSkin: Embed(source="/objects/iconBtn_arrow_down_over.png");
+  downSkin: Embed(source="/objects/iconBtn_arrow_down_active.png");
+  disabledSkin: Embed(source="/objects/iconBtn_arrow_down_off.png");
+  /*upSkin: Embed(source="/objects/arrow_down_out.swf");
+  overSkin: Embed(source="/objects/arrow_down_over.swf");
+  downSkin: Embed(source="/objects/arrow_down_down.swf");*/
+}
+
+Button.XFMDParameterBoxOutputClosedButton
+{
+  upSkin: Embed(source="/objects/iconBtn_arrow_down_off.png");
+  overSkin: Embed(source="/objects/iconBtn_arrow_down_over.png");
+  downSkin: Embed(source="/objects/iconBtn_arrow_down_active.png");
+  disabledSkin: Embed(source="/objects/iconBtn_arrow_down_off.png");
+  /*upSkin: Embed(source="/objects/arrow_down_out.swf");
+  overSkin: Embed(source="/objects/arrow_down_over.swf");
+  downSkin: Embed(source="/objects/arrow_down_down.swf");*/
+}
+
+Button.XFMDParameterBoxOutputOpenedButton
+{
+  upSkin: Embed(source="/objects/iconBtn_arrow_up_off.png");
+  overSkin: Embed(source="/objects/iconBtn_arrow_up_over.png");
+  downSkin: Embed(source="/objects/iconBtn_arrow_up_active.png");
+  disabledSkin: Embed(source="/objects/iconBtn_arrow_up_off.png");
+  /*upSkin: Embed(source="/objects/arrow_up_out.swf");
+  overSkin: Embed(source="/objects/arrow_up_over.swf");
+  downSkin: Embed(source="/objects/arrow_up_down.swf");*/
+}
+
+/*Documentation-Feld*/
+TextArea.XFMDDocumentationArea
+{
+  color: #000000;
+  fontSize: 11;
+  
+  paddingLeft: 5;
+  paddingRight: 5;
+  paddingTop: 5;
+  paddingBottom: 2;
+  
+  backgroundAlpha: 0;
+  borderStyle: none;
+  
+  focusAlpha: 0;
+}
+
+/*Knopf zum Anzeigen von Documentation-Feldern*/
+Button.XFMDDocumentationNoneButton
+{
+  /* none -> nt, off -> t, over -> o, active -> a */
+  upSkin: Embed(source="/objects/documentation_nt.swf");
+  overSkin: Embed(source="/objects/documentation_o.swf");
+  downSkin: Embed(source="/objects/documentation_a.swf");
+  /*
+  oldupSkin: Embed(source="/objects/iconBtn_info_none.png");
+  oldoverSkin: Embed(source="/objects/iconBtn_info_over.png");
+  olddownSkin: Embed(source="/objects/iconBtn_info_active.png");
+  */
+}
+
+Button.XFMDDocumentationClosedButton
+{
+  upSkin: Embed(source="/objects/documentation_t.swf");
+  overSkin: Embed(source="/objects/documentation_o.swf");
+  downSkin: Embed(source="/objects/documentation_a.swf");
+  /*
+  oldupSkin: Embed(source="/objects/iconBtn_info_off.png");
+  oldoverSkin: Embed(source="/objects/iconBtn_info_over.png");
+  olddownSkin: Embed(source="/objects/iconBtn_info_active.png");
+  */
+}
+
+Button.XFMDDocumentationOpenedButton
+{
+  upSkin: Embed(source="/objects/documentation_a.swf");
+  overSkin: Embed(source="/objects/documentation_o.swf");
+  downSkin: Embed(source="/objects/documentation_a.swf");
+  /*
+  oldupSkin: Embed(source="/objects/iconBtn_info_active.png");
+  oldoverSkin: Embed(source="/objects/iconBtn_info_over.png");
+  olddownSkin: Embed(source="/objects/iconBtn_info_active.png");
+  */
+}
+
+/*Button for displaying the Inline-Area*/
+Button.XFMDInlineAreaClosedButton
+{
+  upSkin:   Embed(source="/objects/openinline_ho.swf");
+  overSkin: Embed(source="/objects/openinline_o.swf");
+  downSkin: Embed(source="/objects/openinline_a.swf");
+}
+
+Button.XFMDInlineAreaOpenedButton
+{
+  upSkin:   Embed(source="/objects/openinline_a.swf");
+  overSkin: Embed(source="/objects/openinline_o.swf");
+  downSkin: Embed(source="/objects/openinline_a.swf");
+}
+
+/*Button for displaying the Configuration-Area*/
+Button.XFMDConfigurationClosedButton
+{
+  upSkin:   Embed(source="/objects/configurationarea_ho.swf");
+  overSkin: Embed(source="/objects/configurationarea_o.swf");
+  downSkin: Embed(source="/objects/configurationarea_a.swf");
+}
+
+Button.XFMDConfigurationOpenedButton
+{
+  upSkin:   Embed(source="/objects/configurationarea_a.swf");
+  overSkin: Embed(source="/objects/configurationarea_o.swf");
+  downSkin: Embed(source="/objects/configurationarea_a.swf");
+}
+
+/*Knopf zum Anzeigen von Documentation-Feldern in Templates*/
+Button.XFMDTemplateDocumentationNoneButton
+{
+  upSkin: Embed(source="/objects/iconBtn_info_none2.png");
+  overSkin: Embed(source="/objects/iconBtn_info_over2.png");
+  downSkin: Embed(source="/objects/iconBtn_info_active.png");
+}
+
+Button.XFMDTemplateDocumentationClosedButton
+{
+  upSkin: Embed(source="/objects/iconBtn_info_off2.png");
+  overSkin: Embed(source="/objects/iconBtn_info_over2.png");
+  downSkin: Embed(source="/objects/iconBtn_info_active.png");
+}
+
+Button.XFMDTemplateDocumentationOpenedButton
+{
+  upSkin: Embed(source="/objects/iconBtn_info_active.png");
+  overSkin: Embed(source="/objects/iconBtn_info_over2.png");
+  downSkin: Embed(source="/objects/iconBtn_info_active.png");
+}
+
+/*Knopf zum Oeffnen von externen Documentationen*/
+Button.XFMDExternalDocumentationButton
+{
+  upSkin: Embed(source="/objects/iconBtn_info_none.png");
+  overSkin: Embed(source="/objects/iconBtn_info_over.png");
+  downSkin: Embed(source="/objects/iconBtn_info_active.png");
+}
+
+/*Knopf zum Oeffnen von externen Documentationen in Templates*/
+Button.XFMDTemplateExternalDocumentationButton
+{
+  upSkin: Embed(source="/objects/iconBtn_info_none2.png");
+  overSkin: Embed(source="/objects/iconBtn_info_over2.png");
+  downSkin: Embed(source="/objects/iconBtn_info_active.png");
+}
+
+/*Knopf zum Anzeigen von Details in den Koepfen von Service-Objekten*/
+Button.XFMDTopDetailAreaNoneButton
+{
+  upSkin: Embed(source="/objects/iconBtn_inputsource_off.png");
+  overSkin: Embed(source="/objects/iconBtn_inputsource_over.png");
+  downSkin: Embed(source="/objects/iconBtn_inputsource_active.png");
+}
+
+Button.XFMDTopDetailAreaClosedButton
+{
+  upSkin: Embed(source="/objects/iconBtn_inputsource_filled.png");
+  overSkin: Embed(source="/objects/iconBtn_inputsource_over.png");
+  downSkin: Embed(source="/objects/iconBtn_inputsource_active.png");
+}
+
+Button.XFMDTopDetailAreaOpenedButton
+{
+  upSkin: Embed(source="/objects/iconBtn_inputsource_active.png");
+  overSkin: Embed(source="/objects/iconBtn_inputsource_over.png");
+  downSkin: Embed(source="/objects/iconBtn_inputsource_active.png");
+}
+
+/*Knopf zum Anzeigen von Catch-Exception-Bloecken*/
+Button.XFMDCatchExceptionNoneButton
+{
+  upSkin: Embed(source="/objects/iconBtn_exception_off.png");
+  overSkin: Embed(source="/objects/iconBtn_exception_over.png");
+  downSkin: Embed(source="/objects/iconBtn_exception_active.png");
+}
+
+Button.XFMDCatchExceptionClosedButton
+{
+  upSkin: Embed(source="/objects/iconBtn_exception_filled.png");
+  overSkin: Embed(source="/objects/iconBtn_exception_over.png");
+  downSkin: Embed(source="/objects/iconBtn_exception_active.png");
+}
+
+Button.XFMDCatchExceptionOpenedButton
+{
+  upSkin: Embed(source="/objects/iconBtn_exception_active.png");
+  overSkin: Embed(source="/objects/iconBtn_exception_over.png");
+  downSkin: Embed(source="/objects/iconBtn_exception_active.png");
+}
+
+.XFMDCatchException
+{
+  throwIconStyleName: CatchExceptionThrowIcon;
+  catchIconStyleName: CatchExceptionCatchIcon;
+  
+  catchSelectionColor: #00DBFF;
+}
+
+.CatchExceptionThrowIcon
+{
+  skin: Embed(source="/objects/catchexception_throw.swf");
+}
+
+.CatchExceptionCatchIcon
+{
+  skin: Embed(source="/objects/catchexception_catch.swf");
+}
+
+.XFMDCompensationArea
+{
+  /*Farbe des Focusrahmens*/
+  focusColor: #FABB00;
+}
+
+/*Knopf zum Anzeigen von Compensation-Bloecken*/
+Button.XFMDCompensationNoneButton
+{
+  upSkin: Embed(source="/objects/iconBtn_compensation_off.png");
+  overSkin: Embed(source="/objects/iconBtn_compensation_over.png");
+  downSkin: Embed(source="/objects/iconBtn_compensation_active.png");
+}
+
+Button.XFMDCompensationClosedButton
+{
+  upSkin: Embed(source="/objects/iconBtn_compensation_filled.png");
+  overSkin: Embed(source="/objects/iconBtn_compensation_over.png");
+  downSkin: Embed(source="/objects/iconBtn_compensation_active.png");
+}
+
+Button.XFMDCompensationOpenedButton
+{
+  upSkin: Embed(source="/objects/iconBtn_compensation_active.png");
+  overSkin: Embed(source="/objects/iconBtn_compensation_over.png");
+  downSkin: Embed(source="/objects/iconBtn_compensation_active.png");
+}
+
+Switch01.XFMDCompensationSwitch
+{
+  fontSize: 10;
+  fontGridFitType: subpixel;
+  fontSharpness: 200;
+  letterSpacing: 0.04;
+  
+  switchNumberStyleName: XFMDCompensationSwitchNumberText;
+  labelStyleName: XFMDCompensationSwitchLabelText;
+  
+  cornerRadius: 3;
+    
+  onColor: #FABB00;
+  offColor: #e6e6e6;
+  
+  sliderColor: #4b4b4b;
+  sliderRollOverColor: #000000;
+  sliderDragColor: #666666;
+  
+  backgroundColor: #959595;
+  
+  /*Alphawert des Fokusindikators*/
+  focusAlpha: 1;
+  focusThickness: 1;
+}
+
+Text.XFMDCompensationSwitchNumberText
+{
+  color: #000000;
+  fontWeight: bold;
+  textAlign: center;
+}
+
+Text.XFMDCompensationSwitchLabelText
+{
+  color: #ffffff;
+  fontWeight: normal;
+}
+
+/*Knopf zum Anzeigen von Chat-Bloecken*/
+Button.XFMDChatNoneButton
+{
+  upSkin: Embed(source="/objects/iconBtn_chat_none.png");
+  overSkin: Embed(source="/objects/iconBtn_chat_over.png");
+  downSkin: Embed(source="/objects/iconBtn_chat_active.png");
+}
+
+Button.XFMDChatClosedButton
+{
+  upSkin: Embed(source="/objects/iconBtn_chat_off.png");
+  overSkin: Embed(source="/objects/iconBtn_chat_over.png");
+  downSkin: Embed(source="/objects/iconBtn_chat_active.png");
+}
+
+Button.XFMDChatOpenedButton
+{
+  upSkin: Embed(source="/objects/iconBtn_chat_active.png");
+  overSkin: Embed(source="/objects/iconBtn_chat_over.png");
+  downSkin: Embed(source="/objects/iconBtn_chat_active.png");
+}
+
+.SpecialPurposeThrowIcon
+{
+  icon: Embed(source="/specialPurpose/throw_outline.swf");
+  skin: Embed(source="/specialPurpose/throw.swf");
+}
+
+.SpecialPurposeWaitIcon
+{
+  icon: Embed(source="/specialPurpose/wait_outline.swf");
+  skin: Embed(source="/specialPurpose/wait.swf");
+  
+  iconCenterOffsetX: 2;
+  iconCenterOffsetY: 0;
+}
+
+.SpecialPurposeAwaitIcon
+{
+  icon: Embed(source="/specialPurpose/await_outline.swf");
+  skin: Embed(source="/specialPurpose/await.swf");
+}
+
+.SpecialPurposeNotifyIcon
+{
+  icon: Embed(source="/specialPurpose/notify_outline.swf");
+  skin: Embed(source="/specialPurpose/notify.swf");
+  
+  skinCenterOffsetX: -7;
+  skinCenterOffsetY: 0;
+
+  iconCenterOffsetX: -7;
+  iconCenterOffsetY: 0;
+}
+
+.SpecialPurposeMIIcon
+{
+  icon: Embed(source="/specialPurpose/manualinteraction_outline.swf");
+  skin: Embed(source="/specialPurpose/manualinteraction.swf");
+}
+
+.SpecialPurposeStartIcon
+{
+  icon: Embed(source="/specialPurpose/start_outline.swf");
+  skin: Embed(source="/specialPurpose/start.swf");
+}
+
+.SpecialPurposeSendIcon
+{
+  icon: Embed(source="/specialPurpose/send_outline.swf");
+  skin: Embed(source="/specialPurpose/send.swf");
+}
+
+.SpecialPurposeRetrieveIcon
+{
+  icon: Embed(source="/specialPurpose/send_outline.swf");
+  skin: Embed(source="/specialPurpose/send.swf");
+}
+
+.SpecialPurposeStopIcon
+{
+  icon: Embed(source="/specialPurpose/stop_outline.swf");
+  skin: Embed(source="/specialPurpose/stop.swf");
+}
+
+.SpecialPurposeMappingIcon
+{
+  icon: Embed(source="/specialPurpose/mapping_outline.swf");
+  skin: Embed(source="/specialPurpose/mapping.swf");
+}
+
+.SpecialPurposeRetryIcon
+{
+  icon: Embed(source="/specialPurpose/retry_outline.swf");
+  skin: Embed(source="/specialPurpose/retry.swf");
+}
+
+.SpecialPurposeQueryIcon
+{
+  icon: Embed(source="/specialPurpose/query_outline.swf");
+  skin: Embed(source="/specialPurpose/query.swf");
+}
+
+.SpecialPurposeQueryDeleteIcon
+{
+  icon: Embed(source="/specialPurpose/query_delete_outline.swf");
+  skin: Embed(source="/specialPurpose/query_delete.swf");
+}
+
+.SpecialPurposeQuerySaveIcon
+{
+  icon: Embed(source="/specialPurpose/query_save_outline.swf");
+  skin: Embed(source="/specialPurpose/query_save.swf");
+}
+
+NumericStepper.xfmdRetryStepper
+{
+  color: #000000;
+  fontSize: 10;
+}
+
+/*Leiste zum Einstellen der Detailsstufe*/
+VBox.XFMDDetailsModeSliderBar
+{
+  backgroundColor: #959595;
+}
+
+/*Knopf zum Einstellen der Detailsstufe (simple)*/
+Button.XFMDDetailsModeSimpleButton
+{
+  upSkin: Embed(source="/objects/iconBtn_detailModeSimple_up.png");
+  overSkin: Embed(source="/objects/iconBtn_detailModeSimple_over.png");
+  downSkin: Embed(source="/objects/iconBtn_detailModeSimple_down.png");
+}
+
+/*Knopf zum Einstellen der Detailsstufe (normal)*/
+Button.XFMDDetailsModeNormalButton
+{
+  upSkin: Embed(source="/objects/iconBtn_detailModeNormal_up.png");
+  overSkin: Embed(source="/objects/iconBtn_detailModeNormal_over.png");
+  downSkin: Embed(source="/objects/iconBtn_detailModeNormal_down.png");
+}
+
+/*Knopf zum Einstellen der Detailsstufe (Typeneinblendung)*/
+Button.XFMDDetailsModeTypedButton
+{
+  upSkin: Embed(source="/objects/iconBtn_detailModeTyped_up.png");
+  overSkin: Embed(source="/objects/iconBtn_detailModeTyped_over.png");
+  downSkin: Embed(source="/objects/iconBtn_detailModeTyped_down.png");
+}
+
+/*Knopf zum Einstellen der Detailsstufe (gestreckt)*/
+Button.XFMDDetailsModeStretchedButton
+{
+  upSkin: Embed(source="/objects/iconBtn_detailModeStretched_up.png");
+  overSkin: Embed(source="/objects/iconBtn_detailModeStretched_over.png");
+  downSkin: Embed(source="/objects/iconBtn_detailModeStretched_down.png");
+}
+
+/*Knopf zum Einstellen der Zoomstufe*/
+Button.XFMDZoomSliderButton
+{
+  upSkin: Embed(source="/objects/iconBtn_zoom_up.png");
+  overSkin: Embed(source="/objects/iconBtn_zoom_over.png");
+  downSkin: Embed(source="/objects/iconBtn_zoom_down.png");
+}
+
+/*Leiste zum Einstellen der Zoomstufe*/
+SliderBar.XFMDZoomSliderBar
+{
+  backgroundImage: Embed(source="/objects/zoomslider_track.png");
+  backgroundColor: #959595;
+  
+  sliderButtonStyleName: XFMDZoomSliderTrackButton;
+}
+
+/*Sliderknopf zum Einstellen der Zoomstufe*/
+Button.XFMDZoomSliderTrackButton
+{
+  upSkin: Embed(source="/objects/iconBtn_zoomslider.png");
+  overSkin: Embed(source="/objects/iconBtn_zoomslider.png");
+  downSkin: Embed(source="/objects/iconBtn_zoomslider.png");
+}
+
+/*Knopf zum Einklappen aller Parameterleisten*/
+Button.XFMDCollapseParameterButton
+{
+  upSkin: Embed(source="/objects/iconBtn_collapseParameter_up.png");
+  overSkin: Embed(source="/objects/iconBtn_collapseParameter_over.png");
+  downSkin: Embed(source="/objects/iconBtn_collapseParameter_down.png");
+}
+
+/*Knopf zum Ausklappen aller Parameterleisten*/
+Button.XFMDExpandParameterButton
+{
+  upSkin: Embed(source="/objects/iconBtn_expandParameter_up.png");
+  overSkin: Embed(source="/objects/iconBtn_expandParameter_over.png");
+  downSkin: Embed(source="/objects/iconBtn_expandParameter_down.png");
+}
+
+/*Service Group-Objekt*/
+.xfmdServiceGroup
+{
+  /*Hintergrundfarbe des Label-Bereichs*/
+  toolbarBackgroundColor: #959595;
+  
+  /*Hintergrundfarbe des Content-Bereichs*/
+  bgColor: #e6e6e6;
+}
+
+/*Hauptbeschriftung des Service Group-Objekts*/
+Label.xfmdServiceGroupNameLabel
+{
+  color: #000000;
+  fontSize: 12;
+  fontWeight: bold;
+}
+
+/*Hauptbeschriftung des Service Group-Objekts*/
+Label.xfmdServiceGroupQNameLabel
+{
+  color: #000000;
+  fontSize: 9;
+}
+
+/*Icons der Operatoren*/
+.XFMDOperatorIcons
+{
+  operatorDetached: Embed(source="/specialPurpose/detached_outline.swf");
+  operatorFreeCapacities: Embed(source="/specialPurpose/freecapacity_outline.swf");
+}
+
+/*Forall-Operator*/
+.XFMDForallOperatorIcon
+{
+  /*Forall-Operator*/
+  skin: Embed(source="/specialPurpose/foreach.swf");
+}
+
+/*Pfeil-Knopf (nach oben)*/
+Button.XFMDForallUpButton
+{
+  skin: Embed(source="/common/ButtonArrowN_icon.svg");
+}
+
+/*Pfeil-Knopf (nach unten)*/
+Button.XFMDForallDownButton
+{
+  skin: Embed(source="/common/ButtonArrowS_icon.svg");
+}
+
+/*Label des Forall-Operator*/
+Button.XFMDForallOperatorLabelButton
+{
+  fontSize: 10;
+  fontWeight: normal;
+  color: #000000;
+  cornerRadius: 5;
+}
+
+/*Label des Forall-Operator*/
+ButtonBar.XFMDForeachIsParallelButtonBar
+{
+  themeColor: #ffffff;
+  
+  firstButtonStyleName: XFMDForeachIsParallelSequentialButton;
+  buttonStyleName: XFMDForeachIsParallelMiddleButton;
+  lastButtonStyleName: XFMDForeachIsParallelCapacityButton;
+}
+
+Button.XFMDForeachIsParallelMiddleButton
+{
+  fillColors: #959595, #959595;
+  highlightAlphas: 0.5, 0.0;
+  cornerRadius: 10;
+}
+
+Button.XFMDForeachIsParallelSequentialButton
+{
+  fillColors: #959595, #959595;
+  highlightAlphas: 0.5, 0.0;
+  cornerRadius: 10;
+  
+  paddingRight: 6;
+  
+  skin: ClassReference("skins.ButtonBarButtonSkin");
+  icon: Embed(source="/processmodeller/icon-sequential.png");
+}
+
+Button.XFMDForeachIsParallelButton
+{
+  fillColors: #959595, #959595;
+  highlightAlphas: 0.5, 0.0;
+  cornerRadius: 10;
+  
+  paddingLeft: 6;
+  
+  skin: ClassReference("skins.ButtonBarButtonSkin");
+  icon: Embed(source="/processmodeller/icon-parallel1.png");
+}
+
+Button.XFMDForeachIsParallelConstantButton
+{
+  fillColors: #959595, #959595;
+  highlightAlphas: 0.5, 0.0;
+  cornerRadius: 10;
+  
+  paddingLeft: 6;
+  
+  skin: ClassReference("skins.ButtonBarButtonSkin");
+  icon: Embed(source="/processmodeller/icon-parallel2.png");
+}
+
+Button.XFMDForeachIsParallelCapacityButton
+{
+  fillColors: #959595, #959595;
+  highlightAlphas: 0.5, 0.0;
+  cornerRadius: 10;
+  
+  paddingLeft: 6;
+  
+  skin: ClassReference("skins.ButtonBarButtonSkin");
+  icon: Embed(source="/processmodeller/icon-parallel3.png");
+}
+
+NumericStepper.XFMDForeachIsParallelConstantStepper
+{
+  color: #000000;
+}
+
+/*einfacher Text in Formeln*/
+Label.XFMDFormulaValueText
+{
+  color: #000000;
+  fontSize: 11;
+  fontGridFitType: subpixel;
+  fontSharpness: 200;
+  letterSpacing: 0.04;
+  
+  paddingTop: -1;
+  paddingBottom: -4;
+}
+
+
+/*einfacher Text in Formeln*/
+Label.XFMDFormulaValueTextInverted
+{
+  color: #FFFFFF;
+  fontSize: 11;
+  fontGridFitType: subpixel;
+  fontSharpness: 200;
+  letterSpacing: 0.04;
+  
+  paddingTop: -1;
+  paddingBottom: -4;
+}
+
+
+/*Texteingabefelder in Formeln*/
+TextInput.XFMDFormulaValueTextInput
+{
+  color: #000000;
+  fontSize: 11;
+  cornerRadius: 0;
+  backgroundColor: #CDCDCD;
+  focusAlpha: 0;
+}
+
+/*Operatoren in Formeln*/
+Label.XFMDFormulaOperatorText
+{
+  color: #000000;
+  fontSize: 11;
+  fontWeight: bold;
+  
+  paddingTop: -1;
+  paddingBottom: -4;
+}
+
+/*Operatoren in Formeln*/
+Label.XFMDFormulaOperatorTextInverted
+{
+  color: #FFFFFF;
+  fontSize: 11;
+  fontWeight: bold;
+  
+  paddingTop: -1;
+  paddingBottom: -4;
+}
+
+AutoCompletionInput.XFMDFormulaAutoCompletionInput
+{
+  color: #000000;
+  fontSize: 11;
+  cornerRadius: 0;
+  backgroundColor: #CDCDCD;
+  focusAlpha: 0;
+}
+
+Canvas.XFMDFormulaAutoCompletionHelp
+{
+	backgroundColor: #FFFACE;
+	borderColor: #BABABE;
+	borderStyle: solid;
+	borderThickness: 1;
+	color: #000000;
+}
+
+ComboBox.XFMDFormulaFXComboBox
+{
+  upSkin: Embed(source="/processmodeller/fx_dropdown_small_default.png");
+  overSkin: Embed(source="/processmodeller/fx_dropdown_small_hover.png");
+  downSkin: Embed(source="/processmodeller/fx_dropdown_small_active.png");
+  disabledSkin: Embed(source="/processmodeller/fx_dropdown_small_disabled.png");
+}
+
+Button.XFMDFormulaOKButton
+{
+  upSkin: Embed(source="/objects/iconBtn_okcheck_up.png");
+  overSkin: Embed(source="/objects/iconBtn_okcheck_over.png");
+  downSkin: Embed(source="/objects/iconBtn_okcheck_down.png");
+}
+
+Button.XFMDFormulaCancelButton
+{
+  upSkin: Embed(source="/objects/iconBtn_cancel_up.png");
+  overSkin: Embed(source="/objects/iconBtn_cancel_over.png");
+  downSkin: Embed(source="/objects/iconBtn_cancel_down.png");
+}
+
+/*mehrzeiliges Texteingabefeld für Templates*/
+TokenizedTextArea
+{
+  paddingTop: 1;
+  paddingBottom: 1;
+  fontSharpness: 0;
+  leading: 2;
+  borderStyle: solid;
+  borderThickness: 0;
+  cornerRadius: 6;
+  focusAlpha: 0;
+  focusThickness: 0;
+  fontFamily: ConsolasEmbedded;
+  fontSize: 12;
+  padding: 2;
+  margin: 50;
+  rectBorderThickness: 4;
+  rectBorderColor: #CDCDCD;
+  rectFillColor: #ffffff;
+  rectCornerRadius: 20;
+}
+
+.XFMDConditionalBranching
+{
+  branchSelectionColor: #00DBFF;
+}
+
+
+/*** 7.2 Workflow Modeller *******************************************************/
+/* siehe 7.1 */
+
+/*Slider-Knopf*/
+Button.ProcModSliderButton
+{
+  upSkin: Embed(source="/processmodeller/iconBtn_slider_up.png");
+  overSkin: Embed(source="/processmodeller/iconBtn_slider_over.png");
+  downSkin: Embed(source="/processmodeller/iconBtn_slider_down.png");
+}
+
+
+/*** 7.3 Data Type Modeller ******************************************************/
+
+/*Modellierungsflaeche eines Datentyps*/
+.DTModModeller
+{
+  /*Randfarbe der Modellierungsflaeche*/
+  parameterBorderColor: #959595;
+  
+  /*Hintergrundfarbe der Modellierungsflaeche*/
+  parameterBackgroundColor: #ffffff;
+  
+  /*Farbe des Focusrahmens*/
+  focusColor: #FABB00;
+}
+
+/*allgemeines Label im Data Type Modeller*/
+Label.DTModLabel
+{
+  fontSize: 11;
+  color: #000000;
+  textRollOverColor: #2D2D2E;
+  textSelectedColor: #959595;
+}
+
+/*Checkbox im Data Type Modeller*/
+CheckBox.DTModCheckBox
+{
+  fontSize: 11;
+  color: #000000;
+  textRollOverColor: #2D2D2E;
+  textSelectedColor: #959595;
+}
+
+/*Titel-Label im Detailfenster des Data Type Modeller*/
+Label.DTModDetailHeader
+{
+  color: #000000;
+  fontSize: 13;
+}
+
+/*Label mit dem Namen des Datentyps*/
+LinkButton.DTModLabelLabel
+{
+  color: #000000;
+  fontSize: 13;
+  fontWeight: bold;
+  textRollOverColor: #000000;
+}
+
+/*Label mit dem Pfad des Datentyps*/
+LinkButton.DTModPathLabel
+{
+  color: #000000;
+  fontSize: 11;
+  textRollOverColor: #000000;
+}
+
+/*Storable Meta Tabelle Zellenlabel*/
+Label.DTModStorableMetaCellLabel
+{
+  color: #0B333C;
+  fontSize: 10;
+  fontWeight: normal;
+}
+
+/*Storable Meta Tabelle Transient Button*/
+Label.DTModStorableMetaTransientButton
+{
+  upSkin: Embed(source="/processmodeller/iconBtn_transient_up.png");
+  overSkin: Embed(source="/processmodeller/iconBtn_transient_over.png");
+  downSkin: Embed(source="/processmodeller/iconBtn_transient_down.png");
+}
+
+/*DropZone-Komponente zur Eingabe des komplexen Typen einer Membervariable*/
+DropZone.DTModMemberComplexTypeDropZone, DropZone.DTModWorkflowImplementationDropZone
+{
+  focusStrength: 2;
+  focusAlpha: 1;
+  focusStyle: innerhybrid;
+}
+
+/*Dokumentations-Feld des Datentyps und von Membervariablen*/
+TextArea.DTModDocumentationArea, TextArea.DTModDocumentationAreaReadOnly
+{
+  fontSize: 11;
+  
+  paddingLeft: 2;
+  paddingRight: 2;
+  paddingTop: 2;
+  paddingBottom: 2;
+  
+  borderStyle: solid;
+  borderThickness: 1;
+}
+
+/*Dokumentations-Feld von vererbten variablen*/
+TextArea.DTModDocumentationAreaReadOnly
+{
+  backgroundColor: #dddddd;
+}
+
+
+/*** 7.4 Service Group Modeller **************************************************/
+
+/*Modellierungsflaeche einer Service Group*/
+.SGModModeller
+{
+  /*Hintergrundfarbe des Service Group Modeller*/
+  bgColor: #e6e6e6;
+  
+  /*Hintergrundfarbe der Werkzeugleiste des Service Group Modeller*/
+  toolbarBackgroundColor: #959595;
+  
+  /*Farbe des Focusrahmens*/
+  focusColor: #FABB00;
+}
+
+/*allgemeines Label innerhalb des Service Group Modeller*/
+Label.SGModLabel
+{
+  color: #000000;
+  fontSize: 11;
+}
+
+/*Titel-Label im Detailfenster des Service Group Modeller*/
+Label.SGModDetailHeader
+{
+  color: #000000;
+  fontSize: 13;
+}
+
+/*** 7.5 Coded Service Modeller **************************************************/
+
+/*Modellierungsflaeche eines Coded Service*/
+.CSModModeller
+{
+  /*Hintergrundfarbe des Modellierungsbereichs*/
+  workingAreaBackgroundColor: #ffffff;
+  
+  /*Randfarbe des Coded Service Modellers*/
+  modellerBorderColor: #959595;
+  
+  /*Hintergrundfarbe der Parameterleisten*/
+  parameterBarBackgroundColor: #e6e6e6;
+  
+  /*Hintergrundfarbe des Labelbereichs*/
+  labelBackgroundColor: #000000;
+
+  /*Hintergrundfarbe des Dokumentationsbereichs*/
+  documentationAreaBackgroundColor: #ffffff;
+  
+  /*Hintergrundfarbe des Detailbereichs*/
+  detailsAreaBackgroundColor: #959595;
+  
+  /*Farbe des Focusrahmens*/
+  focusColor: #FABB00;
+}
+
+/*Titel-Label in der Detailansicht eines Coded Service*/
+Label.CSModHeader
+{
+  fontSize: 13;
+  
+  color: #000000;
+  
+  textSelectedColor: #000000;
+  textRollOverColor: #000000;
+}
+
+/*Code Snippet-Eingabebereich eines Coded Service*/
+TextArea.CSModCodeSnippetTextArea
+{
+  fontSize: 13;
+  color: #000000;
+  fontFamily: "Courier New", "_typewriter";
+  
+  backgroundAlpha: 0;
+  borderStyle: none;
+  focusAlpha: 0;
+}
+
+/*Hintergrundfarbe des Code Snippets*/
+.CSModDrawingAreaBackground
+{
+  drawingAreaFillColors: #ffffff, #ffffff;
+}
+
+/*Fokusrahmen der DropZone-Komponente*/
+DropZone.CSModServiceGroupDropZone
+{
+  focusColor: #FABB00;
+  focusStrength: 1;
+  focusAlpha: 0.8;
+  focusStyle: outerglow;
+}
+
+/*** 7.6 Mapping Modeller *********************************************************************/
+
+FXLabel.MapModVisualMappingText
+{
+  color: #76767A;
+  fontSize: 9;
+  borderColor: #76767A;
+  selectedBorderColor: #00DBFF;
+}
+
+.MapModModeller
+{
+  focusColor: #FABB00;
+}
+
+/*Icons der Mapping-Operatoren*/
+.MapModOperatorIcons
+{
+  operatorWrite: Embed(source="/processmodeller/operatorWrite.swf");
+  operatorAdd: Embed(source="/processmodeller/operatorAdd.swf");
+  operatorSub: Embed(source="/processmodeller/operatorAdd.swf");
+  operatorCode: Embed(source="/processmodeller/operatorAdd.swf");
+  operatorDelete: Embed(source="/processmodeller/operatorDelete.swf");
+}
+
+Button.MapModOperatorWriteButton
+{
+  upSkin: Embed(source="/processmodeller/iconBtn_write_up.png");
+  overSkin: Embed(source="/processmodeller/iconBtn_write_over.png");
+  downSkin: Embed(source="/processmodeller/iconBtn_write_down.png");
+  disabledSkin: Embed(source="/processmodeller/iconBtn_write_disabled.png");
+}
+
+Button.MapModOperatorAddButton
+{
+  upSkin: Embed(source="/processmodeller/iconBtn_addition_up.png");
+  overSkin: Embed(source="/processmodeller/iconBtn_addition_over.png");
+  downSkin: Embed(source="/processmodeller/iconBtn_addition_down.png");
+  disabledSkin: Embed(source="/processmodeller/iconBtn_addition_disabled.png");
+}
+
+Button.MapModOperatorSubButton
+{
+  upSkin: Embed(source="/processmodeller/iconBtn_subtraction_up.png");
+  overSkin: Embed(source="/processmodeller/iconBtn_subtraction_over.png");
+  downSkin: Embed(source="/processmodeller/iconBtn_subtraction_down.png");
+  disabledSkin: Embed(source="/processmodeller/iconBtn_subtraction_disabled.png");
+}
+
+Button.MapModOperatorMultButton
+{
+  upSkin: Embed(source="/processmodeller/iconBtn_multiplication_up.png");
+  overSkin: Embed(source="/processmodeller/iconBtn_multiplication_over.png");
+  downSkin: Embed(source="/processmodeller/iconBtn_multiplication_down.png");
+  disabledSkin: Embed(source="/processmodeller/iconBtn_multiplication_disabled.png");
+}
+
+Button.MapModOperatorDivButton
+{
+  upSkin: Embed(source="/processmodeller/iconBtn_division_up.png");
+  overSkin: Embed(source="/processmodeller/iconBtn_division_over.png");
+  downSkin: Embed(source="/processmodeller/iconBtn_division_down.png");
+  disabledSkin: Embed(source="/processmodeller/iconBtn_division_disabled.png");
+}
+
+Button.MapModOperatorDelButton
+{
+  upSkin: Embed(source="/processmodeller/iconBtn_delete_up.png");
+  overSkin: Embed(source="/processmodeller/iconBtn_delete_over.png");
+  downSkin: Embed(source="/processmodeller/iconBtn_delete_down.png");
+  disabledSkin: Embed(source="/processmodeller/iconBtn_delete_disabled.png");
+}
+
+Button.MapModEditButton
+{
+  upSkin: Embed(source="/processmodeller/iconBtn_edit_up.png");
+  overSkin: Embed(source="/processmodeller/iconBtn_edit_over.png");
+  downSkin: Embed(source="/processmodeller/iconBtn_edit_down.png");
+}
+
+Box.MapModFormulaWrapperBox
+{
+  horizontalGap: 2;
+  verticalAlign: middle;
+  paddingBottom: 2;
+  paddingTop: 3;
+}
+
+Box.MapModCompactFormulaWrapperBox
+{
+  horizontalGap: 2;
+  verticalAlign: middle;
+  paddingBottom: 0;
+  paddingTop: 0;
+}
+
+Label.MapModFormulaCounterLabel
+{
+  fontSize: 12;
+  color: #000000;
+  fontWeight: normal;
+  textAlign: right;
+  fontFamily: "Courier New", "_typewriter";
+}
+
+/*Icons für die Autovervollständigungsliste*/
+Button.autoCompletionIconVariable
+{
+  upSkin: Embed(source="/processmodeller/icon_variable.png");
+  overSkin: Embed(source="/processmodeller/icon_variable.png");
+  downSkin: Embed(source="/processmodeller/icon_variable.png");
+}
+
+Button.autoCompletionIconMethod
+{
+  upSkin: Embed(source="/processmodeller/icon_method.png");
+  overSkin: Embed(source="/processmodeller/icon_method.png");
+  downSkin: Embed(source="/processmodeller/icon_method.png");
+}
+
+Button.autoCompletionIconConstant
+{
+  upSkin: Embed(source="/processmodeller/icon_constant.png");
+  overSkin: Embed(source="/processmodeller/icon_constant.png");
+  downSkin: Embed(source="/processmodeller/icon_constant.png");
+}
+
+Button.autoCompletionIconFunction
+{
+  upSkin: Embed(source="/processmodeller/icon_function.png");
+  overSkin: Embed(source="/processmodeller/icon_function.png");
+  downSkin: Embed(source="/processmodeller/icon_function.png");
+}
+
+Button.autoCompletionIconOperator
+{
+  upSkin: Embed(source="/processmodeller/icon_operator.png");
+  overSkin: Embed(source="/processmodeller/icon_operator.png");
+  downSkin: Embed(source="/processmodeller/icon_operator.png");
+}
+
+Button.autoCompletionIconSeparator
+{
+  upSkin: Embed(source="/processmodeller/icon_separator.png");
+  overSkin: Embed(source="/processmodeller/icon_separator.png");
+  downSkin: Embed(source="/processmodeller/icon_separator.png");
+}
+
+/*** 7.7 Factory **************************************************************************************/
+
+/*Anklickbares Symbolbild der Factory*/
+.XynaFactory
+{
+  skin: Embed(source="/processmodeller/factory.swf");
+  horizontalOffset: 0.16;
+}
+
+/*** 7.8 Suche ****************************************************************************/
+
+/*Suchfenster im Process Modeller*/
+Canvas.ProcModSearchCanvas
+{
+  /*Focusfarbe aller im Suchfenster dargestellten XMOM-Objekte*/
+  focusColor: #FABB00;
+  searchFilterBackgroundColor: #000000;
+}
+
+/*Eingabefeld fuer Suchbegriffe*/
+TextInput.ProcModSearchTextInput
+{
+}
+
+Canvas.ProcModSearchResultCanvas
+{
+  backgroundColor: #ffffff;
+  borderStyle: solid;
+  borderColor: #2D2D2E;
+  
+  cornerRadius: 6;
+  
+  searchFilterBackgroundColor: #000000;
+}
+
+/*Kopfbereich der Filtereinstellungen des Suchfensters im Process Modeller*/
+Canvas.ProcModSearchFilterHeaderCanvas
+{
+  backgroundColor: #5a5a5d;
+  
+  borderStyle: solid;
+  borderThickness: 1;
+  borderColor: #2D2D2E;
+  
+  cornerRadius: 6;
+  
+  paddingLeft: 4;
+  paddingRight: 4;
+  paddingTop: 2;
+  paddingBottom: 2;
+}
+
+/*Detailsbereich der Filtereinstellungen des Suchfensters im Process Modeller*/
+Canvas.ProcModSearchFilterDetailsCanvas
+{
+  backgroundColor: #ffffff;
+  borderStyle: solid;
+  borderThickness: 1;
+  borderColor: #2D2D2E;
+  cornerRadius: 6;
+}
+
+/* Suche innerhalb von einem Dokument: Kopfbereich */
+Box.ProcModDocumentSearchHeaderBox
+{
+  backgroundColor: #5a5a5d;
+  borderStyle: solid;
+  borderThickness: 0;
+  cornerRadius: 6;
+  paddingTop: 2;
+  paddingBottom: 1;
+  paddingLeft: 4;
+  paddingRight: 4;
+  horizontalGap: 4;
+  roundedBottomCorners: false;
+}
+
+Button.ProcModDocumentSearchHeaderArrowLeftButton
+{
+  upSkin: Embed(source="/processmodeller/iconBtn_arrowleft_up.png");
+  overSkin: Embed(source="/processmodeller/iconBtn_arrowleft_over.png");
+  downSkin: Embed(source="/processmodeller/iconBtn_arrowleft_down.png");
+}
+
+Button.ProcModDocumentSearchHeaderArrowRightButton
+{
+  upSkin: Embed(source="/processmodeller/iconBtn_arrowright_up.png");
+  overSkin: Embed(source="/processmodeller/iconBtn_arrowright_over.png");
+  downSkin: Embed(source="/processmodeller/iconBtn_arrowright_down.png");
+}
+
+Button.ProcModDocumentSearchItemDataType
+{
+  skin: ClassReference(null);
+  icon: Embed(source="/processmodeller/icon-searchresult_datatype.png");
+}
+
+Button.ProcModDocumentSearchItemException
+{
+  skin: ClassReference(null);
+  icon: Embed(source="/processmodeller/icon-searchresult_exception.png");
+}
+
+Button.ProcModDocumentSearchItemInfo
+{
+  skin: ClassReference(null);
+  icon: Embed(source="/processmodeller/icon-searchresult_info.png");
+}
+
+Button.ProcModDocumentSearchItemServiceGroup
+{
+  skin: ClassReference(null);
+  icon: Embed(source="/processmodeller/icon-searchresult_servicegroup.png");
+}
+
+Button.ProcModDocumentSearchItemTemplate
+{
+  skin: ClassReference(null);
+  icon: Embed(source="/processmodeller/icon-searchresult_template.png");
+}
+
+Button.ProcModDocumentSearchItemWorkflow
+{
+  skin: ClassReference(null);
+  icon: Embed(source="/processmodeller/icon-searchresult_workflow.png");
+}
+
+/* Suche innerhalb von einem Dokument: Ergebnisliste */
+List.ProcModDocumentSearchResultList
+{
+  backgroundColor: #ffffff;
+  borderStyle: solid;
+  borderColor: #505050;
+  borderThickness: 1;
+  /*alternatingItemColors: #ffffff, #eeeeee;*/
+  selectionColor: #fabb00;
+  rollOverColor: #FFcc00;
+}
+
+/*** 7.9 Fabriknavigation *****************************************************************/
+
+Label.ProcModNavigationArea
+{
+  areaBackgroundColor: #959595;
+  areaBorderColor: #2D2D2E;
+  areaOuterBorderColor: #aaaaaa;
+  areaCornerRadius: 12;
+}
+
+Label.ProcModFactoryMouseOverLabel
+{
+  color: #ffffff;
+  fontSize: 13;
+  textAlign: center;
+  paddingTop: 5;
+  paddingBottom: 5;
+  paddingLeft: 5;
+  paddingRight: 5;
+}
+
+Label.ProcModFactoryHeadlineLabel
+{
+  fontSize: 13;
+  fontWeight: bold;
+}
+
+Text.ProcModFactoryDetailsText
+{
+}
+
+.ProcModFactoryDetailsFormItem
+{
+  labelStyleName: ProcModFactoryDetailsFormItemKeyLabel
+}
+
+Label.ProcModFactoryDetailsFormItemKeyLabel
+{
+  color: #000000;
+  textAlign: left;
+}
+
+HBox.ProcModFactoryTopArea
+{
+  horizontalGap: 0;
+}
+
+Canvas.ProcModFactoryMouseOverLabelBackgroundCanvas
+{
+  backgroundColor: #505050;
+  borderThickness: 0;
+  borderStyle: solid;
+  cornerRadius: 10;
+}
+
+AdvancedDataGrid.ProcModFactoryHierarchyTable
+{
+  alternatingItemColors: #ffffff, #ffffff;
+  borderColor: #505050;
+}
+
+Label.ProcModFactoryNavHierarchyLabel
+{
+  fontSize: 11;
+}
+
+Label.ProcModFactoryNavPathLabel
+{
+  color: #ffffff;
+  fontSize: 11;
+}
+
+Canvas.ProcModFactoryGiantList
+{
+  focusColor: #FABB00;
+  
+  listCornerRadius: 5;
+  listBorderThickness: 1;
+  listBorderColor: #505050;
+  listBackgroundColor: #ffffff;
+}
+
+Button.ProcModFactoryNavTableFlatButton
+{
+  upSkin: Embed(source="/objects/iconBtn_tableflat_up.png");
+  overSkin: Embed(source="/objects/iconBtn_tableflat_over.png");
+  downSkin: Embed(source="/objects/iconBtn_tableflat_down.png");
+  selectedUpSkin: Embed(source="/objects/iconBtn_tableflat_down.png");
+  selectedOverSkin: Embed(source="/objects/iconBtn_tableflat_over.png");
+  selectedDownSkin: Embed(source="/objects/iconBtn_tableflat_down.png");
+}
+
+Button.ProcModFactoryNavTableHierarchyButton
+{
+  upSkin: Embed(source="/objects/iconBtn_tablehierarchy_up.png");
+  overSkin: Embed(source="/objects/iconBtn_tablehierarchy_over.png");
+  downSkin: Embed(source="/objects/iconBtn_tablehierarchy_down.png");
+  selectedUpSkin: Embed(source="/objects/iconBtn_tablehierarchy_down.png");
+  selectedOverSkin: Embed(source="/objects/iconBtn_tablehierarchy_over.png");
+  selectedDownSkin: Embed(source="/objects/iconBtn_tablehierarchy_down.png");
+}
+
+Button.ProcModFactoryNavTableTreeButton
+{
+  upSkin: Embed(source="/objects/iconBtn_tabletree_up.png");
+  overSkin: Embed(source="/objects/iconBtn_tabletree_over.png");
+  downSkin: Embed(source="/objects/iconBtn_tabletree_down.png");
+  selectedUpSkin: Embed(source="/objects/iconBtn_tabletree_down.png");
+  selectedOverSkin: Embed(source="/objects/iconBtn_tabletree_over.png");
+  selectedDownSkin: Embed(source="/objects/iconBtn_tabletree_down.png");
+}
+
+/*** 7.10 Drop Zone ***********************************************************************************/
+
+DropZone
+{
+  inputStyleName: DropZoneAutoCompletionInput;
+  instanceLabelStyleName: DropZoneLabel;
+}
+
+Label.DropZoneLabel
+{
+  color: #000000;
+  fontSize: 10;
+}
+
+AutoCompletionInput.DropZoneAutoCompletionInput
+{
+}
+
+.defaultNodeStyle
+{
+  /*  icon: Embed(source="/menu/btn_open_out.png"); */
+  fontSize: 10;
+  color: #ffffff;
+  textRollOverColor: #2D2D2E;
+  textSelectedColor: #2D2D2E;
+}
+
+.defaultLeafNodeStyle
+{
+  /*  icon: Embed(source="/menu/btn_paste_out.png"); */
+  fontSize: 10;
+  color: #ffffff;
+  textRollOverColor: #2D2D2E;
+  textSelectedColor: #2D2D2E;
+}
+
+/*** 7.11 Reporting ***********************************************************************************/
+
+Button.ProcModReportVisible
+{
+  skin: Embed(source="/processmodeller/iconBtn_visible.png");
+}
+
+Button.ProcModReportIgnored
+{
+  skin: Embed(source="/processmodeller/iconBtn_ignored.png");
+}
+
+Button.ProcModReportGoto
+{
+  skin: Embed(source="/processmodeller/iconBtn_goto.png");
+}
+
+Button.ProcModReportQuickFix
+{
+  skin: Embed(source="/processmodeller/iconBtn_quickfix.png");
+}
+
+Button.ProcModReportInfo
+{
+  skin: Embed(source="/processmodeller/iconBtn_info.png");
+}
+
+Button.ProcModReportWarning
+{
+  skin: Embed(source="/processmodeller/iconBtn_warning.png");
+}
+
+Button.ProcModReportError
+{
+  skin: Embed(source="/processmodeller/iconBtn_error.png");
+}
+
+Button.ProcModReportFatal
+{
+  skin: Embed(source="/processmodeller/iconBtn_fatal.png");
+}
+
+Button.ProcModReportDebug
+{
+  skin: Embed(source="/processmodeller/iconBtn_debug.png");
+}
+
+Button.ProcModReportTrace
+{
+  skin: Embed(source="/processmodeller/iconBtn_trace.png");
+}
+
+/*allgemeines Label im Report*/
+Label.ProcModReportLabel
+{
+}
+
+/*Auswahlkomponente fuer Stack Trace, Details, ...*/
+ToggleButtonBar.ProcModReportButtonBar
+{
+  paddingLeft: 1;
+  paddingTop: 1;
+  
+  horizontalGap: 0;
+  
+  buttonStyleName: ProcModReportToggleButtonBarButton;
+  selectedButtonTextStyleName: ProcModReportToggleButtonBarSelectedButtonText;
+  lastButtonStyleName: ProcModReportToggleButtonBarLastButton;
+}
+
+Button.ProcModReportToggleButtonBarButton
+{
+  color: #dddddd;
+  fillColors: #959595, #959595;
+  fillAlphas: 1.0, 1.0;
+  highlightAlphas: 0.0, 0.0;
+  
+  cornerRadius: 0;
+}
+
+Button.ProcModReportToggleButtonBarLastButton
+{
+  color: #dddddd;
+  fillColors: #959595, #959595;
+  fillAlphas: 1.0, 1.0;
+  highlightAlphas: 0.0, 0.0;
+  
+  cornerRadius: 6;
+}
+
+.ProcModReportToggleButtonBarSelectedButtonText
+{
+  color: #FFFFFF;
+}
+
+.ProcModReportTextAreaBackground
+{
+  backgroundColor: #ffffff;
+}
+
+/*Text mit Stack Trace, Details, ...*/
+TextArea.ProcModReportTextArea
+{
+  fontSize: 13;
+  color: #000000;
+  fontFamily: "Courier New", "_typewriter";
+  
+  backgroundAlpha: 0;
+  borderStyle: none;
+  focusAlpha: 0;
+}
+
+
+/*** 7.12 Sontiges ************************************************************************/
+
+TabNavigator.tabNavProcMod
+{
+  tabHeight: 23;
+  
+  paddingLeft: 6;
+  paddingRight: 6;
+  paddingBottom: 6;
+  paddingTop: 6;
+  
+  borderStyle: none;
+  
+  backgroundColor: #959595;
+  backgroundAlpha: 0;
+  
+  tabOffset: 9;
+  horizontalGap: 0;
+  
+  tabStyleName: tabNavigatorProcMod;
+  /*selectedTabTextStyleName: tabNavigatorSelectedTabText;*/
+}
+
+Button.tabNavigatorProcMod
+{
+  borderColor: #959595;
+  /*textRollOverColor: #FFFFFF;*/
+  
+  fillAlphas: 0.3, 0.3, 0.3, 0.3;
+  highlightAlphas: 0, 0;
+  fillColors: #959595, #959595, #959595, #959595;
+  
+  fontWeight: normal;
+
+  paddingLeft: 2;
+  paddingRight: 3;
+  
+  upCloseIcon: Embed(source="/processmodeller/iconBtn_tabclose_up.png");
+  overCloseIcon: Embed(source="/processmodeller/iconBtn_tabclose_over.png");
+  downCloseIcon: Embed(source="/processmodeller/iconBtn_tabclose_down.png");
+  
+  lockIcon: Embed(source="/processmodeller/iconBtn_tablocked.png");
+}
+
+/*
+Button.tabNavigatorSelectedTabText
+{
+  fontWeight: bold;
+}
+*/
+
+DropZone.ProcModMakeRunableDropZone
+{
+  focusColor: #FFFFFF;
+  focusStrength: 1;
+  focusAlpha: 1;
+  focusStyle: line;
+}
+
+TextArea.DataTreeTextInput
+{
+  paddingTop: 0;
+}
+
+DataTree
+{
+  fontSize: 11;
+  borderColor: #B7BABA;
+}
+
+TextArea.DataTreeDetailTextInput
+{
+  fontSize: 11;
+  cornerRadius: 0;
+  borderStyle: solid;
+  borderThickness: 1;
+  borderColor: #B7BABA;
+  borderAlpha: 1;
+}
+
+Button.SortingAscending
+{
+  upSkin: Embed(source="/processmodeller/iconBtn_sortAscending_up.png");
+  overSkin: Embed(source="/processmodeller/iconBtn_sortAscending_over.png");
+  downSkin: Embed(source="/processmodeller/iconBtn_sortAscending_down.png");
+  disabledSkin: Embed(source="/processmodeller/iconBtn_sortAscending_disabled.png");
+}
+
+Button.SortingDescending
+{
+  upSkin: Embed(source="/processmodeller/iconBtn_sortDescending_up.png");
+  overSkin: Embed(source="/processmodeller/iconBtn_sortDescending_over.png");
+  downSkin: Embed(source="/processmodeller/iconBtn_sortDescending_down.png");
+  disabledSkin: Embed(source="/processmodeller/iconBtn_sortDescending_disabled.png");
+}
+
+
+/******************************************************************************************************/
+/*** 8. Process Monitor *******************************************************************************/
+/******************************************************************************************************/
+
+/*** 8.1 Menueeintraege *********************************************************/
+
+/*Menue-Eintrag Order Overview*/
+Button.procMonOrderOverviewMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmon_tb_orders");
+}
+
+/*Menue-Eintrag MI Monitor*/
+Button.procMonMIMonitorMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmon_tb_manual");
+}
+
+/*Menue-Eintrag Time-Controlled Order Monitor*/
+Button.procMonTimeControlledOrderMonitorMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmon_tb_tasks");
+}
+
+/*** 8.2 Buttons und Symbole **************************************************************************/
+
+Button.buttonOrderStatusAccepted
+{
+  overSkin: Embed(source="/processmonitor/icon_accepted.png");
+  upSkin: Embed(source="/processmonitor/icon_accepted.png");
+  downSkin: Embed(source="/processmonitor/icon_accepted.png");
+}
+
+Button.buttonOrderStatusPlanning
+{
+  overSkin: Embed(source="/processmonitor/icon_planning.png");
+  upSkin: Embed(source="/processmonitor/icon_planning.png");
+  downSkin: Embed(source="/processmonitor/icon_planning.png");
+}
+
+Button.buttonOrderStatusWaiting
+{
+  overSkin: Embed(source="/processmonitor/icon_waiting.png");
+  upSkin: Embed(source="/processmonitor/icon_waiting.png");
+  downSkin: Embed(source="/processmonitor/icon_waiting.png");
+}
+
+Button.buttonOrderStatusScheduling
+{
+  overSkin: Embed(source="/processmonitor/icon_scheduling.png");
+  upSkin: Embed(source="/processmonitor/icon_scheduling.png");
+  downSkin: Embed(source="/processmonitor/icon_scheduling.png");
+}
+
+Button.buttonOrderStatusRunning
+{
+  overSkin: Embed(source="/processmonitor/icon_running.png");
+  upSkin: Embed(source="/processmonitor/icon_running.png");
+  downSkin: Embed(source="/processmonitor/icon_running.png");
+}
+
+Button.buttonOrderStatusMI
+{
+  overSkin: Embed(source="/processmonitor/icon_mi.png");
+  upSkin: Embed(source="/processmonitor/icon_mi.png");
+  downSkin: Embed(source="/processmonitor/icon_mi.png");
+}
+
+Button.buttonOrderStatusCleanup
+{
+  overSkin: Embed(source="/processmonitor/icon_cleanup.png");
+  upSkin: Embed(source="/processmonitor/icon_cleanup.png");
+  downSkin: Embed(source="/processmonitor/icon_cleanup.png");
+}
+
+Button.buttonOrderStatusFinished
+{
+  overSkin: Embed(source="/processmonitor/icon_finished.png");
+  upSkin: Embed(source="/processmonitor/icon_finished.png");
+  downSkin: Embed(source="/processmonitor/icon_finished.png");
+}
+
+Button.buttonOrderStatusFailed
+{
+  overSkin: Embed(source="/processmonitor/icon_failed.png");
+  upSkin: Embed(source="/processmonitor/icon_failed.png");
+  downSkin: Embed(source="/processmonitor/icon_failed.png");
+}
+
+Button.buttonOrderDestinationTypeWorkflow
+{
+  overSkin: Embed(source="/processmonitor/icon_typ_workflow.png");
+  upSkin: Embed(source="/processmonitor/icon_typ_workflow.png");
+  downSkin: Embed(source="/processmonitor/icon_typ_workflow.png");
+}
+
+Button.buttonOrderDestinationTypeJava
+{
+  overSkin: Embed(source="/processmonitor/icon_typ_java.png");
+  upSkin: Embed(source="/processmonitor/icon_typ_java.png");
+  downSkin: Embed(source="/processmonitor/icon_typ_java.png");
+}
+
+Button.buttonOrderMonitoringLevelEmpty
+{
+  overSkin: Embed(source="/processmonitor/icon_monitoring-level_empty.png");
+  upSkin: Embed(source="/processmonitor/icon_monitoring-level_empty.png");
+  downSkin: Embed(source="/processmonitor/icon_monitoring-level_empty.png");
+}
+
+Button.buttonOrderMonitoringLevelFull
+{
+  overSkin: Embed(source="/processmonitor/icon_monitoring-level_full.png");
+  upSkin: Embed(source="/processmonitor/icon_monitoring-level_full.png");
+  downSkin: Embed(source="/processmonitor/icon_monitoring-level_full.png");
+}
+
+Button.buttonOrderSelectAll
+{
+  icon: Embed(source="/processmonitor/iconBtn_selectall_out.png");
+  overIcon: Embed(source="/processmonitor/iconBtn_selectall_over.png");
+  disabledIcon: Embed(source="/processmonitor/iconBtn_selectall_disable.png");
+}
+
+Button.buttonOrderDeSelectAll
+{
+  icon: Embed(source="/processmonitor/iconBtn_deselectall_out.png");
+  overIcon: Embed(source="/processmonitor/iconBtn_deselectall_over.png");
+  disabledIcon: Embed(source="/processmonitor/iconBtn_deselectall_disable.png");
+}
+
+Button.buttonOrderCancel
+{
+  icon: Embed(source="/processmonitor/iconBtn_cancel_out.png");
+  overIcon: Embed(source="/processmonitor/iconBtn_cancel_over.png");
+  disabledIcon: Embed(source="/processmonitor/iconBtn_cancel_disable.png");
+}
+
+Button.buttonOrderContinue
+{
+  icon: Embed(source="/processmonitor/iconBtn_continue_out.png");
+  overIcon: Embed(source="/processmonitor/iconBtn_continue_over.png");
+  disabledIcon: Embed(source="/processmonitor/iconBtn_continue_disable.png");
+}
+
+Button.buttonOrderRepeat
+{
+  icon: Embed(source="/processmonitor/iconBtn_repeat_out.png");
+  overIcon: Embed(source="/processmonitor/iconBtn_repeat_over.png");
+  disabledIcon: Embed(source="/processmonitor/iconBtn_repeat_disable.png");
+}
+
+Button.buttonOrderSearch
+{
+  icon: Embed(source="/menu/iconBtn_search.png");
+  disabledIcon: Embed(source="/menu/iconBtn_search_disabled.png");
+}
+
+Button.buttonNavigateBackToOrder
+{
+  icon: Embed(source="/processmonitor/iconBtn_arrowLeft.svg");
+}
+
+Button.buttonNavigateToOrder
+{
+  icon: Embed(source="/processmonitor/iconBtn_arrowRight.svg");
+}
+
+Button.buttonAuditMinimized
+{
+  icon: Embed(source="/processmonitor/iconBtn_minimize_disable.png");
+  overIcon: Embed(source="/processmonitor/iconBtn_minimize_disable.png");
+  disabledIcon: Embed(source="/processmonitor/iconBtn_minimize_disable.png");
+}
+
+Button.buttonAuditImport
+{
+  icon: Embed(source="/common/iconBtn_maximize_out.png");
+  overIcon: Embed(source="/common/iconBtn_maximize_over.png");
+  downIcon: Embed(source="/common/iconBtn_maximize_disable.png");
+}
+
+Button.buttonAuditMaximized
+{
+  icon: Embed(source="/processmonitor/iconBtn_maximize_disable.png");
+  overIcon: Embed(source="/processmonitor/iconBtn_maximize_disable.png");
+  disabledIcon: Embed(source="/processmonitor/iconBtn_maximize_disable.png");
+}
+
+/*Statusicon eines stilisierten Funktion-Objekt in der Indexauflistung von Foreach-Objekten*/
+Button.SuccessXFMDForeachIterationItem
+{
+  skin: Embed(source="/processmonitor/skinBtn_workstep.png");
+}
+
+/*Statusicon eines stilisierten Funktion-Objekt in der Indexauflistung von Foreach-Objekten*/
+Button.FailedXFMDForeachIterationItem
+{
+  skin: Embed(source="/processmonitor/skinBtn_workstep_failed.png");
+}
+
+/*Statusicon eines stilisierten Funktion-Objekt in der Indexauflistung von Foreach-Objekten*/
+Button.UnknownXFMDForeachIterationItem
+{
+  skin: Embed(source="/processmonitor/skinBtn_workstep_unknown.png");
+}
+
+/*** 8.3 Audit Trail **********************************************************************************/
+
+/*Detailansicht der Workflowinstanzen*/
+.AuditTrail
+{
+  /*Aplhawert von gelaufenen oder noch laufenden Worksteps*/
+  activeWorkstepsAlpha: 1;
+  
+  /*Aplhawert von noch nicht gelaufenden Worksteps*/
+  inactiveWorkstepsAlpha: 0.5;
+  
+  /*Aplhawert der eingebelendeten Input-Werteliste*/
+  activeInputsAlpha: 1;
+  
+  /*Aplhawert der ausgebelendeten Input-Werteliste*/
+  inactiveInputsAlpha: 0.3;
+  
+  /*Aplhawert der eingebelendeten Output-Werteliste*/
+  activeOutputsAlpha: 1;
+  
+  /*Aplhawert der ausgebelendeten Output-Werteliste*/
+  inactiveOutputsAlpha: 0.3;
+}
+
+Text.AuditTrailReportText
+{
+}
+
+Label.AuditTrailLabel
+{
+  fontWeight: bold;
+}
+
+/*Beschriftung der Retry-Count-Area*/
+Label.XFMDRetryStepper
+{
+  fontSize: 14;
+  color: #000000;
+}
+
+/*Beschriftung des Retry-Count-Sliders*/
+Label.XFMDRetryStepperSlider
+{
+  fontSize: 10;
+  color: #000000;
+}
+
+AdvancedDataGrid.ForeachIndexChooserAdvancedDataGrid
+{
+  borderThickness: 1;
+  borderColor: #76767A;
+  borderStyle: solid;
+}
+
+VRule.CompensationObjectVRule
+{
+  strokeWidth: 1;
+  strokeColor: #2D2D2E;
+}
+
+HRule.CompensationObjectHRule
+{
+  strokeColor: #2D2D2E;
+}
+
+Container.CompensationObjectContainer
+{
+  borderThickness: 1;
+  borderStyle: solid;
+  cornerRadius: 10;
+  borderColor: #2D2D2E;
+  backgroundColor: #ffffff;
+  verticalGap: 0;
+}
+
+/******************************************************************************************************/
+/*** 9. User Management *******************************************************************************/
+/******************************************************************************************************/
+
+/*** 9.1 allgemein ************************************************************************************/
+
+/*** 9.2 Buttons und Symbole **************************************************************************/
+
+Button.buttonLocked
+{
+  skin: Embed(source="/processmodeller/iconBtn_tablocked.png");
+}
+
+Button.buttonUserManMoveToLeft
+{
+  icon: Embed(source="/usermanagement/iconBtn_left_out.png");
+  overIcon: Embed(source="/usermanagement/iconBtn_left_over.png");
+  disabledIcon: Embed(source="/usermanagement/iconBtn_left_disable.png");
+}
+
+Button.buttonUserManMoveToRight
+{
+  icon: Embed(source="/usermanagement/iconBtn_right_out.png");
+  overIcon: Embed(source="/usermanagement/iconBtn_right_over.png");
+  disabledIcon: Embed(source="/usermanagement/iconBtn_right_disable.png");
+}
+
+Button.buttonUserManLocked
+{
+  skin: Embed(source="/usermanagement/icon_locked.png");
+}
+
+Button.buttonUserManUnLocked
+{
+  skin: Embed(source="/usermanagement/icon_unlocked.png");
+}
+
+Button.buttonUserManLocking
+{
+  icon: Embed(source="/usermanagement/icon_unlocked.png");
+  overIcon: Embed(source="/usermanagement/icon_unlocked.png");
+  downIcon: Embed(source="/usermanagement/icon_unlocked.png");
+  selectedOverIcon: Embed(source="/usermanagement/icon_locked.png");
+  selectedDownIcon: Embed(source="/usermanagement/icon_locked.png");
+  selectedUpIcon: Embed(source="/usermanagement/icon_locked.png");
+}
+
+ButtonBar.toggleButtonBarUserManLocking
+{
+  firstButtonStyleName: toggleButtonBarUserManLockingFirstButton;
+  buttonStyleName: toggleButtonBarUserManLockingMiddleButton;
+  lastButtonStyleName: toggleButtonBarUserManLockingLastButton;
+}
+
+Button.toggleButtonBarUserManLockingMiddleButton
+{
+  highlightAlphas: 0.5, 0.0;
+}
+
+Button.toggleButtonBarUserManLockingFirstButton
+{
+  icon: Embed(source="/usermanagement/icon_unlocked.png");
+}
+
+Button.toggleButtonBarUserManLockingLastButton
+{
+  icon: Embed(source="/usermanagement/icon_locked.png");
+}
+
+/******************************************************************************************************/
+/*** 10. Sequence Modeller ****************************************************************************/
+/******************************************************************************************************/
+
+/*** 10.1 allgemein ***********************************************************************************/
+
+/*Dokumententitel*/
+Label.SeqModDocumentTitleLabel
+{
+  fontSize: 14;
+  fontWeight: bold;
+  color: #FFFFFF;
+}
+
+/*Dokumententitel*/
+TextInput.SeqModDocumentTitleTextInput
+{
+  fontSize: 14;
+}
+
+/*Zoomslider*/
+Label.SeqModSliderLabel
+{
+  color: #000000;
+}
+
+/*Rahmen der Toolbar */
+Canvas.SeqModSideBarCanvas
+{
+  paddingTop: 5;
+  paddingBottom: 5;
+  paddingLeft: 5;
+  paddingRight: 5;
+  verticalGap: 5;
+  backgroundColor: #AAAAAA;
+  backgroundAlpha: 0.4;
+  borderThickness: 1;
+  borderStyle: solid;
+  borderColor: #fdfeff;
+}
+
+/*Rahmen der Zeichenflaeche*/
+Canvas.SeqModDrawingAreaWrapperCanvas
+{
+  borderStyle: solid;
+  borderThickness: 1;
+  borderColor: #ffffff;
+}
+
+/*Ueberschrift der Recent-Documents*/
+Label.SeqModRecentDocumentHeader
+{
+  fontWeight: bold;
+}
+
+/*Items der Recent Documents*/
+Button.SeqModRecentDocumentButton
+{
+  icon: Embed(source="/sequencemodeller/icon_recent_active.png");
+  
+  paddingLeft: 4;
+  paddingRight: 4;
+  paddingTop: 2;
+  paddingBottom: 2;
+
+  textAlign: left;
+  fontSize: 12;
+  fontWeight: normal;
+}
+
+/*** 10.2 Toolbarsymole *******************************************************************************/
+Button.SeqModNewLifeLineButton
+{
+  icon: Embed(source="/sequencemodeller/lifeline_off.png");
+  overIcon: Embed(source="/sequencemodeller/lifeline_off.png");
+  downIcon: Embed(source="/sequencemodeller/lifeline_active.png");
+}
+
+Button.SeqModNewLifeLineSelectedButton
+{
+  borderColor: #FABB00;
+  fillColors: #FFEED7, #EECC7B, #FFEED7, #FFEED7;
+  icon: Embed(source="/sequencemodeller/lifeline_active.png");
+}
+
+Button.SeqModNewActorLifeLineButton
+{
+  icon: Embed(source="/sequencemodeller/actor_off.png");
+  overIcon: Embed(source="/sequencemodeller/actor_off.png");
+  downIcon: Embed(source="/sequencemodeller/actor_active.png");
+}
+
+Button.SeqModNewActorLifeLineSelectedButton
+{
+  borderColor: #FABB00;
+  fillColors: #FFEED7, #EECC7B, #FFEED7, #FFEED7;
+  icon: Embed(source="/sequencemodeller/actor_active.png");
+}
+
+Button.SeqModNewMessageButton
+{
+  icon: Embed(source="/sequencemodeller/sync_off.png");
+  overIcon: Embed(source="/sequencemodeller/sync_off.png");
+  downIcon: Embed(source="/sequencemodeller/sync_active.png");
+}
+
+Button.SeqModNewMessageSelectedButton
+{
+  borderColor: #FABB00;
+  fillColors: #FFEED7, #EECC7B, #FFEED7, #FFEED7;
+  icon: Embed(source="/sequencemodeller/sync_active.png");
+}
+
+Button.SeqModNewMessageSelectedTargetButton
+{
+  borderColor: #FABB00;
+  fillColors: #EECC7B, #5c738f, #FFEED7, #406aa9;
+  icon: Embed(source="/sequencemodeller/sync_active.png");
+}
+
+Button.SeqModNewAMessageButton
+{
+  icon: Embed(source="/sequencemodeller/async_off.png");
+  overIcon: Embed(source="/sequencemodeller/async_off.png");
+  downIcon: Embed(source="/sequencemodeller/async_active.png");
+}
+
+Button.SeqModNewAMessageSelectedButton
+{
+  borderColor: #FABB00;
+  fillColors: #FFEED7, #EECC7B, #FFEED7, #FFEED7;
+  icon: Embed(source="/sequencemodeller/async_active.png");
+}
+
+Button.SeqModNewAMessageSelectedTargetButton
+{
+  borderColor: #FABB00;
+  fillColors: #EECC7B, #5c738f, #FFEED7, #406aa9;
+  icon: Embed(source="/sequencemodeller/async_active.png");
+}
+
+Button.SeqModNewFragmentButton
+{
+  icon: Embed(source="/sequencemodeller/fragment_off.png");
+  overIcon: Embed(source="/sequencemodeller/fragment_off.png");
+  downIcon: Embed(source="/sequencemodeller/fragment_active.png");
+}
+
+Button.SeqModNewFragmentSelectedButton
+{
+  borderColor: #FABB00;
+  fillColors: #FFEED7, #EECC7B, #FFEED7, #FFEED7;
+  icon: Embed(source="/sequencemodeller/fragment_active.png");
+}
+
+Button.SeqModNewNoteButton
+{
+  icon: Embed(source="/sequencemodeller/note_off.png");
+  overIcon: Embed(source="/sequencemodeller/note_off.png");
+  downIcon: Embed(source="/sequencemodeller/note_active.png");
+}
+
+Button.SeqModNewNoteSelectedButton
+{
+  borderColor: #FABB00;
+  fillColors: #FFEED7, #EECC7B, #FFEED7, #FFEED7;
+  icon: Embed(source="/sequencemodeller/note_active.png");
+}
+
+Button.SeqModNewNoteSelectedTargetButton
+{
+  borderColor: #FABB00;
+  fillColors: #EECC7B, #5c738f, #FFEED7, #406aa9;
+  icon: Embed(source="/sequencemodeller/note_active.png");
+}
+
+/*** 10.3 Zeichenflaeche ******************************************************************************/
+
+/*Hintergrundfarben der Zeichenflaeche*/
+.SeqModDrawingAreaBackground
+{
+  drawingAreaFillColors: #ffffff, #ffffff;
+}
+
+/*Zeichenflaeche*/
+.SeqModDrawingArea
+{
+  /*Farbe des Gluehens bei MousOver*/
+  mouseOverGlowColor: #FABB00;
+  
+  /*Farbe des Selektionsgluehens*/
+  mouseClickGlowColor: #FABB00;
+}
+
+/*Liveline*/
+.SeqModLaneItem
+{
+  /*Gluehen hinter der Schrift*/
+  glowShadowColor: #FFFFFF;
+  
+  /*Randfarbe des Textbereichs*/
+  textAreaBorderColor: #000000;
+  
+  /*Hintergrundfarbe des Textbereichs*/
+  textAreaColors: #ffffff, #ffffff;
+  
+  /*Linienstaerke des Randes*/
+  textAreaLineThickness: 3;
+  
+  /*Hintergrundfarbe des Textbereichs*/
+  lifelineColor: #c0c0c7;
+}
+
+/*Liveline-Beschriftung*/
+Label.SeqModLaneItemLabel
+{
+  fontSize: 15;
+  fontWeight: bold;
+  color: #000000;
+}
+
+/*Liveline-Beschriftungseingabefeld*/
+TextInput.SeqModLaneItemTextInput
+{
+  fontSize: 15;
+}
+
+Canvas.SeqModActorLane
+{
+  image: Embed(source="/sequencemodeller/actor_icon.png");
+  
+  /*Gluehen hinter der Schrift*/
+  glowShadowColor: #FFFFFF;
+  
+  /*Randfarbe des Textbereichs*/
+  textAreaBorderColor: #000000;
+  
+  /*Hintergrundfarbe des Textbereichs*/
+  textAreaColors: #ffffff, #ffffff;
+  
+  /*Linienstaerke des Randes*/
+  textAreaLineThickness: 3;
+  
+  /*Hintergrundfarbe des Textbereichs*/
+  lifelineColor: #c0c0c7;
+}
+
+/*Message-Sequenzen*/
+.SeqModSequenceItem
+{
+  /*Sequenzfuellfarbe*/
+  sequenceFillColor: #76767A;
+  
+  /*Sequenzrandfarbe*/
+  sequenceBorderColor: #000000;
+    
+  /*Fuellfarbe der Idlephase*/
+  idleFillColor: #ffffff;
+  
+  /*Randfarbe der Idlephase*/
+  idleBorderColor: #000000;
+  
+  /*Linienstaerke des Randes*/
+  sequenceLineThickness: 4;
+  
+  /*Linienkruemmung an den Enden*/
+  sequenceCornerRadius: 6;
+}
+
+/*Message-Pfeile*/
+.SeqModLineItem
+{
+  /*Linienfuellfarbe*/
+  arrowFillColor: #76767A;
+  
+  /*Linienrandfarbe*/
+  arrowBorderColor: #76767A;
+}
+
+/*Linienbeschriftung*/
+Label.SeqModLineItemLabel
+{
+  fontSize: 14;
+  fontWeight: normal;
+  color: #000000;
+}
+
+/*Linienbeschriftungseingabefeld*/
+TextInput.SeqModLineItemTextInput
+{
+  fontSize: 14;
+}
+
+/*Fragment-Beschriftung*/
+Label.SeqModFragmentItemLabel
+{
+  fontWeight: normal;
+  color: #000000;
+}
+
+/*Fragment-Beschriftungseingabefeld*/
+TextInput.SeqModFragmentItemTextInput
+{
+  paddingTop: 0;
+  paddingBottom: 0;
+}
+
+ComboBox.SeqModFragmentItemTypeComboBox
+{
+  textAlign: center;
+  
+  fillAlphas: 1.0, 1.0, 0.84, 0.84;
+  fillColors: #E4E4E4, #C0C0C0;
+  color: #000000;
+  dropdownStyleName: SeqModFragmentItemTypeDropdown;
+  borderColor: #AAAAAA;
+  
+  paddingTop: 0;
+  paddingBottom: 0;
+  paddingLeft: 0;
+  paddingRight: 0;
+}
+
+.SeqModFragmentItemTypeDropdown
+{
+  textAlign: left;
+  backgroundColor: #FFFFFF;
+  color: #000000;
+}
+
+/*Notes-Hintergrund*/
+.SeqModNoteBackgroundImage
+{
+  noteBackgroundImage: Embed(source="/sequencemodeller/notizzettel.png");
+}
+
+/*Notes-Abstaende*/
+Box.SeqModNoteBox
+{
+  paddingTop: 31;
+  paddingLeft: 13;
+  paddingRight: 13;
+  paddingBottom: 13;
+}
+
+/*Notes-Text*/
+TextArea.SeqModNoteTextArea
+{
+  color: #000000;
+  
+  backgroundAlpha: 0;
+  borderStyle: none;
+  focusAlpha: 0;
+}
+
+
+/*****************************************************************************/
+/*** 11. Topology Modeller 2 *************************************************/
+/*****************************************************************************/
+
+/*** 11.1 Zeichenflaeche *****************************************************/
+
+/*Beschriftungen auf der Zeichenflaeche*/
+Label.TMModellingLabel
+{
+  fontSize: 16;
+  color: #000000;
+  textAlign: center;
+}
+
+Label.TMModellingLabelEdge
+{
+  fontSize: 14;
+  color: #000000;
+  textAlign: center;
+}
+
+/*allgemeines Netzelement*/
+.TMNetElement
+{
+  /*Selektionsfarbe*/
+  selectionGlowColor: #666677;
+}
+
+/*Linien zwischen physischen Netzelementen*/
+.TMEdge
+{
+  /*Linienendpunktfarbe*/
+  edgeColor: #FFFFFF;
+  /*Linienfarbe*/
+  lineColor: #000000;
+  /*Selektionsfarbe*/
+  selectionGlowColor: #AAAAFF;
+  /*Text Style der Elementebeschriftung*/
+  textStyleName: TMModellingLabelEdge;
+}
+
+/*Linien zwischen Aggregationsebenen*/
+.TMVirtualEdge
+{
+  /*Linienendpunktfarbe*/
+  edgeColor: #DDBB00;
+  /*Linienfarbe*/
+  lineColor: #000000;
+  /*Selektionsfarbe*/
+  selectionGlowColor: #FFDDAA;
+  /*Text Style der Elementebeschriftung*/
+  textStyleName: TMModellingLabel;
+}
+
+/*Linien mit Stecker ohne Kontakt zu moeglichen Netzelementen*/
+.TMPlugEdge
+{
+  /*Linienendpunktfarbe*/
+  edgeColor: #FFFFFF;
+  /*Linienfarbe*/
+  lineColor: #2D2D2E;
+  /*Selektionsfarbe*/
+  selectionGlowColor: #6666BB;
+  /*Stecker Style*/
+  plugStyleName: TMPlugButton;
+  /*Text Style der Elementebeschriftung*/
+  textStyleName: TMModellingLabel;
+}
+
+/*Linien mit Stecker mit Kontakt zu passendem Netzelement*/
+.TMValidPlugEdge
+{
+  /*Linienendpunktfarbe*/
+  edgeColor: #FFFFFF;
+  /*Linienfarbe*/
+  lineColor: #2D2D2E;
+  /*Selektionsfarbe*/
+  selectionGlowColor: #66BB66;
+  /*Stecker Style*/
+  plugStyleName: TMPlugButton;
+}
+
+/*Linien mit Stecker mit Kontakt zu unpassendem Netzelement*/
+.TMInvalidPlugEdge
+{
+  /*Linienendpunktfarbe*/
+  edgeColor: #FFFFFF;
+  /*Linienfarbe*/
+  lineColor: #2D2D2E;
+  /*Selektionsfarbe*/
+  selectionGlowColor: #BB6666;
+  /*Stecker Style*/
+  plugStyleName: TMPlugButton;
+}
+
+/*Steckersymbol*/
+Button.TMPlugButton
+{
+  skin: Embed(source="/topologymodeller/edge_plug_dark.png");
+}
+
+/*Groessenaenderungssymbol*/
+Button.TMResizeBoxButton
+{
+  upSkin: Embed(source="/topologymodeller/resize_out.png");
+  overSkin: Embed(source="/topologymodeller/resize_over.png");
+  downSkin: Embed(source="/topologymodeller/resize_down.png");
+}
+
+/*groessenveraenderbares Label*/
+TextArea.TMResizableLabelTextArea
+{
+  color: #000000;
+  fontSize: 16;
+  textAlign: center;
+  
+  borderColor: #AAAAAA;
+  borderStyle: none;
+  borderThickness: 1;
+  
+  backgroundColor: #FFFFFF;
+  backgroundAlpha: 0;
+}
+
+/*groessenveraenderbares Label*/
+TextArea.TMResizableLabelSelectedModeTextArea
+{
+  color: #000000;
+  fontSize: 16;
+  textAlign: center;
+  
+  borderColor: #AAAAAA;
+  borderStyle: solid;
+  borderThickness: 1;
+  
+  backgroundColor: #FFFFFF;
+  backgroundAlpha: 0;
+}
+
+/*groessenveraenderbares Label*/
+TextArea.TMResizableLabelEditModeTextArea
+{
+  color: #000000;
+  fontSize: 16;
+  textAlign: center;
+  
+  borderColor: #AAAAAA;
+  borderStyle: solid;
+  borderThickness: 1;
+  
+  backgroundColor: #FFFFFF;
+  backgroundAlpha: 1;
+}
+
+/*Gruppierung (durch Nutzer angelegt)*/
+.TMUserGroupNode
+{
+  /*Randfarbe*/
+  borderColor: #444466;
+  /*Fuellfarbe*/
+  fillColor: #BBBBFF;
+  /*Selektionsfarbe*/
+  selectionGlowColor: #444466;
+  /*Text Style*/
+  textStyleName: TMModellingLabel;
+  
+  /*Hintergrundbild im zugeklappten Modus*/
+  backgroundImage: Embed(source="/topologymodeller/group_hidden_pattern.png");
+}
+
+/*Gruppierung (durch automatische Aggregation angelegt)*/
+.TMAutoGroupNode
+{
+  /*Randfarbe*/
+  borderColor: #443344;
+  /*Fuellfarbe*/
+  fillColor: #AAFFAA;
+  /*Selektionsfarbe*/
+  selectionGlowColor: #443344;
+  /*Text Style*/
+  textStyleName: TMModellingLabel;
+  
+  /*Hintergrundbild im zugeklappten Modus*/
+  backgroundImage: Embed(source="/topologymodeller/group_hidden_pattern.png");
+}
+
+Canvas.TMGroupNodeHeader
+{
+  backgroundColor: #444455;
+  cornerRadius: 16;
+}
+
+/*Physikalisches Netzelement*/
+.TMPhysicalNode
+{
+  /*Randfarbe des Hintergrundkreises*/
+  borderColor: #666677;
+  /*Fuellfarbe des Hintergrundkreises*/
+  fillColor: #444455;
+  /*Selektionsfarbe*/
+  selectionGlowColor: #DDBB00;
+  
+  /*Text Style der Elementebeschriftung*/
+  textStyleName: TMModellingLabel;
+}
+
+/*Wolke*/
+.TMCloudNode
+{
+  /*Selektionsfarbe*/
+  selectionGlowColor: #DDBB00;
+  
+  /*Text Style der Elementebeschriftung*/
+  textStyleName: TMModellingLabel;
+}
+
+/*Freiform-Label*/
+.TMLabelNode
+{
+  /*Selektionsfarbe*/
+  selectionGlowColor: #DDBB00;
+  
+  /*Text Style der Elementebeschriftung*/
+  textStyleName: TMModellingLabel;
+}
+
+/*Plusknopf zum Aufklappen einer Gruppierung*/
+Button.TMGroupNodeClipPlusButton
+{
+  /*MouseOver Gluehfarbe*/
+  glowMouseOverColor: #2D2D2E;
+  skin: Embed(source="/topologymodeller/group_plus.png");
+}
+
+/*Minusknopf zum Zuklappen einer Gruppierung*/
+Button.TMGroupNodeClipMinusButton
+{
+  /*MouseOver Gluehfarbe*/
+  glowMouseOverColor: #2D2D2E;
+  skin: Embed(source="/topologymodeller/group_minus.png");
+}
+
+/*Selektionsrahmen*/
+.TMSelectionBox
+{
+  /*Randfarbe*/
+  borderColor: #AACCFF;
+  /*Randtransparenz*/
+  borderAlpha: 1;
+  /*Fuellfarbe*/
+  fillColor: #AACCFF;
+  /*Fuelltransparenz*/
+  fillAlpha: 0.5;
+}
+
+/*Hintergrund der Zeichen- und Modellierungsflaeche*/
+Canvas.TMDisplayAreaBackground
+{
+  backgroundColor: #666666;
+  backgroundColorEnabled: #FFFFFF;
+  backgroundColorDisabled: #666666;
+}
+
+/*Ursprungspunkt*/
+Button.TMOrigin
+{
+  skin: Embed(source="/topologymodeller/cross.png");
+}
+
+/*Control Panel*/
+VBox.TMControlPanel
+{
+  backgroundColor: #254364;
+}
+
+/*Scroll-Element: Inneres Rechteck*/
+Canvas.TMScrollPaneInnerRect
+{
+  rectBackgroundColor: #FFFFFF;
+  rectBackgroundAlpha: 0.15;
+  rectBorderColor: #FFFFFF;
+  rectBorderThickness: 1;
+  rectBorderAlpha: 0.85;
+}
+
+/*Scroll-Element: Aeusseres Rechteck*/
+Canvas.TMScrollPanePreviewRect
+{
+  rectBackgroundColor: #254364;
+  rectBackgroundAlpha: 1.0;
+  rectBorderColor: #254364;
+  rectBorderThickness: 2;
+  rectBorderAlpha: 1.0;
+  previewPhysicalNodeColor: #BB9905;
+  previewCloudNodeColor: #9DC8E9;
+  previewLabelNodeColor: #90A8B9;
+}
+
+/*Alignment Grid*/
+Canvas.TMAlignmentGrid
+{
+  borderColor: #254364;
+  borderThickness: 1;
+  borderAlpha: 1.0;
+}
+
+/*** 11.2 Palette ************************************************************/
+
+/* Hintergrund der Palettenelemente*/
+Button.TMPaletteItemBackground
+{
+  borderColor: #666677;
+  fillColor: #444455;
+}
+
+/*Beschriftung der Palettenelemente*/
+Label.TMPaletteItemLabel
+{
+  fontSize: 16;
+  color: #FFFFFF;
+  textAlign: left;
+}
+
+List.TMPalette
+{
+  verticalScrollBarStyleName: listVerticalScrollBar;
+  verticalAlign: middle;
+  
+  backgroundAlpha: 0.0;
+}
+
+/*** 11.3 Overlays ***********************************************************/
+
+/*Ebenensymbol fuer Sichtbarkeit*/
+Button.TMLayerVisibleButton
+{
+  skin: Embed(source="/topologymodeller/layer_visible.png");
+}
+
+/*Ebenensymbol fuer Editierbarkeit*/
+Button.TMLayerEditButton
+{
+  skin: Embed(source="/topologymodeller/layer_edit.png");
+}
+
+Label.TMLayerTableText
+{
+  fontSize: 12;
+  color: #000000;
+}
+
+/*** 11.4 Headers ************************************************************/
+
+/*Topology Name Label*/
+Label.TMTopologyNameLabel
+{
+  fontSize: 16;
+  color: #FFFFFF;
+  fontWeight: bold;
+}
+
+/*Topology Name Input*/
+TextInput.TMTopologyNameInput
+{
+  fontSize: 16;
+  color: #000000;
+  fontWeight: bold;
+}
+
+/*Topology Name LabelInput*/
+LabelInput.TMTopologyNameLabelInput
+{
+  textLabelStyleName: TMTopologyNameLabel;
+  textInputStyleName: TMTopologyNameInput;
+}
+
+
+/*********************************************************************************/
+/*** 12. Factory Manager *********************************************************/
+/*********************************************************************************/
+
+/*** 12.1 Menueeintraege *********************************************************/
+
+/*Menue-Eintrag Order Types*/
+Button.factManOrdertypesMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#factman_tb_ordertype");
+}
+
+/*Menue-Eintrag Capacities*/
+Button.factManCapacitiesMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#factman_tb_capacities");
+}
+
+/*Menue-Eintrag Administrative Vetos*/
+Button.factManAdministrativeVetosMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#factman_tb_vetos");
+}
+
+/*Menue-Eintrag Workflows*/
+Button.factManWorkflowsMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_abstractservice");
+}
+
+/*Menue-Eintrag Deployment Items*/
+Button.factManDeploymentItemsMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_deploy");
+}
+
+/*Menue-Eintrag Time-Controlled Orders*/
+Button.factManTCOMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#factman_tb_timecontrolled");
+}
+
+/*Menue-Eintrag Xyna Properties*/
+Button.factManXynaPropertiesMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#factman_tb_properties");
+}
+
+/*Menue-Eintrag Storable Instances*/
+Button.factManStorableInstancesMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_tb_datatype");
+}
+
+/*Menue-Eintrag Data Models */
+Button.factManDataModelsMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_nb_schematic");
+}
+
+/*Menue-Eintrag Applications*/
+Button.factManApplicationsMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_nb_applications");
+}
+
+/*Menue-Eintrag Order Input Source*/
+Button.factManOrderInputSourcesMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#factman_tb_inputsource");
+}
+
+
+Button.userManUsersMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#navbar_users");
+}
+
+Button.userManDomainsMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#navbar_services");
+}
+
+Button.userManRolesMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#factman_tb_userrole");
+}
+
+Button.userManRightsMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#factman_tb_rights");
+}
+
+/*** 12.2 Order Type Manager *****************************************************/
+
+/*** 12.3 Capacity Manager *******************************************************/
+
+/*Fuellbalken-Element in einer Tabelle (Rand)*/
+Canvas.FactManCMFillBar
+{
+  borderColor: #000000;
+  borderStyle: solid;
+  cornerRadius: 3;
+  borderThickness: 1;
+  backgroundAlpha: 0.001;
+  backgroundColor: #ffffff;
+}
+
+/*Fuellbalken-Element in einer Tabelle (innerer Teil, Breite abhaengig von "Wert 1")*/
+Canvas.FactManCMFillBarInside1
+{
+  borderStyle: solid;
+  cornerRadius: 3;
+  borderThickness: 0;
+  backgroundAlpha: 0.75;
+  backgroundColor: #48ACE5;
+}
+
+/*Fuellbalken-Element in einer Tabelle (innerer Teil, Breite abhaengig von "Wert 2")*/
+Canvas.FactManCMFillBarInside2
+{
+  borderStyle: solid;
+  cornerRadius: 3;
+  borderThickness: 0;
+  backgroundAlpha: 1.0;
+  backgroundColor: #B5E1FA;
+}
+
+/*Auswahlkomponente fuer Stack Trace, Details, ...*/
+ToggleButtonBar.FactManButtonBar
+{
+  horizontalGap: 0;
+  
+  cornerRadius: 6;
+  
+  buttonStyleName: FactManToggleButtonBarButton;
+  selectedButtonTextStyleName: FactManToggleButtonBarSelectedButtonText;
+  lastButtonStyleName: FactManToggleButtonBarLastButton;
+}
+
+Button.FactManToggleButtonBarButton
+{
+  color: #76767A;
+  highlightAlphas: 0.5, 0.0;
+}
+
+Button.FactManToggleButtonBarLastButton
+{
+  color: #76767A;
+  highlightAlphas: 0.5, 0.0;
+}
+
+.FactManToggleButtonBarSelectedButtonText
+{
+  color: #FFFFFF;
+}
+
+/*** 12.4 Administrative Veto Manager ********************************************/
+
+/*** 12.5 Workflow Manager *******************************************************/
+
+/*** 12.6 Cron Like Orders Manager ***********************************************/
+
+/*** 12.7 Time-Controlled Order Manager ******************************************/
+
+/*** 12.8 Xyna Property Manager **************************************************/
+
+TextArea.FactManXynaPropertyText, TextArea.FactManXynaPropertyDefaultValueText
+{
+  borderStyle: none;
+  paddingLeft: 0;
+  paddingRight: 5;
+  paddingTop: 0;
+  paddingBottom: 0;
+}
+
+TextArea.FactManXynaPropertyText
+{
+  fontFamily: "Courier", "_typewriter";
+}
+
+TextArea.FactManXynaPropertyDefaultValueText
+{
+  backgroundColor: #e5e5e5;
+  fontFamily: "Courier", "_typewriter";
+}
+
+
+/*** 12.9 Storable Instances Manager *********************************************/
+
+Label.StorableInstancesColumnLabel
+{
+  color: #0B333C;
+  fontSize: 10;
+  fontWeight: normal;
+}
+
+Button.StorableInstancesColumnArrowButton
+{
+  skin: Embed(source="/factorymanager/arrow_right_up.png");
+  overSkin: Embed(source="/factorymanager/arrow_right_over.png");
+  downSkin: Embed(source="/factorymanager/arrow_right_down.png");
+  disabledSkin: Embed(source="/factorymanager/arrow_right_down.png");
+}
+
+/*** 12.10 Application Manager ***************************************************/
+
+Button.TypedItemWorkflow
+{
+  skin: Embed(source="gip_iconlibrary.swf#ico_workflow");
+}
+
+Button.TypedItemDataType
+{
+  skin: Embed(source="gip_iconlibrary.swf#ico_datatype");
+}
+
+Button.TypedItemExceptionType
+{
+  skin: Embed(source="gip_iconlibrary.swf#ico_exception");
+}
+
+Button.TypedItemServiceGroup
+{
+  skin: Embed(source="gip_iconlibrary.swf#ico_servicegroup");
+}
+
+Button.TypedItemTrigger
+{
+  skin: Embed(source="gip_iconlibrary.swf#ico_trigger");
+}
+
+Button.TypedItemTriggerInstance
+{
+  skin: Embed(source="gip_iconlibrary.swf#ico_triggerinstance");
+}
+
+Button.TypedItemFilter
+{
+  skin: Embed(source="gip_iconlibrary.swf#ico_filter");
+}
+
+Button.TypedItemFilterInstance
+{
+  skin: Embed(source="gip_iconlibrary.swf#ico_filterinstance");
+}
+
+Button.TypedItemOrderType
+{
+  skin: Embed(source="gip_iconlibrary.swf#ico_ordertype");
+}
+
+Button.TypedItemCapacity
+{
+  skin: Embed(source="gip_iconlibrary.swf#ico_capacity");
+}
+
+Button.TypedItemXynaProperty
+{
+  skin: Embed(source="gip_iconlibrary.swf#ico_xynaproperty");
+}
+
+Button.TypedItemSharedLib
+{
+  skin: Embed(source="gip_iconlibrary.swf#ico_sharedlib");
+}
+
+Button.TypedItemFormDefinition
+{
+  skin: Embed(source="gip_iconlibrary.swf#ico_formdefinition");
+}
+
+Button.TypedItemOrderInputSource
+{
+  skin: Embed(source="gip_iconlibrary.swf#ico_inputsource");
+}
+
+/*********************************************************************************/
+/*** 13. Formulare ***************************************************************/
+/*********************************************************************************/
+
+/*** 13.1 allgemein **************************************************************/
+
+Label.formHeaderLabel
+{
+  color: #FFFFFF;
+  fontWeight: bold;
+}
+
+Label.formHeaderItemLabel
+{
+  color: #FFFFFF;
+  fontSize: 12;
+  fontWeight: normal;
+}
+
+CheckBox.formHeaderCheckBox
+{
+  fontSize: 11;
+  fontWeight: normal;
+  
+  color: #C5C5C5;
+  textRollOverColor: #C5C5C5;
+  textSelectedColor: #C5C5C5;
+  textToggleSelectedColor: #C5C5C5;
+  
+  fontSharpness: 0;
+  leading: 0;
+  letterSpacing: 0;
+  horizontalGap: 2;
+}
+
+/*Buttons without Button*/
+Button.formCloseButton
+{
+  transparent: true;
+  paddingLeft: 0;
+  paddingRight: 0;
+  
+  icon: Embed(source="/common/ButtonClose_icon.svg");
+}
+
+Button.formMinButton
+{
+  skin: Embed(source="gip_iconlibrary.swf#but_listitemclosed");
+  selectedUpSkin: Embed(source="gip_iconlibrary.swf#but_listitemopened");
+}
+
+Button.formMaxButton
+{
+  skin: Embed(source="gip_iconlibrary.swf#but_listitemopened");
+}
+
+.formMainAreaKey
+{
+  labelStyleName: formMainAreaKeyLabel
+}
+
+Label.formMainAreaKeyLabel
+{
+  /* Lighter
+  color: #2D2D2E;*/
+  color: #000000;
+  textAlign: left;
+}
+
+Label.formMainAreaValueLabel
+{
+  fontWeight: bold;
+}
+
+.factoryApplication
+{
+}
+
+.inFormNavigator
+{
+  levelSelectorStyleName: levelSelector;
+  rectGap: 8;
+  
+  bgRectColor: #5A5A5D;
+  bgRectBorderColor: #000000;
+  bgRectCornerRadius: 12;
+  bgRectTopPadding: 10;
+  bgRectBottomPadding: 10;
+  
+  statusStyleName: statusMessage;
+  progressSymbolStyleName: statusProgressSymbol;
+  progressSymbolPaddingLeft: 8;
+  
+  logoStyleName: gipLogoWhite;
+  logoScaleFactor: 0.35;
+  logoPaddingRight: 8;
+}
+
+.modalActivityIndicator
+{
+  bgRectColor: #5A5A5D;
+  bgRectBorderColor: #000000;
+  bgRectCornerRadius: 12;
+  
+  statusStyleName: statusMessageModal;
+}
+
+.levelSelector
+{
+  rectCornerRadius: 3;
+  rectColor: #76767A;
+  rectActiveColor: #D0D0D0;
+  rectDividerThickness: 1;
+  rectWidth: 23;
+}
+
+.gipLogoBlack
+{
+  skin: Embed(source="gip_iconlibrary.swf#giplogo_black");
+}
+
+.gipLogoWhite
+{
+  skin: Embed(source="gip_iconlibrary.swf#giplogo_white");
+}
+
+.statusMessage
+{
+  color: #ffffff;
+  fontWeight: normal;
+  textAlign: left;
+}
+
+.statusMessageModal
+{
+  color: #FFFFFF;
+  fontWeight: normal;
+  textAlign: left;
+}
+
+.statusProgressSymbol
+{
+  skin: Embed(source="gip_iconlibrary.swf#procmod_tb_await");
+}
+
+/*** 13.2 Panels *****************************************************************/
+
+.TablePanelXMOMForm, .DetailAreaPanelXMOMForm, .TableSubFormXMOMForm, .DetailAreaSubFormXMOMForm,
+.ApplicationRendererPanel, .ApplicationRendererSubPanel, .ApplicationRendererCompactSubPanel,
+.DetailAreaSubFormCompact
+{
+  headerLabelStyleName: formHeaderLabel;
+  headerCloseButtonStyleName: formCloseButton;
+  headerMinButtonStyleName: formMinButton;
+  headerMaxButtonStyleName: formMaxButton;
+  headerFrameColor: #2D2D2E;
+  headerFrameThickness: 1;
+  headerLabelBGColors: #5A5A5D, #5A5A5D;
+  headerLabelBGAlphas: 1, 1;
+  headerMinHeight: 30;
+  headerVerticalAlign: middle;
+  
+  headerPaddingTop: 5;
+  headerPaddingBottom: 5;
+  headerPaddingLeft: 10;
+  headerPaddingRight: 10;
+  
+  /* Lighter 
+  mainAreaBGColor: #959595;*/
+  mainAreaBGColor: #CDCDCD;
+  mainAreaFrameColor: #2D2D2E;
+  mainAreaFrameThickness: 1;
+  mainAreaPaddingTop: 10;
+  mainAreaPaddingBottom: 10;
+  mainAreaPaddingLeft: 10;
+  mainAreaPaddingRight: 10;
+  
+  footerFrameColor: #2D2D2E;
+  footerFrameThickness: 1;
+  footerAreaBGColors: #5A5A5D, #5A5A5D;
+  footerAreaBGAlphas: 1, 1;
+  footerPaddingTop: 5;
+  footerPaddingBottom: 5;
+  footerPaddingLeft: 10;
+  footerPaddingRight: 10;
+  
+  formCornerRadius: 12;
+}
+
+.DetailAreaPanelXMOMForm
+{
+  mainAreaPaddingTop: 10;
+  mainAreaPaddingBottom: 20;
+  mainAreaPaddingLeft: 10;
+  mainAreaPaddingRight: 10;
+}
+
+/*** 13.3 Sub-Forms **************************************************************/
+
+.TableSubFormXMOMForm
+{
+  headerPaddingLeft: 0;
+  headerPaddingRight: 0;
+  
+  mainAreaPaddingTop: -1;
+  mainAreaPaddingBottom: -1;
+  mainAreaPaddingLeft: 0;
+  mainAreaPaddingRight: 0;
+  
+  formCornerRadius: 6;
+}
+
+.DetailAreaSubFormXMOMForm,
+.ApplicationRendererSubPanel, .ApplicationRendererCompactSubPanel
+{
+  mainAreaBGColor: #FFFFFF;
+  formCornerRadius: 6;
+}
+  
+/*Kompakter Detailbereicht*/
+.ApplicationRendererCompactSubPanel
+{  
+  headerPaddingRight: 6;
+  
+  mainAreaPaddingTop: -1;
+  mainAreaPaddingBottom: -1;
+  mainAreaPaddingLeft: 0;
+  mainAreaPaddingRight: 0;
+}
+
+TextArea.ApplicationRendererTextArea
+{
+  borderStyle: none;
+  paddingLeft: 0;
+  paddingRight: 5;
+  paddingTop: 0;
+  paddingBottom: 0;
+}
+
+/*unsichbarer Detailbereich*/
+.ApplicationRendererInvivisbleSubPanel
+{
+  headerFrameThickness: 0;
+  mainAreaFrameThickness: 0;
+  footerFrameThickness: 0;
+  
+  mainAreaBGAlpha: 0;
+  mainAreaPaddingTop: 0;
+  mainAreaPaddingBottom: 0;
+  mainAreaPaddingLeft: 0;
+  mainAreaPaddingRight: 0;
+  
+  formCornerRadius: 0;
+}
+
+
+/*** 13.4 Detailbereich in Applikationen *****************************************/
+
+Label.TableBasedApplicationDetailLabel
+{
+}
+
+TextArea.TableBasedApplicationDetailTextArea
+{
+  disabledOverlayAlpha: 0;
+  borderStyle: none;
+  paddingLeft: 0;
+  paddingRight: 5;
+  paddingTop: 0;
+  paddingBottom: 0;
+}
+
+CheckBox.TableBasedApplicationDetailCheckBox,
+RadioButton.TableBasedApplicationDetailRadioButton
+{
+  color: #000000;
+  textSelectedColor: #000000;
+  textRollOverColor: #000000;
+}
+
+
+/*********************************************************************************/
+/*** 14. Login *******************************************************************/
+/*********************************************************************************/
+
+TabBar.LoginTabBar
+{
+  fontWeight: normal;
+  horizontalGap: 1;
+  tabStyleName: loginTabBarStyleName;
+  
+  backgroundColor: #76767A;
+  borderColor: #76767A;
+  borderStyle: solid;
+  borderThickness: 1;
+}
+
+Tab.loginTabBarStyleName
+{
+  cornerRadius: 5;
+  
+  borderColorUp: #76767A;
+  borderColorOver: #959595;
+  borderColorDown: #959595;
+  borderColorDisabled: #959595;
+  backgroundColorUp: #76767A;
+  backgroundColorOver: #959595;
+  backgroundColorDown: #959595;
+  backgroundColorDisabled: #959595;
+}
+
+Label.loginLabelStyleName
+{
+  textAlign: left;
+}
+
+
+/*********************************************************************************/
+/*** 15. Test Factory ************************************************************/
+/*********************************************************************************/
+
+/*** 12.1 Menueeintraege *********************************************************/
+
+/*Menue-Eintrag Test Project*/
+Button.testFactoryTestProjectMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#factman_tb_ordertype");
+}
+
+/*Menue-Eintrag System under Test*/
+Button.testFactorySystemUnderTestMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#procmod_nb_applications");
+}
+
+/*Menue-Eintrag Order Monitor*/
+Button.testFactoryOrderMonitorMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#factman_tb_timecontrolled");
+}
+
+/*Menue-Eintrag Live Reporting*/
+Button.testFactoryLiveReportingMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#factman_tb_timecontrolled");
+}
+
+/*Menue-Eintrag Administration*/
+Button.testFactoryAdministrationMenuEntry
+{
+  icon: Embed(source="gip_iconlibrary.swf#factman_tb_properties");
+}
+
+/******************************************************************************************************/
+/*** D. Deprecated ************************************************************************************/
+/******************************************************************************************************/
+/*Die hier aufgefuehrten Definitionen sind veraltet, werden aber noch eine Zeit lang unterstuetzt*/
+
+
+/******************************************************************************************************/
+/*** X. Testgebiet ************************************************************************************/
+/******************************************************************************************************/
+/*Die hier aufgefuehrten Definitionen dienen ausschliesslich zu Testzwecken*/

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 package com.gip.xyna.utils.snmp.agent.utils;
 
 /**
- * Interface, Ã¼ber das eine beliebige Klasse einen Int herausgeben kann.
+ * Interface, über das eine beliebige Klasse einen Int herausgeben kann.
  *
  */
 public interface IntSource {

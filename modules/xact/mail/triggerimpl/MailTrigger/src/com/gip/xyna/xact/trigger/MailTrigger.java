@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -138,7 +138,7 @@ public class MailTrigger extends EventListener<MailTriggerConnection, MailStartP
       logger.warn("Failed to receive mail", t);
       throw new TriggerFailedException("Failed to receive mail", t);
     } else {
-      // da dieser Fehler nicht immer auftritt, wird er als temporÃ¤res Problem angesehen.
+      // da dieser Fehler nicht immer auftritt, wird er als temporäres Problem angesehen.
       //Daher werden weiter Retries probiert.
       if( recReceive == null ) {
         recReceive = new RepeatedExceptionCheck();
@@ -180,7 +180,7 @@ public class MailTrigger extends EventListener<MailTriggerConnection, MailStartP
    * @param con corresponding triggerconnection
    */
   public void onNoFilterFound(MailTriggerConnection con) {
-    //Mail sollte nicht gelÃ¶scht werden. Oder doch? Dann sollte das ein weiterer StartParameter werden!
+    //Mail sollte nicht gelöscht werden. Oder doch? Dann sollte das ein weiterer StartParameter werden!
     mailStore.notProcessed(con.getMessageId());
   }
 

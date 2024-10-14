@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Copyright 2022 GIP SmartMercial GmbH, Germany
+# Copyright 2022 Xyna GmbH, Germany
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,5 +19,5 @@
 #copy license files (non .jar-files) in input dir to output dir
 
 mkdir "$2"
-while read -r i; do cp "$i" "$2"; done <<< $(find "$1" ! -iname "*.jar" -type f)
+while read -r i; do cp "$i" "$2"; done <<< $(find "$1" -maxdepth 1 ! -iname "*.jar" -type f)
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@
         <!--ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/../../../SSHTools/sharedlib/SSHTools">
             <property name="target.dir" value="${basedir}/lib/xyna" />
         </ant-->
+	<ant antfile="build.xml" target="prepare-mdm-jar-if-missing" inheritAll="false" dir="${basedir}/../../../../connection/connection" />
         <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/../../../../connection/connection/mdmimpl/RuleBasedDeviceTypeImpl">
             <property name="target.dir" value="${basedir}/lib/xyna" />
         </ant>

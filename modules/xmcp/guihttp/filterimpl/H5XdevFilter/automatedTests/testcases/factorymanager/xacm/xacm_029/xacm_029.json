@@ -22,7 +22,7 @@
           "!xmcp.xacm.rightmanagement.CreateRight!": "xmcp.xacm.rightmanagement.CreateRight"
         },
         {
-          "!autotest.generated.SONDERZEICHEN!": "autotest.generated.!rnd!.<>°!\\\"§$%&/()=?`´{}|;:,.-üöä+#'@€µ"
+          "!autotest.generated.SONDERZEICHEN!": "autotest.generated.!rnd!.<>Â°!\\\"Â§$%&/()=?`Â´{}|;:,.-üöä+#'@â‚¬Âµ"
         },
         {
           "!xmcp.xacm.rightmanagement.datatypes.Right!": "xmcp.xacm.rightmanagement.datatypes.Right"

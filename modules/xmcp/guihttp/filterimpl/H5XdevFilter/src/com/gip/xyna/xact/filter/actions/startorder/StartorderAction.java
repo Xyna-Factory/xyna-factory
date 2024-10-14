@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@ package com.gip.xyna.xact.filter.actions.startorder;
 
 
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
@@ -38,12 +40,16 @@ import com.gip.xyna.xact.filter.actions.PathElements;
 import com.gip.xyna.xact.filter.actions.auth.utils.AuthUtils;
 import com.gip.xyna.xact.filter.actions.startorder.json.StartorderRequestJson;
 import com.gip.xyna.xact.filter.session.XMOMGuiReply.Status;
+import com.gip.xyna.xact.filter.util.Utils;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
+import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xfmg.exceptions.XFMG_ACCESS_VIOLATION;
+import com.gip.xyna.xfmg.xfctrl.XynaFactoryControl;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.RevisionOrderControl;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
+import com.gip.xyna.xfmg.xfctrl.classloading.MDMClassLoader;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.Role;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.ScopedRightUtils;
@@ -61,10 +67,63 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 public class StartorderAction extends RuntimeContextDependendAction {
   private static final Logger logger = CentralFactoryLogging.getLogger(StartorderAction.class);
   public static final String BASE_PATH = "/" + PathElements.RTCS;
-
+  private static final XynaFactoryControl xfctrl = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl();
+  private static final String documentFqn = "xact.templates.Document";
+  private static final String ordertypeFqn = "xprc.xpce.OrderType";
+  private List<Endpoint> endpoints;
+  
+  
+  public void setEndpoints(List<Endpoint> endpoints) {
+    this.endpoints = endpoints;
+  }
 
   protected boolean matchRuntimeContextIndependent(URLPath url, Method method) {
     return url.getPath().equals("/" + PathElements.START_ORDER) && Method.POST == method;
+  }
+
+  
+  private GeneralXynaObject convertPayloadToWFInput(RuntimeContext rtc, HTTPTriggerConnection tc, RuntimeContext startOrderRTC) {
+    MDMClassLoader classloader = null;
+    try {
+      Long revision = xfctrl.getRevisionManagement().getRevision(rtc);
+      Long startOrderRevision = xfctrl.getRevisionManagement().getRevision(startOrderRTC);
+      classloader = xfctrl.getClassLoaderDispatcher().getMDMClassLoader(ordertypeFqn, revision, true);
+      StartorderRequestJson srj = new JsonParser().parse(tc.getPayload(), StartorderRequestJson.getJsonVisitor(startOrderRevision));
+
+      GeneralXynaObject doc = prepareObject(documentFqn, classloader, "text", tc.getPayload());
+      GeneralXynaObject ot = prepareObject(ordertypeFqn, classloader, "orderType", srj.getOrderType());
+
+      return new Container(doc, ot);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
+  private GeneralXynaObject prepareObject(String fqn, ClassLoader cl, String member, String value) throws Exception {
+    Class<?> fqnClass = cl.loadClass(fqn);
+    Object fqnObject = fqnClass.getDeclaredConstructor().newInstance();
+    GeneralXynaObject casted = (GeneralXynaObject) fqnObject;
+    casted.set(member, value);
+    return casted;
+  }
+
+
+  private String validate(HTTPTriggerConnection tc, RuntimeContext startOrderRTC) throws XynaException {
+    String validationProperty = H5XdevFilter.VALIDATION_WORKFLOW.get();
+    if (validationProperty == null || validationProperty.isEmpty() || startOrderRTC.getName().equals(Utils.APP_NAME)) {
+      return tc.getPayload();
+    }
+    int orderTypeSeparator = validationProperty.indexOf('@');
+    String rtcAsString = validationProperty.substring(orderTypeSeparator + 1);
+    RuntimeContext validationRTC = RuntimeContext.valueOf(rtcAsString);
+    String validationOrderType = validationProperty.substring(0, orderTypeSeparator);
+    GeneralXynaObject gxo = convertPayloadToWFInput(validationRTC, tc, startOrderRTC);
+    DestinationKey dk = new DestinationKey(validationOrderType, validationRTC);
+    XynaOrderCreationParameter xocp = new XynaOrderCreationParameter(dk, gxo);
+    xocp.setTransientCreationRole(getRole(tc));
+    GeneralXynaObject result = XynaFactory.getInstance().getProcessing().startOrderSynchronously(xocp);
+    return (String) result.get("text");
   }
 
 
@@ -73,7 +132,17 @@ public class StartorderAction extends RuntimeContextDependendAction {
       throws XynaException {
     JsonFilterActionInstance jfai = new JsonFilterActionInstance();
 
-    XynaPlainSessionCredentials xpsc = AuthUtils.readCredentialsFromCookies(tc);
+    String payload = null; 
+
+    try {
+      payload = validate(tc, rc);
+    } catch (XynaException e) {
+      AuthUtils.replyError(tc, jfai, e);
+      return jfai;
+    }
+
+
+    XynaPlainSessionCredentials xpsc = AuthUtils.readCredentialsFromRequest(tc);
     Role role = getRole(tc);
     if(role == null) {
       AuthUtils.replyLoginRequiredError(tc, jfai);
@@ -84,7 +153,7 @@ public class StartorderAction extends RuntimeContextDependendAction {
     StartorderRequestJson srj;
 
     try {
-      srj = jp.parse(tc.getPayload(), StartorderRequestJson.getJsonVisitor(revision));
+      srj = jp.parse(payload, StartorderRequestJson.getJsonVisitor(revision));
     } catch (InvalidJSONException | UnexpectedJSONContentException e) {
       AuthUtils.replyError(tc, jfai, e);
       return jfai;
@@ -103,6 +172,7 @@ public class StartorderAction extends RuntimeContextDependendAction {
     xocp.setMonitoringLevel(srj.getMonitoringLevel());
     xocp.setSessionId(xpsc.getSessionId());
     xocp.setTransientCreationRole(role);
+    xocp.addRunnableForFilterAccess("H5XdevFilter", new H5XdevFilterAccessRunnable(tc, endpoints));
 
     XynaMultiChannelPortalSecurityLayer xynaMultiChannelPortalSecurityLayer =
         XynaFactory.getInstance().getXynaMultiChannelPortalSecurityLayer();

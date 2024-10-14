@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ package com.gip.xyna.xact.filter.session.workflowwarnings;
 
 import com.gip.xyna.xact.filter.session.GenerationBaseObject;
 import com.gip.xyna.xact.filter.session.gb.ObjectId;
+import com.gip.xyna.xact.filter.session.gb.ObjectType;
 
 import xmcp.processmodeller.datatypes.Warning;
 import xmcp.processmodeller.datatypes.response.GetWarningsResponse;
@@ -50,6 +51,11 @@ public abstract class WorkflowWarningsHandler {
    */
   public abstract void deleteAllWarnings(String objectId);
   
+  /**
+   * deletes all warnings matching the given ObjectType
+   */
+  public abstract void deleteAllWarningsOfType(ObjectType type);
+  
 
   /**
    * Empty implementations of WorkflowWarningsHandler methods.
@@ -57,7 +63,7 @@ public abstract class WorkflowWarningsHandler {
    * Can be used instead of a regular WorkflowWarningsHandler to ignore warnings
    *
    */
-  public static class EmptyWorkflowWarningsHandler extends WorkflowWarningsHandler{
+  public static class EmptyWorkflowWarningsHandler extends WorkflowWarningsHandler {
 
     @Override
     public GetWarningsResponse createWarningsResponse(GenerationBaseObject obj) {
@@ -86,6 +92,10 @@ public abstract class WorkflowWarningsHandler {
 
     @Override
     public void deleteAllWarnings(String objectId) {
+    }
+
+    @Override
+    public void deleteAllWarningsOfType(ObjectType type) {  
     }
 
   }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -254,19 +254,23 @@ public class LazyAlgorithmExecutor<ALG extends Algorithm> implements Runnable {
       }
       
       while (threadMayRun) {
-        loopAsLongAsRequested();
-        synchronized (sleepLock) {
-          if (threadMayRun) {
-            if (loopsWithoutSleep > 0) {
-              loopsWithoutSleep--;
-              continue;
+        try {
+          loopAsLongAsRequested();
+          synchronized (sleepLock) {
+            if (threadMayRun) {
+              if (loopsWithoutSleep > 0) {
+                loopsWithoutSleep--;
+                continue;
+              }
+              logger.trace(sleepMessage);
+              threadIsAsleep = true;
+              sleepLock.wait(periodicWakeupInterval);
+              threadIsAsleep = false;
+              logger.trace(wokenMessage);
             }
-            logger.trace(sleepMessage);
-            threadIsAsleep = true;
-            sleepLock.wait(periodicWakeupInterval);
-            threadIsAsleep = false;
-            logger.trace(wokenMessage);
           }
+        } catch (OutOfMemoryError t) {
+          Department.handleThrowable(t);
         }
       }
       if (logger.isDebugEnabled()) {

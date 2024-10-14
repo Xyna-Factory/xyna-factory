@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.FactoryNode;
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.NodeManagement;
+import com.gip.xyna.xfmg.xfctrl.nodemgmt.remotecall.NotificationProcessor.RemoteCallNotificationStatus;
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.remotecall.Resumer.ResumeData;
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.remotecall.notifications.AwaitOrderNotification;
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.remotecall.notifications.RemoteCallNotification;
@@ -119,6 +120,10 @@ public class FactoryNodeCaller {
   }
   
   public void shutdown() {
+    shutdown(true);
+  }
+  
+  public void shutdown(boolean hasSuccessor) {
     NodeManagement nm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getNodeManagement();
     
     //Threads beenden
@@ -135,13 +140,20 @@ public class FactoryNodeCaller {
     if( ! notificationProcessor.isFinished() ) {
       //nun sind doch nochmal unerwartet Aufträge eingegangen ...
       //diese nun umtragen in aktuellen FactoryNodeCaller
-      FactoryNodeCaller successor = nm.getFactoryNodeCaller(nodeName);
-      for( RemoteCallNotification n : notificationProcessor.getNotifications())
-      successor.enqueue(n);
+      if(hasSuccessor) {
+        FactoryNodeCaller successor = nm.getFactoryNodeCaller(nodeName);
+        for( RemoteCallNotification n : notificationProcessor.getNotifications()) {
+          successor.enqueue(n);
+        }
+      } else {
+        for( RemoteCallNotification n : notificationProcessor.getNotifications()) {
+          n.setStatusAndNotify(RemoteCallNotificationStatus.Removed);
+        }
+      }
     }
     
     //Sind noch Responses eingegangen?
-    if( ! responses.isEmpty() ) {
+    if( ! responses.isEmpty() && hasSuccessor) {
       //nun sind doch nochmal unerwartet Aufträge eingegangen ...
       //diese nun umtragen in aktuellen FactoryNodeCaller
       FactoryNodeCaller successor = nm.getFactoryNodeCaller(nodeName);
@@ -151,8 +163,14 @@ public class FactoryNodeCaller {
     if( ! awaitResponses.isEmpty() ) {
       //nun sind doch nochmal unerwartet Aufträge eingegangen ...
       //diese nun umtragen in aktuellen FactoryNodeCaller
-      FactoryNodeCaller successor = nm.getFactoryNodeCaller(nodeName);
-      successor.awaitResponses.putAll(awaitResponses);
+      if(hasSuccessor) {
+        FactoryNodeCaller successor = nm.getFactoryNodeCaller(nodeName);
+        successor.awaitResponses.putAll(awaitResponses);
+      } else {
+        for(AwaitOrderNotification awaitResponse : awaitResponses.values()) {
+          awaitResponse.abort(nodeName);
+        }
+      }
     }
     
   }

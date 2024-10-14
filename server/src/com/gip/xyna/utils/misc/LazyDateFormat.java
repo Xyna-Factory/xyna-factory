@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -114,8 +115,9 @@ public class LazyDateFormat implements Serializable {
 
 
   private boolean isCacheUpToDate(String date, String format) {
-    if (format.equals(lastFormat)) {
-      return date.equals(lastDate);
+    //format may only null for base.date.Now
+    if (format == null || format.equals(lastFormat)) {
+      return Objects.equals(date, lastDate);
     }
     dateFormat = null; //dateFormat-Cache refresh erzwingen
     lastFormat = format;

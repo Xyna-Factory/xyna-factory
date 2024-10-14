@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
  */
 package xact.ssh.impl;
 
+
+
 import java.io.Serializable;
 
 
@@ -29,16 +31,17 @@ import java.io.Serializable;
 public abstract class ProtocolMessageHandler implements Serializable {
 
   private static final long serialVersionUID = 1L;
-  
+
   private static final ProtocolMessageHandlerStore STORE = new ProtocolMessageHandlerStore();
-  
+
+
   public static ProtocolMessageHandler newInstance() {
     return STORE;
   }
 
 
-  public abstract void handleProtocol(SSHConnectionInstanceOperationImpl sshConnectionInstanceOperationImpl, 
-                                      String content, String type, boolean commandSent, long recieveTime);
-  
-  
+  public abstract void handleProtocol(SSHConnectionInstanceOperationImpl sshConnectionInstanceOperationImpl, String content, String type,
+                                      boolean commandSent, long recieveTime);
+
+
 }

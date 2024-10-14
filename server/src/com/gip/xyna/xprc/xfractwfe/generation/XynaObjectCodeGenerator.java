@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -161,24 +161,26 @@ public class XynaObjectCodeGenerator {
     generateJavaMethods(cb);
   }
 
+
   public void generateJavaStub(CodeBuffer cb) {
     Set<String> libs = new HashSet<String>(dom.getAdditionalLibraries());
     dom.getAdditionalLibraries().clear();
     List<Operation> operations = dom.getOperations();
     for (Operation operation : operations) {
-      if (operation instanceof JavaOperation) {
-        ((JavaOperation) operation).setActive(false);
+      if (operation instanceof CodeOperation) {
+        ((CodeOperation) operation).setActive(false);
       }
     }
     generateJavaInternally(cb);
     dom.getAdditionalLibraries().addAll(libs);
     for (Operation operation : operations) {
       if (operation instanceof JavaOperation) {
-        ((JavaOperation) operation).setActive(true);
+        ((CodeOperation) operation).setActive(true);
       }
     }
   }
-  
+
+
   public void generateJavaImports(CodeBuffer cb) {
     // this set is only required for the following import creation. the imported class names set is required below.
     Set<String> importedSimpleClasseNames = new HashSet<String>();
@@ -1446,7 +1448,7 @@ public class XynaObjectCodeGenerator {
 
   public static void appendGeneralSetter(CodeBuffer cb, Set<String> imports, List<AVariable> memberVars, boolean hasSuperClassWithGeneralGetter) {
     // allgemeiner setter
-    cb.addLine("public void set(String name, Object o) throws ", XDEV_PARAMETER_NAME_NOT_FOUND.class.getSimpleName(), " {");
+    cb.addLine("public void set(String name, java.lang.Object o) throws ", XDEV_PARAMETER_NAME_NOT_FOUND.class.getSimpleName(), " {");
     for (int i = 0; i < memberVars.size(); i++) {
       AVariable v = memberVars.get(i);
       if (i > 0) {
@@ -1512,13 +1514,13 @@ public class XynaObjectCodeGenerator {
     cb.addLine(" * @param name variable name or path separated by \".\".");
     cb.addLine(" */");
 
-    cb.addLine("public Object get(String name) throws ", InvalidObjectPathException.class.getSimpleName(), " {");
+    cb.addLine("public java.lang.Object get(String name) throws ", InvalidObjectPathException.class.getSimpleName(), " {");
     cb.add("String[] varNames = new String[]{");
     for (int i = 0; i < memberVars.size(); i++) {
       cb.addListElement("\"" + memberVars.get(i).getVarName() + "\"");
     }
     cb.add("};").addLB();
-    cb.add("Object[] vars = new Object[]{");
+    cb.add("java.lang.Object[] vars = new java.lang.Object[]{");
     for (AVariable v : memberVars) {
       if (v.isList()) {
         //getter verwenden, um bei listen die versionsbewusste liste zu bekommen
@@ -1528,7 +1530,7 @@ public class XynaObjectCodeGenerator {
       }
     }
     cb.add("};").addLB();
-    cb.addLine("Object o = ", XOUtils.class.getSimpleName(), ".getIfNameIsInVarNames(varNames, vars, name)");
+    cb.addLine("java.lang.Object o = ", XOUtils.class.getSimpleName(), ".getIfNameIsInVarNames(varNames, vars, name)");
     cb.addLine("if (o == ", XOUtils.class.getSimpleName(), ".VARNAME_NOTFOUND) {");
     if (hasSuperClassWithGeneralGetter) {
       cb.addLine("o = super.get(name)");

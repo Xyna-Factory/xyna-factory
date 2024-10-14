@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,4 +27,5 @@ public class WorkflowWarningMessageCode {
   public static final String ASSIGNMENT_TO_SOURCE = "ASSIGNMENT_TO_SOURCE";
   public static final String ASSIGNMENT_FROM_TARGET = "ASSIGNMENT_FROM_TARGET";
   public static final String NEW_CONNECTION_CANDIDATE = "NEW_CONNECTION_CANDIDATE";
+  public static final String REFERENCE_INVALID = "REFERENCE_INVALD";
 }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,9 @@ import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache.XMOMStorabl
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM.OperationInformation;
+
+import xmcp.yggdrasil.plugin.Context;
+
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.PersistenceInformation;
@@ -62,6 +65,7 @@ public class Utils {
 
   public static List<DatatypeMemberXo> createDtMembers(List<AVariable> memberVars, GenerationBaseObject gbo, Map<String, GenerationBaseObject> parents) {
     List<DatatypeMemberXo> list = new ArrayList<>(memberVars.size());
+    ExtendedContextBuilder contextBuilder = new ExtendedContextBuilder(gbo);
     for (int varIdx = 0; varIdx < memberVars.size(); varIdx++) {
       AVariable var = memberVars.get(varIdx);
 
@@ -76,7 +80,7 @@ public class Utils {
       }
 
 
-      DatatypeMemberXo member = new DatatypeMemberXo(var, ObjectId.createMemberVariableId(varIdx), pi, si, isStorable);
+      DatatypeMemberXo member = new DatatypeMemberXo(var, ObjectId.createMemberVariableId(varIdx), pi, si, isStorable, contextBuilder);
       list.add(member);
 
       GenerationBase varCreator = var.getCreator();
@@ -88,12 +92,14 @@ public class Utils {
     return list;
   }
 
+
   public static List<DatatypeMethodXo> createDtMethods(DOM dom, GenerationBaseObject gbo) {
     List<DatatypeMethodXo> methods = new ArrayList<>();
+    ExtendedContextBuilder contextBuilder = new ExtendedContextBuilder(gbo);
     OperationInformation[] operationInformations = dom.collectOperationsOfDOMHierarchy(true);
     for (int operationIdx = 0; operationIdx < operationInformations.length; operationIdx++) {
       OperationInformation oi = operationInformations[operationIdx];
-      DatatypeMethodXo dtMethod = new DatatypeMethodXo(oi.getOperation(), gbo, ObjectId.createMemberMethodId(operationIdx));
+      DatatypeMethodXo dtMethod = new DatatypeMethodXo(oi.getOperation(), gbo, ObjectId.createMemberMethodId(operationIdx), contextBuilder);
       if(!oi.getDefiningType().equals(dom)) { // Override or inherited
         boolean overrides = false;
         for(Operation operation : dom.getOperations()) {
@@ -142,6 +148,47 @@ public class Utils {
     result.setRuntimeContext(currentRtc);
     
     return result;
+  }
+
+
+  public static class ExtendedContextBuilder {
+
+    private Context.Builder builder;
+    private XMOMType type;
+
+
+    public ExtendedContextBuilder(GenerationBaseObject gbo) {
+      builder = new Context.Builder();
+      builder.fQN(gbo.getOriginalFqName());
+      builder.runtimeContext(com.gip.xyna.xact.filter.util.Utils.getXpceRtc(gbo.getRuntimeContext()));
+      type = gbo.getType();
+    }
+
+    
+    public Context instantiateContext(String location, String objectId) {
+      builder.location(location);
+      builder.objectId(objectId);
+      return builder.instance().clone();
+    }
+
+    public Context.Builder getBuilder() {
+      return builder;
+    }
+
+
+    public void setBuilder(Context.Builder builder) {
+      this.builder = builder;
+    }
+
+
+    public XMOMType getType() {
+      return type;
+    }
+
+
+    public void setType(XMOMType type) {
+      this.type = type;
+    }
   }
 
 }

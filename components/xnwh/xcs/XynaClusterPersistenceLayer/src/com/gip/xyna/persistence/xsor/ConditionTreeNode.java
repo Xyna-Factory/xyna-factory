@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,10 +37,12 @@ abstract class ConditionTreeNode {
 
   abstract List<List<ConditionTreeLeafNode>> convertToLeafNodesInDNF();
 
-  
+
   public static ConditionTreeNode parseIntoTree(ParsedQuery parsedQuery) {
-    ConditionTreeNode root = new ConditionTreeIntermidiateNode();
+    boolean noSubConditions = parsedQuery.getWhereClause().getConditions().isEmpty();
+    ConditionTreeNode root = noSubConditions ? new ConditionTreeLeafNode() : new ConditionTreeIntermidiateNode();
     root.parse(parsedQuery.getWhereClause(), new AtomicInteger(0));
+
     return root;
   }
 

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -284,24 +284,6 @@ public abstract class GenerationBase {
   public static final String MAC_ADDRESS_VALIDATION_EXCEPTION = "base.net.exception.MACAddressValidationException";
   public static final String VLAN_ID_VALIDATION_EXCEPTION = "base.net.exception.VLANIDValidationException";
 
-  public static final String COPYRIGHT_HEADER = "<!--\n" + 
-      " * - - - - - - - - - - - - - - - - - - - - - - - - - -\n" + 
-      " * Copyright 2022 GIP SmartMercial GmbH, Germany\n" + 
-      " *\n" +
-      " * Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
-      " * you may not use this file except in compliance with the License.\n" +
-      " * You may obtain a copy of the License at\n" +
-      " *\n" +
-      " * http://www.apache.org/licenses/LICENSE-2.0\n" +
-      " *\n" +
-      " * distributed under the License is distributed on an \"AS IS\" BASIS,\n" +
-      " * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n" +
-      " * See the License for the specific language governing permissions and\n" +
-      " * limitations under the License.\n" +
-      " * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n" +
-      " -->";
-
-  
   private static final String pathSeparator = Constants.PATH_SEPARATOR;
   
   /**
@@ -533,6 +515,8 @@ public abstract class GenerationBase {
     public static final String REFID = "RefID";
     public static final String PATH = "Path";
     public static final String SNIPPETTYPE = "Type";
+    public static final String JAVA = "Java";
+    public static final String PYTHON = "Python";
     public static final String SERVICE = "Service";
     public static final String SERVICEID = "ServiceID";
     public static final String ABSTRACT = "IsAbstract";
@@ -695,6 +679,7 @@ public abstract class GenerationBase {
     public static final String PREFERED_EXCEPTION_TYPE = "PreferedExceptionType";
     public static final String EXCEPTION = "Exception";
     public static final String LIBRARIES = "Libraries";
+    public static final String PYTHONLIBRARIES = "PythonLibraries";
     public static final String VALUE = "Value";
     public static final String SHAREDLIB = "SharedLibraries";
     public static final String PARAMETER = "Parameter";
@@ -2298,7 +2283,7 @@ public abstract class GenerationBase {
 
   private static void cleanupGlobalCaches(long revision) {
     Path.clearCache();
-    if (!XynaFactory.isInstanceMocked()) {
+    if (XynaFactory.hasInstance() && !XynaFactory.isInstanceMocked()) {
       XynaObject.clearGenerationCache(revision);
     }
   }
@@ -2397,7 +2382,7 @@ public abstract class GenerationBase {
       }
 
       boolean pauseLoading = false;
-      if (!XynaFactory.getInstance().isStartingUp()) {
+      if (XynaFactory.hasInstance() && !XynaFactory.getInstance().isStartingUp()) {
         for (GenerationBase gb : objects) {
           if(gb.mode.mustPauseMigrationLoadingAtStartup()) {
             // pausieren vom Laden des OrderBackups ... wenn das Laden schon fertig, tut das auch nicht weh - die Methode kommt dann sofort zurück
@@ -2431,6 +2416,9 @@ public abstract class GenerationBase {
           try {
             cs.compile();
           } catch (XPRC_CompileError e) {
+            if(XynaProperty.NO_SINGLE_COMPILE.get()) {
+              throw e;
+            }
             if (!proceedOnError) { // if the compile does not proceed on error, we have to
               cs.clear();
               compileInCorrectOrder(objectsWithDependencies, cs, false);
@@ -5410,8 +5398,7 @@ public abstract class GenerationBase {
       return gb;
     }
 
-    long rev = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
-        .getRevisionDefiningXMOMObjectOrParent(originalXmlName, revision);
+    long rev = xmlInputSource.getRevisionDefiningXMOMObjectOrParent(originalXmlName, revision);
     return cacheReference.getFromCache(originalXmlName, rev);
   }
 
@@ -5443,10 +5430,7 @@ public abstract class GenerationBase {
 
   WF getCachedWFInstanceOrCreate(String originalWFInputName, long useRevision) throws XPRC_InvalidPackageNameException {
     String fqClassName = GenerationBase.transformNameForJava(originalWFInputName);
-
-    long rev =
-        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement()
-            .getRevisionDefiningXMOMObjectOrParent(originalWFInputName, useRevision);
+    long rev = xmlInputSource.getRevisionDefiningXMOMObjectOrParent(originalWFInputName, useRevision);
     
     GenerationBase o;
     WF.cacheLockWF.lock();
@@ -6917,10 +6901,10 @@ public abstract class GenerationBase {
   
   public static class FileSystemXMLSource implements XMLSourceAbstraction {
     
-    private final File targetClassFolder;
-    private final Map<RuntimeContext, Set<RuntimeContext>> rtcDependencies;
-    private final Map<RuntimeContext, File> rtcXMOMPaths;
-    private final BijectiveMap<RuntimeContext, Long> revisions;
+    protected final File targetClassFolder;
+    protected final Map<RuntimeContext, Set<RuntimeContext>> rtcDependencies;
+    protected final Map<RuntimeContext, File> rtcXMOMPaths;
+    protected final BijectiveMap<RuntimeContext, Long> revisions;
     
     public FileSystemXMLSource(Map<RuntimeContext, Set<RuntimeContext>> rtcDependencies, Map<RuntimeContext, File> rtcXMOMPaths, File targetClassFolder) {
       this.rtcDependencies = rtcDependencies;
@@ -6931,6 +6915,10 @@ public abstract class GenerationBase {
       for (RuntimeContext rtx : rtcXMOMPaths.keySet()) {
         revisions.put(rtx, revision++);
       }
+    }
+    
+    public Collection<Long> getRevisions() {
+      return revisions.values();
     }
 
     public Set<Long> getDependenciesRecursivly(Long revision) {
@@ -6947,6 +6935,9 @@ public abstract class GenerationBase {
         Set<RuntimeContext> deps = rtcDependencies.get(rtc);
         for (RuntimeContext dep : deps) {
           Long depRev = revisions.get(dep);
+          if(depRev == null) {
+            throw new RuntimeException("Missing dependent RTC: " + dep + ".");
+          }
           if (depenedencies.add(depRev)) {
             getDependenciesRecursivlyInternally(depRev, depenedencies);
           }

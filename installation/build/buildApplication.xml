@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,54 +15,139 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
+ -->
 <project name="buildApplication" basedir=".">
+    <import file="macros.xml" />
+    <property file="${basedir}/server.properties" />
+    <property file="${root.dir}/server.properties" />
+    <property file="${application.dir}/workspace.properties" />
 
     <property name="antUtils.dir" value="${root.dir}/installation/build/" />
+    <property name="common.lib.dir" value="${root.dir}/common/lib" />
+    <property name="common.xyna.lib.dir" value="${common.lib.dir}/xyna" />
+    <property name="xyna.modules.dir" value="${root.dir}/modules" />
+    <property name="xyna.module.checkout.branch" value="main" />
 
-    <xmlproperty file="application.xml" collapseAttributes="true"/>
-    <property name="app.name" value="${Application.applicationName}.${Application.versionName}" />
-
-    <import file="./ant-xyna.xml" />
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+        <classpath>
+            <pathelement location="${root.dir}/installation/build/lib/ant-contrib.jar" />
+        </classpath>
+    </taskdef>
 
     <!-- ================================= 
          target: build-application         
          ================================= -->
     <target name="build-application" depends="check">
+        <xmlproperty file="application.xml" collapseAttributes="true" />
+        <property name="app.name" value="${Application.applicationName}.${Application.versionName}" />
+    
+        <!-- set to false if the XMOM folder contains objects that should not be included in the application -->
+        <property name="minify" value="false" />
+
+
+        <ant antfile="build.xml" dir="${antUtils.dir}/lib" target="resolve" />
 
         <mkdir dir="${target.dir}" />
         <mkdir dir="${target.dir}/app" />
         <delete file="${target.dir}/${app.name}" failonerror="false" />
-        
+
         <copy todir="${target.dir}/app">
-          <fileset dir="." includes="application.xml" />
+            <fileset dir="." includes="AppMgmtAdd*" />
+            <fileset dir="." includes="application.xml" />
         </copy>
 
-        <replaceregexp file="${target.dir}/app/application.xml"
-               match="factoryVersion=&quot;&quot;"
-               replace="factoryVersion=&quot;CURRENT_VERSION&quot;"
-               byline="true"
-        />
+        <replaceregexp file="${target.dir}/app/application.xml" match="factoryVersion=&quot;&quot;" replace="factoryVersion=&quot;CURRENT_VERSION&quot;" byline="true" />
 
-        <zip destfile="${target.dir}/${app.name}.app">
-            <!--fileset dir="." includes="application.xml" /-->
-            <zipfileset dir="XMOM" includes="**/*.xml" prefix="XMOM" erroronmissingdir="false"/>
-            <fileset dir="${target.dir}/app" />
-        </zip>
-        
         <if>
             <isset property="third_parties.dir" />
             <then>
                 <copy todir="${third_parties.dir}/" failonerror="false" quiet="true">
                     <fileset dir="${target.dir}/app/third_parties" includes="*">
-                       <include name="*"/>
-                       <exclude name="xyna"/>
+                        <include name="*" />
+                        <exclude name="xyna" />
                     </fileset>
                 </copy>
             </then>
         </if>
 
-        <delete dir="${target.dir}/app" failonerror="true" />
+        <if>
+            <equals arg1="${minify}" arg2="true" />
+            <!-- copy all XMOM files -->
+            <then>
+                <zip destfile="${target.dir}/${app.name}.app">
+                    <!--fileset dir="." includes="application.xml" /-->
+                    <zipfileset dir="XMOM" includes="**/*.xml" prefix="XMOM" erroronmissingdir="false"/>
+                    <fileset dir="${target.dir}/app" />
+                </zip>
+            </then>
+            <!-- copy only XMOM files referenced in application.xml -->
+            <else>
+                <java classname="com.gip.xyna.xmcp.xfcli.scriptentry.CreateApplicationArchive" fork="true" failonerror="true">
+                    <arg value="${basedir}/application.xml" />
+                    <arg value="${target.dir}" />
+                    <classpath>
+                        <fileset dir="${antUtils.dir}lib/factory">
+                            <include name="*.jar" />
+                        </fileset>
+                    </classpath>
+                </java>
+            </else>
+        </if>
+
+		<!-- include datamodel archive if it exists -->
+		<if>
+			<available file="datamodel" type="dir" />
+			<then>
+				<local name="datamodelzip" />
+				<property name="datamodelzip" value="AppMgmtAdd_${Application.applicationName}.1234567890datamodelarchive" />
+			    <zip destfile="${datamodelzip}" basedir="datamodel" includes="**/*.xml" />
+				<zip destfile="${target.dir}/${app.name}.app" basedir="." includes="${datamodelzip}" update="true"/>
+				<delete file="${datamodelzip}" />
+			</then>
+		</if>
+		<delete dir="${target.dir}/app" failonerror="true" />
+    </target>
+
+
+    <!-- ================================= 
+         target: build-application-stub         
+         ================================= -->
+    <target name="build-application-stub">
+        <xmlproperty file="application-stub.xml" collapseAttributes="true" />
+        <property name="app.name" value="${Application.applicationName}.${Application.versionName}" />
+
+        <mkdir dir="${target.dir}" />
+        <mkdir dir="${target.dir}/stubapp" />
+        <delete file="${target.dir}/${app.name}" failonerror="false" />
+
+        <copy todir="${target.dir}/stubapp">
+            <fileset dir="." includes="AppMgmtAdd*" />
+            <fileset dir="." includes="application-stub.xml" />
+        </copy>
+
+        <if>
+            <isset property="third_parties.dir" />
+            <then>
+                <copy todir="${third_parties.dir}/" failonerror="false" quiet="true">
+                    <fileset dir="${target.dir}/stubapp/third_parties" includes="*">
+                        <include name="*" />
+                        <exclude name="xyna" />
+                    </fileset>
+                </copy>
+            </then>
+        </if>
+
+        <java classname="com.gip.xyna.xmcp.xfcli.scriptentry.BuildApplicationStub" fork="true" failonerror="true">
+            <arg value="${basedir}/application-stub.xml" />
+            <arg value="${target.dir}" />
+            <classpath>
+                <fileset dir="${antUtils.dir}lib/factory">
+                    <include name="*.jar" />
+                </fileset>
+            </classpath>
+        </java>
+
+        <delete dir="${target.dir}/stubapp" failonerror="true" />
     </target>
 
     <!-- ================================= 
@@ -78,16 +163,178 @@
         <echo message="${errors}"/>
     </target>
 
-    <target name="create-mdm-jar" description="Create mdm.jar locally">
-    
-        <property name="java.compile.version" value="Java6" />
-        <property name="output.dir" value="." />
-        <property name="apps.paths" value="${root.dir}" />
 
-        <java classname="com.gip.xyna.xmcp.xfcli.scriptentry.BuildDatatypeJarFromSource" fork="true" failonerror="true">
-            <arg value="${Application.applicationName}/${Application.versionName}" />
-            <arg value="${output.dir}" />
-            <arg line="${apps.paths}" />
+    <!-- ================================= 
+         target: prepare-mdm-jar-if-missing         
+         ================================= -->
+    <target name="prepare-mdm-jar-if-missing" description="Create mdm.jar locally, if there is no mdm.jar present">
+        <condition property="mdmJarExists" value="true" else="false">
+            <resourcecount when="greater" count="0">
+                <fileset dir="${basedir}">
+                    <include name="**/mdm.jar" />
+                </fileset>
+            </resourcecount>
+        </condition>
+        <if>
+            <equals arg1="${mdmJarExists}" arg2="false" />
+            <then>
+                <antcall target="prepare-mdm-jar" />
+            </then>
+            <else>
+                <echo message="mdm jar exists already." />
+            </else>
+        </if>
+    </target>
+
+
+    <!-- ================================= 
+         target: prepare-mdm-jar         
+         ================================= -->
+    <target name="prepare-mdm-jar" description="Create mdm.jar locally, and distribute it to consumers">
+        <!-- Override in build.xml -->
+    </target>
+
+    <!-- ================================= 
+         target: create-mdm-jar         
+         ================================= -->
+    <target name="create-mdm-jar" description="Create mdm.jar locally">
+        <xmlproperty file="application.xml" collapseAttributes="true" />
+
+        <property name="java.compile.version" value="Java11" />
+        <property name="output.dir" value="./mdm.jar" />
+        <property name="xprc.xfractwfe.generation.storable.xmom.interfaces" value="" />
+        <property name="apps.paths" value="${root.dir}" />
+        <property name="recursive" value="true" />
+        <property name="single.file" value="true" />
+        <property name="types" value="DATATYPE,EXCEPTION" />
+
+        <antcall target="compile-xmoms" />
+    </target>
+
+    <!-- ================================= 
+         target: update-application-xml         
+         ================================= -->
+    <target name="update-application-xml" description="create application.xml on Xyna Factory">
+        <xmlproperty file="application.xml" collapseAttributes="true" />
+        <property name="applicationname" value="${Application.applicationName}" />
+        <property name="applicationversion" value="${Application.versionName}" />
+
+        <!-- create application.xml -->
+       <if>
+	       <equals arg1="${workspacename}" arg2="$${workspacename}"/>
+		<then>
+			<custom-ssh-exec host="${server.host}" username="${server.userid}" command="${server.path}/xynafactory.sh buildapplicationxml -applicationName '${applicationname}' -versionName '${applicationversion}' -fileName '/tmp/application.xml'" />
+		</then>
+		<else>
+			<custom-ssh-exec host="${server.host}" username="${server.userid}" command="${server.path}/xynafactory.sh buildapplicationxml -applicationName '${applicationname}' -workspaceName '${workspacename}' -versionName '${applicationversion}' -fileName '/tmp/application.xml'" />
+		</else>
+	   </if>
+
+        <!-- copy application.xml from xyna server-->
+        <default-scp-from-remote fromfile="/tmp/application.xml" todir="${basedir}" />
+
+    </target>
+	
+
+    <!-- ================================= 
+         target: update-stub        
+         ================================= -->
+    <target name="update-stub" description="create application-stub.xml on Xyna Factory">
+        <xmlproperty file="application-stub.xml" collapseAttributes="true" />
+        <property name="applicationname" value="${Application.applicationName}" />
+        <property name="applicationversion" value="${Application.versionName}" />
+
+		<if>
+			<equals arg1="${workspacename}" arg2="$${workspacename}"/>
+			<then>
+				<custom-ssh-exec host="${server.host}" username="${server.userid}" command="${server.path}/xynafactory.sh buildapplicationxml -applicationName '${applicationname}' -versionName '${applicationversion}' -fileName '/tmp/application-stub.xml' -cs" />
+			</then>
+			<else>
+				<custom-ssh-exec host="${server.host}" username="${server.userid}" command="${server.path}/xynafactory.sh buildapplicationxml -applicationName '${applicationname}' -workspaceName '${workspacename}' -versionName '${applicationversion}' -fileName '/tmp/application-stub.xml' -cs" />
+			</else>
+		</if>
+
+        <!-- copy application-stub.xml from xyna server-->
+        <default-scp-from-remote fromfile="/tmp/application-stub.xml" todir="${basedir}" />
+    </target>
+	
+	<!-- ================================= 
+         target: update-xmom         
+         ================================= -->
+    <target name="update-xmom" description="Receive xmom objects from Xyna Factory">
+		<local name="where" />
+		<local name="revision" />
+		<local name="saved" />
+		<xmlproperty file="application.xml" collapseAttributes="true" />
+		<property name="applicationname" value="${Application.applicationName}" />
+        <property name="applicationversion" value="${Application.versionName}" />
+		<if>
+			<equals arg1="${workspacename}" arg2="$${workspacename}"/>
+			<then>
+				<property name="where" value="-applicationName '${applicationname}'  -versionName='${applicationversion}'" />
+                        <property name="saved" value="" />
+			</then>
+			<else> 
+				<property name="where" value="-workspaceName '${workspacename}'" />    
+				<property name="saved" value="saved/" />
+			</else>
+		</if>
+		<local name="command" />
+		<property name="command" value="cd ${server.path}; ./xynafactory.sh printrevision ${where}" />
+		<echo message="executing command: ${command}" />
+		<custom-ssh-exec host="${server.host}" username="${server.userid}" command="${command}" outputproperty="revision" />
+		<echo message="got revision=${revision}" />
+		<mkdir dir="XMOM" />
+		<delete verbose="true">
+			<fileset dir="XMOM" includes="**/*.xml" />
+		</delete>
+		<echo message="copying ${server.userid}@${server.host}:${server.path}/../revisions/rev_${revision}/${saved}XMOM/" />
+		<default-scp-from-remote fromfile="${server.path}/../revisions/rev_${revision}/${saved}XMOM/*" todir="XMOM" />
+    </target>
+	
+	<!-- =================================
+         target: update-datamodel-archive
+         ================================= -->
+    <target name="update-datamodel-archive" description="get datamodel archive from Xyna">
+        <xmlproperty file="application.xml" collapseAttributes="true" />
+        <property name="applicationname" value="${Application.applicationName}" />
+        <property name="applicationversion" value="${Application.versionName}" />
+        <property name="dollar" value="$" />
+
+		<!-- figure out datamodel fqname via sql and then export the datamodel -->
+		<custom-ssh-exec host="${server.host}" username="${server.userid}" command="${server.path}/xynafactory.sh exportdatamodels -datamodelfqname ${dollar}(${server.path}/xynafactory.sh sql &quot;select * from datamodel where label='${applicationname}' and version='${applicationversion}'&quot; HISTORY | grep -e '\sfqname =' | awk '{print $3}' | tr -d &quot;'&quot; ) -filename /tmp/datamodelarchive.zip" />
+
+        <!-- copy datamodelarchive from xyna server-->
+        <default-scp-from-remote fromfile="/tmp/datamodelarchive.zip" todir="${basedir}" />
+
+		<mkdir dir="${basedir}/datamodel" />
+		<unzip src="${basedir}/datamodelarchive.zip" dest="${basedir}/datamodel"/>
+		<delete file="${basedir}/datamodelarchive.zip" />
+    </target>
+
+    <!-- ================================= 
+         target: compile-xmoms         
+         ================================= -->
+    <target name="compile-xmoms" description="compile xmom objects locally" depends="get-xyna-modules">
+        <xmlproperty file="application.xml" collapseAttributes="true" />
+
+        <property name="java.compile.version" value="Java11" />
+        <property name="output.dir" value="./xmomclasses" />
+        <property name="xprc.xfractwfe.generation.storable.xmom.interfaces" value="" />
+        <property name="apps.paths" value="${root.dir}" />
+        <property name="recursive" value="false" />
+        <property name="single.file" value="false" />
+        <property name="types" value="DATATYPE,EXCEPTION,WORKFLOW" />
+        <property name="printclasspath" value="false" />
+
+        <java classname="com.gip.xyna.xmcp.xfcli.scriptentry.XMOMCompiler" fork="true" failonerror="true">
+            <arg value="app:${Application.applicationName}/${Application.versionName}" />
+            <arg value="output:${output.dir}" />
+            <arg value="storableInterfaces:${xprc.xfractwfe.generation.storable.xmom.interfaces}" />
+            <arg line="sourcePaths:${apps.paths}" />
+            <arg value="singleFile:${single.file}" />
+            <arg value="recursive:${recursive}" />
+            <arg value="types:${types}" />
             <env key="mdmjarjavaversion" value="${java.compile.version}" />
             <classpath>
                 <fileset dir="${antUtils.dir}lib/factory">
@@ -97,5 +344,89 @@
         </java>
 
     </target>
+
+	<target name="get-xyna-modules" >
+		<if>
+			<not>
+				<available file="${xyna.modules.dir}" type="dir" />
+			</not>
+			<then>
+				<mkdir dir="${xyna.modules.dir}" />
+				<local name="script.absolute" />
+				<property name="script.absolute" location="${antUtils.dir}/module_checkout.sh"/>
+				<exec executable="${script.absolute}" dir="${xyna.modules.dir}/..">
+					<arg value="${xyna.module.checkout.branch}"/>
+				</exec>
+			</then>
+		</if>
+	</target>
+
+    <!-- ================================= 
+         target: minify application xml         
+         ================================= -->
+    <target name="minify-application-xml" description="Minify an application.xml, removing implicit ordertypes and xmomentries">
+        <java classname="com.gip.xyna.xmcp.xfcli.scriptentry.MinifyApplicationXml" fork="true" failonerror="true">
+            <arg value="${basedir}/application.xml" />
+            <arg value="${basedir}/application.xml_backup" />
+            <classpath>
+                <fileset dir="${antUtils.dir}lib/factory">
+                    <include name="*.jar" />
+                </fileset>
+            </classpath>
+        </java>
+
+    </target>
+	
+	<!-- ================================= 
+         target: maxify application xml         
+         ================================= -->
+    <target name="maxify-application-xml" description="Maxify an application.xml, adding implicit xmomentries">
+        <java classname="com.gip.xyna.xmcp.xfcli.scriptentry.MaxifyApplicationXml" fork="true" failonerror="true">
+            <arg value="${basedir}/application.xml" />
+            <arg value="${basedir}/application.xml_backup" />
+            <classpath>
+                <fileset dir="${antUtils.dir}lib/factory">
+                    <include name="*.jar" />
+                </fileset>
+            </classpath>
+        </java>
+
+    </target>
+
+    <!-- ================================= 
+         target: add-service         
+         ================================= -->
+    <target name="add-service" description="Load service from server and add it to a project. Call with -DServiceFqn">
+        <fail message="ServiceFqn required">
+            <condition>
+                <not>
+                    <isset property="ServiceFqn" />
+                </not>
+            </condition>
+        </fail>
+        <fail message="workspacename required">
+            <condition>
+                <not>
+                    <isset property="workspacename" />
+                </not>
+            </condition>
+        </fail>
+        <local name="command" />
+        <property name="command" value="${server.path}/xynafactory.sh buildserviceprojectjava -fqDatatypeName ${ServiceFqn} -targetDirectory /tmp -workspaceName '${workspacename}'" />
+        <custom-ssh-exec host="${server.host}" username="${server.userid}" command="${command}" />
+        <mkdir dir="${basedir}/mdmimpl/tmp" />
+        <default-scp-from-remote fromfile="/tmp/${ServiceFqn}.zip" todir="${basedir}/mdmimpl/tmp" />
+        <unzip src="${basedir}/mdmimpl/tmp/${ServiceFqn}.zip" dest="${basedir}/mdmimpl/tmp/" />
+        
+        <dirset id="tmp_service_name" dir="${basedir}/mdmimpl/tmp">
+            <include name="${ServiceFqn}*/mdmimpl"/>
+        </dirset>
+        <pathconvert property="tmp_service" refid="tmp_service_name" pathsep=","/>
+
+        <move file="${tmp_service}" tofile="${basedir}/mdmimpl" />
+        <delete dir="${basedir}/mdmimpl/tmp" />
+
+    </target>
+
 
 </project>

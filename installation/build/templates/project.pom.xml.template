@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    See https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#bill-of-materials-bom-poms
+
+    This POM serves as a central "library" of artifacts containing each artifact used by any xyna-factory module / project.
+    Each projects POM should inherit this BOM POM and then only specify the <groupId> and <artifactId> (and <type> if it is not a jar).
+    The versions are maintained here in this file.
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
+	<parent>
+        <groupId>com.gip.xyna</groupId>
+        <artifactId>bom</artifactId>
+        <version>1.0.0</version>
+        <relativePath>{{XYNABOM}}</relativePath>
+    </parent>
+	
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>{{groupId}}</groupId>
+    <artifactId>bom</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
+    <dependencyManagement>
+	</dependencyManagement>
+</project>

@@ -3,7 +3,7 @@
   {
 
 	"name": "dragConditionalBranchingIntoWorkflow",
-	"description": "Öffnet einen neuen Workflow und fügt ein ConditionalBranching ein. Überprüft, dass im Workflow genau ein Schritt ist und der Type ein ConditionalBranching ist.",
+	"description": "Opens a new Workflow and adds a ConditionalBranching. Checks that there is exactly one step in the Workflow and it is of type ConditionalBranching",
 	"created": "11.11.2019",
 	"updated": "11.11.2019"
   },
@@ -13,7 +13,7 @@
 	  "operation": "invoke",
 	  "functionName": "createNewWorkflow",
 	  "mapInput": {},
-	  "mapOutput": 
+	  "mapOutput":
 	  {
 	    "!url!": "!url!"
 	  }

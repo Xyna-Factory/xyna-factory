@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,6 +78,7 @@ public class XynaFactoryControl extends Section {
   private KeyManagement keyManagement;
   private RuntimeContextManagement runtimeContextManagement;
   private InfrastructureAlgorithmExecutionManagement threadManagement;
+  private OOMManagement oomManagement;
   
   public XynaFactoryControl() throws XynaException {
     super();
@@ -161,6 +162,9 @@ public class XynaFactoryControl extends Section {
     
     threadManagement = new InfrastructureAlgorithmExecutionManagement();
     deployFunctionGroup(threadManagement);
+    
+    oomManagement = new OOMManagement();
+    deployFunctionGroup(oomManagement);
   }
 
 
@@ -255,6 +259,10 @@ public class XynaFactoryControl extends Section {
   
   public InfrastructureAlgorithmExecutionManagement getInfrastructureAlgorithmExecutionManagement() {
     return threadManagement;
+  }
+  
+  public OOMManagement getOomManagement() {
+    return oomManagement;
   }
   
 }

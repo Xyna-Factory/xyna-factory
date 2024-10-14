@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ import xmcp.gitintegration.DELETE;
 import xmcp.gitintegration.MODIFY;
 import xmcp.gitintegration.RuntimeContextDependency;
 import xmcp.gitintegration.WorkspaceContentDifference;
+import xmcp.gitintegration.impl.TmpSessionAuthWrapper;
 
 
 
@@ -207,11 +208,10 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
 
 
   public void create(RuntimeDependencyContext owner, RuntimeContextDependency item) {
-    try {
-      TemporarySessionAuthentication tsa = createTemporarySessionAuthentication(TEMPORARY_SESSION_AUTHENTICATION_USERNAME_CREATE);
-
+    try (TmpSessionAuthWrapper wrapper = new TmpSessionAuthWrapper(TEMPORARY_SESSION_AUTHENTICATION_USERNAME_CREATE,
+                                                                   TemporarySessionAuthentication.TEMPORARY_CLI_USER_ROLE)) {
       RuntimeDependencyContext dependency = createRuntimeDependencyContext(item);
-      rtcDependencyManagement.addDependency(owner, dependency, tsa.getUsername(), true);
+      rtcDependencyManagement.addDependency(owner, dependency, wrapper.getTSA().getUsername(), true);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -229,9 +229,8 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
 
 
   public void modify(RuntimeDependencyContext owner, RuntimeContextDependency from, RuntimeContextDependency to) {
-    try {
-      TemporarySessionAuthentication tsa = createTemporarySessionAuthentication(TEMPORARY_SESSION_AUTHENTICATION_USERNAME_MODIFY);
-
+    try (TmpSessionAuthWrapper wrapper = new TmpSessionAuthWrapper(TEMPORARY_SESSION_AUTHENTICATION_USERNAME_MODIFY,
+                                                                   TemporarySessionAuthentication.TEMPORARY_CLI_USER_ROLE)) {
       // get all current workspace dependencies
       Collection<RuntimeDependencyContext> dependencies = rtcDependencyManagement.getRequirements(owner);
 
@@ -255,7 +254,7 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
       // add to-Element to the updated newDepencencyList
       newDependenyList.add(createRuntimeDependencyContext(to));
 
-      rtcDependencyManagement.modifyDependencies(owner, newDependenyList, tsa.getUsername());
+      rtcDependencyManagement.modifyDependencies(owner, newDependenyList, wrapper.getTSA().getUsername());
 
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -274,10 +273,10 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
 
 
   public void delete(RuntimeDependencyContext owner, RuntimeContextDependency item) {
-    try {
-      TemporarySessionAuthentication tsa = createTemporarySessionAuthentication(TEMPORARY_SESSION_AUTHENTICATION_USERNAME_DELETE);
+    try (TmpSessionAuthWrapper wrapper = new TmpSessionAuthWrapper(TEMPORARY_SESSION_AUTHENTICATION_USERNAME_DELETE,
+                                                                   TemporarySessionAuthentication.TEMPORARY_CLI_USER_ROLE)) {
       RuntimeDependencyContext dependency = createRuntimeDependencyContext(item);
-      rtcDependencyManagement.removeDependency(owner, dependency, tsa.getUsername());
+      rtcDependencyManagement.removeDependency(owner, dependency, wrapper.getTSA().getUsername());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -338,14 +337,4 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
     }
     return sb.toString();
   }
-
-
-  private static TemporarySessionAuthentication createTemporarySessionAuthentication(String userName) throws Exception {
-    TemporarySessionAuthentication tsa =
-        TemporarySessionAuthentication.tempAuthWithUniqueUser(userName, TemporarySessionAuthentication.TEMPORARY_CLI_USER_ROLE);
-    tsa.initiate();
-    return tsa;
-  }
-
-
 }

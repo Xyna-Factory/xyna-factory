@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,7 @@ package com.gip.xyna.xprc.remotecallserialization;
 
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 
@@ -31,25 +29,16 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.Section;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
-import com.gip.xyna.xact.trigger.FilterInstanceStorable;
-import com.gip.xyna.xact.trigger.FilterStorable;
-import com.gip.xyna.xact.trigger.TriggerInstanceStorable;
-import com.gip.xyna.xact.trigger.TriggerStorable;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
-import com.gip.xyna.xprc.exceptions.XPRC_DeploymentHandlerException;
 import com.gip.xyna.xprc.exceptions.XPRC_InvalidXMLForObjectCreationException;
 import com.gip.xyna.xprc.exceptions.XPRC_MDMObjectCreationException;
-import com.gip.xyna.xprc.exceptions.XPRC_UnDeploymentHandlerException;
 import com.gip.xyna.xprc.exceptions.XPRC_XmlParsingException;
 import com.gip.xyna.xprc.xfractwfe.base.DeploymentHandling;
-import com.gip.xyna.xprc.xfractwfe.base.DeploymentHandling.DeploymentHandler;
-import com.gip.xyna.xprc.xfractwfe.base.DeploymentHandling.UndeploymentHandler;
+
+import com.gip.xyna.xprc.xfractwfe.base.RevisionChangeUnDeploymentHandler;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
-import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.DeploymentMode;
-import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
-import com.gip.xyna.xprc.xpce.planning.Capacity;
 
 
 
@@ -71,13 +60,18 @@ public class XynaXmomSerialization extends Section {
     if (revisions == null) {
       return;
     }
+    
+    if (logger.isDebugEnabled()) {
+      logger.debug("invalidating: " + revisions.size() + " revisions");
+    }
+    
     for (Long rev : revisions) {
       invalidateRevision(rev);
     }
   }
 
 
-  public void invalidateRevision(Long revision) {
+  private void invalidateRevision(Long revision) {
     synchronized (XynaXmomSerialization.class) {
       RevisionSerialization removed = serializations.remove(revision);
       if (removed != null) {
@@ -232,68 +226,10 @@ public class XynaXmomSerialization extends Section {
   protected void init() throws XynaException {
     serializations = new ConcurrentHashMap<Long, RevisionSerialization>();
     XynaFactory.getInstance().getProcessing().getWorkflowEngine().getDeploymentHandling()
-        .addDeploymentHandler(DeploymentHandling.PRIORITY_REMOTESERIALIZATION, new DeploymentHandler() {
+        .addDeploymentHandler(DeploymentHandling.PRIORITY_REMOTESERIALIZATION, new RevisionChangeUnDeploymentHandler(this::invalidateRevisions));
 
-          //might only need FQN+Revision
-          private final Set<Long> objects = new HashSet<Long>();
-
-
-          @Override
-          public void finish(boolean success) throws XPRC_DeploymentHandlerException {
-            if (!success) {
-              objects.clear();
-              return;
-            }
-
-            if (logger.isDebugEnabled()) {
-              logger.debug("invalidating: " + objects.size() + " revision");
-            }
-            
-            for (Long revision : objects) {
-              invalidateRevision(revision);
-            }
-            objects.clear();
-          }
-
-
-          @Override
-          public void exec(GenerationBase object, DeploymentMode mode) throws XPRC_DeploymentHandlerException {
-            objects.add(object.getRevision());
-          }
-
-
-          @Override
-          public void begin() throws XPRC_DeploymentHandlerException {
-            objects.clear();
-          }
-        });
     XynaFactory.getInstance().getProcessing().getWorkflowEngine().getDeploymentHandling()
-      .addUndeploymentHandler(DeploymentHandling.PRIORITY_REMOTESERIALIZATION, new UndeploymentHandler() {
-        
-        private final Set<Long> objects = new HashSet<Long>();
-
-        public void exec(GenerationBase object) throws XPRC_UnDeploymentHandlerException {
-          objects.add(object.getRevision());
-        }
-
-        public void finish() throws XPRC_UnDeploymentHandlerException {
-          // invalidate changed revisions
-          Set<Long> revisionsToInvalidate = new HashSet<Long>();
-          for (Long object : objects) {
-            XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement().getParentRevisionsRecursivly(object, revisionsToInvalidate);
-          }
-          XynaFactory.getInstance().getProcessing().getXmomSerialization().invalidateRevisions(revisionsToInvalidate);
-        }
-        
-        public boolean executeForReservedServerObjects() { return false; }
-        public void exec(FilterInstanceStorable object) { }
-        public void exec(TriggerInstanceStorable object) { }
-        public void exec(FilterStorable object) { }
-        public void exec(TriggerStorable object) { }
-        public void exec(Capacity object) { }
-        public void exec(DestinationKey object) { }
-
-    });
+      .addUndeploymentHandler(DeploymentHandling.PRIORITY_REMOTESERIALIZATION, new RevisionChangeUnDeploymentHandler(this::invalidateRevisions));
 
   }
 

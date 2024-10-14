@@ -72,7 +72,7 @@
           "!xmcp.factorymanager.capacities.CreateCapacity!": "xmcp.factorymanager.capacities.CreateCapacity"
         },
         {
-          "!sonderzeichen!": "<>^°!\\\"§$%&/\\\\()=?`´{}|;:_,.-üöä+#*'~@€µ"
+          "!sonderzeichen!": "<>^Â°!\\\"Â§$%&/\\\\()=?`Â´{}|;:_,.-üöä+#*'~@â‚¬Âµ"
         },
         {
           "!autotest.generated.random.SONDERZEICHEN!": "autotest.generated.!rnd!.!sonderzeichen!"

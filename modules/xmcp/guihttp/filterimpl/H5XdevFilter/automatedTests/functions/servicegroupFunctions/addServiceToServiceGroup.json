@@ -1,6 +1,6 @@
 [
   {
-    "descrption": "fügt der ServiceGroup einen hinzu, deployt und schließt sie",
+    "descrption": "Adds a service to the service group. Deploys and closes the service group.",
     "type":"function",
     "functionName": "addServiceToServiceGroup",
     "input": ["!workspaceName!", "!path!", "!sgName!", "!serviceLabel!", "!sgLabel!", "!revision!"],
@@ -37,7 +37,8 @@
 	  {
 	    "operation": "read",
 		"targetVariable": "!revision!",
-		"pathInResponse": "revision"
+		"pathInResponse": "revision",
+		"unquoteResult":"True"
 	  },
 	  {
 	    "operation": "call",

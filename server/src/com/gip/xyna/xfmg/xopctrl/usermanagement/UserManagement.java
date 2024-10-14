@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -259,6 +259,16 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
      * Der zweite Parameter schränkt den Namen der Administrative Vetos ein.
      */
     VETO("xfmg.xfctrl.administrativeVetos", new String[] {"[" + Action.read + ", " + Action.write + ", " + Action.insert + ", " + Action.delete + ", *]",SRP_ONLY_STAR}),
+    
+    /**
+     * Zugriffsrechte Trigger-Verwaltung.
+     */
+    Trigger("xfmg.xfctrl.TriggerManagement", new String[] {"[" + Action.read + ", " + Action.write + ", " + Action.insert + ", " + Action.delete + ", *]",SRP_ANY_ESCAPED_STRING}),
+    
+    /**
+     * Zugriffsrechte Filter-Verwaltung.
+     */
+    Filter("xfmg.xfctrl.FilterManagement", new String[] {"[" + Action.read + ", " + Action.write + ", " + Action.insert + ", " + Action.delete + ", *]",SRP_ANY_ESCAPED_STRING}),
     
     /**
      * Rechtebereich, für den lokalen dateizugriff:

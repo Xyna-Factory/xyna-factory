@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -264,6 +264,10 @@ public class ObjectId {
       String baseId = ObjectIdPrefix.operation.getBaseId(id);
       return new ObjectId(ObjectType.operation, baseId, part, objectId);
     }
+    if( ObjectIdPrefix.implementationArea.match(id) ) {
+      String baseId = ObjectIdPrefix.implementationArea.getBaseId(id);
+      return new ObjectId(ObjectType.implementationArea, baseId, part, objectId);
+    }
     if( ObjectIdPrefix.remoteDestinationArea.match(id)) {
       String baseId = ObjectIdPrefix.remoteDestinationArea.getBaseId(id);
       return new ObjectId(ObjectType.remoteDestinationArea, baseId, part, objectId);
@@ -287,6 +291,11 @@ public class ObjectId {
       return new ObjectId(ObjectType.warning, baseId);
     }
 
+    if (ObjectIdPrefix.reference.match(id)) {
+      String baseId = ObjectIdPrefix.reference.getBaseId(id);
+      return new ObjectId(ObjectType.reference, baseId);
+    }
+
     throw new UnknownObjectIdException(objectId);
   }
 
@@ -304,6 +313,10 @@ public class ObjectId {
 
   public static ObjectId createWarningId(int uniqueId) {
     return new ObjectId(ObjectType.warning, "" + uniqueId);
+  }
+  
+  public static ObjectId createReferenceId(String reference) {
+    return new ObjectId(ObjectType.reference, reference);
   }
 
   public static ObjectId createStepId(Step step, ObjectPart part) {
@@ -417,6 +430,14 @@ public class ObjectId {
   
   public static String createOperationDocumentationAreaId(String baseId) {
     return ObjectIdPrefix.operationDocumentationArea.getPrefix() + emptyIfNull(baseId);
+  }
+  
+  public static String createOperationImplementationAreaId(String baseId) {
+    return ObjectIdPrefix.implementationArea.getPrefix() + emptyIfNull(baseId);
+  }
+  
+  public static String createMetaTagId(int idx) {
+    return ObjectIdPrefix.metaTag.getPrefix() + idx;
   }
   
   public static String createIdForCase(String baseId, String branchId, String caseId) {
@@ -858,6 +879,14 @@ public class ObjectId {
         return id.substring(prefix.length());
       }
     },
+    implementationArea("implementationArea") {
+      public boolean match(String objectId) {
+        return objectId.startsWith(prefix);
+      }
+      public String getBaseId(String id) {
+        return id.substring(prefix.length());
+      }
+    },
     remoteDestinationArea("remoteDestinationArea"){
       public boolean match(String objectId) {
         return objectId.startsWith(prefix);
@@ -891,6 +920,22 @@ public class ObjectId {
       }
     },
     warning("warning"){
+      public boolean match(String objectId) {
+        return objectId.startsWith(prefix);
+      }
+      public String getBaseId(String id) {
+        return id.substring(prefix.length());
+      }
+    },
+    reference("reference"){
+      public boolean match(String objectId) {
+        return objectId.startsWith(prefix);
+      }
+      public String getBaseId(String id) {
+        return id.substring(prefix.length());
+      }
+    },
+    metaTag("metaTag"){
       public boolean match(String objectId) {
         return objectId.startsWith(prefix);
       }
@@ -998,6 +1043,8 @@ public class ObjectId {
         return clipboardEntry;
       case warning:
         return warning;
+      case reference:
+        return reference;
       default:
         return null;
       }

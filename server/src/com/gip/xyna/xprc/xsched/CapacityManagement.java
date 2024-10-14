@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -164,7 +164,7 @@ public class CapacityManagement extends FunctionGroup
   
   private class FactoryShutdownClusterStateChangeHandler implements ClusterStateChangeHandler {
 
-    private volatile Timer shutdownTimer = new Timer();
+    private volatile Timer shutdownTimer = new Timer("CapacityManagement - FactoryShutdownClusterStateChangeHandler - shutdown timer");
     private volatile boolean shutDownInitialized = false;
     private ClusterState state;
     

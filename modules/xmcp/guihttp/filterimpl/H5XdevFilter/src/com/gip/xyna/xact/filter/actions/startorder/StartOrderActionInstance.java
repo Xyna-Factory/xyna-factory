@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -164,23 +164,38 @@ class StartOrderActionInstance extends JsonFilterActionInstance {
 
 
   private String modelledErrorResponse(XynaException[] xynaExceptions, HTTPTriggerConnection tc) {
-
     StartOrderExceptionResponse response = new StartOrderExceptionResponse();
     response.setOrderId(Long.toString(orderId));
+    long orderRtc = -1;
+    long guiHttpRevision = -1;
+    try {
+      orderRtc = Utils.getRtcRevision(rtc);
+      guiHttpRevision = Utils.getGuiHttpApplicationRevision();
+    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+    }
 
+    if(xynaExceptions == null) {
+      response.setErrorMessage("Exception information missing.");
+      return Utils.xoToJson(response, orderRtc, new long[] {guiHttpRevision});
+    }
+    
     Throwable t;
     boolean first;
     boolean multipleStackTraces = xynaExceptions.length > 1;
-    
     if (xynaExceptions.length == 1 && xynaExceptions[0] != null) {
       response.setErrorMessage(xynaExceptions[0].getMessage());
     } else if (xynaExceptions.length > 1) {
       response.setErrorMessage("Multiple errors occurred.");
     }
     
-    for (int i = 0; i < xynaExceptions.length; i++) {
-      
+    for (int i = 0; i < xynaExceptions.length; i++) {     
       XynaException xe = xynaExceptions[i];
+      if(xe == null) {
+        if(logger.isWarnEnabled()) {
+          logger.warn("An Exception was null in order " + orderId);
+        }
+        continue;
+      }
       t = xe;
       first = true;
 
@@ -195,8 +210,12 @@ class StartOrderActionInstance extends JsonFilterActionInstance {
           response.addToStackTrace("Caused by: " + t.getMessage());
         }
         StackTraceElement[] ste = t.getStackTrace();
+        if(ste == null) {
+          response.addToStackTrace("NO STACKTRACE INFORMATION AVAILABLE!");
+          continue;
+        }
         for (StackTraceElement s : ste) {
-          response.addToStackTrace(s.toString());
+          response.addToStackTrace(s == null ? "NULL" : s.toString());
         }
         t = t.getCause();
       }
@@ -204,15 +223,6 @@ class StartOrderActionInstance extends JsonFilterActionInstance {
       if (xe instanceof XynaExceptionBase) {
         response.addToExceptions((XynaExceptionBase) xe);
       }
-    }
-
-    long orderRtc = -1;
-    long guiHttpRevision = -1;
-
-    try {
-      orderRtc = Utils.getRtcRevision(rtc);
-      guiHttpRevision = Utils.getGuiHttpApplicationRevision();
-    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
     }
 
     return Utils.xoToJson(response, orderRtc, new long[] {guiHttpRevision});

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,6 +56,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.StepMapping;
 import com.gip.xyna.xprc.xfractwfe.generation.WF;
 import com.gip.xyna.xprc.xfractwfe.generation.ScopeStep.ServiceIdentification;
 import com.gip.xyna.xprc.xfractwfe.generation.ScopeStep.VariableIdentification;
+import com.gip.xyna.xprc.xfractwfe.generation.Service;
 
 import xmcp.processmodeller.datatypes.RepairEntry;
 import xnwh.persistence.SelectionMask;
@@ -209,6 +210,10 @@ import xnwh.persistence.Storable;
   //unlike other steps, we have to check inputs of operation
   //only creates a RepairEntry, if a Connection is removed
   private List<RepairEntry> convertFunctionInputToPrototype(StepFunction step, GenerationBaseObject gbo, boolean apply) {
+    //can't convert variables, if there is no service
+    if(step.getService() == null) {
+      return new ArrayList<RepairEntry>();
+    }
     List<AVariable> avars = Utils.getServiceInputVars(step);
     Function<Integer, String> idGenerator = WorkflowRepair.createVariableIDGenerator(step, VarUsageType.input);
     ConvertStepFunctionVarsToPrototypeData data = new ConvertStepFunctionVarsToPrototypeData();
@@ -234,6 +239,10 @@ import xnwh.persistence.Storable;
   //this repair is done after signature updates. => but changes are only applied, if apply  is true
   //converts StepFunction Output into Prototype, if there is no cast
   private List<RepairEntry> convertFunctionOutputToPrototype(StepFunction step, GenerationBaseObject gbo, boolean apply) {
+    //can't convert variables, if there is no service
+    if(step.getService() == null) {
+      return new ArrayList<RepairEntry>();
+    }
     List<AVariable> avars = Utils.getServiceOutputVariables(step);
     Function<Integer, String> idGenerator = WorkflowRepair.createVariableIDGenerator(step, VarUsageType.output);
     ConvertStepFunctionVarsToPrototypeData data = new ConvertStepFunctionVarsToPrototypeData();
@@ -405,8 +414,9 @@ import xnwh.persistence.Storable;
   //nulls entry in ids, if there is an invalidly typed constant
   private List<RepairEntry> removeInvalidTypedConstants(StepFunction step, String[] ids, InputConnections connections, boolean apply) {
     List<RepairEntry> result = new ArrayList<RepairEntry>();
+
     Boolean[] constants = connections.getConstantConnected();
-    List<AVariable> serviceInputVars = Utils.getServiceInputVars(step);
+    List<AVariable> serviceInputVars = step.getService() == null ? Collections.emptyList() : Utils.getServiceInputVars(step);
 
     for (int i = 0; i < ids.length; i++) {
       if (constants[i] == null || constants[i] == false) {
@@ -514,7 +524,7 @@ import xnwh.persistence.Storable;
       return Collections.emptyList(); //we are changing signature anyway
     }
     
-    List<AVariable> serviceVars = Utils.getServiceInputVars(step);
+    List<AVariable> serviceVars = step.getService() == null ? Collections.emptyList() : Utils.getServiceInputVars(step);
     String[] stepInputVarIds = step.getInputVarIds();
     
     if(serviceVars.size() != stepInputVarIds.length) {
@@ -619,6 +629,11 @@ import xnwh.persistence.Storable;
   private List<RepairEntry> executeCastRemoval(StepFunction s, boolean a, BiFunction<RemoveTypeCastData, Boolean, List<RepairEntry>> f) {
     List<RepairEntry> result = new ArrayList<RepairEntry>();
     RemoveTypeCastData data = new RemoveTypeCastData();
+    
+    if(s.getService() == null) {
+      return new ArrayList<RepairEntry>();
+    }
+    
     //data.step and data.location do change between input and output
     data.setStep(s);
     data.setLocation(WorkflowRepair.createLocation(s));
@@ -924,6 +939,16 @@ import xnwh.persistence.Storable;
       return false;
     }
 
+    Service service = step.getService();
+
+    //not a prototype, but no service set
+    //happens if multiple service calls share the same serviceID
+    //the first occurrence gets repaired and the second ends up
+    //with null.AbstractService - but does not know it is a prototype
+    if (service == null) {
+      return true;
+    }
+
     WF wf = step.getService().getWF();
     if (wf != null) {
       try {
@@ -948,14 +973,6 @@ import xnwh.persistence.Storable;
         return true;
       }
     }
-    
-    //not a prototype, but no wf/dom set
-    //happens if multiple service calls share the same serviceID
-    //the first occurrence gets repaired and the second ends up
-    //with null.AbstractService - but does not know it is a prototype
-    if(wf == null && dom == null) {
-      return true;
-    }
 
     return false;
   }
@@ -970,8 +987,9 @@ import xnwh.persistence.Storable;
     } catch (XPRC_InvalidServiceIdException e) {
       e.printStackTrace();
     }
-    si.service.createEmpty("-1"); //remove old service -otherwise we end up with multiple services with same id
-
+    if(si != null && si.service != null) {
+      si.service.createEmpty("-1"); //remove old service -otherwise we end up with multiple services with same id
+    }
     step.convertToPrototype();
     Step parentStepCatch = step.getParentStep();
     Step parentOfStepCatch = parentStepCatch.getParentStep();

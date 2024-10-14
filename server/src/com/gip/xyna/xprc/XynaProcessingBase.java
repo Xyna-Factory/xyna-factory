@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import com.gip.xyna.xprc.exceptions.XPRC_CancelFailedException;
 import com.gip.xyna.xprc.remotecallserialization.XynaXmomSerialization;
 import com.gip.xyna.xprc.xbatchmgmt.BatchProcessManagement;
 import com.gip.xyna.xprc.xfqctrl.XynaFrequencyControl;
+import com.gip.xyna.xprc.xfractwfe.XynaPythonSnippetManagement;
 import com.gip.xyna.xprc.xpce.WorkflowEngine;
 import com.gip.xyna.xprc.xpce.XynaProcessCtrlExecution;
 import com.gip.xyna.xprc.xprcods.XynaProcessingODS;
@@ -57,9 +58,13 @@ public abstract class XynaProcessingBase extends Department implements XynaProce
 
 
   public abstract BatchProcessManagement getBatchProcessManagement();
+
   
   public abstract XynaXmomSerialization getXmomSerialization();
 
+  
+  public abstract XynaPythonSnippetManagement getXynaPythonSnippetManagement();
+  
   
   public abstract CancelBean cancelOrder(Long id, Long timeout, boolean waitForTimeout)
       throws XPRC_CancelFailedException;

@@ -806,8 +806,25 @@
       "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1594302668355!/!NewWorkflow!"
     },
     {
+      "operation": "read",
+      "pathInResponse": "xmomItem/areas/$list[name=content]/items/$list[1]/areas/$list[name=output]/items/$list[0]/id",   
+      "targetVariable": "!foreachOutput!",
+      "unquoteResult": true
+    },
+    {
       "operation": "call",
       "requestType": "GET",
+      "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1594302668355!/!NewWorkflow!/dataflow"
+    },
+    {
+      "operation": "call",
+      "payload": {
+        "revision": 27,
+        "sourceId": "!foreachOutput!",
+        "targetId": "!var-out0!",
+        "type": "!user!"
+      },
+      "requestType": "PUT",
       "url": "/runtimeContext/!default%20workspace!/xmom/workflows/!new_1594302668355!/!NewWorkflow!/dataflow"
     },
     {

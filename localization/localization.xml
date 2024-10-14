@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1213,5 +1213,33 @@ Dieses Rechte wurde in 7.0.3.1. eingeführt und voller Zugriff auf das SystemTem
     <identifier>xmcp.xfm.acm</identifier>
     <language>DE</language>
     <text>Erlaubt das Anzeigen von Xyna Access Control in der HTML5-GUI</text>
+  </localization>
+  <localization>
+    <id>41</id>
+    <type>RIGHT_SCOPE</type>
+    <identifier>xfmg.xfctrl.TriggerManagement</identifier>
+    <language>EN</language>
+    <text>Allows to view and manage triggers.</text>
+  </localization>
+  <localization>
+    <id>42</id>
+    <type>RIGHT_SCOPE</type>
+    <identifier>xfmg.xfctrl.TriggerManagement</identifier>
+    <language>DE</language>
+    <text>Erlaubt das Anzeigen und Verwalten von Triggern.</text>
+  </localization>
+  <localization>
+    <id>43</id>
+    <type>RIGHT_SCOPE</type>
+    <identifier>xfmg.xfctrl.FilterManagement</identifier>
+    <language>EN</language>
+    <text>Allows to view and manage filters.</text>
+  </localization>
+  <localization>
+    <id>44</id>
+    <type>RIGHT_SCOPE</type>
+    <identifier>xfmg.xfctrl.FilterManagement</identifier>
+    <language>DE</language>
+    <text>Erlaubt das Anzeigen und Verwalten von Filtern.</text>
   </localization>
 </localizationTable>

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -212,7 +212,7 @@ public class JSONTokenizer {
   private void validateNumber(String json, JSONToken number) {
     String n = json.substring(number.start, number.end + 1);
     try {
-      Double d = Double.valueOf(n);
+      Double.valueOf(n);
     } catch (NumberFormatException e) {
       throw new InvalidJSONException(number.start, "Text could not be parsed as a number.");
     }

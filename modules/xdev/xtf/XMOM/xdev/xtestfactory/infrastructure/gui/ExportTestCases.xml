@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Export Test Cases" TypeName="ExportTestCases" TypePath="xdev.xtestfactory.infrastructure.gui" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,hideDetailAreas</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Export Test Cases" Name="ExportTestCases">
+    <Input>
+      <Data ID="6" Label="Test Project Selector" ReferenceName="TestProjectSelector" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testProjectSelector">
+        <Target RefID="5"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="13" Label="Managed File ID" ReferenceName="ManagedFileID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="managedFileID">
+        <Source RefID="14"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="No TestProject With This ID" ReferenceName="NoTestProjectWithThisID" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="noTestProjectWithThisID"/>
+      <Exception Label="Test Data Not Specified For Export" ReferenceName="TestDataNotSpecifiedForExport" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="testDataNotSpecifiedForExport"/>
+      <Exception Label="Test Project not found" ReferenceName="TestProjectNotFound" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="testProjectNotFound"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="4" Label="Get Test Project" ReferenceName="GetTestProject" ReferencePath="xdev.xtestfactory.infrastructure.gui">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Function ID="5" Label="Get Test Project">
+      <Source RefID="4"/>
+      <Source RefID="6"/>
+      <Target RefID="4"/>
+      <Target RefID="7"/>
+      <Invoke Operation="GetTestProject" ServiceID="4">
+        <Source RefID="6"/>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="7"/>
+      </Receive>
+    </Function>
+    <Data ID="7" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject">
+      <Source RefID="5"/>
+      <Target RefID="11"/>
+    </Data>
+    <ServiceReference ID="10" Label="Export Test Cases" ReferenceName="ExportTestCases" ReferencePath="xdev.xtestfactory.infrastructure.actions">
+      <Source RefID="11"/>
+      <Target RefID="11"/>
+    </ServiceReference>
+    <Function ID="11" Label="Export Test Cases">
+      <Source RefID="10"/>
+      <Source RefID="7"/>
+      <Target RefID="10"/>
+      <Target RefID="12"/>
+      <Invoke Operation="ExportTestCases" ServiceID="10">
+        <Source RefID="7"/>
+      </Invoke>
+      <Receive ServiceID="10">
+        <Target RefID="12"/>
+      </Receive>
+    </Function>
+    <Data ID="12" Label="Managed File ID" ReferenceName="ManagedFileID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="managedFileID43">
+      <Source RefID="11"/>
+      <Target RefID="14"/>
+    </Data>
+    <Assign ID="14">
+      <Source RefID="12"/>
+      <Target RefID="13"/>
+      <Copy>
+        <Source RefID="12"/>
+        <Target RefID="13"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

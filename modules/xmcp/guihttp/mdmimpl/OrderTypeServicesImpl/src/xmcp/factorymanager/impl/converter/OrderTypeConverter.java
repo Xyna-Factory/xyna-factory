@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import xmcp.RuntimeContext;
 import xmcp.factorymanager.DestinationType;
 import xmcp.factorymanager.ParameterInheritanceRule;
 import xmcp.factorymanager.ordertypes.OrderType;
+import xmcp.factorymanager.ordertypes.OrderTypeTableFilter;
 
 public class OrderTypeConverter {
   
@@ -44,22 +45,27 @@ public class OrderTypeConverter {
 
   }
   
-  public static OrderType convert(OrdertypeParameter in) {
+  public static OrderType convert(OrdertypeParameter in, boolean filter) {
     if(in == null)
       return null;
     OrderType r = new OrderType();
     r.setDocumentation(in.getDocumentation());
     if(in.getExecutionDestinationValue() != null)
-      r.setExecutionDestination(convert(in.getExecutionDestinationValue()));
-    r.setMonitoringLevel(in.getMonitoringLevel());
-    r.setName(in.getOrdertypeName());
+      r.setExecutionDestination(convert(in.getExecutionDestinationValue(), filter));
+    if(in.getMonitoringLevel() != null)
+      r.setMonitoringLevel(String.valueOf(in.getMonitoringLevel()));
+    r.setEvaluatedMonitoringLevel(in.getMonitoringLevel());
+    if(in.getOrdertypeName() != null) {
+      r.setFullQualifiedName(in.getOrdertypeName());
+      r.setName(filter ? in.getOrdertypeName() : in.getOrdertypeName().substring((in.getOrdertypeName().lastIndexOf('.')) + 1));
+    }
     if(in.getPlanningDestinationValue() != null) 
-      r.setPlanningDestination(convert(in.getPlanningDestinationValue()));
+      r.setPlanningDestination(convert(in.getPlanningDestinationValue(), filter));
     r.setPriority(in.getPriority());
     r.setUsedCapacities(usedCapacities(in.getRequiredCapacities()));
     r.setApplication(in.getApplicationName());
     if(in.getCleanupDestinationValue() != null)
-      r.setCleanupDestination(convert(in.getCleanupDestinationValue()));
+      r.setCleanupDestination(convert(in.getCleanupDestinationValue(), filter));
     r.setRuntimeContext(convert(in.getRuntimeContext()));
     if(in.getRequiredCapacities() != null)
       r.setRequiredCapacities(in.getRequiredCapacities().stream().map(cap -> {
@@ -82,13 +88,11 @@ public class OrderTypeConverter {
         if((rule.getChildFilter() == null || rule.getChildFilter().length() == 0)) {
           // Hierbei handelt es sich um die eigene Precedence und den eigenen MonitoringLevel des OrderTypes
           r.setPrecedence(rule.getPrecedence());
-          try {
-            r.setMonitoringLevel(Integer.valueOf(rule.getUnevaluatedValue()));
-          } catch (Exception ex) {
-            
-          }
+          r.setMonitoringLevel(rule.getUnevaluatedValue());
+          r.setEvaluatedMonitoringLevel(rule.getValueAsInt());
+
         } else {
-          r.addToParameterInheritanceRules(new ParameterInheritanceRule(rule.getChildFilter(), rule.getValueAsString(), rule.getPrecedence()));
+          r.addToParameterInheritanceRules(new ParameterInheritanceRule(rule.getChildFilter(), rule.getUnevaluatedValue(), rule.getPrecedence()));
         }
       }
     }
@@ -107,11 +111,12 @@ public class OrderTypeConverter {
     return sb.toString();
   }
   
-  private static DestinationType convert(DestinationValueParameter in) {
+  private static DestinationType convert(DestinationValueParameter in, boolean filter) {
     if(in == null)
       return null;
     DestinationType r = new DestinationType();
     r.setName(in.getFullQualifiedName());
+    r.setName(filter ? in.getFullQualifiedName() : in.getFullQualifiedName().substring((in.getFullQualifiedName().lastIndexOf('.')) + 1));
     r.setType(in.getDestinationType());
     return r;
   }

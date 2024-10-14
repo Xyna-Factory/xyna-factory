@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -302,7 +302,7 @@ public class TypeInterface extends DeploymentItemIdentificationBase implements D
     if (typeInfo.isModelledType()) {
       return TypeInterface.of(((StepBasedType)typeInfo.getModelledType()).getGenerationType().getOriginalFqName(), false, isList);
     } else {
-      if (typeInfo.getJavaName().equals("Object")) {
+      if (typeInfo.getJavaName().equals("java.lang.Object")) {
         return TypeInterface.anyType();
       } else if (typeInfo.getJavaName().equals("List")) {
         return TypeInterface.anyType(); //FIXME

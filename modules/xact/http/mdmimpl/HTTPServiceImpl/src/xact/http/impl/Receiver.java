@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,10 @@ public class Receiver {
   }
 
   private String readString(HttpEntity entity) throws HttpException {
+    if (entity == null) {
+      return "";
+    }
+    
     try {
       return EntityUtils.toString(entity);
     } catch (ParseException e) {
@@ -61,6 +65,9 @@ public class Receiver {
 
   public InputStream getStream(HttpConnectionImpl hc) throws HttpException {
     HttpEntity entity = hc.receive();
+    if (entity == null) {
+      return InputStream.nullInputStream();
+    }
     InputStream is;
     try {
       is = entity.getContent();

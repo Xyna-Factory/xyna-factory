@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import com.gip.xyna.xnwh.persistence.ResultSetReader;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.EL;
-import com.gip.xyna.xprc.xfractwfe.generation.JavaOperation;
+import com.gip.xyna.xprc.xfractwfe.generation.CodeOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 
@@ -59,7 +59,7 @@ public class XMOMOperationDatabaseEntry extends XMOMServiceDatabaseEntry {
   
   
   //generate cache entry for operation
-  public XMOMOperationDatabaseEntry(DOM dom, String serviceName, JavaOperation op) {
+  public XMOMOperationDatabaseEntry(DOM dom, String serviceName, CodeOperation op) {
     super(generateFqNameForOperation(dom, serviceName, op), op.getLabel(), dom.getOriginalPath(), generateSimpleNameForOperation(dom, serviceName, op),
           "", "", generateFqNameForServiceGroup(dom, serviceName), op.getInputVars(), op.getOutputVars(), op.getThrownExceptions(), dom.isXynaFactoryComponent());
   }

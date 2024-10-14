@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ import com.gip.xyna.xnwh.persistence.memory.index.ConditionType;
 import com.gip.xyna.xnwh.persistence.memory.index.Index;
 import com.gip.xyna.xnwh.persistence.memory.index.ResultHandler;
 import com.gip.xyna.xnwh.selection.parsing.SelectionParser;
-import com.gip.xyna.xnwh.selection.parsing.SelectionParser.EscapeParams;
+import com.gip.xyna.xnwh.selection.parsing.SelectionParser.EscapeParameters;
 
 
 
@@ -562,7 +562,7 @@ public abstract class PreparedQueryForMemory<E> implements IPreparedQueryForMemo
   }
 
 
-  public static class EscapeForMemory implements EscapeParams {
+  public static class EscapeForMemory implements EscapeParameters {
 
     public String escapeForLike(String toEscape) {
       if (toEscape == null || toEscape.length() == 0) {
@@ -573,8 +573,15 @@ public abstract class PreparedQueryForMemory<E> implements IPreparedQueryForMemo
     }
 
 
-    public String getWildcard() {
+    @Override
+    public String getMultiCharacterWildcard() {
       return ".*";
+    }
+
+
+    @Override
+    public String getSingleCharacterWildcard() {
+      return ".";
     }
 
   }

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Store Project Details" TypeName="StoreProjectDetails" TypePath="xdev.xtestfactory.infrastructure.gui" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Store Project Details" Name="StoreProjectDetails">
+    <Input>
+      <Data ID="6" Label="Test Project Selector" ReferenceName="TestProjectSelector" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testProjectSelector">
+        <Target RefID="5"/>
+      </Data>
+      <Data ID="12" Label="Project Details" ReferenceName="ProjectDetails" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="projectDetails">
+        <Target RefID="16"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Test Project not found" ReferenceName="TestProjectNotFound" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="testProjectNotFound"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="4" Label="Get Test Project" ReferenceName="GetTestProject" ReferencePath="xdev.xtestfactory.infrastructure.gui">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Function ID="5" Label="Get Test Project">
+      <Source RefID="4"/>
+      <Source RefID="6"/>
+      <Target RefID="4"/>
+      <Target RefID="7"/>
+      <Invoke Operation="GetTestProject" ServiceID="4">
+        <Source RefID="6"/>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="7"/>
+      </Receive>
+    </Function>
+    <Data ID="7" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject">
+      <Source RefID="5"/>
+      <Target RefID="16"/>
+    </Data>
+    <Mappings ID="16" Label="Apply Changes">
+      <Source RefID="7"/>
+      <Source RefID="12"/>
+      <Target RefID="14"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,VisualMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="15" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject15"/>
+        <Source RefID="7"/>
+      </Input>
+      <Input>
+        <Data ID="17" Label="Project Details" ReferenceName="ProjectDetails" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="projectDetails17"/>
+        <Source RefID="12"/>
+      </Input>
+      <Output>
+        <Data ID="18" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject18"/>
+        <Target RefID="14"/>
+      </Output>
+      <Mapping>%2%=%0%</Mapping>
+      <Mapping>%2%.description=%1%.description</Mapping>
+      <Mapping>%2%.version=%1%.version</Mapping>
+    </Mappings>
+    <Data ID="14" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject13">
+      <Source RefID="16"/>
+      <Target RefID="22"/>
+    </Data>
+    <ServiceReference ID="21" Label="Store Test Project Without Store Parameter" ReferenceName="StoreTestProjectWithoutStoreParameter" ReferencePath="xdev.xtestfactory.infrastructure.actions">
+      <Source RefID="22"/>
+      <Target RefID="22"/>
+    </ServiceReference>
+    <Function ID="22" Label="Store Test Project Without Store Parameter">
+      <Source RefID="21"/>
+      <Source RefID="14"/>
+      <Target RefID="21"/>
+      <Invoke Operation="StoreTestProjectWithoutStoreParameter" ServiceID="21">
+        <Source RefID="14">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="21"/>
+    </Function>
+    <Assign/>
+  </Operation>
+</Service>

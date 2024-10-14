@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -133,7 +133,9 @@ public class PersistenceExpressionVisitors {
     private boolean expectingIndex = false;
     private static final Pattern unescapedStarPattern = Pattern.compile("\\\\*[*]");
     private static final Pattern unescapedQuotesPattern = Pattern.compile("\\\\*[\"]");
+    private static final Pattern unescapedUnderscorePattern = Pattern.compile("\\\\*[_]");
     private static final Pattern unescapedWildcardPattern = Pattern.compile("\\\\*[%]");
+    private static final Pattern unescapedSingleWildcardPattern = Pattern.compile("\\\\*[?]");
     
     private final Parameter parameter;
     
@@ -204,16 +206,12 @@ public class PersistenceExpressionVisitors {
              fe.getFunction().getName().equals(Functions.TYPE_OF_FUNCTION_NAME);
     }
 
-    private boolean lastFunctionInStackIsGlob() {
-      return !functionStack.isEmpty() && functionStack.peek().getFunction().getName().equals(QueryFunctionStore.GLOB_FUNCTION_NAME);
+    private boolean isSQLFunction(FunctionExpression fe) {
+      return fe.getFunction().getName().equals(QueryFunctionStore.REGEXP_LIKE_FUNCTION_NAME);
     }
-    
-    private boolean lastFunctionInStackIsTypeof() {
-      return !functionStack.isEmpty() && functionStack.peek().getFunction().getName().equals(Functions.TYPE_OF_FUNCTION_NAME);
-    }
-    
-    private boolean lastFunctionInStackIsCast() {
-      return !functionStack.isEmpty() && functionStack.peek().getFunction().getName().equals(Functions.CAST_FUNCTION_NAME);
+
+    private boolean lastFunctionInStackIs(String name) {
+      return !functionStack.isEmpty() && functionStack.peek().getFunction().getName().equals(name);
     }
     
     private boolean lastFunctionInStackIsCastOrTypeof() {
@@ -224,8 +222,11 @@ public class PersistenceExpressionVisitors {
     
 
     public void functionSubExpressionEnds(FunctionExpression fe, int parameterCnt) {
-      if (lastFunctionInStackIsGlob() && parameterCnt == 0) {
+      if (lastFunctionInStackIs(QueryFunctionStore.GLOB_FUNCTION_NAME) && parameterCnt == 0) {
         whereClause.append(" LIKE ");
+      }
+      if (lastFunctionInStackIs(QueryFunctionStore.REGEXP_LIKE_FUNCTION_NAME)) {
+        whereClause.append(parameterCnt == 0 ? "," : ")");
       }
     }
     
@@ -240,6 +241,9 @@ public class PersistenceExpressionVisitors {
       functionStack.push(fe);
       if (isCastOrTypeof(fe)) {
         whereClause.append("(");
+      }
+      if (isSQLFunction(fe)) {
+        whereClause.append(fe.getJavaCode()).append("(");
       }
     }
 
@@ -314,7 +318,7 @@ public class PersistenceExpressionVisitors {
           }
         }
         List<StorableColumnInformation> expandedAccessPath = expandSyntheticColumns(accessPath, targetColumn);
-        if (lastFunctionInStackIsCast()) { // there is another cast around us
+        if (lastFunctionInStackIs(Functions.CAST_FUNCTION_NAME)) { // there is another cast around us
           variableIdentification.push(column);
         } else {
           whereClause.append(expandedAccessPath, targetColumn);          
@@ -389,7 +393,7 @@ public class PersistenceExpressionVisitors {
                 break;
               case STRING :
                 String v = expression.getValue();
-                if (lastFunctionInStackIsGlob()) {
+                if (lastFunctionInStackIs(QueryFunctionStore.GLOB_FUNCTION_NAME)) {
                   //TODO: das stimmt so nicht unbedingt, wenn die parameter von functions noch irgendwie anderweitig bearbeitet werden
                   //     beispiel: glob(%0%.a, "1"+"*")
                   //     dann müsste man aber eh solche funktionen noch separat auswerten, bevor man sie als parameter weitergibt!
@@ -417,8 +421,11 @@ public class PersistenceExpressionVisitors {
      *
      * escapes "
      * escapes %
+     * escapes _
      * changes * to %, unless * is escaped
+     * changes ? to _, unless ? is escaped
      * removes escaping from *
+     * removes escaping from ?
      * doubles escaped backslashes for SelectionParser
      */
     private String applyGlobEscapes(String v) {
@@ -430,11 +437,20 @@ public class PersistenceExpressionVisitors {
       m = unescapedWildcardPattern.matcher(v);
       // % -> \%
       v = m.replaceAll(this::addBackslashForUnescaped);
-
+      
+      m = unescapedUnderscorePattern.matcher(v);
+      // _ -> \_
+      v = m.replaceAll(this::addBackslashForUnescaped);
+      
       m = unescapedStarPattern.matcher(v);
       //  * -> % (in reesacpeAndReplaceLast)
       // \* -> * (in removeLastEsape)
       v = m.replaceAll(x -> isEscaped(x.group()) ? removeLastEscape(x.group()) : reescapeAndReplaceLast(x.group(), "%"));
+      
+      m = unescapedSingleWildcardPattern.matcher(v);
+      //  ? -> _ (in rescaeAndReplaceLast)
+      // \? -> ? (in removeLastEscaped)
+      v = m.replaceAll(x -> isEscaped(x.group()) ? removeLastEscape(x.group()) : reescapeAndReplaceLast(x.group(), "_"));
       
       //duplicate "\\\\" to "\\\\\\\\" for SelectionParser.
       v = v.replaceAll("\\\\\\\\", "\\\\\\\\\\\\\\\\");
@@ -449,7 +465,7 @@ public class PersistenceExpressionVisitors {
 
 
     private String reescapeAndReplaceLast(String s, String replacement) {
-      return s.subSequence(0, s.length() - 1) + s.substring(0, s.length() - 1) + "%";
+      return s.subSequence(0, s.length() - 1) + s.substring(0, s.length() - 1) + replacement;
     }
 
 
@@ -563,7 +579,7 @@ public class PersistenceExpressionVisitors {
     
     
     private boolean isGlobOnBooleanColumn() {
-      if (lastFunctionInStackIsGlob() && 
+      if (lastFunctionInStackIs(QueryFunctionStore.GLOB_FUNCTION_NAME) && 
           whereClause.columns.size() > 0) {
         PrimitiveType typeOfLastColumn = whereClause.columns.get(whereClause.columns.size() - 1).getColumn().getPrimitiveType();
         if (typeOfLastColumn != null &&
@@ -733,8 +749,10 @@ public class PersistenceExpressionVisitors {
     private List<String> collectSubTypesRecursivly(StorableStructureInformation type) {
       List<String> types = new ArrayList<>();
       types.add(type.getFqXmlName());
-      for (StorableStructureIdentifier subEntry : type.getSubEntries()) {
-        types.addAll(collectSubTypesRecursivly(subEntry.getInfo()));
+      if (type.getSubEntries() != null) {
+        for (StorableStructureIdentifier subEntry : type.getSubEntries()) {
+          types.addAll(collectSubTypesRecursivly(subEntry.getInfo()));
+        }
       }
       return types;
     }
@@ -1246,29 +1264,34 @@ private static class StorableStructureType implements ModelledType {
     
     protected final static String GLOB_FUNCTION_NAME = "glob";
     protected final static String GLOB_FUNCTION_REPRESENTATION = "GLOB_FUNCTION_REPRESENTATION";
+    protected final static String REGEXP_LIKE_FUNCTION_NAME = "regexp_like";
+    public final static String REGEXP_LIKE_SQL_FUNCTION = "REGEXP_LIKE";
 
+    private static final FunctionParameterTypeDefinition TWO_STRING_PARAMETER = new FunctionParameterTypeDefinition() {
+
+      public TypeInfo getType(int parameterCnt) {
+        if (parameterCnt == 0 || parameterCnt == 1) {
+          return new TypeInfo(BaseType.STRING);
+        }
+        throw new RuntimeException();
+      }
+
+      public int numberOfParas() {
+        return 2;
+      }
+
+      public int numberOfOptionalParas() {
+        return 0;
+      }
+    };
+    
     private static volatile Set<Function> functions; 
 
     public Set<Function> getSupportedFunctions() {
       if (functions == null) {
         Set<Function> supportedFunctions = new HashSet<Function>();
-        supportedFunctions.add(new Function(GLOB_FUNCTION_NAME, new TypeInfo(BaseType.BOOLEAN_PRIMITIVE),  new FunctionParameterTypeDefinition() {
-
-          public TypeInfo getType(int parameterCnt) {
-            if (parameterCnt == 0 || parameterCnt == 1) {
-              return new TypeInfo(BaseType.STRING);
-            }
-            throw new RuntimeException();
-          }
-
-          public int numberOfParas() {
-            return 2;
-          }
-
-          public int numberOfOptionalParas() {
-            return 0;
-          }
-        }, GLOB_FUNCTION_REPRESENTATION));
+        supportedFunctions.add(new Function(GLOB_FUNCTION_NAME, new TypeInfo(BaseType.BOOLEAN_PRIMITIVE),  TWO_STRING_PARAMETER, GLOB_FUNCTION_REPRESENTATION));
+        supportedFunctions.add(new Function(REGEXP_LIKE_FUNCTION_NAME, new TypeInfo(BaseType.BOOLEAN_PRIMITIVE), TWO_STRING_PARAMETER, REGEXP_LIKE_SQL_FUNCTION));
         supportedFunctions.add(new Function("null", TypeInfo.NULL, new FunctionParameterTypeDefinition() {
 
           public TypeInfo getType(int parameterCnt) {

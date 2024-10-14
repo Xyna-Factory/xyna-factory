@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -253,6 +253,8 @@ public class ProxyRole {
       add(rightScopeMap, rsb, "xfmg.xfctrl.orderInputSources:[read, write, insert, delete, generate, *]:/\\*/:/\\*/:/\\*/");
       add(rightScopeMap, rsb, "xfmg.xfctrl.orderTypes:[read, write, insert, delete, *]:/\\*/:/\\*/:/\\*/");
       add(rightScopeMap, rsb, "xfmg.xfctrl.timeControlledOrders:[read, write, insert, enable, disable, kill, *]:/.*/:/.*/:/.*/");
+      add(rightScopeMap, rsb, "xfmg.xfctrl.TriggerManagement:[read, write, insert, delete, *]:/.*/");
+      add(rightScopeMap, rsb, "xfmg.xfctrl.FilterManagement:[read, write, insert, delete, *]:/.*/");
       add(rightScopeMap, rsb, "xnwh.persistence.Storables:[read, write, insert, delete, *]:*:*");
       add(rightScopeMap, rsb, "xprc.xpce.StartOrder:/.*/:/.*/:/.*/");
       return rightScopeMap;

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -190,6 +190,7 @@ import com.gip.xyna.xprc.xfqctrl.FrequencyControlledTask;
 import com.gip.xyna.xprc.xfqctrl.FrequencyControlledTaskCreationParameter;
 import com.gip.xyna.xprc.xfqctrl.FrequencyControlledTaskInformation;
 import com.gip.xyna.xprc.xfqctrl.XynaFrequencyControl;
+import com.gip.xyna.xprc.xfractwfe.XynaPythonSnippetManagement;
 import com.gip.xyna.xprc.xfractwfe.base.DeploymentHandling;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
@@ -2297,6 +2298,11 @@ public class UpdateGeneratedClasses {
 
                   @Override
                   public XynaXmomSerialization getXmomSerialization() {
+                    return null;
+                  }
+                  
+                  @Override
+                  public XynaPythonSnippetManagement getXynaPythonSnippetManagement() {
                     return null;
                   }
                 };

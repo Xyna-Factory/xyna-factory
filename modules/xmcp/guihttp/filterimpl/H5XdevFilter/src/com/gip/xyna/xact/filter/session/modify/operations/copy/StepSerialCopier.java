@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,6 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.ScopeStep;
 import com.gip.xyna.xprc.xfractwfe.generation.Step;
 import com.gip.xyna.xprc.xfractwfe.generation.StepSerial;
-import com.gip.xyna.xprc.xfractwfe.generation.WF;
-import com.gip.xyna.xprc.xfractwfe.generation.WF.WFStep;
 
 
 
@@ -37,25 +35,14 @@ import com.gip.xyna.xprc.xfractwfe.generation.WF.WFStep;
   public StepSerial copyStep(StepSerial sourceSerial, ScopeStep parentScope, GenerationBase creator, CopyData cpyData) {
     StepSerial targetSerial = new StepSerial(parentScope, creator);
     fillStepSerial(sourceSerial, targetSerial, parentScope, cpyData);
-
     cpyData.getTargetStepMap().addStep(targetSerial);
-    copyVars(sourceSerial, targetSerial, cpyData);
-
     return targetSerial;
   }
 
 
   public void fillStepSerial(StepSerial sourceSerial, StepSerial targetSerial, ScopeStep parentScope, CopyData cpyData) {
     //we need variables first!
-    StepSerial sourceStepSerial = sourceSerial;
-    StepSerial targetStepSerial = targetSerial;
-    List<AVariable> vars = sourceStepSerial.getVariablesAndExceptions();
-    WF parentWFObject = (parentScope instanceof WFStep) ? ((WFStep) parentScope).getWF() : parentScope.getParentWFObject();
-
-    for (AVariable var : vars) {
-      AVariable copy = StepCopier.copyVariable(var, parentWFObject, cpyData);
-      targetStepSerial.addVar(copy);
-    }
+    copyVars(sourceSerial, targetSerial, cpyData);
 
     for (int i = 0; i < sourceSerial.getChildSteps().size(); i++) {
       Step sourceChild = sourceSerial.getChildSteps().get(i);

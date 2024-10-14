@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- */
+*/
 package xmcp.gitintegration.impl;
 
 
@@ -22,9 +22,13 @@ package xmcp.gitintegration.impl;
 import base.File;
 import base.Text;
 
+import java.util.List;
+
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
+
+import xmcp.gitintegration.Flag;
 import xmcp.gitintegration.WorkspaceContent;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xprc.xpce.Workspace;
@@ -82,7 +86,7 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
 
   public WorkspaceContent createWorkspaceContent(Workspace workspace) {
     WorkspaceContentCreator contentCreator = new WorkspaceContentCreator();
-    WorkspaceContent result = contentCreator.createWorkspaceContent(workspace.getName());
+    WorkspaceContent result = contentCreator.createWorkspaceContentForWorkspace(workspace.getName());
     return result;
   }
 
@@ -96,6 +100,13 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
   public WorkspaceContent createWorkspaceContentFromText(Text text9) {
     // Implemented as code snippet!
     return null;
+  }
+
+
+  @Override
+  public List<? extends WorkspaceContentDifferences> listOpenWorkspaceDifferencesLists(Workspace arg0, Flag arg1) {
+    WorkspaceDifferenceListStorage storage = new WorkspaceDifferenceListStorage();
+    return storage.loadDifferencesLists(arg0.getName(), arg1.getValue());
   }
 
 }

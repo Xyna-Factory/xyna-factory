@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,14 @@ import java.util.List;
 
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.filter.FilterAction;
+import com.gip.xyna.xact.filter.H5XdevFilter;
 import com.gip.xyna.xact.filter.HTMLBuilder.HTMLPart;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
 import com.gip.xyna.xact.filter.actions.PathElements;
 import com.gip.xyna.xact.filter.actions.auth.utils.AuthUtils;
+import com.gip.xyna.xact.filter.session.XMOMGui;
 import com.gip.xyna.xact.filter.session.XMOMGuiReply.Status;
+import com.gip.xyna.xact.filter.session.XmomGuiSession;
 import com.gip.xyna.xact.filter.util.Utils;
 import com.gip.xyna.xact.filter.URLPath;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
@@ -43,6 +46,11 @@ import xmcp.auth.LoginRequest;
 
 public class LoginAction implements FilterAction {
 
+  protected XMOMGui xmomgui;
+  
+  public LoginAction(XMOMGui xmomgui) {
+    this.xmomgui = xmomgui;
+  }
 
   public boolean match(URLPath url, Method method) {
     return url.getPath().startsWith("/" + PathElements.AUTH + "/" + PathElements.LOGIN) && Method.POST == method;
@@ -76,17 +84,22 @@ public class LoginAction implements FilterAction {
     }
     
 
-    return createLoginResponse(jfai, tc, creds, path);
+    return createLoginResponse(jfai, tc, creds, path, xmomgui);
   }
 
 
-  public static FilterActionInstance createLoginResponse(JsonFilterActionInstance jfai, HTTPTriggerConnection tc, SessionCredentials creds, String path)
+  public static FilterActionInstance createLoginResponse(JsonFilterActionInstance jfai, HTTPTriggerConnection tc, SessionCredentials creds, String path, XMOMGui xmomgui)
       throws XynaException {
-    String sdj = AuthUtils.getSessionDetailsJson(creds.getSessionId());
 
+    String sdj = AuthUtils.getSessionDetailsJson(creds.getSessionId(), creds.getToken());
+    String sessionId = H5XdevFilter.STRICT_TRANSPORT_SECURITY.get() ? AuthUtils.COOKIE_FIELD_SESSION_ID_STS : AuthUtils.COOKIE_FIELD_SESSION_ID;
+
+    xmomgui.getOrCreateSessionBasedData(new XmomGuiSession(creds.getSessionId(), creds.getToken()));
     List<String> list = new ArrayList<>();
-    list.add(AuthUtils.generateCookie(AuthUtils.COOKIE_FIELD_SESSION_ID, creds.getSessionId(), path, tc, true));
-    list.add(AuthUtils.generateCookie(AuthUtils.COOKIE_FIELD_TOKEN, creds.getToken(), path, tc, true));
+    list.add(AuthUtils.generateCookie(sessionId, creds.getSessionId(), path, tc, true));
+    if(!AuthUtils.USE_CSRF_TOKEN.get()) {
+      list.add(AuthUtils.generateCookie(AuthUtils.COOKIE_FIELD_TOKEN, creds.getToken(), path, tc, true));
+    }
     jfai.setProperty("Set-Cookie", list); //Liste wird dann spaeter (in httptriggerconnection) umgewandelt in mehrere Set-Cookie Headerzeilen
     jfai.sendJson(tc, sdj);
     return jfai;

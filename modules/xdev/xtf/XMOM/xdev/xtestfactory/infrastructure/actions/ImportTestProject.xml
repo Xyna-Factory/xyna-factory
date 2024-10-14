@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Import Test Project" TypeName="ImportTestProject" TypePath="xdev.xtestfactory.infrastructure.actions" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Import Test Project" Name="ImportTestProject">
+    <Input>
+      <Data ID="288" Label="Managed File ID" ReferenceName="ManagedFileID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="managedFileID">
+        <Target RefID="286"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="54" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject54">
+        <Source RefID="2"/>
+      </Data>
+    </Output>
+    <Function ID="286" Label="import TestProject">
+      <Source RefID="283"/>
+      <Source RefID="288"/>
+      <Target RefID="283"/>
+      <Target RefID="287"/>
+      <Meta>
+        <FixedDetailOptions>openCompensation</FixedDetailOptions>
+      </Meta>
+      <Invoke Operation="importTestProject" ServiceID="283">
+        <Source RefID="288"/>
+      </Invoke>
+      <Receive ServiceID="283">
+        <Target RefID="287"/>
+      </Receive>
+      <Compensate ID="394">
+        <Function ID="391" Label="Delete Workspace">
+          <Source RefID="283"/>
+          <Source RefID="287"/>
+          <Target RefID="283"/>
+          <Invoke Operation="deleteWorkspace" ServiceID="283">
+            <Source RefID="287"/>
+          </Invoke>
+          <Receive ServiceID="283"/>
+        </Function>
+        <Function ID="409" Label="Delete">
+          <Source RefID="408"/>
+          <Source RefID="287"/>
+          <Source RefID="412"/>
+          <Target RefID="408"/>
+          <Invoke Operation="delete" ServiceID="408">
+            <Source RefID="287"/>
+            <Source RefID="412">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="408"/>
+        </Function>
+      </Compensate>
+    </Function>
+    <ServiceReference ID="283" Label="TestFactoryIntegration" ReferenceName="TestFactoryIntegration.TestFactoryIntegration" ReferencePath="xdev.xtestfactory.infrastructure.services">
+      <Source RefID="286"/>
+      <Source RefID="391"/>
+      <Target RefID="286"/>
+      <Target RefID="391"/>
+    </ServiceReference>
+    <Data ID="287" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject287">
+      <Source RefID="286"/>
+      <Target RefID="391"/>
+      <Target RefID="409"/>
+      <Target RefID="2"/>
+    </Data>
+    <ServiceReference ID="408" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="409"/>
+      <Target RefID="409"/>
+    </ServiceReference>
+    <Data ID="412" Label="Delete parameter" ReferenceName="DeleteParameter" ReferencePath="xnwh.persistence" VariableName="const_DeleteParameter">
+      <Target RefID="409"/>
+      <Data ID="415" Label="Including history" VariableName="includingHistory">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="418" Label="Reference handling" ReferenceName="ReferenceHandling" ReferencePath="xnwh.persistence" VariableName="referenceHandling">
+        <Data ID="416" Label="Backward" VariableName="backward">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+          <Value>delete</Value>
+        </Data>
+        <Data ID="417" Label="Forward" VariableName="forward">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+          <Value>recursive</Value>
+        </Data>
+      </Data>
+    </Data>
+    <Assign ID="2">
+      <Source RefID="287"/>
+      <Target RefID="54"/>
+      <Copy>
+        <Source RefID="287"/>
+        <Target RefID="54"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -115,6 +115,22 @@ public class MonitoringCodes {
       return NO_MONITORING;
     } else {
       return STEP_MONITORING;
+    }
+  }
+
+
+  public static boolean isValid(int val) {
+    switch (val) {
+      case 0 :
+      case 5 :
+      case 10 :
+      case 15 :
+      case 17 :
+      case 18 :
+      case 20 :
+        return true;
+      default :
+        return false;
     }
   }
   

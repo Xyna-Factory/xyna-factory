@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
 	<!--Name for the generate archive (jar or tar.gz) file-->
 	<property name="archive.name" value="xynautils-${utils.name}" />
 	<!--Name of the jar vendor-->
-	<property name="vendor.name" value="GIP SmartMercial GmbH" />
+	<property name="vendor.name" value="Xyna GmbH" />
 	<!--Description of the generated jar file (only needed in the manifest of the jar file)-->
 	<property name="jar.desc" value="XynaUtils for ${utils.name}" />
 	<!--Package name for the classes included into the jar-->
@@ -281,7 +281,7 @@ the current project and copies it to the archive directory.">
 	<target name="doc"
 	        description="Generates the Java Documentation of the current project.">
 		<delete dir="${doc.dir}" failonerror="false" />
-		<javadoc destdir="${doc.dir}" version="true" author="true">
+		<javadoc destdir="${doc.dir}" version="true" author="true" encoding="ISO-8859-1">
 			<link href="http://java.sun.com/j2se/1.5.0/docs/api" />
 			<link href="http://download-uk.oracle.com/docs/cd/B14117_01/appdev.101/b12024" />
 			<classpath>
@@ -314,6 +314,7 @@ moves it to the users public_html folder">
 		         packagenames="com.gip.xyna.utils.*"
 		         version="true"
 		         author="true"
+		         encoding="ISO-8859-1"
 		         windowtitle="Xyna Utils Documentation">
 			<link href="http://java.sun.com/j2se/1.5.0/docs/api" />
 			<link href="http://download-uk.oracle.com/docs/cd/B14117_01/appdev.101/b12024" />

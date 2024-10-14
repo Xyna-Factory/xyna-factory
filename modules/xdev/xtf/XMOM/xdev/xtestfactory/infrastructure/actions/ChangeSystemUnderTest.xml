@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Change System Under Test" TypeName="ChangeSystemUnderTest" TypePath="xdev.xtestfactory.infrastructure.actions" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,vScroll(298)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="ChangeSystemUnderTest" Name="ChangeSystemUnderTest">
+    <Input>
+      <Data ID="2" Label="System Under Test" ReferenceName="SystemUnderTest" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTest">
+        <Target RefID="15"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Failed To Determine Test Project" ReferenceName="FailedToDetermineTestProject" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestProject"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="4" Label="Determine Current Test Project" ReferenceName="DetermineCurrentTestProject" ReferencePath="xdev.xtestfactory.infrastructure.util">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Function ID="5" Label="Determine Current Test Project">
+      <Source RefID="4"/>
+      <Target RefID="4"/>
+      <Target RefID="8"/>
+      <Invoke Operation="DetermineCurrentTestProject" ServiceID="4"/>
+      <Receive ServiceID="4">
+        <Target RefID="8"/>
+      </Receive>
+    </Function>
+    <Data ID="8" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject38">
+      <Source RefID="5"/>
+      <Target RefID="11"/>
+      <Target RefID="15"/>
+      <Target RefID="23"/>
+    </Data>
+    <Choice ID="11" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="8"/>
+      <Input>
+        <Data ID="26" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject26"/>
+        <Source RefID="8">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="29" Label="true" Premise="%0%.systemUnderTest!=null">
+        <Mappings ID="23" Label="Mapping">
+          <Source RefID="8"/>
+          <Target RefID="21"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="22" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject22"/>
+            <Source RefID="8"/>
+          </Input>
+          <Output>
+            <Data ID="27" IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase"/>
+            <Target RefID="21"/>
+          </Output>
+          <Mapping>%1%~=%0%.testCase</Mapping>
+        </Mappings>
+        <Foreach ID="41">
+          <Source RefID="21"/>
+          <Target RefID="47"/>
+          <InputList RefID="21">
+            <Data ID="40" Label="test case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase40">
+              <Target RefID="42"/>
+            </Data>
+          </InputList>
+          <OutputList RefID="47">
+            <Data ID="46" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase46">
+              <Source RefID="42"/>
+            </Data>
+          </OutputList>
+          <Mappings ID="42" Label="Mapping">
+            <Source RefID="40"/>
+            <Target RefID="46"/>
+            <Meta>
+              <FixedDetailOptions>openConfiguration</FixedDetailOptions>
+            </Meta>
+            <Input>
+              <Data ID="39" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase39"/>
+              <Source RefID="40"/>
+            </Input>
+            <Output>
+              <Data ID="43" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase43"/>
+              <Target RefID="46"/>
+            </Output>
+            <Mapping>%1%~=%0%</Mapping>
+            <Mapping>%1%.coveredFeatures~=null</Mapping>
+          </Mappings>
+        </Foreach>
+        <Foreach ID="51">
+          <Source RefID="47"/>
+          <InputList RefID="47">
+            <Data ID="50" Label="test case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase50">
+              <Target RefID="49"/>
+            </Data>
+          </InputList>
+          <Function ID="49" Label="Store - Test Case">
+            <Source RefID="48"/>
+            <Source RefID="50"/>
+            <Source RefID="52"/>
+            <Target RefID="48"/>
+            <Invoke Operation="store" ServiceID="48">
+              <Source RefID="50">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+              <Source RefID="52">
+                <Meta>
+                  <LinkType>Constant</LinkType>
+                </Meta>
+              </Source>
+            </Invoke>
+            <Receive ServiceID="48"/>
+          </Function>
+        </Foreach>
+        <Assign ID="28"/>
+      </Case>
+      <Case ID="32" Label="false">
+        <Assign ID="31"/>
+      </Case>
+    </Choice>
+    <Data ID="14" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject0">
+      <Source RefID="15"/>
+      <Target RefID="53"/>
+    </Data>
+    <Data ID="21" IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase21">
+      <Source RefID="23"/>
+      <Target RefID="41"/>
+    </Data>
+    <Mappings ID="15" Label="Update reference to new SUT and clear SUT instance">
+      <Source RefID="8"/>
+      <Source RefID="2"/>
+      <Target RefID="14"/>
+      <Meta>
+        <FixedDetailOptions>openConfiguration</FixedDetailOptions>
+        <FixedHeight>32</FixedHeight>
+        <FixedWidth>320</FixedWidth>
+      </Meta>
+      <Input>
+        <Data ID="30" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject"/>
+        <Source RefID="8"/>
+      </Input>
+      <Input>
+        <Data ID="16" Label="System Under Test" ReferenceName="SystemUnderTest" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTest16"/>
+        <Source RefID="2"/>
+      </Input>
+      <Output>
+        <Data ID="17" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject17"/>
+        <Target RefID="14"/>
+      </Output>
+      <Mapping>%2%~=%0%</Mapping>
+      <Mapping>%2%.systemUnderTest~=%1%</Mapping>
+      <Mapping>%2%.systemUnderTestInstance~=null</Mapping>
+    </Mappings>
+    <Data ID="47" IsList="true" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase47">
+      <Source RefID="41"/>
+      <Target RefID="51"/>
+    </Data>
+    <ServiceReference ID="48" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="49"/>
+      <Source RefID="53"/>
+      <Target RefID="49"/>
+      <Target RefID="53"/>
+    </ServiceReference>
+    <Data ID="52" Label="Store parameter" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="storeParameter">
+      <Target RefID="49"/>
+      <Data ID="57" Label="Historize previous object" VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="58" Label="Keep meta field data" VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="59" Label="Force recursive store" VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+    </Data>
+    <Function ID="53" Label="Store - Test Project">
+      <Source RefID="48"/>
+      <Source RefID="14"/>
+      <Source RefID="54"/>
+      <Target RefID="48"/>
+      <Invoke Operation="store" ServiceID="48">
+        <Source RefID="14">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="54">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="48"/>
+    </Function>
+    <Data ID="54" Label="Store parameter" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="storeParameter54">
+      <Target RefID="53"/>
+      <Data ID="60" Label="Historize previous object" VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="61" Label="Keep meta field data" VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="62" Label="Force recursive store" VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+    </Data>
+    <Assign ID="3"/>
+  </Operation>
+</Service>

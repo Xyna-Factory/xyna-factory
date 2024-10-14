@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,9 @@ public class GuiLabels {
   public static final String DT_LABEL_UNIQUE_IDENTIFIER       = "uniqueIdentifier";
   public static final String DT_LABEL_CURRENTVERSION_FLAG     = "currentVersionFlag";
 
-  public static final String DT_LABEL_IMPL_TYPE_ABSTRACT      = "abstract";
-  public static final String DT_LABEL_IMPL_TYPE_CODED_SERVICE = "codedService";
-  public static final String DT_LABEL_IMPL_TYPE_REFERENCE     = "reference";
+  public static final String DT_LABEL_IMPL_TYPE_ABSTRACT             = "abstract";
+  public static final String DT_LABEL_IMPL_TYPE_CODED_SERVICE        = "codedService";
+  public static final String DT_LABEL_IMPL_TYPE_CODED_SERVICE_PYTHON = "codedServicePython";
+  public static final String DT_LABEL_IMPL_TYPE_REFERENCE            = "reference";
 
 }

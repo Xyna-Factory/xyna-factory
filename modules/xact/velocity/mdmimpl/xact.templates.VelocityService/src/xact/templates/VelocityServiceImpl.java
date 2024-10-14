@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -281,7 +281,7 @@ public final class VelocityServiceImpl implements DeploymentTask, IPropertyChang
           for(int i=0;i<aliasParts.length-1;i++){
             if(hm.containsKey(aliasParts[i])){
               HashMap hmNew=getHashMap(hm.get(aliasParts[i]));
-              hm.put(aliasParts[i],hmNew);//falls Konvertierung durchgefÃ¼hrt!
+              hm.put(aliasParts[i],hmNew);//falls Konvertierung durchgeführt!
               hm=hmNew;
             } else {
               HashMap hmNeu=new HashMap();

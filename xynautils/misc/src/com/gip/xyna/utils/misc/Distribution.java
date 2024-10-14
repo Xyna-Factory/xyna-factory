@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ public class Distribution<T extends Comparable<? super T>> {
    }
 
    /**
-    * @return grÃ¶ÃŸter Messwert
+    * @return größter Messwert
     */
    public T getMaximum() {
       analyze();
@@ -80,7 +80,7 @@ public class Distribution<T extends Comparable<? super T>> {
    }
 
    /**
-    * @return 9. Decil der Messwerte (10% der Messwerte sind grÃ¶ÃŸer)
+    * @return 9. Decil der Messwerte (10% der Messwerte sind größer)
     */
    public T get9Decil() {
       analyze();

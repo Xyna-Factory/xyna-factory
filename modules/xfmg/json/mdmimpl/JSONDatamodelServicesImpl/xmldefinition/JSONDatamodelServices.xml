@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,19 +22,116 @@
   </Meta>
   <Libraries>JSONDatamodelServicesImpl.jar</Libraries>
   <Service Label="JSON Datamodel Services" TypeName="JSONDatamodelServices">
-    <Operation ID="3" IsStatic="true" Label="Parse Fields from JSON" Name="parseFieldsFromJSON">
+    <Meta>
+      <AdditionalDependencies>
+        <Datatype>xact.templates.JSON</Datatype>
+      </AdditionalDependencies>
+    </Meta>
+    <Operation IsStatic="true" Label="Decode Value" Name="decodeValue">
+      <Input>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document58"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl.decodeValue(document);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Encode Value" Name="encodeValue">
+      <Input>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document53"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl.encodeValue(document);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Parse List from JSON" Name="parseListFromJSON">
+      <Input>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+        <Data Label="JSON Base Model" ReferenceName="AnyType" ReferencePath="base" VariableName="jSONBaseModel">
+          <Restriction>
+            <DefaultType>xfmg.xfctrl.datamodel.json.JSONBaseModel</DefaultType>
+          </Restriction>
+        </Data>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="JSON Base Model" ReferenceName="AnyType" ReferencePath="base" VariableName="jSONBaseModel16">
+          <Restriction>
+            <DefaultType>xfmg.xfctrl.datamodel.json.JSONBaseModel</DefaultType>
+          </Restriction>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl.parseListFromJSON(document, jSONBaseModel);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Parse List from JSON with Options" Name="parseListFromJSONWithOptions">
+      <Input>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+        <Data Label="JSON Base Model" ReferenceName="AnyType" ReferencePath="base" VariableName="jSONBaseModel">
+          <Restriction>
+            <DefaultType>xfmg.xfctrl.datamodel.json.JSONBaseModel</DefaultType>
+          </Restriction>
+        </Data>
+        <Data Label="JSON Parsing Options" ReferenceName="JSONParsingOptions" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="jSONParsingOptions"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="JSON Base Model" ReferenceName="AnyType" ReferencePath="base" VariableName="jSONBaseModel34">
+          <Restriction>
+            <DefaultType>xfmg.xfctrl.datamodel.json.JSONBaseModel</DefaultType>
+          </Restriction>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl.parseListFromJSONWithOptions(document, jSONBaseModel,jSONParsingOptions);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Parse Object from JSON" Name="parseObjectFromJSON">
       <Meta>
         <Abstract.UID>AFA5C8A2-3C14-FD92-F44A-DBEA8B594636</Abstract.UID>
       </Meta>
       <Input>
-        <Data ID="0" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
-        <Data ID="1" Label="JSON Base Model" ReferenceName="JSONBaseModel" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONBaseModel"/>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+        <Data Label="JSON Base Model" ReferenceName="AnyType" ReferencePath="base" VariableName="jSONBaseModel">
+          <Restriction>
+            <DefaultType>xfmg.xfctrl.datamodel.json.JSONBaseModel</DefaultType>
+          </Restriction>
+        </Data>
       </Input>
       <Output>
-        <Data ID="2" Label="JSON Base Model" ReferenceName="JSONBaseModel" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONBaseModel6"/>
+        <Data Label="JSON Base Model" ReferenceName="AnyType" ReferencePath="base" VariableName="jSONBaseModel6">
+          <Restriction>
+            <DefaultType>xfmg.xfctrl.datamodel.json.JSONBaseModel</DefaultType>
+          </Restriction>
+        </Data>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return JSONDatamodelServicesImpl.parseFieldsFromJSON(document, jSONBaseModel);</CodeSnippet>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl.parseObjectFromJSON(document, jSONBaseModel);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Parse Object From JSON with Options" Name="parseObjectFromJSONWithOptions">
+      <Input>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+        <Data Label="JSON Base Model" ReferenceName="AnyType" ReferencePath="base" VariableName="jSONBaseModel">
+          <Restriction>
+            <DefaultType>xfmg.xfctrl.datamodel.json.JSONBaseModel</DefaultType>
+          </Restriction>
+        </Data>
+        <Data Label="JSON Parsing Options" ReferenceName="JSONParsingOptions" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="jSONParsingOptions"/>
+      </Input>
+      <Output>
+        <Data Label="JSON Base Model" ReferenceName="AnyType" ReferencePath="base" VariableName="jSONBaseModel25">
+          <Restriction>
+            <DefaultType>xfmg.xfctrl.datamodel.json.JSONBaseModel</DefaultType>
+          </Restriction>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl.parseObjectFromJSONWithOptions(document, jSONBaseModel,jSONParsingOptions);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Write JSON" Name="writeJSON">
@@ -42,13 +139,108 @@
         <Abstract.UID>CD7266B9-0AEF-C1E3-A337-DBFAF84ACC92</Abstract.UID>
       </Meta>
       <Input>
-        <Data Label="JSON Base Model" ReferenceName="JSONBaseModel" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONBaseModel"/>
+        <Data Label="JSON Base Model" ReferenceName="AnyType" ReferencePath="base" VariableName="jSONBaseModel">
+          <Restriction>
+            <DefaultType>xfmg.xfctrl.datamodel.json.JSONBaseModel</DefaultType>
+          </Restriction>
+        </Data>
       </Input>
       <Output>
         <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return JSONDatamodelServicesImpl.writeJSON(jSONBaseModel);</CodeSnippet>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl.writeJSON(jSONBaseModel);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Write JSON List" Name="writeJSONList">
+      <Input>
+        <Data IsList="true" Label="JSON Base Model" ReferenceName="AnyType" ReferencePath="base" VariableName="jSONBaseModel">
+          <Restriction>
+            <DefaultType>xfmg.xfctrl.datamodel.json.JSONBaseModel</DefaultType>
+          </Restriction>
+        </Data>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl.writeJSONList(jSONBaseModel);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Write JSON List with Options" Name="writeJSONListWithOptions">
+      <Input>
+        <Data IsList="true" Label="JSON Base Model" ReferenceName="AnyType" ReferencePath="base" VariableName="jSONBaseModel">
+          <Restriction>
+            <DefaultType>xfmg.xfctrl.datamodel.json.JSONBaseModel</DefaultType>
+          </Restriction>
+        </Data>
+        <Data Label="JSON Writing Options" ReferenceName="JSONWritingOptions" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="jSONWritingOptions"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl.writeJSONListWithOptions(jSONBaseModel,jSONWritingOptions);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Write JSON with Options" Name="writeJSONWithOptions">
+      <Input>
+        <Data Label="JSON Base Model" ReferenceName="AnyType" ReferencePath="base" VariableName="jSONBaseModel">
+          <Restriction>
+            <DefaultType>xfmg.xfctrl.datamodel.json.JSONBaseModel</DefaultType>
+          </Restriction>
+        </Data>
+        <Data Label="JSON Writing Options" ReferenceName="JSONWritingOptions" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="jSONWritingOptions"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl.writeJSONWithOptions(jSONBaseModel,jSONWritingOptions);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Parse Generic JSON Object" Name="parseGenericJSONObject">
+      <Input>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Input>
+      <Output>
+        <Data Label="JSONObject" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="JSONObject"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl.parseGenericJSONObject(document);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Parse Generic JSON List" Name="parseGenericJSONList">
+      <Input>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document"/>
+      </Input>
+      <Output>
+        <Data IsList="true" Label="JSONValue" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONValue"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl.parseGenericJSONList(document);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Write Generic JSON List" Name="writeGenericJSONList">
+      <Input>
+        <Data IsList="true" Label="JSON Value" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONValue5"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document2"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl.writeGenericJSONList(jSONValue5);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Write Generic JSON Object" Name="writeGenericJSONObject">
+      <Input>
+        <Data Label="JSON Object" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONObject4"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document3"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.xfctrl.datamodel.json.JSONDatamodelServicesImpl.writeGenericJSONObject(jSONObject4);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

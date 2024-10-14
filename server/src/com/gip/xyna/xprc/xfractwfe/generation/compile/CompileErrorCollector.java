@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -119,6 +119,9 @@ class CompileErrorCollector implements DiagnosticListener<JavaFileObject> {
   private final static String JAVA_FILE_SUFFIX = ".java";
   
   private String transformSourceFileToFqName(String originatingFileName) {
+    if (originatingFileName == null) {
+      return "";
+    }
     String fqName = originatingFileName;
     if (fqName.endsWith(JAVA_FILE_SUFFIX)) {
       fqName = fqName.substring(0, fqName.length() - JAVA_FILE_SUFFIX.length());

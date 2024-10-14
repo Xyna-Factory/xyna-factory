@@ -1,6 +1,6 @@
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Copyright 2022 GIP SmartMercial GmbH, Germany
+# Copyright 2022 Xyna GmbH, Germany
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -183,19 +183,15 @@ get_local_interfaces () {
       case ${INSTALLATION_PLATFORM} in
         rhel|oracle|centos)
           case ${INSTALLATION_PLATFORM_VERSION} in
-            7.*|8.*)
-              ALL_INTERFACE_NAMES=$(LANG=C ${VOLATILE_IFCONFIG} | ${VOLATILE_GREP} ': flags' | ${VOLATILE_SED} -e "s+: + +" | ${VOLATILE_AWK} '{print $1}' | ${VOLATILE_SORT} -u)
-              ;;
             *)
+              ALL_INTERFACE_NAMES=$(LANG=C ${VOLATILE_IFCONFIG} | ${VOLATILE_GREP} ': flags' | ${VOLATILE_SED} -e "s+: + +" | ${VOLATILE_AWK} '{print $1}' | ${VOLATILE_SORT} -u)
               ;;
           esac
           ;;
         ubuntu)
           case ${INSTALLATION_PLATFORM_VERSION} in
-           18.*|20.*)
-              ALL_INTERFACE_NAMES=$(LANG=C ${VOLATILE_IFCONFIG} | ${VOLATILE_GREP} ': flags' | ${VOLATILE_SED} -e "s+: + +" | ${VOLATILE_AWK} '{print $1}' | ${VOLATILE_SORT} -u)
-              ;;
              *)
+              ALL_INTERFACE_NAMES=$(LANG=C ${VOLATILE_IFCONFIG} | ${VOLATILE_GREP} ': flags' | ${VOLATILE_SED} -e "s+: + +" | ${VOLATILE_AWK} '{print $1}' | ${VOLATILE_SORT} -u)
               ;;
           esac
           ;;

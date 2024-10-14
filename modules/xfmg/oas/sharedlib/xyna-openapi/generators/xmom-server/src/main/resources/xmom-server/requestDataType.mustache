@@ -1,0 +1,152 @@
+{{!
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+}}
+{{#operations}}
+{{#xynaOperation}}
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
+TypeName="{{parameterRefName}}" TypePath="{{parameterRefPath}}" Label="{{parameterLabel}}"
+BaseTypeName="RequestParameter" BaseTypePath="xmcp.oas.datatype.provider">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation></Documentation>
+  </Meta>
+  {{#params}}
+{{>property}}
+  {{/params}}
+  <Service Label="{{parameterLabel}}" TypeName="{{parameterRefName}}">
+    <Operation Label="Validate" Name="validate" IsStatic="false">
+      <Input>
+      </Input>
+      <Output>
+        <Data ID="3" Label="OASValidationResult" VariableName="oASValidationResult3" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+{{#params}}
+{{>validation}}
+{{/params}}
+return result.getResult();
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="parse Parameter" Name="parseParameter" IsStatic="false">
+      <Input>
+        <Data ID="1" Label="Http Request" VariableName="httpRequest1" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype"/>
+      </Input>
+      <Output>
+        <Data ID="2" Label="{{parameterLabel}}" VariableName="{{parameterVarName}}2"
+        ReferenceName="{{parameterRefName}}" ReferencePath="{{parameterRefPath}}"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+{{parameterRefName}} ret = new {{parameterRefName}}();
+for (xmcp.oas.datatype.URLPathParameter pathPara: httpRequest1.getURLPathParameter()) {
+{{#pathParams}}
+{{#isPrimitive}}
+    if (pathPara.getAttribute().equals("{{propLabel}}")) {
+        ret.{{setPropVarName}}({{javaType}}.valueOf(pathPara.getValue()));
+    }
+{{/isPrimitive}}
+{{/pathParams}}
+}
+for (xact.http.URLPathQuery query: httpRequest1.getURLQueries()) {
+{{#queryParams}}
+{{#isPrimitive}}
+    if (query.getAttribute().equals("{{propLabel}}")) {
+        ret.{{setPropVarName}}({{javaType}}.valueOf(query.getValue()));
+    }
+{{/isPrimitive}}
+{{/queryParams}}
+}
+for (xact.http.HeaderField headerField: httpRequest1.getHeader().getHeaderField()) {
+{{#headerParams}}
+{{#isPrimitive}}
+    if (headerField.getName().equals("{{propLabel}}".trim().toLowerCase())) {
+        ret.{{setPropVarName}}({{javaType}}.valueOf(headerField.getValue()));
+    }
+{{/isPrimitive}}
+{{/headerParams}}
+}
+{{#hasBody}}
+xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
+jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
+jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
+jsonOptions.setUseLabels(true);
+jsonOptions.setProcessAllInputGenerically(false);
+jsonOptions.setListWrapper((List){{listWrapperPath}}.ListWrapperProvider.getListWrapper());
+
+xact.templates.Document document = httpRequest1.getBody();
+  {{#bodyParams}}
+    {{^isPrimitive}}
+jsonOptions.setObjectDecider(new {{propRefPath}}.decider.OASDecider());
+      {{^isList}}
+{{propFQN}} {{propVarName}} = ({{propFQN}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{propFQN}}(), jsonOptions);
+      {{/isList}}
+      {{#isList}}
+List tmp = (List)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new {{propFQN}}(), jsonOptions);
+List&lt;{{propFQN}}&gt; {{propVarName}} = (List&lt;{{propFQN}}&gt;)tmp;
+      {{/isList}}
+ret.{{setPropVarName}}({{propVarName}});
+    {{/isPrimitive}}
+    {{#isPrimitive}}
+      {{^isList}}
+        {{#isString}}
+String text = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.decodeValue(document).getText();
+text = text.substring(1, text.length()-1);
+ret.{{setPropVarName}}(text);
+        {{/isString}}
+        {{^isString}}
+ret.{{setPropVarName}}({{javaType}}.valueOf(document.getText()));
+        {{/isString}}
+      {{/isList}}
+      {{#isList}}
+List tmp = (List)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new xfmg.xfctrl.datamodel.json.JSONValue(), jsonOptions);
+List&lt;? extends xfmg.xfctrl.datamodel.json.JSONValue&gt; values = (List&lt;? extends xfmg.xfctrl.datamodel.json.JSONValue&gt;)tmp;
+List&lt;{{javaType}}&gt; resultData = new ArrayList&lt; &gt;();
+for(xfmg.xfctrl.datamodel.json.JSONValue value : values) {
+    if(value == null || "NULL".equals(value.getType())) {
+        resultData.add(null);
+        continue;
+    }
+  {{javaType}} valueProcessed =
+        {{#isString}}
+    xfmg.xfctrl.datamodel.json.JSONDatamodelServices.decodeValue(new xact.templates.Document.Builder().text(value.getStringOrNumberValue()).instance()).getText();
+        {{/isString}}
+        {{#isNumber}}
+    {{javaType}}.valueOf(value.getStringOrNumberValue());
+        {{/isNumber}}
+        {{#isBoolean}}
+    value.getBooleanValue();
+        {{/isBoolean}}
+    resultData.add(valueProcessed);
+}
+ret.{{setPropVarName}}(resultData);
+      {{/isList}}
+    {{/isPrimitive}}
+  {{/bodyParams}}
+{{/hasBody}}
+return ret;
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
+
+{{/xynaOperation}}
+{{/operations}}

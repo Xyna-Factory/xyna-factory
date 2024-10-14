@@ -3,7 +3,7 @@
   {
 
 	"name": "dragConditionalChoiceIntoWorkflow",
-	"description": "Öffnet einen neuen Workflow und fügt ein ConditionalChoice ein. Überprüft, dass im Workflow genau ein Schritt ist und der Type ein ConditionalChoice ist.",
+	"description": "Opens a new Workflow and adds a ConditionalChoice. Checks that there is exactly one step in the workflow and it is of type ConditionalChoice",
 	"created": "11.11.2019",
 	"updated": "11.11.2019"
   },
@@ -13,7 +13,7 @@
 	  "operation": "invoke",
 	  "functionName": "createNewWorkflow",
 	  "mapInput": {},
-	  "mapOutput": 
+	  "mapOutput":
 	  {
 	    "!url!": "!url!"
 	  }

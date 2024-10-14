@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,10 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * LocalMailStore verwaltet empfangene Mails.
  * 
- * Mails werden nicht sofort aus der Inbox gelÃ¶scht, sollen aber ntÃ¼rlich nicht direkt einen 
- * zweiten Auftrag starten. Daher mÃ¼ssen die Mails, fÃ¼r die gerade ein Auftrag lÃ¤uft, verwaltet werden.
+ * Mails werden nicht sofort aus der Inbox gelöscht, sollen aber ntürlich nicht direkt einen 
+ * zweiten Auftrag starten. Daher müssen die Mails, für die gerade ein Auftrag läuft, verwaltet werden.
  * Wenn der auftrag fertig ist, kann die Mail aus Inbox und aus LocalMailStore entfernt werden.
- * Auch fÃ¼r Retries werden hier die RetryCounter verwaltet.
+ * Auch für Retries werden hier die RetryCounter verwaltet.
  *
  */
 public class LocalMailStore implements Serializable {
@@ -49,10 +49,10 @@ public class LocalMailStore implements Serializable {
     int nextRetry =  retry == null ? 1 : retry.intValue()+1;
     if( nextRetry <= maxRetries ) {
       retriedMails.put(messageId, nextRetry);
-      receivedMails.remove(messageId); //soll wieder gelesen werden kÃ¶nnen
+      receivedMails.remove(messageId); //soll wieder gelesen werden können
       return true;
     }
-    return false; //Retries Ã¼berschritten, daher nun Mail lÃ¶schen -> Aufgabe des Filters
+    return false; //Retries überschritten, daher nun Mail löschen -> Aufgabe des Filters
   }
 
   public void delete(String messageId) {
@@ -61,7 +61,7 @@ public class LocalMailStore implements Serializable {
   }
 
   public void notProcessed(String messageId) {
-    receivedMails.remove(messageId);// Mail soll wieder gelesen werden kÃ¶nnen
+    receivedMails.remove(messageId);// Mail soll wieder gelesen werden können
   }
   
 }

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Store Counter" TypeName="StoreCounter" TypePath="xdev.xtestfactory.infrastructure.actions" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,hideDetailAreas</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Store Counter" Name="StoreCounter">
+    <Input>
+      <Data ID="50" Label="Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter">
+        <Target RefID="6"/>
+        <Target RefID="27"/>
+        <Target RefID="9"/>
+      </Data>
+      <Data ID="4" Label="Store parameter" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="storeParameter">
+        <Target RefID="6"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Failed To Determine Test Project" ReferenceName="FailedToDetermineTestProject" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestProject"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="5" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="6"/>
+      <Source RefID="25"/>
+      <Target RefID="6"/>
+      <Target RefID="25"/>
+    </ServiceReference>
+    <Choice ID="9" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="50"/>
+      <Input>
+        <Data Label="Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables"/>
+        <Source RefID="50">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="34" Label="true" Premise="%0%.iD&gt;&quot;0&quot;">
+        <Function ID="6" Label="Store">
+          <Source RefID="4"/>
+          <Source RefID="5"/>
+          <Source RefID="50"/>
+          <Target RefID="5"/>
+          <Invoke Operation="store" ServiceID="5">
+            <Source RefID="50"/>
+            <Source RefID="4"/>
+          </Invoke>
+          <Receive ServiceID="5"/>
+        </Function>
+        <Assign ID="33"/>
+      </Case>
+      <Case ID="37" Label="false">
+        <Function ID="20" Label="Determine Current Test Project">
+          <Source RefID="19"/>
+          <Target RefID="21"/>
+          <Target RefID="19"/>
+          <Invoke Operation="DetermineCurrentTestProject" ServiceID="19"/>
+          <Receive ServiceID="19">
+            <Target RefID="21"/>
+          </Receive>
+        </Function>
+        <Mappings ID="27" Label="Add To List Of Counters">
+          <Source RefID="21"/>
+          <Source RefID="50"/>
+          <Target RefID="24"/>
+          <Meta>
+            <FixedDetailOptions>openConfiguration</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="35" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject"/>
+            <Source RefID="21"/>
+          </Input>
+          <Input>
+            <Data ID="53" Label="Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter53"/>
+            <Source RefID="50"/>
+          </Input>
+          <Output>
+            <Data ID="29" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject29"/>
+            <Target RefID="24"/>
+          </Output>
+          <Mapping>%2%~=%0%</Mapping>
+          <Mapping>%2%.counter~=append(%0%.counter,%1%)</Mapping>
+        </Mappings>
+        <Function ID="25" Label="Store">
+          <Source RefID="24"/>
+          <Source RefID="5"/>
+          <Source RefID="26"/>
+          <Target RefID="5"/>
+          <Invoke Operation="store" ServiceID="5">
+            <Source RefID="24">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+            <Source RefID="26">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="5"/>
+        </Function>
+        <Assign ID="36"/>
+      </Case>
+    </Choice>
+    <ServiceReference ID="19" Label="Determine Current Test Project" ReferenceName="DetermineCurrentTestProject" ReferencePath="xdev.xtestfactory.infrastructure.util">
+      <Source RefID="20"/>
+      <Target RefID="20"/>
+    </ServiceReference>
+    <Data ID="21" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject38">
+      <Source RefID="20"/>
+      <Target RefID="27"/>
+    </Data>
+    <Data ID="24" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject0">
+      <Source RefID="27"/>
+      <Target RefID="25"/>
+    </Data>
+    <Data ID="26" Label="Store parameter" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="storeParameter26">
+      <Target RefID="25"/>
+      <Data ID="38" Label="Historize previous object" VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="39" Label="Keep meta field data" VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="40" Label="Force recursive store" VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+    </Data>
+    <Assign ID="2"/>
+  </Operation>
+</Service>

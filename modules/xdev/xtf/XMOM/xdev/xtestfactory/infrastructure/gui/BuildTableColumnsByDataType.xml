@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Build TableColumns By DataType" TypeName="BuildTableColumnsByDataType" TypePath="xdev.xtestfactory.infrastructure.gui" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Build TableColumns By DataType" Name="BuildTableColumnsByDataType">
+    <Input>
+      <Data ID="6" Label="DataType FQN" ReferenceName="Text" ReferencePath="base" VariableName="text">
+        <Target RefID="24"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="17" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn17">
+        <Source RefID="18"/>
+      </Data>
+    </Output>
+    <Function ID="24" Label="Build TableColumns By DataType excluding Members">
+      <Source RefID="23"/>
+      <Source RefID="6"/>
+      <Source RefID="26"/>
+      <Target RefID="23"/>
+      <Target RefID="25"/>
+      <Invoke Operation="BuildTableColumnsByDataTypeExcludingMembers" ServiceID="23">
+        <Source RefID="6"/>
+        <Source RefID="26">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="23">
+        <Target RefID="25"/>
+      </Receive>
+    </Function>
+    <ServiceReference ID="23" Label="Build TableColumns By DataType excluding Members" ReferenceName="BuildTableColumnsByDataTypeExcludingMembers" ReferencePath="xdev.xtestfactory.infrastructure.gui">
+      <Source RefID="24"/>
+      <Target RefID="24"/>
+    </ServiceReference>
+    <Data ID="25" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn25">
+      <Source RefID="24"/>
+      <Target RefID="18"/>
+    </Data>
+    <Data ID="26" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="const_Text">
+      <Target RefID="24"/>
+    </Data>
+    <Assign ID="18">
+      <Source RefID="25"/>
+      <Target RefID="17"/>
+      <Copy>
+        <Source RefID="25"/>
+        <Target RefID="17"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

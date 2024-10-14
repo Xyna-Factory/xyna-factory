@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,25 +23,40 @@
         <path location="${basedir}/../../../" />
     </pathconvert>
     <property name="target.dir" value="${basedir}/deploy/" />
-	
-    <ant antfile="build.xml" target="build-app" inheritAll="false" dir="sharedlib/ZetaTools">
-        <property name="target.dir" value="${target.dir}/app" />
-    </ant>
-
-    <ant antfile="build.xml" target="build-app" inheritAll="false" dir="TableServiceGroupImpl">
-        <property name="target.dir" value="${target.dir}/app" />
-    </ant>
-
-    <ant antfile="build.xml" target="build-app" inheritAll="false" dir="TableUtilsImpl">
-        <property name="target.dir" value="${target.dir}/app" />
-    </ant>
-
-    <ant antfile="build.xml" target="build-app" inheritAll="false" dir="ISO8601ToUnixTimestampTransformationImpl">
-        <property name="target.dir" value="${target.dir}/app" />
-    </ant>
 
     <target name="build">
+        <antcall target="prepare-mdm-jar-if-missing" />
+
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="sharedlib/ZetaTools">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="TableServiceGroupImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="TableUtilsImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="ISO8601ToUnixTimestampTransformationImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/PluginManagementImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+
         <antcall target="build-application" />
+    </target>
+
+    <target name="prepare-mdm-jar">
+        <antcall target="create-mdm-jar" />
+        <supply-mdm-jar type="." name="ISO8601ToUnixTimestampTransformationImpl" />
+        <supply-mdm-jar type="." name="TableServiceGroupImpl" />
+        <supply-mdm-jar type="." name="TableUtilsImpl" />
+        <supply-mdm-jar type="." name="mdmimpl/PluginManagementImpl" />
+        <delete file="${basedir}/mdm.jar" />
     </target>
 
     <import file="${root.dir}/installation/build/buildApplication.xml" />

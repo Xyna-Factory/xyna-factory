@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,8 @@ import com.gip.xyna.xact.filter.session.gb.vars.IdentifiedVariables;
 import com.gip.xyna.xact.filter.session.gb.vars.IdentifiedVariablesService;
 import com.gip.xyna.xact.filter.util.AVariableIdentification.VarUsageType;
 import com.gip.xyna.xact.filter.xmom.MetaXmomContainers;
+import com.gip.xyna.xact.filter.xmom.PluginPaths;
+import com.gip.xyna.xact.filter.xmom.datatypes.json.Utils.ExtendedContextBuilder;
 import com.gip.xyna.xact.filter.xmom.workflows.enums.GuiLabels;
 import com.gip.xyna.xact.filter.xmom.workflows.enums.Tags;
 import com.gip.xyna.xact.filter.xmom.workflows.json.ServiceUtils;
@@ -35,6 +37,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.JavaOperation;
+import com.gip.xyna.xprc.xfractwfe.generation.PythonOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.WorkflowCall;
 
@@ -42,6 +45,7 @@ import xmcp.processmodeller.datatypes.TextArea;
 import xmcp.processmodeller.datatypes.datatypemodeller.DynamicMethod;
 import xmcp.processmodeller.datatypes.datatypemodeller.Method;
 import xmcp.processmodeller.datatypes.datatypemodeller.StaticMethod;
+import xmcp.yggdrasil.plugin.Context;
 
 
 public class DatatypeMethodXo implements HasXoRepresentation {
@@ -56,8 +60,10 @@ public class DatatypeMethodXo implements HasXoRepresentation {
   private String implementation;
   private String reference;
   private Boolean overrides = Boolean.FALSE;
+  protected final GuiHttpPluginManagement pluginMgmt;
+  protected final ExtendedContextBuilder contextBuilder;
 
-  public DatatypeMethodXo(Operation operation, GenerationBaseObject gbo, String id) {
+  public DatatypeMethodXo(Operation operation, GenerationBaseObject gbo, String id, ExtendedContextBuilder contextBuilder) {
     this.gbo = gbo;
     try {
       this.methodId = ObjectId.parse(id);
@@ -66,6 +72,7 @@ public class DatatypeMethodXo implements HasXoRepresentation {
     }
     this.identifiedVariables = new IdentifiedVariablesService(methodId, operation, gbo.getDOM());
     this.identifiedVariables.showLinkState(false);
+    pluginMgmt = GuiHttpPluginManagement.getInstance();
 
     this.operation = operation;
     if(operation.isAbstract()) {
@@ -75,14 +82,19 @@ public class DatatypeMethodXo implements HasXoRepresentation {
         implementationType = GuiLabels.DT_LABEL_IMPL_TYPE_CODED_SERVICE;
         JavaOperation javaOperation = (JavaOperation)operation;
         implementation = javaOperation.getImpl();
+      } else if(operation instanceof PythonOperation) {
+        implementationType = GuiLabels.DT_LABEL_IMPL_TYPE_CODED_SERVICE_PYTHON;
+        PythonOperation pythonOperation = (PythonOperation)operation;
+        implementation = pythonOperation.getImpl();
       } else if(operation instanceof WorkflowCall) {
         implementationType = GuiLabels.DT_LABEL_IMPL_TYPE_REFERENCE;
         WorkflowCall workflowCall = (WorkflowCall)operation;
         reference = workflowCall.getWfFQClassName();
       }
     }
+    this.contextBuilder = contextBuilder;
   }
-  
+
   @Override
   public GeneralXynaObject getXoRepresentation() {
     Method method;
@@ -109,11 +121,10 @@ public class DatatypeMethodXo implements HasXoRepresentation {
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       // nothing
     }
-    if(implementation != null) {
-      method.setImplementation(implementation);
-    }
+
     Integer methodNumber = ObjectId.parseMemberMethodNumber(methodId);
     method.addToAreas(createDocumentationArea());
+    method.addToAreas(createImplementationArea());
     method.addToAreas(ServiceUtils.createVariableArea(gbo, ObjectId.createId(ObjectType.methodVarArea, String.valueOf(methodNumber), ObjectPart.input), VarUsageType.input,
                                                       identifiedVariables, ServiceUtils.getServiceTag(VarUsageType.input), 
                                                       new String[] {MetaXmomContainers.DATA_FQN, MetaXmomContainers.EXCEPTION_FQN}, 
@@ -126,7 +137,7 @@ public class DatatypeMethodXo implements HasXoRepresentation {
                                                       identifiedVariables, ServiceUtils.getServiceTag(VarUsageType.thrown), 
                                                       new String[] {MetaXmomContainers.EXCEPTION_FQN}, 
                                                       identifiedVariables.isReadOnly()));
-
+    method.addToAreas(DomOrExceptionXo.createMetaTagArea(operation.getUnknownMetaTags(), identifiedVariables.isReadOnly()));
     return method;
   }
   
@@ -136,7 +147,22 @@ public class DatatypeMethodXo implements HasXoRepresentation {
     area.setId(ObjectId.createOperationDocumentationAreaId(String.valueOf(ObjectId.parseMemberMethodNumber(methodId))));
     area.setText(operation.getDocumentation());
     area.setReadonly(inheritedFrom != null);
-
+    String pluginPath = operation.isStatic() ? PluginPaths.location_servicegroup_method_documentation : PluginPaths.location_datatype_method_documentation;
+    Context context = contextBuilder.instantiateContext(pluginPath, area.getId());
+    area.unversionedSetPlugin(pluginMgmt.createPlugin(context));
+    return area;
+  }
+  
+  private TextArea createImplementationArea() {
+    TextArea area = new TextArea();
+    area.setName(Tags.DATA_TYPE_IMPLEMENTATION);
+    area.setId(ObjectId.createOperationImplementationAreaId(String.valueOf(ObjectId.parseMemberMethodNumber(methodId))));
+    area.setText(implementation);
+    area.setReadonly(inheritedFrom != null);
+    String pluginContextId = ObjectId.createMemberMethodId(ObjectId.parseMemberMethodNumber(methodId));
+    String pluginPath = operation.isStatic() ? PluginPaths.location_servicegroup_method_implementation : PluginPaths.location_datatype_method_implementation;
+    Context context = contextBuilder.instantiateContext(pluginPath, pluginContextId);
+    area.unversionedSetPlugin(pluginMgmt.createPlugin(context));
     return area;
   }
 

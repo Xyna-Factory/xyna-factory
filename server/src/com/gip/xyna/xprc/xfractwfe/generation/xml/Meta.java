@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,16 +20,15 @@ package com.gip.xyna.xprc.xfractwfe.generation.xml;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable.PrimitiveType;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.EL;
 
+import java.util.List;
 import java.util.Set;
 
 import com.gip.xyna.xprc.xfractwfe.generation.PersistenceInformation;
 import com.gip.xyna.xprc.xfractwfe.generation.PersistenceTypeInformation;
+import com.gip.xyna.xprc.xfractwfe.generation.UnknownMetaTagsComponent;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 
-/**
- *
- */
 public class Meta implements XmlAppendable {
   
   private PrimitiveType type;
@@ -39,8 +38,10 @@ public class Meta implements XmlAppendable {
   private Boolean isServiceGroupOnly;
   private PersistenceInformation persistenceInformation;
   private Set<PersistenceTypeInformation> persistenceTypes;
+  private UnknownMetaTagsComponent unknownMetaTagsComponent;
 
   public Meta() {
+    unknownMetaTagsComponent = new UnknownMetaTagsComponent();
   }
 
   public Meta(Meta meta) {
@@ -51,6 +52,7 @@ public class Meta implements XmlAppendable {
     this.isServiceGroupOnly = meta.isServiceGroupOnly;
     this.persistenceInformation = meta.persistenceInformation;
     this.persistenceTypes = meta.persistenceTypes;
+    this.unknownMetaTagsComponent = meta.unknownMetaTagsComponent;
   }
 
   
@@ -125,8 +127,12 @@ public class Meta implements XmlAppendable {
       if (description != null && description.length() > 0) {
         xml.element(EL.DESCRIPTION, XMLUtils.escapeXMLValueAndInvalidChars(description, false, false));
       }
+      
+      unknownMetaTagsComponent.appendUnknownMetaTags(xml);
+      
     } xml.endElement(EL.META);
   }
+
 
   public boolean hasEntries() {
     return (persistenceInformation != null && persistenceInformation.getRestrictionsCount() > 0)
@@ -135,7 +141,8 @@ public class Meta implements XmlAppendable {
         || (type != null)
         || (dataModel != null)
         || (documentation != null && documentation.length() > 0)
-        || (description != null && description.length() > 0);
+        || (description != null && description.length() > 0)
+        || unknownMetaTagsComponent.hasUnknownMetaTags();
   }
 
   public DataModel getDataModel() {
@@ -170,6 +177,14 @@ public class Meta implements XmlAppendable {
     this.persistenceInformation = persistenceInformation;
   }
 
+  public List<String> getUnknownMetaTags() {
+    return unknownMetaTagsComponent.getUnknownMetaTags();
+  }
+  
+  public void setUnknownMetaTags(List<String> unknownMetaTags) {
+    unknownMetaTagsComponent.setUnknownMetaTags(unknownMetaTags);
+  }
+  
   public static Meta simpleType(PrimitiveType simpleType) {
     Meta m = new Meta();
     m.type = simpleType;
@@ -222,6 +237,12 @@ public class Meta implements XmlAppendable {
   public static Meta description(String description) {
     Meta m = new Meta();
     m.description = description;
+    return m;
+  }
+  
+  public static Meta unknownMetaTags(List<String> unknownMetaTags) {
+    Meta m = new Meta();
+    m.unknownMetaTagsComponent.setUnknownMetaTags(unknownMetaTags);
     return m;
   }
   

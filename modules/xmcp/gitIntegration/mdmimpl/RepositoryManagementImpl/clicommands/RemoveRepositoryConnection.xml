@@ -1,0 +1,23 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2023 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<XynaCommandLineCommand>
+  <CommandDefinition Groups="Git Repository Management" Name="removerepositoryconnection" Description="Removes a repository connection" />
+  <Argument Name="workspace" Description="Workspace within the factory to disconnect from the repository"/>
+  <BoolOption Name="f" LongName="full" Description="Determines whether all repository workspaces within the factory will be disconnected from the repository. This option takes precedence over the 'workspace' argument." Optional="true"/>
+  <BoolOption Name="d" LongName="delete" Description="Determines whether the respective workspaces within the factory will be deleted." Optional="true"/>
+</XynaCommandLineCommand>

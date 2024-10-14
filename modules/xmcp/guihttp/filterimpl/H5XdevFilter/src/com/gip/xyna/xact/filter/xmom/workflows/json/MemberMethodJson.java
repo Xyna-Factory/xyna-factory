@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,11 @@ package com.gip.xyna.xact.filter.xmom.workflows.json;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.gip.xyna.utils.misc.JsonParser.EmptyJsonVisitor;
+import com.gip.xyna.utils.misc.JsonParser.JsonVisitor;
 import com.gip.xyna.utils.misc.JsonParser.UnexpectedJSONContentException;
 import com.gip.xyna.xact.filter.xmom.XMOMGuiJson;
 import com.gip.xyna.xact.filter.xmom.workflows.enums.Tags;
@@ -29,12 +33,37 @@ import com.gip.xyna.xact.filter.xmom.workflows.enums.Tags;
 public class MemberMethodJson extends XMOMGuiJson {
 
   private String label;
+  private String implementation;
+  private String documentation;
+
+  private ArrayList<VariableJson> inputVars = new ArrayList<VariableJson>();
+  private ArrayList<VariableJson> outputVars = new ArrayList<VariableJson>();
+  private ArrayList<VariableJson> thrownExceptions = new ArrayList<VariableJson>();
 
 
   public String getLabel() {
     return label;
   }
 
+  public String getImplementation() {
+    return implementation;
+  }
+
+  public String getDocumentation() {
+    return documentation;
+  }
+
+  public List<VariableJson> getInputVars() {
+    return inputVars;
+  }
+
+  public List<VariableJson> getOutputVars() {
+    return outputVars;
+  }
+
+  public List<VariableJson> getThrownExceptions() {
+    return thrownExceptions;
+  }
 
   public static class MemberMethodJsonVisitor extends EmptyJsonVisitor<MemberMethodJson> {
 
@@ -64,6 +93,76 @@ public class MemberMethodJson extends XMOMGuiJson {
 
       if (label.equals(Tags.LABEL)) {
         vj.label = value;
+        return;
+      }
+
+      if (label.equals(Tags.DATA_TYPE_IMPLEMENTATION)) {
+        vj.implementation = value;
+        return;
+      }
+
+      if (label.equals(Tags.DATA_TYPE_DOCUMENTATION)) {
+        vj.documentation = value;
+        return;
+      }
+
+      throw new UnexpectedJSONContentException(label);
+    }
+
+    @Override
+    public JsonVisitor<?> objectStarts(String label) throws UnexpectedJSONContentException {
+      if (label.equals(Tags.DATA_TYPE_INPUT) || label.equals(Tags.DATA_TYPE_OUTPUT) || label.equals(Tags.DATA_TYPE_THROWS)) {
+        return new VariableJson.VariableJsonVisitor();
+      }
+
+      throw new UnexpectedJSONContentException(label);
+    }
+
+    @Override
+    public void objectList(String label, List<Object> values) throws UnexpectedJSONContentException {
+
+      if (label.equals(Tags.DATA_TYPE_INPUT)) {
+        get().inputVars = new ArrayList<VariableJson>();
+        for (Object variableJson : values) {
+          get().inputVars.add((VariableJson)variableJson);
+        }
+        return;
+      }
+
+      if (label.equals(Tags.DATA_TYPE_OUTPUT)) {
+        get().outputVars = new ArrayList<VariableJson>();
+        for (Object variableJson : values) {
+          get().outputVars.add((VariableJson)variableJson);
+        }
+        return;
+      }
+
+      if (label.equals(Tags.DATA_TYPE_THROWS)) {
+        get().thrownExceptions = new ArrayList<VariableJson>();
+        for (Object variableJson : values) {
+          get().thrownExceptions.add((VariableJson)variableJson);
+        }
+        return;
+      }
+
+      throw new UnexpectedJSONContentException(label);
+    }
+
+    @Override
+    public void emptyList(String label) throws UnexpectedJSONContentException {
+
+      if (label.equals(Tags.DATA_TYPE_INPUT)) {
+        get().inputVars = new ArrayList<VariableJson>();
+        return;
+      }
+
+      if (label.equals(Tags.DATA_TYPE_OUTPUT)) {
+        get().outputVars = new ArrayList<VariableJson>();
+        return;
+      }
+
+      if (label.equals(Tags.DATA_TYPE_THROWS)) {
+        get().thrownExceptions = new ArrayList<VariableJson>();
         return;
       }
 

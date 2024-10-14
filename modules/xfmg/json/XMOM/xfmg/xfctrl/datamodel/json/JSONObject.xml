@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="JSON Object" TypeName="JSONObject" TypePath="xfmg.xfctrl.datamodel.json" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data IsList="true" Label="Members" ReferenceName="JSONKeyValue" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="members"/>
+  <Service Label="JSONObject" TypeName="JSONObject">
+    <Operation Label="get Member" Name="getMember" IsStatic="false">
+      <Input>
+        <Data ID="3" Label="Key" VariableName="key">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data Label="Value" VariableName="value" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json"/>
+      </Output>
+      <Meta>
+        <Documentation>Get JSONValue of member with given Key. Returns null if member does not exist</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">return this.getMembers()== null ? null : this.getMembers().stream().filter(x -> key.equals(x.getKey())).map(x -> x.getValue()).findFirst().orElseGet(() -> null);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="From Json" Name="fromJson" IsStatic="true">
+      <Input>
+        <Data Label="Document" VariableName="document2" ReferenceName="Document" ReferencePath="xact.templates" />
+      </Input>
+      <Output>
+        <Data Label="JsonObject" VariableName="jsonObject1" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" />
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return (JSONObject)JSONDatamodelServices.parseObjectFromJSONWithOptions(document2, new JSONObject(), new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions.Builder().processAllInputGenerically(false).instance());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="To Json" Name="toJson" IsStatic="false">
+      <Input>
+      </Input>
+      <Output>
+        <Data Label="Document" VariableName="document3" ReferenceName="Document" ReferencePath="xact.templates" />
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return JSONDatamodelServices.writeJSONWithOptions(this, new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions.Builder().processAllInputGenerically(false).instance());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

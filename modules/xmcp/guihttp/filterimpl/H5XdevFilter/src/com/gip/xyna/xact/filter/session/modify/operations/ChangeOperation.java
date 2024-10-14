@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,7 +80,9 @@ import com.gip.xyna.xprc.xfractwfe.generation.ExceptionVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.generation.HasDocumentation;
+import com.gip.xyna.xprc.xfractwfe.generation.CodeOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.JavaOperation;
+import com.gip.xyna.xprc.xfractwfe.generation.PythonOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.PersistenceTypeInformation;
 import com.gip.xyna.xprc.xfractwfe.generation.Step;
@@ -548,6 +550,7 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
     newVar.setPersistenceTypes(var.getPersistenceTypes());
     newVar.setIsList(var.isList());
     newVar.setVarName(var.getVarName());
+    newVar.setDocumentation(var.getDocumentation());
 
     dtOrException.replaceMemberVar(var, newVar);
   }
@@ -592,25 +595,31 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
       Operation newOperation = null;
       if (GuiLabels.DT_LABEL_IMPL_TYPE_ABSTRACT.equals(implementationType)) {
         newOperation = new JavaOperation(dom);
-        ((JavaOperation)newOperation).setAbstract(true);
+        ((JavaOperation) newOperation).setAbstract(true);
       } else if (GuiLabels.DT_LABEL_IMPL_TYPE_CODED_SERVICE.equals(implementationType)) {
         newOperation = new JavaOperation(dom);
-        ((JavaOperation)newOperation).setImpl("");
+        ((JavaOperation) newOperation).setImpl("");
+        newOperation.setStatic(operation.isStatic());
+      } else if (GuiLabels.DT_LABEL_IMPL_TYPE_CODED_SERVICE_PYTHON.equals(implementationType)) {
+        newOperation = new PythonOperation(dom);
+        ((PythonOperation) newOperation).setImpl("");
+        newOperation.setStatic(operation.isStatic());
       } else if (GuiLabels.DT_LABEL_IMPL_TYPE_REFERENCE.equals(implementationType)) {
         newOperation = new WorkflowCallInService(dom);
         ((WorkflowCallInService)newOperation).setWf(change.getReference(), dom.getRevision());
       } else {
         throw new UnsupportedOperationException(UnsupportedOperationException.OPERATION_IMPLEMENTATION_TYPE,
-                                                UnsupportedOperationException.IMPLEMENTATION_TYPE_NOT_SUPPORTED
-                                                    + GuiLabels.DT_LABEL_IMPL_TYPE_ABSTRACT + ", "
-                                                    + GuiLabels.DT_LABEL_IMPL_TYPE_CODED_SERVICE + ", "
-                                                    + GuiLabels.DT_LABEL_IMPL_TYPE_REFERENCE + ".");
+            UnsupportedOperationException.IMPLEMENTATION_TYPE_NOT_SUPPORTED
+                + GuiLabels.DT_LABEL_IMPL_TYPE_ABSTRACT + ", "
+                + GuiLabels.DT_LABEL_IMPL_TYPE_CODED_SERVICE + ", "
+                + GuiLabels.DT_LABEL_IMPL_TYPE_CODED_SERVICE_PYTHON + ", "
+                + GuiLabels.DT_LABEL_IMPL_TYPE_REFERENCE + ".");
       }
 
       newOperation.setLabel(operation.getLabel());
       newOperation.setName(operation.getName());
       newOperation.takeOverSignature(operation);
-
+      newOperation.setDocumentation(operation.getDocumentation());
       dom.replaceOperation(operation, newOperation);
       operation = newOperation;
       
@@ -633,11 +642,11 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
 
     String implementation = change.getImplementation();
     if (implementation != null) {
-      if (!(operation instanceof JavaOperation) || ((JavaOperation)operation).isAbstract() ) {
+      if (!(operation instanceof CodeOperation) || ((CodeOperation) operation).isAbstract()) {
         throw new UnsupportedOperationException(UnsupportedOperationException.OPERATION_IMPLEMENTATION,
                                                 UnsupportedOperationException.IMPLEMENTATION_NOT_SUPPORTED);
       }
-      ((JavaOperation)operation).setImpl(implementation.strip());
+      ((CodeOperation) operation).setImpl(implementation.strip());
     }
 
     Boolean isAbortable = change.isAbortable();

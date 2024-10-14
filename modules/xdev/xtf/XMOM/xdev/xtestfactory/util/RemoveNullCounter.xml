@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="575" Label="Remove Null-Counter" TypeName="RemoveNullCounter" TypePath="xdev.xtestfactory.util" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="574" Label="Remove Null-Counter" Name="RemoveNullCounter">
+    <Meta>
+      <Abstract.UID>7BD414D0-6F93-F9A0-9A75-180125E8E306</Abstract.UID>
+    </Meta>
+    <Input>
+      <Data ID="573" IsList="true" Label="Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter">
+        <Target RefID="581"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="572" IsList="true" Label="Filtered Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter572">
+        <Source RefID="576"/>
+      </Data>
+    </Output>
+    <Foreach ID="581">
+      <Source RefID="573"/>
+      <Target RefID="596"/>
+      <InputList RefID="573">
+        <Data ID="580" Label="Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter580">
+          <Target RefID="579"/>
+          <Target RefID="600"/>
+          <Target RefID="602"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="596">
+        <Data ID="595" IsList="true" Label="Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter595">
+          <Source RefID="579"/>
+          <Source RefID="597"/>
+          <Source RefID="598"/>
+        </Data>
+      </OutputList>
+      <Choice ID="579" TypeName="BaseChoiceTypeFormula" TypePath="server">
+        <Source RefID="580"/>
+        <Target RefID="595"/>
+        <Input>
+          <Data Label="Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables"/>
+          <Source RefID="580"/>
+        </Input>
+        <Case ID="577" Label="true" Premise="%0%!=null">
+          <Mappings ID="600" Label="Keep Counter">
+            <Source RefID="580"/>
+            <Target RefID="588"/>
+            <Meta>
+              <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+            </Meta>
+            <Input>
+              <Data ID="599" Label="Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter599"/>
+              <Source RefID="580">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Output>
+              <Data IsList="true" Label="Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter586"/>
+              <Target RefID="588"/>
+            </Output>
+            <Mapping>%1%["0"]=%0%</Mapping>
+          </Mappings>
+          <Assign ID="597">
+            <Source RefID="588"/>
+            <Target RefID="595"/>
+            <Copy>
+              <Source RefID="588"/>
+              <Target RefID="595"/>
+            </Copy>
+          </Assign>
+        </Case>
+        <Case ID="578" Label="false">
+          <Mappings ID="602" Label="Remove Counter">
+            <Source RefID="580"/>
+            <Target RefID="594"/>
+            <Meta>
+              <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+            </Meta>
+            <Input>
+              <Data ID="601" Label="Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter601"/>
+              <Source RefID="580">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Output>
+              <Data ID="603" IsList="true" Label="Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter603"/>
+              <Target RefID="594"/>
+            </Output>
+          </Mappings>
+          <Assign ID="598">
+            <Source RefID="594"/>
+            <Target RefID="595"/>
+            <Copy>
+              <Source RefID="594"/>
+              <Target RefID="595"/>
+            </Copy>
+          </Assign>
+        </Case>
+      </Choice>
+    </Foreach>
+    <Data ID="588" IsList="true" Label="Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter588">
+      <Source RefID="600"/>
+      <Target RefID="597"/>
+    </Data>
+    <Data ID="594" IsList="true" Label="Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter591">
+      <Source RefID="602"/>
+      <Target RefID="598"/>
+    </Data>
+    <Data ID="596" IsList="true" Label="Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter596">
+      <Source RefID="581"/>
+      <Target RefID="576"/>
+    </Data>
+    <Assign ID="576">
+      <Source RefID="596"/>
+      <Target RefID="572"/>
+      <Copy>
+        <Source RefID="596">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="572"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -3,7 +3,7 @@ IMPORTS
 	xact FROM GIP-BLACK-MIB;
 
 ------------------------------------------------------
--- Copyright 2022 GIP SmartMercial GmbH, Germany
+-- Copyright 2022 Xyna GmbH, Germany
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ IMPORTS
 --
 xTrig MODULE-IDENTITY
         LAST-UPDATED "201204030832Z"    -- Apr 03, 2012 8:32:00 AM
-        ORGANIZATION "GIP AG"
-        CONTACT-INFO "GIP AG"
+        ORGANIZATION "Xyna GmbH"
+        CONTACT-INFO "Xyna GmbH"
         DESCRIPTION  ""
         REVISION     "201204030832Z"    -- Apr 03, 2012 8:32:00 AM
         DESCRIPTION  ""

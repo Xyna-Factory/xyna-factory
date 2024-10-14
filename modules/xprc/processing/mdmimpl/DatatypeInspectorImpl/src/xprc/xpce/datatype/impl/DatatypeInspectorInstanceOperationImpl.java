@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,10 @@ package xprc.xpce.datatype.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.w3c.dom.Document;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
@@ -28,13 +30,16 @@ import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObjectList;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
+import com.gip.xyna.xprc.exceptions.XPRC_XmlParsingException;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
+import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 import base.Text;
 import xprc.xpce.datatype.DatatypeInspector;
 import xprc.xpce.datatype.DatatypeInspectorInstanceOperation;
 import xprc.xpce.datatype.DatatypeInspectorSuperProxy;
 import xprc.xpce.datatype.InspectionParameter;
+import xprc.xpce.datatype.MetaTag;
 import xprc.xpce.datatype.NamedVariableMember;
 import xprc.xpce.datatype.NamedXMOMMember;
 
@@ -87,6 +92,12 @@ public class DatatypeInspectorInstanceOperationImpl extends DatatypeInspectorSup
     return listVariableMembersRecursivly(xynaObject, "", dom, xynaObject, inspectionParameter);
   }
 
+  
+  private static String[] getXMLTagAndValue(String xmlEl) throws XPRC_XmlParsingException {
+    Document doc = XMLUtils.parseString(xmlEl);
+    return new String[] {doc.getDocumentElement().getNodeName(), XMLUtils.getTextContent(doc.getDocumentElement())};
+  }
+  
 
   private List<NamedVariableMember> listVariableMembersRecursivly(GeneralXynaObject rootObject, String varNamePrefix,
                                                                   com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase currentGXOContext,
@@ -106,31 +117,46 @@ public class DatatypeInspectorInstanceOperationImpl extends DatatypeInspectorSup
             documentation.contains(inspectionParameter.getDocumentationRecursionStopMarker())) {
           continue;
         }
-        NamedVariableMember nvm = new NamedVariableMember(label, currentVarName, documentation);
+        List<MetaTag> metaTags = parseUnknownMetaTags(var.getUnknownMetaTags());
+        String type;
+        if (var.isJavaBaseType()) {
+          type = var.getJavaTypeEnum().getFqName();
+        } else {
+          type = var.getFQClassName();
+        }
+        boolean isList = var.isList();
+        NamedVariableMember nvm = new NamedVariableMember(label, currentVarName, documentation, type, isList, metaTags);
         if (var.isJavaBaseType() || inspectionParameter.getIncludeComplexMembers()) {
           list.add(nvm);
         }
         nvm.setParentObject(rootObject);
         if (!var.isJavaBaseType()) {
-          Object nextO = currentGXO.get(varName);
-          if (nextO != null) {
-            if (nextO instanceof List) {
-              for (int i = 0; i < ((List) nextO).size(); i++) {
-                GeneralXynaObject elementGXO = (GeneralXynaObject) ((List) nextO).get(i);
-                Long revision = com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement.getRevisionByClass(elementGXO.getClass());
-                String fqName = elementGXO.getClass().getName();
-                DOM elementDOM = STATIC_INSTANCE.getGeneration(fqName, revision);
-                list.addAll(listVariableMembersRecursivly(rootObject, currentVarName + "[" + i + "]", elementDOM,
-                                                          elementGXO, inspectionParameter));
+          if (currentGXO == null) {
+            /*
+             * TODO support for recursion in this case. this changes the current behavior for the common usecase of just using an empty object-instance
+             * => 1. configuration options for recursion over structure (backward compatible defaults)
+             *    2. prevent cycles (endless recursion)
+             *    3. maybe make it configurable to not have recursion even when object instance is set.
+             */
+          } else {
+            Object nextO = currentGXO.get(varName);
+            if (nextO != null) {
+              if (nextO instanceof List) {
+                for (int i = 0; i < ((List) nextO).size(); i++) {
+                  GeneralXynaObject elementGXO = (GeneralXynaObject) ((List) nextO).get(i);
+                  Long revision = com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement.getRevisionByClass(elementGXO.getClass());
+                  String fqName = elementGXO.getClass().getName();
+                  DOM elementDOM = STATIC_INSTANCE.getGeneration(fqName, revision);
+                  list.addAll(listVariableMembersRecursivly(rootObject, currentVarName + "[" + i + "]", elementDOM, elementGXO,
+                                                            inspectionParameter));
+                }
+              } else {
+                GeneralXynaObject nextGXO = (GeneralXynaObject) nextO;
+                Long revision = com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement.getRevisionByClass(nextGXO.getClass());
+                String fqName = nextGXO.getClass().getName();
+                DOM nextDOM = STATIC_INSTANCE.getGeneration(fqName, revision);
+                list.addAll(listVariableMembersRecursivly(rootObject, currentVarName, nextDOM, nextGXO, inspectionParameter));
               }
-            } else {
-              GeneralXynaObject nextGXO = (GeneralXynaObject) nextO;
-              Long revision = com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement
-                              .getRevisionByClass(nextGXO.getClass());
-              String fqName = nextGXO.getClass().getName();
-              DOM nextDOM = STATIC_INSTANCE.getGeneration(fqName, revision);
-              list.addAll(listVariableMembersRecursivly(rootObject, currentVarName, nextDOM, nextGXO,
-                                                        inspectionParameter));
             }
           }
         }
@@ -154,10 +180,12 @@ public class DatatypeInspectorInstanceOperationImpl extends DatatypeInspectorSup
         list.add( nxm );
 
         Object o = null;
-        try {
-          o = xynaObject.get(varName);
-        } catch( Exception e ) {
-          throw new RuntimeException(e);
+        if (xynaObject != null) {
+          try {
+            o = xynaObject.get(varName);
+          } catch (Exception e) {
+            throw new RuntimeException(e);
+          }
         }
         if( o instanceof GeneralXynaObject ) {
           nxm.setAnyType( (GeneralXynaObject)o );
@@ -206,4 +234,39 @@ public class DatatypeInspectorInstanceOperationImpl extends DatatypeInspectorSup
     }
   }
 
-}
+  @Override
+  public List<? extends MetaTag> getMetaTags() {
+    return parseUnknownMetaTags(dom.getUnknownMetaTags());
+  }
+
+  private static List<MetaTag> parseUnknownMetaTags(List<String> unknownMetaTags) {
+    List<MetaTag> metaTags = new ArrayList<MetaTag>();
+    for (String e : unknownMetaTags) {
+      String[] kv;
+      try {
+        kv = getXMLTagAndValue(e);
+      } catch (XPRC_XmlParsingException ex) {
+        throw new RuntimeException("Could not parse meta tag: " + e, ex);
+      }
+      metaTags.add(new MetaTag(kv[0], kv[1]));
+    }
+    return metaTags;
+  }
+
+  @Override
+  public GeneralXynaObject getDatatypeInstance() {
+    return xynaObject;
+  }
+
+
+  @Override
+  public List<? extends Text> getSubtypes() {
+    return dom.getSubTypes(dom.getCacheReference(), false).stream().map(d -> new Text(d.getOriginalFqName())).collect(Collectors.toList());
+  }
+
+  @Override
+  public Boolean isAbstract() {
+    return dom.isAbstract();
+  }
+  
+ }

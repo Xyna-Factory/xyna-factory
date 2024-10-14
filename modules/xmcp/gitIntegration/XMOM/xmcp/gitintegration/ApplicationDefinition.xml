@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,5 +31,6 @@
     </Meta>
   </Data>
   <Data IsList="true" Label="Runtime Context Dependencies" ReferenceName="RuntimeContextDependency" ReferencePath="xmcp.gitintegration" VariableName="runtimeContextDependencies"/>
+  <Data IsList="true" Label="Stub Dependencies" ReferenceName="RuntimeContextDependency" ReferencePath="xmcp.gitintegration" VariableName="stubDependencies"/>
   <Data IsList="true" Label="Content Entries" ReferenceName="ContentEntry" ReferencePath="xmcp.gitintegration" VariableName="contentEntries"/>
 </DataType>

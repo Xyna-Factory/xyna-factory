@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Determine Current Test Case Instance" TypeName="DetermineCurrentTestCaseInstance" TypePath="xdev.xtestfactory.infrastructure.util" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,vScroll(1275)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Determine current test case instance" Name="DetermineCurrentTestCaseInstance">
+    <Input/>
+    <Output>
+      <Data ID="144" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance144">
+        <Source RefID="98"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Failed To Determine Test Case Chain" ReferenceName="FailedToDetermineTestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestCaseChain"/>
+      <Exception Label="Failed To Determine Test Case Instance" ReferenceName="FailedToDetermineTestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestCaseInstance"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="4" Label="Determine Current Test Case Chain" ReferenceName="DetermineCurrentTestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.util">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Function ID="5" Label="Determine Current Test Case Chain">
+      <Source RefID="4"/>
+      <Target RefID="4"/>
+      <Target RefID="6"/>
+      <Invoke Operation="DetermineCurrentTestCaseChain" ServiceID="4"/>
+      <Receive ServiceID="4">
+        <Target RefID="6"/>
+      </Receive>
+    </Function>
+    <Data ID="6" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain48">
+      <Source RefID="5"/>
+      <Target RefID="31"/>
+    </Data>
+    <Function ID="166" Label="Get Test Case ID">
+      <Source RefID="165"/>
+      <Target RefID="165"/>
+      <Target RefID="167"/>
+      <Invoke Operation="getTestCaseID" ServiceID="165"/>
+      <Receive ServiceID="165">
+        <Target RefID="167"/>
+      </Receive>
+    </Function>
+    <Mappings ID="31" Label="extract test case instance list">
+      <Source RefID="6"/>
+      <Target RefID="30"/>
+      <Meta>
+        <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="107" Label="Test Case Chain" ReferenceName="TestCaseChain" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCaseChain"/>
+        <Source RefID="6"/>
+      </Input>
+      <Output>
+        <Data ID="32" IsList="true" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance32"/>
+        <Target RefID="30"/>
+      </Output>
+      <Mapping>%1%=%0%.testCaseInstance</Mapping>
+    </Mappings>
+    <Foreach ID="46">
+      <Source RefID="30"/>
+      <Target RefID="135"/>
+      <InputList RefID="30">
+        <Data ID="45" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance45">
+          <Target RefID="33"/>
+          <Target RefID="137"/>
+        </Data>
+      </InputList>
+      <OutputList RefID="135">
+        <Data ID="134" IsList="true" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance134">
+          <Source RefID="33"/>
+          <Source RefID="112"/>
+          <Source RefID="113"/>
+        </Data>
+      </OutputList>
+      <Choice ID="33" TypeName="BaseChoiceTypeFormula" TypePath="server">
+        <Source RefID="45"/>
+        <Source RefID="167"/>
+        <Target RefID="134"/>
+        <Input>
+          <Data ID="109" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance109"/>
+          <Source RefID="45">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Input>
+        <Input>
+          <Data ID="171" Label="Test Case ID" ReferenceName="TestCaseID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseID171"/>
+          <Source RefID="167">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Input>
+        <Case ID="23" Label="true" Premise="%0%.testCase.iD==%1%.iD">
+          <Mappings ID="137" Label="as list element">
+            <Source RefID="45"/>
+            <Target RefID="132"/>
+            <Meta>
+              <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+            </Meta>
+            <Input>
+              <Data ID="138" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance138"/>
+              <Source RefID="45">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Output>
+              <Data ID="136" IsList="true" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance136"/>
+              <Target RefID="132"/>
+            </Output>
+            <Mapping>%1%["0"]=%0%</Mapping>
+          </Mappings>
+          <Assign ID="112">
+            <Source RefID="132"/>
+            <Target RefID="134"/>
+            <Copy>
+              <Source RefID="132"/>
+              <Target RefID="134"/>
+            </Copy>
+          </Assign>
+        </Case>
+        <Case ID="24" Label="false">
+          <Mappings ID="22" Label="empty list">
+            <Target RefID="21"/>
+            <Meta>
+              <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+            </Meta>
+            <Output>
+              <Data ID="108" IsList="true" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance"/>
+              <Target RefID="21"/>
+            </Output>
+          </Mappings>
+          <Assign ID="113">
+            <Source RefID="21"/>
+            <Target RefID="134"/>
+            <Copy>
+              <Source RefID="21"/>
+              <Target RefID="134"/>
+            </Copy>
+          </Assign>
+        </Case>
+      </Choice>
+    </Foreach>
+    <Data ID="21" IsList="true" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance21">
+      <Source RefID="22"/>
+      <Target RefID="113"/>
+    </Data>
+    <Data ID="30" IsList="true" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance30">
+      <Source RefID="31"/>
+      <Target RefID="46"/>
+    </Data>
+    <Choice ID="49" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="135"/>
+      <Target RefID="150"/>
+      <Input>
+        <Data ID="114" IsList="true" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance114"/>
+        <Source RefID="135">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="47" Label="true" Premise="length(%0%)&gt;&quot;0&quot;">
+        <Mappings ID="153" Label="Mapping">
+          <Source RefID="135"/>
+          <Target RefID="149"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="158" IsList="true" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance151"/>
+            <Source RefID="135">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="152" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance152"/>
+            <Target RefID="149"/>
+          </Output>
+          <Mapping>%1%=%0%["0"]</Mapping>
+        </Mappings>
+        <Assign ID="77">
+          <Source RefID="149"/>
+          <Target RefID="150"/>
+          <Copy>
+            <Source RefID="149"/>
+            <Target RefID="150"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="48" Label="false">
+        <Throw ExceptionID="143" ID="142" Label="Throw Failed To Determine Test Case Instance">
+          <Source RefID="143">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+        </Throw>
+        <Assign ID="78"/>
+      </Case>
+    </Choice>
+    <Data ID="132" IsList="true" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance132">
+      <Source RefID="137"/>
+      <Target RefID="112"/>
+    </Data>
+    <Data ID="135" IsList="true" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance135">
+      <Source RefID="46"/>
+      <Target RefID="49"/>
+      <Target RefID="153"/>
+    </Data>
+    <Exception ID="143" Label="Failed To Determine Test Case Instance" ReferenceName="FailedToDetermineTestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="const_FailedToDetermineTestCaseInstance">
+      <Target RefID="142"/>
+    </Exception>
+    <Data ID="149" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance149">
+      <Source RefID="153"/>
+      <Target RefID="77"/>
+    </Data>
+    <Data ID="150" Label="Test Case Instance" ReferenceName="TestCaseInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseInstance150">
+      <Source RefID="49"/>
+      <Source RefID="77"/>
+      <Target RefID="98"/>
+    </Data>
+    <ServiceReference ID="165" Label="TestFactoryIntegration" ReferenceName="TestFactoryIntegration.TestFactoryIntegration" ReferencePath="xdev.xtestfactory.infrastructure.services">
+      <Source RefID="166"/>
+      <Target RefID="166"/>
+    </ServiceReference>
+    <Data ID="167" Label="Test Case ID" ReferenceName="TestCaseID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseID">
+      <Source RefID="166"/>
+      <Target RefID="33"/>
+    </Data>
+    <Assign ID="98">
+      <Source RefID="150"/>
+      <Target RefID="144"/>
+      <Copy>
+        <Source RefID="150"/>
+        <Target RefID="144"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

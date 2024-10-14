@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,6 +81,7 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.UserType;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
 import com.gip.xyna.xmcp.xfcli.CommandLineWriter;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
@@ -158,8 +159,9 @@ public class Support4Eclipse extends FunctionGroup {
 
 
   public void init() throws XynaException {
-    XynaProperty.BUILDMDJAR_JAVA_VERSION.registerDependency(DEFAULT_NAME);
-    XYNAPROPERTY_INCLUDE_WFS_IN_MDM_JARS.registerDependency(DEFAULT_NAME);
+    XynaProperty.BUILDMDJAR_JAVA_VERSION.registerDependency(UserType.XynaFactory, DEFAULT_NAME);
+    XYNAPROPERTY_INCLUDE_WFS_IN_MDM_JARS.registerDependency(UserType.XynaFactory, DEFAULT_NAME);
+    XynaProperty.S4E_TMP_DIR.registerDependency(UserType.XynaFactory, DEFAULT_NAME);
   }
   
 
@@ -240,7 +242,7 @@ public class Support4Eclipse extends FunctionGroup {
       // Manifest-Version: 1.0
       // Ant-Version: Apache Ant 1.7.0
       // Created-By: 1.5.0-b64 (Sun Microsystems Inc.)
-      // Vendor: GIP SmartMercial GmbH
+      // Vendor: Xyna GmbH
       // Version: 2.3.0.0
       // Build-Date: 20090902_1515
 
@@ -263,7 +265,7 @@ public class Support4Eclipse extends FunctionGroup {
 
       // TODO make sure what fields have to be in here
       //    mf.getMainAttributes().putValue(Attributes.Name.IMPLEMENTATION_TITLE.toString(), Constants.FACTORY_NAME);
-      //    mf.getMainAttributes().putValue(Attributes.Name.IMPLEMENTATION_VENDOR.toString(), "GIP SmartMercial GmbH");
+      //    mf.getMainAttributes().putValue(Attributes.Name.IMPLEMENTATION_VENDOR.toString(), "Xyna GmbH");
 
       logger.debug("Adding files to Xyna jar file.");
 
@@ -676,7 +678,7 @@ public class Support4Eclipse extends FunctionGroup {
     RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     File tmpDir;
     while (true) {
-      tmpDir = new File("tmpmdmjar_" + cnt.getAndIncrement());
+      tmpDir = new File(XynaProperty.S4E_TMP_DIR.get() + "tmpmdmjar_" + cnt.getAndIncrement());
       if (!tmpDir.exists()) {
         break;
       }

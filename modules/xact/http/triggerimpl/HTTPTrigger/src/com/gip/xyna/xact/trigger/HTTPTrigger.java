@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -272,10 +272,8 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
         }
 
       }, 50, 100);
-    } catch (IOException e) {
-      throw new HTTPTRIGGER_ServerSocketCreationException(sp.toString(), e);
-    } catch (XynaException e) {
-      throw new HTTPTRIGGER_ServerSocketCreationException(sp.toString(), e);
+    } catch (IOException | XynaException  e) {
+      throw new HTTPTRIGGER_ServerSocketCreationException(sp.toString() + ". " + e.getMessage(), e);
     }
     if (logger.isDebugEnabled()) {
       logger.debug("listening for incoming http" + (sp.useHTTPs() ? "s" : "") + " on "
@@ -381,8 +379,8 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
 
   public void onNoFilterFound(HTTPTriggerConnection con) {
     try {
-      if (logger.isTraceEnabled()) {
-        logger.trace("No filter found for connection " + con);
+      if (logger.isWarnEnabled()) {
+        logger.warn("No filter responsible for " + con.getMethod().toString() + " " + con.getUri() + ". Returning " + HTTPTriggerConnection.HTTP_NOTFOUND);
       }
       String msg = "<html><body><h3>" + HTTPTriggerConnection.HTTP_NOTFOUND + "</h3></body></html>";
       byte[] msgBytes = msg.getBytes(con.getCharSet());

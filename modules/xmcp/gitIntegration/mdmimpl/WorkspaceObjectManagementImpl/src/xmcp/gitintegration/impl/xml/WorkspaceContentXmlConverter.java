@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,19 +19,24 @@ package xmcp.gitintegration.impl.xml;
 
 
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import com.gip.xyna.utils.collections.Pair;
+import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
 import com.gip.xyna.xprc.exceptions.XPRC_XmlParsingException;
-import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 
 import xmcp.gitintegration.WorkspaceContent;
 import xmcp.gitintegration.WorkspaceContentItem;
+import xmcp.gitintegration.impl.WorkspaceContentCreator;
 import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
 
 
@@ -47,7 +52,7 @@ public class WorkspaceContentXmlConverter {
     WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
     XmlBuilder builder = new XmlBuilder();
 
-    builder.append(GenerationBase.COPYRIGHT_HEADER);
+    builder.append(XynaProperty.XML_HEADER_COMMENT.get());
 
     openTag(builder, content);
     if (content.getWorkspaceContentItems() != null) {
@@ -75,18 +80,28 @@ public class WorkspaceContentXmlConverter {
 
   public WorkspaceContent convertFromXml(String content) {
     WorkspaceContent result = new WorkspaceContent();
-    Document doc = null;
-    try {
-      doc = XMLUtils.parseString(content);
-    } catch (XPRC_XmlParsingException e) {
-      throw new RuntimeException(e);
-    }
+    Document doc = StringToDocument(content);
 
     convertWorkspaceName(doc, result);
     convertWorkspaceContentItems(doc, result);
 
 
     return result;
+  }
+
+
+  private Document StringToDocument(String content) {
+    try {
+      return XMLUtils.parseString(content);
+    } catch (XPRC_XmlParsingException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
+  public void addToWorkspaceContent(String input, WorkspaceContent content) {
+    Document doc = StringToDocument(input);
+    convertWorkspaceContentItems(doc, content);
   }
 
 
@@ -102,14 +117,52 @@ public class WorkspaceContentXmlConverter {
 
   private void convertWorkspaceContentItems(Document doc, WorkspaceContent content) {
     WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
-    List<WorkspaceContentItem> workspaceContentItems = new LinkedList<>();
+    List<WorkspaceContentItem> wsItems = null;
+    wsItems = content.getWorkspaceContentItems() == null ? new ArrayList<>() : new ArrayList<>(content.getWorkspaceContentItems());
     NodeList list = doc.getDocumentElement().getChildNodes();
     int length = list.getLength();
     for (int i = 0; i < length; i++) {
       WorkspaceContentItem item = portal.parseWorkspaceContentItem(list.item(i));
-      workspaceContentItems.add(item);
+      wsItems.add(item);
     }
-    workspaceContentItems.removeIf(x -> x == null);
-    content.setWorkspaceContentItems(workspaceContentItems);
+    wsItems.removeIf(x -> x == null);
+    content.setWorkspaceContentItems(wsItems);
   }
+
+
+  public List<Pair<String, String>> split(WorkspaceContent content) {
+    WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
+    List<Pair<String, String>> result = new ArrayList<Pair<String, String>>();
+    List<? extends WorkspaceContentItem> items = content.getWorkspaceContentItems();
+    Map<Class<? extends WorkspaceContentItem>, List<WorkspaceContentItem>> grouped = new HashMap<>();
+    for (WorkspaceContentItem item : items) {
+      Class<? extends WorkspaceContentItem> clazz = item.getClass();
+      grouped.putIfAbsent(clazz, new ArrayList<WorkspaceContentItem>());
+      grouped.get(clazz).add(item);
+    }
+
+    for (Entry<Class<? extends WorkspaceContentItem>, List<WorkspaceContentItem>> group : grouped.entrySet()) {
+      String fileName = portal.getTagName(group.getKey()) + ".xml";
+      WorkspaceContent singleTypeContent = createSingleTypeWorkspaceContent(content, group.getValue());
+      String singleTypeContentString = convertToXml(singleTypeContent);
+      result.add(new Pair<>(fileName, singleTypeContentString));
+    }
+
+    //add workspace.xml for workspace meta data
+    WorkspaceContent c = new WorkspaceContent();
+    c.setWorkspaceName(content.getWorkspaceName());
+    String meta = convertToXml(c);
+    result.add(new Pair<>(WorkspaceContentCreator.WORKSPACE_XML_FILENAME, meta));
+
+    return result;
+  }
+
+
+  private WorkspaceContent createSingleTypeWorkspaceContent(WorkspaceContent full, List<WorkspaceContentItem> items) {
+    WorkspaceContent result = new WorkspaceContent();
+    result.setWorkspaceName(full.getWorkspaceName());
+    result.setWorkspaceContentItems(items);
+    return result;
+  }
+
 }

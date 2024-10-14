@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -865,6 +865,30 @@ public class XynaProcessCtrlExecution extends Section {
 
 
   }
+  
+  private ResponseListenerResponse executeResponseListener(XynaOrderServerExtension xo) throws XNWH_RetryTransactionException {
+    ResponseListener rl = xo.getResponseListener();
+    ResponseListenerResponse response = ResponseListenerResponse.finish();
+    try {
+      if (xo.isAborted()) {
+        if (rl instanceof SubworkflowResponseListener) {
+          ((SubworkflowResponseListener) rl).onOrderAbortion(xo.getAbortionException());
+        } else {
+          response = rl.internal_onErrorWithReply(xo);
+        }
+      } else if (xo.hasError()) {
+        response = rl.internal_onErrorWithReply(xo);
+      } else {
+        response = rl.internal_onResponseWithReply(xo);
+      }
+    } catch(RuntimeException e) {
+      if(logger.isErrorEnabled()) {
+        logger.error("Exception during execution of ResponseListener: " + rl, e);
+      }
+      throw e;
+    }
+    return response;
+  }
 
   
   public void callResponseListener(XynaOrderServerExtension xo, TwoConnectionBean cons) throws XNWH_RetryTransactionException {
@@ -903,18 +927,7 @@ public class XynaProcessCtrlExecution extends Section {
         usingConnection = false;
       }
 
-      ResponseListenerResponse response = ResponseListenerResponse.finish();
-      if (xo.isAborted()) {
-        if (rl instanceof SubworkflowResponseListener) {
-          ((SubworkflowResponseListener) rl).onOrderAbortion(xo.getAbortionException());
-        } else {
-          response = rl.internal_onErrorWithReply(xo);
-        }
-      } else if (xo.hasError()) {
-        response = rl.internal_onErrorWithReply(xo);
-      } else {
-        response = rl.internal_onResponseWithReply(xo);
-      }
+      ResponseListenerResponse response = executeResponseListener(xo);
       
       switch (response.getHandling()) {
         case CONTINUE:

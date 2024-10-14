@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,15 @@
 package xact.ssh.impl;
 
 
+
 public interface PassphraseStore {
 
   public void store(String identityName, String passphrase);
-  
+
+
   public String retrieve(String identityName);
-  
+
+
   public void remove(String identityName);
-  
+
 }

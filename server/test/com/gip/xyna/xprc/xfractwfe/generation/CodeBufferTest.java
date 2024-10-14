@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,12 +25,8 @@ public class CodeBufferTest extends TestCase {
 
   private static final String DEP = "testdep";
 
-  private static final String HEADER = "/*----------------------------------------------------\n" + "* Xyna 6.1 (Black Edition)\n" + "* "
-  + DEP + "\n" + "*----------------------------------------------------\n"
-  + "* Copyright GIP AG 2015\n" + "* (http://www.gip.com)\n" + "* Hechtsheimer Str. 35-37\n"
-  + "* 55131 Mainz\n" + "*----------------------------------------------------\n" + "* $"
-  + "Revision:$\n" + "* $" + "Date:$\n" + "*----------------------------------------------------\n"
-  + "*/\n";
+  /** @todo Insert appropriate header when fixing this test */
+  private static final String HEADER = "TODO";
   
   
   public void testLines() {

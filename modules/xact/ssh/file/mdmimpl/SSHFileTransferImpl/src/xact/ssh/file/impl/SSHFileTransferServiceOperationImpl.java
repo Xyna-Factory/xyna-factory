@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ public class SSHFileTransferServiceOperationImpl implements ExtendedDeploymentTa
     // If null is returned, the default timeout (defined by XynaProperty xyna.xdev.xfractmod.xmdm.deploymenthandler.timeout) will be used.
     return null;
   }
-
+  
   public BehaviorAfterOnUnDeploymentTimeout getBehaviorAfterOnUnDeploymentTimeout() {
     // Defines the behavior of the (un)deployment after reaching the timeout and if this service ignores a Thread.interrupt.
     // - BehaviorAfterOnUnDeploymentTimeout.EXCEPTION: Deployment will be aborted, while undeployment will log the exception and NOT abort.
@@ -118,7 +118,7 @@ public class SSHFileTransferServiceOperationImpl implements ExtendedDeploymentTa
 
   @Override
   public Container scpFromRemoteHost(SSHServerParameter server, File remoteFile, Text location) {
-    String localName = remoteFile.getPath(); //FIXME lokaler name übergebn?
+    String localName = remoteFile.getPath(); //FIXME pass local name?
     int idx = localName.lastIndexOf('/');
     if ( idx > 0 ) {
       localName = localName.substring(idx+1);
@@ -211,15 +211,45 @@ public class SSHFileTransferServiceOperationImpl implements ExtendedDeploymentTa
 
     int port = server.getPort() == null ? 22 : server.getPort().intValue();
     Session s = jsch.getSession(server.getUser(), server.getHost(), port);
-    PassphraseRetrievingUserInfo userInfo =
-        new PassphraseRetrievingUserInfo(new SecureStorablePassphraseStore(), new LogAdapter(logger) );
-    s.setUserInfo(userInfo);
     s.setConfig("StrictHostKeyChecking", "no"); //FIXME sinnvoll?
+    
     if (server.getPassword() != null && server.getPassword().length() > 0) {
+      PassphraseRetrievingUserInfo userInfo =
+        new PassphraseRetrievingUserInfo(new SecureStorablePassphraseStore(), new LogAdapter(logger) );
+      s.setUserInfo(userInfo);
       s.setPassword(server.getPassword());
       userInfo.setPassword(server.getPassword());
+      s.setConfig("PreferredAuthentications", "password,keyboard-interactive");
     }
-    s.setConfig("PreferredAuthentications", "password,keyboard-interactive");
+
+    String knownHostsFile = server.getKnownHostFile();
+    String privateKeyFile = server.getPrivateKeyFile();
+    String privateKey = server.getPrivateKey();
+    String publicKey = server.getPublicKey();
+    String passPhrase = server.getPassPhrase();
+    if (privateKey != null && privateKey.length() > 0) {
+      String charset = "US-ASCII";
+      try {
+        if (publicKey==null) publicKey = "";
+        if (passPhrase==null) passPhrase = "";
+        byte[] privateKeyBytes = privateKey.getBytes(charset);
+        byte[] publicKeyBytes = publicKey.getBytes(charset);
+        byte[] passPhraseBytes = passPhrase.getBytes(charset);
+        jsch.setConfig("PreferredAuthentications", "publickey");
+        jsch.addIdentity("id_rsa", privateKeyBytes, publicKeyBytes, passPhraseBytes); 
+      } catch(Exception ex) {
+        
+      }
+    } else if (privateKeyFile != null && privateKeyFile.length() > 0) {
+      jsch.setConfig("PreferredAuthentications", "publickey");
+      jsch.setConfig("StrictHostKeyChecking", "no");
+      jsch.addIdentity(privateKeyFile, passPhrase);
+    }
+    if (knownHostsFile != null && knownHostsFile.length() > 0) {
+      jsch.setKnownHosts(knownHostsFile);
+      jsch.setConfig("StrictHostKeyChecking", "yes");
+    }
+    
     if(server.getSCPTimeouts() != null && server.getSCPTimeouts().getConnectionTimeout() != null && server.getSCPTimeouts().getConnectionTimeout() > 0)
       s.connect(server.getSCPTimeouts().getConnectionTimeout());
     else

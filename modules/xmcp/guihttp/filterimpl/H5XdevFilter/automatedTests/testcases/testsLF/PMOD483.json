@@ -12,7 +12,7 @@
 	  "operation": "invoke",
 	  "functionName": "createNewWorkflow",
 	  "mapInput": {},
-	  "mapOutput": 
+	  "mapOutput":
 	  {
 	    "!url!": "!url!"
 	  }
@@ -37,7 +37,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!stepId!",
-	  "pathInResponse": "updates/$list[0]/areas/$list[id=step0]/items/$list[operation=bitwiseNOT]/id"
+	  "pathInResponse": "updates/$list[0]/areas/$list[id=step0]/items/$list[operation=bitwiseNOT]/id",
+	  "unquoteResult": true
 	},
 	{
       "operation": "call",

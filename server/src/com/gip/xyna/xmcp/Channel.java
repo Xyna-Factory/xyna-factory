@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -162,6 +162,10 @@ public interface Channel
 
   public InputStream getServiceImplTemplate(String fqClassNameDOM, Long revision, boolean deleteServiceImplAfterStreamClose)
       throws XynaException;
+
+
+  public InputStream getPythonServiceImplTemplate(String fqClassNameDOM, Long revision, boolean deleteServiceImplAfterStreamClose)
+          throws XynaException;
 
 
   public InputStream getTriggerImplTemplate(String triggerName, boolean deleteTriggerImplAfterStreamClose)

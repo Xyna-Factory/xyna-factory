@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import com.gip.xyna.xfmg.xods.configuration.Configuration;
  *
  */
 public class XynaPropertyInheritanceRule extends InheritanceRule {
-
+  
   private static final long serialVersionUID = 1L;
 
   private String xynaPropertyName;
@@ -99,6 +99,10 @@ public class XynaPropertyInheritanceRule extends InheritanceRule {
     else if (!xynaPropertyName.equals(other.xynaPropertyName))
       return false;
     return true;
+  }
+
+  public String getPropertyName() {
+    return xynaPropertyName;
   }
 
 }

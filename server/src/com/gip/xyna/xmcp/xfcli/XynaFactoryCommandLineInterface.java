@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -173,20 +173,24 @@ public class XynaFactoryCommandLineInterface extends Thread {
         }
         
         while ( status.isNot(Status.Stopped) ) {
-          socket = openSocket();
-          if (status.isNot(Status.Stopped)) {
-            executeCommand(socket);
-            //das Socket wird in executeCommand geschlossen!
-          } else {
-            try {
-              CommandLineWriter clw = new CommandLineWriter( socket.getOutputStream() );
-              clw.writeString("Server shutting down.");
-              clw.writeEndToCommandLine(ReturnCode.COMMUNICATION_FAILED);
-            } catch (Throwable t) {
-              //pech
-            } finally {
-              closeSocketSafely(socket);
+          try {
+            socket = openSocket();
+            if (status.isNot(Status.Stopped)) {
+              executeCommand(socket);
+              //das Socket wird in executeCommand geschlossen!
+            } else {
+              try {
+                CommandLineWriter clw = new CommandLineWriter(socket.getOutputStream());
+                clw.writeString("Server shutting down.");
+                clw.writeEndToCommandLine(ReturnCode.COMMUNICATION_FAILED);
+              } catch (Throwable t) {
+                //pech
+              } finally {
+                closeSocketSafely(socket);
+              }
             }
+          } catch(OutOfMemoryError t) {
+            Department.handleThrowable(t);
           }
         }
 

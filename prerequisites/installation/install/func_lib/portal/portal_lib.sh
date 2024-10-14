@@ -1,6 +1,6 @@
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Copyright 2022 GIP SmartMercial GmbH, Germany
+# Copyright 2022 Xyna GmbH, Germany
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ create_certificate () {
 
     if [[ ! -f "${SSL_CERTIFICATE_DIR}/xyna_ssl.crt" || ! -f "${SSL_CERTIFICATE_DIR}/xyna_ssl.key" ]]; then
       echo "    + creating certificate and its key in '${SSL_CERTIFICATE_DIR}'"
-      ${VOLATILE_OPENSSL} req -x509 -nodes -days 3600 -newkey rsa:2048 -sha256 -out "${SSL_CERTIFICATE_DIR}/xyna_ssl.crt" -keyout "${SSL_CERTIFICATE_DIR}/xyna_ssl.key" -subj "/CN=${STR_FQDN}/OU=GIPAG/O=GIPAG/L=Mainz/ST=Rhineland-Palatinate/C=DE"
+      ${VOLATILE_OPENSSL} req -x509 -nodes -days 3600 -newkey rsa:2048 -sha256 -out "${SSL_CERTIFICATE_DIR}/xyna_ssl.crt" -keyout "${SSL_CERTIFICATE_DIR}/xyna_ssl.key" -subj "/CN=${STR_FQDN}/OU=XYNA/O=XYNA/L=XX/ST=XX/C=XX"
     else
       echo "    + nothing to do: certificate + key '${SSL_CERTIFICATE_DIR}/xyna_ssl.crt' already exists"
     fi

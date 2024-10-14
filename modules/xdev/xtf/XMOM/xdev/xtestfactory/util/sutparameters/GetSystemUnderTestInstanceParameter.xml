@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get System Under Test Instance Parameter" TypeName="GetSystemUnderTestInstanceParameter" TypePath="xdev.xtestfactory.util.sutparameters" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode,vScroll(67)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get System Under Test Instance Parameter" Name="GetSystemUnderTestInstanceParameter">
+    <Input>
+      <Data ID="5" Label="System Under Test Instance Parameter Name" ReferenceName="SystemUnderTestInstanceParameterName" ReferencePath="xdev.xtestfactory.util.sutparameters" VariableName="systemUnderTestInstanceParameterName5">
+        <Target RefID="86"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="6" Label="System Under Test Instance Parameter Value" ReferenceName="SystemUnderTestInstanceParameterValue" ReferencePath="xdev.xtestfactory.util.sutparameters" VariableName="systemUnderTestInstanceParameterValue">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Failed To Determine Test Project" ReferenceName="FailedToDetermineTestProject" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestProject"/>
+      <Exception Label="No Matching SUT Instance Parameter" ReferenceName="NoMatchingSUTInstanceParameter" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="noMatchingSUTInstanceParameter"/>
+      <Exception Label="No System Under Test Instance Configured" ReferenceName="NoSystemUnderTestInstanceConfigured" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="noSystemUnderTestInstanceConfigured"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="85" Label="Get System Under Test Instance Parameter From Other Instance" ReferenceName="GetSystemUnderTestInstanceParameterFromOtherInstance" ReferencePath="xdev.xtestfactory.util.sutparameters">
+      <Source RefID="86"/>
+      <Target RefID="86"/>
+    </ServiceReference>
+    <Function ID="93" Label="Determine Current System Under Test Instance">
+      <Source RefID="92"/>
+      <Target RefID="92"/>
+      <Target RefID="94"/>
+      <Invoke Operation="DetermineCurrentSystemUnderTestInstance" ServiceID="92"/>
+      <Receive ServiceID="92">
+        <Target RefID="94"/>
+      </Receive>
+    </Function>
+    <Mappings ID="102">
+      <Source RefID="94"/>
+      <Target RefID="101"/>
+      <Meta>
+        <IsCondition>true</IsCondition>
+      </Meta>
+      <Input>
+        <Data ID="108" Label="System Under Test Instance" ReferenceName="SystemUnderTestInstance" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTestInstance108"/>
+        <Source RefID="94">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="103" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition103"/>
+        <Target RefID="101"/>
+      </Output>
+      <Mapping>%1%.formula=concat("(%0%.iD==\"",replaceall(replaceall(%0%.iD,"\\\\","\\\\\\\\"),"\"","\\\\\""),"\")")</Mapping>
+    </Mappings>
+    <Function ID="100" Label="Query">
+      <Source RefID="99"/>
+      <Source RefID="101"/>
+      <Source RefID="104"/>
+      <Source RefID="105"/>
+      <Target RefID="99"/>
+      <Target RefID="107"/>
+      <Meta>
+        <FixedDetailOptions>openConfiguration</FixedDetailOptions>
+        <QueryFilter>
+          <Condition>%0%.iD==%1%.iD</Condition>
+        </QueryFilter>
+      </Meta>
+      <Invoke Operation="query" ServiceID="99">
+        <Source RefID="104">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="101">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="105">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="99">
+        <Target RefID="107"/>
+      </Receive>
+    </Function>
+    <Mappings ID="125" Label="Mapping">
+      <Source RefID="107"/>
+      <Target RefID="122"/>
+      <Meta>
+        <FixedDetailOptions>FlatMode,FillMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="124" IsList="true" Label="System Under Test Instance" ReferenceName="SystemUnderTestInstance" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTestInstance124"/>
+        <Source RefID="107"/>
+      </Input>
+      <Output>
+        <Data Label="System Under Test Instance" ReferenceName="SystemUnderTestInstance" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTestInstance84"/>
+        <Target RefID="122"/>
+      </Output>
+      <Mapping>%1%=%0%["0"]</Mapping>
+    </Mappings>
+    <Function ID="86" Label="Get System Under Test Instance Parameter From Other Instance">
+      <Source RefID="5"/>
+      <Source RefID="85"/>
+      <Source RefID="122"/>
+      <Target RefID="85"/>
+      <Target RefID="123"/>
+      <Invoke Operation="GetSystemUnderTestInstanceParameterFromOtherInstance" ServiceID="85">
+        <Source RefID="5"/>
+        <Source RefID="122">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="85">
+        <Target RefID="123"/>
+      </Receive>
+    </Function>
+    <ServiceReference ID="92" Label="Determine Current System Under Test Instance" ReferenceName="DetermineCurrentSystemUnderTestInstance" ReferencePath="xdev.xtestfactory.infrastructure.util">
+      <Source RefID="93"/>
+      <Target RefID="93"/>
+    </ServiceReference>
+    <Data ID="94" Label="System Under Test Instance" ReferenceName="SystemUnderTestInstance" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTestInstance94">
+      <Source RefID="93"/>
+      <Target RefID="102"/>
+    </Data>
+    <ServiceReference ID="99" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="100"/>
+      <Target RefID="100"/>
+    </ServiceReference>
+    <Data ID="101" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition">
+      <Source RefID="102"/>
+      <Target RefID="100"/>
+    </Data>
+    <Data ID="104" Label="Selection mask" ReferenceName="SelectionMask" ReferencePath="xnwh.persistence" VariableName="const_SelectionMask">
+      <Target RefID="100"/>
+      <Data Label="Root type" VariableName="rootType">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>xdev.xtestfactory.infrastructure.storables.SystemUnderTestInstance</Value>
+      </Data>
+    </Data>
+    <Data ID="105" Label="Query parameter" ReferenceName="QueryParameter" ReferencePath="xnwh.persistence" VariableName="const_QueryParameter">
+      <Target RefID="100"/>
+      <Data Label="Max objects" VariableName="maxObjects">
+        <Meta>
+          <Type>int</Type>
+        </Meta>
+        <Value>1</Value>
+      </Data>
+      <Data Label="Query history" VariableName="queryHistory">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data IsList="true" Label="Sort criterion" ReferenceName="SortCriterion" ReferencePath="xnwh.persistence" VariableName="sortCriterion"/>
+    </Data>
+    <Data ID="107" IsList="true" Label="System Under Test Instance" ReferenceName="SystemUnderTestInstance" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTestInstance">
+      <Source RefID="100"/>
+      <Target RefID="125"/>
+    </Data>
+    <Data ID="122" Label="System Under Test Instance" ReferenceName="SystemUnderTestInstance" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="systemUnderTestInstance122">
+      <Source RefID="125"/>
+      <Target RefID="86"/>
+    </Data>
+    <Data ID="123" Label="System Under Test Instance Parameter Value" ReferenceName="SystemUnderTestInstanceParameterValue" ReferencePath="xdev.xtestfactory.util.sutparameters" VariableName="systemUnderTestInstanceParameterValue123">
+      <Source RefID="86"/>
+      <Target RefID="3"/>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="123"/>
+      <Target RefID="6"/>
+      <Copy>
+        <Source RefID="123"/>
+        <Target RefID="6"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

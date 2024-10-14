@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,30 +21,36 @@ package com.gip.xyna.xact.filter.actions;
 
 public class PathElements {
   // base path elements
-  public static final String RTCS                = "runtimeContext";
-  public static final String XMOM                = "xmom";
-  public static final String DEPLOYED            = "deployed";
-  public static final String CODED_SERVICES      = "codedservices";
-  public static final String DATA_TYPES          = "datatypes";
-  public static final String EXCEPTION_TYPES     = "exceptions";
-  public static final String OBJECTS             = "objects";
-  public static final String PATHS               = "paths";
-  public static final String SESSION             = "session";
-  public static final String WORKFLOWS           = "workflows";
-  public static final String GENERATEINPUT       = "generateinput";
-  public static final String ORDER_INPUT_DETAILS = "orderinputdetails";
-  public static final String START_ORDER         = "startorder";
-  public static final String START_TEST_CASE     = "starttestcase";
-  public static final String AUTH                = "auth";
-  public static final String SERVICES_GROUPS     = "servicegroups";
-  public static final String AUDITS              = "audits";
-  public static final String IMPORTED_AUDITS     = "importedAudits";
-  public static final String XACM                = "xacm";
-  public static final String REMOTEDESTINATIONS  = "remoteDestinations";
-  public static final String CLIPBOARD           = "clipboard";
-  public static final String CLIPBOARD_CLEAR     = "clear";
-  public static final String EVENTS              = "events";
-  
+  public static final String RTCS                       = "runtimeContext";
+  public static final String XMOM                       = "xmom";
+  public static final String DEPLOYED                   = "deployed";
+  public static final String CODED_SERVICES             = "codedservices";
+  public static final String DATA_TYPES                 = "datatypes";
+  public static final String EXCEPTION_TYPES            = "exceptions";
+  public static final String OBJECTS                    = "objects";
+  public static final String PATHS                      = "paths";
+  public static final String SESSION                    = "session";
+  public static final String WORKFLOWS                  = "workflows";
+  public static final String GENERATEINPUT              = "generateinput";
+  public static final String ORDER_INPUT_DETAILS        = "orderinputdetails";
+  public static final String START_ORDER                = "startorder";
+  public static final String START_TEST_CASE            = "starttestcase";
+  public static final String AUTH                       = "auth";
+  public static final String SERVICES_GROUPS            = "servicegroups";
+  public static final String AUDITS                     = "audits";
+  public static final String IMPORTED_AUDITS            = "importedAudits";
+  public static final String XACM                       = "xacm";
+  public static final String REMOTEDESTINATIONS         = "remoteDestinations";
+  public static final String CLIPBOARD                  = "clipboard";
+  public static final String CLIPBOARD_CLEAR            = "clear";
+  public static final String EVENTS                     = "events";
+  public static final String PROJECT_EVENTS             = "projectEvents";
+  public static final String PROJECT_EVENTS_SUBSCRIBE   = "subscribeProjectEvents";
+  public static final String PROJECT_EVENTS_UNSUBSCRIBE = "unsubscribeProjectEvents";
+  public static final String ENCODE                     = "encode";
+  public static final String DECODE                     = "decode";
+  public static final String MODELLED_EXPRESSIONS       = "modelledExpressions";
+
   // sub path elements
   public static final String SAVE                 = "save";
   public static final String DEPLOY               = "deploy";
@@ -63,6 +69,7 @@ public class PathElements {
   public static final String DELETE               = "delete";
   public static final String MOVE                 = "move";
   public static final String REFACTOR             = "refactor";
+  public static final String REPLACE              = "replace";
   public static final String COPY                 = "copy";
   public static final String COPY_TO_CLIPBOARD    = "copyToClipboard";
   public static final String PASTE                = "paste";
@@ -85,4 +92,9 @@ public class PathElements {
   public static final String KILL                 = "kill";
   public static final String ISSUES               = "issues";
   public static final String WARNINGS             = "warnings";
+  public static final String JAVALIB              = "javalib";
+  public static final String PYTHONLIB            = "pythonlib";
+  public static final String MEMBERS              = "members";
+  public static final String SERVICES             = "services";
+  public static final String META                 = "meta";
 }

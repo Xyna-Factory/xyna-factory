@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,12 @@
  */
 package com.gip.xyna.xmcp.xfcli.impl;
 
+
+
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.xfmg.exceptions.XFMG_NodeConnectException;
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.NodeManagement;
+import com.gip.xyna.xfmg.xfctrl.nodemgmt.remotecall.FactoryNodeCaller;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import java.io.OutputStream;
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -31,6 +35,16 @@ public class RemovefactorynodeImpl extends XynaCommandImplementation<Removefacto
   public void execute(OutputStream statusOutputStream, Removefactorynode payload) throws XynaException {
     NodeManagement nodeMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getNodeManagement();
     nodeMgmt.removeNode(payload.getName());
+    FactoryNodeCaller caller = nodeMgmt.removeFactoryNodeCaller(payload.getName());
+
+    if (caller != null) {
+      try {
+        caller.getRemoteOrderExecution().abortCommunication();
+      } catch (XFMG_NodeConnectException e) {
+        writeToCommandLine(statusOutputStream, "Exception during shutdown of communication with " + payload.getName() + ". " + e.getMessage());
+      }
+      caller.shutdown(false);
+    }
   }
 
 }

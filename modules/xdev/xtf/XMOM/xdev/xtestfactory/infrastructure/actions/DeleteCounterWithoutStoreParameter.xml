@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Delete Counter without Store Parameter" TypeName="DeleteCounterWithoutStoreParameter" TypePath="xdev.xtestfactory.infrastructure.actions" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,showDetailAreas,vScroll(471)</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Delete Counter without Store Parameter" Name="DeleteCounterWithoutStoreParameter">
+    <Input>
+      <Data ID="99" Label="Counter ID" ReferenceName="CounterID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="counterID">
+        <Target RefID="97"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Counter Not Found" ReferenceName="CounterNotFound" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="counterNotFound"/>
+      <Exception Label="Failed To Determine Test Project" ReferenceName="FailedToDetermineTestProject" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="failedToDetermineTestProject"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <Function ID="59" Label="Determine Current Test Project">
+      <Source RefID="58"/>
+      <Target RefID="58"/>
+      <Target RefID="60"/>
+      <Invoke Operation="DetermineCurrentTestProject" ServiceID="58"/>
+      <Receive ServiceID="58">
+        <Target RefID="60"/>
+      </Receive>
+    </Function>
+    <Mappings ID="67" Label="Extract Counters">
+      <Source RefID="60"/>
+      <Target RefID="66"/>
+      <Meta>
+        <FixedDetailOptions>FillMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="86" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject"/>
+        <Source RefID="60"/>
+      </Input>
+      <Output>
+        <Data ID="68" IsList="true" Label="Counters" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter68"/>
+        <Target RefID="66"/>
+      </Output>
+      <Mapping>%1%=%0%.counter</Mapping>
+    </Mappings>
+    <Function ID="97" Label="Get Counter">
+      <Source RefID="96"/>
+      <Source RefID="99"/>
+      <Target RefID="96"/>
+      <Target RefID="98"/>
+      <Invoke Operation="GetCounter" ServiceID="96">
+        <Source RefID="99"/>
+      </Invoke>
+      <Receive ServiceID="96">
+        <Target RefID="98"/>
+      </Receive>
+    </Function>
+    <Function ID="52" Label="Remove Counter from Test Project">
+      <Source RefID="51"/>
+      <Source RefID="66"/>
+      <Source RefID="98"/>
+      <Target RefID="51"/>
+      <Target RefID="53"/>
+      <Invoke Operation="filterListOfCounters" ServiceID="51">
+        <Source RefID="66"/>
+        <Source RefID="98">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="51">
+        <Target RefID="53"/>
+      </Receive>
+    </Function>
+    <Mappings ID="76" Label="Update Test Project">
+      <Source RefID="60"/>
+      <Source RefID="53"/>
+      <Target RefID="74"/>
+      <Meta>
+        <FixedDetailOptions>FillMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="75" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject75"/>
+        <Source RefID="60"/>
+      </Input>
+      <Input>
+        <Data ID="77" IsList="true" Label="Filtered Counters" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter77"/>
+        <Source RefID="53">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="78" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject78"/>
+        <Target RefID="74"/>
+      </Output>
+      <Mapping>%2%=%0%</Mapping>
+      <Mapping>%2%.counter=%1%</Mapping>
+    </Mappings>
+    <Function ID="82" Label="Store updated Test Project">
+      <Source RefID="81"/>
+      <Source RefID="74"/>
+      <Source RefID="83"/>
+      <Target RefID="81"/>
+      <Invoke Operation="store" ServiceID="81">
+        <Source RefID="74">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="83">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="81"/>
+    </Function>
+    <ServiceReference ID="51" Label="TestFactoryIntegration" ReferenceName="TestFactoryIntegration.TestFactoryIntegration" ReferencePath="xdev.xtestfactory.infrastructure.services">
+      <Source RefID="52"/>
+      <Target RefID="52"/>
+    </ServiceReference>
+    <Data ID="53" IsList="true" Label="Filtered Counters" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter166">
+      <Source RefID="52"/>
+      <Target RefID="76"/>
+    </Data>
+    <ServiceReference ID="58" Label="Determine Current Test Project" ReferenceName="DetermineCurrentTestProject" ReferencePath="xdev.xtestfactory.infrastructure.util">
+      <Source RefID="59"/>
+      <Target RefID="59"/>
+    </ServiceReference>
+    <Data ID="60" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject38">
+      <Source RefID="59"/>
+      <Target RefID="67"/>
+      <Target RefID="76"/>
+    </Data>
+    <Data ID="66" IsList="true" Label="Counters to filter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter66">
+      <Source RefID="67"/>
+      <Target RefID="52"/>
+    </Data>
+    <Data ID="74" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject73">
+      <Source RefID="76"/>
+      <Target RefID="82"/>
+    </Data>
+    <ServiceReference ID="81" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="82"/>
+      <Target RefID="82"/>
+    </ServiceReference>
+    <Data ID="83" Label="Store parameter" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="const_StoreParameter">
+      <Target RefID="82"/>
+      <Data ID="91" Label="Historize previous object" VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data ID="92" Label="Keep meta field data" VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>true</Value>
+      </Data>
+      <Data ID="93" Label="Force recursive store" VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+    </Data>
+    <ServiceReference ID="96" Label="Get Counter" ReferenceName="GetCounter" ReferencePath="xdev.xtestfactory.infrastructure.actions">
+      <Source RefID="97"/>
+      <Target RefID="97"/>
+    </ServiceReference>
+    <Data ID="98" Label="Counter" ReferenceName="Counter" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="counter69">
+      <Source RefID="97"/>
+      <Target RefID="52"/>
+      <Target RefID="116"/>
+    </Data>
+    <ServiceReference ID="115" Label="Delete" ReferenceName="Delete" ReferencePath="xnwh.persistence">
+      <Source RefID="116"/>
+      <Target RefID="116"/>
+    </ServiceReference>
+    <Function ID="116" Label="Delete Counter">
+      <Source RefID="115"/>
+      <Source RefID="117"/>
+      <Source RefID="98"/>
+      <Target RefID="115"/>
+      <Target RefID="122"/>
+      <Target RefID="124"/>
+      <Meta>
+        <Documentation>TODO: Remove empty Exception Handling when OP 3784 is fixed</Documentation>
+        <FixedDetailOptions>openCatches,openDocumentation</FixedDetailOptions>
+      </Meta>
+      <Invoke Operation="Delete" ServiceID="115">
+        <Source RefID="98">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="117">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="115"/>
+      <Catch ExceptionID="124" ID="125">
+        <Assign/>
+      </Catch>
+      <Catch ExceptionID="122" ID="123">
+        <Assign/>
+      </Catch>
+    </Function>
+    <Data ID="117" Label="Delete parameter" ReferenceName="DeleteParameter" ReferencePath="xnwh.persistence" VariableName="const_DeleteParameter">
+      <Target RefID="116"/>
+      <Data Label="Including history" VariableName="includingHistory">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data Label="Reference handling" ReferenceName="ReferenceHandling" ReferencePath="xnwh.persistence" VariableName="referenceHandling">
+        <Data Label="Backward" VariableName="backward">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+          <Value>error</Value>
+        </Data>
+        <Data Label="Forward" VariableName="forward">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+          <Value>keep</Value>
+        </Data>
+      </Data>
+    </Data>
+    <Exception ID="122" Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception">
+      <Source RefID="116"/>
+    </Exception>
+    <Exception ID="124" Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException">
+      <Source RefID="116"/>
+    </Exception>
+    <Assign ID="12"/>
+  </Operation>
+</Service>

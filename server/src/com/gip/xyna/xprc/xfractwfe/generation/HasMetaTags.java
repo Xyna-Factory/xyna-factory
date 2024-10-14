@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,8 @@ import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 
 public interface HasMetaTags {
   public boolean hasUnknownMetaTags();
-  public List<Element> getUnknownMetaTags();
-  public void setUnknownMetaTags(List<Element> unknownMetaTags);
+  public List<String> getUnknownMetaTags();
+  public void setUnknownMetaTags(List<String> unknownMetaTags);
   public void parseUnknownMetaTags(Element element, List<String> knownMetaTags);
   public void appendUnknownMetaTags(XmlBuilder xml);
 }

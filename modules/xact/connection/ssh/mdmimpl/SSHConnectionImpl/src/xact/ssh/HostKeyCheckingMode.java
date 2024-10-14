@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,23 +18,25 @@
 package xact.ssh;
 
 
+
 public enum HostKeyCheckingMode {
   YES("yes", Yes.class), NO("no", No.class), ASK("ask", Ask.class);
-  
+
   private final String stringRepresentation;
   private final Class<? extends HostKeyChecking> xynaRepresentation;
-  
+
+
   private HostKeyCheckingMode(String stringRepresentation, Class<? extends HostKeyChecking> xynaRepresentation) {
     this.stringRepresentation = stringRepresentation;
     this.xynaRepresentation = xynaRepresentation;
   }
-  
-  
+
+
   public String getStringRepresentation() {
     return stringRepresentation;
   }
-  
-  
+
+
   public static <C extends HostKeyChecking> HostKeyCheckingMode getByXynaRepresentation(C xynaRepresentation) {
     if (xynaRepresentation != null) {
       for (HostKeyCheckingMode mode : values()) {
@@ -45,5 +47,5 @@ public enum HostKeyCheckingMode {
     }
     return HostKeyCheckingMode.YES;
   }
-  
+
 }

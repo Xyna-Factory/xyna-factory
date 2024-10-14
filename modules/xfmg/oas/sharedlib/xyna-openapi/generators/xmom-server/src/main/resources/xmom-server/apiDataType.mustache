@@ -1,0 +1,80 @@
+{{!
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+}}
+{{#operations}}<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="true"
+Label="{{apiLabel}}" TypeName="{{apiRefName}}" TypePath="{{apiRefPath}}">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Abstract base type.
+Create a derived data type in your implementing workspace and override the services to implement the endpoints.
+    </Documentation>
+  </Meta>
+  <Service Label="{{apiLabel}}" TypeName="{{apiRefName}}">{{#xynaOperation}}
+    <Operation Label="{{implLabel}}" Name="{{implVarName}}" IsStatic="false">
+      <Meta>
+        <Documentation>{{implDescription}}
+        </Documentation>
+      </Meta>
+      <Input>
+        <Data ID="{{parameterId}}" Label="{{parameterLabel}}" VariableName="{{parameterVarName}}{{parameterId}}"
+        ReferenceName="{{parameterRefName}}" ReferencePath="{{parameterRefPath}}"/>
+      </Input>
+      <Output>
+        <Data ID="{{responseId}}" Label="{{responseLabel}}" VariableName="{{responseVarName}}{{responseId}}"
+        ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}" />
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return null;</CodeSnippet>
+      </SourceCode>
+    </Operation>{{/xynaOperation}}
+    <Operation Label="Preprocess Request" Name="preprocessRequest" IsStatic="false">
+      <Input>
+        <Data ID="170" Label="Http Request" VariableName="httpRequest170" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype"/>
+      </Input>
+      <Output>
+        <Data ID="175" Label="Http Request" VariableName="httpRequest175" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype"/>
+      </Output>
+      <Throws>
+        <Exception ID="180" Label="Provider Processing Hook Exception" VariableName="providerProcessingHookException180" ReferenceName="ProviderProcessingHookException" ReferencePath="xmcp.oas.exception"/>
+      </Throws>
+      <Meta>
+        <Documentation>Hook to preprocess request before implementation steps. Used in all endpoints. For an error response use a subclass of xmcp.oas.datatype.provider.ResponseParameter in the exception.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">return httpRequest170;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="Postprocess Response" Name="postprocessResponse" IsStatic="false">
+      <Input>
+        <Data ID="120" Label="Http Response" VariableName="httpResponse120" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype"/>
+      </Input>
+      <Output>
+        <Data ID="125" Label="Http Response" VariableName="httpResponse125" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype"/>
+      </Output>
+      <Throws>
+        <Exception ID="130" Label="Provider Processing Hook Exception" VariableName="providerProcessingHookException130" ReferenceName="ProviderProcessingHookException" ReferencePath="xmcp.oas.exception"/>
+      </Throws>
+      <Meta>
+        <Documentation>Hook to postprocess response after implementation steps. Used in all endpoints of this api. For an error response use a subclass of xmcp.oas.datatype.provider.ResponseParameter in the exception.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">return httpResponse120;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>{{/operations}}

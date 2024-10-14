@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -267,15 +267,8 @@ public class WFRetryMITest extends AGenerationTestTemplate<WF> {
 
     String generated = new String(buf);
 
-    if (!generated.contains("Copyright GIP AG 20")) {
-      fail("no copyright information in generated java file");
-    }
-    if (!generated.contains("Copyright GIP AG 2015")) {
-      fail("copyright information in generated java file is outdated");
-    }
-
-    if (!generated.contains("Copyright GIP AG 2015")) {
-      fail("no copyright information for the year 2009 in generated java code: outdated test?");
+    if (!generated.contains("Copyright 20") || !generated.contains("Xyna GmbH, Germany")) {
+      fail("no or wrong copyright information in generated java file");
     }
 
     if (generated.split("\\{").length > generated.split("\\}").length) {

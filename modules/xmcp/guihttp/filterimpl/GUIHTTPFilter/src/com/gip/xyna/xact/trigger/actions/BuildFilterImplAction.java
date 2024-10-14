@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,8 +58,8 @@ public class BuildFilterImplAction implements FilterAction {
 
   public FilterResponse act(Logger logger, HTTPTriggerConnection tc) throws XynaException {
     logger.info("got filter implementation template request");
-    String filterName = tc.getParas().getProperty("p0");
-    String triggerName = tc.getParas().getProperty("p1");
+    String filterName = tc.getFirstValueOfParameter("p0");
+    String triggerName = tc.getFirstValueOfParameter("p1");
 
     logger.info( "filterName = "+filterName);
     

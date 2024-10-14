@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 
     <property name="xyna.orderInputSource.ConstantInputSource" value="true" />
     <property name="xyna.orderInputSource.WorkflowInputSource" value="true" />
+    <property name="xyna.orderInputSource.XTFInputSource" value="true" />
 
      <property name="target.dir" value="${basedir}/deploy" />
 
@@ -39,6 +40,12 @@
         <xynaTarget name="buildWorkflowInputSource" if="xyna.orderInputSource.WorkflowInputSource">
             <ant antfile="build.xml" target="build" inheritAll="false" dir="WorkflowInputSource">
                 <property name="target.dir" value="${target.dir}/WorkflowInputSource" />
+            </ant>
+        </xynaTarget>
+
+        <xynaTarget name="buildXTFInputSource" if="xyna.orderInputSource.XTFInputSource">
+            <ant antfile="build.xml" target="build" inheritAll="false" dir="XTFInputSource">
+                <property name="target.dir" value="${target.dir}/XTFInputSource" />
             </ant>
         </xynaTarget>
 

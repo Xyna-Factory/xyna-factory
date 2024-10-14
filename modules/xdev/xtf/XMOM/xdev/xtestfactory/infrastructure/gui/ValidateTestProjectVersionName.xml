@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Validate Test Project Version Name" TypeName="ValidateTestProjectVersionName" TypePath="xdev.xtestfactory.infrastructure.gui" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Validate Test Project Version Name" Name="ValidateTestProjectVersionName">
+    <Input>
+      <Data ID="4" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject">
+        <Target RefID="8"/>
+        <Target RefID="14"/>
+        <Target RefID="37"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="2" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject2">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Test Project Version Name Not Allowed" ReferenceName="TestProjectVersionNameNotAllowed" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="testProjectVersionNameNotAllowed"/>
+    </Throws>
+    <Choice ID="8" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="4"/>
+      <Target RefID="30"/>
+      <Target RefID="43"/>
+      <Input>
+        <Data ID="17" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject17"/>
+        <Source RefID="4">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="6" Label="true" Premise="matches(%0%.version,&quot;^[\\w\\-\\.\\, ]{1,}$&quot;)">
+        <Mappings ID="37" Label="Extract Version Name">
+          <Source RefID="4"/>
+          <Target RefID="36"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data ID="38" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject38"/>
+            <Source RefID="4"/>
+          </Input>
+          <Output>
+            <Data ID="35" Label="Version Name" ReferenceName="Text" ReferencePath="base" VariableName="text_0"/>
+            <Target RefID="36"/>
+          </Output>
+          <Mapping>%1%.text=%0%.version</Mapping>
+        </Mappings>
+        <Function ID="28" Label="Label to Java Name">
+          <Source RefID="27"/>
+          <Source RefID="36"/>
+          <Target RefID="27"/>
+          <Target RefID="29"/>
+          <Invoke Operation="labelToJavaName" ServiceID="27">
+            <Source RefID="36"/>
+          </Invoke>
+          <Receive ServiceID="27">
+            <Target RefID="29"/>
+          </Receive>
+        </Function>
+        <Choice ID="39" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="29"/>
+          <Target RefID="40"/>
+          <Input>
+            <Data Label="Label" ReferenceName="Text" ReferencePath="base"/>
+            <Source RefID="29">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Case ID="23" Label="true" Premise="length(%0%.text)==&quot;0&quot;">
+            <Throw ExceptionID="44" ID="45" Label="Throw Test Project Version Name Not Allowed">
+              <Source RefID="44">
+                <Meta>
+                  <LinkType>Constant</LinkType>
+                </Meta>
+              </Source>
+            </Throw>
+            <Assign ID="41"/>
+          </Case>
+          <Case ID="24" Label="false">
+            <Mappings ID="14" Label="Version name allowed">
+              <Source RefID="4"/>
+              <Target RefID="16"/>
+              <Meta>
+                <FixedDetailOptions>FillMode</FixedDetailOptions>
+              </Meta>
+              <Input>
+                <Data ID="13" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject13"/>
+                <Source RefID="4"/>
+              </Input>
+              <Output>
+                <Data ID="15" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject15"/>
+                <Target RefID="16"/>
+              </Output>
+              <Mapping>%1%=%0%</Mapping>
+            </Mappings>
+            <Assign ID="42">
+              <Source RefID="16"/>
+              <Target RefID="40"/>
+              <Copy>
+                <Source RefID="16"/>
+                <Target RefID="40"/>
+              </Copy>
+            </Assign>
+          </Case>
+        </Choice>
+        <Assign ID="18">
+          <Source RefID="29"/>
+          <Source RefID="40"/>
+          <Target RefID="30"/>
+          <Target RefID="43"/>
+          <Copy>
+            <Source RefID="29"/>
+            <Target RefID="30"/>
+          </Copy>
+          <Copy>
+            <Source RefID="40"/>
+            <Target RefID="43"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="7" Label="false">
+        <Throw ExceptionID="22" ID="21" Label="Throw Test Project Version Name Not Allowed">
+          <Source RefID="22">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+        </Throw>
+        <Assign ID="19"/>
+      </Case>
+    </Choice>
+    <Data ID="16" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject16">
+      <Source RefID="14"/>
+      <Target RefID="42"/>
+    </Data>
+    <Exception ID="22" Label="Test Project Version Name Not Allowed" ReferenceName="TestProjectVersionNameNotAllowed" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="const_TestProjectVersionNameNotAllowed">
+      <Target RefID="21"/>
+    </Exception>
+    <ServiceReference ID="27" Label="Utils" ReferenceName="Utils.Utils" ReferencePath="xdev.xtestfactory.infrastructure.gui">
+      <Source RefID="28"/>
+      <Target RefID="28"/>
+    </ServiceReference>
+    <Data ID="29" Label="Label" ReferenceName="Text" ReferencePath="base" VariableName="text35">
+      <Source RefID="28"/>
+      <Target RefID="39"/>
+      <Target RefID="18"/>
+    </Data>
+    <Data ID="30" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text">
+      <Source RefID="8"/>
+      <Source RefID="19"/>
+      <Source RefID="18"/>
+    </Data>
+    <Data ID="36" Label="Label" ReferenceName="Text" ReferencePath="base" VariableName="text36">
+      <Source RefID="37"/>
+      <Target RefID="28"/>
+    </Data>
+    <Data ID="40" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject40">
+      <Source RefID="39"/>
+      <Source RefID="42"/>
+      <Target RefID="18"/>
+    </Data>
+    <Data ID="43" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject43">
+      <Source RefID="8"/>
+      <Source RefID="18"/>
+      <Target RefID="3"/>
+    </Data>
+    <Exception ID="44" Label="Test Project Version Name Not Allowed" ReferenceName="TestProjectVersionNameNotAllowed" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="testProjectVersionNameNotAllowed44">
+      <Target RefID="45"/>
+    </Exception>
+    <Assign ID="3">
+      <Source RefID="43"/>
+      <Target RefID="2"/>
+      <Copy>
+        <Source RefID="43">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="2"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -183,7 +183,7 @@ public class HTTPServiceServiceOperationImpl implements ExtendedDeploymentTask, 
       //ok, Connection wurde vor dem reconnect ordentlich geschlossen 
     } catch (HttpException e) {
       logger.warn("Failed to close old connection before reconnect", e );
-      //soll aber reconnect nicht weiter stÃ¶ren
+      //soll aber reconnect nicht weiter stören
     }
     hc = new HttpConnectionImpl(connectParameter);
     hc.connect(false);

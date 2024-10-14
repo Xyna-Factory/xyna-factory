@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,15 @@
 package xact.ssh.impl;
 
 
+
 public class ProtocolMessageHandlerIgnore extends ProtocolMessageHandler {
 
   private static final long serialVersionUID = 1L;
 
+
   @Override
-  public void handleProtocol(SSHConnectionInstanceOperationImpl sshConnectionInstanceOperationImpl, 
-                             String content, String type, boolean commandSent, long recieveTime) {
+  public void handleProtocol(SSHConnectionInstanceOperationImpl sshConnectionInstanceOperationImpl, String content, String type,
+                             boolean commandSent, long recieveTime) {
     //nichts zu tun
   }
 

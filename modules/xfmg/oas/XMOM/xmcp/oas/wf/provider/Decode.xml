@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Decode" TypeName="Decode" TypePath="xmcp.oas.wf.provider" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Decode" Name="Decode">
+    <Input>
+      <Data ID="64" Label="Request Parameter" ReferenceName="RequestParameter" ReferencePath="xmcp.oas.datatype.provider" VariableName="requestParameter64"/>
+      <Data ID="14" Label="Http Request" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype" VariableName="httpRequest14"/>
+    </Input>
+    <Output>
+      <Data ID="223" Label="Request Parameter" ReferenceName="RequestParameter" ReferencePath="xmcp.oas.datatype.provider" VariableName="requestParameter223"/>
+    </Output>
+    <Throws>
+      <Exception Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception" VariableName="validationException4402"/>
+    </Throws>
+    <ServiceReference ID="4312" Label="OAS Type Validation" ReferenceName="OASTypeValidation" ReferencePath="xmcp.oas.wf">
+      <Source RefID="4311"/>
+      <Target RefID="4311"/>
+    </ServiceReference>
+    <ServiceReference ID="29" Label="Request Parameter" ReferenceName="RequestParameter.RequestParameter" ReferencePath="xmcp.oas.datatype.provider">
+      <Source RefID="28"/>
+      <Target RefID="28"/>
+    </ServiceReference>
+    <Function ID="28" Label="parse Parameter">
+      <Source RefID="29"/>
+      <Source RefID="64"/>
+      <Source RefID="14"/>
+      <Target RefID="29"/>
+      <Target RefID="31"/>
+      <Invoke Operation="parseParameter" ServiceID="29">
+        <Source RefID="64"/>
+        <Source RefID="14"/>
+      </Invoke>
+      <Receive ServiceID="29">
+        <Target RefID="31"/>
+      </Receive>
+    </Function>
+    <Mappings ID="4503" Label="Write Http Request to Request Parameter ">
+      <Input>
+        <Data ID="4606" Label="Request Parameter" ReferenceName="RequestParameter" ReferencePath="xmcp.oas.datatype.provider" VariableName="requestParameter4606">
+          <Source RefID="4503"/>
+        </Data>
+        <Source RefID="31">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="4877" Label="Http Request" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype" VariableName="httpRequest4877">
+          <Source RefID="4503"/>
+        </Data>
+        <Source RefID="14"/>
+      </Input>
+      <Output>
+        <Data ID="4641" Label="Request Parameter" ReferenceName="RequestParameter" ReferencePath="xmcp.oas.datatype.provider" VariableName="requestParameter4641">
+          <Source RefID="4503"/>
+        </Data>
+        <Target RefID="4642"/>
+      </Output>
+      <Mapping>%2%=%0%</Mapping>
+      <Mapping>%2%.hTTPRequest=%1%</Mapping>
+    </Mappings>
+    <Function ID="4311" Label="OAS Type Validation">
+      <Source RefID="4312"/>
+      <Source RefID="4642"/>
+      <Source RefID="4362"/>
+      <Target RefID="4312"/>
+      <Invoke Operation="OASTypeValidation" ServiceID="4312">
+        <Source RefID="4642">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="4362">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="4312"/>
+    </Function>
+    <Data ID="31" Label="Request Parameter" ReferenceName="RequestParameter" ReferencePath="xmcp.oas.datatype.provider" VariableName="requestParameter31">
+      <Source RefID="28"/>
+    </Data>
+    <Data ID="4362" Label="Xyna Property String" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration" VariableName="const_XynaPropertyString4362">
+      <Data VariableName="propertyName">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>xmcp.oas.validation.request_validation</Value>
+      </Data>
+      <Data VariableName="value">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value/>
+      </Data>
+      <Data ReferenceName="UseValue" ReferencePath="xfmg.xods.configuration.parameter" VariableName="behaviourIfPropertyNotSet"/>
+    </Data>
+    <Data ID="4642" Label="Request Parameter" ReferenceName="RequestParameter" ReferencePath="xmcp.oas.datatype.provider" VariableName="requestParameter4642">
+      <Source RefID="4503"/>
+    </Data>
+    <Exception ID="4402" Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception" VariableName="validationException4402">
+      <Target RefID="4439"/>
+    </Exception>
+    <Assign ID="1">
+      <Source RefID="4642"/>
+      <Target RefID="223"/>
+      <Copy>
+        <Source RefID="4642">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="223"/>
+      </Copy>
+    </Assign>
+    <Catch ExceptionID="4402" ID="4405">
+      <Throw ExceptionID="4402" ID="4439" Label="Throw Validation Exception">
+        <Meta>
+          <PreferedExceptionType>xmcp.oas.exception.ValidationException</PreferedExceptionType>
+        </Meta>
+        <Source RefID="4402"/>
+      </Throw>
+      <Assign>
+        <Source RefID="64"/>
+        <Target RefID="223"/>
+        <Copy>
+          <Source RefID="64">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+          <Target RefID="223"/>
+        </Copy>
+      </Assign>
+    </Catch>
+  </Operation>
+</Service>

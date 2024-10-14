@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Duplicate Test Project" TypeName="DuplicateTestProject" TypePath="xdev.xtestfactory.infrastructure.actions" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Duplicate Test Project" Name="DuplicateTestProject">
+    <Input>
+      <Data ID="290" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject">
+        <Target RefID="2"/>
+        <Target RefID="438"/>
+      </Data>
+      <Data ID="410" Label="Selection mask" ReferenceName="SelectionMask" ReferencePath="xnwh.persistence" VariableName="selectionMask"/>
+      <Data ID="411" Label="Update parameter" ReferenceName="UpdateParameter" ReferencePath="xnwh.persistence" VariableName="updateParameter"/>
+    </Input>
+    <Output>
+      <Data ID="54" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject54">
+        <Source RefID="2"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="No TestProject With This ID" ReferenceName="NoTestProjectWithThisID" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="noTestProjectWithThisID"/>
+      <Exception Label="Testproject Has No Name" ReferenceName="TestprojectHasNoName" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="testprojectHasNoName"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <Function ID="438" Label="Duplicate Test Project Without Update Parameter">
+      <Source RefID="437"/>
+      <Source RefID="290"/>
+      <Target RefID="437"/>
+      <Target RefID="439"/>
+      <Invoke Operation="DuplicateTestProjectWithoutUpdateParameter" ServiceID="437">
+        <Source RefID="290"/>
+      </Invoke>
+      <Receive ServiceID="437">
+        <Target RefID="439"/>
+      </Receive>
+    </Function>
+    <ServiceReference ID="437" Label="Duplicate Test Project Without Update Parameter" ReferenceName="DuplicateTestProjectWithoutUpdateParameter" ReferencePath="xdev.xtestfactory.infrastructure.actions">
+      <Source RefID="438"/>
+      <Target RefID="438"/>
+    </ServiceReference>
+    <Data ID="439" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject439">
+      <Source RefID="438"/>
+    </Data>
+    <Assign ID="2">
+      <Source RefID="290"/>
+      <Target RefID="54"/>
+      <Copy>
+        <Source RefID="290">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="54"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

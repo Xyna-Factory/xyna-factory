@@ -1,0 +1,746 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Application applicationName="XTF5 Migration Utilities" factoryVersion="6.1.2.29" versionName="workingset" xmlVersion="1.0">
+  <Ordertypes>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xdev.xtestfactory.infrastructure.migration.cleanup.CleanupTestReportEntries</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xdev.xtestfactory.util.DefaultEmptyGenerator</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xdev.xtestfactory.infrastructure.migration.PerformTestCaseImportFromXTF5</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xdev.xtestfactory.infrastructure.migration.DeleteAllTestCases</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xdev.xtestfactory.infrastructure.migration.cleanup.CleanupAbandonedTestCases</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.DeleteTestCase</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.actions.StoreTestCase</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.migration.CreateOrderInputSource</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.migration.StoreTestCaseFromCombinationWithEmptyTestProcessReference</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.migration.cleanup.DeleteOneUnreferencedTestCase</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.migration.cleanup.DeleteUnreferencedTestCases</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.migration.testseries.AddFunctionSteps</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.migration.testseries.AddServiceReferenceToWFTemplate</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.migration.testseries.EscapeWorkflowNameForSeries</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.migration.testseries.ProcessSeries</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.migration.testseries.StoreTestSeriesWFAndBuildTestCase</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.util.DetermineCurrentTestProject</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xdev.xtestfactory.infrastructure.util.QueryTestCaseByNameInCurrentTestProject</DestinationKey>
+      <OrderContextMapping>true</OrderContextMapping>
+    </Ordertype>
+  </Ordertypes>
+  <XMOMEntries>
+    <XMOMEntry implicitDependency="true">
+      <FqName>base.DateTime</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>base.Text</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>core.exception.XynaExceptionBase</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xact.connection.Command</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xact.connection.CommandResponseTuple</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xact.connection.DetectedError</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xact.connection.Response</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xact.templates.CommandLineInterface</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xact.templates.Document</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xact.templates.DocumentContext</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xact.templates.DocumentPart</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xact.templates.DocumentType</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xact.templates.NETCONF</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xact.templates.PlainText</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xact.templates.TemplateManagement</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xact.templates.XML</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.actions.DeleteTestCase</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.actions.StoreTestCase</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.ManagedFileID</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.SystemUnderTestInstanceProperty</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.TestCaseID</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.TestDataGenerationID</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.TestDataSelector</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.TestProjectCreationParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.Workspacename</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.datatypes.reporting.OutcomeStatistics</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.FailedToDetermineTestProject</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.InvalidCSV</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.NoMatchingTestDataAvailable</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.SUTInstanceSpecificConfigurationFailed</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.TestDataHasAlreadyBeenUsed</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.TestDataNotFound</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.exceptions.TestProjectNotUnique</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.CreateOrderInputSource</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.DeleteAllTestCases</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.ImportConfiguration</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.MigrationServices</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.PerformTestCaseImportFromXTF5</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.StoreTestCaseFromCombinationWithEmptyTestProcessReference</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.TestCaseAndOrderInputSourceCombination</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.TestSeriesAndListOfTestCaseOISCombination</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.XTF5TestcaseCSV</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.XTF5TestcasetestseriesCSV</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.XTF5TestdurchfuerhungsplanCSV</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.XTF5TestseriesCSV</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.cleanup.CleanupAbandonedTestCases</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.cleanup.CleanupTestReportEntries</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.cleanup.DeleteOneUnreferencedTestCase</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.cleanup.DeleteUnreferencedTestCases</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.exceptions.MigrationFailed</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.testcases.InputGenerationMapping</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.testcases.TestProcessMapping</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.testseries.AddFunctionSteps</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.testseries.AddServiceReferenceToWFTemplate</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.testseries.EscapeWorkflowNameForSeries</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.testseries.FunctionObject</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.testseries.ProcessSeries</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.testseries.RefID</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.testseries.SeriesMigrationName</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.testseries.SeriesMigrationPath</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.testseries.ServiceReference</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.migration.testseries.StoreTestSeriesWFAndBuildTestCase</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.services.ExceptionCount</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.services.OrderID</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.services.TestFactoryIntegration</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.Counter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.Feature</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.Interface</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.SystemUnderTest</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.SystemUnderTestInstance</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.TestCase</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.TestData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.TestDataMetaData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.TestDataUsageInfo</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.TestProject</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.TestReport</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.TestReportEntryFeature</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.TestReportEntryTestCase</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.storables.TestReportEntryTestCaseInstance</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.util.DetermineCurrentTestProject</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.util.QueryTestCaseByNameInCurrentTestProject</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.infrastructure.util.testdata.legacy.LegacyTestDataReference</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.xtestfactory.util.DefaultEmptyGenerator</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xopctrl.User</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.xopctrl.UserName</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xnwh.persistence.Alternative</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xnwh.persistence.ConnectionType</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xnwh.persistence.Default</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xnwh.persistence.DeleteParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xnwh.persistence.ExtendedParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xnwh.persistence.FilterCondition</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xnwh.persistence.History</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xnwh.persistence.PersistenceServices</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xnwh.persistence.QueryParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xnwh.persistence.ReferenceHandling</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xnwh.persistence.SelectionMask</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xnwh.persistence.SortCriterion</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xnwh.persistence.Storable</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xnwh.persistence.StoreParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xnwh.persistence.UpdateParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xnwh.persistence.XMOMStorableAccessException</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+  </XMOMEntries>
+  <MonitoringLevels>
+    <MonitoringLevel>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.migration.cleanup.CleanupTestReportEntries</OrdertypeName>
+      <Value>18</Value>
+    </MonitoringLevel>
+    <MonitoringLevel>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.migration.PerformTestCaseImportFromXTF5</OrdertypeName>
+      <Value>18</Value>
+    </MonitoringLevel>
+    <MonitoringLevel>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.migration.DeleteAllTestCases</OrdertypeName>
+      <Value>18</Value>
+    </MonitoringLevel>
+    <MonitoringLevel>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.migration.cleanup.CleanupAbandonedTestCases</OrdertypeName>
+      <Value>18</Value>
+    </MonitoringLevel>
+    <MonitoringLevel>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.migration.CreateOrderInputSource</OrdertypeName>
+      <Value>17</Value>
+    </MonitoringLevel>
+    <MonitoringLevel>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.migration.StoreTestCaseFromCombinationWithEmptyTestProcessReference</OrdertypeName>
+      <Value>17</Value>
+    </MonitoringLevel>
+    <MonitoringLevel>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.migration.cleanup.DeleteOneUnreferencedTestCase</OrdertypeName>
+      <Value>18</Value>
+    </MonitoringLevel>
+    <MonitoringLevel>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.migration.cleanup.DeleteUnreferencedTestCases</OrdertypeName>
+      <Value>18</Value>
+    </MonitoringLevel>
+    <MonitoringLevel>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.migration.testseries.AddFunctionSteps</OrdertypeName>
+      <Value>17</Value>
+    </MonitoringLevel>
+    <MonitoringLevel>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.migration.testseries.AddServiceReferenceToWFTemplate</OrdertypeName>
+      <Value>17</Value>
+    </MonitoringLevel>
+    <MonitoringLevel>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.migration.testseries.EscapeWorkflowNameForSeries</OrdertypeName>
+      <Value>17</Value>
+    </MonitoringLevel>
+    <MonitoringLevel>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.migration.testseries.ProcessSeries</OrdertypeName>
+      <Value>18</Value>
+    </MonitoringLevel>
+    <MonitoringLevel>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.migration.testseries.StoreTestSeriesWFAndBuildTestCase</OrdertypeName>
+      <Value>17</Value>
+    </MonitoringLevel>
+    <MonitoringLevel>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.util.DetermineCurrentTestProject</OrdertypeName>
+      <Value>17</Value>
+    </MonitoringLevel>
+  </MonitoringLevels>
+  <XmomStorables>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.Counter</XmlName>
+      <Path/>
+      <OdsName>counter</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.Feature</XmlName>
+      <Path/>
+      <OdsName>feature</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.Interface</XmlName>
+      <Path/>
+      <OdsName>interface</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.SystemUnderTest</XmlName>
+      <Path>feature</Path>
+      <OdsName>reflistfeature1</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.SystemUnderTest</XmlName>
+      <Path/>
+      <OdsName>systemundertest</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.SystemUnderTest</XmlName>
+      <Path>systemUnderTestInstance</Path>
+      <OdsName>reflistsystemundertestinstance</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.SystemUnderTest</XmlName>
+      <Path>interface0</Path>
+      <OdsName>reflistinterface</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.SystemUnderTestInstance</XmlName>
+      <Path/>
+      <OdsName>systemundertestinstance</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.SystemUnderTestInstance</XmlName>
+      <Path>systemUnderTestInstanceProperty</Path>
+      <OdsName>systemundertestinstanceproperty</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCase</XmlName>
+      <Path>coveredFeatures</Path>
+      <OdsName>reflistfeature</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCase</XmlName>
+      <Path>author</Path>
+      <OdsName>user</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCase</XmlName>
+      <Path/>
+      <OdsName>testcase</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCase</XmlName>
+      <Path>responsibleUser</Path>
+      <OdsName>user1</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestCase</XmlName>
+      <Path>testDateSelector</Path>
+      <OdsName>testdataselector</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestData</XmlName>
+      <Path/>
+      <OdsName>testdata</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestDataMetaData</XmlName>
+      <Path/>
+      <OdsName>testdatametadata</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestDataUsageInfo</XmlName>
+      <Path/>
+      <OdsName>testdatausageinfo</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>counter</Path>
+      <OdsName>reflistcounter</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testReport</Path>
+      <OdsName>reflisttestreport</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>projectOwner</Path>
+      <OdsName>user2</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>usersWithAccess</Path>
+      <OdsName>user3</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testDataMetaData</Path>
+      <OdsName>reflisttestdatametadata</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path/>
+      <OdsName>testproject</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestProject</XmlName>
+      <Path>testCase</Path>
+      <OdsName>reflisttestcase</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestReport</XmlName>
+      <Path/>
+      <OdsName>testreport</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestReport</XmlName>
+      <Path>creator</Path>
+      <OdsName>username</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestReport</XmlName>
+      <Path>creationDate</Path>
+      <OdsName>datetime</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestReportEntryFeature</XmlName>
+      <Path>outcomeStatistics</Path>
+      <OdsName>outcomestatistics1</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestReportEntryFeature</XmlName>
+      <Path/>
+      <OdsName>testreportentryfeature</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestReportEntryTestCase</XmlName>
+      <Path>outcomeStatistics</Path>
+      <OdsName>outcomestatistics</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestReportEntryTestCase</XmlName>
+      <Path/>
+      <OdsName>testreportentrytestcase</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestReportEntryTestCaseInstance</XmlName>
+      <Path>startTime</Path>
+      <OdsName>datetime1</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestReportEntryTestCaseInstance</XmlName>
+      <Path>endTime</Path>
+      <OdsName>datetime2</OdsName>
+    </XmomStorable>
+    <XmomStorable>
+      <XmlName>xdev.xtestfactory.infrastructure.storables.TestReportEntryTestCaseInstance</XmlName>
+      <Path/>
+      <OdsName>testreportentrytestcaseinstance</OdsName>
+    </XmomStorable>
+  </XmomStorables>
+  <InheritanceRules>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.DeleteTestCase</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xdev.xtestfactory.infrastructure.actions.StoreTestCase</OrdertypeName>
+      <ChildFilter/>
+      <Value>xdev.xtestfactory.infrastructure.actions_monitoring_level</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+  </InheritanceRules>
+</Application>

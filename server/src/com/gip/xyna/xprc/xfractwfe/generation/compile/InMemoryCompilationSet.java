@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,11 +41,13 @@ import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
 import com.gip.xyna.xmcp.xfcli.impl.ListsysteminfoImpl;
 import com.gip.xyna.xprc.exceptions.XPRC_CompileError;
+import com.gip.xyna.xprc.exceptions.XPRC_WrappedCompileError;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 
 public class InMemoryCompilationSet implements CompilationSet {
   
   public static final String JAVA_VERSION_ENV_NAME = "mdmjarjavaversion";
+  public static boolean THROW_ALL_ERRORS = false;
   
   public static enum TargetKind {
     FILE, MEMORY;
@@ -98,7 +100,7 @@ public class InMemoryCompilationSet implements CompilationSet {
 
 
   private String determineJavaVersion() {
-    if (XynaFactory.isFactoryServer()) {
+    if (XynaFactory.hasInstance()) {
       return XynaProperty.BUILDMDJAR_JAVA_VERSION.get();
     }
 
@@ -131,10 +133,12 @@ public class InMemoryCompilationSet implements CompilationSet {
       } else if (javaVersion.equals("Java11")) {
         targetVersion = "11";
       } else {
-        throw new RuntimeException("Xyna Property " + XynaProperty.BUILDMDJAR_JAVA_VERSION.getPropertyName() + " has invalid value: " + javaVersion);
+        // Just set to current JavaVersion by default. It might not work and crash later
+        targetVersion = javaVersion.replace("Java", "");
       }
     } else {
-      switch (ListsysteminfoImpl.getJavaVersion()) {
+      int javaVersion = ListsysteminfoImpl.getJavaVersion();
+      switch (javaVersion) {
         case 7 :
           targetVersion = "1.7";
           break;
@@ -148,7 +152,8 @@ public class InMemoryCompilationSet implements CompilationSet {
           targetVersion = "11";
           break;
         default :
-          throw new RuntimeException("Unsupported java version: " + ListsysteminfoImpl.getJavaVersion());
+          // see else case above
+          targetVersion = String.valueOf(javaVersion);
       }
     }
     
@@ -227,7 +232,8 @@ public class InMemoryCompilationSet implements CompilationSet {
       }
     }
     if (stfm.getErrorCollector().getCollectedErrors().size() > 0) {
-      XPRC_CompileError e = stfm.getErrorCollector().getCollectedErrors().get(0);
+      List<XPRC_CompileError> errors = new ArrayList<XPRC_CompileError>(stfm.getErrorCollector().getCollectedErrors());
+      XPRC_CompileError e = THROW_ALL_ERRORS ? new XPRC_WrappedCompileError(null, null, null, errors) : errors.get(0);
       throw e;
     }
     
@@ -324,7 +330,7 @@ public class InMemoryCompilationSet implements CompilationSet {
   }
 
   public String getClassPath() {
-    if (XynaFactory.isFactoryServer()) {
+    if (XynaFactory.hasInstance()) {
       String additionalLibsAsString = GenerationBase.flattenClassPathSet(additionalLibs);
       return GenerationBase.getJarFiles() + Constants.PATH_SEPARATOR + additionalLibsAsString;
     } else {

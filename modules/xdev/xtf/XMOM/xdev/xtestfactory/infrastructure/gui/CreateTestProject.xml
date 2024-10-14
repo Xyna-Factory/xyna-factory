@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Create Test Project" TypeName="CreateTestProject" TypePath="xdev.xtestfactory.infrastructure.gui" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Create Test Project" Name="CreateTestProject">
+    <Input>
+      <Data ID="12" Label="New Project Details" ReferenceName="ProjectDetails" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="projectDetails">
+        <Target RefID="14"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Test Project Not Unique" ReferenceName="TestProjectNotUnique" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="testProjectNotUnique"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="4" Label="Create Test Project" ReferenceName="CreateTestProject" ReferencePath="xdev.xtestfactory.infrastructure.actions">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Mappings ID="14" Label="Use new name, version and description">
+      <Source RefID="12"/>
+      <Target RefID="11"/>
+      <Meta>
+        <FixedDetailOptions>openConfiguration</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="13" Label="New Project Details" ReferenceName="ProjectDetails" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="projectDetails13"/>
+        <Source RefID="12"/>
+      </Input>
+      <Output>
+        <Data ID="15" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject15"/>
+        <Target RefID="11"/>
+      </Output>
+      <Mapping>%1%.description=%0%.description</Mapping>
+      <Mapping>%1%.name=%0%.name</Mapping>
+      <Mapping>%1%.version=%0%.version</Mapping>
+    </Mappings>
+    <Function ID="5" Label="Create Test Project">
+      <Source RefID="4"/>
+      <Source RefID="11"/>
+      <Target RefID="4"/>
+      <Target RefID="6"/>
+      <Invoke Operation="CreateTestProject" ServiceID="4">
+        <Source RefID="11"/>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="6"/>
+      </Receive>
+    </Function>
+    <Data ID="6" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject54">
+      <Source RefID="5"/>
+    </Data>
+    <Data ID="11" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject">
+      <Source RefID="14"/>
+      <Target RefID="5"/>
+    </Data>
+    <Assign/>
+  </Operation>
+</Service>

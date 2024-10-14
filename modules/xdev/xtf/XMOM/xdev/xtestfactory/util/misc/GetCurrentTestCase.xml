@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get Current Test Case" TypeName="GetCurrentTestCase" TypePath="xdev.xtestfactory.util.misc" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get Current Test Case" Name="GetCurrentTestCase">
+    <Input/>
+    <Output>
+      <Data ID="8" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase8">
+        <Source RefID="9"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Test Case Not Found For ID" ReferenceName="TestCaseNotFoundForID" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="testCaseNotFoundForID"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="2" Label="TestFactoryIntegration" ReferenceName="TestFactoryIntegration.TestFactoryIntegration" ReferencePath="xdev.xtestfactory.infrastructure.services">
+      <Source RefID="3"/>
+      <Target RefID="3"/>
+    </ServiceReference>
+    <Function ID="3" Label="Get Test Case ID">
+      <Source RefID="2"/>
+      <Target RefID="2"/>
+      <Target RefID="4"/>
+      <Invoke Operation="getTestCaseID" ServiceID="2"/>
+      <Receive ServiceID="2">
+        <Target RefID="4"/>
+      </Receive>
+    </Function>
+    <Data ID="4" Label="Test Case ID" ReferenceName="TestCaseID" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testCaseID">
+      <Source RefID="3"/>
+      <Target RefID="6"/>
+    </Data>
+    <ServiceReference ID="5" Label="Get Test Case By ID" ReferenceName="GetTestCaseByID" ReferencePath="xdev.xtestfactory.infrastructure.util">
+      <Source RefID="6"/>
+      <Target RefID="6"/>
+    </ServiceReference>
+    <Function ID="6" Label="Get Test Case By ID">
+      <Source RefID="5"/>
+      <Source RefID="4"/>
+      <Target RefID="5"/>
+      <Target RefID="7"/>
+      <Invoke Operation="GetTestCaseByID" ServiceID="5">
+        <Source RefID="4"/>
+      </Invoke>
+      <Receive ServiceID="5">
+        <Target RefID="7"/>
+      </Receive>
+    </Function>
+    <Data ID="7" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase">
+      <Source RefID="6"/>
+      <Target RefID="9"/>
+    </Data>
+    <Assign ID="9">
+      <Source RefID="7"/>
+      <Target RefID="8"/>
+      <Copy>
+        <Source RefID="7"/>
+        <Target RefID="8"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

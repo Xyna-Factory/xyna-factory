@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="Http" comment="" factoryVersion="" versionName="1.2.5" xmlVersion="1.1">
+<Application applicationName="Http" comment="" factoryVersion="" versionName="1.2.10" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">HTTP: Service und Trigger</Description>
     <Description Lang="EN">HTTP: service and trigger</Description>
-    <BuildDate>2015.07.30 10:20:00</BuildDate>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Processing</ApplicationName>
-        <VersionName>1.0.17</VersionName>
+        <VersionName>1.0.22</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

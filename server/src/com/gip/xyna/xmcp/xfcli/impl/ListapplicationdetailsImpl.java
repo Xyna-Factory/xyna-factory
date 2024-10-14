@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,6 @@ import com.gip.xyna.xfmg.xfctrl.appmgmt.RuntimeContextProblem;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.RuntimeContextProblem.UnresolvableRequirement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
-import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeDependencyContext;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Workspace;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
@@ -80,6 +79,12 @@ public class ListapplicationdetailsImpl extends XynaCommandImplementation<Listap
     
     //Ausgabe
     /////////
+    if( payload.getVersionOnly()) {
+      clw.writeToCommandLine(appInfo.getVersion());
+      clw.writeEndToCommandLine(ReturnCode.SUCCESS);
+      return;
+    }
+    
     if( payload.getOnlyMissingRequirements() ) {
       ReturnCode rc = showOnlyMissingRequirements(clw, appInfo);
       clw.writeEndToCommandLine(rc);

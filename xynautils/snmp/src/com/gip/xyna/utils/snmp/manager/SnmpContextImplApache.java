@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 import org.snmp4j.AbstractTarget;
 import org.snmp4j.CommunityTarget;
 import org.snmp4j.PDU;
+import org.snmp4j.SNMP4JSettings;
 import org.snmp4j.ScopedPDU;
 import org.snmp4j.Snmp;
 import org.snmp4j.UserTarget;
@@ -36,8 +37,15 @@ import org.snmp4j.mp.MPv3;
 import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.security.AuthMD5;
 import org.snmp4j.security.AuthSHA;
+import org.snmp4j.security.AuthHMAC128SHA224;
+import org.snmp4j.security.AuthHMAC192SHA256;
+import org.snmp4j.security.AuthHMAC256SHA384;
+import org.snmp4j.security.AuthHMAC384SHA512;
 import org.snmp4j.security.PrivAES128;
+import org.snmp4j.security.PrivAES192;
+import org.snmp4j.security.PrivAES256;
 import org.snmp4j.security.PrivDES;
+import org.snmp4j.security.Priv3DES;
 import org.snmp4j.security.SecurityLevel;
 import org.snmp4j.security.SecurityModels;
 import org.snmp4j.security.SecurityProtocols;
@@ -189,7 +197,7 @@ public final class SnmpContextImplApache implements SnmpContext {
 
     MPv3 mpv3 = new MPv3(usm);
     if (logger.isDebugEnabled()) {      
-      logger.debug("enterpriseid=" + MPv3.getEnterpriseID());
+      logger.debug("enterpriseid=" + SNMP4JSettings.getEnterpriseID());
     }
     //mpv3.addEngineID(address, engineID)
     snmp.getMessageDispatcher().addMessageProcessingModel(mpv3);     
@@ -205,22 +213,27 @@ public final class SnmpContextImplApache implements SnmpContext {
     OID authProtocol = null;
     OID privProtocol = null;
     if (snmpAccessData.getAuthenticationProtocol() != null) {
-      if (snmpAccessData.getAuthenticationProtocol().equals(SnmpAccessData.SHA1)) {
-        authProtocol = AuthSHA.ID;
-      } else if (snmpAccessData.getAuthenticationProtocol().equals(SnmpAccessData.MD5)) {
-        authProtocol = AuthMD5.ID;
-      } else {
-        throw new IllegalArgumentException("Authentication protocol " + snmpAccessData.getAuthenticationProtocol()
-                        + " not supported");
+      switch(snmpAccessData.getAuthenticationProtocol()) {
+        case SnmpAccessData.MD5: { authProtocol = AuthMD5.ID; break; }
+        case SnmpAccessData.SHA: { authProtocol = AuthSHA.ID; break; }
+        case SnmpAccessData.SHA1: { authProtocol = AuthSHA.ID; break; }
+        case SnmpAccessData.SHA224: { authProtocol = AuthHMAC128SHA224.ID; break; }
+        case SnmpAccessData.SHA256: { authProtocol = AuthHMAC192SHA256.ID; break; }
+        case SnmpAccessData.SHA384: { authProtocol = AuthHMAC256SHA384.ID; break; }
+        case SnmpAccessData.SHA512: { authProtocol = AuthHMAC384SHA512.ID; break; }
+        default: throw new IllegalArgumentException("Authentication protocol " + snmpAccessData.getAuthenticationProtocol()
+        + " not supported");
       }
     }
     if (snmpAccessData.getPrivacyProtocol() != null) {
-      if (snmpAccessData.getPrivacyProtocol().equals(SnmpAccessData.AES128)) {
-        privProtocol = PrivAES128.ID;
-      } else if (snmpAccessData.getPrivacyProtocol().equals(SnmpAccessData.DES56)) {
-        privProtocol = PrivDES.ID;
-      } else {
-        throw new IllegalArgumentException("Privacy protocol " + snmpAccessData.getPrivacyProtocol() + " not supported");
+      switch (snmpAccessData.getPrivacyProtocol()) {
+        case SnmpAccessData.AES128: { privProtocol = PrivAES128.ID; break; }
+        case SnmpAccessData.AES192: { privProtocol = PrivAES192.ID; break; }
+        case SnmpAccessData.AES256: { privProtocol = PrivAES256.ID; break; }
+        case SnmpAccessData.DES: { privProtocol = PrivDES.ID; break; }
+        case SnmpAccessData.DES56: { privProtocol = PrivDES.ID; break; }
+        case SnmpAccessData.DESEDE: { privProtocol = Priv3DES.ID; break; }
+        default: throw new IllegalArgumentException("Privacy protocol " + snmpAccessData.getPrivacyProtocol() + " not supported");
       }
     }
     

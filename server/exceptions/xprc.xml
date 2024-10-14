@@ -1,7 +1,7 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1533,6 +1533,20 @@
       <MessageText Language="DE">Speicherversuch ohne override und Datei existiert bereits!</MessageText>
       <MessageText Language="EN">Save not marked as override and file already exists!</MessageText>
    </ExceptionType>
-   <!--  letzte verwendete ID 01555 -->
+   <ExceptionType Code="XYNA-01556" TypeName="XPRC_WrappedCompileError" TypePath="com.gip.xyna.xprc.exceptions" BaseTypeName="XPRC_CompileError" BaseTypePath="com.gip.xyna.xprc.exceptions">
+      <Exception Label="Inner Exceptions" VariableName="innerExceptions" IsList="true" ReferenceName="XPRC_CompileError" ReferencePath="com.gip.xyna.xprc.exceptions"/>
+      <MessageText Language="DE">Das Kompilieren ist fehlgeschlagen.</MessageText>
+      <MessageText Language="EN">Compile failed.</MessageText>
+   </ExceptionType> 
+   <ExceptionType Code="XYNA-01557" TypeName="XPRC_INVALID_PLANNING_INPUT" TypePath="com.gip.xyna.xprc.exceptions">
+      <Data Label="id" VariableName="id">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">(%0%) Die Input Signatur des PlanningWorkflow muss entweder der Input Signatur des ExecutionWorkflow entsprechen oder leer sein.</MessageText>
+      <MessageText Language="EN">(%0%) PlanningWorkflow inputs have to match ExceptionWorkflow inputs or be empty.</MessageText>
+   </ExceptionType>
+   <!--  letzte verwendete ID 01557 -->
    
  </ExceptionStore>

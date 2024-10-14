@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -156,8 +156,8 @@ public class StepBasedVariable implements VariableInfo {
               typesOfInputVars.add(getTypeInfo(aVar, false));
             }
             instanceMethod.setInputParameterTypes(typesOfInputVars);
-            if (operation instanceof JavaOperation) {
-              instanceMethod.setRequiresXynaOrder(((JavaOperation)operation).requiresXynaOrder());              
+            if (operation instanceof CodeOperation) {
+              instanceMethod.setRequiresXynaOrder(((CodeOperation)operation).requiresXynaOrder());              
             }
             if (resultValues.size() > 1) {
               throw new RuntimeException("Instance methods with more than 1 result are not supported: " + instanceMethod.getName());

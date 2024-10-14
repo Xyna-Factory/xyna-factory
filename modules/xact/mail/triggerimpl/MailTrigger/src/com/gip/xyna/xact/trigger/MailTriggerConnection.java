@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,9 +48,9 @@ public class MailTriggerConnection extends TriggerConnection {
 
   /**
    * Versucht einen Retry
-   * Falls die Anzahl der Retries maxRetries Ã¼berschreitet, wird false zurÃ¼ckgegeben.
-   * In diesem Fall muss der Filter die Mail abschlieÃŸend bearbeiten. Es bleibt wohl 
-   * nur Loggen Ã¼brig, danach sollte ein Delete durchgefÃ¼hrt werden!
+   * Falls die Anzahl der Retries maxRetries überschreitet, wird false zurückgegeben.
+   * In diesem Fall muss der Filter die Mail abschließend bearbeiten. Es bleibt wohl 
+   * nur Loggen übrig, danach sollte ein Delete durchgeführt werden!
    * @param maxRetries
    * @return
    */
@@ -59,7 +59,7 @@ public class MailTriggerConnection extends TriggerConnection {
   }
   
   /**
-   * LÃ¶scht die Mail auf dem Server
+   * Löscht die Mail auf dem Server
    * @throws MessagingException
    */
   public void delete() throws MessagingException {
@@ -75,9 +75,9 @@ public class MailTriggerConnection extends TriggerConnection {
   }
 
   public void sendReply(Mail reply) {
-    //in der Reply kÃ¶nnen nun Sender, Recipients und Subject fehlen, diese werden nun ergÃ¤nzt.
+    //in der Reply können nun Sender, Recipients und Subject fehlen, diese werden nun ergänzt.
     if( isEmpty( reply.getSubject() ) ) {
-      reply.setSubject( mail.getSubject() ); //TODO "Re: " ergÃ¤nzen?
+      reply.setSubject( mail.getSubject() ); //TODO "Re: " ergänzen?
     }
     if( isEmpty( reply.getSender() ) ) {
       reply.setSender( mail.getRecipientsTo().get(0) );

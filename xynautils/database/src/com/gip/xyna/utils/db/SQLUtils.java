@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -332,6 +332,8 @@ public class SQLUtils {
                stmt.close();
             } catch (SQLException e) {
             }
+         } else {
+           clearStatement(stmt);
          }
       }
    }
@@ -549,6 +551,20 @@ public class SQLUtils {
       } finally {
          finallyClose(rs, stmt);
       }
+   }
+   
+
+   private void clearStatement(PreparedStatement stmt) {
+     try {
+       stmt.clearParameters();
+       boolean moreResults = stmt.getMoreResults();
+       while (moreResults) {
+         moreResults = stmt.getMoreResults();
+       }
+     } catch (SQLException e) {
+       logException(e);
+     } catch (NullPointerException ne) {
+     }
    }
 
    /**

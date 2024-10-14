@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,6 +50,7 @@ import com.gip.xyna.xnwh.selection.WhereClausesConnection;
 import com.gip.xyna.xnwh.selection.WhereClausesConnection.Connect;
 import com.gip.xyna.xnwh.selection.parsing.Selection;
 import com.gip.xyna.xnwh.selection.parsing.SelectionParser;
+import com.gip.xyna.xnwh.selection.parsing.SelectionParser.EscapeParameters;
 import com.gip.xyna.xnwh.selection.parsing.SelectionParser.EscapeParams;
 import com.gip.xyna.xprc.xprcods.orderarchive.OrderArchive.SubstringMapIndex;
 import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstance;
@@ -522,7 +523,7 @@ public class OrderInstanceSelect extends WhereClausesContainerImpl implements Se
   }
 
 
-  private static class EscapeParamsStoringLikeParts implements EscapeParams {
+  private static class EscapeParamsStoringLikeParts implements EscapeParameters {
 
     List<String> parts = new ArrayList<String>();
     StringBuilder regexp = new StringBuilder();
@@ -541,8 +542,15 @@ public class OrderInstanceSelect extends WhereClausesContainerImpl implements Se
 
 
     @Override
-    public String getWildcard() {
+    public String getMultiCharacterWildcard() {
       regexp.append(".*");
+      return "x";
+    }
+
+
+    @Override
+    public String getSingleCharacterWildcard() {
+      regexp.append(".");
       return "x";
     }
 

@@ -1,0 +1,71 @@
+{{!
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+}}
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" IsAbstract="false"
+ TypeName="{{typeName}}" TypePath="{{typePath}}" Label="{{label}}"
+ BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>{{description}}</Documentation>
+  </Meta>
+{{#vars}}
+{{^isInherited}}
+{{>property}}
+{{/isInherited}}
+{{/vars}}
+  <Service Label="{{label}}" TypeName="{{typeName}}">
+   <Operation Label="Validate" Name="validate" IsStatic="false">
+      <Input>
+      </Input>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" VariableName="oASValidationResult1" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+{{#vars}}
+{{>validation}}
+{{/vars}}
+return result.getResult();
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>{{#allowableValues}}
+    <Operation Label="get {{enumLabel}}" Name="get{{methodname}}" IsStatic="false">
+      <Input/>
+      <Output>
+        <Data ID="2" Label="{{label}}" VariableName="varName" ReferenceName="{{typeName}}" ReferencePath="{{typePath}}"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new {{typeName}}(&quot;{{javaEscaped}}&quot;);</CodeSnippet>
+     </SourceCode>
+    </Operation>
+    <Operation Label="is {{enumLabel}}" Name="is{{methodname}}" IsStatic="false">
+      <Input/>
+      <Output>
+        <Data Label="{{enumLabel}}" VariableName="is{{methodname}}">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return &quot;{{javaEscaped}}&quot;.equals(this.getValue());</CodeSnippet>
+     </SourceCode>
+    </Operation>{{/allowableValues}}
+  </Service>
+</DataType>

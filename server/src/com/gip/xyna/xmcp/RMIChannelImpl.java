@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -457,12 +457,12 @@ public class RMIChannelImpl extends Section implements XynaRMIChannelBase, Initi
         throw new RemoteException("Could not authenticate user '" + publicIdentity + "'. Password expired!");
       }
       if (logger.isWarnEnabled() && unexpectedSessionAuthentificationException(cause)) {
-        logger.warn("Authentification probem.", cause);
+        logger.warn("Authentification problem.", cause);
       }
       throw new RemoteException("Could not authenticate '" + publicIdentity + "'");
     }
     if (logger.isWarnEnabled() && unexpectedSessionAuthentificationException(cause)) {
-      logger.warn("Authentification probem.", cause);
+      logger.warn("Authentification problem.", cause);
     }
   }
 

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ public abstract class DomOrExceptionGenerationBase extends GenerationBase implem
   private boolean isAbstract = false;
   private boolean cacheSubTypes = false;
   private Set<GenerationBase> subTypeCache;
+  protected UnknownMetaTagsComponent unknownMetaTagsComponent = new UnknownMetaTagsComponent();
 
   public String getDocumentation() {
     return documentation;
@@ -61,6 +62,14 @@ public abstract class DomOrExceptionGenerationBase extends GenerationBase implem
     if (!cacheSubTypes) {
       subTypeCache = null;
     }
+  }
+  
+  public List<String> getUnknownMetaTags() {
+    return unknownMetaTagsComponent.getUnknownMetaTags();
+  }
+  
+  public void setUnknownMetaTags(List<String> unknownMetaTags) {
+    unknownMetaTagsComponent.setUnknownMetaTags(unknownMetaTags);
   }
 
   protected DomOrExceptionGenerationBase(String originalClassName, String fqClassName, Long revision) {

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ package com.gip.xyna.xact.filter.xmom.servicegroup;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.gip.xyna.xact.filter.HasXoRepresentation;
 import com.gip.xyna.xact.filter.session.GenerationBaseObject;
@@ -37,10 +36,10 @@ import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import xmcp.processmodeller.datatypes.ServiceGroup;
 import xmcp.processmodeller.datatypes.datatypemodeller.MemberMethodArea;
 import xmcp.processmodeller.datatypes.datatypemodeller.Method;
-import xmcp.processmodeller.datatypes.servicegroupmodeller.JavaLibrariesArea;
-import xmcp.processmodeller.datatypes.servicegroupmodeller.JavaLibrary;
 import xmcp.processmodeller.datatypes.servicegroupmodeller.JavaSharedLibrariesArea;
 import xmcp.processmodeller.datatypes.servicegroupmodeller.JavaSharedLibrary;
+import xmcp.processmodeller.datatypes.servicegroupmodeller.LibrariesArea;
+import xmcp.processmodeller.datatypes.servicegroupmodeller.Library;
 import xmcp.processmodeller.datatypes.servicegroupmodeller.ServiceGroupTypeLabelArea;
 
 
@@ -72,7 +71,7 @@ public class ServiceGroupXO implements HasXoRepresentation {
     serviceGroup.setId("sg");
 
     serviceGroup.addToAreas(createTypeLabelArea());
-    serviceGroup.addToAreas(createJavaLibrariesArea());
+    serviceGroup.addToAreas(createLibrariesArea());
     serviceGroup.addToAreas(createJavaSharedLibrariesArea());
     serviceGroup.addToAreas(createMemberMethodArea());
 
@@ -119,17 +118,30 @@ public class ServiceGroupXO implements HasXoRepresentation {
 
     return area;
   }
-
-  private JavaLibrariesArea createJavaLibrariesArea() {
-    JavaLibrariesArea area = new JavaLibrariesArea();
+  
+  private static LibrariesArea createEmptyJavaLibrariesArea() {
+    LibrariesArea area = new LibrariesArea();
     area.setReadonly(false);
     area.setName(Tags.SERVICE_GROUP_JAVA_LIBRARIES_AREA_ID);
     area.setId(Tags.SERVICE_GROUP_JAVA_LIBRARIES_AREA_ID);
     area.setItemTypes(Collections.emptyList());
-    Set<String> libs = dom.getAdditionalLibraries();
+    return area;
+  }
+
+  private LibrariesArea createLibrariesArea() {
+    LibrariesArea area = createEmptyJavaLibrariesArea();
     int i = 0;
-    for (String lib : libs) {
-      area.addToItems(new JavaLibrary(ObjectId.createServiceGroupLibId(i), false, lib));
+    for (String lib : dom.getAdditionalLibraries()) {
+      Library javaLib = new Library(ObjectId.createServiceGroupLibId(i), false, lib);
+      area.addToItems(javaLib);
+      area.addToJavaLibraries(javaLib);
+      i++;
+    }
+    i = 0;
+    for (String lib : dom.getPythonLibraries()) {
+      Library pythonLib = new Library(ObjectId.createServiceGroupLibId(i), false, lib);
+      area.addToItems(pythonLib);
+      area.addToPythonLibraries(pythonLib);
       i++;
     }
     return area;

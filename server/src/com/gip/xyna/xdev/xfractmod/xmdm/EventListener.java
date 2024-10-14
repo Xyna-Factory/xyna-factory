@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -638,7 +638,7 @@ public abstract class EventListener<I extends TriggerConnection, J extends Start
       } catch (BindException be) {
         // Bei einem trigger-redeploy ist der port evtl vom betriebssystem her noch nicht wieder verfuegbar.
         if (tries >= numberOfRetries) {
-          throw new XACT_SocketCouldNotBeBoundException(numberOfRetries, be);
+          throw new XACT_SocketCouldNotBeBoundException(numberOfRetries, be.getMessage(), be);
         }
         try {
           Thread.sleep(retryIntervalMilli);

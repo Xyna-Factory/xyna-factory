@@ -101,7 +101,7 @@ public class ExternalCredentialsLoginAction implements FilterAction {
     String domainName = request.getDomain();
     // @fixme storing username and password in username field, because the password field won't make it up to the auth-Workflow
     // what is the password field used for, then?
-    XynaUserCredentials userCredentials = new XynaUserCredentials(username + " " + password, "");
+    XynaUserCredentials userCredentials = new XynaUserCredentials(username, password);
     SessionCredentials creds = XynaFactory.getInstance().getFactoryManagement()
         .createSession(userCredentials, Optional.<String> empty(), force);
 

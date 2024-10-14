@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Remove Selector Instance From Test Case" TypeName="RemoveSelectorInstanceFromTestCase" TypePath="xdev.xtestfactory.infrastructure.selector" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Remove Selector Instance From Test Case" Name="RemoveSelectorInstanceFromTestCase">
+    <Input>
+      <Data ID="6" Label="Test Data Selector Instance" ReferenceName="TestDataSelectorInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDataSelectorInstance">
+        <Target RefID="5"/>
+      </Data>
+      <Data ID="15" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase">
+        <Target RefID="14"/>
+        <Target RefID="24"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="4" Label="selectorHandling" ReferenceName="SelectorHandling.SelectorHandling" ReferencePath="xdev.xtestfactory.infrastructure.selector">
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <Mappings ID="14" Label="Mapping">
+      <Source RefID="15"/>
+      <Target RefID="18"/>
+      <Meta>
+        <FixedDetailOptions>FillMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="13" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase13"/>
+        <Source RefID="15"/>
+      </Input>
+      <Output>
+        <Data ID="16" IsList="true" Label="Test Data Selector Instance" ReferenceName="TestDataSelectorInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDataSelectorInstance16"/>
+        <Target RefID="18"/>
+      </Output>
+      <Mapping>%1%=%0%.testDataSelectorInstances</Mapping>
+    </Mappings>
+    <Function ID="5" Label="Remove Selector Instance">
+      <Source RefID="4"/>
+      <Source RefID="18"/>
+      <Source RefID="6"/>
+      <Target RefID="4"/>
+      <Target RefID="7"/>
+      <Invoke Operation="removeSelectorInstance" ServiceID="4">
+        <Source RefID="18"/>
+        <Source RefID="6">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="4">
+        <Target RefID="7"/>
+      </Receive>
+    </Function>
+    <Data ID="7" IsList="true" Label="Test Data Selector Instance" ReferenceName="TestDataSelectorInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDataSelectorInstance3">
+      <Source RefID="5"/>
+      <Target RefID="24"/>
+    </Data>
+    <Data ID="18" IsList="true" Label="Test Data Selector Instance" ReferenceName="TestDataSelectorInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDataSelectorInstance18">
+      <Source RefID="14"/>
+      <Target RefID="5"/>
+    </Data>
+    <Mappings ID="24" Label="Mapping">
+      <Source RefID="15"/>
+      <Source RefID="7"/>
+      <Target RefID="28"/>
+      <Meta>
+        <FixedDetailOptions>FillMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="23" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase23"/>
+        <Source RefID="15"/>
+      </Input>
+      <Input>
+        <Data ID="29" IsList="true" Label="Test Data Selector Instance" ReferenceName="TestDataSelectorInstance" ReferencePath="xdev.xtestfactory.infrastructure.datatypes" VariableName="testDataSelectorInstance29"/>
+        <Source RefID="7">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="27" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase27"/>
+        <Target RefID="28"/>
+      </Output>
+      <Mapping>%2%=%0%</Mapping>
+      <Mapping>%2%.testDataSelectorInstances=%1%</Mapping>
+    </Mappings>
+    <Data ID="28" Label="Test Case" ReferenceName="TestCase" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testCase28">
+      <Source RefID="24"/>
+      <Target RefID="34"/>
+    </Data>
+    <ServiceReference ID="33" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="34"/>
+      <Target RefID="34"/>
+    </ServiceReference>
+    <Function ID="34" Label="Store">
+      <Source RefID="33"/>
+      <Source RefID="28"/>
+      <Source RefID="35"/>
+      <Target RefID="33"/>
+      <Invoke Operation="store" ServiceID="33">
+        <Source RefID="28">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="35">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="33"/>
+    </Function>
+    <Data ID="35" Label="Store parameter" ReferenceName="StoreParameter" ReferencePath="xnwh.persistence" VariableName="const_StoreParameter">
+      <Target RefID="34"/>
+      <Data Label="Historize previous object" VariableName="historizePreviousObject">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data Label="Keep meta field data" VariableName="keepMetaFieldData">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+      <Data Label="Force recursive store" VariableName="forceRecursiveStore">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Assign ID="30"/>
+  </Operation>
+</Service>

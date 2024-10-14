@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@
     <target name="build-all">
         <buildModule target="build-all" dir="connection"  target.dir="${target.dir}/xact" />
         <buildModule target="build-all" dir="devicetypes" target.dir="${target.dir}/xact" />
+        <buildModule target="build-all" dir="dhcp"        target.dir="${target.dir}/xact" />
         <buildModule target="build"     dir="http"        target.dir="${target.dir}/xact" />
         <buildModule target="build"     dir="ldap"        target.dir="${target.dir}/xact" />
         <buildModule target="build"     dir="mail"        target.dir="${target.dir}/xact" />
@@ -32,6 +33,7 @@
         <buildModule target="build"     dir="soap"        target.dir="${target.dir}/xact" />
         <buildModule target="build"     dir="snmp"        target.dir="${target.dir}/xact" />
         <buildModule target="build-all" dir="ssh"         target.dir="${target.dir}/xact" />
+        <buildModule target="build"     dir="velocity"    target.dir="${target.dir}/xact" />
     </target>
     
 </project>

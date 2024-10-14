@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -146,6 +146,7 @@ public class DOM extends DomOrExceptionGenerationBase {
   private Set<GenerationBase> additionalDependenciesSet = new HashSet<GenerationBase>();
   
   private Set<String> additionalLibNames = new TreeSet<String>();
+  private List<String> pythonLibNames = new ArrayList<String>();
   private Set<String> sharedLibs = new HashSet<String>();
   
   private PersistenceInformation persistenceInformation;
@@ -420,7 +421,7 @@ public class DOM extends DomOrExceptionGenerationBase {
 
 
   @Deprecated
-  private static final XynaPropertyBuilds<StringSerializableList<String>> storableInterfaces =
+  public static final XynaPropertyBuilds<StringSerializableList<String>> storableInterfaces =
       new XynaPropertyBuilds<StringSerializableList<String>>("xprc.xfractwfe.generation.storable.xmom.interfaces",
                                                              new StringSerializableList<String>(String.class, new ArrayList<String>(),
                                                                                                 new SeparatorSerializeAlgorithm(",")))
@@ -539,6 +540,15 @@ public class DOM extends DomOrExceptionGenerationBase {
         }
       }
     }
+    List<Element> pythonLibElements = XMLUtils.getChildElementsByName(rootElement, EL.PYTHONLIBRARIES);
+    if (pythonLibElements != null) {
+      for (Element element : pythonLibElements) {
+        String content = XMLUtils.getTextContent(element);
+        if (!GenerationBase.isEmpty(content)) {
+          pythonLibNames.add(content.trim());
+        }
+      }
+    }
 
     // parse operations
     List<Element> ss = XMLUtils.getChildElementsByName(rootElement, GenerationBase.EL.SERVICE);
@@ -554,7 +564,13 @@ public class DOM extends DomOrExceptionGenerationBase {
           if (wfCall) {
             o = new WorkflowCallInService(this);
           } else {
-            o = new JavaOperation(this);
+            Element sourceCode = XMLUtils.getChildElementByName(op, EL.SOURCECODE);
+            if (sourceCode != null
+                && XMLUtils.getChildElementByName(sourceCode, EL.CODESNIPPET).getAttribute(ATT.SNIPPETTYPE).equals(ATT.PYTHON)) {
+              o = new PythonOperation(this);
+            } else {
+              o = new JavaOperation(this);
+            }
           }
           o.parseXML(op);
           operationsForService.add(o);
@@ -597,6 +613,13 @@ public class DOM extends DomOrExceptionGenerationBase {
       } else {
         isServiceGroupOnly = null;
       }
+      
+      List<String> knownMetaTags = Arrays.asList(GenerationBase.EL.DOCUMENTATION, 
+                                                 GenerationBase.EL.DATAMODEL,
+                                                 GenerationBase.EL.PATHMAP,
+                                                 GenerationBase.EL.IS_SERVICE_GROUP_ONLY,
+                                                 GenerationBase.EL.PERSISTENCE);
+       unknownMetaTagsComponent.parseUnknownMetaTags(rootElement, knownMetaTags);
     }
 
     //pktype ist ggf aus supertype und wird erst später befüllt (validate)
@@ -620,7 +643,7 @@ public class DOM extends DomOrExceptionGenerationBase {
     if (index != additionalLibNames.size()) {
       throw new RuntimeException("Only inserting a new lib at the end of the list is supported, right now.");
     }
-
+    pythonLibNames.remove(libName);
     additionalLibNames.add(libName);
   }
 
@@ -636,6 +659,25 @@ public class DOM extends DomOrExceptionGenerationBase {
     }
 
     return null;
+  }
+  
+  public List<String> getPythonLibraries() {
+    return pythonLibNames;
+  }
+
+  public void addPythonLibrary(int index, String libName) {
+    additionalLibNames.remove(libName);
+    int currentIndex = pythonLibNames.indexOf(libName);
+    if (currentIndex == -1) {
+      pythonLibNames.add(index, libName);
+    }
+  }
+
+  public String deletePythonLibrary(int index) {
+    if (index < 0 || index >= pythonLibNames.size()) {
+      return null;
+    }
+    return pythonLibNames.remove(index);
   }
 
   public void addSharedLib(String libName) {
@@ -750,15 +792,15 @@ public class DOM extends DomOrExceptionGenerationBase {
     getDependentJarsWithoutRecursion(result, withSharedLibs, tryFromSaved);
     for (List<Operation> operations : serviceNameToOperationMap.values()) {
       for (Operation op : operations) {
-        if (op instanceof JavaOperation) {
-          for (AVariable v : ((JavaOperation) op).getInputVars()) {
+        if (op instanceof CodeOperation) {
+          for (AVariable v : ((CodeOperation) op).getInputVars()) {
             if (!(v.getDomOrExceptionObject() instanceof DOM))
               continue;
             result.addAll(((DOM) v.getDomOrExceptionObject()).getAdditionalLibsWithRecursion(withSharedLibs,
                                                                                              workedOperations,
                                                                                              tryFromSaved));
           }
-          for (AVariable v : ((JavaOperation) op).getOutputVars()) {
+          for (AVariable v : ((CodeOperation) op).getOutputVars()) {
             if (!(v.getDomOrExceptionObject() instanceof DOM))
               continue;
             result.addAll(((DOM) v.getDomOrExceptionObject()).getAdditionalLibsWithRecursion(withSharedLibs,
@@ -1949,10 +1991,10 @@ public class DOM extends DomOrExceptionGenerationBase {
     vars.addAll(memberVars);
     for (List<Operation> operations : serviceNameToOperationMap.values()) {
       for (Operation op : operations) {
-        if (op instanceof JavaOperation) {
-          JavaOperation jop = (JavaOperation) op;
-          vars.addAll(jop.getInputVars());
-          vars.addAll(jop.getOutputVars());
+        if (op instanceof CodeOperation) {
+          CodeOperation codeOperation = (CodeOperation) op;
+          vars.addAll(codeOperation.getInputVars());
+          vars.addAll(codeOperation.getOutputVars());
         }
       }
     }

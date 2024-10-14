@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,10 +83,7 @@ public class WorkflowsPathAction extends RuntimeContextDependendAction {
     JsonFilterActionInstance jfai = new JsonFilterActionInstance();
     try {
       String path = url.getPathElement(2);
-      SortType sortType = SortType.typeAware;
-      if(tc.getParas() != null && tc.getParas().contains("sort")) {
-        sortType = SortType.valueOf(tc.getParas().getProperty("sort"));
-      }
+      SortType sortType = SortType.valueOf(tc.getFirstValueOfParameterOrDefault("sort", SortType.typeAware.name()));
       
       XmomObjectsPath xmomObjectsPath = new XmomObjectsPath(xmomGui.getXmomLoader(), "workflows");
       xmomObjectsPath.filterTypes(ObjectIdentifierJson.Type.workflow);

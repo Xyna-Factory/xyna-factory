@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
 
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.update.Updater;
-import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
+import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.ATT;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.EL;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
@@ -54,6 +54,7 @@ public class Datatype extends HierarchyTypeWithVariables {
   protected List<Operation> operations;
   protected String[] sharedLibs;
   protected Set<String> additionalLibNames;
+  protected List<String> pythonLibNames;
 
   private Datatype() {
   }
@@ -86,6 +87,7 @@ public class Datatype extends HierarchyTypeWithVariables {
     this.meta = datatype.meta;
     this.sharedLibs = datatype.sharedLibs;
     this.additionalLibNames = datatype.additionalLibNames;
+    this.pythonLibNames = datatype.pythonLibNames;
     this.variables = clone(datatype.variables);
     this.operations = clone(datatype.operations);
   }
@@ -103,7 +105,11 @@ public class Datatype extends HierarchyTypeWithVariables {
   
   public String toXML() {
     XmlBuilder xml = new XmlBuilder();
-    xml.append(GenerationBase.COPYRIGHT_HEADER);
+    if(!XynaProperty.XML_HEADER_COMMENT.get().isBlank()) {
+      xml.append("<!--");
+      xml.append(XynaProperty.XML_HEADER_COMMENT.get());
+      xml.append("-->");
+    }
     xml.startElementWithAttributes(EL.DATATYPE);
     xml.addAttribute(ATT.XMLNS, NAMESPACE );
     xml.addAttribute(ATT.MDM_VERSION, XMOM_VERSION);
@@ -130,6 +136,13 @@ public class Datatype extends HierarchyTypeWithVariables {
       if (additionalLibNames != null) {
         for (String libName : additionalLibNames) {
           xml.element(EL.LIBRARIES, libName);
+        }
+      }
+      
+      // python libraries
+      if (pythonLibNames != null) {
+        for (String libName : pythonLibNames) {
+          xml.element(EL.PYTHONLIBRARIES, libName);
         }
       }
 
@@ -227,6 +240,11 @@ public class Datatype extends HierarchyTypeWithVariables {
 
     public DatatypeBuilder additionalLibNames(Set<String> additionalLibNames) {
       datatype.additionalLibNames = additionalLibNames;
+      return this;
+    }
+    
+    public DatatypeBuilder pythonLibNames(List<String> pythonLibNames) {
+      datatype.pythonLibNames = pythonLibNames;
       return this;
     }
 

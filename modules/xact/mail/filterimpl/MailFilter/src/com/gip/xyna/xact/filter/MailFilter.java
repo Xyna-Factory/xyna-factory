@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -110,9 +110,9 @@ public class MailFilter extends ConnectionFilter<MailTriggerConnection> {
       delete(tc);
     }
     if( reply != null ) {
-      //optionale Reply kann leer sein, da sie nicht als null zurÃ¼ckgegeben werden kann
+      //optionale Reply kann leer sein, da sie nicht als null zurückgegeben werden kann
       if( reply.getBody() != null || reply.getAttachments() != null ) {
-        //wichtige Felder sind gefÃ¼llt, daher Antwort erzeugen
+        //wichtige Felder sind gefüllt, daher Antwort erzeugen
         tc.sendReply(MailConverter.convertFromXmom(reply));
       }
     }

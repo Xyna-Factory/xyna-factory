@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
@@ -96,12 +97,13 @@ import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabaseIndexCollision;
 import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabaseIndexCollision.IndexModification;
 import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabasePersistenceLayerConnectionWithAlterTableSupport;
 import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabasePersistenceLayerWithAlterTableSupportHelper;
+import com.gip.xyna.xnwh.persistence.xmom.PersistenceExpressionVisitors;
 import com.gip.xyna.xnwh.pools.ConnectionPoolManagement;
 import com.gip.xyna.xnwh.pools.MySQLPoolType;
 import com.gip.xyna.xnwh.pools.PoolDefinition;
 import com.gip.xyna.xnwh.pools.TypedConnectionPoolParameter;
 import com.gip.xyna.xnwh.selection.parsing.SelectionParser;
-import com.gip.xyna.xnwh.selection.parsing.SelectionParser.EscapeParams;
+import com.gip.xyna.xnwh.selection.parsing.SelectionParser.EscapeParameters;
 import com.gip.xyna.xnwh.utils.SQLErrorHandling;
 import com.gip.xyna.xnwh.utils.SQLErrorHandlingLogger;
 import com.gip.xyna.xnwh.utils.SQLErrorHandlingLogger.SQLErrorHandlingLoggerBuilder;
@@ -333,9 +335,12 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
     } else {
       String poolname = handleParams(args);
       regularPoolDefinition = poolMgmt.getConnectionPoolDefinition(poolname);
-      if (!regularPoolDefinition.getType().equals(MySQLPoolType.POOLTYPE_IDENTIFIER)) {
+      if (regularPoolDefinition == null) {
+        throw new XNWH_GeneralPersistenceLayerException("Pool '" + poolname + "' for pliID " + String.valueOf(this.pliID) + " does not exist!");
+      }
+      if (!MySQLPoolType.POOLTYPE_IDENTIFIER.equals(regularPoolDefinition.getType())) {
         // only warn as it might be a custom poolType made for MySQL-PL usage
-        logger.warn("PoolType does not match the expected identifier!");
+        logger.warn("PoolType '" + regularPoolDefinition.getType() + "' for pool '" + poolname + "' does not match the expected identifier '" + MySQLPoolType.POOLTYPE_IDENTIFIER + "'!");
       }
       TypedConnectionPoolParameter tcpp = regularPoolDefinition.toCreationParameter();
       tcpp.size(0).name(tcpp.getName() + "_dedicated");
@@ -343,13 +348,13 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
         poolMgmt.startAndAddConnectionPool(tcpp);
       } catch (NoConnectionAvailableException e) {
         // mimics behavior of @deprecated getInstance call
-        throw new RuntimeException(e);
+        throw new RuntimeException("No connection for pool '" + poolname + "' available.", e);
       }
       dedicatedPoolDefinition = poolMgmt.getConnectionPoolDefinition(tcpp.getName());
     }
     
     if (regularPoolDefinition == null) {
-      throw new XNWH_GeneralPersistenceLayerException("Pool does not exist!");
+      throw new XNWH_GeneralPersistenceLayerException("Pool for pliID " + String.valueOf(this.pliID) + " does not exist!");
     }
     
     
@@ -360,7 +365,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
     // TODO echtes Pattern für den connect string benutzen
     int i = url.lastIndexOf("/");
     if (i < 0 || i + 1 == url.length()) {
-      throw new XNWH_GeneralPersistenceLayerException("Connect string must contain a schema name.");
+      throw new XNWH_GeneralPersistenceLayerException("Connect string '" + url + "' for pliID " + String.valueOf(this.pliID) + " must contain a schema name.");
     }
     schemaName = url.substring(i + 1);
     if (schemaName.contains("?")) {
@@ -949,27 +954,15 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
 
 
     private <T extends Storable> boolean isView(String tableName) {
-      Boolean queryResult = sqlUtils.queryOneRow("show table status where name = ?", new com.gip.xyna.utils.db.Parameter(tableName),
-                                  new ResultSetReader<Boolean>() {
+      Boolean queryResult = sqlUtils.queryOneRow("SELECT TABLE_TYPE FROM information_schema.TABLES WHERE TABLE_NAME = ? AND TABLE_SCHEMA = ?",
+                                                 new com.gip.xyna.utils.db.Parameter(tableName, schemaName), new ResultSetReader<Boolean>() {
 
-                                    public Boolean read(ResultSet rs) throws SQLException {
-                                      String comment = rs.getString("comment");
-                                      if (rs.wasNull()) {
-                                        return false;
-                                      }
-                                      /*
-                                       * Auszug aus http://dev.mysql.com/doc/refman/5.0/en/show-table-status.html:
-                                        "For views, all the fields displayed by SHOW TABLE STATUS are NULL except that
-                                        Name indicates the view name and Comment says view. 
-                                       */
-                                      return comment != null && comment.equalsIgnoreCase("view");
-                                    }
-                                  });
-      if (queryResult == null) {
-        return false;
-      } else {
-        return queryResult;
-      }
+                                                   public Boolean read(ResultSet rs) throws SQLException {
+                                                     String tableType = rs.getString("TABLE_TYPE");
+                                                     return tableType != null && tableType.equalsIgnoreCase("VIEW");
+                                                   }
+                                                 });
+      return Boolean.TRUE.equals(queryResult);
     }
 
 
@@ -2101,6 +2094,10 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
       }
 
       String sqlQuery = query.getQuery().getSqlString();
+
+      //Umwandlung zu rlike, da MariaDB regexp_like() nicht unterstützt
+      sqlQuery = modifyFunction(sqlQuery, PersistenceExpressionVisitors.QueryFunctionStore.REGEXP_LIKE_SQL_FUNCTION, "%Column% RLIKE (%Params%)" );
+
       //TODO cachen
       if (maxRows == 1 && transactionProperties != null
           && transactionProperties.contains(TransactionProperty.selectRandomElement())) {
@@ -2136,6 +2133,24 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
         throw new XNWH_GeneralPersistenceLayerException("query \"" + sqlQuery + "\" [" + paras
             + "] could not be executed.", e);
       }
+    }
+
+
+    /**
+     * Passt die Schreibweise einer SQL-Funktion (z.B. regexp_like) an MySQL an.
+     */
+    private String modifyFunction(String sqlQuery, String sqlFunction, String replacement) {
+      if (sqlQuery.contains(sqlFunction)) {
+        String preExpr = "([\\s\\(]+)"; //Leerzeichen oder Klammer stehen am Anfang
+        String params = "([^,]*),([^)]*)"; //Parameter der SQL-Funktion
+        Pattern pattern = Pattern.compile(preExpr +"\\Q" + sqlFunction + "\\E" +"\\s*\\(" + params + "\\)",Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(sqlQuery);
+          if (matcher.find()) {
+            replacement = replacement.replace("%Column%", "$2").replace("%Params%", "$3");
+            sqlQuery = matcher.replaceAll("$1" + replacement); //eigentliche Ersetzung
+        }
+      }
+      return sqlQuery;
     }
 
 
@@ -2238,8 +2253,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
 
 
   public String getInformation() {
-    //user pw jdbc:mysql://x.x.x.x/schema), poolsize, timeout(ms)
-    return toString() + " (" + username + "@" + url + " timeout=" + timeout + ")";
+    return String.format("MySQL Persistence (%s@%s timeout=%s)", username, url, timeout);
   }
 
 
@@ -2450,7 +2464,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
 
   }
   
-  private static class EscapeForMySQL implements EscapeParams {
+  private static class EscapeForMySQL implements EscapeParameters {
 
     public String escapeForLike(String toEscape) {
       if (toEscape == null) {
@@ -2462,8 +2476,14 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
       return toEscape;
     }
 
-    public String getWildcard() {
+    @Override
+    public String getMultiCharacterWildcard() {
       return "%";
+    }
+
+    @Override
+    public String getSingleCharacterWildcard() {
+      return "_";
     }
     
   }

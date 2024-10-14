@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -133,6 +133,17 @@ public static class Rethrower  {
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return new ExceptionHolder(exception);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Exception" Name="getException">
+      <Input>
+        <Data ID="1" Label="Exception Holder" ReferenceName="ExceptionHolder" ReferencePath="core.exception" VariableName="exceptionHolder"/>
+      </Input>
+      <Output>
+        <Exception ID="2" Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return exceptionHolder.getException();</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

@@ -1,6 +1,6 @@
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Copyright 2022 GIP SmartMercial GmbH, Germany
+# Copyright 2022 Xyna GmbH, Germany
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -70,6 +70,7 @@ PRODUCT_PROPERTIES="\
                     default.monitoringlevel\
                     installation.folder\
                     java.home\
+                    jep.module.path\
                     jvm.maxheap.size\
                     jvm.minheap.size\
                     jvm.option.additional\
@@ -84,6 +85,7 @@ PRODUCT_PROPERTIES="\
                     os.locale\
                     pid.folder\
                     project.prefix.uppercase\
+                    python.venv.path\
                     scheduler.stop.timeout.offset\
                     securestorage.seed\
                     sipadapter.high.port\
@@ -160,6 +162,7 @@ case ${PROPERTY} in
   geronimo)                                     echo "false";;
   installation.folder)                          echo "/opt/xyna/xyna_${PRODUCT_INSTANCE_STR}";;
   java.home)                                    echo "${JAVA_HOME}";;
+  jep.module.path)                              echo "$(f_get_jep_module_path)";;
   jvm.maxheap.size)                             echo "${TOMCAT_MEMORY}m";;
   jvm.minheap.size)                             echo "${TOMCAT_MEMORY}m";;
   jvm.option.additional)                        echo "-Dxnwh.securestorage.seedfile=${XYNA_ENVIRONMENT_DIR}/black_edition_${PRODUCT_INSTANCE_STR}.properties";;
@@ -176,6 +179,7 @@ case ${PROPERTY} in
   os.locale)                                    echo "";;
   pid.folder)                                   echo "$(f_get_property_installation_folder)/server";;
   project.prefix.uppercase)                     echo "MYPROJECT";;
+  python.venv.path)                             echo "$(f_get_venv_path)";;
   scheduler.stop.timeout.offset)                echo "20000";;
   securestorage.seed)                           echo "change me to some unique string";;
   sipadapter)                                   echo "false";;
@@ -262,6 +266,31 @@ f_read_product_properties_fast() {
   done < "${PROP_FILE}"
 }
 
+# gets the path to the jep python module, if it is installed
+f_get_jep_module_path() {
+    jepPath=($(pip3 show jep 2>&1 | grep Location))
+    if [ $? -eq 0 ] ; then
+      jepPath="${jepPath[1]}/jep"
+      jepPath=($(find "${jepPath}" -name "libjep.*"))
+      echo "${jepPath}"
+    else
+      echo ""
+    fi
+}
+
+
+f_get_venv_path() {
+    jepPath=($(pip3 show jep 2>&1 | grep Location))
+    if [ $? -eq 0 ] ; then
+      jepPath="${jepPath[1]}/jep"
+      jepPath=($(find $jepPath -name "libjep.*"))
+      venv_path=$(dirname $(dirname $(dirname $(dirname $(dirname "${jepPath}")))))
+      echo "${venv_path}"
+    else
+      echo ""
+    fi
+}
+
 f_map_current_property() {
   local i=${1}
   case ${i} in
@@ -270,6 +299,7 @@ f_map_current_property() {
     default.monitoringlevel)                          DEFAULT_MONITORINGLEVEL="${CURRENT_PROPERTY}";;
     installation.folder)      f_check_is_path "${i}";          INSTALL_PREFIX="${CURRENT_PROPERTY}";;
     java.home)                                        JAVA_HOME="${CURRENT_PROPERTY}";;
+    jep.module.path)                                  JEP_MODULE_PATH="${CURRENT_PROPERTY}";;
     jvm.maxheap.size)                                 JVM_OPTIONS_MAXHEAP_SIZE="${CURRENT_PROPERTY}";;
     jvm.minheap.size)                                 JVM_OPTIONS_MINHEAP_SIZE="${CURRENT_PROPERTY}";;
     jvm.option.additional)                            ADDITIONAL_OPTIONS="${CURRENT_PROPERTY}";;
@@ -285,6 +315,7 @@ f_map_current_property() {
     os.locale)                                        OS_LOCALE="${CURRENT_PROPERTY}";;
     pid.folder)                                       PID_FOLDER="${CURRENT_PROPERTY}";;
     project.prefix.uppercase)                         PROJECT_PREFIX_UPPERCASE="${CURRENT_PROPERTY}";;
+    python.venv.path)                                 PYTHON_VENV_PATH="${CURRENT_PROPERTY}";;
     scheduler.stop.timeout.offset)                    SCHEDULER_STOP_TIMEOUT_OFFSET="${CURRENT_PROPERTY}";;
     svn.hookmanager.port)                             SVN_HOOKMANAGER_PORT="${CURRENT_PROPERTY}";;
     svn.server)                                       SVN_SERVER="${CURRENT_PROPERTY}";;

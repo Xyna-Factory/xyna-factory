@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,19 +17,18 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <!--                                               ################# Version auch in blackedition_lib.sh updaten ########### -->
-<Application applicationName="GuiHttp" comment="" factoryVersion="" versionName="1.1.364a" xmlVersion="1.1">
+<Application applicationName="GuiHttp" comment="" factoryVersion="" versionName="1.2.11" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">GuiHTTPFilter</Description>
     <Description Lang="EN">GuiHTTPFilter</Description>
-    <BuildDate>2015.07.30 10:20:00</BuildDate>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Http</ApplicationName>
-        <VersionName>1.2.5</VersionName>
+        <VersionName>1.2.10</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>ZetaFramework</ApplicationName>
-        <VersionName>0.6.47</VersionName>
+        <VersionName>0.6.54</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>XynaPropertyMgmt</ApplicationName>
@@ -61,7 +60,16 @@
     </SharedLib>
   </SharedLibs>
   <XMOMEntries>
-  
+
+   <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.EncryptionData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+   <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.DeEncoder</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+
   	<!-- ProcessModeller -->
   	<XMOMEntry implicitDependency="false">
       <FqName>xmcp.processmodeller.datatypes.datatypemodeller.DataMemberVariable</FqName>
@@ -444,11 +452,11 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
   	<XMOMEntry implicitDependency="false">
-      <FqName>xmcp.processmodeller.datatypes.servicegroupmodeller.JavaLibrariesArea</FqName>
+      <FqName>xmcp.processmodeller.datatypes.servicegroupmodeller.LibrariesArea</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
   	<XMOMEntry implicitDependency="false">
-      <FqName>xmcp.processmodeller.datatypes.servicegroupmodeller.JavaLibrary</FqName>
+      <FqName>xmcp.processmodeller.datatypes.servicegroupmodeller.Library</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
   	<XMOMEntry implicitDependency="false">
@@ -543,11 +551,35 @@
       <FqName>xmcp.processmodeller.datatypes.Warning</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.MetaTag</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.MetaTagArea</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.request.MetaTagRequest</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
     <!-- // ProcessModeller -->
 
     <!-- // MultiUser -->
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yggdrasil.Event</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yggdrasil.ProjectEvent</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yggdrasil.Message</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yggdrasil.MessageBusUtils</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -592,6 +624,14 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yggdrasil.GetEventsResponse</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yggdrasil.SubscribeProjectPollEventsResponse</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yggdrasil.UnsubscribeProjectPollEventsResponse</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -1064,8 +1104,132 @@
     </XMOMEntry>
 
     <!-- // RtcManager -->
+    <!-- TriggerAndFilterManager -->
+
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.FilterAndTriggerManagerServices</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.DeployFilterInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.DeployFilterRequest</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.DeployTriggerInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.DeployTriggerRequest</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.DisableFilterInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.DisableTriggerInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.EnableFilterInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.EnableTriggerInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.Filter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.FilterDetails</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.FilterInstance</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.FilterInstanceDetails</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetFilterDetail</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetFilterDetailRequest</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetFilterInstanceDetail</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetFilterOverview</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetTriggerDetails</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetTriggerInstanceDetail</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetTriggerOverview</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetTriggerRequest</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.Trigger</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.TriggerDetail</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.TriggerInstance</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.TriggerInstanceDetail</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.UndeployFilterInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.UndeployTriggerInstance</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetPossibleRTCForFilterDeployment</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetPossibleRTCForTriggerDeployment</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.filtermanager.GetPossibleTriggerInstanceForFilterDeployment</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
     
-        <!-- TimeControlledOrders -->
+    <!-- // TriggerAndFilterManager -->
+    
+    <!-- TimeControlledOrders -->
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.factorymanager.TimeControlledOrdersServices</FqName>
       <Type>DATATYPE</Type>
@@ -1269,6 +1433,10 @@
   	<!-- OrderTypeServices -->
   	<XMOMEntry implicitDependency="false">
       <FqName>xmcp.factorymanager.OrderTypeServices</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.ordertypes.OrderTypeTableFilter</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
   	<XMOMEntry implicitDependency="false">
@@ -1487,6 +1655,10 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.factorymanager.deploymentitems.DeployDeploymentItem</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.factorymanager.deploymentitems.ForceDeployDeploymentItem</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -2392,12 +2564,82 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <!-- // xact.startorder -->
-    
+	
+	<!-- // modelled expression -->
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.response.GetModelledExpressionsResponse</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.ModelledExpression</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.Expression</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.VariableAccessPart</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.Expression1Arg</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.Expression2Args</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.ExpressionVariable</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.FunctionExpression</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.LiteralExpression</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.NotExpression</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.SingleVarExpression</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.VariableInstanceFunctionIncovation</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.processmodeller.datatypes.expression.CastExpression</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <!-- // modelled expression -->
+
+    <!-- // plugin -->
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yggdrasil.plugin.Context</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yggdrasil.plugin.GuiDefiningWorkflow</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yggdrasil.plugin.Plugin</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <!-- // plugin -->
+
   </XMOMEntries>
   <Filters>
     <Filter implicitDependency="true">
       <Name>GUIHTTP</Name>
-      <JarFiles>GUIHTTPFilter/commons-fileupload-1.4.jar:GUIHTTPFilter/commons-io-2.7.jar:GUIHTTPFilter/GUIHTTPFilter.jar:</JarFiles>
+      <JarFiles>GUIHTTPFilter/commons-fileupload-1.5.jar:GUIHTTPFilter/commons-io-2.17.0.jar:GUIHTTPFilter/GUIHTTPFilter.jar:</JarFiles>
       <FqFilterClassname>com.gip.xyna.xact.trigger.GUIHTTPFilter</FqFilterClassname>
       <TriggerName>Http</TriggerName>
       <SharedLibs/>

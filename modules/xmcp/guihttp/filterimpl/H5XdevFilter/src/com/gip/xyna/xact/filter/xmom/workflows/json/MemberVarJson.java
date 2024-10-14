@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ import com.gip.xyna.xact.filter.session.gb.GBSubObject;
 import com.gip.xyna.xact.filter.util.AVariableIdentification;
 import com.gip.xyna.xact.filter.xmom.XMOMGuiJson;
 import com.gip.xyna.xact.filter.xmom.workflows.enums.Tags;
+import com.gip.xyna.xprc.xfractwfe.generation.AVariable.PrimitiveType;
+import com.gip.xyna.xprc.xfractwfe.generation.AVariable.UnsupportedJavaTypeException;
 
 
 
@@ -33,6 +35,8 @@ public class MemberVarJson extends XMOMGuiJson {
   private String label;
   private boolean isList;
   private String fqn;
+  private PrimitiveType primitiveType;
+  private String documentation;
 
 
   public MemberVarJson() {}
@@ -42,6 +46,8 @@ public class MemberVarJson extends XMOMGuiJson {
     this.label = object.getVariable().getVariable().getIdentifiedVariable().getLabel();
     this.isList = var.getIdentifiedVariable().isList();
     this.fqn = var.getIdentifiedVariable().getOriginalPath() + "." + var.getIdentifiedVariable().getOriginalName();
+    this.primitiveType = var.getIdentifiedVariable().getJavaTypeEnum();
+    this.documentation = var.getIdentifiedVariable().getDocumentation();
   }
 
 
@@ -57,6 +63,13 @@ public class MemberVarJson extends XMOMGuiJson {
     return fqn;
   }
 
+  public PrimitiveType getPrimitiveType() {
+    return primitiveType;
+  }
+
+  public String getDocumentation() {
+    return documentation;
+  }
 
   public static class MemberVarJsonVisitor extends EmptyJsonVisitor<MemberVarJson> {
 
@@ -96,6 +109,20 @@ public class MemberVarJson extends XMOMGuiJson {
 
       if (label.equals(Tags.FQN)) {
         vj.fqn = value;
+        return;
+      }
+
+      if (label.equals(Tags.DATA_TYPE_PRIMITIVE_TYPE)) {
+        try {
+          vj.primitiveType = PrimitiveType.create(value);
+        } catch (UnsupportedJavaTypeException e) {
+          throw new UnexpectedJSONContentException(label, e);
+        }
+        return;
+      }
+
+      if (label.equals(Tags.DATA_TYPE_DOCUMENTATION_AREA)) {
+        vj.documentation = value;
         return;
       }
 

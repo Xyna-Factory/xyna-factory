@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@
     <import file="${root.dir}/installation/build/buildSharedLib.xml" />
 
     <target name="prepareLibs" description="Prepare libs">
-        <copy file="${basedir}/lib/xyna/ojdbc5-11.2.0.4.jar" todir="${unfree.lib.dir}"/> 
+        <copy file="${basedir}/lib/xyna/ojdbc*.jar" todir="${unfree.lib.dir}"/> 
     </target>
 
 </project>

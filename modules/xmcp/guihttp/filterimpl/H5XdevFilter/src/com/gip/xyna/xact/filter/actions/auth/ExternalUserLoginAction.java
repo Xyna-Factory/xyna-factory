@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import com.gip.xyna.xact.filter.HTMLBuilder.HTMLPart;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
 import com.gip.xyna.xact.filter.URLPath;
 import com.gip.xyna.xact.filter.actions.auth.utils.AuthUtils;
+import com.gip.xyna.xact.filter.session.XMOMGui;
 import com.gip.xyna.xact.filter.session.XMOMGuiReply.Status;
 import com.gip.xyna.xact.filter.util.Utils;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
@@ -73,6 +74,12 @@ public class ExternalUserLoginAction implements FilterAction {
     noUserInfoException.setStackTrace(new StackTraceElement[0]);
     notAuthorizedException.setStackTrace(new StackTraceElement[0]);
     internalServerError.setStackTrace(new StackTraceElement[0]);
+  }
+  
+  private XMOMGui xmomgui;
+  
+  public ExternalUserLoginAction(XMOMGui xmomgui) {
+    this.xmomgui = xmomgui;
   }
 
 
@@ -146,7 +153,7 @@ public class ExternalUserLoginAction implements FilterAction {
       }
     }
 
-    return LoginAction.createLoginResponse(jfai, tc, creds, request.getPath());
+    return LoginAction.createLoginResponse(jfai, tc, creds, request.getPath(), xmomgui);
   }
 
 

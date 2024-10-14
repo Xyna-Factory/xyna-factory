@@ -1,6 +1,6 @@
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Copyright 2022 GIP SmartMercial GmbH, Germany
+# Copyright 2022 Xyna GmbH, Germany
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -333,7 +333,7 @@ warn_for_factory_restart () {
     attention_msg "Xyna Factory will be restarted if you continue."
     ${VOLATILE_CAT} << A_HERE_DOCUMENT
 
-Hit [ENTER] to continue or [STRG-C] to stop:
+Hit [ENTER] to continue or [Ctrl-C] to stop:
 
 A_HERE_DOCUMENT
     read
@@ -493,7 +493,13 @@ j_start_xynafactory () {
 
   local PID_FOLDER_OPTION="-Dpid.folder=$PID_FOLDER"
 
-  local JAVA_OPTIONS="-DBLACK_SERVER_HOME=${PWD} -Xms${JVM_OPTIONS_MINHEAP_SIZE} -Xmx${JVM_OPTIONS_MAXHEAP_SIZE} ${LOG4J_OPTIONS} ${EXCEPTION_OPTIONS} ${GC_OPTIONS} ${PROFILING_OPTIONS} ${DEBUG_OPTIONS} ${RMI_OPTIONS} ${XML_BACKUP_OPTIONS} $PID_FOLDER_OPTION ${ADDITIONAL_OPTIONS}";
+  local JEP_OPTION=$([ -n "$JEP_MODULE_PATH" ] && echo "-Djep.module.path=$JEP_MODULE_PATH" || echo "")
+  
+  local JAVA_OPTIONS="-DBLACK_SERVER_HOME=${PWD} -Xms${JVM_OPTIONS_MINHEAP_SIZE} -Xmx${JVM_OPTIONS_MAXHEAP_SIZE} ${LOG4J_OPTIONS} ${EXCEPTION_OPTIONS} ${GC_OPTIONS} ${PROFILING_OPTIONS} ${DEBUG_OPTIONS} ${RMI_OPTIONS} ${XML_BACKUP_OPTIONS} $PID_FOLDER_OPTION $JEP_OPTION ${ADDITIONAL_OPTIONS}";
+
+  if [ -n "${PYTHON_VENV_PATH}" ]; then
+    source "${PYTHON_VENV_PATH}/bin/activate"
+  fi
 
   f_start_factory_internal ${JAVA_OPTIONS} com.gip.xyna.xmcp.xfcli.XynaFactoryCommandLineInterface "$@" >/dev/null 2>&1 &
 

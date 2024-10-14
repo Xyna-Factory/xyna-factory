@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Get Project Details" TypeName="GetProjectDetails" TypePath="xdev.xtestfactory.infrastructure.gui" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>highDetailsMode,hideDetailAreas</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Get Project Details" Name="GetProjectDetails">
+    <Input>
+      <Data ID="8" Label="Test Project Selector" ReferenceName="TestProjectSelector" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="testProjectSelector">
+        <Target RefID="7"/>
+      </Data>
+    </Input>
+    <Output>
+      <Data ID="2" Label="Project Details" ReferenceName="ProjectDetails" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="projectDetails">
+        <Source RefID="3"/>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="Test Project not found" ReferenceName="TestProjectNotFound" ReferencePath="xdev.xtestfactory.infrastructure.exceptions" VariableName="testProjectNotFound"/>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <ServiceReference ID="6" Label="Get Test Project" ReferenceName="GetTestProject" ReferencePath="xdev.xtestfactory.infrastructure.gui">
+      <Source RefID="7"/>
+      <Target RefID="7"/>
+    </ServiceReference>
+    <Function ID="7" Label="Get Test Project">
+      <Source RefID="6"/>
+      <Source RefID="8"/>
+      <Target RefID="6"/>
+      <Target RefID="9"/>
+      <Invoke Operation="GetTestProject" ServiceID="6">
+        <Source RefID="8"/>
+      </Invoke>
+      <Receive ServiceID="6">
+        <Target RefID="9"/>
+      </Receive>
+    </Function>
+    <Data ID="9" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject">
+      <Source RefID="7"/>
+      <Target RefID="16"/>
+    </Data>
+    <Mappings ID="16" Label="Extraxt Project Details">
+      <Source RefID="9"/>
+      <Target RefID="14"/>
+      <Meta>
+        <FixedDetailOptions>FillMode</FixedDetailOptions>
+      </Meta>
+      <Input>
+        <Data ID="15" Label="Test Project" ReferenceName="TestProject" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testProject15"/>
+        <Source RefID="9"/>
+      </Input>
+      <Output>
+        <Data ID="17" Label="Project Details" ReferenceName="ProjectDetails" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="projectDetails17"/>
+        <Target RefID="14"/>
+      </Output>
+      <Mapping>%1%.description=%0%.description</Mapping>
+      <Mapping>%1%.name=%0%.name</Mapping>
+      <Mapping>%1%.version=%0%.version</Mapping>
+    </Mappings>
+    <Data ID="14" Label="Project Details" ReferenceName="ProjectDetails" ReferencePath="xdev.xtestfactory.infrastructure.gui.datatypes" VariableName="projectDetails14">
+      <Source RefID="16"/>
+      <Target RefID="3"/>
+    </Data>
+    <Assign ID="3">
+      <Source RefID="14"/>
+      <Target RefID="2"/>
+      <Copy>
+        <Source RefID="14"/>
+        <Target RefID="2"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

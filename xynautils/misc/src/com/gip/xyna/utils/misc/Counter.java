@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ public class Counter<T> {
    }
 
    /**
-    * @return Kopie des Speichers: Hashmap<gez√§hltes Object,Anzahl>
+    * @return Kopie des Speichers: Hashmap<gez‰hltes Object,Anzahl>
     */
    public HashMap<T, Integer> getCopyOfMap() {
       HashMap<T, Integer> copy = new HashMap<T, Integer>(map.size());
@@ -79,7 +79,7 @@ public class Counter<T> {
    }
 
    /**
-    * @return Darstellung aller gez√§hlten Objekte
+    * @return Darstellung aller gez‰hlten Objekte
     */
    public String toString() {
       String str = "";

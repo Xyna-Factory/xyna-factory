@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ public class XmomListField extends AbstractXmomField {
   }
   
   /**
-   * keine next()-Methode: get()-Methode fÃ¼hrt einmal nach dem 
+   * keine next()-Methode: get()-Methode führt einmal nach dem 
    * hasNext()-Aufruf intern next() auf, ansonsten wird immer das letzte Element ausgegeben.
    *
    */

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,6 +86,9 @@ public class VariableMap {
           identifiedVariables.remove(String.valueOf(i));
           identifiedVariables.put(String.valueOf(i), identifyOperationVariables(objectId, i));
         }
+        break;
+      case step:
+        identifiedVariables.get(objectId.getBaseId()).identify();
         break;
       default:
         break;

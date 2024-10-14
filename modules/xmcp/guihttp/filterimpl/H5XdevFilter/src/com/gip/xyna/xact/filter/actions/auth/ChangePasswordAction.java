@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ public class ChangePasswordAction implements FilterAction {
     JsonFilterActionInstance jfai = new JsonFilterActionInstance();
 
     // Login-Check
-    XynaPlainSessionCredentials xpsc = AuthUtils.readCredentialsFromCookies(tc);
+    XynaPlainSessionCredentials xpsc = AuthUtils.readCredentialsFromRequest(tc);
     try {
       Role role = AuthUtils.authenticate(xpsc);
       if(!XynaFactory.getInstance().getFactoryManagementPortal().hasRight(Rights.USER_MANAGEMENT_EDIT_OWN.name(), role)) {

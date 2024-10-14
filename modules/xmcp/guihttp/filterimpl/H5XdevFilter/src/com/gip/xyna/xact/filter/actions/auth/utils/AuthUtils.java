@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import com.gip.xyna.XynaFactory;
 import com.gip.xyna.update.Updater;
 import com.gip.xyna.utils.misc.JsonBuilder;
 import com.gip.xyna.utils.timing.Duration;
+import com.gip.xyna.xact.filter.H5XdevFilter;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
 import com.gip.xyna.xact.filter.session.XMOMGuiReply.Status;
 import com.gip.xyna.xact.trigger.HTTPStartParameter;
@@ -41,6 +42,8 @@ import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.SocketNotAvailableException;
 import com.gip.xyna.xfmg.exceptions.XFMG_ACCESS_VIOLATION;
 import com.gip.xyna.xfmg.exceptions.XFMG_UnknownSessionIDException;
+import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyDuration;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyEnum;
 import com.gip.xyna.xfmg.xopctrl.managedsessions.SessionDetails;
@@ -56,7 +59,10 @@ import com.gip.xyna.xprc.exceptions.XPRC_VERSION_DETECTION_PROBLEM;
 public class AuthUtils {
 
   public final static String COOKIE_FIELD_SESSION_ID = "sessionId";
+  public final static String COOKIE_FIELD_SESSION_ID_STS = "__Secure-sessionId";
+  
   public final static String COOKIE_FIELD_TOKEN = "token";
+  public final static String HEADER_FILED_CSRF_TOKEN = "xyna-csrf-token";
   public final static String COOKIE_MARKER_SECURE = "Secure";
   public final static String COOKIE_MARKER_HTTP_ONLY = "HttpOnly";
   public final static String COOKIE_MARKER_EXPIRED = "Expires=Thu, 01 Jan 1970 00:00:00 GMT";
@@ -66,12 +72,17 @@ public class AuthUtils {
   private static final Logger logger = CentralFactoryLogging.getLogger(AuthUtils.class);
   private static String factoryVersion;
   private static Object factoryVersionlock = new Object();
+  
+  
+  public static final XynaPropertyBoolean USE_CSRF_TOKEN = new XynaPropertyBoolean("xmcp.guihttp.csrf", true)
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Add csrf token to login response and validate " + HEADER_FILED_CSRF_TOKEN + " header.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Füge csrf token zur login response hinzu und validiere " + HEADER_FILED_CSRF_TOKEN + " heder.");
 
 
   public static void replyModellerLoginRequiredError(HTTPTriggerConnection tc, JsonFilterActionInstance jfai) throws SocketNotAvailableException {
     Role role = null;
     try {
-      role = AuthUtils.authenticate(AuthUtils.readCredentialsFromCookies(tc));
+      role = AuthUtils.authenticate(AuthUtils.readCredentialsFromRequest(tc));
     } catch (RemoteException e) {
       // user not logged in -> unauthorized
       replyLoginRequiredError(tc, jfai);
@@ -101,13 +112,13 @@ public class AuthUtils {
   }
 
 
-  public static String getSessionDetailsJson(String sessionId) throws PersistenceLayerException, XFMG_UnknownSessionIDException {
+  public static String getSessionDetailsJson(String sessionId, String token) throws PersistenceLayerException, XFMG_UnknownSessionIDException {
     SessionDetails details = XynaFactory.getInstance().getFactoryManagementPortal().getSessionDetails(sessionId);
-    return writeSessionDetailsJson(details);
+    return writeSessionDetailsJson(details, token);
   }
 
 
-  private static String writeSessionDetailsJson(SessionDetails details) {
+  private static String writeSessionDetailsJson(SessionDetails details, String token) {
     JsonBuilder jb = new JsonBuilder();
     
     String user = XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement()
@@ -123,7 +134,9 @@ public class AuthUtils {
       jb.addNumberAttribute("lastInteraction", details.getLastInteraction());
       jb.addNumberAttribute("serverTime", System.currentTimeMillis());
       jb.addNumberAttribute("serverId", XynaFactory.getInstance().hashCode());
-      
+      if(USE_CSRF_TOKEN.get()) {
+        jb.addStringAttribute("sessionToken", token);
+      }
       String xynaVersion;
 
       if (factoryVersion != null) {
@@ -169,10 +182,17 @@ public class AuthUtils {
   }
 
 
-  public static XynaPlainSessionCredentials readCredentialsFromCookies(HTTPTriggerConnection tc) {
+  public static XynaPlainSessionCredentials readCredentialsFromRequest(HTTPTriggerConnection tc) {
     Map<String, String> map = readCookies(tc);
-    return new XynaPlainSessionCredentials(map.get(COOKIE_FIELD_SESSION_ID), map.get(COOKIE_FIELD_TOKEN));
+    String sessionId = H5XdevFilter.STRICT_TRANSPORT_SECURITY.get() ? COOKIE_FIELD_SESSION_ID_STS : COOKIE_FIELD_SESSION_ID;
+    if (USE_CSRF_TOKEN.get()) {
+      String token = (String) tc.getHeader().get(HEADER_FILED_CSRF_TOKEN);
+      return new XynaPlainSessionCredentials(map.get(sessionId), token);
+    } else {
+      return new XynaPlainSessionCredentials(map.get(sessionId), map.get(COOKIE_FIELD_TOKEN));
+    }
   }
+
 
   public static Role authenticate(XynaPlainSessionCredentials xpsc) throws RemoteException {
     return RMIChannelImpl.authenticate(xpsc);

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -114,6 +114,8 @@ public class Tags {
   
   public static final String FOREACH_INPUT = "input";
   public static final String FOREACH_OUTPUT = "output";
+
+  public static final String META_TAG_AREA = "metaTags";
   
   // signature
   public static final String SIGNATURE_INPUTS = "inputs";
@@ -163,6 +165,11 @@ public class Tags {
   public static final String DATA_TYPE_IMPLEMENTATION = "implementation";
   public static final String DATA_TYPE_REFERENCE = "reference";
   public static final String DATA_TYPE_IS_ABORTABLE = "isAbortable";
+  public static final String DATA_TYPE_DOCUMENTATION = "documentation";
+  public static final String DATA_TYPE_INPUT = "input";
+  public static final String DATA_TYPE_OUTPUT = "output";
+  public static final String DATA_TYPE_THROWS = "throws";
+
 
   // ServiceGroups
   public static final String SERVICE_GROUP_TYPE_LABEL_AREA_ID = "typeInfoArea";

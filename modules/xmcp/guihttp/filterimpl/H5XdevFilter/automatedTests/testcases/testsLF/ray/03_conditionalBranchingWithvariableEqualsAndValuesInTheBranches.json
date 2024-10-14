@@ -2,7 +2,6 @@
   "meta":
   {
     "name": "conditional Branching with vairbale at the top and .member=value in the branches",
-	"description": "erstellt einen Datentypen mit zwei Membern. Erstellt einen neuen Workflow mit conditionalBranching und fügt den Datentypen in die Expression ein. Die Expressions der beiden eingefügten  Branches überprüfen den Wert der Membervariablen.",
 	"created": "13.11.2019",
 	"updated": "13.11.2019"
   },
@@ -50,10 +49,10 @@
     {
 	  "operation": "invoke",
 	  "functionName": "createDatatype",
-	  "mapInput": 
+	  "mapInput":
 	  {
-	    "!workspace!": "!workspaceName!", 
-		"!path!": "!datatypePath!", 
+	    "!workspace!": "!workspaceName!",
+		"!path!": "!datatypePath!",
 		"!label!": "!datatypeLabel!"
 	  },
 	  "mapOutput": {"!name!": "!datatypeName!"}
@@ -61,7 +60,7 @@
 	{
 	  "operation": "invoke",
 	  "functionName": "addSimpleTypeMemberToDatatype",
-	  "mapInput": 
+	  "mapInput":
 	  {
 	    "!workspace!" : "!workspaceName!",
 		"!datatypePath!": "!datatypePath!",
@@ -74,7 +73,7 @@
     {
 	  "operation": "invoke",
 	  "functionName": "addSimpleTypeMemberToDatatype",
-	  "mapInput": 
+	  "mapInput":
 	  {
 	    "!workspace!": "!workspaceName!",
 		"!datatypePath!": "!datatypePath!",
@@ -88,7 +87,7 @@
 	  "operation": "invoke",
 	  "functionName": "createNewWorkflow",
 	  "mapInput": {},
-	  "mapOutput": 
+	  "mapOutput":
 	  {
 	    "!url!": "!url!",
 		"!newPath!": "!newWorkflowPath!",
@@ -111,7 +110,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "meta": "insert first Branch",
@@ -123,7 +123,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
     {
 	  "meta": "insert second branch",
@@ -148,7 +149,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
     {
 	  "meta": "add branching expression 2",
@@ -160,7 +162,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "operation": "read",
@@ -177,7 +180,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "meta": "set branch expression 1",
@@ -189,7 +193,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "meta": "set branch expression 2",
@@ -201,7 +206,8 @@
 	{
 	  "operation": "read",
 	  "targetVariable": "!revision!",
-	  "pathInResponse": "revision"
+	  "pathInResponse": "revision",
+	  "unquoteResult":"True"
 	},
 	{
 	  "operation": "call",

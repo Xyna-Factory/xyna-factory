@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,16 @@
   <Data Label="User Name" VariableName="userName">
     <Meta>
       <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Auth Algo" ReferenceName="SNMPv3AuthAlgorithm" ReferencePath="xact.snmp.algorithms" VariableName="sNMPv3AuthAlgorithm">
+    <Meta>
+      <Documentation>if not set explicitly use value of Xyna Property xact.snmp.v3.authalgorithm</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Priv Algo" ReferenceName="SNMPv3PrivAlgorithm" ReferencePath="xact.snmp.algorithms" VariableName="sNMPv3PrivAlgorithm">
+    <Meta>
+      <Documentation>if not set explicitly use value of Xyna Property xact.snmp.v3.privalgorithm</Documentation>
     </Meta>
   </Data>
 </DataType>

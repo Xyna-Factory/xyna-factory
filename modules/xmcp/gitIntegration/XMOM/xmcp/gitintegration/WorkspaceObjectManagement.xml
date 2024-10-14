@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
   <Libraries>WorkspaceObjectManagementImpl.jar</Libraries>
+  <SharedLibraries>XynaObjectGitIntegrationManagement</SharedLibraries>
   <Service Label="Workspace Object Management" TypeName="WorkspaceObjectManagement">
     <Operation IsStatic="true" Label="Create Workspace Content" Name="createWorkspaceContent">
       <Input>
@@ -65,6 +66,18 @@
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return xmcp.gitintegration.WorkspaceObjectManagementImpl.createWorkspaceContentFromText(text9);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="List Open Workspace Differences Lists" Name="listOpenWorkspaceDifferencesLists">
+      <Input>
+        <Data ID="11" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace11"/>
+        <Data ID="13" Label="Return Entries" ReferenceName="Flag" ReferencePath="xmcp.gitintegration" VariableName="flag13"/>
+      </Input>
+      <Output>
+        <Data ID="12" IsList="true" Label="Workspace Content Differences" ReferenceName="WorkspaceContentDifferences" ReferencePath="xmcp.gitintegration" VariableName="workspaceContentDifferences12"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.WorkspaceObjectManagementImpl.listOpenWorkspaceDifferencesLists(workspace11, flag13);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

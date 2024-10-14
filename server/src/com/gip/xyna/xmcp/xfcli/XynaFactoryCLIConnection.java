@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -72,6 +72,7 @@ import com.gip.xyna.xmcp.xfcli.undisclosed.ListBatchProcessManagementInfo;
 import com.gip.xyna.xmcp.xfcli.undisclosed.ListClassloaderInfo;
 import com.gip.xyna.xmcp.xfcli.undisclosed.ListExtendedSchedulerInfo;
 import com.gip.xyna.xmcp.xfcli.undisclosed.ListFurtherInformationFromStartup;
+import com.gip.xyna.xmcp.xfcli.undisclosed.ListOomStats;
 import com.gip.xyna.xmcp.xfcli.undisclosed.ListRmiInfo;
 import com.gip.xyna.xmcp.xfcli.undisclosed.ListSuspendResumeInfo;
 import com.gip.xyna.xmcp.xfcli.undisclosed.ListSynchronizationEntries;
@@ -197,6 +198,7 @@ public class XynaFactoryCLIConnection extends XynaRunnable {
     executionMap.put("validateclassloaders", new ValidateClassloaders() );
     executionMap.put("printstorablecode", new PrintStorableCode() );
     executionMap.put("cleanodsmappings", new CleanODSMappings());
+    executionMap.put("listoomstats", new ListOomStats());
   }
   
   public static Map<String, CommandExecution> getUndisclodedCommandExecutionMap() {

@@ -20,7 +20,7 @@
     {
  	  "operation": "invoke",
 	  "functionName": "createStorable",
-	  "mapInput": 
+	  "mapInput":
 	  {
 	    "!workspace!" : "default workspace",
 		"!path!": "!storableChildPath!",
@@ -32,7 +32,7 @@
 	  "operation": "invoke",
 	  "functionName": "createNewWorkflow",
 	  "mapInput": {},
-	  "mapOutput": 
+	  "mapOutput":
 	  {
 	    "!url!": "!url!"
 	  }

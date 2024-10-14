@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,6 +56,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.Department;
 import com.gip.xyna.FileUtils;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
@@ -72,6 +73,8 @@ import com.gip.xyna.xact.filter.json.CloseJson;
 import com.gip.xyna.xact.filter.json.FQNameJson;
 import com.gip.xyna.xact.filter.json.ObjectIdentifierJson;
 import com.gip.xyna.xact.filter.json.ObjectIdentifierJson.Type;
+import com.gip.xyna.xact.filter.replace.ReplaceProcessor;
+import com.gip.xyna.xact.filter.replace.ReplaceProcessor.ReplaceResult;
 import com.gip.xyna.xact.filter.json.PersistJson;
 import com.gip.xyna.xact.filter.json.RuntimeContextJson;
 import com.gip.xyna.xact.filter.session.View.ViewWrapperJson;
@@ -98,11 +101,12 @@ import com.gip.xyna.xact.filter.session.repair.XMOMRepair;
 import com.gip.xyna.xact.filter.session.save.Persistence;
 import com.gip.xyna.xact.filter.session.workflowissues.WorkflowIssuesRequestProcessor;
 import com.gip.xyna.xact.filter.session.workflowwarnings.DefaultWorkflowWarningsHandler;
+import com.gip.xyna.xact.filter.session.workflowwarnings.ReferenceInvalidatedNotification;
 import com.gip.xyna.xact.filter.session.workflowwarnings.WorkflowWarningsHandler;
 import com.gip.xyna.xact.filter.util.ReadonlyUtil;
 import com.gip.xyna.xact.filter.xmom.session.json.GboJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.DataflowJson;
-import com.gip.xyna.xact.filter.xmom.workflows.json.LabelJson;
+import com.gip.xyna.xact.filter.xmom.workflows.json.LabelInputOutputJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.VariableJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.WorkflowStepVisitor;
 import com.gip.xyna.xdev.xfractmod.xmomlocks.LockManagement;
@@ -176,6 +180,7 @@ import xmcp.processmodeller.datatypes.response.FactoryItem;
 import xmcp.processmodeller.datatypes.response.GetClipboardResponse;
 import xmcp.processmodeller.datatypes.response.GetDataflowResponse;
 import xmcp.processmodeller.datatypes.response.GetIssuesResponse;
+import xmcp.processmodeller.datatypes.response.GetModelledExpressionsResponse;
 import xmcp.processmodeller.datatypes.response.GetObjectXMLResponse;
 import xmcp.processmodeller.datatypes.response.GetOrderInputSourcesResponse;
 import xmcp.processmodeller.datatypes.response.GetRelationsResponse;
@@ -186,6 +191,9 @@ import xmcp.processmodeller.datatypes.response.UnlockResponse;
 import xmcp.xact.modeller.Hint;
 import xmcp.yggdrasil.Event;
 import xmcp.yggdrasil.GetEventsResponse;
+import xmcp.yggdrasil.UnsubscribeProjectPollEventsResponse;
+import xmcp.yggdrasil.Message;
+import xmcp.yggdrasil.SubscribeProjectPollEventsResponse;
 
 /**
  * Speichert alle Daten einer Session:
@@ -229,10 +237,11 @@ public class SessionBasedData {
   private Clipboard clipboard;
 
   private final Map<String, List<Event>> pollRequestUUIDToEventsMap = new ConcurrentHashMap<>();
+  private final Map<String, Boolean> pollRequestUUIDToIsProject = new ConcurrentHashMap<>();
   private final Map<String, Long> pollRequestUUIDToLastPoll = new ConcurrentHashMap<>();
   private final AtomicLong pollRequestId = new AtomicLong();
   private final List<Long> pendingPollRequestIds = Collections.synchronizedList(new ArrayList<>());
-  private volatile boolean terminateOrphanCleaner = false;
+  private volatile boolean orphanCleanerShouldRun = true;
   private volatile boolean shutdownInProgress = false;
   private volatile boolean pollRequestTerminationPending = false;
   private PollEventFetcher pollEventFetcher;
@@ -252,37 +261,40 @@ public class SessionBasedData {
   }
 
   public void init() {
-    pollEventFetcher = new PollEventFetcher(session.getId(), pollRequestUUIDToEventsMap, locks, this); // TODO: Geht das auch im Konstruktor?
+    pollEventFetcher = new PollEventFetcher(session.getId(), pollRequestUUIDToEventsMap, pollRequestUUIDToIsProject, locks, this); // TODO: Geht das auch im Konstruktor?
 
     Thread orphanedPollRequestCleaner = new Thread("Orphaned poll-request cleaner") {
       @Override
       public void run() {
-        while (!terminateOrphanCleaner) {
-          long maxWaitTime = XynaProperty.MESSAGE_BUS_FETCH_TIMEOUT.getMillis() * CLIENT_POLLING_TIMEOUT_FACTOR.get();
-          List<String> orphanedUUIDs = new ArrayList<>();
+        while (orphanCleanerShouldRun) {
+          try {
+            long maxWaitTime = XynaProperty.MESSAGE_BUS_FETCH_TIMEOUT.getMillis() * CLIENT_POLLING_TIMEOUT_FACTOR.get();
+            List<String> orphanedUUIDs = new ArrayList<>();
 
-          synchronized (pollRequestUUIDToLastPoll) {
-            for (Entry<String, Long> lastPoll : pollRequestUUIDToLastPoll.entrySet()) {
-              if ( System.currentTimeMillis() > (lastPoll.getValue() + maxWaitTime) ) {
-                orphanedUUIDs.add(lastPoll.getKey());
-                pollRequestUUIDToEventsMap.remove(lastPoll.getKey());
+            synchronized (pollRequestUUIDToLastPoll) {
+              for (Entry<String, Long> lastPoll : pollRequestUUIDToLastPoll.entrySet()) {
+                if (System.currentTimeMillis() > (lastPoll.getValue() + maxWaitTime)) {
+                  orphanedUUIDs.add(lastPoll.getKey());
+                  pollRequestUUIDToEventsMap.remove(lastPoll.getKey());
+                  pollRequestUUIDToIsProject.remove(lastPoll.getKey());
+                }
+              }
+
+              for (String orphanedUUID : orphanedUUIDs) {
+                pollRequestUUIDToLastPoll.remove(orphanedUUID);
               }
             }
 
-            for (String orphanedUUID : orphanedUUIDs) {
-              pollRequestUUIDToLastPoll.remove(orphanedUUID);
+            try {
+              Thread.sleep(ORPHANED_POLL_REQUEST_CLEAN_INTERVAL);
+            } catch (Exception e) {
+              logger.error("Multiuser: Cleanup thread for orphaned polling requests for session " + session.getId() + " died", e);
+              break;
             }
-          }
-
-          try {
-            Thread.sleep(ORPHANED_POLL_REQUEST_CLEAN_INTERVAL);
-          } catch (Exception e) {
-            logger.error("Multiuser: Cleanup thread for orphaned polling requests for session " + session.getId() + " died", e);
-            break;
+          } catch (OutOfMemoryError t) {
+            Department.handleThrowable(t);
           }
         }
-
-        terminateOrphanCleaner = false;
       }
     };
 
@@ -294,7 +306,7 @@ public class SessionBasedData {
     shutdownInProgress = true;
     pollEventFetcher.stop();
     locks.clear();
-    terminateOrphanCleaner = true;
+    orphanCleanerShouldRun = false;
   }
   
   
@@ -343,6 +355,8 @@ public class SessionBasedData {
         return deploy(request);
       case Refactor:
         return refactor(request);
+      case Replace:
+        return replace(request);
       case DeleteDocument:
         return deleteDocument(request);
       case Close:
@@ -371,11 +385,19 @@ public class SessionBasedData {
       case ClearClipboard:
         return clearClipboard();
       case GetPollEvents:
-        return getPollEvents(request.getObjectId());
+        return getPollEvents(request.getObjectId(), false);
+      case GetProjectPollEvents:
+        return getPollEvents(request.getObjectId(), true);
+      case SubscribeProjectPollEvents:
+        return subscribeProjectPollEvents(request);
+      case UnsubscribeProjectPollEvents:
+        return unsubscribeProjectPollEvents(request);
       case CopyXml:
         return copyXml(request);
       case Warnings:
          return getWarnings(request);
+      case ModelledExpressions:
+        return getModelledExpressions(request);
       default:
         if( request.getOperation().isModification() ) {
           return objectModification(request);
@@ -398,6 +420,16 @@ public class SessionBasedData {
     }
   }
 
+
+  private XMOMGuiReply getModelledExpressions(XMOMGuiRequest request) {
+    FQName fqn = request.getFQName();
+    GenerationBaseObject gbo = gbos.get(fqn);
+    XMOMGuiReply reply = new XMOMGuiReply();
+    ModelledExpressionConverter converter = new ModelledExpressionConverter();
+    GetModelledExpressionsResponse response = converter.convert(gbo, request.getObjectId());
+    reply.setXynaObject(response);
+    return reply;
+  }
 
   private XMOMGuiReply getWarnings(XMOMGuiRequest request) {
     FQName fqn = request.getFQName();
@@ -537,7 +569,7 @@ public class SessionBasedData {
     return reply;
   }
 
-  private XMOMGuiReply getPollEvents(String pollUuid) throws InterruptedException {
+  private XMOMGuiReply getPollEvents(String pollUuid, boolean projectEvents) throws InterruptedException {
     XMOMGuiReply reply;
     GetEventsResponse response;
     Long curPollRequestId;
@@ -556,6 +588,7 @@ public class SessionBasedData {
 
       if (!pollRequestUUIDToEventsMap.containsKey(pollUuid)) {
         pollRequestUUIDToEventsMap.put(pollUuid, Collections.synchronizedList(new ArrayList<>()));
+        pollRequestUUIDToIsProject.put(pollUuid, projectEvents);
         refreshSubscriptions();
         response.setUpdates(new ArrayList<>());
 
@@ -581,8 +614,10 @@ public class SessionBasedData {
         return reply;
       }
 
-      if (!pollRequestUUIDToEventsMap.get(pollUuid).isEmpty()) {
-        break;
+      synchronized (pollRequestUUIDToEventsMap) {
+        if (!pollRequestUUIDToEventsMap.containsKey(pollUuid) || !pollRequestUUIDToEventsMap.get(pollUuid).isEmpty()) {
+          break;
+        }
       }
 
       Thread.sleep(MESSAGE_BUS_UPDATE_SLEEP_TIME);
@@ -593,6 +628,37 @@ public class SessionBasedData {
       pollRequestUUIDToEventsMap.get(pollUuid).clear();
       pendingPollRequestIds.remove(curPollRequestId);
     }
+
+    return reply;
+  }
+
+  private XMOMGuiReply subscribeProjectPollEvents(XMOMGuiRequest request) {
+    XMOMGuiReply reply = new XMOMGuiReply();
+    reply.setStatus(Status.success);
+    reply.setXynaObject(new SubscribeProjectPollEventsResponse());
+
+    Message message = (Message)com.gip.xyna.xact.filter.util.Utils.convertJsonToGeneralXynaObjectUsingGuiHttp(request.getJson());
+    pollEventFetcher.addProjectPolling(request.getObjectId(), message.getCorrelation(), message.getProduct(), message.getContext());
+    terminatePollRequests();
+
+    return reply;
+  }
+
+  private XMOMGuiReply unsubscribeProjectPollEvents(XMOMGuiRequest request) {
+    XMOMGuiReply reply = new XMOMGuiReply();
+    reply.setStatus(Status.success);
+    reply.setXynaObject(new UnsubscribeProjectPollEventsResponse());
+
+    // the current browser tab of the user does not need updates for this subscription, anymore
+    String pollUuid = request.getObjectId();
+    synchronized (pollRequestUUIDToEventsMap) {
+      pollRequestUUIDToEventsMap.remove(pollUuid);
+      pollRequestUUIDToIsProject.remove(pollUuid);
+    }
+
+    Message message = (Message)com.gip.xyna.xact.filter.util.Utils.convertJsonToGeneralXynaObjectUsingGuiHttp(request.getJson());
+    pollEventFetcher.cancelProjectPolling(pollUuid, message.getCorrelation());
+    terminatePollRequests();
 
     return reply;
   }
@@ -623,6 +689,7 @@ public class SessionBasedData {
 
     if (!pendingPollRequestIds.isEmpty()) {
       logger.warn("Multiuser: Failed to terminate running poll requests");
+      pendingPollRequestIds.clear();
     }
 
     pollRequestTerminationPending = false;
@@ -820,8 +887,10 @@ public class SessionBasedData {
 
 
   private void copyLibs(GenerationBaseObject source, GenerationBaseObject destination) throws XPRC_JarFileForServiceImplNotFoundException {
-    Set<String> libNames = source.getDOM().getAdditionalLibraries();
-    for (String libName : libNames) {
+    List<String> allLibs = new LinkedList<>();
+    allLibs.addAll(source.getDOM().getAdditionalLibraries());
+    allLibs.addAll(source.getDOM().getPythonLibraries());
+    for (String libName : allLibs) {
       String sourceFilePathAndName = DOM.getJarFileForServiceLocation(source.getFQName().getFqName(), source.getFQName().getRevision(), libName, true, new FactoryManagedRevisionXMLSource()).getPath();
       File sourceFile = new File(sourceFilePathAndName);
       if(!sourceFile.canRead()) {
@@ -894,6 +963,39 @@ public class SessionBasedData {
 
     return true;
   }
+
+  private XMOMGuiReply replace(XMOMGuiRequest request) throws Exception {
+    RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+    
+    XMOMGuiReply reply = new XMOMGuiReply();
+    try {
+      JsonParser jp = new JsonParser();
+      PersistJson refactorRequest = jp.parse(request.getJson(), PersistJson.getJsonVisitor());
+      Long rev = rm.getRevision(request.getRuntimeContext());
+      
+      String newFqn = refactorRequest.getPath() + "." + Utils.labelToJavaName(refactorRequest.getLabel(), true);
+      String rmvFqn = request.getFQName().getFqName();
+
+      ReplaceProcessor processor = new ReplaceProcessor();
+      List<ReplaceResult> result = processor.replace(rmvFqn, newFqn, rev, request.getRuntimeContext());
+      RefactorResponse response = new RefactorResponse();
+      int total = result.size();
+      long successCount = result.stream().filter(x -> x.isSuccess()).count();
+      long failCount = total-successCount;
+      Hint hint = new Hint(String.format("Replaced %d occurences. Successes %d, Fails: %d", total, successCount, failCount));
+      Hint hintSuccess = new Hint("Successes:\n" + String.join("\n", result.stream().filter(x -> x.isSuccess()).map(x -> x.getObjectFqn()).collect(Collectors.toList())));
+      Hint hintFail = new Hint("Fails:\n" + String.join("\n", result.stream().filter(x -> !x.isSuccess()).map(x -> x.getObjectFqn()).collect(Collectors.toList())));
+      response.unversionedSetHints(List.of(hint, hintSuccess, hintFail));
+      reply.setXynaObject(response);
+      reply.setStatus(Status.success);
+    } catch (Exception e) {
+      reply.setXynaObject(new RefactorResponse());
+      reply.setStatus(Status.failed);
+    }
+    return reply;
+  }
+  
+
 
   private XMOMGuiReply refactor(XMOMGuiRequest request) throws InvalidJSONException, UnexpectedJSONContentException, InvalidRevisionException, XynaException, UnknownObjectIdException, MissingObjectException, DocumentLockedException {
     if(isLockedNotByMe(request.getFQName())) {
@@ -1114,6 +1216,11 @@ public class SessionBasedData {
 
     if (view.getGenerationBaseObject().getType() == XMOMType.WORKFLOW) {
       view.getGenerationBaseObject().createDataflow(getOrCreateWFWarningsHandler(view.getGenerationBaseObject().getFQName()));
+
+      FQName fqName = request.getFQName();
+      ObjectId objectId = new ObjectId(ObjectType.workflow, null);
+      ReferenceInvalidatedNotification notification = new ReferenceInvalidatedNotification(fqName, view.getGenerationBaseObject().getWorkflow());
+      getWFWarningsHandler(fqName).handleChange(objectId, notification);
     }
 
     reply.setXynaObject(view.viewAll(request));
@@ -1540,7 +1647,7 @@ public class SessionBasedData {
     reply.setXynaObject(response);
     
     Map<Long, RuntimeContext> rtcCache = new HashMap<Long, RuntimeContext>();
-    
+    Map<ReferenceType, List<FactoryItem>> lists = new HashMap<>();
     for (Reference reference : references) {
       FactoryItem factoryItem = new FactoryItem();
       factoryItem.setFqn(reference.getFqName().getFqName());
@@ -1562,58 +1669,24 @@ public class SessionBasedData {
       if(reference.getObjectType().equals(Type.codedService)) {
         continue;
       }
-      
-
-      switch (reference.getReferenceType()) {
-        case calledBy:
-          response.addToCalledBy(factoryItem);
-          break;
-        case extend:
-          response.addToExtends0(factoryItem);
-          break;
-        case extendedBy:
-          response.addToExtendedBy0(factoryItem);
-          break;
-        case instanceServiceReferenceOf:
-          response.addToInstanceServiceReferenceOf(factoryItem);
-          break;
-        case possessedBy:
-          response.addToIsMemberOf(factoryItem);
-          break;
-        case possesses:
-          response.addToHasMemberOf(factoryItem);
-          break;
-        case producedBy:
-          response.addToOutputOf0(factoryItem);
-          break;
-        case neededBy:
-          response.addToInputOf0(factoryItem);
-          break;
-        case thrownBy:
-          response.addToThrownBy0(factoryItem);
-          break;
-        case usedInImplOf:
-          response.addToUsedIn0(factoryItem);
-          break;
-        case calls:
-          response.addToCalls(factoryItem);
-          break;
-        case exceptions:
-          response.addToExceptions(factoryItem);
-          break;
-        case needs:
-          response.addToOutputOf0(factoryItem);
-          break;
-        case produces:
-          response.addToInputOf0(factoryItem);
-          break;
-        case online:
-//          response.addToOnline(factoryItem);
-          break;
-        default :
-          break;
-      }
+      lists.putIfAbsent(reference.getReferenceType(), new ArrayList<FactoryItem>());
+      lists.get(reference.getReferenceType()).add(factoryItem);
     }
+
+    response.setCalls(lists.get(ReferenceType.calls));
+    response.setExtends0(lists.get(ReferenceType.extend));
+    response.setOutputOf0(lists.get(ReferenceType.needs));
+    response.setInputOf0(lists.get(ReferenceType.produces));
+    response.setCalledBy(lists.get(ReferenceType.calledBy));
+    response.setInputOf0(lists.get(ReferenceType.neededBy));
+    response.setThrownBy0(lists.get(ReferenceType.thrownBy));
+    response.setOutputOf0(lists.get(ReferenceType.producedBy));
+    response.setUsedIn0(lists.get(ReferenceType.usedInImplOf));
+    response.setHasMemberOf(lists.get(ReferenceType.possesses));
+    response.setExceptions(lists.get(ReferenceType.exceptions));
+    response.setExtendedBy0(lists.get(ReferenceType.extendedBy));
+    response.setIsMemberOf(lists.get(ReferenceType.possessedBy));
+    response.setInstanceServiceReferenceOf(lists.get(ReferenceType.instanceServiceReferenceOf));
 
     return reply;
   }
@@ -1626,7 +1699,7 @@ public class SessionBasedData {
     }
     
     JsonParser jp = new JsonParser();
-    LabelJson label = jp.parse(request.getJson(), LabelJson.getJsonVisitor());
+    LabelInputOutputJson label = jp.parse(request.getJson(), LabelInputOutputJson.getJsonVisitor());
     
     ObjectIdentifierJson object = new ObjectIdentifierJson();
     object.setRuntimeContext( new RuntimeContextJson( request.getRuntimeContext() ));
@@ -1635,7 +1708,17 @@ public class SessionBasedData {
     object.setFQName( new FQNameJson( "new_"+System.currentTimeMillis(), Utils.labelToJavaName(label.getLabel(), true ) ) );
     
     GenerationBaseObject gbo = createNewObject(object);
-    
+    if (request.getType().equals(Type.workflow)) {
+      label.parseInputOutput();
+      WF generationBase = (WF) gbo.getGenerationBase();
+      for (VariableJson json: label.getInputJson()) {
+        generationBase.getInputVars().add(json.toAVariable(generationBase, gbo.getFQName().getRevision()));
+      }
+      for (VariableJson json: label.getOutputJson()) {
+        generationBase.getOutputVars().add(json.toAVariable(generationBase, gbo.getFQName().getRevision()));
+      }
+      generationBase.getWfAsStep().refreshVars(generationBase.getInputVars(), generationBase.getOutputVars());
+    }
     XMOMGuiReply reply = new XMOMGuiReply();
     reply.setStatus(Status.success);
     reply.setXynaObject(gbo.getView().viewAll(request));

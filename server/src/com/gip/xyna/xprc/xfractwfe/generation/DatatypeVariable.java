@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,8 +74,7 @@ public class DatatypeVariable extends AVariable {
   public static final String ANY_TYPE = "base.AnyType";
 
   protected void specialParseXml(Element e, Long revision) throws XPRC_InvalidPackageNameException {
-
-    parseUnknownMetaTags(e, Arrays.asList(EL.PERSISTENCE, EL.METATYPE, EL.USEROUTPUT));
+    parseUnknownMetaTags(e, Arrays.asList(EL.PERSISTENCE, EL.METATYPE, EL.USEROUTPUT, GenerationBase.EL.DOCUMENTATION));
 
     // parse data
     boolean isRef = !GenerationBase.isEmpty(e.getAttribute(GenerationBase.ATT.REFERENCENAME));

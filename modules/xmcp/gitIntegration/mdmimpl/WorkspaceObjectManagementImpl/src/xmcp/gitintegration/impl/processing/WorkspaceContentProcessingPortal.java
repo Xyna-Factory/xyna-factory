@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ import xmcp.gitintegration.storage.WorkspaceDifferenceListStorage;
 
 
 //'Interface' between the outside world (service group / CLI) and WorkpsaceContentProcessors
-public class WorkspaceContentProcessingPortal {
+public class WorkspaceContentProcessingPortal implements XynaContentProcessingPortal<WorkspaceContentItem, WorkspaceContentDifference>{
 
   //String is the tagName
   protected static final HashMap<String, WorkspaceContentProcessor<? extends WorkspaceContentItem>> parserTypes = new HashMap<>();
@@ -61,6 +61,14 @@ public class WorkspaceContentProcessingPortal {
     //register WorkspaceContentProcessors here: addToMap(result, new <WorkspaceContentType>Processor());
     addToMap(result, new RuntimeContextDependencyProcessor());
     addToMap(result, new ApplicationDefinitionProcessor());
+    addToMap(result, new OrderTypeProcessor());
+    addToMap(result, new TriggerInstanceProcessor());
+    addToMap(result, new DatatypeProcessor());
+    addToMap(result, new OrderInputSourceProcessor());
+    addToMap(result, new TriggerProcessor());
+    addToMap(result, new FilterInstanceProcessor());
+    addToMap(result, new FilterProcessor());
+    addToMap(result, new XMOMStorableProcessor());
     return result;
   }
 
@@ -237,6 +245,19 @@ public class WorkspaceContentProcessingPortal {
 
   public String createDifferenceString(WorkspaceContentDifference diff) {
     return createDifferenceStringInternal(diff);
+  }
+
+
+  public String getTagName(Class<? extends WorkspaceContentItem> workspaceContentItem) {
+    return getTagNameInternal(workspaceContentItem);
+  }
+
+
+  @SuppressWarnings({"rawtypes"})
+  public String getTagNameInternal(Class<? extends WorkspaceContentItem> workspaceContentItem) {
+    WorkspaceContentProcessor processor = registeredTypes.get(workspaceContentItem);
+    checkProcessor(processor, workspaceContentItem);
+    return processor.getTagName();
   }
 
 

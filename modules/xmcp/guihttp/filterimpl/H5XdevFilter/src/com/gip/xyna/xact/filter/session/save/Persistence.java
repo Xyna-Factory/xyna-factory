@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -271,33 +271,38 @@ public class Persistence {
   
 
   private String createDataTypeXML() throws XynaException {
-    DOM dataType = gbo.getDOM();
-
+    return createDatatypeXML(gbo.getDOM(), persistType);
+  }
+  
+  public static String createDatatypeXML(DOM dom, XmomType persistType) {
     List<Variable> variables = new ArrayList<Variable>();
-    for (AVariable var : dataType.getMemberVars()) {
+    for (AVariable var : dom.getMemberVars()) {
       variables.add(Utils.createVariable(var));
     }
 
-    List<com.gip.xyna.xprc.xfractwfe.generation.xml.Operation> operations = new ArrayList<com.gip.xyna.xprc.xfractwfe.generation.xml.Operation>();
-    for (Operation operation : (dataType).getOperations()) {
+    List<com.gip.xyna.xprc.xfractwfe.generation.xml.Operation> operations = new ArrayList<>();
+    for (Operation operation : (dom).getOperations()) {
       operations.add(Utils.createOperation(operation, true));
     }
 
     Datatype dt = Datatype.create(persistType).
-             basetype(Utils.getBaseType(dataType)).
-             meta(Utils.createMeta(dataType)).
+             basetype(Utils.getBaseType(dom)).
+             meta(Utils.createMeta(dom)).
              variables(variables).
              operations(operations).
-             sharedLibs(dataType.getSharedLibs()).
-             additionalLibNames(dataType.getAdditionalLibraries()).
+             sharedLibs(dom.getSharedLibs()).
+             additionalLibNames(dom.getAdditionalLibraries()).
+             pythonLibNames(dom.getPythonLibraries()).
              build();
 
     return dt.toXML();
   }
 
   private String createExceptionTypeXML() throws XynaException {
-    ExceptionGeneration exception = gbo.getExceptionGeneration();
-
+    return createExceptionTypeXML(gbo.getExceptionGeneration(), persistType);
+  }
+  
+  public static String createExceptionTypeXML(ExceptionGeneration exception, XmomType persistType) {
     List<Variable> variables = new ArrayList<Variable>();
     for (AVariable var : exception.getMemberVars()) {
       variables.add( Utils.createVariable( var ) );
@@ -450,7 +455,6 @@ public class Persistence {
       FileOutputStream fos = new FileOutputStream(destinationPath + "/" + tFile.getOriginalFilename());
       try {
         StreamUtils.copy(is, fos);
-        gbo.getDOM().getAdditionalLibraries().add(tFile.getOriginalFilename());
       } finally {
         fos.close();
       }

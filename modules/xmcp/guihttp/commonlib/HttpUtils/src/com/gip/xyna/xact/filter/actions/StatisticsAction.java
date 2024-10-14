@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@ public class StatisticsAction implements FilterAction {
     DefaultFilterActionInstance dfai = new DefaultFilterActionInstance();
     StatisticsType type = null;
     try {
-      type = StatisticsType.valueOf( (String)tc.getParas().get("type") );
+      type = StatisticsType.valueOf( (String)tc.getParameters().get("type").get(0) );
     } catch( Exception e ) {
       type = StatisticsType.all;
     }
@@ -208,7 +208,7 @@ public class StatisticsAction implements FilterAction {
   private class StatisticsEntryComparator implements Comparator<StatisticsEntry> {
 
     public int compare(StatisticsEntry o1, StatisticsEntry o2) {
-      return (int)(o2.getTimestamp() - o1.getTimestamp()); //rÃ¼ckwÃ¤rts
+      return (int)(o2.getTimestamp() - o1.getTimestamp()); //rückwärts
     }
     
   }

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" ID="1" Label="Delete All Test Data Content" TypeName="DeleteAllTestDataContent" TypePath="xdev.xtestfactory.infrastructure.util" Version="1.8">
+  <Meta>
+    <FixedDetailOptions>hideDetailAreas,highDetailsMode</FixedDetailOptions>
+  </Meta>
+  <Operation ID="0" Label="Delete All Test Data Content" Name="DeleteAllTestDataContent">
+    <Input>
+      <Data ID="4" Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData4">
+        <Target RefID="3"/>
+        <Target RefID="21"/>
+      </Data>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="XMOM Storable Access Exception" ReferenceName="XMOMStorableAccessException" ReferencePath="xnwh.persistence" VariableName="xMOMStorableAccessException"/>
+    </Throws>
+    <Choice ID="21" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="4"/>
+      <Input>
+        <Data Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables"/>
+        <Source RefID="4"/>
+      </Input>
+      <Case ID="19" Label="true" Premise="length(%0%.testDataFullQualifiedStorableName)&gt;&quot;0&quot;">
+        <Mappings ID="3" Label="Mapping">
+          <Source RefID="4"/>
+          <Target RefID="2"/>
+          <Meta>
+            <FixedDetailOptions>FillMode,openConfiguration,FlatMode</FixedDetailOptions>
+          </Meta>
+          <Input>
+            <Data Label="Test Data Meta Data" ReferenceName="TestDataMetaData" ReferencePath="xdev.xtestfactory.infrastructure.storables" VariableName="testDataMetaData"/>
+            <Source RefID="4"/>
+          </Input>
+          <Output>
+            <Data Label="Selection mask" ReferenceName="SelectionMask" ReferencePath="xnwh.persistence" VariableName="selectionMask"/>
+            <Target RefID="2"/>
+          </Output>
+          <Mapping>%1%.columns["0"]="%0%.iD"</Mapping>
+          <Mapping>%1%.rootType=%0%.testDataFullQualifiedStorableName</Mapping>
+        </Mappings>
+        <Function ID="6" Label="Query">
+          <Source RefID="5"/>
+          <Source RefID="22"/>
+          <Source RefID="2"/>
+          <Source RefID="35"/>
+          <Target RefID="9"/>
+          <Target RefID="5"/>
+          <Target RefID="27"/>
+          <Meta>
+            <FixedDetailOptions>openCatches</FixedDetailOptions>
+            <FixedHeight>32</FixedHeight>
+            <FixedWidth>448</FixedWidth>
+          </Meta>
+          <Invoke Operation="Query" ServiceID="5">
+            <Source RefID="2"/>
+            <Source RefID="22">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+            <Source RefID="35">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="5">
+            <Target RefID="9"/>
+          </Receive>
+          <Catch ExceptionID="27" ID="29">
+            <Mappings ID="34" Label="Empty List">
+              <Target RefID="32"/>
+              <Meta>
+                <Documentation>This error can occur if the test data list is configured to use an object that does not exist any longer -&gt; ignore</Documentation>
+                <FixedDetailOptions>FillMode,openConfiguration,FlatMode,openDocumentation</FixedDetailOptions>
+                <FixedHeight>32</FixedHeight>
+                <FixedWidth>275</FixedWidth>
+              </Meta>
+              <Output>
+                <Data ID="33" IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable33"/>
+                <Target RefID="32"/>
+              </Output>
+            </Mappings>
+            <Assign ID="28">
+              <Source RefID="32"/>
+              <Target RefID="9"/>
+              <Copy>
+                <Source RefID="32"/>
+                <Target RefID="9"/>
+              </Copy>
+            </Assign>
+          </Catch>
+        </Function>
+        <Foreach ID="26">
+          <Source RefID="9"/>
+          <InputList RefID="9">
+            <Data ID="25" Label="storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable25">
+              <Target RefID="15"/>
+            </Data>
+          </InputList>
+          <Function ID="15" Label="Delete">
+            <Source RefID="24"/>
+            <Source RefID="10"/>
+            <Source RefID="25"/>
+            <Target RefID="10"/>
+            <Invoke Operation="delete" ServiceID="10">
+              <Source RefID="25">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+              <Source RefID="24">
+                <Meta>
+                  <LinkType>Constant</LinkType>
+                </Meta>
+              </Source>
+            </Invoke>
+            <Receive ServiceID="10"/>
+          </Function>
+        </Foreach>
+        <Assign/>
+      </Case>
+      <Case ID="20" Label="false">
+        <Assign/>
+      </Case>
+    </Choice>
+    <Data ID="2" Label="Selection mask" ReferenceName="SelectionMask" ReferencePath="xnwh.persistence" VariableName="selectionMask2">
+      <Source RefID="3"/>
+      <Target RefID="6"/>
+    </Data>
+    <ServiceReference ID="5" Label="Query" ReferenceName="Query" ReferencePath="xnwh.persistence">
+      <Source RefID="6"/>
+      <Target RefID="6"/>
+    </ServiceReference>
+    <Data ID="9" IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable8">
+      <Source RefID="6"/>
+      <Source RefID="28"/>
+      <Target RefID="26"/>
+    </Data>
+    <ServiceReference ID="10" Label="Persistence Services" ReferenceName="PersistenceServices.PersistenceServices" ReferencePath="xnwh.persistence">
+      <Source RefID="15"/>
+      <Target RefID="15"/>
+    </ServiceReference>
+    <Data ID="22" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition236">
+      <Target RefID="6"/>
+      <Data Label="formula" VariableName="formula">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="24" Label="Delete parameter" ReferenceName="DeleteParameter" ReferencePath="xnwh.persistence" VariableName="const_DeleteParameter">
+      <Target RefID="15"/>
+      <Data Label="Including history" VariableName="includingHistory">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data Label="Reference handling" ReferenceName="ReferenceHandling" ReferencePath="xnwh.persistence" VariableName="referenceHandling">
+        <Data Label="Backward" VariableName="backward">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data Label="Forward" VariableName="forward">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Data>
+    </Data>
+    <Exception ID="27" Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception">
+      <Source RefID="6"/>
+    </Exception>
+    <Data ID="32" IsList="true" Label="Storable" ReferenceName="Storable" ReferencePath="xnwh.persistence" VariableName="storable32">
+      <Source RefID="34"/>
+      <Target RefID="28"/>
+    </Data>
+    <Data ID="35" Label="Query parameter" ReferenceName="QueryParameter" ReferencePath="xnwh.persistence" VariableName="queryParameter237">
+      <Target RefID="6"/>
+      <Data Label="Max objects" VariableName="maxObjects">
+        <Meta>
+          <Type>int</Type>
+        </Meta>
+        <Value>-1</Value>
+      </Data>
+      <Data Label="Query history" VariableName="queryHistory">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>false</Value>
+      </Data>
+      <Data IsList="true" Label="Sort criterion" ReferenceName="SortCriterion" ReferencePath="xnwh.persistence" VariableName="sortCriterion"/>
+    </Data>
+    <Assign/>
+  </Operation>
+</Service>

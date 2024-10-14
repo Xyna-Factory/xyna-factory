@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,6 +60,7 @@ import com.gip.xyna.xprc.xbatchmgmt.selectbatch.BatchProcessSelectImpl;
 import com.gip.xyna.xprc.xfqctrl.FrequencyControlledTaskCreationParameter;
 import com.gip.xyna.xprc.xfqctrl.FrequencyControlledTaskInformation;
 import com.gip.xyna.xprc.xfqctrl.XynaFrequencyControl;
+import com.gip.xyna.xprc.xfractwfe.XynaPythonSnippetManagement;
 import com.gip.xyna.xprc.xpce.WorkflowEngine;
 import com.gip.xyna.xprc.xpce.XynaProcessCtrlExecution;
 import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
@@ -535,6 +536,12 @@ public class XynaProcessingMock extends XynaProcessingBase {
 
   @Override
   public XynaXmomSerialization getXmomSerialization() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public XynaPythonSnippetManagement getXynaPythonSnippetManagement() {
     // TODO Auto-generated method stub
     return null;
   }

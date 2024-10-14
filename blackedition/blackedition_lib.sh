@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Copyright 2022 GIP SmartMercial GmbH, Germany
+# Copyright 2024 Xyna GmbH, Germany
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,9 +30,9 @@ ALL_DATAMODELTYPES=("mib","tr069","xsd");
 #ACHTUNG: Version auch bei addRequirement zu default workspace berücksichtigen
 ALL_APPLICATIONS="Base Processing"; #Default-Applications, die immer installiert sein sollten
 APPMGMTVERSION=1.0.10
-GUIHTTPVERSION=1.1.364
+GUIHTTPVERSION=1.2.11
 SNMPSTATVERSION=1.0.3
-PROCESSINGVERSION=1.0.17
+PROCESSINGVERSION=1.0.22
 ALL_REPOSITORYACCESSES=("svn");
 INSTANCE_NUMBER="1" #1 ist default
 
@@ -1065,8 +1065,11 @@ install_xyna_cluster () {
     
     echo "    + Xyna Cluster persistence layer"
     if [[ ! -d "${INSTALL_PREFIX}/server/persistencelayers/XynaClusterPersistenceLayer" ]]; then ${VOLATILE_MKDIR} -p "${INSTALL_PREFIX}/server/persistencelayers/XynaClusterPersistenceLayer"; fi
+    # remove old jars
+    ${VOLATILE_RM} -f "${INSTALL_PREFIX}/server/persistencelayers/XynaClusterPersistenceLayer/XynaMemoryPersistenceLayer*.jar"
+    # install new jars
     install_file "components/xnwh/xcs/XynaClusterPersistenceLayer/XynaClusterPersistenceLayer.jar" "${INSTALL_PREFIX}/server/persistencelayers/XynaClusterPersistenceLayer/."
-    install_file "components/xnwh/xcs/XynaClusterPersistenceLayer/XynaMemoryPersistenceLayer.jar" "${INSTALL_PREFIX}/server/persistencelayers/XynaClusterPersistenceLayer/."
+    install_file "components/xnwh/xcs/XynaClusterPersistenceLayer/XynaMemoryPersistenceLayer*.jar" "${INSTALL_PREFIX}/server/persistencelayers/XynaClusterPersistenceLayer/."
 
     echo "    + network availability demon"
     # The folders NetworkAvailability and NetworkAvailability/lib will be created, if it does not exist. 
@@ -1075,7 +1078,11 @@ install_xyna_cluster () {
     ${VOLATILE_RM} -f "${INSTALL_PREFIX}"/NetworkAvailability/lib/*.jar 
     # copy all stuff from delivery to the NetworkAvailability folder
     ${VOLATILE_CP} -rp components/xact/NetworkAvailability/* "${INSTALL_PREFIX}/NetworkAvailability/."
-    ${VOLATILE_CP} -rp "$HOSTNAME/networkAvailability.properties" "${INSTALL_PREFIX}/NetworkAvailability/networkAvailability.properties"
+    if [[ -f "$HOSTNAME/networkAvailability.properties" ]]; then ${VOLATILE_CP} -rp "$HOSTNAME/networkAvailability.properties" "${INSTALL_PREFIX}/NetworkAvailability/config/networkAvailability.properties"; fi
+    # create installDefaults
+    ${VOLATILE_MKDIR} -p ${INSTALL_PREFIX}/NetworkAvailability/config/installDefaults/
+    ${VOLATILE_CP} ${INSTALL_PREFIX}/NetworkAvailability/config/networkAvailability.properties ${INSTALL_PREFIX}/NetworkAvailability/config/installDefaults
+
     
     FILE_TO_EDIT="${INSTALL_PREFIX}/NetworkAvailability/networkAvailabilityDemonWrapper.sh"
     exit_if_not_exists "${FILE_TO_EDIT}"
@@ -1802,7 +1809,7 @@ f_check_license () {
     VENDOR=$(f_extract_vendor_from_jar ${JAR});
     #echo "Vendor ${VENDOR} for ${JAR}"
     case ${VENDOR} in 
-      'GIP AG') 
+      'Xyna GmbH') 
          CHECK_LICENSE="false";
          ;;
       '${vendor.name}')    #FIXME  das sollte raus!

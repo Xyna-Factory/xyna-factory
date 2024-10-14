@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -385,7 +385,7 @@ public abstract class Step implements XmlAppendable, HasMetaTags {
   private Integer xmlId;
   protected GenerationBase creator;
   private List<Parameter> parameterList;
-  private List<Element> unknownMetaTags;
+  private UnknownMetaTagsComponent unknownMetaTagsComponent = new UnknownMetaTagsComponent();
 
   public Step(ScopeStep parentScope, GenerationBase creator) {
     this(creator);
@@ -450,13 +450,13 @@ public abstract class Step implements XmlAppendable, HasMetaTags {
   }
 
   @Override
-  public List<Element> getUnknownMetaTags() {
-    return unknownMetaTags;
+  public List<String> getUnknownMetaTags() {
+    return unknownMetaTagsComponent.getUnknownMetaTags();
   }
 
   @Override
-  public void setUnknownMetaTags(List<Element> unknownMetaTags) {
-    this.unknownMetaTags = unknownMetaTags;
+  public void setUnknownMetaTags(List<String> unknownMetaTags) {
+    unknownMetaTagsComponent.setUnknownMetaTags(unknownMetaTags);
   }
 
   public Parameter getFirstParameter() {
@@ -885,26 +885,19 @@ public abstract class Step implements XmlAppendable, HasMetaTags {
 
   @Override
   public void parseUnknownMetaTags(Element element, List<String> knownMetaTags) {
-    Element meta = XMLUtils.getChildElementByName(element, GenerationBase.EL.META);
-    unknownMetaTags = XMLUtils.getFilteredSubElements(meta, knownMetaTags);
+    unknownMetaTagsComponent.parseUnknownMetaTags(element, knownMetaTags);  
   }
 
 
   @Override
   public boolean hasUnknownMetaTags() {
-    return ( (unknownMetaTags != null) && (unknownMetaTags.size() > 0) );
+    return unknownMetaTagsComponent.hasUnknownMetaTags();
   }
 
 
   @Override
   public void appendUnknownMetaTags(XmlBuilder xml) {
-    if (unknownMetaTags == null) {
-      return;
-    }
-
-    for (Element tag : unknownMetaTags) {
-      xml.append(tag);
-    }
+    unknownMetaTagsComponent.appendUnknownMetaTags(xml);
   }
 
 

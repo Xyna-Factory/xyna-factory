@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,6 @@ package com.gip.xyna.xact.filter.actions;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
-
-import org.apache.log4j.Logger;
-
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.misc.JsonBuilder;
@@ -74,8 +69,6 @@ public class ObjectsAction extends RuntimeContextDependendAction {
   private final static String ANYTYPEFQN = (GenerationBase.ANYTYPE_REFERENCE_PATH + "." + GenerationBase.ANYTYPE_REFERENCE_NAME).toLowerCase();
   private final XMOMLoader xmomLoader;
 
-  private static final Logger logger = CentralFactoryLogging.getLogger(ObjectsAction.class);
-
 
   public ObjectsAction(XMOMLoader xmomLoader) {
     super();
@@ -121,22 +114,20 @@ public class ObjectsAction extends RuntimeContextDependendAction {
   private FilterActionInstance search(RuntimeContext rc, Long revision, URLPath url, HTTPTriggerConnection tc) throws SocketNotAvailableException {
     JsonFilterActionInstance jfai = new JsonFilterActionInstance();
     try {
-      Properties parameter = tc.getParas();
-      XMOMDatabaseSearchResult result = select(parameter, tc.getPayload(), revision);
+      String searchValueParameter = tc.getFirstValueOfParameterOrDefault(SEARCH_VALUE_PARAMETER, null);
+      XMOMDatabaseSearchResult result = select(searchValueParameter, tc.getPayload(), revision);
       
       List<ObjectIdentifierJson> objects = new ArrayList<>();
       int operationCount = fillObjects(result, objects, rc);
       
-      if(shouldAddAnyType(parameter, tc.getPayload())) {
+      if(shouldAddAnyType(searchValueParameter, tc.getPayload())) {
         operationCount++;
         
         ObjectIdentifierJson anyTypeJson = Utils.createAnyTypeIdentifier(revision);
         objects.add(anyTypeJson);
       }
       
-      //Collections.sort(objects, ObjectIdentifierJson.sortByLabel());
-      String searchValue = "";
-      if (parameter.containsKey(SEARCH_VALUE_PARAMETER)) searchValue = parameter.getProperty(SEARCH_VALUE_PARAMETER).toLowerCase();
+      String searchValue = searchValueParameter == null ? "" : searchValueParameter.toLowerCase();
       Collections.sort(objects, ObjectIdentifierJson.sortByFQN(searchValue));
 
       jfai.sendJson(tc, writeJson(result, objects, operationCount) );
@@ -147,8 +138,8 @@ public class ObjectsAction extends RuntimeContextDependendAction {
   }
   
 
-  private XMOMDatabaseSearchResult select(Properties parameter, String searchRequestMeta, Long revision) throws InvalidJSONException, UnexpectedJSONContentException, XNWH_InvalidSelectStatementException, PersistenceLayerException {
-    String searchValue = createSearchValue(parameter.getProperty(SEARCH_VALUE_PARAMETER, null), DB_WILDCARD);
+  private XMOMDatabaseSearchResult select(String seachValueParamter, String searchRequestMeta, Long revision) throws InvalidJSONException, UnexpectedJSONContentException, XNWH_InvalidSelectStatementException, PersistenceLayerException {
+    String searchValue = createSearchValue(seachValueParamter, DB_WILDCARD);
     JsonParser jp = new JsonParser();
     SearchMetaData smd = jp.parse(searchRequestMeta, new SearchMetaData());
     int maxResults = DEFAULT_MAX_RESULTS;
@@ -188,7 +179,7 @@ public class ObjectsAction extends RuntimeContextDependendAction {
   
   
   
-  private boolean shouldAddAnyType(Properties parameter, String searchRequestMeta) throws InvalidJSONException, UnexpectedJSONContentException {
+  private boolean shouldAddAnyType(String searchValueParameter, String searchRequestMeta) throws InvalidJSONException, UnexpectedJSONContentException {
     JsonParser jp = new JsonParser();
     SearchMetaData smd = jp.parse(searchRequestMeta, new SearchMetaData());
 
@@ -197,7 +188,7 @@ public class ObjectsAction extends RuntimeContextDependendAction {
       return false;
     }
 
-    String searchValue = createSearchValue(parameter.getProperty(SEARCH_VALUE_PARAMETER, null), JAVA_WILDCARD);
+    String searchValue = createSearchValue(searchValueParameter, JAVA_WILDCARD);
     searchValue = searchValue.replace(".", "\\.");
     searchValue = searchValue.replace("\\.*", ".*");
     searchValue = searchValue.toLowerCase();

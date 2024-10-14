@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1402,7 +1402,7 @@ public class StepFunction extends Step implements Catchable, HasDocumentation {
       }
       if (receiveVarIds.length == 0) {
       } else if (receiveVarIds.length == 1) {
-        cb.add("Object temp = ");
+        cb.add("java.lang.Object temp = ");
       } else {
         cb.add(Container.class.getSimpleName() + " c = ");
       }
@@ -1450,8 +1450,8 @@ public class StepFunction extends Step implements Catchable, HasDocumentation {
         }
       }
       cb.add(operationName + "(");
-      if (ops instanceof JavaOperation) {
-        if (((JavaOperation) ops).requiresXynaOrder()) {
+      if (ops instanceof CodeOperation) {
+        if (((CodeOperation) ops).requiresXynaOrder()) {
           cb.addListElement(METHODNAME_GET_PROCESS + "()." + WF.METHODNAME_GET_CORRELATED_XYNA_ORDER + "()");
         }
       }
@@ -2172,9 +2172,8 @@ public class StepFunction extends Step implements Catchable, HasDocumentation {
       return false;
     }
     List<String> knownManualInteractionWorkflows = new ArrayList<String>();
-    String customMIs =
-        XynaFactory.getInstance().getFactoryManagement()
-            .getProperty(XynaProperty.CUSTOM_MANUAL_INTERACTION_WORFLOW_XMLFQNAMES);
+    String customMIs = XynaFactory.hasInstance() ? XynaFactory.getInstance().getFactoryManagement()
+        .getProperty(XynaProperty.CUSTOM_MANUAL_INTERACTION_WORFLOW_XMLFQNAMES) : null;
     if (customMIs != null && !customMIs.equals("")) {
       knownManualInteractionWorkflows.addAll(Arrays.asList(customMIs.split(",")));
     }

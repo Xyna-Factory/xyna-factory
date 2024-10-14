@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -530,7 +530,7 @@ public class GBSubObject extends GBBaseObject {
       return references;
     }
     
-    SearchRequestBean srb = createReferencesSearchRequestBean(referenceType.getSelection(), filters);
+    SearchRequestBean srb = Utils.createReferencesSearchRequestBean(referenceType.getSelection(), filters);
     XMOMDatabaseSelect select = (XMOMDatabaseSelect) SelectionParser.generateSelectObjectFromSearchRequestBean(srb);
     select.addAllDesiredResultTypes(Arrays.asList(xmomDatabaseTypes));
     
@@ -545,17 +545,6 @@ public class GBSubObject extends GBBaseObject {
       }
     });
     return references;
-  }
-    
-  private SearchRequestBean createReferencesSearchRequestBean(String selection, HashMap<String, String> filters) {
-    SearchRequestBean srb = new SearchRequestBean();
-    srb.setArchiveIdentifier(ArchiveIdentifier.xmomcache);
-    srb.setMaxRows(-1);
-    srb.setSelection(selection);
-    if(filters != null) {
-      srb.setFilterEntries(filters);
-    }
-    return srb;
   }
   
   public GenerationBaseObject getRoot() {

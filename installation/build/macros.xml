@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2023 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
+ -->
 <project name="macros" basedir=".">
 
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
@@ -88,28 +88,6 @@
         </sequential>
     </macrodef>
 
-
-    <!-- ================================= 
-         macro: checkJavaVersion
-         ================================= -->
-    <macrodef name="checkJavaVersion">
-        <sequential>
-            <fail message="Unsupported Java version: ${java.version}. Expected 1.5.0, 1.6.0, 1.7.0 or 1.8.0">
-                <condition>
-                    <not>
-                        <or>
-                            <contains string="${java.version}" substring="1.5.0" />
-                            <contains string="${java.version}" substring="1.6.0" />
-                            <contains string="${java.version}" substring="1.7.0" />
-                            <contains string="${java.version}" substring="1.8.0" />
-			    <contains string="${java.version}" substring="11" />
-                        </or>
-                    </not>
-                </condition>
-            </fail>
-        </sequential>
-    </macrodef>
-
     <!-- ================================= 
           macro: checkServerProperties
           ================================= -->
@@ -119,7 +97,6 @@
                 <and>
                     <isset property="server.host" />
                     <isset property="server.userid" />
-                    <isset property="server.password" />
                     <isset property="server.path" />
                 </and>
             </condition>
@@ -158,6 +135,194 @@
         </sequential>
     </macrodef>
 
+    <!-- ================================= 
+      macro: custom-ssh-exec         
+      ================================= -->
+    <macrodef name="custom-ssh-exec">
+        <attribute name="host" />
+        <attribute name="username" />
+        <attribute name="command" />
+        <attribute name="outputproperty" default="_ssh.out" />
+        <sequential>
+            <if>
+                <!-- exec into container -->
+                <isset property="server.containername" />
+                <then>
+                    <exec executable="docker" failonerror="true">
+                        <arg value="exec"/>
+                        <arg value="-t"/>
+                        <arg value="--user"/>
+                        <arg value="@{username}"/>
+                        <arg value="${server.containername}" />
+                        <arg line="bash -c '@{command}'"/>
+                        <redirector outputproperty="@{outputproperty}" />
+                    </exec>
+                </then>
+                <elseif>
+                <!-- authenticate with key -->
+                <isset property="server.keyfile" />
+                <then>
+                    <sshexec host="@{host}" username="@{username}" command="@{command}" trust="true" failonerror="true" keyfile="${server.keyfile}" outputproperty="@{outputproperty}" />
+                </then>
+                </elseif>
+                <!-- authenticate with password -->
+                <else>
+                    <sshexec host="@{host}" username="@{username}" command="@{command}" trust="true" failonerror="true" password="${server.password}" outputproperty="@{outputproperty}" />
+                </else>
+            </if>
+        </sequential>
+    </macrodef>
 
+    <!-- ================================= 
+      macro: custom-scp-to-remote        
+      ================================= -->
+    <macrodef name="custom-scp-to-remote">
+        <attribute name="fromdir" />
+        <attribute name="frominclude" />
+        <attribute name="todir" />
+        <sequential>
+            <if>
+                <!-- exec into container -->
+                <isset property="server.containername" />
+                <then>
+                    <exec executable="docker" failonerror="true">
+                        <arg value="cp"/>
+                        <arg value="@{fromdir}" />
+                        <arg value="${server.containername}:@{todir}" />
+                    </exec>
+                </then>
+                <elseif>
+                <isset property="server.keyfile" />
+                <!-- authenticate with key -->
+                <then>
+                    <scp todir="@{todir}" trust="true" verbose="false" keyfile="${server.keyfile}">
+                        <fileset dir="@{fromdir}">
+                            <include name="@{frominclude}" />
+                        </fileset>
+                    </scp>
+                </then>
+                </elseif>
+                <!-- authenticate with password -->
+                <else>
+                    <scp todir="@{todir}" trust="true" verbose="false" password="${server.password}">
+                        <fileset dir="@{fromdir}">
+                            <include name="@{frominclude}" />
+                        </fileset>
+                    </scp>
+                </else>
+            </if>
+        </sequential>
+    </macrodef>
+
+
+    <!-- ================================= 
+        macro: default-scp-to-remote        
+        ================================= -->
+    <macrodef name="default-scp-to-remote">
+        <attribute name="fromdir" />
+        <attribute name="frominclude" />
+        <attribute name="todir" />
+        <sequential>
+            <if>
+                <!-- exec into container -->
+                <isset property="server.containername" />
+                <then>
+                    <custom-scp-to-remote fromdir="${fromdir}" todir="${server.containername}:${todir}" frominclude="${frominclude}" />
+                </then>
+                <!-- password or key -->
+                <else>
+                    <custom-scp-to-remote fromdir="${fromdir}" todir="${server.userid}@${server.host}:${todir}" frominclude="${frominclude}" />
+                </else>
+            </if>
+        </sequential>
+    </macrodef>
+
+
+    <!-- ================================= 
+        macro: custom-scp-from-remote        
+        ================================= -->
+    <macrodef name="custom-scp-from-remote">
+        <attribute name="fromFile" />
+        <attribute name="todir" />
+        <sequential>
+            <local name="actualFrom" />
+            <if>
+                <!-- exec into container -->
+                <isset property="server.containername" />
+                <then>
+                    <condition property="fromIsDirectory" else="false">
+                      <matches pattern=".*\/\*$" string="@{fromFile}" />
+                    </condition>
+                    <if>
+                      <equals arg1="${fromIsDirectory}" arg2="true" />
+                      <then>
+                        <property name="originalFromFile" value="@{fromFile}" />
+                        <!-- replace * at the end with . to copy the content of a directory -->
+                        <local name="command" />
+                        <property name="command" value="echo @{fromFile} | sed 's/.$/./'" />
+                        <custom-ssh-exec host="${server.host}" username="${server.userid}" command="${command}" outputproperty="actualFrom"/>
+                        <echo message="updated actualFrom to ${actualFrom}" />
+                      </then>
+                      <else>
+                        <property name="actualFrom" value="@{fromFile}" />
+                      </else>
+                    </if>
+                    <exec executable="docker" failonerror="true">
+                        <arg value="cp"/>
+                        <arg value="${actualFrom}" />
+                        <arg value="@{todir}" />
+                    </exec>
+                </then>
+                <elseif>
+                <isset property="server.keyfile" />
+                <!-- authenticate with key -->
+                <then>
+                    <scp todir="@{todir}" file="@{fromFile}" trust="true" verbose="false" keyfile="${server.keyfile}" />
+                </then>
+                </elseif>
+                <else>
+                    <scp todir="@{todir}" file="@{fromFile}" trust="true" verbose="false" password="${server.password}" />
+                </else>
+            </if>
+        </sequential>
+    </macrodef>
+
+    <!-- ================================= 
+        macro: default-scp-from-remote        
+        ================================= -->
+    <macrodef name="default-scp-from-remote">
+        <attribute name="fromFile" />
+        <attribute name="todir" />
+        <sequential>
+            <if>
+                <!-- exec into container -->
+                <isset property="server.containername" />
+                <then>
+                    <custom-scp-from-remote fromFile="${server.containername}:@{fromFile}" todir="@{todir}" />
+                </then>
+                <!-- password or key -->
+                <else>
+                    <custom-scp-from-remote fromFile="${server.userid}@${server.host}:@{fromFile}" todir="@{todir}" />
+                </else>
+            </if>
+        </sequential>
+    </macrodef>
+
+    <!-- ================================= 
+        macro: supply-mdm-jar        
+        ================================= -->
+    <macrodef name="supply-mdm-jar">
+        <attribute name="type" /> <!-- mdmimpl/trigger/filter -->
+        <attribute name="name" /> <!-- name of ServiceGroup/trigger/filter -->
+        <attribute name="libDir" default="lib/xyna"/>
+        <attribute name="mdmLocation" default="mdm.jar" />
+        <sequential>
+        <copy todir="${basedir}/@{type}/@{name}/@{libDir}" >
+          <fileset dir="${basedir}">
+            <include name="@{mdmLocation}" />
+          </fileset>
+        </copy>
+        </sequential>
+    </macrodef>
 
 </project>

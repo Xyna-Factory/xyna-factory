@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,13 +30,16 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xact.filter.URLPath;
 import com.gip.xyna.xact.filter.json.ObjectIdentifierJson;
 import com.gip.xyna.xact.filter.session.FQName.XmomVersion;
 import com.gip.xyna.xact.filter.session.XMOMGuiReply.Status;
 import com.gip.xyna.xact.filter.session.XMOMGuiRequest.Operation;
 import com.gip.xyna.xact.filter.session.repair.XMOMRepair;
 import com.gip.xyna.xact.filter.util.Utils;
+import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xfmg.exceptions.XFMG_NoSuchRevision;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xopctrl.managedsessions.SessionManagement;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xprc.exceptions.XPRC_InvalidPackageNameException;
@@ -175,13 +178,17 @@ public class XMOMGui {
     }
   }
   
-  private synchronized SessionBasedData getOrCreateSessionBasedData(XmomGuiSession session) {
+  public synchronized SessionBasedData getOrCreateSessionBasedData(XmomGuiSession session) {
     
     SessionBasedData sbd = sessionBasedData.get(session.getId());
     if(sbd == null) {
       sbd = createNewSessionBasedData(session);
     }
     return sbd;
+  }
+  
+  public synchronized SessionBasedData getSessionBasedData(String sessionId) {
+    return sessionBasedData.get(sessionId);
   }
   
   private synchronized SessionBasedData createNewSessionBasedData(XmomGuiSession session) {
@@ -205,5 +212,12 @@ public class XMOMGui {
   
   public XMOMLoader getXmomLoader() {
     return xmomLoader;
+  }
+  
+  public GenerationBaseObject getGbo(XmomGuiSession session, RuntimeContext rc, Long revision, String path, String name) throws XynaException {
+    SessionBasedData sessionData = this.getSessionBasedData(session.getId());
+    FQName fqName = new FQName(revision, rc, path, name);
+    return sessionData.load(fqName);
+    
   }
 }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,9 @@ import com.gip.xyna.xfmg.exceptions.XFMG_NoSuchRevision;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBase;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBuilds;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyInt;
 import com.gip.xyna.xfmg.xods.ordertypemanagement.OrdertypeManagement.OrderTypeUpdates;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.ODSImpl.PersistenceLayerInstances;
@@ -45,12 +47,14 @@ import com.gip.xyna.xprc.XynaOrderServerExtension;
 import com.gip.xyna.xprc.exceptions.XPRC_DESTINATION_NOT_FOUND;
 import com.gip.xyna.xprc.exceptions.XPRC_INVALID_MONITORING_TYPE;
 import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
+import com.gip.xyna.xprc.xpce.monitoring.MonitoringCodes;
 import com.gip.xyna.xprc.xpce.monitoring.MonitoringDispatcher;
 import com.gip.xyna.xprc.xpce.ordersuspension.SuspensionBackupMode;
 import com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule;
 import com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule.Builder;
 import com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule.PrecedenceComparator;
 import com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRuleCollection;
+import com.gip.xyna.xprc.xpce.parameterinheritance.rules.XynaPropertyInheritanceRule;
 import com.gip.xyna.xprc.xpce.parameterinheritance.storables.InheritanceRuleStorable;
 
 
@@ -207,10 +211,129 @@ public class ParameterInheritanceManagement extends FunctionGroup {
   protected void shutdown() throws XynaException {
     
   }
+
+  private static class XynaPropertyMLWrapper extends ObjectWithRemovalSupport {
+    
+    private static class InheritanceRuleAndDestinationKey {
+      
+      private final InheritanceRule rule;
+      
+      private final DestinationKey dk;
+      
+      public InheritanceRuleAndDestinationKey(InheritanceRule rule, DestinationKey dk) {
+        super();
+        this.rule = rule;
+        this.dk = dk;
+      }
+      
+      @Override
+      public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((dk == null) ? 0 : dk.hashCode());
+        result = prime * result + ((rule == null) ? 0 : rule.hashCode());
+        return result;
+      }
+      
+      @Override
+      public boolean equals(Object obj) {
+        if (this == obj)
+          return true;
+        if (obj == null)
+          return false;
+        if (getClass() != obj.getClass())
+          return false;
+        InheritanceRuleAndDestinationKey other = (InheritanceRuleAndDestinationKey) obj;
+        if (dk == null) {
+          if (other.dk != null)
+            return false;
+        } else if (!dk.equals(other.dk))
+          return false;
+        if (rule == null) {
+          if (other.rule != null)
+            return false;
+        } else if (!rule.equals(other.rule))
+          return false;
+        return true;
+      }
+      
+    }
+    
+    private final XynaPropertyML property;
+    private final Set<InheritanceRuleAndDestinationKey> rules = new HashSet<>();
+    
+    XynaPropertyMLWrapper(String key) {
+      this.property = new XynaPropertyML(key);
+      this.property.setDefaultDocumentation(DocumentationLanguage.EN, "Used by inheritance rules for monitoring level configuration of some ordertypes.");
+    }
+    
+    @Override
+    protected void onDeletion() {
+      property.unregister();
+      super.onDeletion();
+    }
+
+    @Override
+    protected synchronized boolean shouldBeDeleted() {
+      return rules.isEmpty();
+    }
+
+    public synchronized void setUsedBy(DestinationKey dk, InheritanceRule inheritanceRule) {
+      rules.add(new InheritanceRuleAndDestinationKey(inheritanceRule, dk));
+    }
+
+    public synchronized void notUsedAnyMoreBy(DestinationKey dk, InheritanceRule removed) {
+      rules.remove(new InheritanceRuleAndDestinationKey(removed, dk));
+    }
+  }
   
+  public static class XynaPropertyML extends XynaPropertyBase<Integer,XynaPropertyInt> {
+
+    public XynaPropertyML(String name) {
+      super(name, null, "MonitoringLevel");
+    }
+
+    protected Integer fromString(String string) throws Exception {
+      return validateXynaPropertyValueForMonitoringLevel(getPropertyName(), string);
+    }
+
+  }
+  
+  private static Integer validateXynaPropertyValueForMonitoringLevel(String propertyName, String string) {
+    if (string == null) {
+      return null;
+    }
+    Integer val;
+    try {
+      val = Integer.valueOf(string);
+    } catch (NumberFormatException e) {
+      val = -10;
+    }
+    if (!MonitoringCodes.isValid(val)) {
+      throw new RuntimeException("The value of the XynaProperty " + propertyName + " is <" + string + ">, which is not a valid value for a monitoring level configuration.");
+    }
+    return val;
+  }
+
   
   public void addInheritanceRule(ParameterType parameterType, DestinationKey destinationKey, final InheritanceRule inheritanceRule) throws PersistenceLayerException, XFMG_NoSuchRevision {
     long revision = getRevision(destinationKey);
+    if (parameterType == ParameterType.MonitoringLevel && inheritanceRule instanceof XynaPropertyInheritanceRule) {
+      //validation: only when manually adding new rule. not when loading at server init
+      XynaPropertyInheritanceRule xpir = (XynaPropertyInheritanceRule) inheritanceRule;
+      validateXynaPropertyValueForMonitoringLevel(xpir.getPropertyName(), xpir.getValueAsString());
+      //deregister previously registered property if overwritten
+      InheritanceRule previous = orderTypeInheritanceRules.get(parameterType).process(destinationKey, w -> {
+        return w.collection.getRuleByChildFilter(xpir.getChildFilter());
+      });
+      if (previous != null && previous instanceof XynaPropertyInheritanceRule) {
+        XynaPropertyInheritanceRule previousXpir = (XynaPropertyInheritanceRule) previous;
+        propertiesUsedByMonitoringLevelRules.process(previousXpir.getPropertyName(), v -> {
+          v.notUsedAnyMoreBy(destinationKey, previousXpir);
+          return null;
+        });
+      }
+    }
     addInheritanceRuleToMap(parameterType, destinationKey, inheritanceRule);
     storage.persistInheritanceRule(parameterType, destinationKey, inheritanceRule);
     
@@ -241,8 +364,31 @@ public class ParameterInheritanceManagement extends FunctionGroup {
       throw new RuntimeException(e);
     }
   }
+  
+  /*
+   * when properties are used to define the monitoring level used in inheritance rules, the properties should have a validation activated for value changes.
+   * this map enables this behavior: when the XynaPropertyML is created, it is registered together with it validation. when the last rule that uses that
+   * property is removed the property and its validation will be unregistered.
+   */
+  private ConcurrentMapWithObjectRemovalSupport<String, XynaPropertyMLWrapper> propertiesUsedByMonitoringLevelRules = new ConcurrentMapWithObjectRemovalSupport<String, XynaPropertyMLWrapper>() {
+
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    public XynaPropertyMLWrapper createValue(String key) {
+      return new XynaPropertyMLWrapper(key);
+    }
+    
+  };
 
   private void addInheritanceRuleToMap(ParameterType parameterType, DestinationKey destinationKey, final InheritanceRule inheritanceRule) {
+    if (inheritanceRule instanceof XynaPropertyInheritanceRule) {
+      XynaPropertyInheritanceRule xpir = (XynaPropertyInheritanceRule) inheritanceRule;
+      propertiesUsedByMonitoringLevelRules.process(xpir.getPropertyName(), v -> {
+        v.setUsedBy(destinationKey, inheritanceRule);
+        return null;
+      });
+    }
     ParameterInheritanceMap map = orderTypeInheritanceRules.get(parameterType);
     map.process(destinationKey, new ValueProcessor<InheritanceRuleCollectionWrapper, InheritanceRule>() {
       
@@ -264,6 +410,13 @@ public class ParameterInheritanceManagement extends FunctionGroup {
         return v.collection.remove(childFilter);
       }
     });
+    if (removed instanceof XynaPropertyInheritanceRule) {
+      XynaPropertyInheritanceRule xpir = (XynaPropertyInheritanceRule) removed;
+      propertiesUsedByMonitoringLevelRules.process(xpir.getPropertyName(), v -> {
+        v.notUsedAnyMoreBy(destinationKey, removed);
+        return null;
+      });
+    }
     
     storage.deleteInheritanceRule(destinationKey, parameterType, childFilter);
     
@@ -280,6 +433,20 @@ public class ParameterInheritanceManagement extends FunctionGroup {
       value.process(destinationKey, new ValueProcessor<InheritanceRuleCollectionWrapper, Boolean>() {
         
         public Boolean exec(InheritanceRuleCollectionWrapper v) {
+          for (InheritanceRule r : v.collection.getAllInheritanceRules()) {
+            if (r instanceof XynaPropertyInheritanceRule) {
+              XynaPropertyInheritanceRule xpir = (XynaPropertyInheritanceRule) r;
+              propertiesUsedByMonitoringLevelRules.process(xpir.getPropertyName(), new ValueProcessor<XynaPropertyMLWrapper, Void>() {
+
+                @Override
+                public Void exec(XynaPropertyMLWrapper v) {
+                  v.notUsedAnyMoreBy(destinationKey, r);
+                  return null;
+                }
+                
+              });
+            }
+          }
           v.collection.clear();
           return true;
         }

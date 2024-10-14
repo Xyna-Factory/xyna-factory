@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,11 +26,12 @@ import java.io.OutputStreamWriter;
 import java.util.Queue;
 
 import org.apache.log4j.Logger;
-import org.apache.sshd.common.session.Session.TimeoutStatus;
-import org.apache.sshd.server.Command;
+import org.apache.sshd.common.session.helpers.TimeoutIndicator.TimeoutStatus;
+import org.apache.sshd.server.channel.ChannelSession;
+import org.apache.sshd.server.command.Command;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
-import org.apache.sshd.server.SessionAware;
+import org.apache.sshd.server.session.ServerSessionAware;
 import org.apache.sshd.server.session.ServerSession;
 
 import com.gip.xyna.CentralFactoryLogging;
@@ -41,7 +42,7 @@ import xact.ssh.server.SSHSessionStore;
 import xact.ssh.server.SSHSessionStore.SSHConnection;
 import xact.ssh.server.XynaSSHServer;
 
-public class ShellCommand implements Command, SessionAware, SSHConnection {
+public class ShellCommand implements Command, ServerSessionAware, SSHConnection {
   
   private static final Logger logger = CentralFactoryLogging.getLogger(ShellCommand.class);
 
@@ -70,8 +71,8 @@ public class ShellCommand implements Command, SessionAware, SSHConnection {
     this.startParameter = startParameter;
   }
  
-  public void destroy() {
-    if( session.getTimeoutStatus() == TimeoutStatus.NoTimeout) {
+  public void destroy(ChannelSession cs) {
+    if( session.getTimeoutStatus().getStatus() == TimeoutStatus.NoTimeout) {
       if( clientExit ) {
         logger.info("Client requested disconnect on "+connectionParameter.getUniqueId() );
       } else {
@@ -106,7 +107,7 @@ public class ShellCommand implements Command, SessionAware, SSHConnection {
     return connectionParameter;
   }
   
-  public void start(Environment environment) throws IOException {
+  public void start(ChannelSession cs, Environment environment) throws IOException {
     this.environment = environment;
     
     //TODO Encoding aus environment lesen
