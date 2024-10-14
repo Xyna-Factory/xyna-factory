@@ -64,7 +64,7 @@ result.setErrorMessages(new ArrayList&lt;String&gt;());
 return result.getResult();</CodeSnippet>
       </SourceCode>
     </Operation>
-        <Operation IsStatic="false" Label="get Headers" Name="getHeaders">
+    <Operation IsStatic="false" Label="get Headers" Name="getHeaders">
       <Input/>
       <Output>
         <Data ID="4" IsList="true" Label="Header Field" ReferenceName="HeaderField" ReferencePath="xact.http" VariableName="headerField4"/>

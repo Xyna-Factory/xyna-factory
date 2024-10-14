@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="true" Label="OAS Base Api" TypeName="OASBaseApi" TypePath="xmcp.oas.datatype" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="OAS Base Api" TypeName="OASBaseApi">
+    <Operation IsStatic="false" Label="Build Response after Error during Encode" Name="buildResponseAfterErrorDuringEncode">
+      <Input>
+        <Data ID="13" Label="Exception Holder" ReferenceName="ExceptionHolder" ReferencePath="core.exception" VariableName="exceptionHolder13"/>
+      </Input>
+      <Output>
+        <Data ID="21" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype" VariableName="httpResponse21"/>
+      </Output>
+      <Meta>
+        <Documentation>Catching Exceptions during Encode and calling this method to returning proper http response.</Documentation>
+      </Meta>
+      <Call ReferenceName="BuildResposeAfterError" ReferencePath="xmcp.oas.exception"/>
+    </Operation>
+    <Operation IsStatic="false" Label="Build Respose after Error" Name="buildResposeAfterError">
+      <Input>
+        <Data ID="40" Label="Exception Holder" ReferenceName="ExceptionHolder" ReferencePath="core.exception" VariableName="exceptionHolder40"/>
+      </Input>
+      <Output>
+        <Data ID="48" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype" VariableName="httpResponse48"/>
+      </Output>
+      <Meta>
+        <Documentation>Catching Exceptions and calling this method to returning proper http response.</Documentation>
+      </Meta>
+      <Call ReferenceName="BuildResposeAfterError" ReferencePath="xmcp.oas.exception"/>
+    </Operation>
+    <Operation IsStatic="false" Label="Postprocess Response" Name="postprocessResponse">
+      <Input>
+        <Data ID="97" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype" VariableName="httpResponse97"/>
+      </Input>
+      <Output>
+        <Data ID="111" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype" VariableName="httpResponse111"/>
+      </Output>
+      <Throws>
+        <Exception ID="104" Label="Provider Processing Hook Exception" ReferenceName="ProviderProcessingHookException" ReferencePath="xmcp.oas.exception" VariableName="providerProcessingHookException104"/>
+      </Throws>
+      <Meta>
+        <Documentation>Hook to postprocess response after implementation steps. Used in all endpoints of this api. For an error response use a subclass of xmcp.oas.datatype.provider.ResponseParameter in the exception.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">return httpResponse97;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Preprocess Request" Name="preprocessRequest">
+      <Input>
+        <Data ID="118" Label="Http Request" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype" VariableName="httpRequest118"/>
+      </Input>
+      <Output>
+        <Data ID="132" Label="Http Request" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype" VariableName="httpRequest132"/>
+      </Output>
+      <Throws>
+        <Exception ID="125" Label="Provider Processing Hook Exception" ReferenceName="ProviderProcessingHookException" ReferencePath="xmcp.oas.exception" VariableName="providerProcessingHookException125"/>
+      </Throws>
+      <Meta>
+        <Documentation>Hook to preprocess request before implementation steps. Used in all endpoints. For an error response use a subclass of xmcp.oas.datatype.provider.ResponseParameter in the exception.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">return httpRequest118;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Validate during Decode" Name="validateDuringDecode">
+      <Input>
+        <Data ID="4970" Label="Request Parameter" ReferenceName="RequestParameter" ReferencePath="xmcp.oas.datatype.provider" VariableName="requestParameter4970"/>
+      </Input>
+      <Output>
+        <Data ID="228" Label="Validate" ReferenceName="Validate" ReferencePath="xmcp.oas.datatype" VariableName="validate228"/>
+      </Output>
+      <Meta>
+        <Documentation>Decide if request should be validated.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new Validate.Builder().validate(true).instance();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Validate during Encode" Name="validateDuringEncode">
+      <Input>
+        <Data ID="3541" Label="Response Parameter" ReferenceName="ResponseParameter" ReferencePath="xmcp.oas.datatype.provider" VariableName="responseParameter3541"/>
+      </Input>
+      <Output>
+        <Data ID="241" Label="Validate" ReferenceName="Validate" ReferencePath="xmcp.oas.datatype" VariableName="validate241"/>
+      </Output>
+      <Meta>
+        <Documentation>Decide if response should be validated.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new Validate.Builder().validate(true).instance();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

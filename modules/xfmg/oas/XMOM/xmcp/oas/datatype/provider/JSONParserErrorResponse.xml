@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="ResponseParameter" BaseTypePath="xmcp.oas.datatype.provider" IsAbstract="false" Label="JSON Parser Error Response" TypeName="JSONParserErrorResponse" TypePath="xmcp.oas.datatype.provider" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Return Code" VariableName="returnCode">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Error" ReferenceName="JsonParsingError" ReferencePath="xmcp.oas.datatype" VariableName="error"/>
+  <Service Label="JSON Parser Error Response" TypeName="JSONParserErrorResponse">
+    <Operation IsStatic="false" Label="get Headers" Name="getHeaders">
+      <Input/>
+      <Output>
+        <Data ID="1" IsList="true" Label="Header Field" ReferenceName="HeaderField" ReferencePath="xact.http" VariableName="headerField1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">List&lt;HeaderField&gt; headers = new ArrayList&lt;&gt;();
+return headers;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get Payload" Name="getPayload">
+      <Input/>
+      <Output>
+        <Data ID="4" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document4"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">xact.templates.Document body;
+body = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(getError(), new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions());
+ 
+return body;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get Status Code" Name="getStatusCode">
+      <Input/>
+      <Output>
+        <Data ID="69" Label="Http Status" VariableName="string69">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getReturnCode() + " " + getError().getError();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="12" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult12"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+
+
+return result.getResult();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
