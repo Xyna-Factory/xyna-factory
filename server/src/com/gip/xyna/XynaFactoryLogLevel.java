@@ -55,6 +55,7 @@ public class XynaFactoryLogLevel extends Level {
 
   private XynaFactoryLogLevel(int level, String levelStr, int syslogEquivalent, org.apache.logging.log4j.Level version2equivalent) {
     super(level, levelStr, syslogEquivalent, version2equivalent);
+    org.apache.logging.log4j.Level.forName(levelStr, level);
   }
 
 }
