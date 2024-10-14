@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,13 +44,17 @@ public class XynaFactoryLogLevel extends Level {
   public static final int SYSLOG_EQUIVALENT = 3;
 
 
+  public static final org.apache.logging.log4j.Level VERSION2EQUIVALENT = org.apache.logging.log4j.Level.ERROR;
+
+
   public static final XynaFactoryLogLevel Factory = new XynaFactoryLogLevel(XYNA_FACTORY_LOG_LEVEL_INT,
                                                                             XYNA_FACTORY_LOG_LEVEL_STRING,
-                                                                            SYSLOG_EQUIVALENT);
+                                                                            SYSLOG_EQUIVALENT,
+                                                                            VERSION2EQUIVALENT);
 
 
-  private XynaFactoryLogLevel(int level, String levelStr, int syslogEquivalent) {
-    super(level, levelStr, syslogEquivalent);
+  private XynaFactoryLogLevel(int level, String levelStr, int syslogEquivalent, org.apache.logging.log4j.Level version2equivalent) {
+    super(level, levelStr, syslogEquivalent, version2equivalent);
   }
 
 }
