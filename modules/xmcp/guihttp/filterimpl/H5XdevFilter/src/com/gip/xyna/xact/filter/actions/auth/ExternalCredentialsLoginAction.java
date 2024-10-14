@@ -33,6 +33,7 @@ import com.gip.xyna.xact.filter.HTMLBuilder.HTMLPart;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
 import com.gip.xyna.xact.filter.URLPath;
 import com.gip.xyna.xact.filter.actions.auth.utils.AuthUtils;
+import com.gip.xyna.xact.filter.session.XMOMGui;
 import com.gip.xyna.xact.filter.session.XMOMGuiReply.Status;
 import com.gip.xyna.xact.filter.util.Utils;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
@@ -73,7 +74,11 @@ public class ExternalCredentialsLoginAction implements FilterAction {
   //   internalServerError.setStackTrace(new StackTraceElement[0]);
   }
 
+  private XMOMGui xmomgui;
 
+  public ExternalCredentialsLoginAction(XMOMGui xmomgui) {
+    this.xmomgui = xmomgui;
+  }
 
   @Override
   public boolean match(URLPath url, Method method) {
@@ -126,7 +131,7 @@ public class ExternalCredentialsLoginAction implements FilterAction {
       }
     }
 
-    return LoginAction.createLoginResponse(jfai, tc, creds, request.getPath());
+    return LoginAction.createLoginResponse(jfai, tc, creds, request.getPath(), xmomgui);
   }
 
 

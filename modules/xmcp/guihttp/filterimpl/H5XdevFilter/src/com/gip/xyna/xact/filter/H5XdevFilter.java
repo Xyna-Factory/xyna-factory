@@ -373,7 +373,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add(new LogoutAction());
     allFilterActions.add(new ExternalUserLoginInformationAction());
     allFilterActions.add(new ExternalUserLoginAction(xmomGui));
-    allFilterActions.add(new ExternalCredentialsLoginAction());
+    allFilterActions.add(new ExternalCredentialsLoginAction(xmomGui));
     allFilterActions.add(new SharedLoginAction(xmomGui));
     allFilterActions.add(new ChangePasswordAction());
 
