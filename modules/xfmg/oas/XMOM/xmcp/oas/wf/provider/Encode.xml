@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Encode" TypeName="Encode" TypePath="xmcp.oas.wf.provider" Version="1.8">
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Encode" TypeName="Encode" TypePath="xmcp.oas.wf.provider" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Encode" Name="Encode">
     <Input>
       <Data ID="2982" Label="OAS Base Api" ReferenceName="OASBaseApi" ReferencePath="xmcp.oas.datatype" VariableName="oASBaseApi2982"/>
@@ -9,23 +25,23 @@
       <Data ID="127" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype" VariableName="httpResponse127"/>
     </Output>
     <Throws>
-      <Exception Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception" VariableName="validationException4072"/>
+      <Exception Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception" VariableName="validationException3860"/>
     </Throws>
-    <ServiceReference ID="2882" Label="Response Parameter" ReferenceName="ResponseParameter.ResponseParameter" ReferencePath="xmcp.oas.datatype.provider">
-      <Source RefID="2881"/>
-      <Target RefID="2881"/>
-    </ServiceReference>
     <ServiceReference ID="2242" Label="OAS Type Validation" ReferenceName="OASTypeValidation" ReferencePath="xmcp.oas.wf">
       <Source RefID="2241"/>
       <Target RefID="2241"/>
     </ServiceReference>
-    <ServiceReference ID="29" Label="Response Parameter" ReferenceName="ResponseParameter.ResponseParameter" ReferencePath="xmcp.oas.datatype.provider">
-      <Source RefID="28"/>
-      <Target RefID="28"/>
+    <ServiceReference ID="2882" Label="Response Parameter" ReferenceName="ResponseParameter.ResponseParameter" ReferencePath="xmcp.oas.datatype.provider">
+      <Source RefID="2881"/>
+      <Target RefID="2881"/>
     </ServiceReference>
     <ServiceReference ID="3804" Label="OAS Base Api" ReferenceName="OASBaseApi.OASBaseApi" ReferencePath="xmcp.oas.datatype">
       <Source RefID="3803"/>
       <Target RefID="3803"/>
+    </ServiceReference>
+    <ServiceReference ID="29" Label="Response Parameter" ReferenceName="ResponseParameter.ResponseParameter" ReferencePath="xmcp.oas.datatype.provider">
+      <Source RefID="28"/>
+      <Target RefID="28"/>
     </ServiceReference>
     <Function ID="3803" Label="Validate during Encode">
       <Source RefID="3804"/>
