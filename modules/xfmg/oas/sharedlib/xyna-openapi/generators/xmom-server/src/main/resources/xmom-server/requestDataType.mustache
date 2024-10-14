@@ -92,54 +92,63 @@ jsonOptions.setProcessAllInputGenerically(false);
 jsonOptions.setListWrapper((List){{listWrapperPath}}.ListWrapperProvider.getListWrapper());
 
 xact.templates.Document document = httpRequest1.getBody();
+try {
   {{#bodyParams}}
     {{^isPrimitive}}
-jsonOptions.setObjectDecider(new {{propRefPath}}.decider.OASDecider());
+    jsonOptions.setObjectDecider(new {{propRefPath}}.decider.OASDecider());
       {{^isList}}
-{{propFQN}} {{propVarName}} = ({{propFQN}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{propFQN}}(), jsonOptions);
+    {{propFQN}} {{propVarName}} = ({{propFQN}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{propFQN}}(), jsonOptions);
       {{/isList}}
       {{#isList}}
-List tmp = (List)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new {{propFQN}}(), jsonOptions);
-List&lt;{{propFQN}}&gt; {{propVarName}} = (List&lt;{{propFQN}}&gt;)tmp;
+    List tmp = (List)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new {{propFQN}}(), jsonOptions);
+    List&lt;{{propFQN}}&gt; {{propVarName}} = (List&lt;{{propFQN}}&gt;)tmp;
       {{/isList}}
-ret.{{setPropVarName}}({{propVarName}});
+    ret.{{setPropVarName}}({{propVarName}});
     {{/isPrimitive}}
     {{#isPrimitive}}
       {{^isList}}
         {{#isString}}
-String text = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.decodeValue(document).getText();
-text = text.substring(1, text.length()-1);
-ret.{{setPropVarName}}(text);
+    String text = xfmg.xfctrl.datamodel.json.JSONDatamodelServices.decodeValue(document).getText();
+    text = text.substring(1, text.length()-1);
+    ret.{{setPropVarName}}(text);
         {{/isString}}
         {{^isString}}
-ret.{{setPropVarName}}({{javaType}}.valueOf(document.getText()));
+    ret.{{setPropVarName}}({{javaType}}.valueOf(document.getText()));
         {{/isString}}
       {{/isList}}
       {{#isList}}
-List tmp = (List)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new xfmg.xfctrl.datamodel.json.JSONValue(), jsonOptions);
-List&lt;? extends xfmg.xfctrl.datamodel.json.JSONValue&gt; values = (List&lt;? extends xfmg.xfctrl.datamodel.json.JSONValue&gt;)tmp;
-List&lt;{{javaType}}&gt; resultData = new ArrayList&lt; &gt;();
-for(xfmg.xfctrl.datamodel.json.JSONValue value : values) {
-    if(value == null || "NULL".equals(value.getType())) {
-        resultData.add(null);
-        continue;
-    }
-  {{javaType}} valueProcessed =
+    List tmp = (List)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseListFromJSONWithOptions(document, new xfmg.xfctrl.datamodel.json.JSONValue(), jsonOptions);
+    List&lt;? extends xfmg.xfctrl.datamodel.json.JSONValue&gt; values = (List&lt;? extends xfmg.xfctrl.datamodel.json.JSONValue&gt;)tmp;
+    List&lt;{{javaType}}&gt; resultData = new ArrayList&lt; &gt;();
+    for(xfmg.xfctrl.datamodel.json.JSONValue value : values) {
+        if(value == null || "NULL".equals(value.getType())) {
+            resultData.add(null);
+            continue;
+        }
+        {{javaType}} valueProcessed =
         {{#isString}}
-    xfmg.xfctrl.datamodel.json.JSONDatamodelServices.decodeValue(new xact.templates.Document.Builder().text(value.getStringOrNumberValue()).instance()).getText();
+            xfmg.xfctrl.datamodel.json.JSONDatamodelServices.decodeValue(new xact.templates.Document.Builder().text(value.getStringOrNumberValue()).instance()).getText();
         {{/isString}}
         {{#isNumber}}
-    {{javaType}}.valueOf(value.getStringOrNumberValue());
+        {{javaType}}.valueOf(value.getStringOrNumberValue());
         {{/isNumber}}
         {{#isBoolean}}
-    value.getBooleanValue();
+        value.getBooleanValue();
         {{/isBoolean}}
-    resultData.add(valueProcessed);
-}
-ret.{{setPropVarName}}(resultData);
+        resultData.add(valueProcessed);
+    }
+    ret.{{setPropVarName}}(resultData);
       {{/isList}}
     {{/isPrimitive}}
   {{/bodyParams}}
+} catch (Exception e) {
+    xmcp.oas.exception.JSONParserException exception =
+        new xmcp.oas.exception.JSONParserException.Builder().errorResponse(
+            new xmcp.oas.datatype.provider.JSONParserErrorResponse.Builder().returnCode("400").error(
+                new xmcp.oas.datatype.JsonParsingError.Builder().error("Bad request").message("Request body could not be read properly.").instance()
+            ).instance()
+        ).instance();
+}
 {{/hasBody}}
 return ret;
         </CodeSnippet>

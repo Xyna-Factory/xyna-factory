@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 {{!
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2024 Xyna GmbH, Germany
@@ -15,85 +16,90 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }}
-{{#operations}}{{#xynaOperation}}<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8"
-TypeName="{{endpointWorkflowTypeName}}" TypePath="{{endpointWorkflowPath}}" Label="{{endpointWorkflowLabel}}">
+{{#operations}}
+{{#xynaOperation}}
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="{{endpointWorkflowTypeName}}" TypePath="{{endpointWorkflowPath}}" Label="{{endpointWorkflowLabel}}">
   <Operation ID="0" Label="{{endpointWorkflowLabel}}" Name="{{endpointWorkflowTypeName}}" IsStatic="false">
     <Input>
       <Data ID="2" Label="/{{pathPrefix}} Api" VariableName="{{apiRefName}}2" ReferenceName="{{apiRefName}}" ReferencePath="{{apiRefPath}}"/>
       <Data ID="3" Label="Http Request" VariableName="httpRequest3" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype"/>
     </Input>
     <Output>
-      <Data ID="4" Label="Http Response" VariableName="httpResponse4" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype"/>
+      <Data ID="3135" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype" VariableName="httpResponse3135"/>
     </Output>
-    <ServiceReference ID="13" Label="Encode" ReferenceName="Encode" ReferencePath="xmcp.oas.wf.provider">
-      <Source RefID="12"/>
-      <Target RefID="12"/>
-    </ServiceReference>
+    <Throws>
+      <Exception Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception" VariableName="validationException3427"/>
+    </Throws>
     <ServiceReference ID="9" Label="Decode" ReferenceName="Decode" ReferencePath="xmcp.oas.wf.provider">
       <Source RefID="8"/>
       <Target RefID="8"/>
-    </ServiceReference>
-    <ServiceReference ID="6" Label="{{apiLabel}}" ReferenceName="{{apiRefName}}.{{apiRefName}}" ReferencePath="{{apiRefPath}}">
-      <Source RefID="5"/>
-      <Target RefID="5"/>
-    </ServiceReference>
-    <ServiceReference ID="25" Label="{{apiLabel}}" ReferenceName="{{apiRefName}}.{{apiRefName}}" ReferencePath="{{apiRefPath}}">
-      <Source RefID="24"/>
-      <Target RefID="24"/>
-    </ServiceReference>
-    <ServiceReference ID="28" Label="{{apiLabel}}" ReferenceName="{{apiRefName}}.{{apiRefName}}" ReferencePath="{{apiRefPath}}">
-      <Source RefID="27"/>
-      <Target RefID="27"/>
-    </ServiceReference>
-    <ServiceReference ID="20" Label="Encode" ReferenceName="Encode" ReferencePath="xmcp.oas.wf.provider">
-      <Source RefID="19"/>
-      <Target RefID="19"/>
     </ServiceReference>
     <ServiceReference ID="31" Label="Encode" ReferenceName="Encode" ReferencePath="xmcp.oas.wf.provider">
       <Source RefID="30"/>
       <Target RefID="30"/>
     </ServiceReference>
-    <Function ID="24" Label="Preprocess Request">
-      <Source RefID="25">
-      </Source>
-      <Source RefID="2">
-      </Source>
-      <Source RefID="3">
-      </Source>
-      <Target RefID="25">
-      </Target>
-      <Target RefID="26">
-      </Target>
-      <Invoke ServiceID="25" Operation="preprocessRequest">
-        <Source RefID="2">
-        </Source>
-        <Source RefID="3">
-        </Source>
+    <ServiceReference ID="6" Label="{{apiLabel}}" ReferenceName="{{apiRefName}}.{{apiRefName}}" ReferencePath="{{apiRefPath}}>
+      <Source RefID="5"/>
+      <Target RefID="5"/>
+    </ServiceReference>
+    <ServiceReference ID="444" Label="OAS Base Api" ReferenceName="OASBaseApi.OASBaseApi" ReferencePath="xmcp.oas.datatype">
+      <Source RefID="443"/>
+      <Target RefID="443"/>
+    </ServiceReference>
+    <ServiceReference ID="1973" Label="Exception Service" ReferenceName="ExceptionService.ExceptionService" ReferencePath="core.exception">
+      <Source RefID="1972"/>
+      <Target RefID="1972"/>
+    </ServiceReference>
+    <ServiceReference ID="129" Label="OAS Base Api" ReferenceName="OASBaseApi.OASBaseApi" ReferencePath="xmcp.oas.datatype">
+      <Source RefID="128"/>
+      <Target RefID="128"/>
+    </ServiceReference>
+    <ServiceReference ID="2396" Label="OAS Base Api" ReferenceName="OASBaseApi.OASBaseApi" ReferencePath="xmcp.oas.datatype">
+      <Source RefID="2395"/>
+      <Target RefID="2395"/>
+    </ServiceReference>
+    <ServiceReference ID="2251" Label="Exception Service" ReferenceName="ExceptionService.ExceptionService" ReferencePath="core.exception">
+      <Source RefID="2250"/>
+      <Target RefID="2250"/>
+    </ServiceReference>
+    <ServiceReference ID="13" Label="Encode" ReferenceName="Encode" ReferencePath="xmcp.oas.wf.provider">
+      <Source RefID="12"/>
+      <Target RefID="12"/>
+    </ServiceReference>
+    <ServiceReference ID="1571" Label="Build Respose after Error" ReferenceName="BuildResposeAfterError" ReferencePath="xmcp.oas.exception">
+      <Source RefID="1570"/>
+      <Target RefID="1570"/>
+    </ServiceReference>
+    <Function ID="128" Label="Preprocess Request">
+      <Source RefID="129"/>
+      <Source RefID="2"/>
+      <Source RefID="3"/>
+      <Target RefID="129"/>
+      <Target RefID="131"/>
+      <Invoke Operation="preprocessRequest" ServiceID="129">
+        <Source RefID="2"/>
+        <Source RefID="3"/>
       </Invoke>
-      <Receive ServiceID="25">
-        <Target RefID="26">
-        </Target>
+      <Receive ServiceID="129">
+        <Target RefID="131"/>
       </Receive>
     </Function>
     <Function ID="8" Label="Decode">
-      <Source RefID="9">
-      </Source>
-      <Source RefID="11">
-      </Source>
-      <Source RefID="26">
-      </Source>
-      <Target RefID="9">
-      </Target>
-      <Target RefID="10">
-      </Target>
-      <Invoke ServiceID="9" Operation="Decode">
-        <Source RefID="11">
+      <Source RefID="9"/>
+      <Source RefID="2"/>
+      <Source RefID="935"/>
+      <Source RefID="131"/>
+      <Target RefID="9"/>
+      <Target RefID="10"/>
+      <Invoke Operation="Decode" ServiceID="9">
+        <Source RefID="2"/>
+        <Source RefID="935">
           <Meta>
             <LinkType>Constant</LinkType>
             <ExpectedType>{{parameterFQN}}</ExpectedType>
           </Meta>
         </Source>
-        <Source RefID="26">
+        <Source RefID="131">
           <Meta>
             <LinkType>UserConnected</LinkType>
           </Meta>
@@ -108,37 +114,27 @@ TypeName="{{endpointWorkflowTypeName}}" TypePath="{{endpointWorkflowPath}}" Labe
       </Receive>
     </Function>
     <Function ID="5" Label="{{implLabel}}">
-      <Source RefID="6">
-      </Source>
-      <Source RefID="2">
-      </Source>
-      <Source RefID="10">
-      </Source>
-      <Target RefID="6">
-      </Target>
-      <Target RefID="7">
-      </Target>
-      <Invoke ServiceID="6" Operation="{{implVarName}}">
-        <Source RefID="2">
-        </Source>
-        <Source RefID="10">
-        </Source>
+      <Source RefID="6"/>
+      <Source RefID="2"/>
+      <Source RefID="10"/>
+      <Target RefID="6"/>
+      <Target RefID="7"/>
+      <Invoke Operation="{{implVarName}}" ServiceID="6">
+        <Source RefID="2"/>
+        <Source RefID="10"/>
       </Invoke>
       <Receive ServiceID="6">
-        <Target RefID="7">
-        </Target>
+        <Target RefID="7"/>
       </Receive>
     </Function>
     <Function ID="12" Label="Encode">
-      <Source RefID="13">
-      </Source>
-      <Source RefID="7">
-      </Source>
-      <Target RefID="13">
-      </Target>
-      <Target RefID="14">
-      </Target>
-      <Invoke ServiceID="13" Operation="Encode">
+      <Source RefID="13"/>
+      <Source RefID="2"/>
+      <Source RefID="7"/>
+      <Target RefID="13"/>
+      <Target RefID="14"/>
+      <Invoke Operation="Encode" ServiceID="13">
+        <Source RefID="2"/>
         <Source RefID="7">
           <Meta>
             <ExpectedType>{{responseFQN}}</ExpectedType>
@@ -146,181 +142,182 @@ TypeName="{{endpointWorkflowTypeName}}" TypePath="{{endpointWorkflowPath}}" Labe
         </Source>
       </Invoke>
       <Receive ServiceID="13">
-        <Target RefID="14">
-        </Target>
+        <Target RefID="14"/>
       </Receive>
+      <Catch ExceptionID="2114" ID="2115">
+        <Function ID="2250" Label="Wrap Exception">
+          <Source RefID="2251"/>
+          <Source RefID="2114"/>
+          <Target RefID="2251"/>
+          <Target RefID="2253"/>
+          <Invoke Operation="wrapException" ServiceID="2251">
+            <Source RefID="2114"/>
+          </Invoke>
+          <Receive ServiceID="2251">
+            <Target RefID="2253"/>
+          </Receive>
+        </Function>
+        <Function ID="2395" Label="Build Response after Error during Encode">
+          <Source RefID="2396"/>
+          <Source RefID="2"/>
+          <Source RefID="2253"/>
+          <Target RefID="2396"/>
+          <Target RefID="2398"/>
+          <Invoke Operation="buildResponseAfterErrorDuringEncode" ServiceID="2396">
+            <Source RefID="2"/>
+            <Source RefID="2253"/>
+          </Invoke>
+          <Receive ServiceID="2396">
+            <Target RefID="2398"/>
+          </Receive>
+        </Function>
+        <Assign>
+          <Source RefID="2398"/>
+          <Target RefID="14"/>
+          <Copy>
+            <Source RefID="2398"/>
+            <Target RefID="14"/>
+          </Copy>
+        </Assign>
+        <Data ID="2253" Label="Exception Holder" ReferenceName="ExceptionHolder" ReferencePath="core.exception" VariableName="exceptionHolder2253">
+          <Source RefID="2250"/>
+        </Data>
+        <Data ID="2398" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype" VariableName="httpResponse2398">
+          <Source RefID="2395"/>
+        </Data>
+      </Catch>
     </Function>
-    <Function ID="27" Label="Postprocess Response">
-      <Source RefID="28">
-      </Source>
-      <Source RefID="2">
-      </Source>
-      <Source RefID="14">
-      </Source>
-      <Target RefID="28">
-      </Target>
-      <Target RefID="29">
-      </Target>
-      <Invoke ServiceID="28" Operation="postprocessResponse">
-        <Source RefID="2">
-        </Source>
-        <Source RefID="14">
-        </Source>
+    <Function ID="443" Label="Postprocess Response">
+      <Source RefID="444"/>
+      <Source RefID="2"/>
+      <Source RefID="14"/>
+      <Target RefID="444"/>
+      <Target RefID="446"/>
+      <Invoke Operation="postprocessResponse" ServiceID="444">
+        <Source RefID="2"/>
+        <Source RefID="14"/>
       </Invoke>
-      <Receive ServiceID="28">
-        <Target RefID="29">
-        </Target>
+      <Receive ServiceID="444">
+        <Target RefID="446"/>
       </Receive>
     </Function>
     <Data ID="7" VariableName="{{responseVarName}}7" Label="{{responseLabel}}" ReferenceName="{{responseRefName}}" ReferencePath="{{responseRefPath}}">
       <Source RefID="5"/>
     </Data>
-    <Data ID="10" VariableName="{{parameterVarName}}10" Label="{{parameterLabel}}" ReferenceName="{{parameterRefName}}" ReferencePath="{{parameterRefPath}}">
-    </Data>
-    <Data ID="11" VariableName="const_{{parameterVarName}}11" Label="{{parameterLabel}}" ReferenceName="{{parameterRefName}}" ReferencePath="{{parameterRefPath}}">
-    </Data>
-    <Data ID="14" VariableName="httpResponse14" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype">
+    <Data ID="10" VariableName="{{parameterVarName}}10" Label="{{parameterLabel}}" ReferenceName="{{parameterRefName}}" ReferencePath="{{parameterRefPath}}"/>
+    <Data ID="14" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype" VariableName="httpResponse14">
       <Source RefID="12"/>
     </Data>
-    <Data ID="26" VariableName="httpRequest26" Label="Http Request" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype">
-      <Source RefID="24"/>
-    </Data>
-    <Data ID="23" VariableName="validationErrorResponse23" Label="Validation Error Response" ReferenceName="ValidationErrorResponse" ReferencePath="xmcp.oas.datatype.provider">
-      <Source RefID="17"/>
-    </Data>
-    <Data ID="29" VariableName="httpResponse29" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype">
-      <Source RefID="27"/>
-    </Data>
-    <Data ID="37" VariableName="responseParameter37" Label="Response Parameter" ReferenceName="ResponseParameter" ReferencePath="xmcp.oas.datatype.provider">
+    <Data ID="37" Label="Response Parameter" ReferenceName="ResponseParameter" ReferencePath="xmcp.oas.datatype.provider" VariableName="responseParameter37">
       <Source RefID="34"/>
     </Data>
-    <Exception ID="15" VariableName="validationException15" Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception">
-    </Exception>
-    <Exception ID="32" VariableName="providerProcessingHookException32" Label="Provider Processing Hook Exception" ReferenceName="ProviderProcessingHookException" ReferencePath="xmcp.oas.exception">
+    <Data ID="131" Label="Http Request" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype" VariableName="httpRequest131">
+      <Source RefID="128"/>
+    </Data>
+    <Data ID="446" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype" VariableName="httpResponse446">
+      <Source RefID="443"/>
+    </Data>
+    <Data ID="935" VariableName="const_{{parameterVarName}}935" Label="{{parameterLabel}}" ReferenceName="{{parameterRefName}}" ReferencePath="{{parameterRefPath}}"/>
+    <Exception ID="32" Label="Provider Processing Hook Exception" ReferenceName="ProviderProcessingHookException" ReferencePath="xmcp.oas.exception" VariableName="providerProcessingHookException32">
       <Source RefID="0"/>
     </Exception>
+    <Exception ID="1446" Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception1446">
+      <Source RefID="0"/>
+    </Exception>
+    <Exception ID="2114" Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception2114"/>
     <Assign ID="1">
-      <Source RefID="29">
-      </Source>
-      <Target RefID="4">
-      </Target>
+      <Source RefID="446"/>
+      <Target RefID="3135"/>
       <Copy>
-        <Source RefID="29">
+        <Source RefID="446">
           <Meta>
             <LinkType>UserConnected</LinkType>
           </Meta>
         </Source>
-        <Target RefID="4">
-        </Target>
+        <Target RefID="3135"/>
       </Copy>
     </Assign>
-    <Catch ID="16" ExceptionID="15">
-      <Mappings ID="17" Label="Get Validation Error Response">
-        <Input>
-          <Exception ID="18" VariableName="validationException18" Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception">
-            <Source RefID="17"/>
-          </Exception>
-          <Source RefID="15">
-          </Source>
-        </Input>
-        <Output>
-          <Data ID="22" VariableName="validationErrorResponse22" Label="Validation Error Response" ReferenceName="ValidationErrorResponse" ReferencePath="xmcp.oas.datatype.provider">
-            <Source RefID="17"/>
-          </Data>
-          <Target RefID="23">
-          </Target>
-        </Output>
-        <Mapping>%1%=%0%.errorResponse</Mapping>
-      </Mappings>
-      <Function ID="19" Label="Encode">
-        <Source RefID="20">
-        </Source>
-        <Source RefID="23">
-        </Source>
-        <Target RefID="20">
-        </Target>
-        <Target RefID="21">
-        </Target>
-        <Invoke ServiceID="20" Operation="Encode">
-          <Source RefID="23">
-          </Source>
+    <Catch ExceptionID="1446" ID="1447">
+      <Function ID="1972" Label="Wrap Exception">
+        <Source RefID="1973"/>
+        <Source RefID="1446"/>
+        <Target RefID="1973"/>
+        <Target RefID="1975"/>
+        <Invoke Operation="wrapException" ServiceID="1973">
+          <Source RefID="1446"/>
         </Invoke>
-        <Receive ServiceID="20">
-          <Target RefID="21">
-          </Target>
+        <Receive ServiceID="1973">
+          <Target RefID="1975"/>
+        </Receive>
+      </Function>
+      <Function ID="1570" Label="Build Respose after Error">
+        <Source RefID="1571"/>
+        <Source RefID="2"/>
+        <Source RefID="1975"/>
+        <Target RefID="1571"/>
+        <Target RefID="1573"/>
+        <Invoke Operation="BuildResposeAfterError" ServiceID="1571">
+          <Source RefID="2"/>
+          <Source RefID="1975"/>
+        </Invoke>
+        <Receive ServiceID="1571">
+          <Target RefID="1573"/>
         </Receive>
       </Function>
       <Assign>
-        <Source RefID="21">
-        </Source>
-        <Target RefID="4">
-        </Target>
+        <Source RefID="1573"/>
+        <Target RefID="3135"/>
         <Copy>
-          <Source RefID="21">
-            <Meta>
-              <LinkType>UserConnected</LinkType>
-            </Meta>
-          </Source>
-          <Target RefID="4">
-          </Target>
+          <Source RefID="1573"/>
+          <Target RefID="3135"/>
         </Copy>
       </Assign>
-      <Data ID="21" VariableName="httpResponse21" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype">
-        <Source RefID="19"/>
+      <Data ID="1573" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype" VariableName="httpResponse1573">
+        <Source RefID="1570"/>
+      </Data>
+      <Data ID="1975" Label="Exception Holder" ReferenceName="ExceptionHolder" ReferencePath="core.exception" VariableName="exceptionHolder1975">
+        <Source RefID="1972"/>
       </Data>
     </Catch>
-    <Catch ID="33" ExceptionID="32">
+    <Catch ExceptionID="32" ID="33">
       <Mappings ID="34" Label="Get Processing Hook Error Response">
         <Input>
-          <Exception ID="35" VariableName="providerProcessingHookException35" Label="Provider Processing Hook Exception" ReferenceName="ProviderProcessingHookException" ReferencePath="xmcp.oas.exception">
+          <Exception ID="35" Label="Provider Processing Hook Exception" ReferenceName="ProviderProcessingHookException" ReferencePath="xmcp.oas.exception" VariableName="providerProcessingHookException35">
             <Source RefID="34"/>
           </Exception>
-          <Source RefID="32">
-          </Source>
+          <Source RefID="32"/>
         </Input>
         <Output>
-          <Data ID="36" VariableName="responseParameter36" Label="Response Parameter" ReferenceName="ResponseParameter" ReferencePath="xmcp.oas.datatype.provider">
+          <Data ID="36" Label="Response Parameter" ReferenceName="ResponseParameter" ReferencePath="xmcp.oas.datatype.provider" VariableName="responseParameter36">
             <Source RefID="34"/>
           </Data>
-          <Target RefID="37">
-          </Target>
+          <Target RefID="37"/>
         </Output>
         <Mapping>%1%=%0%.errorResponse</Mapping>
       </Mappings>
       <Function ID="30" Label="Encode">
-        <Source RefID="31">
-        </Source>
-        <Source RefID="37">
-        </Source>
-        <Target RefID="31">
-        </Target>
-        <Target RefID="38">
-        </Target>
-        <Invoke ServiceID="31" Operation="Encode">
-          <Source RefID="37">
-          </Source>
+        <Source RefID="31"/>
+        <Source RefID="2"/>
+        <Source RefID="37"/>
+        <Target RefID="31"/>
+        <Target RefID="38"/>
+        <Invoke Operation="Encode" ServiceID="31">
+          <Source RefID="2"/>
+          <Source RefID="37"/>
         </Invoke>
         <Receive ServiceID="31">
-          <Target RefID="38">
-          </Target>
+          <Target RefID="38"/>
         </Receive>
       </Function>
       <Assign>
-        <Source RefID="38">
-        </Source>
-        <Target RefID="4">
-        </Target>
+        <Source RefID="38"/>
+        <Target RefID="3135"/>
         <Copy>
-          <Source RefID="38">
-            <Meta>
-              <LinkType>UserConnected</LinkType>
-            </Meta>
-          </Source>
-          <Target RefID="4">
-          </Target>
+          <Source RefID="38"/>
+          <Target RefID="3135"/>
         </Copy>
       </Assign>
-      <Data ID="38" VariableName="httpResponse38" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype">
+      <Data ID="38" Label="Http Response" ReferenceName="HttpResponse" ReferencePath="xmcp.oas.datatype" VariableName="httpResponse38">
         <Source RefID="30"/>
       </Data>
     </Catch>
