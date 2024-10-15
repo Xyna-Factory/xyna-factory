@@ -19,7 +19,7 @@
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Yang Path" VariableName="yangPath">
+  <Data Label="Total Yang Path" VariableName="totalYangPath">
     <Meta>
       <Type>String</Type>
     </Meta>

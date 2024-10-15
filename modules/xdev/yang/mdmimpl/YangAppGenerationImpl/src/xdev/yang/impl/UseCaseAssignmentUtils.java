@@ -52,6 +52,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
+import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.UseCaseAssignementTableData;
 import xmcp.yang.YangModuleCollection;
 
@@ -76,11 +77,11 @@ public class UseCaseAssignmentUtils {
     return result;
   }
   
-  public static List<UseCaseAssignementTableData> loadPossibleAssignments(List<Module> modules, String path, String rpcName) {
+  public static List<UseCaseAssignementTableData> loadPossibleAssignments(List<Module> modules, String rpcName, LoadYangAssignmentsData data) {
     Rpc rpc = findRpc(modules, rpcName);
     Input input = rpc.getInput();
-    List<YangElement> elements = traverseYang(modules, path, input);
-    return loadAssignments(elements, path);
+    List<YangElement> elements = traverseYang(modules, data.getTotalYangPath(), input);
+    return loadAssignments(elements, data);
   }
 
   private static List<YangElement> traverseYang(List<Module> modules, String path, YangStatement element) {
@@ -105,12 +106,12 @@ public class UseCaseAssignmentUtils {
     throw new RuntimeException("Could not traverse from " + statement.getElementPosition().toString() + " to " + pathStep);
   }
 
-  private static List<UseCaseAssignementTableData> loadAssignments(List<YangElement> subElements, String totalPath) {
+  private static List<UseCaseAssignementTableData> loadAssignments(List<YangElement> subElements, LoadYangAssignmentsData data) {
     List<UseCaseAssignementTableData> result = new ArrayList<>();
     for(YangElement element : subElements) {
       if(isSupportedElement(element)) {
         UseCaseAssignementTableData.Builder builder = new UseCaseAssignementTableData.Builder();
-        builder.totalYangPath(totalPath);
+        builder.loadYangAssignmentsData(data);
         builder.yangPath(((SchemaNode)element).getIdentifier().getLocalName());
         builder.type(yangStatementIdentifiers.get(element.getClass()));
         result.add(builder.instance());

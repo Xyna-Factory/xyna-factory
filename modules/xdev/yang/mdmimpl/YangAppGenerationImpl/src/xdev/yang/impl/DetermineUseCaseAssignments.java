@@ -33,6 +33,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 import org.yangcentral.yangkit.model.api.stmt.Module;
 
+import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.UseCaseAssignementTableData;
 
 
@@ -40,7 +41,10 @@ import xmcp.yang.UseCaseAssignementTableData;
 public class DetermineUseCaseAssignments {
 
 
-  public List<UseCaseAssignementTableData> determineUseCaseAssignments(String yangPath, String fqn, String usecase, String workspaceName) {
+  public List<UseCaseAssignementTableData> determineUseCaseAssignments(LoadYangAssignmentsData data) {
+    String fqn = data.getFqn();
+    String workspaceName = data.getWorkspaceName();
+    String usecase = data.getUsecase();
     List<UseCaseAssignementTableData> result = new ArrayList<UseCaseAssignementTableData>();
     Document meta = loadOperationMeta(fqn, workspaceName, usecase);
     if(meta == null) {
@@ -52,7 +56,7 @@ public class DetermineUseCaseAssignments {
     }
     
     List<Module> modules = UseCaseAssignmentUtils.loadModules(workspaceName);
-    result = UseCaseAssignmentUtils.loadPossibleAssignments(modules, yangPath, rpcName);
+    result = UseCaseAssignmentUtils.loadPossibleAssignments(modules, rpcName, data);
     fillValues(modules, result);
 
     return result;

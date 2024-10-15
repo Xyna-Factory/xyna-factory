@@ -71,6 +71,7 @@ public class LoadUsecasesTable {
         int mappingCount = countMappings(operation);
         UseCaseTableData.Builder data = new UseCaseTableData.Builder();
         data.usecaseGroup(dt.getFqn()).useCase(operation.getName()).mappingCount(mappingCount);
+        data.runtimeContext(datatype.getRuntimeContext().getName());
         result.add(data.instance());
       }
     } catch (Exception e) {

@@ -87,7 +87,7 @@
           <Mapping>%3%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%0%</Mapping>
           <Mapping>%3%.tableWorkflowFQN="xmcp.yang.fman.UseCaseAssignementTableInfo"</Mapping>
           <Mapping>%3%.tableWorkflowRTC=%1%</Mapping>
-          <Mapping>%3%.label=%2%.totalYangPath</Mapping>
+          <Mapping>%3%.label=%2%.loadYangAssignmentsData.totalYangPath</Mapping>
           <Mapping>%3%.dataPath="%0%"</Mapping>
         </Mappings>
         <Assign ID="241">

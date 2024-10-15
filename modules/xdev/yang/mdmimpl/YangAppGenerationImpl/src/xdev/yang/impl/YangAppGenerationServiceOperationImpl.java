@@ -128,6 +128,6 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   @Override
   public List<? extends UseCaseAssignementTableData> loadAssignments(LoadYangAssignmentsData data) {
     DetermineUseCaseAssignments executor = new DetermineUseCaseAssignments();
-    return executor.determineUseCaseAssignments(data.getYangPath(), data.getFqn(), data.getUsecase(), data.getWorkspaceName());
+    return executor.determineUseCaseAssignments(data);
   }
 }

@@ -25,6 +25,10 @@
       <Data ID="23" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo23"/>
       <Data ID="492" IsList="true" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData492"/>
     </Output>
+    <ServiceReference ID="2140" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
+      <Source RefID="2139"/>
+      <Target RefID="2139"/>
+    </ServiceReference>
     <ServiceReference ID="190" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
       <Source RefID="189"/>
       <Target RefID="189"/>
@@ -94,35 +98,35 @@
         </Assign>
       </Case>
     </Choice>
-    <Mappings ID="325" Label="Mapping">
+    <Mappings ID="2173" Label="Mapping">
       <Input>
-        <Data ID="1241" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData1241">
-          <Source RefID="325"/>
+        <Data ID="2204" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData2204">
+          <Source RefID="2173"/>
         </Data>
         <Source RefID="1184"/>
       </Input>
       <Output>
-        <Data ID="591" IsList="true" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData591">
-          <Source RefID="325"/>
+        <Data ID="2235" Label="Load Yang Assignments Data" ReferenceName="LoadYangAssignmentsData" ReferencePath="xmcp.yang" VariableName="loadYangAssignmentsData2235">
+          <Source RefID="2173"/>
         </Data>
-        <Target RefID="592"/>
+        <Target RefID="2236"/>
       </Output>
-      <Mapping>%1%["0"].totalYangPath=concat(%0%.totalYangPath, ".path")</Mapping>
-      <Mapping>%1%["0"].type="Not a Leaf"</Mapping>
-      <Mapping>%1%["0"].yangPath="path"</Mapping>
-      <Mapping>%1%["1"].totalYangPath=concat(%0%.totalYangPath, ".path")</Mapping>
-      <Mapping>%1%["1"].type="leaf"</Mapping>
-      <Mapping>%1%["1"].yangPath="path"</Mapping>
-      <Mapping>%1%["1"].value="Wert"</Mapping>
-      <Mapping>%1%["2"].totalYangPath=concat(%0%.totalYangPath, ".path")</Mapping>
-      <Mapping>%1%["2"].type="Not a Leaf 2"</Mapping>
-      <Mapping>%1%["2"].yangPath="path"</Mapping>
+      <Mapping>%1%=%0%.loadYangAssignmentsData</Mapping>
     </Mappings>
+    <Function ID="2139" Label="Load Assignments">
+      <Source RefID="2140"/>
+      <Source RefID="2236"/>
+      <Target RefID="2140"/>
+      <Target RefID="2142"/>
+      <Invoke Operation="loadAssignments" ServiceID="2140">
+        <Source RefID="2236"/>
+      </Invoke>
+      <Receive ServiceID="2140">
+        <Target RefID="2142"/>
+      </Receive>
+    </Function>
     <Data ID="92" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo92"/>
     <Data ID="93" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo93"/>
-    <Data ID="592" IsList="true" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData592">
-      <Source RefID="325"/>
-    </Data>
     <Data ID="679" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="const_UseCaseAssignementTableData679">
       <Data VariableName="type">
         <Meta>
@@ -325,9 +329,15 @@
         </Data>
       </Value>
     </Data>
+    <Data ID="2142" IsList="true" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData2142">
+      <Source RefID="2139"/>
+    </Data>
+    <Data ID="2236" Label="Load Yang Assignments Data" ReferenceName="LoadYangAssignmentsData" ReferencePath="xmcp.yang" VariableName="loadYangAssignmentsData2236">
+      <Source RefID="2173"/>
+    </Data>
     <Assign ID="1">
       <Source RefID="93"/>
-      <Source RefID="592"/>
+      <Source RefID="2142"/>
       <Target RefID="23"/>
       <Target RefID="492"/>
       <Copy>
@@ -339,7 +349,7 @@
         <Target RefID="23"/>
       </Copy>
       <Copy>
-        <Source RefID="592"/>
+        <Source RefID="2142"/>
         <Target RefID="492"/>
       </Copy>
     </Assign>

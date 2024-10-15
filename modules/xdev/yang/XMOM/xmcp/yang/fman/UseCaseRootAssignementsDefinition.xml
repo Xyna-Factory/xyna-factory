@@ -42,7 +42,10 @@
         <Target RefID="429"/>
       </Output>
       <Mapping>%1%.type="Not a leaf"</Mapping>
-      <Mapping>%1%.totalYangPath="root"</Mapping>
+      <Mapping>%1%.loadYangAssignmentsData.totalYangPath="root"</Mapping>
+      <Mapping>%1%.loadYangAssignmentsData.fqn=%0%.usecaseGroup</Mapping>
+      <Mapping>%1%.loadYangAssignmentsData.usecase=%0%.useCase</Mapping>
+      <Mapping>%1%.loadYangAssignmentsData.workspaceName=%0%.runtimeContext</Mapping>
     </Mappings>
     <Function ID="375" Label="Use Case assignements Definition">
       <Source RefID="376"/>

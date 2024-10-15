@@ -34,9 +34,5 @@
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="total yang path" VariableName="totalYangPath">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
+  <Data Label="Load Yang Assignments Data" ReferenceName="LoadYangAssignmentsData" ReferencePath="xmcp.yang" VariableName="loadYangAssignmentsData"/>
 </DataType>
