@@ -222,16 +222,6 @@
       <Type>WORKFLOW</Type>
     </XMOMEntry>
   </XMOMEntries>
-  <XynaProperties>
-    <XynaProperty implicitDependency="false">
-      <Name>xmcp.oas.validation.request_validation</Name>
-      <Value>404 Bad Request</Value>
-    </XynaProperty>
-    <XynaProperty implicitDependency="false">
-      <Name>xmcp.oas.validation.response_validation</Name>
-      <Value>500 Internal Server Error</Value>
-    </XynaProperty>
-  </XynaProperties>
   <XmomStorables>
     <XmomStorable>
       <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
