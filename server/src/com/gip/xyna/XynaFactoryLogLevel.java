@@ -44,17 +44,13 @@ public class XynaFactoryLogLevel extends Level {
   public static final int SYSLOG_EQUIVALENT = 3;
 
 
-  public static final org.apache.logging.log4j.Level VERSION2EQUIVALENT = org.apache.logging.log4j.Level.ERROR;
-
-
   public static final XynaFactoryLogLevel Factory = new XynaFactoryLogLevel(XYNA_FACTORY_LOG_LEVEL_INT,
                                                                             XYNA_FACTORY_LOG_LEVEL_STRING,
-                                                                            SYSLOG_EQUIVALENT,
-                                                                            VERSION2EQUIVALENT);
+                                                                            SYSLOG_EQUIVALENT);
 
 
-  private XynaFactoryLogLevel(int level, String levelStr, int syslogEquivalent, org.apache.logging.log4j.Level version2equivalent) {
-    super(level, levelStr, syslogEquivalent, version2equivalent);
+  private XynaFactoryLogLevel(int level, String levelStr, int syslogEquivalent) {
+    super(level, levelStr, syslogEquivalent);
     org.apache.logging.log4j.Level.forName(levelStr, level);
   }
 
