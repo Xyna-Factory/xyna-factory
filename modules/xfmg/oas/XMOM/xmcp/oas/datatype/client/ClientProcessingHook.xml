@@ -58,5 +58,27 @@
         <CodeSnippet Type="Java">return new Container(header19, hTTPStatusCode26, document32);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="false" Label="Validate Send Parameter" Name="validateSendParameter">
+      <Input>
+        <Data ID="78" Label="OAS Base Type" ReferenceName="OASBaseType" ReferencePath="xmcp.oas.datatype" VariableName="oASBaseType78"/>
+      </Input>
+      <Output>
+        <Data ID="68" Label="Validate" ReferenceName="Validate" ReferencePath="xmcp.oas.datatype" VariableName="validate68"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new Validate.Builder().validate(true).instance();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Validate Response" Name="validateResponse">
+      <Input>
+        <Data ID="83" Label="OAS Base Type" ReferenceName="OASBaseType" ReferencePath="xmcp.oas.datatype" VariableName="oASBaseType83"/>
+      </Input>
+      <Output>
+        <Data ID="89" Label="Validate" ReferenceName="Validate" ReferencePath="xmcp.oas.datatype" VariableName="validate89"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new Validate.Builder().validate(true).instance();</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

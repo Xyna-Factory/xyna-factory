@@ -66,6 +66,10 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     return "xmom-data-model";
   }
 
+  public String getDeciderPath() {
+    return GeneratorProperty.getModelPath(this) + ".decider";
+  }
+  
   /**
    * any special handling of the entire OpenAPI spec document 
    */
@@ -182,6 +186,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     objs.put("ListWrapperData", listWrapperData);
     objs.put("xynaModels", xModels);
     objs.put("addPropWrapper", addPropWappers);
+    objs.put("deciderPath", getDeciderPath());
     return objs;
   }
   

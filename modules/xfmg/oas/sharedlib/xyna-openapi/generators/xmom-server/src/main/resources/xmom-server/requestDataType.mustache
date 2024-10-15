@@ -95,7 +95,7 @@ xact.templates.Document document = httpRequest1.getBody();
 try {
   {{#bodyParams}}
     {{^isPrimitive}}
-    jsonOptions.setObjectDecider(new {{propRefPath}}.decider.OASDecider());
+    jsonOptions.setObjectDecider(new {{deciderPath}}.OASDecider());
       {{^isList}}
     {{propFQN}} {{propVarName}} = ({{propFQN}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{propFQN}}(), jsonOptions);
       {{/isList}}
