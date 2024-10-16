@@ -70,124 +70,125 @@ public class StringTypeValidator extends PrimitiveTypeValidator<String> {
 
     return result;
   }
-    
-    
+
+
   private static Function<String, Boolean> createFormatValidatorFunction(String pattern) {
     return toCheck -> checkPattern(pattern, toCheck);
   }
 
-    
-    public void setFormat(String f) {
-        format = f.toLowerCase();
+
+  public void setFormat(String f) {
+    format = f.toLowerCase();
+  }
+
+
+  public void setPattern(String p) {
+    // delimiters are cleaned in stringConstraints
+    pattern = p;
+  }
+
+
+  public void setMinLength(Integer m) {
+    min = m;
+  }
+
+
+  public void setMaxLength(Integer m) {
+    max = m;
+  }
+
+
+  @Override
+  public List<String> checkValid() {
+    List<String> errorMessages = super.checkValid();
+
+    if (isNull()) {
+      return errorMessages;
     }
 
-    public void setPattern(String p) {
-        // delimiters are cleaned in stringConstraints
-        pattern = p;
+    if (!checkMinLength()) {
+      errorMessages.add(String.format("%s: String value \"%s\" is too short as minimum length is %d", getName(), getValue(), min));
     }
 
-    public void setMinLength(Integer m) {
-        min = m;
+    if (!checkMaxLength()) {
+      errorMessages.add(String.format("%s: String value \"%s\" is too long as maximum length is %d", getName(), getValue(), max));
     }
 
-    public void setMaxLength(Integer m) {
-        max = m;
+    if (!checkPattern()) {
+      errorMessages.add(String.format("%s: Value \"%s\" does not match pattern \"%s\"", getName(), getValue(), pattern));
     }
 
-    @Override
-    public List<String> checkValid() {
-        List<String> errorMessages = super.checkValid();
-
-        if (isNull()) {
-            return errorMessages;
-        }
-
-        if (!checkMinLength()) {
-            errorMessages.add(String.format(
-                "%s: String value \"%s\" is too short as minimum length is %d", getName(), getValue(), min)
-            );
-        }
-        
-        if (!checkMaxLength()) {
-            errorMessages.add(String.format(
-                "%s: String value \"%s\" is too long as maximum length is %d", getName(), getValue(), max)
-            );
-        }
-
-        if (!checkPattern()) {
-            errorMessages.add(String.format(
-                "%s: Value \"%s\" does not match pattern \"%s\"", getName(), getValue(), pattern)
-            );
-        }
-        
-        if (!checkFormat()) {
-          errorMessages.add(String.format(
-                "%s: Value \"%s\" does not match format \"%s\"", getName(), getValue(), format)
-          );
-        }
-
-        return errorMessages;
+    if (!checkFormat()) {
+      errorMessages.add(String.format("%s: Value \"%s\" does not match format \"%s\"", getName(), getValue(), format));
     }
+
+    return errorMessages;
+  }
+
 
   private boolean checkMaxLength() {
     return max == null || (max != null && getValue().length() <= max);
   }
 
+
   private boolean checkMinLength() {
     return min == null || (min != null && getValue().length() >= min);
   }
 
-    private boolean checkPattern() {
-      return checkPattern(pattern, getValue());
-    }
-    
-    private static boolean checkPattern(String pattern, String toCheck) {
-      if (pattern == null)
-        return true;
+
+  private boolean checkPattern() {
+    return checkPattern(pattern, getValue());
+  }
+
+
+  private static boolean checkPattern(String pattern, String toCheck) {
+    if (pattern == null)
+      return true;
 
     Pattern p = Pattern.compile(pattern);
     Matcher m = p.matcher(toCheck);
     return m.find();
-    }
-    
-    private boolean checkFormat() {
-      if(format == null) {
-        return true;
-      }
-      
-      Function<String, Boolean> validatorFunction = FormatValidatorMap.getOrDefault(format, null);
-      if (validatorFunction == null) {
-        return true; //unknown format
-      }
-      
-      return validatorFunction.apply(getValue());
-    }
+  }
 
 
-    @SuppressWarnings("unused")
-    private static boolean validateFormat(String toCheck, String format) {
-      try {
-        switch (format) {
-          case "ipv4subnet" :
-            IPv4NetmaskData ipv4mask = new IPv4NetmaskData(toCheck);
-            return true;
-          case "ipv6prefix" :
-            String[] ipv6Prefix = toCheck.split("/");
-            if (ipv6Prefix.length != 2)
-              return false;
-            IPv6NetmaskData ipv6mask = new IPv6NetmaskData(ipv6Prefix[1]);
-            toCheck = ipv6Prefix[0];
-          case "ipv6" :
-            IPv6Address ipv6Address = new IPv6Address(toCheck);
-            return true;
-          default :
+  private boolean checkFormat() {
+    if (format == null) {
+      return true;
+    }
+
+    Function<String, Boolean> validatorFunction = FormatValidatorMap.getOrDefault(format, null);
+    if (validatorFunction == null) {
+      return true; //unknown format
+    }
+
+    return validatorFunction.apply(getValue());
+  }
+
+
+  @SuppressWarnings("unused")
+  private static boolean validateFormat(String toCheck, String format) {
+    try {
+      switch (format) {
+        case "ipv4subnet" :
+          IPv4NetmaskData ipv4mask = new IPv4NetmaskData(toCheck);
+          return true;
+        case "ipv6prefix" :
+          String[] ipv6Prefix = toCheck.split("/");
+          if (ipv6Prefix.length != 2)
             return false;
-        }
-
-      } catch (Exception e) {
-        return false;
+          IPv6NetmaskData ipv6mask = new IPv6NetmaskData(ipv6Prefix[1]);
+          toCheck = ipv6Prefix[0];
+        case "ipv6" :
+          IPv6Address ipv6Address = new IPv6Address(toCheck);
+          return true;
+        default :
+          return false;
       }
+
+    } catch (Exception e) {
+      return false;
     }
+  }
 
 
 }
