@@ -16,9 +16,9 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
-  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="OAS-00102" IsAbstract="false" Label="Provider Processing Hook Exception" TypeName="ProviderProcessingHookException" TypePath="xmcp.oas.exception">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="OAS-00104" IsAbstract="false" Label="JSON Parser Exception" TypeName="JSONParserException" TypePath="xmcp.oas.exception">
     <Data Label="Error Response" ReferenceName="ResponseParameter" ReferencePath="xmcp.oas.datatype.provider" VariableName="errorResponse"/>
-    <MessageText Language="DE">Provider Processing Hook Exception</MessageText>
-    <MessageText Language="EN">Provider Processing Hook Exception</MessageText>
+    <MessageText Language="DE">Beim parsen des Json ist ein Fehler aufgetreten.</MessageText>
+    <MessageText Language="EN">Error occured during json parsing.</MessageText>
   </ExceptionType>
 </ExceptionStore>

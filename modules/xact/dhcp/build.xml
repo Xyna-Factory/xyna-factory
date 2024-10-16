@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2024 Xyna GmbH, Germany
@@ -15,10 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
-  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="OAS-00102" IsAbstract="false" Label="Provider Processing Hook Exception" TypeName="ProviderProcessingHookException" TypePath="xmcp.oas.exception">
-    <Data Label="Error Response" ReferenceName="ResponseParameter" ReferencePath="xmcp.oas.datatype.provider" VariableName="errorResponse"/>
-    <MessageText Language="DE">Provider Processing Hook Exception</MessageText>
-    <MessageText Language="EN">Provider Processing Hook Exception</MessageText>
-  </ExceptionType>
-</ExceptionStore>
+-->
+<project name="build" default="build-all" basedir=".">
+
+    <property name="target.dir" value="${basedir}/deploy/" />
+
+    <target name="build-all">
+
+    </target>
+
+</project>

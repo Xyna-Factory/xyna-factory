@@ -66,6 +66,10 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     return "xmom-data-model";
   }
 
+  public String getDeciderPath() {
+    return GeneratorProperty.getModelPath(this) + ".decider";
+  }
+  
   /**
    * any special handling of the entire OpenAPI spec document 
    */
@@ -102,17 +106,17 @@ public class XmomDataModelGenerator extends DefaultCodegen {
      * entire object tree available.  If the input file has a suffix of `.mustache
      * it will be processed by the template engine.  Otherwise, it will be copied
      */
-    supportingFiles.add(new SupportingFile("application.mustache",   // the input template or file
-      "",                                                       // the destination folder, relative `outputFolder`
-      "application.xml")                                          // the output file
+    supportingFiles.add(new SupportingFile("application.mustache", // the input template or file
+                                           "", // the destination folder, relative `outputFolder`
+                                           "application.xml") // the output file
     );
     supportingFiles.add(new SupportingFile("additionalPropertyWrapper.mustache",
-      "XMOM/" + GeneratorProperty.getModelPath(this).replace('.', '/') + "/wrapper",
-      "additionalPropertyWrapper_toSplit.xml"));
-    supportingFiles.add(new SupportingFile("listwrapperprovider.mustache",
-                                           "XMOM/" + modelPackage.replace(".", "/"),
-                                           "ListWrapperProvider.xml")
-                                         );
+                                           "XMOM/" + GeneratorProperty.getModelPath(this).replace('.', '/') + "/wrapper",
+                                           "additionalPropertyWrapper_toSplit.xml"));
+    supportingFiles
+        .add(new SupportingFile("listwrapperprovider.mustache", "XMOM/" + modelPackage.replace(".", "/"), "ListWrapperProvider.xml"));
+    supportingFiles.add(new SupportingFile("OASDecider.mustache", "XMOM/" + modelPackage.replace('.', '/') + "/decider", "OASDecider.xml"));
+
   }
 
 
@@ -144,10 +148,12 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     setListWrapper(modelMap);
     
     List<String> listWrapper = new ArrayList<String>();
+    List<XynaCodegenModel> xModels = new ArrayList<XynaCodegenModel>();
     Set<AdditionalPropertyWrapper> addPropWappers = new HashSet<AdditionalPropertyWrapper>();
     for(ModelMap model: modelMap.values()) {
       XynaCodegenModel mo = codegenFactory.getOrCreateXynaCodegenModel(model.getModel());
       model.put("xynaModel", mo);
+      xModels.add(mo);
       if(mo.isListWrapper) {
         listWrapper.add(mo.getModelFQN());
       }
@@ -178,7 +184,9 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     listWrapperData.setPath(GeneratorProperty.getModelPath(this));
     listWrapperData.setListWrapper(listWrapper);
     objs.put("ListWrapperData", listWrapperData);
+    objs.put("xynaModels", xModels);
     objs.put("addPropWrapper", addPropWappers);
+    objs.put("deciderPath", getDeciderPath());
     return objs;
   }
   
