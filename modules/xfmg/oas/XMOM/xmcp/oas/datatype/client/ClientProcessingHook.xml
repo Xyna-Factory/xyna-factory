@@ -66,9 +66,12 @@
         <Data ID="68" Label="Validate" ReferenceName="Validate" ReferencePath="xmcp.oas.datatype" VariableName="validate68"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">boolean validate = com.gip.xyna.XynaFactory.getInstance().getFactoryManagement().
-    getProperty("xmcp.oas.validation.default").equalsIgnoreCase("true");
-return new Validate.Builder().validate(validate).instance();</CodeSnippet>
+        <CodeSnippet Type="Java">com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyWithDefaultValue property;
+property = com.gip.xyna.XynaFactory.getInstance().getFactoryManagement().
+    getPropertyWithDefaultValue("xmcp.oas.validation.default");
+String validate = property != null ? property.getValueOrDefValue() : "true";
+validate = validate != null ? validate : "true";
+return new Validate.Builder().validate(validate.equalsIgnoreCase("true")).instance();</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="false" Label="Validate Response" Name="validateResponse">
@@ -79,9 +82,12 @@ return new Validate.Builder().validate(validate).instance();</CodeSnippet>
         <Data ID="89" Label="Validate" ReferenceName="Validate" ReferencePath="xmcp.oas.datatype" VariableName="validate89"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">boolean validate = com.gip.xyna.XynaFactory.getInstance().getFactoryManagement().
-    getProperty("xmcp.oas.validation.default").equalsIgnoreCase("true");
-return new Validate.Builder().validate(validate).instance();</CodeSnippet>
+        <CodeSnippet Type="Java">com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyWithDefaultValue property;
+property = com.gip.xyna.XynaFactory.getInstance().getFactoryManagement().
+    getPropertyWithDefaultValue("xmcp.oas.validation.default");
+String validate = property != null ? property.getValueOrDefValue() : "true";
+validate = validate != null ? validate : "true";
+return new Validate.Builder().validate(validate.equalsIgnoreCase("true")).instance();</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

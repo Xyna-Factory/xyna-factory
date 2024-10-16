@@ -222,12 +222,6 @@
       <Type>WORKFLOW</Type>
     </XMOMEntry>
   </XMOMEntries>
-  <XynaProperties>
-    <XynaProperty implicitDependency="false">
-      <Name>xmcp.oas.validation.default</Name>
-      <Value>true</Value>
-    </XynaProperty>
-  </XynaProperties>
   <XmomStorables>
     <XmomStorable>
       <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
