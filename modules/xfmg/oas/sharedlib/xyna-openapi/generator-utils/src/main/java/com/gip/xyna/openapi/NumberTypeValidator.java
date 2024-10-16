@@ -17,7 +17,14 @@
  */
 package com.gip.xyna.openapi;
 
+
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+
+
 
 public class NumberTypeValidator<N extends Number & Comparable<N>> extends PrimitiveTypeValidator<N> {
 
@@ -26,6 +33,16 @@ public class NumberTypeValidator<N extends Number & Comparable<N>> extends Primi
     private N multipleOf;
     private N min;
     private N max;
+    private String format;
+
+  private final Map<String, Function<N, Boolean>> FormatValidatorMap = buildFormatValidatorMap();
+
+
+  private Map<String, Function<N, Boolean>> buildFormatValidatorMap() {
+    Map<String, Function<N, Boolean>> result = new HashMap<String, Function<N, Boolean>>();
+    // no number format validation yet
+    return result;
+  }
 
     public void setMin(N min) {
         this.min = min;
@@ -46,6 +63,12 @@ public class NumberTypeValidator<N extends Number & Comparable<N>> extends Primi
     public void setExcludeMax() {
         excludeMax = true;
     }
+
+
+  public void setFormat(String f) {
+    format = f.toLowerCase();
+  }
+
 
     @Override
     public List<String> checkValid() {
@@ -73,6 +96,12 @@ public class NumberTypeValidator<N extends Number & Comparable<N>> extends Primi
             errorMessages.add(String.format(
                 "%s: Value is %s but must be %s %s", getName(), getValue().toString(), condition, max.toString())
             );
+        }
+
+        if (!checkFormat()) {
+          errorMessages.add(String.format(
+                "%s: Value \"%s\" is not of type \"%s\"", getName(), getValue(), format)
+          );
         }
         
         return errorMessages;
@@ -126,4 +155,17 @@ public class NumberTypeValidator<N extends Number & Comparable<N>> extends Primi
       }
       return valid;
     }
+
+  private boolean checkFormat() {
+    if(format == null) {
+      return true;
+    }
+    
+    Function<N, Boolean> validatorFunction = FormatValidatorMap.getOrDefault(format, null);
+    if (validatorFunction == null) {
+      return true; //unknown format
+    }
+    
+    return validatorFunction.apply(getValue());
+  }
 }
