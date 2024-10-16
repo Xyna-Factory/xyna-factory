@@ -15,23 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="ClientProcessingHook" TypePath="xmcp.oas.datatype.client" Label="Client Processing Hook" IsAbstract="false">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Client Processing Hook" TypeName="ClientProcessingHook" TypePath="xmcp.oas.datatype.client" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
   <Service Label="Client Processing Hook" TypeName="ClientProcessingHook">
-    <Operation Label="Preprocess Request" Name="preprocessRequest" IsStatic="false">
+    <Operation IsStatic="false" Label="Preprocess Request" Name="preprocessRequest">
       <Input>
-        <Data ID="10" Label="Send Parameter" VariableName="sendParameter10" ReferenceName="SendParameter" ReferencePath="xact.http">
-        </Data>
+        <Data ID="10" Label="Send Parameter" ReferenceName="SendParameter" ReferencePath="xact.http" VariableName="sendParameter10"/>
       </Input>
       <Output>
-        <Data ID="14" Label="Send Parameter" VariableName="sendParameter14" ReferenceName="SendParameter" ReferencePath="xact.http">
-        </Data>
+        <Data ID="14" Label="Send Parameter" ReferenceName="SendParameter" ReferencePath="xact.http" VariableName="sendParameter14"/>
       </Output>
       <Throws>
-        <Exception ID="45" Label="Client Processing Hook Exception" VariableName="clientProcessingHookException45" ReferenceName="ClientProcessingHookException" ReferencePath="xmcp.oas.exception">
-        </Exception>
+        <Exception ID="45" Label="Client Processing Hook Exception" ReferenceName="ClientProcessingHookException" ReferencePath="xmcp.oas.exception" VariableName="clientProcessingHookException45"/>
       </Throws>
       <Meta>
         <Documentation>Hook to preprocess send parameter.</Documentation>
@@ -40,32 +37,57 @@
         <CodeSnippet Type="Java">return sendParameter10;</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation Label="Postprocess Response" Name="postprocessResponse" IsStatic="false">
+    <Operation IsStatic="false" Label="Postprocess Response" Name="postprocessResponse">
       <Input>
-        <Data ID="19" Label="Header" VariableName="header19" ReferenceName="Header" ReferencePath="xact.http">
-        </Data>
-        <Data ID="26" Label="HTTP Status Code" VariableName="hTTPStatusCode26" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode">
-        </Data>
-        <Data ID="32" Label="Document" VariableName="document32" ReferenceName="Document" ReferencePath="xact.templates">
-        </Data>
+        <Data ID="19" Label="Header" ReferenceName="Header" ReferencePath="xact.http" VariableName="header19"/>
+        <Data ID="26" Label="HTTP Status Code" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode" VariableName="hTTPStatusCode26"/>
+        <Data ID="32" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document32"/>
       </Input>
       <Output>
-        <Data ID="23" Label="Header" VariableName="header23" ReferenceName="Header" ReferencePath="xact.http">
-        </Data>
-        <Data ID="29" Label="HTTP Status Code" VariableName="hTTPStatusCode29" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode">
-        </Data>
-        <Data ID="36" Label="Document" VariableName="document36" ReferenceName="Document" ReferencePath="xact.templates">
-        </Data>
+        <Data ID="23" Label="Header" ReferenceName="Header" ReferencePath="xact.http" VariableName="header23"/>
+        <Data ID="29" Label="HTTP Status Code" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode" VariableName="hTTPStatusCode29"/>
+        <Data ID="36" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document36"/>
       </Output>
       <Throws>
-        <Exception ID="41" Label="Client Processing Hook Exception" VariableName="clientProcessingHookException41" ReferenceName="ClientProcessingHookException" ReferencePath="xmcp.oas.exception">
-        </Exception>
+        <Exception ID="41" Label="Client Processing Hook Exception" ReferenceName="ClientProcessingHookException" ReferencePath="xmcp.oas.exception" VariableName="clientProcessingHookException41"/>
       </Throws>
       <Meta>
         <Documentation>Hook to postprocess response before it is parsed.</Documentation>
       </Meta>
       <SourceCode>
         <CodeSnippet Type="Java">return new Container(header19, hTTPStatusCode26, document32);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Validate Send Parameter" Name="validateSendParameter">
+      <Input>
+        <Data ID="78" Label="OAS Base Type" ReferenceName="OASBaseType" ReferencePath="xmcp.oas.datatype" VariableName="oASBaseType78"/>
+      </Input>
+      <Output>
+        <Data ID="68" Label="Validate" ReferenceName="Validate" ReferencePath="xmcp.oas.datatype" VariableName="validate68"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyWithDefaultValue property;
+property = com.gip.xyna.XynaFactory.getInstance().getFactoryManagement().
+    getPropertyWithDefaultValue("xmcp.oas.validation.default");
+String validate = property != null ? property.getValueOrDefValue() : "true";
+validate = validate != null ? validate : "true";
+return new Validate.Builder().validate(validate.equalsIgnoreCase("true")).instance();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Validate Response" Name="validateResponse">
+      <Input>
+        <Data ID="83" Label="OAS Base Type" ReferenceName="OASBaseType" ReferencePath="xmcp.oas.datatype" VariableName="oASBaseType83"/>
+      </Input>
+      <Output>
+        <Data ID="89" Label="Validate" ReferenceName="Validate" ReferencePath="xmcp.oas.datatype" VariableName="validate89"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyWithDefaultValue property;
+property = com.gip.xyna.XynaFactory.getInstance().getFactoryManagement().
+    getPropertyWithDefaultValue("xmcp.oas.validation.default");
+String validate = property != null ? property.getValueOrDefValue() : "true";
+validate = validate != null ? validate : "true";
+return new Validate.Builder().validate(validate.equalsIgnoreCase("true")).instance();</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

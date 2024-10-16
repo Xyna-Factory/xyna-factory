@@ -15,10 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
-  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="OAS-00102" IsAbstract="false" Label="Provider Processing Hook Exception" TypeName="ProviderProcessingHookException" TypePath="xmcp.oas.exception">
-    <Data Label="Error Response" ReferenceName="ResponseParameter" ReferencePath="xmcp.oas.datatype.provider" VariableName="errorResponse"/>
-    <MessageText Language="DE">Provider Processing Hook Exception</MessageText>
-    <MessageText Language="EN">Provider Processing Hook Exception</MessageText>
-  </ExceptionType>
-</ExceptionStore>
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Validate" TypeName="Validate" TypePath="xmcp.oas.datatype" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="validate" VariableName="validate">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+</DataType>
