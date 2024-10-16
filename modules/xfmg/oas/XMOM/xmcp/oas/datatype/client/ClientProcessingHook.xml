@@ -66,7 +66,9 @@
         <Data ID="68" Label="Validate" ReferenceName="Validate" ReferencePath="xmcp.oas.datatype" VariableName="validate68"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return new Validate.Builder().validate(true).instance();</CodeSnippet>
+        <CodeSnippet Type="Java">boolean validate = com.gip.xyna.XynaFactory.getInstance().getFactoryManagement().
+    getProperty("xmcp.oas.validation.default").equalsIgnoreCase("true");
+return new Validate.Builder().validate(validate).instance();</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="false" Label="Validate Response" Name="validateResponse">
@@ -77,7 +79,9 @@
         <Data ID="89" Label="Validate" ReferenceName="Validate" ReferencePath="xmcp.oas.datatype" VariableName="validate89"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return new Validate.Builder().validate(true).instance();</CodeSnippet>
+        <CodeSnippet Type="Java">boolean validate = com.gip.xyna.XynaFactory.getInstance().getFactoryManagement().
+    getProperty("xmcp.oas.validation.default").equalsIgnoreCase("true");
+return new Validate.Builder().validate(validate).instance();</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

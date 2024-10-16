@@ -89,7 +89,9 @@
         <Documentation>Decide if request should be validated.</Documentation>
       </Meta>
       <SourceCode>
-        <CodeSnippet Type="Java">return new Validate.Builder().validate(true).instance();</CodeSnippet>
+        <CodeSnippet Type="Java">boolean validate = com.gip.xyna.XynaFactory.getInstance().getFactoryManagement().
+    getProperty("xmcp.oas.validation.default").equalsIgnoreCase("true");
+return new Validate.Builder().validate(validate).instance();</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="false" Label="Validate during Encode" Name="validateDuringEncode">
@@ -103,7 +105,9 @@
         <Documentation>Decide if response should be validated.</Documentation>
       </Meta>
       <SourceCode>
-        <CodeSnippet Type="Java">return new Validate.Builder().validate(true).instance();</CodeSnippet>
+        <CodeSnippet Type="Java">boolean validate = com.gip.xyna.XynaFactory.getInstance().getFactoryManagement().
+    getProperty("xmcp.oas.validation.default").equalsIgnoreCase("true");
+return new Validate.Builder().validate(validate).instance();</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
