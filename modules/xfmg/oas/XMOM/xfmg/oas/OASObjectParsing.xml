@@ -39,7 +39,7 @@
     </Operation>
     <Operation IsStatic="true" Label="Convert Oas List to Json" Name="convertOasListToJson">
       <Input>
-        <Data ID="2" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType" IsList="true">
+        <Data ID="2" IsList="true" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
           <Meta>
             <Type>GeneralXynaObject</Type>
           </Meta>

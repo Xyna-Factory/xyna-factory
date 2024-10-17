@@ -408,6 +408,9 @@ public class XynaCodegenProperty {
 
     public static List<String> numberConstraints(ValuesToValidate values, PraefixPostfix fix) {
       List<String> result = new ArrayList<String>();
+      if (values.dataFormat != null) {
+        result.add(fix.praefix + "setFormat(\"" + values.dataFormat + "\")" + fix.postfix);
+      }
       if (values.minimum != null) {
         result.add(fix.praefix + "setMin(" + values.minimum + ")" + fix.postfix);
       }

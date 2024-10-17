@@ -19,7 +19,7 @@
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="HTTP Request" VariableName="hTTPRequest" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype"/>
+  <Data Label="HTTP Request" ReferenceName="HttpRequest" ReferencePath="xmcp.oas.datatype" VariableName="hTTPRequest"/>
   <Service Label="Request Parameter" TypeName="RequestParameter">
     <Operation IsStatic="false" Label="parse Parameter" Name="parseParameter">
       <Input>
