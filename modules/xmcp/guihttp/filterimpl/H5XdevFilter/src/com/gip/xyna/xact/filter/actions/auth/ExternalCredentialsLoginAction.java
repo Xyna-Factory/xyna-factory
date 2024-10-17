@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP SmartMercial GmbH, Germany
+ * Copyright 2022 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,32 +40,12 @@ import com.gip.xyna.xmcp.RMIChannelImpl;
 
 import xmcp.auth.ExternalCredentialsLoginRequest;
 
-/**
- * vgl ExternalUserLoginInformationAction
- * request:
- * {
- * "username":"<username>""
- * "password":"<password>"
- * "force":"true"
- * "domain":"<domainname>"
- * }
- * 
- * antwort:
- * so wie beim login, nur dass die sessionerzeugung �ber die externe domain
- * passiert
- * 
- */
 public class ExternalCredentialsLoginAction implements FilterAction {
 
-  // private static final Logger logger =
-  // CentralFactoryLogging.getLogger(ExternalUserLoginAction.class);
-
   private static final Exception notAuthorizedException = new Exception("Session could not be authorized.");
-  // private static final Exception internalServerError = new Exception("Internal
-  // Server Error");
+
   static {
     notAuthorizedException.setStackTrace(new StackTraceElement[0]);
-    // internalServerError.setStackTrace(new StackTraceElement[0]);
   }
 
   private XMOMGui xmomgui;
@@ -88,29 +68,18 @@ public class ExternalCredentialsLoginAction implements FilterAction {
     JsonFilterActionInstance jfai = new JsonFilterActionInstance();
     String payload = AuthUtils.insertFqnIfNeeded(tc.getPayload(), "xmcp.auth.ExternalCredentialsLoginRequest");
 
-    // parsing
     ExternalCredentialsLoginRequest request = (ExternalCredentialsLoginRequest) Utils
         .convertJsonToGeneralXynaObjectUsingGuiHttp(payload);
 
-    // session erzeugen
     String username = request.getUsername();
     String password = request.getPassword();
     boolean force = request.getForce() != null ? request.getForce() : true;
     String domainName = request.getDomain();
-    // password can be found in the correlated Xyna Order
     XynaUserCredentials userCredentials = new XynaUserCredentials(username, password);
     SessionCredentials creds = XynaFactory.getInstance().getFactoryManagement()
         .createSession(userCredentials, Optional.<String>empty(), force);
 
-    // session fremd-authorisieren
     try {
-      // logger.info("ExternalCredentialsLogin with: " + username + ", " + password +
-      // ", " + domainName);
-
-      /*
-       * TODO
-       * neue Domain in Zeta-Auth-Login bekannt machen: Domain anlegen mit WG
-       */
       if (!new RMIChannelImpl().authorizeSession(userCredentials, domainName,
           new XynaPlainSessionCredentials(creds.getSessionId(), creds.getToken()))) {
         return error(creds, tc, jfai);
