@@ -517,7 +517,7 @@ public class DHCPv6ServicesImpl implements DeploymentTask, IPropertyChangeListen
     if (liste.size() == 0) {
       if (logger.isDebugEnabled())
         logger.debug("Dataset from DHCPv6 database empty");
-      throw new IllegalArgumentException("Dataset from DHCPv6 database empty");//optionsv6-Table nicht da/befï¿½llt
+      throw new IllegalArgumentException("Dataset from DHCPv6 database empty");//optionsv6-Table nicht da/befüllt
     }
 
     enc = new DHCPv6ConfigurationEncoder(new ArrayList<DHCPv6Encoding>(liste));
@@ -544,7 +544,7 @@ public class DHCPv6ServicesImpl implements DeploymentTask, IPropertyChangeListen
       throw new RuntimeException(e);
     }
     if (clusterManagement.isClustered()) {
-      //immer nachdem die clusterangehï¿½rigkeit das erste mal konfiguriert wurde!
+      //immer nachdem die clusterangehörigkeit das erste mal konfiguriert wurde!
       //d.h. nach der erstinstallation + konfiguration muss man einmal neu-starten.
       clusterManagement.getClusterMgmt().setMCLT(mclt*1000);
       clusterManagement.getClusterMgmt().addClusterStateChangeHandler(new DHCPClusterStateChangeHandler() {
@@ -696,9 +696,9 @@ public class DHCPv6ServicesImpl implements DeploymentTask, IPropertyChangeListen
               int nodeNr = nodeNumberToUse();
               
               if (newState == DHCPClusterState.SYNC_SLAVE) {
-                //warten, bis keine auftrï¿½ge mehr im system sind, und
-                // dafï¿½r sorgen, dass keine neuen mehr ins system kommen.
-                // das ist ein workaround fï¿½r bugz 13654. ist aber evtl auch fachlich sinnvoll?!
+                //warten, bis keine aufträge mehr im system sind, und
+                // dafür sorgen, dass keine neuen mehr ins system kommen.
+                // das ist ein workaround für bugz 13654. ist aber evtl auch fachlich sinnvoll?!
                 closeFilter(newState);
                 disableCapacityAndWaitForRunningOrders(); 
                 
@@ -1231,7 +1231,7 @@ public class DHCPv6ServicesImpl implements DeploymentTask, IPropertyChangeListen
           if (liste.size() == 0) {
             if (logger.isDebugEnabled())
               logger.debug("Dataset from DHCPv6 database empty");
-            //throw new IllegalArgumentException("Dataset from DHCPv6 database empty");//optionsv6-Table nicht da/befï¿½llt
+            //throw new IllegalArgumentException("Dataset from DHCPv6 database empty");//optionsv6-Table nicht da/befüllt
           }
 
           try
@@ -1886,7 +1886,7 @@ public class DHCPv6ServicesImpl implements DeploymentTask, IPropertyChangeListen
 
 
   /**
-   * Wandelt einen String in einen HexString um. Diese Umwandlung wird nur durchgefï¿½hrt, wenn 
+   * Wandelt einen String in einen HexString um. Diese Umwandlung wird nur durchgeführt, wenn 
    * der umzuwandelnde String nicht bereits mit 0x... beginnt
    */
   public static String convertStringToHexString(String inp) {
@@ -3814,7 +3814,7 @@ private static xdnc.dhcpv6.Lease createRequestLease(
     lease.setDppinstance(myname);
     
     lease.setSuperpoolid(superpoolid);
-    lease.setStarttime(Long.MIN_VALUE);  // markiert StartTime, so daï¿½ sie mit dem Wert aus der Datenbank gesetzt wird
+    lease.setStarttime(Long.MIN_VALUE);  // markiert StartTime, so dass sie mit dem Wert aus der Datenbank gesetzt wird
     lease.setPreferredlifetime(preftime);
     lease.setValidlifetime(validlifetime);
     if(enablemclt)
@@ -4585,7 +4585,7 @@ TypeWithValueNode prefLeaseTime = new TypeWithValueNode(DHCPv6Constants.PREFLEAS
    * Converts the MAC notation from Octetstring 0x0012ab096c12 to 0012ab096c12
    */
   private static String convertMAC(String mac) {
-    // TODO performance: Pattern.compile(..) fï¿½r das matchen auf "0x"
+    // TODO performance: Pattern.compile(..) für das matchen auf "0x"
     // verwenden
     if ((mac.length() != 14) || (!mac.startsWith("0x"))) {
       return null;
@@ -4599,7 +4599,7 @@ TypeWithValueNode prefLeaseTime = new TypeWithValueNode(DHCPv6Constants.PREFLEAS
    * Converts the MAC notation from Octetstring 0x0012ab096c12 to 00:12:ab:09:6c:12
    */
   private static String convertMACOctetStringToMacAddress(String mac) {
-    // TODO performance: Pattern.compile(..) fï¿½r das matchen auf "0x"
+    // TODO performance: Pattern.compile(..) für das matchen auf "0x"
     // verwenden
     if ((mac.length() != 14) || (!mac.startsWith("0x"))) {
       return null;
@@ -4893,7 +4893,7 @@ TypeWithValueNode prefLeaseTime = new TypeWithValueNode(DHCPv6Constants.PREFLEAS
     }
 
     // parsen der Conditionals der Klassen, so dass sie bei Bedarf sofort
-    // ausgewertet werden kï¿½nnen
+    // ausgewertet werden können
     // Speichern der geparsten Conditionals in einer statischen HashMap.
     for (DeviceClass deviceclass : queryResult) {
       Map<String, String> subConditionalHash = new HashMap<String, String>();
@@ -5486,7 +5486,7 @@ TypeWithValueNode prefLeaseTime = new TypeWithValueNode(DHCPv6Constants.PREFLEAS
     if (logger.isDebugEnabled()) {
       logger.debug("("+debugmac+") Checking class match for " + classList.size() + " registered classes");
     }
-    // fï¿½r Umbau der Workflows: 
+    // für Umbau der Workflows: 
     //boolean matchFound = false;
     readWriteLock.readLock().lock();
     try {
@@ -5503,7 +5503,7 @@ TypeWithValueNode prefLeaseTime = new TypeWithValueNode(DHCPv6Constants.PREFLEAS
           match = evaluateConditionalString(parsedConditional.getParsedConditional(), parsedConditional
                           .getParsedSubconditionals(), inputoptions, new ExceptionCounter(0));
         } catch (ConditionEvaluationException e) {
-          match = false;//wenn Parameter nicht im Input gefunden wurde, ist Bedingung nicht erfï¿½llt
+          match = false;//wenn Parameter nicht im Input gefunden wurde, ist Bedingung nicht erfüllt
         }
         if (match) {
           // Pooltype wird aus dem zugehoerigen PoolType-Eintrag entnommen
@@ -5534,7 +5534,7 @@ TypeWithValueNode prefLeaseTime = new TypeWithValueNode(DHCPv6Constants.PREFLEAS
           if ((doDNS != null) && (doDNS.equalsIgnoreCase("true"))) {
             dnsFlag.setDoDNS(true);
           }
-       // fï¿½r Umbau der Workflows: 
+       // für Umbau der Workflows: 
           //matchFound = true;
           break;
         } 
@@ -5544,7 +5544,7 @@ TypeWithValueNode prefLeaseTime = new TypeWithValueNode(DHCPv6Constants.PREFLEAS
       readWriteLock.readLock().unlock();
     }
 
-// fï¿½r Umbau der Workflows: 
+// für Umbau der Workflows: 
 //    if (!matchFound){
 //      return new Container(new XynaObjectList<Node>(outputnodes, Node.class),new NoPoolType("matchedNoPoolType") , dnsFlag);
 //    }
@@ -5719,7 +5719,7 @@ TypeWithValueNode prefLeaseTime = new TypeWithValueNode(DHCPv6Constants.PREFLEAS
     String[] nameParts = PROVFLOW_PATTERN.split(value);//parts = [06HYBRID, 012, 00]
     for (String part : nameParts) {
       if (part.length() > 1) {
-        // die ersten zwei Stellen direkt ï¿½bernehmen
+        // die ersten zwei Stellen direkt übernehmen
         result.append(part.substring(0, 2));
         if (part.length() > 2) {
           byte[] nameAsBytearray = Charset.forName("US-ASCII").encode(
@@ -7411,11 +7411,11 @@ TypeWithValueNode prefLeaseTime = new TypeWithValueNode(DHCPv6Constants.PREFLEAS
           l.setIp(currentLease.getIp());
           //l.setPrefixlength(currentLease.getPrefixlength());
           l.setSuperpoolid(currentLease.getSuperPoolID());
-          if(l.getStarttime()==Long.MIN_VALUE) // von Renew zur ï¿½bernahme markiert
+          if(l.getStarttime()==Long.MIN_VALUE) // von Renew zur übernahme markiert
           {
             l.setStarttime(currentLease.getStartTime());
           }
-          if(l.getVendorspecificinformation()!=null && l.getVendorspecificinformation().equals(TO_BE_SET_WITH_DB_VALUE)) // von Renew zur ï¿½bergabe markiert
+          if(l.getVendorspecificinformation()!=null && l.getVendorspecificinformation().equals(TO_BE_SET_WITH_DB_VALUE)) // von Renew zur übergabe markiert
           {
             if(currentLease.getVendorSpecificInformation()!=null)
             {
@@ -7469,8 +7469,8 @@ TypeWithValueNode prefLeaseTime = new TypeWithValueNode(DHCPv6Constants.PREFLEAS
       } catch (PersistenceLayerException e) {
         if (XynaFactory.getPortalInstance().getFactoryManagementPortal().getProperty(XYNAPROPERTY_ISPRIMARYSERVER)
             .equalsIgnoreCase("true")) {
-          //retry im rebind-fall, weil dann beide knoten gleichzeitig die gleiche zeile angefragt haben kï¿½nnen.
-          //in anderen fï¿½llen schadet es auch nichts
+          //retry im rebind-fall, weil dann beide knoten gleichzeitig die gleiche zeile angefragt haben können.
+          //in anderen fällen schadet es auch nichts
           queryResult = DHCPv6ODS.queryODS(con, sqlStatement, sqlparameter, new Lease().getReader(), 1);
         } else {
           throw e;
@@ -7484,12 +7484,12 @@ TypeWithValueNode prefLeaseTime = new TypeWithValueNode(DHCPv6Constants.PREFLEAS
         //l.setPrefixlength(currentLease.getPrefixlength());
         l.setSuperpoolid(currentLease.getSuperPoolID());
         l.setBinding(currentLease.getBinding());
-        if (l.getStarttime() == Long.MIN_VALUE) // von Renew zur ï¿½bernahme markiert
+        if (l.getStarttime() == Long.MIN_VALUE) // von Renew zur übernahme markiert
         {
           l.setStarttime(currentLease.getStartTime());
         }
         if (l.getVendorspecificinformation() != null
-            && l.getVendorspecificinformation().equals(TO_BE_SET_WITH_DB_VALUE)) // von Renew zur ï¿½bergabe markiert
+            && l.getVendorspecificinformation().equals(TO_BE_SET_WITH_DB_VALUE)) // von Renew zur übergabe markiert
         {
           if (currentLease.getVendorSpecificInformation() != null) {
             l.setVendorspecificinformation(currentLease.getVendorSpecificInformation());
@@ -8045,10 +8045,10 @@ TypeWithValueNode prefLeaseTime = new TypeWithValueNode(DHCPv6Constants.PREFLEAS
   
   
   private static List<Node> mergeAndUpdateOptions(List<? extends Node> outputoptionsPreviousStep, List<Node> newOptions) {
-    // Zusammenfï¿½hren von optionsListen - newOption hat Prio
+    // Zusammenführen von optionsListen - newOption hat Prio
     Map<String,Node> newOptionsMap = new HashMap<String, Node>();
     
-    // baue eine Map fï¿½r die neuen Optionen
+    // baue eine Map für die neuen Optionen
     // IA-Adress-Nodes (IA_NA, IA_PD) sind hier nicht dabei
     for(Node n : newOptions) {
       newOptionsMap.put(((TypeWithValueNode) n).getTypeName(), n);
@@ -8058,7 +8058,7 @@ TypeWithValueNode prefLeaseTime = new TypeWithValueNode(DHCPv6Constants.PREFLEAS
     
     // Update bestehender Optionen
     for(Node n : outputoptionsPreviousStep) {
-      // gibts ein Update fï¿½r n ?
+      // gibts ein Update für n ?
       if(newOptionsMap.containsKey(n.getTypeName())) {
         // ... dann nimm den entsprechenden Node aus der newOptions-Liste
         returnOptions.add(newOptionsMap.get(n.getTypeName()));
@@ -8072,7 +8072,7 @@ TypeWithValueNode prefLeaseTime = new TypeWithValueNode(DHCPv6Constants.PREFLEAS
     }
     
     // returnOptions ist jetzt eine upgedatete Kopie von optionsList
-    // hï¿½nge noch neue Nodes (==die Reste in newOptionsMap) an
+    // hänge noch neue Nodes (==die Reste in newOptionsMap) an
     
     for(String k : newOptionsMap.keySet()) {
       returnOptions.add(newOptionsMap.get(k));
@@ -8113,7 +8113,7 @@ TypeWithValueNode prefLeaseTime = new TypeWithValueNode(DHCPv6Constants.PREFLEAS
     // Pooltype-Attribute              
     outputnodes = buildNodesList(requestedClassoptions, debugmac);// in der Liste stehen
     
-    // ### Zusammenfï¿½hren neuer Optionen mit denen aus vorherigen Schritten  
+    // ### Zusammenführen neuer Optionen mit denen aus vorherigen Schritten  
     outputnodes = mergeAndUpdateOptions(outputoptions, outputnodes);
 
     
@@ -8363,7 +8363,7 @@ TypeWithValueNode prefLeaseTime = new TypeWithValueNode(DHCPv6Constants.PREFLEAS
         match = evaluateConditionalString(parsedConditional.getParsedConditional(), parsedConditional
                         .getParsedSubconditionals(), inputoptions, new ExceptionCounter(0));
       } catch (ConditionEvaluationException e) {
-        match = false;//wenn Parameter nicht im Input gefunden wurde, ist Bedingung nicht erfï¿½llt
+        match = false;//wenn Parameter nicht im Input gefunden wurde, ist Bedingung nicht erfüllt
       }
       if (match) {
         // Pooltype wird aus dem zugehoerigen PoolType-Eintrag entnommen
