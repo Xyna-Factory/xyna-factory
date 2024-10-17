@@ -87,6 +87,31 @@
       <Mapping>%4%.label="Open Use Cases"</Mapping>
       <Mapping>%4%.detailsDefinitionReference#cast("xmcp.forms.datatypes.TablePanelDefinition")=%0%</Mapping>
     </Mappings>
+    <Mappings ID="2056" Label="Use Case Button Definition">
+      <Input>
+        <Data ID="2058" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext2058"/>
+        <Source RefID="1897"/>
+      </Input>
+      <Output>
+        <Data ID="2059" Label="add Usecase " ReferenceName="OpenDialogButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDialogButtonDefinition2059"/>
+        <Target RefID="2055"/>
+      </Output>
+      <Mapping>%1%.label="Create Usecase"</Mapping>
+      <Mapping>%1%.dialogDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%0%</Mapping>
+      <Mapping>%1%.dialogDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.yang.fman.DefineAddUsecaseDialog"</Mapping>
+    </Mappings>
+    <Mappings ID="2599" Label="Mapping">
+      <Input>
+        <Data ID="2601" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext2601"/>
+        <Source RefID="1897"/>
+      </Input>
+      <Output>
+        <Data ID="2602" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow2602"/>
+        <Target RefID="2627"/>
+      </Output>
+      <Mapping>%1%.fQN="xmcp.yang.fman.UseCaseRootAssignementsDefinition"</Mapping>
+      <Mapping>%1%.rTC=%0%</Mapping>
+    </Mappings>
     <Mappings ID="19" Label="Import">
       <Input>
         <Data ID="210" Label="import yang module collection" ReferenceName="OpenDialogButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDialogButtonDefinition210">
@@ -109,10 +134,14 @@
         </Source>
       </Input>
       <Input>
-        <Data ID="228" Label="open use cases" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition228">
+        <Data ID="2084" Label="add Usecase" ReferenceName="OpenDialogButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDialogButtonDefinition2084">
           <Source RefID="19"/>
         </Data>
-        <Source RefID="59"/>
+        <Source RefID="2055">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
       </Input>
       <Input>
         <Data ID="1776" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1776">
@@ -124,18 +153,25 @@
           </Meta>
         </Source>
       </Input>
+      <Input>
+        <Data ID="2652" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow2652">
+          <Source RefID="19"/>
+        </Data>
+        <Source RefID="2627"/>
+      </Input>
       <Output>
         <Data ID="28" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition28">
           <Source RefID="19"/>
         </Data>
         <Target RefID="29"/>
       </Output>
-      <Mapping>%4%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDialogButtonDefinition")=%0%</Mapping>
-      <Mapping>%4%.header.rightArea.children["1"]#cast("xmcp.forms.datatypes.OpenDialogButtonDefinition")=%1%</Mapping>
-      <Mapping>%4%.header.rightArea.children["2"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%2%</Mapping>
-      <Mapping>%4%.tableWorkflowFQN="xmcp.yang.fman.YangImportTableInfo"</Mapping>
-      <Mapping>%4%.dataPath="%%"</Mapping>
-      <Mapping>%4%.tableWorkflowRTC=%3%</Mapping>
+      <Mapping>%5%.dataPath="%%"</Mapping>
+      <Mapping>%5%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%4%</Mapping>
+      <Mapping>%5%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDialogButtonDefinition")=%0%</Mapping>
+      <Mapping>%5%.header.rightArea.children["1"]#cast("xmcp.forms.datatypes.OpenDialogButtonDefinition")=%1%</Mapping>
+      <Mapping>%5%.header.rightArea.children["2"]#cast("xmcp.forms.datatypes.OpenDialogButtonDefinition")=%2%</Mapping>
+      <Mapping>%5%.tableWorkflowFQN="xmcp.yang.fman.UseCaseTableInfo"</Mapping>
+      <Mapping>%5%.tableWorkflowRTC=%3%</Mapping>
     </Mappings>
     <Data ID="29" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition29">
       <Source RefID="19"/>
@@ -155,6 +191,8 @@
     <Data ID="1897" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1897">
       <Source RefID="1748"/>
     </Data>
+    <Data ID="2055" Label="Open Dialog Button Definition" ReferenceName="OpenDialogButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDialogButtonDefinition2055"/>
+    <Data ID="2627" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow2627"/>
     <Assign ID="1">
       <Source RefID="29"/>
       <Target RefID="317"/>
