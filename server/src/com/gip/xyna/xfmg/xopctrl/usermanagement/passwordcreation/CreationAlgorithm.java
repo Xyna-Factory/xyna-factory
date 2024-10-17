@@ -66,8 +66,8 @@ public enum CreationAlgorithm {
     
     @Override
     public String createPassword(String cleartext, String salt, Integer rounds) {
-      //das ï¿½bergebene Salt wird ignoriert und ein neues generiert;
-      //der Bcrypt-Algorithmus benï¿½tigt ein 128-Bit Salt;
+      //das übergebene Salt wird ignoriert und ein neues generiert;
+      //der Bcrypt-Algorithmus benötigt ein 128-Bit Salt;
       //hashpw erwartet das Salt im Format $<algo>$<rounds>$<salt>,
       //wobei <salt> Base64 kodiert sein muss
       salt = BCrypt.gensalt(rounds);
@@ -174,7 +174,7 @@ public enum CreationAlgorithm {
    * Extrahiert 'salt' aus einem String der Form $&lt;algorithm id&gt;$&lt;rounds&gt;$&lt;salt&gt;&lt;password&gt;,
    * wobei 'salt' und 'password' Base64 kodiert sind
    * @param hashed
-   * @param passwordLength Lï¿½nge des im String enthaltenen Passworts
+   * @param passwordLength Länge des im String enthaltenen Passworts
    * @return
    */
   protected String extractSalt(String hashed, int passwordLength) {
@@ -203,7 +203,7 @@ public enum CreationAlgorithm {
    */
   public static CreationAlgorithm extractAlgorithm(String hashed) {
     if (!hashed.startsWith("" + MARKER)) {
-      return null; //mit PasswordCreationUtils.generateLegacyHash verschlï¿½sselt
+      return null; //mit PasswordCreationUtils.generateLegacyHash verschlüsselt
     }
     
     String[] split = hashed.split("\\"+MARKER);

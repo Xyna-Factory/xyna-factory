@@ -766,11 +766,11 @@ public abstract class MemoryPersistenceLayerConnection implements PersistenceLay
     }
 
     TableObject<Storable, MemoryRowData<Storable>> t = checkTable(table);
-    // FIXME "forUpdate" korrekt ermitteln und berï¿½cksichtigen
+    // FIXME "forUpdate" korrekt ermitteln und berücksichtigen
     E result = t.queryOneRow(getContainingPersistenceLayer(), queryForMemory, parameter, false);
 
     if (queryForMemory instanceof PreparedCountQueryForMemory) {
-      // FIXME count result unter Berï¿½cksichtigung der Transaktions-Daten updaten
+      // FIXME count result unter Berücksichtigung der Transaktions-Daten updaten
     }
     return result;
 

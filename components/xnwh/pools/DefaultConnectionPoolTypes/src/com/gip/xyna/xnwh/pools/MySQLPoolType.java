@@ -64,7 +64,7 @@ public class MySQLPoolType extends ConnectionPoolType {
                     en("timeout until connection must be established").
                     de("Timeout, bis zu dem Verbindung hergestellt sein muss").
                     build()).
-      defaultValue(Duration.valueOf("365 d")). //1 jahr. besser als sonderbehandlung fï¿½r 0
+      defaultValue(Duration.valueOf("365 d")). //1 jahr. besser als sonderbehandlung für 0
       optional().build();
 
   public static final StringParameter<Duration> SOCKET_TIMEOUT = 
@@ -225,8 +225,8 @@ public class MySQLPoolType extends ConnectionPoolType {
       final CountDownLatch latch = new CountDownLatch(1);
       ConnectionCreator cc = new ConnectionCreator(latch, dbdata);
 
-      //in eigenem thread ausfï¿½hren, damit timeouts ordentlich behandelt werden kï¿½nnen. 
-      //jdbc hat dafï¿½r zwar auch properties, aber wenn diese versagen, bleibt der thread nicht hï¿½ngen.
+      //in eigenem thread ausführen, damit timeouts ordentlich behandelt werden können. 
+      //jdbc hat dafür zwar auch properties, aber wenn diese versagen, bleibt der thread nicht hängen.
       boolean executed = false;
       int cnt = 0;
       while (!executed) {

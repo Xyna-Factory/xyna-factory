@@ -131,7 +131,7 @@ public class BatchProcessCustomizationServiceServiceOperationImpl implements Ext
     try {
       bpi = getBatchProcessManagement().getBatchProcessInformation(bpm.getBatchProcessId());
     } catch (XynaException e) {
-      //XynaException ensteht, wenn batchProcessId ungï¿½ltig ist. Dies sollte hier nie der Fall sein
+      //XynaException ensteht, wenn batchProcessId ungültig ist. Dies sollte hier nie der Fall sein
       throw new RuntimeException(e);
     }
     return bpi;

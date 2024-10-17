@@ -34,7 +34,7 @@ import com.gip.xyna.xact.filter.HTMLBuilder.CodeBuilder.Line;
  *   html.title("Titel");
  *   HTMLPart body = html.body();
  *   
- *   body.heading(3, "ï¿½berschrift);
+ *   body.heading(3, "Überschrift);
  *   body.paragraph().append("eine Zeile).lineBreak();
  *   
  *   TableBuilder tb = body.table().border(1);

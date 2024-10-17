@@ -47,7 +47,7 @@ public class MockMySQLPoolType extends ConnectionPoolType {
                     en("timeout until connection must be established").
                     de("Timeout, bis zu dem Verbindung hergestellt sein muss").
                     build()).
-      defaultValue(Duration.valueOf("365 d")). //1 jahr. besser als sonderbehandlung fï¿½r 0
+      defaultValue(Duration.valueOf("365 d")). //1 jahr. besser als sonderbehandlung für 0
       optional().build();
 
   public static final StringParameter<Duration> SOCKET_TIMEOUT = 
