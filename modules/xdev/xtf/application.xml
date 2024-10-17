@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="XynaTestFactoryInfrastructure" comment="" factoryVersion="" versionName="9.0.0" xmlVersion="1.1">
+--><Application applicationName="XynaTestFactoryInfrastructure" comment="" factoryVersion="" versionName="9.0.1" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>

@@ -408,6 +408,11 @@ public class XMOMCompiler {
 
     for (Path applicationRoot : applicationRoots) {
       Pair<RuntimeContext, Set<RuntimeContext>> newApp = readAppMetaData(applicationRoot);
+      if (xmomPaths.containsKey(newApp.getFirst())) {
+        String oldPath = xmomPaths.get(newApp.getFirst()).getAbsolutePath();
+        String newPath = applicationRoot.toAbsolutePath().toString();
+        throw new RuntimeException("Application " + newApp.getFirst() + " added multiple times. [" + oldPath + ", " + newPath + "]");
+      }
       dependencies.put(newApp.getFirst(), newApp.getSecond());
       xmomPaths.put(newApp.getFirst(), Path.of(applicationRoot.toAbsolutePath().toString(), XMOM_FOLDER).toFile());
     }
