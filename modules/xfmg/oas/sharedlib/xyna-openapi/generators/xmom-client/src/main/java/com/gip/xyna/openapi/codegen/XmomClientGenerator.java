@@ -71,6 +71,10 @@ public class XmomClientGenerator extends DefaultCodegen {
   public String getName() {
     return "xmom-client";
   }
+  
+  public String getDeciderPath() {
+    return GeneratorProperty.getModelPath(this) + ".decider";
+  }
 
   /**
    * any special handling of the entire OpenAPI spec document 
@@ -137,6 +141,7 @@ public class XmomClientGenerator extends DefaultCodegen {
     }
 
     ops.put("xynaOperation" , xoperationList);
+    objs.put("deciderPath", getDeciderPath());
     return results;
   }
   
@@ -179,6 +184,7 @@ public class XmomClientGenerator extends DefaultCodegen {
 
     objs.put("xynaModels", xModels);
     objs.put("addPropWrapper", addPropWappers);
+    objs.put("deciderPath", getDeciderPath());
     return objs;
   }
  

@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="OAS_Base" factoryVersion="" versionName="1.3.0" xmlVersion="1.1">
+<Application applicationName="OAS_Base" factoryVersion="" versionName="1.4.1" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -43,7 +43,15 @@
   </ApplicationInfo>
   <Ordertypes>
     <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.oas.exception.BuildResposeAfterError</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
       <DestinationKey>xmcp.oas.fman.ApplicationImport</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.oas.fman.DefineGenerationDialog</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -52,10 +60,6 @@
     </Ordertype>
     <Ordertype implicitDependency="true">
       <DestinationKey>xmcp.oas.fman.GetOASImportHistoryDefinition</DestinationKey>
-      <OrderContextMapping>false</OrderContextMapping>
-    </Ordertype>
-    <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.oas.fman.DefineGenerationDialog</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -86,6 +90,10 @@
   </SharedLibs>
   <XMOMEntries>
     <XMOMEntry implicitDependency="false">
+      <FqName>xfmg.oas.OASObjectParsing</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
       <FqName>xfmg.oas.generation.ApplicationGeneration</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
@@ -102,6 +110,14 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.datatype.JsonParsingError</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.datatype.OASBaseApi</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.datatype.OASBaseType</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
@@ -114,7 +130,19 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.datatype.Validate</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.datatype.ValidationError</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.datatype.client.ClientProcessingHook</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.datatype.provider.JSONParserErrorResponse</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
@@ -129,8 +157,16 @@
       <FqName>xmcp.oas.datatype.provider.ValidationErrorResponse</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.oas.exception.BuildResposeAfterError</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.oas.exception.ValidationException</FqName>
+      <FqName>xmcp.oas.exception.ClientProcessingHookException</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.exception.JSONParserException</FqName>
       <Type>EXCEPTION</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -138,11 +174,15 @@
       <Type>EXCEPTION</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.oas.exception.ClientProcessingHookException</FqName>
+      <FqName>xmcp.oas.exception.ValidationException</FqName>
       <Type>EXCEPTION</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.fman.ApplicationImport</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.DefineGenerationDialog</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -154,12 +194,12 @@
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.oas.fman.DefineGenerationDialog</FqName>
+      <FqName>xmcp.oas.fman.OASImportTableInfo</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.oas.fman.OASImportTableInfo</FqName>
-      <Type>WORKFLOW</Type>
+      <FqName>xmcp.oas.fman.OasGuiServices</FqName>
+      <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.fman.SetRuntimeContext</FqName>
@@ -181,33 +221,7 @@
       <FqName>xmcp.oas.wf.provider.Encode</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.oas.fman.OasGuiServices</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.oas.datatype.client.ClientProcessingHook</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xfmg.oas.OASObjectParsing</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
   </XMOMEntries>
-  <XynaProperties>
-    <XynaProperty implicitDependency="false">
-      <Name>xmcp.oas.fman.properties.runtime_context</Name>
-      <Value/>
-    </XynaProperty>
-    <XynaProperty implicitDependency="false">
-      <Name>xmcp.oas.validation.request_validation</Name>
-      <Value>400 Bad Request</Value>
-    </XynaProperty>
-    <XynaProperty implicitDependency="false">
-      <Name>xmcp.oas.validation.response_validation</Name>
-      <Value>500 Internal Server Error</Value>
-    </XynaProperty>
-  </XynaProperties>
   <XmomStorables>
     <XmomStorable>
       <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
@@ -217,10 +231,10 @@
     </XmomStorable>
     <XmomStorable>
       <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
-      <Path>date</Path>
+      <Path>date0</Path>
       <OdsName>oas_importhistory</OdsName>
-      <FqPath>date</FqPath>
-      <ColumnName>date</ColumnName>
+      <FqPath>date0</FqPath>
+      <ColumnName>date0</ColumnName>
     </XmomStorable>
     <XmomStorable>
       <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
@@ -249,40 +263,6 @@
       <OdsName>oas_importhistory</OdsName>
       <FqPath>specificationFile</FqPath>
       <ColumnName>specificationfile</ColumnName>
-    </XmomStorable>
-    <XmomStorable>
-      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
-      <Path>specificationFile</Path>
-      <OdsName>specificationfile</OdsName>
-      <FqPath>specificationFile{base.Text}</FqPath>
-    </XmomStorable>
-    <XmomStorable>
-      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
-      <Path>specificationFile.parentuid</Path>
-      <OdsName>specificationfile</OdsName>
-      <FqPath>specificationFile{base.Text}.parentuid</FqPath>
-      <ColumnName>parentuid</ColumnName>
-    </XmomStorable>
-    <XmomStorable>
-      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
-      <Path>specificationFile.text</Path>
-      <OdsName>specificationfile</OdsName>
-      <FqPath>specificationFile{base.Text}.text</FqPath>
-      <ColumnName>text</ColumnName>
-    </XmomStorable>
-    <XmomStorable>
-      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
-      <Path>specificationFile.typename</Path>
-      <OdsName>specificationfile</OdsName>
-      <FqPath>specificationFile{base.Text}.typename</FqPath>
-      <ColumnName>typename</ColumnName>
-    </XmomStorable>
-    <XmomStorable>
-      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
-      <Path>specificationFile.unid</Path>
-      <OdsName>specificationfile</OdsName>
-      <FqPath>specificationFile{base.Text}.unid</FqPath>
-      <ColumnName>unid</ColumnName>
     </XmomStorable>
     <XmomStorable>
       <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
