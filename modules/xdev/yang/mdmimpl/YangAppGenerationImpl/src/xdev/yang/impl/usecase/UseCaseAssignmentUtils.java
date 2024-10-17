@@ -15,7 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package xdev.yang.impl;
+package xdev.yang.impl.usecase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,6 +50,8 @@ import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
+import xdev.yang.impl.Constants;
+import xdev.yang.impl.XmomDbInteraction;
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.UseCaseAssignementTableData;
 import xmcp.yang.YangModuleCollection;

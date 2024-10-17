@@ -15,7 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package xdev.yang.impl;
+package xdev.yang.impl.usecase;
 
 
 
@@ -34,11 +34,11 @@ import com.gip.xyna.xprc.exceptions.XPRC_XMOMObjectDoesNotExist;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 
-import base.Text;
 import xact.http.URLPath;
 import xact.http.enums.httpmethods.HTTPMethod;
 import xact.http.enums.httpmethods.POST;
 import xact.http.enums.httpmethods.PUT;
+import xdev.yang.impl.Constants;
 import xmcp.processmodeller.datatypes.response.GetDataTypeResponse;
 import xprc.xpce.Workspace;
 

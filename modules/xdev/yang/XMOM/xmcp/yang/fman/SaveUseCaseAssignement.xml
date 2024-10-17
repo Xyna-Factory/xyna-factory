@@ -21,6 +21,19 @@
       <Data ID="14" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData14"/>
     </Input>
     <Output/>
+    <ServiceReference ID="36" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
+      <Source RefID="35"/>
+      <Target RefID="35"/>
+    </ServiceReference>
+    <Function ID="35" Label="Save Assignment">
+      <Source RefID="36"/>
+      <Source RefID="14"/>
+      <Target RefID="36"/>
+      <Invoke Operation="saveAssignment" ServiceID="36">
+        <Source RefID="14"/>
+      </Invoke>
+      <Receive ServiceID="36"/>
+    </Function>
     <Assign ID="1"/>
   </Operation>
 </Service>

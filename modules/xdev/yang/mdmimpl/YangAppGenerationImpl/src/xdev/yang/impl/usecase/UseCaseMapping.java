@@ -15,7 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package xdev.yang.impl;
+package xdev.yang.impl.usecase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +24,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
+
+import xdev.yang.impl.Constants;
 
 public class UseCaseMapping {
 

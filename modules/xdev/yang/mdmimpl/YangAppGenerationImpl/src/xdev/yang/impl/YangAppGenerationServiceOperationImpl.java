@@ -39,6 +39,10 @@ import xdev.yang.YangAppGenerationInputParameter;
 import xdev.yang.YangAppGenerationServiceOperation;
 import xdev.yang.cli.generated.OverallInformationProvider;
 import xdev.yang.impl.YangApplicationGeneration.YangApplicationGenerationData;
+import xdev.yang.impl.usecase.AddUsecase;
+import xdev.yang.impl.usecase.DetermineUseCaseAssignments;
+import xdev.yang.impl.usecase.LoadUsecasesTable;
+import xdev.yang.impl.usecase.SaveUsecaseAssignmentAction;
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.UseCaseAssignementTableData;
 import xmcp.yang.UseCaseTableData;
@@ -129,5 +133,12 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   public List<? extends UseCaseAssignementTableData> loadAssignments(LoadYangAssignmentsData data) {
     DetermineUseCaseAssignments executor = new DetermineUseCaseAssignments();
     return executor.determineUseCaseAssignments(data);
+  }
+
+
+  @Override
+  public void saveAssignment(UseCaseAssignementTableData data) {
+    SaveUsecaseAssignmentAction executor = new SaveUsecaseAssignmentAction();
+    executor.saveUsecaseAssignment(data);
   }
 }
