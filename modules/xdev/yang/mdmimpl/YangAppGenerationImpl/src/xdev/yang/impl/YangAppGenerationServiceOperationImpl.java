@@ -120,8 +120,8 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   }
 
   @Override
-  public void addUsecase(XynaOrderServerExtension order, Text usecaseGroupFqn, Text usecaseName, Workspace workspace, Text rpc) {
-      new AddUsecase().addUsecase(usecaseGroupFqn.getText(), usecaseName.getText(), workspace, order, rpc);
+  public void addUsecase(XynaOrderServerExtension order, Text usecaseGroupFqn, Text usecaseName, Workspace workspace, Text rpc, Text deviceFqn) {
+      new AddUsecase().addUsecase(usecaseGroupFqn.getText(), usecaseName.getText(), workspace, order, rpc.getText(), deviceFqn.getText());
     
   }
 

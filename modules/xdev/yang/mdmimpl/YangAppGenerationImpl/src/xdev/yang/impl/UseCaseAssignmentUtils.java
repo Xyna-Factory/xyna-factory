@@ -22,16 +22,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.ls.DOMImplementationLS;
-import org.w3c.dom.ls.LSSerializer;
 import org.yangcentral.yangkit.base.YangElement;
+import org.yangcentral.yangkit.model.api.schema.YangSchemaContext;
 import org.yangcentral.yangkit.model.api.stmt.Container;
 import org.yangcentral.yangkit.model.api.stmt.Grouping;
 import org.yangcentral.yangkit.model.api.stmt.Input;
@@ -40,9 +38,9 @@ import org.yangcentral.yangkit.model.api.stmt.Module;
 import org.yangcentral.yangkit.model.api.stmt.Rpc;
 import org.yangcentral.yangkit.model.api.stmt.SchemaNode;
 import org.yangcentral.yangkit.model.api.stmt.YangStatement;
-import org.yangcentral.yangkit.parser.YinParser;
-
+import org.yangcentral.yangkit.parser.YangYinParser;
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.utils.misc.Base64;
 import com.gip.xyna.xfmg.xfctrl.XynaFactoryControl;
 import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
@@ -80,17 +78,29 @@ public class UseCaseAssignmentUtils {
   public static List<UseCaseAssignementTableData> loadPossibleAssignments(List<Module> modules, String rpcName, LoadYangAssignmentsData data) {
     Rpc rpc = findRpc(modules, rpcName);
     Input input = rpc.getInput();
-    List<YangElement> elements = traverseYang(modules, data.getTotalYangPath(), input);
+    List<YangStatement> elements = traverseYang(modules, data.getTotalYangPath(), input);
     return loadAssignments(elements, data);
   }
 
-  private static List<YangElement> traverseYang(List<Module> modules, String path, YangStatement element) {
+  private static List<YangStatement> traverseYang(List<Module> modules, String path, YangStatement element) {
     String[] parts = path.split("\\/");
-    for(int i=0; i<parts.length; i++) {
+    for(int i=1; i<parts.length; i++) { //ignore initial "/root"
       String part = parts[i];
       element = traverseYangOneLayer(modules, part, element);
     }
-    return element.getSubElements();
+    return getCandidates(element);
+  }
+  
+
+  private static List<YangStatement> getCandidates(YangStatement statement) {
+    List<YangElement> candidates = statement.getSubElements();
+    List<YangStatement> result = new ArrayList<>();
+    for (YangElement candidate : candidates) {
+      if (isSupportedElement(candidate)) {
+        result.add((YangStatement) candidate);
+      }
+    }
+    return result;
   }
   
   private static YangStatement traverseYangOneLayer(List<Module> modules, String pathStep, YangStatement statement) {
@@ -103,31 +113,49 @@ public class UseCaseAssignmentUtils {
       }
     }
     
-    throw new RuntimeException("Could not traverse from " + statement.getElementPosition().toString() + " to " + pathStep);
+    throw new RuntimeException("Could not traverse from " + statement.getArgStr() + " to " + pathStep);
   }
 
-  private static List<UseCaseAssignementTableData> loadAssignments(List<YangElement> subElements, LoadYangAssignmentsData data) {
+
+  private static List<UseCaseAssignementTableData> loadAssignments(List<YangStatement> subElements, LoadYangAssignmentsData data) {
     List<UseCaseAssignementTableData> result = new ArrayList<>();
-    for(YangElement element : subElements) {
-      if(isSupportedElement(element)) {
+    for (YangStatement element : subElements) {
+      if (isSupportedElement(element)) {
+        String localName = ((SchemaNode) element).getIdentifier().getLocalName();
         UseCaseAssignementTableData.Builder builder = new UseCaseAssignementTableData.Builder();
-        builder.loadYangAssignmentsData(data);
-        builder.yangPath(((SchemaNode)element).getIdentifier().getLocalName());
-        builder.type(yangStatementIdentifiers.get(element.getClass()));
+        LoadYangAssignmentsData updatedData = data.clone();
+        updatedData.unversionedSetTotalYangPath(updatedData.getTotalYangPath() + "/" + localName);
+        builder.loadYangAssignmentsData(updatedData);
+        builder.yangPath(localName);
+        builder.type(getYangType(element));
         result.add(builder.instance());
       }
     }
     return result;
   }
   
+
   private static boolean isSupportedElement(YangElement element) {
-    return supportedYangStatementsForAssignments.contains(element.getClass());
+    for (Class<?> c : supportedYangStatementsForAssignments) {
+      if (c.isAssignableFrom(element.getClass())) {
+        return true;
+      }
+    }
+    return false;
   }
-  
+
+  private static String getYangType(YangElement element) {
+    for(Entry<Class<?>, String> c : yangStatementIdentifiers.entrySet()) {
+      if(c.getKey().isAssignableFrom(element.getClass())) {
+        return c.getValue();
+      }
+    }
+    return "Unknown: " + element.getClass().getCanonicalName();
+  }
 
   private static Rpc findRpc(List<Module> modules, String rpcName) {
     for(Module module : modules) {
-      Rpc result = module.getRpc(rpcName); //TODO:
+      Rpc result = module.getRpc(rpcName);
       if(result != null) {
         return result;
       }
@@ -185,30 +213,12 @@ public class UseCaseAssignmentUtils {
     }
     return result;
   }
-  
+
+
   private static void addModulesFromTag(Element module, List<Module> modules) throws Exception {
-    org.dom4j.Document document = convertMetaTagToDocument(module);
-    YinParser parser = new YinParser("module.yin");
-    parser.parse(document);
-    List<YangElement> elements = parser.parse(document);
-    for(YangElement element : elements) {
-      if(element instanceof Module) {
-        modules.add((Module)element);
-      }
-    }
-  }
-  
-  private static org.dom4j.Document convertMetaTagToDocument(Element node) {
-    Document document = node.getOwnerDocument();
-    DOMImplementationLS domImplLS = (DOMImplementationLS) document.getImplementation();
-    LSSerializer serializer = domImplLS.createLSSerializer();
-    String str = serializer.writeToString(node);
-    org.dom4j.Document doc = null;
-    try {
-      doc = DocumentHelper.parseText(str);
-    } catch (DocumentException e) {
-      throw new RuntimeException(e);
-    }
-    return doc;
+    java.io.ByteArrayInputStream is = new java.io.ByteArrayInputStream(Base64.decode(module.getTextContent()));
+    YangSchemaContext context = YangYinParser.parse(is, "module.yang", null);
+    context.validate();
+    modules.addAll(context.getModules());
   }
 }

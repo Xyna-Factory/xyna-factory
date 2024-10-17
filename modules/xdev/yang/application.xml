@@ -87,10 +87,6 @@
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.YangImportTableInfo</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
       <FqName>xdev.yang.YangAppGeneration</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>

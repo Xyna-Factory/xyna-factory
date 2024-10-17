@@ -21,16 +21,25 @@ package xdev.yang.impl;
 public class Constants {
 
   public static final String ATT_YANG_TYPE = "type";
+  public static final String ATT_MAPPING_YANGPATH = "yang";
+  public static final String ATT_MAPPING_VALUE = "config";
+  public static final String ATT_MAPPING_NAMESPACE = "namespace";
   
   public static final String TAG_YANG = "Yang";
   public static final String TAG_RPC = "Rpc";
+  public static final String TAG_DEVICE_FQN = "DeviceFqn";
   public static final String TAG_MAPPINGS = "Mappings";
   public static final String TAG_MAPPING = "Mapping";
   
+  public static final String TAG_HELLO = "hello";
+  public static final String TAG_CAPABILITIES = "capabilities";
+  public static final String TAG_CAPABILITY = "capability";
+  
   public static final String VAL_USECASE = "Usecase";
   public static final String VAL_MODULECOLLECTION = "ModuleCollection";
+  public static final String VAL_DEVICE = "Capabilities";
   
-  public static final String TYPE_CONTAINER = "Container";
-  public static final String TYPE_LEAF = "Leaf";
-  public static final String TYPE_GROUPING = "Grouping";
+  public static final String TYPE_CONTAINER = "container";
+  public static final String TYPE_LEAF = "leaf";
+  public static final String TYPE_GROUPING = "grouping";
 }

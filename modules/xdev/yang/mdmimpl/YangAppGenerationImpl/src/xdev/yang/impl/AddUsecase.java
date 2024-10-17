@@ -49,7 +49,7 @@ public class AddUsecase {
   private static final Logger logger = CentralFactoryLogging.getLogger(AddUsecase.class);
 
 
-  public void addUsecase(String fqn, String usecaseName, Workspace workspace, XynaOrderServerExtension order, Text rpc) {
+  public void addUsecase(String fqn, String usecaseName, Workspace workspace, XynaOrderServerExtension order, String rpc, String deviceFqn) {
     try {
       String workspaceName = workspace.getName();
       if (logger.isDebugEnabled()) {
@@ -73,7 +73,7 @@ public class AddUsecase {
           logger.debug(order.getId() + ": Adding service to datatype. Current datatype path: " + currentPath);
         }
         addParentToDatatype(currentPath, label, workspaceName, order);
-        addServiceToDatatype(currentPath, label, usecaseName, workspaceName, order, rpc);
+        addServiceToDatatype(currentPath, label, usecaseName, workspaceName, order, rpc, deviceFqn);
         saveDatatype(currentPath, path, label, workspaceName, order);
       } finally {
         if (logger.isDebugEnabled()) {
@@ -142,7 +142,7 @@ public class AddUsecase {
     return fqn.substring(0, fqn.lastIndexOf("."));
   }
 
-  private void addServiceToDatatype(String path, String label, String service, String workspace, XynaOrderServerExtension order, Text rpc) {
+  private void addServiceToDatatype(String path, String label, String service, String workspace, XynaOrderServerExtension order, String rpc, String deviceFqn) {
     RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
     String workspaceNameEscaped = urlEncode(workspace);
     String fqnUrl = path + "/" + label;
@@ -158,7 +158,8 @@ public class AddUsecase {
     url = new URLPath(endPoint, null, null);
     method = new PUT();
     String mappings = "<" + Constants.TAG_MAPPINGS + "/>";
-    String tag = "<Yang type=\\\"Usecase\\\">\n  <Rpc>"+ rpc.getText() + "</Rpc>\n  "+ mappings +"\n</Yang>";
+    String device = "<" + Constants.TAG_DEVICE_FQN + ">" + deviceFqn + "</" + Constants.TAG_DEVICE_FQN + ">";
+    String tag = "<Yang type=\\\"Usecase\\\"><Rpc>"+ rpc + "</Rpc>"+ device + mappings +"</Yang>";
     payload = "{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.request.MetaTagRequest\"},\"metaTag\":{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.MetaTag\"},\"deletable\":true,\"tag\":\"" + tag + "\"}}";
     executeRunnable(runnable, url, method, payload, "Could not add meta tag to service.");
   }
