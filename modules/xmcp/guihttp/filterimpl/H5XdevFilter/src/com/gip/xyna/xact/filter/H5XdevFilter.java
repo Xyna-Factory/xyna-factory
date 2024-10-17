@@ -30,6 +30,7 @@ import com.gip.xyna.xact.filter.FilterAction.FilterActionInstance;
 import com.gip.xyna.xact.filter.actions.*;
 import com.gip.xyna.xact.filter.actions.auth.ChangePasswordAction;
 import com.gip.xyna.xact.filter.actions.auth.ExternalUserLoginAction;
+import com.gip.xyna.xact.filter.actions.auth.ExternalCredentialsLoginAction;
 import com.gip.xyna.xact.filter.actions.auth.ExternalUserLoginInformationAction;
 import com.gip.xyna.xact.filter.actions.auth.InfoAction;
 import com.gip.xyna.xact.filter.actions.auth.LoginAction;
@@ -372,6 +373,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add(new LogoutAction());
     allFilterActions.add(new ExternalUserLoginInformationAction());
     allFilterActions.add(new ExternalUserLoginAction(xmomGui));
+    allFilterActions.add(new ExternalCredentialsLoginAction(xmomGui));
     allFilterActions.add(new SharedLoginAction(xmomGui));
     allFilterActions.add(new ChangePasswordAction());
 
