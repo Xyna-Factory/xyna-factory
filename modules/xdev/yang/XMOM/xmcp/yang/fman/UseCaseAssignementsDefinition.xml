@@ -104,24 +104,6 @@
         <Data ID="488" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow488"/>
       </Case>
       <Case ID="239" Label="false">
-        <Mappings ID="2327" Label="Mapping">
-          <Input>
-            <Data ID="2704" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext2704">
-              <Source RefID="2327"/>
-            </Data>
-            <Source RefID="2753"/>
-          </Input>
-          <Output>
-            <Data ID="2352" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition2352">
-              <Source RefID="2327"/>
-            </Data>
-            <Target RefID="2353"/>
-          </Output>
-          <Mapping>%1%.label="Suggestions"</Mapping>
-          <Mapping>%1%.tableWorkflowFQN="xmcp.yang.fman.YangImportTableInfo"</Mapping>
-          <Mapping>%1%.tableWorkflowRTC=%0%</Mapping>
-          <Mapping>%1%.dataPath="%%"</Mapping>
-        </Mappings>
         <Mappings ID="1911" Label="Mapping">
           <Input>
             <Data ID="1913" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1913"/>
@@ -154,21 +136,14 @@
             </Data>
             <Source RefID="1910"/>
           </Input>
-          <Input>
-            <Data ID="2379" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition2379">
-              <Source RefID="271"/>
-            </Data>
-            <Source RefID="2353"/>
-          </Input>
           <Output>
             <Data ID="280" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition280">
               <Source RefID="271"/>
             </Data>
             <Target RefID="281"/>
           </Output>
-          <Mapping>%3%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
-          <Mapping>%3%.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
-          <Mapping>%3%.children["2"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%2%</Mapping>
+          <Mapping>%2%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
+          <Mapping>%2%.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
         </Mappings>
         <Assign ID="243">
           <Source RefID="281"/>
@@ -184,9 +159,6 @@
     </Choice>
     <Data ID="281" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition281">
       <Source RefID="271"/>
-    </Data>
-    <Data ID="2353" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition2353">
-      <Source RefID="2327"/>
     </Data>
     <Data ID="2354" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition2354">
       <Source RefID="237"/>
