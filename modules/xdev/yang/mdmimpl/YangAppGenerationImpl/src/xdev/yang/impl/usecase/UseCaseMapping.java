@@ -39,6 +39,16 @@ public class UseCaseMapping {
     this.value = value;
   }
   
+  public static List<Element> loadMappingElements(Document document) {
+    Element mappingsNode = XMLUtils.getChildElementByName(document.getDocumentElement(), Constants.TAG_MAPPINGS);
+    List<Element> mappingNodes = XMLUtils.getChildElementsByName(mappingsNode, Constants.TAG_MAPPING);
+    List<Element> result = new ArrayList<Element>();
+    for(Element mappingNode : mappingNodes) {
+      result.add(mappingNode);
+    }
+    return result;
+  }
+  
   public static List<UseCaseMapping> loadMappings(Document document) {
     Element mappingsNode = XMLUtils.getChildElementByName(document.getDocumentElement(), Constants.TAG_MAPPINGS);
     List<Element> mappingNodes = XMLUtils.getChildElementsByName(mappingsNode, Constants.TAG_MAPPING);
@@ -50,11 +60,25 @@ public class UseCaseMapping {
     return result;
   }
 
-  private static UseCaseMapping loadUseCaseMapping(Element e) {
+  public static UseCaseMapping loadUseCaseMapping(Element e) {
     String yangPath = e.getAttribute(Constants.ATT_MAPPING_YANGPATH);
     String namespace = e.getAttribute(Constants.ATT_MAPPING_NAMESPACE);
     String value = e.getAttribute(Constants.ATT_MAPPING_VALUE);
     return new UseCaseMapping(yangPath, namespace, value);
+  }
+  
+  public void updateNode(Element e) {
+    e.setAttribute(Constants.ATT_MAPPING_YANGPATH, mappingYangPath);
+    e.setAttribute(Constants.ATT_MAPPING_NAMESPACE, namespace);
+    e.setAttribute(Constants.ATT_MAPPING_VALUE, value);
+  }
+  
+
+  public void createAndAddElement(Document meta) {
+    Element newMappingEle = meta.createElement(Constants.TAG_MAPPING);
+    updateNode(newMappingEle);
+    Element mappingsEle = XMLUtils.getChildElementByName(meta.getDocumentElement(), Constants.TAG_MAPPINGS);
+    mappingsEle.appendChild(newMappingEle);
   }
   
   public String getMappingYangPath() {
@@ -85,4 +109,5 @@ public class UseCaseMapping {
   public void setValue(String value) {
     this.value = value;
   }
+
 }

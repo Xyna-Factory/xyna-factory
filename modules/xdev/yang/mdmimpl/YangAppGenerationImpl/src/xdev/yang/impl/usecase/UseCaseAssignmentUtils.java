@@ -17,6 +17,8 @@
  */
 package xdev.yang.impl.usecase;
 
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,16 +42,24 @@ import org.yangcentral.yangkit.model.api.stmt.SchemaNode;
 import org.yangcentral.yangkit.model.api.stmt.YangStatement;
 import org.yangcentral.yangkit.parser.YangYinParser;
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.utils.collections.Pair;
+import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.misc.Base64;
+import com.gip.xyna.xact.trigger.RunnableForFilterAccess;
 import com.gip.xyna.xfmg.xfctrl.XynaFactoryControl;
 import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResultEntry;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
+import com.gip.xyna.xprc.XynaOrderServerExtension;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
+import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
+import xact.http.URLPath;
+import xact.http.enums.httpmethods.HTTPMethod;
+import xact.http.enums.httpmethods.POST;
 import xdev.yang.impl.Constants;
 import xdev.yang.impl.XmomDbInteraction;
 import xmcp.yang.LoadYangAssignmentsData;
@@ -222,5 +232,60 @@ public class UseCaseAssignmentUtils {
     YangSchemaContext context = YangYinParser.parse(is, "module.yang", null);
     context.validate();
     modules.addAll(context.getModules());
+  }
+  
+  public static Pair<Integer, Document> loadOperationMeta(String fqn, String workspaceName, String usecase) {
+    try {
+      RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+      Long revision = revMgmt.getRevision(null, null, workspaceName);
+      DOM dom = DOM.getOrCreateInstance(fqn, new GenerationBaseCache(), revision);
+      dom.parseGeneration(false, false);
+      Operation operation = dom.getOperationByName(usecase);
+      List<String> unknownMetaTags = operation.getUnknownMetaTags();
+      if(unknownMetaTags == null) {
+        return null;
+      }
+      for(int i=0; i< unknownMetaTags.size(); i++) {
+        String unknownMetaTag = unknownMetaTags.get(i);
+        Document d = XMLUtils.parseString(unknownMetaTag);
+        boolean isYang = d.getDocumentElement().getTagName().equals(Constants.TAG_YANG);
+        boolean isUseCase = Constants.VAL_USECASE.equals(d.getDocumentElement().getAttribute(Constants.ATT_YANG_TYPE));
+        if(isYang && isUseCase) {
+          return new Pair<Integer, Document>(i, d);
+        }
+      }
+      return null;
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+  
+  public static void saveDatatype(String path, String targetPath, String label, String workspace, XynaOrderServerExtension order) {
+    RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
+    String workspaceNameEscaped = urlEncode(workspace);
+    String baseUrl = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + path + "/" + label;
+    URLPath url = new URLPath(baseUrl + "/save", null, null);
+    HTTPMethod method = new POST();
+    String payload = "{\"force\":false,\"revision\":2,\"path\":\"" + targetPath + "\",\"label\":\"" + label + "\"}";
+    executeRunnable(runnable, url, method, payload, "Could not save datatype.");
+    
+    //deploy
+    url = new URLPath(baseUrl + "/deploy", null, null);
+    payload = "{\"revision\":3}";
+    executeRunnable(runnable, url, method, payload, "Could not deploy datatype.");
+  }
+  
+
+  public static Object executeRunnable(RunnableForFilterAccess runnable, URLPath url, HTTPMethod method, String payload, String msg) {
+    try {
+      return runnable.execute(url, method, payload);
+    } catch (XynaException e) {
+      throw new RuntimeException(msg, e);
+    }
+  }
+
+
+  public static String urlEncode(String in) {
+    return URLEncoder.encode(in, Charset.forName("UTF-8"));
   }
 }

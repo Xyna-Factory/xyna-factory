@@ -72,6 +72,9 @@ public class LoadUsecasesTable {
       datatype.parseGeneration(false, false);
       List<Operation> operations = datatype.getOperations();
       for (Operation operation : operations) {
+        if(!isUsecase(operation)) {
+          continue;
+        }
         int mappingCount = countMappings(operation);
         UseCaseTableData.Builder data = new UseCaseTableData.Builder();
         data.usecaseGroup(dt.getFqn()).useCase(operation.getName()).mappingCount(mappingCount);
@@ -83,6 +86,28 @@ public class LoadUsecasesTable {
     }
 
     return result;
+  }
+  
+  private boolean isUsecase(Operation operation) {
+    if (operation.getUnknownMetaTags() == null) {
+      return false;
+    }
+    for (String unknownMetaTag : operation.getUnknownMetaTags()) {
+      try {
+        Document xml = XMLUtils.parseString(unknownMetaTag, false);
+        if (!xml.getDocumentElement().getNodeName().equals(Constants.TAG_YANG)) {
+          continue;
+        }
+        Node yangTypeNode = xml.getDocumentElement().getAttributes().getNamedItem(Constants.ATT_YANG_TYPE);
+        if (yangTypeNode == null || !Constants.VAL_USECASE.equals(yangTypeNode.getNodeValue())) {
+          continue;
+        }
+        return true;
+      } catch(Exception e) {
+        return false;
+      }
+    }
+    return false;
   }
 
 

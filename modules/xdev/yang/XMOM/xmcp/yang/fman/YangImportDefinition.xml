@@ -170,6 +170,7 @@
       <Mapping>%5%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDialogButtonDefinition")=%0%</Mapping>
       <Mapping>%5%.header.rightArea.children["1"]#cast("xmcp.forms.datatypes.OpenDialogButtonDefinition")=%1%</Mapping>
       <Mapping>%5%.header.rightArea.children["2"]#cast("xmcp.forms.datatypes.OpenDialogButtonDefinition")=%2%</Mapping>
+      <Mapping>%5%.label="Usecases"</Mapping>
       <Mapping>%5%.tableWorkflowFQN="xmcp.yang.fman.UseCaseTableInfo"</Mapping>
       <Mapping>%5%.tableWorkflowRTC=%3%</Mapping>
     </Mappings>

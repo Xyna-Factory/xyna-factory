@@ -19,14 +19,10 @@ package xdev.yang.impl.usecase;
 
 
 
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
-import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.trigger.RunnableForFilterAccess;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
@@ -74,7 +70,7 @@ public class AddUsecase {
         }
         addParentToDatatype(currentPath, label, workspaceName, order);
         addServiceToDatatype(currentPath, label, usecaseName, workspaceName, order, rpc, deviceFqn);
-        saveDatatype(currentPath, path, label, workspaceName, order);
+        UseCaseAssignmentUtils.saveDatatype(currentPath, path, label, workspaceName, order);
       } finally {
         if (logger.isDebugEnabled()) {
           logger.debug(order.getId() + ": Closing datatype.");
@@ -88,14 +84,13 @@ public class AddUsecase {
 
   private void addParentToDatatype(String path, String label, String workspace, XynaOrderServerExtension order) {
     RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
-    String workspaceNameEscaped = urlEncode(workspace);
+    String workspaceNameEscaped = UseCaseAssignmentUtils.urlEncode(workspace);
     String fqnUrl = path + "/" + label;
     String endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + fqnUrl + "/objects/typeInfoArea/change";
     URLPath url = new URLPath(endPoint, null, null);
     HTTPMethod method = new PUT();
     String payload = "{\"baseType\":\"xmcp.yang.YangUsecaseImplementation\"}";
-    executeRunnable(runnable, url, method, payload, "Could not add supertype to datatype.");
-    
+    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "Could not add supertype to datatype.");
   }
 
   private boolean doesDomExist(DOM dom) {
@@ -114,12 +109,12 @@ public class AddUsecase {
       logger.debug(order.getId() + ": Datatype does not exist");
     }
     RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
-    String workspaceNameEscaped = urlEncode(workspaceName);
+    String workspaceNameEscaped = UseCaseAssignmentUtils.urlEncode(workspaceName);
     String endpoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + currentPath + "/" + label + "/close";
     URLPath url = new URLPath(endpoint, null, null);
     HTTPMethod method = new POST();
     String payload = "{\"force\":false,\"revision\":0}";
-    executeRunnable(runnable, url, method, payload, "could not close datatype");
+    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "could not close datatype");
 
     if (logger.isDebugEnabled()) {
       logger.debug(order.getId() + ": Datatype created. Temporary path: " + currentPath);
@@ -129,12 +124,12 @@ public class AddUsecase {
 
   private String createDatatype(String label, String workspaceName, XynaOrderServerExtension order) {
     RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
-    String workspaceNameEscaped = urlEncode(workspaceName);
+    String workspaceNameEscaped = UseCaseAssignmentUtils.urlEncode(workspaceName);
     URLPath url = new URLPath("/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes", null, null);
     HTTPMethod method = new POST();
     String payload = "{\"label\":\"" + label + "\"}";
     GetDataTypeResponse json;
-    json = (GetDataTypeResponse) executeRunnable(runnable, url, method, payload, "Could not create datatype.");
+    json = (GetDataTypeResponse) UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "Could not create datatype.");
     if (json == null) {
       throw new RuntimeException("Could not create datatype.");
     }
@@ -144,13 +139,13 @@ public class AddUsecase {
 
   private void addServiceToDatatype(String path, String label, String service, String workspace, XynaOrderServerExtension order, String rpc, String deviceFqn) {
     RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
-    String workspaceNameEscaped = urlEncode(workspace);
+    String workspaceNameEscaped = UseCaseAssignmentUtils.urlEncode(workspace);
     String fqnUrl = path + "/" + label;
     String endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + fqnUrl + "/objects/memberMethodsArea/insert";
     URLPath url = new URLPath(endPoint, null, null);
     HTTPMethod method = new POST();
     String payload = "{\"index\":-1,\"content\":{\"type\":\"memberMethod\",\"label\":\"" +  service + "\"},\"revision\":0}";
-    executeRunnable(runnable, url, method, payload, "Could not add service to datatype.");
+    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "Could not add service to datatype.");
     
     // set meta tag
     String serviceName = service; //TODO: read correct name from datatype
@@ -161,35 +156,6 @@ public class AddUsecase {
     String device = "<" + Constants.TAG_DEVICE_FQN + ">" + deviceFqn + "</" + Constants.TAG_DEVICE_FQN + ">";
     String tag = "<Yang type=\\\"Usecase\\\"><Rpc>"+ rpc + "</Rpc>"+ device + mappings +"</Yang>";
     payload = "{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.request.MetaTagRequest\"},\"metaTag\":{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.MetaTag\"},\"deletable\":true,\"tag\":\"" + tag + "\"}}";
-    executeRunnable(runnable, url, method, payload, "Could not add meta tag to service.");
-  }
-
-  private void saveDatatype(String path, String targetPath, String label, String workspace, XynaOrderServerExtension order) {
-    RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
-    String workspaceNameEscaped = urlEncode(workspace);
-    String baseUrl = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + path + "/" + label;
-    URLPath url = new URLPath(baseUrl + "/save", null, null);
-    HTTPMethod method = new POST();
-    String payload = "{\"force\":false,\"revision\":2,\"path\":\"" + targetPath + "\",\"label\":\"" + label + "\"}";
-    executeRunnable(runnable, url, method, payload, "Could not save datatype.");
-    
-    //deploy
-    url = new URLPath(baseUrl + "/deploy", null, null);
-    payload = "{\"revision\":3}";
-    executeRunnable(runnable, url, method, payload, "Could not deploy datatype.");
-  }
-  
-  
-  private Object executeRunnable(RunnableForFilterAccess runnable, URLPath url, HTTPMethod method, String payload, String msg) {
-    try {
-      return runnable.execute(url, method, payload);
-    } catch (XynaException e) {
-      throw new RuntimeException(msg, e);
-    }
-  }
-
-
-  private String urlEncode(String in) {
-    return URLEncoder.encode(in, Charset.forName("UTF-8"));
+    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "Could not add meta tag to service.");
   }
 }

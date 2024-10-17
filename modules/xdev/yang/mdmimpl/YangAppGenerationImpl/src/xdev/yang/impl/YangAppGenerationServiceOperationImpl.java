@@ -137,8 +137,8 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
 
 
   @Override
-  public void saveAssignment(UseCaseAssignementTableData data) {
+  public void saveAssignment(XynaOrderServerExtension order, UseCaseAssignementTableData data) {
     SaveUsecaseAssignmentAction executor = new SaveUsecaseAssignmentAction();
-    executor.saveUsecaseAssignment(data);
+    executor.saveUsecaseAssignment(order, data);
   }
 }

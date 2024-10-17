@@ -26,6 +26,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xfmg.xfctrl.XynaFactoryControl;
 import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
@@ -33,7 +34,6 @@ import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResultEntr
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
-import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 import xdev.yang.impl.Constants;
@@ -55,20 +55,20 @@ public class DetermineUseCaseAssignments {
     String workspaceName = data.getWorkspaceName();
     String usecase = data.getUsecase();
     List<UseCaseAssignementTableData> result = new ArrayList<UseCaseAssignementTableData>();
-    Document meta = loadOperationMeta(fqn, workspaceName, usecase);
+    Pair<Integer, Document> meta = UseCaseAssignmentUtils.loadOperationMeta(fqn, workspaceName, usecase);
     if(meta == null) {
       return result;
     }
-    String rpcName = readRpcName(meta);
+    String rpcName = readRpcName(meta.getSecond());
     if(rpcName == null) {
       return result;
     }
     
     List<Module> modules = UseCaseAssignmentUtils.loadModules(workspaceName);
-    List<String> moduleCapabilities = loadCapabilities(meta, workspaceName);
+    List<String> moduleCapabilities = loadCapabilities(meta.getSecond(), workspaceName);
     modules.removeIf(x -> !isModuleInCapabilities(moduleCapabilities, x));
     result = UseCaseAssignmentUtils.loadPossibleAssignments(modules, rpcName, data);
-    fillValues(meta, modules, result);
+    fillValues(meta.getSecond(), modules, result);
 
     return result;
   }
@@ -151,8 +151,6 @@ public class DetermineUseCaseAssignments {
     }
   }
   
-
-
   private String readRpcName(Document meta) {
     Element rpcElement = XMLUtils.getChildElementByName(meta.getDocumentElement(), Constants.TAG_RPC);
     if(rpcElement == null) {
@@ -161,29 +159,4 @@ public class DetermineUseCaseAssignments {
     return rpcElement.getTextContent();
   }
 
-
-  private Document loadOperationMeta(String fqn, String workspaceName, String usecase) {
-    try {
-      RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
-      Long revision = revMgmt.getRevision(null, null, workspaceName);
-      DOM dom = DOM.getOrCreateInstance(fqn, new GenerationBaseCache(), revision);
-      dom.parseGeneration(false, false);
-      Operation operation = dom.getOperationByName(usecase);
-      List<String> unknownMetaTags = operation.getUnknownMetaTags();
-      if(unknownMetaTags == null) {
-        return null;
-      }
-      for(String unknownMetaTag : unknownMetaTags) {
-        Document d = XMLUtils.parseString(unknownMetaTag);
-        boolean isYang = d.getDocumentElement().getTagName().equals(Constants.TAG_YANG);
-        boolean isUseCase = Constants.VAL_USECASE.equals(d.getDocumentElement().getAttribute(Constants.ATT_YANG_TYPE));
-        if(isYang && isUseCase) {
-          return d;
-        }
-      }
-      return null;
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
 }
