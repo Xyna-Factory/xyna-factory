@@ -47,15 +47,9 @@
         </Data>
         <Target RefID="1136"/>
       </Output>
-      <Output>
-        <Data ID="20" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition20"/>
-        <Target RefID="16"/>
-      </Output>
       <Mapping>%1%.label="add"</Mapping>
       <Mapping>%1%.dialogDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%0%</Mapping>
       <Mapping>%1%.dialogDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.yang.fman.DefineAddUsecaseDialog"</Mapping>
-      <Mapping>%2%.label="delete"</Mapping>
-      <Mapping>%2%.serviceFQN="xmcp.yang.fman.DeleteUseCase"</Mapping>
     </Mappings>
     <Mappings ID="979" Label="Mapping">
       <Input>
@@ -81,12 +75,6 @@
         <Source RefID="1136"/>
       </Input>
       <Input>
-        <Data ID="1205" Label="delete use case" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1205">
-          <Source RefID="30"/>
-        </Data>
-        <Source RefID="16"/>
-      </Input>
-      <Input>
         <Data ID="1030" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow1030">
           <Source RefID="30"/>
         </Data>
@@ -102,14 +90,12 @@
         <Data ID="37" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition37"/>
         <Target RefID="29"/>
       </Output>
-      <Mapping>%4%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDialogButtonDefinition")=%0%</Mapping>
-      <Mapping>%4%.footer.rightArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
-      <Mapping>%4%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%2%</Mapping>
-      <Mapping>%4%.tableWorkflowFQN="xmcp.yang.fman.UseCaseTableInfo"</Mapping>
-      <Mapping>%4%.tableWorkflowRTC=%3%</Mapping>
-      <Mapping>%4%.dataPath="%%"</Mapping>
+      <Mapping>%3%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDialogButtonDefinition")=%0%</Mapping>
+      <Mapping>%3%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%1%</Mapping>
+      <Mapping>%3%.tableWorkflowFQN="xmcp.yang.fman.UseCaseTableInfo"</Mapping>
+      <Mapping>%3%.tableWorkflowRTC=%2%</Mapping>
+      <Mapping>%3%.dataPath="%%"</Mapping>
     </Mappings>
-    <Data ID="16" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition16"/>
     <Data ID="29" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition29"/>
     <Data ID="989" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow989">
       <Source RefID="979"/>
