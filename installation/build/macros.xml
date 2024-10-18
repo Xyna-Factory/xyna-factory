@@ -56,7 +56,7 @@
                 </then>
                 <else>
                     <!-- <echo message="copyLicense @{from} @{to}"/> -->
-                    <exec executable="${root.dir}/installation/build/copyLicenseFiles.sh" inputstring="" outputproperty="errors" >
+                    <exec executable="${root.dir}/installation/build/copyLicenseFiles.py" inputstring="" outputproperty="errors" >
                        <arg value="@{from}" />
                        <arg value="@{to}" />
                     </exec>
