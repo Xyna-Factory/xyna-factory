@@ -173,7 +173,7 @@ public class Datatype extends HierarchyTypeWithVariables {
 
       if ( (!operations.isEmpty()) ||
            (meta != null && meta.isServiceGroupOnly() != null && meta.isServiceGroupOnly()) || // service groups need an service-tag - even when it doesn't contain any operations
-           (additionalDependencies != null && additionalDependencies.isEmpty())) { 
+           (additionalDependencies != null && !additionalDependencies.isEmpty())) { 
         appendService(xml);
       }
       xml.endElement(EL.DATATYPE);
