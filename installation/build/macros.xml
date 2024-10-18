@@ -245,13 +245,31 @@
         <attribute name="fromFile" />
         <attribute name="todir" />
         <sequential>
+            <local name="actualFrom" />
             <if>
                 <!-- exec into container -->
                 <isset property="server.containername" />
                 <then>
+                    <condition property="fromIsDirectory" else="false">
+                      <matches pattern=".*\/\*$" string="@{fromFile}" />
+                    </condition>
+                    <if>
+                      <equals arg1="${fromIsDirectory}" arg2="true" />
+                      <then>
+                        <property name="originalFromFile" value="@{fromFile}" />
+                        <!-- replace * at the end with . to copy the content of a directory -->
+                        <local name="command" />
+                        <property name="command" value="echo @{fromFile} | sed 's/.$/./'" />
+                        <custom-ssh-exec host="${server.host}" username="${server.userid}" command="${command}" outputproperty="actualFrom"/>
+                        <echo message="updated actualFrom to ${actualFrom}" />
+                      </then>
+                      <else>
+                        <property name="actualFrom" value="@{fromFile}" />
+                      </else>
+                    </if>
                     <exec executable="docker" failonerror="true">
                         <arg value="cp"/>
-                        <arg value="@{fromFile}" />
+                        <arg value="${actualFrom}" />
                         <arg value="@{todir}" />
                     </exec>
                 </then>
