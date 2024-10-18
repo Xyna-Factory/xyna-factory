@@ -20,7 +20,10 @@ package com.gip.xyna.xprc.xfractwfe.generation.xml;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -28,6 +31,8 @@ import org.apache.log4j.Logger;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.update.Updater;
 import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
+import com.gip.xyna.xprc.xfractwfe.generation.AdditionalDependencyContainer;
+import com.gip.xyna.xprc.xfractwfe.generation.AdditionalDependencyContainer.AdditionalDependencyType;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.ATT;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.EL;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
@@ -55,6 +60,7 @@ public class Datatype extends HierarchyTypeWithVariables {
   protected String[] sharedLibs;
   protected Set<String> additionalLibNames;
   protected List<String> pythonLibNames;
+  protected Map<AdditionalDependencyType, List<String>> additionalDependencies;
 
   private Datatype() {
   }
@@ -90,6 +96,18 @@ public class Datatype extends HierarchyTypeWithVariables {
     this.pythonLibNames = datatype.pythonLibNames;
     this.variables = clone(datatype.variables);
     this.operations = clone(datatype.operations);
+    additionalDependencies = cloneAdditionalDependencies(datatype.additionalDependencies);
+  }
+  
+  private Map<AdditionalDependencyType, List<String>> cloneAdditionalDependencies(Map<AdditionalDependencyType, List<String>> input) {
+    if (input == null) {
+      return null;
+    }
+    Map<AdditionalDependencyType, List<String>> result = new HashMap<>();
+    for(Entry<AdditionalDependencyType, List<String>> entry : input.entrySet()) {
+      result.put(entry.getKey(), new ArrayList<String>(entry.getValue()));
+    }
+    return result;
   }
 
   private <T> List<T> clone(List<T> list) {
@@ -154,7 +172,8 @@ public class Datatype extends HierarchyTypeWithVariables {
       }
 
       if ( (!operations.isEmpty()) ||
-           (meta != null && meta.isServiceGroupOnly() != null && meta.isServiceGroupOnly()) ) { // service groups need an service-tag - even when it doesn't contain any operations
+           (meta != null && meta.isServiceGroupOnly() != null && meta.isServiceGroupOnly()) || // service groups need an service-tag - even when it doesn't contain any operations
+           (additionalDependencies != null && additionalDependencies.isEmpty())) { 
         appendService(xml);
       }
       xml.endElement(EL.DATATYPE);
@@ -168,6 +187,19 @@ public class Datatype extends HierarchyTypeWithVariables {
     xml.addAttribute(ATT.LABEL, XMLUtils.escapeXMLValue(type.getLabel(), true, false) );
     xml.addAttribute(ATT.TYPENAME, type.getName() );
     xml.endAttributes();
+    if (additionalDependencies != null && !additionalDependencies.isEmpty()) {
+      xml.startElement(EL.META);
+      xml.startElement(EL.ADDITIONALDEPENDENCIES);
+      List<AdditionalDependencyType> keys = new ArrayList<>(additionalDependencies.keySet());
+      Collections.sort(keys);
+      for (AdditionalDependencyType type : keys) {
+        for (String value : additionalDependencies.get(type)) {
+          xml.element(type.getXmlElementName(), value);
+        }
+      }
+      xml.endElement(EL.ADDITIONALDEPENDENCIES);
+      xml.endElement(EL.META);
+    }
     for( Operation operation : operations ) {
       operation.appendXML(xml);
     }
@@ -255,6 +287,19 @@ public class Datatype extends HierarchyTypeWithVariables {
     
     public DatatypeBuilder variable(VariableBuilder variable) {
       getOrCreateVariables().add(variable.build());
+      return this;
+    }
+    
+    public DatatypeBuilder additionalDependencies(AdditionalDependencyContainer container) {
+      datatype.additionalDependencies = new HashMap<>();
+      for(AdditionalDependencyType type : AdditionalDependencyType.values()) {
+        Set<String> content = container.getAdditionalDependencies(type);
+        if(!content.isEmpty()) {
+          List<String> contentSorted = new ArrayList<String>(content);
+          Collections.sort(contentSorted);
+          datatype.additionalDependencies.put(type, contentSorted);
+        }
+      }
       return this;
     }
     
