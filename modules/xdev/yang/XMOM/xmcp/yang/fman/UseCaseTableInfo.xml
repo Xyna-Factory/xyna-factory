@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Use Case TableInfo" TypeName="UseCaseTableInfo" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Use Case TableInfo" Name="UseCaseTableInfo">
+    <Input>
+      <Data ID="22" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo22"/>
+    </Input>
+    <Output>
+      <Data ID="35" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo35"/>
+      <Data ID="48" IsList="true" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData48"/>
+    </Output>
+    <ServiceReference ID="214" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="213"/>
+      <Target RefID="213"/>
+    </ServiceReference>
+    <ServiceReference ID="535" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
+      <Source RefID="534"/>
+      <Target RefID="534"/>
+    </ServiceReference>
+    <Choice ID="203" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="22"/>
+      <Target RefID="117"/>
+      <Input>
+        <Data ID="210" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo210"/>
+        <Source RefID="22"/>
+      </Input>
+      <Case ID="204" Label="true" Premise="%0%.bootstrap==&quot;true&quot;">
+        <Function ID="213" Label="Build TableInfo and Select Columns">
+          <Source RefID="214"/>
+          <Source RefID="22"/>
+          <Source RefID="415"/>
+          <Source RefID="705"/>
+          <Target RefID="214"/>
+          <Target RefID="212"/>
+          <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="214">
+            <Source RefID="22"/>
+            <Source RefID="415">
+              <Meta>
+                <LinkType>Constant</LinkType>
+                <ExpectedType>xmcp.yang.UseCaseTableData</ExpectedType>
+              </Meta>
+            </Source>
+            <Source RefID="705">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="214">
+            <Target RefID="212"/>
+          </Receive>
+        </Function>
+        <Assign>
+          <Source RefID="212"/>
+          <Target RefID="117"/>
+          <Copy>
+            <Source RefID="212"/>
+            <Target RefID="117"/>
+          </Copy>
+        </Assign>
+        <Data ID="212" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo212"/>
+      </Case>
+      <Case ID="205" Label="false">
+        <Mappings ID="217" Label="Mapping">
+          <Input>
+            <Data ID="218" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo218"/>
+            <Source RefID="22"/>
+          </Input>
+          <Output>
+            <Data ID="219" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo219"/>
+            <Target RefID="116"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign>
+          <Source RefID="116"/>
+          <Target RefID="117"/>
+          <Copy>
+            <Source RefID="116"/>
+            <Target RefID="117"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Function ID="534" Label="Load Usecases">
+      <Source RefID="535"/>
+      <Target RefID="535"/>
+      <Target RefID="537"/>
+      <Invoke Operation="loadUsecases" ServiceID="535"/>
+      <Receive ServiceID="535">
+        <Target RefID="537"/>
+      </Receive>
+    </Function>
+    <Data ID="116" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo116"/>
+    <Data ID="117" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo117"/>
+    <Data ID="415" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="const_UseCaseTableData415">
+      <Data VariableName="usecaseGroup">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="useCase">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data VariableName="mappingCount">
+        <Meta>
+          <Type>int</Type>
+        </Meta>
+        <Value>0</Value>
+      </Data>
+    </Data>
+    <Data ID="537" IsList="true" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData537">
+      <Source RefID="534"/>
+    </Data>
+    <Data ID="705" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="const_TableColumn705">
+      <Value>
+        <Data ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
+          <Data VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>usecaseGroup</Value>
+          </Data>
+          <Data VariableName="break0">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="pre">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="shrink">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>Use Case Group</Value>
+          </Data>
+          <Data VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
+          <Data VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>useCase</Value>
+          </Data>
+          <Data VariableName="break0">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="pre">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="shrink">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>Use Case</Value>
+          </Data>
+          <Data VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
+          <Data VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>rpcName</Value>
+          </Data>
+          <Data VariableName="break0">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="pre">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="shrink">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>Rpc</Value>
+          </Data>
+          <Data VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
+          <Data VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>runtimeContext</Value>
+          </Data>
+          <Data VariableName="break0">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="pre">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="shrink">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>Runtime Context</Value>
+          </Data>
+          <Data VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
+          <Data VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>mappingCount</Value>
+          </Data>
+          <Data VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>Mapping Count</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="117"/>
+      <Source RefID="537"/>
+      <Target RefID="35"/>
+      <Target RefID="48"/>
+      <Copy>
+        <Source RefID="117">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="35"/>
+      </Copy>
+      <Copy>
+        <Source RefID="537"/>
+        <Target RefID="48"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
