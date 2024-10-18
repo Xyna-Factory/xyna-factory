@@ -273,6 +273,11 @@ public class UseCaseAssignmentUtils {
     url = new URLPath(baseUrl + "/deploy", null, null);
     payload = "{\"revision\":3}";
     executeRunnable(runnable, url, method, payload, "Could not deploy datatype.");
+    
+    //close
+    url = new URLPath(baseUrl + "/close", null, null);
+    payload = "{\"force\":false,\"revision\":4}";
+    executeRunnable(runnable, url, method, payload, "Could not close datatype.");
   }
   
 

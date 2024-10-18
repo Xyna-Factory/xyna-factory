@@ -31,6 +31,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 import xact.http.URLPath;
 import xact.http.URLPathQuery;
 import xact.http.enums.httpmethods.DELETE;
+import xact.http.enums.httpmethods.GET;
 import xact.http.enums.httpmethods.HTTPMethod;
 import xact.http.enums.httpmethods.PUT;
 import xmcp.yang.UseCaseAssignementTableData;
@@ -73,20 +74,26 @@ public class SaveUsecaseAssignmentAction {
     String path = fqn.substring(0, fqn.lastIndexOf("."));
     String label = fqn.substring(fqn.lastIndexOf(".") + 1);
     String workspaceNameEscaped = UseCaseAssignmentUtils.urlEncode(workspaceName);
+
+    //open datatype
+    String endpoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + path + "/" + label;
+    URLPath url = new URLPath(endpoint, null, null);
+    HTTPMethod method = new GET();
+    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, null, "could not open datatype");
+    
     //remove old meta tag
-    String endpoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + path + "/" + label + "/services/" + usecase + "/meta";
+    endpoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + path + "/" + label + "/services/" + usecase + "/meta";
     List<URLPathQuery> query = new ArrayList<>();
     query.add(new URLPathQuery.Builder().attribute("metaTagId").value("metaTag"+oldMetaTagIndex).instance());
-    URLPath url = new URLPath(endpoint, query, null);
-    HTTPMethod method = new DELETE();
-    String payload = "";
-    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "could not remove old meta tag");
+    url = new URLPath(endpoint, query, null);
+    method = new DELETE();
+    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, "", "could not remove old meta tag");
 
     //add new meta tag
     url = new URLPath(endpoint, null, null);
     method = new PUT();
     xml = xml.replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"");
-    payload = "{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.request.MetaTagRequest\"},\"metaTag\":{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.MetaTag\"},\"deletable\":true,\"tag\":\""+ xml +"\"}}";
+    String payload = "{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.request.MetaTagRequest\"},\"metaTag\":{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.MetaTag\"},\"deletable\":true,\"tag\":\""+ xml +"\"}}";
     UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "could not add new meta tag");
     
     UseCaseAssignmentUtils.saveDatatype(path, path, label, workspaceName, order);

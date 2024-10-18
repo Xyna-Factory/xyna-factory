@@ -51,14 +51,6 @@
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.DeleteUseCase</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.GetYangWorkspaces</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yang.fman.SaveUseCaseAssignement</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
