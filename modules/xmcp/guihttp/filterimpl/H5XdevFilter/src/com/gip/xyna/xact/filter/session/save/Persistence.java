@@ -293,6 +293,7 @@ public class Persistence {
              sharedLibs(dom.getSharedLibs()).
              additionalLibNames(dom.getAdditionalLibraries()).
              pythonLibNames(dom.getPythonLibraries()).
+             additionalDependencies(dom.getAdditionalDependencies(), dom.getSharedLibs()).
              build();
 
     return dt.toXML();
