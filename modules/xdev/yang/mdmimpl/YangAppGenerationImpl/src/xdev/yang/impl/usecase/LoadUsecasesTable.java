@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
@@ -71,13 +70,17 @@ public class LoadUsecasesTable {
       DOM datatype = DOM.getOrCreateInstance(dt.getFqn(), new GenerationBaseCache(), dt.getRevision());
       datatype.parseGeneration(false, false);
       List<Operation> operations = datatype.getOperations();
+      Document xml;
       for (Operation operation : operations) {
-        if(!isUsecase(operation)) {
+        xml = UseCaseAssignmentUtils.findYangTypeTag(operation);
+        if (!UseCaseAssignmentUtils.isYangType(xml, Constants.VAL_USECASE)) {
           continue;
         }
-        int mappingCount = countMappings(operation);
         UseCaseTableData.Builder data = new UseCaseTableData.Builder();
-        data.usecaseGroup(dt.getFqn()).useCase(operation.getName()).mappingCount(mappingCount);
+        data.usecaseGroup(dt.getFqn());
+        data.rpcName(readRpcName(xml));
+        data.useCase(operation.getName());
+        data.mappingCount(countMappings(xml));
         data.runtimeContext(datatype.getRuntimeContext().getName());
         result.add(data.instance());
       }
@@ -87,52 +90,18 @@ public class LoadUsecasesTable {
 
     return result;
   }
-  
-  private boolean isUsecase(Operation operation) {
-    if (operation.getUnknownMetaTags() == null) {
-      return false;
+
+  private String readRpcName(Document xml) {
+    Element ele = XMLUtils.getChildElementByName(xml.getDocumentElement(), Constants.TAG_RPC);
+    if(ele == null) {
+      throw new RuntimeException("Could not determine rpc name");
     }
-    for (String unknownMetaTag : operation.getUnknownMetaTags()) {
-      try {
-        Document xml = XMLUtils.parseString(unknownMetaTag, false);
-        if (!xml.getDocumentElement().getNodeName().equals(Constants.TAG_YANG)) {
-          continue;
-        }
-        Node yangTypeNode = xml.getDocumentElement().getAttributes().getNamedItem(Constants.ATT_YANG_TYPE);
-        if (yangTypeNode == null || !Constants.VAL_USECASE.equals(yangTypeNode.getNodeValue())) {
-          continue;
-        }
-        return true;
-      } catch(Exception e) {
-        return false;
-      }
-    }
-    return false;
+    return ele.getTextContent();
   }
 
-
-  private int countMappings(Operation operation) {
-    if (operation.getUnknownMetaTags() == null) {
-      return 0;
-    }
-    for (String unknownMetaTag : operation.getUnknownMetaTags()) {
-      try {
-        Document xml = XMLUtils.parseString(unknownMetaTag, false);
-        if (!xml.getDocumentElement().getNodeName().equals(Constants.TAG_YANG)) {
-          continue;
-        }
-        Node yangTypeNode = xml.getDocumentElement().getAttributes().getNamedItem(Constants.ATT_YANG_TYPE);
-        if (yangTypeNode == null || !Constants.VAL_USECASE.equals(yangTypeNode.getNodeValue())) {
-          continue;
-        }
-        Element mappingsNode = XMLUtils.getChildElementByName(xml.getDocumentElement(), Constants.TAG_MAPPINGS);
-        return XMLUtils.getChildElementsByName(mappingsNode, Constants.TAG_MAPPING).size();
-      } catch (Exception e) {
-        return -1;
-      }
-    }
-
-    return 0;
+  private int countMappings(Document xml) {
+    Element mappingsNode = XMLUtils.getChildElementByName(xml.getDocumentElement(), Constants.TAG_MAPPINGS);
+    return XMLUtils.getChildElementsByName(mappingsNode, Constants.TAG_MAPPING).size();
   }
 
 

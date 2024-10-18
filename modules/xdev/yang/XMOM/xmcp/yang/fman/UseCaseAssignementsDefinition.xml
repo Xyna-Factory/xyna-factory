@@ -87,7 +87,7 @@
           <Mapping>%3%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%0%</Mapping>
           <Mapping>%3%.tableWorkflowFQN="xmcp.yang.fman.UseCaseAssignementTableInfo"</Mapping>
           <Mapping>%3%.tableWorkflowRTC=%1%</Mapping>
-          <Mapping>%3%.label=%2%.loadYangAssignmentsData.totalYangPath</Mapping>
+          <Mapping>%3%.label=%2%.yangPath</Mapping>
           <Mapping>%3%.dataPath="%0%"</Mapping>
         </Mappings>
         <Assign ID="241">
@@ -136,14 +136,21 @@
             </Data>
             <Source RefID="1910"/>
           </Input>
+          <Input>
+            <Data ID="2858" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData2858">
+              <Source RefID="271"/>
+            </Data>
+            <Source RefID="357"/>
+          </Input>
           <Output>
             <Data ID="280" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition280">
               <Source RefID="271"/>
             </Data>
             <Target RefID="281"/>
           </Output>
-          <Mapping>%2%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
-          <Mapping>%2%.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
+          <Mapping>%3%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
+          <Mapping>%3%.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
+          <Mapping>%3%.label=%2%.yangPath</Mapping>
         </Mappings>
         <Assign ID="243">
           <Source RefID="281"/>

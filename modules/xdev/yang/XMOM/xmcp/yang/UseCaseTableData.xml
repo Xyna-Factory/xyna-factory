@@ -29,6 +29,11 @@
       <Type>String</Type>
     </Meta>
   </Data>
+  <Data Label="Rpc Name" VariableName="rpcName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
   <Data Label="Runtime Context" VariableName="runtimeContext">
     <Meta>
       <Type>String</Type>

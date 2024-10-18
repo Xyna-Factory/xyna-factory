@@ -24,13 +24,13 @@
       <Data ID="35" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo35"/>
       <Data ID="48" IsList="true" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData48"/>
     </Output>
-    <ServiceReference ID="535" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
-      <Source RefID="534"/>
-      <Target RefID="534"/>
-    </ServiceReference>
     <ServiceReference ID="214" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
       <Source RefID="213"/>
       <Target RefID="213"/>
+    </ServiceReference>
+    <ServiceReference ID="535" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
+      <Source RefID="534"/>
+      <Target RefID="534"/>
     </ServiceReference>
     <Choice ID="203" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="22"/>
@@ -44,7 +44,7 @@
           <Source RefID="214"/>
           <Source RefID="22"/>
           <Source RefID="415"/>
-          <Source RefID="670"/>
+          <Source RefID="705"/>
           <Target RefID="214"/>
           <Target RefID="212"/>
           <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="214">
@@ -55,7 +55,7 @@
                 <ExpectedType>xmcp.yang.UseCaseTableData</ExpectedType>
               </Meta>
             </Source>
-            <Source RefID="670">
+            <Source RefID="705">
               <Meta>
                 <LinkType>Constant</LinkType>
               </Meta>
@@ -129,7 +129,7 @@
     <Data ID="537" IsList="true" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData537">
       <Source RefID="534"/>
     </Data>
-    <Data ID="670" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="const_TableColumn670">
+    <Data ID="705" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="const_TableColumn705">
       <Value>
         <Data ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
           <Data VariableName="disableFilter">
@@ -213,6 +213,52 @@
               <Type>String</Type>
             </Meta>
             <Value>Use Case</Value>
+          </Data>
+          <Data VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
+          <Data VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>rpcName</Value>
+          </Data>
+          <Data VariableName="break0">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="pre">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="shrink">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>Rpc</Value>
           </Data>
           <Data VariableName="disableSort">
             <Meta>

@@ -293,4 +293,31 @@ public class UseCaseAssignmentUtils {
   public static String urlEncode(String in) {
     return URLEncoder.encode(in, Charset.forName("UTF-8"));
   }
+  
+  public static Document findYangTypeTag(Operation operation) {
+    if (operation.getUnknownMetaTags() == null) {
+      return null;
+    }
+    for (String unknownMetaTag : operation.getUnknownMetaTags()) {
+      try {
+        Document xml = XMLUtils.parseString(unknownMetaTag, false);
+        if (!xml.getDocumentElement().getNodeName().equals(Constants.TAG_YANG)) {
+          continue;
+        }
+        return xml;
+      } catch(Exception e) {
+        continue;
+      }
+    }
+    return null;
+  }
+  
+
+  public static boolean isYangType(Document xml, String expectedYangType) {
+    if (xml == null) {
+      return false;
+    }
+    Node yangTypeNode = xml.getDocumentElement().getAttributes().getNamedItem(Constants.ATT_YANG_TYPE);
+    return yangTypeNode != null && expectedYangType.equals(yangTypeNode.getNodeValue());
+  }
 }
