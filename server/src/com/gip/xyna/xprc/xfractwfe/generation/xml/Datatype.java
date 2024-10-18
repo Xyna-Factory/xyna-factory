@@ -290,13 +290,19 @@ public class Datatype extends HierarchyTypeWithVariables {
       return this;
     }
     
-    public DatatypeBuilder additionalDependencies(AdditionalDependencyContainer container) {
+    public DatatypeBuilder additionalDependencies(AdditionalDependencyContainer container, String[] sharedLibs) {
       datatype.additionalDependencies = new HashMap<>();
+      List<String> sharedLibsList = List.of(sharedLibs);
       for(AdditionalDependencyType type : AdditionalDependencyType.values()) {
         Set<String> content = container.getAdditionalDependencies(type);
         if(!content.isEmpty()) {
           List<String> contentSorted = new ArrayList<String>(content);
           Collections.sort(contentSorted);
+          //all used shared libraries are added to the additional dependencies set, but thry should not
+          //be persisted as additional dependency.
+          if(type == AdditionalDependencyType.SHARED_LIB) {
+            contentSorted.removeIf(x -> sharedLibsList.contains(x));
+          }
           datatype.additionalDependencies.put(type, contentSorted);
         }
       }
