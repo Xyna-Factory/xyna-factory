@@ -15,7 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package com.gip.xyna.xprc.xfractwfe.python;
+package com.gip.xyna.xprc.xfractwfe.python.jep;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -42,7 +42,7 @@ import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderDispatcher;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderType;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
-import com.gip.xyna.xprc.xfractwfe.python.jep.JepThreadManagement;
+import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreterFactory;
 import com.gip.xyna.xprc.xfractwfe.python.jep.JepThreadManagement.JepThread;
 
 import jep.python.PyObject;

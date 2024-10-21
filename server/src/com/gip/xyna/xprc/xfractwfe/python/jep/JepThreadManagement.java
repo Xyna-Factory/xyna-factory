@@ -20,8 +20,6 @@ package com.gip.xyna.xprc.xfractwfe.python.jep;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import com.gip.xyna.xprc.xfractwfe.python.JepInterpreter;
-
 public class JepThreadManagement {
 
   

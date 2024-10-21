@@ -29,11 +29,11 @@ import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xprc.xfractwfe.base.DeploymentHandling;
 import com.gip.xyna.xprc.xfractwfe.base.RevisionChangeUnDeploymentHandler;
 import com.gip.xyna.xprc.xfractwfe.python.Context;
-import com.gip.xyna.xprc.xfractwfe.python.JepInterpreterFactory;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreter;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreterFactory;
 import com.gip.xyna.xprc.xfractwfe.python.PythonMdmGeneration;
 import com.gip.xyna.xprc.xfractwfe.python.PythonProjectGeneration;
+import com.gip.xyna.xprc.xfractwfe.python.jep.JepInterpreterFactory;
 
 
 

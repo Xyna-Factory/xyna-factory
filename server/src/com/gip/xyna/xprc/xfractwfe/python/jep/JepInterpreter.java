@@ -15,7 +15,9 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package com.gip.xyna.xprc.xfractwfe.python;
+package com.gip.xyna.xprc.xfractwfe.python.jep;
+
+import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreter;
 
 import jep.Jep;
 import jep.JepConfig;
