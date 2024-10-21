@@ -57,11 +57,9 @@ public class XynaPythonSnippetManagement extends Section {
     mdmGeneration.invalidateRevision(revisions);
   }
 
+
   public PythonInterpreter createPythonInterpreter(ClassLoader classloader) {
-    if (!(classloader instanceof ClassLoaderBase)) {
-      throw new RuntimeException("Unexpected createPythonInterpreter request. " + classloader + " does not inherit from ClassLoaderBase!");
-    }
-    return factory.createInterperter(((ClassLoaderBase) classloader));
+    return factory.createInterperter(classloader);
   }
 
 

@@ -79,7 +79,7 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
 
 
   @Override
-  public PythonInterpreter createInterperter(ClassLoaderBase classLoader) {
+  public PythonInterpreter createInterperter(ClassLoader classLoader) {
     return new JepInterpreter(classLoader);
   }
 
@@ -175,8 +175,8 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
       for (Field f : clazz.getDeclaredFields()) {
         if (f.getModifiers() == 2) { // private members
           String fieldName = f.getName();
-          fieldName = mgmt.getPythonKeywords().contains(fieldName) ? fieldName + "_" : fieldName;
-          Object memberAttr = pyObj.getAttr(fieldName);
+          String pyFieldName = mgmt.getPythonKeywords().contains(fieldName) ? fieldName + "_" : fieldName;
+          Object memberAttr = pyObj.getAttr(pyFieldName);
           resultObj.set(fieldName, convertToJava(context, f.getGenericType().getTypeName(), memberAttr));
         }
       }
