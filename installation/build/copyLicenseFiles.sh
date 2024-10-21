@@ -16,6 +16,8 @@
 # limitations under the License.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+# This script is deprecated, use copyLicenseFiles.py instead.
+
 #copy license files (non .jar-files) in input dir to output dir
 
 mkdir "$2"
