@@ -109,7 +109,7 @@
         <Data ID="2602" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow2602"/>
         <Target RefID="2627"/>
       </Output>
-      <Mapping>%1%.fQN="xmcp.yang.fman.UseCaseRootAssignementsDefinition"</Mapping>
+      <Mapping>%1%.fQN="xmcp.yang.fman.UseCaseRootAssignmentsDefinition"</Mapping>
       <Mapping>%1%.rTC=%0%</Mapping>
     </Mappings>
     <Mappings ID="19" Label="Import">

@@ -15,15 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Use Case Assignement TableInfo" TypeName="UseCaseAssignementTableInfo" TypePath="xmcp.yang.fman" Version="1.8">
-  <Operation ID="0" IsStatic="false" Label="Use Case Assignement TableInfo" Name="UseCaseAssignementTableInfo">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Use Case Assignment TableInfo" TypeName="UseCaseAssignmentTableInfo" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Use Case Assignment TableInfo" Name="UseCaseAssignmentTableInfo">
     <Input>
       <Data ID="10" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo10"/>
-      <Data ID="1184" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData1184"/>
+      <Data ID="1184" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData1184"/>
     </Input>
     <Output>
       <Data ID="23" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo23"/>
-      <Data ID="492" IsList="true" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData492"/>
+      <Data ID="492" IsList="true" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData492"/>
     </Output>
     <ServiceReference ID="2140" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
       <Source RefID="2139"/>
@@ -53,7 +53,7 @@
             <Source RefID="679">
               <Meta>
                 <LinkType>Constant</LinkType>
-                <ExpectedType>xmcp.yang.UseCaseAssignementTableData</ExpectedType>
+                <ExpectedType>xmcp.yang.UseCaseAssignmentTableData</ExpectedType>
               </Meta>
             </Source>
             <Source RefID="2111">
@@ -100,7 +100,7 @@
     </Choice>
     <Mappings ID="2173" Label="Mapping">
       <Input>
-        <Data ID="2204" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData2204">
+        <Data ID="2204" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData2204">
           <Source RefID="2173"/>
         </Data>
         <Source RefID="1184"/>
@@ -127,7 +127,7 @@
     </Function>
     <Data ID="92" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo92"/>
     <Data ID="93" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo93"/>
-    <Data ID="679" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="const_UseCaseAssignementTableData679">
+    <Data ID="679" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="const_UseCaseAssignmentTableData679">
       <Data VariableName="type">
         <Meta>
           <Type>String</Type>
@@ -329,7 +329,7 @@
         </Data>
       </Value>
     </Data>
-    <Data ID="2142" IsList="true" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData2142">
+    <Data ID="2142" IsList="true" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData2142">
       <Source RefID="2139"/>
     </Data>
     <Data ID="2236" Label="Load Yang Assignments Data" ReferenceName="LoadYangAssignmentsData" ReferencePath="xmcp.yang" VariableName="loadYangAssignmentsData2236">

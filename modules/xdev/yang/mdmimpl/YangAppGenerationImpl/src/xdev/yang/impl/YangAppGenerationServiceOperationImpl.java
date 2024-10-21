@@ -44,7 +44,7 @@ import xdev.yang.impl.usecase.DetermineUseCaseAssignments;
 import xdev.yang.impl.usecase.LoadUsecasesTable;
 import xdev.yang.impl.usecase.SaveUsecaseAssignmentAction;
 import xmcp.yang.LoadYangAssignmentsData;
-import xmcp.yang.UseCaseAssignementTableData;
+import xmcp.yang.UseCaseAssignmentTableData;
 import xmcp.yang.UseCaseTableData;
 import xprc.xpce.Workspace;
 
@@ -130,14 +130,14 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   }
 
   @Override
-  public List<? extends UseCaseAssignementTableData> loadAssignments(LoadYangAssignmentsData data) {
+  public List<? extends UseCaseAssignmentTableData> loadAssignments(LoadYangAssignmentsData data) {
     DetermineUseCaseAssignments executor = new DetermineUseCaseAssignments();
     return executor.determineUseCaseAssignments(data);
   }
 
 
   @Override
-  public void saveAssignment(XynaOrderServerExtension order, UseCaseAssignementTableData data) {
+  public void saveAssignment(XynaOrderServerExtension order, UseCaseAssignmentTableData data) {
     SaveUsecaseAssignmentAction executor = new SaveUsecaseAssignmentAction();
     executor.saveUsecaseAssignment(order, data);
   }

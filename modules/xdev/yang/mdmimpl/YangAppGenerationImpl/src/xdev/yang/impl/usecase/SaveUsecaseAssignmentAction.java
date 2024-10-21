@@ -34,11 +34,11 @@ import xact.http.enums.httpmethods.DELETE;
 import xact.http.enums.httpmethods.GET;
 import xact.http.enums.httpmethods.HTTPMethod;
 import xact.http.enums.httpmethods.PUT;
-import xmcp.yang.UseCaseAssignementTableData;
+import xmcp.yang.UseCaseAssignmentTableData;
 
 public class SaveUsecaseAssignmentAction {
 
-  public void saveUsecaseAssignment(XynaOrderServerExtension order, UseCaseAssignementTableData data) {
+  public void saveUsecaseAssignment(XynaOrderServerExtension order, UseCaseAssignmentTableData data) {
     String fqn = data.getLoadYangAssignmentsData().getFqn();
     String workspaceName = data.getLoadYangAssignmentsData().getWorkspaceName();
     String usecase = data.getLoadYangAssignmentsData().getUsecase();

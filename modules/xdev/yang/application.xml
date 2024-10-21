@@ -35,7 +35,7 @@
   </SharedLibs>
   <XMOMEntries>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.UseCaseAssignementTableData</FqName>
+      <FqName>xmcp.yang.UseCaseAssignmentTableData</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -51,15 +51,15 @@
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.SaveUseCaseAssignement</FqName>
+      <FqName>xmcp.yang.fman.SaveUseCaseAssignment</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.UseCaseAssignementsDefinition</FqName>
+      <FqName>xmcp.yang.fman.UseCaseAssignmentsDefinition</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.UseCaseAssignementTableInfo</FqName>
+      <FqName>xmcp.yang.fman.UseCaseAssignmentTableInfo</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
@@ -67,7 +67,7 @@
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.UseCaseRootAssignementsDefinition</FqName>
+      <FqName>xmcp.yang.fman.UseCaseRootAssignmentsDefinition</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">

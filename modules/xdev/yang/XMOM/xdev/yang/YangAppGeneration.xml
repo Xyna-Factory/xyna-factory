@@ -50,7 +50,7 @@
         <Data ID="7" Label="Load Yang Assignments Data" ReferenceName="LoadYangAssignmentsData" ReferencePath="xmcp.yang" VariableName="loadYangAssignmentsData7"/>
       </Input>
       <Output>
-        <Data ID="6" IsList="true" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData6"/>
+        <Data ID="6" IsList="true" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData6"/>
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadAssignments(loadYangAssignmentsData7);</CodeSnippet>
@@ -80,11 +80,11 @@
     </Operation>
     <Operation IsStatic="true" Label="Save Assignment" Name="saveAssignment" RequiresXynaOrder="true">
       <Input>
-        <Data ID="10" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData10"/>
+        <Data ID="10" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData10"/>
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.saveAssignment(correlatedXynaOrder, useCaseAssignementTableData10);</CodeSnippet>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.saveAssignment(correlatedXynaOrder, useCaseAssignmentTableData10);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

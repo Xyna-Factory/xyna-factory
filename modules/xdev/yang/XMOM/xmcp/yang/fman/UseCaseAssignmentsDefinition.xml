@@ -15,14 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Use Case assignements Definition" TypeName="UseCaseAssignementsDefinition" TypePath="xmcp.yang.fman" Version="1.8">
-  <Operation ID="0" IsStatic="false" Label="Use Case assignements Definition" Name="UseCaseAssignementsDefinition">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Use Case assignments Definition" TypeName="UseCaseAssignmentsDefinition" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Use Case assignments Definition" Name="UseCaseAssignmentsDefinition">
     <Input>
-      <Data ID="357" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignement357"/>
+      <Data ID="357" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignment357"/>
     </Input>
     <Output>
       <Data ID="344" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition344"/>
-      <Data ID="1401" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData1401"/>
+      <Data ID="1401" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData1401"/>
     </Output>
     <ServiceReference ID="511" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="510"/>
@@ -41,7 +41,7 @@
       <Source RefID="357"/>
       <Target RefID="2354"/>
       <Input>
-        <Data ID="382" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData382">
+        <Data ID="382" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData382">
           <Source RefID="237"/>
         </Data>
         <Source RefID="357"/>
@@ -56,7 +56,7 @@
             <Data ID="492" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow492"/>
             <Target RefID="488"/>
           </Output>
-          <Mapping>%1%.fQN="xmcp.yang.fman.UseCaseAssignementsDefinition"</Mapping>
+          <Mapping>%1%.fQN="xmcp.yang.fman.UseCaseAssignmentsDefinition"</Mapping>
           <Mapping>%1%.rTC=%0%</Mapping>
         </Mappings>
         <Mappings ID="26" Label="Mapping">
@@ -73,7 +73,7 @@
             <Source RefID="2753"/>
           </Input>
           <Input>
-            <Data ID="1296" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData1296">
+            <Data ID="1296" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData1296">
               <Source RefID="26"/>
             </Data>
             <Source RefID="357"/>
@@ -85,7 +85,7 @@
             <Target RefID="252"/>
           </Output>
           <Mapping>%3%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%0%</Mapping>
-          <Mapping>%3%.tableWorkflowFQN="xmcp.yang.fman.UseCaseAssignementTableInfo"</Mapping>
+          <Mapping>%3%.tableWorkflowFQN="xmcp.yang.fman.UseCaseAssignmentTableInfo"</Mapping>
           <Mapping>%3%.tableWorkflowRTC=%1%</Mapping>
           <Mapping>%3%.label=%2%.yangPath</Mapping>
           <Mapping>%3%.dataPath="%0%"</Mapping>
@@ -119,7 +119,7 @@
           </Output>
           <Mapping>%1%.dataPath="%0%.value"</Mapping>
           <Mapping>%2%.dataPath="%0%"</Mapping>
-          <Mapping>%2%.serviceFQN="xmcp.yang.fman.SaveUseCaseAssignement"</Mapping>
+          <Mapping>%2%.serviceFQN="xmcp.yang.fman.SaveUseCaseAssignment"</Mapping>
           <Mapping>%2%.serviceRTC=%0%</Mapping>
           <Mapping>%2%.label="Save"</Mapping>
         </Mappings>
@@ -137,7 +137,7 @@
             <Source RefID="1910"/>
           </Input>
           <Input>
-            <Data ID="2858" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData2858">
+            <Data ID="2858" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData2858">
               <Source RefID="271"/>
             </Data>
             <Source RefID="357"/>

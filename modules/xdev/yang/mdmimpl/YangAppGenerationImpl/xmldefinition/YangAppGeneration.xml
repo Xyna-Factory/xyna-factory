@@ -50,7 +50,7 @@
         <Data ID="7" Label="Load Yang Assignments Data" ReferenceName="LoadYangAssignmentsData" ReferencePath="xmcp.yang" VariableName="loadYangAssignmentsData7"/>
       </Input>
       <Output>
-        <Data ID="6" IsList="true" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData6"/>
+        <Data ID="6" IsList="true" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="UseCaseAssignmentTableData6"/>
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadAssignments(loadYangAssignmentsData7);</CodeSnippet>
@@ -71,10 +71,20 @@
         <Data ID="3" Label="UsecaseName" ReferenceName="Text" ReferencePath="base" VariableName="text3"/>
         <Data ID="5" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace5"/>
         <Data ID="8" Label="RPC" ReferenceName="Text" ReferencePath="base" VariableName="text8"/>
+        <Data ID="9" Label="Device Fqn" ReferenceName="Text" ReferencePath="base" VariableName="text9"/>
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.addUsecase(correlatedXynaOrder, text2, text3, workspace5, text8);</CodeSnippet>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.addUsecase(correlatedXynaOrder, text2, text3, workspace5, text8, text9);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Save Assignment" Name="saveAssignment" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="10" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="UseCaseAssignmentTableData10"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.saveAssignment(correlatedXynaOrder, UseCaseAssignmentTableData10);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

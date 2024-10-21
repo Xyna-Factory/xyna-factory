@@ -15,16 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Use Case root assignements Definition" TypeName="UseCaseRootAssignementsDefinition" TypePath="xmcp.yang.fman" Version="1.8">
-  <Operation ID="0" IsStatic="false" Label="Use Case root assignements Definition" Name="UseCaseRootAssignementsDefinition">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Use Case root assignments Definition" TypeName="UseCaseRootAssignmentsDefinition" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Use Case root assignments Definition" Name="UseCaseRootAssignmentsDefinition">
     <Input>
       <Data ID="446" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData446"/>
     </Input>
     <Output>
       <Data ID="344" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition344"/>
-      <Data ID="485" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData485"/>
+      <Data ID="485" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData485"/>
     </Output>
-    <ServiceReference ID="376" Label="Use Case assignements Definition" ReferenceName="UseCaseAssignementsDefinition" ReferencePath="xmcp.yang.fman">
+    <ServiceReference ID="376" Label="Use Case assignments Definition" ReferenceName="UseCaseAssignmentsDefinition" ReferencePath="xmcp.yang.fman">
       <Source RefID="375"/>
       <Target RefID="375"/>
     </ServiceReference>
@@ -36,7 +36,7 @@
         <Source RefID="446"/>
       </Input>
       <Output>
-        <Data ID="428" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData428">
+        <Data ID="428" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData428">
           <Source RefID="411"/>
         </Data>
         <Target RefID="429"/>
@@ -48,13 +48,13 @@
       <Mapping>%1%.loadYangAssignmentsData.workspaceName=%0%.runtimeContext</Mapping>
       <Mapping>%1%.yangPath=%0%.rpcName</Mapping>
     </Mappings>
-    <Function ID="375" Label="Use Case assignements Definition">
+    <Function ID="375" Label="Use Case assignments Definition">
       <Source RefID="376"/>
       <Source RefID="429"/>
       <Target RefID="376"/>
       <Target RefID="378"/>
       <Target RefID="468"/>
-      <Invoke Operation="UseCaseAssignementsDefinition" ServiceID="376">
+      <Invoke Operation="UseCaseAssignmentsDefinition" ServiceID="376">
         <Source RefID="429"/>
       </Invoke>
       <Receive ServiceID="376">
@@ -65,10 +65,10 @@
     <Data ID="378" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition378">
       <Source RefID="375"/>
     </Data>
-    <Data ID="429" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData429">
+    <Data ID="429" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData429">
       <Source RefID="411"/>
     </Data>
-    <Data ID="468" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData468"/>
+    <Data ID="468" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData468"/>
     <Assign ID="1">
       <Source RefID="378"/>
       <Source RefID="468"/>

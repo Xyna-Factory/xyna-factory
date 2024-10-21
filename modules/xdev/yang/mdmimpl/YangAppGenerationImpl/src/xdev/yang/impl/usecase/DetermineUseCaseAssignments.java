@@ -42,7 +42,7 @@ import xdev.yang.impl.XmomDbInteraction;
 import org.yangcentral.yangkit.model.api.stmt.Module;
 
 import xmcp.yang.LoadYangAssignmentsData;
-import xmcp.yang.UseCaseAssignementTableData;
+import xmcp.yang.UseCaseAssignmentTableData;
 import xmcp.yang.YangDevice;
 
 
@@ -50,11 +50,11 @@ import xmcp.yang.YangDevice;
 public class DetermineUseCaseAssignments {
 
 
-  public List<UseCaseAssignementTableData> determineUseCaseAssignments(LoadYangAssignmentsData data) {
+  public List<UseCaseAssignmentTableData> determineUseCaseAssignments(LoadYangAssignmentsData data) {
     String fqn = data.getFqn();
     String workspaceName = data.getWorkspaceName();
     String usecase = data.getUsecase();
-    List<UseCaseAssignementTableData> result = new ArrayList<UseCaseAssignementTableData>();
+    List<UseCaseAssignmentTableData> result = new ArrayList<UseCaseAssignmentTableData>();
     Pair<Integer, Document> meta = UseCaseAssignmentUtils.loadOperationMeta(fqn, workspaceName, usecase);
     if(meta == null) {
       return result;
@@ -140,9 +140,9 @@ public class DetermineUseCaseAssignments {
   }
 
 
-  private void fillValues(Document meta, List<Module> modules, List<UseCaseAssignementTableData> entries) {
+  private void fillValues(Document meta, List<Module> modules, List<UseCaseAssignmentTableData> entries) {
     List<UseCaseMapping> mappings = UseCaseMapping.loadMappings(meta);
-    for (UseCaseAssignementTableData entry : entries) {
+    for (UseCaseAssignmentTableData entry : entries) {
       for (UseCaseMapping mapping : mappings) {
         if (mapping.getMappingYangPath().equals(entry.getLoadYangAssignmentsData().getTotalYangPath())) {
           entry.unversionedSetValue(mapping.getValue());

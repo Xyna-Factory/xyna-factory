@@ -63,7 +63,7 @@ import xact.http.enums.httpmethods.POST;
 import xdev.yang.impl.Constants;
 import xdev.yang.impl.XmomDbInteraction;
 import xmcp.yang.LoadYangAssignmentsData;
-import xmcp.yang.UseCaseAssignementTableData;
+import xmcp.yang.UseCaseAssignmentTableData;
 import xmcp.yang.YangModuleCollection;
 
 public class UseCaseAssignmentUtils {
@@ -87,7 +87,7 @@ public class UseCaseAssignmentUtils {
     return result;
   }
   
-  public static List<UseCaseAssignementTableData> loadPossibleAssignments(List<Module> modules, String rpcName, LoadYangAssignmentsData data) {
+  public static List<UseCaseAssignmentTableData> loadPossibleAssignments(List<Module> modules, String rpcName, LoadYangAssignmentsData data) {
     Rpc rpc = findRpc(modules, rpcName);
     Input input = rpc.getInput();
     List<YangStatement> elements = traverseYang(modules, data.getTotalYangPath(), input);
@@ -129,12 +129,12 @@ public class UseCaseAssignmentUtils {
   }
 
 
-  private static List<UseCaseAssignementTableData> loadAssignments(List<YangStatement> subElements, LoadYangAssignmentsData data) {
-    List<UseCaseAssignementTableData> result = new ArrayList<>();
+  private static List<UseCaseAssignmentTableData> loadAssignments(List<YangStatement> subElements, LoadYangAssignmentsData data) {
+    List<UseCaseAssignmentTableData> result = new ArrayList<>();
     for (YangStatement element : subElements) {
       if (isSupportedElement(element)) {
         String localName = ((SchemaNode) element).getIdentifier().getLocalName();
-        UseCaseAssignementTableData.Builder builder = new UseCaseAssignementTableData.Builder();
+        UseCaseAssignmentTableData.Builder builder = new UseCaseAssignmentTableData.Builder();
         LoadYangAssignmentsData updatedData = data.clone();
         updatedData.unversionedSetTotalYangPath(updatedData.getTotalYangPath() + "/" + localName);
         builder.loadYangAssignmentsData(updatedData);

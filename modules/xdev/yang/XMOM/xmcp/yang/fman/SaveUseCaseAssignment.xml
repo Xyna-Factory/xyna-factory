@@ -15,10 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Save Use Case Assignement" TypeName="SaveUseCaseAssignement" TypePath="xmcp.yang.fman" Version="1.8">
-  <Operation ID="0" IsStatic="false" Label="Save Use Case Assignement" Name="SaveUseCaseAssignement">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Save Use Case Assignement" TypeName="SaveUseCaseAssignment" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Save Use Case Assignement" Name="SaveUseCaseAssignment">
     <Input>
-      <Data ID="14" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignementTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignementTableData14"/>
+      <Data ID="14" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData14"/>
     </Input>
     <Output/>
     <ServiceReference ID="36" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
