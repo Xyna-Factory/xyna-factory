@@ -15,14 +15,13 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package com.gip.xyna.xprc.xfractwfe.python.jep;
+package com.gip.xyna.xprc.xfractwfe.python;
 
 import java.lang.reflect.Method;
 import java.util.List;
 
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xprc.xfractwfe.XynaPythonSnippetManagement;
-import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreter;
 
 public class PythonThreadManagement {
 
@@ -31,7 +30,7 @@ public class PythonThreadManagement {
     return new PythonThread(method, instance, inputs);
   }
   
-  public static PythonKeywordsThread createJepKeywordThread(ClassLoader classloader) {
+  public static PythonKeywordsThread createPythonKeywordThread(ClassLoader classloader) {
     return new PythonKeywordsThread(classloader);
   }
   
@@ -90,10 +89,10 @@ public class PythonThreadManagement {
     public void run() {
       try {
         XynaPythonSnippetManagement mgmt = XynaFactory.getInstance().getProcessing().getXynaPythonSnippetManagement();
-        PythonInterpreter jepInterpreter = mgmt.createPythonInterpreter(classloader);
-        jepInterpreter.exec("import keyword");
-        result = (List<String>) jepInterpreter.get("keyword.kwlist");
-        jepInterpreter.close();
+        PythonInterpreter interpreter = mgmt.createPythonInterpreter(classloader);
+        interpreter.exec("import keyword");
+        result = (List<String>) interpreter.get("keyword.kwlist");
+        interpreter.close();
         success = true;
       } catch (Exception e) {
         exception = e;

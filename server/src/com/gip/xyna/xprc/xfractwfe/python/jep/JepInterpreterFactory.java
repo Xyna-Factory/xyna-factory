@@ -45,7 +45,8 @@ import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.python.Context;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreter;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreterFactory;
-import com.gip.xyna.xprc.xfractwfe.python.jep.PythonThreadManagement.PythonThread;
+import com.gip.xyna.xprc.xfractwfe.python.PythonThreadManagement;
+import com.gip.xyna.xprc.xfractwfe.python.PythonThreadManagement.PythonThread;
 
 import jep.python.PyObject;
 
