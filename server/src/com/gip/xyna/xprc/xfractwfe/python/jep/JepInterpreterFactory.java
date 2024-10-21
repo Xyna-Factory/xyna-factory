@@ -42,6 +42,8 @@ import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderDispatcher;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderType;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
+import com.gip.xyna.xprc.xfractwfe.python.Context;
+import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreter;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreterFactory;
 import com.gip.xyna.xprc.xfractwfe.python.jep.JepThreadManagement.JepThread;
 
