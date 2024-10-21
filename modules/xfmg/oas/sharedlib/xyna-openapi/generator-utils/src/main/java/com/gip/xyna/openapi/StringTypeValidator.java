@@ -45,7 +45,7 @@ public class StringTypeValidator extends PrimitiveTypeValidator<String> {
   private static final String MAC_ADDRESS = "macaddress"; // same as mac
   private static final String IPV4 = "ipv4";
   private static final String IPV4_PREFIX = "ipv4prefix"; // address with prefix e.g. 192.168.1.0/24
-  private static final String IPV4_SUBNET = "ipv4subnet"; // e.g. 255.255.255.0
+  private static final String IPV4_SUBNET = "ipv4netmask"; // e.g. 255.255.255.0
   private static final String IPV6 = "ipv6";
   private static final String IPV6_PREFIX = "ipv6prefix"; // address with prefix e.g. 2001:0db8:85a3:08d3:1319:8a2e:0370:7347/64
 
