@@ -484,4 +484,11 @@ public class PythonMdmGeneration {
       bos.write(data);
     }
   }
+  
+  public List<String> getPythonKeywords() {
+    if (pythonKeywords.isEmpty()) {
+      loadPythonKeywords();
+    }
+    return pythonKeywords;
+  }
 }

@@ -118,4 +118,8 @@ public class XynaPythonSnippetManagement extends Section {
     return new PythonProjectGeneration().getPythonServiceImplTemplate(baseDir, fqClassNameDOM, revision, deleteServiceImplAfterStreamClose);
 
   }
+  
+  public List<String> getPythonKeywords() {
+    return mdmGeneration.getPythonKeywords();
+  }
 }

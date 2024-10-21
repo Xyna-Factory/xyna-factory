@@ -42,6 +42,7 @@ import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderDispatcher;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderType;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
+import com.gip.xyna.xprc.xfractwfe.XynaPythonSnippetManagement;
 import com.gip.xyna.xprc.xfractwfe.python.Context;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreter;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreterFactory;
@@ -110,6 +111,7 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
 
   @Override
   public Map<String, Object> convertToPython(GeneralXynaObject obj) {
+    XynaPythonSnippetManagement mgmt = XynaFactory.getInstance().getProcessing().getXynaPythonSnippetManagement();
     Set<String> varNames = new HashSet<String>();
     Map<String, Object> resultMap = new HashMap<String, Object>();
 
@@ -136,6 +138,7 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     for (String i : varNames) {
       try {
         Object memberObj = convertObj.get(i);
+        i = mgmt.getPythonKeywords().contains(i) ? i + "_" : i;
         resultMap.put(i, convertJavaValue(memberObj));
       } catch (InvalidObjectPathException e) {
         throw new RuntimeException("Could not load variable names from " + convertObj, e);
@@ -151,6 +154,7 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     String fqn = (String) pyObj.getAttr("_fqn");
     String xynatype = (String) pyObj.getAttr("_xynatype");
 
+    XynaPythonSnippetManagement mgmt = XynaFactory.getInstance().getProcessing().getXynaPythonSnippetManagement();
     ClassLoaderDispatcher cld = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl()
         .getClassLoaderDispatcher();
     ClassLoaderBase cl;
@@ -171,6 +175,7 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
       for (Field f : clazz.getDeclaredFields()) {
         if (f.getModifiers() == 2) { // private members
           String fieldName = f.getName();
+          fieldName = mgmt.getPythonKeywords().contains(fieldName) ? fieldName + "_" : fieldName;
           Object memberAttr = pyObj.getAttr(fieldName);
           resultObj.set(fieldName, convertToJava(context, f.getGenericType().getTypeName(), memberAttr));
         }
