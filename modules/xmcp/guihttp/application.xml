@@ -21,7 +21,6 @@
   <ApplicationInfo>
     <Description Lang="DE">GuiHTTPFilter</Description>
     <Description Lang="EN">GuiHTTPFilter</Description>
-    <BuildDate>2015.07.30 10:20:00</BuildDate>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Http</ApplicationName>
@@ -2535,6 +2534,10 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.auth.ExternalUserLoginRequest</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.auth.ExternalCredentialsLoginRequest</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
