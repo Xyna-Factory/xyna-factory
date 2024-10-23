@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Filter and Trigger Manager Services" TypeName="FilterAndTriggerManagerServices" TypePath="xmcp.factorymanager" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Filter and Trigger Manager Services" TypeName="FilterAndTriggerManagerServices" TypePath="xmcp.factorymanager" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
@@ -188,6 +187,26 @@
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.getPossibleTriggerInstanceForFilterDeployment(filter37, runtimeContext36);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Invoke GuiHttp Endpoint" Name="invokeGuiHttpEndpoint" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="38" Label="URL-path" ReferenceName="URLPath" ReferencePath="xact.http" VariableName="uRLPath38"/>
+        <Data ID="39" Label="HTTP Method" ReferenceName="HTTPMethod" ReferencePath="xact.http.enums.httpmethods" VariableName="hTTPMethod39"/>
+        <Data ID="40" Label="Payload - Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document40"/>
+      </Input>
+      <Output>
+        <Data ID="41" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType41">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <Meta>
+        <Documentation>Requires the calling workflow to be started using the startorder endpoint of GuiHttp. Invokes an endpoint of GuiHttp in the version responsible for starting the workflow.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.invokeGuiHttpEndpoint(correlatedXynaOrder, uRLPath38, hTTPMethod39, document40);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
