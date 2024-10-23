@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Use Case Definition" TypeName="UseCaseDefinition" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Use Case Definition" Name="UseCaseDefinition">
+    <Input/>
+    <Output>
+      <Data ID="46" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition46"/>
+    </Output>
+    <ServiceReference ID="2079" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="2078"/>
+      <Target RefID="2078"/>
+    </ServiceReference>
+    <Function ID="2078" Label="get Own RuntimeContext">
+      <Source RefID="2079"/>
+      <Target RefID="2079"/>
+      <Target RefID="2818"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="2079"/>
+      <Receive ServiceID="2079">
+        <Target RefID="2818"/>
+      </Receive>
+    </Function>
+    <Mappings ID="17" Label="Use Case Button Definition">
+      <Input>
+        <Data ID="2835" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext2835">
+          <Source RefID="17"/>
+        </Data>
+        <Source RefID="2818"/>
+      </Input>
+      <Output>
+        <Data ID="1135" Label="Open Dialog Button Definition" ReferenceName="OpenDialogButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDialogButtonDefinition1135">
+          <Source RefID="17"/>
+        </Data>
+        <Target RefID="1136"/>
+      </Output>
+      <Mapping>%1%.label="add"</Mapping>
+      <Mapping>%1%.dialogDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%0%</Mapping>
+      <Mapping>%1%.dialogDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.yang.fman.DefineAddUsecaseDialog"</Mapping>
+    </Mappings>
+    <Mappings ID="979" Label="Mapping">
+      <Input>
+        <Data ID="2480" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext2480">
+          <Source RefID="979"/>
+        </Data>
+        <Source RefID="2818"/>
+      </Input>
+      <Output>
+        <Data ID="988" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow988">
+          <Source RefID="979"/>
+        </Data>
+        <Target RefID="989"/>
+      </Output>
+      <Mapping>%1%.fQN="xmcp.yang.fman.UseCaseRootAssignmentsDefinition"</Mapping>
+      <Mapping>%1%.rTC=%0%</Mapping>
+    </Mappings>
+    <Mappings ID="30" Label="Use Case">
+      <Input>
+        <Data ID="1067" Label="add use case" ReferenceName="OpenDialogButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDialogButtonDefinition1067">
+          <Source RefID="17"/>
+        </Data>
+        <Source RefID="1136"/>
+      </Input>
+      <Input>
+        <Data ID="1030" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow1030">
+          <Source RefID="30"/>
+        </Data>
+        <Source RefID="989"/>
+      </Input>
+      <Input>
+        <Data ID="2106" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext2106">
+          <Source RefID="30"/>
+        </Data>
+        <Source RefID="2818"/>
+      </Input>
+      <Output>
+        <Data ID="37" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition37"/>
+        <Target RefID="29"/>
+      </Output>
+      <Mapping>%3%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDialogButtonDefinition")=%0%</Mapping>
+      <Mapping>%3%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%1%</Mapping>
+      <Mapping>%3%.tableWorkflowFQN="xmcp.yang.fman.UseCaseTableInfo"</Mapping>
+      <Mapping>%3%.tableWorkflowRTC=%2%</Mapping>
+      <Mapping>%3%.dataPath="%%"</Mapping>
+    </Mappings>
+    <Data ID="29" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition29"/>
+    <Data ID="989" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow989">
+      <Source RefID="979"/>
+    </Data>
+    <Data ID="1136" Label="Open Dialog Button Definition" ReferenceName="OpenDialogButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDialogButtonDefinition1136">
+      <Source RefID="17"/>
+    </Data>
+    <Data ID="2818" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext2818">
+      <Source RefID="2078"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="29"/>
+      <Target RefID="46"/>
+      <Copy>
+        <Source RefID="29"/>
+        <Target RefID="46"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
