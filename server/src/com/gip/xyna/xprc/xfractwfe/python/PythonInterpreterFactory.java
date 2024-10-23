@@ -24,12 +24,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
-import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 
 
 public abstract class PythonInterpreterFactory {
 
-  public abstract PythonInterpreter createInterperter(ClassLoaderBase classloader);
+  public abstract PythonInterpreter createInterperter(ClassLoader classloader);
 
   public abstract void init();
 

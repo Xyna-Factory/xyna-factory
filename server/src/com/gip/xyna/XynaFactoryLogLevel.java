@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,6 +51,7 @@ public class XynaFactoryLogLevel extends Level {
 
   private XynaFactoryLogLevel(int level, String levelStr, int syslogEquivalent) {
     super(level, levelStr, syslogEquivalent);
+    org.apache.logging.log4j.Level.forName(levelStr, level);
   }
 
 }

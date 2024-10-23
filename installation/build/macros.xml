@@ -56,9 +56,10 @@
                 </then>
                 <else>
                     <!-- <echo message="copyLicense @{from} @{to}"/> -->
-                    <exec executable="${root.dir}/installation/build/copyLicenseFiles.sh" inputstring="" outputproperty="errors" >
-                       <arg value="@{from}" />
-                       <arg value="@{to}" />
+                    <exec executable="python3" inputstring="" outputproperty="errors" >
+                        <arg value="${root.dir}/installation/build/copyLicenseFiles.py" />
+                        <arg value="@{from}" />
+                        <arg value="@{to}" />
                     </exec>
                 </else>
             </if>

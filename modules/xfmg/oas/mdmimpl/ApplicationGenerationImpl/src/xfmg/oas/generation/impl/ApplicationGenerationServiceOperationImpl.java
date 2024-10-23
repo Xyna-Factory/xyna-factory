@@ -69,6 +69,12 @@ import xprc.xpce.RuntimeContext;
 
 public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploymentTask, ApplicationGenerationServiceOperation {
 
+  // Used in xmcp.oas.datatype.client.ClientProcessingHook and xmcp.oas.datatype.OASBaseApi
+  @SuppressWarnings("unused")
+  private static final XynaPropertyBoolean defaultValidation = new XynaPropertyBoolean("xmcp.oas.validation.default", true)
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Bestimmt das Standardverhalten, ob validiert werden soll. Gilt sowohl für Provider als auch Client, request und response.")
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Default behavior, if it should be validated. Counts for Provider and Client, Request and Response.");
+  
   public static final XynaPropertyBoolean createListWrappers = new XynaPropertyBoolean("xfmg.oas.create_list_wrappers", false)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Create an XmomObject for Schemas of type array")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Erzeuge Xmom Objekte für Schemas mit Typ array");

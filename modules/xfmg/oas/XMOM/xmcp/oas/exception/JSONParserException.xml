@@ -1,4 +1,5 @@
-/*
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2024 Xyna GmbH, Germany
  *
@@ -14,45 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- */
-package com.gip.xyna.xprc.xfractwfe.python;
-
-import jep.Jep;
-import jep.JepConfig;
-
-public class JepInterpreter implements PythonInterpreter {
-
-  public JepInterpreter(ClassLoader classloader) {
-    jep = new JepConfig().setClassLoader(classloader).createSubInterpreter();
-  }
-  
-  Jep jep;
-  
-  @Override
-  public void close() {
-    jep.close();
-  }
-
-  @Override
-  public void exec(String script) {
-    jep.exec(script);
-    
-  }
-
-  @Override
-  public Object get(String variableName) {
-    return jep.getValue(variableName);
-    
-  }
-
-  @Override
-  public void set(String variableName, Object value) {
-    jep.set(variableName, value);
-    
-  }
-
-  @Override
-  public void runScript(String path) {
-    jep.runScript(path);
-  }
-}
+--><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="OAS-00104" IsAbstract="false" Label="JSON Parser Exception" TypeName="JSONParserException" TypePath="xmcp.oas.exception">
+    <Data Label="Error Response" ReferenceName="ResponseParameter" ReferencePath="xmcp.oas.datatype.provider" VariableName="errorResponse"/>
+    <MessageText Language="DE">Beim parsen des Json ist ein Fehler aufgetreten.</MessageText>
+    <MessageText Language="EN">Error occured during json parsing.</MessageText>
+  </ExceptionType>
+</ExceptionStore>
