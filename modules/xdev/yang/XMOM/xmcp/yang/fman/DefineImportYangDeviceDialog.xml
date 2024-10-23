@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Define Import Yang Device Dialog" TypeName="DefineImportYangDeviceDialog" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Define Import Yang Device Dialog" Name="DefineImportYangDeviceDialog">
+    <Input/>
+    <Output>
+      <Data ID="1185" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1185"/>
+      <Data ID="729" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text729"/>
+      <Data ID="750" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text750"/>
+      <Data ID="771" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text771"/>
+      <Data ID="792" Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId792"/>
+    </Output>
+    <ServiceReference ID="72" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="71"/>
+      <Target RefID="71"/>
+    </ServiceReference>
+    <Function ID="71" Label="get Own RuntimeContext">
+      <Source RefID="72"/>
+      <Target RefID="72"/>
+      <Target RefID="74"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="72"/>
+      <Receive ServiceID="72">
+        <Target RefID="74"/>
+      </Receive>
+    </Function>
+    <Mappings ID="108" Label="Mapping">
+      <Input>
+        <Data ID="1619" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1619">
+          <Source RefID="108"/>
+        </Data>
+        <Source RefID="74"/>
+      </Input>
+      <Output>
+        <Data ID="224" Label="AppName - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition224">
+          <Source RefID="108"/>
+        </Data>
+        <Target RefID="632"/>
+      </Output>
+      <Output>
+        <Data ID="242" Label="VersionName - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition242">
+          <Source RefID="108"/>
+        </Data>
+        <Target RefID="243"/>
+      </Output>
+      <Output>
+        <Data ID="260" Label="fqn - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition260">
+          <Source RefID="108"/>
+        </Data>
+        <Target RefID="261"/>
+      </Output>
+      <Output>
+        <Data ID="278" Label="Upload Button Definition" ReferenceName="UploadButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="uploadButtonDefinition278">
+          <Source RefID="108"/>
+        </Data>
+        <Target RefID="279"/>
+      </Output>
+      <Output>
+        <Data ID="1369" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1369">
+          <Source RefID="108"/>
+        </Data>
+        <Target RefID="1370"/>
+      </Output>
+      <Mapping>%1%.label="Application Name"</Mapping>
+      <Mapping>%1%.dataPath="%0%.text"</Mapping>
+      <Mapping>%2%.label="Application Version"</Mapping>
+      <Mapping>%2%.dataPath="%1%.text"</Mapping>
+      <Mapping>%3%.label="Datatype FQN"</Mapping>
+      <Mapping>%3%.dataPath="%2%.text"</Mapping>
+      <Mapping>%4%.label="Upload Capabilities File"</Mapping>
+      <Mapping>%4%.dataPath="%3%.id"</Mapping>
+      <Mapping>%5%.label="Create Yang Device Application"</Mapping>
+      <Mapping>%5%.dataPath="%0%, %1%, %2%, %3%"</Mapping>
+      <Mapping>%5%.serviceRTC=%0%</Mapping>
+      <Mapping>%5%.serviceFQN="xmcp.yang.fman.ImportYangDeviceApplication"</Mapping>
+    </Mappings>
+    <Mappings ID="39" Label="Mapping">
+      <Input>
+        <Data ID="91" Label="AppName - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition91">
+          <Source RefID="39"/>
+        </Data>
+        <Source RefID="632">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="141" Label="VersionName - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition141">
+          <Source RefID="39"/>
+        </Data>
+        <Source RefID="243">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="174" Label="fqn - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition174">
+          <Source RefID="39"/>
+        </Data>
+        <Source RefID="261">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="207" Label="Upload Button Definition" ReferenceName="UploadButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="uploadButtonDefinition207">
+          <Source RefID="39"/>
+        </Data>
+        <Source RefID="279"/>
+      </Input>
+      <Input>
+        <Data ID="1352" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1352">
+          <Source RefID="39"/>
+        </Data>
+        <Source RefID="1370"/>
+      </Input>
+      <Output>
+        <Data ID="1238" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1238">
+          <Source RefID="39"/>
+        </Data>
+        <Target RefID="1239"/>
+      </Output>
+      <Mapping>%5%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
+      <Mapping>%5%.children["1"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%1%</Mapping>
+      <Mapping>%5%.children["2"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%2%</Mapping>
+      <Mapping>%5%.children["3"]#cast("xmcp.forms.datatypes.UploadButtonDefinition")=%3%</Mapping>
+      <Mapping>%5%.children["4"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%4%</Mapping>
+    </Mappings>
+    <Data ID="74" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext74">
+      <Source RefID="71"/>
+    </Data>
+    <Data ID="243" Label="VersionName - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition243">
+      <Source RefID="108"/>
+    </Data>
+    <Data ID="261" Label="fqn - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition261">
+      <Source RefID="108"/>
+    </Data>
+    <Data ID="279" Label="Upload Button Definition" ReferenceName="UploadButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="uploadButtonDefinition279">
+      <Source RefID="108"/>
+    </Data>
+    <Data ID="632" Label="AppName - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition632">
+      <Source RefID="108"/>
+    </Data>
+    <Data ID="813" Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="const_ManagedFileId813"/>
+    <Data ID="830" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="const_Text830"/>
+    <Data ID="847" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="const_Text847"/>
+    <Data ID="864" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="const_Text864"/>
+    <Data ID="1239" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1239">
+      <Source RefID="39"/>
+    </Data>
+    <Data ID="1370" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1370">
+      <Source RefID="108"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="1239"/>
+      <Source RefID="864"/>
+      <Source RefID="847"/>
+      <Source RefID="830"/>
+      <Source RefID="813"/>
+      <Target RefID="1185"/>
+      <Target RefID="729"/>
+      <Target RefID="750"/>
+      <Target RefID="771"/>
+      <Target RefID="792"/>
+      <Copy>
+        <Source RefID="1239"/>
+        <Target RefID="1185"/>
+      </Copy>
+      <Copy>
+        <Source RefID="864">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="729"/>
+      </Copy>
+      <Copy>
+        <Source RefID="847">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="750"/>
+      </Copy>
+      <Copy>
+        <Source RefID="830">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="771"/>
+      </Copy>
+      <Copy>
+        <Source RefID="813">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="792"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -1,4 +1,5 @@
-/*
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2024 Xyna GmbH, Germany
  *
@@ -14,45 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- */
-package com.gip.xyna.xprc.xfractwfe.python;
-
-import jep.Jep;
-import jep.JepConfig;
-
-public class JepInterpreter implements PythonInterpreter {
-
-  public JepInterpreter(ClassLoader classloader) {
-    jep = new JepConfig().setClassLoader(classloader).createSubInterpreter();
-  }
-  
-  Jep jep;
-  
-  @Override
-  public void close() {
-    jep.close();
-  }
-
-  @Override
-  public void exec(String script) {
-    jep.exec(script);
-    
-  }
-
-  @Override
-  public Object get(String variableName) {
-    return jep.getValue(variableName);
-    
-  }
-
-  @Override
-  public void set(String variableName, Object value) {
-    jep.set(variableName, value);
-    
-  }
-
-  @Override
-  public void runScript(String path) {
-    jep.runScript(path);
-  }
-}
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Yang Import Table Data" TypeName="YangImportTableData" TypePath="xmcp.yang" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Application Name" VariableName="applicationName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Application Type" VariableName="applicationType">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Order Id" VariableName="orderId">
+    <Meta>
+      <Type>long</Type>
+    </Meta>
+  </Data>
+</DataType>

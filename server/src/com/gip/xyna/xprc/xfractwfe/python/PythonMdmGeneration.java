@@ -43,8 +43,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.python.PythonGeneration.MethodInformation;
 import com.gip.xyna.xprc.xfractwfe.python.PythonGeneration.XynaObjectInformation;
-import com.gip.xyna.xprc.xfractwfe.python.jep.JepThreadManagement;
-import com.gip.xyna.xprc.xfractwfe.python.jep.JepThreadManagement.JepKeywordsThread;
+import com.gip.xyna.xprc.xfractwfe.python.PythonThreadManagement.PythonKeywordsThread;
 
 
 
@@ -69,7 +68,7 @@ public class PythonMdmGeneration {
   
   private void loadPythonKeywords() {
     try {
-      JepKeywordsThread thread = JepThreadManagement.createJepKeywordThread(PythonMdmGeneration.class.getClassLoader());
+      PythonKeywordsThread thread = PythonThreadManagement.createPythonKeywordThread(PythonMdmGeneration.class.getClassLoader());
       thread.start();
       thread.join();
       if (thread.wasSuccessful()) {
@@ -484,5 +483,12 @@ public class PythonMdmGeneration {
     try (PrintWriter bos = new PrintWriter(destination + "/mdm.py")) {
       bos.write(data);
     }
+  }
+  
+  public List<String> getPythonKeywords() {
+    if (pythonKeywords.isEmpty()) {
+      loadPythonKeywords();
+    }
+    return pythonKeywords;
   }
 }
