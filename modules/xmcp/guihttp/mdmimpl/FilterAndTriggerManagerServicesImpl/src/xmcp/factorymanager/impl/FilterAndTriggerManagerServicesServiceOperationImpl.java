@@ -26,15 +26,22 @@ import com.gip.xyna.xact.exceptions.XACT_TriggerNotFound;
 import com.gip.xyna.xact.trigger.DeployFilterParameter;
 import com.gip.xyna.xact.trigger.FilterInformation;
 import com.gip.xyna.xact.trigger.FilterInformation.FilterInstanceInformation;
+import com.gip.xyna.xact.trigger.RunnableForFilterAccess;
 import com.gip.xyna.xact.trigger.TriggerInformation;
 import com.gip.xyna.xact.trigger.TriggerInformation.TriggerInstanceInformation;
 import com.gip.xyna.xact.trigger.XynaActivationTrigger;
+import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeDependencyContext.RuntimeDependencyContextType;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
+import com.gip.xyna.xprc.XynaOrderServerExtension;
+
+import xact.http.URLPath;
+import xact.http.enums.httpmethods.HTTPMethod;
+import xact.templates.Document;
 
 import java.util.HashSet;
 import java.util.List;
@@ -327,6 +334,24 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
       filter(info -> revisions.contains(getRevision(info.getRuntimeContext()))).
       map(info -> convertToXMOM(info)).
       collect(Collectors.toList());
+  }
+  
+  @Override
+  public GeneralXynaObject invokeGuiHttpEndpoint(XynaOrderServerExtension order, URLPath url, HTTPMethod method, Document payload) {
+    try {
+      RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
+      Object result = runnable.execute(url, method, payload.getText());
+      if(result != null) {
+        if(result instanceof GeneralXynaObject) {
+          return (GeneralXynaObject) result;
+        } else {
+          return new Document.Builder().text(result.toString()).instance();
+        }
+      }
+    } catch (Exception e) {
+      return null;
+    }
+    return null;
   }
   
   private Trigger convertToXMOM(TriggerInformation info) {
