@@ -299,7 +299,7 @@ public class SNMPTrigger extends EventListener<SNMPTriggerConnection, SNMPStartP
   public SNMPTriggerConnection receive() {
     while (true) {
       CommandResponderEvent e = events.poll();
-      if (e == null) { //queue empty => wartend pollen. diese threads mï¿½ssen beim trigger-stop unterbrochen werden
+      if (e == null) { //queue empty => wartend pollen. diese threads müssen beim trigger-stop unterbrochen werden
         lock.lock();
         try {
           receiverThreads.add(Thread.currentThread());
