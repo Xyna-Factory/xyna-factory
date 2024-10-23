@@ -15,34 +15,46 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package xdev.yang.impl;
+package com.gip.xyna.xprc.xfractwfe.python.jep;
 
+import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreter;
 
+import jep.Jep;
+import jep.JepConfig;
 
-import xdev.yang.YangAppGeneration;
-import xdev.yang.YangAppGenerationSuperProxy;
+public class JepInterpreter implements PythonInterpreter {
 
-
-
-public class YangAppGenerationInstanceOperationImpl extends YangAppGenerationSuperProxy {
-
-  private static final long serialVersionUID = 1L;
-
-
-  public YangAppGenerationInstanceOperationImpl(YangAppGeneration instanceVar) {
-    super(instanceVar);
+  public JepInterpreter(ClassLoader classloader) {
+    jep = new JepConfig().setClassLoader(classloader).createSubInterpreter();
+  }
+  
+  Jep jep;
+  
+  @Override
+  public void close() {
+    jep.close();
   }
 
-
-  private void writeObject(java.io.ObjectOutputStream s) throws java.io.IOException {
-    //change if needed to store instance context
-    s.defaultWriteObject();
+  @Override
+  public void exec(String script) {
+    jep.exec(script);
+    
   }
 
-
-  private void readObject(java.io.ObjectInputStream s) throws java.io.IOException, ClassNotFoundException {
-    //change if needed to restore instance-context during deserialization of order
-    s.defaultReadObject();
+  @Override
+  public Object get(String variableName) {
+    return jep.getValue(variableName);
+    
   }
 
+  @Override
+  public void set(String variableName, Object value) {
+    jep.set(variableName, value);
+    
+  }
+
+  @Override
+  public void runScript(String path) {
+    jep.runScript(path);
+  }
 }

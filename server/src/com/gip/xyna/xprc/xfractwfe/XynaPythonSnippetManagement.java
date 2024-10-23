@@ -29,11 +29,11 @@ import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xprc.xfractwfe.base.DeploymentHandling;
 import com.gip.xyna.xprc.xfractwfe.base.RevisionChangeUnDeploymentHandler;
 import com.gip.xyna.xprc.xfractwfe.python.Context;
-import com.gip.xyna.xprc.xfractwfe.python.JepInterpreterFactory;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreter;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreterFactory;
 import com.gip.xyna.xprc.xfractwfe.python.PythonMdmGeneration;
 import com.gip.xyna.xprc.xfractwfe.python.PythonProjectGeneration;
+import com.gip.xyna.xprc.xfractwfe.python.jep.JepInterpreterFactory;
 
 
 
@@ -57,11 +57,9 @@ public class XynaPythonSnippetManagement extends Section {
     mdmGeneration.invalidateRevision(revisions);
   }
 
+
   public PythonInterpreter createPythonInterpreter(ClassLoader classloader) {
-    if (!(classloader instanceof ClassLoaderBase)) {
-      throw new RuntimeException("Unexpected createPythonInterpreter request. " + classloader + " does not inherit from ClassLoaderBase!");
-    }
-    return factory.createInterperter(((ClassLoaderBase) classloader));
+    return factory.createInterperter(classloader);
   }
 
 
@@ -117,5 +115,9 @@ public class XynaPythonSnippetManagement extends Section {
       throws XynaException {
     return new PythonProjectGeneration().getPythonServiceImplTemplate(baseDir, fqClassNameDOM, revision, deleteServiceImplAfterStreamClose);
 
+  }
+  
+  public List<String> getPythonKeywords() {
+    return mdmGeneration.getPythonKeywords();
   }
 }

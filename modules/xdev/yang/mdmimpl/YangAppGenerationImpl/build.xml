@@ -23,21 +23,26 @@
         <path location="${basedir}/../../../../.."/>
     </pathconvert>
     <property name="xmom.dir" value="${basedir}/../../XMOM" />
+    <property name="application.dir" value="${basedir}/../../" />
+
+    <property file="${application.dir}/workspace.properties" />
 
     <property name="project.name" value="YangAppGenerationImpl" />
     <property name="fqclassname" value="xdev.yang.YangAppGeneration" />
+
     <property name="mdm.xml.path" value="xdev/yang" />
     <property name="mdm.xml.filename" value="YangAppGeneration.xml" />
     <property name="mdm.service.path" value="xdev.yang.YangAppGeneration" />
-
     <property name="cli.command.java.path" value="xdev.yang.cli" />
-    <property name="cli.command.path" value="xdev/yang/cli" />
+    <property name="cli.command.path" value="xdev/yang.cli" />
 
-    <target name="prepareLibs" description="Prepare Libs">
+
+     <target name="prepareLibs" description="Prepare Libs">
         <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/../../sharedlib/yangkit">
             <property name="target.dir" value="${basedir}/lib/xyna" />
         </ant>
-    </target>
+     </target>
+
 
     <import file="${root.dir}/installation/build/buildService.xml" />
 
