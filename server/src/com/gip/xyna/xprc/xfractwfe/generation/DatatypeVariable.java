@@ -157,7 +157,7 @@ public class DatatypeVariable extends AVariable {
     //2. variable in wf => ja
     //  konstantenbelegung in wfs:
     //3. verschachtelte membervariable in wf => ja
-    //4. bei listen gibt es ein kapselndes data-element fï¿½r jedes listenelement => nein
+    //4. bei listen gibt es ein kapselndes data-element für jedes listenelement => nein
     //
     if (getParentVariableInXml() == null || getParentVariableInXml().isList()) {
       return false;
