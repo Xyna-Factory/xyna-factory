@@ -220,6 +220,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
 
     try {
       transientConnectionData.setSession(createSession(getSSHConnectionParameter()));
+      transientConnectionData.setTransport(client.getTransport());
     } catch (xact.connection.SSHException sshE) {
         logger.trace("Error (SSHException) in Connect",sshE);
         throw new RuntimeException(sshE);
