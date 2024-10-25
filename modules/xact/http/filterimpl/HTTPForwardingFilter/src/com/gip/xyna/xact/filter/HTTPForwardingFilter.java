@@ -415,8 +415,10 @@ public class HTTPForwardingFilter extends ConnectionFilter<HTTPTriggerConnection
 
   private URLPath getURLPath(HTTPTriggerConnection tc) {
     List<URLPathQuery> queries = new ArrayList<URLPathQuery>();
-    for (Entry<Object, Object> e : tc.getParas().entrySet()) {
-      queries.add(new URLPathQuery.Builder().attribute(String.valueOf(e.getKey())).value(String.valueOf(e.getValue())).instance());
+    for (String key : tc.getParameters().keySet()) {
+      for (String value : tc.getParameters().get(key)) {
+        queries.add(new URLPathQuery.Builder().attribute(key).value(value).instance());
+      }
     }
     return new URLPath.Builder().path(tc.getUri()).query(queries).instance();
   }
