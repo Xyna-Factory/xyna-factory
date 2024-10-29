@@ -90,15 +90,17 @@ public class UseCaseAssignmentUtils {
   public static List<UseCaseAssignmentTableData> loadPossibleAssignments(List<Module> modules, String rpcName, LoadYangAssignmentsData data) {
     Rpc rpc = findRpc(modules, rpcName);
     Input input = rpc.getInput();
-    List<YangStatement> elements = traverseYang(modules, data.getTotalYangPath(), input);
+    List<YangStatement> elements = traverseYang(modules, data.getTotalYangPath(), data.getTotalNamespaces(), input);
     return loadAssignments(elements, data);
   }
 
-  private static List<YangStatement> traverseYang(List<Module> modules, String path, YangStatement element) {
+  private static List<YangStatement> traverseYang(List<Module> modules, String path, String namespaces, YangStatement element) {
     String[] parts = path.split("\\/");
-    for(int i=1; i<parts.length; i++) { //ignore initial "/root"
+    String[] namespaceParts = namespaces.split(Constants.NS_SEPARATOR);
+    for(int i=1; i<parts.length; i++) { //ignore initial "/<rpcName>"
       String part = parts[i];
-      element = traverseYangOneLayer(modules, part, element);
+      String namespace = namespaceParts[i];
+      element = traverseYangOneLayer(modules, part, namespace, element);
     }
     return getCandidates(element);
   }
@@ -115,11 +117,11 @@ public class UseCaseAssignmentUtils {
     return result;
   }
   
-  private static YangStatement traverseYangOneLayer(List<Module> modules, String pathStep, YangStatement statement) {
+  private static YangStatement traverseYangOneLayer(List<Module> modules, String pathStep, String namespace, YangStatement statement) {
     List<YangElement> candidates = statement.getSubElements();
     for(YangElement candidate : candidates) {
       if(isSupportedElement(candidate)) {
-        if(((SchemaNode)candidate).getIdentifier().getLocalName().equals(pathStep)) {
+        if(((SchemaNode)candidate).getIdentifier().getLocalName().equals(pathStep)) { //TODO: check name space
           return (YangStatement) candidate;
         }
       }
@@ -134,9 +136,11 @@ public class UseCaseAssignmentUtils {
     for (YangStatement element : subElements) {
       if (isSupportedElement(element)) {
         String localName = ((SchemaNode) element).getIdentifier().getLocalName();
+        String namespace = element.getContext().getNamespace().getUri().toString();
         UseCaseAssignmentTableData.Builder builder = new UseCaseAssignmentTableData.Builder();
         LoadYangAssignmentsData updatedData = data.clone();
         updatedData.unversionedSetTotalYangPath(updatedData.getTotalYangPath() + "/" + localName);
+        updatedData.unversionedSetTotalNamespaces(updatedData.getTotalNamespaces() + Constants.NS_SEPARATOR + namespace);
         builder.loadYangAssignmentsData(updatedData);
         builder.yangPath(localName);
         builder.type(getYangType(element));
@@ -319,5 +323,13 @@ public class UseCaseAssignmentUtils {
     }
     Node yangTypeNode = xml.getDocumentElement().getAttributes().getNamedItem(Constants.ATT_YANG_TYPE);
     return yangTypeNode != null && expectedYangType.equals(yangTypeNode.getNodeValue());
+  }
+  
+  public static String readRpcName(Document meta) {
+    Element rpcElement = XMLUtils.getChildElementByName(meta.getDocumentElement(), Constants.TAG_RPC);
+    if(rpcElement == null) {
+      return null;
+    }
+    return rpcElement.getTextContent();
   }
 }

@@ -59,7 +59,7 @@ public class DetermineUseCaseAssignments {
     if(meta == null) {
       return result;
     }
-    String rpcName = readRpcName(meta.getSecond());
+    String rpcName = UseCaseAssignmentUtils.readRpcName(meta.getSecond());
     if(rpcName == null) {
       return result;
     }
@@ -151,12 +151,6 @@ public class DetermineUseCaseAssignments {
     }
   }
   
-  private String readRpcName(Document meta) {
-    Element rpcElement = XMLUtils.getChildElementByName(meta.getDocumentElement(), Constants.TAG_RPC);
-    if(rpcElement == null) {
-      return null;
-    }
-    return rpcElement.getTextContent();
-  }
+
 
 }
