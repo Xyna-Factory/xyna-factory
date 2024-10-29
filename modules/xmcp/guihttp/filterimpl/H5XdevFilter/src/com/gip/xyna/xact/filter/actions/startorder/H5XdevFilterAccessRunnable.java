@@ -19,6 +19,7 @@ package com.gip.xyna.xact.filter.actions.startorder;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,7 +54,10 @@ public class H5XdevFilterAccessRunnable implements RunnableForFilterAccess {
     HTTPMethod tmpMethod = (xact.http.enums.httpmethods.HTTPMethod) parameters[1];
     String payload = parameters.length > 2 ? (String)parameters[2] : null;
     Method method = Method.valueOf(tmpMethod.getClass().getSimpleName());
-    List<URLPathQuery> query = tmpUrl.getQuery().stream().map(x -> new URLPathQuery(x.getAttribute(), x.getValue())).collect(Collectors.toList());
+    List<URLPathQuery> query = new ArrayList<>();
+    if (tmpUrl.getQuery() != null) {
+      query = tmpUrl.getQuery().stream().map(x -> new URLPathQuery(x.getAttribute(), x.getValue())).collect(Collectors.toList());
+    }
     URLPath url = new URLPath(tmpUrl.getPath(), query,  null);
     for(Endpoint endpoint : endpoints) {
       if(endpoint.match(url, method)) {
