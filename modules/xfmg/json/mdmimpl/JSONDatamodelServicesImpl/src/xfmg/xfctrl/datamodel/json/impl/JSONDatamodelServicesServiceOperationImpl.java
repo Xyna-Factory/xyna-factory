@@ -87,9 +87,6 @@ import xfmg.xfctrl.datamodel.json.parameter.XynaObjectDecider;
 public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploymentTask, JSONDatamodelServicesServiceOperation {
 
   private static final Logger logger = CentralFactoryLogging.getLogger(JSONDatamodelServicesServiceOperationImpl.class);
-  public static final XynaPropertyBoolean GENERIC_PROCESSING = new XynaPropertyBoolean("xfmg.json.GenericProcessing", false)
-      .setDefaultDocumentation(DocumentationLanguage.EN, "If ProcessAllInputGenerically is set to null in JSONParsing or JSONWriting Options, this value is used.")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Wenn ProcessAllInputGenerically in JSONParsing oder JSONWriting Options nicht gesetzt ist, wird dieser Wert benutzt.");
 
   public void onDeployment() throws XynaException {
   }
@@ -746,7 +743,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     Map<String, String> mapTransformations = convertListToMapTransformations(options.getListToMapTransformation());
     Map<String, String> mapSubstitutions = convertMemberSubstitutions(options.getMemberSubstitution());
     Set<String> listWrappers = convertListWrappers(options.getListWrapper());
-    boolean inline = options.getProcessAllInputGenerically() != null ? !options.getProcessAllInputGenerically() : !GENERIC_PROCESSING.get();
+    boolean inline = options.getProcessAllInputGenerically() != null ? !options.getProcessAllInputGenerically() : true;
     JsonOptions result = new JsonOptions(mapTransformations, mapSubstitutions, listWrappers, options.getUseLabels(), inline);
     return result;
   }
@@ -756,7 +753,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     Map<String, String> mapTransformations = convertListToMapTransformations(options.getListToMapTransformation());
     Map<String, String> mapSubstitutions = convertMemberSubstitutions(options.getMemberSubstitution());
     Set<String> listWrappers = convertListWrappers(options.getListWrapper());
-    boolean inline = options.getProcessAllInputGenerically() != null ? !options.getProcessAllInputGenerically() : !GENERIC_PROCESSING.get();
+    boolean inline = options.getProcessAllInputGenerically() != null ? !options.getProcessAllInputGenerically() : true;
     JsonOptions result = new JsonOptions(mapTransformations, mapSubstitutions, listWrappers, options.getUseLabels(), inline);
     return result;
   }
@@ -1137,7 +1134,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
       substitutions = Collections.emptyMap();
       listwrapper = Collections.emptySet();
       useLabels = false;
-      inlineGenerics = GENERIC_PROCESSING.get();
+      inlineGenerics = true;
     }
     
     public JsonOptions(Map<String, String> transformations, Map<String, String> substitutions, Set<String> listwrapper, boolean useLabels, boolean inlineGenerics) {

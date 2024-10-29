@@ -41,8 +41,7 @@ If not set or set to a different value no membervars will be skipped.</Documenta
     <Meta>
       <Type>Boolean</Type>
       <Documentation>When set to true, xfmg.xfctrl.datamodel.json.JSONObject and xfmg.xfctrl.datamodel.json.JSONValue are written using the generic serialization process. 
-When set to false, xfmg.xfctrl.datamodel.json.JSONObject and xfmg.xfctrl.datamodel.json.JSONValue are written inline.
-When set to null, the xynaproperty xfmg.json.GenericProcessing is used!
+When set to false or null, xfmg.xfctrl.datamodel.json.JSONObject and xfmg.xfctrl.datamodel.json.JSONValue are written inline.
 Example json for a xfmg.xfctrl.datamodel.json.JSONObject with one member "key" that has a value of "value":
 inline: { "key": "value" }
 generic serialization: { "members": [ {"key": "key", value: { "type": "STRING", "stringOrNumberValue": "value" }}]}
