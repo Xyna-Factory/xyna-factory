@@ -37,7 +37,7 @@ import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
 
 
 /**
- * sammlung aller kindauftrï¿½ge, die implizit von einem wf-step gestartet werden, der einen java-call macht.
+ * sammlung aller kindaufträge, die implizit von einem wf-step gestartet werden, der einen java-call macht.
  * z.b. instanzmethoden die als workflow modelliert sind.
  * 
  * codegenerierung in instanzmethoden-impls:
@@ -56,7 +56,7 @@ import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
     </pre>
  * falls man in einem coded service eine instanzmethode aufruft, und darauf vorbereitet sein will, dass die instanzmethode als workflow implementiert ist
  * oder selbst wiederum einen workflow startet (inkl suspend/resume-support), gibt es folgendes zu beachten:
- * 1) man muss dafï¿½r sorgen, dass der bereits ausgefï¿½hrte code nicht mehrfach (beim resume) ausgefï¿½hrt wird
+ * 1) man muss dafür sorgen, dass der bereits ausgeführte code nicht mehrfach (beim resume) ausgeführt wird
  * 2) man darf die suspend-exceptions nicht fangen
  * 
  * verwendungspattern ist also:
@@ -69,9 +69,9 @@ import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
  *   callInstanceMethod(); //
  * } catch (ProcessSuspendedExcception e) {
  *   throw e; //damit suspend funktioniert!
- * } //andere exceptions dï¿½rfen beliebig behandelt werden.
+ * } //andere exceptions dürfen beliebig behandelt werden.
  * //} catch (XynaExceptionResultingFromWorkflowCall e) {
- * //  infrastruktur-exceptions von der workflow-ausfï¿½hrung.
+ * //  infrastruktur-exceptions von der workflow-ausführung.
  * //}
  * 
  * //restlicher code
@@ -86,7 +86,7 @@ public class ChildOrderStorage implements Serializable {
   private static final Logger logger = CentralFactoryLogging.getLogger(ChildOrderStorage.class);
 
   /**
-   * oberstes element im stack ist der parent-ChildOrderStorage, der zu dem step gehï¿½rt, der
+   * oberstes element im stack ist der parent-ChildOrderStorage, der zu dem step gehört, der
    * den aufruf des letzten instanz-methodencalls dieses threads verursacht hat.
    * 
    * ACHTUNG: wird im generierten code von workflows und datentypen verwendet
@@ -107,14 +107,14 @@ public class ChildOrderStorage implements Serializable {
     private final LinkedList<ChildOrderStorage> stack = new LinkedList<ChildOrderStorage>();
 
 
-    //aus abwï¿½rtskompatibilitï¿½t vorhanden, verwendet revision von aufrufendem workflow
+    //aus abwärtskompatibilität vorhanden, verwendet revision von aufrufendem workflow
     public XynaOrderServerExtension createOrGetXynaOrder(String ordertype) {
       ChildOrderStorage cos = stack.getLast();
       return cos.createOrGetXynaOrder(ordertype, null);
     }
     
     /**
-     * gibt xynaorder vom im stack am obersten liegenden storage zurï¿½ck
+     * gibt xynaorder vom im stack am obersten liegenden storage zurück
      */
     public XynaOrderServerExtension createOrGetXynaOrder(String ordertype, long revision) {
       ChildOrderStorage cos = stack.getLast();
@@ -122,7 +122,7 @@ public class ChildOrderStorage implements Serializable {
     }
 
     /**
-     * gibt aktuell laufende XynaOrder zurï¿½ck
+     * gibt aktuell laufende XynaOrder zurück
      */
     public XynaOrderServerExtension getCorrelatedXynaOrder() {
       if (stack.isEmpty()) {
@@ -142,7 +142,7 @@ public class ChildOrderStorage implements Serializable {
     }
 
     /**
-     * fï¿½gt storage zum stack hinzu
+     * fügt storage zum stack hinzu
      */
     public void add(ChildOrderStorage cos) {
       stack.add(cos);
@@ -165,8 +165,8 @@ public class ChildOrderStorage implements Serializable {
     }
     
     /**
-     * @return true, falls die erste ausfï¿½hrung der xynaorder, false beim resume
-     * FIXME funktioniert derzeit so, dass der erste aufruf dieser funktion das flag umsetzt. das ist eigtl nicht so schï¿½n.
+     * @return true, falls die erste ausführung der xynaorder, false beim resume
+     * FIXME funktioniert derzeit so, dass der erste aufruf dieser funktion das flag umsetzt. das ist eigtl nicht so schön.
      *       weil nur im generierten code aufgerufen, funktioniert das so.
      *       D.h. man muss derzeit immer createOrGetXynaOrder aufrufen und darauf folgend isFirstExecution
      */
@@ -179,7 +179,7 @@ public class ChildOrderStorage implements Serializable {
   private final FractalProcessStep<?> step;
 
   /**
-   * liste aller auftrï¿½ge die in dem step mal gestartet wurden
+   * liste aller aufträge die in dem step mal gestartet wurden
    */
   private final List<XynaOrderServerExtension> orders = new ArrayList<XynaOrderServerExtension>();
 
@@ -188,18 +188,18 @@ public class ChildOrderStorage implements Serializable {
    * beispiel:<br>
    * 1. step startet java, 
    * 2. java ruft als wf implementierte instanzmethode
-   *    -&gt; liste enthï¿½lt 1 auftrag, idx = 0, firstExecutionIdx = -1-&gt;0
+   *    -&gt; liste enthält 1 auftrag, idx = 0, firstExecutionIdx = -1-&gt;0
    * 3. wf wird suspendiert
-   *    -&gt; liste enthï¿½lt 1 auftrag, idx = -1, firstExecutionIdx = 0
+   *    -&gt; liste enthält 1 auftrag, idx = -1, firstExecutionIdx = 0
    * 4. wf wird resumed
-   *    -&gt; liste enthï¿½lt 1 auftrag, idx = 0, firstExecutionIdx = 0
+   *    -&gt; liste enthät 1 auftrag, idx = 0, firstExecutionIdx = 0
    * 5. wf wird beendet
    * 6. java ruft weitere als wf implementierte instanzmethode
-   *    -&gt; liste enthï¿½lt 2 auftrï¿½ge, idx = 1, firstExecutionIdx = 0-&gt;1
+   *    -&gt; liste enthält 2 aufträge, idx = 1, firstExecutionIdx = 0-&gt;1
    * 7. wf wird suspendiert
-   *    -&gt; liste enthï¿½lt 2 auftrï¿½ge, idx = 0, firstExecutionIdx = 1
+   *    -&gt; liste enthält 2 aufträge, idx = 0, firstExecutionIdx = 1
    * 8. wf wird resumed
-   *    -&gt; liste enthï¿½lt 2 auftrï¿½ge, idx = 1, firstExecutionIdx = 1
+   *    -&gt; liste enthält 2 aufträge, idx = 1, firstExecutionIdx = 1
    * usw.
    */
   private int currentOrderIdx = -1;
@@ -233,7 +233,7 @@ public class ChildOrderStorage implements Serializable {
    * 
    * achtung: dieser aufruf kann mehrfach auf dem gleichen objekt passieren, wenn eine instanzmethode mehrere
    * workflows nacheinander aufruft.
-   * um welchen auftrag es sich jeweils handelt, wird ï¿½ber die reihenfolge der aufrufe festgelegt, damit folgendes
+   * um welchen auftrag es sich jeweils handelt, wird über die reihenfolge der aufrufe festgelegt, damit folgendes
    * funktioniert:<br>
    * startOrder(1) -> suspend -> resume -> startOrder(1) -> finishOrder -> startOrder(2)
    * -> suspend -> resume -> startOrder(2) -> finishOrder -> startOrder(3) -> usw.
@@ -270,11 +270,11 @@ public class ChildOrderStorage implements Serializable {
         //z.b. bei einer servicedestination ist der classloader kein classloaderbase, weil der workflow ein interner ist
         revision = step.getProcess().getCorrelatedXynaOrder().getRevision();
       } else {
-        //TODO genï¿½gt hier eine warnung?
+        //TODO genügt hier eine warnung?
         throw new RuntimeException("Could not determine revision of context, in which a child order is to be started.");
       }
     }
-    //im planning wird revision in den destinationkey ï¿½bernommen
+    //im planning wird revision in den destinationkey übernommen
     XynaOrderServerExtension xo = new XynaOrderServerExtension(new DestinationKey(ordertype));
     xo.setRevision(revision);
     XynaOrderServerExtension cxo = step.getProcess().getCorrelatedXynaOrder();
@@ -309,7 +309,7 @@ public class ChildOrderStorage implements Serializable {
 
 
   /**
-   * @return liste aller auftrï¿½ge, die bisher von diesem step gestartet worden sind
+   * @return liste aller aufträge, die bisher von diesem step gestartet worden sind
    */
   public List<XynaOrderServerExtension> getChildXynaOrders() {
     synchronized (orders) {

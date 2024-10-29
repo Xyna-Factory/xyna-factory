@@ -16,6 +16,8 @@
 # limitations under the License.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+# This script is deprecated, use checkApplicationFiles.py instead.
+
 # 1) filename von application.xml
 
 # checke, dass alle im application-xml erwaehnten objekte auch als file existieren

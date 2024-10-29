@@ -79,7 +79,7 @@ public class Lease extends Storable<Lease> implements Comparable<Lease>, XSORPay
   public static final String COL_CMTSIP = "cmtsip";
   
   private static final long serialVersionUID = 1L;
-  //public static final int IPv6ADDRESSLENGTH = 128;//Prefixlength fï¿½r komplette IPv6-Adresse
+  //public static final int IPv6ADDRESSLENGTH = 128;//Prefixlength für komplette IPv6-Adresse
   //public static final String COL_PK = "leaseID";
   
   final static String CHARSET_ISO_8859_15_IDENTIFIER= "ISO-8859-15";// 8bit Encoding;

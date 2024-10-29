@@ -71,7 +71,7 @@ public class XSORClusterProvider implements ClusterProvider {
   protected static final Logger logger = CentralFactoryLogging.getLogger(XSORClusterProvider.class);
 
   private static final String TYPE_NAME = XSORClusterProvider.class.getSimpleName();
-  private static final String EXTENDEDSTATUS_NAME = "XynaCluster"; //ACHTUNG. bei ï¿½nderungen auch in networkavailability demon/checkFactoryState.sh ï¿½ndern!
+  private static final String EXTENDEDSTATUS_NAME = "XynaCluster"; //ACHTUNG. bei Änderungen auch in networkavailability demon/checkFactoryState.sh ändern!
 
 
   private static final String PARAMETER_DESCRIPTION = "1. Interconnect Port Remote, "
@@ -150,7 +150,7 @@ public class XSORClusterProvider implements ClusterProvider {
 
 
   public void checkInterconnect() {
-    //ntbd, interconnect wird von externem prozess ï¿½berprï¿½ft.
+    //ntbd, interconnect wird von externem prozess überprüft.
   }
 
 
@@ -200,7 +200,7 @@ public class XSORClusterProvider implements ClusterProvider {
     String nodeId = startParameters[12];
     boolean nodePreference = Boolean.valueOf(startParameters[13]);
     int availabilityDelayMs = Integer.valueOf(startParameters[14]);
-    //!!!! ACHTUNG: bei ergï¿½nzung auch in konstante PARAMETER_DESCRIPTION anpassen und oben die parameter-lï¿½nge anpassen!!!
+    //!!!! ACHTUNG: bei ergänzung auch in konstante PARAMETER_DESCRIPTION anpassen und oben die parameter-länge anpassen!!!
     
     xsorClusterInstanceStorable =
         new XSORClusterInstanceStorable(getInternalClusterId(), remote, icServerPort, icRemotePort,
@@ -235,9 +235,9 @@ public class XSORClusterProvider implements ClusterProvider {
 
   public List<Integer> getAllBindingsIncludingLocal() {
     // FIXME : Alle Bindings aus statischem Objekt im Cluster auslesen. Kann nicht gecached werden, weil
-    //             in der Zwischenzeit Objekte dazugekommen sein kï¿½nnten. Alternative: Das zentrale Objekt
-    //             wird immer redundant gehalten und es wird ein Trigger an das Objekt gehï¿½ngt, der dann
-    //             aktiv hier den Cache updated. Aus Performance-Sicht wï¿½re das sicherlich die bessere Variante.
+    //             in der Zwischenzeit Objekte dazugekommen sein könnten. Alternative: Das zentrale Objekt
+    //             wird immer redundant gehalten und es wird ein Trigger an das Objekt gehängt, der dann
+    //             aktiv hier den Cache updated. Aus Performance-Sicht wäre das sicherlich die bessere Variante.
     return null;
   }
 
@@ -317,7 +317,7 @@ public class XSORClusterProvider implements ClusterProvider {
         return com.gip.xyna.cluster.ClusterState.SYNC_PARTNER;
       case SYNC_SLAVE :
         return com.gip.xyna.cluster.ClusterState.SYNC_SLAVE;
-        /* nicht unterstï¿½tzt:  
+        /* nicht unterstützt:  
         case SINGLE :
         case DISCONNECTED_SLAVE:
         case NO_CLUSTER :
@@ -370,7 +370,7 @@ public class XSORClusterProvider implements ClusterProvider {
 
 
   public boolean isConnected() {
-    // TODO: was genau bedeutet connected hier? wozu gibt es die methode, wenn sie ï¿½quivalent zu clsuterstate connected ist? evtl methode rauswerfen?
+    // TODO: was genau bedeutet connected hier? wozu gibt es die methode, wenn sie äquivalent zu clsuterstate connected ist? evtl methode rauswerfen?
     com.gip.xyna.cluster.ClusterState cs = clusterManagement.getCurrentState();
     return cs == com.gip.xyna.cluster.ClusterState.CONNECTED || cs == com.gip.xyna.cluster.ClusterState.SYNC_MASTER
         || cs == com.gip.xyna.cluster.ClusterState.SYNC_PARTNER || cs == com.gip.xyna.cluster.ClusterState.SYNC_SLAVE;
@@ -430,7 +430,7 @@ public class XSORClusterProvider implements ClusterProvider {
                                        boolean wasMasterBeforeShutdown, int availabilityDelayMs)
       throws XMCP_RMI_BINDING_ERROR {
 
-    //ï¿½ber futureexecutiontask in xynaclusteringservicesmanagement ist sichergestellt, dass rmimanagement zu dem zeitpunkt bereits initialisiert wurde.
+    //über futureexecutiontask in xynaclusteringservicesmanagement ist sichergestellt, dass rmimanagement zu dem zeitpunkt bereits initialisiert wurde.
     cmRmiIf =
         new RMIInterface(hostnameRemote, portRemote, hostnameLocal, rmiPortRegistryLocal, rmiPortCommunicationLocal);
     final ClusterProviderManagement remoteRMIIf = cmRmiIf.createRMIAdapter();
@@ -504,7 +504,7 @@ public class XSORClusterProvider implements ClusterProvider {
                   PersistenceProcessingState remoteState = getBackingStoreState();
                   while (clusterManagement.getCurrentState().isSync()
 
-                  //abbruch, wenn diese bedingungen gemeinsam erfï¿½llt sind
+                  //abbruch, wenn diese bedingungen gemeinsam erfüllt sind
                       && !(remoteState.currentlyWaitingRequests < 100 && remoteState.numberOfPersistedRequests
                           - persistenceCounterBefore >= xsor.getNumberOfMessagesSentLastSync() - 100)
                           
@@ -675,8 +675,8 @@ public class XSORClusterProvider implements ClusterProvider {
         XynaFactory.getInstance().getFactoryManagement().getXynaFactoryManagementODS().getConfiguration();
     try {
       //property beim serverstart hier immer auf nicht-erreichbar setzen, weil die property
-      //ï¿½ber die cli nicht gesetzt werden kann, wï¿½hrend der server hochfï¿½hrt. der wert von
-      //vor dem serverstart kï¿½nnte OK sein, was hier dann nicht passend ist.
+      //über die cli nicht gesetzt werden kann, während der server hochfährt. der wert von
+      //vor dem serverstart könnte OK sein, was hier dann nicht passend ist.
       conf.setProperty(XYNAPROPERTY_NETWORK_AVAILABILITY, NETWORK_AVAILABILITY_STATE.ERROR.name());
     } catch (PersistenceLayerException e) {
       throw new RuntimeException(e);
