@@ -155,20 +155,42 @@ public class AddUsecase {
   }
 
   private void addServiceToDatatype(String path, String label, String service, String workspace, XynaOrderServerExtension order, String rpc, String deviceFqn, String rpcNs) {
+    // create service
     RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
     String workspaceNameEscaped = UseCaseAssignmentUtils.urlEncode(workspace);
     String fqnUrl = path + "/" + label;
     String endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + fqnUrl + "/objects/memberMethodsArea/insert";
     URLPath url = new URLPath(endPoint, null, null);
     HTTPMethod method = new POST();
-    String payload = "{\"index\":-1,\"content\":{\"type\":\"memberMethod\",\"label\":\"" +  service + "\"},\"revision\":0}";
+    String payload = "{\"index\":-1,\"content\":{\"type\":\"memberService\",\"label\":\"" + service + "\"}}";
+    //TODO: read the number of the created service from the response
     UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "Could not add service to datatype.");
-    
+
+    String serviceNumber = "0";
+
+    // add xmcp.yang.MessageId as input variable
+    endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl + "/objects/methodVarArea" + serviceNumber + "_input/insert";
+    url = new URLPath(endPoint, null, null);
+    payload = "{\"index\":-1,\"content\":{\"type\":\"variable\",\"label\":\"MessageId\",\"fqn\":\"xmcp.yang.MessageId\",\"isList\":false}}";
+    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "Could not add input variable to service.");
+
+    // add xact.templates.Document as output variable
+    endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl + "/objects/methodVarArea" + serviceNumber + "_output/insert";
+    url = new URLPath(endPoint, null, null);
+    payload = "{\"index\":-1,\"content\":{\"type\":\"variable\",\"label\":\"Document\",\"fqn\":\"xact.templates.Document\",\"isList\":false}}";
+    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "Could not add output variable to service.");
+
+    // set impelmentation to "return null;"
+    endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl + "/objects/memberMethod" + serviceNumber + "/change";
+    url = new URLPath(endPoint, null, null);
+    payload = "{\"implementation\":\"return null;\"}";
+    method = new PUT();
+    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "Could not set implementation of service.");
+
     // set meta tag
     String serviceName = service; //TODO: read correct name from datatype
     endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + fqnUrl + "/services/" + serviceName + "/meta";
     url = new URLPath(endPoint, null, null);
-    method = new PUT();
     String mappings = "<" + Constants.TAG_MAPPINGS + "/>";
     String device = "<" + Constants.TAG_DEVICE_FQN + ">" + deviceFqn + "</" + Constants.TAG_DEVICE_FQN + ">";
     String rpcNsTag = "<" + Constants.TAG_RPC_NS + ">" + rpcNs + "</" + Constants.TAG_RPC_NS + ">";
