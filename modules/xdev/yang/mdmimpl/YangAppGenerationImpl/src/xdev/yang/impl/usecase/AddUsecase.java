@@ -19,7 +19,11 @@ package xdev.yang.impl.usecase;
 
 
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
+import org.yangcentral.yangkit.model.api.stmt.Module;
+import org.yangcentral.yangkit.model.api.stmt.Rpc;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
@@ -45,7 +49,7 @@ public class AddUsecase {
   private static final Logger logger = CentralFactoryLogging.getLogger(AddUsecase.class);
 
 
-  public void addUsecase(String fqn, String usecaseName, Workspace workspace, XynaOrderServerExtension order, String rpc, String deviceFqn) {
+  public void addUsecase(String fqn, String usecaseName, Workspace workspace, XynaOrderServerExtension order, String rpc, String deviceFqn, String rpcNs) {
     try {
       String workspaceName = workspace.getName();
       if (logger.isDebugEnabled()) {
@@ -69,7 +73,8 @@ public class AddUsecase {
           logger.debug(order.getId() + ": Adding service to datatype. Current datatype path: " + currentPath);
         }
         addParentToDatatype(currentPath, label, workspaceName, order);
-        addServiceToDatatype(currentPath, label, usecaseName, workspaceName, order, rpc, deviceFqn);
+        rpcNs = rpcNs == null || rpcNs.isBlank() ? loadRpcNs(rpc, deviceFqn, workspaceName) : rpcNs;
+        addServiceToDatatype(currentPath, label, usecaseName, workspaceName, order, rpc, deviceFqn, rpcNs);
         UseCaseAssignmentUtils.saveDatatype(currentPath, path, label, workspaceName, order);
       } finally {
         if (logger.isDebugEnabled()) {
@@ -80,6 +85,18 @@ public class AddUsecase {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+  }
+
+  private String loadRpcNs(String rpc, String deviceFqn, String workspaceName) {
+    List<Module> modules = UseCaseAssignmentUtils.loadModules(workspaceName);
+    //filter modules to supported by device
+    List<String> capabilities = UseCaseAssignmentUtils.loadCapabilities(deviceFqn, workspaceName);
+    modules = UseCaseAssignmentUtils.filterModules(modules, capabilities);
+    List<Rpc> candidates = UseCaseAssignmentUtils.findRpcs(modules, rpc);
+    if(candidates.size() != 1) {
+      throw new RuntimeException("Could not determine rpc namespace. There are " + candidates.size() + " candidates.");
+    }
+    return candidates.get(0).getContext().getNamespace().getUri().toString();
   }
 
   private void addParentToDatatype(String path, String label, String workspace, XynaOrderServerExtension order) {
@@ -137,7 +154,7 @@ public class AddUsecase {
     return fqn.substring(0, fqn.lastIndexOf("."));
   }
 
-  private void addServiceToDatatype(String path, String label, String service, String workspace, XynaOrderServerExtension order, String rpc, String deviceFqn) {
+  private void addServiceToDatatype(String path, String label, String service, String workspace, XynaOrderServerExtension order, String rpc, String deviceFqn, String rpcNs) {
     RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
     String workspaceNameEscaped = UseCaseAssignmentUtils.urlEncode(workspace);
     String fqnUrl = path + "/" + label;
@@ -154,7 +171,8 @@ public class AddUsecase {
     method = new PUT();
     String mappings = "<" + Constants.TAG_MAPPINGS + "/>";
     String device = "<" + Constants.TAG_DEVICE_FQN + ">" + deviceFqn + "</" + Constants.TAG_DEVICE_FQN + ">";
-    String tag = "<Yang type=\\\"Usecase\\\"><Rpc>"+ rpc + "</Rpc>"+ device + mappings +"</Yang>";
+    String rpcNsTag = "<" + Constants.TAG_RPC_NS + ">" + rpcNs + "</" + Constants.TAG_RPC_NS + ">";
+    String tag = "<Yang type=\\\"Usecase\\\"><Rpc>"+ rpc + "</Rpc>"+ device + rpcNsTag + mappings +"</Yang>";
     payload = "{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.request.MetaTagRequest\"},\"metaTag\":{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.MetaTag\"},\"deletable\":true,\"tag\":\"" + tag + "\"}}";
     UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "Could not add meta tag to service.");
   }

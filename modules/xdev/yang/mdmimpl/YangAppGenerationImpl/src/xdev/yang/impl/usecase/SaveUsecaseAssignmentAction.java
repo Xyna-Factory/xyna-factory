@@ -100,6 +100,7 @@ public class SaveUsecaseAssignmentAction {
   private String createImpl(Document meta) {
     StringBuilder result = new StringBuilder();
     String rpcName = UseCaseAssignmentUtils.readRpcName(meta);
+    String rpcNs = UseCaseAssignmentUtils.readRpcNamespace(meta);
     String messageIdVarName = "TODO";
     result
         .append("com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder builder = new com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder();\n")
@@ -107,7 +108,9 @@ public class SaveUsecaseAssignmentAction {
         .append("builder.addAttribute(\"message-Id\", \"").append(messageIdVarName).append("\");\n")
         .append("builder.addAttribute(\"xmlns\", \"").append(Constants.NETCONF_NS).append("\");\n")
         .append("builder.endAttributes();\n")
-        .append("builder.startElement(\"").append(rpcName).append("\");\n");
+        .append("builder.startElementWithAttributes(\"").append(rpcName).append("\");\n")
+        .append("builder.addAttribute(\"xmlns\", \"").append(rpcNs).append("\");\n")
+        .append("builder.endAttributes();\n");
 
     createMappingImpl(result, meta);
     
