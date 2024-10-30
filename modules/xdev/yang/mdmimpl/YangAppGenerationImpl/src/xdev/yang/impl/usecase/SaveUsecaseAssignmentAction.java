@@ -18,6 +18,7 @@
 package xdev.yang.impl.usecase;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import org.w3c.dom.Document;
@@ -34,6 +35,8 @@ import xact.http.enums.httpmethods.GET;
 import xact.http.enums.httpmethods.HTTPMethod;
 import xact.http.enums.httpmethods.PUT;
 import xdev.yang.impl.Constants;
+import xdev.yang.impl.GuiHttpInteraction;
+import xmcp.processmodeller.datatypes.response.GetDataTypeResponse;
 import xmcp.yang.UseCaseAssignmentTableData;
 
 public class SaveUsecaseAssignmentAction {
@@ -83,10 +86,11 @@ public class SaveUsecaseAssignmentAction {
     String endpoint = commonPath;
     URLPath url = new URLPath(endpoint, null, null);
     HTTPMethod method = new GET();
-    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, null, "could not open datatype");
-
+    GetDataTypeResponse response = (GetDataTypeResponse)UseCaseAssignmentUtils.executeRunnable(runnable, url, method, null, "could not open datatype");
+    List<String> inputVarNames = GuiHttpInteraction.loadVarNames(response, meta.getFirst());
+    
     //Update implementation
-    String newImpl = createImpl(meta.getSecond());
+    String newImpl = createImpl(meta.getSecond(), inputVarNames);
     newImpl = newImpl.replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"");
     newImpl = "{ \"implementation\": \"" + newImpl + "\"}";
     endpoint = commonPath + "/objects/memberMethod" + id + "/change";
@@ -97,15 +101,14 @@ public class SaveUsecaseAssignmentAction {
     UseCaseAssignmentUtils.saveDatatype(path, path, label, workspaceName, order);
   }
 
-  private String createImpl(Document meta) {
+  private String createImpl(Document meta, List<String> inputVarNames) {
     StringBuilder result = new StringBuilder();
     String rpcName = UseCaseAssignmentUtils.readRpcName(meta);
     String rpcNs = UseCaseAssignmentUtils.readRpcNamespace(meta);
-    String messageIdVarName = "TODO";
     result
         .append("com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder builder = new com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder();\n")
         .append("builder.startElementWithAttributes(\"rpc\");\n")
-        .append("builder.addAttribute(\"message-Id\", \"").append(messageIdVarName).append("\");\n")
+        .append("builder.addAttribute(\"message-Id\", ").append(inputVarNames.get(0)).append(".getId());\n")
         .append("builder.addAttribute(\"xmlns\", \"").append(Constants.NETCONF_NS).append("\");\n")
         .append("builder.endAttributes();\n")
         .append("builder.startElementWithAttributes(\"").append(rpcName).append("\");\n")
@@ -124,11 +127,12 @@ public class SaveUsecaseAssignmentAction {
 
   private void createMappingImpl(StringBuilder result, Document meta) {
     String rpcName = UseCaseAssignmentUtils.readRpcName(meta);
+    String rpcNs = UseCaseAssignmentUtils.readRpcNamespace(meta);
     List<UseCaseMapping> mappings = UseCaseMapping.loadMappings(meta);
-    //TODO: sort mappings
+    Collections.sort(mappings);
     
     List<Pair<String, String>> position = new ArrayList<>();
-    position.add(new Pair<>(rpcName, "")); //TODO: nameSpace
+    position.add(new Pair<>(rpcName, rpcNs));
     for(UseCaseMapping mapping : mappings) {
       createMappingImpl(result, mapping, position);
     }

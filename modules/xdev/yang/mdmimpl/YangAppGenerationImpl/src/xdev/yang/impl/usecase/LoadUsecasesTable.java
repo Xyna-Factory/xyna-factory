@@ -79,7 +79,7 @@ public class LoadUsecasesTable {
         UseCaseTableData.Builder data = new UseCaseTableData.Builder();
         data.usecaseGroup(dt.getFqn());
         data.rpcName(UseCaseAssignmentUtils.readRpcName(xml));
-        data.rpcNamespace(""); //TODO: namespace of rpc
+        data.rpcNamespace(UseCaseAssignmentUtils.readRpcNamespace(xml));
         data.useCase(operation.getName());
         data.mappingCount(countMappings(xml));
         data.runtimeContext(datatype.getRuntimeContext().getName());

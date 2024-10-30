@@ -29,7 +29,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 import xdev.yang.impl.Constants;
 
-public class UseCaseMapping {
+public class UseCaseMapping implements Comparable<UseCaseMapping> {
 
   private String mappingYangPath;
   private String namespace;
@@ -152,6 +152,27 @@ public class UseCaseMapping {
 
   public void setValue(String value) {
     this.value = value;
+  }
+
+
+  @Override
+  public int compareTo(UseCaseMapping o) {
+    List<Pair<String, String>> pathList = createPathList();
+    List<Pair<String, String>> otherPathList = o.createPathList();
+    int minLength = Math.min(pathList.size(), otherPathList.size());
+    for (int i = 0; i < minLength; i++) {
+      int pathComparision = pathList.get(i).getFirst().compareTo(otherPathList.get(i).getFirst());
+      if (pathComparision != 0) {
+        return pathComparision;
+      }
+      int namespaceComparision = pathList.get(i).getSecond().compareTo(otherPathList.get(i).getSecond());
+      if (namespaceComparision != 0) {
+        return namespaceComparision;
+      }
+    }
+
+    //all entries up to the minimum length are the same
+    return pathList.size() - otherPathList.size();
   }
 
 
