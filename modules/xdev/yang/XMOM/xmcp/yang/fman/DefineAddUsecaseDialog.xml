@@ -186,8 +186,8 @@
       <Mapping>%7%.children["2"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%2%</Mapping>
       <Mapping>%7%.children["3"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%3%</Mapping>
       <Mapping>%7%.children["4"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%4%</Mapping>
-      <Mapping>%7%.children["4"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%5%</Mapping>
-      <Mapping>%7%.children["5"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%6%</Mapping>
+      <Mapping>%7%.children["5"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%5%</Mapping>
+      <Mapping>%7%.children["6"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%6%</Mapping>
     </Mappings>
     <Data ID="37" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition37">
       <Source RefID="27"/>
