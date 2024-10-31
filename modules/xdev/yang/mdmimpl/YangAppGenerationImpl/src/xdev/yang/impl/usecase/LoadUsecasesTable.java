@@ -78,7 +78,8 @@ public class LoadUsecasesTable {
         }
         UseCaseTableData.Builder data = new UseCaseTableData.Builder();
         data.usecaseGroup(dt.getFqn());
-        data.rpcName(readRpcName(xml));
+        data.rpcName(UseCaseAssignmentUtils.readRpcName(xml));
+        data.rpcNamespace(UseCaseAssignmentUtils.readRpcNamespace(xml));
         data.useCase(operation.getName());
         data.mappingCount(countMappings(xml));
         data.runtimeContext(datatype.getRuntimeContext().getName());
@@ -91,13 +92,6 @@ public class LoadUsecasesTable {
     return result;
   }
 
-  private String readRpcName(Document xml) {
-    Element ele = XMLUtils.getChildElementByName(xml.getDocumentElement(), Constants.TAG_RPC);
-    if(ele == null) {
-      throw new RuntimeException("Could not determine rpc name");
-    }
-    return ele.getTextContent();
-  }
 
   private int countMappings(Document xml) {
     Element mappingsNode = XMLUtils.getChildElementByName(xml.getDocumentElement(), Constants.TAG_MAPPINGS);

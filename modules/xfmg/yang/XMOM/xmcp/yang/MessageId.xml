@@ -21,7 +21,7 @@
   </Meta>
   <Data Label="id" VariableName="id">
     <Meta>
-      <Type>int</Type>
+      <Type>String</Type>
     </Meta>
   </Data>
 </DataType>

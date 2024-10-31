@@ -41,11 +41,12 @@
         </Data>
         <Target RefID="429"/>
       </Output>
-      <Mapping>%1%.type="Rpc"</Mapping>
-      <Mapping>%1%.loadYangAssignmentsData.totalYangPath=%0%.rpcName</Mapping>
       <Mapping>%1%.loadYangAssignmentsData.fqn=%0%.usecaseGroup</Mapping>
+      <Mapping>%1%.loadYangAssignmentsData.totalNamespaces=%0%.rpcNamespace</Mapping>
+      <Mapping>%1%.loadYangAssignmentsData.totalYangPath=%0%.rpcName</Mapping>
       <Mapping>%1%.loadYangAssignmentsData.usecase=%0%.useCase</Mapping>
       <Mapping>%1%.loadYangAssignmentsData.workspaceName=%0%.runtimeContext</Mapping>
+      <Mapping>%1%.type="Rpc"</Mapping>
       <Mapping>%1%.yangPath=%0%.rpcName</Mapping>
     </Mappings>
     <Function ID="375" Label="Use Case assignments Definition">
