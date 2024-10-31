@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Use Case root assignments Definition" TypeName="UseCaseRootAssignmentsDefinition" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Use Case root assignments Definition" Name="UseCaseRootAssignmentsDefinition">
+    <Input>
+      <Data ID="446" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData446"/>
+    </Input>
+    <Output>
+      <Data ID="344" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition344"/>
+      <Data ID="485" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData485"/>
+    </Output>
+    <ServiceReference ID="376" Label="Use Case assignments Definition" ReferenceName="UseCaseAssignmentsDefinition" ReferencePath="xmcp.yang.fman">
+      <Source RefID="375"/>
+      <Target RefID="375"/>
+    </ServiceReference>
+    <Mappings ID="411" Label="Mapping">
+      <Input>
+        <Data ID="467" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData467">
+          <Source RefID="411"/>
+        </Data>
+        <Source RefID="446"/>
+      </Input>
+      <Output>
+        <Data ID="428" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData428">
+          <Source RefID="411"/>
+        </Data>
+        <Target RefID="429"/>
+      </Output>
+      <Mapping>%1%.type="Rpc"</Mapping>
+      <Mapping>%1%.loadYangAssignmentsData.totalYangPath=%0%.rpcName</Mapping>
+      <Mapping>%1%.loadYangAssignmentsData.fqn=%0%.usecaseGroup</Mapping>
+      <Mapping>%1%.loadYangAssignmentsData.usecase=%0%.useCase</Mapping>
+      <Mapping>%1%.loadYangAssignmentsData.workspaceName=%0%.runtimeContext</Mapping>
+      <Mapping>%1%.yangPath=%0%.rpcName</Mapping>
+    </Mappings>
+    <Function ID="375" Label="Use Case assignments Definition">
+      <Source RefID="376"/>
+      <Source RefID="429"/>
+      <Target RefID="376"/>
+      <Target RefID="378"/>
+      <Target RefID="468"/>
+      <Invoke Operation="UseCaseAssignmentsDefinition" ServiceID="376">
+        <Source RefID="429"/>
+      </Invoke>
+      <Receive ServiceID="376">
+        <Target RefID="378"/>
+        <Target RefID="468"/>
+      </Receive>
+    </Function>
+    <Data ID="378" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition378">
+      <Source RefID="375"/>
+    </Data>
+    <Data ID="429" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData429">
+      <Source RefID="411"/>
+    </Data>
+    <Data ID="468" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData468"/>
+    <Assign ID="1">
+      <Source RefID="378"/>
+      <Source RefID="468"/>
+      <Target RefID="344"/>
+      <Target RefID="485"/>
+      <Copy>
+        <Source RefID="378"/>
+        <Target RefID="344"/>
+      </Copy>
+      <Copy>
+        <Source RefID="468">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="485"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

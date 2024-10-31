@@ -15,25 +15,26 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package com.gip.xyna.xprc.xfractwfe.python.jep;
+package com.gip.xyna.xprc.xfractwfe.python;
 
 import java.lang.reflect.Method;
 import java.util.List;
 
-import com.gip.xyna.xprc.xfractwfe.python.JepInterpreter;
+import com.gip.xyna.XynaFactory;
+import com.gip.xyna.xprc.xfractwfe.XynaPythonSnippetManagement;
 
-public class JepThreadManagement {
+public class PythonThreadManagement {
 
   
-  public static JepThread createJepThread(Method method, Object instance, Object[] inputs) {
-    return new JepThread(method, instance, inputs);
+  public static PythonThread createPythonThread(Method method, Object instance, Object[] inputs) {
+    return new PythonThread(method, instance, inputs);
   }
   
-  public static JepKeywordsThread createJepKeywordThread(ClassLoader classloader) {
-    return new JepKeywordsThread(classloader);
+  public static PythonKeywordsThread createPythonKeywordThread(ClassLoader classloader) {
+    return new PythonKeywordsThread(classloader);
   }
   
-  public static class JepThread extends Thread {
+  public static class PythonThread extends Thread {
     
     private final Method method;
     private final Object instance;
@@ -42,7 +43,7 @@ public class JepThreadManagement {
     private Exception exception;
     private boolean success;
     
-    private JepThread(Method method, Object instance, Object[] inputs) {
+    private PythonThread(Method method, Object instance, Object[] inputs) {
       this.method = method;
       this.instance = instance;
       this.inputs = inputs;
@@ -72,7 +73,7 @@ public class JepThreadManagement {
     }
   }
 
-  public static class JepKeywordsThread extends Thread {
+  public static class PythonKeywordsThread extends Thread {
 
     private ClassLoader classloader;
     
@@ -80,17 +81,18 @@ public class JepThreadManagement {
     private Exception exception;
     private boolean success;
 
-    public JepKeywordsThread(ClassLoader classloader) {
+    public PythonKeywordsThread(ClassLoader classloader) {
       this.classloader = classloader;
     }
 
     @SuppressWarnings("unchecked")
     public void run() {
       try {
-        JepInterpreter jepInterpreter = new JepInterpreter(classloader);
-        jepInterpreter.exec("import keyword");
-        result = (List<String>) jepInterpreter.get("keyword.kwlist");
-        jepInterpreter.close();
+        XynaPythonSnippetManagement mgmt = XynaFactory.getInstance().getProcessing().getXynaPythonSnippetManagement();
+        PythonInterpreter interpreter = mgmt.createPythonInterpreter(classloader);
+        interpreter.exec("import keyword");
+        result = (List<String>) interpreter.get("keyword.kwlist");
+        interpreter.close();
         success = true;
       } catch (Exception e) {
         exception = e;

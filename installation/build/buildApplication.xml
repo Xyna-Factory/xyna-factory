@@ -156,7 +156,8 @@
     <target name="check" 
         description="check that all XMOM-files exists" >
 
-        <exec executable="${antUtils.dir}/checkApplicationFiles.sh" inputstring="" outputproperty="errors">
+        <exec executable="python3" inputstring="" outputproperty="errors">
+            <arg value="${antUtils.dir}/checkApplicationFiles.py"/>
             <arg value="application.xml"/>
         </exec>
 

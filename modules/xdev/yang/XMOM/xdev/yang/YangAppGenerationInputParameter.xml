@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="YangAppGenerationInputParameter" TypePath="xdev.yang" Label="Yang App Generation Input Parameter" IsAbstract="false">
+ --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Yang App Generation Input Parameter" TypeName="YangAppGenerationInputParameter" TypePath="xdev.yang" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
@@ -34,7 +34,5 @@
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="File ID" VariableName="fileID" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt">
-  </Data>
+  <Data Label="File ID" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="fileID"/>
 </DataType>
-

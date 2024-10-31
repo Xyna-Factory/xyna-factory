@@ -220,7 +220,7 @@ public class SSHConnectionManagementRepositoryAccess {
   }
 
   /**
-   * Lï¿½scht die Identities vom angegeben type und publickey. Wird keiner der beiden
+   * Löscht die Identities vom angegeben type und publickey. Wird keiner der beiden
    * Parameter angeben wird das ganze Archiv geleert.
    * @param type
    * @param publickey

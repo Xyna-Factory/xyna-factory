@@ -22,6 +22,7 @@ package xdev.yang.impl;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +30,7 @@ import java.util.Set;
 import com.gip.xyna.FileUtils;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
+import com.gip.xyna.utils.misc.Base64;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
 import com.gip.xyna.xfmg.xfctrl.filemgmt.FileManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
@@ -37,14 +39,8 @@ import com.gip.xyna.xprc.exceptions.XPRC_XmlParsingException;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 import xdev.yang.YangAppGenerationInputParameter;
 
-import org.dom4j.DocumentException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.yangcentral.yangkit.model.api.schema.YangSchemaContext;
-import org.yangcentral.yangkit.parser.YangParserException;
-import org.yangcentral.yangkit.parser.YangYinParser;
-import org.yangcentral.yangkit.writter.YinWriter;
-
 import java.util.zip.ZipOutputStream;
 
 import java.io.FileOutputStream;
@@ -64,12 +60,13 @@ public class YangApplicationGeneration {
     files.add(unzipedApp);
 
     // directory with yang modules
-    String yangModulesDir = fileMgmt.retrieve(genParameter.getFileID().getId()).getOriginalFilename();
-    if (yangModulesDir.endsWith(".zip")) {
-      yangModulesDir = decompressArchive(yangModulesDir);
-      files.add(new File(yangModulesDir));
+    String originalFileName = fileMgmt.retrieve(genParameter.getFileID().getId()).getOriginalFilename();
+    String fileAbsPath = fileMgmt.getAbsolutePath(genParameter.getFileID().getId());
+    if (originalFileName.endsWith(".zip")) {
+      fileAbsPath = decompressArchive(fileAbsPath);
+      files.add(new File(fileAbsPath));
     }
-    Document yinDocument = parseYangModules(yangModulesDir);
+    Document yinDocument = parseYangModules(fileAbsPath);
 
     createDatatype(genParameter.getDataTypeFQN(), "YangModuleCollection", yinDocument, unzipedApp.getAbsolutePath());
     createApplicationXML(genParameter, unzipedApp.getAbsolutePath());
@@ -90,14 +87,14 @@ public class YangApplicationGeneration {
     File unzipedApp = new File("/tmp/" + appName);
     files.add(unzipedApp);
 
-    String capabilitiesFile = fileMgmt.retrieve(genParameter.getFileID().getId()).getOriginalFilename();
+    String capabilitiesFile = fileMgmt.getAbsolutePath(genParameter.getFileID().getId());
     Document capabilities;
     try {
       capabilities = XMLUtils.parse(capabilitiesFile);
+      capabilities = XMLUtils.parseString("<Yang type=\""+ Constants.VAL_DEVICE + "\">"+XMLUtils.getXMLString(capabilities.getDocumentElement(), false)+"</Yang>");
     } catch (Ex_FileAccessException | XPRC_XmlParsingException e) {
       throw new RuntimeException(e);
     }
-
     createDatatype(genParameter.getDataTypeFQN(), "YangDevice", capabilities, unzipedApp.getAbsolutePath());
     createApplicationXML(genParameter, unzipedApp.getAbsolutePath());
 
@@ -212,22 +209,23 @@ public class YangApplicationGeneration {
 
 
   private static Document parseYangModules(String yangModulesDir) {
+    List<File> files = new ArrayList<File>();
+    Document document = null;
+    FileUtils.findFilesRecursively(new File(yangModulesDir), files, (dir, name) -> name.endsWith(".yang"));
     try {
-      Document yinDocument = XMLUtils.parseString("<Yang type=\"ModuleCollection\"></Yang>");
-      Element rootElement = yinDocument.getDocumentElement();
-      YangSchemaContext schemaContext = YangYinParser.parse(yangModulesDir);
-      for (var entry : schemaContext.getParseResult().entrySet()) {
-        Document doc = XMLUtils.parseString(YinWriter.serialize(entry.getValue()).asXML());
-        rootElement.appendChild(yinDocument.importNode(doc.getDocumentElement(), true));
+      document = XMLUtils.parseString("<Yang type=\"ModuleCollection\"></Yang>");
+      Element rootElement = document.getDocumentElement();
+      for (File f : files) {
+        String encoded = Base64.encode(Files.readAllBytes(f.toPath()));
+        Element node = document.createElement("module");
+        node.appendChild(document.createTextNode(encoded));
+        rootElement.appendChild(node);
       }
-
-      return yinDocument;
-
-    } catch (IOException | YangParserException | DocumentException | XPRC_XmlParsingException e) {
+    } catch (Exception e) {
       throw new RuntimeException("Could not parse Yang modules", e);
     }
+    return document;
   }
-
 
   public static String decompressArchive(String zipFile) {
     String unzipDir = "/tmp/" + new File(zipFile).getName().replace(".zip", "_unzipped");

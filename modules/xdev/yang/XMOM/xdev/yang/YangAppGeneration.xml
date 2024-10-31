@@ -22,6 +22,11 @@
   <Libraries>YangAppGenerationImpl.jar</Libraries>
   <SharedLibraries>yangkit</SharedLibraries>
   <Service Label="Yang App Generation" TypeName="YangAppGeneration">
+    <Meta>
+      <AdditionalDependencies>
+        <Datatype>xmcp.forms.plugin.PluginManagement</Datatype>
+      </AdditionalDependencies>
+    </Meta>
     <Operation IsStatic="true" Label="Import Module Collection Application" Name="importModuleCollectionApplication">
       <Input>
         <Data ID="1" Label="Yang App Generation Input Parameter" ReferenceName="YangAppGenerationInputParameter" ReferencePath="xdev.yang" VariableName="yangAppGenerationInputParameter1"/>
@@ -38,6 +43,48 @@
       <Output/>
       <SourceCode>
         <CodeSnippet Type="Java">YangAppGenerationImpl.createYangDeviceApp(yangAppGenerationInputParameter2);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Load Assignments" Name="loadAssignments">
+      <Input>
+        <Data ID="7" Label="Load Yang Assignments Data" ReferenceName="LoadYangAssignmentsData" ReferencePath="xmcp.yang" VariableName="loadYangAssignmentsData7"/>
+      </Input>
+      <Output>
+        <Data ID="6" IsList="true" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData6"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadAssignments(loadYangAssignmentsData7);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Load Usecases" Name="loadUsecases">
+      <Input/>
+      <Output>
+        <Data ID="1" IsList="true" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadUsecases();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Add Usecase" Name="addUsecase" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="2" Label="UsecaseGroupFqn" ReferenceName="Text" ReferencePath="base" VariableName="text2"/>
+        <Data ID="3" Label="UsecaseName" ReferenceName="Text" ReferencePath="base" VariableName="text3"/>
+        <Data ID="5" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace5"/>
+        <Data ID="8" Label="RPC" ReferenceName="Text" ReferencePath="base" VariableName="text8"/>
+        <Data ID="9" Label="Device Fqn" ReferenceName="Text" ReferencePath="base" VariableName="text9"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.addUsecase(correlatedXynaOrder, text2, text3, workspace5, text8, text9);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Save Assignment" Name="saveAssignment" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="10" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData10"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.saveAssignment(correlatedXynaOrder, useCaseAssignmentTableData10);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
