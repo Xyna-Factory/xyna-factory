@@ -36,7 +36,7 @@ import xact.http.enums.httpmethods.HTTPMethod;
 import xact.http.enums.httpmethods.PUT;
 import xdev.yang.impl.Constants;
 import xdev.yang.impl.GuiHttpInteraction;
-import xmcp.processmodeller.datatypes.response.GetDataTypeResponse;
+import xmcp.processmodeller.datatypes.response.GetServiceGroupResponse;
 import xmcp.yang.UseCaseAssignmentTableData;
 
 public class SaveUsecaseAssignmentAction {
@@ -79,16 +79,15 @@ public class SaveUsecaseAssignmentAction {
     String path = fqn.substring(0, fqn.lastIndexOf("."));
     String label = fqn.substring(fqn.lastIndexOf(".") + 1);
     String workspaceNameEscaped = UseCaseAssignmentUtils.urlEncode(workspaceName);
-    Integer id = meta.getFirst();
-    String commonPath = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + path + "/" + label;
-    
+    String commonPath = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + path + "/" + label;
     //open datatype
     String endpoint = commonPath;
     URLPath url = new URLPath(endpoint, null, null);
     HTTPMethod method = new GET();
-    GetDataTypeResponse response = (GetDataTypeResponse)UseCaseAssignmentUtils.executeRunnable(runnable, url, method, null, "could not open datatype");
-    List<String> inputVarNames = GuiHttpInteraction.loadVarNames(response, meta.getFirst());
-    
+    GetServiceGroupResponse response = (GetServiceGroupResponse)UseCaseAssignmentUtils.executeRunnable(runnable, url, method, null, "could not open datatype");
+    Integer id = Integer.valueOf(GuiHttpInteraction.loadServiceId(response, usecase));
+    List<String> inputVarNames = GuiHttpInteraction.loadVarNames(response, id);
+
     //Update implementation
     String newImpl = createImpl(meta.getSecond(), inputVarNames);
     newImpl = newImpl.replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"");
@@ -96,9 +95,9 @@ public class SaveUsecaseAssignmentAction {
     endpoint = commonPath + "/objects/memberMethod" + id + "/change";
     url = new URLPath(endpoint, null, null);
     method = new PUT();
-    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, newImpl, "could not open datatype");
-    
-    UseCaseAssignmentUtils.saveDatatype(path, path, label, workspaceName, order);
+    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, newImpl, "could not update implementation");
+
+    UseCaseAssignmentUtils.saveDatatype(path, path, label, workspaceName, "servicegroups", order);
   }
 
   private String createImpl(Document meta, List<String> inputVarNames) {
@@ -194,7 +193,7 @@ public class SaveUsecaseAssignmentAction {
     UseCaseAssignmentUtils.executeRunnable(runnable, url, method, null, "could not open datatype");
     
     //remove old meta tag
-    endpoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + path + "/" + label + "/services/" + usecase + "/meta";
+    endpoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + path + "/" + label + "/services/" + usecase + "/meta";
     List<URLPathQuery> query = new ArrayList<>();
     query.add(new URLPathQuery.Builder().attribute("metaTagId").value("metaTag"+oldMetaTagIndex).instance());
     url = new URLPath(endpoint, query, null);
@@ -208,6 +207,6 @@ public class SaveUsecaseAssignmentAction {
     String payload = "{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.request.MetaTagRequest\"},\"metaTag\":{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.MetaTag\"},\"deletable\":true,\"tag\":\""+ xml +"\"}}";
     UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "could not add new meta tag");
     
-    UseCaseAssignmentUtils.saveDatatype(path, path, label, workspaceName, order);
+    UseCaseAssignmentUtils.saveDatatype(path, path, label, workspaceName, "servicegroups", order);
   }
 }

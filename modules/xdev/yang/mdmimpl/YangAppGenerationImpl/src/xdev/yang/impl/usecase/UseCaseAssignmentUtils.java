@@ -274,17 +274,17 @@ public class UseCaseAssignmentUtils {
     }
   }
   
-  public static void saveDatatype(String path, String targetPath, String label, String workspace, XynaOrderServerExtension order) {
+  public static void saveDatatype(String path, String targetPath, String label, String workspace, String viewtype, XynaOrderServerExtension order) {
     RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
     String workspaceNameEscaped = urlEncode(workspace);
-    String baseUrl = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + path + "/" + label;
+    String baseUrl = "/runtimeContext/" + workspaceNameEscaped + "/xmom/" + viewtype + "/" + path + "/" + label;
     URLPath url = new URLPath(baseUrl + "/save", null, null);
     HTTPMethod method = new POST();
     String payload = "{\"force\":false,\"revision\":2,\"path\":\"" + targetPath + "\",\"label\":\"" + label + "\"}";
     executeRunnable(runnable, url, method, payload, "Could not save datatype.");
     
     //deploy
-    baseUrl = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + targetPath + "/" + label;
+    baseUrl = "/runtimeContext/" + workspaceNameEscaped + "/xmom/" + viewtype + "/" + targetPath + "/" + label;
     url = new URLPath(baseUrl + "/deploy", null, null);
     payload = "{\"revision\":3}";
     executeRunnable(runnable, url, method, payload, "Could not deploy datatype.");

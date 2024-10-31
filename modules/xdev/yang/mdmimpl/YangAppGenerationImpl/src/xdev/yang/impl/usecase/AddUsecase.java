@@ -35,11 +35,14 @@ import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 
 import xact.http.URLPath;
+import xact.http.enums.httpmethods.GET;
 import xact.http.enums.httpmethods.HTTPMethod;
 import xact.http.enums.httpmethods.POST;
 import xact.http.enums.httpmethods.PUT;
 import xdev.yang.impl.Constants;
+import xdev.yang.impl.GuiHttpInteraction;
 import xmcp.processmodeller.datatypes.response.GetDataTypeResponse;
+import xmcp.processmodeller.datatypes.response.UpdateXMOMItemResponse;
 import xprc.xpce.Workspace;
 
 
@@ -67,15 +70,18 @@ public class AddUsecase {
       try {
         if (!doesDomExist(dom)) {
           currentPath = createDatatype(label, workspaceName, order);
+          addParentToDatatype(currentPath, label, workspaceName, order);
+          UseCaseAssignmentUtils.saveDatatype(currentPath, path, label, workspaceName, "datatypes", order);
+          currentPath = path;
         }
 
         if (logger.isDebugEnabled()) {
           logger.debug(order.getId() + ": Adding service to datatype. Current datatype path: " + currentPath);
         }
-        addParentToDatatype(currentPath, label, workspaceName, order);
+
         rpcNs = rpcNs == null || rpcNs.isBlank() ? loadRpcNs(rpc, deviceFqn, workspaceName) : rpcNs;
         addServiceToDatatype(currentPath, label, usecaseName, workspaceName, order, rpc, deviceFqn, rpcNs);
-        UseCaseAssignmentUtils.saveDatatype(currentPath, path, label, workspaceName, order);
+        UseCaseAssignmentUtils.saveDatatype(currentPath, path, label, workspaceName, "servicegroups", order);
       } finally {
         if (logger.isDebugEnabled()) {
           logger.debug(order.getId() + ": Closing datatype.");
@@ -155,18 +161,25 @@ public class AddUsecase {
   }
 
   private void addServiceToDatatype(String path, String label, String service, String workspace, XynaOrderServerExtension order, String rpc, String deviceFqn, String rpcNs) {
-    // create service
     RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
     String workspaceNameEscaped = UseCaseAssignmentUtils.urlEncode(workspace);
     String fqnUrl = path + "/" + label;
-    String endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + fqnUrl + "/objects/memberMethodsArea/insert";
-    URLPath url = new URLPath(endPoint, null, null);
-    HTTPMethod method = new POST();
-    String payload = "{\"index\":-1,\"content\":{\"type\":\"memberService\",\"label\":\"" + service + "\"}}";
-    //TODO: read the number of the created service from the response
-    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "Could not add service to datatype.");
 
-    String serviceNumber = "0";
+    //open datatype as service group
+    String endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl;
+    URLPath url = new URLPath(endPoint, null, null);
+    HTTPMethod method = new GET();
+    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, null, "Could not open service group.");
+
+    // create service
+    endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl + "/objects/memberMethodsArea/insert";
+    url = new URLPath(endPoint, null, null);
+    method = new POST();
+    String payload = "{\"index\":-1,\"content\":{\"type\":\"memberService\",\"label\":\"" + service + "\"}}";
+    UpdateXMOMItemResponse json;
+    json = (UpdateXMOMItemResponse)UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "Could not add service to datatype.");
+
+    String serviceNumber = String.valueOf(GuiHttpInteraction.loadServiceId(json, service));
 
     // add xmcp.yang.MessageId as input variable
     endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl + "/objects/methodVarArea" + serviceNumber + "_input/insert";
@@ -180,7 +193,7 @@ public class AddUsecase {
     payload = "{\"index\":-1,\"content\":{\"type\":\"variable\",\"label\":\"Document\",\"fqn\":\"xact.templates.Document\",\"isList\":false}}";
     UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "Could not add output variable to service.");
 
-    // set impelmentation to "return null;"
+    // set implementation to "return null;"
     endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl + "/objects/memberMethod" + serviceNumber + "/change";
     url = new URLPath(endPoint, null, null);
     payload = "{\"implementation\":\"return null;\"}";
@@ -188,13 +201,14 @@ public class AddUsecase {
     UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "Could not set implementation of service.");
 
     // set meta tag
-    String serviceName = service; //TODO: read correct name from datatype
-    endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + fqnUrl + "/services/" + serviceName + "/meta";
+    endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl + "/services/" + service + "/meta";
     url = new URLPath(endPoint, null, null);
     String mappings = "<" + Constants.TAG_MAPPINGS + "/>";
     String device = "<" + Constants.TAG_DEVICE_FQN + ">" + deviceFqn + "</" + Constants.TAG_DEVICE_FQN + ">";
     String rpcNsTag = "<" + Constants.TAG_RPC_NS + ">" + rpcNs + "</" + Constants.TAG_RPC_NS + ">";
-    String tag = "<Yang type=\\\"Usecase\\\"><Rpc>"+ rpc + "</Rpc>"+ device + rpcNsTag + mappings +"</Yang>";
+    String rpcTag = "<" + Constants.TAG_RPC + ">" + rpc + "</" + Constants.TAG_RPC + ">";
+    String YangStartTag = "<"+ Constants.TAG_YANG + " " + Constants.ATT_YANG_TYPE + "=\\\"" + Constants.VAL_USECASE + "\\\">";
+    String tag = YangStartTag + rpcTag + device + rpcNsTag + mappings +"</" + Constants.TAG_YANG + ">";
     payload = "{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.request.MetaTagRequest\"},\"metaTag\":{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.MetaTag\"},\"deletable\":true,\"tag\":\"" + tag + "\"}}";
     UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "Could not add meta tag to service.");
   }
