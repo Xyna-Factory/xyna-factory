@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -64,6 +65,7 @@ import xdev.yang.impl.Constants;
 import xdev.yang.impl.XmomDbInteraction;
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.UseCaseAssignmentTableData;
+import xmcp.yang.YangDevice;
 import xmcp.yang.YangModuleCollection;
 
 public class UseCaseAssignmentUtils {
@@ -87,18 +89,20 @@ public class UseCaseAssignmentUtils {
     return result;
   }
   
-  public static List<UseCaseAssignmentTableData> loadPossibleAssignments(List<Module> modules, String rpcName, LoadYangAssignmentsData data) {
-    Rpc rpc = findRpc(modules, rpcName);
+  public static List<UseCaseAssignmentTableData> loadPossibleAssignments(List<Module> modules, String rpcName, String rpcNs, LoadYangAssignmentsData data) {
+    Rpc rpc = findRpc(modules, rpcName, rpcNs);
     Input input = rpc.getInput();
-    List<YangStatement> elements = traverseYang(modules, data.getTotalYangPath(), input);
+    List<YangStatement> elements = traverseYang(modules, data.getTotalYangPath(), data.getTotalNamespaces(), input);
     return loadAssignments(elements, data);
   }
 
-  private static List<YangStatement> traverseYang(List<Module> modules, String path, YangStatement element) {
+  private static List<YangStatement> traverseYang(List<Module> modules, String path, String namespaces, YangStatement element) {
     String[] parts = path.split("\\/");
-    for(int i=1; i<parts.length; i++) { //ignore initial "/root"
+    String[] namespaceParts = namespaces.split(Constants.NS_SEPARATOR);
+    for(int i=1; i<parts.length; i++) { //ignore initial "/<rpcName>"
       String part = parts[i];
-      element = traverseYangOneLayer(modules, part, element);
+      String namespace = namespaceParts[i];
+      element = traverseYangOneLayer(modules, part, namespace, element);
     }
     return getCandidates(element);
   }
@@ -115,11 +119,13 @@ public class UseCaseAssignmentUtils {
     return result;
   }
   
-  private static YangStatement traverseYangOneLayer(List<Module> modules, String pathStep, YangStatement statement) {
+  private static YangStatement traverseYangOneLayer(List<Module> modules, String pathStep, String namespace, YangStatement statement) {
     List<YangElement> candidates = statement.getSubElements();
     for(YangElement candidate : candidates) {
       if(isSupportedElement(candidate)) {
-        if(((SchemaNode)candidate).getIdentifier().getLocalName().equals(pathStep)) {
+        SchemaNode node = (SchemaNode) candidate;
+        if (node.getIdentifier().getLocalName().equals(pathStep)
+            && Objects.equals(node.getContext().getNamespace().getUri().toString(), namespace)) {
           return (YangStatement) candidate;
         }
       }
@@ -134,9 +140,11 @@ public class UseCaseAssignmentUtils {
     for (YangStatement element : subElements) {
       if (isSupportedElement(element)) {
         String localName = ((SchemaNode) element).getIdentifier().getLocalName();
+        String namespace = element.getContext().getNamespace().getUri().toString();
         UseCaseAssignmentTableData.Builder builder = new UseCaseAssignmentTableData.Builder();
         LoadYangAssignmentsData updatedData = data.clone();
         updatedData.unversionedSetTotalYangPath(updatedData.getTotalYangPath() + "/" + localName);
+        updatedData.unversionedSetTotalNamespaces(updatedData.getTotalNamespaces() + Constants.NS_SEPARATOR + namespace);
         builder.loadYangAssignmentsData(updatedData);
         builder.yangPath(localName);
         builder.type(getYangType(element));
@@ -165,14 +173,25 @@ public class UseCaseAssignmentUtils {
     return "Unknown: " + element.getClass().getCanonicalName();
   }
 
-  private static Rpc findRpc(List<Module> modules, String rpcName) {
-    for(Module module : modules) {
+  private static Rpc findRpc(List<Module> modules, String rpcName, String rpcNs) {
+    for (Module module : modules) {
       Rpc result = module.getRpc(rpcName);
-      if(result != null) {
+      if (result != null && Objects.equals(result.getContext().getNamespace().getUri().toString(), rpcNs)) {
         return result;
       }
     }
-    throw new RuntimeException("rpc " + rpcName + " not found.");
+    throw new RuntimeException("rpc " + rpcName + "in namespace " + rpcNs + "not found.");
+  }
+
+  public static List<Rpc> findRpcs(List<Module> modules, String rpcName) {
+    List<Rpc> result = new ArrayList<>();
+    for (Module module : modules) {
+      Rpc rpc = module.getRpc(rpcName);
+      if (result != null) {
+        result.add(rpc);
+      }
+    }
+    return result;
   }
 
   public static List<Module> loadModules(String workspaceName) {
@@ -180,18 +199,13 @@ public class UseCaseAssignmentUtils {
     XynaFactoryControl xynaFactoryCtrl = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl();
     XmomDbInteraction interaction = new XmomDbInteraction();
     RevisionManagement revMgmt = xynaFactoryCtrl.getRevisionManagement();
-    RuntimeContextDependencyManagement rtcDepMgmt = xynaFactoryCtrl.getRuntimeContextDependencyManagement();
     Long revision;
     try {
       revision = revMgmt.getRevision(null, null, workspaceName);
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       throw new RuntimeException(e);
     }
-    Set<Long> revisions = new HashSet<Long>();
-    revisions.add(revision);
-    rtcDepMgmt.getDependenciesRecursivly(revision, revisions);
-    List<Long> revisionsList = new ArrayList<>(revisions);
-    List<XMOMDatabaseSearchResultEntry> xmomDbResult = interaction.searchYangDTs(YangModuleCollection.class.getCanonicalName(), revisionsList);
+    List<XMOMDatabaseSearchResultEntry> xmomDbResult = interaction.searchYangDTs(YangModuleCollection.class.getCanonicalName(), List.of(revision));
     for(XMOMDatabaseSearchResultEntry entry : xmomDbResult) {
       Long entryRevision;
       try {
@@ -260,16 +274,17 @@ public class UseCaseAssignmentUtils {
     }
   }
   
-  public static void saveDatatype(String path, String targetPath, String label, String workspace, XynaOrderServerExtension order) {
+  public static void saveDatatype(String path, String targetPath, String label, String workspace, String viewtype, XynaOrderServerExtension order) {
     RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
     String workspaceNameEscaped = urlEncode(workspace);
-    String baseUrl = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + path + "/" + label;
+    String baseUrl = "/runtimeContext/" + workspaceNameEscaped + "/xmom/" + viewtype + "/" + path + "/" + label;
     URLPath url = new URLPath(baseUrl + "/save", null, null);
     HTTPMethod method = new POST();
     String payload = "{\"force\":false,\"revision\":2,\"path\":\"" + targetPath + "\",\"label\":\"" + label + "\"}";
     executeRunnable(runnable, url, method, payload, "Could not save datatype.");
     
     //deploy
+    baseUrl = "/runtimeContext/" + workspaceNameEscaped + "/xmom/" + viewtype + "/" + targetPath + "/" + label;
     url = new URLPath(baseUrl + "/deploy", null, null);
     payload = "{\"revision\":3}";
     executeRunnable(runnable, url, method, payload, "Could not deploy datatype.");
@@ -319,5 +334,98 @@ public class UseCaseAssignmentUtils {
     }
     Node yangTypeNode = xml.getDocumentElement().getAttributes().getNamedItem(Constants.ATT_YANG_TYPE);
     return yangTypeNode != null && expectedYangType.equals(yangTypeNode.getNodeValue());
+  }
+  
+  public static String readRpcName(Document meta) {
+    Element rpcElement = XMLUtils.getChildElementByName(meta.getDocumentElement(), Constants.TAG_RPC);
+    if(rpcElement == null) {
+      return null;
+    }
+    return rpcElement.getTextContent();
+  }
+  
+  public static String readRpcNamespace(Document meta) {
+    Element rpcElement = XMLUtils.getChildElementByName(meta.getDocumentElement(), Constants.TAG_RPC_NS);
+    if(rpcElement == null) {
+      return null;
+    }
+    return rpcElement.getTextContent();
+  }
+  
+  
+  public static String readDeviceFqn(Document usecaseMeta) {
+    Element deviceFqnEle = XMLUtils.getChildElementByName(usecaseMeta.getDocumentElement(), Constants.TAG_DEVICE_FQN);
+    return deviceFqnEle.getTextContent();
+  }
+
+
+  public static List<Module> filterModules(List<Module> modules, List<String> capabilities) {
+    List<Module> result = new ArrayList<>(modules);
+    result.removeIf(x -> !isModuleInCapabilities(capabilities, x));
+    return result;
+  }
+  
+  private static boolean isModuleInCapabilities(List<String> capabilities, Module module) {
+    return capabilities.contains(module.getMainModule().getNamespace().getUri().toString());
+  }
+
+
+  public static List<String> loadCapabilities(String deviceFqn, String workspaceName) {
+    DOM deviceDatatype = loadDeviceDatatype(deviceFqn, workspaceName);
+    List<String> unknownMetaTags = deviceDatatype.getUnknownMetaTags();
+    Document deviceMeta = loadDeviceMeta(unknownMetaTags);
+    Element  ele = XMLUtils.getChildElementByName(deviceMeta.getDocumentElement(), Constants.TAG_HELLO);
+    ele = XMLUtils.getChildElementByName(ele, Constants.TAG_CAPABILITIES);
+    List<Element> capabilities = XMLUtils.getChildElementsByName(ele, Constants.TAG_CAPABILITY);
+    List<String> result = new ArrayList<String>();
+    for(Element capability : capabilities) {
+      result.add(capability.getTextContent());
+    }
+    return result;
+  }
+  
+  private static Document loadDeviceMeta(List<String> unknownMetaTags) {
+    try {
+      for (String unknownMetaTag : unknownMetaTags) {
+        Document d = XMLUtils.parseString(unknownMetaTag);
+        boolean isYang = d.getDocumentElement().getTagName().equals(Constants.TAG_YANG);
+        boolean isDevice = Constants.VAL_DEVICE.equals(d.getDocumentElement().getAttribute(Constants.ATT_YANG_TYPE));
+        if (isYang && isDevice) {
+          return d;
+        }
+      }
+      throw new RuntimeException("No Device Meta Tag found");
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+  
+  private static DOM loadDeviceDatatype(String deviceFqn, String workspace) {
+    XynaFactoryControl factoryControl = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl();
+    XmomDbInteraction interaction = new XmomDbInteraction();
+    RevisionManagement rm = factoryControl.getRevisionManagement();
+    Long revision;
+    try {
+      revision = rm.getRevision(null, null, workspace);
+    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+      throw new RuntimeException(e);
+    }
+    RuntimeContextDependencyManagement rcdm = factoryControl.getRuntimeContextDependencyManagement();
+    List<Long> revisions = new ArrayList<>(rcdm.getDependencies(revision));
+    List<XMOMDatabaseSearchResultEntry> candidates = interaction.searchYangDTs(YangDevice.class.getCanonicalName(), revisions);
+    for(XMOMDatabaseSearchResultEntry candidate : candidates) {
+      if(candidate.getFqName().equals(deviceFqn)) {
+        Long deviceRevision;
+        try {
+          deviceRevision = rm.getRevision(candidate.getRuntimeContext());
+          DOM result = DOM.getOrCreateInstance(deviceFqn, new GenerationBaseCache(), deviceRevision);
+          result.parseGeneration(true, false);
+          return result;
+        } catch (Exception e) {
+          throw new RuntimeException(e);
+        }
+      }
+    }
+    throw new RuntimeException("Could not find device datatype " + deviceFqn + " in " + workspace + " or dependencies");
   }
 }

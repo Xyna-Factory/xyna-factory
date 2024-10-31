@@ -27,6 +27,7 @@ public class Constants {
   
   public static final String TAG_YANG = "Yang";
   public static final String TAG_RPC = "Rpc";
+  public static final String TAG_RPC_NS = "RpcNamespace";
   public static final String TAG_DEVICE_FQN = "DeviceFqn";
   public static final String TAG_MAPPINGS = "Mappings";
   public static final String TAG_MAPPING = "Mapping";
@@ -42,4 +43,8 @@ public class Constants {
   public static final String TYPE_CONTAINER = "container";
   public static final String TYPE_LEAF = "leaf";
   public static final String TYPE_GROUPING = "grouping";
+  
+  public static final String NS_SEPARATOR = "§";
+  
+  public static final String NETCONF_NS = "urn:ietf:params:xml:ns:netconf:base:1.0";
 }

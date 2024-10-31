@@ -39,4 +39,9 @@
       <Type>String</Type>
     </Meta>
   </Data>
+  <Data Label="Total Namespaces" VariableName="totalNamespaces">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
 </DataType>
