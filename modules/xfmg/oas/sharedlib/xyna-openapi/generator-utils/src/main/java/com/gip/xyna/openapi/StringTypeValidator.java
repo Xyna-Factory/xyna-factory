@@ -45,7 +45,7 @@ public class StringTypeValidator extends PrimitiveTypeValidator<String> {
   private static final String MAC_ADDRESS = "macaddress"; // same as mac
   private static final String IPV4 = "ipv4";
   private static final String IPV4_PREFIX = "ipv4prefix"; // address with prefix e.g. 192.168.1.0/24
-  private static final String IPV4_SUBNET = "ipv4subnet"; // e.g. 255.255.255.0
+  private static final String IPV4_NETMASK = "ipv4netmask"; // e.g. 255.255.255.0
   private static final String IPV6 = "ipv6";
   private static final String IPV6_PREFIX = "ipv6prefix"; // address with prefix e.g. 2001:0db8:85a3:08d3:1319:8a2e:0370:7347/64
 
@@ -64,7 +64,7 @@ public class StringTypeValidator extends PrimitiveTypeValidator<String> {
     result.put(MAC_ADDRESS, createFormatValidatorFunction(MAC_ADDRESS_REGEX));
     result.put(IPV4, createFormatValidatorFunction(IPV4_REGEX));
     result.put(IPV4_PREFIX, createFormatValidatorFunction(IPV4_PREFIX_REGEX));
-    result.put(IPV4_SUBNET, toCheck -> validateFormat(toCheck, IPV4_SUBNET));
+    result.put(IPV4_NETMASK, toCheck -> validateFormat(toCheck, IPV4_NETMASK));
     result.put(IPV6, toCheck -> validateFormat(toCheck, IPV6));
     result.put(IPV6_PREFIX, toCheck -> validateFormat(toCheck, IPV6_PREFIX));
 
@@ -169,16 +169,16 @@ public class StringTypeValidator extends PrimitiveTypeValidator<String> {
   private static boolean validateFormat(String toCheck, String format) {
     try {
       switch (format) {
-        case "ipv4subnet" :
+        case IPV4_NETMASK :
           IPv4NetmaskData ipv4mask = new IPv4NetmaskData(toCheck);
           return true;
-        case "ipv6prefix" :
+        case IPV6_PREFIX :
           String[] ipv6Prefix = toCheck.split("/");
           if (ipv6Prefix.length != 2)
             return false;
           IPv6NetmaskData ipv6mask = new IPv6NetmaskData(ipv6Prefix[1]);
           toCheck = ipv6Prefix[0];
-        case "ipv6" :
+        case IPV6 :
           IPv6Address ipv6Address = new IPv6Address(toCheck);
           return true;
         default :
