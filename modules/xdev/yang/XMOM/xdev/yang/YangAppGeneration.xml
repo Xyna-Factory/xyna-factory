@@ -72,10 +72,11 @@
         <Data ID="5" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace5"/>
         <Data ID="8" Label="RPC" ReferenceName="Text" ReferencePath="base" VariableName="text8"/>
         <Data ID="9" Label="Device Fqn" ReferenceName="Text" ReferencePath="base" VariableName="text9"/>
+        <Data ID="11" Label="Rpc Namespace" ReferenceName="Text" ReferencePath="base" VariableName="text11"/>
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.addUsecase(correlatedXynaOrder, text2, text3, workspace5, text8, text9);</CodeSnippet>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.addUsecase(correlatedXynaOrder, text2, text3, workspace5, text8, text9, text11);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Save Assignment" Name="saveAssignment" RequiresXynaOrder="true">

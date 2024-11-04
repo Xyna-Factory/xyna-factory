@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="Http" comment="" factoryVersion="" versionName="1.2.10" xmlVersion="1.1">
+<Application applicationName="Http" comment="" factoryVersion="" versionName="1.3.0" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">HTTP: Service und Trigger</Description>
     <Description Lang="EN">HTTP: service and trigger</Description>

@@ -19,15 +19,17 @@ package xdev.yang.impl.usecase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 import xdev.yang.impl.Constants;
 
-public class UseCaseMapping {
+public class UseCaseMapping implements Comparable<UseCaseMapping> {
 
   private String mappingYangPath;
   private String namespace;
@@ -80,7 +82,49 @@ public class UseCaseMapping {
     Element mappingsEle = XMLUtils.getChildElementByName(meta.getDocumentElement(), Constants.TAG_MAPPINGS);
     mappingsEle.appendChild(newMappingEle);
   }
+
+
+  public List<Pair<String, String>> createPathList() {
+    return createPathList(mappingYangPath, namespace);
+  }
   
+  
+  public static List<Pair<String, String>> createPathList(String totalYangPath, String totalNamespaces) {
+    List<Pair<String, String>> result = new ArrayList<>();
+    String[] yangPathElements = totalYangPath.split("\\/");
+    String[] namespaceElements = totalNamespaces.split(Constants.NS_SEPARATOR);
+    if (yangPathElements.length != namespaceElements.length) {
+      throw new RuntimeException("yangPathElement count does not match namespace: " + yangPathElements.length + ": "
+          + namespaceElements.length);
+    }
+
+    for (int i = 0; i < yangPathElements.length; i++) {
+      Pair<String, String> element = new Pair<>(yangPathElements[i], namespaceElements[i]);
+      result.add(element);
+    }
+    
+    return result;
+  }
+  
+
+  public boolean match(List<Pair<String, String>> pathList) {
+    List<Pair<String, String>> myPathList = createPathList();
+    if (myPathList.size() != pathList.size()) {
+      return false;
+    }
+
+    for (int i = 0; i < myPathList.size(); i++) {
+      if (!Objects.equals(myPathList.get(i).getFirst(), pathList.get(i).getFirst())
+          || !Objects.equals(myPathList.get(i).getSecond(), pathList.get(i).getSecond())) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  
+
   public String getMappingYangPath() {
     return mappingYangPath;
   }
@@ -105,9 +149,31 @@ public class UseCaseMapping {
     return value;
   }
 
-  
+
   public void setValue(String value) {
     this.value = value;
   }
+
+
+  @Override
+  public int compareTo(UseCaseMapping o) {
+    List<Pair<String, String>> pathList = createPathList();
+    List<Pair<String, String>> otherPathList = o.createPathList();
+    int minLength = Math.min(pathList.size(), otherPathList.size());
+    for (int i = 0; i < minLength; i++) {
+      int pathComparision = pathList.get(i).getFirst().compareTo(otherPathList.get(i).getFirst());
+      if (pathComparision != 0) {
+        return pathComparision;
+      }
+      int namespaceComparision = pathList.get(i).getSecond().compareTo(otherPathList.get(i).getSecond());
+      if (namespaceComparision != 0) {
+        return namespaceComparision;
+      }
+    }
+
+    //all entries up to the minimum length are the same
+    return pathList.size() - otherPathList.size();
+  }
+
 
 }
