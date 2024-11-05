@@ -34,6 +34,11 @@
       <Type>String</Type>
     </Meta>
   </Data>
+  <Data Label="Rpc Namespace" VariableName="rpcNamespace">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
   <Data Label="Runtime Context" VariableName="runtimeContext">
     <Meta>
       <Type>String</Type>

@@ -25,6 +25,7 @@
       <Data ID="636" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace636"/>
       <Data ID="812" Label="RPC - Text" ReferenceName="Text" ReferencePath="base" VariableName="text812"/>
       <Data ID="1127" Label="Device - Text" ReferenceName="Text" ReferencePath="base" VariableName="text1127"/>
+      <Data ID="1499" Label="Rpc Namespace - Text" ReferenceName="Text" ReferencePath="base" VariableName="text1499"/>
     </Output>
     <ServiceReference ID="752" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="751"/>
@@ -77,6 +78,12 @@
         <Target RefID="1198"/>
       </Output>
       <Output>
+        <Data ID="1256" Label="Rpc Namespace - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition1256">
+          <Source RefID="102"/>
+        </Data>
+        <Target RefID="1257"/>
+      </Output>
+      <Output>
         <Data ID="457" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition457">
           <Source RefID="102"/>
         </Data>
@@ -92,11 +99,13 @@
       <Mapping>%4%.dataPath="%3%.text"</Mapping>
       <Mapping>%5%.label="Device Fqn"</Mapping>
       <Mapping>%5%.dataPath="%4%.text"</Mapping>
-      <Mapping>%6%.dataPath="%0%, %1%, %2%, %3%, %4%"</Mapping>
-      <Mapping>%6%.label="Create Usecase"</Mapping>
-      <Mapping>%6%.serviceRTC=%0%</Mapping>
-      <Mapping>%6%.serviceFQN="xmcp.yang.fman.AddUseCase"</Mapping>
-      <Mapping>%6%.synchronously="true"</Mapping>
+      <Mapping>%6%.label="(Optional) RPC Namespace"</Mapping>
+      <Mapping>%6%.dataPath="%5%.text"</Mapping>
+      <Mapping>%7%.dataPath="%0%, %1%, %2%, %3%, %4%, %5%"</Mapping>
+      <Mapping>%7%.label="Create Usecase"</Mapping>
+      <Mapping>%7%.serviceRTC=%0%</Mapping>
+      <Mapping>%7%.serviceFQN="xmcp.yang.fman.AddUseCase"</Mapping>
+      <Mapping>%7%.synchronously="true"</Mapping>
     </Mappings>
     <Mappings ID="27" Label="Mapping">
       <Input>
@@ -150,6 +159,16 @@
         </Source>
       </Input>
       <Input>
+        <Data ID="1418" Label="Rpc Namespace - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition1418">
+          <Source RefID="27"/>
+        </Data>
+        <Source RefID="1257">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
         <Data ID="448" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition448">
           <Source RefID="27"/>
         </Data>
@@ -161,13 +180,14 @@
         </Data>
         <Target RefID="37"/>
       </Output>
-      <Mapping>%6%.label="Add Usecase"</Mapping>
-      <Mapping>%6%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
-      <Mapping>%6%.children["1"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%1%</Mapping>
-      <Mapping>%6%.children["2"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%2%</Mapping>
-      <Mapping>%6%.children["3"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%3%</Mapping>
-      <Mapping>%6%.children["4"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%4%</Mapping>
-      <Mapping>%6%.children["5"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%5%</Mapping>
+      <Mapping>%7%.label="Add Usecase"</Mapping>
+      <Mapping>%7%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
+      <Mapping>%7%.children["1"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%1%</Mapping>
+      <Mapping>%7%.children["2"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%2%</Mapping>
+      <Mapping>%7%.children["3"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%3%</Mapping>
+      <Mapping>%7%.children["4"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%4%</Mapping>
+      <Mapping>%7%.children["5"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%5%</Mapping>
+      <Mapping>%7%.children["6"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%6%</Mapping>
     </Mappings>
     <Data ID="37" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition37">
       <Source RefID="27"/>
@@ -198,6 +218,10 @@
     <Data ID="1198" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition1198">
       <Source RefID="102"/>
     </Data>
+    <Data ID="1257" Label="Device - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition1257">
+      <Source RefID="102"/>
+    </Data>
+    <Data ID="1536" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="const_Text1536"/>
     <Assign ID="1">
       <Source RefID="37"/>
       <Source RefID="544"/>
@@ -205,12 +229,14 @@
       <Source RefID="649"/>
       <Source RefID="849"/>
       <Source RefID="1164"/>
+      <Source RefID="1536"/>
       <Target RefID="14"/>
       <Target RefID="531"/>
       <Target RefID="561"/>
       <Target RefID="636"/>
       <Target RefID="812"/>
       <Target RefID="1127"/>
+      <Target RefID="1499"/>
       <Copy>
         <Source RefID="37"/>
         <Target RefID="14"/>
@@ -254,6 +280,14 @@
           </Meta>
         </Source>
         <Target RefID="1127"/>
+      </Copy>
+      <Copy>
+        <Source RefID="1536">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="1499"/>
       </Copy>
     </Assign>
   </Operation>

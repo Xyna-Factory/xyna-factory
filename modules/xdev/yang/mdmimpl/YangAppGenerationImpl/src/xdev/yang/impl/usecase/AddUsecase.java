@@ -19,7 +19,11 @@ package xdev.yang.impl.usecase;
 
 
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
+import org.yangcentral.yangkit.model.api.stmt.Module;
+import org.yangcentral.yangkit.model.api.stmt.Rpc;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
@@ -31,11 +35,14 @@ import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 
 import xact.http.URLPath;
+import xact.http.enums.httpmethods.GET;
 import xact.http.enums.httpmethods.HTTPMethod;
 import xact.http.enums.httpmethods.POST;
 import xact.http.enums.httpmethods.PUT;
 import xdev.yang.impl.Constants;
+import xdev.yang.impl.GuiHttpInteraction;
 import xmcp.processmodeller.datatypes.response.GetDataTypeResponse;
+import xmcp.processmodeller.datatypes.response.UpdateXMOMItemResponse;
 import xprc.xpce.Workspace;
 
 
@@ -45,7 +52,7 @@ public class AddUsecase {
   private static final Logger logger = CentralFactoryLogging.getLogger(AddUsecase.class);
 
 
-  public void addUsecase(String fqn, String usecaseName, Workspace workspace, XynaOrderServerExtension order, String rpc, String deviceFqn) {
+  public void addUsecase(String fqn, String usecaseName, Workspace workspace, XynaOrderServerExtension order, String rpc, String deviceFqn, String rpcNs) {
     try {
       String workspaceName = workspace.getName();
       if (logger.isDebugEnabled()) {
@@ -63,14 +70,18 @@ public class AddUsecase {
       try {
         if (!doesDomExist(dom)) {
           currentPath = createDatatype(label, workspaceName, order);
+          addParentToDatatype(currentPath, label, workspaceName, order);
+          UseCaseAssignmentUtils.saveDatatype(currentPath, path, label, workspaceName, "datatypes", order);
+          currentPath = path;
         }
 
         if (logger.isDebugEnabled()) {
           logger.debug(order.getId() + ": Adding service to datatype. Current datatype path: " + currentPath);
         }
-        addParentToDatatype(currentPath, label, workspaceName, order);
-        addServiceToDatatype(currentPath, label, usecaseName, workspaceName, order, rpc, deviceFqn);
-        UseCaseAssignmentUtils.saveDatatype(currentPath, path, label, workspaceName, order);
+
+        rpcNs = rpcNs == null || rpcNs.isBlank() ? loadRpcNs(rpc, deviceFqn, workspaceName) : rpcNs;
+        addServiceToDatatype(currentPath, label, usecaseName, workspaceName, order, rpc, deviceFqn, rpcNs);
+        UseCaseAssignmentUtils.saveDatatype(currentPath, path, label, workspaceName, "servicegroups", order);
       } finally {
         if (logger.isDebugEnabled()) {
           logger.debug(order.getId() + ": Closing datatype.");
@@ -80,6 +91,18 @@ public class AddUsecase {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+  }
+
+  private String loadRpcNs(String rpc, String deviceFqn, String workspaceName) {
+    List<Module> modules = UseCaseAssignmentUtils.loadModules(workspaceName);
+    //filter modules to supported by device
+    List<String> capabilities = UseCaseAssignmentUtils.loadCapabilities(deviceFqn, workspaceName);
+    modules = UseCaseAssignmentUtils.filterModules(modules, capabilities);
+    List<Rpc> candidates = UseCaseAssignmentUtils.findRpcs(modules, rpc);
+    if(candidates.size() != 1) {
+      throw new RuntimeException("Could not determine rpc namespace. There are " + candidates.size() + " candidates.");
+    }
+    return candidates.get(0).getContext().getNamespace().getUri().toString();
   }
 
   private void addParentToDatatype(String path, String label, String workspace, XynaOrderServerExtension order) {
@@ -137,24 +160,55 @@ public class AddUsecase {
     return fqn.substring(0, fqn.lastIndexOf("."));
   }
 
-  private void addServiceToDatatype(String path, String label, String service, String workspace, XynaOrderServerExtension order, String rpc, String deviceFqn) {
+  private void addServiceToDatatype(String path, String label, String service, String workspace, XynaOrderServerExtension order, String rpc, String deviceFqn, String rpcNs) {
     RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
     String workspaceNameEscaped = UseCaseAssignmentUtils.urlEncode(workspace);
     String fqnUrl = path + "/" + label;
-    String endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + fqnUrl + "/objects/memberMethodsArea/insert";
+
+    //open datatype as service group
+    String endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl;
     URLPath url = new URLPath(endPoint, null, null);
-    HTTPMethod method = new POST();
-    String payload = "{\"index\":-1,\"content\":{\"type\":\"memberMethod\",\"label\":\"" +  service + "\"},\"revision\":0}";
-    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "Could not add service to datatype.");
-    
-    // set meta tag
-    String serviceName = service; //TODO: read correct name from datatype
-    endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + fqnUrl + "/services/" + serviceName + "/meta";
+    HTTPMethod method = new GET();
+    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, null, "Could not open service group.");
+
+    // create service
+    endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl + "/objects/memberMethodsArea/insert";
     url = new URLPath(endPoint, null, null);
+    method = new POST();
+    String payload = "{\"index\":-1,\"content\":{\"type\":\"memberService\",\"label\":\"" + service + "\"}}";
+    UpdateXMOMItemResponse json;
+    json = (UpdateXMOMItemResponse)UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "Could not add service to datatype.");
+
+    String serviceNumber = String.valueOf(GuiHttpInteraction.loadServiceId(json, service));
+
+    // add xmcp.yang.MessageId as input variable
+    endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl + "/objects/methodVarArea" + serviceNumber + "_input/insert";
+    url = new URLPath(endPoint, null, null);
+    payload = "{\"index\":-1,\"content\":{\"type\":\"variable\",\"label\":\"MessageId\",\"fqn\":\"xmcp.yang.MessageId\",\"isList\":false}}";
+    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "Could not add input variable to service.");
+
+    // add xact.templates.Document as output variable
+    endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl + "/objects/methodVarArea" + serviceNumber + "_output/insert";
+    url = new URLPath(endPoint, null, null);
+    payload = "{\"index\":-1,\"content\":{\"type\":\"variable\",\"label\":\"Document\",\"fqn\":\"xact.templates.Document\",\"isList\":false}}";
+    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "Could not add output variable to service.");
+
+    // set implementation to "return null;"
+    endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl + "/objects/memberMethod" + serviceNumber + "/change";
+    url = new URLPath(endPoint, null, null);
+    payload = "{\"implementation\":\"return null;\"}";
     method = new PUT();
+    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "Could not set implementation of service.");
+
+    // set meta tag
+    endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl + "/services/" + service + "/meta";
+    url = new URLPath(endPoint, null, null);
     String mappings = "<" + Constants.TAG_MAPPINGS + "/>";
     String device = "<" + Constants.TAG_DEVICE_FQN + ">" + deviceFqn + "</" + Constants.TAG_DEVICE_FQN + ">";
-    String tag = "<Yang type=\\\"Usecase\\\"><Rpc>"+ rpc + "</Rpc>"+ device + mappings +"</Yang>";
+    String rpcNsTag = "<" + Constants.TAG_RPC_NS + ">" + rpcNs + "</" + Constants.TAG_RPC_NS + ">";
+    String rpcTag = "<" + Constants.TAG_RPC + ">" + rpc + "</" + Constants.TAG_RPC + ">";
+    String YangStartTag = "<"+ Constants.TAG_YANG + " " + Constants.ATT_YANG_TYPE + "=\\\"" + Constants.VAL_USECASE + "\\\">";
+    String tag = YangStartTag + rpcTag + device + rpcNsTag + mappings +"</" + Constants.TAG_YANG + ">";
     payload = "{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.request.MetaTagRequest\"},\"metaTag\":{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.MetaTag\"},\"deletable\":true,\"tag\":\"" + tag + "\"}}";
     UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "Could not add meta tag to service.");
   }
