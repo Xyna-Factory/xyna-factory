@@ -43,8 +43,10 @@ public class Constants {
   public static final String TYPE_CONTAINER = "container";
   public static final String TYPE_LEAF = "leaf";
   public static final String TYPE_GROUPING = "grouping";
+  public static final String TYPE_USES = "uses";
+  public static final String TYPE_IDENTITY = "identity";
   
-  public static final String NS_SEPARATOR = "§";
+  public static final String NS_SEPARATOR = "ï¿½";
   
   public static final String NETCONF_NS = "urn:ietf:params:xml:ns:netconf:base:1.0";
 }
