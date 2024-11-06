@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -81,11 +82,6 @@ public class HTTPTriggerConnection extends TriggerConnection {
   private String method; 
   private Method methodEnum;
   private Properties header;
-  @Deprecated
-  /**
-   * Use parameters instead
-   */
-  private Properties paras;
   private HashMap<String, List<String>> parameters;
   private String payload;
   private String charSet = Charset.defaultCharset().name();
@@ -444,8 +440,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
 
 
   private void debugProperties(String fieldName, Properties properties, boolean onlyIfTraceDisabled) {
-
-    if (suppressLogging || !logger.isDebugEnabled() || (logger.isTraceEnabled() && onlyIfTraceDisabled)) {
+    if (!shouldDebugProperties(onlyIfTraceDisabled)) {
       return;
     }
 
@@ -464,6 +459,28 @@ public class HTTPTriggerConnection extends TriggerConnection {
 
     logger.debug(sb.toString());
 
+  }
+  
+  private boolean shouldDebugProperties(boolean onlyIfTraceDisabled) {
+    return !suppressLogging && logger.isDebugEnabled() && (!logger.isTraceEnabled() || !onlyIfTraceDisabled);
+  }
+  
+  private void debugParameters(Map<String, List<String>> data, boolean onlyIfTraceDisabled) {
+    if (!shouldDebugProperties(onlyIfTraceDisabled)) {
+      return;
+    }
+
+    StringBuilder sb = new StringBuilder();
+    sb.append("Parsed parameter fields: ");
+    int count = 0;
+    for (String key : data.keySet()) {
+      String value = String.join(", ", data.get(key));
+      sb.append("{").append(key).append(": ").append("[").append(value).append("]}");
+      count++;
+      if (count < data.size()) {
+        sb.append(", ");
+      }
+    }
   }
 
   private static final long timeoutFirstPartOfRequestLine = 5000; //TODO konfigurierbar?
@@ -544,11 +561,9 @@ public class HTTPTriggerConnection extends TriggerConnection {
     }
 
     // Decode parameters from the URI
-    paras = new Properties();
     parameters = new HashMap<>();
     int qmi = uri.indexOf('?');
     if (qmi >= 0) {
-      decodeParas(uri.substring(qmi + 1), paras);
       decodeParameters(uri.substring(qmi +1), parameters);
       uri = decode(uri.substring(0, qmi));
     } else {
@@ -559,7 +574,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
       logger.debug("Method: " + methodEnum + ", URI: " + uri);
     }
 
-    debugProperties("parameter", paras, false);
+    debugParameters(parameters, false);
     
     try {
       this.socket.setSoTimeout(previousTimeout);
@@ -607,27 +622,6 @@ public class HTTPTriggerConnection extends TriggerConnection {
 
 
   /**
-   * Decodes parameters in percent-encoded URI-format ( e.g. "name=Jack%20Daniels&pass=Single%20Malt" ) and adds them to
-   * given Properties.
-   */
-  private void decodeParas(String paras, Properties p) throws InterruptedException {
-    if (paras == null)
-      return;
-
-    StringTokenizer st = new StringTokenizer(paras, "&");
-    while (st.hasMoreTokens()) {
-      String e = st.nextToken();
-      int sep = e.indexOf('=');
-      if (sep >= 0) {
-        p.put(decode(e.substring(0, sep)).trim(), decode(e.substring(sep + 1)));
-      } else {
-        p.put(decode(e).trim(), "");
-      }
-    }
-  }
-
-
-  /**
    * Decodes parameters in percent-encoded URI-format ( e.g. "name=default%20workspace&desc=a%20description" ) and adds 
    * them to given HashMap.
    */
@@ -658,43 +652,6 @@ public class HTTPTriggerConnection extends TriggerConnection {
         logger.warn("UnsupportedEncodingException in URLDecoder.decode(string, \"UTF-8\")", e);
       }
       return string;
-    }
-  }
-
-  /**
-   * Decodes the percent encoding scheme. <br/>
-   * For example: "an+example%20string" -> "an example string"
-   * @deprecated
-   */
-  private String decodePercentX(String str) throws InterruptedException {
-    try {
-      StringBuffer sb = new StringBuffer();
-      for (int i = 0; i < str.length(); i++) {
-        char c = str.charAt(i);
-        switch (c) {
-          case '+' :
-            sb.append(' ');
-            break;
-          case '%' :
-            sb.append((char) Integer.parseInt(str.substring(i + 1, i + 3), 16));
-            i += 2;
-            break;
-          default :
-            sb.append(c);
-            break;
-        }
-      }
-      return sb.toString();
-    } catch (Exception e) {
-      try {
-        logInvalidHttpRequest();
-        sendError(HTTP_BADREQUEST, "BAD REQUEST: Bad percent-encoding.");
-      } catch (SocketNotAvailableException e1) {
-        if (!suppressLogging) {
-          logger.error("socket was unexpectedly not available when trying to send errormessage to client", e1);
-        }
-      }
-      return null; // wird nicht ausgeführt
     }
   }
 
@@ -1018,7 +975,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
             // workaround for multiple response header entries with the same name
             Object complexValue = responseHeader.get(key);
             if (complexValue instanceof List) {
-              for (Object singleValue : (List)complexValue) {
+              for (Object singleValue : (List<?>)complexValue) {
                 pw.print(key+": "+String.valueOf(singleValue)+CRLF);
               }
             }
@@ -1088,15 +1045,6 @@ public class HTTPTriggerConnection extends TriggerConnection {
 
   public Properties getHeader() {
     return header;
-  }
-
-
-  @Deprecated
-  /**
-   * Use getParameters() or getFirstValueOfParameter() instead
-   */
-  public Properties getParas() {
-    return paras;
   }
   
   public HashMap<String, List<String>> getParameters() {
