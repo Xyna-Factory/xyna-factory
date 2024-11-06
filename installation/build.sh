@@ -123,38 +123,21 @@ build_misc() {
   mvn install:install-file -Dfile=./deploy/misc.jar -DpomFile=./pom.xml
 }
 
+build_cligenerator_jar() {
+  echo "building xynafactoryCLIGenerator-1.0.0.jar..."
+  cd $SCRIPT_DIR/../server
+  mvn -f cligenerator.pom.xml dependency:resolve
+  mvn -f cligenerator.pom.xml -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
+  ant -Doracle.home=/tmp buildCliClassGeneratorJar
+  mvn install:install-file -Dfile=./deploy/xynafactoryCLIGenerator.jar -DpomFile=cligenerator.pom.xml
+}
+
 build_xynafactory_jar() {
   echo "building xynafactory.jar..."
   cd $SCRIPT_DIR/../server
-  mkdir -p lib/internal_xyna
-  cp build.xml build.xml.bak
-  sed -i 's/depends="resolve, /depends="/' build.xml
-  sed -i "s/XynaFactoryServer/xynafactory/" pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>ecj</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>XynaJavaSerializationPersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>OraclePersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>XynaLocalMemoryPersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>XynaMemoryPersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>XynaXMLShellPersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>xynafactoryCLIGenerator</{N;N;d}}}' pom.xml
-  mvn dependency:resolve
-  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  ant -Doracle.home=/tmp buildCliClassGeneratorJar
-  mvn install:install-file -Dfile=./deploy/xynafactoryCLIGenerator.jar -DpomFile=./pom.xml -Dversion=1.0.0 -DartifactId=xynafactoryCLIGenerator -DgroudId="com.gip.xyna"
-  cp ./deploy/xynafactoryCLIGenerator.jar lib/xynafactoryCLIGenerator-1.0.0.jar
-  ant -Doracle.home=/tmp build
-  mvn install:install-file -Dfile=./deploy/xynafactory.jar -DpomFile=./pom.xml
-  cp lib/xynafactoryCLIGenerator-1.0.0.jar .
-  
-  
   ant -Doracle.home=/tmp -Dxyna.clusterprovider.OracleRACClusterProvider=false build
-  
-  rm -rf lib build.xml
-  mv build.xml.bak build.xml
-  mkdir -p lib/internal_xyna
-  mv xynafactoryCLIGenerator-1.0.0.jar lib/
+  mvn install:install-file -Dfile=./deploy/xynafactory.jar -DpomFile=./pom.xml
 }
-
 
 prepare_modules() {
   echo "prepareing modules..."
@@ -627,6 +610,7 @@ build_all() {
 build() {
   build_xynautils
   build_misc
+  build_cligenerator_jar
   build_xynafactory_jar
   build_conpooltypes
   build_persistencelayers
