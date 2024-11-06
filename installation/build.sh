@@ -115,10 +115,6 @@ build_xynautils_misc() {
 build_misc() {
   echo "building misc..."
   cd $SCRIPT_DIR/../misc
-  mkdir -p lib/xyna
-  mvn dependency:resolve
-  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  sed -i 's/ depends="resolve"//' build.xml
   ant -Doracle.home=/tmp build
   mvn install:install-file -Dfile=./deploy/misc.jar -DpomFile=./pom.xml
 }
