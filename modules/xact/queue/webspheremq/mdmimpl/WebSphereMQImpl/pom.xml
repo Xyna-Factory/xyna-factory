@@ -36,14 +36,11 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>com.ibm.mq</groupId>
-            <artifactId>com.ibm.mq.allclient</artifactId> <!-- unfree -->
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.jms</groupId>
-            <artifactId>jms</artifactId> <!-- unfree -->
-            <scope>provided</scope>
+            <groupId>com.gip.xyna</groupId>
+            <artifactId>webspheremq_third_parties</artifactId>
+            <version>1.0.0</version>
+            <type>pom</type>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
