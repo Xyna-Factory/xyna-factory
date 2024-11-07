@@ -20,28 +20,18 @@ package xdev.yang.impl.usecase;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Set;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.yangcentral.yangkit.base.YangElement;
 import org.yangcentral.yangkit.model.api.schema.YangSchemaContext;
-import org.yangcentral.yangkit.model.api.stmt.Container;
-import org.yangcentral.yangkit.model.api.stmt.Grouping;
-import org.yangcentral.yangkit.model.api.stmt.Identity;
 import org.yangcentral.yangkit.model.api.stmt.Input;
-import org.yangcentral.yangkit.model.api.stmt.Leaf;
 import org.yangcentral.yangkit.model.api.stmt.Module;
 import org.yangcentral.yangkit.model.api.stmt.Rpc;
-import org.yangcentral.yangkit.model.api.stmt.SchemaNode;
-import org.yangcentral.yangkit.model.api.stmt.Uses;
 import org.yangcentral.yangkit.model.api.stmt.YangStatement;
 import org.yangcentral.yangkit.parser.YangYinParser;
 
@@ -66,38 +56,14 @@ import xact.http.enums.httpmethods.HTTPMethod;
 import xact.http.enums.httpmethods.POST;
 import xdev.yang.impl.Constants;
 import xdev.yang.impl.XmomDbInteraction;
+import xdev.yang.impl.YangStatementTranslator;
+import xdev.yang.impl.YangStatementTranslator.YangStatementTranslation;
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.UseCaseAssignmentTableData;
 import xmcp.yang.YangDevice;
 import xmcp.yang.YangModuleCollection;
 
 public class UseCaseAssignmentUtils {
-
-  private static final Set<Class<?>> supportedYangStatementsForAssignments = setupSupportedAssignmentClasses();
-  private static final Map<Class<?>, String> yangStatementIdentifiers = setupStatementIdentifiers();
-
-
-  private static Set<Class<?>> setupSupportedAssignmentClasses() {
-    Set<Class<?>> result = new HashSet<Class<?>>();
-    // Groupings and Identities are not SchemaNodes and are currently skipped
-    result.add(Container.class);
-    result.add(Leaf.class);
-    result.add(Grouping.class);
-    result.add(Uses.class);
-    result.add(Identity.class);
-    return result;
-  }
-
-
-  private static Map<Class<?>, String> setupStatementIdentifiers() {
-    Map<Class<?>, String> result = new HashMap<Class<?>, String>();
-    result.put(Container.class, Constants.TYPE_CONTAINER);
-    result.put(Leaf.class, Constants.TYPE_LEAF);
-    result.put(Grouping.class, Constants.TYPE_GROUPING);
-    result.put(Uses.class, Constants.TYPE_USES);
-    result.put(Identity.class, Constants.TYPE_IDENTITY);
-    return result;
-  }
 
 
   public static List<UseCaseAssignmentTableData> loadPossibleAssignments(List<Module> modules, String rpcName, String rpcNs, LoadYangAssignmentsData data) {
@@ -120,12 +86,7 @@ public class UseCaseAssignmentUtils {
 
 
   private static List<YangStatement> getCandidates(YangStatement statement) {
-    List<YangElement> candidates;
-    if (statement instanceof Uses) {
-      candidates = ((Uses) statement).getRefGrouping().getSubElements();
-    } else {
-      candidates = statement.getSubElements();
-    }
+    List<YangElement> candidates = YangStatementTranslation.getSubStatements(statement);
     List<YangStatement> result = new ArrayList<>();
     for (YangElement candidate : candidates) {
       if (isSupportedElement(candidate)) {
@@ -137,20 +98,13 @@ public class UseCaseAssignmentUtils {
 
 
   private static YangStatement traverseYangOneLayer(List<Module> modules, String pathStep, String namespace, YangStatement statement) {
-    List<YangElement> candidates = statement.getSubElements();
-    if (statement instanceof Uses) {
-      candidates = ((Uses) statement).getRefGrouping().getSubElements();
-    } else {
-      candidates = statement.getSubElements();
-    }
+    List<YangElement> candidates = YangStatementTranslation.getSubStatements(statement);
     for (YangElement candidate : candidates) {
       if (isSupportedElement(candidate)) {
-        if (candidate instanceof SchemaNode) {
-          SchemaNode node = (SchemaNode) candidate;
-          if (node.getIdentifier().getLocalName().equals(pathStep)
-              && Objects.equals(node.getContext().getNamespace().getUri().toString(), namespace)) {
-            return (YangStatement) candidate;
-          }
+        YangStatement node = (YangStatement) candidate;
+        if (YangStatementTranslation.getLocalName(node).equals(pathStep)
+            && Objects.equals(YangStatementTranslation.getUriString(node), namespace)) {
+          return node;
         }
       }
     }
@@ -162,18 +116,16 @@ public class UseCaseAssignmentUtils {
     List<UseCaseAssignmentTableData> result = new ArrayList<>();
     for (YangStatement element : subElements) {
       if (isSupportedElement(element)) {
-        if (element instanceof SchemaNode) {
-          String localName = ((SchemaNode) element).getIdentifier().getLocalName();
-          String namespace = element.getContext().getNamespace().getUri().toString();
-          UseCaseAssignmentTableData.Builder builder = new UseCaseAssignmentTableData.Builder();
-          LoadYangAssignmentsData updatedData = data.clone();
-          updatedData.unversionedSetTotalYangPath(updatedData.getTotalYangPath() + "/" + localName);
-          updatedData.unversionedSetTotalNamespaces(updatedData.getTotalNamespaces() + Constants.NS_SEPARATOR + namespace);
-          builder.loadYangAssignmentsData(updatedData);
-          builder.yangPath(localName);
-          builder.type(getYangType(element));
-          result.add(builder.instance());
-        }
+        String localName = YangStatementTranslation.getLocalName(element);
+        String namespace = YangStatementTranslation.getUriString(element);
+        UseCaseAssignmentTableData.Builder builder = new UseCaseAssignmentTableData.Builder();
+        LoadYangAssignmentsData updatedData = data.clone();
+        updatedData.unversionedSetTotalYangPath(updatedData.getTotalYangPath() + "/" + localName);
+        updatedData.unversionedSetTotalNamespaces(updatedData.getTotalNamespaces() + Constants.NS_SEPARATOR + namespace);
+        builder.loadYangAssignmentsData(updatedData);
+        builder.yangPath(localName);
+        builder.type(getYangType(element));
+        result.add(builder.instance());
       }
     }
     return result;
@@ -181,8 +133,8 @@ public class UseCaseAssignmentUtils {
 
 
   private static boolean isSupportedElement(YangElement element) {
-    for (Class<?> c : supportedYangStatementsForAssignments) {
-      if (c.isAssignableFrom(element.getClass())) {
+    for (Entry<Class<?>, YangStatementTranslation> c: YangStatementTranslator.translations.entrySet()) {
+      if (c.getKey().isAssignableFrom(element.getClass())) {
         return true;
       }
     }
@@ -190,9 +142,9 @@ public class UseCaseAssignmentUtils {
   }
 
   private static String getYangType(YangElement element) {
-    for(Entry<Class<?>, String> c : yangStatementIdentifiers.entrySet()) {
+    for(Entry<Class<?>, YangStatementTranslation> c : YangStatementTranslator.translations.entrySet()) {
       if(c.getKey().isAssignableFrom(element.getClass())) {
-        return c.getValue();
+        return c.getValue().getYangStatementName();
       }
     }
     return "Unknown: " + element.getClass().getCanonicalName();
