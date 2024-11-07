@@ -551,7 +551,6 @@ fill_lib() {
 
 build_all() {
   build
-  build_oracle_aq_tools
   build_modules
   build_plugins
   build_clusterproviders
