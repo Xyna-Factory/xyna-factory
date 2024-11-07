@@ -138,7 +138,6 @@ build_xynafactory_jar() {
 build_oracle_aq_tools() {
   echo "build oracleAQ Tools"
   cd $SCRIPT_DIR/build
-  sed -i 's#name="prepareLibs"#name="prepareLibsX"#' ../../modules/xact/queue/oracleaq/sharedlib/OracleAQTools/build.xml
   ant -Doracle.home=/tmp -f ../../modules/xact/queue/oracleaq/sharedlib/OracleAQTools/build.xml build
   mvn install:install-file -Dfile=../../modules/xact/queue/oracleaq/sharedlib/OracleAQTools/deploy/OracleAQTools.jar -DpomFile=../../modules/xact/queue/oracleaq/sharedlib/OracleAQTools/pom.xml 
 }
