@@ -370,12 +370,8 @@ compose_thirdparties() {
   sed -i '/<dependency>/{N;N;{/<artifactId>jradius-extended</{N;N;d}}}' pom.xml
   sed -i '/<dependency>/{N;N;{/<artifactId>ecj</{N;N;d}}}' pom.xml
   sed -i '/<dependency>/{N;N;{/<artifactId>gnu-crypto</{N;N;d}}}' pom.xml
-  echo "pom.xml:"
-  echo "$(cat pom.xml)"
   # run license downloads (bom must have name "pom.xml")
   mvn license:download-licenses -DlicensesOutputDirectory=$SCRIPT_DIR/../release/third_parties -DlicensesOutputFile=$SCRIPT_DIR/../release/third_parties/licenses.xml
-  echo "license.xml"
-  echo "$(cat $SCRIPT_DIR/../release/third_parties/licenses.xml)"
   # restore backup
   rm pom.xml
   mv pom.xml-bak pom.xml
