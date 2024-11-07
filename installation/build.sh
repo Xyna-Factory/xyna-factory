@@ -135,43 +135,6 @@ build_xynafactory_jar() {
   mvn install:install-file -Dfile=./deploy/xynafactory.jar -DpomFile=./pom.xml
 }
 
-prepare_modules() {
-  echo "prepareing modules..."
-  cd $SCRIPT_DIR/..
-  # sed -i '/websphere/d' modules/xact/queue/build.xml # can not build without unavailable libs
-  sed -i '/<dependency>/{N;N;{/<artifactId>com.ibm.mq.traceControl/{N;N;d}}}' modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  sed -i '/<dependency>/{N;N;{/fscontext/{N;N;d}}}' modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  sed -i '/<dependency>/{N;N;{/javaee-api/{N;N;d}}}' modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  sed -i '/<dependency>/{N;N;{/providerutil/{N;N;d}}}' modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  sed -i '/<dependency>/{N;N;{/jms/{N;N;d}}}' modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  sed -i '/<\/dependencies>/,$d'  modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  echo "<dependency><groupId>org.apache.geronimo.specs</groupId><artifactId>geronimo-jms_1.1_spec</artifactId><version>1.1.1</version></dependency>" >> modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  echo "</dependencies></project>" >> modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  sed -i '/<copy/d' modules/xact/queue/webspheremq/sharedlib/webspheremq/build.xml
-  sed -i '/<dependency>/{N;N;{/jms/{N;N;d}}}' modules/xact/queue/webspheremq/mdmimpl/WebSphereMQImpl/pom.xml
-  sed -i '/<\/dependencies>/,$d'  modules/xact/queue/webspheremq/mdmimpl/WebSphereMQImpl/pom.xml
-  echo "<dependency><groupId>org.apache.geronimo.specs</groupId><artifactId>geronimo-jms_1.1_spec</artifactId><version>1.1.1</version></dependency>" >> modules/xact/queue/webspheremq/mdmimpl/WebSphereMQImpl/pom.xml
-  echo "</dependencies></project>" >> modules/xact/queue/webspheremq/mdmimpl/WebSphereMQImpl/pom.xml
-  sed -i '/<dependency>/{N;N;{/jms/{N;N;d}}}' modules/xact/queue/webspheremq/triggerimpl/WebSphereMQTrigger/test_filter/pom.xml
-  sed -i '/<\/dependencies>/,$d' modules/xact/queue/webspheremq/triggerimpl/WebSphereMQTrigger/test_filter/pom.xml
-  echo "<dependency><groupId>org.apache.geronimo.specs</groupId><artifactId>geronimo-jms_1.1_spec</artifactId><version>1.1.1</version></dependency>" >> modules/xact/queue/webspheremq/triggerimpl/WebSphereMQTrigger/test_filter/pom.xml
-  echo "</dependencies></project>" >> modules/xact/queue/webspheremq/triggerimpl/WebSphereMQTrigger/test_filter/pom.xml
-  mkdir -p modules/xact/queue/webspheremq/sharedlib/webspheremq/lib
-  mkdir -p modules/xact/queue/webspheremq/triggerimpl/WebSphereMQTrigger/test_filter/lib
-  mkdir -p modules/xact/queue/webspheremq/mdmimpl/WebSphereMQImpl/lib
-  cd modules/xact/queue/webspheremq/sharedlib/webspheremq
-  mvn dependency:resolve
-  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  cd ../../../../../../
-  cd modules/xact/queue/webspheremq/mdmimpl/WebSphereMQImpl/
-  mvn dependency:resolve
-  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  cd ../../../../../../
-  cd modules/xact/queue/webspheremq/triggerimpl/WebSphereMQTrigger/test_filter
-  mvn dependency:resolve
-  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-}
-
 build_oracle_aq_tools() {
   echo "build oracleAQ Tools"
   cd $SCRIPT_DIR/build
@@ -607,7 +570,6 @@ build() {
   build_conpooltypes
   build_persistencelayers
   fill_lib
-  prepare_modules
   build_oracle_aq_tools
 }
 
