@@ -18,5 +18,5 @@
   <ExceptionType BaseTypeName="SSHException" BaseTypePath="xact.connection" IsAbstract="false" Label="Connection Exception" TypeName="ConnectionException" TypePath="xact.ssh">
     <MessageText Language="DE"></MessageText>
     <MessageText Language="EN"></MessageText>
-  <ExceptionType>
+  </ExceptionType>
 </ExceptionStore>

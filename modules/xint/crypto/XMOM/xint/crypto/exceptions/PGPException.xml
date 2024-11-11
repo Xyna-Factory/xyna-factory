@@ -20,5 +20,5 @@
   <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" IsAbstract="true" Label="PGP Exception" TypeName="PGPException" TypePath="xint.crypto.exceptions">
     <MessageText Language="DE"></MessageText>
     <MessageText Language="EN"></MessageText>
-  <ExceptionType>
+  </ExceptionType>
 </ExceptionStore>
