@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
 
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyInt;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
 import com.gip.xyna.xsor.common.Interconnectable;
 import com.gip.xyna.xsor.common.ReplyCode;
 import com.gip.xyna.xsor.common.XSORUtil;
@@ -49,7 +50,9 @@ public class InterconnectSender extends InterconnectableStore implements Runnabl
   public static final XynaPropertyInt XSOR_SOCKET_TIMEOUT   = new XynaPropertyInt("com.gip.xyna.xsor.socket.timeout",   60000).setDefaultDocumentation(DocumentationLanguage.EN, "timeout of the xsor socket in milliseconds");
   public static final XynaPropertyInt XSOR_TCP_KEEPIDLE     = new XynaPropertyInt("com.gip.xyna.xsor.tcp.keepidle",     5).setDefaultDocumentation(DocumentationLanguage.EN, "after this interval in seconds, we will send TCP_KEEP");
   public static final XynaPropertyInt XSOR_TPC_KEEPINTERVAL = new XynaPropertyInt("com.gip.xyna.xsor.tcp.keepinterval", 5).setDefaultDocumentation(DocumentationLanguage.EN, "all x seconds we will repeat the TCP_KEEP");
-  
+  public static final XynaPropertyInt XSOR_TPC_KEEPCOUNT    = new XynaPropertyInt("com.gip.xyna.xsor.tcp.keepcount", 5).setDefaultDocumentation(DocumentationLanguage.EN, "maximum number of retransmissions, if the remote system does not respons");
+  public static final XynaPropertyBoolean XSOR_TCP_KEEPALIVE= new XynaPropertyBoolean("com.gip.xyna.xsor.tcp.keepalive",false).setDefaultDocumentation(DocumentationLanguage.EN, "use extended Socket properties");
+
 
   
   private volatile Socket socket;
@@ -107,11 +110,15 @@ public class InterconnectSender extends InterconnectableStore implements Runnabl
             localSocket.setSoTimeout(InterconnectSender.XSOR_SOCKET_TIMEOUT.get().intValue());
             logger.info("try to set extended Options");
             try {
-				localSocket.setOption(ExtendedSocketOptions.TCP_KEEPIDLE, InterconnectSender.XSOR_TCP_KEEPIDLE.get().intValue());
-				localSocket.setOption(ExtendedSocketOptions.TCP_KEEPINTERVAL, InterconnectSender.XSOR_TPC_KEEPINTERVAL.get().intValue());
-			} catch (Exception e) {
-				logger.info("unable to set extended Options",e);
-			}
+                if (InterconnectSender.XSOR_TCP_KEEPALIVE.get()) {
+                    localSocket.setOption(ExtendedSocketOptions.TCP_KEEPIDLE, InterconnectSender.XSOR_TCP_KEEPIDLE.get().intValue());
+                    localSocket.setOption(ExtendedSocketOptions.TCP_KEEPINTERVAL, InterconnectSender.XSOR_TPC_KEEPINTERVAL.get().intValue());
+                    localSocket.setOption(ExtendedSocketOptions.TCP_KEEPCOUNT, InterconnectSender.XSOR_TPC_KEEPCOUNT.get().intValue());
+                }
+ 
+	    } catch (Exception e) {
+		logger.info("unable to set extended Options",e);
+	    }
             socket = localSocket;
             Iterator<byte[]> it = lastSent.iterator();
             while (it.hasNext()) {
@@ -169,18 +176,18 @@ public class InterconnectSender extends InterconnectableStore implements Runnabl
             }
             //FIXME wenn jetzt ein fehler im netzwerk passiert, kann es passieren, dass man diese nachricht verliert, 
             //weil nicht auf eine antwort des anderen knoten gewartet wird.
-            //und hat evtl zus‰tzlich einen synchron wartenden client (waitmanagement). der l‰uft dann in ein timeout...
+            //und hat evtl zus√§tzlich einen synchron wartenden client (waitmanagement). der l√§uft dann in ein timeout...
           }
 
         }
         if (!foundMessage) {//In keiner der Queues eine Nachricht gefunden.
 
 
-          //Potentiell kˆnnte aber inzwischen eine weitere
+          //Potentiell k√∂nnte aber inzwischen eine weitere
           //Nachricht eingetroffen sein.
           //Warte deshalb nur eine kurze Zeit
           /*
-           * TODO man kˆnnte hier effizienter sein, indem man l‰nger wartet und innerhalb des synchronized
+           * TODO man k√∂nnte hier effizienter sein, indem man l√§nger wartet und innerhalb des synchronized
            * blocks einen modcounter der queues abfragt.
            * 
            * lastModCounter = modCounter;
@@ -222,7 +229,7 @@ public class InterconnectSender extends InterconnectableStore implements Runnabl
 
 
   /*
-   * F¸r Testzwecke Einfuegen einer Verzoegerung
+   * F√ºr Testzwecke Einfuegen einer Verzoegerung
    */
   public void setAdditionalWait(int i) {
     additionalWait = i;
@@ -243,7 +250,7 @@ public class InterconnectSender extends InterconnectableStore implements Runnabl
   //Runnable zum Auslesen der Replies
   class ReplyReader implements Runnable {
 
-    public void run() {//Besser als Callback=> Abh‰ngigkeiten
+    public void run() {//Besser als Callback=> Abh√§ngigkeiten
       while (running) {
         while (running && !paused) {
           Socket localSocket = socket;
@@ -360,7 +367,7 @@ public class InterconnectSender extends InterconnectableStore implements Runnabl
     int n = 0;
     closeSocket();
     for (Interconnectable interconnectable : registeredXSORMemory.values()) {
-      n += interconnectable.getOutgoingQueue().size(); //immer z‰hlen
+      n += interconnectable.getOutgoingQueue().size(); //immer z√§hlen
       if (!specialStartMessageSent) {
         interconnectable.sendSpecialStartedMessage();
       }
@@ -393,7 +400,7 @@ public class InterconnectSender extends InterconnectableStore implements Runnabl
     lastSent.clear();
   }
 
-  //f¸r Tests
+  //f√ºr Tests
   Socket getSocket() {
     return socket;
   }
