@@ -182,7 +182,6 @@ build_clusterproviders() {
   
   #oracle rac cluster provider
   cd $SCRIPT_DIR/../clusterproviders/OracleRACClusterProvider
-  rm -f /test/com/gip/xyna/xfmg/xclusteringservices/clusterprovider/OracleRACClusterProviderTest.java
   ant -Doracle.home=/tmp
   
   #xsor cluster provider
