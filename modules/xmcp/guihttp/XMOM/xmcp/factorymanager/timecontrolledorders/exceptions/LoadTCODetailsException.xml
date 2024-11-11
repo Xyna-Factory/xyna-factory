@@ -23,7 +23,7 @@
         <Type>String</Type>
       </Meta>
     </Data>
-    <MessageText Language="DE">%0%</MessageText>
-    <MessageText Language="EN">%0%</MessageText>
+    <MessageText Language="DE">EC-xfm.fman.timecontrolledorders.loaddetails#%0%</MessageText>
+    <MessageText Language="EN">EC-xfm.fman.timecontrolledorders.loaddetails#%0%</MessageText>
   </ExceptionType>
 </ExceptionStore>
