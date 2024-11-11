@@ -36,13 +36,6 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>com.gip.xyna</groupId>
-            <artifactId>webspheremq_third_parties</artifactId>
-            <version>1.0.0</version>
-            <type>pom</type>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-1.2-api</artifactId>
         </dependency>
