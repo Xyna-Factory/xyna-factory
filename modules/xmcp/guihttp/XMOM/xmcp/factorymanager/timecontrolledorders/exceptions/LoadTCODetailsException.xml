@@ -23,5 +23,7 @@
         <Type>String</Type>
       </Meta>
     </Data>
+    <MessageText Language="DE"></MessageText>
+    <MessageText Language="EN"></MessageText>
   </ExceptionType>
 </ExceptionStore>
