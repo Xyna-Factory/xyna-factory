@@ -141,7 +141,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.gip.xyna</groupId>
-			<artifactId>xynafactoryCLIGenerator</artifactId>
+			<artifactId>cligenerator</artifactId>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
