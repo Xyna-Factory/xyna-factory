@@ -20,4 +20,53 @@
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
+  <Service Label="HTTP Method" TypeName="HTTPMethod">
+    <Operation Label="Get HTTP Enum Datatype" Name="getHTTPEnumDatatype" IsStatic="true">
+      <Input>
+        <Data ID="3" Label="Text" VariableName="text3" ReferenceName="Text" ReferencePath="base">
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="1" Label="HTTP Method" VariableName="hTTPMethod1" ReferenceName="HTTPMethod" ReferencePath="xact.http.enums.httpmethods">
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">switch(text3.getText().toUpperCase()){
+    case "DELETE":
+        return new DELETE();
+    case "GET":
+        return new GET();
+    case "HEAD":
+        return new HEAD();
+    case "OPTIONS":
+        return new OPTIONS();
+    case "PATCH":
+        return new PATCH();
+    case "POST":
+        return new POST();
+    case "PUT":
+        return new PUT();
+    case "TRACE":
+        return new TRACE();
+    default:
+        return null;
+}</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="Get HTTP Method Name" Name="getHTTPMethodName" IsStatic="true">
+      <Input>
+        <Data ID="2" Label="HTTP Method" VariableName="hTTPMethod2" ReferenceName="HTTPMethod" ReferencePath="xact.http.enums.httpmethods">
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="4" Label="Text" VariableName="text4" ReferenceName="Text" ReferencePath="base">
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">Text name = new Text();
+name.setText(hTTPMethod2.getClass().getSimpleName());
+return name;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>
