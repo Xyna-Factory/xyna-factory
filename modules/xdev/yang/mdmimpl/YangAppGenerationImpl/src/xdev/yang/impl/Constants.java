@@ -43,6 +43,8 @@ public class Constants {
   public static final String TYPE_CONTAINER = "container";
   public static final String TYPE_LEAF = "leaf";
   public static final String TYPE_GROUPING = "grouping";
+  public static final String TYPE_USES = "uses";
+  public static final String TYPE_IDENTITY = "identity";
   
   public static final String NS_SEPARATOR = "§";
   

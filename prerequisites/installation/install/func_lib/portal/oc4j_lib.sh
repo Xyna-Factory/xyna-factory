@@ -35,8 +35,8 @@ f_check_oc4j_container_status () {
     #     opmnctl status -fmt %prt50%sta8
     # process-type                                       | status
     # ---------------------------------------------------+---------
-    # OC4J:Tethys7                                       | Alive
-    # OC4J:Tethys6                                       | Down
+    # OC4J:<Project>7                                    | Alive
+    # OC4J:<Project>6                                    | Down
     # HTTP_Server                                        | Alive
     #
     #  Zeile mit dem Container filtern und den Status aus der letzten Spalte ausgeben

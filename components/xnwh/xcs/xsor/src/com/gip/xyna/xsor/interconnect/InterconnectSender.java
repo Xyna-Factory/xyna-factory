@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
 
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyInt;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
 import com.gip.xyna.xsor.common.Interconnectable;
 import com.gip.xyna.xsor.common.ReplyCode;
 import com.gip.xyna.xsor.common.XSORUtil;
@@ -49,7 +50,9 @@ public class InterconnectSender extends InterconnectableStore implements Runnabl
   public static final XynaPropertyInt XSOR_SOCKET_TIMEOUT   = new XynaPropertyInt("com.gip.xyna.xsor.socket.timeout",   60000).setDefaultDocumentation(DocumentationLanguage.EN, "timeout of the xsor socket in milliseconds");
   public static final XynaPropertyInt XSOR_TCP_KEEPIDLE     = new XynaPropertyInt("com.gip.xyna.xsor.tcp.keepidle",     5).setDefaultDocumentation(DocumentationLanguage.EN, "after this interval in seconds, we will send TCP_KEEP");
   public static final XynaPropertyInt XSOR_TPC_KEEPINTERVAL = new XynaPropertyInt("com.gip.xyna.xsor.tcp.keepinterval", 5).setDefaultDocumentation(DocumentationLanguage.EN, "all x seconds we will repeat the TCP_KEEP");
-  
+  public static final XynaPropertyInt XSOR_TPC_KEEPCOUNT    = new XynaPropertyInt("com.gip.xyna.xsor.tcp.keepcount", 5).setDefaultDocumentation(DocumentationLanguage.EN, "maximum number of retransmissions, if the remote system does not respond");
+  public static final XynaPropertyBoolean XSOR_TCP_KEEPALIVE= new XynaPropertyBoolean("com.gip.xyna.xsor.tcp.keepalive",false).setDefaultDocumentation(DocumentationLanguage.EN, "use extended Socket properties");
+
 
   
   private volatile Socket socket;
@@ -107,11 +110,15 @@ public class InterconnectSender extends InterconnectableStore implements Runnabl
             localSocket.setSoTimeout(InterconnectSender.XSOR_SOCKET_TIMEOUT.get().intValue());
             logger.info("try to set extended Options");
             try {
-				localSocket.setOption(ExtendedSocketOptions.TCP_KEEPIDLE, InterconnectSender.XSOR_TCP_KEEPIDLE.get().intValue());
-				localSocket.setOption(ExtendedSocketOptions.TCP_KEEPINTERVAL, InterconnectSender.XSOR_TPC_KEEPINTERVAL.get().intValue());
-			} catch (Exception e) {
-				logger.info("unable to set extended Options",e);
-			}
+                if (InterconnectSender.XSOR_TCP_KEEPALIVE.get()) {
+                    localSocket.setOption(ExtendedSocketOptions.TCP_KEEPIDLE, InterconnectSender.XSOR_TCP_KEEPIDLE.get().intValue());
+                    localSocket.setOption(ExtendedSocketOptions.TCP_KEEPINTERVAL, InterconnectSender.XSOR_TPC_KEEPINTERVAL.get().intValue());
+                    localSocket.setOption(ExtendedSocketOptions.TCP_KEEPCOUNT, InterconnectSender.XSOR_TPC_KEEPCOUNT.get().intValue());
+                }
+ 
+	    } catch (Exception e) {
+		logger.info("unable to set extended Options",e);
+	    }
             socket = localSocket;
             Iterator<byte[]> it = lastSent.iterator();
             while (it.hasNext()) {
