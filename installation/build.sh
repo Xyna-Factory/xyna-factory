@@ -120,7 +120,7 @@ build_misc() {
 }
 
 build_cligenerator_jar() {
-  echo "building xynafactoryCLIGenerator-1.0.0.jar..."
+  echo "building cligenerator"
   cd $SCRIPT_DIR/../server
   mvn -f cligenerator.pom.xml dependency:resolve
   mvn -f cligenerator.pom.xml -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
