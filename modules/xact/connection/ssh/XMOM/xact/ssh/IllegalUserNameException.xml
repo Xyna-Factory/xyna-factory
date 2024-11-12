@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  --><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
   <ExceptionType BaseTypeName="UserAuthException" BaseTypePath="xact.ssh" Code="DEVEL-00501" IsAbstract="false" Label="Illegal User Name Exception" TypeName="IllegalUserNameException" TypePath="xact.ssh">
-    <MessageText Language="DE"></MessageText>
-    <MessageText Language="EN"></MessageText>
+    <MessageText Language="DE">Unerlaubter Benutzername: %0%</MessageText>
+    <MessageText Language="EN">Illegal User Name: %0%</MessageText>
   </ExceptionType>
 </ExceptionStore>

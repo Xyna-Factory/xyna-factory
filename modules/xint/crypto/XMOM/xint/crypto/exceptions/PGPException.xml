@@ -18,7 +18,7 @@
 -->
 <ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
   <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" IsAbstract="true" Label="PGP Exception" TypeName="PGPException" TypePath="xint.crypto.exceptions">
-    <MessageText Language="DE"></MessageText>
-    <MessageText Language="EN"></MessageText>
+    <MessageText Language="DE">PGP Fehler</MessageText>
+    <MessageText Language="EN">PGP Error</MessageText>
   </ExceptionType>
 </ExceptionStore>

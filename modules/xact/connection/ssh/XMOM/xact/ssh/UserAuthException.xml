@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  --><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
   <ExceptionType BaseTypeName="SSHException" BaseTypePath="xact.connection" IsAbstract="false" Label="User Auth Exception" TypeName="UserAuthException" TypePath="xact.ssh">
-    <MessageText Language="DE"></MessageText>
-    <MessageText Language="EN"></MessageText>
+    <MessageText Language="DE">Fehler bei der Authentifizierung des Benutzers: %0%</MessageText>
+    <MessageText Language="EN">Error during user authentication: %0%</MessageText>
   </ExceptionType>
 </ExceptionStore>
