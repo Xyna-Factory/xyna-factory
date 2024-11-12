@@ -115,88 +115,29 @@ build_xynautils_misc() {
 build_misc() {
   echo "building misc..."
   cd $SCRIPT_DIR/../misc
-  mkdir -p lib/xyna
-  mvn dependency:resolve
-  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  sed -i 's/ depends="resolve"//' build.xml
   ant -Doracle.home=/tmp build
   mvn install:install-file -Dfile=./deploy/misc.jar -DpomFile=./pom.xml
+}
+
+build_cligenerator_jar() {
+  echo "building cligenerator"
+  cd $SCRIPT_DIR/../server
+  mvn -f cligenerator.pom.xml dependency:resolve
+  mvn -f cligenerator.pom.xml -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
+  ant -Doracle.home=/tmp buildCliClassGeneratorJar
+  mvn install:install-file -Dfile=./deploy/xynafactoryCLIGenerator.jar -DpomFile=cligenerator.pom.xml
 }
 
 build_xynafactory_jar() {
   echo "building xynafactory.jar..."
   cd $SCRIPT_DIR/../server
-  mkdir -p lib/internal_xyna
-  cp build.xml build.xml.bak
-  sed -i 's/depends="resolve, /depends="/' build.xml
-  sed -i "s/XynaFactoryServer/xynafactory/" pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>ecj</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>XynaJavaSerializationPersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>OraclePersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>XynaLocalMemoryPersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>XynaMemoryPersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>XynaXMLShellPersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>xynafactoryCLIGenerator</{N;N;d}}}' pom.xml
-  mvn dependency:resolve
-  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  ant -Doracle.home=/tmp buildCliClassGeneratorJar
-  mvn install:install-file -Dfile=./deploy/xynafactoryCLIGenerator.jar -DpomFile=./pom.xml -Dversion=1.0.0 -DartifactId=xynafactoryCLIGenerator -DgroudId="com.gip.xyna"
-  cp ./deploy/xynafactoryCLIGenerator.jar lib/xynafactoryCLIGenerator-1.0.0.jar
-  ant -Doracle.home=/tmp build
-  mvn install:install-file -Dfile=./deploy/xynafactory.jar -DpomFile=./pom.xml
-  cp lib/xynafactoryCLIGenerator-1.0.0.jar .
-  
-  
   ant -Doracle.home=/tmp -Dxyna.clusterprovider.OracleRACClusterProvider=false build
-  
-  rm -rf lib build.xml
-  mv build.xml.bak build.xml
-  mkdir -p lib/internal_xyna
-  mv xynafactoryCLIGenerator-1.0.0.jar lib/
-}
-
-
-prepare_modules() {
-  echo "prepareing modules..."
-  cd $SCRIPT_DIR/..
-  # sed -i '/websphere/d' modules/xact/queue/build.xml # can not build without unavailable libs
-  sed -i '/<dependency>/{N;N;{/<artifactId>com.ibm.mq.traceControl/{N;N;d}}}' modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  sed -i '/<dependency>/{N;N;{/fscontext/{N;N;d}}}' modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  sed -i '/<dependency>/{N;N;{/javaee-api/{N;N;d}}}' modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  sed -i '/<dependency>/{N;N;{/providerutil/{N;N;d}}}' modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  sed -i '/<dependency>/{N;N;{/jms/{N;N;d}}}' modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  sed -i '/<\/dependencies>/,$d'  modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  echo "<dependency><groupId>org.apache.geronimo.specs</groupId><artifactId>geronimo-jms_1.1_spec</artifactId><version>1.1.1</version></dependency>" >> modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  echo "</dependencies></project>" >> modules/xact/queue/webspheremq/sharedlib/webspheremq/pom.xml
-  sed -i '/<copy/d' modules/xact/queue/webspheremq/sharedlib/webspheremq/build.xml
-  sed -i '/<dependency>/{N;N;{/jms/{N;N;d}}}' modules/xact/queue/webspheremq/mdmimpl/WebSphereMQImpl/pom.xml
-  sed -i '/<\/dependencies>/,$d'  modules/xact/queue/webspheremq/mdmimpl/WebSphereMQImpl/pom.xml
-  echo "<dependency><groupId>org.apache.geronimo.specs</groupId><artifactId>geronimo-jms_1.1_spec</artifactId><version>1.1.1</version></dependency>" >> modules/xact/queue/webspheremq/mdmimpl/WebSphereMQImpl/pom.xml
-  echo "</dependencies></project>" >> modules/xact/queue/webspheremq/mdmimpl/WebSphereMQImpl/pom.xml
-  sed -i '/<dependency>/{N;N;{/jms/{N;N;d}}}' modules/xact/queue/webspheremq/triggerimpl/WebSphereMQTrigger/test_filter/pom.xml
-  sed -i '/<\/dependencies>/,$d' modules/xact/queue/webspheremq/triggerimpl/WebSphereMQTrigger/test_filter/pom.xml
-  echo "<dependency><groupId>org.apache.geronimo.specs</groupId><artifactId>geronimo-jms_1.1_spec</artifactId><version>1.1.1</version></dependency>" >> modules/xact/queue/webspheremq/triggerimpl/WebSphereMQTrigger/test_filter/pom.xml
-  echo "</dependencies></project>" >> modules/xact/queue/webspheremq/triggerimpl/WebSphereMQTrigger/test_filter/pom.xml
-  mkdir -p modules/xact/queue/webspheremq/sharedlib/webspheremq/lib
-  mkdir -p modules/xact/queue/webspheremq/triggerimpl/WebSphereMQTrigger/test_filter/lib
-  mkdir -p modules/xact/queue/webspheremq/mdmimpl/WebSphereMQImpl/lib
-  cd modules/xact/queue/webspheremq/sharedlib/webspheremq
-  mvn dependency:resolve
-  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  cd ../../../../../../
-  cd modules/xact/queue/webspheremq/mdmimpl/WebSphereMQImpl/
-  mvn dependency:resolve
-  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  cd ../../../../../../
-  cd modules/xact/queue/webspheremq/triggerimpl/WebSphereMQTrigger/test_filter
-  mvn dependency:resolve
-  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
+  mvn install:install-file -Dfile=./deploy/xynafactory.jar -DpomFile=./pom.xml
 }
 
 build_oracle_aq_tools() {
   echo "build oracleAQ Tools"
   cd $SCRIPT_DIR/build
-  sed -i 's#name="prepareLibs"#name="prepareLibsX"#' ../../modules/xact/queue/oracleaq/sharedlib/OracleAQTools/build.xml
   ant -Doracle.home=/tmp -f ../../modules/xact/queue/oracleaq/sharedlib/OracleAQTools/build.xml build
   mvn install:install-file -Dfile=../../modules/xact/queue/oracleaq/sharedlib/OracleAQTools/deploy/OracleAQTools.jar -DpomFile=../../modules/xact/queue/oracleaq/sharedlib/OracleAQTools/pom.xml 
 }
@@ -241,7 +182,6 @@ build_clusterproviders() {
   
   #oracle rac cluster provider
   cd $SCRIPT_DIR/../clusterproviders/OracleRACClusterProvider
-  rm -f /test/com/gip/xyna/xfmg/xclusteringservices/clusterprovider/OracleRACClusterProviderTest.java
   ant -Doracle.home=/tmp
   
   #xsor cluster provider
@@ -391,12 +331,8 @@ compose_thirdparties() {
   sed -i '/<dependency>/{N;N;{/<artifactId>jradius-extended</{N;N;d}}}' pom.xml
   sed -i '/<dependency>/{N;N;{/<artifactId>ecj</{N;N;d}}}' pom.xml
   sed -i '/<dependency>/{N;N;{/<artifactId>gnu-crypto</{N;N;d}}}' pom.xml
-  echo "pom.xml:"
-  echo "$(cat pom.xml)"
   # run license downloads (bom must have name "pom.xml")
   mvn license:download-licenses -DlicensesOutputDirectory=$SCRIPT_DIR/../release/third_parties -DlicensesOutputFile=$SCRIPT_DIR/../release/third_parties/licenses.xml
-  echo "license.xml"
-  echo "$(cat $SCRIPT_DIR/../release/third_parties/licenses.xml)"
   # restore backup
   rm pom.xml
   mv pom.xml-bak pom.xml
@@ -613,7 +549,6 @@ fill_lib() {
 
 build_all() {
   build
-  build_oracle_aq_tools
   build_modules
   build_plugins
   build_clusterproviders
@@ -627,11 +562,11 @@ build_all() {
 build() {
   build_xynautils
   build_misc
+  build_cligenerator_jar
   build_xynafactory_jar
   build_conpooltypes
   build_persistencelayers
   fill_lib
-  prepare_modules
   build_oracle_aq_tools
 }
 
