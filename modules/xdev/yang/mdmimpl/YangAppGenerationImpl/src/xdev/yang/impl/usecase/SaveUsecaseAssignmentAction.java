@@ -142,6 +142,7 @@ public class SaveUsecaseAssignmentAction {
     result.append("\n//").append(mapping.getMappingYangPath()).append(" -> ").append(mapping.getValue()).append("\n");
     
     List<Pair<String, String>> mappingList = mapping.createPathList();
+    mappingList.removeIf(x -> x.getFirst().startsWith("uses:")); // remove tags <uses:grouping_name> in the mapping implementation
     int insertIndex = 0;
     for (int i = 0; i < position.size(); i++) {
       if (mappingList.size() < i) {

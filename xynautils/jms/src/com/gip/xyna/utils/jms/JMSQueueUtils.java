@@ -201,7 +201,7 @@ public class JMSQueueUtils {
    * @param jdbcUrl beispielsweise jdbc:oracle:thin:@10.0.10.11:1521:xynadb oder <br>
    * "jdbc:oracle:thin:@(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = gipsun162-vip)(PORT = 1521))
    * (ADDRESS = (PROTOCOL = TCP)(HOST = gipsun163-vip)(PORT = 1521))(LOAD_BALANCE = yes) (CONNECT_DATA = (SERVER = DEDICATED)
-   * (SERVICE_NAME = pallasha2) (FAILOVER_MODE = (TYPE = SELECT) (METHOD = BASIC) (RETRIES = 180) (DELAY =5)))"
+   * (SERVICE_NAME = [project]ha2) (FAILOVER_MODE = (TYPE = SELECT) (METHOD = BASIC) (RETRIES = 180) (DELAY =5)))"
    * @param dbUser benutzername für die datenbank verbindung
    * @param dbPassword password für die datenbank verbindung
    * @param transacted
