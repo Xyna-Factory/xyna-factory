@@ -145,8 +145,14 @@ public class ResumeOrderJavaDestination extends JavaDestination {
       }
       Pair<ResumeResult, String> result = null;
       if (foreignBinding == null) {
+        if (logger.isDebugEnabled()) {
+          logger.debug("Resuming Order " + bean.getTarget() + " locally");
+        }
         result = srm.resumeOrder(bean.getTarget());
       } else {
+        if (logger.isDebugEnabled()) {
+          logger.debug("Resuming Order " + bean.getTarget() + " on remote node with binding " + foreignBinding);
+        }
         result = srm.resumeOrderRemote(foreignBinding, bean.getTarget());
       }
 
@@ -288,6 +294,9 @@ public class ResumeOrderJavaDestination extends JavaDestination {
           int localBinding = clusterInstance.getLocalBinding();
           for (int binding : clusterInstance.getAllBindingsIncludingLocal()) {
             if (binding != localBinding) {
+              if (logger.isDebugEnabled()) {
+                logger.debug("Resuming Order " + bean.getTarget() + " on remote node with binding " + binding);
+              }
               srm.resumeOrderRemote(binding, bean.getTarget());
               //result kann hier nicht weiter verarbeitet werden. anderer knoten macht ggf retries
               break;
