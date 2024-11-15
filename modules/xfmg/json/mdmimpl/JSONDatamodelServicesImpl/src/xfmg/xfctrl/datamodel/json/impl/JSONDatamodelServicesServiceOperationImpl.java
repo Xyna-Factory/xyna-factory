@@ -309,26 +309,20 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     }
     return null;
   }
-  
+
+
   private Pair<Class<?>, Type> determineTypeOfField(GeneralXynaObject xo, String varNameInXyna) {
-    Class<?> typeOfField = null;
-    Type genericType = null;
-    boolean searchingClass = true;
-    Class<?> currentClass = xo.getClass();
-    while (searchingClass) {
-      try {
-        Field f = currentClass.getDeclaredField(varNameInXyna);
-        if (!Modifier.isStatic(f.getModifiers())) {
-          genericType = f.getGenericType();
-          typeOfField = f.getType();
-        }
-        searchingClass = false;
-      } catch (NoSuchFieldException ex) {
-        currentClass = currentClass.getSuperclass();
-        searchingClass = currentClass != null && currentClass != XynaObject.class && currentClass != Object.class;
+    try {
+      Method m = xo.getClass().getMethod("getField", String.class);
+      Field f = (Field) m.invoke(null, varNameInXyna);
+      if (f != null && !Modifier.isStatic(f.getModifiers())) {
+        Type genericType = f.getGenericType();
+        Class<?> typeOfField = f.getType();
+        return new Pair<Class<?>, Type>(typeOfField, genericType);
       }
+    } catch (Exception ex) {
     }
-    return new Pair<Class<?>, Type>(typeOfField, genericType);
+    throw new RuntimeException("Could not determine type of field " + varNameInXyna + " for " + xo.getClass());
   }
   
   @SuppressWarnings("unchecked")

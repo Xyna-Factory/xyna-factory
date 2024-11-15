@@ -86,6 +86,7 @@ public class PythonMdmGeneration {
   private static String setupLoadModuleSnippet() {
     StringBuilder sb = new StringBuilder();
     sb.append("import importlib\n");
+    sb.append("from importlib import abc\n");
     sb.append("import sys\n");
     sb.append("import types\n");
     setupStringLoader(sb);
