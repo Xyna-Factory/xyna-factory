@@ -16,4 +16,9 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="XMOMItem" BaseTypePath="xmcp.processmodeller.datatypes" Label="Data Type" TypeName="DataType" TypePath="xmcp.processmodeller.datatypes" Version="1.8"/>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="XMOMItem" BaseTypePath="xmcp.processmodeller.datatypes" Label="Data Type" TypeName="DataType" TypePath="xmcp.processmodeller.datatypes" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Plugin" VariableName="plugin" ReferenceName="Plugin" ReferencePath="xmcp.yggdrasil.plugin"/>
+</DataType>

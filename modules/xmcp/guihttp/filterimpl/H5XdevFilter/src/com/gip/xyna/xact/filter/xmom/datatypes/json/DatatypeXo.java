@@ -82,6 +82,7 @@ public class DatatypeXo extends DomOrExceptionXo {
     dataType.setLabel(dom.getLabel());
     dataType.setId("dt");
     dataType.setIsAbstract(dom.isAbstract());
+    dataType.unversionedSetPlugin(pluginMgmt.createPlugin(contextBuilder.instantiateContext(PluginPaths.location_datatype_root, null)));
 
     List<Area> dataTypeAreas = new ArrayList<Area>() {
 
