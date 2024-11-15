@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.gip.xyna.xact.filter.HasXoRepresentation;
 import com.gip.xyna.xact.filter.json.RuntimeContextJson;
 import com.gip.xyna.xact.filter.session.GenerationBaseObject;
 import com.gip.xyna.xact.filter.session.gb.ObjectId;
@@ -42,6 +41,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.PersistenceTypeInformation;
 
+import xmcp.processmodeller.datatypes.Area;
 import xmcp.processmodeller.datatypes.DataType;
 import xmcp.processmodeller.datatypes.DataTypeTypeLabelArea;
 import xmcp.processmodeller.datatypes.TextArea;
@@ -54,7 +54,7 @@ import xmcp.processmodeller.datatypes.servicegroupmodeller.JavaSharedLibrary;
 import xmcp.processmodeller.datatypes.servicegroupmodeller.LibrariesArea;
 import xmcp.processmodeller.datatypes.servicegroupmodeller.Library;
 
-public class DatatypeXo extends DomOrExceptionXo implements HasXoRepresentation {
+public class DatatypeXo extends DomOrExceptionXo {
 
   private List<DatatypeMethodXo> methods;
   private final DOM dom;
@@ -66,7 +66,8 @@ public class DatatypeXo extends DomOrExceptionXo implements HasXoRepresentation 
     this.dom = gbo.getDOM();
     this.methods = Utils.createDtMethods(dom, gbo);
   }
-  
+
+
   @Override
   public GeneralXynaObject getXoRepresentation() {
     DataType dataType = new DataType();
@@ -81,23 +82,30 @@ public class DatatypeXo extends DomOrExceptionXo implements HasXoRepresentation 
     dataType.setLabel(dom.getLabel());
     dataType.setId("dt");
     dataType.setIsAbstract(dom.isAbstract());
-    dataType.addToAreas(createDataTypeTypeLabelArea());
 
-    dataType.addToAreas(createGlobalStorablePropertyArea());
+    List<Area> dataTypeAreas = new ArrayList<Area>() {
 
-    dataType.addToAreas(createDocumentationArea(dom.getDocumentation(), PluginPaths.location_datatype_documenation));
+      {
+        add(createDataTypeTypeLabelArea());
+        add(createGlobalStorablePropertyArea());
+        add(createDocumentationArea(dom.getDocumentation(), PluginPaths.location_datatype_documenation));
+        add(createLibrariesArea());
+        add(createJavaSharedLibrariesArea());
+        add(createInheritedVariablesArea());
+        add(createMemberVariableArea(PluginPaths.location_datatype_members));
+        add(createInheritedMethodArea());
+        add(createOverrideMethodArea());
+        add(createMemberMethodArea());
+        add(createMetaTagArea(dom.getUnknownMetaTags(), false));
+      }
+    };
     
-    dataType.addToAreas(createLibrariesArea());
-    dataType.addToAreas(createJavaSharedLibrariesArea());
+    dataType.unversionedSetAreas(dataTypeAreas);
 
-    dataType.addToAreas(createInheritedVariablesArea());
-    dataType.addToAreas(createMemberVariableArea(PluginPaths.location_datatype_members));
-    dataType.addToAreas(createInheritedMethodArea());
-    dataType.addToAreas(createOverrideMethodArea());
-    dataType.addToAreas(createMemberMethodArea());
     return dataType;
   }
-  
+
+
   private static JavaSharedLibrariesArea createEmptyJavaSharedLibrariesArea() {
     JavaSharedLibrariesArea area = new JavaSharedLibrariesArea();
     area.setReadonly(false);
