@@ -17,9 +17,22 @@
  */
 package xdev.yang.impl;
 
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xact.trigger.RunnableForFilterAccess;
+import com.gip.xyna.xprc.XynaOrderServerExtension;
+
+import xact.http.URLPath;
+import xact.http.URLPathQuery;
+import xact.http.enums.httpmethods.DELETE;
+import xact.http.enums.httpmethods.GET;
+import xact.http.enums.httpmethods.HTTPMethod;
+import xact.http.enums.httpmethods.POST;
+import xact.http.enums.httpmethods.PUT;
 import xmcp.processmodeller.datatypes.Area;
 import xmcp.processmodeller.datatypes.Data;
 import xmcp.processmodeller.datatypes.Item;
@@ -85,6 +98,81 @@ public class GuiHttpInteraction {
     return null;
   }
   
+  public static void updateAssignmentsMeta(XynaOrderServerExtension order, String fqn, String workspaceName, String usecase, String xml, int oldMetaTagIndex) {
+    RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
+    String path = fqn.substring(0, fqn.lastIndexOf("."));
+    String label = fqn.substring(fqn.lastIndexOf(".") + 1);
+    String workspaceNameEscaped = GuiHttpInteraction.urlEncode(workspaceName);
+
+    //open datatype
+    String endpoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + path + "/" + label;
+    URLPath url = new URLPath(endpoint, null, null);
+    HTTPMethod method = new GET();
+    GuiHttpInteraction.executeRunnable(runnable, url, method, null, "could not open datatype");
+    
+    //remove old meta tag
+    endpoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + path + "/" + label + "/services/" + usecase + "/meta";
+    List<URLPathQuery> query = new ArrayList<>();
+    query.add(new URLPathQuery.Builder().attribute("metaTagId").value("metaTag"+oldMetaTagIndex).instance());
+    url = new URLPath(endpoint, query, null);
+    method = new DELETE();
+    GuiHttpInteraction.executeRunnable(runnable, url, method, "", "could not remove old meta tag");
+
+    //add new meta tag
+    url = new URLPath(endpoint, null, null);
+    method = new PUT();
+    xml = xml.replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"");
+    String payload = "{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.request.MetaTagRequest\"},\"metaTag\":{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.MetaTag\"},\"deletable\":true,\"tag\":\""+ xml +"\"}}";
+    GuiHttpInteraction.executeRunnable(runnable, url, method, payload, "could not add new meta tag");
+    
+    GuiHttpInteraction.saveDatatype(path, path, label, workspaceName, "servicegroups", order);
+  }
+
+
+  public static Object openDatatype(XynaOrderServerExtension order, String fqn, String workspaceName, String type) {
+    RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
+    String path = fqn.substring(0, fqn.lastIndexOf("."));
+    String label = fqn.substring(fqn.lastIndexOf(".") + 1);
+    String workspaceNameEscaped = GuiHttpInteraction.urlEncode(workspaceName);
+    String endpoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/" + type + "/" + path + "/" + label;
+    URLPath url = new URLPath(endpoint, null, null);
+    return executeRunnable(runnable, url, new GET(), null, "could not open datatype");
+  }
+
+
+  public static void updateImplementation(XynaOrderServerExtension order, String fqn, String workspaceName, String type, int methodId, String impl) {
+    RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
+    String path = fqn.substring(0, fqn.lastIndexOf("."));
+    String label = fqn.substring(fqn.lastIndexOf(".") + 1);
+    String workspaceNameEscaped = GuiHttpInteraction.urlEncode(workspaceName);
+    String endpoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/" + type + "/" + path + "/" + label + "/objects/memberMethod" + methodId + "/change";
+    URLPath url = new URLPath(endpoint, null, null);
+    String newImpl = impl.replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"");
+    newImpl = "{ \"implementation\": \"" + newImpl + "\"}";
+    GuiHttpInteraction.executeRunnable(runnable, url, new PUT(), newImpl, "could not update implementation");
+  }
+  
+  public static void saveDatatype(String path, String targetPath, String label, String workspace, String viewtype, XynaOrderServerExtension order) {
+    RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
+    String workspaceNameEscaped = urlEncode(workspace);
+    String baseUrl = "/runtimeContext/" + workspaceNameEscaped + "/xmom/" + viewtype + "/" + path + "/" + label;
+    URLPath url = new URLPath(baseUrl + "/save", null, null);
+    HTTPMethod method = new POST();
+    String payload = "{\"force\":false,\"revision\":2,\"path\":\"" + targetPath + "\",\"label\":\"" + label + "\"}";
+    executeRunnable(runnable, url, method, payload, "Could not save datatype.");
+    
+    //deploy
+    baseUrl = "/runtimeContext/" + workspaceNameEscaped + "/xmom/" + viewtype + "/" + targetPath + "/" + label;
+    url = new URLPath(baseUrl + "/deploy", null, null);
+    payload = "{\"revision\":3}";
+    executeRunnable(runnable, url, method, payload, "Could not deploy datatype.");
+    
+    //close
+    url = new URLPath(baseUrl + "/close", null, null);
+    payload = "{\"force\":false,\"revision\":4}";
+    executeRunnable(runnable, url, method, payload, "Could not close datatype.");
+  }
+  
   private static Area findAreaByName(List<? extends Area> areas, String name) {
     for(Area area: areas) {
       if(area.getName().equals(name)) {
@@ -92,5 +180,18 @@ public class GuiHttpInteraction {
       }
     }
     return null;
+  }
+  
+  public static Object executeRunnable(RunnableForFilterAccess runnable, URLPath url, HTTPMethod method, String payload, String msg) {
+    try {
+      return runnable.execute(url, method, payload);
+    } catch (XynaException e) {
+      throw new RuntimeException(msg, e);
+    }
+  }
+
+  
+  public static String urlEncode(String in) {
+    return URLEncoder.encode(in, Charset.forName("UTF-8"));
   }
 }
