@@ -45,6 +45,10 @@ import xmcp.processmodeller.datatypes.response.UpdateXMOMItemResponse;
 
 public class GuiHttpInteraction {
 
+  public static POST METHOD_POST = new POST();
+  public static GET METHOD_GET = new GET();
+  public static PUT METHOD_PUT = new PUT();
+  
   public static List<String> loadVarNames(GetServiceGroupResponse response, Integer operationIndex) {
     List<String> result = new ArrayList<String>();
     List<? extends Area> areas = response.getXmomItem().getAreas();

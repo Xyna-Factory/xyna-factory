@@ -19,13 +19,6 @@ package xdev.yang.impl.usecase;
 
 
 
-import java.util.List;
-
-import org.apache.log4j.Logger;
-import org.yangcentral.yangkit.model.api.stmt.Module;
-import org.yangcentral.yangkit.model.api.stmt.Rpc;
-
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xact.trigger.RunnableForFilterAccess;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
@@ -35,14 +28,9 @@ import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 
 import xact.http.URLPath;
-import xact.http.enums.httpmethods.GET;
 import xact.http.enums.httpmethods.HTTPMethod;
-import xact.http.enums.httpmethods.POST;
-import xact.http.enums.httpmethods.PUT;
 import xdev.yang.impl.Constants;
 import xdev.yang.impl.GuiHttpInteraction;
-import xdev.yang.impl.YangCapabilityUtils;
-import xdev.yang.impl.YangStatementTranslator.YangStatementTranslation;
 import xmcp.processmodeller.datatypes.response.GetDataTypeResponse;
 import xmcp.processmodeller.datatypes.response.UpdateXMOMItemResponse;
 import xprc.xpce.Workspace;
@@ -51,107 +39,78 @@ import xprc.xpce.Workspace;
 
 public class AddUsecase {
 
-  private static final Logger logger = CentralFactoryLogging.getLogger(AddUsecase.class);
-
-
   public void addUsecase(String fqn, String usecaseName, Workspace workspace, XynaOrderServerExtension order, String rpc, String deviceFqn, String rpcNs) {
+    String label = fqn.substring(fqn.lastIndexOf(".") + 1);
+    String path = fqn.substring(0, fqn.lastIndexOf("."));
+    UsecaseCreationParameter parameter = new UsecaseCreationParameter();
+    parameter.deviceFqn = deviceFqn;
+    parameter.label = label;
+    parameter.order = order;
+    parameter.path = path;
+    parameter.rpc = rpc;
+    parameter.rpcNs = rpcNs;
+    parameter.workspace = workspace.getName();
+    createUsecase(parameter);
+  }
+  
+  public Usecase createUsecase(UsecaseCreationParameter parameter) {
+    String path = parameter.path;
+    String label = parameter.label;
+    String workspace = parameter.workspace;
+    XynaOrderServerExtension order = parameter.order;
+    String usecase = parameter.usecase;
+    String fqn = path + "." + label;
     try {
-      String workspaceName = workspace.getName();
-      if (logger.isDebugEnabled()) {
-        logger.debug("addUsecase: " + usecaseName + " to " + fqn + " in workspace " + workspaceName + " using order: " + order.getId());
-      }
       RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
-      Long revision = revMgmt.getRevision(null, null, workspaceName);
+      Long revision = revMgmt.getRevision(null, null, workspace);
       DOM dom = DOM.getOrCreateInstance(fqn, new GenerationBaseCache(), revision);
-      String label = fqn.substring(fqn.lastIndexOf(".") + 1);
-      String path = fqn.substring(0, fqn.lastIndexOf("."));
-      String currentPath = path;
-      if (logger.isDebugEnabled()) {
-        logger.debug(order.getId() + ": Read from input: Workspace revision: " + revision + ", label: " + label + ", path: " + path);
-      }
-      try {
-        if (!doesDomExist(dom)) {
-          currentPath = createDatatype(label, workspaceName, order);
-          addParentToDatatype(currentPath, label, workspaceName, order);
-          GuiHttpInteraction.saveDatatype(currentPath, path, label, workspaceName, "datatypes", order);
-          currentPath = path;
-        }
-
-        if (logger.isDebugEnabled()) {
-          logger.debug(order.getId() + ": Adding service to datatype. Current datatype path: " + currentPath);
-        }
-
-        rpcNs = rpcNs == null || rpcNs.isBlank() ? loadRpcNs(rpc, deviceFqn, workspaceName) : rpcNs;
-        addServiceToDatatype(currentPath, label, usecaseName, workspaceName, order, rpc, deviceFqn, rpcNs);
-        GuiHttpInteraction.saveDatatype(currentPath, path, label, workspaceName, "servicegroups", order);
-      } finally {
-        if (logger.isDebugEnabled()) {
-          logger.debug(order.getId() + ": Closing datatype.");
-        }
-        closeDatatype(currentPath, label, workspaceName, order);
+      if (!doesDomExist(dom)) {
+        String tmpPath = createDatatype(label, workspace, order);
+        addParentToDatatype(tmpPath, label, workspace, order);
+        GuiHttpInteraction.saveDatatype(tmpPath, path, label, workspace, "datatypes", order);
       }
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+
+    addUsecaseToDatatype(parameter);
+    Usecase result = Usecase.open(order, fqn, workspace, usecase);;
+    result.addInput("xmcp.yang.MessageId");
+    result.addOutput("xact.templates.Document");
+    result.updateImplementation("return null;");
+    String meta = createMetaTag(result, parameter.deviceFqn);
+    result.setMetaTag(meta);
+    result.save();
+    return result;
   }
 
-  private String loadRpcNs(String rpc, String deviceFqn, String workspaceName) {
-    List<Module> modules = UseCaseAssignmentUtils.loadModules(workspaceName);
-    //filter modules to supported by device
-    List<String> capabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
-    modules = YangCapabilityUtils.filterModules(modules, capabilities);
-    List<Rpc> candidates = UseCaseAssignmentUtils.findRpcs(modules, rpc);
-    if(candidates.size() != 1) {
-      throw new RuntimeException("Could not determine rpc namespace. There are " + candidates.size() + " candidates.");
-    }
-    return YangStatementTranslation.getNamespace(candidates.get(0));
+
+  private String createMetaTag(Usecase usecase, String deviceFqn) {
+    String mappings = "<" + Constants.TAG_MAPPINGS + "/>";
+    String device = "<" + Constants.TAG_DEVICE_FQN + ">" + deviceFqn + "</" + Constants.TAG_DEVICE_FQN + ">";
+    String rpcNsTag = "<" + Constants.TAG_RPC_NS + ">" + usecase.getRpcNamespace() + "</" + Constants.TAG_RPC_NS + ">";
+    String rpcTag = "<" + Constants.TAG_RPC + ">" + usecase.getRpcName() + "</" + Constants.TAG_RPC + ">";
+    String YangStartTag = "<" + Constants.TAG_YANG + " " + Constants.ATT_YANG_TYPE + "=\\\"" + Constants.VAL_USECASE + "\\\">";
+    return YangStartTag + rpcTag + device + rpcNsTag + mappings + "</" + Constants.TAG_YANG + ">";
   }
 
-  private void addParentToDatatype(String path, String label, String workspace, XynaOrderServerExtension order) {
-    RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
-    String workspaceNameEscaped = GuiHttpInteraction.urlEncode(workspace);
-    String fqnUrl = path + "/" + label;
-    String endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + fqnUrl + "/objects/typeInfoArea/change";
-    URLPath url = new URLPath(endPoint, null, null);
-    HTTPMethod method = new PUT();
-    String payload = "{\"baseType\":\"xmcp.yang.YangUsecaseImplementation\"}";
-    GuiHttpInteraction.executeRunnable(runnable, url, method, payload, "Could not add supertype to datatype.");
-  }
 
-  private boolean doesDomExist(DOM dom) {
+  private static boolean doesDomExist(DOM dom) {
     try {
       dom.parseGeneration(false, false);
       return dom.exists();
-    } catch(XPRC_XMOMObjectDoesNotExist e) {
+    } catch (XPRC_XMOMObjectDoesNotExist e) {
       return false;
-    } catch(Exception e) {
+    } catch (Exception e) {
       throw new RuntimeException(e);
     }
   }
-
-  private void closeDatatype(String currentPath, String label, String workspaceName, XynaOrderServerExtension order) {
-    if (logger.isDebugEnabled()) {
-      logger.debug(order.getId() + ": Datatype does not exist");
-    }
-    RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
-    String workspaceNameEscaped = GuiHttpInteraction.urlEncode(workspaceName);
-    String endpoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + currentPath + "/" + label + "/close";
-    URLPath url = new URLPath(endpoint, null, null);
-    HTTPMethod method = new POST();
-    String payload = "{\"force\":false,\"revision\":0}";
-    GuiHttpInteraction.executeRunnable(runnable, url, method, payload, "could not close datatype");
-
-    if (logger.isDebugEnabled()) {
-      logger.debug(order.getId() + ": Datatype created. Temporary path: " + currentPath);
-    }
-  }
-
-
-  private String createDatatype(String label, String workspaceName, XynaOrderServerExtension order) {
+  
+  private static String createDatatype(String label, String workspaceName, XynaOrderServerExtension order) {
     RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
     String workspaceNameEscaped = GuiHttpInteraction.urlEncode(workspaceName);
     URLPath url = new URLPath("/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes", null, null);
-    HTTPMethod method = new POST();
+    HTTPMethod method = GuiHttpInteraction.METHOD_POST;
     String payload = "{\"label\":\"" + label + "\"}";
     GetDataTypeResponse json;
     json = (GetDataTypeResponse) GuiHttpInteraction.executeRunnable(runnable, url, method, payload, "Could not create datatype.");
@@ -161,60 +120,58 @@ public class AddUsecase {
     String fqn = json.getXmomItem().getFqn();
     return fqn.substring(0, fqn.lastIndexOf("."));
   }
-
-  private void addServiceToDatatype(String path, String label, String service, String workspace, XynaOrderServerExtension order, String rpc, String deviceFqn, String rpcNs) {
+  
+  private static void addParentToDatatype(String path, String label, String workspace, XynaOrderServerExtension order) {
     RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
     String workspaceNameEscaped = GuiHttpInteraction.urlEncode(workspace);
     String fqnUrl = path + "/" + label;
-
-    //open datatype as service group
-    String endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl;
+    String endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + fqnUrl + "/objects/typeInfoArea/change";
     URLPath url = new URLPath(endPoint, null, null);
-    HTTPMethod method = new GET();
-    GuiHttpInteraction.executeRunnable(runnable, url, method, null, "Could not open service group.");
-
-    // create service
-    endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl + "/objects/memberMethodsArea/insert";
-    url = new URLPath(endPoint, null, null);
-    method = new POST();
-    String payload = "{\"index\":-1,\"content\":{\"type\":\"memberService\",\"label\":\"" + service + "\"}}";
-    UpdateXMOMItemResponse json;
-    json = (UpdateXMOMItemResponse)GuiHttpInteraction.executeRunnable(runnable, url, method, payload, "Could not add service to datatype.");
-
-    String serviceNumber = String.valueOf(GuiHttpInteraction.loadServiceId(json, service));
-    if(serviceNumber.equals("-1")) {
-      throw new RuntimeException("could not add service " + service + " to datatype " + path + "." + label);
-    }
-    
-    // add xmcp.yang.MessageId as input variable
-    endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl + "/objects/methodVarArea" + serviceNumber + "_input/insert";
-    url = new URLPath(endPoint, null, null);
-    payload = "{\"index\":-1,\"content\":{\"type\":\"variable\",\"label\":\"MessageId\",\"fqn\":\"xmcp.yang.MessageId\",\"isList\":false}}";
-    GuiHttpInteraction.executeRunnable(runnable, url, method, payload, "Could not add input variable to service.");
-
-    // add xact.templates.Document as output variable
-    endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl + "/objects/methodVarArea" + serviceNumber + "_output/insert";
-    url = new URLPath(endPoint, null, null);
-    payload = "{\"index\":-1,\"content\":{\"type\":\"variable\",\"label\":\"Document\",\"fqn\":\"xact.templates.Document\",\"isList\":false}}";
-    GuiHttpInteraction.executeRunnable(runnable, url, method, payload, "Could not add output variable to service.");
-
-    // set implementation to "return null;"
-    endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl + "/objects/memberMethod" + serviceNumber + "/change";
-    url = new URLPath(endPoint, null, null);
-    payload = "{\"implementation\":\"return null;\"}";
-    method = new PUT();
-    GuiHttpInteraction.executeRunnable(runnable, url, method, payload, "Could not set implementation of service.");
-
-    // set meta tag
-    endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl + "/services/" + service + "/meta";
-    url = new URLPath(endPoint, null, null);
-    String mappings = "<" + Constants.TAG_MAPPINGS + "/>";
-    String device = "<" + Constants.TAG_DEVICE_FQN + ">" + deviceFqn + "</" + Constants.TAG_DEVICE_FQN + ">";
-    String rpcNsTag = "<" + Constants.TAG_RPC_NS + ">" + rpcNs + "</" + Constants.TAG_RPC_NS + ">";
-    String rpcTag = "<" + Constants.TAG_RPC + ">" + rpc + "</" + Constants.TAG_RPC + ">";
-    String YangStartTag = "<"+ Constants.TAG_YANG + " " + Constants.ATT_YANG_TYPE + "=\\\"" + Constants.VAL_USECASE + "\\\">";
-    String tag = YangStartTag + rpcTag + device + rpcNsTag + mappings +"</" + Constants.TAG_YANG + ">";
-    payload = "{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.request.MetaTagRequest\"},\"metaTag\":{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.MetaTag\"},\"deletable\":true,\"tag\":\"" + tag + "\"}}";
-    GuiHttpInteraction.executeRunnable(runnable, url, method, payload, "Could not add meta tag to service.");
+    String payload = "{\"baseType\":\"xmcp.yang.YangUsecaseImplementation\"}";
+    GuiHttpInteraction.executeRunnable(runnable, url, GuiHttpInteraction.METHOD_PUT, payload, "Could not add supertype to datatype.");
   }
+  
+  public static void addUsecaseToDatatype(UsecaseCreationParameter parameter) {
+    String rpcNs = parameter.rpcNs;
+    String deviceFqn = parameter.deviceFqn;
+    String rpc = parameter.rpc;
+    String workspaceName = parameter.workspace;
+    String path = parameter.path;
+    String label = parameter.label;
+    rpcNs = rpcNs == null || rpcNs.isBlank() ? UseCaseAssignmentUtils.loadRpcNs(rpc, deviceFqn, workspaceName) : rpcNs;
+
+    UpdateXMOMItemResponse json = createService(parameter);
+    String serviceNumber = String.valueOf(GuiHttpInteraction.loadServiceId(json, rpc));
+    if (serviceNumber.equals("-1")) {
+      throw new RuntimeException("could not add service " + rpc + " to datatype " + path + "." + label);
+    }
+  }
+
+
+  private static UpdateXMOMItemResponse createService(UsecaseCreationParameter parameter) {
+    String rpc = parameter.rpc;
+    String workspaceNameEscaped = GuiHttpInteraction.urlEncode(parameter.workspace);
+    String fqnUrl = parameter.path + "/" + parameter.label;
+    RunnableForFilterAccess runnable = parameter.order.getRunnableForFilterAccess("H5XdevFilter");
+    String endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl + "/objects/memberMethodsArea/insert";
+    URLPath url = new URLPath(endPoint, null, null);
+    String payload = "{\"index\":-1,\"content\":{\"type\":\"memberService\",\"label\":\"" + rpc + "\"}}";
+    String errorMsg = "Could not add service to datatype.";
+    HTTPMethod method = GuiHttpInteraction.METHOD_POST;
+    return (UpdateXMOMItemResponse) GuiHttpInteraction.executeRunnable(runnable, url, method, payload, errorMsg);
+  }
+  
+  
+  public static class UsecaseCreationParameter {
+
+    private XynaOrderServerExtension order;
+    private String path;
+    private String label;
+    private String workspace;
+    private String usecase;
+    private String rpc;
+    private String rpcNs;
+    private String deviceFqn;
+  }
+
 }

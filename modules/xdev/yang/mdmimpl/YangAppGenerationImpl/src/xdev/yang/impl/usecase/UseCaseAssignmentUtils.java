@@ -47,6 +47,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 import xdev.yang.impl.Constants;
 import xdev.yang.impl.XmomDbInteraction;
+import xdev.yang.impl.YangCapabilityUtils;
 import xdev.yang.impl.YangStatementTranslator;
 import xdev.yang.impl.YangStatementTranslator.YangStatementTranslation;
 import xmcp.yang.LoadYangAssignmentsData;
@@ -85,7 +86,6 @@ public class UseCaseAssignmentUtils {
     }
     return result;
   }
-
 
 
   private static YangStatement traverseYangOneLayer(List<Module> modules, String pathStep, String namespace, YangStatement statement) {
@@ -292,4 +292,15 @@ public class UseCaseAssignmentUtils {
     return deviceFqnEle.getTextContent();
   }
   
+  public static String loadRpcNs(String rpc, String deviceFqn, String workspaceName) {
+    List<Module> modules = UseCaseAssignmentUtils.loadModules(workspaceName);
+    //filter modules to supported by device
+    List<String> capabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
+    modules = YangCapabilityUtils.filterModules(modules, capabilities);
+    List<Rpc> candidates = UseCaseAssignmentUtils.findRpcs(modules, rpc);
+    if (candidates.size() != 1) {
+      throw new RuntimeException("Could not determine rpc namespace. There are " + candidates.size() + " candidates.");
+    }
+    return YangStatementTranslation.getNamespace(candidates.get(0));
+  }
 }
