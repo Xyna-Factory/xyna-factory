@@ -102,6 +102,10 @@ public class ResumeOrderJavaDestination extends JavaDestination {
         logger.debug("Skipping resume as it has been already performed earlier");
         return bean;
       }
+      
+      if (logger.isDebugEnabled()) {
+        logger.debug("Resume for " + bean.getTarget() + ". RetryCount: " + bean.getRetryCount() + " with orderId: " + xose.getId());
+      }
 
       SuspendResumeManagement srm = XynaFactory.getInstance().getProcessing().getXynaProcessCtrlExecution().getSuspendResumeManagement();
 
@@ -125,19 +129,30 @@ public class ResumeOrderJavaDestination extends JavaDestination {
        * => Der Check wird dadurch durchgeführt, dass man einfach lokal das Resume probiert.
        * Wenn es fehlschlägt, weil der Auftrag nicht im Backup gefunden wird (dies inkludiert B1a und B2a), dann auf den anderen Knoten delegieren
        */
-      Integer foreignBinding;
+      Integer foreignBinding = null;
       try {
         foreignBinding = getForeignBinding(bean);
       } catch (PersistenceLayerException e) {
-        srm.resumeOrderAsynchronouslyDelayed(bean.getTarget(), bean.getRetryCount() + 1, null, bean.mayDelegateToOtherNodeIfOrderIsNotFound());
-        bean.setRequestSucceeded(true);
-        bean.setResumed(false);
-        return bean;
+        if (bean.getRetryCount() <= 5) {
+          if (logger.isDebugEnabled()) {
+            logger.debug("Could not determine foreign binding. Retry.", e);
+          }
+          srm.resumeOrderAsynchronouslyDelayed(bean.getTarget(), bean.getRetryCount() + 1, null, bean.mayDelegateToOtherNodeIfOrderIsNotFound());
+          bean.setRequestSucceeded(true);
+          bean.setResumed(false);
+          return bean;
+        } 
       }
       Pair<ResumeResult, String> result = null;
       if (foreignBinding == null) {
+        if (logger.isDebugEnabled()) {
+          logger.debug("Resuming Order " + bean.getTarget() + " locally");
+        }
         result = srm.resumeOrder(bean.getTarget());
       } else {
+        if (logger.isDebugEnabled()) {
+          logger.debug("Resuming Order " + bean.getTarget() + " on remote node with binding " + foreignBinding);
+        }
         result = srm.resumeOrderRemote(foreignBinding, bean.getTarget());
       }
 
@@ -279,6 +294,9 @@ public class ResumeOrderJavaDestination extends JavaDestination {
           int localBinding = clusterInstance.getLocalBinding();
           for (int binding : clusterInstance.getAllBindingsIncludingLocal()) {
             if (binding != localBinding) {
+              if (logger.isDebugEnabled()) {
+                logger.debug("Resuming Order " + bean.getTarget() + " on remote node with binding " + binding);
+              }
               srm.resumeOrderRemote(binding, bean.getTarget());
               //result kann hier nicht weiter verarbeitet werden. anderer knoten macht ggf retries
               break;
@@ -332,6 +350,9 @@ public class ResumeOrderJavaDestination extends JavaDestination {
           break;
         case Unresumeable :
           if (SuspendResumeManagement.UNRESUMABLE_LOCKED.equals(result.getSecond())) {
+            if (logger.isDebugEnabled()) {
+              logger.debug("Order " + bean.getTarget() + " is locked. Retry.");
+            }
             retryCount = 0; //permanente Retries, bis Lock aufgehoben wird
           }
           break;
