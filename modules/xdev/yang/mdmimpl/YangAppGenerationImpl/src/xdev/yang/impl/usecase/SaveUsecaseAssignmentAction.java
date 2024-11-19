@@ -25,18 +25,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.gip.xyna.utils.collections.Pair;
-import com.gip.xyna.xact.trigger.RunnableForFilterAccess;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
-import xact.http.URLPath;
-import xact.http.URLPathQuery;
-import xact.http.enums.httpmethods.DELETE;
-import xact.http.enums.httpmethods.GET;
-import xact.http.enums.httpmethods.HTTPMethod;
-import xact.http.enums.httpmethods.PUT;
 import xdev.yang.impl.Constants;
-import xdev.yang.impl.GuiHttpInteraction;
-import xmcp.processmodeller.datatypes.response.GetServiceGroupResponse;
 import xmcp.yang.UseCaseAssignmentTableData;
 
 public class SaveUsecaseAssignmentAction {
@@ -44,11 +35,12 @@ public class SaveUsecaseAssignmentAction {
   public void saveUsecaseAssignment(XynaOrderServerExtension order, UseCaseAssignmentTableData data) {
     String fqn = data.getLoadYangAssignmentsData().getFqn();
     String workspaceName = data.getLoadYangAssignmentsData().getWorkspaceName();
-    String usecase = data.getLoadYangAssignmentsData().getUsecase();
+    String usecaseName = data.getLoadYangAssignmentsData().getUsecase();
     String totalYangPath = data.getLoadYangAssignmentsData().getTotalYangPath();
     String totalNamespaces = data.getLoadYangAssignmentsData().getTotalNamespaces();
+    
     boolean update = false;
-    Pair<Integer, Document> meta = UseCaseAssignmentUtils.loadOperationMeta(fqn, workspaceName, usecase);
+    Pair<Integer, Document> meta = UseCaseAssignmentUtils.loadOperationMeta(fqn, workspaceName, usecaseName);
     if(meta == null) {
       return;
     }
@@ -68,37 +60,19 @@ public class SaveUsecaseAssignmentAction {
       mapping.createAndAddElement(meta.getSecond());
     }
     
-    //write updated meta back to Datatype
-    String xml = XMLUtils.getXMLString(meta.getSecond().getDocumentElement(), false);
-    updateAssignmentsMeta(order, fqn, workspaceName, usecase, xml, meta.getFirst());
-    updateUsecaseImpl(order, fqn, workspaceName, usecase, meta);
+    
+    try(Usecase usecase = Usecase.open(order, fqn, workspaceName, usecaseName)) {
+      String xml = XMLUtils.getXMLString(meta.getSecond().getDocumentElement(), false);
+      usecase.updateAssignmentsMeta(xml, meta.getFirst());
+      String newImpl = createImpl(meta.getSecond(), usecase.getInputVarNames());
+      usecase.updateImplementation(newImpl);
+      usecase.save();
+      usecase.deploy();
+    } catch(Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
-  private void updateUsecaseImpl(XynaOrderServerExtension order, String fqn, String workspaceName, String usecase, Pair<Integer, Document> meta) {
-    RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
-    String path = fqn.substring(0, fqn.lastIndexOf("."));
-    String label = fqn.substring(fqn.lastIndexOf(".") + 1);
-    String workspaceNameEscaped = UseCaseAssignmentUtils.urlEncode(workspaceName);
-    String commonPath = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + path + "/" + label;
-    //open datatype
-    String endpoint = commonPath;
-    URLPath url = new URLPath(endpoint, null, null);
-    HTTPMethod method = new GET();
-    GetServiceGroupResponse response = (GetServiceGroupResponse)UseCaseAssignmentUtils.executeRunnable(runnable, url, method, null, "could not open datatype");
-    Integer id = Integer.valueOf(GuiHttpInteraction.loadServiceId(response, usecase));
-    List<String> inputVarNames = GuiHttpInteraction.loadVarNames(response, id);
-
-    //Update implementation
-    String newImpl = createImpl(meta.getSecond(), inputVarNames);
-    newImpl = newImpl.replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"");
-    newImpl = "{ \"implementation\": \"" + newImpl + "\"}";
-    endpoint = commonPath + "/objects/memberMethod" + id + "/change";
-    url = new URLPath(endpoint, null, null);
-    method = new PUT();
-    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, newImpl, "could not update implementation");
-
-    UseCaseAssignmentUtils.saveDatatype(path, path, label, workspaceName, "servicegroups", order);
-  }
 
   private String createImpl(Document meta, List<String> inputVarNames) {
     StringBuilder result = new StringBuilder();
@@ -181,33 +155,5 @@ public class SaveUsecaseAssignmentAction {
   }
 
 
-  private void updateAssignmentsMeta(XynaOrderServerExtension order, String fqn, String workspaceName, String usecase, String xml, int oldMetaTagIndex) {
-    RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
-    String path = fqn.substring(0, fqn.lastIndexOf("."));
-    String label = fqn.substring(fqn.lastIndexOf(".") + 1);
-    String workspaceNameEscaped = UseCaseAssignmentUtils.urlEncode(workspaceName);
-
-    //open datatype
-    String endpoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + path + "/" + label;
-    URLPath url = new URLPath(endpoint, null, null);
-    HTTPMethod method = new GET();
-    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, null, "could not open datatype");
-    
-    //remove old meta tag
-    endpoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + path + "/" + label + "/services/" + usecase + "/meta";
-    List<URLPathQuery> query = new ArrayList<>();
-    query.add(new URLPathQuery.Builder().attribute("metaTagId").value("metaTag"+oldMetaTagIndex).instance());
-    url = new URLPath(endpoint, query, null);
-    method = new DELETE();
-    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, "", "could not remove old meta tag");
-
-    //add new meta tag
-    url = new URLPath(endpoint, null, null);
-    method = new PUT();
-    xml = xml.replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"");
-    String payload = "{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.request.MetaTagRequest\"},\"metaTag\":{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.MetaTag\"},\"deletable\":true,\"tag\":\""+ xml +"\"}}";
-    UseCaseAssignmentUtils.executeRunnable(runnable, url, method, payload, "could not add new meta tag");
-    
-    UseCaseAssignmentUtils.saveDatatype(path, path, label, workspaceName, "servicegroups", order);
-  }
+  
 }

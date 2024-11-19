@@ -126,7 +126,6 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   @Override
   public void addUsecase(XynaOrderServerExtension order, Text usecaseGroupFqn, Text usecaseName, Workspace ws, Text rpc, Text deviceFqn, Text rpcNs) {
       new AddUsecase().addUsecase(usecaseGroupFqn.getText(), usecaseName.getText(), ws, order, rpc.getText(), deviceFqn.getText(), rpcNs.getText());
-    
   }
 
   @Override
