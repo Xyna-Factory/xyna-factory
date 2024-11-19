@@ -21,6 +21,8 @@ import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
+import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 import com.gip.xyna.xprc.exceptions.XPRC_DUPLICATE_CORRELATIONID;
 import com.gip.xyna.xprc.exceptions.XPRC_InvalidXMLForObjectCreationException;
@@ -34,6 +36,9 @@ import com.gip.xyna.xprc.xpce.WorkflowEngine;
 public class SynchronizationImpl {
   
   private static final String NULL_VALUE = "__NULL_VALUE_internal";
+  public static final XynaPropertyBoolean THROW_EXCEPTION = new XynaPropertyBoolean("xprc.synchronization.THOW_EXCEPTION", false)
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Ist die Synchronization Answer eine Exception, wird diese vom Await Schritt geworfen.")
+      .setDefaultDocumentation(DocumentationLanguage.EN, "If the synchronization answer is an exception, that exception is thrown by the await."); 
 
 
   public SynchronizationImpl() {
@@ -59,12 +64,23 @@ public class SynchronizationImpl {
   }
 
 
-  private static XynaObject createAnswer(String resultingAnswerString, Long rootRevision) {
+  private static XynaObject createAnswer(String resultingAnswerString, Long rootRevision) throws XynaException {
     if (resultingAnswerString == null) {
       return null;
     }
     if (resultingAnswerString.equals(NULL_VALUE)) {
       return null;
+    }
+    if (resultingAnswerString.startsWith("<Exception ") && THROW_EXCEPTION.get()) {
+      try {
+        GeneralXynaObject obj = XynaObject.generalFromXml(resultingAnswerString, rootRevision);
+        if (obj instanceof XynaException) {
+          ((XynaException) obj).setStackTrace(new StackTraceElement[0]);
+          throw (XynaException) obj;
+        }
+      } catch (XPRC_XmlParsingException | XPRC_InvalidXMLForObjectCreationException | XPRC_MDMObjectCreationException e) {
+        throw e;
+      }
     }
     if (resultingAnswerString.startsWith("<Data ")) {
       try {
