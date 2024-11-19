@@ -27,7 +27,6 @@ import com.gip.xyna.xact.trigger.RunnableForFilterAccess;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 
 import xact.http.URLPath;
-import xact.http.URLPathQuery;
 import xact.http.enums.httpmethods.DELETE;
 import xact.http.enums.httpmethods.GET;
 import xact.http.enums.httpmethods.HTTPMethod;
@@ -48,6 +47,7 @@ public class GuiHttpInteraction {
   public static POST METHOD_POST = new POST();
   public static GET METHOD_GET = new GET();
   public static PUT METHOD_PUT = new PUT();
+  public static DELETE METHOD_DELETE = new DELETE();
   
   public static List<String> loadVarNames(GetServiceGroupResponse response, Integer operationIndex) {
     List<String> result = new ArrayList<String>();
@@ -56,6 +56,9 @@ public class GuiHttpInteraction {
     Method method = (Method) area.getItems().get(operationIndex);
     areas = method.getAreas();
     VariableArea varArea = (VariableArea)findAreaByName(areas, "input");
+    if(varArea == null || varArea.getItems() == null) {
+      return result;
+    }
     for (Item item : varArea.getItems()) {
       Data inputVarData = (Data) item;
       result.add(inputVarData.getName());
@@ -101,36 +104,6 @@ public class GuiHttpInteraction {
     }
     return null;
   }
-  
-  public static void updateAssignmentsMeta(XynaOrderServerExtension order, String fqn, String workspaceName, String usecase, String xml, int oldMetaTagIndex) {
-    RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
-    String path = fqn.substring(0, fqn.lastIndexOf("."));
-    String label = fqn.substring(fqn.lastIndexOf(".") + 1);
-    String workspaceNameEscaped = GuiHttpInteraction.urlEncode(workspaceName);
-
-    //open datatype
-    String endpoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/datatypes/" + path + "/" + label;
-    URLPath url = new URLPath(endpoint, null, null);
-    HTTPMethod method = new GET();
-    GuiHttpInteraction.executeRunnable(runnable, url, method, null, "could not open datatype");
-    
-    //remove old meta tag
-    endpoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + path + "/" + label + "/services/" + usecase + "/meta";
-    List<URLPathQuery> query = new ArrayList<>();
-    query.add(new URLPathQuery.Builder().attribute("metaTagId").value("metaTag"+oldMetaTagIndex).instance());
-    url = new URLPath(endpoint, query, null);
-    method = new DELETE();
-    GuiHttpInteraction.executeRunnable(runnable, url, method, "", "could not remove old meta tag");
-
-    //add new meta tag
-    url = new URLPath(endpoint, null, null);
-    method = new PUT();
-    xml = xml.replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"");
-    String payload = "{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.request.MetaTagRequest\"},\"metaTag\":{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.MetaTag\"},\"deletable\":true,\"tag\":\""+ xml +"\"}}";
-    GuiHttpInteraction.executeRunnable(runnable, url, method, payload, "could not add new meta tag");
-    
-    GuiHttpInteraction.saveDatatype(path, path, label, workspaceName, "servicegroups", order);
-  }
 
 
   public static Object openDatatype(XynaOrderServerExtension order, String fqn, String workspaceName, String type) {
@@ -142,19 +115,7 @@ public class GuiHttpInteraction {
     URLPath url = new URLPath(endpoint, null, null);
     return executeRunnable(runnable, url, new GET(), null, "could not open datatype");
   }
-
-
-  public static void updateImplementation(XynaOrderServerExtension order, String fqn, String workspaceName, String type, int methodId, String impl) {
-    RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
-    String path = fqn.substring(0, fqn.lastIndexOf("."));
-    String label = fqn.substring(fqn.lastIndexOf(".") + 1);
-    String workspaceNameEscaped = GuiHttpInteraction.urlEncode(workspaceName);
-    String endpoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/" + type + "/" + path + "/" + label + "/objects/memberMethod" + methodId + "/change";
-    URLPath url = new URLPath(endpoint, null, null);
-    String newImpl = impl.replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"");
-    newImpl = "{ \"implementation\": \"" + newImpl + "\"}";
-    GuiHttpInteraction.executeRunnable(runnable, url, new PUT(), newImpl, "could not update implementation");
-  }
+  
   
   public static void saveDatatype(String path, String targetPath, String label, String workspace, String viewtype, XynaOrderServerExtension order) {
     RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
@@ -175,6 +136,16 @@ public class GuiHttpInteraction {
     url = new URLPath(baseUrl + "/close", null, null);
     payload = "{\"force\":false,\"revision\":4}";
     executeRunnable(runnable, url, method, payload, "Could not close datatype.");
+  }
+  
+  public static void setMetaTag(String path, String label, String workspace, String usecase, String tag, XynaOrderServerExtension order) {
+    RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
+    String workspaceNameEscaped = urlEncode(workspace);
+    String baseUrl = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + path + "/" + label;
+    URLPath url = new URLPath(baseUrl + "/services/" + usecase + "/meta", null, null);
+    String payload = "{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.request.MetaTagRequest\"},"
+        + "\"metaTag\":{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.MetaTag\"},\"deletable\":true,\"tag\":\"" + tag + "\"}}";
+    executeRunnable(runnable, url, GuiHttpInteraction.METHOD_PUT, payload, "Could not add meta tag to service.");
   }
   
   private static Area findAreaByName(List<? extends Area> areas, String name) {

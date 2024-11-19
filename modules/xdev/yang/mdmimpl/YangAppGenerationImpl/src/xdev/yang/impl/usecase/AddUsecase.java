@@ -50,10 +50,11 @@ public class AddUsecase {
     parameter.rpc = rpc;
     parameter.rpcNs = rpcNs;
     parameter.workspace = workspace.getName();
+    parameter.usecase = usecaseName;
     createUsecase(parameter);
   }
   
-  public Usecase createUsecase(UsecaseCreationParameter parameter) {
+  public void createUsecase(UsecaseCreationParameter parameter) {
     String path = parameter.path;
     String label = parameter.label;
     String workspace = parameter.workspace;
@@ -74,22 +75,23 @@ public class AddUsecase {
     }
 
     addUsecaseToDatatype(parameter);
-    Usecase result = Usecase.open(order, fqn, workspace, usecase);;
-    result.addInput("xmcp.yang.MessageId");
-    result.addOutput("xact.templates.Document");
-    result.updateImplementation("return null;");
-    String meta = createMetaTag(result, parameter.deviceFqn);
-    result.setMetaTag(meta);
-    result.save();
-    return result;
+    try (Usecase result = Usecase.open(order, fqn, workspace, usecase)) {
+      result.addInput("xmcp.yang.MessageId");
+      result.addOutput("xact.templates.Document");
+      result.updateImplementation("return null;");
+      result.save();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+
   }
 
 
-  private String createMetaTag(Usecase usecase, String deviceFqn) {
+  private static String createMetaTag(String deviceFqn, String rpc, String rpcNs) {
     String mappings = "<" + Constants.TAG_MAPPINGS + "/>";
     String device = "<" + Constants.TAG_DEVICE_FQN + ">" + deviceFqn + "</" + Constants.TAG_DEVICE_FQN + ">";
-    String rpcNsTag = "<" + Constants.TAG_RPC_NS + ">" + usecase.getRpcNamespace() + "</" + Constants.TAG_RPC_NS + ">";
-    String rpcTag = "<" + Constants.TAG_RPC + ">" + usecase.getRpcName() + "</" + Constants.TAG_RPC + ">";
+    String rpcNsTag = "<" + Constants.TAG_RPC_NS + ">" + rpcNs + "</" + Constants.TAG_RPC_NS + ">";
+    String rpcTag = "<" + Constants.TAG_RPC + ">" + rpc + "</" + Constants.TAG_RPC + ">";
     String YangStartTag = "<" + Constants.TAG_YANG + " " + Constants.ATT_YANG_TYPE + "=\\\"" + Constants.VAL_USECASE + "\\\">";
     return YangStartTag + rpcTag + device + rpcNsTag + mappings + "</" + Constants.TAG_YANG + ">";
   }
@@ -138,24 +140,32 @@ public class AddUsecase {
     String workspaceName = parameter.workspace;
     String path = parameter.path;
     String label = parameter.label;
+    String usecase = parameter.usecase;
     rpcNs = rpcNs == null || rpcNs.isBlank() ? UseCaseAssignmentUtils.loadRpcNs(rpc, deviceFqn, workspaceName) : rpcNs;
 
     UpdateXMOMItemResponse json = createService(parameter);
-    String serviceNumber = String.valueOf(GuiHttpInteraction.loadServiceId(json, rpc));
+    String serviceNumber = String.valueOf(GuiHttpInteraction.loadServiceId(json, usecase));
     if (serviceNumber.equals("-1")) {
-      throw new RuntimeException("could not add service " + rpc + " to datatype " + path + "." + label);
+      throw new RuntimeException("could not add service " + usecase + " to datatype " + path + "." + label);
     }
+    
+    String meta = createMetaTag(deviceFqn, rpc, rpcNs);
+    GuiHttpInteraction.setMetaTag(path, label, workspaceName, usecase, meta, parameter.order);
+    
+    GuiHttpInteraction.saveDatatype(path, path, label, workspaceName, "datatypes", parameter.order);
   }
+
+  
 
 
   private static UpdateXMOMItemResponse createService(UsecaseCreationParameter parameter) {
-    String rpc = parameter.rpc;
+    String usecase = parameter.usecase;
     String workspaceNameEscaped = GuiHttpInteraction.urlEncode(parameter.workspace);
     String fqnUrl = parameter.path + "/" + parameter.label;
     RunnableForFilterAccess runnable = parameter.order.getRunnableForFilterAccess("H5XdevFilter");
     String endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl + "/objects/memberMethodsArea/insert";
     URLPath url = new URLPath(endPoint, null, null);
-    String payload = "{\"index\":-1,\"content\":{\"type\":\"memberService\",\"label\":\"" + rpc + "\"}}";
+    String payload = "{\"index\":-1,\"content\":{\"type\":\"memberService\",\"label\":\"" + usecase + "\"}}";
     String errorMsg = "Could not add service to datatype.";
     HTTPMethod method = GuiHttpInteraction.METHOD_POST;
     return (UpdateXMOMItemResponse) GuiHttpInteraction.executeRunnable(runnable, url, method, payload, errorMsg);

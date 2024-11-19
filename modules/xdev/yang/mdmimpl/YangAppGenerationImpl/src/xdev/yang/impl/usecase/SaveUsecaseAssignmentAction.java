@@ -28,8 +28,6 @@ import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 import xdev.yang.impl.Constants;
-import xdev.yang.impl.GuiHttpInteraction;
-import xmcp.processmodeller.datatypes.response.GetServiceGroupResponse;
 import xmcp.yang.UseCaseAssignmentTableData;
 
 public class SaveUsecaseAssignmentAction {
@@ -37,11 +35,12 @@ public class SaveUsecaseAssignmentAction {
   public void saveUsecaseAssignment(XynaOrderServerExtension order, UseCaseAssignmentTableData data) {
     String fqn = data.getLoadYangAssignmentsData().getFqn();
     String workspaceName = data.getLoadYangAssignmentsData().getWorkspaceName();
-    String usecase = data.getLoadYangAssignmentsData().getUsecase();
+    String usecaseName = data.getLoadYangAssignmentsData().getUsecase();
     String totalYangPath = data.getLoadYangAssignmentsData().getTotalYangPath();
     String totalNamespaces = data.getLoadYangAssignmentsData().getTotalNamespaces();
+    
     boolean update = false;
-    Pair<Integer, Document> meta = UseCaseAssignmentUtils.loadOperationMeta(fqn, workspaceName, usecase);
+    Pair<Integer, Document> meta = UseCaseAssignmentUtils.loadOperationMeta(fqn, workspaceName, usecaseName);
     if(meta == null) {
       return;
     }
@@ -61,27 +60,19 @@ public class SaveUsecaseAssignmentAction {
       mapping.createAndAddElement(meta.getSecond());
     }
     
-    //write updated meta back to Datatype
-    String xml = XMLUtils.getXMLString(meta.getSecond().getDocumentElement(), false);
-    GuiHttpInteraction.updateAssignmentsMeta(order, fqn, workspaceName, usecase, xml, meta.getFirst());
-    updateUsecaseImpl(order, fqn, workspaceName, usecase, meta);
-  }
-
-  private void updateUsecaseImpl(XynaOrderServerExtension order, String fqn, String workspaceName, String usecase, Pair<Integer, Document> meta) {
-    String path = fqn.substring(0, fqn.lastIndexOf("."));
-    String label = fqn.substring(fqn.lastIndexOf(".") + 1);
     
-    //open datatype
-    GetServiceGroupResponse response = (GetServiceGroupResponse)GuiHttpInteraction.openDatatype(order, fqn, workspaceName, "servicegroups");
-    Integer id = Integer.valueOf(GuiHttpInteraction.loadServiceId(response, usecase));
-    List<String> inputVarNames = GuiHttpInteraction.loadVarNames(response, id);
-
-    //Update implementation
-    String newImpl = createImpl(meta.getSecond(), inputVarNames);
-    GuiHttpInteraction.updateImplementation(order, fqn, workspaceName, "servicegroups", id, newImpl);
-
-    GuiHttpInteraction.saveDatatype(path, path, label, workspaceName, "servicegroups", order);
+    try(Usecase usecase = Usecase.open(order, fqn, workspaceName, usecaseName)) {
+      String xml = XMLUtils.getXMLString(meta.getSecond().getDocumentElement(), false);
+      usecase.updateAssignmentsMeta(xml, meta.getFirst());
+      String newImpl = createImpl(meta.getSecond(), usecase.getInputVarNames());
+      usecase.updateImplementation(newImpl);
+      usecase.save();
+      usecase.deploy();
+    } catch(Exception e) {
+      throw new RuntimeException(e);
+    }
   }
+
 
   private String createImpl(Document meta, List<String> inputVarNames) {
     StringBuilder result = new StringBuilder();

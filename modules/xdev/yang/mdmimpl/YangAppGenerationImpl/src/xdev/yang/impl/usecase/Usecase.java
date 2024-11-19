@@ -19,6 +19,9 @@ package xdev.yang.impl.usecase;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.w3c.dom.Document;
 
 import com.gip.xyna.utils.collections.Pair;
@@ -27,6 +30,7 @@ import com.gip.xyna.xact.trigger.RunnableForFilterAccess;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 
 import xact.http.URLPath;
+import xact.http.URLPathQuery;
 import xact.http.enums.httpmethods.HTTPMethod;
 import xdev.yang.impl.GuiHttpInteraction;
 import xmcp.processmodeller.datatypes.response.GetServiceGroupResponse;
@@ -45,6 +49,7 @@ public class Usecase implements AutoCloseable {
   private String rpcName;
   private String rpcNamespace;
   private String baseUrl;
+  private List<String> inputVarNames;
   private RunnableForFilterAccess runnable;
 
 
@@ -108,7 +113,11 @@ public class Usecase implements AutoCloseable {
   }
 
 
-  
+  public List<String> getInputVarNames() {
+    return inputVarNames;
+  }
+
+
   public RunnableForFilterAccess getRunnable() {
     return runnable;
   }
@@ -140,6 +149,7 @@ public class Usecase implements AutoCloseable {
     result.rpcNamespace = UseCaseAssignmentUtils.readRpcNamespace(meta.getSecond());
     result.runnable = runnable;
     result.baseUrl = "/runtimeContext/" + result.workspaceNameEscaped + "/xmom/servicegroups/" + result.fqnUrl;
+    result.inputVarNames = GuiHttpInteraction.loadVarNames(obj, Integer.valueOf(result.serviceNumber));
     return result;
   }
 
@@ -187,11 +197,21 @@ public class Usecase implements AutoCloseable {
     executeRunnable(runnable, url, GuiHttpInteraction.METHOD_PUT, newImpl, "could not update implementation");
   }
 
-  public void setMetaTag(String tag) {
-    URLPath url = new URLPath(baseUrl + "/services/" + usecaseName + "/meta", null, null);
+
+  public void updateAssignmentsMeta(String xml, int oldMetaTagIndex) { 
+    //remove old meta tag
+    String endpoint = baseUrl + "/services/" + usecaseName + "/meta";
+    List<URLPathQuery> query = new ArrayList<>();
+    query.add(new URLPathQuery.Builder().attribute("metaTagId").value("metaTag"+oldMetaTagIndex).instance());
+    URLPath url = new URLPath(endpoint, query, null);
+    GuiHttpInteraction.executeRunnable(runnable, url, GuiHttpInteraction.METHOD_DELETE, "", "could not remove old meta tag");
+
+    //add new meta tag
+    url = new URLPath(endpoint, null, null);
+    xml = xml.replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"");
     String payload = "{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.request.MetaTagRequest\"},"
-        + "\"metaTag\":{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.MetaTag\"},\"deletable\":true,\"tag\":\"" + tag + "\"}}";
-    executeRunnable(runnable, url, GuiHttpInteraction.METHOD_POST, payload, "Could not add meta tag to service.");
+        + "\"metaTag\":{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.MetaTag\"},\"deletable\":true,\"tag\":\"" + xml + "\"}}";
+    executeRunnable(url, GuiHttpInteraction.METHOD_PUT, payload, "could not add new meta tag");
   }
 
   @Override
