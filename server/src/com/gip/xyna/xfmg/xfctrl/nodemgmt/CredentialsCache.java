@@ -112,6 +112,17 @@ public class CredentialsCache implements IPropertyChangeListener {
     }
   }
   
+  public XynaCredentials getCredentialsIfPresent(String nodeName) {
+    ensureLockIsPresent(nodeName);
+    synchronized(locksPerNode.get(nodeName)) {
+      Session session = sessionsPerNode.get(nodeName);
+      if(session == null) {
+        return null;
+      }
+      return session.creds;
+    }
+  }
+  
   
   public void clearSession(String nodeName) {
     ensureLockIsPresent(nodeName);
