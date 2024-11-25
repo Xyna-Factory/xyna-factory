@@ -163,7 +163,7 @@ public class HostKeyStorableRepository implements XynaHostKeyRepository {
     String[] subelements = rawpublickey.trim().split("\\s+");
     if (subelements.length==1) {
       try {
-        byte[] keyBytes = net.schmizz.sshj.common.Base64.decode(hostkey.getPublickey().trim());
+        byte[] keyBytes = Base64.getDecoder().decode(hostkey.getPublickey().trim());
         java.security.PublicKey key = new net.schmizz.sshj.common.Buffer.PlainBuffer(keyBytes).readPublicKey();
         EncryptionType encryType = EncryptionType.getByStringRepresentation(key.getAlgorithm());
         publickey=hostkey.getPublickey().trim();

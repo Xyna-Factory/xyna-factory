@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import com.gip.xyna.xfmg.xfctrl.filemgmt.FileManagement;
@@ -46,6 +47,7 @@ import xdev.yang.impl.usecase.SaveUsecaseAssignmentAction;
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.UseCaseAssignmentTableData;
 import xmcp.yang.UseCaseTableData;
+import xmcp.yang.fman.UsecaseSignatureEntry;
 import xprc.xpce.Workspace;
 
 
@@ -139,5 +141,23 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   public void saveAssignment(XynaOrderServerExtension order, UseCaseAssignmentTableData data) {
     SaveUsecaseAssignmentAction executor = new SaveUsecaseAssignmentAction();
     executor.saveUsecaseAssignment(order, data);
+  }
+
+
+  @Override
+  public void addVariableToUsecaseSignature(UseCaseTableData usecase, UsecaseSignatureEntry signature) {
+
+  }
+
+
+  @Override
+  public Container loadUsecaseSignature(UseCaseTableData usecase) {
+    return null;
+  }
+
+
+  @Override
+  public void removeVariableFromUsecaseSignautre(UseCaseTableData usecase, UsecaseSignatureEntry signature) {
+    
   }
 }
