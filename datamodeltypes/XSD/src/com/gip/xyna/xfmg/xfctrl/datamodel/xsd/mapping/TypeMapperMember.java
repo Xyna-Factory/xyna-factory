@@ -175,13 +175,22 @@ public class TypeMapperMember {
         value = String.valueOf(o);
       }
     }
-    parent.setTextContent(value);
+    setElementText(xmlContext, parent, value);
+  }
+  
+  private void setElementText(XmlContext xmlContext, Element el, String value) {
+    if (value != null && value.startsWith("<![CDATA[") && value.endsWith("]]>")) {
+      Node cdata = xmlContext.createCDATASection(value.substring(9, value.length() - 3));
+      el.appendChild(cdata);
+    } else {
+      el.setTextContent(value);
+    }
   }
 
   private void addXmlNode(XmlContext xmlContext, Element parent, String value) {
     if( value != null ) {
       Element el = xmlContext.createElement(typeInfoMember.isQualified(), typeInfoMember.getName());
-      el.setTextContent( value );
+      setElementText(xmlContext, el, value);
       parent.appendChild(el);
     } else {
       if( typeInfoMember.isOptional() ) {
