@@ -22,20 +22,20 @@
       <Data ID="18" Label="UsecaseSignatureEntry" ReferenceName="UsecaseSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="usecaseSignatureEntry18"/>
     </Input>
     <Output/>
-    <ServiceReference ID="61" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
-      <Source RefID="60"/>
-      <Target RefID="60"/>
+    <ServiceReference ID="525" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
+      <Source RefID="524"/>
+      <Target RefID="524"/>
     </ServiceReference>
-    <Function ID="60" Label="Remove Variable From Usecase Signautre">
-      <Source RefID="61"/>
+    <Function ID="524" Label="Remove Variable From Usecase Signature">
+      <Source RefID="525"/>
       <Source RefID="515"/>
       <Source RefID="18"/>
-      <Target RefID="61"/>
-      <Invoke Operation="removeVariableFromUsecaseSignautre" ServiceID="61">
+      <Target RefID="525"/>
+      <Invoke Operation="removeVariableFromUsecaseSignature" ServiceID="525">
         <Source RefID="515"/>
         <Source RefID="18"/>
       </Invoke>
-      <Receive ServiceID="61"/>
+      <Receive ServiceID="525"/>
     </Function>
     <Assign ID="1"/>
   </Operation>

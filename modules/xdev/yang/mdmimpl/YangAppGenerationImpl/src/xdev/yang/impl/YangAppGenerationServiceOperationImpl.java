@@ -162,7 +162,7 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
 
 
   @Override
-  public void removeVariableFromUsecaseSignautre(XynaOrderServerExtension order, UseCaseTableData usecase, UsecaseSignatureEntry signature) {
+  public void removeVariableFromUsecaseSignature(XynaOrderServerExtension order, UseCaseTableData usecase, UsecaseSignatureEntry signature) {
     RemoveVariableFromUsecaseSignature executor = new RemoveVariableFromUsecaseSignature();
     executor.removeVariable(order, usecase, signature);
   }
