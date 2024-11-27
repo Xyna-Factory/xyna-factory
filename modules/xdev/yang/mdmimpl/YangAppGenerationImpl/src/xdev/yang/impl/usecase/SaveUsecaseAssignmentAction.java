@@ -86,8 +86,9 @@ public class SaveUsecaseAssignmentAction {
         .append("builder.endAttributes();\n")
         .append("builder.startElementWithAttributes(\"").append(rpcName).append("\");\n")
         .append("builder.addAttribute(\"xmlns\", \"").append(rpcNs).append("\");\n")
-        .append("builder.endAttributes();\n");
-
+        .append("builder.endAttributes();\n\n");
+    
+    createVariables(result, meta, inputVarNames);
     createMappingImpl(result, meta);
     
     result
@@ -97,6 +98,18 @@ public class SaveUsecaseAssignmentAction {
 
     return result.toString();
   }
+  
+
+  private void createVariables(StringBuilder result, Document meta, List<String> inputVarNames) {
+    List<UsecaseSignatureVariable> variables = UsecaseSignatureVariable.loadSignatureEntries(meta, Constants.VAL_LOCATION_INPUT);  
+    for (int i = 0; i < variables.size(); i++) {
+      UsecaseSignatureVariable variable = variables.get(i);
+      String serviceInputVarName = inputVarNames.get(i + 1);
+      String fqn = variable.getFqn();
+      String customVarName = variable.getVarName();
+      result.append(fqn).append(" ").append(customVarName).append(" = ").append(serviceInputVarName).append(";\n");
+    }
+  }
 
   private void createMappingImpl(StringBuilder result, Document meta) {
     String rpcName = UseCaseAssignmentUtils.readRpcName(meta);
@@ -104,12 +117,19 @@ public class SaveUsecaseAssignmentAction {
     List<UseCaseMapping> mappings = UseCaseMapping.loadMappings(meta);
     Collections.sort(mappings);
     
+    result.append("try {\n");
+    
     List<Pair<String, String>> position = new ArrayList<>();
     position.add(new Pair<>(rpcName, rpcNs));
     for(UseCaseMapping mapping : mappings) {
       createMappingImpl(result, mapping, position);
     }
     closeTags(result, position, 0);
+    
+    result
+      .append("} catch(Exception e) {\n")
+      .append("  throw new RuntimeException(e);\n")
+      .append("}\n");
   }
 
   private void createMappingImpl(StringBuilder result, UseCaseMapping mapping, List<Pair<String, String>> position) {
@@ -143,7 +163,19 @@ public class SaveUsecaseAssignmentAction {
       }
     }
     String tag = mappingList.get(mappingList.size() - 1).getFirst();
-    result.append("builder.endAttributesAndElement(\"").append(mapping.getValue()).append("\", \"").append(tag).append("\");\n");
+    String value = determineMappingValue(mapping.getValue());
+    result.append("builder.endAttributesAndElement(").append(value).append(", \"").append(tag).append("\");\n");
+  }
+  
+  private String determineMappingValue(String mappingValue) {
+    if(mappingValue.startsWith("\"")) {
+      return mappingValue;
+    } else {
+      int firstDot = mappingValue.indexOf(".");
+      String variable = mappingValue.substring(0, firstDot);
+      String path = mappingValue.substring(firstDot + 1);
+      return String.format("String.valueOf(%s.get(\"%s\"))", variable, path);
+    }
   }
 
 
