@@ -2,171 +2,172 @@
 // Standard extensions get all permissions by default
 
 grant codeBase "file:${{java.ext.dirs}}/*" {
-	permission java.security.AllPermission;
+    permission java.security.AllPermission;
 };
 
 // default permissions granted to all domains
 
 grant {
-	// Allows any thread to stop itself using the java.lang.Thread.stop()
-	// method that takes no argument.
-	// Note that this permission is granted by default only to remain
-	// backwards compatible.
-	// It is strongly recommended that you either remove this permission
-	// from this policy file or further restrict it to code sources
-	// that you specify, because Thread.stop() is potentially unsafe.
-	// See "http://java.sun.com/notes" for more information.
-//	permission java.lang.RuntimePermission "stopThread";
+    // Allows any thread to stop itself using the java.lang.Thread.stop()
+    // method that takes no argument.
+    // Note that this permission is granted by default only to remain
+    // backwards compatible.
+    // It is strongly recommended that you either remove this permission
+    // from this policy file or further restrict it to code sources
+    // that you specify, because Thread.stop() is potentially unsafe.
+    // See "http://java.sun.com/notes" for more information.
+   // permission java.lang.RuntimePermission "stopThread";
 
-	// the following are required for the classloading mechanism and loading classes per reflection
-	permission java.lang.RuntimePermission "createClassLoader";
-	permission java.lang.RuntimePermission "closeClassLoader";
-	permission java.lang.RuntimePermission "accessClassInPackage.sun.reflect";
-	permission java.lang.RuntimePermission "getClassLoader";
+    // the following are required for the classloading mechanism and loading classes per reflection
+    permission java.lang.RuntimePermission "createClassLoader";
+    permission java.lang.RuntimePermission "closeClassLoader";
+    permission java.lang.RuntimePermission "accessClassInPackage.sun.reflect";
+    permission java.lang.RuntimePermission "getClassLoader";
     
-	permission java.lang.RuntimePermission "modifyThread"; // threadpool shutdown
-	permission java.lang.RuntimePermission "getStackTrace"; // shutdown
-	permission java.lang.RuntimePermission "modifyThreadGroup"; // shutdown
-	permission java.lang.RuntimePermission "setContextClassLoader";
-	permission java.lang.RuntimePermission "getenv.*"; //exception utils
-	
-	//used by listthreadinfo
-	permission java.lang.management.ManagementPermission "control";
-	permission java.lang.management.ManagementPermission "monitor";
+    permission java.lang.RuntimePermission "modifyThread"; // threadpool shutdown
+    permission java.lang.RuntimePermission "getStackTrace"; // shutdown
+    permission java.lang.RuntimePermission "modifyThreadGroup"; // shutdown
+    permission java.lang.RuntimePermission "setContextClassLoader";
+    permission java.lang.RuntimePermission "getenv.*"; //exception utils
+    
+    //used by listthreadinfo
+    permission java.lang.management.ManagementPermission "control";
+    permission java.lang.management.ManagementPermission "monitor";
 
-	permission java.lang.RuntimePermission "accessDeclaredMembers";
+    permission java.lang.RuntimePermission "accessDeclaredMembers";
 
-	permission java.lang.RuntimePermission "shutdownHooks";
+    permission java.lang.RuntimePermission "shutdownHooks";
 
-	// the following two permissions are not sufficient for compilation
-	// note that for windows these need to be specified using '\\' but unix requires '/'
-//	permission java.io.FilePermission ".\\-", "read, write, delete";
-//	permission java.io.FilePermission "..\\MDM\\-", "read, write, delete";
+    // the following two permissions are not sufficient for compilation
+    // note that for windows these need to be specified using '\\' but unix requires '/'
+    // permission java.io.FilePermission ".\\-", "read, write, delete";
+    // permission java.io.FilePermission "..\\MDM\\-", "read, write, delete";
 
-	// this may be replaced by something that is more secure (execute added to execute sh & grep for XMLShellPersLayer)
-	permission java.io.FilePermission "<<ALL FILES>>", "read, write, delete, execute";
+    // this may be replaced by something that is more secure (execute added to execute sh & grep for XMLShellPersLayer)
+    permission java.io.FilePermission "<<ALL FILES>>", "read, write, delete, execute";
 
-	// this is required to obtain system information on solaris machines
-	permission java.io.FilePermission "/usr/sbin/prtdiag", "execute";
+    // this is required to obtain system information on solaris machines
+    permission java.io.FilePermission "/usr/sbin/prtdiag", "execute";
 
-	// allows anyone to listen on un-privileged ports
+    // allows anyone to listen on un-privileged ports
 
-	// Socket permissions are resolved in reverse order (additional permissions from jre/lib/security/java.policy are added below and thus resolved first)
-        // If a wildcard hostname is used, no reverse DNS lookup is made.
- 	permission java.net.SocketPermission "localhost:514", "connect, resolve"; // syslog
-	permission java.net.SocketPermission "*:1024-", "accept, connect, resolve, listen";
-	permission java.net.SocketPermission "*:*", "connect, resolve";
+    // Socket permissions are resolved in reverse order (additional permissions from jre/lib/security/java.policy are added below and thus resolved first)
+    // If a wildcard hostname is used, no reverse DNS lookup is made.
+    permission java.net.SocketPermission "localhost:514", "connect, resolve"; // syslog
+    permission java.net.SocketPermission "*:1024-", "accept, connect, resolve, listen";
+    permission java.net.SocketPermission "*:*", "connect, resolve";
 
-	// "standard" properties that can be read by anyone
+    // "standard" properties that can be read by anyone
 
-	permission java.util.PropertyPermission "java.version", "read";
-	permission java.util.PropertyPermission "java.vendor", "read";
-	permission java.util.PropertyPermission "java.vendor.url", "read";
-	permission java.util.PropertyPermission "java.class.version", "read";
-	permission java.util.PropertyPermission "os.name", "read";
-	permission java.util.PropertyPermission "os.version", "read";
-	permission java.util.PropertyPermission "os.arch", "read";
-	permission java.util.PropertyPermission "file.separator", "read";
-	permission java.util.PropertyPermission "path.separator", "read";
-	permission java.util.PropertyPermission "line.separator", "read";
+    permission java.util.PropertyPermission "java.version", "read";
+    permission java.util.PropertyPermission "java.vendor", "read";
+    permission java.util.PropertyPermission "java.vendor.url", "read";
+    permission java.util.PropertyPermission "java.class.version", "read";
+    permission java.util.PropertyPermission "os.name", "read";
+    permission java.util.PropertyPermission "os.version", "read";
+    permission java.util.PropertyPermission "os.arch", "read";
+    permission java.util.PropertyPermission "file.separator", "read";
+    permission java.util.PropertyPermission "path.separator", "read";
+    permission java.util.PropertyPermission "line.separator", "read";
 
-	permission java.util.PropertyPermission "java.specification.version", "read";
-	permission java.util.PropertyPermission "java.specification.vendor", "read";
-	permission java.util.PropertyPermission "java.specification.name", "read";
+    permission java.util.PropertyPermission "java.specification.version", "read";
+    permission java.util.PropertyPermission "java.specification.vendor", "read";
+    permission java.util.PropertyPermission "java.specification.name", "read";
 
-	permission java.util.PropertyPermission "java.vm.specification.version", "read";
-	permission java.util.PropertyPermission "java.vm.specification.vendor", "read";
-	permission java.util.PropertyPermission "java.vm.specification.name", "read";
-	permission java.util.PropertyPermission "java.vm.version", "read";
-	permission java.util.PropertyPermission "java.vm.vendor", "read";
-	permission java.util.PropertyPermission "java.vm.name", "read";
+    permission java.util.PropertyPermission "java.vm.specification.version", "read";
+    permission java.util.PropertyPermission "java.vm.specification.vendor", "read";
+    permission java.util.PropertyPermission "java.vm.specification.name", "read";
+    permission java.util.PropertyPermission "java.vm.version", "read";
+    permission java.util.PropertyPermission "java.vm.vendor", "read";
+    permission java.util.PropertyPermission "java.vm.name", "read";
 
-	// the following properties are required for the exception handling
-	permission java.util.PropertyPermission "user.dir", "read";
-	permission java.util.PropertyPermission "exceptions.storage", "read";
+    // the following properties are required for the exception handling
+    permission java.util.PropertyPermission "user.dir", "read";
+    permission java.util.PropertyPermission "exceptions.storage", "read";
 
-	// the following properties are required for compilation
-	permission java.util.PropertyPermission "java.endorsed.dirs", "read";
-	permission java.util.PropertyPermission "sun.boot.class.path", "read";
-	permission java.util.PropertyPermission "java.ext.dirs", "read";
+    // the following properties are required for compilation
+    permission java.util.PropertyPermission "java.endorsed.dirs", "read";
+    permission java.util.PropertyPermission "sun.boot.class.path", "read";
+    permission java.util.PropertyPermission "java.ext.dirs", "read";
 
-	//benchmark:
-	permission java.util.PropertyPermission "java.home", "read";
+    //benchmark:
+    permission java.util.PropertyPermission "java.home", "read";
 
-	//support4eclipse
-	permission java.util.PropertyPermission "user.name", "read";
+    //support4eclipse
+    permission java.util.PropertyPermission "user.name", "read";
 
-	//Jain SipStack
-	permission java.util.PropertyPermission "gov.nist.*", "read";
+    //Jain SipStack
+    permission java.util.PropertyPermission "gov.nist.*", "read";
 
-	//exception utils
-	permission java.util.PropertyPermission "*", "read, write";
+    //exception utils
+    permission java.util.PropertyPermission "*", "read, write";
 
-	permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+    permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
 
-	//weitere RuntimePermissions, alphabetisch sortiert
-	permission java.lang.RuntimePermission "accessClassInPackage.com.sun.org.apache.xerces.internal.impl";
-	permission java.lang.RuntimePermission "accessClassInPackage.com.sun.org.apache.xerces.internal.impl.xs";
-	permission java.lang.RuntimePermission "accessClassInPackage.com.sun.org.apache.xerces.internal.impl.xs.traversers";
-	permission java.lang.RuntimePermission "accessClassInPackage.com.sun.org.apache.xerces.internal.jaxp";
-	permission java.lang.RuntimePermission "accessClassInPackage.com.sun.org.apache.xerces.internal.jaxp.validation";
-	permission java.lang.RuntimePermission "accessClassInPackage.com.sun.org.apache.xerces.internal.parsers";
-	permission java.lang.RuntimePermission "accessClassInPackage.com.sun.org.apache.xerces.internal.util";
-	permission java.lang.RuntimePermission "accessClassInPackage.com.sun.org.apache.xerces.internal.xni";
-	permission java.lang.RuntimePermission "accessClassInPackage.com.sun.proxy"; //Log4J
-        permission java.lang.RuntimePermission "accessClassInPackage.com.sun.script.javascript"; //Log4J
-	permission java.lang.RuntimePermission "accessClassInPackage.sun.misc"; //base64Encoder?
-	permission java.lang.RuntimePermission "accessClassInPackage.sun.net";
-	permission java.lang.RuntimePermission "accessClassInPackage.sun.net.www.protocol.file";
-	permission java.lang.RuntimePermission "accessClassInPackage.sun.nio.cs";
-	permission java.lang.RuntimePermission "accessClassInPackage.sun.nio.ch";
-	permission java.lang.RuntimePermission "accessClassInPackage.sun.reflect.generics.repository";
-	permission java.lang.RuntimePermission "accessClassInPackage.sun.reflect.generics.tree";
-	permission java.lang.RuntimePermission "accessClassInPackage.sun.reflect.generics.visitor";
-	permission java.lang.RuntimePermission "accessClassInPackage.sun.reflect.generics.factory";
-	permission java.lang.RuntimePermission "accessClassInPackage.sun.rmi.registry";
-	permission java.lang.RuntimePermission "accessClassInPackage.sun.rmi.server";
-	permission java.lang.RuntimePermission "accessClassInPackage.sun.rmi.transport";
-	permission java.lang.RuntimePermission "accessClassInPackage.sun.rmi.transport.proxy"; //Log4J
-	permission java.lang.RuntimePermission "accessClassInPackage.sun.rmi.transport.tcp";
-	permission java.lang.RuntimePermission "accessClassInPackage.sun.security.provider"; //Appender ASYNC
-	permission java.lang.RuntimePermission "accessClassInPackage.sun.security.ssl"; //Appender ASYNC
+    //weitere RuntimePermissions, alphabetisch sortiert
+    permission java.lang.RuntimePermission "accessClassInPackage.com.sun.org.apache.xerces.internal.impl";
+    permission java.lang.RuntimePermission "accessClassInPackage.com.sun.org.apache.xerces.internal.impl.xs";
+    permission java.lang.RuntimePermission "accessClassInPackage.com.sun.org.apache.xerces.internal.impl.xs.traversers";
+    permission java.lang.RuntimePermission "accessClassInPackage.com.sun.org.apache.xerces.internal.jaxp";
+    permission java.lang.RuntimePermission "accessClassInPackage.com.sun.org.apache.xerces.internal.jaxp.validation";
+    permission java.lang.RuntimePermission "accessClassInPackage.com.sun.org.apache.xerces.internal.parsers";
+    permission java.lang.RuntimePermission "accessClassInPackage.com.sun.org.apache.xerces.internal.util";
+    permission java.lang.RuntimePermission "accessClassInPackage.com.sun.org.apache.xerces.internal.xni";
+    permission java.lang.RuntimePermission "accessClassInPackage.com.sun.proxy"; //Log4J
+    permission java.lang.RuntimePermission "accessClassInPackage.com.sun.script.javascript"; //Log4J
+    permission java.lang.RuntimePermission "accessClassInPackage.sun.misc"; //base64Encoder?
+    permission java.lang.RuntimePermission "accessClassInPackage.sun.net";
+    permission java.lang.RuntimePermission "accessClassInPackage.sun.net.www.protocol.file";
+    permission java.lang.RuntimePermission "accessClassInPackage.sun.nio.cs";
+    permission java.lang.RuntimePermission "accessClassInPackage.sun.nio.ch";
+    permission java.lang.RuntimePermission "accessClassInPackage.sun.reflect.generics.repository";
+    permission java.lang.RuntimePermission "accessClassInPackage.sun.reflect.generics.tree";
+    permission java.lang.RuntimePermission "accessClassInPackage.sun.reflect.generics.visitor";
+    permission java.lang.RuntimePermission "accessClassInPackage.sun.reflect.generics.factory";
+    permission java.lang.RuntimePermission "accessClassInPackage.sun.rmi.registry";
+    permission java.lang.RuntimePermission "accessClassInPackage.sun.rmi.server";
+    permission java.lang.RuntimePermission "accessClassInPackage.sun.rmi.transport";
+    permission java.lang.RuntimePermission "accessClassInPackage.sun.rmi.transport.proxy"; //Log4J
+    permission java.lang.RuntimePermission "accessClassInPackage.sun.rmi.transport.tcp";
+    permission java.lang.RuntimePermission "accessClassInPackage.sun.security.provider"; //Appender ASYNC
+    permission java.lang.RuntimePermission "accessClassInPackage.sun.security.ssl"; //Appender ASYNC
 
-	//OJDBC6
-	permission java.lang.RuntimePermission "accessClassInPackage.sun.security.krb5";
+    //OJDBC6
+    permission java.lang.RuntimePermission "accessClassInPackage.sun.security.krb5";
 
-	//URL Constructor used in SOAP Services
-        permission java.net.NetPermission "specifyStreamHandler";
+    //URL Constructor used in SOAP Services
+    permission java.net.NetPermission "specifyStreamHandler";
 
-	//xstream persistence layer
-	permission java.io.SerializablePermission "enableSubclassImplementation";
+    //xstream persistence layer
+    permission java.io.SerializablePermission "enableSubclassImplementation";
 
-	// listsysteminfo
-	permission javax.management.MBeanServerPermission "createMBeanServer";
-	permission javax.management.MBeanPermission "*#*[*:*]", "queryNames, getMBeanInfo, invoke, getAttribute, unregisterMBean, registerMBean";
-	permission javax.management.MBeanTrustPermission "register";
+    // listsysteminfo
+    permission javax.management.MBeanServerPermission "createMBeanServer";
+    permission javax.management.MBeanPermission "*#*[*:*]", "queryNames, getMBeanInfo, invoke, getAttribute, unregisterMBean, registerMBean";
+    permission javax.management.MBeanTrustPermission "register";
 
-	permission java.sql.SQLPermission "deregisterDriver";
-	permission java.sql.SQLPermission "setNetworkTimeout";
+    permission java.sql.SQLPermission "deregisterDriver";
+    permission java.sql.SQLPermission "setNetworkTimeout";
 
-        // Websphere MQ Infrastruktur verwendet das (vgl Bug 17590)
-        permission java.util.logging.LoggingPermission "control";
+    // Websphere MQ Infrastruktur verwendet das (vgl Bug 17590)
+    permission java.util.logging.LoggingPermission "control";
 
-        // java11
-        permission java.lang.RuntimePermission "accessClassInPackage.jdk.internal.reflect";
-        permission java.lang.RuntimePermission "accessSystemModules";
-        permission java.lang.RuntimePermission "fileSystemProvider";
-        permission java.lang.RuntimePermission "getProtectionDomain";
+    // java11
+    permission java.lang.RuntimePermission "accessClassInPackage.jdk.internal.reflect";
+    permission java.lang.RuntimePermission "accessSystemModules";
+    permission java.lang.RuntimePermission "fileSystemProvider";
+    permission java.lang.RuntimePermission "getProtectionDomain";
 
-	// http module
-	permission java.net.NetPermission "getProxySelector";
-
-
-	// python code snippets
-	//permission java.lang.RuntimePermission "loadLibrary.TOKEN_PATH_TO_LIB";
+    // http module
+    permission java.net.NetPermission "getProxySelector";
 
 
+    // python code snippets
+    //permission java.lang.RuntimePermission "loadLibrary.TOKEN_PATH_TO_LIB";
 
-	//this should always be the last permission in this file to guarantee it having no syntax errors.
-	permission com.gip.xyna.XynaUsagePermission "start";
+    // BC for sshj 
+    permission java.security.SecurityPermission "getProperty.org.bouncycastle.pkcs12.default";
+
+    //this should always be the last permission in this file to guarantee it having no syntax errors.
+    permission com.gip.xyna.XynaUsagePermission "start";
 };
