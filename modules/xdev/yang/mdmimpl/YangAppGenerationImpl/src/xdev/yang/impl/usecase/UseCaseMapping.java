@@ -43,17 +43,11 @@ public class UseCaseMapping implements Comparable<UseCaseMapping> {
   
   public static List<Element> loadMappingElements(Document document) {
     Element mappingsNode = XMLUtils.getChildElementByName(document.getDocumentElement(), Constants.TAG_MAPPINGS);
-    List<Element> mappingNodes = XMLUtils.getChildElementsByName(mappingsNode, Constants.TAG_MAPPING);
-    List<Element> result = new ArrayList<Element>();
-    for(Element mappingNode : mappingNodes) {
-      result.add(mappingNode);
-    }
-    return result;
+    return XMLUtils.getChildElementsByName(mappingsNode, Constants.TAG_MAPPING);
   }
   
   public static List<UseCaseMapping> loadMappings(Document document) {
-    Element mappingsNode = XMLUtils.getChildElementByName(document.getDocumentElement(), Constants.TAG_MAPPINGS);
-    List<Element> mappingNodes = XMLUtils.getChildElementsByName(mappingsNode, Constants.TAG_MAPPING);
+    List<Element> mappingNodes = loadMappingElements(document);
     List<UseCaseMapping> result = new ArrayList<UseCaseMapping>();
     for(Element mappingNode : mappingNodes) {
       UseCaseMapping mapping = loadUseCaseMapping(mappingNode);

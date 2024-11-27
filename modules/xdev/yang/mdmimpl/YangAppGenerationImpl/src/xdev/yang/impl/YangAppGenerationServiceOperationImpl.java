@@ -41,8 +41,11 @@ import xdev.yang.YangAppGenerationServiceOperation;
 import xdev.yang.cli.generated.OverallInformationProvider;
 import xdev.yang.impl.YangApplicationGeneration.YangApplicationGenerationData;
 import xdev.yang.impl.usecase.AddUsecase;
+import xdev.yang.impl.usecase.AddVariableToUsecaseSignature;
 import xdev.yang.impl.usecase.DetermineUseCaseAssignments;
+import xdev.yang.impl.usecase.LoadUsecaseSignature;
 import xdev.yang.impl.usecase.LoadUsecasesTable;
+import xdev.yang.impl.usecase.RemoveVariableFromUsecaseSignature;
 import xdev.yang.impl.usecase.SaveUsecaseAssignmentAction;
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.UseCaseAssignmentTableData;
@@ -145,19 +148,22 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
 
 
   @Override
-  public void addVariableToUsecaseSignature(UseCaseTableData usecase, UsecaseSignatureEntry signature) {
-
+  public void addVariableToUsecaseSignature(XynaOrderServerExtension order, UseCaseTableData usecase, UsecaseSignatureEntry signature) {
+    AddVariableToUsecaseSignature executor = new AddVariableToUsecaseSignature();
+    executor.addVariable(order, usecase, signature);
   }
 
 
   @Override
   public Container loadUsecaseSignature(UseCaseTableData usecase) {
-    return null;
+    LoadUsecaseSignature executor = new LoadUsecaseSignature();
+    return executor.loadSignature(usecase);
   }
 
 
   @Override
-  public void removeVariableFromUsecaseSignautre(UseCaseTableData usecase, UsecaseSignatureEntry signature) {
-    
+  public void removeVariableFromUsecaseSignautre(XynaOrderServerExtension order, UseCaseTableData usecase, UsecaseSignatureEntry signature) {
+    RemoveVariableFromUsecaseSignature executor = new RemoveVariableFromUsecaseSignature();
+    executor.removeVariable(order, usecase, signature);
   }
 }

@@ -63,7 +63,7 @@ public class SaveUsecaseAssignmentAction {
     
     try(Usecase usecase = Usecase.open(order, fqn, workspaceName, usecaseName)) {
       String xml = XMLUtils.getXMLString(meta.getSecond().getDocumentElement(), false);
-      usecase.updateAssignmentsMeta(xml, meta.getFirst());
+      usecase.updateMeta(xml, meta.getFirst());
       String newImpl = createImpl(meta.getSecond(), usecase.getInputVarNames());
       usecase.updateImplementation(newImpl);
       usecase.save();
