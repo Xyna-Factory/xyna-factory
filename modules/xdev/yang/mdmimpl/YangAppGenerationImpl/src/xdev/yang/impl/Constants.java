@@ -24,6 +24,9 @@ public class Constants {
   public static final String ATT_MAPPING_YANGPATH = "yang";
   public static final String ATT_MAPPING_VALUE = "config";
   public static final String ATT_MAPPING_NAMESPACE = "namespace";
+  public static final String ATT_SIGNATURE_LOCATION = "location";
+  public static final String ATT_SIGNATURE_ENTRY_FQN = "fqn";
+  public static final String ATT_SIGNATURE_ENTRY_VARNAME = "variableName";
   
   public static final String TAG_YANG = "Yang";
   public static final String TAG_RPC = "Rpc";
@@ -31,6 +34,8 @@ public class Constants {
   public static final String TAG_DEVICE_FQN = "DeviceFqn";
   public static final String TAG_MAPPINGS = "Mappings";
   public static final String TAG_MAPPING = "Mapping";
+  public static final String TAG_SIGNATURE = "Signature";
+  public static final String TAG_SIGNATURE_ENTRY = "SignatureEntry";
   
   public static final String TAG_HELLO = "hello";
   public static final String TAG_CAPABILITIES = "capabilities";
@@ -39,6 +44,9 @@ public class Constants {
   public static final String VAL_USECASE = "Usecase";
   public static final String VAL_MODULECOLLECTION = "ModuleCollection";
   public static final String VAL_DEVICE = "Capabilities";
+  
+  public static final String VAL_LOCATION_INPUT = "input";
+  public static final String VAL_LOCATION_OUTPUT = "output";
   
   public static final String TYPE_CONTAINER = "container";
   public static final String TYPE_LEAF = "leaf";

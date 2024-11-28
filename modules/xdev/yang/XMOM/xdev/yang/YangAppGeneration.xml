@@ -100,24 +100,24 @@
         <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadUsecaseSignature(useCaseTableData16);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Remove Variable From Usecase Signautre" Name="removeVariableFromUsecaseSignautre">
+    <Operation IsStatic="true" Label="Remove Variable From Usecase Signature" Name="removeVariableFromUsecaseSignature" RequiresXynaOrder="true">
       <Input>
         <Data ID="23" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData23"/>
         <Data ID="24" Label="UsecaseSignatureEntry" ReferenceName="UsecaseSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="usecaseSignatureEntry24"/>
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.removeVariableFromUsecaseSignautre(useCaseTableData23, usecaseSignatureEntry24);</CodeSnippet>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.removeVariableFromUsecaseSignature(correlatedXynaOrder, useCaseTableData23, usecaseSignatureEntry24);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Add Variable To Usecase Signature" Name="addVariableToUsecaseSignature">
+    <Operation IsStatic="true" Label="Add Variable To Usecase Signature" Name="addVariableToUsecaseSignature" RequiresXynaOrder="true">
       <Input>
         <Data ID="21" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData21"/>
         <Data ID="22" Label="UsecaseSignatureEntry" ReferenceName="UsecaseSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="usecaseSignatureEntry22"/>
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.addVariableToUsecaseSignature(useCaseTableData21, usecaseSignatureEntry22);</CodeSnippet>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.addVariableToUsecaseSignature(correlatedXynaOrder, useCaseTableData21, usecaseSignatureEntry22);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
