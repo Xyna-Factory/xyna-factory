@@ -44,4 +44,9 @@
       <Type>String</Type>
     </Meta>
   </Data>
+  <Data Label="TotalKeywords" VariableName="totalKeywords">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
 </DataType>
