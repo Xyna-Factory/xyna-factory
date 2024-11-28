@@ -26,8 +26,10 @@ import java.util.Map;
 import org.yangcentral.yangkit.base.YangElement;
 import org.yangcentral.yangkit.model.api.stmt.Container;
 import org.yangcentral.yangkit.model.api.stmt.Leaf;
+import org.yangcentral.yangkit.model.api.stmt.Rpc;
 import org.yangcentral.yangkit.model.api.stmt.Uses;
 import org.yangcentral.yangkit.model.api.stmt.YangStatement;
+import org.yangcentral.yangkit.model.impl.stmt.MainModuleImpl;
 
 
 
@@ -41,6 +43,7 @@ public class YangStatementTranslator {
     result.put(Container.class, new YangStatementTranslation(Constants.TYPE_CONTAINER));
     result.put(Leaf.class, new YangStatementTranslation(Constants.TYPE_LEAF));
     result.put(Uses.class, new YangStatementTranslation(Constants.TYPE_USES));
+    result.put(Rpc.class, new YangStatementTranslation(Constants.TYPE_RPC));
     return result;
   }
 
@@ -71,8 +74,13 @@ public class YangStatementTranslator {
     }
 
 
-    public static String getUriString(YangStatement statement) {
-      return statement.getContext().getNamespace().getUri().toString();
+    public static String getNamespace(YangStatement statement) {
+      if (statement.getContext().getNamespace() != null) {
+        return statement.getContext().getNamespace().getUri().toString();
+      } else if (statement.getContext().getCurModule() instanceof MainModuleImpl) {
+        return ((MainModuleImpl) statement.getContext().getCurModule()).getNamespace().getUri().toString();
+      }
+      throw new RuntimeException("Namespace not found for " + statement);
     }
 
 
@@ -83,7 +91,6 @@ public class YangStatementTranslator {
         return statement.getSubElements();
       }
     }
-
 
   }
 }

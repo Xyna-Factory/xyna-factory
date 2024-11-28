@@ -17,9 +17,21 @@
  */
 package xdev.yang.impl;
 
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xact.trigger.RunnableForFilterAccess;
+import com.gip.xyna.xprc.XynaOrderServerExtension;
+
+import xact.http.URLPath;
+import xact.http.enums.httpmethods.DELETE;
+import xact.http.enums.httpmethods.GET;
+import xact.http.enums.httpmethods.HTTPMethod;
+import xact.http.enums.httpmethods.POST;
+import xact.http.enums.httpmethods.PUT;
 import xmcp.processmodeller.datatypes.Area;
 import xmcp.processmodeller.datatypes.Data;
 import xmcp.processmodeller.datatypes.Item;
@@ -32,6 +44,11 @@ import xmcp.processmodeller.datatypes.response.UpdateXMOMItemResponse;
 
 public class GuiHttpInteraction {
 
+  public static POST METHOD_POST = new POST();
+  public static GET METHOD_GET = new GET();
+  public static PUT METHOD_PUT = new PUT();
+  public static DELETE METHOD_DELETE = new DELETE();
+  
   public static List<String> loadVarNames(GetServiceGroupResponse response, Integer operationIndex) {
     List<String> result = new ArrayList<String>();
     List<? extends Area> areas = response.getXmomItem().getAreas();
@@ -39,6 +56,9 @@ public class GuiHttpInteraction {
     Method method = (Method) area.getItems().get(operationIndex);
     areas = method.getAreas();
     VariableArea varArea = (VariableArea)findAreaByName(areas, "input");
+    if(varArea == null || varArea.getItems() == null) {
+      return result;
+    }
     for (Item item : varArea.getItems()) {
       Data inputVarData = (Data) item;
       result.add(inputVarData.getName());
@@ -84,6 +104,49 @@ public class GuiHttpInteraction {
     }
     return null;
   }
+
+
+  public static Object openDatatype(XynaOrderServerExtension order, String fqn, String workspaceName, String type) {
+    RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
+    String path = fqn.substring(0, fqn.lastIndexOf("."));
+    String label = fqn.substring(fqn.lastIndexOf(".") + 1);
+    String workspaceNameEscaped = GuiHttpInteraction.urlEncode(workspaceName);
+    String endpoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/" + type + "/" + path + "/" + label;
+    URLPath url = new URLPath(endpoint, null, null);
+    return executeRunnable(runnable, url, new GET(), null, "could not open datatype");
+  }
+  
+  
+  public static void saveDatatype(String path, String targetPath, String label, String workspace, String viewtype, XynaOrderServerExtension order) {
+    RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
+    String workspaceNameEscaped = urlEncode(workspace);
+    String baseUrl = "/runtimeContext/" + workspaceNameEscaped + "/xmom/" + viewtype + "/" + path + "/" + label;
+    URLPath url = new URLPath(baseUrl + "/save", null, null);
+    HTTPMethod method = new POST();
+    String payload = "{\"force\":false,\"revision\":2,\"path\":\"" + targetPath + "\",\"label\":\"" + label + "\"}";
+    executeRunnable(runnable, url, method, payload, "Could not save datatype.");
+    
+    //deploy
+    baseUrl = "/runtimeContext/" + workspaceNameEscaped + "/xmom/" + viewtype + "/" + targetPath + "/" + label;
+    url = new URLPath(baseUrl + "/deploy", null, null);
+    payload = "{\"revision\":3}";
+    executeRunnable(runnable, url, method, payload, "Could not deploy datatype.");
+    
+    //close
+    url = new URLPath(baseUrl + "/close", null, null);
+    payload = "{\"force\":false,\"revision\":4}";
+    executeRunnable(runnable, url, method, payload, "Could not close datatype.");
+  }
+  
+  public static void setMetaTag(String path, String label, String workspace, String usecase, String tag, XynaOrderServerExtension order) {
+    RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
+    String workspaceNameEscaped = urlEncode(workspace);
+    String baseUrl = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + path + "/" + label;
+    URLPath url = new URLPath(baseUrl + "/services/" + usecase + "/meta", null, null);
+    String payload = "{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.request.MetaTagRequest\"},"
+        + "\"metaTag\":{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.MetaTag\"},\"deletable\":true,\"tag\":\"" + tag + "\"}}";
+    executeRunnable(runnable, url, GuiHttpInteraction.METHOD_PUT, payload, "Could not add meta tag to service.");
+  }
   
   private static Area findAreaByName(List<? extends Area> areas, String name) {
     for(Area area: areas) {
@@ -92,5 +155,18 @@ public class GuiHttpInteraction {
       }
     }
     return null;
+  }
+  
+  public static Object executeRunnable(RunnableForFilterAccess runnable, URLPath url, HTTPMethod method, String payload, String msg) {
+    try {
+      return runnable.execute(url, method, payload);
+    } catch (XynaException e) {
+      throw new RuntimeException(msg, e);
+    }
+  }
+
+  
+  public static String urlEncode(String in) {
+    return URLEncoder.encode(in, Charset.forName("UTF-8"));
   }
 }
