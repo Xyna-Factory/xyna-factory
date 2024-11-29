@@ -15,13 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Load Yang Assignments Data" TypeName="LoadYangAssignmentsData" TypePath="xmcp.yang" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="UsecaseSignatureEntry" TypeName="UsecaseSignatureEntry" TypePath="xmcp.yang.fman" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Total Yang Path" VariableName="totalYangPath">
+  <Data Label="Variable Name" VariableName="variableName">
     <Meta>
       <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Location" VariableName="location">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>input / output</Documentation>
     </Meta>
   </Data>
   <Data Label="Fqn" VariableName="fqn">
@@ -29,24 +35,9 @@
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Usecase" VariableName="usecase">
+  <Data Label="Index" VariableName="index">
     <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Workspace Name" VariableName="workspaceName">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Total Namespaces" VariableName="totalNamespaces">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="TotalKeywords" VariableName="totalKeywords">
-    <Meta>
-      <Type>String</Type>
+      <Type>Integer</Type>
     </Meta>
   </Data>
 </DataType>

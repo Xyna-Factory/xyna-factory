@@ -99,7 +99,8 @@ public class TypeGeneration {
   //public final static String XSD_DATAMODEL_BASE_APP_VERSION_NEWEST = "1.1.3"; //Bugfix 23382 falsche Version 0 
   //public final static String XSD_DATAMODEL_BASE_APP_VERSION_NEWEST = "1.1.4";  //Bugfix 23393 XSD:AnyType wird nun besser umgesetzt
   //public final static String XSD_DATAMODEL_BASE_APP_VERSION_REPAIR_REV = "1.1.5";  //Bugfix 23691: Revision Fallback auf Rootrevision
-  public final static String XSD_DATAMODEL_BASE_APP_VERSION_FOUNDDM_NOT_NULL = "1.1.6";  //Bugfix 23293: ValidateXML hat Datamodel nicht ermittelt
+  //public final static String XSD_DATAMODEL_BASE_APP_VERSION_FOUNDDM_NOT_NULL = "1.1.6";  //Bugfix 23293: ValidateXML hat Datamodel nicht ermittelt
+  public final static String XSD_DATAMODEL_BASE_APP_VERSION_CDATA = "1.1.7";
   
   private XSModel schema;
   private TypeInfoGenerator typeInfoGenerator;
@@ -336,13 +337,13 @@ public class TypeGeneration {
     Collection<ApplicationStorable> applications = appMgmt.listApplicationStorables();
     for (ApplicationStorable application : applications) {
       if (application.getName().equals(XSD_DATAMODEL_BASE_APP_NAME) &&
-          application.getVersion().equals(XSD_DATAMODEL_BASE_APP_VERSION_FOUNDDM_NOT_NULL) &&
+          application.getVersion().equals(XSD_DATAMODEL_BASE_APP_VERSION_CDATA) &&
           application.getStateAsEnum() != ApplicationState.AUDIT_MODE) {
-        return new RuntimeContextRequirementXmlEntry(XSD_DATAMODEL_BASE_APP_NAME, XSD_DATAMODEL_BASE_APP_VERSION_FOUNDDM_NOT_NULL, null);
+        return new RuntimeContextRequirementXmlEntry(XSD_DATAMODEL_BASE_APP_NAME, XSD_DATAMODEL_BASE_APP_VERSION_CDATA, null);
       }
     }
     createXsdBaseApp(appMgmt);
-    return new RuntimeContextRequirementXmlEntry(XSD_DATAMODEL_BASE_APP_NAME, XSD_DATAMODEL_BASE_APP_VERSION_FOUNDDM_NOT_NULL, null);
+    return new RuntimeContextRequirementXmlEntry(XSD_DATAMODEL_BASE_APP_NAME, XSD_DATAMODEL_BASE_APP_VERSION_CDATA, null);
   }
 
   public void createXsdBaseApp(ApplicationManagementImpl appMgmt) throws XPRC_VERSION_DETECTION_PROBLEM, PersistenceLayerException, Ex_FileAccessException, IOException, ParserConfigurationException {
@@ -358,7 +359,7 @@ public class TypeGeneration {
     utilsGen.createConstants();
     utilsGen.createAndAddUtilTypes(baseGenerator);
     StringBuilder comment = new StringBuilder("XSD Datamodel Utils");
-    File xsdBaseApp = baseGenerator.buildApplication(XSD_DATAMODEL_BASE_APP_NAME, XSD_DATAMODEL_BASE_APP_VERSION_FOUNDDM_NOT_NULL, comment.toString(), createBasicAppRequirements(appMgmt));
+    File xsdBaseApp = baseGenerator.buildApplication(XSD_DATAMODEL_BASE_APP_NAME, XSD_DATAMODEL_BASE_APP_VERSION_CDATA, comment.toString(), createBasicAppRequirements(appMgmt));
     try {
       importApplication(appMgmt, xsdBaseApp);
     } catch (Exception e) {

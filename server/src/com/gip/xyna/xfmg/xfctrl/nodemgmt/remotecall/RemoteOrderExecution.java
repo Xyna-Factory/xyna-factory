@@ -32,9 +32,9 @@ import com.gip.xyna.xfmg.xfctrl.nodemgmt.InfrastructureLinkProfile;
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.InterFactoryLink.InterFactoryLinkProfileIdentifier;
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.RemoteData;
 import com.gip.xyna.xfmg.xfctrl.nodemgmt.remotecall.RemoteOrderExecutionInterface.TransactionMode;
+import com.gip.xyna.xfmg.xopctrl.usermanagement.XynaCredentials;
 import com.gip.xyna.xmcp.OrderExecutionResponse;
 import com.gip.xyna.xmcp.RemoteCallXynaOrderCreationParameter;
-import com.gip.xyna.xmcp.RemoteXynaOrderCreationParameter;
 
 public class RemoteOrderExecution {
   
@@ -105,9 +105,12 @@ public class RemoteOrderExecution {
   }
 
   public void abortCommunication() throws XFMG_NodeConnectException{
-    executeRemoteCommand(new RemoteCommand<Void>() {
+    executeRemoteCommandNoRetry(new RemoteCommand<Void>() {
       public Void execute() throws XFMG_NodeConnectException {
-        orderExecution.abortCommunication(credentials.getCredentials(nodeName, infrastructure), identifier);
+        XynaCredentials creds = credentials.getCredentialsIfPresent(nodeName);
+        if (creds != null) {
+          orderExecution.abortCommunication(creds, identifier);
+        }
         return null;
       }
     });
@@ -165,19 +168,11 @@ public class RemoteOrderExecution {
   
   private <O> O executeRemoteCommand(RemoteCommand<O> command) throws XFMG_NodeConnectException {
     try {
-      O output = command.execute();
-      connected = true;
-      logger.debug("connected to " + nodeName);
-      lastConnectException = null;
-      return output;
+      return executeRemoteCommandNoRetry(command);
     } catch (XFMG_NodeConnectException e) {
       if (checkConnectivity()) {
         try {
-          O output = command.execute();
-          connected = true;
-          logger.debug("connected to " + nodeName);
-          lastConnectException = null;
-          return output;
+          return executeRemoteCommandNoRetry(command);
         } catch (XFMG_NodeConnectException ee) {
           connected = false;
           logger.debug("disconnected from " + nodeName);
@@ -189,6 +184,14 @@ public class RemoteOrderExecution {
         throw e;
       }
     }
+  }
+  
+  private <O> O executeRemoteCommandNoRetry(RemoteCommand<O> command) throws XFMG_NodeConnectException {
+    O output = command.execute();
+    connected = true;
+    logger.debug("connected to " + nodeName);
+    lastConnectException = null;
+    return output;
   }
   
   
