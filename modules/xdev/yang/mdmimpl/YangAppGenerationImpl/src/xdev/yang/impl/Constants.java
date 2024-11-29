@@ -23,6 +23,7 @@ public class Constants {
   public static final String ATT_YANG_TYPE = "type";
   public static final String ATT_MAPPING_YANGPATH = "yang";
   public static final String ATT_MAPPING_VALUE = "config";
+  public static final String ATT_MAPPING_KEYWORD = "keyword";
   public static final String ATT_MAPPING_NAMESPACE = "namespace";
   public static final String ATT_SIGNATURE_LOCATION = "location";
   public static final String ATT_SIGNATURE_ENTRY_FQN = "fqn";
@@ -54,6 +55,8 @@ public class Constants {
   public static final String TYPE_USES = "uses";
   public static final String TYPE_IDENTITY = "identity";
   public static final String TYPE_RPC = "rpc";
+  public static final String TYPE_CHOICE = "choice";
+  public static final String TYPE_CASE = "case";
   
   public static final String NS_SEPARATOR = "§";
   
