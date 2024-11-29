@@ -138,5 +138,33 @@
       <FqName>xmcp.yang.fman.UseCaseSignatureInputTableInfo</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.ConfigureList</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.ConfigureListDialogDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.ConstantListConfiguration</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.ListConfiguration</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.UsecaseAssignmentsDefinitionContainer</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.UsecaseAssignmentsDefinitionLeaf</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.UsecaseAssignmentsDefinitionList</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
   </XMOMEntries>
 </Application>

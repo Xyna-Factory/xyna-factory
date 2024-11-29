@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Configure List Dialog Definition" TypeName="ConfigureListDialogDefinition" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Configure List Dialog Definition" Name="ConfigureListDialogDefinition">
+    <Input>
+      <Data ID="242" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData242"/>
+    </Input>
+    <Output>
+      <Data ID="68" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition68"/>
+      <Data ID="171" Label="ListConfiguration" ReferenceName="ListConfiguration" ReferencePath="xmcp.yang.fman" VariableName="listConfiguration171"/>
+      <Data ID="150" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData150"/>
+    </Output>
+    <ServiceReference ID="50" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="49"/>
+      <Target RefID="49"/>
+    </ServiceReference>
+    <Function ID="49" Label="get Own RuntimeContext">
+      <Source RefID="50"/>
+      <Target RefID="50"/>
+      <Target RefID="48"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="50"/>
+      <Receive ServiceID="50">
+        <Target RefID="48"/>
+      </Receive>
+    </Function>
+    <Mappings ID="16" Label="Mapping">
+      <Input>
+        <Data ID="18" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext18"/>
+        <Source RefID="48"/>
+      </Input>
+      <Output>
+        <Data ID="19" Label="Length - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition19"/>
+        <Target RefID="14"/>
+      </Output>
+      <Output>
+        <Data ID="20" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition20"/>
+        <Target RefID="15"/>
+      </Output>
+      <Mapping>%1%.label="Length"</Mapping>
+      <Mapping>%1%.placeholder="0"</Mapping>
+      <Mapping>%1%.dataPath="%0%.constantListConfiguration.length"</Mapping>
+      <Mapping>%2%.label="Save"</Mapping>
+      <Mapping>%2%.serviceRTC=%0%</Mapping>
+      <Mapping>%2%.serviceFQN="xmcp.yang.fman.ConfigureList"</Mapping>
+      <Mapping>%2%.dataPath="%0%, %1%"</Mapping>
+      <Mapping>%2%.synchronously="true"</Mapping>
+    </Mappings>
+    <Mappings ID="30" Label="Mapping">
+      <Input>
+        <Data ID="32" Label="Length - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition32"/>
+        <Source RefID="14"/>
+      </Input>
+      <Input>
+        <Data ID="34" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition34"/>
+        <Source RefID="15"/>
+      </Input>
+      <Output>
+        <Data ID="35" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition35"/>
+        <Target RefID="29"/>
+      </Output>
+      <Mapping>%2%.label="Configure List"</Mapping>
+      <Mapping>%2%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
+      <Mapping>%2%.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
+    </Mappings>
+    <Data ID="14" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition14"/>
+    <Data ID="15" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition15"/>
+    <Data ID="29" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition29"/>
+    <Data ID="48" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext48"/>
+    <Data ID="192" Label="ListConfiguration" ReferenceName="ListConfiguration" ReferencePath="xmcp.yang.fman" VariableName="const_ListConfiguration192">
+      <Data ReferenceName="ConstantListConfiguration" ReferencePath="xmcp.yang.fman" VariableName="constantListConfiguration"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="29"/>
+      <Source RefID="192"/>
+      <Source RefID="242"/>
+      <Target RefID="68"/>
+      <Target RefID="171"/>
+      <Target RefID="150"/>
+      <Copy>
+        <Source RefID="29"/>
+        <Target RefID="68"/>
+      </Copy>
+      <Copy>
+        <Source RefID="192">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="171"/>
+      </Copy>
+      <Copy>
+        <Source RefID="242"/>
+        <Target RefID="150"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
