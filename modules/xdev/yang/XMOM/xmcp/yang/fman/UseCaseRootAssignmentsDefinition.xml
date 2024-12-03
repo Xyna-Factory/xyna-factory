@@ -52,6 +52,7 @@
       <Mapping>%1%.loadYangAssignmentsData.totalYangPath=%0%.rpcName</Mapping>
       <Mapping>%1%.loadYangAssignmentsData.usecase=%0%.useCase</Mapping>
       <Mapping>%1%.loadYangAssignmentsData.workspaceName=%0%.runtimeContext</Mapping>
+      <Mapping>%1%.loadYangAssignmentsData.totalKeywords="rpc"</Mapping>
       <Mapping>%1%.type="Rpc"</Mapping>
       <Mapping>%1%.yangPath=%0%.rpcName</Mapping>
     </Mappings>
