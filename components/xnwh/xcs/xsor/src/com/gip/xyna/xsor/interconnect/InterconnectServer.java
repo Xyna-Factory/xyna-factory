@@ -75,14 +75,18 @@ public class InterconnectServer extends InterconnectableStore implements Runnabl
       }
     }
 
-    serverSocket = new ServerSocket();
-    serverSocket.setReuseAddress(true);
+    try {
+      serverSocket = new ServerSocket();
+      serverSocket.setReuseAddress(true);
+    } catch (IOException e) {
+      logger.error("error creating serversocket.", e);
+    }
 
     while (!serverSocket.isBound()) {
       try {
         serverSocket.bind(serverAddress);
       } catch (IOException e) {
-        logger.error("IO-Exception while opening serversocket port " + port, e);
+        logger.error("IO-Exception while opening serversocket port " + serverAddress.getPort(), e);
         XSORUtil.sleep(1000);
       }
     }
