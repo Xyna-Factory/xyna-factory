@@ -20,6 +20,7 @@ package com.gip.xyna.xsor.interconnect;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
@@ -37,6 +38,7 @@ public class InterconnectServer extends InterconnectableStore implements Runnabl
   private final static int SIZE_ENCODED_MSG_LENGTH = 8;
   private static final int DEFAULT_BUFFER_SIZE = 65536;
 
+  InetSocketAddress serverAddress = null;
   private ServerSocket serverSocket = null;
   private Socket socket = null;
   private boolean socketClosedForWriting=true;
@@ -56,15 +58,36 @@ public class InterconnectServer extends InterconnectableStore implements Runnabl
     lastReplied=new byte[corrQueueLength][];
     lastIndex=0;
 
+    serverAddress = new InetSocketAddress(port);
 
-    while (serverSocket == null) {
+    serverSocket = getOrCreateServerSocket();
+  }
+
+  private ServerSocket getOrCreateServerSocket() {
+    if (serverSocket != null && serverSocket.isBound())
+      return serverSocket;
+
+    if (serverSocket != null && !serverSocket.isClosed()) {
       try {
-        serverSocket = new ServerSocket(port);
+        serverSocket.close();
+      } catch (IOException e) {
+        logger.warn("error closing serversocket.", e);
+      }
+    }
+
+    serverSocket = new ServerSocket();
+    serverSocket.setReuseAddress(true);
+
+    while (!serverSocket.isBound()) {
+      try {
+        serverSocket.bind(serverAddress);
       } catch (IOException e) {
         logger.error("IO-Exception while opening serversocket port " + port, e);
         XSORUtil.sleep(1000);
       }
     }
+
+    return serverSocket;
   }
 
   private byte[] temp;
@@ -73,7 +96,7 @@ public class InterconnectServer extends InterconnectableStore implements Runnabl
     byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];//wird bei Bedarf unten vergroessert
     while (running) {
       try {
-        ServerSocket s = serverSocket;
+        ServerSocket s = getOrCreateServerSocket();
         while (running && !paused) {
           if (s != null) {
             Socket localSocket = s.accept();
@@ -349,7 +372,14 @@ public class InterconnectServer extends InterconnectableStore implements Runnabl
       paused = true;
       notifyObject.notifyAll();
     }
-    //sicherstellen, dass nicht weiter vom socket-inputstream gelesen wird.
+    // sicherstellen, dass nicht weiter vom socket-inputstream gelesen wird und keine neuen Verbindungen geöffnet werden.
+    if (serverSocket != null && !serverSocket.isClosed()) {
+      try {
+        serverSocket.close();
+      } catch (IOException e) {
+        logger.warn("error closing serversocket.", e);
+      }
+    }
     closeSocket();
   }
 
