@@ -64,8 +64,14 @@ public class InterconnectServer extends InterconnectableStore implements Runnabl
   }
 
   private ServerSocket getOrCreateServerSocket() {
-    if (serverSocket != null && serverSocket.isBound())
+    if (serverSocket != null && serverSocket.isBound() && !serverSocket.isClosed()) {
+      if (logger.isDebugEnabled()) {
+        logger.debug("returned serversocket: " + serverSocket.toString() + " bound: " + serverSocket.isBound()
+            + " closed: " + serverSocket.isClosed());
+      }
+
       return serverSocket;
+    }
 
     if (serverSocket != null && !serverSocket.isClosed()) {
       try {
@@ -91,6 +97,10 @@ public class InterconnectServer extends InterconnectableStore implements Runnabl
       }
     }
 
+    if (logger.isDebugEnabled()) {
+      logger.debug("created serversocket: " + serverSocket.toString());
+    }
+
     return serverSocket;
   }
 
@@ -100,9 +110,9 @@ public class InterconnectServer extends InterconnectableStore implements Runnabl
     byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];//wird bei Bedarf unten vergroessert
     while (running) {
       try {
-        ServerSocket s = getOrCreateServerSocket();
         while (running && !paused) {
-          if (s != null) {
+          ServerSocket s = getOrCreateServerSocket();
+          if (s != null && !s.isClosed()) {
             Socket localSocket = s.accept();
             if (logger.isInfoEnabled()) {
               logger.info("got new socket from " + localSocket.getInetAddress() + ":" + localSocket.getPort());
@@ -380,6 +390,7 @@ public class InterconnectServer extends InterconnectableStore implements Runnabl
     if (serverSocket != null && !serverSocket.isClosed()) {
       try {
         serverSocket.close();
+        logger.debug("closed serversocket: " + serverSocket.toString());
       } catch (IOException e) {
         logger.warn("error closing serversocket.", e);
       }
