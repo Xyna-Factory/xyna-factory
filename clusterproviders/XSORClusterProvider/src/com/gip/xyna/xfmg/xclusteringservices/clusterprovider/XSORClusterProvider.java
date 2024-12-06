@@ -141,7 +141,7 @@ public class XSORClusterProvider implements ClusterProvider {
 
 
   public void changeClusterState(ClusterState newState) {
-    if (newState == ClusterState.DISCONNECTED_MASTER) {
+    if (newState == ClusterState.DISCONNECTED_MASTER || newState == ClusterState.SHUTDOWN) {
       clusterManagement.changeState(transFormState(newState));
     } else {
       throw new RuntimeException("state may not be set to " + newState);
