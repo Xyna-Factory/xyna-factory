@@ -42,6 +42,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.XynaPlainSessionCredentials;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
+import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.GuiRight;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.Rights;
@@ -55,13 +56,14 @@ public class MetaTagAddAction extends RuntimeContextDependendAction implements E
 
   private XMOMGui xmomGui;
 
-  
+
   private static final Map<String, MetaTagAddFunction> metaTagAddFunctions = setupMetaTagAddFunctions();
-  
+
   private static final Map<String, MetaTagAddFunction> setupMetaTagAddFunctions() {
     Map<String, MetaTagAddFunction> result = new HashMap<>();
     result.put(PathElements.MEMBERS, MetaTagAddAction::addMemberMetaTag);
     result.put(PathElements.SERVICES, MetaTagAddAction::addMethodMetaTag);
+    result.put("", MetaTagAddAction::addDocumentMetaTag);
     return result;
   }
 
@@ -148,6 +150,14 @@ public class MetaTagAddAction extends RuntimeContextDependendAction implements E
     List<String> unknownMetaTags = method.getUnknownMetaTags() != null ? method.getUnknownMetaTags() : new ArrayList<String>();
     unknownMetaTags.add(content);
     method.setUnknownMetaTags(unknownMetaTags);
+  }
+
+
+  private static void addDocumentMetaTag(GenerationBaseObject gbo, String objectName, String content) throws XynaException {
+    DOM document = gbo.getDOM();
+    List<String> unknownMetaTags = document.getUnknownMetaTags() != null ? document.getUnknownMetaTags() : new ArrayList<String>();
+    unknownMetaTags.add(content);
+    document.setUnknownMetaTags(unknownMetaTags);
   }
 
 

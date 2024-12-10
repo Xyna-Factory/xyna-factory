@@ -41,6 +41,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.XynaPlainSessionCredentials;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
+import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.GuiRight;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.Rights;
@@ -51,13 +52,14 @@ public class MetaTagRmvAction extends RuntimeContextDependendAction implements E
 
   private XMOMGui xmomGui;
 
-  
+
   private static final Map<String, MetaTagRmvFunction> metaTagRmvFunctions = setupMetaTagRmvFunctions();
-  
+
   private static final Map<String, MetaTagRmvFunction> setupMetaTagRmvFunctions() {
     Map<String, MetaTagRmvFunction> result = new HashMap<>();
     result.put(PathElements.MEMBERS, MetaTagRmvAction::rmvMemberMetaTag);
     result.put(PathElements.SERVICES, MetaTagRmvAction::rmvMethodMetaTag);
+    result.put("", MetaTagRmvAction::rmvDocumentMetaTag);
     return result;
   }
 
@@ -139,6 +141,12 @@ public class MetaTagRmvAction extends RuntimeContextDependendAction implements E
   private static void rmvMethodMetaTag(GenerationBaseObject gbo, String objectName, int index) throws XynaException {
     Operation method = gbo.getDOM().getOperationByName(objectName);
     method.getUnknownMetaTags().remove(index);
+  }
+
+
+  private static void rmvDocumentMetaTag(GenerationBaseObject gbo, String objectName, int index) throws XynaException {
+    DOM document = gbo.getDOM();
+    document.getUnknownMetaTags().remove(index);
   }
 
 
