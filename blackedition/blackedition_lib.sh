@@ -1461,7 +1461,7 @@ merge_files () {
     
   else
     local MSG="Merging customized \"${FILENAME}\" with new version from delivery failed.\n"
-    MSG="${MSG}Following files can be found in \"${DIR}\":\n";
+    MSG="${MSG}Following files can be found in \"${PWD}/${TMP_FILE_DIR}\":\n";
     MSG="${MSG}  - conflicted merge: \"${FILENAME}_merge\"\n";
     MSG="${MSG}  - original file: \"${FILENAME}_customized\" (or \"${FILENAME}\")\n";
     MSG="${MSG}  - new file \"${FILENAME}_new\" (or \"${NEW_FILE}\")\n";
@@ -1477,13 +1477,13 @@ merge_files () {
         MSG="${MSG}Actions:\n";
         if [ ! -e ${COMMON_BASE_FILE} ] ; then
           MSG="${MSG}  *) Provide a proper common base from last installed delivery \n";
-          MSG="${MSG}       in \"${BASE_DIR}/${FILENAME}\".\n";
+          MSG="${MSG}       in \"${DIR}/${BASE_DIR}/${FILENAME}\".\n";
           MSG="${MSG}     Continue installation with [ENTER]\n";
         fi;
         MSG="${MSG}  *) Resolve conflict manually:\n";
         MSG="${MSG}     Edit \"${FILENAME}_merge\" to resolve the conflict.\n";
-        MSG="${MSG}     Copy \"${FILENAME}_merge\" to \"${FILENAME}\".\n";
-        MSG="${MSG}     Copy \"${FILENAME}_new\" to \"${BASE_DIR}/${FILENAME}\".\n";
+        MSG="${MSG}     Copy \"${FILENAME}_merge\" to \"${DIR}/${FILENAME}\".\n";
+        MSG="${MSG}     Copy \"${FILENAME}_new\" to \"${DIR}/${BASE_DIR}/${FILENAME}\".\n";
         MSG="${MSG}     Continue installation with [ENTER]\n";
         MSG="${MSG}  *) Stop installation with [STRG-C]";
         ;;
