@@ -161,11 +161,20 @@ public class Usecase implements AutoCloseable {
   }
 
 
-  public void addInput(String fqn) {
+  public void addInput(String varName, String fqn) {
     String endPoint = baseUrl + "/objects/methodVarArea" + serviceNumber + "_input/insert";
     URLPath url = new URLPath(endPoint, null, null);
-    String payload = "{\"index\":-1,\"content\":{\"type\":\"variable\",\"label\":\"MessageId\",\"fqn\":\"xmcp.yang.MessageId\",\"isList\":false}}";
+    String payload = "{\"index\":-1,\"content\":{\"type\":\"variable\",\"label\":\""+varName+"\",\"fqn\":\"" + fqn+ "\",\"isList\":false}}";
     executeRunnable(runnable, url, GuiHttpInteraction.METHOD_POST, payload, "Could not add input variable to service.");
+  }
+  
+  public void deleteInput(int indexOfAdditionalInput) {
+    int absoluteIndex = indexOfAdditionalInput + 1;
+    String endPoint = baseUrl + "/objects/var" + serviceNumber + "-in" + absoluteIndex + "/delete";
+    URLPath url = new URLPath(endPoint, null, null);
+    String payload = "{\"force\":false}";
+    executeRunnable(runnable, url, GuiHttpInteraction.METHOD_POST, payload, "Could not remove input variable from service.");
+
   }
   
   
@@ -198,7 +207,7 @@ public class Usecase implements AutoCloseable {
   }
 
 
-  public void updateAssignmentsMeta(String xml, int oldMetaTagIndex) { 
+  public void updateMeta(String xml, int oldMetaTagIndex) { 
     //remove old meta tag
     String endpoint = baseUrl + "/services/" + usecaseName + "/meta";
     List<URLPathQuery> query = new ArrayList<>();

@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -31,6 +33,13 @@ import xdev.yang.impl.Constants;
 import xmcp.yang.UseCaseAssignmentTableData;
 
 public class SaveUsecaseAssignmentAction {
+  
+  public static final Set<String> hiddenYangKeywords = Set.of(
+                                                              Constants.TYPE_GROUPING,
+                                                              Constants.TYPE_USES,
+                                                              Constants.TYPE_CHOICE, 
+                                                              Constants.TYPE_CASE);
+
 
   public void saveUsecaseAssignment(XynaOrderServerExtension order, UseCaseAssignmentTableData data) {
     String fqn = data.getLoadYangAssignmentsData().getFqn();
@@ -38,6 +47,7 @@ public class SaveUsecaseAssignmentAction {
     String usecaseName = data.getLoadYangAssignmentsData().getUsecase();
     String totalYangPath = data.getLoadYangAssignmentsData().getTotalYangPath();
     String totalNamespaces = data.getLoadYangAssignmentsData().getTotalNamespaces();
+    String totalKeywords = data.getLoadYangAssignmentsData().getTotalKeywords();
     
     boolean update = false;
     Pair<Integer, Document> meta = UseCaseAssignmentUtils.loadOperationMeta(fqn, workspaceName, usecaseName);
@@ -45,7 +55,7 @@ public class SaveUsecaseAssignmentAction {
       return;
     }
     List<Element> mappings = UseCaseMapping.loadMappingElements(meta.getSecond());
-    List<Pair<String, String>> pathList = UseCaseMapping.createPathList(totalYangPath, totalNamespaces);
+    List<MappingPathElement> pathList = UseCaseMapping.createPathList(totalYangPath, totalNamespaces, totalKeywords);
     for(Element mappingEle : mappings) {
       UseCaseMapping mapping = UseCaseMapping.loadUseCaseMapping(mappingEle);
       mapping.setValue(data.getValue());
@@ -56,14 +66,14 @@ public class SaveUsecaseAssignmentAction {
       }
     }
     if(!update) {
-      UseCaseMapping mapping = new UseCaseMapping(totalYangPath, totalNamespaces, data.getValue());
+      UseCaseMapping mapping = new UseCaseMapping(totalYangPath, totalNamespaces, data.getValue(), totalKeywords);
       mapping.createAndAddElement(meta.getSecond());
     }
     
     
     try(Usecase usecase = Usecase.open(order, fqn, workspaceName, usecaseName)) {
       String xml = XMLUtils.getXMLString(meta.getSecond().getDocumentElement(), false);
-      usecase.updateAssignmentsMeta(xml, meta.getFirst());
+      usecase.updateMeta(xml, meta.getFirst());
       String newImpl = createImpl(meta.getSecond(), usecase.getInputVarNames());
       usecase.updateImplementation(newImpl);
       usecase.save();
@@ -86,8 +96,9 @@ public class SaveUsecaseAssignmentAction {
         .append("builder.endAttributes();\n")
         .append("builder.startElementWithAttributes(\"").append(rpcName).append("\");\n")
         .append("builder.addAttribute(\"xmlns\", \"").append(rpcNs).append("\");\n")
-        .append("builder.endAttributes();\n");
-
+        .append("builder.endAttributes();\n\n");
+    
+    createVariables(result, meta, inputVarNames);
     createMappingImpl(result, meta);
     
     result
@@ -97,6 +108,18 @@ public class SaveUsecaseAssignmentAction {
 
     return result.toString();
   }
+  
+
+  private void createVariables(StringBuilder result, Document meta, List<String> inputVarNames) {
+    List<UsecaseSignatureVariable> variables = UsecaseSignatureVariable.loadSignatureEntries(meta, Constants.VAL_LOCATION_INPUT);  
+    for (int i = 0; i < variables.size(); i++) {
+      UsecaseSignatureVariable variable = variables.get(i);
+      String serviceInputVarName = inputVarNames.get(i + 1);
+      String fqn = variable.getFqn();
+      String customVarName = variable.getVarName();
+      result.append(fqn).append(" ").append(customVarName).append(" = ").append(serviceInputVarName).append(";\n");
+    }
+  }
 
   private void createMappingImpl(StringBuilder result, Document meta) {
     String rpcName = UseCaseAssignmentUtils.readRpcName(meta);
@@ -104,27 +127,34 @@ public class SaveUsecaseAssignmentAction {
     List<UseCaseMapping> mappings = UseCaseMapping.loadMappings(meta);
     Collections.sort(mappings);
     
-    List<Pair<String, String>> position = new ArrayList<>();
-    position.add(new Pair<>(rpcName, rpcNs));
+    result.append("try {\n");
+    
+    List<MappingPathElement> position = new ArrayList<>();
+    position.add(new MappingPathElement(rpcName, rpcNs, Constants.TYPE_RPC));
     for(UseCaseMapping mapping : mappings) {
       createMappingImpl(result, mapping, position);
     }
     closeTags(result, position, 0);
+    
+    result
+      .append("} catch(Exception e) {\n")
+      .append("  throw new RuntimeException(e);\n")
+      .append("}\n");
   }
 
-  private void createMappingImpl(StringBuilder result, UseCaseMapping mapping, List<Pair<String, String>> position) {
+  private void createMappingImpl(StringBuilder result, UseCaseMapping mapping, List<MappingPathElement> position) {
     result.append("\n//").append(mapping.getMappingYangPath()).append(" -> ").append(mapping.getValue()).append("\n");
     
-    List<Pair<String, String>> mappingList = mapping.createPathList();
-    mappingList.removeIf(x -> x.getFirst().startsWith("uses:")); // remove tags <uses:grouping_name> in the mapping implementation
+    List<MappingPathElement> mappingList = mapping.createPathList();
+    mappingList.removeIf(x -> hiddenYangKeywords.contains(x.getKeyword()));
     int insertIndex = 0;
     for (int i = 0; i < position.size(); i++) {
       if (mappingList.size() < i) {
         break;
       }
-      Pair<String, String> curPos = position.get(i);
-      Pair<String, String> mapPos = mappingList.get(i);
-      if (!Objects.equals(curPos.getFirst(), mapPos.getFirst()) || !Objects.equals(curPos.getSecond(), mapPos.getSecond())) {
+      MappingPathElement curPos = position.get(i);
+      MappingPathElement mapPos = mappingList.get(i);
+      if (!Objects.equals(curPos, mapPos)) {
         break;
       }
       insertIndex = i;
@@ -135,21 +165,37 @@ public class SaveUsecaseAssignmentAction {
     }
 
     for (int i = insertIndex + 1; i < mappingList.size(); i++) {
-      result.append("builder.startElementWithAttributes(\"").append(mappingList.get(i).getFirst()).append("\");\n");
-      result.append("builder.addAttribute(\"xmlns\", \"").append(mappingList.get(i).getSecond()).append("\");\n");
+      result.append("builder.startElementWithAttributes(\"").append(mappingList.get(i).getYangPath()).append("\");\n");
+      result.append("builder.addAttribute(\"xmlns\", \"").append(mappingList.get(i).getNamespace()).append("\");\n");
       if (i != mappingList.size() - 1) { //do not close the final tag, because we want to set the value
         result.append("builder.endAttributes();\n");
         position.add(mappingList.get(i)); //we close the final tag. As a result, we do not need to add that position
       }
     }
-    String tag = mappingList.get(mappingList.size() - 1).getFirst();
-    result.append("builder.endAttributesAndElement(\"").append(mapping.getValue()).append("\", \"").append(tag).append("\");\n");
+    String tag = mappingList.get(mappingList.size() - 1).getYangPath();
+    String value = determineMappingValue(mapping.getValue());
+    result.append("builder.endAttributesAndElement(").append(value).append(", \"").append(tag).append("\");\n");
+  }
+  
+
+  private String determineMappingValue(String mappingValue) {
+    int firstDot = mappingValue.indexOf(".");
+    if (firstDot == -1) {
+      if (!mappingValue.startsWith("\"")) {
+        mappingValue = String.format("\"%s\"", mappingValue);
+      }
+      return mappingValue;
+    } else {
+      String variable = mappingValue.substring(0, firstDot);
+      String path = mappingValue.substring(firstDot + 1);
+      return String.format("String.valueOf(%s.get(\"%s\"))", variable, path);
+    }
   }
 
 
-  private void closeTags(StringBuilder sb, List<Pair<String, String>> tags, int index) {
+  private void closeTags(StringBuilder sb, List<MappingPathElement> tags, int index) {
     for (int i = tags.size()-1; i > index; i--) {
-      sb.append("builder.endElement(\"").append(tags.get(i).getFirst()).append("\");\n");
+      sb.append("builder.endElement(\"").append(tags.get(i).getYangPath()).append("\");\n");
       tags.remove(i);
     }
   }

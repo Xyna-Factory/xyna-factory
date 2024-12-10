@@ -26,6 +26,7 @@ import com.gip.xyna.xprc.XynaOrderServerExtension;
 import com.gip.xyna.xprc.exceptions.XPRC_XMOMObjectDoesNotExist;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
+import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 
 import xact.http.URLPath;
 import xact.http.enums.httpmethods.HTTPMethod;
@@ -76,7 +77,7 @@ public class AddUsecase {
 
     addUsecaseToDatatype(parameter);
     try (Usecase result = Usecase.open(order, fqn, workspace, usecase)) {
-      result.addInput("xmcp.yang.MessageId");
+      result.addInput("MessageId", "xmcp.yang.MessageId");
       result.addOutput("xact.templates.Document");
       result.updateImplementation("return null;");
       result.save();
@@ -88,12 +89,22 @@ public class AddUsecase {
 
 
   private static String createMetaTag(String deviceFqn, String rpc, String rpcNs) {
-    String mappings = "<" + Constants.TAG_MAPPINGS + "/>";
-    String device = "<" + Constants.TAG_DEVICE_FQN + ">" + deviceFqn + "</" + Constants.TAG_DEVICE_FQN + ">";
-    String rpcNsTag = "<" + Constants.TAG_RPC_NS + ">" + rpcNs + "</" + Constants.TAG_RPC_NS + ">";
-    String rpcTag = "<" + Constants.TAG_RPC + ">" + rpc + "</" + Constants.TAG_RPC + ">";
-    String YangStartTag = "<" + Constants.TAG_YANG + " " + Constants.ATT_YANG_TYPE + "=\\\"" + Constants.VAL_USECASE + "\\\">";
-    return YangStartTag + rpcTag + device + rpcNsTag + mappings + "</" + Constants.TAG_YANG + ">";
+    XmlBuilder builder = new XmlBuilder();
+    builder.startElementWithAttributes(Constants.TAG_YANG);
+    builder.addAttribute(Constants.ATT_YANG_TYPE, Constants.VAL_USECASE);
+    builder.endAttributes();
+    builder.element(Constants.TAG_RPC, rpc);
+    builder.element(Constants.TAG_RPC_NS, rpcNs);
+    builder.element(Constants.TAG_DEVICE_FQN, deviceFqn);
+    builder.startElementWithAttributes(Constants.TAG_SIGNATURE);
+    builder.addAttribute(Constants.ATT_SIGNATURE_LOCATION, Constants.VAL_LOCATION_INPUT);
+    builder.endAttributesAndElement();
+    builder.element(Constants.TAG_MAPPINGS);
+    builder.startElementWithAttributes(Constants.TAG_SIGNATURE);
+    builder.addAttribute(Constants.ATT_SIGNATURE_LOCATION, Constants.VAL_LOCATION_OUTPUT);
+    builder.endAttributesAndElement();
+    builder.endElement(Constants.TAG_YANG);
+    return builder.toString();
   }
 
 
@@ -150,6 +161,7 @@ public class AddUsecase {
     }
     
     String meta = createMetaTag(deviceFqn, rpc, rpcNs);
+    meta = meta.replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"");
     GuiHttpInteraction.setMetaTag(path, label, workspaceName, usecase, meta, parameter.order);
     
     GuiHttpInteraction.saveDatatype(path, path, label, workspaceName, "datatypes", parameter.order);

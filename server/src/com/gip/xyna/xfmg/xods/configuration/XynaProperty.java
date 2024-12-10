@@ -297,6 +297,9 @@ public interface XynaProperty {
   public static final XynaPropertyInt RMI_IL_SOCKET_COMPRESSION_BUFFERSIZE =
       new XynaPropertyInt("xyna.rmi.interlink.ssl.compression.buffersize", 1024*128);
 
+  public static final XynaPropertyDuration SHUTDOWN_ABORT_COMMUNICATION_TIMEOUT = new XynaPropertyDuration("shutdown.timeout.factorynodes", "10 s")
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Time to wait for each remote node to abort communication during shutdown")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Solange pro FactoryNode warten, bis die Kommunikation beendet ist");
 
   /**
    * Path to and including grep (for logScanning) Examples: "/bin/grep" "/usr/xpg4/bin/grep"

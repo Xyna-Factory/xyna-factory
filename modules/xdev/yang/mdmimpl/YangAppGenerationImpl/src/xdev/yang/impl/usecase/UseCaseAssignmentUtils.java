@@ -113,6 +113,7 @@ public class UseCaseAssignmentUtils {
         LoadYangAssignmentsData updatedData = data.clone();
         updatedData.unversionedSetTotalYangPath(updatedData.getTotalYangPath() + "/" + localName);
         updatedData.unversionedSetTotalNamespaces(updatedData.getTotalNamespaces() + Constants.NS_SEPARATOR + namespace);
+        updatedData.unversionedSetTotalKeywords(updatedData.getTotalKeywords() + " " + element.getYangKeyword().getLocalName());
         builder.loadYangAssignmentsData(updatedData);
         builder.yangPath(localName);
         builder.type(getYangType(element));
@@ -148,7 +149,7 @@ public class UseCaseAssignmentUtils {
         return result;
       }
     }
-    throw new RuntimeException("rpc " + rpcName + "in namespace " + rpcNs + "not found.");
+    throw new RuntimeException("rpc " + rpcName + " in namespace " + rpcNs + " not found.");
   }
 
   public static List<Rpc> findRpcs(List<Module> modules, String rpcName) {
