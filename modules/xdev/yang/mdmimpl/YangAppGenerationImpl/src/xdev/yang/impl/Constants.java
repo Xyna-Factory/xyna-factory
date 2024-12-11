@@ -21,13 +21,25 @@ package xdev.yang.impl;
 public class Constants {
 
   public static final String ATT_YANG_TYPE = "type";
+  
   public static final String ATT_MAPPING_YANGPATH = "yang";
   public static final String ATT_MAPPING_VALUE = "config";
   public static final String ATT_MAPPING_KEYWORD = "keyword";
   public static final String ATT_MAPPING_NAMESPACE = "namespace";
+  
   public static final String ATT_SIGNATURE_LOCATION = "location";
   public static final String ATT_SIGNATURE_ENTRY_FQN = "fqn";
   public static final String ATT_SIGNATURE_ENTRY_VARNAME = "variableName";
+  
+  public static final String ATT_LIST_CONFIG_TYPE = "type";
+  public static final String ATT_LIST_CONFIG_YANG = "yang";
+  public static final String ATT_LIST_CONFIG_NS = "namespaces";
+  public static final String ATT_LIST_CONFIG_KEYWORDS = "keywords";
+  
+  public static final String ATT_LIST_CONFIG_CONSTANT_LENGTH = "length";
+  
+  public static final String ATT_LIST_CONFIG_DYNAMIC_VARIABLE = "variable";
+  public static final String ATT_LIST_CONFIG_DYNAMIC_PATH = "path";
   
   public static final String TAG_YANG = "Yang";
   public static final String TAG_RPC = "Rpc";
@@ -37,6 +49,9 @@ public class Constants {
   public static final String TAG_MAPPING = "Mapping";
   public static final String TAG_SIGNATURE = "Signature";
   public static final String TAG_SIGNATURE_ENTRY = "SignatureEntry";
+
+  public static final String TAG_LISTCONFIGS = "ListConfigurations";
+  public static final String TAG_LISTCONFIG = "ListConfiguration";
   
   public static final String TAG_HELLO = "hello";
   public static final String TAG_CAPABILITIES = "capabilities";
@@ -49,6 +64,9 @@ public class Constants {
   public static final String VAL_LOCATION_INPUT = "input";
   public static final String VAL_LOCATION_OUTPUT = "output";
   
+  public static final String VAL_LIST_CONFIG_CONSTANT = "constant";
+  public static final String VAL_LIST_CONFIG_DYNAMIC = "dynamic";
+  
   public static final String TYPE_CONTAINER = "container";
   public static final String TYPE_LEAF = "leaf";
   public static final String TYPE_GROUPING = "grouping";
@@ -57,8 +75,13 @@ public class Constants {
   public static final String TYPE_RPC = "rpc";
   public static final String TYPE_CHOICE = "choice";
   public static final String TYPE_CASE = "case";
+  public static final String TYPE_ANYXML = "anyxml";
+  public static final String TYPE_LEAFLIST = "leaf-list";
+  public static final String TYPE_LIST = "list";
   
   public static final String NS_SEPARATOR = "§";
+  public static final String LIST_INDEX_SEPARATOR = ") ";
+  
   
   public static final String NETCONF_NS = "urn:ietf:params:xml:ns:netconf:base:1.0";
   public static final String NETCONF_BASE_CAPABILITY_NO_VERSION = "urn:ietf:params:netconf:base:";

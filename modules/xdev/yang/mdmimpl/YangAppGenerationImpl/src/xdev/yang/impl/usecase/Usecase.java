@@ -28,6 +28,7 @@ import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.trigger.RunnableForFilterAccess;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
+import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 import xact.http.URLPath;
 import xact.http.URLPathQuery;
@@ -46,6 +47,8 @@ public class Usecase implements AutoCloseable {
   private String workspaceNameEscaped;
   private String usecaseName;
   private String serviceNumber;
+  private int metaTagIndex;
+  private Document meta;
   private String rpcName;
   private String rpcNamespace;
   private String baseUrl;
@@ -96,6 +99,20 @@ public class Usecase implements AutoCloseable {
 
 
   
+  
+  public int getMetaTagIndex() {
+    return metaTagIndex;
+  }
+
+
+
+  
+  public Document getMeta() {
+    return meta;
+  }
+
+
+
   public String getRpcName() {
     return rpcName;
   }
@@ -145,6 +162,8 @@ public class Usecase implements AutoCloseable {
     result.workspaceNameEscaped = workspaceNameEscaped;
     result.usecaseName = usecase;
     result.serviceNumber = GuiHttpInteraction.loadServiceId(obj, usecase);
+    result.metaTagIndex = meta.getFirst();
+    result.meta = meta.getSecond();
     result.rpcName = UseCaseAssignmentUtils.readRpcName(meta.getSecond());
     result.rpcNamespace = UseCaseAssignmentUtils.readRpcNamespace(meta.getSecond());
     result.runnable = runnable;
@@ -176,14 +195,6 @@ public class Usecase implements AutoCloseable {
     executeRunnable(runnable, url, GuiHttpInteraction.METHOD_POST, payload, "Could not remove input variable from service.");
 
   }
-  
-  
-  public void updateUsecaseImpl(Pair<Integer, Document> meta, String impl) {
-    URLPath url = new URLPath(baseUrl + "/objects/memberMethod" + serviceNumber + "/change", null, null);
-    String newImpl = impl.replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"");
-    newImpl = "{ \"implementation\": \"" + newImpl + "\"}";
-    executeRunnable(runnable, url, GuiHttpInteraction.METHOD_PUT, newImpl, "could not update implementation");
-  }
 
 
   public void save() {
@@ -207,11 +218,12 @@ public class Usecase implements AutoCloseable {
   }
 
 
-  public void updateMeta(String xml, int oldMetaTagIndex) { 
+  public void updateMeta() {
+    String xml = XMLUtils.getXMLString(meta.getDocumentElement(), false);
     //remove old meta tag
     String endpoint = baseUrl + "/services/" + usecaseName + "/meta";
     List<URLPathQuery> query = new ArrayList<>();
-    query.add(new URLPathQuery.Builder().attribute("metaTagId").value("metaTag"+oldMetaTagIndex).instance());
+    query.add(new URLPathQuery.Builder().attribute("metaTagId").value("metaTag"+metaTagIndex).instance());
     URLPath url = new URLPath(endpoint, query, null);
     GuiHttpInteraction.executeRunnable(runnable, url, GuiHttpInteraction.METHOD_DELETE, "", "could not remove old meta tag");
 

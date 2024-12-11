@@ -57,7 +57,7 @@ public class DetermineUseCaseAssignments {
     String deviceFqn = UseCaseAssignmentUtils.readDeviceFqn(usecaseMeta);
     List<String> moduleCapabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
     modules = YangCapabilityUtils.filterModules(modules, moduleCapabilities);
-    result = UseCaseAssignmentUtils.loadPossibleAssignments(modules, rpcName, rpcNamespace, data);
+    result = UseCaseAssignmentUtils.loadPossibleAssignments(modules, rpcName, rpcNamespace, data, usecaseMeta);
     fillValues(usecaseMeta, modules, result);
 
     return result;

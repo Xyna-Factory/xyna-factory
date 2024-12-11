@@ -96,6 +96,7 @@ public class AddUsecase {
     builder.element(Constants.TAG_RPC, rpc);
     builder.element(Constants.TAG_RPC_NS, rpcNs);
     builder.element(Constants.TAG_DEVICE_FQN, deviceFqn);
+    builder.element(Constants.TAG_LISTCONFIGS);
     builder.startElementWithAttributes(Constants.TAG_SIGNATURE);
     builder.addAttribute(Constants.ATT_SIGNATURE_LOCATION, Constants.VAL_LOCATION_INPUT);
     builder.endAttributesAndElement();

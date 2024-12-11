@@ -24,12 +24,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.yangcentral.yangkit.base.YangElement;
+import org.yangcentral.yangkit.model.api.stmt.Anyxml;
 import org.yangcentral.yangkit.model.api.stmt.Case;
 import org.yangcentral.yangkit.model.api.stmt.Choice;
 import org.yangcentral.yangkit.model.api.stmt.Container;
 import org.yangcentral.yangkit.model.api.stmt.Leaf;
+import org.yangcentral.yangkit.model.api.stmt.LeafList;
 import org.yangcentral.yangkit.model.api.stmt.Rpc;
 import org.yangcentral.yangkit.model.api.stmt.Uses;
+import org.yangcentral.yangkit.model.api.stmt.YangList;
 import org.yangcentral.yangkit.model.api.stmt.YangStatement;
 import org.yangcentral.yangkit.model.impl.stmt.MainModuleImpl;
 
@@ -48,6 +51,9 @@ public class YangStatementTranslator {
     result.put(Rpc.class, new YangStatementTranslation(Constants.TYPE_RPC));
     result.put(Choice.class, new YangStatementTranslation(Constants.TYPE_CHOICE));
     result.put(Case.class, new YangStatementTranslation(Constants.TYPE_CASE));
+    result.put(Anyxml.class, new YangStatementTranslation(Constants.TYPE_ANYXML));
+    result.put(LeafList.class, new YangStatementTranslation(Constants.TYPE_LEAFLIST));
+    result.put(YangList.class, new YangStatementTranslation(Constants.TYPE_LIST));
     return result;
   }
 

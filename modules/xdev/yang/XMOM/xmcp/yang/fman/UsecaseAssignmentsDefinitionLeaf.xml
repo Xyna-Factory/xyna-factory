@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Usecase Assignments Definition - Leaf" TypeName="UsecaseAssignmentsDefinitionLeaf" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Usecase Assignments Definition - Leaf" Name="UsecaseAssignmentsDefinitionLeaf">
+    <Input>
+      <Data ID="109" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData109"/>
+    </Input>
+    <Output>
+      <Data ID="150" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition150"/>
+    </Output>
+    <ServiceReference ID="24" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="23"/>
+      <Target RefID="23"/>
+    </ServiceReference>
+    <Function ID="23" Label="get Own RuntimeContext">
+      <Source RefID="24"/>
+      <Target RefID="24"/>
+      <Target RefID="22"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="24"/>
+      <Receive ServiceID="24">
+        <Target RefID="22"/>
+      </Receive>
+    </Function>
+    <Mappings ID="3189" Label="Mapping">
+      <Input>
+        <Data ID="3191" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext3191"/>
+        <Source RefID="22"/>
+      </Input>
+      <Output>
+        <Data ID="3192" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition3192"/>
+        <Target RefID="3187"/>
+      </Output>
+      <Output>
+        <Data ID="3193" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition3193"/>
+        <Target RefID="3188"/>
+      </Output>
+      <Mapping>%1%.dataPath="%0%.value"</Mapping>
+      <Mapping>%2%.dataPath="%0%"</Mapping>
+      <Mapping>%2%.serviceFQN="xmcp.yang.fman.SaveUseCaseAssignment"</Mapping>
+      <Mapping>%2%.serviceRTC=%0%</Mapping>
+      <Mapping>%2%.label="Save"</Mapping>
+    </Mappings>
+    <Mappings ID="3211" Label="Mapping">
+      <Input>
+        <Data ID="3213" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition3213"/>
+        <Source RefID="3187"/>
+      </Input>
+      <Input>
+        <Data ID="3215" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition3215"/>
+        <Source RefID="3188"/>
+      </Input>
+      <Input>
+        <Data ID="3217" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData3217"/>
+        <Source RefID="109"/>
+      </Input>
+      <Output>
+        <Data ID="3218" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3218"/>
+        <Target RefID="3210"/>
+      </Output>
+      <Mapping>%3%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
+      <Mapping>%3%.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
+      <Mapping>%3%.label=%2%.yangPath</Mapping>
+    </Mappings>
+    <Data ID="22" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext22"/>
+    <Data ID="3187" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition3187"/>
+    <Data ID="3188" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition3188"/>
+    <Data ID="3210" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3210"/>
+    <Assign ID="1">
+      <Source RefID="3210"/>
+      <Target RefID="150"/>
+      <Copy>
+        <Source RefID="3210"/>
+        <Target RefID="150"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

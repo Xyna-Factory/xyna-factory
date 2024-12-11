@@ -120,5 +120,15 @@
         <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.addVariableToUsecaseSignature(correlatedXynaOrder, useCaseTableData21, usecaseSignatureEntry22);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Configure List" Name="configureList" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="26" Label="Load Yang Assignments Data" ReferenceName="LoadYangAssignmentsData" ReferencePath="xmcp.yang" VariableName="loadYangAssignmentsData26"/>
+        <Data ID="25" Label="ListConfiguration" ReferenceName="ListConfiguration" ReferencePath="xmcp.yang.fman" VariableName="listConfiguration25"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.configureList(correlatedXynaOrder, loadYangAssignmentsData26, listConfiguration25);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

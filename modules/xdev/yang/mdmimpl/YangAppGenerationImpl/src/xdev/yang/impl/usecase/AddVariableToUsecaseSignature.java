@@ -21,10 +21,7 @@ package xdev.yang.impl.usecase;
 
 import org.w3c.dom.Document;
 
-import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
-import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
-
 import xmcp.yang.UseCaseTableData;
 import xmcp.yang.fman.UsecaseSignatureEntry;
 
@@ -37,17 +34,12 @@ public class AddVariableToUsecaseSignature {
     String workspace = usecase.getRuntimeContext();
     String usecaseName = usecase.getUseCase();
 
-    Pair<Integer, Document> meta = UseCaseAssignmentUtils.loadOperationMeta(fqn, workspace, usecaseName);
-    if (meta == null) {
-      return;
-    }
-
-    UsecaseSignatureVariable variable = new UsecaseSignatureVariable(signature.getFqn(), signature.getVariableName());
-    variable.createAndAddElement(meta.getSecond(), signature.getLocation().toLowerCase());
-
     try (Usecase uc = Usecase.open(order, fqn, workspace, usecaseName)) {
-      String xml = XMLUtils.getXMLString(meta.getSecond().getDocumentElement(), false);
-      uc.updateMeta(xml, meta.getFirst());
+      Document meta = uc.getMeta();
+      UsecaseSignatureVariable variable = new UsecaseSignatureVariable(signature.getFqn(), signature.getVariableName());
+      variable.createAndAddElement(meta, signature.getLocation().toLowerCase());
+      
+      uc.updateMeta();
       uc.addInput(signature.getVariableName(), signature.getFqn());
       uc.save();
       uc.deploy();
