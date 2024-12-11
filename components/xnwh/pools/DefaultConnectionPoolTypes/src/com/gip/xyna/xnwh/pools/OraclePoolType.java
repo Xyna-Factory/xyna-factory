@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
@@ -35,6 +36,7 @@ import com.gip.xyna.utils.db.pool.FastValidationStrategy;
 import com.gip.xyna.utils.db.pool.ValidationStrategy;
 import com.gip.xyna.utils.misc.Documentation;
 import com.gip.xyna.utils.misc.StringParameter;
+import com.gip.xyna.utils.misc.EnvironmentVariable.StringEnvironmentVariable;
 import com.gip.xyna.utils.timing.Duration;
 import com.gip.xyna.xmcp.PluginDescription;
 import com.gip.xyna.xmcp.PluginDescription.ParameterUsage;
@@ -87,9 +89,30 @@ public class OraclePoolType extends ConnectionPoolType {
                     build()).
       defaultValue(false).
       build();
-  
-  public static final List<StringParameter<?>> additionalParameters = 
-      StringParameter.asList( CONNECT_TIMEOUT, SOCKET_TIMEOUT, VALIDATION_TIMEOUT, DURABLE_STATEMENT_CACHE );
+
+  public static final StringParameter<StringEnvironmentVariable> USERNAME_ENV = StringParameter
+      .typeEnvironmentVariable(StringEnvironmentVariable.class, "usernameEnv")
+      .label("Username environment variable.")
+      .documentation(Documentation.en("Name of the environment variable containing the db username.")
+          .de("Name der Umgebungsvariable, die den DB Nutzernamen enthält.").build())
+      .optional().build();
+
+  public static final StringParameter<StringEnvironmentVariable> PASSWORD_ENV = StringParameter
+      .typeEnvironmentVariable(StringEnvironmentVariable.class, "passwordEnv")
+      .label("Password environment variable.")
+      .documentation(Documentation.en("Name of the environment variable containing the db password.")
+          .de("Name der Umgebungsvariable, die das DB Passwort enthält.").build())
+      .optional().build();
+
+  public static final StringParameter<StringEnvironmentVariable> CONNECT_ENV = StringParameter
+      .typeEnvironmentVariable(StringEnvironmentVariable.class, "connectStringEnv")
+      .label("Connectstring environment variable.")
+      .documentation(Documentation.en("Name of the environment variable containing the JDBC connect string.")
+          .de("Name der Umgebungsvariable mit den JDBC Verbindungsdaten.").build())
+      .optional().build();
+
+  public static final List<StringParameter<?>> additionalParameters = StringParameter.asList(CONNECT_TIMEOUT,
+      SOCKET_TIMEOUT, VALIDATION_TIMEOUT, DURABLE_STATEMENT_CACHE, USERNAME_ENV, PASSWORD_ENV, CONNECT_ENV);
 
   private PluginDescription pluginDescription;
 
@@ -121,10 +144,22 @@ public class OraclePoolType extends ConnectionPoolType {
     Duration connectTimeout = CONNECT_TIMEOUT.getFromMap(cpp.getAdditionalParams());
     Duration socketTimeout = SOCKET_TIMEOUT.getFromMap(cpp.getAdditionalParams());
     Boolean useDurableStatementCache = DURABLE_STATEMENT_CACHE.getFromMap(cpp.getAdditionalParams());
-    
+
+    Optional<StringEnvironmentVariable> userEnv = Optional
+        .ofNullable(USERNAME_ENV.getFromMap(cpp.getAdditionalParams()));
+    Optional<StringEnvironmentVariable> pwdEnv = Optional
+        .ofNullable(PASSWORD_ENV.getFromMap(cpp.getAdditionalParams()));
+    Optional<StringEnvironmentVariable> connectStringEnv = Optional
+        .ofNullable(CONNECT_ENV.getFromMap(cpp.getAdditionalParams()));
+
+    String user = userEnv.map(u -> u.getValue().orElse(cpp.getUser())).orElse(cpp.getUser());
+    String pwd = pwdEnv.map(p -> p.getValue().orElse(cpp.getPassword())).orElse(cpp.getPassword());
+    String connString = connectStringEnv.map(c -> c.getValue().orElse(cpp.getConnectString()))
+        .orElse(cpp.getConnectString());
+
     DBConnectionData dbdata =
       DBConnectionData.newDBConnectionData().
-          user(cpp.getUser()).password(cpp.getPassword()).url(cpp.getConnectString())
+          user(user).password(pwd).url(connString)
           .connectTimeoutInSeconds((int)connectTimeout.getDuration(TimeUnit.SECONDS))
           .socketTimeoutInSeconds((int)socketTimeout.getDuration(TimeUnit.SECONDS))
           .classLoaderToLoadDriver(OraclePoolType.class.getClassLoader()) // enforcing the connector jar to be stored in userlib

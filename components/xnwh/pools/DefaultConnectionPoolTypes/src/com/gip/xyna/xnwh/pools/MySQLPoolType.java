@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import java.net.Socket;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.SynchronousQueue;
@@ -43,6 +44,7 @@ import com.gip.xyna.utils.db.pool.DefaultValidationStrategy;
 import com.gip.xyna.utils.db.pool.ValidationStrategy;
 import com.gip.xyna.utils.misc.Documentation;
 import com.gip.xyna.utils.misc.StringParameter;
+import com.gip.xyna.utils.misc.EnvironmentVariable.StringEnvironmentVariable;
 import com.gip.xyna.utils.timing.Duration;
 import com.gip.xyna.xmcp.PluginDescription;
 import com.gip.xyna.xmcp.PluginDescription.ParameterUsage;
@@ -87,8 +89,29 @@ public class MySQLPoolType extends ConnectionPoolType {
       defaultValue(Duration.valueOf("10 s")).
       build();
 
-  public static final List<StringParameter<?>> additionalParameters = 
-      StringParameter.asList( CONNECT_TIMEOUT, SOCKET_TIMEOUT, VALIDATION_TIMEOUT );
+  public static final StringParameter<StringEnvironmentVariable> USERNAME_ENV = StringParameter
+      .typeEnvironmentVariable(StringEnvironmentVariable.class, "usernameEnv")
+      .label("Username environment variable.")
+      .documentation(Documentation.en("Name of the environment variable containing the db username.")
+          .de("Name der Umgebungsvariable, die den DB Nutzernamen enthält.").build())
+      .optional().build();
+
+  public static final StringParameter<StringEnvironmentVariable> PASSWORD_ENV = StringParameter
+      .typeEnvironmentVariable(StringEnvironmentVariable.class, "passwordEnv")
+      .label("Password environment variable.")
+      .documentation(Documentation.en("Name of the environment variable containing the db password.")
+          .de("Name der Umgebungsvariable, die das DB Passwort enthält.").build())
+      .optional().build();
+
+  public static final StringParameter<StringEnvironmentVariable> CONNECT_ENV = StringParameter
+      .typeEnvironmentVariable(StringEnvironmentVariable.class, "connectStringEnv")
+      .label("Connectstring environment variable.")
+      .documentation(Documentation.en("Name of the environment variable containing the JDBC connect string.")
+          .de("Name der Umgebungsvariable mit den JDBC Verbindungsdaten.").build())
+      .optional().build();
+
+  public static final List<StringParameter<?>> additionalParameters = StringParameter.asList(CONNECT_TIMEOUT,
+      SOCKET_TIMEOUT, VALIDATION_TIMEOUT, USERNAME_ENV, PASSWORD_ENV, CONNECT_ENV);
 
   private PluginDescription pluginDescription;
 
@@ -168,9 +191,22 @@ public class MySQLPoolType extends ConnectionPoolType {
   public ConnectionBuildStrategy createConnectionBuildStrategy(TypedConnectionPoolParameter cpp) {
     Duration connectTimeout = CONNECT_TIMEOUT.getFromMap(cpp.getAdditionalParams());
     Duration socketTimeout = SOCKET_TIMEOUT.getFromMap(cpp.getAdditionalParams());
+
+    Optional<StringEnvironmentVariable> userEnv = Optional
+        .ofNullable(USERNAME_ENV.getFromMap(cpp.getAdditionalParams()));
+    Optional<StringEnvironmentVariable> pwdEnv = Optional
+        .ofNullable(PASSWORD_ENV.getFromMap(cpp.getAdditionalParams()));
+    Optional<StringEnvironmentVariable> connectStringEnv = Optional
+        .ofNullable(CONNECT_ENV.getFromMap(cpp.getAdditionalParams()));
+
+    String user = userEnv.map(u -> u.getValue().orElse(cpp.getUser())).orElse(cpp.getUser());
+    String pwd = pwdEnv.map(p -> p.getValue().orElse(cpp.getPassword())).orElse(cpp.getPassword());
+    String connString = connectStringEnv.map(c -> c.getValue().orElse(cpp.getConnectString()))
+        .orElse(cpp.getConnectString());
+    
     DBConnectionData dbdata =
         DBConnectionData.newDBConnectionData().
-            user(cpp.getUser()).password(cpp.getPassword()).url(cpp.getConnectString())
+            user(user).password(pwd).url(connString)
             .connectTimeoutInSeconds((int)connectTimeout.getDuration(TimeUnit.SECONDS))
             .socketTimeoutInSeconds((int)socketTimeout.getDuration(TimeUnit.SECONDS))
             .classLoaderToLoadDriver(MySQLPoolType.class.getClassLoader()) // enforcing the connector jar to be stored in userlib
