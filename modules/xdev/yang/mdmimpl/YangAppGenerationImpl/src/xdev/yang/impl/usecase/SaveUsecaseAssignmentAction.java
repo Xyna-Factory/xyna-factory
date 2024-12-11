@@ -176,17 +176,17 @@ public class SaveUsecaseAssignmentAction {
         String loopVareName = dynListConfig.getVariable();
         String loopVarPath = determineMappingValueBase(dynListConfig.getPath());
         String counterVarName = String.format("i_%d", data.nextVariable++);
-        result.append("List<?> ").append(loopVareName).append("_list = (List<?>)").append(loopVarPath).append(";\n");
-        result.append("for (int ").append(counterVarName).append(" = 0; ").append(counterVarName).append(" < ");
-        result.append(loopVareName).append("_list.size(); ").append(counterVarName).append("++) {\n");
-        result.append("Object ").append(loopVareName).append(" = ").append(loopVareName).append("_list.get(").append(counterVarName).append(");\n");
+        result.append("List<?> ").append(loopVareName).append("_list = (List<?>)").append(loopVarPath).append(";\n")
+          .append("for (int ").append(counterVarName).append(" = 0; ").append(counterVarName).append(" < ")
+          .append(loopVareName).append("_list.size(); ").append(counterVarName).append("++) {\n")
+          .append("Object ").append(loopVareName).append(" = ").append(loopVareName).append("_list.get(").append(counterVarName).append(");\n");
         position.add(mappingList.get(i)); // dynamic lists are hidden, but we need to keep track of opened lists anyway
       } else if(Constants.TYPE_LIST.equals(mappingList.get(i).getKeyword())) {
         position.add(mappingList.get(i)); //static complex list
       }
       if(!hiddenYangKeywords.contains(mappingList.get(i).getKeyword())) {
-        result.append("builder.startElementWithAttributes(\"").append(tag).append("\");\n");
-        result.append("builder.addAttribute(\"xmlns\", \"").append(mappingList.get(i).getNamespace()).append("\");\n");
+        result.append("builder.startElementWithAttributes(\"").append(tag).append("\");\n")
+          .append("builder.addAttribute(\"xmlns\", \"").append(mappingList.get(i).getNamespace()).append("\");\n");
         if (i != mappingList.size() - 1) { //do not close the final tag, because we want to set the value
           result.append("builder.endAttributes();\n");
           position.add(mappingList.get(i)); //we close the final tag. As a result, we do not need to add that position
