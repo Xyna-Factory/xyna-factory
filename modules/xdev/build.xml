@@ -23,6 +23,7 @@
     
     <target name="build-all">
         <buildModule target="build"     dir="xtf"        target.dir="${target.dir}/xdev" />
+        <buildModule target="build"     dir="yang"        target.dir="${target.dir}/xdev" />
     </target>
     
 </project>
