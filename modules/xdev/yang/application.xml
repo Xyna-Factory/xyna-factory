@@ -140,7 +140,7 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yang.fman.ConfigureList</FqName>
-      <Type>DATATYPE</Type>
+      <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yang.fman.ConfigureListDialogDefinition</FqName>
