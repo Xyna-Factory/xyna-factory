@@ -17,6 +17,7 @@
  */
 package com.gip.xyna.xprc.xbatchmgmt;
 
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -803,7 +804,13 @@ public class BatchProcess {
    * @return
    */
   public boolean isInRevision(Long revision) {
-    return batchProcessArchiveData.getRevision().equals(revision);
+    Long batchProcessRevision = null;
+    try {
+      batchProcessRevision = batchProcessArchiveData.getRevision();
+    } catch (IllegalArgumentException e) {
+      return false;
+    }
+    return Objects.equals(batchProcessRevision, revision);
   }
   
   

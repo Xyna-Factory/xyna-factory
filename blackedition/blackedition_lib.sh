@@ -30,7 +30,7 @@ ALL_DATAMODELTYPES=("mib","tr069","xsd");
 #ACHTUNG: Version auch bei addRequirement zu default workspace berücksichtigen
 ALL_APPLICATIONS="Base Processing"; #Default-Applications, die immer installiert sein sollten
 APPMGMTVERSION=1.0.10
-GUIHTTPVERSION=1.3.4
+GUIHTTPVERSION=1.3.5
 SNMPSTATVERSION=1.0.3
 PROCESSINGVERSION=1.0.22
 ALL_REPOSITORYACCESSES=("svn");
@@ -892,20 +892,24 @@ update_xynafactory () {
   fi
    
   echo -e "\n  + Copy delivery items to ${INSTALL_PREFIX}/{revisions,server}/."
+  replace_child_dirs server/clusterproviders
+  replace_child_versioned_files server/conpooltypes
+  replace_child_dirs server/datamodeltypes
+  replace_dir server/lib ${INSTALL_PREFIX}/server/lib
+  replace_child_dirs server/orderinputsourcetypes
+  replace_child_dirs server/persistencelayers
+  copy_dir server/storage ${INSTALL_PREFIX}/server/storage
+  copy_dir server/resources ${INSTALL_PREFIX}/server/resources
+  copy_dir server/exceptions ${INSTALL_PREFIX}/server/exceptions
+  copy_dir func_lib ${INSTALL_PREFIX}/server/func_lib
+  copy_file server/product_lib.sh ${INSTALL_PREFIX}/server
+  copy_file server/Exceptions.xml ${INSTALL_PREFIX}/server
+  copy_file server/TemplateImplNew.zip ${INSTALL_PREFIX}/server
+  copy_file server/TemplateImpl.zip ${INSTALL_PREFIX}/server
 
-  ${VOLATILE_RM} -rf ${INSTALL_PREFIX}/server/lib
-   
   ${VOLATILE_MKDIR} -p ${INSTALL_PREFIX}/revisions/rev_workingset/saved/{services,sharedLibs,XMOM}
-  ${VOLATILE_CP} -rp "./func_lib/" ${INSTALL_PREFIX}/server/.
   
-  #alles im server-Verzeichnis kopieren außer log4j2.xml, server.policy, xynafactory.sh
-  ${VOLATILE_CP} -rp server ${INSTALL_PREFIX}/.
-  
-  #log4j2.xml, server.policy, xynafactory.sh aus backup wiederherstellen
-  restore_file_from_dir ${INSTALL_PREFIX} server server.policy 
-  restore_file_from_dir ${INSTALL_PREFIX} server log4j2.xml
-  restore_file_from_dir ${INSTALL_PREFIX} server xynafactory.sh
-  #weitere Ausnahmen:
+  #persistencelayers.xml aus backup wiederherstellen
   restore_file_from_dir ${INSTALL_PREFIX} server/storage/persistence persistencelayers.xml
   
   #Lizenzen
@@ -940,6 +944,62 @@ update_xynafactory () {
   ${VOLATILE_CHMOD} 550 ${INSTALL_PREFIX}/server/xynafactory.sh
 
   echo -e "\n  Updating server directory finished.\n"
+}
+
+replace_dir () {
+  local SOURCE_DIR=$1
+  local TARGET_DIR=$2
+
+  rm -rf ${TARGET_DIR}
+  ${VOLATILE_CP} -rp ${SOURCE_DIR} ${TARGET_DIR}
+}
+
+copy_dir () {
+  local SOURCE_DIR=$1
+  local TARGET_DIR=$2
+
+  ${VOLATILE_MKDIR} -p ${TARGET_DIR}
+  ${VOLATILE_CP} -rp ${SOURCE_DIR} ${TARGET_DIR}
+}
+
+copy_file () {
+  local SOURCE_FILE=$1
+  local TARGET_DIR=$2
+
+  ${VOLATILE_MKDIR} -p ${TARGET_DIR}
+  ${VOLATILE_CP} -rp ${SOURCE_FILE} ${TARGET_DIR}
+}
+
+replace_versioned_file () {
+  local SOURCE_FILE=$1
+  local TARGET_DIR=$2
+  local SOURCE_BASE_FILE=$(basename -- "$SOURCE_FILE")
+  local TARGET_BASE_FILE=${SOURCE_BASE_FILE//[0-9]\.[0-9]\.[0-9]/*}
+
+  rm -f ${TARGET_DIR}/${TARGET_BASE_FILE}
+  ${VOLATILE_CP} -rp ${SOURCE_FILE} ${TARGET_DIR}
+}
+
+replace_child_dirs () {
+  local SOURCE_DIR=$1
+
+  ${VOLATILE_MKDIR} -p ${INSTALL_PREFIX}/${SOURCE_DIR}
+  for dir in ${SOURCE_DIR}/*; do
+    if [ -d "${dir}" ]; then
+      replace_dir ${dir} ${INSTALL_PREFIX}/${dir}
+    fi
+  done
+}
+
+replace_child_versioned_files () {
+  local SOURCE_DIR=$1
+
+  ${VOLATILE_MKDIR} -p ${INSTALL_PREFIX}/${SOURCE_DIR}
+  for file in ${SOURCE_DIR}/*; do
+    if [ -f "${file}" ]; then
+      replace_versioned_file ${file} ${INSTALL_PREFIX}/${SOURCE_DIR}
+    fi
+  done
 }
 
 install_license () {
@@ -1461,7 +1521,7 @@ merge_files () {
     
   else
     local MSG="Merging customized \"${FILENAME}\" with new version from delivery failed.\n"
-    MSG="${MSG}Following files can be found in \"${DIR}\":\n";
+    MSG="${MSG}Following files can be found in \"${PWD}/${TMP_FILE_DIR}\":\n";
     MSG="${MSG}  - conflicted merge: \"${FILENAME}_merge\"\n";
     MSG="${MSG}  - original file: \"${FILENAME}_customized\" (or \"${FILENAME}\")\n";
     MSG="${MSG}  - new file \"${FILENAME}_new\" (or \"${NEW_FILE}\")\n";
@@ -1477,13 +1537,13 @@ merge_files () {
         MSG="${MSG}Actions:\n";
         if [ ! -e ${COMMON_BASE_FILE} ] ; then
           MSG="${MSG}  *) Provide a proper common base from last installed delivery \n";
-          MSG="${MSG}       in \"${BASE_DIR}/${FILENAME}\".\n";
+          MSG="${MSG}       in \"${DIR}/${BASE_DIR}/${FILENAME}\".\n";
           MSG="${MSG}     Continue installation with [ENTER]\n";
         fi;
         MSG="${MSG}  *) Resolve conflict manually:\n";
         MSG="${MSG}     Edit \"${FILENAME}_merge\" to resolve the conflict.\n";
-        MSG="${MSG}     Copy \"${FILENAME}_merge\" to \"${FILENAME}\".\n";
-        MSG="${MSG}     Copy \"${FILENAME}_new\" to \"${BASE_DIR}/${FILENAME}\".\n";
+        MSG="${MSG}     Copy \"${FILENAME}_merge\" to \"${DIR}/${FILENAME}\".\n";
+        MSG="${MSG}     Copy \"${FILENAME}_new\" to \"${DIR}/${BASE_DIR}/${FILENAME}\".\n";
         MSG="${MSG}     Continue installation with [ENTER]\n";
         MSG="${MSG}  *) Stop installation with [STRG-C]";
         ;;
