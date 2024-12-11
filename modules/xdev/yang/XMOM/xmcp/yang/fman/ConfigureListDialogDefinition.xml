@@ -53,7 +53,7 @@
       </Output>
       <Mapping>%1%.label="Length"</Mapping>
       <Mapping>%1%.placeholder="0"</Mapping>
-      <Mapping>%1%.dataPath="%0%.constantListConfiguration.length"</Mapping>
+      <Mapping>%1%.dataPath="%0%.config"</Mapping>
       <Mapping>%2%.label="Save"</Mapping>
       <Mapping>%2%.serviceRTC=%0%</Mapping>
       <Mapping>%2%.serviceFQN="xmcp.yang.fman.ConfigureList"</Mapping>
@@ -81,9 +81,7 @@
     <Data ID="15" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition15"/>
     <Data ID="29" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition29"/>
     <Data ID="48" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext48"/>
-    <Data ID="192" Label="ListConfiguration" ReferenceName="ListConfiguration" ReferencePath="xmcp.yang.fman" VariableName="const_ListConfiguration192">
-      <Data ReferenceName="ConstantListConfiguration" ReferencePath="xmcp.yang.fman" VariableName="constantListConfiguration"/>
-    </Data>
+    <Data ID="192" Label="ListConfiguration" ReferenceName="ListConfiguration" ReferencePath="xmcp.yang.fman" VariableName="const_ListConfiguration192"/>
     <Assign ID="1">
       <Source RefID="29"/>
       <Source RefID="192"/>
