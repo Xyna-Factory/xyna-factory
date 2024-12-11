@@ -181,6 +181,8 @@ public class SaveUsecaseAssignmentAction {
         result.append(loopVareName).append("_list.size(); ").append(counterVarName).append("++) {\n");
         result.append("Object ").append(loopVareName).append(" = ").append(loopVareName).append("_list.get(").append(counterVarName).append(");\n");
         position.add(mappingList.get(i)); // dynamic lists are hidden, but we need to keep track of opened lists anyway
+      } else if(Constants.TYPE_LIST.equals(mappingList.get(i).getKeyword())) {
+        position.add(mappingList.get(i)); //static complex list
       }
       if(!hiddenYangKeywords.contains(mappingList.get(i).getKeyword())) {
         result.append("builder.startElementWithAttributes(\"").append(tag).append("\");\n");
@@ -201,6 +203,9 @@ public class SaveUsecaseAssignmentAction {
     String keyword = mappingElements.get(mappingElements.size()-1).getKeyword();
     if(Constants.TYPE_LEAFLIST.equals(keyword) || Constants.TYPE_LIST.equals(keyword)) {
       for(ListConfiguration listConfig : listConfigs) {
+        if(!(listConfig.getConfig() instanceof DynamicListLengthConfig)) {
+          continue;
+        }
         List<MappingPathElement> listPath = UseCaseMapping.createPathList(listConfig.getYang(), listConfig.getNamespaces(), listConfig.getKeywords());
         if(MappingPathElement.compareLists(mappingElements, listPath) == 0) {
           return listConfig;
