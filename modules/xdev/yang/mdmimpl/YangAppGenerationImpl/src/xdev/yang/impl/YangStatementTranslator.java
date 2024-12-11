@@ -32,6 +32,7 @@ import org.yangcentral.yangkit.model.api.stmt.Leaf;
 import org.yangcentral.yangkit.model.api.stmt.LeafList;
 import org.yangcentral.yangkit.model.api.stmt.Rpc;
 import org.yangcentral.yangkit.model.api.stmt.Uses;
+import org.yangcentral.yangkit.model.api.stmt.YangList;
 import org.yangcentral.yangkit.model.api.stmt.YangStatement;
 import org.yangcentral.yangkit.model.impl.stmt.MainModuleImpl;
 
@@ -52,6 +53,7 @@ public class YangStatementTranslator {
     result.put(Case.class, new YangStatementTranslation(Constants.TYPE_CASE));
     result.put(Anyxml.class, new YangStatementTranslation(Constants.TYPE_ANYXML));
     result.put(LeafList.class, new YangStatementTranslation(Constants.TYPE_LEAFLIST));
+    result.put(YangList.class, new YangStatementTranslation(Constants.TYPE_LIST));
     return result;
   }
 

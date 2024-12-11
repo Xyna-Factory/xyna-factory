@@ -38,6 +38,9 @@ public class Constants {
   
   public static final String ATT_LIST_CONFIG_CONSTANT_LENGTH = "length";
   
+  public static final String ATT_LIST_CONFIG_DYNAMIC_VARIABLE = "variable";
+  public static final String ATT_LIST_CONFIG_DYNAMIC_PATH = "path";
+  
   public static final String TAG_YANG = "Yang";
   public static final String TAG_RPC = "Rpc";
   public static final String TAG_RPC_NS = "RpcNamespace";
@@ -62,6 +65,7 @@ public class Constants {
   public static final String VAL_LOCATION_OUTPUT = "output";
   
   public static final String VAL_LIST_CONFIG_CONSTANT = "constant";
+  public static final String VAL_LIST_CONFIG_DYNAMIC = "dynamic";
   
   public static final String TYPE_CONTAINER = "container";
   public static final String TYPE_LEAF = "leaf";
@@ -73,6 +77,7 @@ public class Constants {
   public static final String TYPE_CASE = "case";
   public static final String TYPE_ANYXML = "anyxml";
   public static final String TYPE_LEAFLIST = "leaf-list";
+  public static final String TYPE_LIST = "list";
   
   public static final String NS_SEPARATOR = "§";
   public static final String LIST_INDEX_SEPARATOR = ") ";

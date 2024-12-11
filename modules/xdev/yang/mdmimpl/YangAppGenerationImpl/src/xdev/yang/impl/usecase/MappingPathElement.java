@@ -17,7 +17,7 @@
  */
 package xdev.yang.impl.usecase;
 
-
+import java.util.List;
 
 public class MappingPathElement implements Comparable<MappingPathElement> {
 
@@ -66,5 +66,23 @@ public class MappingPathElement implements Comparable<MappingPathElement> {
     }
 
     return compareTo((MappingPathElement) obj) == 0;
+  }
+  
+  @Override
+  public String toString() {
+    return String.format("MappingPathElement: \n\t%s\n\t%s\n\t%s", yangPath, namespace, keyword);
+  }
+  
+  public static int compareLists(List<MappingPathElement> pathList, List<MappingPathElement> otherPathList) {
+    int minLength = Math.min(pathList.size(), otherPathList.size());
+    for (int i = 0; i < minLength; i++) {
+      int elementComparision = pathList.get(i).compareTo(otherPathList.get(i));
+      if(elementComparision != 0) {
+        return elementComparision;
+      }
+    }
+
+    //all entries up to the minimum length are the same
+    return pathList.size() - otherPathList.size();
   }
 }

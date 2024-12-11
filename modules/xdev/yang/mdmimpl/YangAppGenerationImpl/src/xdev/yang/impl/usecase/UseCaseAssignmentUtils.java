@@ -51,7 +51,7 @@ import xdev.yang.impl.XmomDbInteraction;
 import xdev.yang.impl.YangCapabilityUtils;
 import xdev.yang.impl.YangStatementTranslator;
 import xdev.yang.impl.YangStatementTranslator.YangStatementTranslation;
-import xdev.yang.impl.usecase.ListConfiguration.ConstantListLengthConfig;
+import xdev.yang.impl.usecase.ListConfiguration.ListLengthConfig;
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.UseCaseAssignmentTableData;
 import xmcp.yang.YangModuleCollection;
@@ -83,10 +83,11 @@ public class UseCaseAssignmentUtils {
     String keyword = element.getYangKeyword().getLocalName();
     switch (keyword) {
       case Constants.TYPE_LEAFLIST :
+        ListConfiguration leaflistConfig = getListConfig(listConfigs, path, namespaces);
+        return getLeafListCandidates(element, leaflistConfig);
+      case Constants.TYPE_LIST:
         ListConfiguration listConfig = getListConfig(listConfigs, path, namespaces);
-        return getLeafListCandidates(element, listConfig);
-      //case LIST:
-      //  getListCandidates(element, listConfig);
+        return getListCandidates(element, listConfig);
       default :
         return getCandidates(element);
     }
@@ -100,19 +101,33 @@ public class UseCaseAssignmentUtils {
     }
     return null;
   }
+  
+  private static List<YangStatement> getListCandidates(YangStatement statement, ListConfiguration listConfig) {
+    List<YangStatement> result = new ArrayList<YangStatement>();
+    if(listConfig == null) {
+      return result;
+    }
+    
+    //only if list length is dynamic
+    return getCandidates(statement);
+  }
 
   private static List<YangStatement> getLeafListCandidates(YangStatement statement, ListConfiguration listConfig) {
     List<YangStatement> result = new ArrayList<YangStatement>();
     if(listConfig == null) {
       return result;
     }
-    for(int i=0; i<((ConstantListLengthConfig)listConfig.getConfig()).getLength(); i++) {
-      LeafImpl impl = new LeafImpl(i + Constants.LIST_INDEX_SEPARATOR + statement.getArgStr());
+    
+    ListLengthConfig config = listConfig.getConfig();
+    for (int i = 0; i < config.getNumberOfCandidateEntries(); i++) {
+      LeafImpl impl = new LeafImpl(config.createCandidateName(i) + Constants.LIST_INDEX_SEPARATOR + statement.getArgStr());
       impl.setContext(statement.getContext());
       result.add(impl);
     }
+
     return result;
   }
+
 
   private static List<YangStatement> getCandidates(YangStatement statement) {
     List<YangElement> candidates = YangStatementTranslation.getSubStatements(statement);

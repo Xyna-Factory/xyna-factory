@@ -15,9 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="List Configuration" TypeName="ListConfiguration" TypePath="xmcp.yang.fman" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="ListConfiguration" TypeName="ListConfiguration" TypePath="xmcp.yang.fman" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Constant List Configuration" ReferenceName="ConstantListConfiguration" ReferencePath="xmcp.yang.fman" VariableName="constantListConfiguration"/>
+  <Data Label="Config" VariableName="config">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
 </DataType>

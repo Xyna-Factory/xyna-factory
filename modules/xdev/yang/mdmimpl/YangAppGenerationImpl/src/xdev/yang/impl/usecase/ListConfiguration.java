@@ -99,7 +99,15 @@ public class ListConfiguration {
   }
   
   public static ListConfiguration fromDatatype(String yang, String ns, String keywords, xmcp.yang.fman.ListConfiguration dtConfig) {
-    ListLengthConfig config = new ConstantListLengthConfig(dtConfig.getConstantListConfiguration().getLength());
+    ListLengthConfig config;
+    String configString = dtConfig.getConfig();
+    if(configString.contains(":")) {
+      String variable = configString.substring(0, configString.indexOf(":"));
+      String path = configString.substring(configString.indexOf(":") + 1);
+      config = new DynamicListLengthConfig(variable, path);
+    } else {
+      config = new ConstantListLengthConfig(Integer.valueOf(configString));
+    }
     return new ListConfiguration(yang, ns, keywords, config);
   }
   
@@ -134,10 +142,13 @@ public class ListConfiguration {
     private static Map<String, Function<Element, ListLengthConfig>> setupLoadFunctions() {
       Map<String, Function<Element, ListLengthConfig>> result = new HashMap<>();
       result.put(Constants.VAL_LIST_CONFIG_CONSTANT, ConstantListLengthConfig::loadFromElement);
+      result.put(Constants.VAL_LIST_CONFIG_DYNAMIC, DynamicListLengthConfig::loadFromElement);
       return result;
     }
     
     public abstract void updateNode(Element element);
+    public abstract int getNumberOfCandidateEntries();
+    public abstract String createCandidateName(int i);
 
     public static ListLengthConfig loadFromElement(Element element) {
       String type = element.getAttribute(Constants.ATT_LIST_CONFIG_TYPE);
@@ -158,6 +169,16 @@ public class ListConfiguration {
       element.setAttribute(Constants.ATT_LIST_CONFIG_TYPE, Constants.VAL_LIST_CONFIG_CONSTANT);
       element.setAttribute(Constants.ATT_LIST_CONFIG_CONSTANT_LENGTH, String.valueOf(length));
     }
+
+    @Override
+    public int getNumberOfCandidateEntries() {
+      return length;
+    }
+    
+    @Override
+    public String createCandidateName(int i) {
+      return String.valueOf(i);
+    }
     
     public ConstantListLengthConfig(int length) {
       this.length = length;
@@ -173,5 +194,45 @@ public class ListConfiguration {
       this.length = length;
     }
     
+  }
+  
+  public static class DynamicListLengthConfig extends ListLengthConfig {
+    private String variable;
+    private String path;
+    
+    public DynamicListLengthConfig(String variable, String path) {
+      this.variable = variable;
+      this.path = path;
+    }
+    
+    public static DynamicListLengthConfig loadFromElement(Element element) {   
+      String variable = element.getAttribute(Constants.ATT_LIST_CONFIG_DYNAMIC_VARIABLE);
+      String path = element.getAttribute(Constants.ATT_LIST_CONFIG_DYNAMIC_PATH);
+      return new DynamicListLengthConfig(variable, path);
+    }
+    
+    public void updateNode(Element element) {
+      element.setAttribute(Constants.ATT_LIST_CONFIG_TYPE, Constants.VAL_LIST_CONFIG_DYNAMIC);
+      element.setAttribute(Constants.ATT_LIST_CONFIG_DYNAMIC_VARIABLE, variable);
+      element.setAttribute(Constants.ATT_LIST_CONFIG_DYNAMIC_PATH, path);
+    }
+    
+    @Override
+    public int getNumberOfCandidateEntries() {
+      return 1;
+    }
+    
+    @Override
+    public String createCandidateName(int i) {
+      return variable;
+    }
+    
+    public String getVariable() {
+      return variable;
+    }
+    
+    public String getPath() {
+      return path;
+    }
   }
 }
