@@ -38,7 +38,8 @@ public class SaveUsecaseAssignmentAction {
                                                               Constants.TYPE_USES,
                                                               Constants.TYPE_CHOICE, 
                                                               Constants.TYPE_CASE,
-                                                              Constants.TYPE_LEAFLIST);
+                                                              Constants.TYPE_LEAFLIST,
+                                                              Constants.TYPE_LIST);
 
 
   public void saveUsecaseAssignment(XynaOrderServerExtension order, UseCaseAssignmentTableData data) {
@@ -150,7 +151,6 @@ public class SaveUsecaseAssignmentAction {
     result.append("\n//").append(mapping.getMappingYangPath()).append(" -> ").append(mapping.getValue()).append("\n");
     
     List<MappingPathElement> mappingList = mapping.createPathList();
-    //mappingList.removeIf(x -> hiddenYangKeywords.contains(x.getKeyword())); //TODO: remove -> ignore in loop
     int insertIndex = 0;
     for (int i = 0; i < position.size(); i++) {
       if (mappingList.size() < i) {
@@ -247,16 +247,21 @@ public class SaveUsecaseAssignmentAction {
 
   private void closeTags(StringBuilder sb, ImplCreationData data, int index) {
     List<MappingPathElement> tags = data.position;
-    for (int i = tags.size()-1; i > index; i--) {
+    for (int i = tags.size() - 1; i > index; i--) {
       MappingPathElement element = tags.get(i);
-      
+
       if (!hiddenYangKeywords.contains(element.getKeyword())) {
-        sb.append("builder.endElement(\"").append(element.getYangPath()).append("\");\n");
-        tags.remove(i);
+        String tag = cleanupTag(element.getYangPath());
+        sb.append("builder.endElement(\"").append(tag).append("\");\n");
+
       }
-      
+
       if (isDynamicList(tags.subList(0, i + 1), data.listConfigs) != null) {
         sb.append("}\n");
+      }
+
+      if (!hiddenYangKeywords.contains(element.getKeyword())) {
+        tags.remove(i);
       }
     }
   }
