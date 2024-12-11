@@ -212,25 +212,29 @@ public class MySQLPoolType extends ConnectionPoolType {
     private int socketTimeout;
     private String poolId;
 
-    private final Optional<StringEnvironmentVariable> userEnv = Optional
-        .ofNullable(USERNAME_ENV.getFromMap(tcpp.getAdditionalParams()));
-    private final Optional<StringEnvironmentVariable> pwdEnv = Optional
-        .ofNullable(PASSWORD_ENV.getFromMap(tcpp.getAdditionalParams()));
-    private final Optional<StringEnvironmentVariable> connectStringEnv = Optional
-        .ofNullable(CONNECT_ENV.getFromMap(tcpp.getAdditionalParams()));
+    private final Optional<StringEnvironmentVariable> userEnv;
+    private final Optional<StringEnvironmentVariable> pwdEnv;
+    private final Optional<StringEnvironmentVariable> connectStringEnv;
 
     public MySQLConnectionBuildStrategy(TypedConnectionPoolParameter tcpp, int connectTimeout, int socketTimeout) {
       this.tcpp = tcpp;
       this.dbdata = null;
       this.connectTimeout = connectTimeout;
       this.socketTimeout = socketTimeout;
+
+      userEnv = Optional
+          .ofNullable(USERNAME_ENV.getFromMap(tcpp.getAdditionalParams()));
+      pwdEnv = Optional
+          .ofNullable(PASSWORD_ENV.getFromMap(tcpp.getAdditionalParams()));
+      connectStringEnv = Optional
+          .ofNullable(CONNECT_ENV.getFromMap(tcpp.getAdditionalParams()));
     }
 
     private void updateDBConnectData() {
-      String user = userEnv.flatMap(u -> u.getValue()).filter(s -> !s.isEmpty()).orElse(tcpp.getUser());
-      String pwd = pwdEnv.flatMap(p -> p.getValue()).filter(s -> !s.isEmpty()).orElse(tcpp.getPassword());
+      String user = userEnv.flatMap(u -> u.getValue()).filter(s -> !s.isEmpty()).orElse(tcpp.getUser()).trim();
+      String pwd = pwdEnv.flatMap(p -> p.getValue()).filter(s -> !s.isEmpty()).orElse(tcpp.getPassword()).trim();
       String connString = connectStringEnv.flatMap(c -> c.getValue()).filter(s -> !s.isEmpty())
-          .orElse(tcpp.getConnectString());
+          .orElse(tcpp.getConnectString()).trim();
 
       if (dbdata == null) {
         dbdata = DBConnectionData.newDBConnectionData().user(user).password(pwd).url(connString)

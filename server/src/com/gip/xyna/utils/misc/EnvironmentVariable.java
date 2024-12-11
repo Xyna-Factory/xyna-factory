@@ -53,7 +53,7 @@ public abstract class EnvironmentVariable<T> {
             if (isFilePath()) {
                 return Optional.of(readValueFromFile(readValueFromEnv()));
             } else {
-                return Optional.of(readValueFromEnv());
+                return Optional.ofNullable(readValueFromEnv());
             }
         } catch (IOException e) {
             logger.error("Error reading from file in environment variable '" + varName + "'': " + e.getMessage());
@@ -62,6 +62,9 @@ public abstract class EnvironmentVariable<T> {
     }
 
     protected String readValueFromFile(String filePath) throws IOException {
+        if (filePath == null)
+            throw new IOException("no filePath available.");
+
         return Files.readString(Paths.get(filePath));
     }
 
