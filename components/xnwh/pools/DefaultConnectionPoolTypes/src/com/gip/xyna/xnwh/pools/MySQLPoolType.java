@@ -39,6 +39,7 @@ import com.gip.xyna.utils.db.ConnectionPool;
 import com.gip.xyna.utils.db.ConnectionPool.NoConnectionAvailableException.Reason;
 import com.gip.xyna.utils.db.ConnectionPool.NoConnectionAvailableReasonDetector;
 import com.gip.xyna.utils.db.DBConnectionData;
+import com.gip.xyna.utils.db.DBConnectionData.DBConnectionDataBuilder;
 import com.gip.xyna.utils.db.pool.ConnectionBuildStrategy;
 import com.gip.xyna.utils.db.pool.DefaultValidationStrategy;
 import com.gip.xyna.utils.db.pool.ValidationStrategy;
@@ -191,29 +192,7 @@ public class MySQLPoolType extends ConnectionPoolType {
   public ConnectionBuildStrategy createConnectionBuildStrategy(TypedConnectionPoolParameter cpp) {
     Duration connectTimeout = CONNECT_TIMEOUT.getFromMap(cpp.getAdditionalParams());
     Duration socketTimeout = SOCKET_TIMEOUT.getFromMap(cpp.getAdditionalParams());
-
-    Optional<StringEnvironmentVariable> userEnv = Optional
-        .ofNullable(USERNAME_ENV.getFromMap(cpp.getAdditionalParams()));
-    Optional<StringEnvironmentVariable> pwdEnv = Optional
-        .ofNullable(PASSWORD_ENV.getFromMap(cpp.getAdditionalParams()));
-    Optional<StringEnvironmentVariable> connectStringEnv = Optional
-        .ofNullable(CONNECT_ENV.getFromMap(cpp.getAdditionalParams()));
-
-    String user = userEnv.map(u -> u.getValue().orElse(cpp.getUser())).orElse(cpp.getUser());
-    String pwd = pwdEnv.map(p -> p.getValue().orElse(cpp.getPassword())).orElse(cpp.getPassword());
-    String connString = connectStringEnv.map(c -> c.getValue().orElse(cpp.getConnectString()))
-        .orElse(cpp.getConnectString());
-    
-    DBConnectionData dbdata =
-        DBConnectionData.newDBConnectionData().
-            user(user).password(pwd).url(connString)
-            .connectTimeoutInSeconds((int)connectTimeout.getDuration(TimeUnit.SECONDS))
-            .socketTimeoutInSeconds((int)socketTimeout.getDuration(TimeUnit.SECONDS))
-            .classLoaderToLoadDriver(MySQLPoolType.class.getClassLoader()) // enforcing the connector jar to be stored in userlib
-            .property("rewriteBatchedStatements", "true")
-            .build();
-
-    return new MySQLConnectionBuildStrategy(dbdata, (int)connectTimeout.getDuration(TimeUnit.SECONDS) );
+    return new MySQLConnectionBuildStrategy(cpp, (int)connectTimeout.getDuration(TimeUnit.SECONDS), (int)socketTimeout.getDuration(TimeUnit.SECONDS) );
   }
 
 
@@ -227,16 +206,51 @@ public class MySQLPoolType extends ConnectionPoolType {
   public static class MySQLConnectionBuildStrategy implements ConnectionBuildStrategy {
     
     private static ThreadPoolExecutor threadpool = new ThreadPoolExecutor(1, 1000, 10, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());
+    private TypedConnectionPoolParameter tcpp;
     private DBConnectionData dbdata;
     private int connectTimeout;
+    private int socketTimeout;
     private String poolId;
 
-    public MySQLConnectionBuildStrategy(DBConnectionData dbdata, int connectTimeout) {
-      this.dbdata = dbdata;
+    private final Optional<StringEnvironmentVariable> userEnv = Optional
+        .ofNullable(USERNAME_ENV.getFromMap(tcpp.getAdditionalParams()));
+    private final Optional<StringEnvironmentVariable> pwdEnv = Optional
+        .ofNullable(PASSWORD_ENV.getFromMap(tcpp.getAdditionalParams()));
+    private final Optional<StringEnvironmentVariable> connectStringEnv = Optional
+        .ofNullable(CONNECT_ENV.getFromMap(tcpp.getAdditionalParams()));
+
+    public MySQLConnectionBuildStrategy(TypedConnectionPoolParameter tcpp, int connectTimeout, int socketTimeout) {
+      this.tcpp = tcpp;
+      this.dbdata = null;
       this.connectTimeout = connectTimeout;
+      this.socketTimeout = socketTimeout;
+    }
+
+    private void updateDBConnectData() {
+      String user = userEnv.flatMap(u -> u.getValue()).filter(s -> !s.isEmpty()).orElse(tcpp.getUser());
+      String pwd = pwdEnv.flatMap(p -> p.getValue()).filter(s -> !s.isEmpty()).orElse(tcpp.getPassword());
+      String connString = connectStringEnv.flatMap(c -> c.getValue()).filter(s -> !s.isEmpty())
+          .orElse(tcpp.getConnectString());
+
+      if (dbdata == null) {
+        dbdata = DBConnectionData.newDBConnectionData().user(user).password(pwd).url(connString)
+            .connectTimeoutInSeconds(connectTimeout)
+            .socketTimeoutInSeconds(socketTimeout)
+            .classLoaderToLoadDriver(MySQLPoolType.class.getClassLoader()) // enforcing the connector jar to be stored
+                                                                           // in userlib
+            .property("rewriteBatchedStatements", "true")
+            .build();
+      } else {
+        if (dbdata.getUrl().equals(connString) && dbdata.getUser().equals(user) && dbdata.getPassword().equals(pwd))
+          return;
+
+        dbdata = (new DBConnectionDataBuilder(dbdata)).user(user).password(pwd).url(connString).build();
+      }
     }
 
     public Connection createNewConnection() {
+      updateDBConnectData();
+
       Connection con = createNewConnectionInternal();
       if (con == null) {
         throw new RuntimeException("Could not create connection but returned null.");
