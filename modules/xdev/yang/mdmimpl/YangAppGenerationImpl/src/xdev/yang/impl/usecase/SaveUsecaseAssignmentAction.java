@@ -174,7 +174,7 @@ public class SaveUsecaseAssignmentAction {
       if(listConfig != null) {
         DynamicListLengthConfig dynListConfig = (DynamicListLengthConfig)listConfig.getConfig();
         String loopVareName = dynListConfig.getVariable();
-        String loopVarPath = determineMappingValueBase(dynListConfig.getPath());
+        String loopVarPath = determineMappingValueObject(dynListConfig.getPath());
         String counterVarName = String.format("i_%d", data.nextVariable++);
         result.append("List<?> ").append(loopVareName).append("_list = (List<?>)").append(loopVarPath).append(";\n")
           .append("for (int ").append(counterVarName).append(" = 0; ").append(counterVarName).append(" < ")
@@ -194,7 +194,7 @@ public class SaveUsecaseAssignmentAction {
       }
     }
     String tag = cleanupTag(mappingList.get(mappingList.size() - 1).getYangPath());
-    String value = determineMappingValue(mapping.getValue());
+    String value = determineMappingString(mapping.getValue());
     result.append("builder.endAttributesAndElement(").append(value).append(", \"").append(tag).append("\");\n");
   }
   
@@ -223,7 +223,7 @@ public class SaveUsecaseAssignmentAction {
     return tag;
   }
   
-  private String determineMappingValueBase(String mappingValue) {
+  private String determineMappingValueObject(String mappingValue) {
     int firstDot = mappingValue.indexOf(".");
     if (firstDot == -1 || mappingValue.startsWith("\"")) {
       return mappingValue;
@@ -234,7 +234,7 @@ public class SaveUsecaseAssignmentAction {
     }
   }
 
-  private String determineMappingValue(String mappingValue) {
+  private String determineMappingString(String mappingValue) {
     int firstDot = mappingValue.indexOf(".");
     if (firstDot == -1) {
       if(mappingValue.startsWith("\"")) {
