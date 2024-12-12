@@ -43,6 +43,7 @@ import xdev.yang.impl.YangApplicationGeneration.YangApplicationGenerationData;
 import xdev.yang.impl.usecase.AddUsecase;
 import xdev.yang.impl.usecase.AddVariableToUsecaseSignature;
 import xdev.yang.impl.usecase.ConfigureList;
+import xdev.yang.impl.usecase.DeleteUsecaseAssignmentAction;
 import xdev.yang.impl.usecase.DetermineUseCaseAssignments;
 import xdev.yang.impl.usecase.LoadUsecaseSignature;
 import xdev.yang.impl.usecase.LoadUsecasesTable;
@@ -174,5 +175,13 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   public void configureList(XynaOrderServerExtension order, LoadYangAssignmentsData data, ListConfiguration config) {
     ConfigureList executor = new ConfigureList();
     executor.configure(order, data, config);
+  }
+
+
+  @Override
+  public void deleteAssignment(XynaOrderServerExtension order, UseCaseAssignmentTableData data) {
+    DeleteUsecaseAssignmentAction executor = new DeleteUsecaseAssignmentAction();
+    executor.deleteUsecaseAssignment(order, data);
+
   }
 }

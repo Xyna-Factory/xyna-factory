@@ -17,23 +17,28 @@
  */
 package xdev.yang.impl.usecase;
 
+
+
 import java.util.List;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.gip.xyna.xprc.XynaOrderServerExtension;
+
 import xmcp.yang.UseCaseAssignmentTableData;
 
-public class SaveUsecaseAssignmentAction {
 
 
-  public void saveUsecaseAssignment(XynaOrderServerExtension order, UseCaseAssignmentTableData data) {
+public class DeleteUsecaseAssignmentAction {
+
+  public void deleteUsecaseAssignment(XynaOrderServerExtension order, UseCaseAssignmentTableData data) {
     String fqn = data.getLoadYangAssignmentsData().getFqn();
     String workspaceName = data.getLoadYangAssignmentsData().getWorkspaceName();
     String usecaseName = data.getLoadYangAssignmentsData().getUsecase();
     UsecaseImplementationProvider implProvider = new UsecaseImplementationProvider();
 
-    try(Usecase usecase = Usecase.open(order, fqn, workspaceName, usecaseName)) {
+    try (Usecase usecase = Usecase.open(order, fqn, workspaceName, usecaseName)) {
       Document meta = usecase.getMeta();
       updateMeta(meta, data);
       usecase.updateMeta();
@@ -41,37 +46,26 @@ public class SaveUsecaseAssignmentAction {
       usecase.updateImplementation(newImpl);
       usecase.save();
       usecase.deploy();
-    } catch(Exception e) {
+    } catch (Exception e) {
       throw new RuntimeException(e);
     }
   }
+
 
   private void updateMeta(Document meta, UseCaseAssignmentTableData data) {
     String totalYangPath = data.getLoadYangAssignmentsData().getTotalYangPath();
     String totalNamespaces = data.getLoadYangAssignmentsData().getTotalNamespaces();
     String totalKeywords = data.getLoadYangAssignmentsData().getTotalKeywords();
-    String value = data.getValue();
-    boolean update = false;  
+    Element mappingsElement = UseCaseMapping.loadMappingsElement(meta);
     List<Element> mappings = UseCaseMapping.loadMappingElements(meta);
     List<MappingPathElement> pathList = UseCaseMapping.createPathList(totalYangPath, totalNamespaces, totalKeywords);
-    for(Element mappingEle : mappings) {
+    for (Element mappingEle : mappings) {
       UseCaseMapping mapping = UseCaseMapping.loadUseCaseMapping(mappingEle);
-      mapping.setValue(value);
-      if(mapping.match(pathList)) {
-        mapping.updateNode(mappingEle);
-        update = true;
-        break;
+      if (mapping.match(pathList)) {
+        mappingsElement.removeChild(mappingEle);
+        return;
       }
     }
-    if(!update) {
-      UseCaseMapping mapping = new UseCaseMapping(totalYangPath, totalNamespaces, value, totalKeywords);
-      mapping.createAndAddElement(meta);
-    }
   }
-  
 
-  
-
-
-  
 }
