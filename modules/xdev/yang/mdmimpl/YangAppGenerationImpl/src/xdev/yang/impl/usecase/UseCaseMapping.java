@@ -156,16 +156,7 @@ public class UseCaseMapping implements Comparable<UseCaseMapping> {
   public int compareTo(UseCaseMapping o) {
     List<MappingPathElement> pathList = createPathList();
     List<MappingPathElement> otherPathList = o.createPathList();
-    int minLength = Math.min(pathList.size(), otherPathList.size());
-    for (int i = 0; i < minLength; i++) {
-      int elementComparision = pathList.get(i).compareTo(otherPathList.get(i));
-      if(elementComparision != 0) {
-        return elementComparision;
-      }
-    }
-
-    //all entries up to the minimum length are the same
-    return pathList.size() - otherPathList.size();
+    return MappingPathElement.compareLists(pathList, otherPathList);
   }
 
 

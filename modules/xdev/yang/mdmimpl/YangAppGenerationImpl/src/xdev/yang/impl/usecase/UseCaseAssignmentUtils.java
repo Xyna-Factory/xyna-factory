@@ -31,6 +31,8 @@ import org.yangcentral.yangkit.model.api.stmt.Input;
 import org.yangcentral.yangkit.model.api.stmt.Module;
 import org.yangcentral.yangkit.model.api.stmt.Rpc;
 import org.yangcentral.yangkit.model.api.stmt.YangStatement;
+import org.yangcentral.yangkit.model.impl.stmt.ContainerImpl;
+import org.yangcentral.yangkit.model.impl.stmt.LeafImpl;
 import org.yangcentral.yangkit.parser.YangYinParser;
 
 import com.gip.xyna.XynaFactory;
@@ -50,6 +52,7 @@ import xdev.yang.impl.XmomDbInteraction;
 import xdev.yang.impl.YangCapabilityUtils;
 import xdev.yang.impl.YangStatementTranslator;
 import xdev.yang.impl.YangStatementTranslator.YangStatementTranslation;
+import xdev.yang.impl.usecase.ListConfiguration.ListLengthConfig;
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.UseCaseAssignmentTableData;
 import xmcp.yang.YangModuleCollection;
@@ -57,22 +60,85 @@ import xmcp.yang.YangModuleCollection;
 public class UseCaseAssignmentUtils {
 
 
-  public static List<UseCaseAssignmentTableData> loadPossibleAssignments(List<Module> modules, String rpcName, String rpcNs, LoadYangAssignmentsData data) {
+  public static List<UseCaseAssignmentTableData> loadPossibleAssignments(List<Module> modules, String rpcName, String rpcNs, LoadYangAssignmentsData data, Document meta) {
     Rpc rpc = findRpc(modules, rpcName, rpcNs);
     Input input = rpc.getInput();
-    List<YangStatement> elements = traverseYang(modules, data.getTotalYangPath(), data.getTotalNamespaces(), input);
-    return loadAssignments(elements, data);
+    List<ListConfiguration> listConfigs = ListConfiguration.loadListConfigurations(meta);
+    List<YangStatement> elements = traverseYang(data.getTotalYangPath(), data.getTotalNamespaces(), data.getTotalKeywords(), input, listConfigs);
+    List<UseCaseAssignmentTableData> result = loadAssignments(elements, data);
+    return result;
   }
 
-  private static List<YangStatement> traverseYang(List<Module> modules, String path, String namespaces, YangStatement element) {
+
+  private static List<YangStatement> traverseYang(String path, String namespaces, String keywords, YangStatement element, List<ListConfiguration> listConfigs) {
     String[] parts = path.split("\\/");
     String[] namespaceParts = namespaces.split(Constants.NS_SEPARATOR);
+    String[] keywordParts = keywords.split(" ");
     for (int i = 1; i < parts.length; i++) { //ignore initial "/<rpcName>"
       String part = parts[i];
       String namespace = namespaceParts[i];
-      element = traverseYangOneLayer(modules, part, namespace, element);
+      String keyword = keywordParts[i];
+      element = traverseYangOneLayer(part, namespace, element);
+      if(Constants.TYPE_LIST.equals(keyword)) {
+        //do not traverse this layer because it is synthetic
+        i++;
+        continue;
+      }
     }
-    return getCandidates(element);
+
+    String keyword = keywordParts[keywordParts.length -1];
+    switch (keyword) {
+      case Constants.TYPE_LEAFLIST :
+        ListConfiguration leaflistConfig = getListConfig(listConfigs, path, namespaces);
+        return getLeafListCandidates(element, leaflistConfig);
+      case Constants.TYPE_LIST:
+        ListConfiguration listConfig = getListConfig(listConfigs, path, namespaces);
+        return getListCandidates(element, listConfig);
+      default :
+        return getCandidates(element);
+    }
+  }
+  
+  private static ListConfiguration getListConfig(List<ListConfiguration> listConfigs, String path, String namespaces) {
+    for(ListConfiguration candidate : listConfigs) {
+      if(Objects.equals(candidate.getYang(), path) && Objects.equals(candidate.getNamespaces(), namespaces)) {
+        return candidate;
+      }
+    }
+    return null;
+  }
+  
+  private static List<YangStatement> getListCandidates(YangStatement statement, ListConfiguration listConfig) {
+    List<YangStatement> result = new ArrayList<YangStatement>();
+    if(listConfig == null) {
+      return result;
+    }
+    
+    ListLengthConfig config = listConfig.getConfig();
+    for (int i = 0; i < config.getNumberOfCandidateEntries(); i++) {
+      ContainerImpl impl = new ContainerImpl(config.createCandidateName(i) + Constants.LIST_INDEX_SEPARATOR + statement.getArgStr());
+      impl.setContext(statement.getContext());
+      impl.setChildren(statement.getSubElements());
+      result.add(impl);
+    }
+    
+    return result;
+  }
+
+  private static List<YangStatement> getLeafListCandidates(YangStatement statement, ListConfiguration listConfig) {
+    List<YangStatement> result = new ArrayList<YangStatement>();
+    if(listConfig == null) {
+      return result;
+    }
+    
+    ListLengthConfig config = listConfig.getConfig();
+    for (int i = 0; i < config.getNumberOfCandidateEntries(); i++) {
+      LeafImpl impl = new LeafImpl(config.createCandidateName(i) + Constants.LIST_INDEX_SEPARATOR + statement.getArgStr());
+      impl.setContext(statement.getContext());
+      result.add(impl);
+    }
+
+    return result;
   }
 
 
@@ -88,7 +154,7 @@ public class UseCaseAssignmentUtils {
   }
 
 
-  private static YangStatement traverseYangOneLayer(List<Module> modules, String pathStep, String namespace, YangStatement statement) {
+  private static YangStatement traverseYangOneLayer(String pathStep, String namespace, YangStatement statement) {
     List<YangElement> candidates = YangStatementTranslation.getSubStatements(statement);
     for (YangElement candidate : candidates) {
       if (isSupportedElement(candidate)) {
@@ -109,11 +175,12 @@ public class UseCaseAssignmentUtils {
       if (isSupportedElement(element)) {
         String localName = YangStatementTranslation.getLocalName(element);
         String namespace = YangStatementTranslation.getNamespace(element);
+        String keyword = element.getYangKeyword().getLocalName();
         UseCaseAssignmentTableData.Builder builder = new UseCaseAssignmentTableData.Builder();
         LoadYangAssignmentsData updatedData = data.clone();
         updatedData.unversionedSetTotalYangPath(updatedData.getTotalYangPath() + "/" + localName);
         updatedData.unversionedSetTotalNamespaces(updatedData.getTotalNamespaces() + Constants.NS_SEPARATOR + namespace);
-        updatedData.unversionedSetTotalKeywords(updatedData.getTotalKeywords() + " " + element.getYangKeyword().getLocalName());
+        updatedData.unversionedSetTotalKeywords(updatedData.getTotalKeywords() + " " + keyword);
         builder.loadYangAssignmentsData(updatedData);
         builder.yangPath(localName);
         builder.type(getYangType(element));

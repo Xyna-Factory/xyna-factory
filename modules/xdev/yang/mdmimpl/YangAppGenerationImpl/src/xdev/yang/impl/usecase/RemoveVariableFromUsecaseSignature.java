@@ -24,10 +24,7 @@ import java.util.List;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
-import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
-
 import xmcp.yang.UseCaseTableData;
 import xmcp.yang.fman.UsecaseSignatureEntry;
 
@@ -40,19 +37,14 @@ public class RemoveVariableFromUsecaseSignature {
     String workspace = usecase.getRuntimeContext();
     String usecaseName = usecase.getUseCase();
 
-    Pair<Integer, Document> meta = UseCaseAssignmentUtils.loadOperationMeta(fqn, workspace, usecaseName);
-    if (meta == null) {
-      return;
-    }
-
-    Element signatureElement = UsecaseSignatureVariable.loadSignatureElement(meta.getSecond(), signature.getLocation());
-    List<Element> signatureEntryElements = UsecaseSignatureVariable.loadSignatureEntryElements(meta.getSecond(), signature.getLocation());
-    Element signatureEntryToRemove = signatureEntryElements.get(signature.getIndex());
-    signatureElement.removeChild(signatureEntryToRemove);
-
     try (Usecase uc = Usecase.open(order, fqn, workspace, usecaseName)) {
-      String xml = XMLUtils.getXMLString(meta.getSecond().getDocumentElement(), false);
-      uc.updateMeta(xml, meta.getFirst());
+      Document meta = uc.getMeta();
+      Element signatureElement = UsecaseSignatureVariable.loadSignatureElement(meta, signature.getLocation());
+      List<Element> signatureEntryElements = UsecaseSignatureVariable.loadSignatureEntryElements(meta, signature.getLocation());
+      Element signatureEntryToRemove = signatureEntryElements.get(signature.getIndex());
+      signatureElement.removeChild(signatureEntryToRemove);
+      
+      uc.updateMeta();
       uc.deleteInput(signature.getIndex());
       uc.save();
       uc.deploy();
