@@ -152,7 +152,7 @@ build_conpooltypes() {
   echo "building connectionpooltypes..."
   cd $SCRIPT_DIR/build
   ant -Doracle.home=/tmp conpooltypes
-  mvn install:install-file -Dfile=../../common/lib/xyna/DefaultConnectionPoolTypes-1.0.0.jar -DpomFile=../../components/xnwh/pools/DefaultConnectionPoolTypes/pom.xml
+  mvn install:install-file -Dfile=../../common/lib/xyna/DefaultConnectionPoolTypes-1.0.1.jar -DpomFile=../../components/xnwh/pools/DefaultConnectionPoolTypes/pom.xml
 }
 
 build_persistencelayers() {
