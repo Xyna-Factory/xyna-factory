@@ -85,4 +85,11 @@ public class MappingPathElement implements Comparable<MappingPathElement> {
     //all entries up to the minimum length are the same
     return pathList.size() - otherPathList.size();
   }
+  
+  public static boolean isMoreSpecificPath(List<MappingPathElement> base, List<MappingPathElement> candidate) {
+    if(candidate.size() < base.size()) {
+      return false;
+    }
+    return compareLists(base, candidate.subList(0, base.size())) == 0;
+  }
 }

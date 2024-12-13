@@ -21,10 +21,12 @@ package xdev.yang.impl.usecase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.w3c.dom.Document;
 import com.gip.xyna.utils.collections.Pair;
 
+import xdev.yang.impl.Constants;
 import xdev.yang.impl.YangCapabilityUtils;
 
 import org.yangcentral.yangkit.model.api.stmt.Module;
@@ -36,6 +38,7 @@ import xmcp.yang.UseCaseAssignmentTableData;
 
 public class DetermineUseCaseAssignments {
 
+  private static final Set<String> primitives = Set.of(Constants.TYPE_LEAF, Constants.TYPE_ANYXML);
 
   public List<UseCaseAssignmentTableData> determineUseCaseAssignments(LoadYangAssignmentsData data) {
     List<UseCaseAssignmentTableData> result = new ArrayList<UseCaseAssignmentTableData>();
@@ -67,15 +70,44 @@ public class DetermineUseCaseAssignments {
   private void fillValues(Document meta, List<Module> modules, List<UseCaseAssignmentTableData> entries) {
     List<UseCaseMapping> mappings = UseCaseMapping.loadMappings(meta);
     for (UseCaseAssignmentTableData entry : entries) {
-      for (UseCaseMapping mapping : mappings) {
-        if (mapping.getMappingYangPath().equals(entry.getLoadYangAssignmentsData().getTotalYangPath()) &&
-            mapping.getNamespace().equals(entry.getLoadYangAssignmentsData().getTotalNamespaces())) {
-          entry.unversionedSetValue(mapping.getValue());
-        }
-      }
+      String totalYangPath = entry.getLoadYangAssignmentsData().getTotalYangPath();
+      String totalNamespaces = entry.getLoadYangAssignmentsData().getTotalNamespaces();
+      String totalKeywords = entry.getLoadYangAssignmentsData().getTotalKeywords();
+      List<MappingPathElement> entryPath = UseCaseMapping.createPathList(totalYangPath, totalNamespaces, totalKeywords);
+      fillValue(entry, entryPath, mappings);
     }
   }
   
 
+  private void fillValue(UseCaseAssignmentTableData entry, List<MappingPathElement> entryPath, List<UseCaseMapping> mappings) {
+    boolean isPrimitive = primitives.contains(entry.getType());
+    String value = isPrimitive ? getPrimitiveValue(entryPath, mappings) : getContainerValue(entryPath, mappings);
+    entry.unversionedSetValue(value);
+  }
+  
 
+  private String getPrimitiveValue(List<MappingPathElement> entryPath, List<UseCaseMapping> mappings) {
+    for (UseCaseMapping mapping : mappings) {
+      if (MappingPathElement.compareLists(entryPath, mapping.createPathList()) == 0) {
+        return mapping.getValue();
+      }
+    }
+    return "";
+  }
+
+
+  private String getContainerValue( List<MappingPathElement> entryPath, List<UseCaseMapping> mappings) {
+    int subAssignments = 0;
+    for (UseCaseMapping mapping : mappings) {
+      if (MappingPathElement.isMoreSpecificPath(entryPath, mapping.createPathList())) {
+        subAssignments++;
+      }
+    }
+
+    if (subAssignments > 0) {
+      return String.format("contains %s assignment%s", subAssignments, subAssignments == 1 ? "" : "s");
+    }
+    
+    return "";
+  }
 }
