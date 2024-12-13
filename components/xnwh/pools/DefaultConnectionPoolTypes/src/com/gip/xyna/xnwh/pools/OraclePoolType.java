@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
@@ -30,11 +31,13 @@ import com.gip.xyna.utils.db.ConnectionPool;
 import com.gip.xyna.utils.db.ConnectionPool.NoConnectionAvailableException.Reason;
 import com.gip.xyna.utils.db.ConnectionPool.NoConnectionAvailableReasonDetector;
 import com.gip.xyna.utils.db.DBConnectionData;
+import com.gip.xyna.utils.db.DBConnectionData.DBConnectionDataBuilder;
 import com.gip.xyna.utils.db.pool.ConnectionBuildStrategy;
 import com.gip.xyna.utils.db.pool.FastValidationStrategy;
 import com.gip.xyna.utils.db.pool.ValidationStrategy;
 import com.gip.xyna.utils.misc.Documentation;
 import com.gip.xyna.utils.misc.StringParameter;
+import com.gip.xyna.utils.misc.EnvironmentVariable.StringEnvironmentVariable;
 import com.gip.xyna.utils.timing.Duration;
 import com.gip.xyna.xmcp.PluginDescription;
 import com.gip.xyna.xmcp.PluginDescription.ParameterUsage;
@@ -87,9 +90,30 @@ public class OraclePoolType extends ConnectionPoolType {
                     build()).
       defaultValue(false).
       build();
-  
-  public static final List<StringParameter<?>> additionalParameters = 
-      StringParameter.asList( CONNECT_TIMEOUT, SOCKET_TIMEOUT, VALIDATION_TIMEOUT, DURABLE_STATEMENT_CACHE );
+
+  public static final StringParameter<StringEnvironmentVariable> USERNAME_ENV = StringParameter
+      .typeEnvironmentVariable(StringEnvironmentVariable.class, "usernameEnv")
+      .label("Username environment variable.")
+      .documentation(Documentation.en("Name of the environment variable containing the db username.")
+          .de("Name der Umgebungsvariable, die den DB Nutzernamen enthält.").build())
+      .optional().build();
+
+  public static final StringParameter<StringEnvironmentVariable> PASSWORD_ENV = StringParameter
+      .typeEnvironmentVariable(StringEnvironmentVariable.class, "passwordEnv")
+      .label("Password environment variable.")
+      .documentation(Documentation.en("Name of the environment variable containing the db password.")
+          .de("Name der Umgebungsvariable, die das DB Passwort enthält.").build())
+      .optional().build();
+
+  public static final StringParameter<StringEnvironmentVariable> CONNECT_ENV = StringParameter
+      .typeEnvironmentVariable(StringEnvironmentVariable.class, "connectStringEnv")
+      .label("Connectstring environment variable.")
+      .documentation(Documentation.en("Name of the environment variable containing the JDBC connect string.")
+          .de("Name der Umgebungsvariable mit den JDBC Verbindungsdaten.").build())
+      .optional().build();
+
+  public static final List<StringParameter<?>> additionalParameters = StringParameter.asList(CONNECT_TIMEOUT,
+      SOCKET_TIMEOUT, VALIDATION_TIMEOUT, DURABLE_STATEMENT_CACHE, USERNAME_ENV, PASSWORD_ENV, CONNECT_ENV);
 
   private PluginDescription pluginDescription;
 
@@ -121,32 +145,65 @@ public class OraclePoolType extends ConnectionPoolType {
     Duration connectTimeout = CONNECT_TIMEOUT.getFromMap(cpp.getAdditionalParams());
     Duration socketTimeout = SOCKET_TIMEOUT.getFromMap(cpp.getAdditionalParams());
     Boolean useDurableStatementCache = DURABLE_STATEMENT_CACHE.getFromMap(cpp.getAdditionalParams());
-    
-    DBConnectionData dbdata =
-      DBConnectionData.newDBConnectionData().
-          user(cpp.getUser()).password(cpp.getPassword()).url(cpp.getConnectString())
-          .connectTimeoutInSeconds((int)connectTimeout.getDuration(TimeUnit.SECONDS))
-          .socketTimeoutInSeconds((int)socketTimeout.getDuration(TimeUnit.SECONDS))
-          .classLoaderToLoadDriver(OraclePoolType.class.getClassLoader()) // enforcing the connector jar to be stored in userlib
-          .property("rewriteBatchedStatements", "true")
-          .build();
-    
-    return new OracleConnectionBuildStrategy(dbdata, useDurableStatementCache);
+
+    return new OracleConnectionBuildStrategy(cpp, useDurableStatementCache,
+        (int) connectTimeout.getDuration(TimeUnit.SECONDS), (int) socketTimeout.getDuration(TimeUnit.SECONDS));
   }
 
 
   public static class OracleConnectionBuildStrategy implements ConnectionBuildStrategy {
 
+    private TypedConnectionPoolParameter tcpp;
     private DBConnectionData dbdata;
+    private int connectTimeout;
+    private int socketTimeout;
     private boolean useDurableStatementCache;
     private String poolId;
 
-    public OracleConnectionBuildStrategy(DBConnectionData dbdata, boolean useDurableStatementCache) {
-      this.dbdata = dbdata;
+    private final Optional<StringEnvironmentVariable> userEnv;
+    private final Optional<StringEnvironmentVariable> pwdEnv;
+    private final Optional<StringEnvironmentVariable> connectStringEnv;
+
+    public OracleConnectionBuildStrategy(TypedConnectionPoolParameter tcpp, boolean useDurableStatementCache, int connectTimeout, int socketTimeout) {
+      this.tcpp = tcpp;
+      this.socketTimeout = socketTimeout;
+      this.connectTimeout = connectTimeout;
+      this.dbdata = null;
       this.useDurableStatementCache = useDurableStatementCache;
+
+      userEnv = Optional
+          .ofNullable(USERNAME_ENV.getFromMap(tcpp.getAdditionalParams()));
+      pwdEnv = Optional
+          .ofNullable(PASSWORD_ENV.getFromMap(tcpp.getAdditionalParams()));
+      connectStringEnv = Optional
+          .ofNullable(CONNECT_ENV.getFromMap(tcpp.getAdditionalParams()));
+    }
+
+    private void updateDBConnectData() {
+      String user = userEnv.flatMap(u -> u.getValue()).filter(s -> !s.isEmpty()).orElse(tcpp.getUser()).trim();
+      String pwd = pwdEnv.flatMap(p -> p.getValue()).filter(s -> !s.isEmpty()).orElse(tcpp.getPassword()).trim();
+      String connString = connectStringEnv.flatMap(c -> c.getValue()).filter(s -> !s.isEmpty())
+          .orElse(tcpp.getConnectString()).trim();
+
+      if (dbdata == null) {
+        dbdata = DBConnectionData.newDBConnectionData().user(user).password(pwd).url(connString)
+            .connectTimeoutInSeconds(connectTimeout)
+            .socketTimeoutInSeconds(socketTimeout)
+            .classLoaderToLoadDriver(OraclePoolType.class.getClassLoader()) // enforcing the connector jar to be stored
+                                                                            // in userlib
+            .property("rewriteBatchedStatements", "true")
+            .build();
+      } else {
+        if (dbdata.getUrl().equals(connString) && dbdata.getUser().equals(user) && dbdata.getPassword().equals(pwd))
+          return;
+
+        dbdata = (new DBConnectionDataBuilder(dbdata)).user(user).password(pwd).url(connString).build();
+      }
     }
 
     public Connection createNewConnection() {
+      updateDBConnectData();
+
       try {
         Connection con = dbdata.createConnection();
         if (useDurableStatementCache) { 
