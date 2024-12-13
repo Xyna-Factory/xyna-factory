@@ -42,6 +42,10 @@ public class UseCaseMapping implements Comparable<UseCaseMapping> {
     this.keyword = keyword;
   }
   
+  public static Element loadMappingsElement(Document document) {
+    return XMLUtils.getChildElementByName(document.getDocumentElement(), Constants.TAG_MAPPINGS);
+  }
+  
   public static List<Element> loadMappingElements(Document document) {
     Element mappingsNode = XMLUtils.getChildElementByName(document.getDocumentElement(), Constants.TAG_MAPPINGS);
     return XMLUtils.getChildElementsByName(mappingsNode, Constants.TAG_MAPPING);

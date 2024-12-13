@@ -130,5 +130,14 @@
         <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.configureList(correlatedXynaOrder, loadYangAssignmentsData26, listConfiguration25);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Delete Assignment" Name="deleteAssignment" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="27" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData27"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.deleteAssignment(correlatedXynaOrder, useCaseAssignmentTableData27);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

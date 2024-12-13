@@ -46,14 +46,24 @@
         <Target RefID="3187"/>
       </Output>
       <Output>
-        <Data ID="3193" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition3193"/>
+        <Data ID="3193" Label="save - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition3193"/>
         <Target RefID="3188"/>
+      </Output>
+      <Output>
+        <Data ID="3267" Label="delete - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition3267">
+          <Source RefID="3189"/>
+        </Data>
+        <Target RefID="3268"/>
       </Output>
       <Mapping>%1%.dataPath="%0%.value"</Mapping>
       <Mapping>%2%.dataPath="%0%"</Mapping>
       <Mapping>%2%.serviceFQN="xmcp.yang.fman.SaveUseCaseAssignment"</Mapping>
       <Mapping>%2%.serviceRTC=%0%</Mapping>
       <Mapping>%2%.label="Save"</Mapping>
+      <Mapping>%3%.dataPath="%0%"</Mapping>
+      <Mapping>%3%.serviceFQN="xmcp.yang.fman.DeleteUseCaseAssignment"</Mapping>
+      <Mapping>%3%.serviceRTC=%0%</Mapping>
+      <Mapping>%3%.label="Delete"</Mapping>
     </Mappings>
     <Mappings ID="3211" Label="Mapping">
       <Input>
@@ -61,8 +71,22 @@
         <Source RefID="3187"/>
       </Input>
       <Input>
-        <Data ID="3215" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition3215"/>
-        <Source RefID="3188"/>
+        <Data ID="3215" Label="save - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition3215"/>
+        <Source RefID="3188">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="3301" Label="delete - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition3301">
+          <Source RefID="3211"/>
+        </Data>
+        <Source RefID="3268">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
       </Input>
       <Input>
         <Data ID="3217" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData3217"/>
@@ -72,14 +96,18 @@
         <Data ID="3218" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3218"/>
         <Target RefID="3210"/>
       </Output>
-      <Mapping>%3%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
-      <Mapping>%3%.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
-      <Mapping>%3%.label=%2%.yangPath</Mapping>
+      <Mapping>%4%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
+      <Mapping>%4%.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
+      <Mapping>%4%.children["2"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%2%</Mapping>
+      <Mapping>%4%.label=%3%.yangPath</Mapping>
     </Mappings>
     <Data ID="22" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext22"/>
     <Data ID="3187" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition3187"/>
     <Data ID="3188" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition3188"/>
     <Data ID="3210" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3210"/>
+    <Data ID="3268" Label="save - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition3268">
+      <Source RefID="3189"/>
+    </Data>
     <Assign ID="1">
       <Source RefID="3210"/>
       <Target RefID="150"/>
