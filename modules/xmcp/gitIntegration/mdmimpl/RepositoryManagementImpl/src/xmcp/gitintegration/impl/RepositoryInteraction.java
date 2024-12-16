@@ -337,7 +337,7 @@ public class RepositoryInteraction {
 
   private void print(GitDataContainer container) {
     if (logger.isDebugEnabled()) {
-      List<String> execs = container.exec.stream().map(x -> x.getFirst() + " - " + x.getSecond()).collect(Collectors.toList());
+      List<String> execs = container.exec.stream().map(x -> x.execType + " - " + x.repoPath).collect(Collectors.toList());
       logger.debug("  Pull: " + container.pull.size() + ": " + String.join(", ", container.pull));
       logger.debug("  Push: " + container.push.size() + ": " + String.join(", ", container.push));
       logger.debug("  Exec: " + container.exec.size() + ": " + String.join(", ", execs));
@@ -422,21 +422,20 @@ public class RepositoryInteraction {
 
 
   private void processExecs(GitDataContainer container) {
-    List<Pair<Boolean, String>> execs = container.exec; //command, path (in repository)
+    List<PullExec> execs = container.exec; //command, path (in repository)
 
-    List<Triple<Boolean, String, String>> exceptions = new ArrayList<>();
+    List<Triple<PullExecType, String, String>> exceptions = new ArrayList<>();
 
-    for (Pair<Boolean, String> exec : execs) {
-      Boolean command = exec.getFirst();
-      String repoPath = exec.getSecond();
+    for (PullExec exec : execs) {
+      String repoPath = exec.repoPath;
       Pair<String, String> fqnAndWorkspace = getFqnAndWorkspaceFromRepoPath(repoPath, container.repository);
       String fqn = fqnAndWorkspace.getFirst();
       String workspace = fqnAndWorkspace.getSecond();
 
       try {
-        updateXmomRegistration(command, workspace, fqn);
+        updateXmomRegistration(exec.execType, workspace, fqn);
       } catch (XynaException e) {
-        exceptions.add(new Triple<>(command, workspace, fqn));
+        exceptions.add(new Triple<>(exec.execType, workspace, fqn));
       }
     }
 
@@ -534,19 +533,19 @@ public class RepositoryInteraction {
   }
 
 
-  private String formatXmomRegistrationException(Triple<Boolean, String, String> input) {
+  private String formatXmomRegistrationException(Triple<PullExecType , String, String> input) {
     StringBuilder sb = new StringBuilder();
-    sb.append("Cound not ").append(input.getFirst() ? "add " : "remove '");
+    sb.append("Cound not ").append(input.getFirst());
     sb.append(input.getThird()).append("' in workspace '");
     sb.append(input.getSecond()).append("'.");
     return sb.toString();
   }
 
 
-  private void updateXmomRegistration(boolean add, String workspace, String fqn) throws XynaException {
-    if (add) {
+  private void updateXmomRegistration(PullExecType execType, String workspace, String fqn) throws XynaException {
+    if (execType == PullExecType.deploy) {
       SavexmomobjectImpl saveXmom = new SavexmomobjectImpl();
-      saveXmom.saveXmomObject(workspace, fqn, false);
+      saveXmom.saveXmomObject(workspace, fqn, true);
     } else {
       RemovexmomobjectImpl removeXmom = new RemovexmomobjectImpl();
       removeXmom.removeXmomObject(workspace, fqn);
@@ -624,10 +623,9 @@ public class RepositoryInteraction {
 
 
       String path = entry.getChangeType() == ChangeType.ADD ? entry.getNewPath() : entry.getOldPath();
-      if (entry.getChangeType() == ChangeType.ADD || entry.getChangeType() == ChangeType.DELETE) {
-        Boolean command = entry.getChangeType() == ChangeType.ADD;
-        container.exec.add(new Pair<Boolean, String>(command, path));
-      }
+      PullExecType command = PullExecType.convert(entry.getChangeType());
+      container.exec.add(new PullExec(command, path));
+      
       container.pull.add(path);
     }
   }
@@ -900,7 +898,7 @@ public class RepositoryInteraction {
     private List<String> revert = new ArrayList<>();
     private List<String> pull = new ArrayList<>();
     private List<String> push = new ArrayList<>();
-    private List<Pair<Boolean, String>> exec = new ArrayList<>(); //command => true=add, false=remove, path
+    private List<PullExec> exec = new ArrayList<>(); //command => true=add, false=remove, path
     private CredentialsProvider creds; //only used within this class
     private String user;
     private String mail;
@@ -909,7 +907,7 @@ public class RepositoryInteraction {
     @Override
     public String toString() {
       StringBuilder sb = new StringBuilder();
-      List<String> execString = exec.stream().map(x -> x.getFirst() + " - " + x.getSecond()).collect(Collectors.toList());
+      List<String> execString = exec.stream().map(x -> x.execType + " - " + x.repoPath).collect(Collectors.toList());
       List<String> localDiffString = localDiffs.stream().map(x -> x.toString()).collect(Collectors.toList());
       List<String> remoteDiffString = remoteDiffs.stream().map(x -> x.toString()).collect(Collectors.toList());
       sb.append("Data for repository: ").append(repository).append("\n");
@@ -925,7 +923,26 @@ public class RepositoryInteraction {
   }
   
   
+  private static class PullExec {
+    private PullExecType execType;
+    private String repoPath;
+    
+    public PullExec(PullExecType execType, String objectFqn) {
+      this.execType = execType;
+      this.repoPath = objectFqn;
+    }
+    
+  }
   
+  private enum PullExecType {
+
+    delete, deploy;
+
+
+    public static PullExecType convert(ChangeType type) {
+      return type == ChangeType.DELETE ? delete: deploy;
+    }
+  }
   
   private static class SshTransportConfigCallback implements TransportConfigCallback {
     

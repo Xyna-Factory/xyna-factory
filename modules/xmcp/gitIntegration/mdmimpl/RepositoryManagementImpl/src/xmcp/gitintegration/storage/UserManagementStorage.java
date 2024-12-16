@@ -52,6 +52,11 @@ public class UserManagementStorage {
     ODSImpl ods = ODSImpl.getInstance();
     ods.registerStorable(RepositoryUserStorable.class);
   }
+  
+  public static void shutdown() throws PersistenceLayerException {
+    ODSImpl ods = ODSImpl.getInstance();
+    ods.unregisterStorable(RepositoryUserStorable.class);
+  }
 
 
   public String loadPassword(String factoryUser, String repository) throws XynaException {
