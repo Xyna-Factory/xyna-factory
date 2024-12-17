@@ -183,7 +183,7 @@ public class RepositoryInteraction {
         Commit.Builder builder = new Commit.Builder();
         builder.authorEmail(commit.getAuthorIdent().getEmailAddress());
         builder.authorName(commit.getAuthorIdent().getName());
-        builder.commitTime(commit.getAuthorIdent().getWhen().toInstant().toEpochMilli());
+        builder.commitTime(commit.getAuthorIdent().getWhenAsInstant().toEpochMilli());
         builder.comment(commit.getFullMessage());
         builder.commitHash(commit.toObjectId().getName());
         result.add(builder.instance());
