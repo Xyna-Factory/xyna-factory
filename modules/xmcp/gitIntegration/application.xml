@@ -28,6 +28,9 @@
     <SharedLib implicitDependency="false">
       <SharedLib>XynaObjectGitIntegrationManagement</SharedLib>
     </SharedLib>
+    <SharedLib implicitDependency="false">
+      <SharedLib>JGit</SharedLib>
+    </SharedLib>
   </SharedLibs>
   <XMOMEntries>
     <XMOMEntry implicitDependency="false">

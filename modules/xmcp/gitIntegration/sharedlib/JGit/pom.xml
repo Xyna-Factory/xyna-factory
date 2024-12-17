@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 GIP Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@
         <version>1.0.0</version>
         <relativePath>../../../../../installation/build/pom.xml</relativePath>
     </parent>
-
+    
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gip.xyna</groupId>
-    <artifactId>RepositoryManagementImpl</artifactId>
-    <version>0.1.0</version>
+    <artifactId>JGitSharedLib</artifactId>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -35,21 +35,12 @@
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-1.2-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gip.xyna</groupId>
-            <artifactId>xynafactory</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gip.xyna</groupId>
-            <artifactId>xynautils-exceptions</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gip.xyna</groupId>
-            <artifactId>xynautils-database</artifactId>
-        </dependency>
+      <dependency>
+        <groupId>com.gip.xyna</groupId>
+        <artifactId>JGit_third_parties</artifactId>
+        <version>1.0.0</version>
+        <type>pom</type>
+        <scope>runtime</scope>
+      </dependency>
     </dependencies>
 </project>
