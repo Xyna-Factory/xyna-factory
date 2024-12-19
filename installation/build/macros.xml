@@ -186,11 +186,14 @@
                 <!-- exec into container -->
                 <isset property="server.containername" />
                 <then>
-                    <exec executable="docker" failonerror="true">
+                    <apply executable="docker">
                         <arg value="cp"/>
-                        <arg value="@{fromdir}" />
+                        <srcfile/>
                         <arg value="${server.containername}:@{todir}" />
-                    </exec>
+                        <fileset dir="@{fromdir}">
+                            <include name="@{frominclude}" />
+                        </fileset>
+                    </apply>
                 </then>
                 <elseif>
                 <isset property="server.keyfile" />
