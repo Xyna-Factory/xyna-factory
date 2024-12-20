@@ -43,7 +43,6 @@ import com.gip.xyna.xact.filter.session.cache.CachedXynaObjectJsonBuilder;
 import com.gip.xyna.xact.filter.session.cache.CachedXynaObjectVisitor;
 import com.gip.xyna.xact.filter.session.cache.JsonBuilderCache;
 import com.gip.xyna.xact.filter.session.cache.JsonVisitorCache;
-import com.gip.xyna.xact.filter.session.exceptions.RevisionNotFoundException;
 import com.gip.xyna.xact.filter.session.gb.StepMap;
 import com.gip.xyna.xact.filter.session.gb.StepMap.RecursiveVisitor;
 import com.gip.xyna.xact.filter.util.xo.GenericResult;
@@ -126,17 +125,20 @@ public class Utils {
     return null;
   }
   
-  public static Application getGuiHttpApplication() {
+  public static RuntimeContext getGuiHttpRtc() {
     ApplicationManagementImpl am = (ApplicationManagementImpl)XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getApplicationManagement();
     String highestRunningVersion = am.getHighestVersion(APP_NAME, true);
+    if(highestRunningVersion == null) {
+      return new Workspace(APP_NAME);
+    }
     return new Application(APP_NAME, highestRunningVersion);
   }
   
   public static String xoToJson(GeneralXynaObject generalXynaObject) {
     try {
-      return xoToJson(generalXynaObject, getGuiHttpApplicationRevision());
+      return xoToJson(generalXynaObject, getGuiHttpRevision());
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
-      throw new RevisionNotFoundException(Utils.getGuiHttpApplication());
+      throw new RuntimeException(e);
     }
   }
   
@@ -202,7 +204,7 @@ public class Utils {
   public static GeneralXynaObject convertJsonToGeneralXynaObjectUsingGuiHttp(String json) {
     long revision = -1;
     try {
-      revision = com.gip.xyna.xact.filter.util.Utils.getRtcRevision(com.gip.xyna.xact.filter.util.Utils.getGuiHttpApplication());
+      revision = Utils.getGuiHttpRevision();
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       throw new RuntimeException(e.getMessage(), e);
     }
@@ -308,8 +310,8 @@ public class Utils {
     }
   }
   
-  public static Long getGuiHttpApplicationRevision() throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
-    return revisionManagement.getRevision(getGuiHttpApplication());
+  public static Long getGuiHttpRevision() throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
+    return revisionManagement.getRevision(getGuiHttpRtc());
   }
   
   /**
