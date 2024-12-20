@@ -231,11 +231,11 @@
                 <!-- exec into container -->
                 <isset property="server.containername" />
                 <then>
-                    <custom-scp-to-remote fromdir="${fromdir}" todir="${server.containername}:${todir}" frominclude="${frominclude}" />
+                    <custom-scp-to-remote fromdir="@{fromdir}" todir="@{todir}" frominclude="@{frominclude}" />
                 </then>
                 <!-- password or key -->
                 <else>
-                    <custom-scp-to-remote fromdir="${fromdir}" todir="${server.userid}@${server.host}:${todir}" frominclude="${frominclude}" />
+                    <custom-scp-to-remote fromdir="@{fromdir}" todir="${server.userid}@${server.host}:@{todir}" frominclude="@{frominclude}" />
                 </else>
             </if>
         </sequential>
