@@ -46,10 +46,6 @@
   </ApplicationInfo>
   <Ordertypes>
     <Ordertype implicitDependency="false">
-      <DestinationKey>xmcp.processmonitor.GetOrderDetails</DestinationKey>
-      <OrderContextMapping>false</OrderContextMapping>
-    </Ordertype>
-    <Ordertype implicitDependency="false">
       <DestinationKey>xmcp.processmonitor.GetOrderOverview</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
@@ -1897,10 +1893,6 @@
     </XMOMEntry>
   	<!-- // AdministrativeVetoServicesImpl -->
 
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.processmonitor.GetOrderDetails</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.processmonitor.GetOrderOverview</FqName>
       <Type>WORKFLOW</Type>
