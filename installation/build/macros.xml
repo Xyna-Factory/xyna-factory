@@ -329,4 +329,26 @@
         </sequential>
     </macrodef>
 
+    <!-- ================================= 
+        macro: determine-workspace-revision
+        ================================= -->
+    <macrodef name="determine-revision">
+        <attribute name="workspacename" />
+        <attribute name="outputproperty" />
+        <sequential>
+            <local name="command" />
+            <if>
+                <matches pattern="^default workspace$" string="@{workspacename}"/>
+                <then>
+                    <property name="command" value="cd ${server.path}; echo workingset" />
+                </then>
+                <else>
+                    <property name="command" value="cd ${server.path}; ./xynafactory.sh printrevision -workspaceName '@{workspacename}'" />
+                </else>
+            </if>
+            <custom-ssh-exec host="${server.host}" username="${server.userid}" command="${command}" outputproperty="@{outputproperty}" />
+            <echo message="determined revision for '@{workspacename}' to be ${@{outputproperty}}" />
+        </sequential>
+    </macrodef>
+
 </project>

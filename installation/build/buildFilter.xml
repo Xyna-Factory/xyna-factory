@@ -34,8 +34,6 @@
     <property file="${root.dir}/server.properties" />
 
     <!-- depends on server make use of server variable -->
-    <property name="server.mdm.path" value="${server.path}/${revision.dir}/filter/${mdm.xml.name}" />
-    <property name="server.mdm.xml.path" value="${server.path}/${revision.dir}/saved/filter/${mdm.xml.name}" />
     <property name="server.mdm.xml.filename" value="${mdm.xml.filename}" />
     <property name="local.xml.dir" value="${basedir}/xmldefinition" />
 
@@ -50,7 +48,6 @@
 
         <map from="${basedir}/lib" to="${revision.dir}/filter/${mdm.xml.name}" />
     </pathconvert>
-    <property name="deploy.template" value="addfilter -sharedLibs ${deploy.sharedlibs} -jarFiles ${deploy.jars} -triggerName ${trigger.name} -filterName ${filter.name} -workspaceName '${workspacename}' -fqClassName ${fqclassname}" />
 
     <resolver:pom file="${basedir}/pom.xml" id="pom"/>
 
@@ -106,6 +103,16 @@
     <!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
     <target name="deploy" depends="build" description="Deploy jar file to xyna server.">
         <fail message="No server properties specified. Unable to deploy." unless="server.available" />
+        <local name ="revision" />
+        <local name = "revision.dir" />
+        <local name = "deploy.template" />
+        <local name = "server.mdm.xml.path" />
+        <determine-revision workspacename="${workspacename}" outputproperty="revision" />
+        <property name="revision.dir" value="../revisions/rev_${revision}" />
+        <property name="server.mdm.path" value="${server.path}/${revision.dir}/filter/${mdm.xml.name}" />
+        <property name="deploy.template" value="addfilter -sharedLibs ${deploy.sharedlibs} -jarFiles ${deploy.jars} -triggerName ${trigger.name} -filterName ${filter.name} -workspaceName '${workspacename}' -fqClassName ${fqclassname}" />
+        <property name="server.mdm.xml.path" value="${server.path}/${revision.dir}/saved/filter/${mdm.xml.name}" />
+
         <!-- clean directory on xyna server -->
         <!--<custom-ssh-exec host="${server.host}" username="${server.userid}"  command="rm -rf ${server.mdm.path}" /> -->
         <!-- create directory on xyna server -->
