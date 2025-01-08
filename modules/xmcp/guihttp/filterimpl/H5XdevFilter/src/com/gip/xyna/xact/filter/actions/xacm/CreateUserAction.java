@@ -72,9 +72,7 @@ public class CreateUserAction implements FilterAction {
     
     CreateUserRequest createUserRequest = (CreateUserRequest) com.gip.xyna.xact.filter.util.Utils.convertJsonToGeneralXynaObject(
                      tc.getPayload(), 
-                     com.gip.xyna.xact.filter.util.Utils.getRtcRevision(
-                              com.gip.xyna.xact.filter.util.Utils.getGuiHttpApplication()
-                     ));
+                     com.gip.xyna.xact.filter.util.Utils.getGuiHttpRevision());
     String passwordHashed = PasswordCreationUtils.generatePassword(createUserRequest.getPassword(), EncryptionPhase.LOGIN);
     boolean success = factoryManagement.createUser(createUserRequest.getUsername(), createUserRequest.getRole(), passwordHashed, true, createUserRequest.getDomains());
     jfai.sendJson(tc, "{\"success\": " + (success ? "true" : "false") + "}");
