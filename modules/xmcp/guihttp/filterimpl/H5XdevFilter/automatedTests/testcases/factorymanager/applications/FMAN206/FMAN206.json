@@ -209,13 +209,13 @@
       "operation": "read",
       "targetVariable": "!stateFirst!",
       "pathInResponse": "output[1]/$list[0]/state",
-      "unquoteResult": true
+      "unquoteResult": false
     },
     {
       "operation": "read",
       "targetVariable": "!stateLast!",
       "pathInResponse": "output[1]/$list[last]/state",
-      "unquoteResult": true
+      "unquoteResult": false
     },
     {
       "operation": "assert",
