@@ -173,7 +173,7 @@ public class Util {
 
 
   private static RuntimeContextJson getRtcXmomContainers() {
-    return new RuntimeContextJson(Utils.getGuiHttpApplication());
+    return new RuntimeContextJson(Utils.getGuiHttpRtc());
   }
 
 

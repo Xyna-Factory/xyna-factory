@@ -34,6 +34,8 @@
 
     <property name="trigger.name" value="Http" />
     <property name="filter.name" value="H5XdevFilter" />
+
+    <property name="deploy.sharedlibs" value="XynaObjectJsonBuilder" />
       
     <target name="prepareLibs" description="Prepare Libs">
         <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/../../commonlib/HttpUtils">
