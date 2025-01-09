@@ -128,7 +128,7 @@ public class MetaTagAddAction extends RuntimeContextDependendAction implements E
 
 
   private void addMetaTag(String sessionId, Long revision, URLPath url, String payload) throws Exception {
-    Long guiHttpRevision = Utils.getGuiHttpApplicationRevision();
+    Long guiHttpRevision = Utils.getGuiHttpRevision();
     MetaTag metaTag = ((MetaTagRequest) Utils.convertJsonToGeneralXynaObject(payload, guiHttpRevision)).getMetaTag();
     MetaTagProcessingInfoContainer data = MetaTagActionUtils.createProcessingInfoContainer(url, sessionId, xmomGui, revision);
     String tag = metaTag.getTag();
