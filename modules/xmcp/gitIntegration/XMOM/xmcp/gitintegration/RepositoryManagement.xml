@@ -21,14 +21,8 @@
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
   <Libraries>RepositoryManagementImpl.jar</Libraries>
-  <Libraries>JavaEWAH-1.2.3.jar</Libraries>
-  <Libraries>org.eclipse.jgit-6.6.0.202305301015-r.jar</Libraries>
-  <Libraries>org.eclipse.jgit.ssh.apache-6.7.0.202309050840-r.jar</Libraries>
-  <Libraries>slf4j-api-1.7.36.jar</Libraries>
-  <Libraries>sshd-osgi-2.10.0.jar</Libraries>
-  <Libraries>sshd-sftp-2.10.0.jar</Libraries>
-  <Libraries>eddsa-0.3.0.jar</Libraries>
   <SharedLibraries>XynaObjectGitIntegrationManagement</SharedLibraries>
+  <SharedLibraries>JGit</SharedLibraries>
   <Service Label="Repository Management" TypeName="RepositoryManagement">
     <Operation IsStatic="true" Label="Add Repository Connection" Name="addRepositoryConnection">
       <Input>
