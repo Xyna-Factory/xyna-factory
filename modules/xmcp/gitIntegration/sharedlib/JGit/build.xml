@@ -1,6 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +16,16 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<XynaCommandLineCommand>
-  <CommandDefinition Name="buildserviceproject" Groups="Support for Eclipse" Description="Create a service template to import in Eclipse. (deprecated - use buildserviceprojectjava)" Deprecated="true"/>
-  <Argument Name="targetDirectory" Description="The path to which the template zip file is written"/>
-  <Argument Name="fqDatatypeName" Description="The fully qualified name of the datatype containing the service that is supposed to be implemented"/>
-  <Argument Name="workspaceName" Description="The name of the workspace." Optional="true"/>
-</XynaCommandLineCommand>
+<project name="build" default="build" basedir=".">
+
+    <!-- this is the absolute path to the root -->
+    <pathconvert property="root.dir" >
+        <path location="${basedir}/../../../../.."/>
+    </pathconvert>
+
+    <property name="sharedLib.folder.name" value="JGit" />
+    <property name="sharedLib.name" value="JGit" />
+
+    <import file="${root.dir}/installation/build/buildSharedLib.xml" />
+
+</project>

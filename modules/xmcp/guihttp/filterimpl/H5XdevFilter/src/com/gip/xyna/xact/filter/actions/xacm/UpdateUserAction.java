@@ -74,9 +74,7 @@ public class UpdateUserAction implements FilterAction {
     
     UpdateUserRequest updateUserRequest = (UpdateUserRequest) com.gip.xyna.xact.filter.util.Utils.convertJsonToGeneralXynaObject(
                      tc.getPayload(), 
-                     com.gip.xyna.xact.filter.util.Utils.getRtcRevision(
-                              com.gip.xyna.xact.filter.util.Utils.getGuiHttpApplication()
-                     ));
+                     com.gip.xyna.xact.filter.util.Utils.getGuiHttpRevision());
     
     User user = factoryManagement.getUser(updateUserRequest.getUsername());
     if(user == null) {

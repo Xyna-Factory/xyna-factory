@@ -186,11 +186,14 @@
                 <!-- exec into container -->
                 <isset property="server.containername" />
                 <then>
-                    <exec executable="docker" failonerror="true">
+                    <apply executable="docker">
                         <arg value="cp"/>
-                        <arg value="@{fromdir}" />
+                        <srcfile/>
                         <arg value="${server.containername}:@{todir}" />
-                    </exec>
+                        <fileset dir="@{fromdir}">
+                            <include name="@{frominclude}" />
+                        </fileset>
+                    </apply>
                 </then>
                 <elseif>
                 <isset property="server.keyfile" />
@@ -228,11 +231,11 @@
                 <!-- exec into container -->
                 <isset property="server.containername" />
                 <then>
-                    <custom-scp-to-remote fromdir="${fromdir}" todir="${server.containername}:${todir}" frominclude="${frominclude}" />
+                    <custom-scp-to-remote fromdir="@{fromdir}" todir="@{todir}" frominclude="@{frominclude}" />
                 </then>
                 <!-- password or key -->
                 <else>
-                    <custom-scp-to-remote fromdir="${fromdir}" todir="${server.userid}@${server.host}:${todir}" frominclude="${frominclude}" />
+                    <custom-scp-to-remote fromdir="@{fromdir}" todir="${server.userid}@${server.host}:@{todir}" frominclude="@{frominclude}" />
                 </else>
             </if>
         </sequential>
@@ -323,6 +326,28 @@
             <include name="@{mdmLocation}" />
           </fileset>
         </copy>
+        </sequential>
+    </macrodef>
+
+    <!-- ================================= 
+        macro: determine-workspace-revision
+        ================================= -->
+    <macrodef name="determine-revision">
+        <attribute name="workspacename" />
+        <attribute name="outputproperty" />
+        <sequential>
+            <local name="command" />
+            <if>
+                <matches pattern="^default workspace$" string="@{workspacename}"/>
+                <then>
+                    <property name="command" value="cd ${server.path}; echo workingset" />
+                </then>
+                <else>
+                    <property name="command" value="cd ${server.path}; ./xynafactory.sh printrevision -workspaceName '@{workspacename}'" />
+                </else>
+            </if>
+            <custom-ssh-exec host="${server.host}" username="${server.userid}" command="${command}" outputproperty="@{outputproperty}" />
+            <echo message="determined revision for '@{workspacename}' to be ${@{outputproperty}}" />
         </sequential>
     </macrodef>
 
