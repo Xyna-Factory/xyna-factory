@@ -31,7 +31,9 @@ import com.gip.xyna.xact.filter.session.gb.ObjectId;
 import com.gip.xyna.xact.filter.session.gb.vars.IdentifiedVariables;
 import com.gip.xyna.xact.filter.util.AVariableIdentification.VarUsageType;
 import com.gip.xyna.xact.filter.xmom.MetaXmomContainers;
+import com.gip.xyna.xact.filter.xmom.PluginPaths;
 import com.gip.xyna.xact.filter.xmom.XMOMGuiJson;
+import com.gip.xyna.xact.filter.xmom.datatypes.json.GuiHttpPluginManagement;
 import com.gip.xyna.xact.filter.xmom.workflows.enums.Tags;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xmcp.XynaMultiChannelPortal;
@@ -40,34 +42,38 @@ import com.gip.xyna.xprc.xfractwfe.generation.StepMapping;
 import xmcp.processmodeller.datatypes.Mapping;
 import xmcp.processmodeller.datatypes.ModellingItem;
 import xmcp.processmodeller.datatypes.Template;
-
+import xmcp.yggdrasil.plugin.Context;
 
 
 public class MappingJson extends XMOMGuiJson implements HasXoRepresentation {
-  
+
   private static final XynaMultiChannelPortal multiChannelPortal = (XynaMultiChannelPortal)XynaFactory.getInstance().getXynaMultiChannelPortal();
   private static final String XYNA_PROPERTY_KEY_QUERY_DEBUG = "xyna.processmodeller.query.debug";
+  protected final GuiHttpPluginManagement pluginMgmt;
 
   private View view;
   private StepMapping stepMapping;
   private ObjectId mappingId;
   private IdentifiedVariables identifiedVariables;
-  private Boolean isCondition = false; 
-  
+  private Boolean isCondition = false;
+
   public String label;
   public String expression;
 
-  
+
   private MappingJson() {
-    
+    pluginMgmt = GuiHttpPluginManagement.getInstance();
   }
 
+
   public MappingJson(String label) {
+    this();
     this.label = label;
   }
-  
-  
+
+
   public MappingJson(View view, StepMapping stepMapping) {
+    this();
     this.view = view;
     this.stepMapping = stepMapping;
     this.mappingId = ObjectId.createStepId(stepMapping);
@@ -75,9 +81,10 @@ public class MappingJson extends XMOMGuiJson implements HasXoRepresentation {
     this.label = stepMapping.getLabel();
   }
 
+
   @Override
   public GeneralXynaObject getXoRepresentation() {
-    if(stepMapping.isConditionMapping() && hideConditionMapping()) { // suppress helper mappings that are used to build the input of a query
+    if (stepMapping.isConditionMapping() && hideConditionMapping()) { // suppress helper mappings that are used to build the input of a query
       return null;
     } else if (stepMapping.isTemplateMapping()) {
       Template t = new Template();
@@ -91,10 +98,12 @@ public class MappingJson extends XMOMGuiJson implements HasXoRepresentation {
       m.setId(mappingId.getObjectId());
       m.setDeletable(true);
       addAreas(m);
+      m.unversionedSetPlugin(pluginMgmt.createPlugin(getPluginContext()));
       return m;
     }
   }
-  
+
+
   private boolean hideConditionMapping() {
     String showConditionMapping = multiChannelPortal.getProperty(XYNA_PROPERTY_KEY_QUERY_DEBUG);
     if(showConditionMapping != null && showConditionMapping.equalsIgnoreCase("true")) {
@@ -122,6 +131,16 @@ public class MappingJson extends XMOMGuiJson implements HasXoRepresentation {
     item.addToAreas(ServiceUtils.createVariableArea(view.getGenerationBaseObject(), mappingId, VarUsageType.output, identifiedVariables, Tags.MAPPING_OUTPUT, itemTypes, readonlyVarAreas));
   }
 
+  private Context getPluginContext() {
+    Context.Builder builder = new Context.Builder();
+    builder.fQN(stepMapping.getParentWFObject().getOriginalFqName());
+    builder.location(PluginPaths.location_workflow_mapping);
+    builder.objectId(mappingId.getObjectId());
+    builder.runtimeContext(com.gip.xyna.xact.filter.util.Utils.getXpceRtc(stepMapping.getParentWFObject().getRuntimeContext()));
+    return builder.instance().clone();
+  }
+
+
   public String getLabel() {
     return label;
   }
@@ -130,7 +149,7 @@ public class MappingJson extends XMOMGuiJson implements HasXoRepresentation {
   public String getExpression() {
     return expression;
   }
-  
+
 
   public Boolean getIsCondition() {
     return isCondition;
@@ -168,7 +187,7 @@ public class MappingJson extends XMOMGuiJson implements HasXoRepresentation {
           return;
         }
       }
-      
+
       if( label.equals(Tags.LABEL) ) {
         mj.label = value;
         return;
@@ -177,7 +196,7 @@ public class MappingJson extends XMOMGuiJson implements HasXoRepresentation {
         mj.expression = value;
         return;
       }
-      
+
       throw new UnexpectedJSONContentException(label);
     }
 
