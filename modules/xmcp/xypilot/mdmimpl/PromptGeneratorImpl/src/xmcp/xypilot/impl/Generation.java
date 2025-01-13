@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package xmcp.xypilot.impl;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -26,10 +27,13 @@ import com.gip.xyna.xmcp.xguisupport.messagebus.transfer.MessageInputParameter;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 
+import xmcp.xypilot.CodeAnalysisResult;
+import xmcp.xypilot.CodeSuggestion;
 import xmcp.xypilot.Documentation;
 import xmcp.xypilot.ExceptionMessage;
 import xmcp.xypilot.MemberVariable;
 import xmcp.xypilot.MethodDefinition;
+import xmcp.xypilot.MetricEvaluationResult;
 import xmcp.xypilot.NoXyPilotUserConfigException;
 import xmcp.xypilot.XMOMItemReference;
 import xmcp.xypilot.XypilotUserConfig;
@@ -45,6 +49,8 @@ import xmcp.xypilot.impl.gen.util.FilterCallbackInteractionUtils;
 import xmcp.xypilot.impl.locator.DataModelLocator;
 import xmcp.xypilot.impl.locator.PipelineLocator;
 import xmcp.xypilot.metrics.Code;
+import xmcp.xypilot.metrics.Metric;
+import xmcp.xypilot.metrics.Score;
 import xmcp.yggdrasil.plugin.Context;
 import xprc.xpce.Workspace;
 
@@ -213,7 +219,44 @@ public class Generation {
     FilterCallbackInteractionUtils.updateDomMethodImpl(code, order, xmomItemReference, context.getObjectId());
     publishUpdateMessage(xmomItemReference, "DataType");
   }
+  
+  public List<? extends CodeSuggestion> genCodeSuggestions(XynaOrderServerExtension order, Context context) throws Exception {
+    XypilotUserConfig config = getConfigFromOrder(order);
+    XMOMItemReference xmomItemReference = buildItemFromContext(context);
+    String type = DataModelLocator.datatypesTypeName;
+    DomMethodModel model = DataModelLocator.getDomMethodModel(xmomItemReference, order, context.getObjectId(), type);
+    Pipeline<Code, DomMethodModel> pipeline = PipelineLocator.getPipeline(config, "dom-method-implementation");
+    List<Code> code = pipeline.run(model, config.getUri()).choices();
+    if(config.getMaxSuggestions() < code.size()) {
+      code = code.subList(0, config.getMaxSuggestions());
+    }
+    //TODO: filter to selected metrics
+    List<? extends Metric> metrics = Metric.getMetricInstances(order);
+    return evaludateCodeSuggestions(code, metrics);
+  }
 
+  
+  private List<? extends CodeSuggestion> evaludateCodeSuggestions(List<Code> codes, List<? extends Metric> metrics) {
+    CodeAnalysisResult.Builder codeAnalysisResultBuilder = new CodeAnalysisResult.Builder();
+    MetricEvaluationResult.Builder metricResultBuilder;
+    List<MetricEvaluationResult> metricResults = new ArrayList<>(codes.size());
+    List<Score> scores;
+    for(Metric metric : metrics) {
+      metric.init();
+      scores = new ArrayList<>(codes.size());
+      for(Code code: codes) {
+        Score score = metric.computeScore(code);
+        scores.add(score);
+      }
+      @SuppressWarnings("unchecked")
+      List<Score> normalizedScores = (List<Score>) metric.normalizeScores(scores);
+      metricResultBuilder = new MetricEvaluationResult.Builder();
+      metricResultBuilder.metric(metric).scores(scores).normalizedScores(normalizedScores);
+      metricResults.add(metricResultBuilder.instance());
+    }
+    codeAnalysisResultBuilder.codes(codes).metricResults(metricResults);
+    return codeAnalysisResultBuilder.instance().buildSuggestions();
+  }
 
   @FunctionalInterface
   public interface GenerationInterface {

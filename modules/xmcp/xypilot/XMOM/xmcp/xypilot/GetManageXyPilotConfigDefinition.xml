@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="GetManageXyPilotConfigDefinition" TypePath="xmcp.xypilot" Label="Get Manage XyPilot Config Definition">
-  <Operation ID="0" Label="Get Manage XyPilot Config Definition" Name="GetManageXyPilotConfigDefinition" IsStatic="false">
-    <Input>
-    </Input>
+ --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Manage XyPilot Config Definition" TypeName="GetManageXyPilotConfigDefinition" TypePath="xmcp.xypilot" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Get Manage XyPilot Config Definition" Name="GetManageXyPilotConfigDefinition">
+    <Input/>
     <Output>
-      <Data ID="174" Label="Form Panel Definition" VariableName="formPanelDefinition174" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes">
-      </Data>
-      <Data ID="261" Label="Xypilot User Config" VariableName="xypilotUserConfig261" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot">
-      </Data>
+      <Data ID="174" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition174"/>
+      <Data ID="261" Label="Xypilot User Config" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot" VariableName="xypilotUserConfig261"/>
     </Output>
     <ServiceReference ID="452" Label="PromptGenerator" ReferenceName="PromptGenerator.PromptGenerator" ReferencePath="xmcp.xypilot">
       <Source RefID="451"/>
@@ -34,62 +31,45 @@
       <Target RefID="11"/>
     </ServiceReference>
     <Function ID="11" Label="get Own RuntimeContext">
-      <Source RefID="12">
-      </Source>
-      <Target RefID="12">
-      </Target>
-      <Target RefID="10">
-      </Target>
-      <Invoke ServiceID="12" Operation="getOwnRuntimeContext">
-      </Invoke>
+      <Source RefID="12"/>
+      <Target RefID="12"/>
+      <Target RefID="10"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="12"/>
       <Receive ServiceID="12">
-        <Target RefID="10">
-        </Target>
+        <Target RefID="10"/>
       </Receive>
     </Function>
     <Function ID="451" Label="Load User Config">
-      <Source RefID="452">
-      </Source>
-      <Target RefID="452">
-      </Target>
-      <Target RefID="454">
-      </Target>
-      <Invoke ServiceID="452" Operation="loadUserConfig">
-      </Invoke>
+      <Source RefID="452"/>
+      <Target RefID="452"/>
+      <Target RefID="454"/>
+      <Invoke Operation="loadUserConfig" ServiceID="452"/>
       <Receive ServiceID="452">
-        <Target RefID="454">
-        </Target>
+        <Target RefID="454"/>
       </Receive>
-      <Catch ID="496" ExceptionID="493">
+      <Catch ExceptionID="493" ID="496">
         <Mappings ID="522" Label="Create Empty">
           <Output>
-            <Data ID="547" VariableName="xypilotUserConfig547" Label="Xypilot User Config" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot">
+            <Data ID="547" Label="Xypilot User Config" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot" VariableName="xypilotUserConfig547">
               <Source RefID="522"/>
             </Data>
-            <Target RefID="548">
-            </Target>
+            <Target RefID="548"/>
           </Output>
         </Mappings>
         <Assign>
-          <Source RefID="548">
-          </Source>
-          <Target RefID="454">
-          </Target>
+          <Source RefID="548"/>
+          <Target RefID="454"/>
           <Copy>
-            <Source RefID="548">
-            </Source>
-            <Target RefID="454">
-            </Target>
+            <Source RefID="548"/>
+            <Target RefID="454"/>
           </Copy>
         </Assign>
       </Catch>
     </Function>
     <Mappings ID="49" Label="Mapping">
       <Output>
-        <Data ID="50" VariableName="textAreaDefinition50" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes">
-        </Data>
-        <Target RefID="48">
-        </Target>
+        <Data ID="50" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition50"/>
+        <Target RefID="48"/>
       </Output>
       <Mapping>%0%.label="URI"</Mapping>
       <Mapping>%0%.numberOfLines="2"</Mapping>
@@ -97,10 +77,8 @@
     </Mappings>
     <Mappings ID="68" Label="Mapping">
       <Output>
-        <Data ID="69" VariableName="textAreaDefinition69" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes">
-        </Data>
-        <Target RefID="67">
-        </Target>
+        <Data ID="69" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition69"/>
+        <Target RefID="67"/>
       </Output>
       <Mapping>%0%.label="Model"</Mapping>
       <Mapping>%0%.numberOfLines="2"</Mapping>
@@ -108,10 +86,8 @@
     </Mappings>
     <Mappings ID="87" Label="Mapping">
       <Output>
-        <Data ID="88" VariableName="textAreaDefinition88" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes">
-        </Data>
-        <Target RefID="86">
-        </Target>
+        <Data ID="88" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition88"/>
+        <Target RefID="86"/>
       </Output>
       <Mapping>%0%.label="Max Suggestions"</Mapping>
       <Mapping>%0%.numberOfLines="2"</Mapping>
@@ -119,16 +95,12 @@
     </Mappings>
     <Mappings ID="106" Label="Mapping">
       <Input>
-        <Data ID="108" VariableName="runtimeContext108" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce">
-        </Data>
-        <Source RefID="10">
-        </Source>
+        <Data ID="108" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext108"/>
+        <Source RefID="10"/>
       </Input>
       <Output>
-        <Data ID="109" VariableName="startOrderButtonDefinition109" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes">
-        </Data>
-        <Target RefID="105">
-        </Target>
+        <Data ID="109" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition109"/>
+        <Target RefID="105"/>
       </Output>
       <Mapping>%1%.label="Save"</Mapping>
       <Mapping>%1%.serviceRTC=%0%</Mapping>
@@ -138,23 +110,18 @@
     </Mappings>
     <Mappings ID="127" Label="Mapping">
       <Input>
-        <Data ID="129" VariableName="startOrderButtonDefinition129" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes">
-        </Data>
-        <Source RefID="105">
-        </Source>
+        <Data ID="129" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition129"/>
+        <Source RefID="105"/>
       </Input>
       <Output>
-        <Data ID="130" VariableName="panelBoxDefinition130" Label="Panel Box Definition" ReferenceName="PanelBoxDefinition" ReferencePath="xmcp.forms.datatypes">
-        </Data>
-        <Target RefID="126">
-        </Target>
+        <Data ID="130" Label="Panel Box Definition" ReferenceName="PanelBoxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="panelBoxDefinition130"/>
+        <Target RefID="126"/>
       </Output>
       <Mapping>%1%.rightArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%0%</Mapping>
     </Mappings>
     <Mappings ID="148" Label="Mapping">
       <Input>
-        <Data ID="150" VariableName="textAreaDefinition150" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes">
-        </Data>
+        <Data ID="150" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition150"/>
         <Source RefID="86">
           <Meta>
             <LinkType>UserConnected</LinkType>
@@ -162,8 +129,7 @@
         </Source>
       </Input>
       <Input>
-        <Data ID="152" VariableName="textAreaDefinition152" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes">
-        </Data>
+        <Data ID="152" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition152"/>
         <Source RefID="48">
           <Meta>
             <LinkType>UserConnected</LinkType>
@@ -171,8 +137,7 @@
         </Source>
       </Input>
       <Input>
-        <Data ID="154" VariableName="textAreaDefinition154" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes">
-        </Data>
+        <Data ID="154" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition154"/>
         <Source RefID="67">
           <Meta>
             <LinkType>UserConnected</LinkType>
@@ -180,16 +145,12 @@
         </Source>
       </Input>
       <Input>
-        <Data ID="156" VariableName="panelBoxDefinition156" Label="Panel Box Definition" ReferenceName="PanelBoxDefinition" ReferencePath="xmcp.forms.datatypes">
-        </Data>
-        <Source RefID="126">
-        </Source>
+        <Data ID="156" Label="Panel Box Definition" ReferenceName="PanelBoxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="panelBoxDefinition156"/>
+        <Source RefID="126"/>
       </Input>
       <Output>
-        <Data ID="157" VariableName="formPanelDefinition157" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes">
-        </Data>
-        <Target RefID="147">
-        </Target>
+        <Data ID="157" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition157"/>
+        <Target RefID="147"/>
       </Output>
       <Mapping>%4%.children["0"]#cast("xmcp.forms.datatypes.TextAreaDefinition")=%0%</Mapping>
       <Mapping>%4%.children["1"]#cast("xmcp.forms.datatypes.TextAreaDefinition")=%1%</Mapping>
@@ -197,48 +158,32 @@
       <Mapping>%4%.header=%3%</Mapping>
       <Mapping>%4%.label="Manage XyPilot Configuration"</Mapping>
     </Mappings>
-    <Data ID="10" VariableName="runtimeContext10" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce">
-    </Data>
-    <Data ID="48" VariableName="textAreaDefinition48" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes">
-    </Data>
-    <Data ID="67" VariableName="textAreaDefinition67" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes">
-    </Data>
-    <Data ID="86" VariableName="textAreaDefinition86" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes">
-    </Data>
-    <Data ID="105" VariableName="startOrderButtonDefinition105" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes">
-    </Data>
-    <Data ID="126" VariableName="panelBoxDefinition126" Label="Panel Box Definition" ReferenceName="PanelBoxDefinition" ReferencePath="xmcp.forms.datatypes">
-    </Data>
-    <Data ID="147" VariableName="formPanelDefinition147" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes">
-    </Data>
-    <Data ID="454" VariableName="xypilotUserConfig454" Label="Xypilot User Config" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot">
+    <Data ID="10" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext10"/>
+    <Data ID="48" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition48"/>
+    <Data ID="67" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition67"/>
+    <Data ID="86" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition86"/>
+    <Data ID="105" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition105"/>
+    <Data ID="126" Label="Panel Box Definition" ReferenceName="PanelBoxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="panelBoxDefinition126"/>
+    <Data ID="147" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition147"/>
+    <Data ID="454" Label="Xypilot User Config" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot" VariableName="xypilotUserConfig454">
       <Source RefID="451"/>
     </Data>
-    <Data ID="548" VariableName="xypilotUserConfig548" Label="Xypilot User Config" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot">
+    <Data ID="548" Label="Xypilot User Config" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot" VariableName="xypilotUserConfig548">
       <Source RefID="522"/>
     </Data>
-    <Exception ID="493" VariableName="noXyPilotUserConfigException493" Label="No XyPilot User Config Exception" ReferenceName="NoXyPilotUserConfigException" ReferencePath="xmcp.xypilot">
-    </Exception>
+    <Exception ID="493" Label="No XyPilot User Config Exception" ReferenceName="NoXyPilotUserConfigException" ReferencePath="xmcp.xypilot" VariableName="noXyPilotUserConfigException493"/>
     <Assign ID="1">
-      <Source RefID="147">
-      </Source>
-      <Source RefID="454">
-      </Source>
-      <Target RefID="174">
-      </Target>
-      <Target RefID="261">
-      </Target>
+      <Source RefID="147"/>
+      <Source RefID="454"/>
+      <Target RefID="174"/>
+      <Target RefID="261"/>
       <Copy>
-        <Source RefID="147">
-        </Source>
-        <Target RefID="174">
-        </Target>
+        <Source RefID="147"/>
+        <Target RefID="174"/>
       </Copy>
       <Copy>
-        <Source RefID="454">
-        </Source>
-        <Target RefID="261">
-        </Target>
+        <Source RefID="454"/>
+        <Target RefID="261"/>
       </Copy>
     </Assign>
   </Operation>

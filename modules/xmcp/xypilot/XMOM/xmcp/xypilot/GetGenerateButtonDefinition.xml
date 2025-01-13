@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,68 +15,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="GetGenerateButtonDefinition" TypePath="xmcp.xypilot" Label="GetGenerateButtonDefinition">
-  <Operation ID="0" Label="Get Generate Button Definition" Name="GetGenerateButtonDefinition" IsStatic="false">
-    <Input>
-    </Input>
+ --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="GetGenerateButtonDefinition" TypeName="GetGenerateButtonDefinition" TypePath="xmcp.xypilot" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Get Generate Button Definition" Name="GetGenerateButtonDefinition">
+    <Input/>
     <Output>
-      <Data ID="14" Label="Start Order Button Definition" VariableName="startOrderButtonDefinition14" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes">
-      </Data>
+      <Data ID="14" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition14"/>
     </Output>
     <ServiceReference ID="84" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="83"/>
       <Target RefID="83"/>
     </ServiceReference>
     <Function ID="83" Label="get Own RuntimeContext">
-      <Source RefID="84">
-      </Source>
-      <Target RefID="84">
-      </Target>
-      <Target RefID="86">
-      </Target>
-      <Invoke ServiceID="84" Operation="getOwnRuntimeContext">
-      </Invoke>
+      <Source RefID="84"/>
+      <Target RefID="84"/>
+      <Target RefID="86"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="84"/>
       <Receive ServiceID="84">
-        <Target RefID="86">
-        </Target>
+        <Target RefID="86"/>
       </Receive>
     </Function>
     <Mappings ID="27" Label="Mapping">
       <Input>
-        <Data ID="103" VariableName="runtimeContext103" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce">
+        <Data ID="103" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext103">
           <Source RefID="27"/>
         </Data>
-        <Source RefID="86">
-        </Source>
+        <Source RefID="86"/>
       </Input>
       <Output>
-        <Data ID="36" VariableName="startOrderButtonDefinition36" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes">
+        <Data ID="36" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition36">
           <Source RefID="27"/>
         </Data>
-        <Target RefID="37">
-        </Target>
+        <Target RefID="37"/>
       </Output>
       <Mapping>%1%.label="AI"</Mapping>
       <Mapping>%1%.serviceRTC=%0%</Mapping>
       <Mapping>%1%.synchronously="true"</Mapping>
       <Mapping>%1%.serviceFQN="xmcp.xypilot.Generate"</Mapping>
     </Mappings>
-    <Data ID="37" VariableName="startOrderButtonDefinition37" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes">
+    <Data ID="37" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition37">
       <Source RefID="27"/>
     </Data>
-    <Data ID="86" VariableName="runtimeContext86" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce">
+    <Data ID="86" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext86">
       <Source RefID="83"/>
     </Data>
     <Assign ID="1">
-      <Source RefID="37">
-      </Source>
-      <Target RefID="14">
-      </Target>
+      <Source RefID="37"/>
+      <Target RefID="14"/>
       <Copy>
-        <Source RefID="37">
-        </Source>
-        <Target RefID="14">
-        </Target>
+        <Source RefID="37"/>
+        <Target RefID="14"/>
       </Copy>
     </Assign>
   </Operation>
