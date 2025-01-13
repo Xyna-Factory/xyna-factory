@@ -156,7 +156,7 @@ public class FilterCallbackInteractionUtils {
     URLPath url = createUrlPath(putChangeTemplate, ref, "datatypes", objectId);
     JsonBuilder payload = new JsonBuilder();
     payload.startObject();
-    payload.addStringAttribute("implementation", JsonUtils.escapeString(code.getText()));
+    payload.addStringAttribute("implementation", code.getText());
     payload.endObject();
     order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpPut, payload.toString());
   }
@@ -169,7 +169,7 @@ public class FilterCallbackInteractionUtils {
     URLPath url = createUrlPath(putChangeTemplate, ref, type, objectId);
     JsonBuilder payload = new JsonBuilder();
     payload.startObject();
-    payload.addStringAttribute("text", JsonUtils.escapeString(docu.getText()));
+    payload.addStringAttribute("text", docu.getText());
     payload.endObject();
     order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpPut, payload.toString());
   }
@@ -190,9 +190,9 @@ public class FilterCallbackInteractionUtils {
       payload.addIntegerAttribute("index", -1);
       payload.addObjectAttribute("content");
       payload.addStringAttribute("type", "memberVar");
-      payload.addStringAttribute("label", JsonUtils.escapeString(var.getName()));
-      payload.addStringAttribute("documentation", JsonUtils.escapeString(var.getDocumentation()));
-      payload.addStringAttribute("primitiveType", JsonUtils.escapeString(var.getPrimitiveType()));
+      payload.addStringAttribute("label", var.getName());
+      payload.addStringAttribute("documentation", var.getDocumentation());
+      payload.addStringAttribute("primitiveType", var.getPrimitiveType());
       payload.addBooleanAttribute("isList", var.getIsList());
       payload.endObject();
       payload.endObject();
@@ -208,8 +208,8 @@ public class FilterCallbackInteractionUtils {
       payload.addIntegerAttribute("index", -1);
       payload.addObjectAttribute("content");
       payload.addStringAttribute("type", "memberMethod");
-      payload.addStringAttribute("label", JsonUtils.escapeString(method.getName()));
-      payload.addStringAttribute("documentation", JsonUtils.escapeString(method.getDocumentation()));
+      payload.addStringAttribute("label", method.getName());
+      payload.addStringAttribute("documentation", method.getDocumentation());
       payload.addListAttribute("input");
       for (int index = 0; index < method.getInputParams().size(); index++) {
         Parameter para = method.getInputParams().get(index);
@@ -247,8 +247,8 @@ public class FilterCallbackInteractionUtils {
     for (ExceptionMessage message: exceptionMessages) {
       JsonBuilder payload = new JsonBuilder();
       payload.startObject();
-      payload.addStringAttribute("messageLanguage", JsonUtils.escapeString(message.getLanguage()));
-      payload.addStringAttribute("messageText", JsonUtils.escapeString(message.getMessage()));
+      payload.addStringAttribute("messageLanguage", message.getLanguage());
+      payload.addStringAttribute("messageText", message.getMessage());
       payload.endObject();
       order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpPut, payload.toString());
     }
