@@ -56,6 +56,7 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     RepositoryManagementImpl.init();
     UserManagementStorage.init();
     OverallInformationProvider.onDeployment();
+    PluginManagement.registerPlugin(this.getClass());
   }
 
 
@@ -63,6 +64,7 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     RepositoryManagementImpl.shutdown();
     UserManagementStorage.shutdown();
     OverallInformationProvider.onUndeployment();
+    PluginManagement.unregisterPlugin(this.getClass());
   }
 
 
@@ -90,8 +92,8 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
   }
 
 
-  public Text listRepositoryConnections() {
-    return new Text(RepositoryManagementImpl.listRepositoryConnections());
+  public List<? extends RepositoryConnection> listRepositoryConnections() {
+    return RepositoryManagementImpl.listRepositoryConnections();
   }
 
 
