@@ -137,7 +137,7 @@ public class MappingJson extends XMOMGuiJson implements HasXoRepresentation {
     builder.location(PluginPaths.location_workflow_mapping);
     builder.objectId(mappingId.getObjectId());
     builder.runtimeContext(com.gip.xyna.xact.filter.util.Utils.getXpceRtc(stepMapping.getParentWFObject().getRuntimeContext()));
-    return builder.instance().clone();
+    return builder.instance();
   }
 
 
