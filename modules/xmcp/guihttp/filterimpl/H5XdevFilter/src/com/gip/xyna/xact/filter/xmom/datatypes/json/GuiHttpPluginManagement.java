@@ -118,6 +118,7 @@ public class GuiHttpPluginManagement {
         cmeBuilder.navigationEntryName(pluginEntry.getNavigationEntryName());
         cmeBuilder.navigationIconName(pluginEntry.getNavigationIconName());
         cmeBuilder.fQN(pluginEntry.getDefinitionWorkflowFQN());
+        cmeBuilder.runtimeContext(pluginEntry.getPluginRTC());
         menuEntries.get(path).add(cmeBuilder.instance());
       }
       else {

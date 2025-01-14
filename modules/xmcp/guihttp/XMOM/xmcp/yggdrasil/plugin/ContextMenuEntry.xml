@@ -39,4 +39,5 @@
       <Type>String</Type>
     </Meta>
   </Data>
+  <Data Label="Runtime Context" VariableName="runtimeContext" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce"></Data>
 </DataType>
