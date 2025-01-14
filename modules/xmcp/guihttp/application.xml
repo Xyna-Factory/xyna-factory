@@ -17,7 +17,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <!--                                               ################# Version auch in blackedition_lib.sh updaten ########### -->
-<Application applicationName="GuiHttp" comment="" factoryVersion="" versionName="1.3.7" xmlVersion="1.1">
+<Application applicationName="GuiHttp" comment="" factoryVersion="" versionName="1.3.8" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">GuiHTTPFilter</Description>
     <Description Lang="EN">GuiHTTPFilter</Description>
