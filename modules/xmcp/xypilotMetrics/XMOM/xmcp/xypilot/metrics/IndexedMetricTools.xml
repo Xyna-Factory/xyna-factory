@@ -20,19 +20,31 @@
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
   <Service Label="Indexed Metric Tools" TypeName="IndexedMetricTools">
-    <Operation IsStatic="true" Label="Adapt to Indexed Metric List" Name="adaptToIndexedMetricList">
+    <Operation IsStatic="true" Label="Sort and Adapt to Indexed Metric List" Name="sortAndAdaptToIndexedMetricList">
       <Input>
-        <Data ID="1" IsList="true" Label="Metric" ReferenceName="Metric" ReferencePath="xmcp.xypilot.metrics" VariableName="metric1"/>
+        <Data ID="8947" IsList="true" Label="Selected Metric" ReferenceName="SelectedMetric" ReferencePath="xmcp.xypilot.metrics" VariableName="selectedMetric8947"/>
       </Input>
       <Output>
-        <Data ID="2" IsList="true" Label="Indexed Metric" ReferenceName="IndexedMetric" ReferencePath="xmcp.xypilot.metrics" VariableName="indexedMetric2"/>
+        <Data ID="8948" IsList="true" Label="Indexed Metric" ReferenceName="IndexedMetric" ReferencePath="xmcp.xypilot.metrics" VariableName="indexedMetric8948"/>
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">java.util.List&lt;IndexedMetric&gt; ret = new java.util.ArrayList&lt;&gt;();
+java.util.Map&lt;String, SelectedMetric&gt; map = new java.util.TreeMap&lt;&gt;();
+java.util.List&lt;String&gt; names = new java.util.ArrayList&lt;&gt;();
+for (SelectedMetric sm : selectedMetric8947) {
+  if (sm == null) { continue; }
+  if (sm.getMetric() == null) { continue; }
+  String name = sm.getMetric().getClass().getName();
+  sm.getMetric().init();
+  map.put(name, sm);
+  names.add(name);
+}
+java.util.Collections.sort(names);
 int i = 0;
-for (Metric metric : metric1) {    
+for (String name : names) {
+  SelectedMetric sm = map.get(name);
   IndexedMetric im = new IndexedMetric();
-  im.setMetric(metric);
+  im.setMetric(sm);
   im.setIndex(i);
   i++;
   ret.add(im);
