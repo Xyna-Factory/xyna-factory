@@ -60,6 +60,8 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
 
 
   public void onUndeployment() throws XynaException {
+    RepositoryManagementImpl.shutdown();
+    UserManagementStorage.shutdown();
     OverallInformationProvider.onUndeployment();
   }
 

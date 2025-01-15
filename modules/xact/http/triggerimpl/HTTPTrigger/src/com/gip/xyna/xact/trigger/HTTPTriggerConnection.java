@@ -183,7 +183,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
     }
     triggerIp = trigger.getOwnIp();
     triggerHostname = trigger.getOwnHostname();
-
+    initCharset();
   }
 
 
@@ -233,11 +233,46 @@ public class HTTPTriggerConnection extends TriggerConnection {
       readMethodAndUriAndParameters(); //erste zeile die nicht nur ein zeilenumbruch ist
       readHeaders(); //zeilen in der form <name>=<value> CRLF
 
+      determineCharset();
     } catch (IOException e) {
       throw new HTTPTRIGGER_HTTP_STREAM_ERROR(e.getMessage(), e);
     }
   }
 
+  
+  private void initCharset() {
+    try {
+      String propval = HTTPTrigger.PROP_DEFAULT_ENCODING.get(); 
+      if (propval == null) { return; }
+      propval = propval.trim();
+      if (propval.length() < 1) { return; }
+      if (!Charset.isSupported(propval)) { return; }
+      this.charSet = propval;
+    }
+    catch (Exception e) {
+      logger.error("Error accessing xyna property for default encoding");
+    }
+  }
+  
+  
+  private void determineCharset() {
+    Object obj = header.get(PROP_KEY_CONTENT_TYPE.toLowerCase());
+    if (!(obj instanceof String)) { return; }    
+    String val = "";
+    for (String part : ((String) obj).toLowerCase().split(";")) {
+      part = part.trim();
+      if (part.startsWith("charset=")) { val = part.substring(8); break; }
+    }
+    if (val.length() == 0) { return; }
+    val = val.toUpperCase();          
+    if (!Charset.isSupported(val)) { return; }
+    this.charSet = val;
+    if (!suppressLogging) {
+      logger.debug("Set charset to " + val);
+    }    
+  }
+  
+  
   /**
    * 
    * @throws XynaException falls fehler nicht zurück signalisiert wurde
@@ -329,7 +364,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
             buf = new byte[(int) Math.min(512l, numberOfBytes - readBytes)];
             read = lineBufferedInputStream.read(buf);
           }
-
+          
           payload = new String(postLine.toByteArray(), getCharSet());
         }
     } catch (IOException e) {
@@ -774,6 +809,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
   /**
    * @deprecated use {@link #getAuthenticationInformationOrSend401Response(String, String)}
    */
+  @Deprecated
   public DigestAuthentificationInformation getAuthentificationInformationOrSend401Response(String realm, String mime)
                   throws XynaException, InterruptedException {
     return getAuthenticationInformationOrSend401Response(realm, mime);
@@ -798,6 +834,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
   /**
    * @deprecated use {@link #getAuthenticationInformationOrSend401Response(String, String, String)}
    */
+  @Deprecated
   public DigestAuthentificationInformation getAuthentificationInformationOrSend401Response(String realm, String mime,
                                                                                            String password)
                   throws InterruptedException, XynaException {

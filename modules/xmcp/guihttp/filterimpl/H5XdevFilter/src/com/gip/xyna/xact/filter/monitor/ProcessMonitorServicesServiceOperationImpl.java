@@ -541,13 +541,18 @@ public class ProcessMonitorServicesServiceOperationImpl {
   
   
   private void writePrunedValue(JsonBuilder builder, String instanceId) {
-    Application app = Utils.getGuiHttpApplication();
+    com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext rtc = Utils.getGuiHttpRtc();
     PrunedValue prunedValue = new PrunedValue.Builder().message("Value was pruned by LazyLoading. Id was " + instanceId).instance();
     builder.addObjectAttribute(XynaObjectVisitor.META_TAG);
     builder.addStringAttribute(MetaInfo.FULL_QUALIFIED_NAME, prunedValue.getClass().getCanonicalName());
     builder.addObjectAttribute(MetaInfo.RUNTIME_CONTEXT);
-    builder.addStringAttribute(RuntimeContextVisitor.APPLICATION_LABEL, app.getName());
-    builder.addStringAttribute(RuntimeContextVisitor.VERSION_LABEL, app.getVersionName());
+    if(rtc instanceof Application) {
+      Application casted = (Application)rtc;
+      builder.addStringAttribute(RuntimeContextVisitor.APPLICATION_LABEL, casted.getName());
+      builder.addStringAttribute(RuntimeContextVisitor.VERSION_LABEL, casted.getVersionName());
+    } else {
+      builder.addStringAttribute(RuntimeContextVisitor.WORKSPACE_LABEL, rtc.getName());
+    }
     builder.endObject();
     builder.endObject();
     builder.addStringAttribute("message", prunedValue.getMessage());

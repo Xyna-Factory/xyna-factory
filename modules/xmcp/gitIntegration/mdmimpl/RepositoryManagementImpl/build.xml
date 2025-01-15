@@ -40,6 +40,9 @@
         <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/../../sharedlib/XynaObjectGitIntegrationManagement">
             <property name="target.dir" value="${basedir}/lib/xyna" />
         </ant>
+        <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/../../sharedlib/JGit">
+            <property name="target.dir" value="${basedir}/lib/xyna" />
+        </ant>
      </target>
 
     <import file="${root.dir}/installation/build/buildService.xml" />
