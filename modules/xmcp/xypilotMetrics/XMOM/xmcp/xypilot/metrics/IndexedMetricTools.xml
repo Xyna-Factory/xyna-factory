@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Indexed Metric Tools" TypeName="IndexedMetricTools" TypePath="xmcp.xypilot.metrics" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="Indexed Metric Tools" TypeName="IndexedMetricTools">
+    <Operation IsStatic="true" Label="Adapt to Indexed Metric List" Name="adaptToIndexedMetricList">
+      <Input>
+        <Data ID="1" IsList="true" Label="Metric" ReferenceName="Metric" ReferencePath="xmcp.xypilot.metrics" VariableName="metric1"/>
+      </Input>
+      <Output>
+        <Data ID="2" IsList="true" Label="Indexed Metric" ReferenceName="IndexedMetric" ReferencePath="xmcp.xypilot.metrics" VariableName="indexedMetric2"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">java.util.List&lt;IndexedMetric&gt; ret = new java.util.ArrayList&lt;&gt;();
+int i = 0;
+for (Metric metric : metric1) {    
+  IndexedMetric im = new IndexedMetric();
+  im.setMetric(metric);
+  im.setIndex(i);
+  i++;
+  ret.add(im);
+}
+return ret;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

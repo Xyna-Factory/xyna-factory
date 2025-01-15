@@ -19,6 +19,8 @@ package xmcp.xypilot.impl.config;
 
 
 
+import java.util.List;
+
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.ODSConnection;
 import com.gip.xyna.xnwh.persistence.ODSConnectionType;
@@ -28,14 +30,22 @@ import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoException
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoResult;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutor;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutor.WarehouseRetryExecutorBuilder;
+import com.gip.xyna.xprc.XynaOrderServerExtension;
 
 import xmcp.xypilot.XypilotUserConfig;
+import xmcp.xypilot.metrics.SelectedMetric;
 
 
 
 public class XypilotUserConfigStorage {
 
+  private MetricSubtypesMap metricSubtypesMap = null; 
 
+  
+  public XypilotUserConfigStorage(XynaOrderServerExtension order) {
+    metricSubtypesMap = new MetricSubtypesMap(order);
+  }
+  
   public static void init() throws PersistenceLayerException {
     ODSImpl ods = ODSImpl.getInstance();
     ods.registerStorable(XypilotUserConfigStorable.class);
@@ -53,16 +63,19 @@ public class XypilotUserConfigStorage {
 
 
   private XypilotUserConfigStorable convert(XypilotUserConfig config) {
-    return new XypilotUserConfigStorable(config.getUser(), config.getUri(), config.getModel(), config.getMaxSuggestions());
+    List<? extends SelectedMetric> list = config.getSelectedMetricList();
+    return new XypilotUserConfigStorable(config.getUser(), config.getUri(), config.getModel(), config.getMaxSuggestions(),
+                                         metricSubtypesMap.adapt(list));
   }
 
 
   private XypilotUserConfig convert(XypilotUserConfigStorable storable) {
     if (storable == null) {
       return null;
-    }
+    }    
     XypilotUserConfig.Builder builder = new XypilotUserConfig.Builder();
-    builder.user(storable.getUser()).uri(storable.getXypiloturi()).model(storable.getModel()).maxSuggestions(storable.getMaxsuggestions());
+    builder.user(storable.getUser()).uri(storable.getXypiloturi()).model(storable.getModel()).maxSuggestions(storable.getMaxsuggestions())
+           .selectedMetricList(metricSubtypesMap.adapt(storable.getMetrics()));
     return builder.instance();
   }
 

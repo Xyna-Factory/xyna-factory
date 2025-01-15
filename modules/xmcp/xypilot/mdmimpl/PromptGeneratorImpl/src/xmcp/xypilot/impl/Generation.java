@@ -182,7 +182,7 @@ public class Generation {
   public XypilotUserConfig getConfigFromOrder(XynaOrderServerExtension order) throws PersistenceLayerException, NoXyPilotUserConfigException {
     String sessionId = order.getSessionId();
     String user = XynaFactory.getInstance().resolveSessionToUser(sessionId);
-    XypilotUserConfigStorage storage = new XypilotUserConfigStorage();
+    XypilotUserConfigStorage storage = new XypilotUserConfigStorage(order);
     XypilotUserConfig config = storage.loadConfig(user);
     if(config == null) {
       throw new NoXyPilotUserConfigException(user);
