@@ -41,11 +41,11 @@ public class XypilotUserConfigStorage {
 
   private MetricSubtypesMap metricSubtypesMap = null; 
 
-  
+
   public XypilotUserConfigStorage(XynaOrderServerExtension order) {
     metricSubtypesMap = new MetricSubtypesMap(order);
   }
-  
+
   public static void init() throws PersistenceLayerException {
     ODSImpl ods = ODSImpl.getInstance();
     ods.registerStorable(XypilotUserConfigStorable.class);
@@ -72,7 +72,7 @@ public class XypilotUserConfigStorage {
   private XypilotUserConfig convert(XypilotUserConfigStorable storable) {
     if (storable == null) {
       return null;
-    }    
+    }
     XypilotUserConfig.Builder builder = new XypilotUserConfig.Builder();
     builder.user(storable.getUser()).uri(storable.getXypiloturi()).model(storable.getModel()).maxSuggestions(storable.getMaxsuggestions())
            .selectedMetricList(metricSubtypesMap.adapt(storable.getMetrics()));
