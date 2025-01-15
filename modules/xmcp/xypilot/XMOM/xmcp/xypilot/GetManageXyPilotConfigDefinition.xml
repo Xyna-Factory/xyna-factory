@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Manage XyPilot Config Definition" TypeName="GetManageXyPilotConfigDefinition" TypePath="xmcp.xypilot" Version="1.8">
+<!--
+* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Manage XyPilot Config Definition" TypeName="GetManageXyPilotConfigDefinition" TypePath="xmcp.xypilot" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Get Manage XyPilot Config Definition" Name="GetManageXyPilotConfigDefinition">
     <Input/>
     <Output>
       <Data ID="174" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition174"/>
       <Data ID="261" Label="Xypilot User Config" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot" VariableName="xypilotUserConfig261"/>
     </Output>
+    <ServiceReference ID="12" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="11"/>
+      <Target RefID="11"/>
+    </ServiceReference>
     <ServiceReference ID="4815" Label="Indexed Metric Tools" ReferenceName="IndexedMetricTools.IndexedMetricTools" ReferencePath="xmcp.xypilot.metrics">
       <Source RefID="4814"/>
       <Target RefID="4814"/>
@@ -14,17 +34,13 @@
       <Source RefID="451"/>
       <Target RefID="451"/>
     </ServiceReference>
-    <ServiceReference ID="3252" Label="Metric" ReferenceName="Metric.Metric" ReferencePath="xmcp.xypilot.metrics">
-      <Source RefID="3251"/>
-      <Target RefID="3251"/>
-    </ServiceReference>
     <ServiceReference ID="713" Label="Metric" ReferenceName="Metric.Metric" ReferencePath="xmcp.xypilot.metrics">
       <Source RefID="712"/>
       <Target RefID="712"/>
     </ServiceReference>
-    <ServiceReference ID="12" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
-      <Source RefID="11"/>
-      <Target RefID="11"/>
+    <ServiceReference ID="3252" Label="Metric" ReferenceName="Metric.Metric" ReferencePath="xmcp.xypilot.metrics">
+      <Source RefID="3251"/>
+      <Target RefID="3251"/>
     </ServiceReference>
     <Function ID="11" Label="get Own RuntimeContext">
       <Source RefID="12"/>
@@ -157,9 +173,9 @@
         <Data ID="157" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition157"/>
         <Target RefID="781"/>
       </Output>
-      <Mapping>%4%.children["0"]=%1%</Mapping>
-      <Mapping>%4%.children["1"]=%2%</Mapping>
-      <Mapping>%4%.children["2"]=%3%</Mapping>
+      <Mapping>%4%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%1%</Mapping>
+      <Mapping>%4%.children["1"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%2%</Mapping>
+      <Mapping>%4%.children["2"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%3%</Mapping>
       <Mapping>%4%.header=%0%</Mapping>
       <Mapping>%4%.label="Manage XyPilot Configuration"</Mapping>
     </Mappings>
