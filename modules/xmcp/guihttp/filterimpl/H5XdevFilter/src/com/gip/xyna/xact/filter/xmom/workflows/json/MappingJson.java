@@ -37,6 +37,7 @@ import com.gip.xyna.xact.filter.xmom.datatypes.json.GuiHttpPluginManagement;
 import com.gip.xyna.xact.filter.xmom.workflows.enums.Tags;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xmcp.XynaMultiChannelPortal;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.StepMapping;
 
 import xmcp.processmodeller.datatypes.Mapping;
@@ -98,7 +99,9 @@ public class MappingJson extends XMOMGuiJson implements HasXoRepresentation {
       m.setId(mappingId.getObjectId());
       m.setDeletable(true);
       addAreas(m);
-      m.unversionedSetPlugin(pluginMgmt.createPlugin(getPluginContext()));
+      if (stepMapping.getParentWFObject().getRevision() != GenerationBase.StringXMLSource.REVISION) {  // disable plugins when the rtc might be unknown
+        m.unversionedSetPlugin(pluginMgmt.createPlugin(getPluginContext()));
+      }
       return m;
     }
   }
