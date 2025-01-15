@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2024 Xyna GmbH, Germany
@@ -15,9 +15,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" BaseTypeName="PluginBase" BaseTypePath="xmcp.yggdrasil.plugin" TypeName="Plugin" TypePath="xmcp.yggdrasil.plugin" Label="Plugin" IsAbstract="false">
-  <Meta>
-    <IsServiceGroupOnly>false</IsServiceGroupOnly>
-  </Meta>
-  <Data Label="Gui Defining Workflow" VariableName="guiDefiningWorkflow" IsList="true" ReferenceName="GuiDefiningWorkflow" ReferencePath="xmcp.yggdrasil.plugin"/>
-</DataType>
+-->
+<project name="build" default="build" basedir=".">
+
+    <!-- this is the absolute path to the root -->
+    <pathconvert property="root.dir" >
+        <path location="${basedir}/../../../../.."/>
+    </pathconvert>
+
+    <property name="sharedLib.folder.name" value="JGit" />
+    <property name="sharedLib.name" value="JGit" />
+
+    <import file="${root.dir}/installation/build/buildSharedLib.xml" />
+
+</project>

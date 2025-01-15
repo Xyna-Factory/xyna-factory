@@ -204,9 +204,9 @@ public class StartorderAction extends RuntimeContextDependendAction {
       RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
       Application app = (Application) rc;
       Long calledRevision = rm.getRevision(app.getName(), app.getVersionName(), null);
+      boolean isApp = rm.isApplicationRevision(myRevision);
 
-
-      if (RevisionOrderControl.checkCustomOrderEntryClosed(calledRevision, myRevision, H5XdevFilter.ORDERENTRYNAME)) {
+      if (isApp && RevisionOrderControl.checkCustomOrderEntryClosed(calledRevision, myRevision, H5XdevFilter.ORDERENTRYNAME)) {
         AuthUtils.replyError(tc, jfai, Status.forbidden, new RuntimeException("Order entry disabled for application '" + app.getName() + "/" + app.getVersionName() + "'."));
         return jfai;
       }

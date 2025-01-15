@@ -39,11 +39,8 @@
     <property file="${application.dir}/workspace.properties" />
 
     <property name="workspacename" value="default workspace" />
-    <property name="revision.dir" value="../revisions/rev_workingset" />
 
     <!-- depends on server make use of server variable -->
-    <property name="server.mdm.path" value="${server.path}/${revision.dir}/saved/services/${fqclassname}" />
-    <property name="server.mdm.xml.path" value="${server.path}/${revision.dir}/saved/XMOM/${mdm.xml.path}" />
     <property name="local.xml.dir" value="${xmom.dir}/${mdm.xml.path}" />
 
     <property name="deploy.sharedlibs" value=":" />
@@ -118,6 +115,14 @@
     <!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
     <target name="deploy" depends="updateServiceDefinition, build" description="Deploy jar file to xyna server.">
         <fail message="No server properties specified. Unable to deploy." unless="server.available" />
+        <local name ="revision" />
+        <local name = "revision.dir" />
+        <local name = "server.mdm.xml.path" />
+        <determine-revision workspacename="${workspacename}" outputproperty="revision" />
+        <property name="revision.dir" value="../revisions/rev_${revision}" />
+        <property name="server.mdm.path" value="${server.path}/${revision.dir}/saved/services/${fqclassname}" />
+        <property name="server.mdm.xml.path" value="${server.path}/${revision.dir}/saved/XMOM/${mdm.xml.path}" />
+
         <!-- create directory on xyna server -->
         <custom-ssh-exec host="${server.host}" username="${server.userid}" command="mkdir -p ${server.mdm.path}" />
         <!-- copy xml file to server -->

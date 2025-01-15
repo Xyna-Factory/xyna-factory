@@ -15,18 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="GitIntegration" comment="" factoryVersion="" versionName="0.1.6" xmlVersion="1.1">
+--><Application applicationName="GitIntegration" comment="" factoryVersion="" versionName="0.1.7" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>GuiHttp</ApplicationName>
-        <VersionName>1.3.5</VersionName>
+        <VersionName>1.3.9</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
   <SharedLibs>
     <SharedLib implicitDependency="false">
       <SharedLib>XynaObjectGitIntegrationManagement</SharedLib>
+    </SharedLib>
+    <SharedLib implicitDependency="false">
+      <SharedLib>JGit</SharedLib>
     </SharedLib>
   </SharedLibs>
   <XMOMEntries>

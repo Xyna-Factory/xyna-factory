@@ -111,7 +111,7 @@ class StartOrderActionInstance extends JsonFilterActionInstance {
     long revision;
     long backupRevision = -1L;
     try {
-      revision = Utils.getGuiHttpApplicationRevision();
+      revision = Utils.getGuiHttpRevision();
       backupRevision = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().getRevision(rtc);
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       throw new RuntimeException(e);
@@ -170,7 +170,7 @@ class StartOrderActionInstance extends JsonFilterActionInstance {
     long guiHttpRevision = -1;
     try {
       orderRtc = Utils.getRtcRevision(rtc);
-      guiHttpRevision = Utils.getGuiHttpApplicationRevision();
+      guiHttpRevision = Utils.getGuiHttpRevision();
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
     }
 
