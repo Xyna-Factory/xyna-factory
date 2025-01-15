@@ -9,30 +9,4 @@
     </Meta>
   </Data>
   <Data Label="Metric" ReferenceName="Metric" ReferencePath="xmcp.xypilot.metrics" VariableName="metric"/>
-  <Service Label="Indexed Metric" TypeName="IndexedMetric">
-    <Operation IsStatic="true" Label="Get Metric Instances" Name="getMetricInstances" RequiresXynaOrder="true">
-      <Input/>
-      <Output>
-        <Data ID="70" IsList="true" Label="Metric" ReferenceName="Metric" ReferencePath="xmcp.xypilot.metrics" VariableName="metric70"/>
-      </Output>
-      <SourceCode>
-        <CodeSnippet Type="Java">long revision = correlatedXynaOrder.getRevision();
-try {
-    com.gip.xyna.xprc.xfractwfe.generation.DOM dom = com.gip.xyna.xprc.xfractwfe.generation.DOM.getInstance(Metric.class.getName(), revision);
-    java.util.Set&lt;com.gip.xyna.xprc.xfractwfe.generation.GenerationBase&gt; subTypes = dom.getSubTypes(new com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache());
-    java.util.Map&lt;String, Metric&gt; metricsByFQN = new java.util.HashMap&lt;&gt;(); // use a map to avoid duplicate subtypes with the same FQN
-    for (com.gip.xyna.xprc.xfractwfe.generation.GenerationBase subType : subTypes) {
-        try {
-            com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject instance = com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.instantiate(subType.getFqClassName(), true, revision);
-            metricsByFQN.put(subType.getFqClassName(), (Metric) instance);
-        } catch (Exception e) {
-        }
-    }
-    return new java.util.ArrayList&lt;&gt;(metricsByFQN.values());
-} catch (Exception e) {
-    throw new RuntimeException(e);
-}</CodeSnippet>
-      </SourceCode>
-    </Operation>
-  </Service>
 </DataType>
