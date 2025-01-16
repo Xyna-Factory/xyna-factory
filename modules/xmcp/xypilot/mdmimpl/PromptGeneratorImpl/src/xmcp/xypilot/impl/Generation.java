@@ -21,6 +21,7 @@ package xmcp.xypilot.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xmcp.xguisupport.messagebus.transfer.MessageInputParameter;
@@ -220,6 +221,7 @@ public class Generation {
     publishUpdateMessage(xmomItemReference, "DataType");
   }
   
+
   public List<? extends CodeSuggestion> genCodeSuggestions(XynaOrderServerExtension order, Context context) throws Exception {
     XypilotUserConfig config = getConfigFromOrder(order);
     XMOMItemReference xmomItemReference = buildItemFromContext(context);
@@ -227,11 +229,10 @@ public class Generation {
     DomMethodModel model = DataModelLocator.getDomMethodModel(xmomItemReference, order, context.getObjectId(), type);
     Pipeline<Code, DomMethodModel> pipeline = PipelineLocator.getPipeline(config, "dom-method-implementation");
     List<Code> code = pipeline.run(model, config.getUri()).choices();
-    if(config.getMaxSuggestions() < code.size()) {
+    if (config.getMaxSuggestions() < code.size()) {
       code = code.subList(0, config.getMaxSuggestions());
     }
-    //TODO: filter to selected metrics
-    List<? extends Metric> metrics = Metric.getMetricInstances(order);
+    var metrics = config.getSelectedMetricList().stream().filter(x -> x.getSelected()).map(x -> x.getMetric()).collect(Collectors.toList());
     return evaludateCodeSuggestions(code, metrics);
   }
 
