@@ -71,6 +71,11 @@ get_local_interfaces
 set_platform_dependent_properties
 
 #  start main logic
+if [[ -f "${XYNA_CACHE_DIR}/xyna_func_lib_cache.sh" ]]; then
+  ${VOLATILE_RM} "${XYNA_CACHE_DIR}/xyna_func_lib_cache.sh"
+  load_settings_from_cache
+  set_platform_dependent_properties
+fi
 
 if [[ "x${COMPONENT_LIMITS}"              == "xtrue" ]]; then SOMETHING_CHANGED="true"; f_configure_limits; fi
 if [[ "x${COMPONENT_SSH}"                 == "xtrue" ]]; then SOMETHING_CHANGED="true"; f_configure_ssh; fi

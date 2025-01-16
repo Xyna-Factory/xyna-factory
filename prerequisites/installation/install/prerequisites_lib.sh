@@ -194,7 +194,6 @@ f_check_parameters () {
   f_check_system_before_installation
   if [[ $? -gt 0 ]]; then
      f_add_to_error_buffer "! System requirement for installation are not fulfilled. See above\n"                   
-     write_settings_to_cache
   fi
   
   echo -e "\n* Checking if all parameters are valid:"
