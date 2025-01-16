@@ -410,6 +410,7 @@ f_check_system_before_installation () {
    echo "!!! The following programs are missing!!!"
     echo ${STR_MISSING_COMMANDS}
    echo "!!!!!!!!!!!!!!!!!!!!!!!"
+   write_settings_to_cache
  else
    f_ok
  fi
