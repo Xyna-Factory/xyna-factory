@@ -28,20 +28,24 @@ import org.apache.log4j.Logger;
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.Department;
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.xact.filter.xmom.PluginPaths;
 import com.gip.xyna.xmcp.xguisupport.messagebus.MessageBusManagementPortal;
 import com.gip.xyna.xmcp.xguisupport.messagebus.transfer.MessageRetrievalResult;
 import com.gip.xyna.xmcp.xguisupport.messagebus.transfer.MessageSubscriptionParameter;
 
 import xmcp.forms.plugin.PluginManagement;
 import xmcp.yggdrasil.plugin.Context;
+import xmcp.yggdrasil.plugin.ContextMenuEntry;
+import xmcp.yggdrasil.plugin.ContextMenuPlugin;
 import xmcp.yggdrasil.plugin.GuiDefiningWorkflow;
 import xmcp.yggdrasil.plugin.Plugin;
+import xmcp.yggdrasil.plugin.PluginBase;
 
 
 
 public class GuiHttpPluginManagement {
 
-  private HashMap<String, Plugin.Builder> builders;
+  private HashMap<String, PluginBase> guiPlugins;
 
   private static final String subscriptionProduct = "zeta";
   private static final String subscriptionContext = "plugin";
@@ -68,7 +72,7 @@ public class GuiHttpPluginManagement {
 
 
   private GuiHttpPluginManagement() {
-    builders = new HashMap<>();
+    guiPlugins = new HashMap<>();
     messageBusManagementPortal = XynaFactory.getInstance().getXynaMultiChannelPortal().getMessageBusManagement();
     MessageSubscriptionParameter subscription = new MessageSubscriptionParameter(1l, subscriptionProduct, subscriptionContext, ".*");
     messageBusManagementPortal.addSubscription(subscriptionSessionId, subscription);
@@ -96,36 +100,62 @@ public class GuiHttpPluginManagement {
 
   public void updatePluginData() {
     logger.debug("updating plugin data");
-    builders.clear();
-    List<? extends xmcp.forms.plugin.Plugin> plugins = PluginManagement.listPlugins();
+    guiPlugins.clear();
+    List<? extends xmcp.forms.plugin.Plugin> zetaPluginEntries = PluginManagement.listPlugins();
     HashMap<String, List<GuiDefiningWorkflow>> definingWorkflows = new HashMap<>();
-    for (xmcp.forms.plugin.Plugin plugin : plugins) {
-      String path = plugin.getPath();
-      builders.putIfAbsent(path, new Plugin.Builder());
-      definingWorkflows.putIfAbsent(path, new ArrayList<GuiDefiningWorkflow>());
-      GuiDefiningWorkflow.Builder gdwBuilder = new GuiDefiningWorkflow.Builder();
-      gdwBuilder.fQN(plugin.getDefinitionWorkflowFQN());
-      gdwBuilder.runtimeContext(plugin.getPluginRTC());
-      definingWorkflows.get(path).add(gdwBuilder.instance());
+    HashMap<String, List<ContextMenuEntry>> menuEntries = new HashMap<>();
+    for (xmcp.forms.plugin.Plugin pluginEntry : zetaPluginEntries) {
+      String path = pluginEntry.getPath();
+      if (path == null || path.isBlank()) {
+        logger.warn("Missing path name for Plugin " + pluginEntry.getNavigationEntryName() + ", using default path \"manager\"");
+        path = "manager";
+      }
+      if (path.equals(PluginPaths.location_workflow_mapping)) {
+        guiPlugins.putIfAbsent(path, new ContextMenuPlugin());
+        menuEntries.putIfAbsent(path, new ArrayList<ContextMenuEntry>());
+        ContextMenuEntry.Builder cmeBuilder = new ContextMenuEntry.Builder();
+        cmeBuilder.navigationEntryLabel(pluginEntry.getNavigationEntryLabel());
+        cmeBuilder.navigationEntryName(pluginEntry.getNavigationEntryName());
+        cmeBuilder.navigationIconName(pluginEntry.getNavigationIconName());
+        cmeBuilder.fQN(pluginEntry.getDefinitionWorkflowFQN());
+        cmeBuilder.runtimeContext(pluginEntry.getPluginRTC());
+        menuEntries.get(path).add(cmeBuilder.instance());
+      }
+      else {
+        guiPlugins.putIfAbsent(path, new Plugin());
+        definingWorkflows.putIfAbsent(path, new ArrayList<GuiDefiningWorkflow>());
+        GuiDefiningWorkflow.Builder gdwBuilder = new GuiDefiningWorkflow.Builder();
+        gdwBuilder.fQN(pluginEntry.getDefinitionWorkflowFQN());
+        gdwBuilder.runtimeContext(pluginEntry.getPluginRTC());
+        definingWorkflows.get(path).add(gdwBuilder.instance());
+      }
     }
 
-    for (String path : builders.keySet()) {
-      Plugin.Builder builder = builders.get(path);
-      builder.guiDefiningWorkflow(definingWorkflows.get(path));
-      builders.put(path, builder);
+    for (String path : guiPlugins.keySet()) {
+      if (path.equals(PluginPaths.location_workflow_mapping)) {
+        ContextMenuPlugin contextMenuPlugin = new ContextMenuPlugin();
+        contextMenuPlugin.unversionedSetMenuEntry(menuEntries.get(path));
+        guiPlugins.put(path, contextMenuPlugin);
+      }
+      else {
+        Plugin plugin = new Plugin();
+        plugin.unversionedSetGuiDefiningWorkflow(definingWorkflows.get(path));
+        guiPlugins.put(path, plugin);
+      }
     }
   }
 
 
-  public Plugin createPlugin(Context context) {
-    Plugin.Builder builder = builders.get(context.getLocation());
-    if (builder == null) {
+  @SuppressWarnings("unchecked")
+  public <T extends PluginBase> T createPlugin(Context context) {
+    T guiPlugin = (T) guiPlugins.get(context.getLocation());
+    if (guiPlugin == null) {
       return null;
     }
 
-    builder.context(context);
+    guiPlugin.unversionedSetContext(context);
 
-    return builder.instance().clone();
+    return (T) guiPlugin.clone();
   }
 
 
@@ -142,7 +172,8 @@ public class GuiHttpPluginManagement {
       }
     }
   }
-  
+
+
   public void start() {
     updatePluginData();
     if(messageBusThread != null) {

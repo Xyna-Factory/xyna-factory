@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,20 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Manage XyPilot Config Definition" TypeName="GetManageXyPilotConfigDefinition" TypePath="xmcp.xypilot" Version="1.8">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Manage XyPilot Config Definition" TypeName="GetManageXyPilotConfigDefinition" TypePath="xmcp.xypilot" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Get Manage XyPilot Config Definition" Name="GetManageXyPilotConfigDefinition">
     <Input/>
     <Output>
       <Data ID="174" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition174"/>
       <Data ID="261" Label="Xypilot User Config" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot" VariableName="xypilotUserConfig261"/>
     </Output>
-    <ServiceReference ID="452" Label="PromptGenerator" ReferenceName="PromptGenerator.PromptGenerator" ReferencePath="xmcp.xypilot">
-      <Source RefID="451"/>
-      <Target RefID="451"/>
+    <ServiceReference ID="713" Label="Metric" ReferenceName="Metric.Metric" ReferencePath="xmcp.xypilot.metrics">
+      <Source RefID="712"/>
+      <Target RefID="712"/>
     </ServiceReference>
     <ServiceReference ID="12" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="11"/>
       <Target RefID="11"/>
+    </ServiceReference>
+    <ServiceReference ID="9060" Label="Indexed Metric Tools" ReferenceName="IndexedMetricTools.IndexedMetricTools" ReferencePath="xmcp.xypilot.metrics">
+      <Source RefID="9059"/>
+      <Target RefID="9059"/>
+    </ServiceReference>
+    <ServiceReference ID="452" Label="PromptGenerator" ReferenceName="PromptGenerator.PromptGenerator" ReferencePath="xmcp.xypilot">
+      <Source RefID="451"/>
+      <Target RefID="451"/>
     </ServiceReference>
     <Function ID="11" Label="get Own RuntimeContext">
       <Source RefID="12"/>
@@ -66,32 +74,35 @@
         </Assign>
       </Catch>
     </Function>
+    <Mappings ID="87" Label="Mapping">
+      <Output>
+        <Data ID="6620" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition6620">
+          <Source RefID="87"/>
+        </Data>
+        <Target RefID="6910"/>
+      </Output>
+      <Mapping>%0%.label="Max Suggestions"</Mapping>
+      <Mapping>%0%.dataPath="%0%.maxSuggestions"</Mapping>
+    </Mappings>
     <Mappings ID="49" Label="Mapping">
       <Output>
-        <Data ID="50" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition50"/>
-        <Target RefID="48"/>
+        <Data ID="6040" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition6040">
+          <Source RefID="49"/>
+        </Data>
+        <Target RefID="6041"/>
       </Output>
       <Mapping>%0%.label="URI"</Mapping>
-      <Mapping>%0%.numberOfLines="2"</Mapping>
       <Mapping>%0%.dataPath="%0%.uri"</Mapping>
     </Mappings>
     <Mappings ID="68" Label="Mapping">
       <Output>
-        <Data ID="69" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition69"/>
-        <Target RefID="67"/>
+        <Data ID="6378" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition6378">
+          <Source RefID="68"/>
+        </Data>
+        <Target RefID="6379"/>
       </Output>
       <Mapping>%0%.label="Model"</Mapping>
-      <Mapping>%0%.numberOfLines="2"</Mapping>
       <Mapping>%0%.dataPath="%0%.model"</Mapping>
-    </Mappings>
-    <Mappings ID="87" Label="Mapping">
-      <Output>
-        <Data ID="88" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition88"/>
-        <Target RefID="86"/>
-      </Output>
-      <Mapping>%0%.label="Max Suggestions"</Mapping>
-      <Mapping>%0%.numberOfLines="2"</Mapping>
-      <Mapping>%0%.dataPath="%0%.maxSuggestions"</Mapping>
     </Mappings>
     <Mappings ID="106" Label="Mapping">
       <Input>
@@ -121,68 +132,336 @@
     </Mappings>
     <Mappings ID="148" Label="Mapping">
       <Input>
-        <Data ID="150" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition150"/>
-        <Source RefID="86">
-          <Meta>
-            <LinkType>UserConnected</LinkType>
-          </Meta>
-        </Source>
-      </Input>
-      <Input>
-        <Data ID="152" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition152"/>
-        <Source RefID="48">
-          <Meta>
-            <LinkType>UserConnected</LinkType>
-          </Meta>
-        </Source>
-      </Input>
-      <Input>
-        <Data ID="154" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition154"/>
-        <Source RefID="67">
-          <Meta>
-            <LinkType>UserConnected</LinkType>
-          </Meta>
-        </Source>
-      </Input>
-      <Input>
         <Data ID="156" Label="Panel Box Definition" ReferenceName="PanelBoxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="panelBoxDefinition156"/>
         <Source RefID="126"/>
       </Input>
+      <Input>
+        <Data ID="7103" Label="Text Input Definition 1" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition7103">
+          <Source RefID="148"/>
+        </Data>
+        <Source RefID="6910">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="7152" Label="Text Input Definition 2" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition7152">
+          <Source RefID="148"/>
+        </Data>
+        <Source RefID="6041">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="7201" Label="Text Input Definition 3" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition7201">
+          <Source RefID="148"/>
+        </Data>
+        <Source RefID="6379">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
       <Output>
         <Data ID="157" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition157"/>
-        <Target RefID="147"/>
+        <Target RefID="781"/>
       </Output>
-      <Mapping>%4%.children["0"]#cast("xmcp.forms.datatypes.TextAreaDefinition")=%0%</Mapping>
-      <Mapping>%4%.children["1"]#cast("xmcp.forms.datatypes.TextAreaDefinition")=%1%</Mapping>
-      <Mapping>%4%.children["2"]#cast("xmcp.forms.datatypes.TextAreaDefinition")=%2%</Mapping>
-      <Mapping>%4%.header=%3%</Mapping>
+      <Mapping>%4%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%1%</Mapping>
+      <Mapping>%4%.children["1"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%2%</Mapping>
+      <Mapping>%4%.children["2"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%3%</Mapping>
+      <Mapping>%4%.header=%0%</Mapping>
       <Mapping>%4%.label="Manage XyPilot Configuration"</Mapping>
     </Mappings>
+    <Choice ID="3782" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="454"/>
+      <Target RefID="7844"/>
+      <Input>
+        <Data ID="3829" Label="Xypilot User Config" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot" VariableName="xypilotUserConfig3829">
+          <Source RefID="3782"/>
+        </Data>
+        <Source RefID="454"/>
+      </Input>
+      <Case ID="3783" Label="true" Premise="length(%0%.selectedMetricList)&lt;&quot;1&quot;">
+        <Function ID="712" Label="Get Metric Instances">
+          <Source RefID="713"/>
+          <Target RefID="713"/>
+          <Target RefID="3950"/>
+          <Invoke Operation="getMetricInstances" ServiceID="713"/>
+          <Receive ServiceID="713">
+            <Target RefID="3950"/>
+          </Receive>
+        </Function>
+        <Foreach ID="7841">
+          <Source RefID="3950"/>
+          <Target RefID="7843"/>
+          <InputList RefID="3950">
+            <Data ID="7842" Label="Metric" ReferenceName="Metric" ReferencePath="xmcp.xypilot.metrics" VariableName="metric7842"/>
+          </InputList>
+          <OutputList RefID="7843">
+            <Data ID="7742" Label="Selected Metric" ReferenceName="SelectedMetric" ReferencePath="xmcp.xypilot.metrics" VariableName="selectedMetric7742">
+              <Source RefID="7692"/>
+            </Data>
+          </OutputList>
+          <Mappings ID="7692" Label="Mapping">
+            <Input>
+              <Data ID="7840" Label="Metric" ReferenceName="Metric" ReferencePath="xmcp.xypilot.metrics" VariableName="metric7840">
+                <Source RefID="7692"/>
+              </Data>
+              <Source RefID="7842"/>
+            </Input>
+            <Output>
+              <Data ID="7741" Label="Selected Metric" ReferenceName="SelectedMetric" ReferencePath="xmcp.xypilot.metrics" VariableName="selectedMetric7741">
+                <Source RefID="7692"/>
+              </Data>
+              <Target RefID="7742"/>
+            </Output>
+            <Mapping>%1%.metric=%0%</Mapping>
+            <Mapping>%1%.selected="true"</Mapping>
+          </Mappings>
+        </Foreach>
+        <Assign ID="3786">
+          <Source RefID="7843"/>
+          <Target RefID="7844"/>
+          <Copy>
+            <Source RefID="7843"/>
+            <Target RefID="7844"/>
+          </Copy>
+        </Assign>
+        <Data ID="3950" IsList="true" Label="Metric" ReferenceName="Metric" ReferencePath="xmcp.xypilot.metrics" VariableName="metric3950">
+          <Source RefID="712"/>
+        </Data>
+      </Case>
+      <Case ID="3784" Label="false">
+        <Mappings ID="4034" Label="Mapping">
+          <Input>
+            <Data ID="4075" Label="Xypilot User Config" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot" VariableName="xypilotUserConfig4075">
+              <Source RefID="4034"/>
+            </Data>
+            <Source RefID="454"/>
+          </Input>
+          <Output>
+            <Data ID="4116" IsList="true" Label="Selected Metric" ReferenceName="SelectedMetric" ReferencePath="xmcp.xypilot.metrics" VariableName="selectedMetric4116">
+              <Source RefID="4034"/>
+            </Data>
+            <Target RefID="4117"/>
+          </Output>
+          <Mapping>%1%=%0%.selectedMetricList</Mapping>
+        </Mappings>
+        <Assign ID="3788">
+          <Source RefID="4117"/>
+          <Target RefID="7844"/>
+          <Copy>
+            <Source RefID="4117"/>
+            <Target RefID="7844"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Function ID="9059" Label="Sort and Adapt to Indexed Metric List">
+      <Source RefID="9060"/>
+      <Source RefID="7844"/>
+      <Target RefID="9060"/>
+      <Target RefID="9062"/>
+      <Invoke Operation="sortAndAdaptToIndexedMetricList" ServiceID="9060">
+        <Source RefID="7844"/>
+      </Invoke>
+      <Receive ServiceID="9060">
+        <Target RefID="9062"/>
+      </Receive>
+    </Function>
+    <Foreach ID="9119">
+      <Source RefID="9062"/>
+      <Target RefID="9121"/>
+      <InputList RefID="9062">
+        <Data ID="9120" Label="Indexed Metric" ReferenceName="IndexedMetric" ReferencePath="xmcp.xypilot.metrics" VariableName="indexedMetric9120"/>
+      </InputList>
+      <OutputList RefID="9121">
+        <Data ID="8332" Label="Selected Metric" ReferenceName="SelectedMetric" ReferencePath="xmcp.xypilot.metrics" VariableName="selectedMetric8332">
+          <Source RefID="8183"/>
+        </Data>
+      </OutputList>
+      <Mappings ID="8183" Label="Mapping">
+        <Input>
+          <Data ID="8232" Label="Indexed Metric" ReferenceName="IndexedMetric" ReferencePath="xmcp.xypilot.metrics" VariableName="indexedMetric8232">
+            <Source RefID="8183"/>
+          </Data>
+          <Source RefID="9120"/>
+        </Input>
+        <Output>
+          <Data ID="8331" Label="Selected Metric" ReferenceName="SelectedMetric" ReferencePath="xmcp.xypilot.metrics" VariableName="selectedMetric8331">
+            <Source RefID="8183"/>
+          </Data>
+          <Target RefID="8332"/>
+        </Output>
+        <Mapping>%1%=%0%.metric</Mapping>
+      </Mappings>
+    </Foreach>
+    <Mappings ID="7251" Label="Mapping">
+      <Input>
+        <Data ID="7350" Label="Xypilot User Config IN" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot" VariableName="xypilotUserConfig7350">
+          <Source RefID="7251"/>
+        </Data>
+        <Source RefID="454"/>
+      </Input>
+      <Input>
+        <Data ID="8037" IsList="true" Label="Selected Metric" ReferenceName="SelectedMetric" ReferencePath="xmcp.xypilot.metrics" VariableName="selectedMetric8037">
+          <Source RefID="7251"/>
+        </Data>
+        <Source RefID="9121">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="7300" Label="Xypilot User Config" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot" VariableName="xypilotUserConfig7300">
+          <Source RefID="7251"/>
+        </Data>
+        <Target RefID="8670"/>
+      </Output>
+      <Mapping>%2%=%0%</Mapping>
+      <Mapping>%2%.selectedMetricList=%1%</Mapping>
+    </Mappings>
+    <Foreach ID="9122">
+      <Source RefID="9062"/>
+      <Target RefID="9124"/>
+      <InputList RefID="9062">
+        <Data ID="9123" Label="Indexed Metric" ReferenceName="IndexedMetric" ReferencePath="xmcp.xypilot.metrics" VariableName="indexedMetric9123"/>
+      </InputList>
+      <OutputList RefID="9124">
+        <Data ID="600" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition600">
+          <Source RefID="574"/>
+        </Data>
+      </OutputList>
+      <Mappings ID="574" Label="Mapping">
+        <Input>
+          <Data ID="5403" Label="Indexed Metric" ReferenceName="IndexedMetric" ReferencePath="xmcp.xypilot.metrics" VariableName="indexedMetric5403">
+            <Source RefID="574"/>
+          </Data>
+          <Source RefID="9123"/>
+        </Input>
+        <Output>
+          <Data ID="599" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition599">
+            <Source RefID="574"/>
+          </Data>
+          <Target RefID="600"/>
+        </Output>
+        <Mapping>%1%.dataPath=concat("%0%.selectedMetricList.", %0%.index, ".selected")</Mapping>
+        <Mapping>%1%.label=concat(%0%.metric.metric.name, ": ", %0%.metric.metric.description)</Mapping>
+      </Mappings>
+    </Foreach>
+    <Mappings ID="5625" Label="Mapping">
+      <Input>
+        <Data ID="5627" IsList="true" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition5627"/>
+        <Source RefID="9124"/>
+      </Input>
+      <Output>
+        <Data ID="5628" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5628"/>
+        <Target RefID="5629"/>
+      </Output>
+      <Mapping>%1%.children=%0%</Mapping>
+      <Mapping>%1%.label="Selected Metrics"</Mapping>
+    </Mappings>
+    <Mappings ID="882" Label="Mapping">
+      <Input>
+        <Data ID="949" Label="Form Panel Definition 1" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition949">
+          <Source RefID="882"/>
+        </Data>
+        <Source RefID="781">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="5966" Label="Form Panel Definition 2" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5966">
+          <Source RefID="882"/>
+        </Data>
+        <Source RefID="5629">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="915" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition915">
+          <Source RefID="882"/>
+        </Data>
+        <Target RefID="5210"/>
+      </Output>
+      <Mapping>%2%=%0%</Mapping>
+      <Mapping>%2%.children=append(%0%.children, %1%)</Mapping>
+    </Mappings>
     <Data ID="10" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext10"/>
-    <Data ID="48" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition48"/>
-    <Data ID="67" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition67"/>
-    <Data ID="86" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition86"/>
     <Data ID="105" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition105"/>
     <Data ID="126" Label="Panel Box Definition" ReferenceName="PanelBoxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="panelBoxDefinition126"/>
-    <Data ID="147" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition147"/>
     <Data ID="454" Label="Xypilot User Config" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot" VariableName="xypilotUserConfig454">
       <Source RefID="451"/>
     </Data>
     <Data ID="548" Label="Xypilot User Config" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot" VariableName="xypilotUserConfig548">
       <Source RefID="522"/>
     </Data>
+    <Data ID="781" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition781"/>
+    <Data ID="4117" IsList="true" Label="Selected Metric" ReferenceName="SelectedMetric" ReferencePath="xmcp.xypilot.metrics" VariableName="selectedMetric4117">
+      <Source RefID="4034"/>
+    </Data>
+    <Data ID="5210" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5210">
+      <Source RefID="882"/>
+    </Data>
+    <Data ID="5629" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5629"/>
+    <Data ID="6041" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition6041">
+      <Source RefID="49"/>
+    </Data>
+    <Data ID="6379" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition6379">
+      <Source RefID="68"/>
+    </Data>
+    <Data ID="6910" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition6910">
+      <Source RefID="87"/>
+    </Data>
+    <Data ID="7843" IsList="true" Label="Selected Metric" ReferenceName="SelectedMetric" ReferencePath="xmcp.xypilot.metrics" VariableName="selectedMetric7843">
+      <Source RefID="7841"/>
+      <Target RefID="7843"/>
+    </Data>
+    <Data ID="7844" IsList="true" Label="Selected Metric" ReferenceName="SelectedMetric" ReferencePath="xmcp.xypilot.metrics" VariableName="selectedMetric7844">
+      <Source RefID="3782"/>
+    </Data>
+    <Data ID="8670" Label="Xypilot User Config" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot" VariableName="xypilotUserConfig8670">
+      <Source RefID="7251"/>
+    </Data>
+    <Data ID="9062" IsList="true" Label="Indexed Metric" ReferenceName="IndexedMetric" ReferencePath="xmcp.xypilot.metrics" VariableName="indexedMetric9062">
+      <Source RefID="9059"/>
+    </Data>
+    <Data ID="9121" IsList="true" Label="Selected Metric" ReferenceName="SelectedMetric" ReferencePath="xmcp.xypilot.metrics" VariableName="selectedMetric9121">
+      <Source RefID="9119"/>
+      <Target RefID="9121"/>
+    </Data>
+    <Data ID="9124" IsList="true" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition9124">
+      <Source RefID="9122"/>
+      <Target RefID="9124"/>
+    </Data>
     <Exception ID="493" Label="No XyPilot User Config Exception" ReferenceName="NoXyPilotUserConfigException" ReferencePath="xmcp.xypilot" VariableName="noXyPilotUserConfigException493"/>
     <Assign ID="1">
-      <Source RefID="147"/>
-      <Source RefID="454"/>
+      <Source RefID="5210"/>
+      <Source RefID="8670"/>
       <Target RefID="174"/>
       <Target RefID="261"/>
       <Copy>
-        <Source RefID="147"/>
+        <Source RefID="5210">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
         <Target RefID="174"/>
       </Copy>
       <Copy>
-        <Source RefID="454"/>
+        <Source RefID="8670">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
         <Target RefID="261"/>
       </Copy>
     </Assign>

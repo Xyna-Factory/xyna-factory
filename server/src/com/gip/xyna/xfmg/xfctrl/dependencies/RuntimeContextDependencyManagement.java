@@ -597,17 +597,20 @@ public class RuntimeContextDependencyManagement extends FunctionGroup {
     return ChangeResult.Succeeded;
   }
 
-  
-  public ChangeResult removeDependency(RuntimeDependencyContext owner, RuntimeDependencyContext dependency, String user) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
+  public ChangeResult removeDependency(RuntimeDependencyContext owner, RuntimeDependencyContext dependency, String user, boolean force) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
     List<RuntimeDependencyContext> newDependencies = new ArrayList<RuntimeDependencyContext>(getDependencies(owner));
     if (!newDependencies.contains(dependency)) {
       return ChangeResult.NoChange;
     }
     
     newDependencies.remove(dependency);
-    modifyDependencies(owner, newDependencies, user);
+    modifyDependencies(owner, newDependencies, user, force, true);
     
     return ChangeResult.Succeeded;
+  }
+  
+  public ChangeResult removeDependency(RuntimeDependencyContext owner, RuntimeDependencyContext dependency, String user) throws PersistenceLayerException, XFMG_CouldNotModifyRuntimeContextDependenciesException {
+    return removeDependency(owner, dependency, user, false);
   }
   
   
