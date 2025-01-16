@@ -22,21 +22,21 @@
       <Data ID="174" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition174"/>
       <Data ID="261" Label="Xypilot User Config" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot" VariableName="xypilotUserConfig261"/>
     </Output>
-    <ServiceReference ID="452" Label="PromptGenerator" ReferenceName="PromptGenerator.PromptGenerator" ReferencePath="xmcp.xypilot">
-      <Source RefID="451"/>
-      <Target RefID="451"/>
+    <ServiceReference ID="713" Label="Metric" ReferenceName="Metric.Metric" ReferencePath="xmcp.xypilot.metrics">
+      <Source RefID="712"/>
+      <Target RefID="712"/>
     </ServiceReference>
     <ServiceReference ID="12" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="11"/>
       <Target RefID="11"/>
     </ServiceReference>
-    <ServiceReference ID="713" Label="Metric" ReferenceName="Metric.Metric" ReferencePath="xmcp.xypilot.metrics">
-      <Source RefID="712"/>
-      <Target RefID="712"/>
-    </ServiceReference>
     <ServiceReference ID="9060" Label="Indexed Metric Tools" ReferenceName="IndexedMetricTools.IndexedMetricTools" ReferencePath="xmcp.xypilot.metrics">
       <Source RefID="9059"/>
       <Target RefID="9059"/>
+    </ServiceReference>
+    <ServiceReference ID="452" Label="PromptGenerator" ReferenceName="PromptGenerator.PromptGenerator" ReferencePath="xmcp.xypilot">
+      <Source RefID="451"/>
+      <Target RefID="451"/>
     </ServiceReference>
     <Function ID="11" Label="get Own RuntimeContext">
       <Source RefID="12"/>
@@ -219,6 +219,7 @@
               <Target RefID="7742"/>
             </Output>
             <Mapping>%1%.metric=%0%</Mapping>
+            <Mapping>%1%.selected="true"</Mapping>
           </Mappings>
         </Foreach>
         <Assign ID="3786">
