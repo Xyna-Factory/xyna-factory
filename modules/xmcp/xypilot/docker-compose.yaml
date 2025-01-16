@@ -1,0 +1,126 @@
+services:
+   mariadb:
+    image: mariadb:11.3
+    restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE=xyna
+      - MYSQL_USER=xyna
+      - MYSQL_ROOT_PASSWORD=db_root_pwd
+      - MYSQL_PASSWORD=xyna_db_pwd
+    expose:
+      - 3306
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb -u $$MYSQL_USER -p$$MYSQL_PASSWORD $$MYSQL_DATABASE -e 'select 1;'"]
+      interval: 5s
+      timeout: 3s
+      retries: 6
+      start_period: 5s
+    
+   xyna:
+     # platform: linux/amd64 #Has to be set for Mac users
+    image: xynafactory/factory:latest
+    environment:
+      - SYNC_CONTAINER_LIFECYCLE_TO_FACTORY=true
+      - USERARCHIVE_XMLFILEPATH=defaultHISTORY/userarchive.xml
+      - USERARCHIVE_MOUNTDIRECTORY=/userarchive
+      - POOLDEFINITION_XMLFILEPATH=defaultHISTORY/pooldefinition.xml
+      - POOLDEFINITION_MOUNTDIRECTORY=/pooldefinition
+    volumes:
+      - xyna-userarchive:/userarchive:rw
+      - xyna-pooldefinition:/pooldefinition
+      - xyna-tmp:/tmp
+      - xyna-revisions:/opt/xyna/xyna_001/revisions
+      - xyna-xmomreposisotiy:/opt/xyna/xyna_001/xmomrepository
+      - xyna-xnwhclasses:/opt/xyna/xyna_001/server/xnwhclasses
+      - xyna-gen:/opt/xyna/xyna_001/server/gen
+      - xyna-storage:/opt/xyna/xyna_001/server/storage
+    configs:
+     - source: userarchive.XYNA.password
+       target: /userarchive/XYNA.password
+     - source: userarchive.XYNA.name
+       target: /userarchive/XYNA.name
+     - source: userarchive.XYNA.role
+       target: /userarchive/XYNA.role
+     - source: pooldefinition.password
+       target: /pooldefinition/Xyna-Infra-Pool.password
+     - source: pooldefinition.password
+       target: /pooldefinition/Xyna-Infra-Pool_dedicated.password
+     - source: pooldefinition.user
+       target: /pooldefinition/Xyna-Infra-Pool.user
+     - source: pooldefinition.user
+       target: /pooldefinition/Xyna-Infra-Pool_dedicated.user
+     - source: pooldefinition.connectstring
+       target: /pooldefinition/Xyna-Infra-Pool.connectstring
+     - source: pooldefinition.connectstring
+       target: /pooldefinition/Xyna-Infra-Pool_dedicated.connectstring
+     - source: pooldefinition.type
+       target: /pooldefinition/Xyna-Infra-Pool.type
+     - source: pooldefinition.type
+       target: /pooldefinition/Xyna-Infra-Pool_dedicated.type
+    expose:
+      - 4245
+      - 4000
+    healthcheck:
+      test: "echo -n $$'status\x1D\x1D\x04' | nc 127.0.0.1 4242 2>&1"
+      interval: 1s
+      timeout: 5s
+      retries: 60
+      start_period: 180s
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - 8000
+      - 4000:4000
+
+   modeller:
+    image: xynafactory/modeller:latest
+    entrypoint: ["apachectl", "-D", "FOREGROUND"]
+    environment:
+      - MODELLER_PORT=8000
+      - MODELLER_HOSTNAME="xyna"
+      - GUIHTTP_URL="http://xyna:4245"
+      - GUIHTTP_COOKIE_FLAGS="off"
+      - RESOLVER="127.0.0.11"
+    ports:
+      - 8000:8000
+    depends_on:
+      - xyna
+
+   apiserver:
+     image: xypilot-api-server:1.0.0
+     expose:
+       - 5000
+
+configs:
+  userarchive.XYNA.name:
+    content: |
+      XYNA
+  userarchive.XYNA.password:
+    content: |
+      XYNAPW
+  userarchive.XYNA.role:
+    content: |
+      ADMIN
+  pooldefinition.password:
+    content: |
+      xyna_db_pwd
+  pooldefinition.user:
+    content: |
+      xyna
+  pooldefinition.connectstring:
+    content: |
+      jdbc:mariadb://mariadb:3306/xyna
+  pooldefinition.type:
+    content: |
+      MySQL
+
+volumes:
+  xyna-userarchive:
+  xyna-pooldefinition:
+  xyna-tmp:
+  xyna-revisions:
+  xyna-xmomreposisotiy:
+  xyna-xnwhclasses:
+  xyna-gen:
+  xyna-storage:

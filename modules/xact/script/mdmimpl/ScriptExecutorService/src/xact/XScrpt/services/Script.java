@@ -23,7 +23,6 @@ package xact.XScrpt.services;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -234,28 +233,10 @@ public class Script implements ServiceStepEventHandler<AbortServiceStepEvent> {
       logger.debug("process " + process.getClass().getName() + " started");
     }
 
-    // return the process id (pid) to the caller
-    // HACK to access a private field of java.lang.UNIXProcess
-    if (process.getClass().getName().equals("java.lang.UNIXProcess")) {
-      Field field;
-      try {
-        field = process.getClass().getDeclaredField("pid");
-      } catch (SecurityException e) {
-        throw new RuntimeException("Failed to access field 'pid' within process object", e);
-      } catch (NoSuchFieldException e) {
-        throw new RuntimeException("Failed to access field 'pid' within process object", e);
-      }
-      field.setAccessible(true);
-      try {
-        pid = field.getInt(process);
-      } catch (IllegalArgumentException e) {
-        throw new RuntimeException("Failed to access field 'pid' within process object", e);
-      } catch (IllegalAccessException e) {
-        throw new RuntimeException("Failed to access field 'pid' within process object", e);
-      }
-      logger.debug("process id " + pid);
-    } else {
-      logger.warn("Cannot get processId on non UNIX platform");
+    try {
+      pid = process.pid();
+    } catch(UnsupportedOperationException e) {
+     logger.warn("can't get pid of process.", e); 
     }
 
     // setup timer

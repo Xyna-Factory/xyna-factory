@@ -1,6 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<XynaCommandLineCommand>
-  <CommandDefinition Name="buildserviceproject" Groups="Support for Eclipse" Description="Create a service template to import in Eclipse. (deprecated - use buildserviceprojectjava)" Deprecated="true"/>
-  <Argument Name="targetDirectory" Description="The path to which the template zip file is written"/>
-  <Argument Name="fqDatatypeName" Description="The fully qualified name of the datatype containing the service that is supposed to be implemented"/>
-  <Argument Name="workspaceName" Description="The name of the workspace." Optional="true"/>
-</XynaCommandLineCommand>
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="PluginBase" TypePath="xmcp.yggdrasil.plugin" Label="Plugin Base" IsAbstract="true">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Context" VariableName="context" ReferenceName="Context" ReferencePath="xmcp.yggdrasil.plugin"/>
+</DataType>
