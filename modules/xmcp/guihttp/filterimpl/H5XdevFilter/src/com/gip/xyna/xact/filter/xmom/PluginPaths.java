@@ -28,6 +28,7 @@ public class PluginPaths {
   private static final String location_datatype = String.join("/", location_modeller, "datatype");
   private static final String location_servicegroup = String.join("/", location_modeller, "servicegroup");
   private static final String location_exception = String.join("/", location_modeller, "exception");
+  private static final String location_workflow = String.join("/", location_modeller, "workflow");
 
   public static final String location_datatype_root = location_datatype;
   public static final String location_datatype_documenation = String.join("/", location_datatype, documentation);
@@ -45,4 +46,6 @@ public class PluginPaths {
   public static final String location_exception_members = String.join("/", location_exception, members);
   public static final String location_exception_member_documentation = String.join("/", location_exception_members, documentation);
   public static final String location_exception_message = String.join("/", location_exception, "message");
+
+  public static final String location_workflow_mapping = String.join("/", location_workflow, "mapping");
 }
