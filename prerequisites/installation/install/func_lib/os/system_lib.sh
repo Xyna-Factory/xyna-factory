@@ -402,6 +402,12 @@ write_settings_to_cache () {
   set | ${VOLATILE_GREP} "^VOLATILE_" >> "${FUNC_LIB_CACHE_FILE}" 
 }
 
+# Cache Datei entfernen
+remove_cache_file () {
+  f_set_environment_dir
+  FUNC_LIB_CACHE_FILE="${XYNA_CACHE_DIR}/xyna_func_lib_cache.sh"
+  ${VOLATILE_RM} -f "${FUNC_LIB_CACHE_FILE}"
+}
 
 #  Volle Pfade zu benoetigten Programmen ermitteln
 get_volatile_settings () {

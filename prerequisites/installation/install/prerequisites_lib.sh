@@ -409,6 +409,8 @@ f_check_system_before_installation () {
    echo "!!! The following programs are missing!!!"
     echo ${STR_MISSING_COMMANDS}
    echo "!!!!!!!!!!!!!!!!!!!!!!!"
+   # Remove Cache file
+   remove_cache_file
  else
    f_ok
  fi
