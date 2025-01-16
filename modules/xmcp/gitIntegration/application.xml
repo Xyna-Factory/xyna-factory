@@ -20,7 +20,7 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>GuiHttp</ApplicationName>
-        <VersionName>1.3.7</VersionName>
+        <VersionName>1.3.10</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
