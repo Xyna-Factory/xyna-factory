@@ -76,7 +76,7 @@ public class PromptGeneratorServiceOperationImpl implements ExtendedDeploymentTa
 
     @Override
     public void storeUserConfig(XynaOrderServerExtension correlatedXynaOrder, XypilotUserConfig config) {
-      XypilotUserConfigStorage storage = new XypilotUserConfigStorage();
+      XypilotUserConfigStorage storage = new XypilotUserConfigStorage(correlatedXynaOrder);
       String sessionId = correlatedXynaOrder.getSessionId();
       String user = XynaFactory.getInstance().resolveSessionToUser(sessionId);
       config.unversionedSetUser(user);
