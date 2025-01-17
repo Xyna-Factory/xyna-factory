@@ -251,7 +251,7 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.gitintegration.RepositoryConnectionGroup</FqName>
+      <FqName>xmcp.gitintegration.repository.RepositoryConnectionGroup</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
