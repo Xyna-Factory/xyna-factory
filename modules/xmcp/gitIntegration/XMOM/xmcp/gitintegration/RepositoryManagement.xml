@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Repository Management" TypeName="RepositoryManagement" TypePath="xmcp.gitintegration" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Repository Management" TypeName="RepositoryManagement" TypePath="xmcp.gitintegration" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
@@ -58,7 +57,7 @@
     <Operation IsStatic="true" Label="List Repository Connections" Name="listRepositoryConnections">
       <Input/>
       <Output>
-        <Data ID="6" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text6"/>
+        <Data ID="31" IsList="true" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection31"/>
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.listRepositoryConnections();</CodeSnippet>
@@ -192,6 +191,15 @@
       <Output/>
       <SourceCode>
         <CodeSnippet Type="Java">xmcp.gitintegration.RepositoryManagementImpl.checkout(branch, repository);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="List Repository Connection Groups" Name="listRepositoryConnectionGroups">
+      <Input/>
+      <Output>
+        <Data ID="32" IsList="true" Label="Repository Connection Group" ReferenceName="RepositoryConnectionGroup" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnectionGroup32"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.listRepositoryConnectionGroups();</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
