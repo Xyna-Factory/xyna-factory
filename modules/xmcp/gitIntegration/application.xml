@@ -250,9 +250,8 @@
       <FqName>xmcp.gitintegration.Parameter</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
-	
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.gitintegration.ui.RepositoryConnectionGroup</FqName>
+      <FqName>xmcp.gitintegration.RepositoryConnectionGroup</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
