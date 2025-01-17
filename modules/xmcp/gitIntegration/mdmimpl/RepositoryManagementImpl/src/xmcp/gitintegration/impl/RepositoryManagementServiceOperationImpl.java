@@ -218,15 +218,37 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     }
   }
 
+  
+  private String getUserFromSession(String session) {
+    SessionManagement sessionMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement();
+    return sessionMgmt.resolveSessionToUser(session);
+  }
+
 
   @Override
   public Text pull(XynaOrderServerExtension order, Repository repository) {
-    return null;
+    String user = getUserFromSession(order.getSessionId());
+    String result;
+    try {
+      GitDataContainer data = new RepositoryInteraction().pull(repository.getPath(), false, user);
+      result = data.toString();
+    } catch (Exception e) {
+      return new Text("Exception during pull: " + e.getMessage());
+    }
+
+    return new Text(result);
   }
 
 
   @Override
   public Text push(XynaOrderServerExtension order, Repository arg0, Text arg1, List<? extends File> arg2) {
-    return null;
+    String user = getUserFromSession(order.getSessionId());
+    try {
+      new RepositoryInteraction().push(arg0.getPath(), arg1.getText(), false, user);
+    } catch (Exception e) {
+      return new Text("Exception during push: " + e.getMessage());
+    }
+
+    return new Text("Push successful!");
   }
 }
