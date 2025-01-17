@@ -19,6 +19,7 @@ package xmcp.gitintegration.impl;
 
 
 
+import base.File;
 import base.Text;
 import base.math.IntegerNumber;
 
@@ -45,6 +46,7 @@ import xmcp.gitintegration.Flag;
 import xprc.xpce.Workspace;
 import xmcp.gitintegration.RepositoryManagementServiceOperation;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
+import xmcp.gitintegration.impl.RepositoryInteraction.GitDataContainer;
 import xmcp.gitintegration.repository.Branch;
 import xmcp.gitintegration.repository.BranchData;
 import xmcp.gitintegration.repository.Commit;
@@ -214,5 +216,17 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+  }
+
+
+  @Override
+  public Text pull(XynaOrderServerExtension order, Repository repository) {
+    return null;
+  }
+
+
+  @Override
+  public Text push(XynaOrderServerExtension order, Repository arg0, Text arg1, List<? extends File> arg2) {
+    return null;
   }
 }

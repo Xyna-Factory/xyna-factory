@@ -155,5 +155,29 @@
         <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.listRepositoryConnectionGroups();</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Push" Name="push" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="42" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository42"/>
+        <Data ID="47" Label="Message - Text" ReferenceName="Text" ReferencePath="base" VariableName="text47"/>
+        <Data ID="43" IsList="true" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file43"/>
+      </Input>
+      <Output>
+        <Data ID="44" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text44"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.push(correlatedXynaOrder, repository42, text47, file43);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Pull" Name="pull" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="45" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository45"/>
+      </Input>
+      <Output>
+        <Data ID="46" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text46"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.pull(correlatedXynaOrder, repository45);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>
