@@ -15,29 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Xypilot User Config" TypeName="XypilotUserConfig" TypePath="xmcp.xypilot" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Indexed Metric" TypeName="IndexedMetric" TypePath="xmcp.xypilot.metrics" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="User" VariableName="user">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Uri" VariableName="uri">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Model" VariableName="model">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Max Suggestions" VariableName="maxSuggestions">
+  <Data Label="Index" VariableName="index">
     <Meta>
       <Type>int</Type>
     </Meta>
   </Data>
-  <Data IsList="true" Label="Selected Metric List" ReferenceName="SelectedMetric" ReferencePath="xmcp.xypilot.metrics" VariableName="selectedMetricList"/>
+  <Data Label="Metric" ReferenceName="SelectedMetric" ReferencePath="xmcp.xypilot.metrics" VariableName="metric"/>
 </DataType>

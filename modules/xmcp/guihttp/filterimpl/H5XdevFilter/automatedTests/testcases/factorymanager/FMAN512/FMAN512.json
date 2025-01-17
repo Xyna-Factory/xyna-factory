@@ -27,9 +27,6 @@
           "!GuiHttp!": "GuiHttp"
         },
         {
-          "!1.1.353.7!": "1.1.353.7"
-        },
-        {
           "!default_workspace!": "default workspace"
         },
         {
@@ -180,9 +177,6 @@
           "!ZetaFramework!": "ZetaFramework"
         },
         {
-          "!0.6.44.1!": "0.6.44.1"
-        },
-        {
           "!xmcp.factorymanager.rtcmanager.SetADContent!": "xmcp.factorymanager.rtcmanager.SetADContent"
         },
         {
@@ -254,8 +248,7 @@
             "$meta": {
               "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
               "rtc": {
-                "application": "!GuiHttp!",
-                "version": "!1.1.353.7!"
+                "application": "!GuiHttp!"
               }
             },
             "name": "!FMAN512_AD1!",
@@ -286,8 +279,7 @@
             "$meta": {
               "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
               "rtc": {
-                "application": "!GuiHttp!",
-                "version": "!1.1.353.7!"
+                "application": "!GuiHttp!"
               }
             },
             "name": "!FMAN512_AD2!",
@@ -326,8 +318,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "name": "!FMAN512_AD2!",
@@ -369,8 +360,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "name": "!FMAN512_AD2!",
@@ -405,8 +395,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "name": "!FMAN512_AD2!",
@@ -433,8 +422,7 @@
             "$meta": {
               "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
               "rtc": {
-                "application": "!GuiHttp!",
-                "version": "!1.1.353.7!"
+                "application": "!GuiHttp!"
               }
             },
             "name": "!FMAN512_AD2!",
@@ -457,8 +445,7 @@
             "$meta": {
               "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
               "rtc": {
-                "application": "!GuiHttp!",
-                "version": "!1.1.353.7!"
+                "application": "!GuiHttp!"
               }
             },
             "name": "!FMAN512_AD2!",
@@ -1853,8 +1840,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "name": "!default_workspace!"
@@ -1901,8 +1887,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "name": "!default_workspace!"
@@ -1933,8 +1918,7 @@
             "$meta": {
               "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
               "rtc": {
-                "application": "!GuiHttp!",
-                "version": "!1.1.353.7!"
+                "application": "!GuiHttp!"
               }
             },
             "name": "!FMAN512_AD1!",
@@ -1973,8 +1957,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "name": "!FMAN512_AD1!",
@@ -2016,8 +1999,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "name": "!FMAN512_AD1!",
@@ -2052,8 +2034,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "name": "!FMAN512_AD1!",
@@ -2080,8 +2061,7 @@
             "$meta": {
               "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
               "rtc": {
-                "application": "!GuiHttp!",
-                "version": "!1.1.353.7!"
+                "application": "!GuiHttp!"
               }
             },
             "name": "!FMAN512_AD1!",
@@ -2115,8 +2095,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "documentation": "",
@@ -2145,8 +2124,7 @@
             "$meta": {
               "fqn": "!xmcp.tables.datatypes.TableInfo!",
               "rtc": {
-                "application": "!ZetaFramework!",
-                "version": "!0.6.44.1!"
+                "application": "!ZetaFramework!"
               }
             },
             "bootstrap": false,
@@ -2194,8 +2172,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "documentation": "",
@@ -2224,8 +2201,7 @@
             "$meta": {
               "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
               "rtc": {
-                "application": "!GuiHttp!",
-                "version": "!1.1.353.7!"
+                "application": "!GuiHttp!"
               }
             },
             "name": "!FMAN512_AD1!",
@@ -2237,8 +2213,7 @@
                 "$meta": {
                   "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
                   "rtc": {
-                    "application": "!GuiHttp!",
-                    "version": "!1.1.353.7!"
+                    "application": "!GuiHttp!"
                   }
                 },
                 "dependencyType": "!explicit!",
@@ -2250,8 +2225,7 @@
                 "$meta": {
                   "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
                   "rtc": {
-                    "application": "!GuiHttp!",
-                    "version": "!1.1.353.7!"
+                    "application": "!GuiHttp!"
                   }
                 },
                 "dependencyType": "!explicit!",
@@ -2263,8 +2237,7 @@
                 "$meta": {
                   "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
                   "rtc": {
-                    "application": "!GuiHttp!",
-                    "version": "!1.1.353.7!"
+                    "application": "!GuiHttp!"
                   }
                 },
                 "dependencyType": "!explicit!",
@@ -2276,8 +2249,7 @@
                 "$meta": {
                   "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
                   "rtc": {
-                    "application": "!GuiHttp!",
-                    "version": "!1.1.353.7!"
+                    "application": "!GuiHttp!"
                   }
                 },
                 "dependencyType": "!explicit!",
@@ -2289,8 +2261,7 @@
                 "$meta": {
                   "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
                   "rtc": {
-                    "application": "!GuiHttp!",
-                    "version": "!1.1.353.7!"
+                    "application": "!GuiHttp!"
                   }
                 },
                 "dependencyType": "!explicit!",
@@ -2302,8 +2273,7 @@
                 "$meta": {
                   "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
                   "rtc": {
-                    "application": "!GuiHttp!",
-                    "version": "!1.1.353.7!"
+                    "application": "!GuiHttp!"
                   }
                 },
                 "dependencyType": "!explicit!",
@@ -2315,8 +2285,7 @@
                 "$meta": {
                   "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
                   "rtc": {
-                    "application": "!GuiHttp!",
-                    "version": "!1.1.353.7!"
+                    "application": "!GuiHttp!"
                   }
                 },
                 "dependencyType": "!explicit!",
@@ -2328,8 +2297,7 @@
                 "$meta": {
                   "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
                   "rtc": {
-                    "application": "!GuiHttp!",
-                    "version": "!1.1.353.7!"
+                    "application": "!GuiHttp!"
                   }
                 },
                 "dependencyType": "!explicit!",
@@ -2357,8 +2325,7 @@
             "$meta": {
               "fqn": "!xmcp.tables.datatypes.TableInfo!",
               "rtc": {
-                "application": "!ZetaFramework!",
-                "version": "!0.6.44.1!"
+                "application": "!ZetaFramework!"
               }
             },
             "bootstrap": false,
@@ -2405,8 +2372,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "name": "!FMAN512_AD1!",
@@ -2433,8 +2399,7 @@
             "$meta": {
               "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
               "rtc": {
-                "application": "!GuiHttp!",
-                "version": "!1.1.353.7!"
+                "application": "!GuiHttp!"
               }
             },
             "name": "!FMAN512_AD2!",
@@ -2455,8 +2420,7 @@
             "$meta": {
               "fqn": "!xmcp.tables.datatypes.TableInfo!",
               "rtc": {
-                "application": "!ZetaFramework!",
-                "version": "!0.6.44.1!"
+                "application": "!ZetaFramework!"
               }
             },
             "bootstrap": false,
@@ -2522,8 +2486,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "name": "!FMAN512_AD2!",
@@ -2547,8 +2510,7 @@
             "$meta": {
               "fqn": "!xmcp.tables.datatypes.TableInfo!",
               "rtc": {
-                "application": "!ZetaFramework!",
-                "version": "!0.6.44.1!"
+                "application": "!ZetaFramework!"
               }
             },
             "bootstrap": false,
@@ -2614,8 +2576,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "name": "!FMAN512_AD2!",
@@ -2650,8 +2611,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "name": "!FMAN512_AD2!",
@@ -2678,8 +2638,7 @@
             "$meta": {
               "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
               "rtc": {
-                "application": "!GuiHttp!",
-                "version": "!1.1.353.7!"
+                "application": "!GuiHttp!"
               }
             },
             "name": "!FMAN512_AD2!",
@@ -2713,8 +2672,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "documentation": "",
@@ -2743,8 +2701,7 @@
             "$meta": {
               "fqn": "!xmcp.tables.datatypes.TableInfo!",
               "rtc": {
-                "application": "!ZetaFramework!",
-                "version": "!0.6.44.1!"
+                "application": "!ZetaFramework!"
               }
             },
             "bootstrap": false,
@@ -2792,8 +2749,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "documentation": "",
@@ -2822,8 +2778,7 @@
             "$meta": {
               "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini!",
               "rtc": {
-                "application": "!GuiHttp!",
-                "version": "!1.1.353.7!"
+                "application": "!GuiHttp!"
               }
             },
             "name": "!FMAN512_AD2!",
@@ -2835,8 +2790,7 @@
                 "$meta": {
                   "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
                   "rtc": {
-                    "application": "!GuiHttp!",
-                    "version": "!1.1.353.7!"
+                    "application": "!GuiHttp!"
                   }
                 },
                 "dependencyType": "!explicit!",
@@ -2848,8 +2802,7 @@
                 "$meta": {
                   "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
                   "rtc": {
-                    "application": "!GuiHttp!",
-                    "version": "!1.1.353.7!"
+                    "application": "!GuiHttp!"
                   }
                 },
                 "dependencyType": "!explicit!",
@@ -2861,8 +2814,7 @@
                 "$meta": {
                   "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
                   "rtc": {
-                    "application": "!GuiHttp!",
-                    "version": "!1.1.353.7!"
+                    "application": "!GuiHttp!"
                   }
                 },
                 "dependencyType": "!explicit!",
@@ -2874,8 +2826,7 @@
                 "$meta": {
                   "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
                   "rtc": {
-                    "application": "!GuiHttp!",
-                    "version": "!1.1.353.7!"
+                    "application": "!GuiHttp!"
                   }
                 },
                 "dependencyType": "!explicit!",
@@ -2887,8 +2838,7 @@
                 "$meta": {
                   "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
                   "rtc": {
-                    "application": "!GuiHttp!",
-                    "version": "!1.1.353.7!"
+                    "application": "!GuiHttp!"
                   }
                 },
                 "dependencyType": "!explicit!",
@@ -2900,8 +2850,7 @@
                 "$meta": {
                   "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
                   "rtc": {
-                    "application": "!GuiHttp!",
-                    "version": "!1.1.353.7!"
+                    "application": "!GuiHttp!"
                   }
                 },
                 "dependencyType": "!explicit!",
@@ -2913,8 +2862,7 @@
                 "$meta": {
                   "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
                   "rtc": {
-                    "application": "!GuiHttp!",
-                    "version": "!1.1.353.7!"
+                    "application": "!GuiHttp!"
                   }
                 },
                 "dependencyType": "!explicit!",
@@ -2926,8 +2874,7 @@
                 "$meta": {
                   "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationElemen!",
                   "rtc": {
-                    "application": "!GuiHttp!",
-                    "version": "!1.1.353.7!"
+                    "application": "!GuiHttp!"
                   }
                 },
                 "dependencyType": "!explicit!",
@@ -2955,8 +2902,7 @@
             "$meta": {
               "fqn": "!xmcp.tables.datatypes.TableInfo!",
               "rtc": {
-                "application": "!ZetaFramework!",
-                "version": "!0.6.44.1!"
+                "application": "!ZetaFramework!"
               }
             },
             "bootstrap": false,
@@ -3003,8 +2949,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.ApplicationDefini0!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "name": "!FMAN512_AD2!",
@@ -3031,8 +2976,7 @@
             "$meta": {
               "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!",
               "rtc": {
-                "application": "!GuiHttp!",
-                "version": "!1.1.353.7!"
+                "application": "!GuiHttp!"
               }
             },
             "name": "!default_workspace!"
@@ -3062,8 +3006,7 @@
             "$meta": {
               "fqn": "!xmcp.tables.datatypes.TableInfo!",
               "rtc": {
-                "application": "!ZetaFramework!",
-                "version": "!0.6.44.1!"
+                "application": "!ZetaFramework!"
               }
             },
             "bootstrap": false,
@@ -3129,8 +3072,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "applicationDefinitions": {
@@ -3187,8 +3129,7 @@
             "$meta": {
               "fqn": "!xmcp.tables.datatypes.TableInfo!",
               "rtc": {
-                "application": "!ZetaFramework!",
-                "version": "!0.6.44.1!"
+                "application": "!ZetaFramework!"
               }
             },
             "bootstrap": false,
@@ -3254,8 +3195,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "applicationDefinitions": {
@@ -3324,8 +3264,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "applicationDefinitions": {
@@ -3382,8 +3321,7 @@
             "$meta": {
               "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!",
               "rtc": {
-                "application": "!GuiHttp!",
-                "version": "!1.1.353.7!"
+                "application": "!GuiHttp!"
               }
             },
             "applicationDefinitions": {
@@ -3449,8 +3387,7 @@
             "$meta": {
               "fqn": "!xmcp.tables.datatypes.TableInfo!",
               "rtc": {
-                "application": "!ZetaFramework!",
-                "version": "!0.6.44.1!"
+                "application": "!ZetaFramework!"
               }
             },
             "bootstrap": false,
@@ -3511,8 +3448,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.Workspace!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "applicationDefinitions": {
@@ -3833,8 +3769,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.WorkspaceDetails!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "applicationDefinitions": {
@@ -3898,8 +3833,7 @@
             "$meta": {
               "fqn": "!xmcp.tables.datatypes.TableInfo!",
               "rtc": {
-                "application": "!ZetaFramework!",
-                "version": "!0.6.44.1!"
+                "application": "!ZetaFramework!"
               }
             },
             "bootstrap": false,
@@ -3960,8 +3894,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.WorkspaceDetails!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "applicationDefinitions": {
@@ -4039,8 +3972,7 @@
             "$meta": {
               "fqn": "!xmcp.tables.datatypes.TableInfo!",
               "rtc": {
-                "application": "!ZetaFramework!",
-                "version": "!0.6.44.1!"
+                "application": "!ZetaFramework!"
               }
             },
             "bootstrap": false,
@@ -4101,8 +4033,7 @@
               "$meta": {
                 "fqn": "!xmcp.factorymanager.rtcmanager.WorkspaceDetails!",
                 "rtc": {
-                  "application": "!GuiHttp!",
-                  "version": "!1.1.353.7!"
+                  "application": "!GuiHttp!"
                 }
               },
               "applicationDefinitions": {

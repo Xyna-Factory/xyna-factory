@@ -79,8 +79,14 @@ public class RepositoryManagementImpl {
 
   public static void init() throws PersistenceLayerException {
     ODSImpl ods = ODSImpl.getInstance();
-
     ods.registerStorable(RepositoryConnectionStorable.class);
+    queryCache = new PreparedQueryCache();
+  }
+
+
+  public static void shutdown() throws PersistenceLayerException {
+    ODSImpl ods = ODSImpl.getInstance();
+    ods.unregisterStorable(RepositoryConnectionStorable.class);
   }
 
 
