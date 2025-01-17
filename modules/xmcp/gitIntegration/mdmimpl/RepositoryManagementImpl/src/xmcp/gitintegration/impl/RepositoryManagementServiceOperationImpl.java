@@ -20,6 +20,7 @@ package xmcp.gitintegration.impl;
 
 
 import base.Text;
+import base.math.IntegerNumber;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,12 +45,14 @@ import xmcp.gitintegration.Flag;
 import xprc.xpce.Workspace;
 import xmcp.gitintegration.RepositoryManagementServiceOperation;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
+import xmcp.gitintegration.repository.Branch;
 import xmcp.gitintegration.repository.BranchData;
 import xmcp.gitintegration.repository.Commit;
 import xmcp.gitintegration.repository.Repository;
 import xmcp.gitintegration.repository.RepositoryConnection;
 import xmcp.gitintegration.repository.RepositoryConnectionGroup;
 import xmcp.gitintegration.repository.RepositoryUser;
+import xmcp.gitintegration.repository.RepositoryUserCreationData;
 import xmcp.gitintegration.storage.UserManagementStorage;
 
 
@@ -151,10 +154,9 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
 
 
   @Override
-  public List<? extends RepositoryUser> listUsersOfRepository(String arg0) {
-    return new UserManagementStorage().listUsersOfRepo(arg0);
+  public List<? extends RepositoryUser> listUsersOfRepository(Repository repository) {
+    return new UserManagementStorage().listUsersOfRepo(repository.getPath());
   }
-
 
   @Override
   public RepositoryConnection getRepositoryConnection(Workspace workspace) {
@@ -167,9 +169,13 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     RepositoryManagementImpl.updatetRepositoryConnection(repositoryConnection);
   }
 
-
+  
   @Override
-  public void addUserToRepository(XynaOrderServerExtension order, String repo, String encodedPassword, String repoUser, String mail) {
+  public void addUserToRepository(XynaOrderServerExtension order, RepositoryUserCreationData data) {
+    String repo = data.getRepository().getPath();
+    String encodedPassword = data.getEncodedPassword();
+    String repoUser = data.getUsername();
+    String mail = data.getMail();
     Pair<String, String> usernamePassword;
     try {
       usernamePassword = getUserNameAndDecodePassword(encodedPassword, order.getSessionId());
@@ -177,14 +183,14 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
       throw new RuntimeException(e);
     }
     new UserManagementStorage().AddUserToRepository(usernamePassword.getFirst(), repoUser, repo, usernamePassword.getSecond(), mail);
-
   }
 
+  
 
   @Override
-  public BranchData listBranches(String arg0) {
+  public BranchData listBranches(Repository repository) {
     try {
-      return new RepositoryInteraction().listBranches(arg0);
+      return new RepositoryInteraction().listBranches(repository.getPath());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -192,9 +198,9 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
 
 
   @Override
-  public List<? extends Commit> listCommits(String arg0, String arg1, int arg2) {
+  public List<? extends Commit> listCommits(Repository repo, Branch branch, IntegerNumber count) {
     try {
-      return new RepositoryInteraction().listCommits(arg0, arg1, arg2);
+      return new RepositoryInteraction().listCommits(repo.getPath(), branch.getName(), (int)count.getValue());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -202,9 +208,9 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
 
 
   @Override
-  public void checkout(String arg0, String arg1) {
+  public void checkout(Branch branch, Repository repository) {
     try {
-      new RepositoryInteraction().checkout(arg0, arg1);
+      new RepositoryInteraction().checkout(branch.getName(), repository.getPath());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

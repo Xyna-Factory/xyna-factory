@@ -290,5 +290,9 @@
       <FqName>xmcp.gitintegration.ui.RepositoryConnectionGroupGuiData</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.gitintegration.repository.UserCreationData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
   </XMOMEntries>
 </Application>
