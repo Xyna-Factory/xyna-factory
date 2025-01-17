@@ -22,7 +22,9 @@ package xmcp.gitintegration.impl;
 import base.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.Pair;
@@ -44,7 +46,9 @@ import xmcp.gitintegration.RepositoryManagementServiceOperation;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
 import xmcp.gitintegration.repository.BranchData;
 import xmcp.gitintegration.repository.Commit;
+import xmcp.gitintegration.repository.Repository;
 import xmcp.gitintegration.repository.RepositoryConnection;
+import xmcp.gitintegration.repository.RepositoryConnectionGroup;
 import xmcp.gitintegration.repository.RepositoryUser;
 import xmcp.gitintegration.storage.UserManagementStorage;
 
@@ -94,6 +98,25 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
 
   public List<? extends RepositoryConnection> listRepositoryConnections() {
     return RepositoryManagementImpl.listRepositoryConnections();
+  }
+
+
+  @Override
+  public List<? extends RepositoryConnectionGroup> listRepositoryConnectionGroups() {
+    List<RepositoryConnection> connections = RepositoryManagementImpl.listRepositoryConnections();
+    List<RepositoryConnectionGroup> result = new ArrayList<>();
+    Map<String, List<RepositoryConnection>> groups = new HashMap<>();
+    for(RepositoryConnection connection: connections) {
+      groups.putIfAbsent(connection.getPath(), new ArrayList<>());
+      groups.get(connection.getPath()).add(connection);
+    }
+    for(String repoGroup : groups.keySet()) {
+      Repository repo = new Repository.Builder().path(repoGroup).instance();
+      List<RepositoryConnection> conns = groups.get(repoGroup);
+      RepositoryConnectionGroup group = new RepositoryConnectionGroup.Builder().repository(repo).repositoryConnection(conns).instance();
+      result.add(group);
+    }
+    return result;
   }
 
 
@@ -186,5 +209,4 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
       throw new RuntimeException(e);
     }
   }
-
 }
