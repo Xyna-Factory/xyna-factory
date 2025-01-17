@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="WebSphereMQ" comment="" factoryVersion="" versionName="1.0.9" xmlVersion="1.1">
+<Application applicationName="WebSphereMQ" comment="" factoryVersion="" versionName="1.0.11" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">WebSphereMQ</Description>
     <Description Lang="EN">WebSphereMQ</Description>
