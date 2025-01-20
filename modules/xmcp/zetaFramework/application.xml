@@ -132,6 +132,14 @@
         <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.DefinitionEvent</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.DefinitionEventButtonDefinition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
         <FqName>xmcp.forms.datatypes.DefinitionWorkflow</FqName>
         <Type>DATATYPE</Type>
     </XMOMEntry>
