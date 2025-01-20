@@ -125,7 +125,7 @@
         </Data>
         <Target RefID="3432"/>
       </Output>
-      <Mapping>%2%.label="Manage Config"</Mapping>
+      <Mapping>%2%.label="manage config"</Mapping>
       <Mapping>%2%.dataPath=%0%.text</Mapping>
       <Mapping>%2%.detailsDefinitionReference#cast("xmcp.forms.datatypes.FormPanelDefinition")=%1%</Mapping>
     </Mappings>
@@ -157,7 +157,7 @@
         <Target RefID="10"/>
       </Output>
       <Mapping>%3%.label=concat(%0%.workspaceName, " (", %0%.subpath, ")")</Mapping>
-      <Mapping>%3%.header.rightArea.children["0"]=%1%</Mapping>
+      <Mapping>%3%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%1%</Mapping>
     </Mappings>
     <Data ID="10" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10"/>
     <Data ID="1716" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection1716">

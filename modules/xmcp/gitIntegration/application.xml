@@ -275,10 +275,6 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.gitintegration.ui.ManageIgnoreEntriesDefinition</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.gitintegration.ui.PullDefinition</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>

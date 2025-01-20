@@ -134,13 +134,7 @@
         <Target RefID="1853"/>
       </Output>
       <Output>
-        <Data ID="1870" Label="manage credentals - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition1870">
-          <Source RefID="1817"/>
-        </Data>
-        <Target RefID="1871"/>
-      </Output>
-      <Output>
-        <Data ID="1888" Label="manage ignore - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition1888">
+        <Data ID="1888" Label="manage credentials - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition1888">
           <Source RefID="1817"/>
         </Data>
         <Target RefID="1889"/>
@@ -161,14 +155,9 @@
       <Mapping>%4%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%1%</Mapping>
       <Mapping>%4%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.CheckoutDefinition"</Mapping>
       <Mapping>%5%.label="manage credentials"</Mapping>
-      <Mapping>%5%.dataPath=%0%.text</Mapping>
       <Mapping>%5%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").dataPath=%0%.text</Mapping>
       <Mapping>%5%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%1%</Mapping>
       <Mapping>%5%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.ManageCredentialsDefinition"</Mapping>
-      <Mapping>%6%.label="manage ignore entries"</Mapping>
-      <Mapping>%6%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").dataPath=%0%.text</Mapping>
-      <Mapping>%6%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%1%</Mapping>
-      <Mapping>%6%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.ManageIgnoreEntriesDefinition"</Mapping>
     </Mappings>
     <Mappings ID="309" Label="Mapping">
       <Input>
@@ -202,17 +191,7 @@
         </Source>
       </Input>
       <Input>
-        <Data ID="2127" Label="manage credentals - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition2127">
-          <Source RefID="309"/>
-        </Data>
-        <Source RefID="1871">
-          <Meta>
-            <LinkType>UserConnected</LinkType>
-          </Meta>
-        </Source>
-      </Input>
-      <Input>
-        <Data ID="2144" Label="manage ignore - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition2144">
+        <Data ID="2144" Label="manage credentials - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition2144">
           <Source RefID="309"/>
         </Data>
         <Source RefID="1889">
@@ -227,11 +206,10 @@
         </Data>
         <Target RefID="319"/>
       </Output>
-      <Mapping>%5%["0"]=%0%</Mapping>
-      <Mapping>%5%["1"]=%1%</Mapping>
-      <Mapping>%5%["2"]=%2%</Mapping>
-      <Mapping>%5%["3"]=%3%</Mapping>
-      <Mapping>%5%["4"]=%4%</Mapping>
+      <Mapping>%4%["0"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%0%</Mapping>
+      <Mapping>%4%["1"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%1%</Mapping>
+      <Mapping>%4%["2"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%2%</Mapping>
+      <Mapping>%4%["3"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%3%</Mapping>
     </Mappings>
     <Foreach ID="1766">
       <Source RefID="1306"/>
@@ -335,9 +313,6 @@
       <Source RefID="1817"/>
     </Data>
     <Data ID="1853" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition1853">
-      <Source RefID="1817"/>
-    </Data>
-    <Data ID="1871" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition1871">
       <Source RefID="1817"/>
     </Data>
     <Data ID="1889" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition1889">
