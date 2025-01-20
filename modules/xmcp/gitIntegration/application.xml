@@ -287,7 +287,7 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.gitintegration.repository.UserCreationData</FqName>
+      <FqName>xmcp.gitintegration.repository.RepositoryUserCreationData</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
   </XMOMEntries>
