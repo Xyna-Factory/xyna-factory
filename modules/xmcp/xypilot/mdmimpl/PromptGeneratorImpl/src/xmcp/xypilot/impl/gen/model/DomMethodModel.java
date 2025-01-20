@@ -78,7 +78,7 @@ public class DomMethodModel extends DomModel {
     }
 
     public String getLatestImplementation() {
-        return latestImplementation;
+        return latestImplementation != null ? latestImplementation : "";
     }
 
     public Operation getTargetMethod() {
