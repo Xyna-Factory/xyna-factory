@@ -56,18 +56,18 @@ public class YangCapabilityUtils {
     }
     String moduleNamespace = module.getMainModule().getNamespace().getUri().toString();
     for (String capability : capabilities) {
-      
+
       //direct match
       if (capability.equals(moduleNamespace)) {
         return true;
       }
-      
+
       //match name
       int index = capability.indexOf("?");
       if(index > 0 && capability.subSequence(0, index).equals(moduleNamespace)) {
         return true;
       }
-      
+
       //default capability
       if(capability.startsWith(Constants.NETCONF_BASE_CAPABILITY_NO_VERSION) && moduleNamespace.equals(Constants.NETCONF_NS)) {
         return true;
@@ -82,12 +82,34 @@ public class YangCapabilityUtils {
     DOM deviceDatatype = loadDeviceDatatype(deviceFqn, workspaceName);
     List<String> unknownMetaTags = deviceDatatype.getUnknownMetaTags();
     Document deviceMeta = loadDeviceMeta(unknownMetaTags);
+
     Element ele = XMLUtils.getChildElementByName(deviceMeta.getDocumentElement(), Constants.TAG_HELLO);
+    if (ele != null) {
+      return loadCapabilitiesFromHelloMessage(ele);
+    }
+    else {
+      return loadCapabilitiesFromYangLibrary(XMLUtils.getChildElementByName(deviceMeta.getDocumentElement(), Constants.TAG_YANG_LIBRARY));
+    }
+  }
+
+  private static List<String> loadCapabilitiesFromHelloMessage(Element ele) {
     ele = XMLUtils.getChildElementByName(ele, Constants.TAG_CAPABILITIES);
     List<Element> capabilities = XMLUtils.getChildElementsByName(ele, Constants.TAG_CAPABILITY);
     List<String> result = new ArrayList<String>();
     for (Element capability : capabilities) {
       result.add(capability.getTextContent());
+    }
+    return result;
+  }
+
+  private static List<String> loadCapabilitiesFromYangLibrary(Element ele) {
+    List<String> result = new ArrayList<String>();
+    List<Element> moduleSets = XMLUtils.getChildElementsByName(ele, Constants.TAG_MODULE_SET);
+    for (Element moduleSet: moduleSets) {
+      List<Element> modules = XMLUtils.getChildElementsByName(moduleSet, Constants.TAG_MODULE);
+      for (Element module : modules) {
+        result.add(XMLUtils.getChildElementByName(module, Constants.TAG_MODULE_NAME).getTextContent());
+      }
     }
     return result;
   }
