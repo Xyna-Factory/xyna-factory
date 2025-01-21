@@ -23,6 +23,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.gip.xyna.xnwh.persistence.Column;
+import com.gip.xyna.xnwh.persistence.ColumnType;
 import com.gip.xyna.xnwh.persistence.Persistable;
 import com.gip.xyna.xnwh.persistence.ResultSetReader;
 import com.gip.xyna.xnwh.persistence.Storable;
@@ -39,6 +40,7 @@ public class XypilotUserConfigStorable extends Storable<XypilotUserConfigStorabl
   public static final String COL_XYPILOTURI = "xypiloturi";
   public static final String COL_MODEL = "model";
   public static final String COL_MAXSUGGESTIONS = "maxsuggestions";
+  public static final String COL_METRICS = "metrics";
 
 
   @Column(name = COL_USER)
@@ -49,6 +51,8 @@ public class XypilotUserConfigStorable extends Storable<XypilotUserConfigStorabl
   private String model;
   @Column(name = COL_MAXSUGGESTIONS)
   private int maxsuggestions;
+  @Column(name = COL_METRICS, type=ColumnType.BLOBBED_JAVAOBJECT)
+  private byte[] metrics;
 
   public static XypilotUseConfigStorableReader reader = new XypilotUseConfigStorableReader();
 
@@ -62,12 +66,13 @@ public class XypilotUserConfigStorable extends Storable<XypilotUserConfigStorabl
   }
 
 
-  public XypilotUserConfigStorable(String user, String xypiloturi, String model, int maxsuggestions) {
+  public XypilotUserConfigStorable(String user, String xypiloturi, String model, int maxsuggestions, String metrics) {
     super();
     this.user = user;
     this.xypiloturi = xypiloturi;
     this.model = model;
     this.maxsuggestions = maxsuggestions;
+    this.metrics = metrics == null ? null : metrics.getBytes();
   }
 
 
@@ -80,6 +85,7 @@ public class XypilotUserConfigStorable extends Storable<XypilotUserConfigStorabl
       result.xypiloturi = rs.getString(COL_XYPILOTURI);
       result.model = rs.getString(COL_MODEL);
       result.maxsuggestions = rs.getInt(COL_MAXSUGGESTIONS);
+      result.metrics = (byte[]) result.readBlobbedJavaObjectFromResultSet(rs, COL_METRICS, result.user);
       return result;
     }
 
@@ -105,6 +111,7 @@ public class XypilotUserConfigStorable extends Storable<XypilotUserConfigStorabl
     xypiloturi = cast.xypiloturi;
     model = cast.model;
     maxsuggestions = cast.maxsuggestions;
+    metrics = cast.metrics;
   }
 
 
@@ -145,6 +152,16 @@ public class XypilotUserConfigStorable extends Storable<XypilotUserConfigStorabl
 
   public void setMaxsuggestions(int maxsuggestions) {
     this.maxsuggestions = maxsuggestions;
+  }
+
+  
+  public String getMetrics() {
+    return metrics == null ? null : new String(metrics);
+  }
+
+  
+  public void setMetrics(String metrics) {
+    this.metrics = metrics == null ? null : metrics.getBytes();
   }
 
 }

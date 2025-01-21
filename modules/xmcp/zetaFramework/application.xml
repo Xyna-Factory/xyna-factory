@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="ZetaFramework" comment="" factoryVersion="" versionName="0.6.55" xmlVersion="1.1">
+<Application applicationName="ZetaFramework" comment="" factoryVersion="" versionName="0.6.56" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -129,6 +129,14 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
         <FqName>xmcp.forms.datatypes.Definition</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.DefinitionEvent</FqName>
+        <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+        <FqName>xmcp.forms.datatypes.DefinitionEventButtonDefinition</FqName>
         <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
