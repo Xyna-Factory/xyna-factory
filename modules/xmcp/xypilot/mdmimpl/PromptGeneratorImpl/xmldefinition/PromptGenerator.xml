@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@
         <Data Label="Xypilot User Config" ReferenceName="XypilotUserConfig" ReferencePath="xmcp.xypilot" VariableName="xypilotUserConfig901"/>
       </Output>
       <Throws>
-        <Exception Label="No XyPilot User Config Exception" VariableName="noXyPilotUserConfigException3" ReferenceName="NoXyPilotUserConfigException" ReferencePath="xmcp.xypilot" />
+        <Exception Label="No XyPilot User Config Exception" ReferenceName="NoXyPilotUserConfigException" ReferencePath="xmcp.xypilot" VariableName="noXyPilotUserConfigException3"/>
       </Throws>
       <SourceCode>
         <CodeSnippet Type="Java">return xmcp.xypilot.PromptGeneratorImpl.loadUserConfig(correlatedXynaOrder);</CodeSnippet>
@@ -55,6 +55,17 @@
       <Output/>
       <SourceCode>
         <CodeSnippet Type="Java">xmcp.xypilot.PromptGeneratorImpl.storeUserConfig(correlatedXynaOrder, xypilotUserConfig902);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Generate Code Suggestions" Name="generateCodeSuggestions" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="2" Label="Context" ReferenceName="Context" ReferencePath="xmcp.yggdrasil.plugin" VariableName="context2"/>
+      </Input>
+      <Output>
+        <Data ID="1" IsList="true" Label="Code Suggestion" ReferenceName="CodeSuggestion" ReferencePath="xmcp.xypilot" VariableName="codeSuggestion1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.xypilot.PromptGeneratorImpl.generateCodeSuggestions(correlatedXynaOrder, context2);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

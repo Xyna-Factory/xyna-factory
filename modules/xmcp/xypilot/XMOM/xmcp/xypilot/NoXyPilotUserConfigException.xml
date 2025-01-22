@@ -15,8 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- --><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Version="1.8" Name="ExceptionStore">
-  <ExceptionType Code="XYPILOT-00001" TypeName="NoXyPilotUserConfigException" TypePath="xmcp.xypilot" Label="No XyPilot User Config Exception" IsAbstract="false" BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception">
+ --><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="XYPILOT-00001" IsAbstract="false" Label="No XyPilot User Config Exception" TypeName="NoXyPilotUserConfigException" TypePath="xmcp.xypilot">
     <Data Label="user" VariableName="user">
       <Meta>
         <Type>String</Type>

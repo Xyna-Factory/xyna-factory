@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,13 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="ContainerDefinition" TypePath="xmcp.forms.datatypes" Label="Container Definition" IsAbstract="true" BaseTypeName="BaseDefinition" BaseTypePath="xmcp.forms.datatypes">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Selected Metric" TypeName="SelectedMetric" TypePath="xmcp.xypilot.metrics" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Children" VariableName="children" IsList="true" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes">
+  <Data Label="Selected" VariableName="selected">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
   </Data>
-  <Data Label="Trigger Change Children" VariableName="triggerChangeChildren" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes">
-  </Data>
+  <Data Label="Metric" ReferenceName="Metric" ReferencePath="xmcp.xypilot.metrics" VariableName="metric"/>
 </DataType>

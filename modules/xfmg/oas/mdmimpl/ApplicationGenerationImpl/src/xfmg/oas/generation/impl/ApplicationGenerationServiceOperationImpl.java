@@ -74,20 +74,20 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
   private static final XynaPropertyBoolean defaultValidation = new XynaPropertyBoolean("xmcp.oas.validation.default", true)
       .setDefaultDocumentation(DocumentationLanguage.DE, "Bestimmt das Standardverhalten, ob validiert werden soll. Gilt sowohl für Provider als auch Client, request und response.")
       .setDefaultDocumentation(DocumentationLanguage.EN, "Default behavior, if it should be validated. Counts for Provider and Client, Request and Response.");
-  
+
   public static final XynaPropertyBoolean createListWrappers = new XynaPropertyBoolean("xfmg.oas.create_list_wrappers", false)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Create an XmomObject for Schemas of type array")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Erzeuge Xmom Objekte für Schemas mit Typ array");
-  
+
   private static final LocalRuntimeContextManagementSecurity localLrcms =
       new LocalRuntimeContextManagementSecurity();
-  private static final SessionManagement sessionManagement = 
+  private static final SessionManagement sessionManagement =
       XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement();
-  private static final FileManagement fileManagement = 
+  private static final FileManagement fileManagement =
       XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getFileManagement();
-  
+
   private static Logger logger = CentralFactoryLogging.getLogger(ApplicationGenerationServiceOperationImpl.class);
-  
+
   public void onDeployment() throws XynaException {
     OverallInformationProvider.onDeployment();
     try {
@@ -98,7 +98,7 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
     } catch (Exception e) {
       logger.error("Could not register oas plugin.", e);
     }
-    
+
     createListWrappers.registerDependency(UserType.Service, "OAS_Base");
   }
 
@@ -140,6 +140,7 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
     plugin.navigationEntryName(entryName);
     plugin.definitionWorkflowFQN("xmcp.oas.fman.GetOASImportHistoryDefinition");
     plugin.pluginRTC(rtc);
+    plugin.path("manager");
     return plugin.instance();
   }
 
@@ -152,9 +153,9 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
 
   @Override
   public void generateApplication(XynaOrderServerExtension correlatedXynaOrder, ApplicationGenerationParameter applicationGenerationParameter1, File file4) {
-    
+
     BuildoasapplicationImpl oasAppBuilder = new BuildoasapplicationImpl();
-    
+
     String specFile = file4.getPath();
     String target = "/tmp/Order_" + correlatedXynaOrder.getId();
 
@@ -185,7 +186,7 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
       createAndImportApplication(correlatedXynaOrder, "xmom-client", target + "_client", specFile, workspace);
     }
   }
-  
+
   private void createAndImportApplication(XynaOrderServerExtension correlatedXynaOrder, String generator, String target, String specFile, String workspace) {
     BuildoasapplicationImpl oasAppBuilder = new BuildoasapplicationImpl();
     try(OASApplicationData data = oasAppBuilder.createOasApp(generator, target, specFile)) {
@@ -196,7 +197,7 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
       }
     }
   }
-  
+
   private void importApplicationAsApplication(XynaOrderServerExtension correlatedXynaOrder, String id) {
     try {
       String user = sessionManagement.resolveSessionToUser(correlatedXynaOrder.getSessionId());
@@ -224,7 +225,7 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
       if (!Files.exists(path)) {
         Files.createDirectories(path);
       }
-      
+
       //copy XMOM folder from application to workspace
       FileUtils.unzip(fileManagement.getAbsolutePath(id), tmpPath.toString(), (f) -> true);
       String appXmomDir = Path.of(tmpPath.toString(), "XMOM").toString();
@@ -262,7 +263,7 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
       importApplicationAsWorkspace(correlatedXynaOrder, id, workspace);
     }
   }
-  
+
   @Override
   public void generateApplicationByManagedFileID(XynaOrderServerExtension correlatedXynaOrder, ApplicationGenerationParameter applicationGenerationParameter2, ManagedFileId managedFileId3) {
     String path = fileManagement.getAbsolutePath(managedFileId3.getId());
