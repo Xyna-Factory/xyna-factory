@@ -46,8 +46,8 @@ import com.gip.xyna.xact.trigger.ssl.WebSphereMQTriggerSSLConfigBuilder;
 import com.gip.xyna.xact.trigger.ssl.WebSphereMQTriggerSSLConfigBuilder.XynaPropertyPrefixForSSLKeystoreConfig;
 import com.gip.xyna.xdev.xfractmod.xmdm.EventListener;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.WebSphereMQConnectData;
-import com.ibm.mq.jms.JMSC;
 import com.ibm.mq.jms.MQConnectionFactory;
+import com.ibm.msg.client.wmq.WMQConstants;
 
 
 public class WebSphereMQTrigger extends EventListener<WebSphereMQTriggerConnection, WebSphereMQStartParameter> {
@@ -271,7 +271,7 @@ public class WebSphereMQTrigger extends EventListener<WebSphereMQTriggerConnecti
   private void openConnection() throws XACT_TriggerCouldNotBeStartedException {
     try {
       MQConnectionFactory factory = new MQConnectionFactory();
-      factory.setTransportType(JMSC.MQJMS_TP_CLIENT_MQ_TCPIP);
+      factory.setTransportType(WMQConstants.WMQ_CM_DIRECT_TCPIP);
       factory.setHostName(startParameter.getHostname());
       factory.setPort(startParameter.getPort());
       factory.setQueueManager(startParameter.getQueueManager());
@@ -363,7 +363,7 @@ public class WebSphereMQTrigger extends EventListener<WebSphereMQTriggerConnecti
       WebSphereMQConnectData connData = (WebSphereMQConnectData) queue.getConnectData();
 
       MQConnectionFactory factory = new MQConnectionFactory();
-      factory.setTransportType(JMSC.MQJMS_TP_CLIENT_MQ_TCPIP);
+      factory.setTransportType(WMQConstants.WMQ_CM_DIRECT_TCPIP);
       factory.setHostName(connData.getHostname());
       factory.setPort(connData.getPort());
       factory.setQueueManager(connData.getQueueManager());
