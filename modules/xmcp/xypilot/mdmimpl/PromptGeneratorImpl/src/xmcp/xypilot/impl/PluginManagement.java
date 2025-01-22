@@ -35,33 +35,41 @@ import xprc.xpce.RuntimeContext;
 
 
 public class PluginManagement {
+  
+  public static final String DEFAULT_PLUGIN = "default:";
+  public static final String MAPPING_LABEL_PLUGIN = "mapingLabel:";
+  public static final String MAPPING_ASSIGNMENT_PLUGIN = "mapingAssignment:";
 
   private static Logger logger = Logger.getLogger("XyPilot");
   private static final Map<String, GenerationButton> pluginEntryNameAndPath = createPluginNameAndPaths();
 
+  private static final String GEN_BTN_FQN = "xmcp.xypilot.GetGenerateButtonDefinition";
+  private static final String GEN_BTN_MAPPING_LABEL = "xmcp.xypilot.GenerateMappingLabel";
+  private static final String GEN_BTN_MAPPING_ASSIGNMENTS = "xmcp.xypilot.GenerateMappingAssignments";
 
   private static Map<String, GenerationButton> createPluginNameAndPaths() {
     Map<String, GenerationButton> result = new HashMap<>();
-    Generation generation = new Generation();
-    createGenerationButton(result, "DTDocu", "modeller/datatype/documentation", generation::genDatatypeDocu);
-    createGenerationButton(result, "DTMem", "modeller/datatype/members", generation::genDatatypeVariables);
-    createGenerationButton(result, "DTMemDocu", "modeller/datatype/members/documentation", generation::genDatatypeVarDocu);
-    createGenerationButton(result, "DTMeth", "modeller/datatype/methods", generation::genMethods);
-    createGenerationButton(result, "DTMethDocu", "modeller/datatype/methods/documentation", generation::genDatatypeMethodDocu);
-    createGenerationButton(result, "DTMethImpl", "modeller/datatype/methods/implementation", generation::genDatatypeMethodImpl);
-    createGenerationButton(result, "EXDocu", "modeller/exception/documentation", generation::genExceptionDocu);
-    createGenerationButton(result, "EXMem", "modeller/exception/members", generation::genExceptionVariables);
-    createGenerationButton(result, "EXMemDocu", "modeller/exception/members/documentation", generation::genExceptionVarDocu);
-    createGenerationButton(result, "EXMess", "modeller/exception/message", generation::genExceptionMessages);
-    createGenerationButton(result, "SGMethDocu", "modeller/servicegroup/methods/documentation", generation::genServiceGroupMethodDocu);
-    createGenerationButton(result, "SGMethImpl", "modeller/servicegroup/methods/implementation", generation::genServiceGroupMethodImpl);
-    
+    Generation gen = new Generation();
+    createGenerationButton(result, "DTDocu", "modeller/datatype/documentation", gen::genDatatypeDocu, GEN_BTN_FQN, DEFAULT_PLUGIN);
+    createGenerationButton(result, "DTMem", "modeller/datatype/members", gen::genDatatypeVariables, GEN_BTN_FQN, DEFAULT_PLUGIN);
+    createGenerationButton(result, "DTMemDocu", "modeller/datatype/members/documentation", gen::genDatatypeVarDocu, GEN_BTN_FQN, DEFAULT_PLUGIN);
+    createGenerationButton(result, "DTMeth", "modeller/datatype/methods", gen::genMethods, GEN_BTN_FQN, DEFAULT_PLUGIN);
+    createGenerationButton(result, "DTMethDocu", "modeller/datatype/methods/documentation", gen::genDatatypeMethodDocu, GEN_BTN_FQN, DEFAULT_PLUGIN);
+    createGenerationButton(result, "DTMethImpl", "modeller/datatype/methods/implementation", gen::genDatatypeMethodImpl, GEN_BTN_FQN, DEFAULT_PLUGIN);
+    createGenerationButton(result, "EXDocu", "modeller/exception/documentation", gen::genExceptionDocu, GEN_BTN_FQN, DEFAULT_PLUGIN);
+    createGenerationButton(result, "EXMem", "modeller/exception/members", gen::genExceptionVariables, GEN_BTN_FQN, DEFAULT_PLUGIN);
+    createGenerationButton(result, "EXMemDocu", "modeller/exception/members/documentation", gen::genExceptionVarDocu, GEN_BTN_FQN, DEFAULT_PLUGIN);
+    createGenerationButton(result, "EXMess", "modeller/exception/message", gen::genExceptionMessages, GEN_BTN_FQN, DEFAULT_PLUGIN);
+    createGenerationButton(result, "SGMethDocu", "modeller/servicegroup/methods/documentation", gen::genServiceGroupMethodDocu, GEN_BTN_FQN, DEFAULT_PLUGIN);
+    createGenerationButton(result, "SGMethImpl", "modeller/servicegroup/methods/implementation", gen::genServiceGroupMethodImpl, GEN_BTN_FQN, DEFAULT_PLUGIN);
+    createGenerationButton(result, "Xypilot: Generate Assignments", "modeller/workflow/mapping", gen::genMappingAssignments, GEN_BTN_MAPPING_ASSIGNMENTS, MAPPING_ASSIGNMENT_PLUGIN);
+    createGenerationButton(result, "Xypilot: Generate Label", "modeller/workflow/mapping", gen::genMappingLabel, GEN_BTN_MAPPING_LABEL, MAPPING_LABEL_PLUGIN);
     return result;
   }
 
 
-  private static void createGenerationButton(Map<String, GenerationButton> map, String name, String path, GenerationInterface method) {
-    map.put(path, new GenerationButton(name, path, method));
+  private static void createGenerationButton(Map<String, GenerationButton> map, String name, String path, GenerationInterface method, String fqn, String type) {
+    map.put(type + path, new GenerationButton(name, path, method, fqn));
   }
 
 
@@ -78,12 +86,12 @@ public class PluginManagement {
   private void managePlugins(RuntimeContext rtc, Consumer<Plugin> consumer) {
     Plugin.Builder builder = new Plugin.Builder();
     builder.pluginRTC(rtc);
-    builder.definitionWorkflowFQN("xmcp.xypilot.GetGenerateButtonDefinition");
     for (GenerationButton btn : pluginEntryNameAndPath.values()) {
+      builder.definitionWorkflowFQN(btn.getWorkflowFqn());
       builder.navigationEntryName(btn.getName());
       builder.navigationEntryLabel(btn.getName());
       builder.path(btn.getPath());
-      consumer.accept(builder.instance());
+      consumer.accept(builder.instance().clone());
     }
 
     builder.definitionWorkflowFQN("xmcp.xypilot.GetManageXyPilotConfigDefinition");
@@ -94,8 +102,8 @@ public class PluginManagement {
   }
 
 
-  public void generate(XynaOrderServerExtension correlatedXynaOrder, Context context) {
-    pluginEntryNameAndPath.get(context.getLocation()).execute(correlatedXynaOrder, context);
+  public void generate(XynaOrderServerExtension correlatedXynaOrder, Context context, String type) {
+    pluginEntryNameAndPath.get(type + context.getLocation()).execute(correlatedXynaOrder, context);
   }
 
 
@@ -103,13 +111,15 @@ public class PluginManagement {
 
     private final String name;
     private final String path;
+    private final String workflowFqn;
     private final GenerationInterface method;
 
-
-    public GenerationButton(String name, String path, GenerationInterface method) {
+    
+    public GenerationButton(String name, String path, GenerationInterface method, String workflowFqn) {
       this.name = name;
       this.path = path;
       this.method = method;
+      this.workflowFqn = workflowFqn;
     }
 
 
@@ -122,6 +132,10 @@ public class PluginManagement {
       return path;
     }
 
+    
+    public String getWorkflowFqn() {
+      return workflowFqn;
+    }
 
     public void execute(XynaOrderServerExtension order, Context c) {
       try {

@@ -28,10 +28,13 @@ import com.gip.xyna.xmcp.xguisupport.messagebus.transfer.MessageInputParameter;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 
+import base.Text;
 import xmcp.xypilot.CodeAnalysisResult;
 import xmcp.xypilot.CodeSuggestion;
 import xmcp.xypilot.Documentation;
 import xmcp.xypilot.ExceptionMessage;
+import xmcp.xypilot.Mapping;
+import xmcp.xypilot.MemberReference;
 import xmcp.xypilot.MemberVariable;
 import xmcp.xypilot.MethodDefinition;
 import xmcp.xypilot.MetricEvaluationResult;
@@ -45,6 +48,7 @@ import xmcp.xypilot.impl.gen.model.DomModel;
 import xmcp.xypilot.impl.gen.model.DomVariableModel;
 import xmcp.xypilot.impl.gen.model.ExceptionModel;
 import xmcp.xypilot.impl.gen.model.ExceptionVariableModel;
+import xmcp.xypilot.impl.gen.model.MappingModel;
 import xmcp.xypilot.impl.gen.pipeline.Pipeline;
 import xmcp.xypilot.impl.gen.util.FilterCallbackInteractionUtils;
 import xmcp.xypilot.impl.locator.DataModelLocator;
@@ -221,6 +225,32 @@ public class Generation {
     publishUpdateMessage(xmomItemReference, "DataType");
   }
   
+  
+  public void genMappingLabel(XynaOrderServerExtension order, Context context) throws Exception {
+    XypilotUserConfig config = getConfigFromOrder(order);
+    XMOMItemReference xmomItemReference = buildItemFromContext(context);
+    MemberReference.Builder builder = new MemberReference.Builder();
+    builder.member(context.getObjectId()).item(xmomItemReference);
+    MemberReference memberReference = builder.instance();
+    MappingModel model = DataModelLocator.getMappingModel(memberReference, order);
+    Pipeline<Text, MappingModel> pipeline = PipelineLocator.getPipeline(config, "mapping-label");
+    Text text = pipeline.run(model, config.getUri()).firstChoice();
+    String labelAreaId = String.format("labelArea%s", context.getObjectId().substring(4)); // ObjectId = "step[ID]"
+    FilterCallbackInteractionUtils.updateMappingLabel(text.getText(), order, memberReference.getItem(), labelAreaId);
+    publishUpdateMessage(xmomItemReference, "Workflow");
+  }
+  
+  public void genMappingAssignments(XynaOrderServerExtension order, Context context) throws Exception {
+    XypilotUserConfig config = getConfigFromOrder(order);
+    XMOMItemReference xmomItemReference = buildItemFromContext(context);
+    MemberReference.Builder builder = new MemberReference.Builder();
+    builder.member(context.getObjectId()).item(xmomItemReference);
+    MemberReference memberReference = builder.instance();
+    MappingModel model = DataModelLocator.getMappingModel(memberReference, order);
+    Pipeline<Mapping, MappingModel> pipeline = PipelineLocator.getPipeline(config, "mapping-assignments");
+    //TODO:
+    publishUpdateMessage(xmomItemReference, "Workflow");
+  }
 
   public List<? extends CodeSuggestion> genCodeSuggestions(XynaOrderServerExtension order, Context context) throws Exception {
     XypilotUserConfig config = getConfigFromOrder(order);
