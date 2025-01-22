@@ -256,31 +256,31 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.gitintegration.ui.CheckoutDefinition</FqName>
-      <Type>DATATYPE</Type>
+      <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.gitintegration.ui.CreateRepositoryConnectionPanel</FqName>
-      <Type>DATATYPE</Type>
+      <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.gitintegration.ui.CreateWorkspacePanel</FqName>
-      <Type>DATATYPE</Type>
+      <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.gitintegration.ui.GitIntegrationManagementDefinition</FqName>
-      <Type>DATATYPE</Type>
+      <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.gitintegration.ui.ManageCredentialsDefinition</FqName>
-      <Type>DATATYPE</Type>
+      <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.gitintegration.ui.PullDefinition</FqName>
-      <Type>DATATYPE</Type>
+      <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.gitintegration.ui.PushDefinition</FqName>
-      <Type>DATATYPE</Type>
+      <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.gitintegration.ui.RepositoryConnectionGroupGuiData</FqName>
