@@ -61,6 +61,8 @@ public class Constants {
   public static final String TAG_MODULE_SET = "module-set";
   public static final String TAG_MODULE = "module";
   public static final String TAG_MODULE_NAME = "name";
+  public static final String TAG_MODULE_NAMESPACE = "namespace";
+  public static final String TAG_MODULE_REVISION = "revision";
 
   public static final String VAL_USECASE = "Usecase";
   public static final String VAL_MODULECOLLECTION = "ModuleCollection";

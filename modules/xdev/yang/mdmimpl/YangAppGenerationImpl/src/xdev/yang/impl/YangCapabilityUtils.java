@@ -43,33 +43,51 @@ import xmcp.yang.YangDevice;
 public class YangCapabilityUtils {
 
 
-  public static List<Module> filterModules(List<Module> modules, List<String> capabilities) {
+  public static List<Module> filterModules(List<Module> modules, List<YangDeviceCapability> capabilities) {
     List<Module> result = new ArrayList<>(modules);
     result.removeIf(x -> !isModuleInCapabilities(capabilities, x));
     return result;
   }
 
 
-  private static boolean isModuleInCapabilities(List<String> capabilities, Module module) {
-    if(module.getMainModule() == null) {
+  private static boolean isModuleInCapabilities(List<YangDeviceCapability> capabilities, Module module) {
+    if (module.getMainModule() == null) {
       return false;
     }
     String moduleNamespace = module.getMainModule().getNamespace().getUri().toString();
-    for (String capability : capabilities) {
+    for (YangDeviceCapability capability : capabilities) {
+      String capabilityNameSpace = capability.getNameSpace();
+      String capabilityRawInfo = capability.getRawInfo();
 
-      //direct match
-      if (capability.equals(moduleNamespace)) {
+      // try direct match
+      if (capabilityRawInfo.equals(moduleNamespace)) {
         return true;
       }
 
-      //match name
-      int index = capability.indexOf("?");
-      if(index > 0 && capability.subSequence(0, index).equals(moduleNamespace)) {
+      // try to match namespace and revision dierectly
+      int index = capabilityRawInfo.indexOf("?");
+      if (index > 0 && capabilityRawInfo.subSequence(0, index).equals(moduleNamespace)) {
         return true;
       }
 
-      //default capability
-      if(capability.startsWith(Constants.NETCONF_BASE_CAPABILITY_NO_VERSION) && moduleNamespace.equals(Constants.NETCONF_NS)) {
+      // comparison for capabilities from a yang-library
+      if (capabilityNameSpace != null && capabilityNameSpace.equals(moduleNamespace)) {
+        String capabilityRevision = capability.getRevision();
+        List<String> revisions = new ArrayList<String>();
+        module.getRevisions().forEach(e -> {
+          revisions.add(e.getArgStr());
+        });
+        if (capabilityRevision == null) {
+          return true;
+        }
+        if (revisions.contains(capabilityRevision)) {
+          return true;
+        }
+        return false;
+      }
+
+      // default capability
+      if (capabilityRawInfo.startsWith(Constants.NETCONF_BASE_CAPABILITY_NO_VERSION) && moduleNamespace.equals(Constants.NETCONF_NS)) {
         return true;
       }
 
@@ -78,37 +96,49 @@ public class YangCapabilityUtils {
   }
 
 
-  public static List<String> loadCapabilities(String deviceFqn, String workspaceName) {
+  public static List<YangDeviceCapability> loadCapabilities(String deviceFqn, String workspaceName) {
     DOM deviceDatatype = loadDeviceDatatype(deviceFqn, workspaceName);
     List<String> unknownMetaTags = deviceDatatype.getUnknownMetaTags();
     Document deviceMeta = loadDeviceMeta(unknownMetaTags);
 
-    Element ele = XMLUtils.getChildElementByName(deviceMeta.getDocumentElement(), Constants.TAG_HELLO);
-    if (ele != null) {
-      return loadCapabilitiesFromHelloMessage(ele);
-    }
-    else {
+    Element helloElement = XMLUtils.getChildElementByName(deviceMeta.getDocumentElement(), Constants.TAG_HELLO);
+    if (helloElement != null) {
+      return loadCapabilitiesFromHelloMessage(helloElement);
+    } else {
       return loadCapabilitiesFromYangLibrary(XMLUtils.getChildElementByName(deviceMeta.getDocumentElement(), Constants.TAG_YANG_LIBRARY));
     }
   }
 
-  private static List<String> loadCapabilitiesFromHelloMessage(Element ele) {
+
+  private static List<YangDeviceCapability> loadCapabilitiesFromHelloMessage(Element ele) {
     ele = XMLUtils.getChildElementByName(ele, Constants.TAG_CAPABILITIES);
-    List<Element> capabilities = XMLUtils.getChildElementsByName(ele, Constants.TAG_CAPABILITY);
-    List<String> result = new ArrayList<String>();
-    for (Element capability : capabilities) {
-      result.add(capability.getTextContent());
+    List<Element> capabilityElements = XMLUtils.getChildElementsByName(ele, Constants.TAG_CAPABILITY);
+    List<YangDeviceCapability> result = new ArrayList<YangDeviceCapability>();
+
+    for (Element ce : capabilityElements) {
+      YangDeviceCapability devCapability = new YangDeviceCapability();
+      devCapability.rawInfo = ce.getTextContent().trim();
+      result.add(devCapability);
     }
     return result;
   }
 
-  private static List<String> loadCapabilitiesFromYangLibrary(Element ele) {
-    List<String> result = new ArrayList<String>();
+
+  private static List<YangDeviceCapability> loadCapabilitiesFromYangLibrary(Element ele) {
+    List<YangDeviceCapability> result = new ArrayList<YangDeviceCapability>();
     List<Element> moduleSets = XMLUtils.getChildElementsByName(ele, Constants.TAG_MODULE_SET);
-    for (Element moduleSet: moduleSets) {
-      List<Element> modules = XMLUtils.getChildElementsByName(moduleSet, Constants.TAG_MODULE);
+
+    for (Element mset : moduleSets) {
+      List<Element> modules = XMLUtils.getChildElementsByName(mset, Constants.TAG_MODULE);
       for (Element module : modules) {
-        result.add(XMLUtils.getChildElementByName(module, Constants.TAG_MODULE_NAME).getTextContent());
+        YangDeviceCapability devCapability = new YangDeviceCapability();
+        devCapability.moduleName = XMLUtils.getChildElementByName(module, Constants.TAG_MODULE_NAME).getTextContent().trim();
+        devCapability.nameSpace = XMLUtils.getChildElementByName(module, Constants.TAG_MODULE_NAMESPACE).getTextContent().trim();
+        Element revisionElement = XMLUtils.getChildElementByName(module, Constants.TAG_MODULE_REVISION);
+        if (revisionElement != null) {
+          devCapability.revision = revisionElement.getTextContent().trim();
+        }
+        result.add(devCapability);
       }
     }
     return result;
@@ -159,6 +189,43 @@ public class YangCapabilityUtils {
       }
     }
     throw new RuntimeException("Could not find device datatype " + deviceFqn + " in " + workspace + " or dependencies");
+  }
+
+
+  public static class YangDeviceCapability {
+
+    private String moduleName;
+    private String nameSpace;
+    private String revision;
+    private String rawInfo;
+
+
+    public String getModuleName() {
+      return moduleName;
+    }
+
+
+    public String getNameSpace() {
+      return nameSpace;
+    }
+
+
+    public String getRevision() {
+      return revision;
+    }
+
+
+    public String getRawInfo() {
+      if (rawInfo != null) { // for capabilities read from hello messages
+        return rawInfo;
+      } else { // for capabilities read from yang-library
+        if (revision != null) {
+          return nameSpace + ":" + revision;
+        } else {
+          return nameSpace;
+        }
+      }
+    }
   }
 
 }
