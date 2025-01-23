@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="GitIntegration Management Definition" TypeName="GitIntegrationManagementDefinition" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="GitIntegration Management Definition" Name="GitIntegrationManagementDefinition">
+    <Input/>
+    <Output>
+      <Data ID="53" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition53"/>
+      <Data ID="1711" IsList="true" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData1711"/>
+    </Output>
+    <ServiceReference ID="1487" Label="Create Repository Connection Panel" ReferenceName="CreateRepositoryConnectionPanel" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="1486"/>
+      <Target RefID="1486"/>
+    </ServiceReference>
+    <ServiceReference ID="1340" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="1339"/>
+      <Target RefID="1339"/>
+    </ServiceReference>
+    <ServiceReference ID="1671" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData.RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="1670"/>
+      <Target RefID="1670"/>
+    </ServiceReference>
+    <Mappings ID="673" Label="Mapping">
+      <Output>
+        <Data ID="706" Label="Add connection - Open Dialog Button Definition" ReferenceName="OpenDialogButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDialogButtonDefinition706">
+          <Source RefID="673"/>
+        </Data>
+        <Target RefID="707"/>
+      </Output>
+      <Mapping>%0%.label="Add Workspace Connection"</Mapping>
+    </Mappings>
+    <Mappings ID="35" Label="Mapping">
+      <Input>
+        <Data ID="740" Label="Add connection - Open Dialog Button Definition" ReferenceName="OpenDialogButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDialogButtonDefinition740">
+          <Source RefID="35"/>
+        </Data>
+        <Source RefID="707"/>
+      </Input>
+      <Output>
+        <Data ID="22" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition22"/>
+        <Target RefID="44"/>
+      </Output>
+      <Mapping>%1%.label="Repository Connections"</Mapping>
+      <Mapping>%1%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDialogButtonDefinition")=%0%</Mapping>
+    </Mappings>
+    <Function ID="1339" Label="List Repository Connection Groups">
+      <Source RefID="1340"/>
+      <Target RefID="1340"/>
+      <Target RefID="1342"/>
+      <Invoke Operation="listRepositoryConnectionGroups" ServiceID="1340"/>
+      <Receive ServiceID="1340">
+        <Target RefID="1342"/>
+      </Receive>
+    </Function>
+    <Function ID="1670" Label="Translate">
+      <Source RefID="1671"/>
+      <Source RefID="1342"/>
+      <Target RefID="1671"/>
+      <Target RefID="1673"/>
+      <Invoke Operation="translate" ServiceID="1671">
+        <Source RefID="1342"/>
+      </Invoke>
+      <Receive ServiceID="1671">
+        <Target RefID="1673"/>
+      </Receive>
+    </Function>
+    <Foreach ID="1674">
+      <Source RefID="1673"/>
+      <Target RefID="1676"/>
+      <InputList RefID="1673">
+        <Data ID="1678" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData1678"/>
+      </InputList>
+      <OutputList RefID="1676">
+        <Data ID="1489" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1489">
+          <Source RefID="1486"/>
+        </Data>
+      </OutputList>
+      <Function ID="1486" Label="Create Repository Connection Panel">
+        <Source RefID="1487"/>
+        <Source RefID="1678"/>
+        <Target RefID="1487"/>
+        <Target RefID="1489"/>
+        <Invoke Operation="CreateRepositoryConnectionPanel" ServiceID="1487">
+          <Source RefID="1678">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Invoke>
+        <Receive ServiceID="1487">
+          <Target RefID="1489"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <Mappings ID="230" Label="Mapping">
+      <Input>
+        <Data ID="247" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition247">
+          <Source RefID="230"/>
+        </Data>
+        <Source RefID="44">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="264" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition264">
+          <Source RefID="230"/>
+        </Data>
+        <Source RefID="1676"/>
+      </Input>
+      <Output>
+        <Data ID="297" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition297">
+          <Source RefID="230"/>
+        </Data>
+        <Target RefID="298"/>
+      </Output>
+      <Mapping>%2%~=%0%</Mapping>
+      <Mapping>%2%.children=concatlists(%0%.children, %1%)</Mapping>
+    </Mappings>
+    <Data ID="44" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition44"/>
+    <Data ID="298" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition298">
+      <Source RefID="230"/>
+    </Data>
+    <Data ID="707" Label="Open Dialog Button Definition" ReferenceName="OpenDialogButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDialogButtonDefinition707">
+      <Source RefID="673"/>
+    </Data>
+    <Data ID="1342" IsList="true" Label="Repository Connection Group" ReferenceName="RepositoryConnectionGroup" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnectionGroup1342">
+      <Source RefID="1339"/>
+    </Data>
+    <Data ID="1673" IsList="true" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData1673">
+      <Source RefID="1670"/>
+    </Data>
+    <Data ID="1676" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1676">
+      <Source RefID="1674"/>
+      <Target RefID="1676"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="298"/>
+      <Source RefID="1673"/>
+      <Target RefID="53"/>
+      <Target RefID="1711"/>
+      <Copy>
+        <Source RefID="298">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="53"/>
+      </Copy>
+      <Copy>
+        <Source RefID="1673"/>
+        <Target RefID="1711"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
