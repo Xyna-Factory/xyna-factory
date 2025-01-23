@@ -16,12 +16,9 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="ContainerDefinition" TypePath="xmcp.forms.datatypes" Label="Container Definition" IsAbstract="true" BaseTypeName="BaseDefinition" BaseTypePath="xmcp.forms.datatypes">
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="ButtonDefinition" BaseTypePath="xmcp.forms.datatypes" IsAbstract="false" Label="Definition Event Button Definition" TypeName="DefinitionEventButtonDefinition" TypePath="xmcp.forms.datatypes" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Children" VariableName="children" IsList="true" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes">
-  </Data>
-  <Data Label="Trigger Change Children" VariableName="triggerChangeChildren" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes">
-  </Data>
+  <Data IsList="true" Label="On Click Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="onClickEvent"/>
 </DataType>

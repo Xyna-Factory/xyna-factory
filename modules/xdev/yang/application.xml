@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="YangAppGenerator" comment="" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
+--><Application applicationName="YangAppGenerator" comment="" factoryVersion="" versionName="1.0.3" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
