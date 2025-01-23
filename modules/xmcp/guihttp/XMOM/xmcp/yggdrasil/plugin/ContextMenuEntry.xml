@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2025 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="ContainerDefinition" TypePath="xmcp.forms.datatypes" Label="Container Definition" IsAbstract="true" BaseTypeName="BaseDefinition" BaseTypePath="xmcp.forms.datatypes">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Context Menu Entry" TypeName="ContextMenuEntry" TypePath="xmcp.yggdrasil.plugin" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Children" VariableName="children" IsList="true" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes">
+  <Data Label="Navigation Entry Label" VariableName="navigationEntryLabel">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
   </Data>
-  <Data Label="Trigger Change Children" VariableName="triggerChangeChildren" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes">
+  <Data Label="Navigation Entry Name" VariableName="navigationEntryName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
   </Data>
+  <Data Label="Navigation Icon Name" VariableName="navigationIconName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="FQN" VariableName="fQN">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Runtime Context" VariableName="runtimeContext" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce"></Data>
 </DataType>

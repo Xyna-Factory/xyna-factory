@@ -23,8 +23,8 @@ class AppCreator:
     with open(application_xml, 'w') as file:
       file.write(filedata)
 
-  def copy_and_set_project_bom_xml(self, projectDir: str, app_dir: str, groupId: str):
-    relpath = os.path.relpath(self.this_dir.parent.parent.absolute(), Path(app_dir).absolute())
+  def copy_and_set_project_bom_xml(self, projectDir: str, groupId: str):
+    relpath = os.path.relpath(self.this_dir.parent.parent.absolute(), Path(projectDir).absolute())
     relpath = relpath.replace("\\", "/")
     relpath += "/installation/build/pom.xml"
     project_bom_xml_template = os.path.join(self.this_dir, "templates", "project.pom.xml.template")
@@ -54,7 +54,7 @@ class AppCreator:
       print("project directory does not exist. Creating it and placing server.properties and pom.xml in it.")
       os.makedirs(projectDir, exist_ok= True)
       self.copy_template(projectDir, "server.properties" )
-      self.copy_and_set_project_bom_xml(projectDir, app_dir, "myproject")
+      self.copy_and_set_project_bom_xml(projectDir, "myproject")
       next_steps.append("* set server.properties")
       next_steps.append("* set groupId in pom.xml")
     else:
@@ -65,11 +65,9 @@ class AppCreator:
     
     relpath = os.path.relpath(self.this_dir.parent.parent.absolute(), Path(app_dir).absolute())
     relpath = relpath.replace("\\", "/")
-    print(f"relpath: {relpath}")
     
     projectRootRelPath =  os.path.relpath(Path(projectDir).parent, Path(appDir).absolute())
     projectRootRelPath = projectRootRelPath.replace("\\", "/")
-    print(f"projectRootRelPath: {projectRootRelPath}")
     
     os.makedirs(app_dir)
     self.copy_template(app_dir, "workspace.properties" )

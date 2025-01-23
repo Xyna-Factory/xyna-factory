@@ -51,6 +51,7 @@ import xdev.yang.impl.Constants;
 import xdev.yang.impl.XmomDbInteraction;
 import xdev.yang.impl.YangCapabilityUtils;
 import xdev.yang.impl.YangStatementTranslator;
+import xdev.yang.impl.YangCapabilityUtils.YangDeviceCapability;
 import xdev.yang.impl.YangStatementTranslator.YangStatementTranslation;
 import xdev.yang.impl.usecase.ListConfiguration.ListLengthConfig;
 import xmcp.yang.LoadYangAssignmentsData;
@@ -98,7 +99,7 @@ public class UseCaseAssignmentUtils {
         return getCandidates(element);
     }
   }
-  
+
   private static ListConfiguration getListConfig(List<ListConfiguration> listConfigs, String path, String namespaces) {
     for(ListConfiguration candidate : listConfigs) {
       if(Objects.equals(candidate.getYang(), path) && Objects.equals(candidate.getNamespaces(), namespaces)) {
@@ -107,13 +108,13 @@ public class UseCaseAssignmentUtils {
     }
     return null;
   }
-  
+
   private static List<YangStatement> getListCandidates(YangStatement statement, ListConfiguration listConfig) {
     List<YangStatement> result = new ArrayList<YangStatement>();
     if(listConfig == null) {
       return result;
     }
-    
+
     ListLengthConfig config = listConfig.getConfig();
     for (int i = 0; i < config.getNumberOfCandidateEntries(); i++) {
       ContainerImpl impl = new ContainerImpl(config.createCandidateName(i) + Constants.LIST_INDEX_SEPARATOR + statement.getArgStr());
@@ -121,7 +122,7 @@ public class UseCaseAssignmentUtils {
       impl.setChildren(statement.getSubElements());
       result.add(impl);
     }
-    
+
     return result;
   }
 
@@ -130,7 +131,7 @@ public class UseCaseAssignmentUtils {
     if(listConfig == null) {
       return result;
     }
-    
+
     ListLengthConfig config = listConfig.getConfig();
     for (int i = 0; i < config.getNumberOfCandidateEntries(); i++) {
       LeafImpl impl = new LeafImpl(config.createCandidateName(i) + Constants.LIST_INDEX_SEPARATOR + statement.getArgStr());
@@ -283,7 +284,7 @@ public class UseCaseAssignmentUtils {
     context.validate();
     modules.addAll(context.getModules());
   }
-  
+
   public static Pair<Integer, Document> loadOperationMeta(String fqn, String workspaceName, String usecase) {
     try {
       RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
@@ -309,7 +310,7 @@ public class UseCaseAssignmentUtils {
       throw new RuntimeException(e);
     }
   }
-  
+
 
   public static Document findYangTypeTag(Operation operation) {
     if (operation.getUnknownMetaTags() == null) {
@@ -328,7 +329,7 @@ public class UseCaseAssignmentUtils {
     }
     return null;
   }
-  
+
 
   public static boolean isYangType(Document xml, String expectedYangType) {
     if (xml == null) {
@@ -337,7 +338,7 @@ public class UseCaseAssignmentUtils {
     Node yangTypeNode = xml.getDocumentElement().getAttributes().getNamedItem(Constants.ATT_YANG_TYPE);
     return yangTypeNode != null && expectedYangType.equals(yangTypeNode.getNodeValue());
   }
-  
+
   public static String readRpcName(Document meta) {
     Element rpcElement = XMLUtils.getChildElementByName(meta.getDocumentElement(), Constants.TAG_RPC);
     if(rpcElement == null) {
@@ -345,7 +346,7 @@ public class UseCaseAssignmentUtils {
     }
     return rpcElement.getTextContent();
   }
-  
+
   public static String readRpcNamespace(Document meta) {
     Element rpcElement = XMLUtils.getChildElementByName(meta.getDocumentElement(), Constants.TAG_RPC_NS);
     if(rpcElement == null) {
@@ -353,17 +354,17 @@ public class UseCaseAssignmentUtils {
     }
     return rpcElement.getTextContent();
   }
-  
-  
+
+
   public static String readDeviceFqn(Document usecaseMeta) {
     Element deviceFqnEle = XMLUtils.getChildElementByName(usecaseMeta.getDocumentElement(), Constants.TAG_DEVICE_FQN);
     return deviceFqnEle.getTextContent();
   }
-  
+
   public static String loadRpcNs(String rpc, String deviceFqn, String workspaceName) {
     List<Module> modules = UseCaseAssignmentUtils.loadModules(workspaceName);
     //filter modules to supported by device
-    List<String> capabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
+    List<YangDeviceCapability> capabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
     modules = YangCapabilityUtils.filterModules(modules, capabilities);
     List<Rpc> candidates = UseCaseAssignmentUtils.findRpcs(modules, rpc);
     if (candidates.size() != 1) {

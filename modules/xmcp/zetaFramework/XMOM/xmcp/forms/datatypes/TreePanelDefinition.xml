@@ -20,4 +20,5 @@
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
+  <Data Label="Structure RTC" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="structureRTC"/>
 </DataType>

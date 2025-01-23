@@ -28,6 +28,7 @@ import com.gip.xyna.utils.collections.Pair;
 
 import xdev.yang.impl.Constants;
 import xdev.yang.impl.YangCapabilityUtils;
+import xdev.yang.impl.YangCapabilityUtils.YangDeviceCapability;
 
 import org.yangcentral.yangkit.model.api.stmt.Module;
 
@@ -55,10 +56,10 @@ public class DetermineUseCaseAssignments {
     if(rpcName == null || rpcNamespace == null) {
       return result;
     }
-    
+
     List<Module> modules = UseCaseAssignmentUtils.loadModules(workspaceName);
     String deviceFqn = UseCaseAssignmentUtils.readDeviceFqn(usecaseMeta);
-    List<String> moduleCapabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
+    List<YangDeviceCapability> moduleCapabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
     modules = YangCapabilityUtils.filterModules(modules, moduleCapabilities);
     result = UseCaseAssignmentUtils.loadPossibleAssignments(modules, rpcName, rpcNamespace, data, usecaseMeta);
     fillValues(usecaseMeta, modules, result);
@@ -77,14 +78,14 @@ public class DetermineUseCaseAssignments {
       fillValue(entry, entryPath, mappings);
     }
   }
-  
+
 
   private void fillValue(UseCaseAssignmentTableData entry, List<MappingPathElement> entryPath, List<UseCaseMapping> mappings) {
     boolean isPrimitive = primitives.contains(entry.getType());
     String value = isPrimitive ? getPrimitiveValue(entryPath, mappings) : getContainerValue(entryPath, mappings);
     entry.unversionedSetValue(value);
   }
-  
+
 
   private String getPrimitiveValue(List<MappingPathElement> entryPath, List<UseCaseMapping> mappings) {
     for (UseCaseMapping mapping : mappings) {
@@ -107,7 +108,7 @@ public class DetermineUseCaseAssignments {
     if (subAssignments > 0) {
       return String.format("contains %s assignment%s", subAssignments, subAssignments == 1 ? "" : "s");
     }
-    
+
     return "";
   }
 }

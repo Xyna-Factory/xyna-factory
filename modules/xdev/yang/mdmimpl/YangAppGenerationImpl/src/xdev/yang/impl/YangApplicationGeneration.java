@@ -91,7 +91,13 @@ public class YangApplicationGeneration {
     Document capabilities;
     try {
       capabilities = XMLUtils.parse(capabilitiesFile);
-      capabilities = XMLUtils.parseString("<Yang type=\""+ Constants.VAL_DEVICE + "\">"+XMLUtils.getXMLString(capabilities.getDocumentElement(), false)+"</Yang>");
+      String docElementTagName = capabilities.getDocumentElement().getTagName();
+      if (docElementTagName.equals(Constants.TAG_HELLO) || docElementTagName.equals(Constants.TAG_YANG_LIBRARY)){
+        capabilities = XMLUtils.parseString("<Yang type=\""+ Constants.VAL_DEVICE + "\">"+XMLUtils.getXMLString(capabilities.getDocumentElement(), false)+"</Yang>");
+      }
+      else {
+        throw new XPRC_XmlParsingException("Format of capabilities file not supported.");
+      }
     } catch (Ex_FileAccessException | XPRC_XmlParsingException e) {
       throw new RuntimeException(e);
     }

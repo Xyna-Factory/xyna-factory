@@ -17,7 +17,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <!--                                               ################# Version auch in blackedition_lib.sh updaten ########### -->
-<Application applicationName="GuiHttp" comment="" factoryVersion="" versionName="1.3.6" xmlVersion="1.1">
+<Application applicationName="GuiHttp" comment="" factoryVersion="" versionName="1.3.10" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">GuiHTTPFilter</Description>
     <Description Lang="EN">GuiHTTPFilter</Description>
@@ -28,7 +28,7 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>ZetaFramework</ApplicationName>
-        <VersionName>0.6.54</VersionName>
+        <VersionName>0.6.56</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>XynaPropertyMgmt</ApplicationName>
@@ -45,10 +45,6 @@
     </RuntimeContextRequirements>
   </ApplicationInfo>
   <Ordertypes>
-    <Ordertype implicitDependency="false">
-      <DestinationKey>xmcp.processmonitor.GetOrderDetails</DestinationKey>
-      <OrderContextMapping>false</OrderContextMapping>
-    </Ordertype>
     <Ordertype implicitDependency="false">
       <DestinationKey>xmcp.processmonitor.GetOrderOverview</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
@@ -1898,10 +1894,6 @@
   	<!-- // AdministrativeVetoServicesImpl -->
 
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.processmonitor.GetOrderDetails</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.processmonitor.GetOrderOverview</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
@@ -2631,6 +2623,18 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yggdrasil.plugin.Plugin</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yggdrasil.plugin.PluginBase</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yggdrasil.plugin.ContextMenuEntry</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yggdrasil.plugin.ContextMenuPlugin</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <!-- // plugin -->

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,33 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="Generate" TypePath="xmcp.xypilot" Label="Generate">
-  <Operation ID="0" Label="Generate" Name="Generate" IsStatic="false">
+ --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Generate" TypeName="Generate" TypePath="xmcp.xypilot" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Generate" Name="Generate">
     <Input>
-      <Data ID="18" Label="Context" VariableName="context18" ReferenceName="Context" ReferencePath="xmcp.yggdrasil.plugin">
-      </Data>
+      <Data ID="18" Label="Context" ReferenceName="Context" ReferencePath="xmcp.yggdrasil.plugin" VariableName="context18"/>
     </Input>
-    <Output>
-    </Output>
+    <Output/>
     <ServiceReference ID="36" Label="PromptGenerator" ReferenceName="PromptGenerator.PromptGenerator" ReferencePath="xmcp.xypilot">
       <Source RefID="35"/>
       <Target RefID="35"/>
     </ServiceReference>
     <Function ID="35" Label="Generate">
-      <Source RefID="36">
-      </Source>
-      <Source RefID="18">
-      </Source>
-      <Target RefID="36">
-      </Target>
-      <Invoke ServiceID="36" Operation="generate">
-        <Source RefID="18">
-        </Source>
+      <Source RefID="36"/>
+      <Source RefID="18"/>
+      <Target RefID="36"/>
+      <Invoke Operation="generate" ServiceID="36">
+        <Source RefID="18"/>
       </Invoke>
-      <Receive ServiceID="36">
-      </Receive>
+      <Receive ServiceID="36"/>
     </Function>
-    <Assign ID="1">
-    </Assign>
+    <Assign ID="1"/>
   </Operation>
 </Service>

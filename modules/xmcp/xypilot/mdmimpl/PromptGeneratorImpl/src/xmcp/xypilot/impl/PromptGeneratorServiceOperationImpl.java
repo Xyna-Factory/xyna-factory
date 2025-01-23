@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,9 @@ package xmcp.xypilot.impl;
 
 import base.math.IntegerNumber;
 import xfmg.xfctrl.appmgmt.RuntimeContextService;
+
+import java.util.List;
+
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
@@ -31,6 +34,7 @@ import xmcp.xypilot.impl.config.XypilotUserConfigStorage;
 import xmcp.xypilot.impl.factory.XynaFactory;
 import xmcp.yggdrasil.plugin.Context;
 import xprc.xpce.RuntimeContext;
+import xmcp.xypilot.CodeSuggestion;
 import xmcp.xypilot.NoXyPilotUserConfigException;
 import xmcp.xypilot.PromptGeneratorServiceOperation;
 
@@ -76,7 +80,7 @@ public class PromptGeneratorServiceOperationImpl implements ExtendedDeploymentTa
 
     @Override
     public void storeUserConfig(XynaOrderServerExtension correlatedXynaOrder, XypilotUserConfig config) {
-      XypilotUserConfigStorage storage = new XypilotUserConfigStorage();
+      XypilotUserConfigStorage storage = new XypilotUserConfigStorage(correlatedXynaOrder);
       String sessionId = correlatedXynaOrder.getSessionId();
       String user = XynaFactory.getInstance().resolveSessionToUser(sessionId);
       config.unversionedSetUser(user);
@@ -97,4 +101,16 @@ public class PromptGeneratorServiceOperationImpl implements ExtendedDeploymentTa
         throw new RuntimeException(e);
       }
     }
+
+
+    @Override
+    public List<? extends CodeSuggestion> generateCodeSuggestions(XynaOrderServerExtension order, Context context) {
+      Generation generation = new Generation();
+      try {
+        return generation.genCodeSuggestions(order, context);
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+
 }

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package xact.queue.impl;
 
 
 import xact.queue.QueueName;
-import xact.queue.WebSphereMQ;
 import xact.queue.admin.WebSphereMQConfig;
 
 import com.gip.xyna.XynaFactory;
