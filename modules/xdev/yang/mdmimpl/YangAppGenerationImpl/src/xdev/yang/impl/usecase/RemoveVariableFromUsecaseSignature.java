@@ -21,6 +21,7 @@ package xdev.yang.impl.usecase;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -32,6 +33,8 @@ import xmcp.yang.fman.UsecaseSignatureEntry;
 
 public class RemoveVariableFromUsecaseSignature {
 
+  private static Logger _logger = Logger.getLogger(RemoveVariableFromUsecaseSignature.class);
+  
   public void removeVariable(XynaOrderServerExtension order, UseCaseTableData usecase, UsecaseSignatureEntry signature) {
     String fqn = usecase.getUsecaseGroup();
     String workspace = usecase.getRuntimeContext();
@@ -46,9 +49,25 @@ public class RemoveVariableFromUsecaseSignature {
       
       uc.updateMeta();
       uc.deleteInput(signature.getIndex());
+      // handle problem that input variable names will be automatically changed by xyna factory
+      uc.updateImplementation("return null;");
       uc.save();
       uc.deploy();
     } catch (Exception e) {
+      _logger.error(e.getMessage(), e);
+      return;
+    }
+    try (Usecase uc = Usecase.open(order, fqn, workspace, usecaseName)) {
+      Document meta = uc.getMeta();      
+      UsecaseImplementationProvider implProvider = new UsecaseImplementationProvider();
+      // adjust implementation java code to changed input variable names
+      String newImpl = implProvider.createImpl(meta, uc.getInputVarNames());
+      uc.updateImplementation(newImpl);
+      uc.save();
+      uc.deploy();      
+    }
+    catch (Exception e) {
+      _logger.error(e.getMessage(), e);
     }
   }
 
