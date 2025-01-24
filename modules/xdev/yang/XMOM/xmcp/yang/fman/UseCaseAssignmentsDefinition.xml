@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,10 @@
       <Data ID="344" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition344"/>
       <Data ID="1401" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData1401"/>
     </Output>
+    <ServiceReference ID="3141" Label="Usecase Assignments Definition - Container" ReferenceName="UsecaseAssignmentsDefinitionContainer" ReferencePath="xmcp.yang.fman">
+      <Source RefID="3140"/>
+      <Target RefID="3140"/>
+    </ServiceReference>
     <ServiceReference ID="511" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="510"/>
       <Target RefID="510"/>
@@ -35,10 +39,6 @@
     <ServiceReference ID="3112" Label="Usecase Assignments Definition - Leaf" ReferenceName="UsecaseAssignmentsDefinitionLeaf" ReferencePath="xmcp.yang.fman">
       <Source RefID="3111"/>
       <Target RefID="3111"/>
-    </ServiceReference>
-    <ServiceReference ID="3141" Label="Usecase Assignments Definition - Container" ReferenceName="UsecaseAssignmentsDefinitionContainer" ReferencePath="xmcp.yang.fman">
-      <Source RefID="3140"/>
-      <Target RefID="3140"/>
     </ServiceReference>
     <ServiceReference ID="3998" Label="Usecase Assignments Definition - List" ReferenceName="UsecaseAssignmentsDefinitionList" ReferencePath="xmcp.yang.fman">
       <Source RefID="3997"/>
@@ -55,7 +55,7 @@
     </Function>
     <Choice ID="2971" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="357"/>
-      <Target RefID="4151"/>
+      <Target RefID="5732"/>
       <Meta>
         <OuterConditionPart>%0%.type==?</OuterConditionPart>
       </Meta>
@@ -80,10 +80,10 @@
         </Function>
         <Assign ID="3042">
           <Source RefID="3114"/>
-          <Target RefID="4151"/>
+          <Target RefID="5732"/>
           <Copy>
             <Source RefID="3114"/>
-            <Target RefID="4151"/>
+            <Target RefID="5732"/>
           </Copy>
         </Assign>
         <Data ID="3114" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3114">
@@ -91,6 +91,7 @@
         </Data>
       </Case>
       <Case Alias="3040" ID="3275" Label="" Premise="%0%.type==&quot;anyxml&quot;"/>
+      <Case Alias="3040" ID="5730" Premise="%0%.type==&quot;anydata&quot;"/>
       <Case ID="3075" Label="" Premise="%0%.type==&quot;container&quot;">
         <Function ID="3140" Label="Usecase Assignments Definition - Container">
           <Source RefID="3141"/>
@@ -106,10 +107,10 @@
         </Function>
         <Assign ID="3077">
           <Source RefID="3143"/>
-          <Target RefID="4151"/>
+          <Target RefID="5732"/>
           <Copy>
             <Source RefID="3143"/>
-            <Target RefID="4151"/>
+            <Target RefID="5732"/>
           </Copy>
         </Assign>
         <Data ID="3143" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3143">
@@ -134,10 +135,10 @@
         </Function>
         <Assign ID="3895">
           <Source RefID="4000"/>
-          <Target RefID="4151"/>
+          <Target RefID="5732"/>
           <Copy>
             <Source RefID="4000"/>
-            <Target RefID="4151"/>
+            <Target RefID="5732"/>
           </Copy>
         </Assign>
         <Data ID="4000" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4000">
@@ -160,10 +161,10 @@
         </Function>
         <Assign ID="2974">
           <Source RefID="3313"/>
-          <Target RefID="4151"/>
+          <Target RefID="5732"/>
           <Copy>
             <Source RefID="3313"/>
-            <Target RefID="4151"/>
+            <Target RefID="5732"/>
           </Copy>
         </Assign>
         <Data ID="3313" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3313">
@@ -174,16 +175,16 @@
     <Data ID="2753" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext2753">
       <Source RefID="510"/>
     </Data>
-    <Data ID="4151" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4151">
+    <Data ID="5732" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5732">
       <Source RefID="2971"/>
     </Data>
     <Assign ID="1">
-      <Source RefID="4151"/>
+      <Source RefID="5732"/>
       <Source RefID="357"/>
       <Target RefID="344"/>
       <Target RefID="1401"/>
       <Copy>
-        <Source RefID="4151"/>
+        <Source RefID="5732"/>
         <Target RefID="344"/>
       </Copy>
       <Copy>
