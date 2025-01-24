@@ -205,20 +205,20 @@ public class FilterCallbackInteractionUtils {
     order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpPut, payload.toString());
   }
   
-  public static void updateMappingAssignments(Mapping mapping, XynaOrderServerExtension order, XMOMItemReference ref, String objectId) throws XynaException {
-    URLPath url = createUrlPath(putChangeTemplate, ref, "workflows", objectId);
+  public static void updateMappingAssignments(Mapping mapping, XynaOrderServerExtension order, XMOMItemReference ref, String stepObjectId, int idx, String exp) throws XynaException {
+    URLPath url = createUrlPath(putChangeTemplate, ref, "workflows", String.format("formula%s-%d_input", stepObjectId.substring(4), idx));
     JsonBuilder payload = new JsonBuilder();
     if(mapping.getExpressionCompletion() != null && !mapping.getExpressionCompletion().isEmpty()) {
       payload = new JsonBuilder();
       payload.startObject();
       payload.addObjectAttribute("content");
-      payload.addStringAttribute("expression", mapping.getExpressionCompletion());
+      payload.addStringAttribute("expression", exp + mapping.getExpressionCompletion());
       payload.endObject();
       payload.endObject();
       order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpPut, payload.toString());
     }
-    //update objectId
-    url = createUrlPath(putInsertTemplate, ref, "workflows", objectId);
+    
+    url = createUrlPath(putInsertTemplate, ref, "workflows", String.format("formulaArea%s", stepObjectId.substring(4)));
     for(MappingAssignment assignment : mapping.getAssignments()) {
       payload = new JsonBuilder();
       payload.startObject();
@@ -226,11 +226,11 @@ public class FilterCallbackInteractionUtils {
       payload.addObjectAttribute("content");
       payload.addStringAttribute("expression", assignment.getExpression());
       payload.addStringAttribute("type", "formula");
-      payload.endObject();
       payload.addListAttribute("variables");
       payload.endList();
       payload.endObject();
-      order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpPut, payload.toString());
+      payload.endObject();
+      order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpPost, payload.toString());
     }
   }
 

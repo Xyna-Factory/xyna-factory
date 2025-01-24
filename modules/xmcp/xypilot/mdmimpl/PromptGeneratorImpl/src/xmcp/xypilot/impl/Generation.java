@@ -248,7 +248,11 @@ public class Generation {
     MemberReference memberReference = builder.instance();
     MappingModel model = DataModelLocator.getMappingModel(memberReference, order);
     Pipeline<Mapping, MappingModel> pipeline = PipelineLocator.getPipeline(config, "mapping-assignments");
-    //TODO:
+    Mapping mapping = pipeline.run(model, config.getUri()).firstChoice();
+    var expressions = model.getMapping().getRawExpressions();
+    int lastAssignmentId = model.getMapping().getRawExpressions().size() - 1;
+    String exp = lastAssignmentId > -1 ? expressions.get(lastAssignmentId) : "";
+    FilterCallbackInteractionUtils.updateMappingAssignments(mapping, order, xmomItemReference, context.getObjectId(), lastAssignmentId, exp);
     publishUpdateMessage(xmomItemReference, "Workflow");
   }
 
