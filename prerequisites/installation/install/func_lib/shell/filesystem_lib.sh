@@ -215,7 +215,7 @@ backup_dir () {
     debug_msg "... done - enough inodes left: ${BOOL_ENOUGH_FREE_INODES} (${STR_MIN_FREE_INODES_NEEDED} < ${STR_INODES_SPACE_ON_DEVICE})"
 
     if [[ "${BOOL_ENOUGH_FREE_INODES:-false}" == "false" ]]; then
-     f_exit_with_message ${EX_INODES} "backup_dir: Unable to backup '${STR_TARGET_DIR}' as '${STR_BACKUP_DIR}'. Not enough inodes (needed: ${STR_MIN_FREE_INODES_NEEDED}, free: ${STR_FREE_SPACE_ON_DEVICE})!"
+     f_exit_with_message ${EX_INODES} "backup_dir: Unable to backup '${STR_TARGET_DIR}' as '${STR_BACKUP_DIR}'. Not enough inodes (needed: ${STR_MIN_FREE_INODES_NEEDED}, free: ${STR_INODES_SPACE_ON_DEVICE})!"
     fi
 
     echo "    + backing up '${STR_TARGET_DIR}' as '${STR_BACKUP_DIR}'"
