@@ -434,7 +434,7 @@ public class RepositoryInteraction {
 
 
   private void processExecs(GitDataContainer container) {
-    List<PullExec> execs = container.exec; //command, path (in repository)
+    List<PullExec> execs = container.exec;
 
     List<Triple<PullExecType, String, String>> exceptions = new ArrayList<>();
     Map<Long, List<ObjectToDeploy>> toDeployByRevision = new HashMap<>();
@@ -442,6 +442,10 @@ public class RepositoryInteraction {
       String repoPath = exec.repoPath;
       String filePath = Path.of(container.repository, repoPath).toString();
       Pair<String, String> fqnAndWorkspace = getFqnAndWorkspaceFromRepoPath(repoPath, container.repository);
+      if(fqnAndWorkspace == null) {
+        exceptions.add(new Triple<>(exec.execType, "unknown", exec.repoPath));
+        continue;
+      }
       String fqn = fqnAndWorkspace.getFirst();
       String workspace = fqnAndWorkspace.getSecond();
       RemovexmomobjectImpl removeXmom = new RemovexmomobjectImpl();
@@ -469,8 +473,7 @@ public class RepositoryInteraction {
 
     if (!exceptions.isEmpty()) {
       List<String> e = exceptions.stream().map(this::formatXmomRegistrationException).collect(Collectors.toList());
-      String exceptionText = String.join("\n\t", e);
-      throw new RuntimeException("Exceptions occurred in " + exceptions.size() + " objects: \n\t" + exceptionText);
+      container.warnings = e;
     }
   }
   
@@ -705,9 +708,10 @@ public class RepositoryInteraction {
 
 
       String path = entry.getChangeType() == ChangeType.ADD ? entry.getNewPath() : entry.getOldPath();
-      PullExecType command = PullExecType.convert(entry.getChangeType());
-      container.exec.add(new PullExec(command, path));
-      
+      if (getFqnAndWorkspaceFromRepoPath(path, container.repository) != null) {
+        PullExecType command = PullExecType.convert(entry.getChangeType());
+        container.exec.add(new PullExec(command, path));
+      }
       container.pull.add(path);
     }
   }
@@ -981,6 +985,7 @@ public class RepositoryInteraction {
     private List<String> pull = new ArrayList<>();
     private List<String> push = new ArrayList<>();
     private List<PullExec> exec = new ArrayList<>(); //command => true=add, false=remove, path
+    private List<String> warnings = new ArrayList<>();
     private CredentialsProvider creds; //only used within this class
     private String user;
     private String mail;
@@ -1000,7 +1005,14 @@ public class RepositoryInteraction {
       sb.append("  Exec: ").append(exec.size()).append(": ").append(String.join(", ", execString)).append("\n");
       sb.append("  Conf: ").append(conflicts.size()).append(": ").append(String.join(", ", conflicts)).append("\n");
       sb.append("  revt: ").append(revert.size()).append(": ").append(String.join(", ", revert)).append("\n");
+      if (!warnings.isEmpty()) {
+        sb.append("  warn: ").append(warnings.size()).append(": ").append(String.join(", ", warnings)).append("\n");
+      }
       return sb.toString();
+    }
+    
+    public boolean containsWarnings() {
+      return warnings.isEmpty();
     }
   }
   
@@ -1009,9 +1021,9 @@ public class RepositoryInteraction {
     private PullExecType execType;
     private String repoPath;
     
-    public PullExec(PullExecType execType, String objectFqn) {
+    public PullExec(PullExecType execType, String repoPath) {
       this.execType = execType;
-      this.repoPath = objectFqn;
+      this.repoPath = repoPath;
     }
     
   }
