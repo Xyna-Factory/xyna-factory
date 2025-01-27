@@ -46,11 +46,12 @@ public class YangSubelementContentHelper {
     return this.getSubelementValueOrNull(ys, org.yangcentral.yangkit.model.api.stmt.StatusStmt.class);
   }
   
+  /*
   public void copyRelevantSubelementValues(YangStatement ys, LoadYangAssignmentsData data) {
     data.setDescription(this.getDescriptionSubelementValueOrNull(ys));
     data.setStatus(this.getStatusSubelementValueOrNull(ys));
   }
-
+  */
   private String getSubelementValueOrNull(YangStatement ys, Class<?> clazz) {
     if (ys == null) { return null; }
     if (clazz == null) { return null; }
