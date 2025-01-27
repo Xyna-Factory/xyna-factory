@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.yangcentral.yangkit.base.YangElement;
+import org.yangcentral.yangkit.model.api.stmt.Anydata;
 import org.yangcentral.yangkit.model.api.stmt.Anyxml;
 import org.yangcentral.yangkit.model.api.stmt.Case;
 import org.yangcentral.yangkit.model.api.stmt.Choice;
@@ -54,6 +55,7 @@ public class YangStatementTranslator {
     result.put(Anyxml.class, new YangStatementTranslation(Constants.TYPE_ANYXML));
     result.put(LeafList.class, new YangStatementTranslation(Constants.TYPE_LEAFLIST));
     result.put(YangList.class, new YangStatementTranslation(Constants.TYPE_LIST));
+    result.put(Anydata.class, new YangStatementTranslation(Constants.TYPE_ANYDATA));
     return result;
   }
 
