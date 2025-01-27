@@ -139,5 +139,18 @@
         <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.deleteAssignment(correlatedXynaOrder, useCaseAssignmentTableData27);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation Label="Update Variable In Usecase Signature" Name="updateVariableInUsecaseSignature" IsStatic="true" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="28" Label="Use Case Table Data" VariableName="useCaseTableData28" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang">
+        </Data>
+        <Data ID="29" Label="UsecaseSignatureEntry" VariableName="usecaseSignatureEntry29" ReferenceName="UsecaseSignatureEntry" ReferencePath="xmcp.yang.fman">
+        </Data>
+      </Input>
+      <Output>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.updateVariableInUsecaseSignature(correlatedXynaOrder, useCaseTableData28, usecaseSignatureEntry29);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>
