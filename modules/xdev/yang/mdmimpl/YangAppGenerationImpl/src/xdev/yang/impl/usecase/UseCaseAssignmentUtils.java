@@ -171,9 +171,10 @@ public class UseCaseAssignmentUtils {
 
 
   private static List<UseCaseAssignmentTableData> loadAssignments(List<YangStatement> subElements, LoadYangAssignmentsData data) {
+    YangSubelementContentHelper helper = new YangSubelementContentHelper();
     List<UseCaseAssignmentTableData> result = new ArrayList<>();
     for (YangStatement element : subElements) {
-      if (isSupportedElement(element)) {
+      if (isSupportedElement(element) && helper.getConfigSubelementValueBoolean(element)) {
         String localName = YangStatementTranslation.getLocalName(element);
         String namespace = YangStatementTranslation.getNamespace(element);
         String keyword = element.getYangKeyword().getLocalName();
@@ -182,6 +183,7 @@ public class UseCaseAssignmentUtils {
         updatedData.unversionedSetTotalYangPath(updatedData.getTotalYangPath() + "/" + localName);
         updatedData.unversionedSetTotalNamespaces(updatedData.getTotalNamespaces() + Constants.NS_SEPARATOR + namespace);
         updatedData.unversionedSetTotalKeywords(updatedData.getTotalKeywords() + " " + keyword);
+        //helper.copyRelevantSubelementValues(element, updatedData);
         builder.loadYangAssignmentsData(updatedData);
         builder.yangPath(localName);
         builder.type(getYangType(element));
