@@ -199,12 +199,12 @@ backup_dir () {
      f_exit_with_message ${EX_NOSPACE} "backup_dir: Unable to backup '${STR_TARGET_DIR}' as '${STR_BACKUP_DIR}'. Not enough space (needed: ${STR_MIN_FREE_SPACE_NEEDED} KB, free: ${STR_FREE_SPACE_ON_DEVICE} KB)!"
     fi
 
-    # Check if enough number od free inodes
+    # Check if enough free inodes are available
     debug_msg "Calculating number of used inodes of '${STR_TARGET_DIR}' ..."
     local STR_INODES_OF_TARGET_DIR=$(${VOLATILE_DU} -s --inodes "${STR_TARGET_DIR}" | ${VOLATILE_AWK} '{ print $1 }')
     debug_msg "... done - number of inodes is: ${STR_INODES_OF_TARGET_DIR}"
 
-    debug_msg "Checking if enough number of inodes is left on device ..."
+    debug_msg "Checking if enough inodes are left on device ..."
     #  Bei 'df' ist die Anzahl der noch verfuegbare Speicher in Spalte 4:
     local STR_INODES_SPACE_ON_DEVICE=$(${VOLATILE_DF} -Pi "${STR_BACKUP_BASE}" | ${VOLATILE_AWK} 'NR > 1 { print $4 }')
     local STR_MIN_FREE_INODES_NEEDED="$(echo "${STR_INODES_OF_TARGET_DIR} 1.01 * p" | LANG="C" ${VOLATILE_DC} | ${VOLATILE_AWK} 'BEGIN { FS="." } { print $1 }')"
