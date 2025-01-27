@@ -83,6 +83,7 @@ public class Constants {
   public static final String TYPE_CHOICE = "choice";
   public static final String TYPE_CASE = "case";
   public static final String TYPE_ANYXML = "anyxml";
+  public static final String TYPE_ANYDATA = "anydata";
   public static final String TYPE_LEAFLIST = "leaf-list";
   public static final String TYPE_LIST = "list";
 

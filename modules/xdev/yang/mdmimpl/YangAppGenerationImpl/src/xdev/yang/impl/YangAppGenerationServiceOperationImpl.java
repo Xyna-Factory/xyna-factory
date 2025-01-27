@@ -49,6 +49,7 @@ import xdev.yang.impl.usecase.LoadUsecaseSignature;
 import xdev.yang.impl.usecase.LoadUsecasesTable;
 import xdev.yang.impl.usecase.RemoveVariableFromUsecaseSignature;
 import xdev.yang.impl.usecase.SaveUsecaseAssignmentAction;
+import xdev.yang.impl.usecase.UpdateVariableInUsecaseSignature;
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.UseCaseAssignmentTableData;
 import xmcp.yang.UseCaseTableData;
@@ -184,4 +185,11 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
     executor.deleteUsecaseAssignment(order, data);
 
   }
+  
+  @Override
+  public void updateVariableInUsecaseSignature(XynaOrderServerExtension order, UseCaseTableData usecase, UsecaseSignatureEntry signature) {
+    UpdateVariableInUsecaseSignature executor = new UpdateVariableInUsecaseSignature();
+    executor.updateVariable(order, usecase, signature);
+  }
+
 }

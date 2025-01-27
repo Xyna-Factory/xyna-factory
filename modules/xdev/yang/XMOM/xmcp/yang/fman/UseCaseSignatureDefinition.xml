@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,7 +88,7 @@
         <Target RefID="2774"/>
       </Output>
       <Mapping>%3%.label=concat("Add ", %0%.text)</Mapping>
-      <Mapping>%3%.dialogDefinitionReference=%2%</Mapping>
+      <Mapping>%3%.dialogDefinitionReference#cast("xmcp.forms.datatypes.FormDefinition")=%2%</Mapping>
     </Mappings>
     <Mappings ID="83" Label="Mapping">
       <Input>
@@ -136,6 +136,7 @@
       <Mapping>%4%.dataPath="%1%"</Mapping>
       <Mapping>%4%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDialogButtonDefinition")=%3%</Mapping>
       <Mapping>%4%.selectionDataPath="%i%, %1%"</Mapping>
+      <Mapping>%4%.triggerRefresh.eventId="yang_uc_sig_refresh"</Mapping>
     </Mappings>
     <Choice ID="1931" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="31"/>
