@@ -183,7 +183,6 @@ public class UseCaseAssignmentUtils {
         updatedData.unversionedSetTotalYangPath(updatedData.getTotalYangPath() + "/" + localName);
         updatedData.unversionedSetTotalNamespaces(updatedData.getTotalNamespaces() + Constants.NS_SEPARATOR + namespace);
         updatedData.unversionedSetTotalKeywords(updatedData.getTotalKeywords() + " " + keyword);
-        //helper.copyRelevantSubelementValues(element, updatedData);
         builder.loadYangAssignmentsData(updatedData);
         builder.yangPath(localName);
         builder.type(getYangType(element));

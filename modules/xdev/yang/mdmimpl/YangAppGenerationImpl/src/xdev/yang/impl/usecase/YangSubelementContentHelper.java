@@ -16,58 +16,42 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-
 package xdev.yang.impl.usecase;
 
 import org.yangcentral.yangkit.base.YangElement;
 import org.yangcentral.yangkit.model.api.stmt.Config;
 import org.yangcentral.yangkit.model.api.stmt.Description;
 import org.yangcentral.yangkit.model.api.stmt.StatusStmt;
+import org.yangcentral.yangkit.model.api.stmt.YangBuiltinStatement;
 import org.yangcentral.yangkit.model.api.stmt.YangStatement;
-import org.yangcentral.yangkit.model.impl.stmt.ConfigImpl;
-
-import xmcp.yang.LoadYangAssignmentsData;
 
 
 public class YangSubelementContentHelper {
     
   public boolean getConfigSubelementValueBoolean(YangStatement ys) {
-    YangStatement result = getSubelementOrNull(ys, Config.class);
+    Config result = getSubelementOrNull(ys, Config.class);
     if (result == null) { return true; }
-    if (result instanceof ConfigImpl) {
-      return ((ConfigImpl) result).isConfig();
-    }
-    String val = result.getArgStr();
-    if (val == null) { return true; }
-    return Boolean.parseBoolean(val.trim());
+    return result.isConfig();
   }
 
-  
   public Description getDescriptionSubelementOrNull(YangStatement ys) {
-    return (Description) getSubelementOrNull(ys, Description.class);
+    return getSubelementOrNull(ys, Description.class);
   }
 
   public StatusStmt getStatusSubelementOrNull(YangStatement ys) {
-    return (StatusStmt) getSubelementOrNull(ys, StatusStmt.class);
+    return getSubelementOrNull(ys, StatusStmt.class);
   }
-  
-  private String getNullOrArgStr(YangStatement ys) {
+
+  protected String getNullOrArgStr(YangStatement ys) {
     return ys == null ? null : ys.getArgStr();
   }
-  
-  public void copyRelevantSubelementValues(YangStatement ys, LoadYangAssignmentsData data) {
-    data.setDescription(getNullOrArgStr(getDescriptionSubelementOrNull(ys)));
-    data.setStatus(getNullOrArgStr(getStatusSubelementOrNull(ys)));
-  }
-  
 
-  private YangStatement getSubelementOrNull(YangStatement ys, Class<?> clazz) {
+  
+  private <T extends YangBuiltinStatement> T getSubelementOrNull(YangStatement ys, Class<T> clazz) {
     if (ys == null) { return null; }
-    if (clazz == null) { return null; }
     for (YangElement elem: ys.getSubElements()) {
-      if (!(elem instanceof YangStatement)) { continue; }
-      if (clazz.isAssignableFrom(elem.getClass())) {
-        return (YangStatement) elem;
+      if (clazz.isInstance(elem)) {
+        return clazz.cast(elem);
       }
     }
     return null;
