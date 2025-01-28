@@ -1012,7 +1012,7 @@ public class RepositoryInteraction {
     }
     
     public boolean containsWarnings() {
-      return warnings.isEmpty();
+      return !warnings.isEmpty();
     }
   }
   
