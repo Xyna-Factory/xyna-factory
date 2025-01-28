@@ -20,7 +20,11 @@
 package xdev.yang.impl.usecase;
 
 import org.yangcentral.yangkit.base.YangElement;
+import org.yangcentral.yangkit.model.api.stmt.Config;
+import org.yangcentral.yangkit.model.api.stmt.Description;
+import org.yangcentral.yangkit.model.api.stmt.StatusStmt;
 import org.yangcentral.yangkit.model.api.stmt.YangStatement;
+import org.yangcentral.yangkit.model.impl.stmt.ConfigImpl;
 
 import xmcp.yang.LoadYangAssignmentsData;
 
@@ -28,41 +32,45 @@ import xmcp.yang.LoadYangAssignmentsData;
 public class YangSubelementContentHelper {
     
   public boolean getConfigSubelementValueBoolean(YangStatement ys) {
-    String val = this.getConfigSubelementValueOrNull(ys);
+    YangStatement result = getSubelementOrNull(ys, Config.class);
+    if (result == null) { return true; }
+    if (result instanceof ConfigImpl) {
+      return ((ConfigImpl) result).isConfig();
+    }
+    String val = result.getArgStr();
     if (val == null) { return true; }
-    if ("false".equals(val.trim())) { return false; }
-    return true;
+    return Boolean.parseBoolean(val.trim());
   }
 
-  public String getConfigSubelementValueOrNull(YangStatement ys) {
-    return this.getSubelementValueOrNull(ys, org.yangcentral.yangkit.model.api.stmt.Config.class);
-  }
   
-  public String getDescriptionSubelementValueOrNull(YangStatement ys) {
-    return this.getSubelementValueOrNull(ys, org.yangcentral.yangkit.model.api.stmt.Description.class);
+  public Description getDescriptionSubelementOrNull(YangStatement ys) {
+    return (Description) getSubelementOrNull(ys, Description.class);
   }
 
-  public String getStatusSubelementValueOrNull(YangStatement ys) {
-    return this.getSubelementValueOrNull(ys, org.yangcentral.yangkit.model.api.stmt.StatusStmt.class);
+  public StatusStmt getStatusSubelementOrNull(YangStatement ys) {
+    return (StatusStmt) getSubelementOrNull(ys, StatusStmt.class);
   }
   
-  /*
+  private String getNullOrArgStr(YangStatement ys) {
+    return ys == null ? null : ys.getArgStr();
+  }
+  
   public void copyRelevantSubelementValues(YangStatement ys, LoadYangAssignmentsData data) {
-    data.setDescription(this.getDescriptionSubelementValueOrNull(ys));
-    data.setStatus(this.getStatusSubelementValueOrNull(ys));
+    data.setDescription(getNullOrArgStr(getDescriptionSubelementOrNull(ys)));
+    data.setStatus(getNullOrArgStr(getStatusSubelementOrNull(ys)));
   }
-  */
-  private String getSubelementValueOrNull(YangStatement ys, Class<?> clazz) {
+  
+
+  private YangStatement getSubelementOrNull(YangStatement ys, Class<?> clazz) {
     if (ys == null) { return null; }
     if (clazz == null) { return null; }
     for (YangElement elem: ys.getSubElements()) {
       if (!(elem instanceof YangStatement)) { continue; }
       if (clazz.isAssignableFrom(elem.getClass())) {
-        String val = ((YangStatement) elem).getArgStr();
-        return val; 
+        return (YangStatement) elem;
       }
     }
     return null;
   }
-
+    
 }
