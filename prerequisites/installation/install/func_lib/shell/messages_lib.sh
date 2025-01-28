@@ -39,6 +39,7 @@ EX_TEMPFAIL=75
 EX_PROTOCOL=76
 EX_NOPERM=77
 EX_XYNA=78
+EX_INODES=79
 
 #  Eingabeparameter: Fehlercode
 #  Rueckgabewert   : String mit der ausfuerhlichen Fehlerbeschreibung
