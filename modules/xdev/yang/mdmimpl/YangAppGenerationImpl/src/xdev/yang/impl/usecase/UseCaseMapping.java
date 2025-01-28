@@ -34,23 +34,23 @@ public class UseCaseMapping implements Comparable<UseCaseMapping> {
   private String namespace;
   private String value;
   private String keyword;
-  
+
   public UseCaseMapping(String mappingYangPath, String namespace, String value, String keyword) {
     this.mappingYangPath = mappingYangPath;
     this.namespace = namespace;
     this.value = value;
     this.keyword = keyword;
   }
-  
+
   public static Element loadMappingsElement(Document document) {
     return XMLUtils.getChildElementByName(document.getDocumentElement(), Constants.TAG_MAPPINGS);
   }
-  
+
   public static List<Element> loadMappingElements(Document document) {
     Element mappingsNode = XMLUtils.getChildElementByName(document.getDocumentElement(), Constants.TAG_MAPPINGS);
     return XMLUtils.getChildElementsByName(mappingsNode, Constants.TAG_MAPPING);
   }
-  
+
   public static List<UseCaseMapping> loadMappings(Document document) {
     List<Element> mappingNodes = loadMappingElements(document);
     List<UseCaseMapping> result = new ArrayList<UseCaseMapping>();
@@ -68,14 +68,14 @@ public class UseCaseMapping implements Comparable<UseCaseMapping> {
     String keyword = e.getAttribute(Constants.ATT_MAPPING_KEYWORD);
     return new UseCaseMapping(yangPath, namespace, value, keyword);
   }
-  
+
   public void updateNode(Element e) {
     e.setAttribute(Constants.ATT_MAPPING_YANGPATH, mappingYangPath);
     e.setAttribute(Constants.ATT_MAPPING_NAMESPACE, namespace);
     e.setAttribute(Constants.ATT_MAPPING_VALUE, value);
     e.setAttribute(Constants.ATT_MAPPING_KEYWORD, keyword);
   }
-  
+
 
   public void createAndAddElement(Document meta) {
     Element newMappingEle = meta.createElement(Constants.TAG_MAPPING);
@@ -88,12 +88,12 @@ public class UseCaseMapping implements Comparable<UseCaseMapping> {
   public List<MappingPathElement> createPathList() {
     return createPathList(mappingYangPath, namespace, keyword);
   }
-  
-  
+
+
   public static List<MappingPathElement> createPathList(String totalYangPath, String totalNamespaces, String totalKeywords) {
     List<MappingPathElement> result = new ArrayList<>();
     String[] yangPathElements = totalYangPath.split("\\/");
-    String[] namespaceElements = totalNamespaces.split(Constants.NS_SEPARATOR);
+    String[] namespaceElements = totalNamespaces.split("\\" + Constants.NS_SEPARATOR);
     String[] totalKeywordElements = totalKeywords.split(" ");
     if (yangPathElements.length != namespaceElements.length) {
       throw new RuntimeException("yangPathElement count does not match namespace: " + yangPathElements.length + ": "
@@ -104,10 +104,10 @@ public class UseCaseMapping implements Comparable<UseCaseMapping> {
       MappingPathElement element = new MappingPathElement(yangPathElements[i], namespaceElements[i], totalKeywordElements[i]);
       result.add(element);
     }
-    
+
     return result;
   }
-  
+
 
   public boolean match(List<MappingPathElement> pathList) {
     List<MappingPathElement> myPathList = createPathList();
@@ -124,28 +124,28 @@ public class UseCaseMapping implements Comparable<UseCaseMapping> {
     return true;
   }
 
-  
+
 
   public String getMappingYangPath() {
     return mappingYangPath;
   }
 
-  
+
   public void setMappingYangPath(String mappingYangPath) {
     this.mappingYangPath = mappingYangPath;
   }
 
-  
+
   public String getNamespace() {
     return namespace;
   }
 
-  
+
   public void setNamespace(String namespace) {
     this.namespace = namespace;
   }
 
-  
+
   public String getValue() {
     return value;
   }

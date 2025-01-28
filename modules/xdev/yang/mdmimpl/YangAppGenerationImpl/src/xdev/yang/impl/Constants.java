@@ -63,6 +63,7 @@ public class Constants {
   public static final String TAG_MODULE_NAME = "name";
   public static final String TAG_MODULE_NAMESPACE = "namespace";
   public static final String TAG_MODULE_REVISION = "revision";
+  public static final String TAG_MODULE_FEATURES = "features";
 
   public static final String VAL_USECASE = "Usecase";
   public static final String VAL_MODULECOLLECTION = "ModuleCollection";
@@ -86,7 +87,7 @@ public class Constants {
   public static final String TYPE_LEAFLIST = "leaf-list";
   public static final String TYPE_LIST = "list";
 
-  public static final String NS_SEPARATOR = "§";
+  public static final String NS_SEPARATOR = "?";
   public static final String LIST_INDEX_SEPARATOR = ") ";
 
 
