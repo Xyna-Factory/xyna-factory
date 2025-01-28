@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 
@@ -34,7 +33,7 @@ public class UpdateVariableInUsecaseSignature {
 
   private static Logger _logger = Logger.getLogger(UpdateVariableInUsecaseSignature.class);
 
-  public void updateVariable(XynaOrderServerExtension order, UseCaseTableData usecase, UsecaseSignatureEntry signature) {    
+  public void updateVariable(XynaOrderServerExtension order, UseCaseTableData usecase, UsecaseSignatureEntry signature) {
     String fqn = usecase.getUsecaseGroup();
     String workspace = usecase.getRuntimeContext();
     String usecaseName = usecase.getUseCase();
@@ -70,15 +69,15 @@ public class UpdateVariableInUsecaseSignature {
       _logger.error(e.getMessage(), e);
       return;
     }
-    
+
     try (Usecase uc = Usecase.open(order, fqn, workspace, usecaseName)) {
-      Document meta = uc.getMeta();      
+      Document meta = uc.getMeta();
       UsecaseImplementationProvider implProvider = new UsecaseImplementationProvider();
       // adjust implementation java code to changed input variable names
       String newImpl = implProvider.createImpl(meta, uc.getInputVarNames());
       uc.updateImplementation(newImpl);
       uc.save();
-      uc.deploy();      
+      uc.deploy();
     }
     catch (Exception e) {
       _logger.error(e.getMessage(), e);
