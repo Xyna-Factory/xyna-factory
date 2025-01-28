@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Create Repository Connection Panel" TypeName="CreateRepositoryConnectionPanel" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Create Repository Connection Panel" Name="CreateRepositoryConnectionPanel">
+    <Input>
+      <Data ID="1202" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData1202"/>
+    </Input>
+    <Output>
+      <Data ID="10" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10"/>
+    </Output>
+    <ServiceReference ID="3408" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="3407"/>
+      <Target RefID="3407"/>
+    </ServiceReference>
+    <ServiceReference ID="1731" Label="Create Workspace Panel" ReferenceName="CreateWorkspacePanel" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="1730"/>
+      <Target RefID="1730"/>
+    </ServiceReference>
+    <Function ID="3407" Label="get Own RuntimeContext">
+      <Source RefID="3408"/>
+      <Target RefID="3408"/>
+      <Target RefID="3410"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="3408"/>
+      <Receive ServiceID="3408">
+        <Target RefID="3410"/>
+      </Receive>
+    </Function>
+    <Mappings ID="88" Label="Mapping">
+      <Input>
+        <Data ID="1223" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData1223">
+          <Source RefID="88"/>
+        </Data>
+        <Source RefID="1202"/>
+      </Input>
+      <Output>
+        <Data ID="105" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection105">
+          <Source RefID="88"/>
+        </Data>
+        <Target RefID="106"/>
+      </Output>
+      <Output>
+        <Data ID="916" IsList="true" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection916">
+          <Source RefID="88"/>
+        </Data>
+        <Target RefID="917"/>
+      </Output>
+      <Output>
+        <Data ID="1305" IsList="true" Label="Connection indices - IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber1305">
+          <Source RefID="88"/>
+        </Data>
+        <Target RefID="1306"/>
+      </Output>
+      <Output>
+        <Data ID="1428" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository1428">
+          <Source RefID="88"/>
+        </Data>
+        <Target RefID="1429"/>
+      </Output>
+      <Output>
+        <Data ID="1719" Label="Group Index - IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber1719">
+          <Source RefID="88"/>
+        </Data>
+        <Target RefID="1720"/>
+      </Output>
+      <Mapping>%1%=%0%.repositoryConnectionGroup.repositoryConnection["0"]</Mapping>
+      <Mapping>%2%=%0%.repositoryConnectionGroup.repositoryConnection</Mapping>
+      <Mapping>%3%=%0%.repositoryConnectionIndices</Mapping>
+      <Mapping>%4%=%0%.repositoryConnectionGroup.repository</Mapping>
+      <Mapping>%5%.value=%0%.groupIndex</Mapping>
+    </Mappings>
+    <Mappings ID="2562" Label="Mapping">
+      <Input>
+        <Data ID="2629" Label="Group Index - IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber2629">
+          <Source RefID="2562"/>
+        </Data>
+        <Source RefID="1720">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="2579" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text2579">
+          <Source RefID="2562"/>
+        </Data>
+        <Target RefID="2580"/>
+      </Output>
+      <Mapping>%1%.text=concat("%0%.", %0%.value, ".repositoryConnectionGroup.repository")</Mapping>
+    </Mappings>
+    <Mappings ID="1817" Label="Mapping">
+      <Input>
+        <Data ID="2545" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text2545">
+          <Source RefID="1817"/>
+        </Data>
+        <Source RefID="2580"/>
+      </Input>
+      <Input>
+        <Data ID="3435" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext3435">
+          <Source RefID="1817"/>
+        </Data>
+        <Source RefID="3410"/>
+      </Input>
+      <Output>
+        <Data ID="1954" Label="pull - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition1954">
+          <Source RefID="1817"/>
+        </Data>
+        <Target RefID="1955"/>
+      </Output>
+      <Output>
+        <Data ID="1834" Label="push - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition1834">
+          <Source RefID="1817"/>
+        </Data>
+        <Target RefID="1835"/>
+      </Output>
+      <Output>
+        <Data ID="1852" Label="checkout - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition1852">
+          <Source RefID="1817"/>
+        </Data>
+        <Target RefID="1853"/>
+      </Output>
+      <Output>
+        <Data ID="1888" Label="manage credentials - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition1888">
+          <Source RefID="1817"/>
+        </Data>
+        <Target RefID="1889"/>
+      </Output>
+      <Mapping>%2%.label="pull"</Mapping>
+      <Mapping>%2%.dataPath=%0%.text</Mapping>
+      <Mapping>%2%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").dataPath=%0%.text</Mapping>
+      <Mapping>%2%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%1%</Mapping>
+      <Mapping>%2%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.PullDefinition"</Mapping>
+      <Mapping>%3%.label="push"</Mapping>
+      <Mapping>%3%.dataPath=%0%.text</Mapping>
+      <Mapping>%3%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").dataPath=%0%.text</Mapping>
+      <Mapping>%3%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%1%</Mapping>
+      <Mapping>%3%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.PushDefinition"</Mapping>
+      <Mapping>%4%.label="checkout"</Mapping>
+      <Mapping>%4%.dataPath=%0%.text</Mapping>
+      <Mapping>%4%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").dataPath=%0%.text</Mapping>
+      <Mapping>%4%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%1%</Mapping>
+      <Mapping>%4%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.CheckoutDefinition"</Mapping>
+      <Mapping>%5%.label="manage credentials"</Mapping>
+      <Mapping>%5%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").dataPath=%0%.text</Mapping>
+      <Mapping>%5%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%1%</Mapping>
+      <Mapping>%5%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.ManageCredentialsDefinition"</Mapping>
+    </Mappings>
+    <Mappings ID="309" Label="Mapping">
+      <Input>
+        <Data ID="2076" Label="pull - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition2076">
+          <Source RefID="309"/>
+        </Data>
+        <Source RefID="1955">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="2093" Label="push - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition2093">
+          <Source RefID="309"/>
+        </Data>
+        <Source RefID="1835">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="2110" Label="checkout - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition2110">
+          <Source RefID="309"/>
+        </Data>
+        <Source RefID="1853">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="2144" Label="manage credentials - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition2144">
+          <Source RefID="309"/>
+        </Data>
+        <Source RefID="1889">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="318" IsList="true" Label="Button Definition" ReferenceName="ButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="buttonDefinition318">
+          <Source RefID="309"/>
+        </Data>
+        <Target RefID="319"/>
+      </Output>
+      <Mapping>%4%["0"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%0%</Mapping>
+      <Mapping>%4%["1"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%1%</Mapping>
+      <Mapping>%4%["2"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%2%</Mapping>
+      <Mapping>%4%["3"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%3%</Mapping>
+    </Mappings>
+    <Foreach ID="1766">
+      <Source RefID="1306"/>
+      <Target RefID="1768"/>
+      <InputList RefID="1306">
+        <Data ID="1767" Label="IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber1767"/>
+      </InputList>
+      <OutputList RefID="1768">
+        <Data ID="1733" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1733">
+          <Source RefID="1730"/>
+        </Data>
+      </OutputList>
+      <Function ID="1730" Label="Create Workspace Panel">
+        <Source RefID="1731"/>
+        <Source RefID="1720"/>
+        <Source RefID="1767"/>
+        <Source RefID="917"/>
+        <Target RefID="1731"/>
+        <Target RefID="1733"/>
+        <Invoke Operation="CreateWorkspacePanel" ServiceID="1731">
+          <Source RefID="1720">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+          <Source RefID="1767">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+          <Source RefID="917"/>
+        </Invoke>
+        <Receive ServiceID="1731">
+          <Target RefID="1733"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <Mappings ID="23" Label="Mapping">
+      <Input>
+        <Data ID="155" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection155">
+          <Source RefID="23"/>
+        </Data>
+        <Source RefID="106">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="284" IsList="true" Label="Button Definition" ReferenceName="ButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="buttonDefinition284">
+          <Source RefID="23"/>
+        </Data>
+        <Source RefID="319">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="551" IsList="true" Label="WorkspacePanels - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition551">
+          <Source RefID="23"/>
+        </Data>
+        <Source RefID="1768"/>
+      </Input>
+      <Output>
+        <Data ID="32" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition32">
+          <Source RefID="23"/>
+        </Data>
+        <Target RefID="33"/>
+      </Output>
+      <Mapping>%3%.label=%0%.path</Mapping>
+      <Mapping>%3%.header.rightArea.children=%1%</Mapping>
+      <Mapping>%3%.children=%2%</Mapping>
+    </Mappings>
+    <Data ID="33" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition33">
+      <Source RefID="23"/>
+    </Data>
+    <Data ID="106" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection106">
+      <Source RefID="88"/>
+    </Data>
+    <Data ID="319" IsList="true" Label="Button Definition" ReferenceName="ButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="buttonDefinition319">
+      <Source RefID="309"/>
+    </Data>
+    <Data ID="917" IsList="true" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection917">
+      <Source RefID="88"/>
+    </Data>
+    <Data ID="1306" IsList="true" Label="IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber1306">
+      <Source RefID="88"/>
+    </Data>
+    <Data ID="1429" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository1429">
+      <Source RefID="88"/>
+    </Data>
+    <Data ID="1720" Label="IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber1720">
+      <Source RefID="88"/>
+    </Data>
+    <Data ID="1768" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1768">
+      <Source RefID="1766"/>
+      <Target RefID="1768"/>
+    </Data>
+    <Data ID="1835" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition1835">
+      <Source RefID="1817"/>
+    </Data>
+    <Data ID="1853" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition1853">
+      <Source RefID="1817"/>
+    </Data>
+    <Data ID="1889" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition1889">
+      <Source RefID="1817"/>
+    </Data>
+    <Data ID="1955" Label="push - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition1955">
+      <Source RefID="1817"/>
+    </Data>
+    <Data ID="2580" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text2580">
+      <Source RefID="2562"/>
+    </Data>
+    <Data ID="3410" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext3410">
+      <Source RefID="3407"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="33"/>
+      <Target RefID="10"/>
+      <Copy>
+        <Source RefID="33"/>
+        <Target RefID="10"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

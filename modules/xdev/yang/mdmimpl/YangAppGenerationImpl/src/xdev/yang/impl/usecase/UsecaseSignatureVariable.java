@@ -20,6 +20,7 @@ package xdev.yang.impl.usecase;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -27,8 +28,11 @@ import com.gip.xyna.utils.exceptions.utils.XMLUtils;
 
 import xdev.yang.impl.Constants;
 
+
 public class UsecaseSignatureVariable {
 
+  private static Logger _logger = Logger.getLogger(UsecaseSignatureVariable.class);
+  
   private String fqn;
   private String varName;
   
@@ -66,12 +70,24 @@ public class UsecaseSignatureVariable {
     }
     return result;
   }
-  
+
+  public static void overwriteSignatureEntryAtIndex(Document document, String location, int index, 
+                                                    UsecaseSignatureVariable newValues) {
+    List<Element> signatureEntryElements = loadSignatureEntryElements(document, location);
+    if (index >= signatureEntryElements.size()) {
+      throw new IllegalArgumentException("Could not find xml element 'SignatureEntry' with list index " + index +
+                                         " at location attribute " + location);
+    }
+    Element elem = signatureEntryElements.get(index);
+    newValues.updateNode(elem);
+  }
+
+
   public void updateNode(Element e) {
     e.setAttribute(Constants.ATT_SIGNATURE_ENTRY_FQN, fqn);
     e.setAttribute(Constants.ATT_SIGNATURE_ENTRY_VARNAME, varName);
   }
-  
+
   public void createAndAddElement(Document meta, String location) {
     Element signatureElement = loadSignatureElement(meta, location);
     Element newEntryNode = meta.createElement(Constants.TAG_SIGNATURE_ENTRY);
@@ -79,12 +95,12 @@ public class UsecaseSignatureVariable {
     signatureElement.appendChild(newEntryNode);
   }
 
-  
+
   public String getFqn() {
     return fqn;
   }
 
-  
+
   public String getVarName() {
     return varName;
   }
