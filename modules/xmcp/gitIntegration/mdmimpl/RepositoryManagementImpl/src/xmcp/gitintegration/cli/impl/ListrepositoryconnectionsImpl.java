@@ -20,17 +20,25 @@ package xmcp.gitintegration.cli.impl;
 
 
 import java.io.OutputStream;
+import java.util.List;
+
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import xmcp.gitintegration.cli.generated.Listrepositoryconnections;
 import xmcp.gitintegration.impl.RepositoryManagementImpl;
+import xmcp.gitintegration.repository.RepositoryConnection;
 
 
 
 public class ListrepositoryconnectionsImpl extends XynaCommandImplementation<Listrepositoryconnections> {
 
   public void execute(OutputStream statusOutputStream, Listrepositoryconnections payload) throws XynaException {
-    writeToCommandLine(statusOutputStream, RepositoryManagementImpl.listRepositoryConnections());
+    List<RepositoryConnection> data = RepositoryManagementImpl.listRepositoryConnections();
+    String format = "Repository: '%s' SubPath: '%s' Workspace: '%s'\n";
+    for(RepositoryConnection connection : data) {
+      String line = String.format(format, connection.getPath(), connection.getSubpath(), connection.getWorkspaceName());
+      writeToCommandLine(statusOutputStream, line);
+    }
   }
 
 }

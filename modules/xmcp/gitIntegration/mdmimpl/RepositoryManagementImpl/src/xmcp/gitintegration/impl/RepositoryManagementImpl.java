@@ -357,11 +357,24 @@ public class RepositoryManagementImpl {
   }
 
 
-  public static String listRepositoryConnections() {
-    return String.join("\n", loadRepositoryConnections().stream().map(storable -> "Workspace: '" + storable.getWorkspacename()
-        + "', Path: '" + storable.getPath() + "', SubPath: '" + storable.getSubpath() + "', Splitted: '" + storable.getSplitted() + "'").collect(Collectors.toList()));
+  public static List<RepositoryConnection> listRepositoryConnections() {
+    List<RepositoryConnection> result = new ArrayList<>();
+    List<RepositoryConnectionStorable> storables = loadRepositoryConnections();
+    for(RepositoryConnectionStorable storable : storables) {
+      result.add(convert(storable));
+    }
+    return result;
   }
 
+  private static RepositoryConnection convert(RepositoryConnectionStorable storable) {
+    RepositoryConnection.Builder result = new RepositoryConnection.Builder();
+    result.path(storable.getPath())
+        .savedinrepo(storable.getSavedinrepo())
+        .splitted(storable.getSplitted())
+        .subpath(storable.getSubpath())
+        .workspaceName(storable.getWorkspacename());
+    return result.instance();
+  }
 
   public static String removeRepositoryConnection(String workspace, boolean full, boolean delete) {
     List<? extends RepositoryConnectionStorable> storables = loadRepositoryConnections();
@@ -422,7 +435,7 @@ public class RepositoryManagementImpl {
   }
 
 
-  public static List<? extends RepositoryConnectionStorable> loadRepositoryConnections() {
+  public static List<RepositoryConnectionStorable> loadRepositoryConnections() {
     List<RepositoryConnectionStorable> result;
     try {
       result = WarehouseRetryExecutor.buildMinorExecutor().connection(ODSConnectionType.HISTORY)

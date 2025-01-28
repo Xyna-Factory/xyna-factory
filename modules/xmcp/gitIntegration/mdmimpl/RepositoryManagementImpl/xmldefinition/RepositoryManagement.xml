@@ -24,6 +24,11 @@
   <SharedLibraries>XynaObjectGitIntegrationManagement</SharedLibraries>
   <SharedLibraries>JGit</SharedLibraries>
   <Service Label="Repository Management" TypeName="RepositoryManagement">
+    <Meta>
+      <AdditionalDependencies>
+        <Datatype>xmcp.forms.plugin.PluginManagement</Datatype>
+      </AdditionalDependencies>
+    </Meta>
     <Operation IsStatic="true" Label="Add Repository Connection" Name="addRepositoryConnection">
       <Input>
         <Data ID="1" Label="Path" ReferenceName="Text" ReferencePath="base" VariableName="text1"/>

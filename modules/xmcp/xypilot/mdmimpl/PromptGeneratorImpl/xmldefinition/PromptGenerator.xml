@@ -68,5 +68,23 @@
         <CodeSnippet Type="Java">return xmcp.xypilot.PromptGeneratorImpl.generateCodeSuggestions(correlatedXynaOrder, context2);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Generate Mapping Label" Name="generateMappingLabel" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="3" Label="Context" ReferenceName="Context" ReferencePath="xmcp.yggdrasil.plugin" VariableName="context3"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.xypilot.PromptGeneratorImpl.generateMappingLabel(correlatedXynaOrder, context3);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Generate Mapping Assignments" Name="generateMappingAssignments" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="4" Label="Context" ReferenceName="Context" ReferencePath="xmcp.yggdrasil.plugin" VariableName="context4"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xmcp.xypilot.PromptGeneratorImpl.generateMappingAssignments(correlatedXynaOrder, context4);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

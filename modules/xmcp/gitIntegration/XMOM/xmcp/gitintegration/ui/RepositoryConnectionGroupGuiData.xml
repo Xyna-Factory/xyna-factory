@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Repository Connection Group Gui Data" TypeName="RepositoryConnectionGroupGuiData" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Repository Connection Group" ReferenceName="RepositoryConnectionGroup" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnectionGroup"/>
+  <Data Label="Group Index" VariableName="groupIndex">
+    <Meta>
+      <Type>int</Type>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="Repository Connection Indices" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="repositoryConnectionIndices"/>
+  <Service Label="Repository Connection Group Gui Data" TypeName="RepositoryConnectionGroupGuiData">
+    <Operation IsStatic="true" Label="Translate" Name="translate">
+      <Input>
+        <Data ID="1" IsList="true" Label="Repository Connection Group" ReferenceName="RepositoryConnectionGroup" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnectionGroup1"/>
+      </Input>
+      <Output>
+        <Data ID="2" IsList="true" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData2"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">List&lt;RepositoryConnectionGroupGuiData&gt; result = new ArrayList&lt;&gt;();
+for(int i=0; i&lt;repositoryConnectionGroup1.size(); i++) {
+  RepositoryConnectionGroup group = repositoryConnectionGroup1.get(i);
+  RepositoryConnectionGroupGuiData.Builder builder = new RepositoryConnectionGroupGuiData.Builder();
+  builder.groupIndex(i);
+  builder.repositoryConnectionGroup(group);
+  List&lt;IntegerNumber&gt; indices = new ArrayList&lt;&gt;();
+  for(int j=0; j&lt;group.getRepositoryConnection().size(); j++) {
+    indices.add(new IntegerNumber.Builder().value(j).instance());
+  }
+  builder.repositoryConnectionIndices(indices);
+  result.add(builder.instance());
+}
+
+return result;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
