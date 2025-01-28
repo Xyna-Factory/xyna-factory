@@ -16,7 +16,6 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-
 package xdev.yang.impl.usecase;
 
 import org.yangcentral.yangkit.base.YangElement;
@@ -25,8 +24,6 @@ import org.yangcentral.yangkit.model.api.stmt.Description;
 import org.yangcentral.yangkit.model.api.stmt.StatusStmt;
 import org.yangcentral.yangkit.model.api.stmt.YangStatement;
 import org.yangcentral.yangkit.model.impl.stmt.ConfigImpl;
-
-import xmcp.yang.LoadYangAssignmentsData;
 
 
 public class YangSubelementContentHelper {
@@ -42,7 +39,7 @@ public class YangSubelementContentHelper {
     return Boolean.parseBoolean(val.trim());
   }
 
-  
+
   public Description getDescriptionSubelementOrNull(YangStatement ys) {
     return (Description) getSubelementOrNull(ys, Description.class);
   }
@@ -50,16 +47,11 @@ public class YangSubelementContentHelper {
   public StatusStmt getStatusSubelementOrNull(YangStatement ys) {
     return (StatusStmt) getSubelementOrNull(ys, StatusStmt.class);
   }
-  
+
   private String getNullOrArgStr(YangStatement ys) {
     return ys == null ? null : ys.getArgStr();
   }
-  
-  public void copyRelevantSubelementValues(YangStatement ys, LoadYangAssignmentsData data) {
-    data.setDescription(getNullOrArgStr(getDescriptionSubelementOrNull(ys)));
-    data.setStatus(getNullOrArgStr(getStatusSubelementOrNull(ys)));
-  }
-  
+
 
   private YangStatement getSubelementOrNull(YangStatement ys, Class<?> clazz) {
     if (ys == null) { return null; }
@@ -72,5 +64,5 @@ public class YangSubelementContentHelper {
     }
     return null;
   }
-    
+
 }
