@@ -82,7 +82,7 @@ public class UseCaseAssignmentUtils {
   private static List<YangStatement> traverseYang(String path, String namespaces, String keywords, YangStatement element,
                                                   List<ListConfiguration> listConfigs, List<String> supportedFeatures) {
     String[] parts = path.split("\\/");
-    String[] namespaceParts = namespaces.split("\\" + Constants.NS_SEPARATOR);
+    String[] namespaceParts = namespaces.split(Constants.NS_SEPARATOR);
     String[] keywordParts = keywords.split(" ");
     for (int i = 1; i < parts.length; i++) { //ignore initial "/<rpcName>"
       String part = parts[i];

@@ -93,7 +93,7 @@ public class UseCaseMapping implements Comparable<UseCaseMapping> {
   public static List<MappingPathElement> createPathList(String totalYangPath, String totalNamespaces, String totalKeywords) {
     List<MappingPathElement> result = new ArrayList<>();
     String[] yangPathElements = totalYangPath.split("\\/");
-    String[] namespaceElements = totalNamespaces.split("\\" + Constants.NS_SEPARATOR);
+    String[] namespaceElements = totalNamespaces.split(Constants.NS_SEPARATOR);
     String[] totalKeywordElements = totalKeywords.split(" ");
     if (yangPathElements.length != namespaceElements.length) {
       throw new RuntimeException("yangPathElement count does not match namespace: " + yangPathElements.length + ": "

@@ -91,7 +91,7 @@ public class Constants {
   public static final String TYPE_CONFIG = "config";
   public static final String TYPE_DESCRIPTION = "description";
 
-  public static final String NS_SEPARATOR = "?";
+  public static final String NS_SEPARATOR = "§";
   public static final String LIST_INDEX_SEPARATOR = ") ";
 
 
