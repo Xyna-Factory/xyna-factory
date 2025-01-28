@@ -21,21 +21,37 @@ package xdev.yang.impl.usecase;
 import org.yangcentral.yangkit.base.YangElement;
 import org.yangcentral.yangkit.model.api.stmt.Config;
 import org.yangcentral.yangkit.model.api.stmt.Description;
+import org.yangcentral.yangkit.model.api.stmt.Status;
 import org.yangcentral.yangkit.model.api.stmt.StatusStmt;
-import org.yangcentral.yangkit.model.api.stmt.YangBuiltinStatement;
 import org.yangcentral.yangkit.model.api.stmt.YangStatement;
+
+import xmcp.yang.LoadYangAssignmentsData;
 
 
 public class YangSubelementContentHelper {
-    
+
   public boolean getConfigSubelementValueBoolean(YangStatement ys) {
     Config result = getSubelementOrNull(ys, Config.class);
     if (result == null) { return true; }
     return result.isConfig();
   }
 
+  public void copyRelevantSubelementValues(YangStatement ys, LoadYangAssignmentsData data) {
+    data.setDescription(getNullOrArgStr(getDescriptionSubelementOrNull(ys)));
+    data.setStatus(getStatusValueIfNotCurrentOrNull(ys));
+  }
+
   public Description getDescriptionSubelementOrNull(YangStatement ys) {
     return getSubelementOrNull(ys, Description.class);
+  }
+
+  public String getStatusValueIfNotCurrentOrNull(YangStatement ys) {
+    StatusStmt elem = getStatusSubelementOrNull(ys);
+    if (elem == null) { return null; }
+    Status status = elem.getStatus();
+    if (status == null) { return null; }
+    if (status == Status.CURRENT) { return null; }
+    return status.getStatus();
   }
 
   public StatusStmt getStatusSubelementOrNull(YangStatement ys) {
@@ -43,11 +59,11 @@ public class YangSubelementContentHelper {
   }
 
   protected String getNullOrArgStr(YangStatement ys) {
-    return ys == null ? null : ys.getArgStr();
+    return ys == null ? null : ys.getArgStr();    
   }
 
-  
-  private <T extends YangBuiltinStatement> T getSubelementOrNull(YangStatement ys, Class<T> clazz) {
+
+  private <T extends YangStatement> T getSubelementOrNull(YangStatement ys, Class<T> clazz) {
     if (ys == null) { return null; }
     for (YangElement elem: ys.getSubElements()) {
       if (clazz.isInstance(elem)) {
@@ -56,5 +72,5 @@ public class YangSubelementContentHelper {
     }
     return null;
   }
-    
+
 }
