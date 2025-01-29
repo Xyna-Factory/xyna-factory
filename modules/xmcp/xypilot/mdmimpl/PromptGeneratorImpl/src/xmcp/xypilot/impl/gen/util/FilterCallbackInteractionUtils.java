@@ -32,8 +32,12 @@ import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.XMLSourceAbstraction;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
+import com.gip.xyna.xprc.xfractwfe.generation.Step;
+import com.gip.xyna.xprc.xfractwfe.generation.StepMapping;
+import com.gip.xyna.xprc.xfractwfe.generation.WF;
 
 import xact.http.URLPath;
 import xact.http.enums.httpmethods.GET;
@@ -49,6 +53,9 @@ import xmcp.processmodeller.datatypes.response.GetXMLResponse;
 import xmcp.processmodeller.datatypes.response.GetXMOMItemResponse;
 import xmcp.xypilot.Documentation;
 import xmcp.xypilot.ExceptionMessage;
+import xmcp.xypilot.Mapping;
+import xmcp.xypilot.MappingAssignment;
+import xmcp.xypilot.MemberReference;
 import xmcp.xypilot.MemberVariable;
 import xmcp.xypilot.MethodDefinition;
 import xmcp.xypilot.Parameter;
@@ -87,6 +94,29 @@ public class FilterCallbackInteractionUtils {
     exg.parse(false);
     return exg;
   }
+  
+  public static StepMapping getMapping(MemberReference ref, XynaOrderServerExtension order) throws XynaException {
+    Long revision = getRevision(ref.getItem());
+    XMLSourceAbstraction inputSource = getXml(ref.getItem(), order, "workflows");
+    WF wf = (WF)GenerationBase.getOrCreateInstance(ref.getItem().getFqName(),new GenerationBaseCache(), revision, inputSource);
+    wf.parse(false);
+    StepMapping result = findStepMapping(ref.getMember().substring(4), wf.getWfAsStep());
+    return result;
+  }
+  
+
+  private static StepMapping findStepMapping(String stepId, Step step) {
+    if (step instanceof StepMapping && stepId.equals(step.getStepId())) {
+      return (StepMapping) step;
+    }
+    for (Step child : step.getChildSteps()) {
+      StepMapping result = findStepMapping(stepId, child);
+      if (result != null) {
+        return result;
+      }
+    }
+    return null;
+  }
 
   private static XMLSourceAbstraction getXml(XMOMItemReference ref, XynaOrderServerExtension order, String type) throws XynaException {
     Long revision = getRevision(ref);
@@ -104,6 +134,7 @@ public class FilterCallbackInteractionUtils {
     XMOMItem parent = getXmomItem(ref, order, "exceptions");
     return findId(parent, id);
   }
+ 
 
   private static XMOMItem getXmomItem(XMOMItemReference ref, XynaOrderServerExtension order, String type) throws XynaException {
     URLPath url = createUrlPath(getDatatypeResponseUrlTemplate, ref, type);
@@ -163,6 +194,44 @@ public class FilterCallbackInteractionUtils {
 
   public static void updateExceptionVarDocu(Documentation docu, XynaOrderServerExtension order, XMOMItemReference ref, String objectId) throws XynaException {
     updateDocu(docu, order, ref, "exceptions", objectId);
+  }
+  
+  public static void updateMappingLabel(String label, XynaOrderServerExtension order, XMOMItemReference ref, String objectId) throws XynaException {
+    URLPath url = createUrlPath(putChangeTemplate, ref, "workflows", objectId);
+    JsonBuilder payload = new JsonBuilder();
+    payload.startObject();
+    payload.addStringAttribute("text", label);
+    payload.endObject();
+    order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpPut, payload.toString());
+  }
+  
+  public static void updateMappingAssignments(Mapping mapping, XynaOrderServerExtension order, XMOMItemReference ref, String stepObjectId, int idx, String exp) throws XynaException {
+    URLPath url = createUrlPath(putChangeTemplate, ref, "workflows", String.format("formula%s-%d_input", stepObjectId.substring(4), idx));
+    JsonBuilder payload = new JsonBuilder();
+    if(mapping.getExpressionCompletion() != null && !mapping.getExpressionCompletion().isEmpty()) {
+      payload = new JsonBuilder();
+      payload.startObject();
+      payload.addObjectAttribute("content");
+      payload.addStringAttribute("expression", exp + mapping.getExpressionCompletion());
+      payload.endObject();
+      payload.endObject();
+      order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpPut, payload.toString());
+    }
+    
+    url = createUrlPath(putInsertTemplate, ref, "workflows", String.format("formulaArea%s", stepObjectId.substring(4)));
+    for(MappingAssignment assignment : mapping.getAssignments()) {
+      payload = new JsonBuilder();
+      payload.startObject();
+      payload.addIntegerAttribute("index", -1);
+      payload.addObjectAttribute("content");
+      payload.addStringAttribute("expression", assignment.getExpression());
+      payload.addStringAttribute("type", "formula");
+      payload.addListAttribute("variables");
+      payload.endList();
+      payload.endObject();
+      payload.endObject();
+      order.getRunnableForFilterAccess(h5xdevfilterCallbackName).execute(url, httpPost, payload.toString());
+    }
   }
 
   private static void updateDocu(Documentation docu, XynaOrderServerExtension order, XMOMItemReference ref, String type, String objectId) throws XynaException {

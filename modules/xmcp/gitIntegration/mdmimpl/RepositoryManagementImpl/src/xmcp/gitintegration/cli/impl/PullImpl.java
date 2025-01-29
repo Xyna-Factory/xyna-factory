@@ -21,6 +21,7 @@ package xmcp.gitintegration.cli.impl;
 
 import java.io.OutputStream;
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xmcp.xfcli.ReturnCode;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import xmcp.gitintegration.cli.generated.Pull;
 import xmcp.gitintegration.impl.RepositoryInteraction;
@@ -36,6 +37,9 @@ public class PullImpl extends XynaCommandImplementation<Pull> {
     try {
       GitDataContainer result = repoInteraction.pull(payload.getRepository(), payload.getDryrun(), UserManagementStorage.CLI_USERNAME);
       writeToCommandLine(statusOutputStream, result);
+      if (result.containsWarnings()) {
+        writeEndToCommandLine(statusOutputStream, ReturnCode.SUCCESS_WITH_PROBLEM);
+      }
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
