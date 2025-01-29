@@ -35,6 +35,7 @@ import org.yangcentral.yangkit.model.api.stmt.Module;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xfmg.xfctrl.XynaFactoryControl;
 import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
@@ -44,7 +45,6 @@ import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
-import xact.http.URLPathQuery;
 import xmcp.yang.YangDevice;
 
 
@@ -112,9 +112,7 @@ public class YangCapabilityUtils {
     for (YangDeviceCapability c : capabilities) {
       List<String> capabilityFeatures = c.getFeatures();
       if (capabilityFeatures != null && !capabilityFeatures.isEmpty()) {
-        capabilityFeatures.forEach(f -> {
-          allFeatures.add(f);
-        });
+        allFeatures.addAll(capabilityFeatures);
       }
     }
     return allFeatures;
@@ -146,9 +144,9 @@ public class YangCapabilityUtils {
       devCapability.rawInfo = textContent;
       try {
         URI uri = new URI(textContent.replace(":", "/"));
-        List<URLPathQuery> queryList = null;
+        List<Pair<String, String>> queryList = null;
         if (uri.getQuery() != null) {
-          queryList = new ArrayList<URLPathQuery>();
+          queryList = new ArrayList<Pair<String, String>>();
           for (String kvp : uri.getQuery().split("&|;")) {
             String attribute = null;
             String value = null;
@@ -159,22 +157,22 @@ public class YangCapabilityUtils {
             } else {
               attribute = kvp;
             }
-            queryList.add(new URLPathQuery(URLDecoder.decode(attribute, "UTF-8"), URLDecoder.decode(value, "UTF-8")));
+            queryList.add(new Pair<String, String>(URLDecoder.decode(attribute, "UTF-8"), URLDecoder.decode(value, "UTF-8")));
           }
         }
 
         if (queryList != null) {
           devCapability.nameSpace = textContent.split("\\?")[0];
-          for (URLPathQuery q : queryList) {
-            String queryAttribute = q.getAttribute();
+          for (Pair<String, String> q : queryList) {
+            String queryAttribute = q.getFirst();
             if (queryAttribute.equals(Constants.TAG_MODULE_REVISION)) {
-              devCapability.revision = q.getValue();
+              devCapability.revision = q.getSecond();
             }
             if (queryAttribute.equals(Constants.TAG_MODULE)) {
-              devCapability.moduleName = q.getValue();
+              devCapability.moduleName = q.getSecond();
             }
             if (queryAttribute.equals(Constants.TAG_MODULE_FEATURES)) {
-              devCapability.features = Arrays.asList(q.getValue().split(","));
+              devCapability.features = Arrays.asList(q.getSecond().split(","));
             }
           }
         }
