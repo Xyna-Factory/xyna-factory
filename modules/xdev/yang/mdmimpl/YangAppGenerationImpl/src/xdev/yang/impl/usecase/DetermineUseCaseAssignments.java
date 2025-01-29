@@ -39,7 +39,7 @@ import xmcp.yang.UseCaseAssignmentTableData;
 
 public class DetermineUseCaseAssignments {
 
-  private static final Set<String> primitives = Set.of(Constants.TYPE_LEAF, Constants.TYPE_ANYXML);
+  private static final Set<String> primitives = Set.of(Constants.TYPE_LEAF, Constants.TYPE_ANYXML, Constants.TYPE_ANYDATA);
 
   public List<UseCaseAssignmentTableData> determineUseCaseAssignments(LoadYangAssignmentsData data) {
     List<UseCaseAssignmentTableData> result = new ArrayList<UseCaseAssignmentTableData>();
