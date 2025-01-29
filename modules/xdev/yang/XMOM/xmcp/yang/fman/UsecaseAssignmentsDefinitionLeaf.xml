@@ -81,14 +81,6 @@
         <Target RefID="3864"/>
       </Output>
       <Mapping>%0%.dataPath="%0%.loadYangAssignmentsData.description"</Mapping>
-    </Mappings>
-    <Mappings ID="3922" Label="Mapping">
-      <Output>
-        <Data ID="3923" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition3923"/>
-        <Target RefID="3924"/>
-      </Output>
-      <Mapping>%0%.dataPath="%0%.loadYangAssignmentsData.status"</Mapping>
-      <Mapping>%0%.label="Status"</Mapping>
       <Mapping>%0%.hideIfEmpty="true"</Mapping>
     </Mappings>
     <Mappings ID="3211" Label="Mapping">
@@ -119,16 +111,6 @@
         <Source RefID="109"/>
       </Input>
       <Input>
-        <Data ID="4053" Label="Text Item Status" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition4053">
-          <Source RefID="3211"/>
-        </Data>
-        <Source RefID="3924">
-          <Meta>
-            <LinkType>UserConnected</LinkType>
-          </Meta>
-        </Source>
-      </Input>
-      <Input>
         <Data ID="3881" Label="Text Item Description" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition3881">
           <Source RefID="3211"/>
         </Data>
@@ -142,14 +124,76 @@
         <Data ID="3218" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3218"/>
         <Target RefID="3210"/>
       </Output>
-      <Mapping>%6%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
-      <Mapping>%6%.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
-      <Mapping>%6%.children["2"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%2%</Mapping>
-      <Mapping>%6%.children["3"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%5%</Mapping>
-      <Mapping>%6%.children["4"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%4%</Mapping>
-      <Mapping>%6%.label=%3%.yangPath</Mapping>
-      <Mapping>%6%.closable="true"</Mapping>
+      <Mapping>%5%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
+      <Mapping>%5%.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
+      <Mapping>%5%.children["2"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%2%</Mapping>
+      <Mapping>%5%.children["3"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%4%</Mapping>
+      <Mapping>%5%.label=%3%.yangPath</Mapping>
+      <Mapping>%5%.closable="true"</Mapping>
     </Mappings>
+    <Choice ID="4105" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="109"/>
+      <Target RefID="4225"/>
+      <Input>
+        <Data ID="4112" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData4112"/>
+        <Source RefID="109"/>
+      </Input>
+      <Case Alias="" ID="4106" Label="true" Premise="%0%.loadYangAssignmentsData.status!=null">
+        <Mappings ID="4114" Label="Mapping">
+          <Input>
+            <Data ID="4117" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData4117"/>
+            <Source RefID="109"/>
+          </Input>
+          <Input>
+            <Data ID="4138" Label="Form Panel Definition IN" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4138">
+              <Source RefID="4114"/>
+            </Data>
+            <Source RefID="3210"/>
+          </Input>
+          <Output>
+            <Data ID="4171" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4171">
+              <Source RefID="4114"/>
+            </Data>
+            <Target RefID="4172"/>
+          </Output>
+          <Mapping>%2%=%1%</Mapping>
+          <Mapping>%2%.label=concat(%1%.label, " (", %0%.loadYangAssignmentsData.status, ")")</Mapping>
+        </Mappings>
+        <Assign>
+          <Source RefID="4172"/>
+          <Target RefID="4225"/>
+          <Copy>
+            <Source RefID="4172"/>
+            <Target RefID="4225"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case Alias="" ID="4107" Label="false">
+        <Mappings ID="4206" Label="Mapping">
+          <Input>
+            <Data ID="4242" Label="Form Panel Definition IN" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4242">
+              <Source RefID="4206"/>
+            </Data>
+            <Source RefID="3210"/>
+          </Input>
+          <Output>
+            <Data ID="4223" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4223">
+              <Source RefID="4206"/>
+            </Data>
+            <Target RefID="4224"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign>
+          <Source RefID="4224"/>
+          <Target RefID="4225"/>
+          <Copy>
+            <Source RefID="4224"/>
+            <Target RefID="4225"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
     <Data ID="22" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext22"/>
     <Data ID="3210" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3210"/>
     <Data ID="3268" Label="save - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition3268">
@@ -160,12 +204,24 @@
     <Data ID="3864" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition3864">
       <Source RefID="3838"/>
     </Data>
-    <Data ID="3924" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition3924"/>
+    <Data ID="4172" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4172">
+      <Source RefID="4114"/>
+    </Data>
+    <Data ID="4224" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4224">
+      <Source RefID="4206"/>
+    </Data>
+    <Data ID="4225" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4225">
+      <Source RefID="4105"/>
+    </Data>
     <Assign ID="1">
-      <Source RefID="3210"/>
+      <Source RefID="4225"/>
       <Target RefID="150"/>
       <Copy>
-        <Source RefID="3210"/>
+        <Source RefID="4225">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
         <Target RefID="150"/>
       </Copy>
     </Assign>

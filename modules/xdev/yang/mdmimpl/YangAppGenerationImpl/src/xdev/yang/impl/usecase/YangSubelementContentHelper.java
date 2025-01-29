@@ -59,7 +59,7 @@ public class YangSubelementContentHelper {
   }
 
   protected String getNullOrArgStr(YangStatement ys) {
-    return ys == null ? null : ys.getArgStr();    
+    return ys == null ? null : ys.getArgStr();
   }
 
 
