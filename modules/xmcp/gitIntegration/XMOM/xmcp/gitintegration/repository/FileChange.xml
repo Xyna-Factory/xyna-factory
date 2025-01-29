@@ -15,24 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Xyna Content Difference" TypeName="XynaContentDifference" TypePath="xmcp.gitintegration" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="File Change" TypeName="FileChange" TypePath="xmcp.gitintegration.repository" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Id" VariableName="id">
-    <Meta>
-      <Type>long</Type>
-    </Meta>
-  </Data>
-  <Data Label="Content Type" VariableName="contentType">
+  <Data Label="Type" VariableName="type">
     <Meta>
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Difference Type" ReferenceName="WorkspaceContentDifferenceType" ReferencePath="xmcp.gitintegration" VariableName="differenceType"/>
-  <Data Label="Entry Id" VariableName="entryId">
-    <Meta>
-      <Type>long</Type>
-    </Meta>
-  </Data>
+  <Data Label="File" ReferenceName="File" ReferencePath="base" VariableName="file"/>
 </DataType>
