@@ -174,10 +174,10 @@
         <include name="${project.name}.zip" />
       </fileset>
     </delete>
-    <buildJar basedir="${basedir}"
+    <buildJar basedir="${root.dir}"
               destfile="${release.build.dir}/${project.name}.jar" />
     <copy todir="${release.build.dir}" flatten="true">
-      <fileset dir="${basedir}">
+      <fileset dir="${root.dir}">
         <include name="lib/**/*.jar" />
       </fileset>
     </copy>
