@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@
         <Target RefID="5360"/>
       </Output>
       <Mapping>%1%.label="Configure"</Mapping>
-      <Mapping>%1%.dialogDefinitionReference=%0%</Mapping>
+      <Mapping>%1%.dialogDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%0%</Mapping>
     </Mappings>
     <Mappings ID="3416" Label="Mapping">
       <Input>
@@ -115,16 +115,108 @@
       <Mapping>%4%.dataPath="%0%"</Mapping>
       <Mapping>%4%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDialogButtonDefinition")=%3%</Mapping>
     </Mappings>
+    <Choice ID="5408" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="109"/>
+      <Target RefID="5407"/>
+      <Input>
+        <Data ID="5415" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData5415"/>
+        <Source RefID="109"/>
+      </Input>
+      <Case Alias="" ID="5409" Label="true" Premise="%0%.loadYangAssignmentsData.status!=null">
+        <Mappings ID="5417" Label="Mapping">
+          <Input>
+            <Data ID="5419" Label="Table Panel Definition IN" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition5419"/>
+            <Source RefID="3415"/>
+          </Input>
+          <Input>
+            <Data ID="5420" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData5420"/>
+            <Source RefID="109"/>
+          </Input>
+          <Output>
+            <Data ID="5421" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition5421"/>
+            <Target RefID="5406"/>
+          </Output>
+          <Mapping>%2%=%0%</Mapping>
+          <Mapping>%2%.label=concat(%0%.label, " (", %1%.loadYangAssignmentsData.status, ")")</Mapping>
+        </Mappings>
+        <Assign>
+          <Source RefID="5406"/>
+          <Target RefID="5407"/>
+          <Copy>
+            <Source RefID="5406"/>
+            <Target RefID="5407"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case Alias="" ID="5410" Label="false">
+        <Mappings ID="5422" Label="Mapping">
+          <Input>
+            <Data ID="5423" Label="Table Panel Definition IN" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition5423"/>
+            <Source RefID="3415"/>
+          </Input>
+          <Output>
+            <Data ID="5424" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition5424"/>
+            <Target RefID="5405"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign>
+          <Source RefID="5405"/>
+          <Target RefID="5407"/>
+          <Copy>
+            <Source RefID="5405"/>
+            <Target RefID="5407"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Mappings ID="5442" Label="Mapping">
+      <Output>
+        <Data ID="5443" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5443"/>
+        <Target RefID="5441"/>
+      </Output>
+      <Mapping>%0%.dataPath="%0%.loadYangAssignmentsData.description"</Mapping>
+      <Mapping>%0%.hideIfEmpty="true"</Mapping>
+    </Mappings>
+    <Mappings ID="5461" Label="Mapping">
+      <Input>
+        <Data ID="5463" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition5463"/>
+        <Source RefID="5407">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="5465" Label="Text Item Definition 1" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5465"/>
+        <Source RefID="5441"/>
+      </Input>
+      <Output>
+        <Data ID="5466" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5466"/>
+        <Target RefID="5460"/>
+      </Output>
+      <Mapping>%2%.children["0"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%0%</Mapping>
+      <Mapping>%2%.children["1"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%1%</Mapping>
+    </Mappings>
     <Data ID="22" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext22"/>
     <Data ID="3394" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow3394"/>
     <Data ID="3415" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition3415"/>
     <Data ID="5331" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow5331"/>
     <Data ID="5360" Label="Open Dialog Button Definition" ReferenceName="OpenDialogButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDialogButtonDefinition5360"/>
+    <Data ID="5405" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition5405"/>
+    <Data ID="5406" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition5406"/>
+    <Data ID="5407" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition5407"/>
+    <Data ID="5441" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5441"/>
+    <Data ID="5460" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5460"/>
     <Assign ID="1">
-      <Source RefID="3415"/>
+      <Source RefID="5460"/>
       <Target RefID="230"/>
       <Copy>
-        <Source RefID="3415"/>
+        <Source RefID="5460">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
         <Target RefID="230"/>
       </Copy>
     </Assign>

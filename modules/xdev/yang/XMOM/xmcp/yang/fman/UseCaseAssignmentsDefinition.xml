@@ -24,25 +24,25 @@
       <Data ID="344" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition344"/>
       <Data ID="1401" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData1401"/>
     </Output>
-    <ServiceReference ID="3141" Label="Usecase Assignments Definition - Container" ReferenceName="UsecaseAssignmentsDefinitionContainer" ReferencePath="xmcp.yang.fman">
-      <Source RefID="3140"/>
-      <Target RefID="3140"/>
+    <ServiceReference ID="3112" Label="Usecase Assignments Definition - Leaf" ReferenceName="UsecaseAssignmentsDefinitionLeaf" ReferencePath="xmcp.yang.fman">
+      <Source RefID="3111"/>
+      <Target RefID="3111"/>
     </ServiceReference>
     <ServiceReference ID="511" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="510"/>
       <Target RefID="510"/>
     </ServiceReference>
-    <ServiceReference ID="3311" Label="Usecase Assignments Definition - Container" ReferenceName="UsecaseAssignmentsDefinitionContainer" ReferencePath="xmcp.yang.fman">
-      <Source RefID="3310"/>
-      <Target RefID="3310"/>
-    </ServiceReference>
-    <ServiceReference ID="3112" Label="Usecase Assignments Definition - Leaf" ReferenceName="UsecaseAssignmentsDefinitionLeaf" ReferencePath="xmcp.yang.fman">
-      <Source RefID="3111"/>
-      <Target RefID="3111"/>
+    <ServiceReference ID="3141" Label="Usecase Assignments Definition - Container" ReferenceName="UsecaseAssignmentsDefinitionContainer" ReferencePath="xmcp.yang.fman">
+      <Source RefID="3140"/>
+      <Target RefID="3140"/>
     </ServiceReference>
     <ServiceReference ID="3998" Label="Usecase Assignments Definition - List" ReferenceName="UsecaseAssignmentsDefinitionList" ReferencePath="xmcp.yang.fman">
       <Source RefID="3997"/>
       <Target RefID="3997"/>
+    </ServiceReference>
+    <ServiceReference ID="3311" Label="Usecase Assignments Definition - Container" ReferenceName="UsecaseAssignmentsDefinitionContainer" ReferencePath="xmcp.yang.fman">
+      <Source RefID="3310"/>
+      <Target RefID="3310"/>
     </ServiceReference>
     <Function ID="510" Label="get Own RuntimeContext">
       <Source RefID="511"/>
@@ -91,7 +91,7 @@
         </Data>
       </Case>
       <Case Alias="3040" ID="3275" Label="" Premise="%0%.type==&quot;anyxml&quot;"/>
-      <Case Alias="3040" ID="5730" Premise="%0%.type==&quot;anydata&quot;"/>
+      <Case Alias="3040" ID="5730" Label="" Premise="%0%.type==&quot;anydata&quot;"/>
       <Case ID="3075" Label="" Premise="%0%.type==&quot;container&quot;">
         <Function ID="3140" Label="Usecase Assignments Definition - Container">
           <Source RefID="3141"/>

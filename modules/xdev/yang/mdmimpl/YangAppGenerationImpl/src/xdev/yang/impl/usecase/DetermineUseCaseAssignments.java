@@ -24,14 +24,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.w3c.dom.Document;
+import org.yangcentral.yangkit.model.api.stmt.Module;
+
 import com.gip.xyna.utils.collections.Pair;
 
 import xdev.yang.impl.Constants;
 import xdev.yang.impl.YangCapabilityUtils;
 import xdev.yang.impl.YangCapabilityUtils.YangDeviceCapability;
-
-import org.yangcentral.yangkit.model.api.stmt.Module;
-
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.UseCaseAssignmentTableData;
 
@@ -60,8 +59,9 @@ public class DetermineUseCaseAssignments {
     List<Module> modules = UseCaseAssignmentUtils.loadModules(workspaceName);
     String deviceFqn = UseCaseAssignmentUtils.readDeviceFqn(usecaseMeta);
     List<YangDeviceCapability> moduleCapabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
+    List<String> supportedFeatures = YangCapabilityUtils.getSupportedFeatureNames(modules, moduleCapabilities);
     modules = YangCapabilityUtils.filterModules(modules, moduleCapabilities);
-    result = UseCaseAssignmentUtils.loadPossibleAssignments(modules, rpcName, rpcNamespace, data, usecaseMeta);
+    result = UseCaseAssignmentUtils.loadPossibleAssignments(modules, rpcName, rpcNamespace, data, usecaseMeta, supportedFeatures);
     fillValues(usecaseMeta, modules, result);
 
     return result;
