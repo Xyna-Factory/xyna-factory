@@ -31,7 +31,7 @@
   <property name="vendor.name" value="Xyna GmbH" />
 
   <import file="${ant.file.xynautils_masterbuild}/../../build/ant-xyna.xml" />
-  <import file="${ant.file.xynautils_masterbuild}/../../build/macros.xml" />
+  <import file="${ant.file.xynautils_masterbuild}/../../../build/macros.xml" />
 
   <!-- Directory to build releases -->
   <property name="root.dir" value="${release.dir}/checkout_${timestamp}" />
