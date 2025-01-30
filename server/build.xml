@@ -313,11 +313,11 @@
  </target>
 
   <target name="installMavenArtifactXynaFactory" depends="build" description="install artifact to maven repository">
-    <install-maven-artifact artifactFile="${build.dir}/${project.name}.jar" pomFile="${basedir}/pom.xml">
+    <install-maven-artifact artifactFile="${build.dir}/${project.name}.jar" pomFile="${basedir}/pom.xml" />
   </target>
 
   <target name="installMavenArtifactXCLIGenerator" depends="buildCliClassGeneratorJar" description="install artifact to maven repository">
-    <install-maven-artifact artifactFile="${build.dir}/${project.name}CLIGenerator.jar" pomFile="${basedir}/cligenerator.pom.xml">
+    <install-maven-artifact artifactFile="${build.dir}/${project.name}CLIGenerator.jar" pomFile="${basedir}/cligenerator.pom.xml" />
   </target>
 
 </project>
