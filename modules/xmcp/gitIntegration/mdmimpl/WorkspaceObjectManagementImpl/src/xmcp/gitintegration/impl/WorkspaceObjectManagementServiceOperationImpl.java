@@ -117,4 +117,18 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
     // TODO Auto-generated method stub
   }
 
+
+  @Override
+  public void closeWorkspaceDifferencesList(ListId listId) {
+    // TODO Auto-generated method stub
+    
+  }
+
+
+  @Override
+  public void updateWorkspaceContent(Workspace workspace) {
+    // TODO Auto-generated method stub
+    
+  }
+
 }

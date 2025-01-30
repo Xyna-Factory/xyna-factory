@@ -92,5 +92,23 @@
         <CodeSnippet Type="Java">xmcp.gitintegration.WorkspaceObjectManagementImpl.resolveWorkspaceDifferences(listId16, workspaceContentDifferencesResolution15);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Close Workspace Differences List" Name="closeWorkspaceDifferencesList">
+      <Input>
+        <Data ID="17" Label="List Id" ReferenceName="ListId" ReferencePath="xmcp.gitintegration" VariableName="listId17"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java"/>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Update Workspace Content" Name="updateWorkspaceContent">
+      <Input>
+        <Data ID="18" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace18"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java"/>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>
