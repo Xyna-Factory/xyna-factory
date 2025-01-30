@@ -19,11 +19,6 @@
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Id" VariableName="id">
-    <Meta>
-      <Type>long</Type>
-    </Meta>
-  </Data>
   <Data Label="Content Type" VariableName="contentType">
     <Meta>
       <Type>String</Type>
