@@ -351,4 +351,20 @@
         </sequential>
     </macrodef>
 
+    <!-- ================================= 
+        macro: install-maven-artifact
+        ================================= -->
+    <macrodef name="install-maven-artifact">
+        <attribute name="artifactFile" />
+        <attribute name="pomFile" />
+        <sequential>
+            <resolver:artifacts id="output">
+                <artifact file="@{artifactFile}"/>
+            </resolver:artifacts>
+            <resolver:install artifactsref="output" >
+                <pom file="@{pomFile}" />
+            </resolver:install>
+        </sequential>
+    </macrodef>
+
 </project>
