@@ -84,12 +84,12 @@
     </Operation>
     <Operation IsStatic="true" Label="Resolve Workspace Differences" Name="resolveWorkspaceDifferences">
       <Input>
-        <Data ID="14" Label="List ID" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber14"/>
+        <Data ID="16" Label="List Id" ReferenceName="ListId" ReferencePath="xmcp.gitintegration" VariableName="listId16"/>
         <Data ID="15" IsList="true" Label="Workspace Content Differences Resolution" ReferenceName="WorkspaceContentDifferencesResolution" ReferencePath="xmcp.gitintegration" VariableName="workspaceContentDifferencesResolution15"/>
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">xmcp.gitintegration.WorkspaceObjectManagementImpl.resolveWorkspaceDifferences(integerNumber14, workspaceContentDifferencesResolution15);</CodeSnippet>
+        <CodeSnippet Type="Java">xmcp.gitintegration.WorkspaceObjectManagementImpl.resolveWorkspaceDifferences(listId16, workspaceContentDifferencesResolution15);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

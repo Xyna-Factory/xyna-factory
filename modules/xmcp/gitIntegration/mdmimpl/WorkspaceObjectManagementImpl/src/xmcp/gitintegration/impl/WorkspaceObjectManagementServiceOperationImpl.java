@@ -21,6 +21,7 @@ package xmcp.gitintegration.impl;
 
 import base.File;
 import base.Text;
+import base.math.IntegerNumber;
 
 import java.util.List;
 
@@ -29,8 +30,10 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTi
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 
 import xmcp.gitintegration.Flag;
+import xmcp.gitintegration.ListId;
 import xmcp.gitintegration.WorkspaceContent;
 import xmcp.gitintegration.WorkspaceContentDifferences;
+import xmcp.gitintegration.WorkspaceContentDifferencesResolution;
 import xprc.xpce.Workspace;
 import xmcp.gitintegration.WorkspaceObjectManagementServiceOperation;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
@@ -107,6 +110,12 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
   public List<? extends WorkspaceContentDifferences> listOpenWorkspaceDifferencesLists(Workspace arg0, Flag arg1) {
     WorkspaceDifferenceListStorage storage = new WorkspaceDifferenceListStorage();
     return storage.loadDifferencesLists(arg0.getName(), arg1.getValue());
+  }
+
+
+  @Override
+  public void resolveWorkspaceDifferences(ListId listId, List<? extends WorkspaceContentDifferencesResolution> list) {
+    // TODO Auto-generated method stub
   }
 
 }
