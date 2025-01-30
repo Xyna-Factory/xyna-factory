@@ -96,7 +96,7 @@
       </target>
 
   <target name="installMavenArtifact" depends="build" description="install artifact to maven repository">
-     <install-maven-artifact artifactFile="${target.dir}/$project.name}.jar" pomFile="${basedir}/pom.xml" />
+     <install-maven-artifact artifactFile="${target.dir}/${project.name}.jar" pomFile="${basedir}/pom.xml" />
   </target>
 
 </project>
