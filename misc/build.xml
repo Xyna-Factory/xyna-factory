@@ -22,7 +22,7 @@
 	<import file="../installation/build/macros.xml" />
 
 	<!-- use a special project name variable name since "project.name" is overridden when being called by the main build script -->
-	<property name="project.name.local2" value="misc" />
+	<property name="project.name" value="misc" />
 
 	<property name="target.dir" value="${basedir}/deploy" />
 
@@ -39,7 +39,7 @@
 	         target: build             
 	        ================================= -->
 	<target name="build" depends="resolve">
-		<buildJar destfile="${target.dir}/${project.name.local2}.jar" />
+		<buildJar destfile="${target.dir}/${project.name}.jar" />
 	</target>
     
       <target name="resolve">
@@ -53,7 +53,7 @@
       </target>
 
     <target name="installMavenArtifact" depends="build" description="install artifact to maven repository">
-         <install-maven-artifact artifactFile="${build.dir}/${project.name.local2}.jar" pomFile="${basedir}/pom.xml" />
+         <install-maven-artifact artifactFile="${target.dir}/${project.name}.jar" pomFile="${basedir}/pom.xml" />
     </target>
 
 </project>
