@@ -18,7 +18,6 @@
 package xdev.yang.impl.usecase;
 
 
-
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 
@@ -27,11 +26,10 @@ import xmcp.yang.UseCaseTableData;
 import xmcp.yang.fman.UsecaseSignatureEntry;
 
 
-
 public class AddVariableToUsecaseSignature {
 
   private static Logger _logger = Logger.getLogger(AddVariableToUsecaseSignature.class);
-  
+
   public void addVariable(XynaOrderServerExtension order, UseCaseTableData usecase, UsecaseSignatureEntry signature) {
     String fqn = usecase.getUsecaseGroup();
     String workspace = usecase.getRuntimeContext();
@@ -41,28 +39,18 @@ public class AddVariableToUsecaseSignature {
       Document meta = uc.getMeta();
       UsecaseSignatureVariable variable = new UsecaseSignatureVariable(signature.getFqn(), signature.getVariableName());
       variable.createAndAddElement(meta, signature.getLocation().toLowerCase());
-      
+
       uc.updateMeta();
       uc.addInput(signature.getVariableName(), signature.getFqn());
-      // handle problem that input variable names will be automatically changed by xyna factory
-      uc.updateImplementation("return null;");
-      uc.save();
-      uc.deploy();
-    } catch (Exception e) {
-      _logger.error(e.getMessage(), e);
-      return;
-    }
-    try (Usecase uc = Usecase.open(order, fqn, workspace, usecaseName)) {
-      Document meta = uc.getMeta();      
       UsecaseImplementationProvider implProvider = new UsecaseImplementationProvider();
-      // adjust implementation java code to changed input variable names
       String newImpl = implProvider.createImpl(meta, uc.getInputVarNames());
       uc.updateImplementation(newImpl);
       uc.save();
-      uc.deploy();      
+      uc.deploy();
     }
     catch (Exception e) {
       _logger.error(e.getMessage(), e);
     }
   }
+  
 }
