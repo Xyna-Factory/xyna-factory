@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="FactoryContentItem" BaseTypePath="xmcp.gitintegration" IsAbstract="false" Label="Factory Capacity" TypeName="FactoryCapacity" TypePath="xmcp.gitintegration" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="FactoryContentItem" BaseTypePath="xmcp.gitintegration" IsAbstract="false" Label="Factory Capacity" TypeName="FactoryCapacity" TypePath="xmcp.gitintegration" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
@@ -36,5 +35,3 @@
     </Meta>
   </Data>
 </DataType>
-
-
