@@ -145,13 +145,11 @@ build_persistencelayers() {
   cd $SCRIPT_DIR/build
   
   #build and install memory persistencelayer
-  ant -Doracle.home=/tmp -f  ../../persistencelayers/XynaMemoryPersistenceLayer/build.xml
-  mvn install:install-file -Dfile=../../persistencelayers/XynaMemoryPersistenceLayer/deploy/XynaMemoryPersistenceLayer.jar -DpomFile=../../persistencelayers/XynaMemoryPersistenceLayer/pom.xml
-
+  ant -Doracle.home=/tmp -f  ../../persistencelayers/XynaMemoryPersistenceLayer/build.xml installMavenArtifact
+ 
   #build and install install XynaJavaSerializationPersistenceLayer
-  ant -Doracle.home=/tmp -f ../../persistencelayers/XynaJavaSerializationPersistenceLayer/build.xml
-  mvn install:install-file -Dfile=../../persistencelayers/XynaJavaSerializationPersistenceLayer/deploy/XynaJavaSerializationPersistenceLayer.jar -DpomFile=../../persistencelayers/XynaJavaSerializationPersistenceLayer/pom.xml
-
+  ant -Doracle.home=/tmp -f ../../persistencelayers/XynaJavaSerializationPersistenceLayer/build.xml installMavenArtifact
+ 
   # build all persistencelayers
   ant -Doracle.home=/tmp buildPersistenceLayers  
 }
