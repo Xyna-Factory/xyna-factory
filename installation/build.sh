@@ -177,8 +177,7 @@ build_networkavailability() {
   
   #build and install demon
   cd $SCRIPT_DIR/../components/xact/demon
-  ant -Doracle.home=/tmp
-  mvn install:install-file -Dfile=$SCRIPT_DIR/../components/xact/demon/deploy/demonlib.jar -DpomFile=$SCRIPT_DIR/../components/xact/demon/pom.xml
+  ant -Doracle.home=/tmp installMavenArtifact
 
   #build networkavailability
   cd $SCRIPT_DIR/../components/xact/NetworkAvailability
