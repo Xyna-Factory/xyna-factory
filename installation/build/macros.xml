@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
-<project name="macros" basedir=".">
+<project name="macros" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant" >
 
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
         <classpath>
