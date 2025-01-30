@@ -176,8 +176,8 @@
     </delete>
     <buildJar basedir="${basedir}"
               destfile="${release.build.dir}/${project.name}.jar" />
-    <copy todir="@{destdir}" flatten="true">
-      <fileset dir="@{basedir}">
+    <copy todir="${release.build.dir}" flatten="true">
+      <fileset dir="${basedir}">
         <include name="lib/**/*.jar" />
       </fileset>
     </copy>
