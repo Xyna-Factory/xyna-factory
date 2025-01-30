@@ -21,7 +21,6 @@ package xmcp.gitintegration.impl;
 
 import base.File;
 import base.Text;
-import base.math.IntegerNumber;
 
 import java.util.List;
 
