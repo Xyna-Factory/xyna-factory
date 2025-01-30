@@ -19,7 +19,7 @@
 <project name="build" default="build" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
 
   <import file="../../installation/build/ant-xyna.xml" />
-  <import file="../installation/build/macros.xml" />
+  <import file="../../installation/build/macros.xml" />
 
   <property name="project.name" value="XynaJavaSerializationPersistenceLayer" />
 
