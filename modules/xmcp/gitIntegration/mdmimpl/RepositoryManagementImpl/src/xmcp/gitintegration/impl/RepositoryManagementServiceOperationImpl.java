@@ -49,6 +49,7 @@ import xmcp.gitintegration.cli.generated.OverallInformationProvider;
 import xmcp.gitintegration.impl.RepositoryInteraction.GitDataContainer;
 import xmcp.gitintegration.repository.Branch;
 import xmcp.gitintegration.repository.BranchData;
+import xmcp.gitintegration.repository.ChangeSet;
 import xmcp.gitintegration.repository.Commit;
 import xmcp.gitintegration.repository.Repository;
 import xmcp.gitintegration.repository.RepositoryConnection;
@@ -251,4 +252,12 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
 
     return new Text("Push successful!");
   }
+
+
+  @Override
+  public ChangeSet loadChangeSet(Repository repository) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  
 }
