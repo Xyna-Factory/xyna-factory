@@ -41,7 +41,7 @@ import xmcp.yang.UseCaseAssignmentTableData;
 public class DetermineUseCaseAssignments {
 
   private static Logger _logger = Logger.getLogger(DetermineUseCaseAssignments.class);
-  
+
   private static final Set<String> primitives = Set.of(Constants.TYPE_LEAF, Constants.TYPE_ANYXML, Constants.TYPE_ANYDATA);
 
   public List<UseCaseAssignmentTableData> determineUseCaseAssignments(LoadYangAssignmentsData data) {
@@ -110,16 +110,14 @@ public class DetermineUseCaseAssignments {
     int subAssignments = 0;
     String elemtype = entryPath.get(entryPath.size() - 1).getKeyword();    
     boolean isChoice = Constants.TYPE_CHOICE.equals(elemtype);
-    _logger.warn("### elemtype = " + elemtype + ", isChoice = " + isChoice);
     Set<String> caseSet = isChoice ? new HashSet<>() : null;
-    
+
     for (UseCaseMapping mapping : mappings) {
       List<MappingPathElement> mappingPath = mapping.createPathList();
       if (MappingPathElement.isMoreSpecificPath(entryPath, mappingPath)) {
         subAssignments++;
         if (isChoice && (mappingPath.size() > entryPath.size())) {
           MappingPathElement childElem = mappingPath.get(entryPath.size());
-          _logger.warn("### childtype = " + childElem.getKeyword() + ", path elem = " + childElem.getYangPath());
           if (Constants.TYPE_CASE.equals(childElem.getKeyword())) {
             caseSet.add(childElem.getYangPath());
           }
@@ -127,8 +125,7 @@ public class DetermineUseCaseAssignments {
       }
     }
     if ((caseSet != null) && (caseSet.size() > 1)) {
-      _logger.warn("### Choice " + entryPath.get(entryPath.size() - 1).getYangPath() + " has assigns in more than one case.");
-      entry.getLoadYangAssignmentsData().setWarning("WARNING: Choice has assignments in more than one case.");
+      entry.getLoadYangAssignmentsData().unversionedSetWarning("WARNING: Choice has assignments in more than one case.");
     }
 
     String retval = "";
@@ -137,5 +134,5 @@ public class DetermineUseCaseAssignments {
     }
     entry.unversionedSetValue(retval);
   }
-  
+
 }
