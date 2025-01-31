@@ -54,8 +54,6 @@
     <available file="${jdev.home}" />
   </condition>
 
-  <property name="FLEX_HOME" value="${root}/opt/common/flex_sdk" />
-
   <!-- needed for sqlplus -->
   <condition property="nls_lang"
              value="${env.NLS_LANG}"
@@ -201,9 +199,6 @@
       </fail>
     </sequential>
   </macrodef>
-
-  <!--  <taskdef resource="flexUnitTasks.tasks"
-           classpath="${install.lib.dir}/flexUnitTasks-4.0.0.jar" />-->
 
   <if>
     <equals arg1="${isInstall}" arg2="true" />
