@@ -31,6 +31,7 @@
   <property name="vendor.name" value="Xyna GmbH" />
 
   <import file="${ant.file.xynautils_masterbuild}/../../build/ant-xyna.xml" />
+  <import file="${ant.file.xynautils_masterbuild}/../../../../installation/build/macros.xml" />
 
   <!-- Directory to build releases -->
   <property name="root.dir" value="${release.dir}/checkout_${timestamp}" />
@@ -158,6 +159,43 @@
            src="${release.dir}/${project.name}-I${timestamp}.zip" />
     <move file="${release.dir}/${project.name}-I${timestamp}"
           tofile="${release.dir}/${project.name}" failonerror="false"/>
+  </target>
+
+  <!-- ================================= 
+              target: build              
+       =================================
+-->
+  <target name="build"
+          depends="copySources"
+          description="Create build artfact">
+    <delete dir="${release.dir}/${project.name}" />
+    <delete>
+      <fileset dir="${release.dir}">
+        <include name="${project.name}.zip" />
+      </fileset>
+    </delete>
+    <buildJar basedir="${root.dir}"
+              destfile="${release.build.dir}/${project.name}.jar" />
+    <copy todir="${release.build.dir}" flatten="true">
+      <fileset dir="${root.dir}">
+        <include name="lib/**/*.jar" />
+      </fileset>
+    </copy>
+
+    <!-- build zip file -->
+    <zipDeliveryItems srcdir="${release.build.dir}"
+                      destdir="${release.dir}"
+                      name="${project.name}" />
+    <!-- clean up -->
+    <delete dir="${root.dir}" />
+    <unzip dest="${release.dir}"
+           src="${release.dir}/${project.name}.zip" />
+    <move file="${release.dir}/${project.name}"
+          tofile="${release.dir}/${project.name}" failonerror="false"/>
+  </target>
+
+  <target name="installMavenArtifact" depends="build" description="install artifact to maven repository">
+     <install-maven-artifact artifactFile="${release.dir}/${project.name}/${project.name}.jar" pomFile="${basedir}/pom.xml" />
   </target>
 
   <!-- - - - - - - - - - - - - - - - - - 

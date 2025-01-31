@@ -17,6 +17,8 @@
  */
 package xdev.yang.impl.usecase;
 
+
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -27,6 +29,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.yangcentral.yangkit.base.YangElement;
 import org.yangcentral.yangkit.model.api.schema.YangSchemaContext;
+import org.yangcentral.yangkit.model.api.stmt.DataDefinition;
 import org.yangcentral.yangkit.model.api.stmt.Input;
 import org.yangcentral.yangkit.model.api.stmt.Module;
 import org.yangcentral.yangkit.model.api.stmt.Rpc;
@@ -50,28 +53,34 @@ import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 import xdev.yang.impl.Constants;
 import xdev.yang.impl.XmomDbInteraction;
 import xdev.yang.impl.YangCapabilityUtils;
-import xdev.yang.impl.YangStatementTranslator;
 import xdev.yang.impl.YangCapabilityUtils.YangDeviceCapability;
+import xdev.yang.impl.YangStatementTranslator;
 import xdev.yang.impl.YangStatementTranslator.YangStatementTranslation;
 import xdev.yang.impl.usecase.ListConfiguration.ListLengthConfig;
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.UseCaseAssignmentTableData;
 import xmcp.yang.YangModuleCollection;
 
+
+
 public class UseCaseAssignmentUtils {
 
 
-  public static List<UseCaseAssignmentTableData> loadPossibleAssignments(List<Module> modules, String rpcName, String rpcNs, LoadYangAssignmentsData data, Document meta) {
+  public static List<UseCaseAssignmentTableData> loadPossibleAssignments(List<Module> modules, String rpcName, String rpcNs,
+                                                                         LoadYangAssignmentsData data, Document meta,
+                                                                         List<String> supportedFeatures) {
     Rpc rpc = findRpc(modules, rpcName, rpcNs);
     Input input = rpc.getInput();
     List<ListConfiguration> listConfigs = ListConfiguration.loadListConfigurations(meta);
-    List<YangStatement> elements = traverseYang(data.getTotalYangPath(), data.getTotalNamespaces(), data.getTotalKeywords(), input, listConfigs);
-    List<UseCaseAssignmentTableData> result = loadAssignments(elements, data);
+    List<YangStatement> elements =
+        traverseYang(data.getTotalYangPath(), data.getTotalNamespaces(), data.getTotalKeywords(), input, listConfigs, supportedFeatures);
+    List<UseCaseAssignmentTableData> result = loadAssignments(elements, data, supportedFeatures);
     return result;
   }
 
 
-  private static List<YangStatement> traverseYang(String path, String namespaces, String keywords, YangStatement element, List<ListConfiguration> listConfigs) {
+  private static List<YangStatement> traverseYang(String path, String namespaces, String keywords, YangStatement element,
+                                                  List<ListConfiguration> listConfigs, List<String> supportedFeatures) {
     String[] parts = path.split("\\/");
     String[] namespaceParts = namespaces.split(Constants.NS_SEPARATOR);
     String[] keywordParts = keywords.split(" ");
@@ -79,26 +88,27 @@ public class UseCaseAssignmentUtils {
       String part = parts[i];
       String namespace = namespaceParts[i];
       String keyword = keywordParts[i];
-      element = traverseYangOneLayer(part, namespace, element);
-      if(Constants.TYPE_LIST.equals(keyword)) {
+      element = traverseYangOneLayer(part, namespace, element, supportedFeatures);
+      if (Constants.TYPE_LIST.equals(keyword)) {
         //do not traverse this layer because it is synthetic
         i++;
         continue;
       }
     }
 
-    String keyword = keywordParts[keywordParts.length -1];
+    String keyword = keywordParts[keywordParts.length - 1];
     switch (keyword) {
       case Constants.TYPE_LEAFLIST :
         ListConfiguration leaflistConfig = getListConfig(listConfigs, path, namespaces);
         return getLeafListCandidates(element, leaflistConfig);
-      case Constants.TYPE_LIST:
+      case Constants.TYPE_LIST :
         ListConfiguration listConfig = getListConfig(listConfigs, path, namespaces);
         return getListCandidates(element, listConfig);
       default :
-        return getCandidates(element);
+        return getCandidates(element, supportedFeatures);
     }
   }
+
 
   private static ListConfiguration getListConfig(List<ListConfiguration> listConfigs, String path, String namespaces) {
     for(ListConfiguration candidate : listConfigs) {
@@ -143,11 +153,11 @@ public class UseCaseAssignmentUtils {
   }
 
 
-  private static List<YangStatement> getCandidates(YangStatement statement) {
+  private static List<YangStatement> getCandidates(YangStatement statement, List<String> supportedFeatures) {
     List<YangElement> candidates = YangStatementTranslation.getSubStatements(statement);
     List<YangStatement> result = new ArrayList<>();
     for (YangElement candidate : candidates) {
-      if (isSupportedElement(candidate)) {
+      if (isSupportedElement(candidate, supportedFeatures)) {
         result.add((YangStatement) candidate);
       }
     }
@@ -155,10 +165,11 @@ public class UseCaseAssignmentUtils {
   }
 
 
-  private static YangStatement traverseYangOneLayer(String pathStep, String namespace, YangStatement statement) {
+  private static YangStatement traverseYangOneLayer(String pathStep, String namespace, YangStatement statement,
+                                                    List<String> supportedFeatures) {
     List<YangElement> candidates = YangStatementTranslation.getSubStatements(statement);
     for (YangElement candidate : candidates) {
-      if (isSupportedElement(candidate)) {
+      if (isSupportedElement(candidate, supportedFeatures)) {
         YangStatement node = (YangStatement) candidate;
         if (YangStatementTranslation.getLocalName(node).equals(pathStep)
             && Objects.equals(YangStatementTranslation.getNamespace(node), namespace)) {
@@ -170,11 +181,11 @@ public class UseCaseAssignmentUtils {
   }
 
 
-  private static List<UseCaseAssignmentTableData> loadAssignments(List<YangStatement> subElements, LoadYangAssignmentsData data) {
+  private static List<UseCaseAssignmentTableData> loadAssignments(List<YangStatement> subElements, LoadYangAssignmentsData data, List<String> supportedFeatures) {
     YangSubelementContentHelper helper = new YangSubelementContentHelper();
     List<UseCaseAssignmentTableData> result = new ArrayList<>();
     for (YangStatement element : subElements) {
-      if (isSupportedElement(element) && helper.getConfigSubelementValueBoolean(element)) {
+      if (isSupportedElement(element, supportedFeatures) && helper.getConfigSubelementValueBoolean(element)) {
         String localName = YangStatementTranslation.getLocalName(element);
         String namespace = YangStatementTranslation.getNamespace(element);
         String keyword = element.getYangKeyword().getLocalName();
@@ -183,6 +194,7 @@ public class UseCaseAssignmentUtils {
         updatedData.unversionedSetTotalYangPath(updatedData.getTotalYangPath() + "/" + localName);
         updatedData.unversionedSetTotalNamespaces(updatedData.getTotalNamespaces() + Constants.NS_SEPARATOR + namespace);
         updatedData.unversionedSetTotalKeywords(updatedData.getTotalKeywords() + " " + keyword);
+        helper.copyRelevantSubelementValues(element, updatedData);
         builder.loadYangAssignmentsData(updatedData);
         builder.yangPath(localName);
         builder.type(getYangType(element));
@@ -193,14 +205,29 @@ public class UseCaseAssignmentUtils {
   }
 
 
-  private static boolean isSupportedElement(YangElement element) {
-    for (Entry<Class<?>, YangStatementTranslation> c: YangStatementTranslator.translations.entrySet()) {
+  private static boolean isSupportedElement(YangElement element, List<String> supportedFeatures) {
+    Boolean supportedStatement = false;
+    for (Entry<Class<?>, YangStatementTranslation> c : YangStatementTranslator.translations.entrySet()) {
       if (c.getKey().isAssignableFrom(element.getClass())) {
-        return true;
+        supportedStatement = true;
       }
     }
-    return false;
+    return supportedStatement && ifFeatureSupport(element, supportedFeatures);
   }
+
+
+  private static boolean ifFeatureSupport(YangElement element, List<String> supportedFeatures) {
+    if (element instanceof DataDefinition) {
+      List<String> ifFeatures = new ArrayList<String>();
+      ((DataDefinition) element).getIfFeatures().forEach(e -> {
+        ifFeatures.add(e.getArgStr());
+      });
+      // retainAll returns false when the list does not change, i.e. when all if-features are supported
+      return !ifFeatures.retainAll(supportedFeatures);
+    }
+    return true;
+  }
+
 
   private static String getYangType(YangElement element) {
     for(Entry<Class<?>, YangStatementTranslation> c : YangStatementTranslator.translations.entrySet()) {

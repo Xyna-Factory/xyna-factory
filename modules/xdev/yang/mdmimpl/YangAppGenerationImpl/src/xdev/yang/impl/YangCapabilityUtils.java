@@ -19,14 +19,23 @@ package xdev.yang.impl;
 
 
 
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.yangcentral.yangkit.model.api.stmt.Module;
 
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xfmg.xfctrl.XynaFactoryControl;
 import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
@@ -41,6 +50,8 @@ import xmcp.yang.YangDevice;
 
 
 public class YangCapabilityUtils {
+
+  private static final Logger logger = CentralFactoryLogging.getLogger(YangCapabilityUtils.class);
 
 
   public static List<Module> filterModules(List<Module> modules, List<YangDeviceCapability> capabilities) {
@@ -96,6 +107,18 @@ public class YangCapabilityUtils {
   }
 
 
+  public static List<String> getSupportedFeatureNames(List<Module> modules, List<YangDeviceCapability> capabilities) {
+    List<String> allFeatures = new ArrayList<String>();
+    for (YangDeviceCapability c : capabilities) {
+      List<String> capabilityFeatures = c.getFeatures();
+      if (capabilityFeatures != null && !capabilityFeatures.isEmpty()) {
+        allFeatures.addAll(capabilityFeatures);
+      }
+    }
+    return allFeatures;
+  }
+
+
   public static List<YangDeviceCapability> loadCapabilities(String deviceFqn, String workspaceName) {
     DOM deviceDatatype = loadDeviceDatatype(deviceFqn, workspaceName);
     List<String> unknownMetaTags = deviceDatatype.getUnknownMetaTags();
@@ -117,7 +140,45 @@ public class YangCapabilityUtils {
 
     for (Element ce : capabilityElements) {
       YangDeviceCapability devCapability = new YangDeviceCapability();
-      devCapability.rawInfo = ce.getTextContent().trim();
+      String textContent = ce.getTextContent().trim();
+      devCapability.rawInfo = textContent;
+      try {
+        URI uri = new URI(textContent.replace(":", "/"));
+        List<Pair<String, String>> queryList = null;
+        if (uri.getQuery() != null) {
+          queryList = new ArrayList<Pair<String, String>>();
+          for (String kvp : uri.getQuery().split("&|;")) {
+            String attribute = null;
+            String value = null;
+            int idx = kvp.indexOf('=');
+            if (idx > 0) {
+              attribute = kvp.substring(0, idx);
+              value = kvp.substring(idx + 1);
+            } else {
+              attribute = kvp;
+            }
+            queryList.add(new Pair<String, String>(URLDecoder.decode(attribute, "UTF-8"), URLDecoder.decode(value, "UTF-8")));
+          }
+        }
+
+        if (queryList != null) {
+          devCapability.nameSpace = textContent.split("\\?")[0];
+          for (Pair<String, String> q : queryList) {
+            String queryAttribute = q.getFirst();
+            if (queryAttribute.equals(Constants.TAG_MODULE_REVISION)) {
+              devCapability.revision = q.getSecond();
+            }
+            if (queryAttribute.equals(Constants.TAG_MODULE)) {
+              devCapability.moduleName = q.getSecond();
+            }
+            if (queryAttribute.equals(Constants.TAG_MODULE_FEATURES)) {
+              devCapability.features = Arrays.asList(q.getSecond().split(","));
+            }
+          }
+        }
+      } catch (URISyntaxException | DOMException | UnsupportedEncodingException e) {
+        logger.warn("Invalid capability format: " + ce.getTextContent());
+      }
       result.add(devCapability);
     }
     return result;
@@ -138,6 +199,13 @@ public class YangCapabilityUtils {
         if (revisionElement != null) {
           devCapability.revision = revisionElement.getTextContent().trim();
         }
+
+        List<String> features = new ArrayList<String>();
+        XMLUtils.getChildElementsByName(module, Constants.TAG_MODULE_FEATURES).forEach(e -> {
+          features.add(e.getTextContent().trim());
+        });
+        devCapability.features = features;
+
         result.add(devCapability);
       }
     }
@@ -198,6 +266,7 @@ public class YangCapabilityUtils {
     private String nameSpace;
     private String revision;
     private String rawInfo;
+    private List<String> features;
 
 
     public String getModuleName() {
@@ -226,6 +295,12 @@ public class YangCapabilityUtils {
         }
       }
     }
+
+
+    public List<String> getFeatures() {
+      return features;
+    }
+
   }
 
 }
