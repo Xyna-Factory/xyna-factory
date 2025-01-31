@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
-<project name="macros" basedir=".">
+<project name="macros" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant" >
 
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
         <classpath>
@@ -348,6 +348,22 @@
             </if>
             <custom-ssh-exec host="${server.host}" username="${server.userid}" command="${command}" outputproperty="@{outputproperty}" />
             <echo message="determined revision for '@{workspacename}' to be ${@{outputproperty}}" />
+        </sequential>
+    </macrodef>
+
+    <!-- ================================= 
+        macro: install-maven-artifact
+        ================================= -->
+    <macrodef name="install-maven-artifact">
+        <attribute name="artifactFile" />
+        <attribute name="pomFile" />
+        <sequential>
+            <resolver:artifacts id="output">
+                <artifact file="@{artifactFile}"/>
+            </resolver:artifacts>
+            <resolver:install artifactsref="output" >
+                <pom file="@{pomFile}" />
+            </resolver:install>
         </sequential>
     </macrodef>
 
