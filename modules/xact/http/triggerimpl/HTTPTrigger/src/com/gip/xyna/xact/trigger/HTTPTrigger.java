@@ -81,6 +81,9 @@ import com.gip.xyna.xfmg.xfmon.fruntimestats.statistics.Statistics;
 import com.gip.xyna.xfmg.xfmon.fruntimestats.values.IntegerStatisticsValue;
 import com.gip.xyna.xfmg.xfmon.fruntimestats.values.LongStatisticsValue;
 import com.gip.xyna.xfmg.xfmon.fruntimestats.values.StringStatisticsValue;
+import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.UserType;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyString;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 
 
@@ -90,6 +93,7 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
 
   private static final Logger logger = CentralFactoryLogging.getLogger(HTTPTrigger.class);
 
+  private static final String NAME = "HTTP Trigger";
 
   private ServerSocket serverSocketForSSL;
   private ServerSocketChannel serverSocketChannelForUnsecureMode;
@@ -103,6 +107,12 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
 
   private AtomicLong receivedCounter = new AtomicLong(0);
   private AtomicLong rejectCounter = new AtomicLong(0);
+
+  public static final XynaPropertyString PROP_DEFAULT_ENCODING = new XynaPropertyString("xact.http.default_encoding", "")
+    .setDefaultDocumentation(DocumentationLanguage.EN, 
+    "Default encoding for incoming http-messages if none is provided in the http header")
+    .setDefaultDocumentation(DocumentationLanguage.DE, 
+    "Default-Encoding bei eingehenden Http-Nachrichten, wenn im Http-Header keins gesetzt ist");
 
 
   // the stopping task has to be initialized when the object is created because the jar file may already have changed
@@ -305,6 +315,7 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
     } catch (Exception e) {
       logger.info("HTTPTrigger Statistics could not be initialized. ", e);
     }
+    PROP_DEFAULT_ENCODING.registerDependency(UserType.Trigger, NAME);
   }
 
 
@@ -367,6 +378,7 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
     } catch (XFMG_InvalidStatisticsPath e) {
       logger.warn("invalid path supplied when trying to unregister statistics",e);
     }
+    PROP_DEFAULT_ENCODING.unregister();
 
     logger.debug("stopped httptrigger");
   }

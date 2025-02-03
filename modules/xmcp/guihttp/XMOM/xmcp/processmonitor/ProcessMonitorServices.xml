@@ -36,26 +36,6 @@
         <CodeSnippet Type="Java">xmcp.processmonitor.ProcessMonitorServicesImpl.cancelFrequencyControlledTask(taskId);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Get Audit" Name="getAudit">
-      <Input>
-        <Data Label="Order Overview entry" ReferenceName="OrderOverviewEntry" ReferencePath="xmcp.processmonitor.datatypes" VariableName="orderOverviewEntry"/>
-      </Input>
-      <Output>
-        <Data Label="Audit" ReferenceName="Audit" ReferencePath="xmcp.processmonitor.datatypes" VariableName="audit"/>
-      </Output>
-      <Throws>
-        <Exception Label="No Audit Data" ReferenceName="NoAuditData" ReferencePath="xmcp.processmonitor.datatypes" VariableName="noAuditData"/>
-      </Throws>
-      <Meta>
-        <Documentation>Deprecated. 
-Use filter callback instead: 
-xact.http.URLPath url = new xact.http.URLPath.Builder().path("/audits/" + orderid).query(Collections.emptyList()).instance();
-correlatedXynaOrder.getRunnableForFilterAccess("H5XdevFilter").execute(url, new xact.http.enums.httpmethods.GET())</Documentation>
-      </Meta>
-      <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.processmonitor.ProcessMonitorServicesImpl.getAudit(orderOverviewEntry);</CodeSnippet>
-      </SourceCode>
-    </Operation>
     <Operation IsStatic="true" Label="Get Capacities" Name="getCapacities">
       <Input>
         <Data Label="Filter" ReferenceName="Filter" ReferencePath="xmcp.processmonitor.resources" VariableName="filter44"/>
@@ -228,13 +208,7 @@ correlatedXynaOrder.getRunnableForFilterAccess("H5XdevFilter").execute(url, new 
         <Data ID="48" IsList="true" Label="Table Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn48"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">for (var column : tableColumn47) {
-    if (column.getPath().equals(columnPath49.getValue())) {
-        column.setPath(columnPath50.getValue());
-    }
-}
-
-return tableColumn47;</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.processmonitor.ProcessMonitorServicesImpl.mapColumnPath(tableColumn47, columnPath49, columnPath50);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

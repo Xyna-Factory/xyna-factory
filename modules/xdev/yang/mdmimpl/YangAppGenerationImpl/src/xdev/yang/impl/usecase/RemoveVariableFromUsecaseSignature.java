@@ -21,6 +21,7 @@ package xdev.yang.impl.usecase;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -32,6 +33,8 @@ import xmcp.yang.fman.UsecaseSignatureEntry;
 
 public class RemoveVariableFromUsecaseSignature {
 
+  private static Logger _logger = Logger.getLogger(RemoveVariableFromUsecaseSignature.class);
+  
   public void removeVariable(XynaOrderServerExtension order, UseCaseTableData usecase, UsecaseSignatureEntry signature) {
     String fqn = usecase.getUsecaseGroup();
     String workspace = usecase.getRuntimeContext();
@@ -43,12 +46,17 @@ public class RemoveVariableFromUsecaseSignature {
       List<Element> signatureEntryElements = UsecaseSignatureVariable.loadSignatureEntryElements(meta, signature.getLocation());
       Element signatureEntryToRemove = signatureEntryElements.get(signature.getIndex());
       signatureElement.removeChild(signatureEntryToRemove);
-      
+
       uc.updateMeta();
       uc.deleteInput(signature.getIndex());
+      UsecaseImplementationProvider implProvider = new UsecaseImplementationProvider();
+      String newImpl = implProvider.createImpl(meta, uc.getInputVarNames());
+      uc.updateImplementation(newImpl);
       uc.save();
       uc.deploy();
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
+      _logger.error(e.getMessage(), e);
     }
   }
 

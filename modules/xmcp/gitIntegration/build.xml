@@ -48,6 +48,10 @@
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
 
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="sharedlib/JGit">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+
         <antcall target="build-application" />
     </target>
     

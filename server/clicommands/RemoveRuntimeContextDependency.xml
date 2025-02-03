@@ -1,6 +1,6 @@
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,4 +23,5 @@
   <Argument Name="requirementApplicationName" Description="The name of the required application." Optional="true"/>
   <Argument Name="requirementVersionName" Description="The name of the required application version." Optional="true"/>
   <Argument Name="requirementWorkspaceName" Description="The name of the required workspace." Optional="true"/>
+  <BoolOption Name="f" LongName="force" Description="Ignore nonfatal validation errors" Optional="true"/>
 </XynaCommandLineCommand>

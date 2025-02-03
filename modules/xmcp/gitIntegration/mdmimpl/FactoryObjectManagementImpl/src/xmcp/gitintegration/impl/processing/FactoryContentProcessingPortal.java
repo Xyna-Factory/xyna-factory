@@ -343,7 +343,7 @@ public class FactoryContentProcessingPortal {
       return true;
     } catch (Exception e) {
       //if there is an exception, do not remove the entry
-      sb.append("Exception occurred while resolving item " + entry.getId() + ". It remains in the list. Details: " + e.getMessage());
+      sb.append("Exception occurred while resolving item " + entry.getEntryId() + ". It remains in the list. Details: " + e.getMessage());
       sb.append("\n");
     }
     return false;
@@ -378,7 +378,7 @@ public class FactoryContentProcessingPortal {
 
 
   private Optional<? extends FactoryContentDifference> findEntry(FactoryContentDifferences diffs, long entryId) {
-    return diffs.getDifferences().stream().filter(x -> x.getId() == entryId).findFirst();
+    return diffs.getDifferences().stream().filter(x -> x.getEntryId() == entryId).findFirst();
   }
 
 
@@ -454,7 +454,7 @@ public class FactoryContentProcessingPortal {
 
     int id = 0;
     for (FactoryContentDifference difference : result) {
-      difference.setId(id++);
+      difference.setEntryId(id++);
     }
 
     return result;

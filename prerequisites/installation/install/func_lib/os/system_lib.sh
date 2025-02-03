@@ -402,7 +402,6 @@ write_settings_to_cache () {
   set | ${VOLATILE_GREP} "^VOLATILE_" >> "${FUNC_LIB_CACHE_FILE}" 
 }
 
-
 #  Volle Pfade zu benoetigten Programmen ermitteln
 get_volatile_settings () {
   ##############################################################################

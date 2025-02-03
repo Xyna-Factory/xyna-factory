@@ -191,7 +191,7 @@
             <dependency>
                 <groupId>com.ibm.mq</groupId>
                 <artifactId>com.ibm.mq.allclient</artifactId>                <!-- unfree -->
-                <version>9.1.5.0</version>
+                <version>9.4.1.1</version>
             </dependency>
             <dependency>
                 <groupId>com.ibm.mq</groupId>
@@ -352,7 +352,7 @@
             <dependency>
                 <groupId>com.mysql</groupId>
                 <artifactId>mysql-connector-j</artifactId>
-                <version>9.1.0</version>
+                <version>9.2.0</version>
             </dependency>
             <dependency>
                 <groupId>org.mariadb.jdbc</groupId>
@@ -552,7 +552,12 @@
             <dependency>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-cli</artifactId>
-                <version>7.3.0</version>
+                <version>7.11.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator</artifactId>
+                <version>7.11.0</version>
             </dependency>
             <dependency>
                 <groupId>org.freemarker</groupId>

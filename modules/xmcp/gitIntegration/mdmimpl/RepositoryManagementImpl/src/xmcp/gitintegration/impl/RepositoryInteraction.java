@@ -21,13 +21,17 @@ package xmcp.gitintegration.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -65,20 +69,28 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.transport.sshd.SshdSessionFactoryBuilder;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.util.FS;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.collections.Triple;
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.utils.exceptions.utils.XMLUtils;
+import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemState;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemStateManagement;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DeploymentItemStateReport;
 import com.gip.xyna.xfmg.xfctrl.deploystate.DisplayState;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
+import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase.XMOMType;
 import com.gip.xyna.xmcp.xfcli.impl.RemovexmomobjectImpl;
 import com.gip.xyna.xmcp.xfcli.impl.SavexmomobjectImpl;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.DeploymentMode;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.WorkflowProtectionMode;
 
 import xmcp.gitintegration.Flag;
 import xmcp.gitintegration.WorkspaceContentDifferences;
@@ -183,7 +195,7 @@ public class RepositoryInteraction {
         Commit.Builder builder = new Commit.Builder();
         builder.authorEmail(commit.getAuthorIdent().getEmailAddress());
         builder.authorName(commit.getAuthorIdent().getName());
-        builder.commitTime(commit.getAuthorIdent().getWhen().toInstant().toEpochMilli());
+        builder.commitTime(commit.getAuthorIdent().getWhenAsInstant().toEpochMilli());
         builder.comment(commit.getFullMessage());
         builder.commitHash(commit.toObjectId().getName());
         result.add(builder.instance());
@@ -337,7 +349,7 @@ public class RepositoryInteraction {
 
   private void print(GitDataContainer container) {
     if (logger.isDebugEnabled()) {
-      List<String> execs = container.exec.stream().map(x -> x.getFirst() + " - " + x.getSecond()).collect(Collectors.toList());
+      List<String> execs = container.exec.stream().map(x -> x.execType + " - " + x.repoPath).collect(Collectors.toList());
       logger.debug("  Pull: " + container.pull.size() + ": " + String.join(", ", container.pull));
       logger.debug("  Push: " + container.push.size() + ": " + String.join(", ", container.push));
       logger.debug("  Exec: " + container.exec.size() + ": " + String.join(", ", execs));
@@ -422,32 +434,115 @@ public class RepositoryInteraction {
 
 
   private void processExecs(GitDataContainer container) {
-    List<Pair<Boolean, String>> execs = container.exec; //command, path (in repository)
+    List<PullExec> execs = container.exec;
 
-    List<Triple<Boolean, String, String>> exceptions = new ArrayList<>();
-
-    for (Pair<Boolean, String> exec : execs) {
-      Boolean command = exec.getFirst();
-      String repoPath = exec.getSecond();
+    List<Triple<PullExecType, String, String>> exceptions = new ArrayList<>();
+    Map<Long, List<ObjectToDeploy>> toDeployByRevision = new HashMap<>();
+    for (PullExec exec : execs) {
+      String repoPath = exec.repoPath;
+      String filePath = Path.of(container.repository, repoPath).toString();
       Pair<String, String> fqnAndWorkspace = getFqnAndWorkspaceFromRepoPath(repoPath, container.repository);
+      if(fqnAndWorkspace == null) {
+        exceptions.add(new Triple<>(exec.execType, "unknown", exec.repoPath));
+        continue;
+      }
       String fqn = fqnAndWorkspace.getFirst();
       String workspace = fqnAndWorkspace.getSecond();
-
+      RemovexmomobjectImpl removeXmom = new RemovexmomobjectImpl();
       try {
-        updateXmomRegistration(command, workspace, fqn);
+        if (exec.execType == PullExecType.delete) {
+          removeXmom.removeXmomObject(workspace, fqn);
+        } else {
+          Long revision = getRevisionMgmt().getRevision(null, null, workspace);
+          toDeployByRevision.putIfAbsent(revision, new ArrayList<ObjectToDeploy>());
+          toDeployByRevision.get(revision).add(new ObjectToDeploy(fqn, filePath));
+        }
       } catch (XynaException e) {
-        exceptions.add(new Triple<>(command, workspace, fqn));
+        exceptions.add(new Triple<>(exec.execType, workspace, fqn));
       }
     }
+    
+    List<Long> revisionsSorted = sortRevisions(toDeployByRevision.keySet());
+    for(Long revision : revisionsSorted) {
+      if(logger.isDebugEnabled()) {
+        logger.debug("depolying " + toDeployByRevision.get(revision).size() + " objects in revision " + revision);
+      }
+      deployRevision(revision, toDeployByRevision.get(revision), exceptions);
+    }
+    
 
     if (!exceptions.isEmpty()) {
       List<String> e = exceptions.stream().map(this::formatXmomRegistrationException).collect(Collectors.toList());
-      String exceptionText = String.join("\n\t", e);
-      throw new RuntimeException("Exceptions occurred in " + exceptions.size() + " objects: \n\t" + exceptionText);
+      container.warnings = e;
+    }
+  }
+  
+  
+  private List<Long> sortRevisions(Set<Long> revisions) {
+    RuntimeContextDependencyManagement rtcMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
+    List<Long> revisionsOrdered = new ArrayList<>();
+    for (Long candidate : revisions) {
+      sortRevision(candidate, revisionsOrdered, revisions, rtcMgmt);
+    }
+
+    return revisionsOrdered;
+  }
+
+
+  private void sortRevision(Long candidate, List<Long> sorted, Set<Long> relevantRevisions, RuntimeContextDependencyManagement rtcMgmt) {
+    if (sorted.contains(candidate)) {
+      return;
+    }
+    Set<Long> dependencies = new HashSet<>();
+    rtcMgmt.getDependenciesRecursivly(candidate, dependencies);
+    //remove unrelated and already processed revisions
+    dependencies.removeIf(x -> sorted.contains(x) || !relevantRevisions.contains(x));
+    if (dependencies.isEmpty()) {
+      sorted.add(candidate);
+      return;
+    }
+    for (Long dependency : dependencies) {
+      sortRevision(dependency, sorted, relevantRevisions, rtcMgmt);
+    }
+    sorted.add(candidate);
+  }
+  
+  
+  private void deployRevision(Long revision, List<ObjectToDeploy> objectFiles, List<Triple<PullExecType, String, String>> exceptions) {
+    Map<XMOMType, List<String>> items = new HashMap<>();
+    String workspace = String.valueOf(revision);
+    try {
+      workspace = getRevisionMgmt().getWorkspace(revision).getName();
+    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e1) {
+    }
+    for (ObjectToDeploy objectToDeploy : objectFiles) {
+      Optional<XMOMType> type = determineXmomType(objectToDeploy.fileName);
+      if (type.isEmpty()) {
+        exceptions.add(new Triple<PullExecType, String, String>(PullExecType.deploy, workspace, objectToDeploy.fqn));
+        continue;
+      }
+      items.putIfAbsent(type.get(), new LinkedList<String>());
+      items.get(type.get()).add(objectToDeploy.fqn);
+    }
+    try {
+      GenerationBase.deploy(items, DeploymentMode.codeChanged, false, WorkflowProtectionMode.FORCE_DEPLOYMENT, revision, "gitIntegration");
+    } catch (Exception e) {
+      List<String> objs = objectFiles.stream().map(x -> x.fqn).collect(Collectors.toList());
+      exceptions.add(new Triple<PullExecType, String, String>(PullExecType.deploy, workspace, String.join(",", objs)));
     }
   }
 
 
+  private Optional<XMOMType> determineXmomType(String fileName) {
+    try {
+      Document d = XMLUtils.parse(new File(fileName.toString()), true);
+      Element rootElement = d.getDocumentElement();
+      return Optional.of(XMOMType.getXMOMTypeByRootTag(rootElement.getTagName()));
+    } catch (Exception e) {
+      return Optional.empty();
+    }
+  }
+  
   private HashMap<String, List<? extends RepositoryConnectionStorable>> repoCache = new HashMap<>();
 
 
@@ -465,7 +560,7 @@ public class RepositoryInteraction {
       logger.debug("getSubPathAndWorkspace candidates: " + candidates.size());
     }
 
-    Optional<? extends RepositoryConnectionStorable> o = candidates.stream().filter(x -> pathInRepo.startsWith(x.getSubpath())).findAny();
+    Optional<? extends RepositoryConnectionStorable> o = candidates.stream().filter(x -> pathInRepo.startsWith(x.getSubpath() + "/")).findAny();
 
     if (logger.isDebugEnabled()) {
       System.out.println("getSubPathAndWorkspace result: " + (o.isEmpty() ? "null" : o.get()));
@@ -534,23 +629,12 @@ public class RepositoryInteraction {
   }
 
 
-  private String formatXmomRegistrationException(Triple<Boolean, String, String> input) {
+  private String formatXmomRegistrationException(Triple<PullExecType , String, String> input) {
     StringBuilder sb = new StringBuilder();
-    sb.append("Cound not ").append(input.getFirst() ? "add " : "remove '");
+    sb.append("Cound not ").append(input.getFirst()).append(" ");
     sb.append(input.getThird()).append("' in workspace '");
     sb.append(input.getSecond()).append("'.");
     return sb.toString();
-  }
-
-
-  private void updateXmomRegistration(boolean add, String workspace, String fqn) throws XynaException {
-    if (add) {
-      SavexmomobjectImpl saveXmom = new SavexmomobjectImpl();
-      saveXmom.saveXmomObject(workspace, fqn, false);
-    } else {
-      RemovexmomobjectImpl removeXmom = new RemovexmomobjectImpl();
-      removeXmom.removeXmomObject(workspace, fqn);
-    }
   }
 
 
@@ -624,9 +708,9 @@ public class RepositoryInteraction {
 
 
       String path = entry.getChangeType() == ChangeType.ADD ? entry.getNewPath() : entry.getOldPath();
-      if (entry.getChangeType() == ChangeType.ADD || entry.getChangeType() == ChangeType.DELETE) {
-        Boolean command = entry.getChangeType() == ChangeType.ADD;
-        container.exec.add(new Pair<Boolean, String>(command, path));
+      if (getFqnAndWorkspaceFromRepoPath(path, container.repository) != null) {
+        PullExecType command = PullExecType.convert(entry.getChangeType());
+        container.exec.add(new PullExec(command, path));
       }
       container.pull.add(path);
     }
@@ -900,7 +984,8 @@ public class RepositoryInteraction {
     private List<String> revert = new ArrayList<>();
     private List<String> pull = new ArrayList<>();
     private List<String> push = new ArrayList<>();
-    private List<Pair<Boolean, String>> exec = new ArrayList<>(); //command => true=add, false=remove, path
+    private List<PullExec> exec = new ArrayList<>(); //command => true=add, false=remove, path
+    private List<String> warnings = new ArrayList<>();
     private CredentialsProvider creds; //only used within this class
     private String user;
     private String mail;
@@ -909,7 +994,7 @@ public class RepositoryInteraction {
     @Override
     public String toString() {
       StringBuilder sb = new StringBuilder();
-      List<String> execString = exec.stream().map(x -> x.getFirst() + " - " + x.getSecond()).collect(Collectors.toList());
+      List<String> execString = exec.stream().map(x -> x.execType + " - " + x.repoPath).collect(Collectors.toList());
       List<String> localDiffString = localDiffs.stream().map(x -> x.toString()).collect(Collectors.toList());
       List<String> remoteDiffString = remoteDiffs.stream().map(x -> x.toString()).collect(Collectors.toList());
       sb.append("Data for repository: ").append(repository).append("\n");
@@ -920,12 +1005,38 @@ public class RepositoryInteraction {
       sb.append("  Exec: ").append(exec.size()).append(": ").append(String.join(", ", execString)).append("\n");
       sb.append("  Conf: ").append(conflicts.size()).append(": ").append(String.join(", ", conflicts)).append("\n");
       sb.append("  revt: ").append(revert.size()).append(": ").append(String.join(", ", revert)).append("\n");
+      if (!warnings.isEmpty()) {
+        sb.append("  warn: ").append(warnings.size()).append(": ").append(String.join(", ", warnings)).append("\n");
+      }
       return sb.toString();
+    }
+    
+    public boolean containsWarnings() {
+      return !warnings.isEmpty();
     }
   }
   
   
+  private static class PullExec {
+    private PullExecType execType;
+    private String repoPath;
+    
+    public PullExec(PullExecType execType, String repoPath) {
+      this.execType = execType;
+      this.repoPath = repoPath;
+    }
+    
+  }
   
+  private enum PullExecType {
+
+    delete, deploy;
+
+
+    public static PullExecType convert(ChangeType type) {
+      return type == ChangeType.DELETE ? delete: deploy;
+    }
+  }
   
   private static class SshTransportConfigCallback implements TransportConfigCallback {
     
@@ -942,5 +1053,15 @@ public class RepositoryInteraction {
       sshTransport.setSshSessionFactory(f);
     }
     
+  }
+  
+  private static class ObjectToDeploy {
+    private String fqn;
+    private String fileName;
+  
+    public ObjectToDeploy(String fqn, String fileName) {
+      this.fqn = fqn;
+      this.fileName = fileName;
+    }
   }
 }

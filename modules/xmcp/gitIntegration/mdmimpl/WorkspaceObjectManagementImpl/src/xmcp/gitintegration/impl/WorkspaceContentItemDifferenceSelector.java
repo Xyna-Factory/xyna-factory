@@ -35,7 +35,7 @@ public class WorkspaceContentItemDifferenceSelector implements XynaObjectDiffere
 
   @Override
   public String selectId(WorkspaceContentDifference item) {
-    return String.valueOf(item.getId());
+    return String.valueOf(item.getEntryId());
   }
 
   @Override

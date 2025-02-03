@@ -19,10 +19,14 @@ package xmcp.gitintegration.impl;
 
 
 
+import base.File;
 import base.Text;
+import base.math.IntegerNumber;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.Pair;
@@ -42,10 +46,16 @@ import xmcp.gitintegration.Flag;
 import xprc.xpce.Workspace;
 import xmcp.gitintegration.RepositoryManagementServiceOperation;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
+import xmcp.gitintegration.impl.RepositoryInteraction.GitDataContainer;
+import xmcp.gitintegration.repository.Branch;
 import xmcp.gitintegration.repository.BranchData;
+import xmcp.gitintegration.repository.ChangeSet;
 import xmcp.gitintegration.repository.Commit;
+import xmcp.gitintegration.repository.Repository;
 import xmcp.gitintegration.repository.RepositoryConnection;
+import xmcp.gitintegration.repository.RepositoryConnectionGroup;
 import xmcp.gitintegration.repository.RepositoryUser;
+import xmcp.gitintegration.repository.RepositoryUserCreationData;
 import xmcp.gitintegration.storage.UserManagementStorage;
 
 
@@ -56,11 +66,15 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     RepositoryManagementImpl.init();
     UserManagementStorage.init();
     OverallInformationProvider.onDeployment();
+    PluginManagement.registerPlugin(this.getClass());
   }
 
 
   public void onUndeployment() throws XynaException {
+    RepositoryManagementImpl.shutdown();
+    UserManagementStorage.shutdown();
     OverallInformationProvider.onUndeployment();
+    PluginManagement.unregisterPlugin(this.getClass());
   }
 
 
@@ -88,8 +102,27 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
   }
 
 
-  public Text listRepositoryConnections() {
-    return new Text(RepositoryManagementImpl.listRepositoryConnections());
+  public List<? extends RepositoryConnection> listRepositoryConnections() {
+    return RepositoryManagementImpl.listRepositoryConnections();
+  }
+
+
+  @Override
+  public List<? extends RepositoryConnectionGroup> listRepositoryConnectionGroups() {
+    List<RepositoryConnection> connections = RepositoryManagementImpl.listRepositoryConnections();
+    List<RepositoryConnectionGroup> result = new ArrayList<>();
+    Map<String, List<RepositoryConnection>> groups = new HashMap<>();
+    for(RepositoryConnection connection: connections) {
+      groups.putIfAbsent(connection.getPath(), new ArrayList<>());
+      groups.get(connection.getPath()).add(connection);
+    }
+    for(String repoGroup : groups.keySet()) {
+      Repository repo = new Repository.Builder().path(repoGroup).instance();
+      List<RepositoryConnection> conns = groups.get(repoGroup);
+      RepositoryConnectionGroup group = new RepositoryConnectionGroup.Builder().repository(repo).repositoryConnection(conns).instance();
+      result.add(group);
+    }
+    return result;
   }
 
 
@@ -124,10 +157,9 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
 
 
   @Override
-  public List<? extends RepositoryUser> listUsersOfRepository(String arg0) {
-    return new UserManagementStorage().listUsersOfRepo(arg0);
+  public List<? extends RepositoryUser> listUsersOfRepository(Repository repository) {
+    return new UserManagementStorage().listUsersOfRepo(repository.getPath());
   }
-
 
   @Override
   public RepositoryConnection getRepositoryConnection(Workspace workspace) {
@@ -140,9 +172,13 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     RepositoryManagementImpl.updatetRepositoryConnection(repositoryConnection);
   }
 
-
+  
   @Override
-  public void addUserToRepository(XynaOrderServerExtension order, String repo, String encodedPassword, String repoUser, String mail) {
+  public void addUserToRepository(XynaOrderServerExtension order, RepositoryUserCreationData data) {
+    String repo = data.getRepository().getPath();
+    String encodedPassword = data.getEncodedPassword();
+    String repoUser = data.getUsername();
+    String mail = data.getMail();
     Pair<String, String> usernamePassword;
     try {
       usernamePassword = getUserNameAndDecodePassword(encodedPassword, order.getSessionId());
@@ -150,14 +186,14 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
       throw new RuntimeException(e);
     }
     new UserManagementStorage().AddUserToRepository(usernamePassword.getFirst(), repoUser, repo, usernamePassword.getSecond(), mail);
-
   }
 
+  
 
   @Override
-  public BranchData listBranches(String arg0) {
+  public BranchData listBranches(Repository repository) {
     try {
-      return new RepositoryInteraction().listBranches(arg0);
+      return new RepositoryInteraction().listBranches(repository.getPath());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -165,9 +201,9 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
 
 
   @Override
-  public List<? extends Commit> listCommits(String arg0, String arg1, int arg2) {
+  public List<? extends Commit> listCommits(Repository repo, Branch branch, IntegerNumber count) {
     try {
-      return new RepositoryInteraction().listCommits(arg0, arg1, arg2);
+      return new RepositoryInteraction().listCommits(repo.getPath(), branch.getName(), (int)count.getValue());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -175,12 +211,53 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
 
 
   @Override
-  public void checkout(String arg0, String arg1) {
+  public void checkout(Branch branch, Repository repository) {
     try {
-      new RepositoryInteraction().checkout(arg0, arg1);
+      new RepositoryInteraction().checkout(branch.getName(), repository.getPath());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
   }
 
+  
+  private String getUserFromSession(String session) {
+    SessionManagement sessionMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement();
+    return sessionMgmt.resolveSessionToUser(session);
+  }
+
+
+  @Override
+  public Text pull(XynaOrderServerExtension order, Repository repository) {
+    String user = getUserFromSession(order.getSessionId());
+    String result;
+    try {
+      GitDataContainer data = new RepositoryInteraction().pull(repository.getPath(), false, user);
+      result = data.toString();
+    } catch (Exception e) {
+      return new Text("Exception during pull: " + e.getMessage());
+    }
+
+    return new Text(result);
+  }
+
+
+  @Override
+  public Text push(XynaOrderServerExtension order, Repository arg0, Text arg1, List<? extends File> arg2) {
+    String user = getUserFromSession(order.getSessionId());
+    try {
+      new RepositoryInteraction().push(arg0.getPath(), arg1.getText(), false, user);
+    } catch (Exception e) {
+      return new Text("Exception during push: " + e.getMessage());
+    }
+
+    return new Text("Push successful!");
+  }
+
+
+  @Override
+  public ChangeSet loadChangeSet(Repository repository) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  
 }

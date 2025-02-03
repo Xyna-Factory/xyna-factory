@@ -37,4 +37,5 @@
       <Type>boolean</Type>
     </Meta>
   </Data>
+  <Data IsList="true" Label="On Startorder Result Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="onStartorderResultEvent"/>
 </DataType>

@@ -126,7 +126,7 @@ public class DomOrExceptionModel extends BaseModel {
     }
 
     public String getLatestDocumentation() {
-        return latestDocumentation;
+        return latestDocumentation != null ? latestDocumentation : "";
     }
 
     public Class<DOM> getDOM() {
