@@ -19,6 +19,7 @@
 <project name="build_server" default="build" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
 
   <import file="../installation/build/ant-xyna.xml" xmlns:resolver="antlib:org.apache.maven.resolver.ant"/>
+  <import file="../installation/build/macros.xml" />
 
   <property name="project.name" value="xynafactory" />
   <property name="build.dir" value="${basedir}/deploy" />
@@ -310,5 +311,13 @@
      <fileset dir="${basedir}/classes" includes="**/*.class" />
    </jar>
  </target>
+
+  <target name="installMavenArtifactXynaFactory" depends="build" description="install artifact to maven repository">
+    <install-maven-artifact artifactFile="${build.dir}/${project.name}.jar" pomFile="${basedir}/pom.xml" />
+  </target>
+
+  <target name="installMavenArtifactCLIGenerator" depends="buildCliClassGeneratorJar" description="install artifact to maven repository">
+    <install-maven-artifact artifactFile="${build.dir}/${project.name}CLIGenerator.jar" pomFile="${basedir}/cligenerator.pom.xml" />
+  </target>
 
 </project>

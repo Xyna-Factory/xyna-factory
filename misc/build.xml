@@ -19,9 +19,10 @@
 <project name="build" default="build" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
 
 	<import file="../installation/build/ant-xyna.xml" />
+	<import file="../installation/build/macros.xml" />
 
 	<!-- use a special project name variable name since "project.name" is overridden when being called by the main build script -->
-	<property name="project.name.local2" value="misc" />
+	<property name="project.name" value="misc" />
 
 	<property name="target.dir" value="${basedir}/deploy" />
 
@@ -38,7 +39,7 @@
 	         target: build             
 	        ================================= -->
 	<target name="build" depends="resolve">
-		<buildJar destfile="${target.dir}/${project.name.local2}.jar" />
+		<buildJar destfile="${target.dir}/${project.name}.jar" />
 	</target>
     
       <target name="resolve">
@@ -51,6 +52,8 @@
         <!-- delete generated-resources ? -->
       </target>
 
-
+    <target name="installMavenArtifact" depends="build" description="install artifact to maven repository">
+         <install-maven-artifact artifactFile="${target.dir}/${project.name}.jar" pomFile="${basedir}/pom.xml" />
+    </target>
 
 </project>
