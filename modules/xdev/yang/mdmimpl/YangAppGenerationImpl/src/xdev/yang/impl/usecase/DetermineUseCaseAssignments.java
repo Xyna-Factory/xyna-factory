@@ -24,7 +24,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.yangcentral.yangkit.model.api.stmt.Module;
 
