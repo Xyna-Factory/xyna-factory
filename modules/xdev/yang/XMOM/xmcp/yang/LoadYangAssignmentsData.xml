@@ -59,4 +59,9 @@
       <Type>String</Type>
     </Meta>
   </Data>
+  <Data Label="Warning" VariableName="warning">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
 </DataType>
