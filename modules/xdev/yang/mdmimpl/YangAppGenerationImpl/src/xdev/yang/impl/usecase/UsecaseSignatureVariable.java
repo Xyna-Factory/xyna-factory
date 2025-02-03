@@ -31,8 +31,6 @@ import xdev.yang.impl.Constants;
 
 public class UsecaseSignatureVariable {
 
-  private static Logger _logger = Logger.getLogger(UsecaseSignatureVariable.class);
-  
   private String fqn;
   private String varName;
   

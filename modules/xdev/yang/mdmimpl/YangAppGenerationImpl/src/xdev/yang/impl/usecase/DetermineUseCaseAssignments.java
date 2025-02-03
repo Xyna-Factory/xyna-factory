@@ -40,8 +40,6 @@ import xmcp.yang.UseCaseAssignmentTableData;
 
 public class DetermineUseCaseAssignments {
 
-  private static Logger _logger = Logger.getLogger(DetermineUseCaseAssignments.class);
-
   private static final Set<String> primitives = Set.of(Constants.TYPE_LEAF, Constants.TYPE_ANYXML, Constants.TYPE_ANYDATA);
 
   public List<UseCaseAssignmentTableData> determineUseCaseAssignments(LoadYangAssignmentsData data) {
@@ -118,9 +116,7 @@ public class DetermineUseCaseAssignments {
         subAssignments++;
         if (isChoice && (mappingPath.size() > entryPath.size())) {
           MappingPathElement childElem = mappingPath.get(entryPath.size());
-          if (Constants.TYPE_CASE.equals(childElem.getKeyword())) {
-            caseSet.add(childElem.getYangPath());
-          }
+          caseSet.add(childElem.getYangPath());
         }
       }
     }
