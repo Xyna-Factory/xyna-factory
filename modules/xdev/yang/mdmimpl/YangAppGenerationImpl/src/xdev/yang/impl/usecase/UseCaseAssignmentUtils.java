@@ -299,19 +299,21 @@ public class UseCaseAssignmentUtils {
         continue;
       }
       List<Element> modules = XMLUtils.getChildElementsByName(xml.getDocumentElement(), "module");
+      YangSchemaContext context = null;
       for(Element module : modules) {
-        addModulesFromTag(module, result);
+        context = addModulesFromTag(module, result, context);
       }
     }
     return result;
   }
 
 
-  private static void addModulesFromTag(Element module, List<Module> modules) throws Exception {
+  private static YangSchemaContext addModulesFromTag(Element module, List<Module> modules, YangSchemaContext context) throws Exception {
     java.io.ByteArrayInputStream is = new java.io.ByteArrayInputStream(Base64.decode(module.getTextContent()));
-    YangSchemaContext context = YangYinParser.parse(is, "module.yang", null);
+    context = YangYinParser.parse(is, "module.yang", context);
     context.validate();
     modules.addAll(context.getModules());
+    return context;
   }
 
   public static Pair<Integer, Document> loadOperationMeta(String fqn, String workspaceName, String usecase) {
