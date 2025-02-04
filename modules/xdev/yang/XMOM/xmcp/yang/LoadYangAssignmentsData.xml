@@ -64,4 +64,14 @@
       <Type>String</Type>
     </Meta>
   </Data>
+  <Data Label="Deviation Info" VariableName="deviationInfo">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Is Not Supported Deviation" VariableName="isNotSupportedDeviation">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
 </DataType>

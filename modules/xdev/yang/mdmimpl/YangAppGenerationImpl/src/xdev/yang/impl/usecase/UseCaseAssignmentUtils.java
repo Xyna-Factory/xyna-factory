@@ -20,16 +20,21 @@ package xdev.yang.impl.usecase;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.yangcentral.yangkit.base.YangElement;
 import org.yangcentral.yangkit.model.api.schema.YangSchemaContext;
 import org.yangcentral.yangkit.model.api.stmt.DataDefinition;
+import org.yangcentral.yangkit.model.api.stmt.Deviate;
+import org.yangcentral.yangkit.model.api.stmt.DeviateType;
+import org.yangcentral.yangkit.model.api.stmt.Deviation;
 import org.yangcentral.yangkit.model.api.stmt.Input;
 import org.yangcentral.yangkit.model.api.stmt.Module;
 import org.yangcentral.yangkit.model.api.stmt.Rpc;
@@ -64,26 +69,128 @@ import xmcp.yang.YangModuleCollection;
 
 
 public class UseCaseAssignmentUtils {
+  
+  public static class DeviationList {
+    private List<Deviation> deviations = new ArrayList<>();
+    public DeviationList(List<Deviation> deviations) {
+      if (deviations != null) {
+        this.deviations.addAll(deviations);
+      }
+    }
+    public List<Deviation> getList() {
+      return deviations;
+    }
+    public void replace(List<Deviation> deviations) {
+      this.deviations.clear();
+      this.deviations.addAll(deviations);
+    }
+  }
+  
+  public static class RpcAndDeviations {
+    private Rpc rpc;
+    private DeviationList deviationList;
+    public RpcAndDeviations(Rpc rpc, List<Deviation> deviations) {
+      this.rpc = rpc;
+      deviationList = new DeviationList(deviations);      
+    }
+    public Rpc getRpc() {
+      return rpc;
+    }
+    public DeviationList getDeviationList() {
+      return deviationList;
+    }
+  }
 
+  private static Logger _logger = Logger.getLogger(UseCaseAssignmentUtils.class);
+  
 
   public static List<UseCaseAssignmentTableData> loadPossibleAssignments(List<Module> modules, String rpcName, String rpcNs,
                                                                          LoadYangAssignmentsData data, Document meta,
                                                                          List<String> supportedFeatures) {
-    Rpc rpc = findRpc(modules, rpcName, rpcNs);
-    Input input = rpc.getInput();
+    RpcAndDeviations rpc = findRpc(modules, rpcName, rpcNs);
+    Input input = rpc.getRpc().getInput();
     List<ListConfiguration> listConfigs = ListConfiguration.loadListConfigurations(meta);
     List<YangStatement> elements =
-        traverseYang(data.getTotalYangPath(), data.getTotalNamespaces(), data.getTotalKeywords(), input, listConfigs, supportedFeatures);
-    List<UseCaseAssignmentTableData> result = loadAssignments(elements, data, supportedFeatures);
+        traverseYang(data.getTotalYangPath(), data.getTotalNamespaces(), data.getTotalKeywords(), input, listConfigs, 
+                     supportedFeatures, rpc.getDeviationList());
+    List<UseCaseAssignmentTableData> result = loadAssignments(elements, data, supportedFeatures, rpc.getDeviationList());
     return result;
   }
 
+  
+  private static boolean identifiersAreEqual(String id1, String id2) {
+    return removeOptionalPrefix(id1).equals(removeOptionalPrefix(id2));
+  }
+  
+  private static String removeOptionalPrefix(String id) {
+    if (id == null) { return ""; }
+    if (!id.contains(":")) { return id; }
+    return id.substring(id.indexOf(":") + 1);
+  }
 
+  private static void filterDeviations(DeviationList deviations, String[] partsIn, String[] namespacePartsIn,
+                                       String[] keywordParts) {
+    String[] parts = partsIn;
+    String[] namespaceParts = namespacePartsIn;
+    int indexOfUses = -1;
+    for (int i = 0; i < keywordParts.length; i++) {
+      if (Constants.TYPE_USES.equals(keywordParts[i])) {
+        indexOfUses = i;
+      }
+    }
+    if (indexOfUses + 1 >= parts.length) { return; }
+    if (indexOfUses > 0) {
+      parts = Arrays.copyOfRange(parts, indexOfUses, parts.length);
+      namespaceParts = Arrays.copyOfRange(namespaceParts, indexOfUses, namespaceParts.length);
+    }
+    List<Deviation> filtered = new ArrayList<>();
+    for (Deviation dev : deviations.getList()) {
+      if (keepDeviation(dev, parts, namespaceParts)) {
+        filtered.add(dev);
+      }
+    }
+    deviations.replace(filtered);
+  }
+  
+  
+  private static boolean hasDeviationTypeNotSupported(Deviation dev) {
+    if (dev.getDeviates() == null) { return false; }
+    for (Deviate deviate : dev.getDeviates()) { 
+      if (deviate.getDeviateType() == DeviateType.NOT_SUPPORTED) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  
+  private static boolean keepDeviation(Deviation dev, String[] parts, String[] namespaceParts) {
+    if (dev.getDeviates() == null) { return false; }
+    if (dev.getTargetPath() == null) { return false; }
+    if (dev.getTargetPath().getPath() == null) { return false; }
+    if (dev.getTargetPath().getPath().size() != parts.length + 1) { return false; }
+    if (dev.getTargetPath().getPath().size() != namespaceParts.length + 1) { return false; }
+    
+    for (int i = 0; i < parts.length; i++) {
+      _logger.warn("### Checking deviation path elem local name [ " + i + " ]: " + 
+                   dev.getTargetPath().getPath().get(i).getLocalName() + " <-> " + parts[i]);
+      _logger.warn("### Checking deviation path elem namespace [ " + i + " ]: " + 
+                   dev.getTargetPath().getPath().get(i).getNamespace().toString() + " <-> " + namespaceParts[i]);
+      if (!namespaceParts[i].equals(dev.getTargetPath().getPath().get(i).getNamespace().toString())) { return false; }
+      if (!identifiersAreEqual(parts[i], dev.getTargetPath().getPath().get(i).getLocalName())) { return false; }
+    }
+    return true;
+  }
+  
+  
   private static List<YangStatement> traverseYang(String path, String namespaces, String keywords, YangStatement element,
-                                                  List<ListConfiguration> listConfigs, List<String> supportedFeatures) {
+                                                  List<ListConfiguration> listConfigs, List<String> supportedFeatures,
+                                                  DeviationList deviations) {
     String[] parts = path.split("\\/");
     String[] namespaceParts = namespaces.split(Constants.NS_SEPARATOR);
     String[] keywordParts = keywords.split(" ");
+    filterDeviations(deviations, parts, namespaceParts, keywordParts);
+    
     for (int i = 1; i < parts.length; i++) { //ignore initial "/<rpcName>"
       String part = parts[i];
       String namespace = namespaceParts[i];
@@ -157,11 +264,35 @@ public class UseCaseAssignmentUtils {
     List<YangElement> candidates = YangStatementTranslation.getSubStatements(statement);
     List<YangStatement> result = new ArrayList<>();
     for (YangElement candidate : candidates) {
-      if (isSupportedElement(candidate, supportedFeatures)) {
+      
+      if (isSupportedElement(candidate, supportedFeatures)) {        
         result.add((YangStatement) candidate);
       }
     }
     return result;
+  }
+  
+  
+  private static void handleDeviationsForElement(YangStatement node, DeviationList deviations,
+                                                 LoadYangAssignmentsData data) {
+    for (Deviation dev : deviations.getList()) {
+      String devLocalname = dev.getTargetPath().getLast().getLocalName();
+      String devNamespace = dev.getTargetPath().getLast().getNamespace().toString();
+      String localname = YangStatementTranslation.getLocalName(node);
+      String namespace = YangStatementTranslation.getNamespace(node);
+      _logger.warn("### Checking path end / local name: " + localname + " <-> " + devLocalname);
+      _logger.warn("### Checking path end / namespace: " + namespace + " <-> " + devNamespace);
+      if (identifiersAreEqual(localname, devLocalname) && namespace.equals(devNamespace)) {
+        if (hasDeviationTypeNotSupported(dev)) {
+          data.unversionedSetIsNotSupportedDeviation(true);
+        }
+        //else 
+        if ((dev.getDeviates() != null) && (dev.getDeviates().size() > 0)) {
+          data.unversionedSetDeviationInfo(dev.getDeviates().get(0).getArgStr());  
+        }
+        return;
+      }
+    }
   }
 
 
@@ -181,7 +312,8 @@ public class UseCaseAssignmentUtils {
   }
 
 
-  private static List<UseCaseAssignmentTableData> loadAssignments(List<YangStatement> subElements, LoadYangAssignmentsData data, List<String> supportedFeatures) {
+  private static List<UseCaseAssignmentTableData> loadAssignments(List<YangStatement> subElements, LoadYangAssignmentsData data, 
+                                                                  List<String> supportedFeatures, DeviationList deviations) {
     YangSubelementContentHelper helper = new YangSubelementContentHelper();
     List<UseCaseAssignmentTableData> result = new ArrayList<>();
     for (YangStatement element : subElements) {
@@ -196,6 +328,7 @@ public class UseCaseAssignmentUtils {
         updatedData.unversionedSetTotalKeywords(updatedData.getTotalKeywords() + " " + keyword);
         updatedData.unversionedSetWarning(null);
         helper.copyRelevantSubelementValues(element, updatedData);
+        handleDeviationsForElement(element, deviations, updatedData);
         builder.loadYangAssignmentsData(updatedData);
         builder.yangPath(localName);
         builder.type(getYangType(element));
@@ -239,11 +372,11 @@ public class UseCaseAssignmentUtils {
     return "Unknown: " + element.getClass().getCanonicalName();
   }
 
-  private static Rpc findRpc(List<Module> modules, String rpcName, String rpcNs) {
+  private static RpcAndDeviations findRpc(List<Module> modules, String rpcName, String rpcNs) {
     for (Module module : modules) {
       Rpc result = module.getRpc(rpcName);
       if (result != null && Objects.equals(YangStatementTranslation.getNamespace(result), rpcNs)) {
-        return result;
+        return new RpcAndDeviations(result, module.getDeviations());
       }
     }
     throw new RuntimeException("rpc " + rpcName + " in namespace " + rpcNs + " not found.");
