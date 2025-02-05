@@ -60,20 +60,7 @@ public class UpdateVariableInUsecaseSignature {
           uc.addInput(var.getVarName(), var.getFqn());
         }
       }
-      // handle problem that input variable names will be automatically changed by xyna factory
-      uc.updateImplementation("return null;");
-      uc.save();
-      uc.deploy();
-    }
-    catch (Exception e) {
-      _logger.error(e.getMessage(), e);
-      return;
-    }
-
-    try (Usecase uc = Usecase.open(order, fqn, workspace, usecaseName)) {
-      Document meta = uc.getMeta();
       UsecaseImplementationProvider implProvider = new UsecaseImplementationProvider();
-      // adjust implementation java code to changed input variable names
       String newImpl = implProvider.createImpl(meta, uc.getInputVarNames());
       uc.updateImplementation(newImpl);
       uc.save();

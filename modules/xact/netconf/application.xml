@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Factory Content" TypeName="FactoryContent" TypePath="xmcp.gitintegration" Version="1.8">
-  <Meta>
-    <IsServiceGroupOnly>false</IsServiceGroupOnly>
-  </Meta>
-  <Data IsList="true" Label="Factory Content Items" ReferenceName="FactoryContentItem" ReferencePath="xmcp.gitintegration" VariableName="factoryContentItems"/>
-</DataType>
+-->
+<Application applicationName="NetConf" comment="" factoryVersion="" versionName="0.0.1" xmlVersion="1.1">
+</Application>

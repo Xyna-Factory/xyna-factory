@@ -19,8 +19,9 @@
 <project name="build" default="build" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
 
   <import file="../../installation/build/ant-xyna.xml" />
+  <import file="../../installation/build/macros.xml" />
 
-  <property name="project.name.local2" value="XynaMemoryPersistenceLayer" />
+  <property name="project.name" value="XynaMemoryPersistenceLayer" />
 
   <property name="target.dir" value="${basedir}/deploy" />
   <property name="target.dir.test" value="${basedir}/deploy.test" />
@@ -38,7 +39,7 @@
 	         target: build             
 	        ================================= -->
   <target name="build" depends="resolve">
-    <buildJar destfile="${target.dir}/${project.name.local2}.jar" />
+    <buildJar destfile="${target.dir}/${project.name}.jar" />
   </target>
 
   	<!-- ================================= 
@@ -75,7 +76,7 @@
       </classpath>
     </javac>
     <mkdir dir="${target.dir.test}" />
-    <jar destfile="${target.dir.test}/${project.name.local2}-test.jar">
+    <jar destfile="${target.dir.test}/${project.name}-test.jar">
       <fileset dir="${basedir}/classes" includes="**/*.class" />
       <fileset dir="${basedir}">
         <include name="Exceptions.xml" />
@@ -93,5 +94,9 @@
         <loadLicenses targetDir="${basedir}/lib" />
         <!-- delete generated-resources ? -->
       </target>
+
+  <target name="installMavenArtifact" depends="build" description="install artifact to maven repository">
+     <install-maven-artifact artifactFile="${target.dir}/${project.name}.jar" pomFile="${basedir}/pom.xml" />
+  </target>
 
 </project>

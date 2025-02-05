@@ -20,7 +20,6 @@ package xdev.yang.impl.usecase;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -31,8 +30,6 @@ import xdev.yang.impl.Constants;
 
 public class UsecaseSignatureVariable {
 
-  private static Logger _logger = Logger.getLogger(UsecaseSignatureVariable.class);
-  
   private String fqn;
   private String varName;
   
