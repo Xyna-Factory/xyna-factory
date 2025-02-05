@@ -121,7 +121,7 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
 
     int id = 0;
     for (WorkspaceContentDifference difference : result) {
-      difference.setId(id++);
+      difference.setEntryId(id++);
     }
 
     return result;
@@ -303,7 +303,7 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
       return true;
     } catch (Exception e) {
       //if there is an exception, do not remove the entry
-      sb.append("Exception occurred while resolving item " + entry.getId() + ". It remains in the list. Details: " + e.getMessage());
+      sb.append("Exception occurred while resolving item " + entry.getEntryId() + ". It remains in the list. Details: " + e.getMessage());
       sb.append("\n");
     }
     return false;
@@ -340,7 +340,7 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
 
 
   private Optional<? extends WorkspaceContentDifference> findEntry(WorkspaceContentDifferences diffs, long entryId) {
-    return diffs.getDifferences().stream().filter(x -> x.getId() == entryId).findFirst();
+    return diffs.getDifferences().stream().filter(x -> x.getEntryId() == entryId).findFirst();
   }
 
 

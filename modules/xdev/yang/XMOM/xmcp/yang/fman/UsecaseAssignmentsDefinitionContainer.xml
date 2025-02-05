@@ -142,6 +142,14 @@
       <Mapping>%0%.dataPath="%0%.loadYangAssignmentsData.description"</Mapping>
       <Mapping>%0%.hideIfEmpty="true"</Mapping>
     </Mappings>
+    <Mappings ID="4279" Label="Mapping">
+      <Output>
+        <Data ID="4280" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition4280"/>
+        <Target RefID="4281"/>
+      </Output>
+      <Mapping>%0%.dataPath="%0%.loadYangAssignmentsData.warning"</Mapping>
+      <Mapping>%0%.hideIfEmpty="true"</Mapping>
+    </Mappings>
     <Mappings ID="3502" Label="Mapping">
       <Input>
         <Data ID="3553" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition3553">
@@ -163,14 +171,25 @@
           </Meta>
         </Source>
       </Input>
+      <Input>
+        <Data ID="4314" Label="Text Item Definition 2" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition4314">
+          <Source RefID="3502"/>
+        </Data>
+        <Source RefID="4281">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
       <Output>
         <Data ID="3519" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3519">
           <Source RefID="3502"/>
         </Data>
         <Target RefID="3520"/>
       </Output>
-      <Mapping>%2%.children["0"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%0%</Mapping>
-      <Mapping>%2%.children["1"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%1%</Mapping>
+      <Mapping>%3%.children["0"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%0%</Mapping>
+      <Mapping>%3%.children["1"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%1%</Mapping>
+      <Mapping>%3%.children["2"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%2%</Mapping>
     </Mappings>
     <Data ID="22" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext22"/>
     <Data ID="3394" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow3394"/>
@@ -186,6 +205,7 @@
     <Data ID="4157" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition4157">
       <Source RefID="3836"/>
     </Data>
+    <Data ID="4281" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition4281"/>
     <Assign ID="1">
       <Source RefID="3520"/>
       <Target RefID="230"/>
