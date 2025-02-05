@@ -311,7 +311,6 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
 
     //addStatistics
     try {
-      TriggerInstanceIdentification i = getTriggerInstanceIdentification();
       registerStatistics();
     } catch (Exception e) {
       logger.info("HTTPTrigger Statistics could not be initialized. ", e);
@@ -540,7 +539,7 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
                                                                          .append(getTriggerInstanceIdentification().getInstanceName())
                                                                          .append(statisticType);
 
-        Statistics existingStatistics;
+        Statistics<?,?> existingStatistics;
         try {
           existingStatistics = statistics.getStatistic(ownPath);
         } catch (XFMG_InvalidStatisticsPath e) {
@@ -552,7 +551,7 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
               .append(new StatisticsPathImpl.BlackListFilter("All"))
               .append(getTriggerInstanceIdentification().getInstanceName())
               .append(statisticType);
-          Statistics aggregate = AggregationStatisticsFactory.generateDefaultAggregationStatistics(ownPath, pathToAggregate);
+          Statistics<?,?> aggregate = AggregationStatisticsFactory.generateDefaultAggregationStatistics(ownPath, pathToAggregate);
           try {
             statistics.registerStatistic(aggregate);
           } catch (XFMG_StatisticAlreadyRegistered e) {

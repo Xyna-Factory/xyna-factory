@@ -122,7 +122,7 @@ public class HTTPStartParameter extends EnhancedStartParameter {
       StringParameter.typeString("address").
       documentation( Documentation.
                      de("Name der IP im NetworkConfigurationManagement oder Network-Interface-name (Default: Akzeptiert Verbindungen von allen Interfaces)").
-                     en("Name of ip in NetworkConfigurationManagement or network interface name (Default: accept connections from all interfaces)").build() ).
+                     en("Name of ip in NetworkConfigurationManagement or network interface name (Default: Accept connections from all interfaces)").build() ).
       defaultValue("").build();
   public static final StringParameter<InterfaceProtocolPreference> NETWORK_INTERFACE_PROTOCOL =
       StringParameter.typeEnum(InterfaceProtocolPreference.class, "protocol", true).
@@ -131,8 +131,8 @@ public class HTTPStartParameter extends EnhancedStartParameter {
   public static final StringParameter<KeyStoreParameter> HTTPS =
       StringParameter.typeEnum(KeyStoreParameter.class, "https", true).
       documentation( Documentation
-                     .de("Verwende HTTP oder HTTPS mit SSL-Context, NONE: http, FILE: https und Angabe eines gemeinsamen Key/Trust-Files, KEY_MGMT: https und Angabe eines KeyStores und TrustManagers)")
-                     .en("Use HTTP or HTTPS with SSL context, NONE: http, FILE: https and parameters for a shared Key/Trust-File, KEY_MGMT: https and parameters for a key store and a trust manager)").build() ).
+                     .de("Verwende HTTP oder HTTPS mit SSL-Context, NONE: http, FILE: https und Angabe eines gemeinsamen Key/Trust-Files, KEY_MGMT: https und Angabe eines KeyStores und TrustManagers")
+                     .en("Use HTTP or HTTPS with SSL context, NONE: http, FILE: https and parameters for a shared Key/Trust-File, KEY_MGMT: https and parameters for a key store and a trust manager").build() ).
       defaultValue(KeyStoreParameter.NONE).build();
   public static final StringParameter<ClientAuth> CLIENTAUTH =
       StringParameter.typeEnum(ClientAuth.class, "clientauth").
@@ -174,7 +174,7 @@ public class HTTPStartParameter extends EnhancedStartParameter {
   public static final StringParameter<String> SSL_CONTEXT_ALGORITHM =
       StringParameter.typeString("ssl")
           .documentation(Documentation.de("TLS-Protokoll").en("TLS protocol").build())
-          .defaultValue("TLSv1.3").pattern("^TLS(v1(\\.[1-3])?)?$").build();
+          .defaultValue("TLS").pattern("^TLS(v1(\\.[1-3])?)?$").build();
   public static final StringParameter<Boolean> SUPPRESS_LOGGING = StringParameter.typeBoolean("suppressRequestLogging").
                   documentation(Documentation.de("Unterdrücke requestabhängiges Logging").en("Suppress request dependent logging.").build()).
                   optional().defaultValue(false).build();
