@@ -45,7 +45,7 @@ import com.gip.xyna.xfmg.xfctrl.netconfmgmt.InternetAddressBean;
 public class HTTPStartParameter extends EnhancedStartParameter {
 
   private static Logger logger = CentralFactoryLogging.getLogger(HTTPStartParameter.class);
-  
+
   private int port;
   private String address;
   private KeyStoreParameter keystoreParameter;
@@ -56,11 +56,13 @@ public class HTTPStartParameter extends EnhancedStartParameter {
   private InterfaceProtocolPreference interfacePreference;
   private String keyStoreName;
   private String trustStoreName;
+  private String sslContextAlgorithm;
   private boolean suppressRequestLogging = false;
-  
-  public enum ClientAuth { //in anlehnung an apache 
+
+  public enum ClientAuth { //in anlehnung an apache
     require, optional, none;
   }
+
   public enum InterfaceProtocolPreference {
 
     IPV4, IPV6;
@@ -75,23 +77,23 @@ public class HTTPStartParameter extends EnhancedStartParameter {
       }
     }
   }
-  
+
   public static enum KeyStoreParameter {
-    
+
     NONE(false),
     FILE(true),
     KEY_MGMT(true),
     // for deserializtion of old entries
     FALSE(false),
     TRUE(true);
-    
-    
+
+
     private final boolean useHTTPS;
-    
+
     KeyStoreParameter(boolean useHTTPS) {
       this.useHTTPS = useHTTPS;
     }
-    
+
     public static KeyStoreParameter getByNameIgnoreCase(String name) {
       if (NONE.toString().equalsIgnoreCase(name) ||
           Boolean.FALSE.toString().equalsIgnoreCase(name)) {
@@ -105,40 +107,40 @@ public class HTTPStartParameter extends EnhancedStartParameter {
         return null;
       }
     }
-    
+
     public boolean useHTTPS() {
       return useHTTPS;
     }
-    
+
   }
 
-  public static final StringParameter<Integer> PORT = 
+  public static final StringParameter<Integer> PORT =
       StringParameter.typeInteger("port").
       documentation( Documentation.de("Port").en("Port").build() ).
       mandatory().build();
-  public static final StringParameter<String> ADDRESS = 
+  public static final StringParameter<String> ADDRESS =
       StringParameter.typeString("address").
       documentation( Documentation.
-                     de("Name der IP im NetworkConfigurationManagement oder Network-Interface-name (Default:= akzeptiert Connections von allen Interfaces)").
-                     en("Name of ip in NetworkConfigurationManagement or network interface name (Default=accept connections from all interfaces)").build() ).
+                     de("Name der IP im NetworkConfigurationManagement oder Network-Interface-name (Default: Akzeptiert Verbindungen von allen Interfaces)").
+                     en("Name of ip in NetworkConfigurationManagement or network interface name (Default: accept connections from all interfaces)").build() ).
       defaultValue("").build();
-  public static final StringParameter<InterfaceProtocolPreference> NETWORK_INTERFACE_PROTOCOL = 
+  public static final StringParameter<InterfaceProtocolPreference> NETWORK_INTERFACE_PROTOCOL =
       StringParameter.typeEnum(InterfaceProtocolPreference.class, "protocol", true).
       documentation( Documentation.de("Network-Interface-Protokoll").en("Network interface protocol").build() ).
       defaultValue(InterfaceProtocolPreference.IPV4).build();
-  public static final StringParameter<KeyStoreParameter> HTTPS = 
+  public static final StringParameter<KeyStoreParameter> HTTPS =
       StringParameter.typeEnum(KeyStoreParameter.class, "https", true).
       documentation( Documentation
-                     .de("Wird HTTPS verwendet und wenn, wie wird der SSLContext befüllt. NONE: http, FILE: https und Angabe eines gemeinsamen Key/Trust-Files, KEY_MGMT: https und Angabe eines KeyStores und TrustManagers")
-                     .en("Use HTTPS and if so, how will the SSLContext be initialised. NONE: http, FILE: https und parameters for a shared Key/Trust-File, KEY_MGMT: https and para,eters for a key store and a trust manager").build() ).
+                     .de("Verwende HTTP oder HTTPS mit SSL-Context, NONE: http, FILE: https und Angabe eines gemeinsamen Key/Trust-Files, KEY_MGMT: https und Angabe eines KeyStores und TrustManagers)")
+                     .en("Use HTTP or HTTPS with SSL context, NONE: http, FILE: https and parameters for a shared Key/Trust-File, KEY_MGMT: https and parameters for a key store and a trust manager)").build() ).
       defaultValue(KeyStoreParameter.NONE).build();
-  public static final StringParameter<ClientAuth> CLIENTAUTH = 
+  public static final StringParameter<ClientAuth> CLIENTAUTH =
       StringParameter.typeEnum(ClientAuth.class, "clientauth").
-      documentation( Documentation.de("Client-Authentication").en("Clientauthentication").build() ).
+      documentation( Documentation.de("Client-Authentifizierung").en("Clientauthentication").build() ).
       mandatoryFor(HTTPS, KeyStoreParameter.FILE).
       mandatoryFor(HTTPS, KeyStoreParameter.KEY_MGMT).
       build();
-  public static final StringParameter<String> KEYSTOREPATH = 
+  public static final StringParameter<String> KEYSTOREPATH =
       StringParameter.typeString("keystorepath").
       documentation( Documentation.de("Pfad zum Keystore").en("Keystore Path").build() ).
       mandatoryFor(HTTPS, KeyStoreParameter.FILE).
@@ -148,104 +150,148 @@ public class HTTPStartParameter extends EnhancedStartParameter {
    * vgl
    * http://stackoverflow.com/questions/25488203/unrecoverablekeyexception-cannot-recover-key
     da steht:
-    If you really want to use two distinct passwords, you'll need to implement getPrivateKey(String alias) in your custom X509KeyManager 
+    If you really want to use two distinct passwords, you'll need to implement getPrivateKey(String alias) in your custom X509KeyManager
     to take this into account. In particular, it will have to load the keys from your KeyStore instance with the right password for
      each alias (see getKey(String alias, char[] password)).
    */
-  public static final StringParameter<String> KEYSTOREPASS = 
+  public static final StringParameter<String> KEYSTOREPASS =
       StringParameter.typeString("keystorepasswd").
       documentation( Documentation.de("Keystore-Passwort").en("Keystore Password").build() ).
       mandatoryFor(HTTPS, KeyStoreParameter.FILE).
       build();
-  public static final StringParameter<String> KEYSTORETYPE = 
+  public static final StringParameter<String> KEYSTORETYPE =
       StringParameter.typeString("keystoretype").
       documentation( Documentation.de("Keystore-Typ").en("Keystore Type").build() ).
       defaultValue("JKS").build();
-  public static final StringParameter<String> KEYSTORE_NAME = 
+  public static final StringParameter<String> KEYSTORE_NAME =
                   StringParameter.typeString("keystorename").
                   documentation( Documentation.de("Keystore-Name").en("Keystore Name").build() ).
                   mandatoryFor(HTTPS, KeyStoreParameter.KEY_MGMT).build();
-  public static final StringParameter<String> TRUSTSTORE_NAME = 
+  public static final StringParameter<String> TRUSTSTORE_NAME =
                   StringParameter.typeString("trustmanagername").
                   documentation( Documentation.de("TrustManager-Name").en("TrustManager Name").build() ).
                   optional().build();
+  public static final StringParameter<String> SSL_CONTEXT_ALGORITHM =
+      StringParameter.typeString("ssl")
+          .documentation(Documentation.de("TLS-Protokoll").en("TLS protocol").build())
+          .defaultValue("TLSv1.3").pattern("^TLS(v1(\\.[1-3])?)?$").build();
   public static final StringParameter<Boolean> SUPPRESS_LOGGING = StringParameter.typeBoolean("suppressRequestLogging").
                   documentation(Documentation.de("Unterdrücke requestabhängiges Logging").en("Suppress request dependent logging.").build()).
                   optional().defaultValue(false).build();
-  
-  public static final List<StringParameter<?>> allParameters = 
-      StringParameter.asList( PORT, ADDRESS, NETWORK_INTERFACE_PROTOCOL, HTTPS, CLIENTAUTH, KEYSTOREPATH, KEYSTOREPASS, KEYSTORETYPE, KEYSTORE_NAME, TRUSTSTORE_NAME, SUPPRESS_LOGGING);
-  
-  
+
+  public static final List<StringParameter<?>> allParameters =
+      StringParameter.asList(PORT, ADDRESS, NETWORK_INTERFACE_PROTOCOL, HTTPS, CLIENTAUTH, KEYSTOREPATH, KEYSTOREPASS, KEYSTORETYPE,
+                             KEYSTORE_NAME, TRUSTSTORE_NAME, SSL_CONTEXT_ALGORITHM, SUPPRESS_LOGGING);
+
+
   /* (non-Javadoc)
    * @see com.gip.xyna.xdev.xfractmod.xmdm.EnhancedStartParameter#convertToNewParameters(java.util.List)
    */
   @Override
-  public List<String> convertToNewParameters(List<String> params) throws XACT_InvalidStartParameterCountException,
-      XACT_InvalidTriggerStartParameterValueException {
+  public List<String> convertToNewParameters(List<String> params)
+      throws XACT_InvalidStartParameterCountException, XACT_InvalidTriggerStartParameterValueException {
     List<String> startParams = new ArrayList<String>();
-    startParams.add( PORT.toNamedParameterString(params.get(0) ) );
-    switch( params.size() ) {
-      case 1:
-        break;
-      case 2:
-        startParams.add( ADDRESS.toNamedParameterString(params.get(1) ) );
-        break;
-      case 3:
-        startParams.add( ADDRESS.toNamedParameterString(params.get(1) ) );
-        startParams.add( NETWORK_INTERFACE_PROTOCOL.toNamedParameterString(params.get(2) ) );
-        break;
-      case 6:
-        startParams.add( ADDRESS.toNamedParameterString(params.get(1) ) );
-        //InterfaceProtocolPreference.IPV4 ist default
-        startParams.add( HTTPS.toNamedParameterString(params.get(2) ) );
-        startParams.add( CLIENTAUTH.toNamedParameterString(params.get(3) ) );
-        startParams.add( KEYSTOREPATH.toNamedParameterString(params.get(4) ) );
-        startParams.add( KEYSTOREPASS.toNamedParameterString(params.get(5) ) );
-        //KEYSTORETYPE ist DefaultJKS
-        break;
-      case 7:
-        boolean withNETWORK_INTERFACE_PROTOCOL;
-        try {
-          HTTPS.parse(params.get(2));
-          //Param 2 lies sich als boolean parsen -> kein Protocol
-          withNETWORK_INTERFACE_PROTOCOL = false; 
-        } catch(StringParameterParsingException e) {
-          //Param 2 lies sich nicht als boolean parsen -> wahrscheinlich ein Protocol
-          withNETWORK_INTERFACE_PROTOCOL = true;
-        }
-        if( withNETWORK_INTERFACE_PROTOCOL ) {
-          startParams.add( ADDRESS.toNamedParameterString(params.get(1) ) );
-          startParams.add( NETWORK_INTERFACE_PROTOCOL.toNamedParameterString(params.get(2) ) );
-          startParams.add( HTTPS.toNamedParameterString(params.get(3) ) );
-          startParams.add( CLIENTAUTH.toNamedParameterString(params.get(4) ) );
-          startParams.add( KEYSTOREPATH.toNamedParameterString(params.get(5) ) );
-          startParams.add( KEYSTOREPASS.toNamedParameterString(params.get(6) ) );
-          //KEYSTORETYPE ist DefaultJKS
-        } else {
-          startParams.add( ADDRESS.toNamedParameterString(params.get(1) ) );
-          //InterfaceProtocolPreference.IPV4 ist default
-          startParams.add( HTTPS.toNamedParameterString(params.get(2) ) );
-          startParams.add( CLIENTAUTH.toNamedParameterString(params.get(3) ) );
-          startParams.add( KEYSTOREPATH.toNamedParameterString(params.get(4) ) );
-          startParams.add( KEYSTOREPASS.toNamedParameterString(params.get(5) ) );
-          startParams.add( KEYSTORETYPE.toNamedParameterString(params.get(6) ) );
-        }
-        break;
-      case 8:
-        startParams.add( ADDRESS.toNamedParameterString(params.get(1) ) );
-        startParams.add( NETWORK_INTERFACE_PROTOCOL.toNamedParameterString(params.get(2) ) );
-        startParams.add( HTTPS.toNamedParameterString(params.get(3) ) );
-        startParams.add( CLIENTAUTH.toNamedParameterString(params.get(4) ) );
-        startParams.add( KEYSTOREPATH.toNamedParameterString(params.get(5) ) );
-        startParams.add( KEYSTOREPASS.toNamedParameterString(params.get(6) ) );
-        startParams.add( KEYSTORETYPE.toNamedParameterString(params.get(7) ) );
-        break;
-      default:
-        throw new XACT_InvalidStartParameterCountException();
+    int paramSize = params.size();
+    boolean withNETWORK_INTERFACE_PROTOCOL = true;
+    boolean withSSL_CONTEXT_ALGORITHM = true;
+    if (paramSize == 7 || paramSize == 8) {
+      try {
+        HTTPS.parse(params.get(2));
+        withNETWORK_INTERFACE_PROTOCOL = false;
+      } catch (StringParameterParsingException e) {
+        withNETWORK_INTERFACE_PROTOCOL = true;
+      }
+      try {
+        SSL_CONTEXT_ALGORITHM.parse(params.get(6));
+        withSSL_CONTEXT_ALGORITHM = false;
+      } catch (StringParameterParsingException e) {
+        withSSL_CONTEXT_ALGORITHM = true;
+      }
     }
+
+    try {
+      startParams.add(PORT.toNamedParameterString(PORT.parse(params.get(0)).toString()));
+      switch (params.size()) {
+        case 1 :
+          break;
+        case 2 : // PORT, ADDRESS
+          startParams.add(ADDRESS.toNamedParameterString(ADDRESS.parse(params.get(1)).toString()));
+          break;
+        case 3 : // PORT, ADDRESS, NETWORK_INTERFACE_PROTOCOL
+          startParams.add(ADDRESS.toNamedParameterString(ADDRESS.parse(params.get(1)).toString()));
+          startParams.add(NETWORK_INTERFACE_PROTOCOL.toNamedParameterString(NETWORK_INTERFACE_PROTOCOL.parse(params.get(2)).toString()));
+          break;
+        case 6 : // HTTPS or CLIENTAUTH
+          startParams.add(ADDRESS.toNamedParameterString(ADDRESS.parse(params.get(1)).toString()));
+          startParams.add(HTTPS.toNamedParameterString(HTTPS.parse(params.get(2)).toString()));
+          startParams.add(CLIENTAUTH.toNamedParameterString(CLIENTAUTH.parse(params.get(3)).toString()));
+          startParams.add(KEYSTOREPATH.toNamedParameterString(KEYSTOREPATH.parse(params.get(4)).toString()));
+          startParams.add(KEYSTOREPASS.toNamedParameterString(KEYSTOREPASS.parse(params.get(5)).toString()));
+          break;
+        case 7 :
+          if (withNETWORK_INTERFACE_PROTOCOL) { // PORT, ADDRESS, NETWORK_INTERFACE_PROTOCOL, HTTPS, CLIENTAUTH, KEYSTOREPATH, KEYSTOREPASS
+            startParams.add(ADDRESS.toNamedParameterString(ADDRESS.parse(params.get(1)).toString()));
+            startParams.add(NETWORK_INTERFACE_PROTOCOL.toNamedParameterString(NETWORK_INTERFACE_PROTOCOL.parse(params.get(2)).toString()));
+            startParams.add(HTTPS.toNamedParameterString(HTTPS.parse(params.get(3)).toString()));
+            startParams.add(CLIENTAUTH.toNamedParameterString(CLIENTAUTH.parse(params.get(4)).toString()));
+            startParams.add(KEYSTOREPATH.toNamedParameterString(KEYSTOREPATH.parse(params.get(5)).toString()));
+            startParams.add(KEYSTOREPASS.toNamedParameterString(KEYSTOREPASS.parse(params.get(6)).toString()));
+            break;
+          }
+          startParams.add(ADDRESS.toNamedParameterString(ADDRESS.parse(params.get(1)).toString()));
+          startParams.add(HTTPS.toNamedParameterString(HTTPS.parse(params.get(2)).toString()));
+          startParams.add(CLIENTAUTH.toNamedParameterString(CLIENTAUTH.parse(params.get(3)).toString()));
+          startParams.add(KEYSTOREPATH.toNamedParameterString(KEYSTOREPATH.parse(params.get(4)).toString()));
+          startParams.add(KEYSTOREPASS.toNamedParameterString(KEYSTOREPASS.parse(params.get(5)).toString()));
+          if (withSSL_CONTEXT_ALGORITHM) { // PORT, ADDRESS, HTTPS, CLIENTAUTH, KEYSTOREPATH, KEYSTOREPASS, SSL_CONTEXT_ALGORITHM
+            startParams.add(SSL_CONTEXT_ALGORITHM.toNamedParameterString(SSL_CONTEXT_ALGORITHM.parse(params.get(6)).toString()));
+          } else { // PORT, ADDRESS, HTTPS, CLIENTAUTH, KEYSTOREPATH, KEYSTOREPASS, KEYSTORETYPE
+            startParams.add(KEYSTORETYPE.toNamedParameterString(KEYSTORETYPE.parse(params.get(6)).toString()));
+          }
+          break;
+        case 8 :
+          if (!withNETWORK_INTERFACE_PROTOCOL) { // PORT, ADDRESS, HTTPS, CLIENTAUTH, KEYSTOREPATH, KEYSTOREPASS, KEYSTORETYPE, SSL_CONTEXT_ALGORITHM
+            startParams.add(ADDRESS.toNamedParameterString(ADDRESS.parse(params.get(1)).toString()));
+            startParams.add(HTTPS.toNamedParameterString(HTTPS.parse(params.get(2)).toString()));
+            startParams.add(CLIENTAUTH.toNamedParameterString(CLIENTAUTH.parse(params.get(3)).toString()));
+            startParams.add(KEYSTOREPATH.toNamedParameterString(KEYSTOREPATH.parse(params.get(4)).toString()));
+            startParams.add(KEYSTOREPASS.toNamedParameterString(KEYSTOREPASS.parse(params.get(5)).toString()));
+            startParams.add(KEYSTORETYPE.toNamedParameterString(KEYSTORETYPE.parse(params.get(6)).toString()));
+            startParams.add(SSL_CONTEXT_ALGORITHM.toNamedParameterString(SSL_CONTEXT_ALGORITHM.parse(params.get(7)).toString()));
+            break;
+          }
+          startParams.add(ADDRESS.toNamedParameterString(ADDRESS.parse(params.get(1)).toString()));
+          startParams.add(NETWORK_INTERFACE_PROTOCOL.toNamedParameterString(NETWORK_INTERFACE_PROTOCOL.parse(params.get(2)).toString()));
+          startParams.add(HTTPS.toNamedParameterString(HTTPS.parse(params.get(3)).toString()));
+          startParams.add(CLIENTAUTH.toNamedParameterString(CLIENTAUTH.parse(params.get(4)).toString()));
+          startParams.add(KEYSTOREPATH.toNamedParameterString(KEYSTOREPATH.parse(params.get(5)).toString()));
+          startParams.add(KEYSTOREPASS.toNamedParameterString(KEYSTOREPASS.parse(params.get(6)).toString()));
+          if (withSSL_CONTEXT_ALGORITHM) { // PORT, ADDRESS, NETWORK_INTERFACE_PROTOCOL, HTTPS, CLIENTAUTH, KEYSTOREPATH, KEYSTOREPASS, SSL_CONTEXT_ALGORITHM
+            startParams.add(SSL_CONTEXT_ALGORITHM.toNamedParameterString(SSL_CONTEXT_ALGORITHM.parse(params.get(7)).toString()));
+          } else { // PORT, ADDRESS, NETWORK_INTERFACE_PROTOCOL, HTTPS, CLIENTAUTH, KEYSTOREPATH, KEYSTOREPASS, KEYSTORETYPE
+            startParams.add(KEYSTORETYPE.toNamedParameterString(KEYSTORETYPE.parse(params.get(7)).toString()));
+          }
+          break;
+        case 9 : //  PORT, ADDRESS, NETWORK_INTERFACE_PROTOCOL, HTTPS, CLIENTAUTH, KEYSTOREPATH, KEYSTOREPASS, KEYSTORETYPE, SSL_CONTEXT_ALGORITHM
+          startParams.add(ADDRESS.toNamedParameterString(ADDRESS.parse(params.get(1)).toString()));
+          startParams.add(NETWORK_INTERFACE_PROTOCOL.toNamedParameterString(NETWORK_INTERFACE_PROTOCOL.parse(params.get(2)).toString()));
+          startParams.add(HTTPS.toNamedParameterString(HTTPS.parse(params.get(3)).toString()));
+          startParams.add(CLIENTAUTH.toNamedParameterString(CLIENTAUTH.parse(params.get(4)).toString()));
+          startParams.add(KEYSTOREPATH.toNamedParameterString(KEYSTOREPATH.parse(params.get(5)).toString()));
+          startParams.add(KEYSTOREPASS.toNamedParameterString(KEYSTOREPASS.parse(params.get(6)).toString()));
+          startParams.add(KEYSTORETYPE.toNamedParameterString(KEYSTORETYPE.parse(params.get(7)).toString()));
+          startParams.add(SSL_CONTEXT_ALGORITHM.toNamedParameterString(SSL_CONTEXT_ALGORITHM.parse(params.get(8)).toString()));
+          break;
+        default :
+          throw new XACT_InvalidStartParameterCountException();
+      }
+    } catch (StringParameterParsingException e) {
+      throw new XACT_InvalidTriggerStartParameterValueException(params.toString());
+    }
+
     return startParams;
   }
+
 
   @Override
   public List<StringParameter<?>> getAllStringParameters() {
@@ -269,6 +315,7 @@ public class HTTPStartParameter extends EnhancedStartParameter {
     param.keyStorePassword = KEYSTOREPASS.getFromMap(paramMap);
     param.keyStoreName = KEYSTORE_NAME.getFromMap(paramMap);
     param.trustStoreName = TRUSTSTORE_NAME.getFromMap(paramMap);
+    param.sslContextAlgorithm = SSL_CONTEXT_ALGORITHM.getFromMap(paramMap);
     param.suppressRequestLogging = SUPPRESS_LOGGING.getFromMap(paramMap);
     return param;
   }
@@ -288,7 +335,7 @@ public class HTTPStartParameter extends EnhancedStartParameter {
   public boolean useHTTPs() {
     return keystoreParameter.useHTTPS();
   }
-  
+
   public KeyStoreParameter getKeyStoreParameter() {
     return keystoreParameter;
   }
@@ -311,14 +358,20 @@ public class HTTPStartParameter extends EnhancedStartParameter {
   public String getKeyStoreType() {
     return keyStoreType;
   }
-  
+
   public String getKeyStoreName() {
     return keyStoreName;
   }
-  
+
   public String getTrustStoreName() {
     return trustStoreName;
   }
+
+
+  public String getSSLContextAlgorithm() {
+    return sslContextAlgorithm;
+  }
+
 
   public boolean suppressRequestLogging() {
     return suppressRequestLogging;
