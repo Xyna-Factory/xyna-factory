@@ -71,7 +71,7 @@ public class PromptGeneratorServiceOperationImpl implements ExtendedDeploymentTa
 
     @Override
     public void generate(XynaOrderServerExtension correlatedXynaOrder, Context context) {
-      pluginManagement.generate(correlatedXynaOrder, context);
+      pluginManagement.generate(correlatedXynaOrder, context, PluginManagement.DEFAULT_PLUGIN);
     }
 
 
@@ -111,6 +111,19 @@ public class PromptGeneratorServiceOperationImpl implements ExtendedDeploymentTa
       } catch (Exception e) {
         throw new RuntimeException(e);
       }
+    }
+
+
+    @Override
+    public void generateMappingAssignments(XynaOrderServerExtension correlatedXynaOrder, Context context) {
+      pluginManagement.generate(correlatedXynaOrder, context, PluginManagement.MAPPING_ASSIGNMENT_PLUGIN);
+    }
+
+
+    @Override
+    public void generateMappingLabel(XynaOrderServerExtension correlatedXynaOrder, Context context) {
+      pluginManagement.generate(correlatedXynaOrder, context, PluginManagement.MAPPING_LABEL_PLUGIN);
+      
     }
 
 }

@@ -52,9 +52,7 @@ build_xynautils_exceptions() {
   mkdir -p lib
   mvn dependency:resolve
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  ant -Doracle.home=/tmp integration
-  mv ../releases/xynautils-exceptions/xynautils-exceptions-I*[0-9].jar ../releases/xynautils-exceptions/xynautils-exceptions.jar
-  mvn install:install-file -Dfile=../releases/xynautils-exceptions/xynautils-exceptions.jar -DpomFile=./pom.xml
+  ant -Doracle.home=/tmp installMavenArtifact
 }
 
 build_xynautils_logging() {
@@ -63,9 +61,7 @@ build_xynautils_logging() {
   mkdir -p lib
   mvn dependency:resolve
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  ant -Doracle.home=/tmp integration
-  mv ../releases/xynautils-logging/xynautils-logging-I*[0-9].jar ../releases/xynautils-logging/xynautils-logging.jar
-  mvn install:install-file -Dfile=../releases/xynautils-logging/xynautils-logging.jar -DpomFile=./pom.xml
+  ant -Doracle.home=/tmp installMavenArtifact
 }
 
 build_xynautils_database() {
@@ -74,9 +70,7 @@ build_xynautils_database() {
   mkdir -p lib
   mvn dependency:resolve
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  ant -Doracle.home=/tmp integration
-  mv ../releases/xynautils-database/xynautils-database-I*[0-9].jar ../releases/xynautils-database/xynautils-database.jar
-  mvn install:install-file -Dfile=../releases/xynautils-database/xynautils-database.jar -DpomFile=./pom.xml
+  ant -Doracle.home=/tmp installMavenArtifact
 }
 
 build_xynautils_snmp() {
@@ -85,9 +79,7 @@ build_xynautils_snmp() {
   mkdir -p lib
   mvn dependency:resolve
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  ant -Doracle.home=/tmp integration
-  mv ../releases/xynautils-snmp/xynautils-snmp-I*[0-9].jar ../releases/xynautils-snmp/xynautils-snmp.jar
-  mvn install:install-file -Dfile=../releases/xynautils-snmp/xynautils-snmp.jar -DpomFile=./pom.xml
+  ant -Doracle.home=/tmp installMavenArtifact
 }
 
 build_xynautils_ldap() {
@@ -96,9 +88,7 @@ build_xynautils_ldap() {
   mkdir -p lib
   mvn dependency:resolve
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  ant -Doracle.home=/tmp integration
-  mv ../releases/xynautils-ldap/xynautils-ldap-I*[0-9].jar ../releases/xynautils-ldap/xynautils-ldap.jar
-  mvn install:install-file -Dfile=../releases/xynautils-ldap/xynautils-ldap.jar -DpomFile=./pom.xml
+  ant -Doracle.home=/tmp installMavenArtifact
 }
 
 build_xynautils_misc() {
@@ -107,16 +97,13 @@ build_xynautils_misc() {
   mkdir -p lib
   mvn dependency:resolve
   mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  ant -Doracle.home=/tmp integration
-  mv ../releases/xynautils-misc/xynautils-misc-I*[0-9].jar ../releases/xynautils-misc/xynautils-misc.jar
-  mvn install:install-file -Dfile=../releases/xynautils-misc/xynautils-misc.jar -DpomFile=./pom.xml
+  ant -Doracle.home=/tmp installMavenArtifact
 }
 
 build_misc() {
   echo "building misc..."
   cd $SCRIPT_DIR/../misc
-  ant -Doracle.home=/tmp build
-  mvn install:install-file -Dfile=./deploy/misc.jar -DpomFile=./pom.xml
+  ant -Doracle.home=/tmp installMavenArtifact
 }
 
 build_cligenerator_jar() {
@@ -124,15 +111,13 @@ build_cligenerator_jar() {
   cd $SCRIPT_DIR/../server
   mvn -f cligenerator.pom.xml dependency:resolve
   mvn -f cligenerator.pom.xml -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
-  ant -Doracle.home=/tmp buildCliClassGeneratorJar
-  mvn install:install-file -Dfile=./deploy/xynafactoryCLIGenerator.jar -DpomFile=cligenerator.pom.xml
+  ant -Doracle.home=/tmp installMavenArtifactCLIGenerator
 }
 
 build_xynafactory_jar() {
   echo "building xynafactory.jar..."
   cd $SCRIPT_DIR/../server
-  ant -Doracle.home=/tmp -Dxyna.clusterprovider.OracleRACClusterProvider=false build
-  mvn install:install-file -Dfile=./deploy/xynafactory.jar -DpomFile=./pom.xml
+  ant -Doracle.home=/tmp -Dxyna.clusterprovider.OracleRACClusterProvider=false installMavenArtifactXynaFactory
 }
 
 build_oracle_aq_tools() {
@@ -160,13 +145,11 @@ build_persistencelayers() {
   cd $SCRIPT_DIR/build
   
   #build and install memory persistencelayer
-  ant -Doracle.home=/tmp -f  ../../persistencelayers/XynaMemoryPersistenceLayer/build.xml
-  mvn install:install-file -Dfile=../../persistencelayers/XynaMemoryPersistenceLayer/deploy/XynaMemoryPersistenceLayer.jar -DpomFile=../../persistencelayers/XynaMemoryPersistenceLayer/pom.xml
-
+  ant -Doracle.home=/tmp -f  ../../persistencelayers/XynaMemoryPersistenceLayer/build.xml installMavenArtifact
+ 
   #build and install install XynaJavaSerializationPersistenceLayer
-  ant -Doracle.home=/tmp -f ../../persistencelayers/XynaJavaSerializationPersistenceLayer/build.xml
-  mvn install:install-file -Dfile=../../persistencelayers/XynaJavaSerializationPersistenceLayer/deploy/XynaJavaSerializationPersistenceLayer.jar -DpomFile=../../persistencelayers/XynaJavaSerializationPersistenceLayer/pom.xml
-
+  ant -Doracle.home=/tmp -f ../../persistencelayers/XynaJavaSerializationPersistenceLayer/build.xml installMavenArtifact
+ 
   # build all persistencelayers
   ant -Doracle.home=/tmp buildPersistenceLayers  
 }
@@ -194,8 +177,7 @@ build_networkavailability() {
   
   #build and install demon
   cd $SCRIPT_DIR/../components/xact/demon
-  ant -Doracle.home=/tmp
-  mvn install:install-file -Dfile=$SCRIPT_DIR/../components/xact/demon/deploy/demonlib.jar -DpomFile=$SCRIPT_DIR/../components/xact/demon/pom.xml
+  ant -Doracle.home=/tmp installMavenArtifact
 
   #build networkavailability
   cd $SCRIPT_DIR/../components/xact/NetworkAvailability

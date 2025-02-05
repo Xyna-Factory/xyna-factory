@@ -39,6 +39,8 @@ def main(application_path):
     objectRefs = []
     for dirpath, _, filenames in walk(xmomDir):
         for xmlFile in filenames:
+            if not xmlFile.endswith(".xml"):
+                continue
             xmlRoot = ET.parse(path.join(dirpath, xmlFile)).getroot()
             if "TypePath" in xmlRoot.attrib and "TypeName" in xmlRoot.attrib:
                 objectRefs.append(xmlRoot.get("TypePath") + "." + xmlRoot.get("TypeName"))

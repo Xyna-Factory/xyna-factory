@@ -52,8 +52,8 @@ public class DataModelLocator {
   private static final String docuTextAreaName = "documentation";
   private static final String implTextAreaName = "implementation";
 
-  public static MappingModel getMappingModel(MemberReference memberReference) throws XynaException {
-    StepMapping targetMapping = GenerationBaseObjectLocator.getMapping(memberReference);
+  public static MappingModel getMappingModel(MemberReference memberReference, XynaOrderServerExtension order) throws XynaException {
+    StepMapping targetMapping = FilterCallbackInteractionUtils.getMapping(memberReference, order);
     return new MappingModel(targetMapping);
   }
 
