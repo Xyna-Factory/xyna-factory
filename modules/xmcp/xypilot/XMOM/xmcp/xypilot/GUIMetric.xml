@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="GUI Metric" TypeName="GUIMetric" TypePath="xmcp.xypilot" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Score" VariableName="score">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Service Label="GUI Metric" TypeName="GUIMetric">
+    <Operation IsStatic="false" Label="form metric score" Name="formMetricScore">
+      <Input>
+        <Data ID="8" Label="Metric Score" ReferenceName="MetricScore" ReferencePath="xmcp.xypilot" VariableName="metricScore8"/>
+      </Input>
+      <Output>
+        <Data ID="6" Label="GUI Metric" ReferenceName="GUIMetric" ReferencePath="xmcp.xypilot" VariableName="gUIMetric6"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">this.setName(metricScore8.getMetric().getName());
+int leadingCharsNumber = (int) (metricScore8.getNormalizedScore()*10);
+String formatString = "_".repeat(leadingCharsNumber) + "l" + "_".repeat(11-leadingCharsNumber) + "  %.2f";
+this.setScore(String.format(formatString, metricScore8.getNormalizedScore()));
+return this;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -90,6 +90,25 @@ public class PluginManagement {
     builder.navigationEntryName("XyPilot Config");
     builder.navigationEntryLabel("XyPilot Config");
     builder.path("manager");
+    consumer.accept(builder.instance());
+
+    builder.definitionWorkflowFQN("xmcp.xypilot.DefineCodeSuggestionGenerationButton");
+    builder.navigationEntryName("DTMethImpl");
+    builder.navigationEntryLabel("DTMethImpl");
+    builder.path("modeller/datatype/methods/implementation");
+    consumer.accept(builder.instance());
+
+    builder.definitionWorkflowFQN("xmcp.xypilot.DefineCodeSuggestionGenerationButton");
+    builder.navigationEntryName("SGMethImpl");
+    builder.navigationEntryLabel("SGMethImpl");
+    builder.path("modeller/servicegroup/methods/implementation");
+    consumer.accept(builder.instance());
+
+    builder.definitionWorkflowFQN("xmcp.xypilot.DefineMethodImplementationPanel");
+    builder.navigationEntryName("XyPilot Code Suggestion");
+    builder.navigationEntryLabel("XyPilot Code Suggestion");
+    builder.navigationIconName("build");
+    builder.path("datatypes/rightnav");
     consumer.accept(builder.instance());
   }
 

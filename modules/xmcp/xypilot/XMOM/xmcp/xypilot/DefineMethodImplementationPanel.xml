@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Define Method Implementation Panel" TypeName="DefineMethodImplementationPanel" TypePath="xmcp.xypilot" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Define Method Implementation Panel" Name="DefineMethodImplementationPanel">
+    <Input/>
+    <Output>
+      <Data ID="29" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition29"/>
+    </Output>
+    <Mappings ID="10" Label="Mapping">
+      <Output>
+        <Data ID="19" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition19">
+          <Source RefID="10"/>
+        </Data>
+        <Target RefID="20"/>
+      </Output>
+      <Mapping>%0%.label="Implementation"</Mapping>
+      <Mapping>%0%.triggerChangeChildren.eventId="update_method_implementation"</Mapping>
+    </Mappings>
+    <Data ID="20" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition20">
+      <Source RefID="10"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="20"/>
+      <Target RefID="29"/>
+      <Copy>
+        <Source RefID="20"/>
+        <Target RefID="29"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
+
