@@ -29,7 +29,7 @@
         <Target RefID="20"/>
       </Output>
       <Mapping>%0%.label="Implementation"</Mapping>
-      <Mapping>%0%.triggerChangeChildren.eventId="update_method_implementation"</Mapping>
+      <Mapping>%0%.triggerChangeChildren.eventId="xypilot_update_method_implementation"</Mapping>
     </Mappings>
     <Data ID="20" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition20">
       <Source RefID="10"/>

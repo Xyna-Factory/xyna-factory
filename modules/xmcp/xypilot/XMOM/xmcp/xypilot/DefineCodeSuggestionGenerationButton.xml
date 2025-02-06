@@ -51,7 +51,7 @@
       <Mapping>%1%.serviceRTC=%0%</Mapping>
       <Mapping>%1%.serviceFQN="xmcp.xypilot.DefineCodeSuggestionsPanel"</Mapping>
       <Mapping>%1%.synchronously="true"</Mapping>
-      <Mapping>%1%.onStartorderResultEvent["0"].eventId="update_method_implementation"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="xypilot_update_method_implementation"</Mapping>
     </Mappings>
     <Data ID="132" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition132">
       <Source RefID="35"/>
