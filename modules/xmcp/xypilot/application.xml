@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- --><Application applicationName="XyPilot" comment="" factoryVersion="" versionName="1.1.10" xmlVersion="1.1">
+ --><Application applicationName="XyPilot" comment="" factoryVersion="" versionName="1.1.11" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -29,12 +29,32 @@
     </RuntimeContextRequirements>
   </ApplicationInfo>
   <Ordertypes>
-    <Ordertype implicitDependency="false">
-      <DestinationKey>xmcp.xypilot.GetGenerateButtonDefinition</DestinationKey>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.xypilot.DefineCodeSuggestionGenerationButton</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.xypilot.DefineCodeSuggestionsPanel</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.xypilot.DefineMethodImplementationPanel</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="false">
       <DestinationKey>xmcp.xypilot.Generate</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.xypilot.GenerateMappingAssignments</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.xypilot.GenerateMappingLabel</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.xypilot.GetGenerateButtonDefinition</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="false">
@@ -56,11 +76,55 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.DefineCodeSuggestionGenerationButton</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.DefineCodeSuggestionsPanel</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.DefineMethodImplementationPanel</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.xypilot.Documentation</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.xypilot.ExceptionMessage</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.GUIMetric</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.Generate</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.GenerateMappingAssignments</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.GenerateMappingLabel</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.GetGenerateButtonDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.GetManageXyPilotConfigDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.GuiSuggestion</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.IterationIndexBuilder</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -88,8 +152,16 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.MetricIteration</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.xypilot.MetricScore</FqName>
       <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.NoXyPilotUserConfigException</FqName>
+      <Type>EXCEPTION</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.xypilot.Parameter</FqName>
@@ -97,6 +169,14 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.xypilot.PromptGenerator</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.SetXyPilotConfig</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.SuggestionIteration</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -131,27 +211,5 @@
       <FqName>xmcp.xypilot.XypilotUserConfig</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.xypilot.NoXyPilotUserConfigException</FqName>
-      <Type>EXCEPTION</Type>
-    </XMOMEntry>
   </XMOMEntries>
-  <XynaProperties>
-    <XynaProperty implicitDependency="false">
-      <Name>xmcp.xypilot.disabled_metrics</Name>
-      <Value/>
-    </XynaProperty>
-    <XynaProperty implicitDependency="false">
-      <Name>xmcp.xypilot.max_suggestions</Name>
-      <Value>4</Value>
-    </XynaProperty>
-    <XynaProperty implicitDependency="false">
-      <Name>xmcp.xypilot.model</Name>
-      <Value/>
-    </XynaProperty>
-    <XynaProperty implicitDependency="false">
-      <Name>xmcp.xypilot.uri</Name>
-      <Value/>
-    </XynaProperty>
-  </XynaProperties>
 </Application>
