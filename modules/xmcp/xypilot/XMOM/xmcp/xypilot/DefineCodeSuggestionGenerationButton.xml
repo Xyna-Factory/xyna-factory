@@ -47,7 +47,7 @@
         </Data>
         <Target RefID="132"/>
       </Output>
-      <Mapping>%1%.label="Test"</Mapping>
+      <Mapping>%1%.label="AI"</Mapping>
       <Mapping>%1%.serviceRTC=%0%</Mapping>
       <Mapping>%1%.serviceFQN="xmcp.xypilot.DefineCodeSuggestionsPanel"</Mapping>
       <Mapping>%1%.synchronously="true"</Mapping>

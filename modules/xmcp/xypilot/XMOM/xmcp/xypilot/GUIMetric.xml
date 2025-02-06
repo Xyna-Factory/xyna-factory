@@ -40,7 +40,7 @@
       <SourceCode>
         <CodeSnippet Type="Java">this.setName(metricScore8.getMetric().getName());
 int leadingCharsNumber = (int) (metricScore8.getNormalizedScore()*10);
-String formatString = "_".repeat(leadingCharsNumber) + "l" + "_".repeat(11-leadingCharsNumber) + "  %.2f";
+String formatString = "_".repeat(leadingCharsNumber) + "l" + "_".repeat(10-leadingCharsNumber) + "  %.2f";
 this.setScore(String.format(formatString, metricScore8.getNormalizedScore()));
 return this;</CodeSnippet>
       </SourceCode>
