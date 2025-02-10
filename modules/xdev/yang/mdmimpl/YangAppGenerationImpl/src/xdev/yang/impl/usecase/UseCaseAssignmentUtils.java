@@ -24,20 +24,16 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 
-import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.yangcentral.yangkit.base.YangElement;
-import org.yangcentral.yangkit.common.api.QName;
 import org.yangcentral.yangkit.model.api.schema.YangSchemaContext;
 import org.yangcentral.yangkit.model.api.stmt.DataDefinition;
-import org.yangcentral.yangkit.model.api.stmt.Deviate;
 import org.yangcentral.yangkit.model.api.stmt.Deviation;
 import org.yangcentral.yangkit.model.api.stmt.Input;
 import org.yangcentral.yangkit.model.api.stmt.Module;
 import org.yangcentral.yangkit.model.api.stmt.Rpc;
-import org.yangcentral.yangkit.model.api.stmt.SchemaNode;
 import org.yangcentral.yangkit.model.api.stmt.YangStatement;
 import org.yangcentral.yangkit.model.impl.stmt.ContainerImpl;
 import org.yangcentral.yangkit.model.impl.stmt.LeafImpl;
@@ -85,16 +81,10 @@ public class UseCaseAssignmentUtils {
     }
   }
   
-  private static Logger _logger = Logger.getLogger(UseCaseAssignmentUtils.class);
   
-
   public static List<UseCaseAssignmentTableData> loadPossibleAssignments(List<Module> modules, String rpcName, String rpcNs,
                                                                          LoadYangAssignmentsData data, Document meta,
-                                                                         List<String> supportedFeatures) {    
-    for (Module mod : modules) {
-      _logger.warn("### using (for rpc search) module: " + mod.getArgStr());
-      //logModule(mod);
-    }
+                                                                         List<String> supportedFeatures) {
     RpcAndDeviations rpc = findRpc(modules, rpcName, rpcNs);
     Input input = rpc.getRpc().getInput();
     List<ListConfiguration> listConfigs = ListConfiguration.loadListConfigurations(meta);
@@ -184,10 +174,8 @@ public class UseCaseAssignmentUtils {
   private static List<YangStatement> getCandidates(YangStatement statement, List<String> supportedFeatures) {
     List<YangElement> candidates = YangStatementTranslation.getSubStatements(statement);
     List<YangStatement> result = new ArrayList<>();
-    _logger.warn("### Checking parent elem " + statement.getArgStr() + " (" + statement.getClass().getName() + ")");
     for (YangElement candidate : candidates) {      
       if (isSupportedElement(candidate, supportedFeatures)) {
-        _logger.warn("### Found child elem " + ((YangStatement) candidate).getArgStr());
         result.add((YangStatement) candidate);
       }
     }
@@ -282,8 +270,6 @@ public class UseCaseAssignmentUtils {
     for (Module module : modules) {
       Rpc result = module.getRpc(rpcName);
       if (result != null && Objects.equals(YangStatementTranslation.getNamespace(result), rpcNs)) {
-        _logger.warn("### Found rpc in module");
-        logModule(module);
         return new RpcAndDeviations(result, module.getDeviations());
       }
     }
@@ -293,11 +279,9 @@ public class UseCaseAssignmentUtils {
   public static List<Rpc> findRpcs(List<Module> modules, String rpcName) {
     List<Rpc> result = new ArrayList<>();
     for (Module module : modules) {
-      _logger.warn("### Checking module " + module.getArgStr() + " for rpc " + rpcName);
       Rpc rpc = module.getRpc(rpcName);
       if (rpc != null) {
         result.add(rpc);
-        _logger.warn("### Found: In module " + module.getArgStr() + " rpc " + rpcName);
       }
     }
     return result;
@@ -314,7 +298,6 @@ public class UseCaseAssignmentUtils {
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       throw new RuntimeException(e);
     }
-    //_logger.warn("### Found revision: " + revision);
     List<XMOMDatabaseSearchResultEntry> xmomDbResult = interaction.searchYangDTs(YangModuleCollection.class.getCanonicalName(), List.of(revision));
     for(XMOMDatabaseSearchResultEntry entry : xmomDbResult) {
       Long entryRevision;
@@ -329,7 +312,6 @@ public class UseCaseAssignmentUtils {
   }
 
   private static List<Module> loadModulesFromDt(String fqName, Long entryRevision) throws Exception {
-    //_logger.warn("### Parsing module in fq=" + fqName + ", rev =" + entryRevision);
     DOM dom = DOM.getOrCreateInstance(fqName, new GenerationBaseCache(), entryRevision);
     dom.parseGeneration(true, false);
     List<String> metaTags = dom.getUnknownMetaTags();
@@ -346,51 +328,21 @@ public class UseCaseAssignmentUtils {
       List<Element> modules = XMLUtils.getChildElementsByName(xml.getDocumentElement(), "module");
       YangSchemaContext context = null;
       for(Element module : modules) {
-        context = addModulesFromTag(module, result, context);
-        _logger.warn("### Found module in fq=" + fqName + ", rev =" + entryRevision);        
+        context = addModulesFromTag(module, result, context);      
       }
       if (context != null) {
         context.validate();
-      }
-      for (Module mod : context.getModules()) {
-        _logger.warn("### Added module: " + mod.getArgStr());
-        logModule(mod);
       }
       result.addAll(context.getModules());
     }
     return result;
   }
 
-  
-  private static void handleElement(YangElement elem, int layer) {    
-    if (elem instanceof YangStatement) {
-      YangStatement ys = (YangStatement) elem;
-      _logger.warn(layer + " ### YangStatement: " + elem.toString()+ " / " + ys.getArgStr() + 
-                           "      ####### " + ys.getClass().getName());
-      for (YangElement child : YangStatementTranslation.getSubStatements(ys)) {
-        handleElement(child, layer + 1);
-      }
-    }
-    else {
-      _logger.warn(layer + " ### YangElement: " + elem.toString());
-    }
-  }
-  
-  private static void logModule(Module mod) {
-    _logger.warn("### Showing module: " + mod.getArgStr());
-    if (mod.getRpcs() == null) { return; }
-    if (mod.getRpcs().size() < 1) { return; }
-    if (mod.getRpcs().get(0).getInput() == null) { return; }
-      
-    handleElement(mod.getRpcs().get(0).getInput(), 0);
-  }
-  
+   
 
   private static YangSchemaContext addModulesFromTag(Element module, List<Module> modules, YangSchemaContext context) throws Exception {
     java.io.ByteArrayInputStream is = new java.io.ByteArrayInputStream(Base64.decode(module.getTextContent()));
-    _logger.warn("### MODULE ### " + new String(Base64.decode(module.getTextContent())));
     context = YangYinParser.parse(is, "module.yang", context);
-    //context.validate();
     return context;
   }
 

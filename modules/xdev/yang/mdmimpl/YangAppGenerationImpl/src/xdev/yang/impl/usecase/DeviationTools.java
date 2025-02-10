@@ -34,8 +34,6 @@ import xmcp.yang.LoadYangAssignmentsData;
 
 public class DeviationTools {
 
-  private static Logger _logger = Logger.getLogger(DeviationTools.class);
-  
   public DeviationList filterByPath(DeviationList list, SchemaNodePath path) {
     List<Deviation> filtered = new ArrayList<>();
     for (Deviation dev : list.getDeviations()) {
@@ -65,15 +63,12 @@ public class DeviationTools {
     if (dev.getTargetPath().getPath() == null) { return false; }
     if (dev.getTargetPath().getPath().size() != path.getLocalnameList().size() + 1) { return false; }
     if (dev.getTargetPath().getPath().size() != path.getNamespaceList().size() + 1) { return false; }
-    _logger.warn("### deviation: " + dev.getArgStr() + ", path size = " + dev.getTargetPath().getPath().size()); 
     
     for (int i = 0; i < path.getLocalnameList().size(); i++) {
       String devLocalname = dev.getTargetPath().getPath().get(i).getLocalName();
       String devNamespace = dev.getTargetPath().getPath().get(i).getNamespace().toString();
       String localname = path.getLocalnameList().get(i);
       String namespace = path.getNamespaceList().get(i);
-      _logger.warn("### Checking deviation path elem local name [ " + i + " ]: " + devLocalname + " <-> " + localname);
-      _logger.warn("### Checking deviation path elem namespace [ " + i + " ]: " + devNamespace + " <-> " + namespace);
       if (!namespace.equals(devNamespace)) { return false; }
       if (!identifiersAreEqual(localname, devLocalname)) { return false; }
     }
@@ -102,18 +97,17 @@ public class DeviationTools {
     String localname = YangStatementTranslation.getLocalName(node);
     String namespace = YangStatementTranslation.getNamespace(node);
     for (Deviation dev : deviationsFilteredByParent.getDeviations()) {
-      _logger.warn("### deviation: " + dev.getArgStr() + ", path size = " + dev.getTargetPath().getPath().size()); 
       String devLocalname = dev.getTargetPath().getLast().getLocalName();
       String devNamespace = dev.getTargetPath().getLast().getNamespace().toString();
-      _logger.warn("### Checking path end / local name: " + localname + " <-> " + devLocalname);
-      _logger.warn("### Checking path end / namespace: " + namespace + " <-> " + devNamespace);
       if (identifiersAreEqual(localname, devLocalname) && namespace.equals(devNamespace)) {
         if (hasDeviationTypeNotSupported(dev)) {
           nodeData.unversionedSetIsNotSupportedDeviation(true);
           return;
         }
-        if ((dev.getDeviates() != null) && (dev.getDeviates().size() > 0)) {
-          appendMessage(info, dev.getDeviates().get(0).getArgStr());
+        if ((dev.getDeviates() != null) && (dev.getDeviates().size() > 0)) {          
+          StringBuilder deviateInfo = new StringBuilder();
+          logDeviationSubelements(dev, deviateInfo);
+          appendMessage(info, deviateInfo);          
         }
       }
     }
@@ -122,7 +116,6 @@ public class DeviationTools {
     }
     
     info = new StringBuilder();
-    _logger.warn("### Checking sub-elems of node " + node.getArgStr());
     for (YangElement element : YangStatementTranslation.getSubStatements(node)) {
       if (element instanceof YangStatement) {
         handleDeviationsForChildElement(unfiltered, (YangStatement) element, nodeData, info);
@@ -151,11 +144,8 @@ public class DeviationTools {
     String localname = YangStatementTranslation.getLocalName(child);
     String namespace = YangStatementTranslation.getNamespace(child);
     for (Deviation dev : filtered.getDeviations()) {
-      _logger.warn("### deviation: " + dev.getArgStr() + ", path size = " + dev.getTargetPath().getPath().size()); 
       String devLocalname = dev.getTargetPath().getLast().getLocalName();
       String devNamespace = dev.getTargetPath().getLast().getNamespace().toString();
-      _logger.warn("### child: Checking path end / local name: " + localname + " <-> " + devLocalname);
-      _logger.warn("### child: Checking path end / namespace: " + namespace + " <-> " + devNamespace);
       if (identifiersAreEqual(localname, devLocalname) && namespace.equals(devNamespace)) {
         if (hasDeviationTypeNotSupported(dev)) {
           if (subinfo.length() < 1) {
@@ -163,10 +153,24 @@ public class DeviationTools {
             subinfo.append(localname);
           }
           else {
-            appendMessage(subinfo, child.getYangKeyword().getLocalName());
+            appendMessage(subinfo, localname);
           }
         }
         return;
+      }
+    }
+  }
+  
+  
+  private void logDeviationSubelements(YangElement elem, StringBuilder str) {
+    if (!(elem instanceof Deviation)) {
+      str.append(" ").append(elem.toString());
+    }
+    if (elem instanceof YangStatement) {
+      YangStatement ys = (YangStatement) elem;
+      if (ys.getSubElements() == null) { return; } 
+      for (YangElement item : ys.getSubElements()) {
+        logDeviationSubelements(item, str);
       }
     }
   }

@@ -64,7 +64,6 @@ public class DetermineUseCaseAssignments {
     modules = YangCapabilityUtils.filterModules(modules, moduleCapabilities);
     result = UseCaseAssignmentUtils.loadPossibleAssignments(modules, rpcName, rpcNamespace, data, usecaseMeta, supportedFeatures);
     fillValuesAndWarnings(usecaseMeta, modules, result);
-
     return result;
   }
 
