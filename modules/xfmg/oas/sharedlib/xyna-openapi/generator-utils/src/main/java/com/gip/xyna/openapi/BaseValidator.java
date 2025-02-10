@@ -41,6 +41,10 @@ public abstract class BaseValidator {
     public void setNullable() {
         isNullable = true;
     }
+    
+    public boolean getIsNullable() {
+      return isNullable;
+    }
 
     public void setRequired() {
         isRequired = true;
