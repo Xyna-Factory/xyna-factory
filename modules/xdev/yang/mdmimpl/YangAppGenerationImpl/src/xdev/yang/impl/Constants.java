@@ -17,6 +17,7 @@
  */
 package xdev.yang.impl;
 
+import java.util.Set;
 
 public class Constants {
 
@@ -90,6 +91,10 @@ public class Constants {
   public static final String TYPE_STATUS = "status";
   public static final String TYPE_CONFIG = "config";
   public static final String TYPE_DESCRIPTION = "description";
+  public static final String TYPE_ACTION = "action";
+  public static final String TYPE_INPUT = "input";
+  public static final String TYPE_OUTPUT = "output";
+  public static final String TYPE_NOTIFICATION = "notification";
 
   public static final String NS_SEPARATOR = "§";
   public static final String LIST_INDEX_SEPARATOR = ") ";
@@ -97,4 +102,13 @@ public class Constants {
 
   public static final String NETCONF_NS = "urn:ietf:params:xml:ns:netconf:base:1.0";
   public static final String NETCONF_BASE_CAPABILITY_NO_VERSION = "urn:ietf:params:netconf:base:";
+  
+  /* from RFC 7950;
+     schema node: A node in the schema tree.  One of action, container,
+      leaf, leaf-list, list, choice, case, rpc, input, output,
+      notification, anydata, and anyxml.
+   */
+  public static final Set<String> SET_SCHEMA_NODE_TYPE_NAMES = Set.of(TYPE_ACTION, TYPE_CONTAINER, TYPE_LEAF, TYPE_LEAFLIST, TYPE_LIST,
+                                                                      TYPE_CHOICE, TYPE_CASE, TYPE_RPC, TYPE_INPUT, TYPE_OUTPUT,
+                                                                      TYPE_NOTIFICATION, TYPE_ANYDATA, TYPE_ANYXML);
 }

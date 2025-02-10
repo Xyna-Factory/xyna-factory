@@ -74,4 +74,9 @@
       <Type>boolean</Type>
     </Meta>
   </Data>
+  <Data Label="Subelement Deviation Info" VariableName="subelementDeviationInfo">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
 </DataType>
