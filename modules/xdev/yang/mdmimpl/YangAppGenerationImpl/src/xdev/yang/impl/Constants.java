@@ -108,7 +108,7 @@ public class Constants {
      leaf, leaf-list, list, choice, case, rpc, input, output,
      notification, anydata, and anyxml.
    */
-  public static final Set<String> SET_SCHEMA_NODE_TYPE_NAMES = Set.of(TYPE_ACTION, TYPE_CONTAINER, TYPE_LEAF, TYPE_LEAFLIST, TYPE_LIST,
-                                                                      TYPE_CHOICE, TYPE_CASE, TYPE_RPC, TYPE_INPUT, TYPE_OUTPUT,
-                                                                      TYPE_NOTIFICATION, TYPE_ANYDATA, TYPE_ANYXML);
+  public static final Set<String> SCHEMA_NODE_TYPE_NAMES = Set.of(TYPE_ACTION, TYPE_CONTAINER, TYPE_LEAF, TYPE_LEAFLIST, TYPE_LIST,
+                                                                  TYPE_CHOICE, TYPE_CASE, TYPE_RPC, TYPE_INPUT, TYPE_OUTPUT,
+                                                                  TYPE_NOTIFICATION, TYPE_ANYDATA, TYPE_ANYXML);
 }

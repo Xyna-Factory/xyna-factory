@@ -22,14 +22,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.yangcentral.yangkit.model.api.stmt.Deviation;
+import org.yangcentral.yangkit.model.api.stmt.Module;
 
 
 public class DeviationList {
 
   private List<Deviation> deviations = new ArrayList<>();
-
-
+  
+  private DeviationList() {}
+  
   public DeviationList(List<Deviation> deviations) {
+    if (deviations != null) {
+      this.deviations.addAll(deviations);
+    }
+  }
+  
+  public DeviationList(Module mod) {
+    add(mod);
+  }
+  
+  public static DeviationList build(List<Module> modules) {
+    DeviationList ret = new DeviationList();
+    if (modules == null) { return ret; }
+    for (Module mod : modules) {
+      ret.add(mod);
+    }
+    return ret;
+  }
+  
+  
+  private void add(Module mod) {
+    if (mod != null) {
+      add(mod.getDeviations());
+    }
+  }
+  
+  private void add(List<Deviation> deviations) {
     if (deviations != null) {
       this.deviations.addAll(deviations);
     }

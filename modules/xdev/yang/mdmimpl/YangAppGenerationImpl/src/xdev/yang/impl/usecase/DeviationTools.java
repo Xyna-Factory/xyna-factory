@@ -27,6 +27,7 @@ import org.yangcentral.yangkit.model.api.stmt.DeviateType;
 import org.yangcentral.yangkit.model.api.stmt.Deviation;
 import org.yangcentral.yangkit.model.api.stmt.YangStatement;
 
+import xdev.yang.impl.YangStatementTranslator;
 import xdev.yang.impl.YangStatementTranslator.YangStatementTranslation;
 import xmcp.yang.LoadYangAssignmentsData;
 
@@ -45,16 +46,17 @@ public class DeviationTools {
   
   
   protected boolean keepDeviation(Deviation dev, SchemaNodePath path) {
-    boolean ret = keepDeviationImpl(dev, path);
-    if (!ret) {
-      for (SchemaNodePath snp : path.getContainedPathsOfUsedGroupings()) {
-        if (keepDeviationImpl(dev, snp)) {
-          return true;
-        }
+    if (keepDeviationImpl(dev, path)) { 
+      return true; 
+    }    
+    for (SchemaNodePath snp : path.getContainedPathsOfUsedGroupings()) {
+      if (keepDeviationImpl(dev, snp)) {
+        return true;
       }
-    }
-    return ret;
+    }    
+    return false;
   }
+  
   
   protected boolean keepDeviationImpl(Deviation dev, SchemaNodePath path) {
     if (dev.getDeviates() == null) { return false; }
@@ -99,11 +101,11 @@ public class DeviationTools {
       String devLocalname = dev.getTargetPath().getLast().getLocalName();
       String devNamespace = dev.getTargetPath().getLast().getNamespace().toString();
       if (identifiersAreEqual(localname, devLocalname) && namespace.equals(devNamespace)) {
-        if (hasDeviationTypeNotSupported(dev)) {
+        if (hasDeviateType(dev, DeviateType.NOT_SUPPORTED)) {
           nodeData.unversionedSetIsNotSupportedDeviation(true);
           return;
         }
-        logDeviationSubelements(dev, info);
+        writeDeviationSubelementsInfo(dev, info);
       }
     }
     if (info.length() > 0) {
@@ -142,56 +144,56 @@ public class DeviationTools {
       String devLocalname = dev.getTargetPath().getLast().getLocalName();
       String devNamespace = dev.getTargetPath().getLast().getNamespace().toString();
       if (identifiersAreEqual(localname, devLocalname) && namespace.equals(devNamespace)) {
-        if (hasDeviationTypeNotSupported(dev)) {
-          if (subinfo.length() < 1) {
-            appendMessage(subinfo, "Deviation removed sub-elements: ");
-            subinfo.append(localname);
+        if (hasDeviateType(dev, DeviateType.NOT_SUPPORTED)) {
+          if (subinfo.length() < 1) { 
+            subinfo.append("Deviation removed sub-elements: "); 
           }
-          else {
-            appendMessage(subinfo, localname);
+          else { 
+            subinfo.append(", "); 
           }
+          subinfo.append(localname);
+          return;
         }
-        return;
       }
     }
   }
   
   
-  private void logDeviationSubelements(Deviation dev, StringBuilder info) {    
-    if ((dev.getDeviates() != null) && (dev.getDeviates().size() > 0)) {          
-      StringBuilder deviateInfo = new StringBuilder();
-      boolean isfirst = true;
-      for (Deviate deviate : dev.getDeviates()) {
-        if (isfirst) { isfirst = false; } else { deviateInfo.append("; "); }
-        deviateInfo.append("deviate: ").append(deviate.getArgStr());
-        logDeviationSubelementsImpl(deviate, deviateInfo);
-      }
-      appendMessage(info, deviateInfo);
+  private void writeDeviationSubelementsInfo(Deviation dev, StringBuilder info) {    
+    if (dev.getDeviates() == null) { return; }
+    if (dev.getDeviates().size() < 1) { return; }
+    StringBuilder deviateInfo = new StringBuilder();
+    boolean isfirst = true;
+    for (Deviate deviate : dev.getDeviates()) {
+      if (isfirst) { isfirst = false; } else { deviateInfo.append("; "); }
+      deviateInfo.append("deviate: ").append(deviate.getArgStr());
+      writeDeviationSubelementsInfoImpl(deviate, deviateInfo);
     }
+    appendMessage(info, deviateInfo);    
   }
   
-  private void logDeviationSubelementsImpl(YangElement elem, StringBuilder str) {
+  private void writeDeviationSubelementsInfoImpl(YangElement elem, StringBuilder str) {
     if (!(elem instanceof Deviate)) {
       str.append(" ").append(elem.toString());
     }
     if (elem instanceof YangStatement) {
-      YangStatement ys = (YangStatement) elem;
-      if (ys.getSubElements() == null) { return; } 
-      for (YangElement item : ys.getSubElements()) {
-        logDeviationSubelementsImpl(item, str);
+      List<YangElement> list = YangStatementTranslation.getSubStatements((YangStatement) elem);
+      if (list == null) { return; }
+      for (YangElement item : list) {
+        writeDeviationSubelementsInfoImpl(item, str);
       }
     }
   }
   
   
-  protected boolean hasDeviationTypeNotSupported(Deviation dev) {
+  protected boolean hasDeviateType(Deviation dev, DeviateType dt) {
     if (dev.getDeviates() == null) { return false; }
-    for (Deviate deviate : dev.getDeviates()) { 
-      if (deviate.getDeviateType() == DeviateType.NOT_SUPPORTED) {
+    for (Deviate deviate : dev.getDeviates()) {
+      if (deviate.getDeviateType() == dt) {
         return true;
       }
     }
     return false;
   }
-  
+
 }

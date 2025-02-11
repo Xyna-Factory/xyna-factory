@@ -65,42 +65,28 @@ import xmcp.yang.YangModuleCollection;
 
 
 public class UseCaseAssignmentUtils {
-    
-  public static class RpcAndDeviations {
-    private Rpc rpc;
-    private DeviationList deviationList;
-    public RpcAndDeviations(Rpc rpc, List<Deviation> deviations) {
-      this.rpc = rpc;
-      deviationList = new DeviationList(deviations);      
-    }
-    public Rpc getRpc() {
-      return rpc;
-    }
-    public DeviationList getDeviationList() {
-      return deviationList;
-    }
-  }
-  
+     
   
   public static List<UseCaseAssignmentTableData> loadPossibleAssignments(List<Module> modules, String rpcName, String rpcNs,
                                                                          LoadYangAssignmentsData data, Document meta,
                                                                          List<String> supportedFeatures) {
-    RpcAndDeviations rpc = findRpc(modules, rpcName, rpcNs);
-    Input input = rpc.getRpc().getInput();
+    Rpc rpc = findRpc(modules, rpcName, rpcNs);
+    DeviationList deviations = DeviationList.build(modules);
+    Input input = rpc.getInput();
     List<ListConfiguration> listConfigs = ListConfiguration.loadListConfigurations(meta);
     List<YangStatement> elements = traverseYang(data.getTotalYangPath(), data.getTotalNamespaces(), data.getTotalKeywords(), 
                                                 input, listConfigs, supportedFeatures);
-    List<UseCaseAssignmentTableData> result = loadAssignments(elements, data, supportedFeatures, rpc.getDeviationList());
+    List<UseCaseAssignmentTableData> result = loadAssignments(elements, data, supportedFeatures, deviations);
     return result;
   }
 
 
   private static List<YangStatement> traverseYang(String path, String namespaces, String keywords, YangStatement element,
                                                   List<ListConfiguration> listConfigs, List<String> supportedFeatures) {
-    String[] parts = path.split("\\/");
-    String[] namespaceParts = namespaces.split(Constants.NS_SEPARATOR);
-    String[] keywordParts = keywords.split(" ");
-    
+    LoadYangAssignmentsDataContent content = new LoadYangAssignmentsDataContent(path, namespaces, keywords);
+    String[] parts = content.getParts();
+    String[] namespaceParts = content.getNamespaceParts();
+    String[] keywordParts = content.getKeywordParts();
     for (int i = 1; i < parts.length; i++) { //ignore initial "/<rpcName>"
       String part = parts[i];
       String namespace = namespaceParts[i];
@@ -265,16 +251,17 @@ public class UseCaseAssignmentUtils {
     return "Unknown: " + element.getClass().getCanonicalName();
   }
 
-  private static RpcAndDeviations findRpc(List<Module> modules, String rpcName, String rpcNs) {
+  
+  private static Rpc findRpc(List<Module> modules, String rpcName, String rpcNs) {
     for (Module module : modules) {
       Rpc result = module.getRpc(rpcName);
       if (result != null && Objects.equals(YangStatementTranslation.getNamespace(result), rpcNs)) {
-        return new RpcAndDeviations(result, module.getDeviations());
+        return result;
       }
     }
     throw new RuntimeException("rpc " + rpcName + " in namespace " + rpcNs + " not found.");
   }
-
+  
   public static List<Rpc> findRpcs(List<Module> modules, String rpcName) {
     List<Rpc> result = new ArrayList<>();
     for (Module module : modules) {

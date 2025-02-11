@@ -43,32 +43,20 @@ public class SchemaNodePath {
   
   public SchemaNodePath(LoadYangAssignmentsData data) {
     _pathData = new PathData();
-    boolean valid = true;
-    if (data.getTotalYangPath() == null) { valid = false; }
-    else if (data.getTotalNamespaces() == null) { valid = false; }
-    else if (data.getTotalKeywords() == null) { valid = false; }
-    if (!valid) { throw new IllegalArgumentException("Supplied LoadYangAssignmentsData object incomplete"); }
-    
-    String[] parts = data.getTotalYangPath().split("\\/");
-    String[] namespaceParts = data.getTotalNamespaces().split(Constants.NS_SEPARATOR);
-    String[] keywordParts = data.getTotalKeywords().split(" ");
-    if (parts.length != namespaceParts.length) { valid = false; }
-    else if (parts.length != keywordParts.length) { valid = false; }
-    if (!valid) { throw new IllegalArgumentException("Supplied LoadYangAssignmentsData object inconsistent"); }
-    
+    LoadYangAssignmentsDataContent content = new LoadYangAssignmentsDataContent(data);
     List<PathData> groupingPaths = new ArrayList<>();
-    for (int i = 0; i < parts.length; i++) {
-      if (Constants.TYPE_USES.equals(keywordParts[i])) {
+    for (int i = 0; i < content.getLength(); i++) {
+      if (Constants.TYPE_USES.equals(content.getKeywordPart(i))) {
         groupingPaths.add(new PathData());
       }
-      if (Constants.SET_SCHEMA_NODE_TYPE_NAMES.contains(keywordParts[i])) { 
-        _pathData.localnameList.add(parts[i]); 
-        _pathData.namespaceList.add(namespaceParts[i]); 
-        _pathData.keywordList.add(keywordParts[i]);
+      if (Constants.SCHEMA_NODE_TYPE_NAMES.contains(content.getKeywordPart(i))) { 
+        _pathData.localnameList.add(content.getPart(i));
+        _pathData.namespaceList.add(content.getNamespacePart(i));
+        _pathData.keywordList.add(content.getKeywordPart(i));
         for (PathData pd : groupingPaths) {
-          pd.localnameList.add(parts[i]); 
-          pd.namespaceList.add(namespaceParts[i]); 
-          pd.keywordList.add(keywordParts[i]);
+          pd.localnameList.add(content.getPart(i));
+          pd.namespaceList.add(content.getNamespacePart(i)); 
+          pd.keywordList.add(content.getKeywordPart(i));
         }
       }
     }
@@ -93,5 +81,5 @@ public class SchemaNodePath {
   public List<SchemaNodePath> getContainedPathsOfUsedGroupings() {
     return _containedPathsOfUsedGroupings;
   }
-  
+
 }
