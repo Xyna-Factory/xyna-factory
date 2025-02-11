@@ -18,7 +18,6 @@
 package xdev.yang.impl.usecase;
 
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -30,7 +29,6 @@ import org.w3c.dom.Node;
 import org.yangcentral.yangkit.base.YangElement;
 import org.yangcentral.yangkit.model.api.schema.YangSchemaContext;
 import org.yangcentral.yangkit.model.api.stmt.DataDefinition;
-import org.yangcentral.yangkit.model.api.stmt.Deviation;
 import org.yangcentral.yangkit.model.api.stmt.Input;
 import org.yangcentral.yangkit.model.api.stmt.Module;
 import org.yangcentral.yangkit.model.api.stmt.Rpc;
@@ -63,10 +61,9 @@ import xmcp.yang.UseCaseAssignmentTableData;
 import xmcp.yang.YangModuleCollection;
 
 
-
 public class UseCaseAssignmentUtils {
-     
-  
+
+
   public static List<UseCaseAssignmentTableData> loadPossibleAssignments(List<Module> modules, String rpcName, String rpcNs,
                                                                          LoadYangAssignmentsData data, Document meta,
                                                                          List<String> supportedFeatures) {
