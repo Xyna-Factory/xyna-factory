@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.yangcentral.yangkit.base.YangElement;
 import org.yangcentral.yangkit.model.api.stmt.Anydata;
 import org.yangcentral.yangkit.model.api.stmt.Anyxml;
@@ -42,8 +41,6 @@ import org.yangcentral.yangkit.model.impl.stmt.MainModuleImpl;
 
 
 public class YangStatementTranslator {
-
-  private static Logger _logger = Logger.getLogger(YangStatementTranslator.class);
   
   public static final Map<Class<?>, YangStatementTranslation> translations = setupStatementTranslations();
 

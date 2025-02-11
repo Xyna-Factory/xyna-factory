@@ -127,7 +127,7 @@ public class DeviationTools {
     if (s.length() > 0) {
       s.append("; ");
     }
-    s.append(msg);    
+    s.append(msg);
   }
   
   
@@ -166,7 +166,7 @@ public class DeviationTools {
         deviateInfo.append("deviate: ").append(deviate.getArgStr());
         logDeviationSubelementsImpl(deviate, deviateInfo);
       }
-      appendMessage(info, deviateInfo);          
+      appendMessage(info, deviateInfo);
     }
   }
   

@@ -88,9 +88,8 @@ public class UseCaseAssignmentUtils {
     RpcAndDeviations rpc = findRpc(modules, rpcName, rpcNs);
     Input input = rpc.getRpc().getInput();
     List<ListConfiguration> listConfigs = ListConfiguration.loadListConfigurations(meta);
-    List<YangStatement> elements = 
-        traverseYang(data.getTotalYangPath(), data.getTotalNamespaces(), data.getTotalKeywords(), input, listConfigs, 
-                     supportedFeatures);
+    List<YangStatement> elements = traverseYang(data.getTotalYangPath(), data.getTotalNamespaces(), data.getTotalKeywords(), 
+                                                input, listConfigs, supportedFeatures);
     List<UseCaseAssignmentTableData> result = loadAssignments(elements, data, supportedFeatures, rpc.getDeviationList());
     return result;
   }
@@ -338,7 +337,6 @@ public class UseCaseAssignmentUtils {
     return result;
   }
 
-   
 
   private static YangSchemaContext addModulesFromTag(Element module, List<Module> modules, YangSchemaContext context) throws Exception {
     java.io.ByteArrayInputStream is = new java.io.ByteArrayInputStream(Base64.decode(module.getTextContent()));
