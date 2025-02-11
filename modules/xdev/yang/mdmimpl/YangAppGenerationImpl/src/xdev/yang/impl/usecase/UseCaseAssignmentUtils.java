@@ -173,7 +173,7 @@ public class UseCaseAssignmentUtils {
   private static List<YangStatement> getCandidates(YangStatement statement, List<String> supportedFeatures) {
     List<YangElement> candidates = YangStatementTranslation.getSubStatements(statement);
     List<YangStatement> result = new ArrayList<>();
-    for (YangElement candidate : candidates) {      
+    for (YangElement candidate : candidates) {
       if (isSupportedElement(candidate, supportedFeatures)) {
         result.add((YangStatement) candidate);
       }
