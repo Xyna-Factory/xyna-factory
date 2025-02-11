@@ -45,6 +45,11 @@
       <Documentation>Defines if the panel gets a close-button to be closed by the user</Documentation>
     </Meta>
   </Data>
+  <Data Label="headersize" VariableName="headersize">
+    <Meta>
+      <Type>int</Type>
+    </Meta>
+  </Data>
   <Data Label="Trigger Close" VariableName="triggerClose" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes">
   </Data>
 </DataType>
