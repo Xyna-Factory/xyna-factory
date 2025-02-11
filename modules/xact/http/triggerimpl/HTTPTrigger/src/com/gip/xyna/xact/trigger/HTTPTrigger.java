@@ -97,7 +97,7 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
 
   private ServerSocket serverSocketForSSL;
   private ServerSocketChannel serverSocketChannelForUnsecureMode;
-  
+
   private HTTPStartParameter startParams;
 
   private volatile boolean isStopping = false;
@@ -109,9 +109,9 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
   private AtomicLong rejectCounter = new AtomicLong(0);
 
   public static final XynaPropertyString PROP_DEFAULT_ENCODING = new XynaPropertyString("xact.http.default_encoding", "")
-    .setDefaultDocumentation(DocumentationLanguage.EN, 
+    .setDefaultDocumentation(DocumentationLanguage.EN,
     "Default encoding for incoming http-messages if none is provided in the http header")
-    .setDefaultDocumentation(DocumentationLanguage.DE, 
+    .setDefaultDocumentation(DocumentationLanguage.DE,
     "Default-Encoding bei eingehenden Http-Nachrichten, wenn im Http-Header keins gesetzt ist");
 
 
@@ -134,27 +134,28 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
   public HTTPTrigger() {
   }
 
-  
-  private static ServerSocketFactory getServerSocketFactory(HTTPStartParameter params) throws UnrecoverableKeyException, KeyManagementException, KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException, XFMG_KeyStoreConversionError, XFMG_UnknownKeyStoreType, XFMG_UnknownKeyStore, StringParameterParsingException {
+
+  private static ServerSocketFactory getServerSocketFactory(HTTPStartParameter params) throws UnrecoverableKeyException,
+      KeyManagementException, KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException,
+      XFMG_KeyStoreConversionError, XFMG_UnknownKeyStoreType, XFMG_UnknownKeyStore, StringParameterParsingException {
     switch (params.getKeyStoreParameter()) {
       case KEY_MGMT :
         KeyManagement km = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getKeyManagement();
         KeyManagerFactory kmf = null;
-        if (params.getKeyStoreName() != null && 
-            params.getKeyStoreName().length() > 0) {
+        if (params.getKeyStoreName() != null && params.getKeyStoreName().length() > 0) {
           Map<String, String> map = new HashMap<String, String>();
           kmf = km.getKeyStore(params.getKeyStoreName(), KeyManagerFactory.class, map);
         }
         TrustManagerFactory tmf = null;
-        if (params.getTrustStoreName() != null && 
-            params.getTrustStoreName().length() > 0) {
+        if (params.getTrustStoreName() != null && params.getTrustStoreName().length() > 0) {
           Map<String, String> map = new HashMap<String, String>();
           tmf = km.getKeyStore(params.getTrustStoreName(), TrustManagerFactory.class, map);
         }
-        return getServerSocketFactory(kmf, tmf);
+        return getServerSocketFactory(kmf, tmf, params.getSSLContextAlgorithm());
       case FILE :
       case TRUE :
-        return getServerSocketFactory(params.getKeyStorePath(), params.getKeyStoreType(), params.getKeyStorePassword());
+        return getServerSocketFactory(params.getKeyStorePath(), params.getKeyStoreType(), params.getKeyStorePassword(),
+                                      params.getSSLContextAlgorithm());
       case NONE :
       case FALSE :
         // should never be encountered
@@ -162,12 +163,12 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
         return SSLServerSocketFactory.getDefault();
     }
   }
-                                                            
 
-  private static ServerSocketFactory getServerSocketFactory(String keyStorePath, String keyStoreType,
-                                                            String keyStorePassword) throws KeyStoreException,
-      NoSuchAlgorithmException, UnrecoverableKeyException, CertificateException, FileNotFoundException, IOException,
-      KeyManagementException {
+
+  private static ServerSocketFactory getServerSocketFactory(String keyStorePath, String keyStoreType, String keyStorePassword,
+                                                            String sslContextAlgorithm)
+      throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException, CertificateException, FileNotFoundException,
+      IOException, KeyManagementException {
 
     if (keyStoreType.equals("default")) {
       return SSLServerSocketFactory.getDefault();
@@ -182,18 +183,18 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
 
     ks.load(new FileInputStream(keyStorePath), passphrase);
     kmf.init(ks, passphrase);
-    
+
     TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
     tmf.init(ks);
-    
 
-    return getServerSocketFactory(kmf, tmf);
+    return getServerSocketFactory(kmf, tmf, sslContextAlgorithm);
   }
-  
-  
-  private static ServerSocketFactory getServerSocketFactory(KeyManagerFactory kmf, TrustManagerFactory tmf) throws NoSuchAlgorithmException, KeyManagementException {
+
+
+  private static ServerSocketFactory getServerSocketFactory(KeyManagerFactory kmf, TrustManagerFactory tmf, String sslContextAlgorithm)
+      throws NoSuchAlgorithmException, KeyManagementException {
     SSLServerSocketFactory ssf = null;
-    SSLContext ctx = SSLContext.getInstance("TLS");
+    SSLContext ctx = SSLContext.getInstance(sslContextAlgorithm);
     ctx.init(kmf == null ? null : kmf.getKeyManagers(), tmf == null ? null : tmf.getTrustManagers(), null);
     ssf = ctx.getServerSocketFactory();
     return ssf;
@@ -227,7 +228,7 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
             ((SSLServerSocket) serverSocketForSSL).setNeedClientAuth(false);
             ((SSLServerSocket) serverSocketForSSL).setWantClientAuth(false);
             break;
-          default: 
+          default:
             //sollte nicht vorkommen, da in startparameter klasse gehandlet.
             throw new IllegalArgumentException("invalid client auth parameter: " + sp.getClientAuth());
         }
@@ -310,7 +311,6 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
 
     //addStatistics
     try {
-      TriggerInstanceIdentification i = getTriggerInstanceIdentification();
       registerStatistics();
     } catch (Exception e) {
       logger.info("HTTPTrigger Statistics could not be initialized. ", e);
@@ -328,8 +328,8 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
       throw new RuntimeException();
     }
   }
-  
-  
+
+
   public HTTPStartParameter getStartParameter() {
     return startParams;
   }
@@ -431,8 +431,8 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
       logger.info("socket was unexpectedly not available when trying to send errormessage to client", e);
     }
   }
-  
-  
+
+
   private enum HttpTriggerStatisticType implements StatisticsPathPart {
     INSTANCENAME("InstanceName"),
     MAXEVENTS("ConfiguredMaxTriggerEvents"),
@@ -440,13 +440,13 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
     RECEIVED("RequestsReceived"),
     REJECTED("RequestsRejected"),
     PROCESSED("RequestsProcessed");
-    
+
     private HttpTriggerStatisticType(String partname) {
       this.partname = partname;
     }
- 
+
     private final String partname;
-    
+
     public String getPartName() {
       return partname;
     }
@@ -454,11 +454,11 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
     public StatisticsNodeTraversal getStatisticsNodeTraversal() {
       return StatisticsNodeTraversal.SINGLE;
     }
-    
+
   }
-  
+
   private StatisticsPath instancePathPath;
-  
+
   private StatisticsPath getInstanceBasePath() {
     if (instancePathPath == null) {
       String rtc = "WorkingSet";
@@ -474,12 +474,12 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
           // "WorkingSet" als RuntimeContext in StatisticsPath eintragen
         }
       }
-      
+
       instancePathPath = PredefinedXynaStatisticsPath.HTTPTRIGGER.append(rtc).append(triggerId.getInstanceName());
-    } 
+    }
     return instancePathPath;
   }
-  
+
 
   private void registerStatistics() {
     FactoryRuntimeStatistics statistics = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryMonitoring().getFactoryRuntimeStatistics();
@@ -532,26 +532,26 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
         @Override
         public String getDescription() { return "The amount of events that were received and not rejected"; }
       });
-    
+
       // register aggregations over applications
       for (HttpTriggerStatisticType statisticType : HttpTriggerStatisticType.values()) {
         StatisticsPath ownPath = PredefinedXynaStatisticsPath.HTTPTRIGGER.append(StatisticsPathImpl.simplePathPart("All"))
                                                                          .append(getTriggerInstanceIdentification().getInstanceName())
                                                                          .append(statisticType);
-        
-        Statistics existingStatistics;
+
+        Statistics<?,?> existingStatistics;
         try {
           existingStatistics = statistics.getStatistic(ownPath);
         } catch (XFMG_InvalidStatisticsPath e) {
           throw new RuntimeException(e);
         }
-        
+
         if (existingStatistics == null) {
           StatisticsPath pathToAggregate = PredefinedXynaStatisticsPath.HTTPTRIGGER
               .append(new StatisticsPathImpl.BlackListFilter("All"))
               .append(getTriggerInstanceIdentification().getInstanceName())
               .append(statisticType);
-          Statistics aggregate = AggregationStatisticsFactory.generateDefaultAggregationStatistics(ownPath, pathToAggregate);
+          Statistics<?,?> aggregate = AggregationStatisticsFactory.generateDefaultAggregationStatistics(ownPath, pathToAggregate);
           try {
             statistics.registerStatistic(aggregate);
           } catch (XFMG_StatisticAlreadyRegistered e) {
