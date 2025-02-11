@@ -105,8 +105,8 @@ public class Constants {
   
   /* from RFC 7950;
      schema node: A node in the schema tree.  One of action, container,
-      leaf, leaf-list, list, choice, case, rpc, input, output,
-      notification, anydata, and anyxml.
+     leaf, leaf-list, list, choice, case, rpc, input, output,
+     notification, anydata, and anyxml.
    */
   public static final Set<String> SET_SCHEMA_NODE_TYPE_NAMES = Set.of(TYPE_ACTION, TYPE_CONTAINER, TYPE_LEAF, TYPE_LEAFLIST, TYPE_LIST,
                                                                       TYPE_CHOICE, TYPE_CASE, TYPE_RPC, TYPE_INPUT, TYPE_OUTPUT,

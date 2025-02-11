@@ -21,7 +21,6 @@ package xdev.yang.impl.usecase;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.yangcentral.yangkit.base.YangElement;
 import org.yangcentral.yangkit.model.api.stmt.Deviate;
 import org.yangcentral.yangkit.model.api.stmt.DeviateType;
@@ -104,11 +103,7 @@ public class DeviationTools {
           nodeData.unversionedSetIsNotSupportedDeviation(true);
           return;
         }
-        if ((dev.getDeviates() != null) && (dev.getDeviates().size() > 0)) {          
-          StringBuilder deviateInfo = new StringBuilder();
-          logDeviationSubelements(dev, deviateInfo);
-          appendMessage(info, deviateInfo);          
-        }
+        logDeviationSubelements(dev, info);
       }
     }
     if (info.length() > 0) {
@@ -162,15 +157,28 @@ public class DeviationTools {
   }
   
   
-  private void logDeviationSubelements(YangElement elem, StringBuilder str) {
-    if (!(elem instanceof Deviation)) {
+  private void logDeviationSubelements(Deviation dev, StringBuilder info) {    
+    if ((dev.getDeviates() != null) && (dev.getDeviates().size() > 0)) {          
+      StringBuilder deviateInfo = new StringBuilder();
+      boolean isfirst = true;
+      for (Deviate deviate : dev.getDeviates()) {
+        if (isfirst) { isfirst = false; } else { deviateInfo.append("; "); }
+        deviateInfo.append("deviate: ").append(deviate.getArgStr());
+        logDeviationSubelementsImpl(deviate, deviateInfo);
+      }
+      appendMessage(info, deviateInfo);          
+    }
+  }
+  
+  private void logDeviationSubelementsImpl(YangElement elem, StringBuilder str) {
+    if (!(elem instanceof Deviate)) {
       str.append(" ").append(elem.toString());
     }
     if (elem instanceof YangStatement) {
       YangStatement ys = (YangStatement) elem;
       if (ys.getSubElements() == null) { return; } 
       for (YangElement item : ys.getSubElements()) {
-        logDeviationSubelements(item, str);
+        logDeviationSubelementsImpl(item, str);
       }
     }
   }
