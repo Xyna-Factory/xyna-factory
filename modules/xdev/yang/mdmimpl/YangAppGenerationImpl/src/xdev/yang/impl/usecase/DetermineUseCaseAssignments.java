@@ -25,7 +25,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.w3c.dom.Document;
+import org.yangcentral.yangkit.base.YangContext;
 import org.yangcentral.yangkit.model.api.stmt.Module;
+import org.yangcentral.yangkit.model.impl.schema.YangSchemaContextImpl;
 
 import com.gip.xyna.utils.collections.Pair;
 
@@ -62,6 +64,14 @@ public class DetermineUseCaseAssignments {
     List<YangDeviceCapability> moduleCapabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
     List<String> supportedFeatures = YangCapabilityUtils.getSupportedFeatureNames(modules, moduleCapabilities);
     modules = YangCapabilityUtils.filterModules(modules, moduleCapabilities);
+    YangSchemaContextImpl schemaContext = new YangSchemaContextImpl();
+    for(Module module : modules) {
+      module.clear();
+      YangContext moduleContext = new YangContext(schemaContext, module);
+      schemaContext.addModule(module);
+      module.setContext(moduleContext);
+    }
+    schemaContext.validate();
     result = UseCaseAssignmentUtils.loadPossibleAssignments(modules, rpcName, rpcNamespace, data, usecaseMeta, supportedFeatures);
     fillValuesAndWarnings(usecaseMeta, modules, result);
     return result;

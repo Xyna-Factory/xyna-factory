@@ -309,23 +309,19 @@ public class UseCaseAssignmentUtils {
         continue;
       }
       List<Element> modules = XMLUtils.getChildElementsByName(xml.getDocumentElement(), "module");
-      YangSchemaContext context = null;
       for(Element module : modules) {
-        context = addModulesFromTag(module, result, context);      
+        addModulesFromTag(module, result);
       }
-      if (context != null) {
-        context.validate();
-      }
-      result.addAll(context.getModules());
     }
     return result;
   }
 
 
-  private static YangSchemaContext addModulesFromTag(Element module, List<Module> modules, YangSchemaContext context) throws Exception {
+  private static void addModulesFromTag(Element module, List<Module> modules) throws Exception {
     java.io.ByteArrayInputStream is = new java.io.ByteArrayInputStream(Base64.decode(module.getTextContent()));
-    context = YangYinParser.parse(is, "module.yang", context);
-    return context;
+    YangSchemaContext context = YangYinParser.parse(is, "module.yang", null);
+    context.validate();
+    modules.addAll(context.getModules());
   }
 
   public static Pair<Integer, Document> loadOperationMeta(String fqn, String workspaceName, String usecase) {
