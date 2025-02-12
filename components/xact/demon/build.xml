@@ -31,6 +31,11 @@
               destfile="${target.dir}/demonlib.jar" />
     </target>
 
+    <target name="resolve">
+        <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib/xyna" />
+        <loadLicenses targetDir="${basedir}/lib" />
+    </target>
+
     <target name="installMavenArtifact" depends="build" description="install artifact to maven repository">
          <install-maven-artifact artifactFile="${target.dir}/demonlib.jar" pomFile="${basedir}/pom.xml" />
     </target>
