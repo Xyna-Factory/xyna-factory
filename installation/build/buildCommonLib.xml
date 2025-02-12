@@ -140,12 +140,6 @@
                target: resolve             
           =================================  -->
     <target name="resolve">
-        <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib/xyna" />
-        <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib" scopes="runtime" />
-        <loadLicenses targetDir="${basedir}/lib" />
-    </target>
-
-      <target name="resolve">
         <if>
             <equals arg1="${third_parties.available}" arg2="true" />
             <then>
@@ -155,6 +149,6 @@
         </if>
         <resolve pomFile="${basedir}/pom.xml" dir="${base.lib.dir}/xyna" />
         <resolve pomFile="${basedir}/pom.xml" dir="${base.lib.dir}" scopes="runtime" />
-      </target>
+    </target>
 
 </project>
