@@ -24,12 +24,6 @@
         </classpath>
     </taskdef>
 
-    <!-- Maven Resolver Ant Task - http://maven.apache.org/resolver-ant-tasks/ -->
-    <taskdef uri="antlib:org.apache.maven.resolver.ant" resource="org/apache/maven/resolver/ant/antlib.xml">
-        <classpath>
-            <fileset dir="${install.lib.dir}" includes="maven-resolver-ant-tasks-*uber.jar"/>
-        </classpath>
-    </taskdef>
 
     <!-- ================================= 
          macro: copyJar
