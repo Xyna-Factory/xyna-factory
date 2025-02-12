@@ -21,6 +21,7 @@
   <property name="target.dir" value="${basedir}" />
 
   <import file="${basedir}/../../../installation/build/ant-xyna.xml" />
+  <import file="${basedir}/../../../installation/build/macros.xml" />
 
   <property name="project.name.local" value="NetworkAvailability" />
 
