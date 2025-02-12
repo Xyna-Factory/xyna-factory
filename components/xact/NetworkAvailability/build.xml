@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="NetworkAvailability" default="build" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+<project name="NetworkAvailability" default="build" basedir="." >
 
   <property name="target.dir" value="${basedir}" />
 
@@ -26,7 +26,6 @@
 
   <mkdir dir="${basedir}/lib" />
 
-  <resolver:pom file="${basedir}/pom.xml" id="pom"/>
 
   <!-- =================================
            target: build
@@ -48,12 +47,8 @@
              target: resolve             
         =================================  -->
   <target name="resolve">
-    <resolver:resolve>
-      <resolver:dependencies pomRef="pom"/>
-      <resolver:files refid="files" dir="${basedir}/lib" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/>
-    </resolver:resolve>
+    <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib/xyna" scopes="runtime" />
     <loadLicenses targetDir="${target.dir}/lib" />
-    <!-- delete generated-resources ? -->
   </target>
 
 </project>
