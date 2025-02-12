@@ -16,9 +16,10 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="build" default="build" basedir="."  xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+<project name="build" default="build" basedir="." >
 	
 	<import file="../../../../installation/build/ant-xyna.xml" />
+	<import file="../../../../installation/build/macros.xml" />
 
 	<property name="project.name.local2" value="DefaultConnectionPoolTypes" />
 
@@ -29,8 +30,6 @@
 
 
         <mkdir dir="${basedir}/lib/xyna" />
-
-	<resolver:pom file="${basedir}/pom.xml" id="pom"/>
 
 	<path id="libraries">
 		<fileset dir="${basedir}/lib/xyna">
@@ -43,25 +42,9 @@
 		<buildJar destfile="${target.dir}/${project.name.local2}-${release.number}.jar" />
 	</target>
 
-
-	<target name="resolve">
-        <resolver:resolve>
-          <resolver:dependencies pomRef="pom"/>
-	  <resolver:files refid="files" dir="${basedir}/lib/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
-	  <!--resolver:files refid="files" dir="${basedir}/lib" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/-->
-        </resolver:resolve>
-		<loadLicenses targetDir="${basedir}/lib" />
-        <!-- delete generated-resources ? -->
-      </target>
-	<!--path id="libraries">
-		<fileset dir="${basedir}/../../../../common/lib">
-			<include name="**/log4j-*.jar" />
-			<include name="**/xynafactory.jar" />
-			<include name="**/xynautils-database-*.jar" />
-		</fileset>
-                <fileset dir="${basedir}/lib.build">
-                  <include name="**/*.jar" />
-                </fileset>
-	</path-->
+    <target name="resolve">
+        <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib/xyna" />
+        <loadLicenses targetDir="${basedir}/lib" />
+    </target>
 
 </project>
