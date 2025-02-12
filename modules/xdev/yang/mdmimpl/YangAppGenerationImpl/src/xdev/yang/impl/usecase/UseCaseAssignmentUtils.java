@@ -56,6 +56,7 @@ import xdev.yang.impl.YangCapabilityUtils.YangDeviceCapability;
 import xdev.yang.impl.YangStatementTranslator;
 import xdev.yang.impl.YangStatementTranslator.YangStatementTranslation;
 import xdev.yang.impl.usecase.ListConfiguration.ListLengthConfig;
+import xdev.yang.impl.usecase.ModuleLoadingInfo.ModuleLoadingStrategy;
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.UseCaseAssignmentTableData;
 import xmcp.yang.YangModuleCollection;
@@ -63,7 +64,8 @@ import xmcp.yang.YangModuleCollection;
 
 public class UseCaseAssignmentUtils {
 
-
+  
+  
   public static List<UseCaseAssignmentTableData> loadPossibleAssignments(List<Module> modules, String rpcName, String rpcNs,
                                                                          LoadYangAssignmentsData data, Document meta,
                                                                          List<String> supportedFeatures) {
@@ -270,8 +272,8 @@ public class UseCaseAssignmentUtils {
     return result;
   }
 
-  public static List<Module> loadModules(String workspaceName) {
-    List<Module> result = new ArrayList<>();
+  public static List<ModuleLoadingInfo> loadModules(String workspaceName) {
+    List<ModuleLoadingInfo> result = new ArrayList<>();
     XynaFactoryControl xynaFactoryCtrl = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl();
     XmomDbInteraction interaction = new XmomDbInteraction();
     RevisionManagement revMgmt = xynaFactoryCtrl.getRevisionManagement();
@@ -286,7 +288,7 @@ public class UseCaseAssignmentUtils {
       Long entryRevision;
       try {
         entryRevision = revMgmt.getRevision(entry.getRuntimeContext());
-        result.addAll(loadModulesFromDt(entry.getFqName(), entryRevision));
+        result.add(loadModulesFromDt(entry.getFqName(), entryRevision, ModuleLoadingStrategy.IGNORE_IMPORTS));
       } catch (Exception e) {
         throw new RuntimeException(e);
       }
@@ -294,11 +296,29 @@ public class UseCaseAssignmentUtils {
     return result;
   }
 
-  private static List<Module> loadModulesFromDt(String fqName, Long entryRevision) throws Exception {
+  
+  public static List<Module> reloadModules(List<ModuleLoadingInfo> modules) {
+    List<Module> ret = new ArrayList<>();    
+    try {
+      for (ModuleLoadingInfo info : modules) {
+        ModuleLoadingInfo reloaded = loadModulesFromDt(info.getModuleFqXmomTypename(), info.getEntryRevision(), 
+                                                       ModuleLoadingStrategy.FOLLOW_IMPORTS);
+        ret.addAll(reloaded.getModuleList());
+      }
+    } 
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    return ret;
+  }
+  
+  
+  private static ModuleLoadingInfo loadModulesFromDt(String fqName, Long entryRevision, 
+                                                     ModuleLoadingStrategy strategy) throws Exception {
     DOM dom = DOM.getOrCreateInstance(fqName, new GenerationBaseCache(), entryRevision);
     dom.parseGeneration(true, false);
     List<String> metaTags = dom.getUnknownMetaTags();
-    List<Module> result = new ArrayList<Module>();
+    List<Module> modules = new ArrayList<>();
     for(String meta : metaTags) {
       Document xml = XMLUtils.parseString(meta, true);
       if (!xml.getDocumentElement().getNodeName().equals(Constants.TAG_YANG)) {
@@ -308,20 +328,37 @@ public class UseCaseAssignmentUtils {
       if (yangTypeNode == null || !Constants.VAL_MODULECOLLECTION.equals(yangTypeNode.getNodeValue())) {
         continue;
       }
-      List<Element> modules = XMLUtils.getChildElementsByName(xml.getDocumentElement(), "module");
-      for(Element module : modules) {
-        addModulesFromTag(module, result);
+      List<Element> xmlModules = XMLUtils.getChildElementsByName(xml.getDocumentElement(), "module");
+      YangSchemaContext context = null;
+      for(Element module : xmlModules) {
+        context = addModulesFromTag(module, modules, context, strategy);
+        if (strategy == ModuleLoadingStrategy.IGNORE_IMPORTS) {
+          context = null;
+        }
       }
+      if (strategy == ModuleLoadingStrategy.FOLLOW_IMPORTS) {
+        if (context != null) {
+          context.validate();
+        }
+      }
+    }
+    ModuleLoadingInfo result = new ModuleLoadingInfo(fqName, entryRevision);
+    for (Module mod : modules) {
+      result.addModule(mod);
     }
     return result;
   }
 
 
-  private static void addModulesFromTag(Element module, List<Module> modules) throws Exception {
+  private static YangSchemaContext addModulesFromTag(Element module, List<Module> modules, YangSchemaContext context, 
+                                                     ModuleLoadingStrategy strategy) throws Exception {
     java.io.ByteArrayInputStream is = new java.io.ByteArrayInputStream(Base64.decode(module.getTextContent()));
-    YangSchemaContext context = YangYinParser.parse(is, "module.yang", null);
-    context.validate();
+    context = YangYinParser.parse(is, "module.yang", context);    
+    if (strategy == ModuleLoadingStrategy.IGNORE_IMPORTS) {
+      context.validate();
+    }
     modules.addAll(context.getModules());
+    return context;
   }
 
   public static Pair<Integer, Document> loadOperationMeta(String fqn, String workspaceName, String usecase) {
@@ -401,11 +438,12 @@ public class UseCaseAssignmentUtils {
   }
 
   public static String loadRpcNs(String rpc, String deviceFqn, String workspaceName) {
-    List<Module> modules = UseCaseAssignmentUtils.loadModules(workspaceName);
+    List<ModuleLoadingInfo> modules = UseCaseAssignmentUtils.loadModules(workspaceName);
     //filter modules to supported by device
     List<YangDeviceCapability> capabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
     modules = YangCapabilityUtils.filterModules(modules, capabilities);
-    List<Rpc> candidates = UseCaseAssignmentUtils.findRpcs(modules, rpc);
+    List<Module> filtered = ModuleLoadingInfo.toModuleList(modules);
+    List<Rpc> candidates = UseCaseAssignmentUtils.findRpcs(filtered, rpc);
     if (candidates.size() != 1) {
       throw new RuntimeException("Could not determine rpc namespace. There are " + candidates.size() + " candidates.");
     }

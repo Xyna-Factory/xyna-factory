@@ -58,22 +58,26 @@ public class DetermineUseCaseAssignments {
     if(rpcName == null || rpcNamespace == null) {
       return result;
     }
-
-    List<Module> modules = UseCaseAssignmentUtils.loadModules(workspaceName);
+    List<ModuleLoadingInfo> modules = UseCaseAssignmentUtils.loadModules(workspaceName);
+    List<Module> unfilteredModules = ModuleLoadingInfo.toModuleList(modules); 
     String deviceFqn = UseCaseAssignmentUtils.readDeviceFqn(usecaseMeta);
     List<YangDeviceCapability> moduleCapabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
-    List<String> supportedFeatures = YangCapabilityUtils.getSupportedFeatureNames(modules, moduleCapabilities);
+    List<String> supportedFeatures = YangCapabilityUtils.getSupportedFeatureNames(unfilteredModules, moduleCapabilities);
     modules = YangCapabilityUtils.filterModules(modules, moduleCapabilities);
     YangSchemaContextImpl schemaContext = new YangSchemaContextImpl();
-    for(Module module : modules) {
+    List<Module> filteredModules = UseCaseAssignmentUtils.reloadModules(modules);
+    /*
+    for (Module module : modules) {
       module.clear();
       YangContext moduleContext = new YangContext(schemaContext, module);
       schemaContext.addModule(module);
       module.setContext(moduleContext);
     }
+    */
     schemaContext.validate();
-    result = UseCaseAssignmentUtils.loadPossibleAssignments(modules, rpcName, rpcNamespace, data, usecaseMeta, supportedFeatures);
-    fillValuesAndWarnings(usecaseMeta, modules, result);
+    
+    result = UseCaseAssignmentUtils.loadPossibleAssignments(filteredModules, rpcName, rpcNamespace, data, usecaseMeta, supportedFeatures);
+    fillValuesAndWarnings(usecaseMeta, filteredModules, result);
     return result;
   }
 

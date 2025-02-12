@@ -45,6 +45,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
+import xdev.yang.impl.usecase.ModuleLoadingInfo;
 import xmcp.yang.YangDevice;
 
 
@@ -54,9 +55,15 @@ public class YangCapabilityUtils {
   private static final Logger logger = CentralFactoryLogging.getLogger(YangCapabilityUtils.class);
 
 
-  public static List<Module> filterModules(List<Module> modules, List<YangDeviceCapability> capabilities) {
-    List<Module> result = new ArrayList<>(modules);
-    result.removeIf(x -> !isModuleInCapabilities(capabilities, x));
+  public static List<ModuleLoadingInfo> filterModules(List<ModuleLoadingInfo> modules, List<YangDeviceCapability> capabilities) {
+    List<ModuleLoadingInfo> result = new ArrayList<>();
+    for (ModuleLoadingInfo info : modules) {
+      List<Module> list = new ArrayList<>(info.getModuleList());
+      list.removeIf(x -> !isModuleInCapabilities(capabilities, x));
+      if (list.size() > 0) {
+        result.add(info);
+      }
+    }
     return result;
   }
 
