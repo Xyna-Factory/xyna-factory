@@ -25,7 +25,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.w3c.dom.Document;
+import org.yangcentral.yangkit.base.YangContext;
 import org.yangcentral.yangkit.model.api.stmt.Module;
+import org.yangcentral.yangkit.model.impl.schema.YangSchemaContextImpl;
 
 import com.gip.xyna.utils.collections.Pair;
 
@@ -56,15 +58,15 @@ public class DetermineUseCaseAssignments {
     if(rpcName == null || rpcNamespace == null) {
       return result;
     }
-
-    List<Module> modules = UseCaseAssignmentUtils.loadModules(workspaceName);
     String deviceFqn = UseCaseAssignmentUtils.readDeviceFqn(usecaseMeta);
     List<YangDeviceCapability> moduleCapabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
-    List<String> supportedFeatures = YangCapabilityUtils.getSupportedFeatureNames(modules, moduleCapabilities);
-    modules = YangCapabilityUtils.filterModules(modules, moduleCapabilities);
-    result = UseCaseAssignmentUtils.loadPossibleAssignments(modules, rpcName, rpcNamespace, data, usecaseMeta, supportedFeatures);
-    fillValuesAndWarnings(usecaseMeta, modules, result);
-
+    List<String> supportedFeatures = YangCapabilityUtils.getSupportedFeatureNames(moduleCapabilities);
+    
+    List<ModuleGroup> groups = UseCaseAssignmentUtils.loadModules(workspaceName);
+    List<Module> filteredModules = new ModuleFilterTools().filterAndReload(groups, moduleCapabilities);
+        
+    result = UseCaseAssignmentUtils.loadPossibleAssignments(filteredModules, rpcName, rpcNamespace, data, usecaseMeta, supportedFeatures);
+    fillValuesAndWarnings(usecaseMeta, filteredModules, result);
     return result;
   }
 
