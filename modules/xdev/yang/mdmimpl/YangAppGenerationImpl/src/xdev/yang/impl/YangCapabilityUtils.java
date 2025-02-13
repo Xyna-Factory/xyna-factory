@@ -45,7 +45,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
-import xdev.yang.impl.usecase.ModuleLoadingInfo;
+import xdev.yang.impl.usecase.ModuleGroup;
 import xmcp.yang.YangDevice;
 
 
@@ -55,20 +55,19 @@ public class YangCapabilityUtils {
   private static final Logger logger = CentralFactoryLogging.getLogger(YangCapabilityUtils.class);
 
 
-  public static List<ModuleLoadingInfo> filterModules(List<ModuleLoadingInfo> modules, List<YangDeviceCapability> capabilities) {
-    List<ModuleLoadingInfo> result = new ArrayList<>();
-    for (ModuleLoadingInfo info : modules) {
-      List<Module> list = new ArrayList<>(info.getModuleList());
+  public static List<Module> filterModules(List<ModuleGroup> modules, List<YangDeviceCapability> capabilities) {
+    for (ModuleGroup group : modules) {
+      List<Module> list = new ArrayList<>(group.getModuleList());
       list.removeIf(x -> !isModuleInCapabilities(capabilities, x));
       if (list.size() > 0) {
-        result.add(info);
+        return list;
       }
     }
-    return result;
+    return new ArrayList<Module>();
   }
 
 
-  private static boolean isModuleInCapabilities(List<YangDeviceCapability> capabilities, Module module) {
+  public static boolean isModuleInCapabilities(List<YangDeviceCapability> capabilities, Module module) {
     if (module.getMainModule() == null) {
       return false;
     }
@@ -108,13 +107,12 @@ public class YangCapabilityUtils {
       if (capabilityRawInfo.startsWith(Constants.NETCONF_BASE_CAPABILITY_NO_VERSION) && moduleNamespace.equals(Constants.NETCONF_NS)) {
         return true;
       }
-
     }
     return false;
   }
 
 
-  public static List<String> getSupportedFeatureNames(List<Module> modules, List<YangDeviceCapability> capabilities) {
+  public static List<String> getSupportedFeatureNames(List<YangDeviceCapability> capabilities) {
     List<String> allFeatures = new ArrayList<String>();
     for (YangDeviceCapability c : capabilities) {
       List<String> capabilityFeatures = c.getFeatures();
