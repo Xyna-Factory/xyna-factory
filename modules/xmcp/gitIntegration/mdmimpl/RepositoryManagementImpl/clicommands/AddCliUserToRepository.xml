@@ -19,6 +19,8 @@
   <CommandDefinition Groups="Git Repository Management" Name="addcliusertorepository" Description="Configures a cli user for a repository" />
   <Argument Name="repository" Description="Path to the repository" />
   <Argument Name="username" Description="Repository username" />
-  <Argument Name="password" Description="Password" />
+  <Argument Name="password" Description="Password" Optional="true" />
+  <Argument Name="privateKeyFile" Description="Path and filename containing private key" Optional="true" />
+  <Argument Name="keyPassphrase" Description="Passphrase for private key" Optional="true" />
   <Argument Name="mail" Description="Mail" />
 </XynaCommandLineCommand>
