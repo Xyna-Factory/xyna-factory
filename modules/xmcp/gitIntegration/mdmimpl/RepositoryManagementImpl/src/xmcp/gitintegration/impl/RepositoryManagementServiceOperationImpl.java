@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.gip.xyna.XynaFactory;
-import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
@@ -131,8 +130,7 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
   }
 
 
-  private Pair<String, String> getUserNameAndDecodePassword(String encodedPassword, String sessionId) throws PersistenceLayerException {
-    SessionManagement sessionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement();
+  private String getToken(String sessionId) throws PersistenceLayerException {
     ManagedSession session = new ManagedSession(sessionId, null, null);
     ODS ods = XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getODS();
     ODSConnection con = ods.openConnection();
@@ -144,9 +142,7 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
       con.closeConnection();
     }
 
-    String userName = sessionManagement.resolveSessionToUser(sessionId);
-    String password = DeEncoder.decode(encodedPassword, sessionId, session.getToken());
-    return new Pair<>(userName, password);
+    return session.getToken();
   }
 
 
@@ -175,17 +171,27 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
   
   @Override
   public void addUserToRepository(XynaOrderServerExtension order, RepositoryUserCreationData data) {
+    SessionManagement sessionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement();
     String repo = data.getRepository().getPath();
     String encodedPassword = data.getEncodedPassword();
+    String encodedKey = data.getEncodedKey();
+    String encodedKeyPhrase = data.getEncodedKeyPassphrase();
     String repoUser = data.getUsername();
     String mail = data.getMail();
-    Pair<String, String> usernamePassword;
+    String sessionId = order.getSessionId();
+    String username = sessionManagement.resolveSessionToUser(sessionId);
+    String password = null;
+    String key = null;
+    String keyPhrase = null;
     try {
-      usernamePassword = getUserNameAndDecodePassword(encodedPassword, order.getSessionId());
+      String token = getToken(order.getSessionId());
+      password = DeEncoder.decode(encodedPassword, sessionId, token);
+      key = DeEncoder.decode(encodedKey, sessionId, token);
+      keyPhrase = DeEncoder.decode(encodedKeyPhrase, sessionId, token);
     } catch (PersistenceLayerException e) {
       throw new RuntimeException(e);
     }
-    new UserManagementStorage().AddUserToRepository(usernamePassword.getFirst(), repoUser, repo, usernamePassword.getSecond(), mail);
+    new UserManagementStorage().AddUserToRepository(username, repoUser, repo, password, key, keyPhrase, mail);
   }
 
   

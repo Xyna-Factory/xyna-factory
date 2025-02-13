@@ -19,8 +19,13 @@ package xmcp.gitintegration.cli.impl;
 
 
 
+import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xmcp.xfcli.ReturnCode;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import xmcp.gitintegration.cli.generated.Addcliusertorepository;
 import xmcp.gitintegration.storage.UserManagementStorage;
@@ -31,7 +36,23 @@ public class AddcliusertorepositoryImpl extends XynaCommandImplementation<Addcli
 
   public void execute(OutputStream statusOutputStream, Addcliusertorepository payload) throws XynaException {
     UserManagementStorage storage = new UserManagementStorage();
-    storage.AddUserToRepository(UserManagementStorage.CLI_USERNAME, payload.getUsername(), payload.getRepository(), payload.getPassword(), payload.getMail());
+    String keyFile = payload.getPrivateKeyFile();
+    String key = null;
+    if(keyFile != null && !keyFile.isEmpty()) {
+      try {
+        key = Files.readString(Path.of(keyFile));
+      } catch (IOException e) {
+        writeToCommandLine(statusOutputStream, "Error loading key file...");
+        writeEndToCommandLine(statusOutputStream, ReturnCode.GENERAL_ERROR);
+      }
+    }
+    storage.AddUserToRepository(UserManagementStorage.CLI_USERNAME, 
+                                payload.getUsername(), 
+                                payload.getRepository(),
+                                payload.getPassword(), 
+                                key,
+                                payload.getKeyPassphrase(),
+                                payload.getMail());
   }
 
 }

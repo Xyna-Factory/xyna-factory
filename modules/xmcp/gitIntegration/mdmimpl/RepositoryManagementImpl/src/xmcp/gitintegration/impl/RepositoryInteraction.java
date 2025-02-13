@@ -59,9 +59,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.FetchResult;
-import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.util.FS;
 import org.w3c.dom.Document;
@@ -90,6 +88,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.WorkflowProtectionM
 import xmcp.gitintegration.Flag;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceObjectManagement;
+import xmcp.gitintegration.impl.RepositoryCredentialsManagement.XynaRepoCredentials;
 import xmcp.gitintegration.impl.processing.ReferenceSupport;
 import xmcp.gitintegration.impl.references.InternalReference;
 import xmcp.gitintegration.repository.Branch;
@@ -306,10 +305,9 @@ public class RepositoryInteraction {
   private GitDataContainer fillGitDataContainer(Git git, Repository repo, String path, String user) throws Exception {
     UserManagementStorage storage = new UserManagementStorage();
     RepositoryUser repoUser = storage.loadUser(user, path);
-    String password = storage.loadPassword(user, path);
     GitDataContainer container = new GitDataContainer();
     container.repository = path;
-    container.creds = new UsernamePasswordCredentialsProvider(repoUser.getRepositoryUsername(), password);
+    container.creds = getCredentialsMgmt().createCreds(user, path, repoUser.getRepositoryUsername());
     container.user = repoUser.getRepositoryUsername();
     container.mail = repoUser.getMail();
     fetch(git, repo, container);
@@ -949,7 +947,7 @@ public class RepositoryInteraction {
     private List<String> push = new ArrayList<>();
     private List<PullExec> exec = new ArrayList<>(); //command => true=add, false=remove, path
     private List<String> warnings = new ArrayList<>();
-    private CredentialsProvider creds; //only used within this class
+    private XynaRepoCredentials creds; //only used within this class
     private String user;
     private String mail;
 
