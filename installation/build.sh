@@ -456,7 +456,7 @@ compose_server_persistencelayers() {
 compose_server_orderinpoutsourcetypes() {
   cd $SCRIPT_DIR/../release/server
   cp -r $SCRIPT_DIR/../localbuild/server/orderinputsourcetypes .
-  rm -rf $SCRIPT_DIR/../localbuild/server/orderinputsourcetypes/deploy/*/xyna
+  rm -rf $SCRIPT_DIR/../localbuild/server/orderinputsourcetypes/*/xyna
 }
 
 compose_server_lib() {
