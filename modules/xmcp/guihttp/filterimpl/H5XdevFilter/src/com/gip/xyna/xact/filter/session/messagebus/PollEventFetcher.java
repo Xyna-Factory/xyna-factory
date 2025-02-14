@@ -314,7 +314,7 @@ public class PollEventFetcher {
 
       Path path = new Path(gbo.getFQName().getFqName(), gbo.getGenerationBase().getRevision());
       String correlationId = LockManagement.createCorrelation(path, gbo.getType().getNiceName());
-      if (!gbo.getSaveState() || correlationToSubscriptionIds.keySet().contains(correlationId)) {
+      if (correlationToSubscriptionIds.keySet().contains(correlationId)) {
         return;
       }
 

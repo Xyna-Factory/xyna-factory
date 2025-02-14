@@ -54,8 +54,6 @@
     <available file="${jdev.home}" />
   </condition>
 
-  <property name="FLEX_HOME" value="${root}/opt/common/flex_sdk" />
-
   <!-- needed for sqlplus -->
   <condition property="nls_lang"
              value="${env.NLS_LANG}"
@@ -202,9 +200,6 @@
     </sequential>
   </macrodef>
 
-  <!--  <taskdef resource="flexUnitTasks.tasks"
-           classpath="${install.lib.dir}/flexUnitTasks-4.0.0.jar" />-->
-
   <if>
     <equals arg1="${isInstall}" arg2="true" />
     <then>
@@ -222,7 +217,6 @@
     </classpath>
   </taskdef>
 
-  <resolver:pom file="${basedir}/pom.xml" id="pom"/>
   
   <!-- macro for downloading license files -->
   <macrodef name="loadLicenses">
@@ -453,19 +447,6 @@
       </else>
     </if>
     <echo message="Update complete." />
-  </target>
-
-  <!-- ================================= 
-               target: resolve             
-          =================================  -->
-  <target name="resolve">
-    <resolver:resolve>
-      <resolver:dependencies pomRef="pom"/>
-      <resolver:files refid="files" dir="${basedir}/lib/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
-      <resolver:files refid="files" dir="${basedir}/lib" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/>
-    </resolver:resolve>
-    <loadLicenses targetDir="${base.lib.dir}" />
-    <!-- delete generated-resources ? -->
   </target>
 
 </project>

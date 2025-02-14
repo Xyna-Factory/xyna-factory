@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<project name="prepareXmomCompile" default="deploy" basedir="." >
-
-    <import file="../ant-xyna.xml" />
-    <import file="../macros.xml" />
-
-    <!-- ================================= 
-               target: resolve             
-          =================================  -->
-    <target name="resolve">
-        <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/factory" />
-    </target>
-
-</project>
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Metric Iteration" TypeName="MetricIteration" TypePath="xmcp.xypilot" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Gui Metric" ReferenceName="GUIMetric" ReferencePath="xmcp.xypilot" VariableName="guiMetric"/>
+  <Data Label="Index" VariableName="index">
+    <Meta>
+      <Type>int</Type>
+    </Meta>
+  </Data>
+</DataType>

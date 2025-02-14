@@ -367,4 +367,21 @@
         </sequential>
     </macrodef>
 
+    <!-- ================================= 
+        macro: resolve
+        ================================= -->
+    <macrodef name="resolve">
+        <attribute name="pomFile"/>
+        <attribute name="dir"/>
+        <attribute name="layout" default="{artifactId}-{classifier}-{version}.{extension}" />
+        <attribute name="scopes" default="" />
+        <sequential>
+            <resolver:pom file="@{pomFile}" id="pom"/>
+            <resolver:resolve>
+                <resolver:dependencies pomRef="pom"/>
+                <resolver:files refid="files" dir="@{dir}" layout="@{layout}" scopes="@{scopes}"/>
+            </resolver:resolve>
+        </sequential>
+    </macrodef>
+  
 </project>

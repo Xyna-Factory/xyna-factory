@@ -20,6 +20,7 @@ package xdev.yang.impl.usecase;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -62,28 +63,32 @@ public class DetermineUseCaseAssignments {
     List<String> supportedFeatures = YangCapabilityUtils.getSupportedFeatureNames(modules, moduleCapabilities);
     modules = YangCapabilityUtils.filterModules(modules, moduleCapabilities);
     result = UseCaseAssignmentUtils.loadPossibleAssignments(modules, rpcName, rpcNamespace, data, usecaseMeta, supportedFeatures);
-    fillValues(usecaseMeta, modules, result);
+    fillValuesAndWarnings(usecaseMeta, modules, result);
 
     return result;
   }
 
 
-  private void fillValues(Document meta, List<Module> modules, List<UseCaseAssignmentTableData> entries) {
+  private void fillValuesAndWarnings(Document meta, List<Module> modules, List<UseCaseAssignmentTableData> entries) {
     List<UseCaseMapping> mappings = UseCaseMapping.loadMappings(meta);
     for (UseCaseAssignmentTableData entry : entries) {
       String totalYangPath = entry.getLoadYangAssignmentsData().getTotalYangPath();
       String totalNamespaces = entry.getLoadYangAssignmentsData().getTotalNamespaces();
       String totalKeywords = entry.getLoadYangAssignmentsData().getTotalKeywords();
       List<MappingPathElement> entryPath = UseCaseMapping.createPathList(totalYangPath, totalNamespaces, totalKeywords);
-      fillValue(entry, entryPath, mappings);
+      fillValueAndOptionalWarning(entry, entryPath, mappings);
     }
   }
 
 
-  private void fillValue(UseCaseAssignmentTableData entry, List<MappingPathElement> entryPath, List<UseCaseMapping> mappings) {
-    boolean isPrimitive = primitives.contains(entry.getType());
-    String value = isPrimitive ? getPrimitiveValue(entryPath, mappings) : getContainerValue(entryPath, mappings);
-    entry.unversionedSetValue(value);
+  private void fillValueAndOptionalWarning(UseCaseAssignmentTableData entry, List<MappingPathElement> entryPath, List<UseCaseMapping> mappings) {
+    if (primitives.contains(entry.getType())) {
+      String value = getPrimitiveValue(entryPath, mappings);
+      entry.unversionedSetValue(value);
+    }
+    else {
+      handleValueAndOptionalWarningOfContainer(entryPath, mappings, entry);
+    }
   }
 
 
@@ -97,18 +102,32 @@ public class DetermineUseCaseAssignments {
   }
 
 
-  private String getContainerValue( List<MappingPathElement> entryPath, List<UseCaseMapping> mappings) {
+  private void handleValueAndOptionalWarningOfContainer(List<MappingPathElement> entryPath, List<UseCaseMapping> mappings,
+                                                        UseCaseAssignmentTableData entry) {
     int subAssignments = 0;
+    String elemtype = entryPath.get(entryPath.size() - 1).getKeyword();    
+    boolean isChoice = Constants.TYPE_CHOICE.equals(elemtype);
+    Set<String> caseSet = isChoice ? new HashSet<>() : null;
+
     for (UseCaseMapping mapping : mappings) {
-      if (MappingPathElement.isMoreSpecificPath(entryPath, mapping.createPathList())) {
+      List<MappingPathElement> mappingPath = mapping.createPathList();
+      if (MappingPathElement.isMoreSpecificPath(entryPath, mappingPath)) {
         subAssignments++;
+        if (isChoice && (mappingPath.size() > entryPath.size())) {
+          MappingPathElement childElem = mappingPath.get(entryPath.size());
+          caseSet.add(childElem.getYangPath());
+        }
       }
     }
-
-    if (subAssignments > 0) {
-      return String.format("contains %s assignment%s", subAssignments, subAssignments == 1 ? "" : "s");
+    if ((caseSet != null) && (caseSet.size() > 1)) {
+      entry.getLoadYangAssignmentsData().unversionedSetWarning("WARNING: Choice has assignments in more than one case.");
     }
 
-    return "";
+    String retval = "";
+    if (subAssignments > 0) {
+      retval = String.format("contains %s assignment%s", subAssignments, subAssignments == 1 ? "" : "s");
+    }
+    entry.unversionedSetValue(retval);
   }
+
 }

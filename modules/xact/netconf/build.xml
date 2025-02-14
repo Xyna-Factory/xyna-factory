@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,24 +22,12 @@
     <pathconvert property="root.dir">
         <path location="${basedir}/../../../" />
     </pathconvert>
-    <property name="target.dir" value="${basedir}/deploy" />
-    <property name="base.lib.dir" value="${basedir}/lib" />
+    <property name="target.dir" value="${basedir}/deploy/" />
 
-    <target name="build" depends="resolve">
-        <buildJar basedir="${basedir}"
-              lib.dir="${basedir}/lib"
-              destfile="${target.dir}/demonlib.jar" />
+    <target name="build">
+
+        <antcall target="build-application" />
     </target>
 
-    <target name="resolve">
-        <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib/xyna" />
-        <loadLicenses targetDir="${basedir}/lib" />
-    </target>
-
-    <target name="installMavenArtifact" depends="build" description="install artifact to maven repository">
-         <install-maven-artifact artifactFile="${target.dir}/demonlib.jar" pomFile="${basedir}/pom.xml" />
-    </target>
-
-    <import file="${root.dir}/xynautils/install/xynautils/masterbuild.xml" />
-
+    <import file="${root.dir}/installation/build/buildApplication.xml" />
 </project>
