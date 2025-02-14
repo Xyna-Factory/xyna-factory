@@ -265,7 +265,6 @@ public class UseCaseAssignmentUtils {
     List<Rpc> result = new ArrayList<>();
     for (Module module : modules) {
       Rpc rpc = module.getRpc(rpcName);
-      _logger.warn("## Found rpc " + rpcName + " in module " + module.getArgStr() + ": " + (rpc != null));
       if (rpc != null) {
         result.add(rpc);
       }

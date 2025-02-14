@@ -89,7 +89,6 @@ public class ModuleGroup {
       if (mod.getModuleId() == null) { continue; }
       ComparableModuleId id = new ComparableModuleId(mod.getModuleId());
       _map.put(id, data);
-      _logger.warn("### Added ModuleParseData: " + id.toString());
       _revisionData.register(mod);
     }    
   }
@@ -132,7 +131,6 @@ public class ModuleGroup {
         ret.add(opt.get());
       }
       else {
-        //throw new RuntimeException("Could not find default revision for module " + id.getModuleName());
         _logger.warn("Could not find default revision for module " + id.getModuleName());
       }
     }

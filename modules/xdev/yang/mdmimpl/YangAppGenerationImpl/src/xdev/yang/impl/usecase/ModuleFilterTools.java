@@ -99,18 +99,15 @@ public class ModuleFilterTools {
   private ModuleGroup buildFilteredModuleGroup(ModuleGroup oldGroup, Set<ComparableModuleId> idset) {
     ModuleGroup newGroup = new ModuleGroup();
     for (ModuleId id : idset) {
-      _logger.warn("### searching module parse data for reload for " + idToString(id));
       Optional<ModuleParseData> opt = newGroup.getModuleParseData(id);
       if (opt.isPresent()) {
         continue;
       }
       opt = oldGroup.getModuleParseData(id);
       if (opt.isPresent()) {
-        _logger.warn("### got module parse data for reload for " + idToString(id));
         newGroup.add(opt.get());  
       }
       else {
-        //throw new RuntimeException("Could not find module with id " + idToString(id));
         _logger.warn("Could not find module with id " + idToString(id));
       }            
     }
@@ -121,7 +118,6 @@ public class ModuleFilterTools {
   private void followReferences(ModuleId id, ModuleGroup group, Set<ModuleId> extended) {
     if (extended.contains(id)) { return; }
     extended.add(id);
-    _logger.warn("### Following refs for module id " + idToString(id));
     Set<ModuleId> newids = getReferencedModuleIds(id, group);
     for (ModuleId nextid : newids) {
       followReferences(nextid, group, extended);
@@ -133,7 +129,6 @@ public class ModuleFilterTools {
     Set<ModuleId> ret = new HashSet<>();
     Optional<Module> opt = group.getModule(id);
     if (!opt.isPresent()) {
-      //throw new RuntimeException("Could not find referenced module: " + idToString(id)); 
       _logger.warn("Could not find referenced module: " + idToString(id));
       return ret;
     }
@@ -146,7 +141,6 @@ public class ModuleFilterTools {
       }
       ModuleId nextid = new ModuleId(name, revision);
       ret.add(nextid);
-      //_logger.info("include: " + sub.getArgStr() + " | " + sub.getRevisionDate().getArgStr());
     }
     for (Import sub : mod.getImports()) {
       String name = sub.getArgStr();
@@ -156,7 +150,6 @@ public class ModuleFilterTools {
       }
       ModuleId nextid = new ModuleId(name, revision);
       ret.add(nextid);
-      //_logger.info("include: " + sub.getArgStr() + " | " + sub.getRevisionDate().getArgStr());
     }
     return ret;
   }
@@ -182,7 +175,6 @@ public class ModuleFilterTools {
       boolean matches = YangCapabilityUtils.isModuleInCapabilities(capabilities, module);
       if (matches) {
         ret.getMatchedIds().add(module.getModuleId());
-        _logger.warn("### module matched capabilities: " + idToString(module.getModuleId()));
       }
     }
     return ret;
