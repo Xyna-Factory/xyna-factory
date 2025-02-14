@@ -27,44 +27,51 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.yangcentral.yangkit.model.api.schema.ModuleId;
-import org.yangcentral.yangkit.model.api.schema.YangSchemaContext;
 import org.yangcentral.yangkit.model.api.stmt.Module;
-import org.yangcentral.yangkit.parser.YangYinParser;
-
-import com.gip.xyna.utils.misc.Base64;
 
 
 public class ModuleParseData {
 
-  private final byte[] sourceString;
-  private final Map<ModuleId, Module> modules = new TreeMap<>();
+  private final byte[] _sourceString;
+  private Map<ComparableModuleId, Module> _modules = new TreeMap<>();
   
   
   public ModuleParseData(byte[] sourceString, List<Module> modulelist) {
-    this.sourceString = sourceString;
-    for (Module mod : modulelist) {
-      modules.put(mod.getModuleId(), mod);
+    this._sourceString = sourceString;
+    if (modulelist != null) {
+      for (Module mod : modulelist) {
+        ComparableModuleId id = new ComparableModuleId(mod.getModuleId()); 
+        _modules.put(id, mod);
+      }
     }
   }
 
   public List<Module> getModuleList() {
     List<Module> ret = new ArrayList<>();
-    ret.addAll(modules.values());
+    ret.addAll(_modules.values());
     return ret;
   }
   
   public Set<ModuleId> getModuleIds() {
-    return Collections.unmodifiableSet(modules.keySet());
+    return Collections.unmodifiableSet(_modules.keySet());
   }
 
 
   public byte[] getSourceStringBytes() {
-    return sourceString;
+    return _sourceString;
   }
   
   public Optional<Module> getModule(ModuleId id) {
-    return Optional.ofNullable(modules.get(id));
+    return getModuleImpl(adapt(id));
   }
-    
+  
+  private Optional<Module> getModuleImpl(ComparableModuleId id) {
+    return Optional.ofNullable(_modules.get(id));
+  }
+  
+  private ComparableModuleId adapt(ModuleId id) {
+    if (id instanceof ComparableModuleId) { return (ComparableModuleId) id; }
+    return new ComparableModuleId(id);
+  }
   
 }

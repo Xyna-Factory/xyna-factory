@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -63,7 +64,7 @@ import xmcp.yang.YangModuleCollection;
 
 public class UseCaseAssignmentUtils {
 
-  
+  private static Logger _logger = Logger.getLogger(UseCaseAssignmentUtils.class);
   
   public static List<UseCaseAssignmentTableData> loadPossibleAssignments(List<Module> modules, String rpcName, String rpcNs,
                                                                          LoadYangAssignmentsData data, Document meta,
@@ -264,6 +265,7 @@ public class UseCaseAssignmentUtils {
     List<Rpc> result = new ArrayList<>();
     for (Module module : modules) {
       Rpc rpc = module.getRpc(rpcName);
+      _logger.warn("## Found rpc " + rpcName + " in module " + module.getArgStr() + ": " + (rpc != null));
       if (rpc != null) {
         result.add(rpc);
       }
@@ -290,7 +292,8 @@ public class UseCaseAssignmentUtils {
         ModuleGroup group = loadModulesFromDt(entry.getFqName(), entryRevision);
         result.add(group);
       } catch (Exception e) {
-        throw new RuntimeException(e);
+        _logger.error(e.getMessage(), e);
+        throw new RuntimeException(e.getMessage(), e);
       }
     }
     return result;

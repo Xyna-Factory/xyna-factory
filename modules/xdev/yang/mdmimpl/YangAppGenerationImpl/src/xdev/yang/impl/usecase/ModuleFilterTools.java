@@ -28,6 +28,7 @@ import org.yangcentral.yangkit.model.api.stmt.Import;
 import org.yangcentral.yangkit.model.api.stmt.Include;
 import org.yangcentral.yangkit.model.api.stmt.Module;
 import org.yangcentral.yangkit.parser.YangYinParser;
+import org.apache.log4j.Logger;
 import org.yangcentral.yangkit.model.api.schema.ModuleId;
 import org.yangcentral.yangkit.model.api.schema.YangSchemaContext;
 
@@ -52,27 +53,30 @@ public class ModuleFilterTools {
   }
   
   
+  private static Logger _logger = Logger.getLogger(ModuleFilterTools.class);
+  
+  
   public List<Module> filterAndReload(List<ModuleGroup> grouplist, List<YangDeviceCapability> capabilities) {
     Optional<MatchData> matched = checkCapabilities(grouplist, capabilities);
     if (!matched.isPresent()) {
       return new ArrayList<Module>();
     }
-    ModuleGroup group = matched.get().getGroup();    
-    Set<ModuleId> filtered = matched.get().getMatchedIds();    
-    Set<ModuleId> extended = new HashSet<>();
+    ModuleGroup group = matched.get().getGroup();
+    Set<ModuleId> extendedSet = new HashSet<>();
     
-    for (ModuleId nextid : filtered) {
-      followReferences(nextid, group, extended);
+    for (ModuleId nextid : matched.get().getMatchedIds()) {
+      followReferences(nextid, group, extendedSet);
     }
-    return reloadModules(group, extended);
+    Set<ComparableModuleId> adaptedSet = group.adaptEmptyModuleRevisions(extendedSet);
+    return reloadModules(group, adaptedSet);
   }
   
   
-  private List<Module> reloadModules(ModuleGroup oldGroup, Set<ModuleId> idset) {
+  private List<Module> reloadModules(ModuleGroup oldGroup, Set<ComparableModuleId> idset) {
     List<Module> ret = new ArrayList<>();
     ModuleGroup newGroup = buildFilteredModuleGroup(oldGroup, idset);
     YangSchemaContext context = null;
-    for (ModuleParseData data : newGroup.getAllModuleParseData()) {      
+    for (ModuleParseData data : newGroup.getAllModuleParseData()) {
       java.io.ByteArrayInputStream is = new java.io.ByteArrayInputStream(data.getSourceStringBytes());
       try {
         context = YangYinParser.parse(is, "module.yang", context);
@@ -92,18 +96,23 @@ public class ModuleFilterTools {
   }
   
   
-  private ModuleGroup buildFilteredModuleGroup(ModuleGroup oldGroup, Set<ModuleId> idset) {
+  private ModuleGroup buildFilteredModuleGroup(ModuleGroup oldGroup, Set<ComparableModuleId> idset) {
     ModuleGroup newGroup = new ModuleGroup();
     for (ModuleId id : idset) {
+      _logger.warn("### searching module parse data for reload for " + idToString(id));
       Optional<ModuleParseData> opt = newGroup.getModuleParseData(id);
       if (opt.isPresent()) {
         continue;
       }
       opt = oldGroup.getModuleParseData(id);
-      if (!opt.isPresent()) {
-        throw new RuntimeException("Could not find module with id " + idToString(id));
+      if (opt.isPresent()) {
+        _logger.warn("### got module parse data for reload for " + idToString(id));
+        newGroup.add(opt.get());  
       }
-      newGroup.add(opt.get());      
+      else {
+        //throw new RuntimeException("Could not find module with id " + idToString(id));
+        _logger.warn("Could not find module with id " + idToString(id));
+      }            
     }
     return newGroup;
   }
@@ -112,6 +121,7 @@ public class ModuleFilterTools {
   private void followReferences(ModuleId id, ModuleGroup group, Set<ModuleId> extended) {
     if (extended.contains(id)) { return; }
     extended.add(id);
+    _logger.warn("### Following refs for module id " + idToString(id));
     Set<ModuleId> newids = getReferencedModuleIds(id, group);
     for (ModuleId nextid : newids) {
       followReferences(nextid, group, extended);
@@ -123,7 +133,9 @@ public class ModuleFilterTools {
     Set<ModuleId> ret = new HashSet<>();
     Optional<Module> opt = group.getModule(id);
     if (!opt.isPresent()) {
-      throw new RuntimeException("Could not find referenced module: " + idToString(id)); 
+      //throw new RuntimeException("Could not find referenced module: " + idToString(id)); 
+      _logger.warn("Could not find referenced module: " + idToString(id));
+      return ret;
     }
     Module mod = opt.get();
     for (Include sub : mod.getIncludes()) {
@@ -170,6 +182,7 @@ public class ModuleFilterTools {
       boolean matches = YangCapabilityUtils.isModuleInCapabilities(capabilities, module);
       if (matches) {
         ret.getMatchedIds().add(module.getModuleId());
+        _logger.warn("### module matched capabilities: " + idToString(module.getModuleId()));
       }
     }
     return ret;
