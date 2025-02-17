@@ -22,6 +22,7 @@ package xdev.yang.impl.usecase;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.w3c.dom.Document;
@@ -62,9 +63,16 @@ public class DetermineUseCaseAssignments {
     List<YangDeviceCapability> moduleCapabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
     List<String> supportedFeatures = YangCapabilityUtils.getSupportedFeatureNames(moduleCapabilities);
     
-    List<ModuleGroup> groups = UseCaseAssignmentUtils.loadModules(workspaceName);
-    List<Module> filteredModules = new ModuleFilterTools().filterAndReload(groups, moduleCapabilities);
-        
+    List<Module> filteredModules = null;
+    Optional<List<Module>> opt = UseCaseCache.getInstance().get(data);
+    if (opt.isPresent()) {
+      filteredModules = opt.get();
+    }
+    else {
+      List<ModuleGroup> groups = UseCaseAssignmentUtils.loadModules(workspaceName);
+      filteredModules = new ModuleFilterTools().filterAndReload(groups, moduleCapabilities);
+      UseCaseCache.getInstance().put(data, filteredModules);
+    }
     result = UseCaseAssignmentUtils.loadPossibleAssignments(filteredModules, rpcName, rpcNamespace, data, usecaseMeta, supportedFeatures);
     fillValuesAndWarnings(usecaseMeta, filteredModules, result);
     return result;
