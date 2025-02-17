@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -207,6 +207,17 @@
       </Meta>
       <SourceCode>
         <CodeSnippet Type="Java">return xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.invokeGuiHttpEndpoint(correlatedXynaOrder, uRLPath38, hTTPMethod39, document40);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Possible Start Parameter for Trigger Deployment" Name="getPossibleStartParameterForTriggerDeployment">
+      <Input>
+        <Data ID="43" Label="Trigger" ReferenceName="Trigger" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="trigger43"/>
+      </Input>
+      <Output>
+        <Data ID="42" IsList="true" Label="Start Parameter Details" ReferenceName="StartParameterDetails" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="startParameterDetails42"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.factorymanager.FilterAndTriggerManagerServicesImpl.getPossibleStartParameterForTriggerDeployment(trigger43);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
