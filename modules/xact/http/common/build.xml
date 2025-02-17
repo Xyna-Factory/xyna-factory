@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="build" default="build" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+<project name="build" default="build" basedir="." >
 
     <!-- this is the absolute path to the root -->
     <pathconvert property="root.dir">
@@ -24,6 +24,7 @@
     </pathconvert>
 
     <import file="${root.dir}/installation/build/ant-xyna.xml" />
+    <import file="${root.dir}/installation/build/macros.xml" />
 
     <property name="project.name" value="common" />
     <property name="src.dir" value="src" />
@@ -53,8 +54,6 @@
 
     <property name="server.mdm.xml.path" value="${server.path}/${revision.dir}/saved/XMOM" />
 
-    <resolver:pom file="${basedir}/pom.xml" id="pom"/>
-
     <target name="build" description="Compiles" depends="resolve">
         <delete dir="${classes.dir}" />
         <mkdir dir="${target.dir}" />
@@ -68,12 +67,8 @@
     </target>
 
     <target name="resolve">
-        <resolver:resolve>
-            <resolver:dependencies pomRef="pom"/>
-            <resolver:files refid="files" dir="${lib.dir}/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
-        </resolver:resolve>
+        <resolve pomFile="${basedir}/pom.xml" dir="${lib.dir}/xyna" />
         <loadLicenses targetDir="${lib.dir}" />
-        <!-- delete generated-resources ? -->
     </target>
 
     <target name="update-mdm" description="Receive new mdm.jar from Xyna Factory">

@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,8 +60,7 @@ public class PluginManagement {
     createGenerationButton(result, "EXMem", "modeller/exception/members", gen::genExceptionVariables, GEN_BTN_FQN, DEFAULT_PLUGIN);
     createGenerationButton(result, "EXMemDocu", "modeller/exception/members/documentation", gen::genExceptionVarDocu, GEN_BTN_FQN, DEFAULT_PLUGIN);
     createGenerationButton(result, "EXMess", "modeller/exception/message", gen::genExceptionMessages, GEN_BTN_FQN, DEFAULT_PLUGIN);
-    createGenerationButton(result, "SGMethDocu", "modeller/servicegroup/methods/documentation", gen::genServiceGroupMethodDocu, GEN_BTN_FQN, DEFAULT_PLUGIN);
-    createGenerationButton(result, "SGMethImpl", "modeller/servicegroup/methods/implementation", gen::genServiceGroupMethodImpl, GEN_BTN_FQN, DEFAULT_PLUGIN);
+    
     createGenerationButton(result, "Xypilot: Generate Assignments", "modeller/workflow/mapping", gen::genMappingAssignments, GEN_BTN_MAPPING_ASSIGNMENTS, MAPPING_ASSIGNMENT_PLUGIN);
     createGenerationButton(result, "Xypilot: Generate Label", "modeller/workflow/mapping", gen::genMappingLabel, GEN_BTN_MAPPING_LABEL, MAPPING_LABEL_PLUGIN);
     return result;
@@ -98,7 +97,26 @@ public class PluginManagement {
     builder.navigationEntryName("XyPilot Config");
     builder.navigationEntryLabel("XyPilot Config");
     builder.path("manager");
-    consumer.accept(builder.instance());
+    consumer.accept(builder.instance().clone());
+
+    builder.definitionWorkflowFQN("xmcp.xypilot.DefineCodeSuggestionGenerationButton");
+    builder.navigationEntryName("DTMethImpl");
+    builder.navigationEntryLabel("DTMethImpl");
+    builder.path("modeller/datatype/methods/implementation");
+    consumer.accept(builder.instance().clone());
+
+    builder.definitionWorkflowFQN("xmcp.xypilot.DefineCodeSuggestionGenerationButton");
+    builder.navigationEntryName("SGMethImpl");
+    builder.navigationEntryLabel("SGMethImpl");
+    builder.path("modeller/servicegroup/methods/implementation");
+    consumer.accept(builder.instance().clone());
+
+    builder.definitionWorkflowFQN("xmcp.xypilot.DefineMethodImplementationPanel");
+    builder.navigationEntryName("XyPilot Code Suggestion");
+    builder.navigationEntryLabel("XyPilot Code Suggestion");
+    builder.navigationIconName("build");
+    builder.path("datatypes/rightnav");
+    consumer.accept(builder.instance().clone());
   }
 
 

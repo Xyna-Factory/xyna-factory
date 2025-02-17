@@ -389,34 +389,12 @@ public class RepositoryManagementImpl {
         return "Error: Workspace '" + workspaceName + "' does not exist within the factory!";
       }
       Path revisionPath = Path.of(Constants.BASEDIR, Constants.REVISION_PATH, Constants.PREFIX_REVISION + revision);
-      Path subPath = Path.of(storable.getSubpath());
-      // make sure, saved/XMOM or XMOM is located in sub path
-      if (!subPath.resolve(SAVED).resolve(XMOM).toFile().isDirectory() && !subPath.resolve(XMOM).toFile().isDirectory()) {
-        return "Error: Sub path of workspace.xml for workspace '" + workspaceName + "' does not contain the " + SAVED + "/" + XMOM + " or "
-            + XMOM + " directory!";
+      String error = replaceSymbolicLinks(revisionPath, storable);
+      if(error != null) {
+        return error;
       }
-      // check, whether saved/XMOM exists
-      String error;
-      if (subPath.resolve(SAVED).resolve(XMOM).toFile().isDirectory()) {
-        error = replaceSymbolicLink(revisionPath);
-        if (error != null) {
-          return error;
-        }
-      } else {
-        error = replaceSymbolicLink(revisionPath.resolve(SAVED).resolve(XMOM));
-        if (error != null) {
-          return error;
-        }
-        if (Files.isSymbolicLink(revisionPath.resolve(CONFIG))) {
-          error = replaceSymbolicLink(revisionPath.resolve(CONFIG));
-          if (error != null) {
-            return error;
-          }
-        }
-      }
-      // delete storable
+
       deleteRepositoryConnectionStorable(workspaceName);
-      // delete workspace, if requested
       if (delete) {
         deleteWorkspace(workspaceName);
       }
@@ -425,6 +403,22 @@ public class RepositoryManagementImpl {
     return "Successfully removed " + count + " workspace(s) from the repository.";
   }
 
+
+  private static String replaceSymbolicLinks(Path revisionPath, RepositoryConnectionStorable storable) {
+    String error = null;
+    List<Path> toReplace = new ArrayList<>();
+    toReplace.add(storable.getSavedinrepo() ? revisionPath : revisionPath.resolve(SAVED).resolve(XMOM));
+    if (storable.getSplitted() && Files.isSymbolicLink(revisionPath.resolve(CONFIG))) {
+      toReplace.add(revisionPath.resolve(CONFIG));
+    }
+    for (Path pathToReplace : toReplace) {
+      error = replaceSymbolicLink(pathToReplace);
+      if (error != null) {
+        return error;
+      }
+    }
+    return error;
+  }
 
   private static class LoadRepositoryConnections implements WarehouseRetryExecutableNoException<List<RepositoryConnectionStorable>> {
 

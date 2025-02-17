@@ -16,17 +16,16 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="build" default="build" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+<project name="build" default="build" basedir="." >
 
   <import file="../../installation/build/ant-xyna.xml" />
+  <import file="../../installation/build/macros.xml" />
 
   <property name="project.name.local" value="MySQLPersistenceLayer" />
 
   <property name="target.dir" value="${basedir}/deploy" />
 
         <mkdir dir="${basedir}/lib/xyna" />
-
-        <resolver:pom file="${basedir}/pom.xml" id="pom"/>
 
         <path id="libraries">
                 <fileset dir="${basedir}/lib/xyna">
@@ -42,15 +41,9 @@
     <buildJar destfile="${target.dir}/${project.name.local}.jar" />
   </target>
 
-      <target name="resolve">
-        <resolver:resolve>
-          <resolver:dependencies pomRef="pom"/>
-          <resolver:files refid="files" dir="${basedir}/lib/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
-          <!--resolver:files refid="files" dir="${basedir}/lib" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/-->
-        </resolver:resolve>
-        <loadLicenses targetDir="${basedir}/lib" />
-        <!-- delete generated-resources ? -->
-      </target>
-
+  <target name="resolve">
+    <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib/xyna" />
+    <loadLicenses targetDir="${basedir}/lib" />
+  </target>
 
 </project>
