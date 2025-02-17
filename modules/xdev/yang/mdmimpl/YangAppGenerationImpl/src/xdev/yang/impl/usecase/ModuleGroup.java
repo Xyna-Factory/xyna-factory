@@ -126,7 +126,7 @@ public class ModuleGroup {
         ret.add(new ComparableModuleId(id));
         continue;
       }
-      Optional<ComparableModuleId> opt = this._revisionData.findDefaultRevisionForModule(id.getModuleName());
+      Optional<ComparableModuleId> opt = _revisionData.findDefaultRevisionForModule(id.getModuleName());
       if (opt.isPresent()) {
         ret.add(opt.get());
       }
