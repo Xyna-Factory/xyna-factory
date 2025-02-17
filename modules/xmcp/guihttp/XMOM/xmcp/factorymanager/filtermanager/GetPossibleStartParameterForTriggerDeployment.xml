@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Possible Start Parameter for Trigger Deployment" TypeName="GetPossibleStartParameterForTriggerDeployment" TypePath="xmcp.factorymanager.filtermanager" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Get Possible Start Parameter for Trigger Deployment" Name="GetPossibleStartParameterForTriggerDeployment">
+    <Input>
+      <Data ID="31" Label="Trigger" ReferenceName="Trigger" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="trigger31"/>
+    </Input>
+    <Output>
+      <Data ID="52" IsList="true" Label="Start Parameter Details" ReferenceName="StartParameterDetails" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="startParameterDetails52"/>
+    </Output>
+    <Throws>
+      <Exception Label="Insufficient Rights" ReferenceName="InsufficientRights" ReferencePath="xmcp.factorymanager.shared" VariableName="insufficientRights206"/>
+    </Throws>
+    <ServiceReference ID="12" Label="Filter and Trigger Manager Services" ReferenceName="FilterAndTriggerManagerServices.FilterAndTriggerManagerServices" ReferencePath="xmcp.factorymanager">
+      <Source RefID="11"/>
+      <Target RefID="11"/>
+    </ServiceReference>
+    <ServiceReference ID="86" Label="Check Rights for Current User" ReferenceName="CheckRightsForCurrentUser" ReferencePath="xmcp.factorymanager.shared">
+      <Source RefID="85"/>
+      <Target RefID="85"/>
+    </ServiceReference>
+    <Function ID="85" Label="Check Rights for Current User">
+      <Source RefID="86"/>
+      <Source RefID="87"/>
+      <Target RefID="86"/>
+      <Invoke Operation="CheckRightsForCurrentUser" ServiceID="86">
+        <Source RefID="87">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="86"/>
+    </Function>
+    <Function ID="11" Label="Get Possible Start Parameter for Trigger Deployment">
+      <Source RefID="12"/>
+      <Source RefID="31"/>
+      <Target RefID="12"/>
+      <Target RefID="14"/>
+      <Invoke Operation="getPossibleStartParameterForTriggerDeployment" ServiceID="12">
+        <Source RefID="31"/>
+      </Invoke>
+      <Receive ServiceID="12">
+        <Target RefID="14"/>
+      </Receive>
+    </Function>
+    <Data ID="14" IsList="true" Label="Start Parameter Details" ReferenceName="StartParameterDetails" ReferencePath="xmcp.factorymanager.filtermanager" VariableName="startParameterDetails14">
+      <Source RefID="11"/>
+    </Data>
+    <Data ID="87" IsList="true" ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl" VariableName="userAuthenticationRight87">
+      <Value>
+        <Data ReferenceName="UserAuthenticationRight" ReferencePath="xfmg.xopctrl">
+          <Data VariableName="right">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>xfmg.xfctrl.FilterManagement:read:*</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="14"/>
+      <Target RefID="52"/>
+      <Copy>
+        <Source RefID="14"/>
+        <Target RefID="52"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
