@@ -82,14 +82,14 @@ public class ExportrolesImpl extends XynaCommandImplementation<Exportroles> {
         scriptFile.delete();
         return;
       }
-      if (!generateDomainImports(factory, scriptStream)) {
+      if (!generateDomainImports(factory, scriptStream, payload.getIncludePredefinedRoles())) {
         writeToCommandLine(statusOutputStream, "The script '" + payload.getScriptName() + "' could not be created\n");
         logger.warn("Could not create import script, error while writing to file");
         scriptStream.close();
         scriptFile.delete();
         return;
       }
-      if (!generateRoleImports(factory, scriptStream)) {
+      if (!generateRoleImports(factory, scriptStream, payload.getIncludePredefinedRoles())) {
         writeToCommandLine(statusOutputStream, "The script '" + payload.getScriptName() + "' could not be created\n");
         logger.warn("Could not create import script, error while writing to file");
         scriptStream.close();
@@ -109,13 +109,13 @@ public class ExportrolesImpl extends XynaCommandImplementation<Exportroles> {
   }
 
 
-  static boolean generateRoleImports(XynaFactoryPortal factory, OutputStream scriptStream)
+  static boolean generateRoleImports(XynaFactoryPortal factory, OutputStream scriptStream, boolean withPredefinedRoles)
       throws PersistenceLayerException {
 
     Collection<Role> roles = factory.getFactoryManagementPortal().getRoles();
     for (Role role : roles) {
       if (!factory.getFactoryManagementPortal().isPredefined(PredefinedCategories.ROLE,
-                                                             role.getName() + role.getDomain())) {
+                                                             role.getName() + role.getDomain()) || withPredefinedRoles) {
         try {
           scriptStream.write(("./" + Constants.SERVER_SHELLNAME + " createrole " + role.getName() + " "
               + role.getDomain() + "\n").getBytes(Constants.DEFAULT_ENCODING));
@@ -154,11 +154,11 @@ public class ExportrolesImpl extends XynaCommandImplementation<Exportroles> {
   }
 
 
-  static boolean generateDomainImports(XynaFactoryPortal factory, OutputStream scriptStream)
+  static boolean generateDomainImports(XynaFactoryPortal factory, OutputStream scriptStream, boolean withPredefinedRoles)
       throws PersistenceLayerException {
     Collection<Domain> domains = factory.getFactoryManagementPortal().getDomains();
     for (Domain domain : domains) {
-      if (!factory.getFactoryManagementPortal().isPredefined(PredefinedCategories.DOMAIN, domain.getName())) {
+      if (!factory.getFactoryManagementPortal().isPredefined(PredefinedCategories.DOMAIN, domain.getName()) || withPredefinedRoles) {
         try {
           scriptStream.write(("./xynafactory.sh createdomain " + domain.getName() + " " + domain.getDomainType()
               + domain.getMaxRetries() + " " + domain.getConnectionTimeout() + "\n")
