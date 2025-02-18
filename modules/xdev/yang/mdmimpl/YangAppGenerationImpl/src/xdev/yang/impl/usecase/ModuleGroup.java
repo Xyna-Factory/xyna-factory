@@ -102,8 +102,10 @@ public class ModuleGroup {
     Optional<ModuleParseData> opt = getModuleParseData(id);
     if (opt.isPresent()) {
       return opt.get().getModule(id);
-    }    
-    Optional<ComparableModuleId> revisionId = _revisionData.findNewestExistingRevisionForModule(id);
+    }
+    // check other existing revisions of module only if no specific revision was requested
+    if (id.getRevision() != null) { return Optional.empty(); }
+    Optional<ComparableModuleId> revisionId = _revisionData.findNewestExistingRevisionForModule(id.getModuleName());
     if (!revisionId.isPresent()) {
       return Optional.empty();
     }
