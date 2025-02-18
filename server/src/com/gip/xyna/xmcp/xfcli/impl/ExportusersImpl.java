@@ -68,14 +68,14 @@ public class ExportusersImpl extends XynaCommandImplementation<Exportusers> {
         scriptFile.delete();
         return;
       }
-      if (!ExportrolesImpl.generateDomainImports(factory, scriptStream)) {
+      if (!ExportrolesImpl.generateDomainImports(factory, scriptStream, false)) {
         writeToCommandLine(statusOutputStream, "The script '" + payload.getScriptName() + "' could not be created\n");
         logger.warn("Could not create import script, error while writing to file");
         scriptStream.close();
         scriptFile.delete();
         return;
       }
-      if (!ExportrolesImpl.generateRoleImports(factory, scriptStream)) {
+      if (!ExportrolesImpl.generateRoleImports(factory, scriptStream, false)) {
         writeToCommandLine(statusOutputStream, "The script '" + payload.getScriptName() + "' could not be created\n");
         logger.warn("Could not create import script, error while writing to file");
         scriptStream.close();

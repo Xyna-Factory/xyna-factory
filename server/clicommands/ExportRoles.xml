@@ -18,4 +18,5 @@
 <XynaCommandLineCommand>
   <CommandDefinition Name="exportroles" Groups="User Management" Description="Generates a shell script that will import all roles, domains and rights registered on this Xyna Factory."/>
   <Argument Name="scriptName" Description="The name of file to be created"/>
+  <BoolOption Name="i" LongName="includePredefinedRoles" Description="The generated shell script will include the predefined Xyna Factory roles." Optional="true"/>
 </XynaCommandLineCommand>
