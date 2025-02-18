@@ -35,4 +35,14 @@
       <Type>String</Type>
     </Meta>
   </Data>
+  <Data Label="Encoded Key" VariableName="encodedKey">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Encoded Key Passphrase" VariableName="encodedKeyPassphrase">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
 </DataType>
