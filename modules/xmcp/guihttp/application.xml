@@ -28,7 +28,7 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>ZetaFramework</ApplicationName>
-        <VersionName>0.6.56</VersionName>
+        <VersionName>0.6.57</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>XynaPropertyMgmt</ApplicationName>
