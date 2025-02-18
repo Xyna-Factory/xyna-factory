@@ -19,6 +19,7 @@ package xdev.yang.impl;
 
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,7 @@ import org.yangcentral.yangkit.model.impl.stmt.MainModuleImpl;
 
 
 public class YangStatementTranslator {
-
+  
   public static final Map<Class<?>, YangStatementTranslation> translations = setupStatementTranslations();
 
 
@@ -98,7 +99,11 @@ public class YangStatementTranslator {
 
     public static List<YangElement> getSubStatements(YangStatement statement) {
       if (statement instanceof Uses) {
-        return ((Uses) statement).getRefGrouping().getSubElements();
+        Uses uses = (Uses) statement; 
+        if (uses.getRefGrouping() == null) {
+          return new ArrayList<YangElement>();
+        }
+        return uses.getRefGrouping().getSubElements();
       } else {
         return statement.getSubElements();
       }
