@@ -59,7 +59,7 @@ public class ExportdomainsImpl extends XynaCommandImplementation<Exportdomains> 
 
       BufferedOutputStream scriptStream = new BufferedOutputStream(new FileOutputStream(scriptFile));
 
-      if (!ExportrolesImpl.generateDomainImports(factory, scriptStream, false)) {
+      if (!ExportrolesImpl.generateDomainImports(factory, scriptStream)) {
         writeToCommandLine(statusOutputStream, "The script '" + payload.getScriptName() + "' could not be created\n");
         logger.warn("Could not create import script, error while writing to file");
         scriptStream.close();
