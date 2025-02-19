@@ -33,7 +33,8 @@ public class PushImpl extends XynaCommandImplementation<Push> {
   public void execute(OutputStream statusOutputStream, Push payload) throws XynaException {
     RepositoryInteraction repoInteraction = new RepositoryInteraction();
     try {
-      repoInteraction.push(payload.getRepository(), payload.getMessage(), payload.getDryrun(), UserManagementStorage.CLI_USERNAME);
+      repoInteraction.push(payload.getRepository(), payload.getMessage(), payload.getDryrun(), 
+                           UserManagementStorage.CLI_USERNAME, payload.getFilePatterns());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

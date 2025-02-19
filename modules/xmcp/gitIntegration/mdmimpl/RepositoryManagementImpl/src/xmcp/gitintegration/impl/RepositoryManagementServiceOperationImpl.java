@@ -251,7 +251,7 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
   public Text push(XynaOrderServerExtension order, Repository arg0, Text arg1, List<? extends File> arg2) {
     String user = getUserFromSession(order.getSessionId());
     try {
-      new RepositoryInteraction().push(arg0.getPath(), arg1.getText(), false, user);
+      new RepositoryInteraction().push(arg0.getPath(), arg1.getText(), false, user, null);
     } catch (Exception e) {
       return new Text("Exception during push: " + e.getMessage());
     }

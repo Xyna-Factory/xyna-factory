@@ -200,7 +200,7 @@ public class RepositoryInteraction {
   }
 
 
-  public void push(String repository, String message, boolean dryrun, String user) throws Exception {
+  public void push(String repository, String message, boolean dryrun, String user, String[] filePatterns) throws Exception {
     Repository repo = loadRepo(repository, true);
     GitDataContainer container;
 
@@ -214,7 +214,7 @@ public class RepositoryInteraction {
       if (!container.pull.isEmpty()) {
         throw new RuntimeException("pulls required: " + String.join(", ", container.pull));
       }
-      processPushs(git, repo, container, message);
+      processPushs(git, repo, container, message, filePatterns);
     }
   }
 
@@ -911,7 +911,13 @@ public class RepositoryInteraction {
   }
 
 
-  private void processPushs(Git git, Repository repository, GitDataContainer container, String msg) throws Exception {
+  private void processPushs(Git git, Repository repository, GitDataContainer container, String msg, String[] filePatterns) throws Exception {
+    if (filePatterns != null) {
+      for (String str : filePatterns) {
+        logger.warn("### got pattern: " + str);    
+      }
+    }
+     
     git.add().addFilepattern(".").call();
     
     CommitCommand commitCmd = git.commit().setAuthor(container.user, container.mail).setMessage(msg);
