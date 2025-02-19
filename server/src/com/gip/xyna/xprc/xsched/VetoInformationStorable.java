@@ -89,7 +89,7 @@ public class VetoInformationStorable extends ClusteredStorable<VetoInformationSt
     return this.usingOrderId;
   }
   
-  protected Long getUsingRootOrderId() {
+  public Long getUsingRootOrderId() {
     if (this.usingRootOrderId == null) {
       return getUsingOrderId();
     }
