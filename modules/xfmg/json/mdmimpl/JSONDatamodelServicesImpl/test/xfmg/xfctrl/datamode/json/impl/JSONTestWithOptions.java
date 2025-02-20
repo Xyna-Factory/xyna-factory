@@ -17,6 +17,7 @@
  */
 package xfmg.xfctrl.datamode.json.impl;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,6 +27,8 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import xfmg.xfctrl.datamodel.json.impl.InvalidJSONException;
 import xfmg.xfctrl.datamodel.json.impl.JSONDatamodelServicesServiceOperationImpl;
@@ -618,6 +621,28 @@ public class JSONTestWithOptions extends TestCase {
         throw new XDEV_PARAMETER_NAME_NOT_FOUND(path);
       }
     }
+
+    private static ConcurrentMap<String, Field> fieldMap = new ConcurrentHashMap<>();
+    
+    public static Field getField(String target_fieldname) throws InvalidObjectPathException {
+      Field foundField = null;
+      foundField = fieldMap.get(target_fieldname);
+      if (foundField != null) {
+        return foundField;
+      }
+      try {
+        foundField = ListWrapperWrapper.class.getDeclaredField(target_fieldname);
+      } catch (NoSuchFieldException e) {
+      }
+      if (foundField == null) {
+        throw new InvalidObjectPathException(new XDEV_PARAMETER_NAME_NOT_FOUND(target_fieldname));
+      } else {
+        foundField.setAccessible(true);
+        fieldMap.put(target_fieldname, foundField);
+        return foundField;
+      }
+    }
+    
   }
   
   public static class ListWrapperXO extends BaseTestXO {
@@ -644,6 +669,27 @@ public class JSONTestWithOptions extends TestCase {
         roles = (List<RoleXO>) value;
       } else {
         throw new XDEV_PARAMETER_NAME_NOT_FOUND(path);
+      }
+    }
+    
+    private static ConcurrentMap<String, Field> fieldMap = new ConcurrentHashMap<>();
+    
+    public static Field getField(String target_fieldname) throws InvalidObjectPathException {
+      Field foundField = null;
+      foundField = fieldMap.get(target_fieldname);
+      if (foundField != null) {
+        return foundField;
+      }
+      try {
+        foundField = ListWrapperXO.class.getDeclaredField(target_fieldname);
+      } catch (NoSuchFieldException e) {
+      }
+      if (foundField == null) {
+        throw new InvalidObjectPathException(new XDEV_PARAMETER_NAME_NOT_FOUND(target_fieldname));
+      } else {
+        foundField.setAccessible(true);
+        fieldMap.put(target_fieldname, foundField);
+        return foundField;
       }
     }
   }
@@ -674,6 +720,27 @@ public class JSONTestWithOptions extends TestCase {
         values = (List<String>) value;
       } else {
         throw new XDEV_PARAMETER_NAME_NOT_FOUND(path);
+      }
+    }
+    
+    private static ConcurrentMap<String, Field> fieldMap = new ConcurrentHashMap<>();
+
+    public static Field getField(String target_fieldname) throws InvalidObjectPathException {
+      Field foundField = null;
+      foundField = fieldMap.get(target_fieldname);
+      if (foundField != null) {
+        return foundField;
+      }
+      try {
+        foundField = PrimitiveListWrapperXO.class.getDeclaredField(target_fieldname);
+      } catch (NoSuchFieldException e) {
+      }
+      if (foundField == null) {
+        throw new InvalidObjectPathException(new XDEV_PARAMETER_NAME_NOT_FOUND(target_fieldname));
+      } else {
+        foundField.setAccessible(true);
+        fieldMap.put(target_fieldname, foundField);
+        return foundField;
       }
     }
   }
@@ -724,6 +791,28 @@ public class JSONTestWithOptions extends TestCase {
       }
     }
     
+
+    private static ConcurrentMap<String, Field> fieldMap = new ConcurrentHashMap<>();
+    
+    public static Field getField(String target_fieldname) throws InvalidObjectPathException {
+      Field foundField = null;
+      foundField = fieldMap.get(target_fieldname);
+      if (foundField != null) {
+        return foundField;
+      }
+      try {
+        foundField = UserXO.class.getDeclaredField(target_fieldname);
+      } catch (NoSuchFieldException e) {
+      }
+      if (foundField == null) {
+        throw new InvalidObjectPathException(new XDEV_PARAMETER_NAME_NOT_FOUND(target_fieldname));
+      } else {
+        foundField.setAccessible(true);
+        fieldMap.put(target_fieldname, foundField);
+        return foundField;
+      }
+    }
+    
   }
 
   public static class AuthorizationXO extends BaseTestXO {
@@ -757,6 +846,27 @@ public class JSONTestWithOptions extends TestCase {
         roles = (List<RoleXO>) value;
       } else {
         throw new XDEV_PARAMETER_NAME_NOT_FOUND(path);
+      }
+    }
+
+    private static ConcurrentMap<String, Field> fieldMap = new ConcurrentHashMap<>();
+    
+    public static Field getField(String target_fieldname) throws InvalidObjectPathException {
+      Field foundField = null;
+      foundField = fieldMap.get(target_fieldname);
+      if (foundField != null) {
+        return foundField;
+      }
+      try {
+        foundField = AuthorizationXO.class.getDeclaredField(target_fieldname);
+      } catch (NoSuchFieldException e) {
+      }
+      if (foundField == null) {
+        throw new InvalidObjectPathException(new XDEV_PARAMETER_NAME_NOT_FOUND(target_fieldname));
+      } else {
+        foundField.setAccessible(true);
+        fieldMap.put(target_fieldname, foundField);
+        return foundField;
       }
     }
 
@@ -796,6 +906,26 @@ public class JSONTestWithOptions extends TestCase {
       }
     }
 
+    private static ConcurrentMap<String, Field> fieldMap = new ConcurrentHashMap<>();
+    
+    public static Field getField(String target_fieldname) throws InvalidObjectPathException {
+      Field foundField = null;
+      foundField = fieldMap.get(target_fieldname);
+      if (foundField != null) {
+        return foundField;
+      }
+      try {
+        foundField = RoleXO.class.getDeclaredField(target_fieldname);
+      } catch (NoSuchFieldException e) {
+      }
+      if (foundField == null) {
+        throw new InvalidObjectPathException(new XDEV_PARAMETER_NAME_NOT_FOUND(target_fieldname));
+      } else {
+        foundField.setAccessible(true);
+        fieldMap.put(target_fieldname, foundField);
+        return foundField;
+      }
+    }
     
   }
   
@@ -833,6 +963,26 @@ public class JSONTestWithOptions extends TestCase {
       }
     }
 
+    private static ConcurrentMap<String, Field> fieldMap = new ConcurrentHashMap<>();
+    
+    public static Field getField(String target_fieldname) throws InvalidObjectPathException {
+      Field foundField = null;
+      foundField = fieldMap.get(target_fieldname);
+      if (foundField != null) {
+        return foundField;
+      }
+      try {
+        foundField = ContainerXO.class.getDeclaredField(target_fieldname);
+      } catch (NoSuchFieldException e) {
+      }
+      if (foundField == null) {
+        throw new InvalidObjectPathException(new XDEV_PARAMETER_NAME_NOT_FOUND(target_fieldname));
+      } else {
+        foundField.setAccessible(true);
+        fieldMap.put(target_fieldname, foundField);
+        return foundField;
+      }
+    }
     
   }
   
@@ -865,6 +1015,27 @@ public class JSONTestWithOptions extends TestCase {
         throw new XDEV_PARAMETER_NAME_NOT_FOUND(path);
       }
     }
+    
+    private static ConcurrentMap<String, Field> fieldMap = new ConcurrentHashMap<>();
+    
+    public static Field getField(String target_fieldname) throws InvalidObjectPathException {
+      Field foundField = null;
+      foundField = fieldMap.get(target_fieldname);
+      if (foundField != null) {
+        return foundField;
+      }
+      try {
+        foundField = ListContainerXO.class.getDeclaredField(target_fieldname);
+      } catch (NoSuchFieldException e) {
+      }
+      if (foundField == null) {
+        throw new InvalidObjectPathException(new XDEV_PARAMETER_NAME_NOT_FOUND(target_fieldname));
+      } else {
+        foundField.setAccessible(true);
+        fieldMap.put(target_fieldname, foundField);
+        return foundField;
+      }
+    }
   }
   
   public static class List2dContainerXO extends BaseTestXO {
@@ -893,6 +1064,27 @@ public class JSONTestWithOptions extends TestCase {
         throw new XDEV_PARAMETER_NAME_NOT_FOUND(path);
       }
     }
+    
+    private static ConcurrentMap<String, Field> fieldMap = new ConcurrentHashMap<>();
+    
+    public static Field getField(String target_fieldname) throws InvalidObjectPathException {
+      Field foundField = null;
+      foundField = fieldMap.get(target_fieldname);
+      if (foundField != null) {
+        return foundField;
+      }
+      try {
+        foundField = List2dContainerXO.class.getDeclaredField(target_fieldname);
+      } catch (NoSuchFieldException e) {
+      }
+      if (foundField == null) {
+        throw new InvalidObjectPathException(new XDEV_PARAMETER_NAME_NOT_FOUND(target_fieldname));
+      } else {
+        foundField.setAccessible(true);
+        fieldMap.put(target_fieldname, foundField);
+        return foundField;
+      }
+    }
   }
   
   public static class List2dWrapper2XO extends BaseTestXO {
@@ -918,6 +1110,27 @@ public class JSONTestWithOptions extends TestCase {
         list2d = (ListWrapperWrapper) value;
       } else {
         throw new XDEV_PARAMETER_NAME_NOT_FOUND(path);
+      }
+    }
+    
+    private static ConcurrentMap<String, Field> fieldMap = new ConcurrentHashMap<>();
+    
+    public static Field getField(String target_fieldname) throws InvalidObjectPathException {
+      Field foundField = null;
+      foundField = fieldMap.get(target_fieldname);
+      if (foundField != null) {
+        return foundField;
+      }
+      try {
+        foundField = List2dWrapper2XO.class.getDeclaredField(target_fieldname);
+      } catch (NoSuchFieldException e) {
+      }
+      if (foundField == null) {
+        throw new InvalidObjectPathException(new XDEV_PARAMETER_NAME_NOT_FOUND(target_fieldname));
+      } else {
+        foundField.setAccessible(true);
+        fieldMap.put(target_fieldname, foundField);
+        return foundField;
       }
     }
   }
