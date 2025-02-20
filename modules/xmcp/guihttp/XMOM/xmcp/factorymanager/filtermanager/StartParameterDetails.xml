@@ -15,32 +15,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Repository User Creation Data" TypeName="RepositoryUserCreationData" TypePath="xmcp.gitintegration.repository" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Start Parameter Details" TypeName="StartParameterDetails" TypePath="xmcp.factorymanager.filtermanager" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository"/>
-  <Data Label="Username" VariableName="username">
+  <Data IsList="true" Label="Lagacy Parameter Combination" VariableName="lagacyParameterCombination">
     <Meta>
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Encoded Password" VariableName="encodedPassword">
+  <Data Label="Name" VariableName="name">
     <Meta>
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Mail" VariableName="mail">
+  <Data Label="Documentation" VariableName="documentation">
     <Meta>
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Encoded Key" VariableName="encodedKey">
+  <Data Label="Optional" VariableName="optional">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+  <Data Label="Mandatory" VariableName="mandatory">
     <Meta>
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Encoded Key Passphrase" VariableName="encodedKeyPassphrase">
+  <Data Label="Type" VariableName="type">
     <Meta>
       <Type>String</Type>
     </Meta>

@@ -17,7 +17,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
 <!-- CAUTION: Do not attempt to launch any target from here. Launch them from build.xml instead. -->
-<project name="buildFilter" default="deploy" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+<project name="buildFilter" default="deploy" basedir="." >
 
     <property name="common.lib.dir" value="${root.dir}/installation/build/lib/factory" />
 
@@ -48,8 +48,6 @@
 
         <map from="${basedir}/lib" to="${revision.dir}/filter/${mdm.xml.name}" />
     </pathconvert>
-
-    <resolver:pom file="${basedir}/pom.xml" id="pom"/>
 
     <property name="third_parties.pom" value="${basedir}/third_parties.pom.xml" />
 
@@ -82,12 +80,8 @@
                 <loadLicenses targetDir="${base.lib.dir}" pom="${third_parties.pom}" />
             </then>
         </if>
-        <resolver:resolve>
-          <resolver:dependencies pomRef="pom"/>
-          <resolver:files refid="files" dir="${base.lib.dir}/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
-          <resolver:files refid="files" dir="${base.lib.dir}" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/>
-        </resolver:resolve>
-        <!-- delete generated-resources ? -->
+        <resolve pomFile="${basedir}/pom.xml" dir="${base.lib.dir}/xyna" />
+        <resolve pomFile="${basedir}/pom.xml" dir="${base.lib.dir}" scopes="runtime" />
       </target>
 
     <!-- ================================= 

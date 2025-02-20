@@ -89,25 +89,29 @@ public class ListdatamodelsImpl extends XynaCommandImplementation<Listdatamodels
 
 
   private void appendVerbose(StringBuilder output, DataModel dm, String indent) {
-    if( dm.getDocumentation() != null && dm.getDocumentation().length() != 0 ) {
+    if (dm.getDocumentation() != null && dm.getDocumentation().length() != 0) {
       output.append(indent).append(dm.getDocumentation()).append("\n");
     }
-    if( dm.getXmomTypeCount() != null ) {
+    if (dm.getType() != null && dm.getType().getFqName() != null && !dm.getType().getFqName().isBlank()) {
+      output.append(indent).append("Datamodel Fqname=").append(dm.getType().getFqName()).append("\n");
+    }
+
+    if (dm.getXmomTypeCount() != null) {
       output.append(indent).append(dm.getXmomTypeCount());
-      if( dm.getDeployable() ) {
+      if (dm.getDeployable()) {
         output.append(" deployable");
       }
       output.append(" datatypes\n");
     }
-    
-    if( dm.getDataModelSpecifics() == null ) {
+
+    if (dm.getDataModelSpecifics() == null) {
       return;
     }
-    
-    Map<String, ArrayList<DataModelSpecific>> grouped = CollectionUtils.group(dm.getDataModelSpecifics(), new GetLabel() );
+
+    Map<String, ArrayList<DataModelSpecific>> grouped = CollectionUtils.group(dm.getDataModelSpecifics(), new GetLabel());
     List<String> labels = new ArrayList<String>(grouped.keySet());
     Collections.sort(labels);
-    for( String label : labels ) {
+    for (String label : labels) {
       List<DataModelSpecific> list = grouped.get(label);
       Collections.sort(list);
       output.append(indent).append(label);

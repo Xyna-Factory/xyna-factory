@@ -16,15 +16,15 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="build" default="build" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+<project name="build" default="build" basedir="." >
 
 	<import file="../../../../installation/build/ant-xyna.xml" />
+	<import file="../../../../installation/build/macros.xml" />
 
 	<property name="project.name.local" value="XynaClusterPersistenceLayer" />
 
 	<property name="target.dir" value="${basedir}/deploy" />
 
-    <resolver:pom file="${basedir}/pom.xml" id="pom"/>
 
 	<!-- ================================= 
 	         target: build             
@@ -103,14 +103,11 @@
                target: resolve             
           =================================  -->
     <target name="resolve">
-        <resolver:resolve>
-            <resolver:dependencies pomRef="pom"/>
-            <resolver:files refid="files" dir="${basedir}/lib/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
-            <resolver:files refid="files" dir="${basedir}/lib" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/>
-        </resolver:resolve>
+        <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib/xyna" />
+        <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib" scopes="runtime" />
         <loadLicenses targetDir="${basedir}/lib" />
-        <!-- delete generated-resources ? -->
     </target>
+
 
 	<target name="buildXSOR">
 <echo message="basedir: ${basedir}" />

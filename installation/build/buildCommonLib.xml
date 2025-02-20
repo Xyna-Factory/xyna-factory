@@ -17,7 +17,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <!-- CAUTION: Do not attempt to launch any target from here. Launch them from build.xml instead. -->
-<project name="buildCommonLib" default="build" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+<project name="buildCommonLib" default="build" basedir="." >
 
     <import file="./macros.xml" />
     <import file="./ant-xyna.xml" />
@@ -29,8 +29,6 @@
 
     <property file="${basedir}/server.properties" />
     <property file="${root.dir}/server.properties" />
-
-    <resolver:pom file="${basedir}/pom.xml" id="pom"/>
 
     <property name="third_parties.pom" value="${basedir}/third_parties.pom.xml" />
 
@@ -141,8 +139,7 @@
     <!-- ================================= 
                target: resolve             
           =================================  -->
-      <target name="resolve">
-
+    <target name="resolve">
         <if>
             <equals arg1="${third_parties.available}" arg2="true" />
             <then>
@@ -150,12 +147,8 @@
                 <loadLicenses targetDir="${base.lib.dir}" pom="${third_parties.pom}" />
             </then>
         </if>
-        <resolver:resolve>
-          <resolver:dependencies pomRef="pom"/>
-          <resolver:files refid="files" dir="${base.lib.dir}/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
-          <resolver:files refid="files" dir="${base.lib.dir}" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/>
-        </resolver:resolve>
-        <!-- delete generated-resources ? -->
-      </target>
+        <resolve pomFile="${basedir}/pom.xml" dir="${base.lib.dir}/xyna" />
+        <resolve pomFile="${basedir}/pom.xml" dir="${base.lib.dir}" scopes="runtime" />
+    </target>
 
 </project>
