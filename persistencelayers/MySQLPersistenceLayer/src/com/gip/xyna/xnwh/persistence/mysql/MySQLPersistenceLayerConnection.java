@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,6 +56,7 @@ import com.gip.xyna.xnwh.persistence.Query;
 import com.gip.xyna.xnwh.persistence.Storable;
 import com.gip.xyna.xnwh.persistence.TransactionProperty;
 import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabasePersistenceLayerWithAlterTableSupportHelper;
+import com.gip.xyna.xnwh.persistence.sql.ResultSetReaderWrapper;
 import com.gip.xyna.xnwh.persistence.xmom.PersistenceExpressionVisitors;
 import com.gip.xyna.xnwh.selection.parsing.SelectionParser;
 

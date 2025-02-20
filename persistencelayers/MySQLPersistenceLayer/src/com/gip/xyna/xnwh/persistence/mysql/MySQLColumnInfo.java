@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,9 +25,9 @@ import org.apache.log4j.Logger;
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.db.ResultSetReader;
 import com.gip.xyna.xnwh.persistence.IndexType;
-import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabaseColumnInfo;
+import com.gip.xyna.xnwh.persistence.sql.SqlColumnInfo;
 
-class MySQLColumnInfo extends DatabaseColumnInfo {
+class MySQLColumnInfo extends SqlColumnInfo<MySqlType, MySqlBaseType> {
 
     static final Logger logger = CentralFactoryLogging.getLogger(MySQLColumnInfo.class);
 
@@ -36,35 +36,15 @@ class MySQLColumnInfo extends DatabaseColumnInfo {
     static final String DOES_TABLE_EXIST_SQL = "select count(*) from information_schema.tables where table_schema = ? and table_name = ?";
     static final String DOES_INDEX_EXIST_FOR_TABLE_SQL = "SELECT count(*) FROM information_schema.statistics WHERE index_name = ? AND table_name = ?";
 
-    MySqlType type; // uppercase
-    IndexType indexType;
     MySQLColumnInfo next; // verkettete Liste, wenn mehrere Einträge zu einer Tabellenspalte existieren
-    private Class<?> clazz;
-
-    @Override
-    public String getTypeAsString() {
-        return type != null ? type.toString() : "<null>";
-    }
-
-    public void setStorableClass(Class<?> clazz) {
-        this.clazz = clazz;
-    }
-
-    @Override
-    public boolean isTypeDependentOnSizeSpecification() {
-        if (type == null) {
-            throw new RuntimeException("Type has not been set.");
-        }
-        return type.isDependentOnSizeSpecification();
-    }
 
     @Override
     public String toString() {
-        return "MySQLColumnInfo(clazzloader=" + (clazz == null ? "?" : clazz.getClassLoader()) + ", type=" + type
-                + ",indexType=" + indexType + ",next=" + next + ")";
+        return "MySQLColumnInfo(clazzloader=" + (getStorableClass() == null ? "?" : getStorableClass().getClassLoader()) + ", type=" + getType()
+                + ",indexType=" + getIndexType() + ",next=" + next + ")";
     }
 
-    protected static IndexType getIndexTypeByString(String column_key) {
+    private static IndexType getIndexTypeByString(String column_key) {
         if (column_key == null || column_key.equals("")) {
             return IndexType.NONE;
         } else if (column_key.equals("PRI")) {
@@ -89,15 +69,15 @@ class MySQLColumnInfo extends DatabaseColumnInfo {
                 MySQLColumnInfo i = new MySQLColumnInfo();
                 i.setName(rs.getString("column_name"));
                 try {
-                    i.type = MySqlType.valueOf(rs.getString("data_type").toUpperCase());
+                    i.setType(MySqlType.valueOf(rs.getString("data_type").toUpperCase()));
                 } catch (IllegalArgumentException e) {
-                    i.type = MySqlType.UNKNOWN;
+                    i.setType(MySqlType.UNKNOWN);
                     logger.warn("unknown datatype: " + rs.getString("data_type") + " in column "
                             + i.getName() + " of table "
                             + tableName + ".");
                 }
                 i.setCharLength(rs.getLong("character_maximum_length"));
-                i.indexType = getIndexTypeByString(rs.getString("column_key"));
+                i.setIndexType(getIndexTypeByString(rs.getString("column_key")));
                 return i;
             }
 

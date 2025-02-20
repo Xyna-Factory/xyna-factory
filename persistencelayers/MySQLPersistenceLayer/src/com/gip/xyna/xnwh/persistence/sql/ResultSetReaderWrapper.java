@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package com.gip.xyna.xnwh.persistence.mysql;
+package com.gip.xyna.xnwh.persistence.sql;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,7 +24,7 @@ import com.gip.xyna.utils.db.ResultSetReader;
 import com.gip.xyna.xnwh.persistence.Storable;
 
 //FIXME duplicated class from OraclePL
-class ResultSetReaderWrapper<T> implements ResultSetReader<T> {
+public class ResultSetReaderWrapper<T> implements ResultSetReader<T> {
 
     private final com.gip.xyna.xnwh.persistence.ResultSetReader<? extends T> innerReader;
     private final boolean zippedBlobs;

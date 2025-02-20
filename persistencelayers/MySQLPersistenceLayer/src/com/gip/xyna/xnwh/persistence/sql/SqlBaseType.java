@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,25 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package com.gip.xyna.xnwh.persistence.mysql;
+package com.gip.xyna.xnwh.persistence.sql;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.zip.GZIPOutputStream;
+public interface SqlBaseType<T extends Enum<T> & SqlBaseType<T>> {
+    /**
+     * gibt zurück, ob der übergebene typ größergleich ist. OTHER.isCompatibleTo(TIME) = false
+     * NUMBER.isCompatibleTo(TEXT_ENCODED) = true
+     * @param otherType
+     * @return
+     */
+    public boolean isCompatibleTo(T otherType);
 
-// FIXME duplicated class from OraclePL
-class ConfigurableGZIPOutputStream extends GZIPOutputStream {
+    public default T[] getValues() {
+        return getEnumClass().getEnumConstants();
+    }
 
-    public ConfigurableGZIPOutputStream(OutputStream out, int compressionLevel, int buffersize) throws IOException {
-        super(out, buffersize);
-        def.setLevel(compressionLevel);
+    public Class<T> getEnumClass();
+
+    default T valueFor(String name) {
+        return Enum.valueOf(getEnumClass(), name);
     }
 
 }
