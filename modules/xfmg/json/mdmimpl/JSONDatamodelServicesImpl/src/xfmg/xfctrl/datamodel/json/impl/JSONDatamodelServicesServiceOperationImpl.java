@@ -159,24 +159,24 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
 
   @Override
   public Document writeJSON(GeneralXynaObject jSONBaseModel) {
-    return writeJSON(jSONBaseModel, new JsonOptions(), OASScope.none);
+    return writeJSON(jSONBaseModel, new JsonOptions(), OASScope.none, null);
   }
   
   @Override
   public Document writeJSONList(List<GeneralXynaObject> list) {
-    return writeJSONList(list, new JsonOptions(), OASScope.none);
+    return writeJSONList(list, new JsonOptions(), OASScope.none, null);
   }
 
   @Override
   public Document writeJSONListWithOptions(List<GeneralXynaObject> jSONBaseModel, JSONWritingOptions jSONWritingOptions) {
     JsonOptions options = convertWritingOptions(jSONWritingOptions);
-    return writeJSONList(jSONBaseModel, options, OASScope.valueOfOrNone(jSONWritingOptions.getOASMessageType()));
+    return writeJSONList(jSONBaseModel, options, OASScope.valueOfOrNone(jSONWritingOptions.getOASMessageType()), jSONWritingOptions.getXynaObjectDecider());
   }
 
   @Override
   public Document writeJSONWithOptions(GeneralXynaObject jSONBaseModel, JSONWritingOptions jSONWritingOptions) {
     JsonOptions options = convertWritingOptions(jSONWritingOptions);
-    return writeJSON(jSONBaseModel, options, OASScope.valueOfOrNone(jSONWritingOptions.getOASMessageType()));
+    return writeJSON(jSONBaseModel, options, OASScope.valueOfOrNone(jSONWritingOptions.getOASMessageType()), jSONWritingOptions.getXynaObjectDecider());
   }
 
 
@@ -655,7 +655,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
   @SuppressWarnings("unchecked")
   private <A extends GeneralXynaObject> A createXynaObject(Class<A> genTypeClass, JSONObject obj, XynaObjectDecider decider) {
     try {
-      return decider == null ? genTypeClass.getConstructor().newInstance() : (A) decider.decide(genTypeClass.getCanonicalName(), obj);
+      return decider == null ? genTypeClass.getConstructor().newInstance() : (A) decider.decideObjectOnRead(genTypeClass.getCanonicalName(), obj);
     } catch (InstantiationException e1) {
       throw new RuntimeException("Could not instantiate " + genTypeClass.getName(), e1);
     } catch (Exception e1) {
@@ -725,10 +725,10 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
   }
 
 
-  public Document writeJSON(GeneralXynaObject jSONBaseModel, JsonOptions options, OASScope scope) {
+  public Document writeJSON(GeneralXynaObject jSONBaseModel, JsonOptions options, OASScope scope, XynaObjectDecider decider) {
     Document d = new Document();
     d.setDocumentType(new JSON());
-    JSONValue job = createValFromXynaObjectRecursively(jSONBaseModel, "", options, scope);
+    JSONValue job = createValFromXynaObjectRecursively(jSONBaseModel, "", options, scope, decider);
     if (job != null) {
       d.setText(JSONValueWriter.toJSON("", job));
     } else {
@@ -795,20 +795,20 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     }
   }
   
-  public JSONValue createValFromXynaObjectListRecurisvely(List<? extends GeneralXynaObject> xo, String currentPath, JsonOptions options, OASScope scope) {
+  public JSONValue createValFromXynaObjectListRecurisvely(List<? extends GeneralXynaObject> xo, String currentPath, JsonOptions options, OASScope scope, XynaObjectDecider decider) {
     if(xo == null) {
       return createNullValue();
     }
     JSONValue result = new JSONValue();
     result.unversionedSetType(JSONVALTYPES.ARRAY);
     List<JSONValue> values = new ArrayList<JSONValue>(xo.size());
-    xo.forEach(xObj -> values.add(createValFromXynaObjectRecursively(xObj, currentPath, options, scope)));
+    xo.forEach(xObj -> values.add(createValFromXynaObjectRecursively(xObj, currentPath, options, scope, decider)));
     result.unversionedSetArrayValue(values);
     return result;
   }
   
   @SuppressWarnings("unchecked")
-  public JSONValue createValFromXynaObjectRecursively(GeneralXynaObject xo, String currentPath, JsonOptions options, OASScope scope) {
+  public JSONValue createValFromXynaObjectRecursively(GeneralXynaObject xo, String currentPath, JsonOptions options, OASScope scope, XynaObjectDecider decider) {
     if(xo == null) {
       return null;
     }
@@ -829,7 +829,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
       Class<?> genTypeClass = (Class<?>) genType;
       if (XynaObject.class.isAssignableFrom(genTypeClass)) {
         List<GeneralXynaObject> list = (List<GeneralXynaObject>) get(xo, member);
-        result = createValFromXynaObjectListRecurisvely(list, newPath, options, scope);
+        result = createValFromXynaObjectListRecurisvely(list, newPath, options, scope, decider);
       } else {
         List<Object> list = (List<Object>) get(xo, member);
         if(list == null) {
@@ -843,7 +843,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
       }
     } else {
       result.unversionedSetType(JSONVALTYPES.OBJECT);
-      JSONObject obj = createFromXynaObjectRecursivly(xo, currentPath, options, scope);
+      JSONObject obj = createFromXynaObjectRecursivly(xo, currentPath, options, scope, decider);
       result.unversionedSetObjectValue(obj);
     }
     return result;
@@ -898,7 +898,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     return null; 
   }
   
-  private JSONValue createJSONValue(GeneralXynaObject xo, String newPath, JsonOptions options, HashMap<String,String> varNamesOfXynaObject, String varNameInXyna, OASScope scope) {
+  private JSONValue createJSONValue(GeneralXynaObject xo, String newPath, JsonOptions options, HashMap<String,String> varNamesOfXynaObject, String varNameInXyna, OASScope scope, XynaObjectDecider decider) {
     JSONValue value = new JSONValue();
     try {
       Object val = xo.get(varNameInXyna);
@@ -906,10 +906,10 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
         value = createNullValue();
       } else if (val instanceof XynaObject) {
         value.unversionedSetType(JSONVALTYPES.OBJECT);
-        JSONObject obj = createFromXynaObjectRecursivly((XynaObject) val, newPath, options, scope);
+        JSONObject obj = createFromXynaObjectRecursivly((XynaObject) val, newPath, options, scope, decider);
         value.unversionedSetObjectValue(obj);
       } else if (val instanceof List) {
-        value = createListValue(options, scope, newPath, val);
+        value = createListValue(options, scope, newPath, val, decider);
       } else {
         value = createPrimitiveJsonValue(val);
       } 
@@ -919,7 +919,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     return value;
   }
   
-  public JSONObject createFromXynaObjectRecursivly(GeneralXynaObject xo, String currentPath, JsonOptions options, OASScope scope) {
+  public JSONObject createFromXynaObjectRecursivly(GeneralXynaObject xo, String currentPath, JsonOptions options, OASScope scope, XynaObjectDecider decider) {
     if (xo == null) {
       return null;
     }
@@ -927,6 +927,8 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     if(options.inlineGenerics && xo.getClass() == JSONObject.class) {
       return (JSONObject)xo;
     }
+    
+    xo = decider == null ? xo : decider.decideObjectOnWrite(xo);
     
     JSONObject job = new JSONObject();
     List<JSONKeyValue> members = new ArrayList<JSONKeyValue>();
@@ -938,7 +940,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
       String varName = varNamesOfXynaObject.get(varNameInXyna);
       String newPath = currentPath.isEmpty() ? varNameInXyna : currentPath + "." + varNameInXyna;
       varName = options.substitutions.getOrDefault(newPath, varName);
-      JSONValue value = createJSONValue(xo, newPath, options, varNamesOfXynaObject, varNameInXyna, scope);
+      JSONValue value = createJSONValue(xo, newPath, options, varNamesOfXynaObject, varNameInXyna, scope, decider);
       if (value != null) {
         members.add(new JSONKeyValue(varName, value));
       }
@@ -948,7 +950,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
   }
 
 
-  private JSONValue createListValue(JsonOptions options, OASScope scope, String newPath, Object val) throws InvalidObjectPathException {
+  private JSONValue createListValue(JsonOptions options, OASScope scope, String newPath, Object val, XynaObjectDecider decider) throws InvalidObjectPathException {
     JSONValue value = new JSONValue();
     value.unversionedSetType(JSONVALTYPES.ARRAY);
     if (options.transformations.containsKey(newPath)) {
@@ -960,7 +962,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
       List<? extends XynaObject> l = (List<? extends XynaObject>) val;
       for (XynaObject xoe: l) {
         JSONValue childValue = new JSONValue();
-        JSONObject childJob = createFromXynaObjectRecursivly(xoe, newPath+"[]", options, scope);
+        JSONObject childJob = createFromXynaObjectRecursivly(xoe, newPath+"[]", options, scope, decider);
         childValue.unversionedSetObjectValue(childJob);
         childValue.unversionedSetType(JSONVALTYPES.OBJECT);
         list.add(new JSONKeyValue(xoe.get(keyName).toString(), childValue));
@@ -975,7 +977,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
         if (o == null) {
           jval.unversionedSetType(JSONVALTYPES.NULL);
         } else if (o instanceof XynaObject) {
-          JSONObject childJob = createFromXynaObjectRecursivly((XynaObject) o, newPath+"[]", options, scope);
+          JSONObject childJob = createFromXynaObjectRecursivly((XynaObject) o, newPath+"[]", options, scope, decider);
           jval.unversionedSetObjectValue(childJob);
           jval.unversionedSetType(JSONVALTYPES.OBJECT);
         } else {
@@ -1096,13 +1098,13 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     return false;
   }
 
-  private Document writeJSONList(List<? extends GeneralXynaObject> list, JsonOptions options, OASScope scope) {
+  private Document writeJSONList(List<? extends GeneralXynaObject> list, JsonOptions options, OASScope scope, XynaObjectDecider decider) {
     Document d = new Document();
     d.setDocumentType(new JSON());
     if (list == null || list.isEmpty()) {
       d.setText("[]");
     } else {
-      JSONValue value = createValFromXynaObjectListRecurisvely(list, "", options, scope);
+      JSONValue value = createValFromXynaObjectListRecurisvely(list, "", options, scope, decider);
       d.setText(JSONValueWriter.toJSON("", value));
     }
     return d;

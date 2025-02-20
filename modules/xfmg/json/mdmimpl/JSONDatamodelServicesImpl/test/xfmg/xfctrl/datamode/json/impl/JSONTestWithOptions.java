@@ -476,7 +476,7 @@ public class JSONTestWithOptions extends TestCase {
     trans.put("roles", "name");
     trans.put("roles[].roles", "name");
     JsonOptions options = new JsonOptions(trans, Collections.emptyMap(), Collections.emptySet(), false, false);
-    JSONObject obj = impl.createFromXynaObjectRecursivly(user, "", options, OASScope.none);
+    JSONObject obj = impl.createFromXynaObjectRecursivly(user, "", options, OASScope.none, null);
     System.out.println(JSONObjectWriter.toJSON("", obj));
   }
   
@@ -503,7 +503,7 @@ public class JSONTestWithOptions extends TestCase {
     Map<String, String> subs = new HashMap<String, String>();
     subs.put("roles[].name", "tenant");
     JsonOptions options = new JsonOptions(trans, subs, Collections.emptySet(), false, false);
-    JSONObject obj = impl.createFromXynaObjectRecursivly(user, "", options, OASScope.none);
+    JSONObject obj = impl.createFromXynaObjectRecursivly(user, "", options, OASScope.none, null);
     System.out.println(JSONObjectWriter.toJSON("", obj));
   }
   
@@ -514,7 +514,7 @@ public class JSONTestWithOptions extends TestCase {
     Map<String, String> trans = new HashMap<String, String>();
     Map<String, String> subs = new HashMap<String, String>();
     JsonOptions options = new JsonOptions(trans, subs, Collections.emptySet(), true, false);
-    JSONObject obj = impl.createFromXynaObjectRecursivly(role1, "", options, OASScope.none);
+    JSONObject obj = impl.createFromXynaObjectRecursivly(role1, "", options, OASScope.none, null);
     //can't use getMember(), because implementation is not set in mdm.jars created outside of a running factory
     JSONValue readName = obj.getMembers().stream().filter(x -> "SomeName".equals(x.getKey())).map(x -> x.getValue()).findFirst().orElse(null);
     assertTrue(readName != null);
@@ -529,7 +529,7 @@ public class JSONTestWithOptions extends TestCase {
     Map<String, String> subs = new HashMap<String, String>();
     subs.put("name", "someOtherName");
     JsonOptions options = new JsonOptions(trans, subs, Collections.emptySet(), true, false);
-    JSONObject obj = impl.createFromXynaObjectRecursivly(role1, "", options, OASScope.none);
+    JSONObject obj = impl.createFromXynaObjectRecursivly(role1, "", options, OASScope.none, null);
     //can't use getMember(), because implementation is not set in mdm.jars created outside of a running factory
     JSONValue readName = obj.getMembers().stream().filter(x -> "someOtherName".equals(x.getKey())).map(x -> x.getValue()).findFirst().orElse(null);
     assertTrue(readName != null);
@@ -545,7 +545,7 @@ public class JSONTestWithOptions extends TestCase {
     Set<String> wrappers = new HashSet<String>();
     wrappers.add(ListWrapperXO.class.getCanonicalName());
     JsonOptions options = new JsonOptions(trans, subs, wrappers, false, false);
-    JSONValue value = impl.createValFromXynaObjectListRecurisvely(Arrays.asList(wrapper), "", options, OASScope.none);
+    JSONValue value = impl.createValFromXynaObjectListRecurisvely(Arrays.asList(wrapper), "", options, OASScope.none, null);
     assertTrue(value.getType().equals(JSONVALTYPES.ARRAY));
     assertTrue(value.getArrayValue().size() == 1);
     assertTrue(value.getArrayValue().get(0).getType().equals(JSONVALTYPES.ARRAY));
@@ -565,7 +565,7 @@ public class JSONTestWithOptions extends TestCase {
     wrappers.add(ListWrapperWrapper.class.getCanonicalName());
     wrappers.add(ListWrapperXO.class.getCanonicalName());
     JsonOptions options = new JsonOptions(trans, subs, wrappers, false, false);
-    JSONValue value = impl.createValFromXynaObjectRecursively(wrapper, "", options, OASScope.none);
+    JSONValue value = impl.createValFromXynaObjectRecursively(wrapper, "", options, OASScope.none, null);
     assertTrue(value.getType().equals(JSONVALTYPES.ARRAY));
     assertTrue(value.getArrayValue().size() == 1);
     assertTrue(value.getArrayValue().get(0).getType().equals(JSONVALTYPES.ARRAY));
@@ -583,7 +583,7 @@ public class JSONTestWithOptions extends TestCase {
     Set<String> wrappers = new HashSet<String>();
     wrappers.add(PrimitiveListWrapperXO.class.getCanonicalName());
     JsonOptions options = new JsonOptions(trans, subs, wrappers, false, false);
-    JSONValue value = impl.createValFromXynaObjectListRecurisvely(Arrays.asList(primListWrapper), "", options, OASScope.none);
+    JSONValue value = impl.createValFromXynaObjectListRecurisvely(Arrays.asList(primListWrapper), "", options, OASScope.none, null);
     assertTrue(value.getType().equals(JSONVALTYPES.ARRAY));
     assertTrue(value.getArrayValue().size() == 1);
     assertTrue(value.getArrayValue().get(0).getType().equals(JSONVALTYPES.ARRAY));

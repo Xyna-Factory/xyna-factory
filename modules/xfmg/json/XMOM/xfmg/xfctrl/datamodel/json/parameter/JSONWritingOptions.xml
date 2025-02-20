@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,12 +39,15 @@ If not set or set to a different value no membervars will be skipped.</Documenta
   <Data Label="Process All Input Generically" VariableName="processAllInputGenerically">
     <Meta>
       <Type>Boolean</Type>
-      <Documentation>When set to true, xfmg.xfctrl.datamodel.json.JSONObject and xfmg.xfctrl.datamodel.json.JSONValue are written using the generic serialization process. 
+      <Documentation>
+        <![CDATA[When set to true, xfmg.xfctrl.datamodel.json.JSONObject and xfmg.xfctrl.datamodel.json.JSONValue are written using the generic serialization process. 
 When set to false or null, xfmg.xfctrl.datamodel.json.JSONObject and xfmg.xfctrl.datamodel.json.JSONValue are written inline.
 Example json for a xfmg.xfctrl.datamodel.json.JSONObject with one member "key" that has a value of "value":
 inline: { "key": "value" }
 generic serialization: { "members": [ {"key": "key", value: { "type": "STRING", "stringOrNumberValue": "value" }}]}
-</Documentation>
+]]>
+      </Documentation>
     </Meta>
   </Data>
+  <Data Label="Xyna Object Decider" ReferenceName="XynaObjectDecider" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="xynaObjectDecider"/>
 </DataType>
