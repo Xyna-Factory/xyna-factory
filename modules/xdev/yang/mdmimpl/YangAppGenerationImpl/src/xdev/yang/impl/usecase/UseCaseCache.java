@@ -33,7 +33,7 @@ import xmcp.yang.LoadYangAssignmentsData;
 
 public class UseCaseCache {
   
-  public static final XynaPropertyInt PROP_USECASE_CACHE_SIZE = new XynaPropertyInt("xdev.yang.UseCaseCache.size", 0)
+  public static final XynaPropertyInt PROP_USECASE_CACHE_SIZE = new XynaPropertyInt("xdev.yang.UseCaseCache.size", 2)
     .setDefaultDocumentation(DocumentationLanguage.EN,
     "Number of recently loaded yang usescases for which xyna factory keeps the parsed data in cache (0 = no cache used)")
     .setDefaultDocumentation(DocumentationLanguage.DE,
