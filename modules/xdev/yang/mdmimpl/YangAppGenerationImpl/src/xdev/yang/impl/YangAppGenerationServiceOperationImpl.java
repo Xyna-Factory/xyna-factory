@@ -67,7 +67,7 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   public void onDeployment() throws XynaException {
     OverallInformationProvider.onDeployment();
     PluginManagement.registerPlugin(this.getClass());
-    UseCaseCache.PROP_USECASE_CACHE_SIZE.registerDependency(UserType.Trigger, "YangAppGenerationService");
+    UseCaseCache.PROP_USECASE_CACHE_SIZE.registerDependency(UserType.Service, "YangAppGenerationService");
   }
 
 
