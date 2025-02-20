@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="JSON Writing Options" TypeName="JSONWritingOptions" TypePath="xfmg.xfctrl.datamodel.json.parameter" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="JSON Writing Options" TypeName="JSONWritingOptions" TypePath="xfmg.xfctrl.datamodel.json.parameter" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
@@ -36,7 +35,7 @@ When set to Response, the Json will not contain any membervars that are marked a
 If not set or set to a different value no membervars will be skipped.</Documentation>
     </Meta>
   </Data>
-  <Data Label="List Wrapper" VariableName="listWrapper" IsList="true" ReferenceName="ListWrapper" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" />
+  <Data IsList="true" Label="List Wrapper" ReferenceName="ListWrapper" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="listWrapper"/>
   <Data Label="Process All Input Generically" VariableName="processAllInputGenerically">
     <Meta>
       <Type>Boolean</Type>

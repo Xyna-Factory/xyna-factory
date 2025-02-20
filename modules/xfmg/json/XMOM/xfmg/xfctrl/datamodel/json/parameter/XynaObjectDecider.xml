@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="true" Label="Xyna Object Decider" TypeName="XynaObjectDecider" TypePath="xfmg.xfctrl.datamodel.json.parameter" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Xyna Object Decider" TypeName="XynaObjectDecider" TypePath="xfmg.xfctrl.datamodel.json.parameter" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
     <Documentation>Extend this class and implement the Decide method for custom object instantiation. The decide method is called with the fqn of the static type and a JSONObject providing additional context.</Documentation>
   </Meta>
   <Service Label="Xyna Object Decider" TypeName="XynaObjectDecider">
-    <Operation IsAbstract="true" IsStatic="false" Label="Decide" Name="decide">
+    <Operation IsStatic="false" Label="Decide" Name="decide">
       <Input>
         <Data ID="7" Label="Generic Type" VariableName="genericType">
           <Meta>
@@ -37,6 +37,16 @@
           </Meta>
         </Data>
       </Output>
+      <Meta>
+        <Documentation>Deprecated. Use DecideObjectOnRead and DecideObjectOnWrite instead</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">try {
+return (com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject)getClass().getClassLoader().loadClass(genericType).getConstructor().newInstance();
+} catch(Exception e) {
+    return null;
+}</CodeSnippet>
+      </SourceCode>
     </Operation>
     <Operation IsStatic="false" Label="On Unknown Member" Name="onUnknownMember">
       <Input>
@@ -58,6 +68,64 @@
       </Meta>
       <SourceCode>
         <CodeSnippet Type="Java">logger.debug("parameter " + varName + " not found in " + xo);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Decide Object on Write" Name="decideObjectOnWrite">
+      <Input>
+        <Data Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType996">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType997">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return anyType996;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Continue Read with Object" Name="continueReadWithObject">
+      <Input>
+        <Data Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return anyType;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Decide Object on Read" Name="decideObjectOnRead">
+      <Input>
+        <Data ID="7" Label="Generic Type" VariableName="genericType">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="11" Label="JSON Object" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONObject11"/>
+      </Input>
+      <Output>
+        <Data ID="13" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType13">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return decide(genericType, jSONObject11);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
