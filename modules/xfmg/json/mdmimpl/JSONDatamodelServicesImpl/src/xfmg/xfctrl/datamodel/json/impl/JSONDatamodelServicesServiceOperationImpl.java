@@ -180,7 +180,7 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
   }
 
 
-  public GeneralXynaObject parseObjectFromJSON(Document document, GeneralXynaObject xo, JsonOptions options, XynaObjectDecider decider) {
+  private GeneralXynaObject parseObjectFromJSON(Document document, GeneralXynaObject xo, JsonOptions options, XynaObjectDecider decider) {
     String json = document.getText();
     if (json == null || json.isBlank()) {
       return null;
@@ -257,7 +257,8 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
         genType = pt.getActualTypeArguments()[0];
         Class<?> genTypeClass = (Class<?>) genType;
         GeneralXynaObject innerObj = createXynaObject((Class<GeneralXynaObject>) genTypeClass, value.getObjectValue(), decider);
-        fillXynaObjectRecursivly(innerObj, value.getObjectValue(), newPath, options, decider);
+        GeneralXynaObject continueObject = determineContinueObject(innerObj, value.getObjectValue(), decider);
+        fillXynaObjectRecursivly(continueObject, value.getObjectValue(), newPath, options, decider);
         objects.add(innerObj);
       } else {
         objects.add(getPrimitiveValue(value));
@@ -433,7 +434,9 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
           throw new RuntimeException("Can not instantiate abstract member type " + typeOfField + " for member " + varNameInXyna + ".");
         }
         o = createXynaObject((Class<GeneralXynaObject>) typeOfField, value.getObjectValue(), decider);
+        GeneralXynaObject continueObject = determineContinueObject((GeneralXynaObject)o, value.getObjectValue(), decider);
         xo.set(varNameInXyna, o);
+        o = continueObject;
       }
       if (o instanceof XynaObject) {
         fillXynaObjectRecursivly((XynaObject) o, value.getObjectValue(), newPath, options, decider);
@@ -659,6 +662,10 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
       throw new RuntimeException(e1);
     }
   }
+  
+  private GeneralXynaObject determineContinueObject(GeneralXynaObject createdObject, JSONObject obj, XynaObjectDecider decider) {
+    return decider == null ? createdObject : decider.continueReadWithObject(createdObject, obj);
+  }
 
   @SuppressWarnings("unchecked")
   public <A extends GeneralXynaObject> List<A> createList(Class<A> genTypeClass, List<? extends JSONValue> array, String currentPath, JsonOptions options, XynaObjectDecider decider) {
@@ -676,13 +683,16 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     
     for (JSONValue jv : array) {
       A listElement;
+      GeneralXynaObject continueObject;
       if (JSONVALTYPES.OBJECT.equals(jv.getType())) {
         listElement = createXynaObject(genTypeClass, jv.getObjectValue(), decider);
-        fillXynaObjectRecursivly(listElement, jv.getObjectValue(), newPath, options, decider);
+        continueObject = determineContinueObject(listElement, jv.getObjectValue(), decider);
+        fillXynaObjectRecursivly(continueObject, jv.getObjectValue(), newPath, options, decider);
         l.add(listElement);
       } else if (JSONVALTYPES.ARRAY.equals(jv.getType()) && options.listwrapper.contains(genTypeClass.getCanonicalName())) {
         listElement = createXynaObject(genTypeClass, jv.getObjectValue(), decider);
-        fillXynaObjectListWrapper(listElement, jv.getArrayValue(), newPath, options, decider);
+        continueObject = determineContinueObject(listElement, jv.getObjectValue(), decider);
+        fillXynaObjectListWrapper(continueObject, jv.getArrayValue(), newPath, options, decider);
         l.add(listElement);
       } else {
         logger.debug("array element " + jv + " is not of object type");

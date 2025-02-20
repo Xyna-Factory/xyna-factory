@@ -96,6 +96,7 @@ return (com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject)getClass().getClassLo
             <Type>GeneralXynaObject</Type>
           </Meta>
         </Data>
+        <Data ID="36" Label="JSON Object" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONObject36"/>
       </Input>
       <Output>
         <Data Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
