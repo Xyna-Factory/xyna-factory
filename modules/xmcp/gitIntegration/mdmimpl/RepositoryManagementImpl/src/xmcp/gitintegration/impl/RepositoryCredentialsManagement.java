@@ -106,6 +106,7 @@ public class RepositoryCredentialsManagement {
 
 
     public SshTransportConfigCallback(String privateKeyContent, String passphrase) {
+      if (privateKeyContent == null) { return; }
       keyPairs = loadKeyPairs(privateKeyContent, passphrase);
       factory = new SshdSessionFactoryBuilder()
           .setPreferredAuthentications("publickey")

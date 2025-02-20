@@ -35,6 +35,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.CheckoutCommand;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.FetchCommand;
@@ -912,13 +913,16 @@ public class RepositoryInteraction {
 
 
   private void processPushs(Git git, Repository repository, GitDataContainer container, String msg, String[] filePatterns) throws Exception {
+    AddCommand add = git.add(); 
     if (filePatterns != null) {
       for (String str : filePatterns) {
+        add.addFilepattern(str);
         logger.warn("### got pattern: " + str);    
       }
     }
      
-    git.add().addFilepattern(".").call();
+    //git.add().addFilepattern(".").call();
+    add.call();
     
     CommitCommand commitCmd = git.commit().setAuthor(container.user, container.mail).setMessage(msg);
     commitCmd.call();
