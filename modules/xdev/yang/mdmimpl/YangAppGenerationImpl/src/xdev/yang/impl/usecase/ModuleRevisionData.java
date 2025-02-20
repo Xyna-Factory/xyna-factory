@@ -44,12 +44,12 @@ public class ModuleRevisionData {
     ComparableModuleId id = new ComparableModuleId(module.getModuleId());
     if (!set.contains(id)) {
       set.add(id);
-    }    
+    }
   }
   
-  public Optional<ComparableModuleId> findNewestExistingRevisionForModule(ComparableModuleId id) {
-    if (id == null) { return Optional.empty(); }
-    TreeSet<ComparableModuleId> set = _map.get(id.getModuleName());
+  public Optional<ComparableModuleId> findNewestExistingRevisionForModule(String modulename) {
+    if (modulename == null) { return Optional.empty(); }
+    TreeSet<ComparableModuleId> set = _map.get(modulename);
     if (set == null) {
       return Optional.empty();
     }

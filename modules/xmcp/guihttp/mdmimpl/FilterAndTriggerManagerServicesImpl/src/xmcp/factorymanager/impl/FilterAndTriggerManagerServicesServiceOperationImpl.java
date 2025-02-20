@@ -19,7 +19,10 @@ package xmcp.factorymanager.impl;
 
 
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.utils.collections.SerializablePair;
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.utils.misc.StringParameter;
+import com.gip.xyna.utils.misc.StringParameter.StringParameterWithEnum;
 import com.gip.xyna.xact.exceptions.XACT_FilterNotFound;
 import com.gip.xyna.xact.exceptions.XACT_TriggerInstanceNotFound;
 import com.gip.xyna.xact.exceptions.XACT_TriggerNotFound;
@@ -35,6 +38,8 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTi
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeDependencyContext.RuntimeDependencyContextType;
+import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
+import com.gip.xyna.xmcp.xfcli.StringParameterFormatter;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
@@ -43,6 +48,9 @@ import xact.http.URLPath;
 import xact.http.enums.httpmethods.HTTPMethod;
 import xact.templates.Document;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,6 +63,7 @@ import xmcp.factorymanager.filtermanager.FilterInstance;
 import xmcp.factorymanager.filtermanager.FilterInstanceDetails;
 import xmcp.factorymanager.filtermanager.GetFilterDetailRequest;
 import xmcp.factorymanager.filtermanager.GetTriggerRequest;
+import xmcp.factorymanager.filtermanager.StartParameterDetails;
 import xmcp.factorymanager.filtermanager.Trigger;
 import xmcp.factorymanager.filtermanager.TriggerDetail;
 import xmcp.factorymanager.filtermanager.TriggerInstance;
@@ -315,6 +324,35 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
       collect(Collectors.toList());
   }
   
+  public List<? extends StartParameterDetails> getPossibleStartParameterForTriggerDeployment(Trigger trigger43) {
+    TriggerInformation triggerinfo;
+    try {
+      triggerinfo = activationTrigger.getTriggerInformation(trigger43.getName(), getRevision(trigger43.getRuntimeContext()), true);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    
+    if (triggerinfo.getEnhancedStartParameter() != null) {
+      return triggerinfo.getEnhancedStartParameter().stream().
+      map(para -> new StartParameterDetails.Builder().
+          name(para.getName()).
+          documentation(para.documentation(DocumentationLanguage.EN)).
+          optional(para.isOptional()).
+          mandatory(getMandatoryFromStringParameter(para)).
+          type(getTypeFromStringParameter(para)).
+          instance()).
+      collect(Collectors.toList());
+    } else if (triggerinfo.getStartParameterDocumentation() != null) {
+      return Arrays.asList(triggerinfo.getStartParameterDocumentation()).stream().
+      map(docu -> new StartParameterDetails.Builder().
+          lagacyParameterCombination(Arrays.asList(docu)).
+          instance()).
+      collect(Collectors.toList());
+    }
+    return List.of();
+  }
+
+  
   public List<? extends TriggerInstance> getPossibleTriggerInstanceForFilterDeployment(Filter filter37, RuntimeContext runtimeContext36) {
     TriggerInformation triggerinfo;
     try {
@@ -496,6 +534,48 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
       }
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       throw new RuntimeException(e);
+    }
+  }
+  
+  private static String getTypeFromStringParameter(StringParameter<?> sp) {
+    
+    String typename = sp.getSimpleTypeString();
+    if (sp instanceof StringParameterWithEnum) {
+      StringParameterWithEnum<?,?> spwe = (StringParameterWithEnum<?,?>) sp;
+      if (spwe.hasDocumentedEnum()) {
+        typename = spwe.getSimpleTypeString();
+      } else {
+        String enums = spwe.getEnumConstantsAsStrings().toString();
+        typename = spwe.getSimpleTypeString()+"("+ enums.substring(1,enums.length()-1) +")";
+      }
+    }
+    return typename;
+  }
+  
+  private static String getMandatoryFromStringParameter(StringParameter<?> sp) {
+    
+    if (sp.isMandatory()) {
+      return "mandatory";
+    } else if (sp.isMandatoryFor()) {
+      StringBuilder sb = new StringBuilder();
+      sb.append("mandatory for [");
+      String sep = "";
+      List<SerializablePair<String,Serializable>> mandatoryFor = sp.getMandatoryFor();
+      for (SerializablePair<String,Serializable> pair : mandatoryFor) {
+        sb.append(sep).append(pair.getFirst());
+        if (pair.getSecond() != null) {
+          if (pair.getSecond() instanceof String) {
+            sb.append("=\"").append(pair.getSecond()).append("\"");
+          } else {
+            sb.append("=").append(pair.getSecond());
+          }
+        }
+        sep = ", ";
+      }
+      sb.append("]");
+      return sb.toString();
+    } else {
+      return "";
     }
   }
 }
