@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,10 +41,7 @@ import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabaseIndexCollision.IndexM
 import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabasePersistenceLayerConnectionWithAlterTableSupport;
 import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabasePersistenceLayerWithAlterTableSupportHelper;
 
-class MySQLPersistenceLayerAlterTableConnection
-        implements
-        DatabasePersistenceLayerConnectionWithAlterTableSupport,
-        AutoCloseable {
+class MySQLPersistenceLayerAlterTableConnection implements DatabasePersistenceLayerConnectionWithAlterTableSupport {
 
     static final Logger logger = CentralFactoryLogging.getLogger(MySQLPersistenceLayerAlterTableConnection.class);
 
@@ -106,8 +103,6 @@ class MySQLPersistenceLayerAlterTableConnection
 
     private SQLUtils sqlUtils;
 
-    private String lock;
-
     // Maximale Länge des Hashs, bei dem es noch Sinn macht zu modulon. Alles
     // darüber übertrifft Integer.MAX_VALUE und ergibt somit keinen Sinn mehr
     private final int MAX_HASH = (int) (Math.log(Integer.MAX_VALUE) / Math.log(36));
@@ -117,26 +112,6 @@ class MySQLPersistenceLayerAlterTableConnection
         this.mySQLPersistenceLayerConnection = plCon;
         this.mySQLPersistenceLayer = pl;
         this.sqlUtils = utils;
-    }
-
-    boolean tryLock(String lock) {
-        if (isLocked())
-            throw new IllegalStateException("Lock with name " + this.lock + " exists. Can not create new lock for " + lock);
-
-        // executeDDL("select get_lock('" + this.lock + "', -1)");
-
-        this.lock = lock;
-        return false;
-    }
-
-    boolean isLocked() {
-        return this.lock != null && !this.lock.isEmpty();
-    }
-
-    void unlock() {
-        if (!isLocked())
-            return;
-        // executeDDL("do relese_lock('" + this.lock + "')");
     }
 
     @SuppressWarnings("rawtypes")
@@ -173,11 +148,11 @@ class MySQLPersistenceLayerAlterTableConnection
                         continue;
                     }
 
-                    if (javaIndexType == IndexType.NONE && colInfo.indexType == IndexType.NONE) {
+                    if (javaIndexType == IndexType.NONE && colInfo.getIndexType() == IndexType.NONE) {
                         continue; // kein Index
                     }
 
-                    if (colInfo.indexType == IndexType.PRIMARY
+                    if (colInfo.getIndexType() == IndexType.PRIMARY
                             && colInfo.getName().equalsIgnoreCase(collision.getPersi().primaryKey())) {
                         // primarykey index ok...
                         continue;
@@ -251,8 +226,8 @@ class MySQLPersistenceLayerAlterTableConnection
                     if (col.name().equalsIgnoreCase(colInfo.getName())) {
                         colInfo.setStorableClass(klass);
                         if (this.mySQLPersistenceLayer.getColumnMap().get(col) == null ||
-                                this.mySQLPersistenceLayer.getColumnMap().get(col).indexType != colInfo.indexType ||
-                                this.mySQLPersistenceLayer.getColumnMap().get(col).type != colInfo.type) {
+                                this.mySQLPersistenceLayer.getColumnMap().get(col).getIndexType() != colInfo.getIndexType() ||
+                                this.mySQLPersistenceLayer.getColumnMap().get(col).getType() != colInfo.getType()) {
                             colInfo.next = this.mySQLPersistenceLayer.getColumnMap().get(col); // evtl. vorherige
                                                                                                // Einträge
                             // aufheben: es kann mehrere
@@ -294,11 +269,11 @@ class MySQLPersistenceLayerAlterTableConnection
                         continue;
                     }
 
-                    if (javaIndexType == IndexType.NONE && colInfo.indexType == IndexType.NONE) {
+                    if (javaIndexType == IndexType.NONE && colInfo.getIndexType() == IndexType.NONE) {
                         continue; // kein Index
                     }
 
-                    if (colInfo.indexType == IndexType.PRIMARY
+                    if (colInfo.getIndexType() == IndexType.PRIMARY
                             && colInfo.getName().equalsIgnoreCase(persistable.primaryKey())) {
                         // primarykey index ok...
                         continue;
@@ -466,14 +441,14 @@ class MySQLPersistenceLayerAlterTableConnection
     @SuppressWarnings("rawtypes")
     public <T extends Storable> boolean areBaseTypesCompatible(Column col, Class<T> klass, DatabaseColumnInfo colInfo) {
         MySqlType recommendedType = getDefaultMySQLColTypeForStorableColumn(col, klass);
-        return ((MySQLColumnInfo) colInfo).type.getBaseType().isCompatibleTo(recommendedType.getBaseType());
+        return ((MySQLColumnInfo) colInfo).getType().getBaseType().isCompatibleTo(recommendedType.getBaseType());
     }
 
     @SuppressWarnings("rawtypes")
     public <T extends Storable> boolean areColumnsCompatible(Column col, Class<T> klass, DatabaseColumnInfo colInfo) {
         MySqlType recommendedType = getDefaultMySQLColTypeForStorableColumn(col, klass);
         List<MySqlType> compatibleTypes = recommendedType.getCompatibleTypes();
-        return compatibleTypes.contains(((MySQLColumnInfo) colInfo).type);
+        return compatibleTypes.contains(((MySQLColumnInfo) colInfo).getType());
     }
 
     @SuppressWarnings("rawtypes")
@@ -523,7 +498,7 @@ class MySQLPersistenceLayerAlterTableConnection
                     "Unimplemented check of multiple indexes on column " + column.name() + " in table " + tableName);
             return;
         }
-        if (colInfo.indexType == javaIndexType) {
+        if (colInfo.getIndexType() == javaIndexType) {
             // this is OK as long as we cannot verify the name
             return;
         }
@@ -538,7 +513,7 @@ class MySQLPersistenceLayerAlterTableConnection
                 return;
             }
         }
-        if (colInfo.indexType == IndexType.NONE) {
+        if (colInfo.getIndexType() == IndexType.NONE) {
             if (desiredModification != IndexModification.CREATE) {
                 logger.warn("Detected index creation on column " + column.name() + " in table "
                         + tableName + " does not match the desired modifcation " + desiredModification);
@@ -554,7 +529,7 @@ class MySQLPersistenceLayerAlterTableConnection
         } else {
             logger.warn(
                     "Unimplemented change index on column " + column.name() + " in table " + tableName + ". Found: "
-                            + colInfo.indexType + ", expected: " + javaIndexType.name());
+                            + colInfo.getIndexType() + ", expected: " + javaIndexType.name());
         }
     }
 
@@ -656,14 +631,14 @@ class MySQLPersistenceLayerAlterTableConnection
                     "Unimplemented check of multiple indexes on column " + column.name() + " in table " + tableName);
             return null;
         }
-        if (colInfo.indexType == javaIndexType) {
+        if (colInfo.getIndexType() == javaIndexType) {
             // this is OK as long as we cannot verify the name
             return null;
         }
         if (javaIndexType == IndexType.NONE) {
             return IndexModification.DELETE;
         }
-        if (colInfo.indexType == IndexType.NONE) {
+        if (colInfo.getIndexType() == IndexType.NONE) {
             return IndexModification.CREATE;
         }
 
@@ -671,9 +646,5 @@ class MySQLPersistenceLayerAlterTableConnection
 
     }
 
-    @Override
-    public void close() throws Exception {
-        unlock();
-    }
 
 }
