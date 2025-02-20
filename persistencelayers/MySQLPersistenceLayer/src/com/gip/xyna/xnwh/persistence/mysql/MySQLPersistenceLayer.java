@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,6 +65,7 @@ import com.gip.xyna.xnwh.persistence.PersistenceLayer;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerConnection;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.persistence.Storable;
+import com.gip.xyna.xnwh.persistence.sql.ZippedBlob;
 import com.gip.xyna.xnwh.pools.ConnectionPoolManagement;
 import com.gip.xyna.xnwh.pools.MySQLPoolType;
 import com.gip.xyna.xnwh.pools.PoolDefinition;
@@ -728,7 +729,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
               }
               return (int) l;
           } else {
-              long l = colInfo.type.size;
+              long l = colInfo.getType().getSize();
               if (logger.isTraceEnabled()) {
                   logger.trace("size for col " + col.name() + " = " + l);
               }

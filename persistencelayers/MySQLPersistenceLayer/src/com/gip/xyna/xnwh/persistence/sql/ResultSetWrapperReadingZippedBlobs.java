@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package com.gip.xyna.xnwh.persistence.mysql;
+package com.gip.xyna.xnwh.persistence.sql;
 
 
 
@@ -34,7 +34,7 @@ import com.gip.xyna.xnwh.persistence.Storable;
 
 
 // FIXME duplicated class from OraclePersistenceLayer
-class ResultSetWrapperReadingZippedBlobs extends WrappedResultSet {
+public class ResultSetWrapperReadingZippedBlobs extends WrappedResultSet {
 
   public static final String UNSUPPORTED_MESSAGE = "unsupported operation";
 

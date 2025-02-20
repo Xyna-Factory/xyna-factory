@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,9 @@
  */
 package com.gip.xyna.xnwh.persistence.mysql;
 
-enum MySqlBaseType {
+import com.gip.xyna.xnwh.persistence.sql.SqlBaseType;
+
+enum MySqlBaseType implements SqlBaseType<MySqlBaseType> {
     NUMBER, FLOAT, TIME, TEXT_ENCODED, BINARY, OTHER;
 
     /**
@@ -44,5 +46,10 @@ enum MySqlBaseType {
             return otherType == TEXT_ENCODED;
         } else
             return false;
+    }
+
+    @Override
+    public Class<MySqlBaseType> getEnumClass() {
+        return MySqlBaseType.class;
     }
 }
