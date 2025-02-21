@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -50,24 +50,55 @@
       <Mapping>%1%.dataPath="%0%.value"</Mapping>
       <Mapping>%1%.disabled=%0%.loadYangAssignmentsData.isNotSupportedDeviation</Mapping>
     </Mappings>
+    <Mappings ID="4688" Label="Mapping">
+      <Input>
+        <Data ID="4878" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData4878">
+          <Source RefID="4688"/>
+        </Data>
+        <Source RefID="109"/>
+      </Input>
+      <Output>
+        <Data ID="4763" Label="Refresh - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent4763">
+          <Source RefID="4688"/>
+        </Data>
+        <Target RefID="4764"/>
+      </Output>
+      <Mapping>%1%.eventId=concat("yang_assignment_refresh_", substring(%0%.loadYangAssignmentsData.totalYangPath, "0", ((length(%0%.loadYangAssignmentsData.totalYangPath)-length(%0%.yangPath))-"1")))</Mapping>
+    </Mappings>
     <Mappings ID="3374" Label="Mapping">
       <Input>
         <Data ID="3375" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext3375"/>
         <Source RefID="22"/>
       </Input>
+      <Input>
+        <Data ID="4797" Label="Refresh - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent4797">
+          <Source RefID="3374"/>
+        </Data>
+        <Source RefID="4764"/>
+      </Input>
       <Output>
         <Data ID="3378" Label="save - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition3378"/>
         <Target RefID="3379"/>
       </Output>
-      <Mapping>%1%.dataPath="%0%"</Mapping>
-      <Mapping>%1%.serviceFQN="xmcp.yang.fman.SaveUseCaseAssignment"</Mapping>
-      <Mapping>%1%.serviceRTC=%0%</Mapping>
-      <Mapping>%1%.label="Save"</Mapping>
+      <Mapping>%2%.dataPath="%0%"</Mapping>
+      <Mapping>%2%.label="Save"</Mapping>
+      <Mapping>%2%.onStartorderResultEvent["0"].eventId="yang_leaf_clean"</Mapping>
+      <Mapping>%2%.onStartorderResultEvent["1"].eventId="yang_leaf_close"</Mapping>
+      <Mapping>%2%.onStartorderResultEvent["2"]=%1%</Mapping>
+      <Mapping>%2%.serviceFQN="xmcp.yang.fman.SaveUseCaseAssignment"</Mapping>
+      <Mapping>%2%.serviceRTC=%0%</Mapping>
+      <Mapping>%2%.synchronously="true"</Mapping>
     </Mappings>
     <Mappings ID="3189" Label="Mapping">
       <Input>
         <Data ID="3191" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext3191"/>
         <Source RefID="22"/>
+      </Input>
+      <Input>
+        <Data ID="5503" Label="Refresh - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent5503">
+          <Source RefID="3189"/>
+        </Data>
+        <Source RefID="4764"/>
       </Input>
       <Output>
         <Data ID="3267" Label="delete - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition3267">
@@ -75,10 +106,14 @@
         </Data>
         <Target RefID="3268"/>
       </Output>
-      <Mapping>%1%.dataPath="%0%"</Mapping>
-      <Mapping>%1%.serviceFQN="xmcp.yang.fman.DeleteUseCaseAssignment"</Mapping>
-      <Mapping>%1%.serviceRTC=%0%</Mapping>
-      <Mapping>%1%.label="Delete"</Mapping>
+      <Mapping>%2%.dataPath="%0%"</Mapping>
+      <Mapping>%2%.serviceFQN="xmcp.yang.fman.DeleteUseCaseAssignment"</Mapping>
+      <Mapping>%2%.serviceRTC=%0%</Mapping>
+      <Mapping>%2%.label="Delete"</Mapping>
+      <Mapping>%2%.onStartorderResultEvent["0"].eventId="yang_leaf_clean"</Mapping>
+      <Mapping>%2%.onStartorderResultEvent["0"].eventId="yang_leaf_close"</Mapping>
+      <Mapping>%2%.onStartorderResultEvent["0"]=%1%</Mapping>
+      <Mapping>%2%.synchronously="true"</Mapping>
     </Mappings>
     <Mappings ID="3838" Label="Mapping">
       <Output>
@@ -157,6 +192,8 @@
       <Mapping>%6%.label=%3%.yangPath</Mapping>
       <Mapping>%6%.closable="true"</Mapping>
       <Mapping>%6%.disabled=%3%.loadYangAssignmentsData.isNotSupportedDeviation</Mapping>
+      <Mapping>%6%.triggerClose.eventId="yang_leaf_close"</Mapping>
+      <Mapping>%6%.triggerClearDataChangeState.eventId="yang_leaf_clean"</Mapping>
     </Mappings>
     <Choice ID="4105" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="109"/>
@@ -241,6 +278,9 @@
       <Source RefID="4105"/>
     </Data>
     <Data ID="4261" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition4261"/>
+    <Data ID="4764" Label="Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent4764">
+      <Source RefID="4688"/>
+    </Data>
     <Assign ID="1">
       <Source RefID="4225"/>
       <Target RefID="150"/>

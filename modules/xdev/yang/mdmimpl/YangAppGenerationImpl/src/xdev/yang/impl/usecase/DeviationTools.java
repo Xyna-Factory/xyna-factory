@@ -27,7 +27,6 @@ import org.yangcentral.yangkit.model.api.stmt.DeviateType;
 import org.yangcentral.yangkit.model.api.stmt.Deviation;
 import org.yangcentral.yangkit.model.api.stmt.YangStatement;
 
-import xdev.yang.impl.YangStatementTranslator;
 import xdev.yang.impl.YangStatementTranslator.YangStatementTranslation;
 import xmcp.yang.LoadYangAssignmentsData;
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -87,7 +87,8 @@
       <Mapping>%1%.dataPath="%1%, %0%"</Mapping>
       <Mapping>%1%.serviceFQN="xmcp.yang.fman.UpdateVariableInUsecaseSignature"</Mapping>
       <Mapping>%1%.serviceRTC=%0%</Mapping>
-      <Mapping>%1%.onStartorderResultEvent["0"].eventId="yang_uc_sig_refresh"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="yang_uc_sig_clean"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["1"].eventId="yang_uc_sig_refresh"</Mapping>
       <Mapping>%1%.synchronously="true"</Mapping>
     </Mappings>
     <Mappings ID="2729" Label="Mapping">
@@ -103,7 +104,8 @@
       <Mapping>%1%.dataPath="%1%, %0%"</Mapping>
       <Mapping>%1%.serviceFQN="xmcp.yang.fman.DeleteVariableFromUsecaseSignature"</Mapping>
       <Mapping>%1%.serviceRTC=%0%</Mapping>
-      <Mapping>%1%.onStartorderResultEvent["0"].eventId="yang_uc_sig_refresh"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="yang_uc_sig_clean"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["1"].eventId="yang_uc_sig_refresh"</Mapping>
       <Mapping>%1%.synchronously="true"</Mapping>
     </Mappings>
     <Mappings ID="49" Label="Mapping">
@@ -182,6 +184,7 @@
       <Mapping>%6%.children["3"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%5%</Mapping>
       <Mapping>%6%.children["4"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
       <Mapping>%6%.closable="true"</Mapping>
+      <Mapping>%6%.triggerClearDataChangeState.eventId="yang_uc_sig_clean"</Mapping>
     </Mappings>
     <Data ID="59" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition59">
       <Source RefID="49"/>

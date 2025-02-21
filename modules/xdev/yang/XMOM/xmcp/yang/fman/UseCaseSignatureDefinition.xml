@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,13 +27,13 @@
       <Data ID="3364" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData3364"/>
       <Data ID="3647" Label="UsecaseSignatureEntry" ReferenceName="UsecaseSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="usecaseSignatureEntry3647"/>
     </Output>
-    <ServiceReference ID="64" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
-      <Source RefID="63"/>
-      <Target RefID="63"/>
-    </ServiceReference>
     <ServiceReference ID="3401" Label="Define Add To Usecase Signature Dialog " ReferenceName="DefineAddToUsecaseSignatureDialog" ReferencePath="xmcp.yang.fman">
       <Source RefID="3400"/>
       <Target RefID="3400"/>
+    </ServiceReference>
+    <ServiceReference ID="64" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="63"/>
+      <Target RefID="63"/>
     </ServiceReference>
     <Function ID="63" Label="get Own RuntimeContext">
       <Source RefID="64"/>
