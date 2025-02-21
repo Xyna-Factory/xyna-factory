@@ -15,33 +15,29 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package com.gip.xyna.xnwh.persistence.mysql;
+package com.gip.xyna.xnwh.persistence.sql;
 
-import com.gip.xyna.xnwh.persistence.PreparedQuery;
-import com.gip.xyna.xnwh.persistence.Query;
-import com.gip.xyna.xnwh.persistence.ResultSetReader;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.zip.Deflater;
+import java.util.zip.DeflaterOutputStream;
 
+import com.gip.xyna.utils.db.types.BLOB;
 
-public class MySQLPreparedQuery<T> implements PreparedQuery<T> {
+//FIXME duplicated class from OraclePL
+public class ZippedBlob extends BLOB {
 
-  private Query<T> query;
-  
-  public MySQLPreparedQuery(Query<T> query) {
-    this.query = query;
-    String existingTableName = query.getTable();
-    this.query.modifyTargetTable(existingTableName.toLowerCase());
-  }
-  
-  public ResultSetReader<? extends T> getReader() {
-    return query.getReader();
-  }
+    public ZippedBlob() {
+        super(BLOB.ZIPPED);
+    }
 
-  public String getTable() {
-    return query.getTable();
-  }
-  
-  public Query<T> getQuery() {
-    return query;
-  }
+    @Override
+    protected DeflaterOutputStream createZippedOutputStream(OutputStream os) throws IOException {
+        return new ConfigurableGZIPOutputStream(os, Deflater.BEST_SPEED, 512);
+    }
+
+    public String toString() {
+        return super.toString();
+    }
 
 }

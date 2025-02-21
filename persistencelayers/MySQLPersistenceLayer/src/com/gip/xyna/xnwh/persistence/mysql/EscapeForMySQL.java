@@ -17,31 +17,28 @@
  */
 package com.gip.xyna.xnwh.persistence.mysql;
 
-import com.gip.xyna.xnwh.persistence.PreparedQuery;
-import com.gip.xyna.xnwh.persistence.Query;
-import com.gip.xyna.xnwh.persistence.ResultSetReader;
+import com.gip.xyna.xnwh.selection.parsing.SelectionParser.EscapeParameters;
 
+class EscapeForMySQL implements EscapeParameters {
 
-public class MySQLPreparedQuery<T> implements PreparedQuery<T> {
+    public String escapeForLike(String toEscape) {
+        if (toEscape == null) {
+            return toEscape;
+        }
 
-  private Query<T> query;
-  
-  public MySQLPreparedQuery(Query<T> query) {
-    this.query = query;
-    String existingTableName = query.getTable();
-    this.query.modifyTargetTable(existingTableName.toLowerCase());
-  }
-  
-  public ResultSetReader<? extends T> getReader() {
-    return query.getReader();
-  }
+        toEscape = toEscape.replaceAll("%", "\\\\%");
+        toEscape = toEscape.replaceAll("_", "\\\\_");
+        return toEscape;
+    }
 
-  public String getTable() {
-    return query.getTable();
-  }
-  
-  public Query<T> getQuery() {
-    return query;
-  }
+    @Override
+    public String getMultiCharacterWildcard() {
+        return "%";
+    }
+
+    @Override
+    public String getSingleCharacterWildcard() {
+        return "_";
+    }
 
 }

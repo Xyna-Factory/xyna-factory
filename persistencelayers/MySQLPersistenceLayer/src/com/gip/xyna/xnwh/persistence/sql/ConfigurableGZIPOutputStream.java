@@ -15,33 +15,18 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package com.gip.xyna.xnwh.persistence.mysql;
+package com.gip.xyna.xnwh.persistence.sql;
 
-import com.gip.xyna.xnwh.persistence.PreparedQuery;
-import com.gip.xyna.xnwh.persistence.Query;
-import com.gip.xyna.xnwh.persistence.ResultSetReader;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.zip.GZIPOutputStream;
 
+// FIXME duplicated class from OraclePL
+public class ConfigurableGZIPOutputStream extends GZIPOutputStream {
 
-public class MySQLPreparedQuery<T> implements PreparedQuery<T> {
-
-  private Query<T> query;
-  
-  public MySQLPreparedQuery(Query<T> query) {
-    this.query = query;
-    String existingTableName = query.getTable();
-    this.query.modifyTargetTable(existingTableName.toLowerCase());
-  }
-  
-  public ResultSetReader<? extends T> getReader() {
-    return query.getReader();
-  }
-
-  public String getTable() {
-    return query.getTable();
-  }
-  
-  public Query<T> getQuery() {
-    return query;
-  }
+    public ConfigurableGZIPOutputStream(OutputStream out, int compressionLevel, int buffersize) throws IOException {
+        super(out, buffersize);
+        def.setLevel(compressionLevel);
+    }
 
 }

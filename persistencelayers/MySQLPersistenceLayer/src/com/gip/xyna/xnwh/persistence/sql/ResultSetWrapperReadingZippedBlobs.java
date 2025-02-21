@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package com.gip.xyna.xnwh.persistence.mysql;
+package com.gip.xyna.xnwh.persistence.sql;
 
 
 
@@ -42,13 +42,14 @@ public class ResultSetWrapperReadingZippedBlobs extends WrappedResultSet {
   //FIXME getBinaryStream überschreiben?
   //FIXME update-Methoden überschreiben
   
+  @SuppressWarnings("rawtypes")
   private Class<? extends Storable> storableClass;
 
   public ResultSetWrapperReadingZippedBlobs(ResultSet rs) {
     super(rs);
   }
   
-  public ResultSetWrapperReadingZippedBlobs(ResultSet rs, Class<? extends Storable> storableClass) {
+  public ResultSetWrapperReadingZippedBlobs(ResultSet rs, @SuppressWarnings("rawtypes") Class<? extends Storable> storableClass) {
     this(rs);
     this.storableClass = storableClass;
   }
@@ -74,6 +75,7 @@ public class ResultSetWrapperReadingZippedBlobs extends WrappedResultSet {
     return new WrappedZippedBlob(super.getBlob(colName));
   }
 
+  @SuppressWarnings("unused")
   private static class ConfigurableGZIPInputStream extends GZIPInputStream {
 
     public ConfigurableGZIPInputStream(InputStream in) throws IOException {
