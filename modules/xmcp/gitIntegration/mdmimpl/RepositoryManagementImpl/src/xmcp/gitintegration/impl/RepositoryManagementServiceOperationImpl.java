@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -251,7 +253,9 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
   public Text push(XynaOrderServerExtension order, Repository arg0, Text arg1, List<? extends File> arg2) {
     String user = getUserFromSession(order.getSessionId());
     try {
-      new RepositoryInteraction().push(arg0.getPath(), arg1.getText(), false, user, null);
+      List<String> adapted = (arg2 == null) ? new ArrayList<String>() :
+                             arg2.stream().filter(Objects::nonNull).map(x -> x.getPath()).collect(Collectors.toList());
+      new RepositoryInteraction().push(arg0.getPath(), arg1.getText(), false, user, adapted);
     } catch (Exception e) {
       return new Text("Exception during push: " + e.getMessage());
     }
@@ -261,9 +265,13 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
 
 
   @Override
-  public ChangeSet loadChangeSet(Repository repository) {
-    // TODO Auto-generated method stub
-    return null;
+  public ChangeSet loadChangeSet(Repository repository) {    
+    try {
+      return new RepositoryInteraction().loadChanges(repository.getPath());
+    } 
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
   
 }

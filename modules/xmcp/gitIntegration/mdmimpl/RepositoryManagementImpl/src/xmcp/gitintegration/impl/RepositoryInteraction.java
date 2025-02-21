@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -41,6 +42,8 @@ import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PushCommand;
+import org.eclipse.jgit.api.Status;
+import org.eclipse.jgit.api.StatusCommand;
 import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
 import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
@@ -94,7 +97,9 @@ import xmcp.gitintegration.impl.processing.ReferenceSupport;
 import xmcp.gitintegration.impl.references.InternalReference;
 import xmcp.gitintegration.repository.Branch;
 import xmcp.gitintegration.repository.BranchData;
+import xmcp.gitintegration.repository.ChangeSet;
 import xmcp.gitintegration.repository.Commit;
+import xmcp.gitintegration.repository.FileChange;
 import xmcp.gitintegration.repository.RepositoryConnection;
 import xmcp.gitintegration.repository.RepositoryUser;
 import xmcp.gitintegration.storage.ReferenceStorable;
@@ -200,8 +205,40 @@ public class RepositoryInteraction {
     return result;
   }
 
-
+  
+  
+  public ChangeSet loadChanges(String repository) throws Exception {
+    ChangeSet ret = new ChangeSet();
+    Repository repo = loadRepo(repository, true);
+    try (Git git = new Git(repo)) {
+      StatusCommand cmd = git.status();
+      Status status = cmd.call();
+      for (String str : status.getChanged()) {
+        ret.addToChanges(buildFileChange(str, "Changed"));
+      }
+      for (String str : status.getModified()) {
+        ret.addToChanges(buildFileChange(str, "Modified"));
+      }
+    }
+    return ret;
+  }
+  
+  private FileChange buildFileChange(String path, String typestr) {
+    FileChange change = new FileChange();
+    base.File file = new base.File();
+    file.setPath(path);
+    change.setFile(file);
+    change.setType(typestr);
+    return change;
+  }
+  
+  
   public void push(String repository, String message, boolean dryrun, String user, String[] filePatterns) throws Exception {
+    List<String> list = filePatterns == null ? new ArrayList<String>() : Arrays.asList(filePatterns);
+    push(repository, message, dryrun, user, list);
+  }
+  
+  public void push(String repository, String message, boolean dryrun, String user, List<String> filePatterns) throws Exception {
     Repository repo = loadRepo(repository, true);
     GitDataContainer container;
 
@@ -912,15 +949,17 @@ public class RepositoryInteraction {
   }
 
 
-  private void processPushs(Git git, Repository repository, GitDataContainer container, String msg, String[] filePatterns) throws Exception {
+  private void processPushs(Git git, Repository repository, GitDataContainer container, String msg, List<String> filePatterns) throws Exception {
     AddCommand add = git.add(); 
-    if (filePatterns != null) {
+    if ((filePatterns == null) || (filePatterns.size() < 1)) {
+      git.add().addFilepattern(".");      
+    }
+    else {
       for (String str : filePatterns) {
         add.addFilepattern(str);
         logger.warn("### got pattern: " + str);    
       }
-    }
-     
+    }     
     //git.add().addFilepattern(".").call();
     add.call();
     
