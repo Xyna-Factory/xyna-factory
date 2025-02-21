@@ -89,24 +89,28 @@ try {
         <CodeSnippet Type="Java">
 {{#xynaModels}}
 {{#isOrWrapper}}
-if (anytype.getClass().getCanonicalName().equals("{{modelFQN}}")) {
-  String dyntype = "";
-  xfmg.xfctrl.datamodel.json.JSONValue value = jSONObject.getMember("{{discriminatorKey}}");
-  if (value != null) {
-    dyntype = value.getStringOrNumberValue();
+try {
+  if (anytype.getClass().getCanonicalName().equals("{{modelFQN}}")) {
+    String dyntype = "";
+    xfmg.xfctrl.datamodel.json.JSONValue value = jSONObject.getMember("{{discriminatorKey}}");
+    if (value != null) {
+      dyntype = value.getStringOrNumberValue();
+    }
+    anytype.set("{{discriminatorProp}}", dyntype);
+    {{#discriminatorMap}}
+    if (dyntype.equals("{{keyValue}}")) {
+      {{fqn}} child = new {{fqn}}();
+      anytype.set("{{varName}}", child);
+      return child;
+    }
+    {{/discriminatorMap}}
   }
-  anytype.set("{{discriminatorProp}}", dyntype);
-  {{#discriminatorMap}}
-  if (dyntype.equals("{{keyValue}}")) {
-    {{fqn}} child = new {{fqn}}();
-    anytype.set("{{varName}}", child);
-    return child;
-  }
-  {{/discriminatorMap}}
+} catch(Exception e) {
+  return null;
 }
 {{/isOrWrapper}}
 {{/xynaModels}}
-return anyType;
+return anytype;
         </CodeSnippet>
       </SourceCode>
     </Operation>
@@ -132,17 +136,21 @@ return anyType;
         <CodeSnippet Type="Java">
 {{#xynaModels}}
 {{#isOrWrapper}}
-if (anytype.getClass().getCanonicalName().equals("{{modelFQN}}")) {
-  String dyntype = (String) anytype.get("{{discriminatorProp}}");
-  {{#discriminatorMap}}
-  if (dyntype.equals("{{keyValue}}")) {
-    return anytype.get("{{varName}}");
+try {
+  if (anytype.getClass().getCanonicalName().equals("{{modelFQN}}")) {
+    String dyntype = (String) anytype.get("{{discriminatorProp}}");
+    {{#discriminatorMap}}
+    if (dyntype.equals("{{keyValue}}")) {
+      return ({{fqn}}) anytype.get("{{varName}}");
+    }
+    {{/discriminatorMap}}
   }
-  {{/discriminatorMap}}
+} catch(Exception e) {
+  return null;
 }
 {{/isOrWrapper}}
 {{/xynaModels}}
-return anyType;
+return anytype;
       </CodeSnippet>
       </SourceCode>
     </Operation>
