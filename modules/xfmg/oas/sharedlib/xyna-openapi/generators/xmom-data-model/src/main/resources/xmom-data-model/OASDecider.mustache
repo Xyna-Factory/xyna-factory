@@ -103,6 +103,7 @@ if (anytype.getClass().getCanonicalName().equals("{{modelFQN}}")) {
     return child;
   }
   {{/discriminatorMap}}
+}
 {{/isOrWrapper}}
 {{/xynaModels}}
 return anyType;
@@ -138,6 +139,7 @@ if (anytype.getClass().getCanonicalName().equals("{{modelFQN}}")) {
     return anytype.get("{{varName}}");
   }
   {{/discriminatorMap}}
+}
 {{/isOrWrapper}}
 {{/xynaModels}}
 return anyType;
