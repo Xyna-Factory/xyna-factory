@@ -124,6 +124,9 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
   private static final String KEY_SOCKET_TIMEOUT = "socketTimeout";
   private static final String KEY_DURABLE_STATEMENT_CACHE = "durableStatementCache";
   private static final String KEY_ZIPPED_BLOBS = "zippedBlobs";
+  private static final String KEY_ENABLE_SCHEMA_LOCKING = "schemaLocking";
+  private static final String KEY_SCHEMA_LOCKING_TIMEOUT = "schemaLockingTimeout";
+  private static final String KEY_READ_ONLY_MODE = "readOnlyMode";
 
 
   public PersistenceLayerConnection getConnection() throws PersistenceLayerException {
@@ -188,9 +191,14 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
         "poolname (see listconnectionpools)",
         "timeout(ms)",
         "additional optional parameters are key value pairs (key=value). supported keys are: " + "\n"
-            + KEY_AUTOMATIC_COLUMN_TYPE_WIDENING + " (true/false)" + "\n" + KEY_USE_PL_LOGGER
-            + " (true=>better performance, false=>better configuration possibilities)" + "\n" 
-            + KEY_DURABLE_STATEMENT_CACHE + " (true/false)" + "\n" + KEY_ZIPPED_BLOBS + " (true/false)"};
+            + KEY_AUTOMATIC_COLUMN_TYPE_WIDENING + " (true/false), default: false" + "\n" 
+            + KEY_USE_PL_LOGGER+ " (true=>better performance, false=>better configuration possibilities), default: false" + "\n"
+            + KEY_DURABLE_STATEMENT_CACHE + " (true/false), default: false" + "\n"
+            + KEY_ZIPPED_BLOBS + " (true/false), default: false" + "\n"
+            + KEY_ENABLE_SCHEMA_LOCKING + " (true/false), default: false" + "\n"
+            + KEY_SCHEMA_LOCKING_TIMEOUT + " (integer), default: -1" + "\n"
+            + KEY_READ_ONLY_MODE + " (read-data/readonly/read-write), default: read-write"
+    };
   }
 
 
@@ -314,6 +322,21 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
         if (logger.isDebugEnabled()) {
           logger.debug("set " + KEY_ZIPPED_BLOBS + " to " + zippedBlobs);
         }
+      } else if (key.equals(KEY_ENABLE_SCHEMA_LOCKING)) {
+        enableSchmeaLocking = Boolean.valueOf(keyValue[1]);
+        if (logger.isDebugEnabled()) {
+          logger.debug("set " + KEY_ENABLE_SCHEMA_LOCKING + " to " + enableSchmeaLocking);
+        }
+      } else if (key.equals(KEY_SCHEMA_LOCKING_TIMEOUT)) {
+        schemaLockingTimeout = Integer.valueOf(keyValue[1]);
+        if (logger.isDebugEnabled()) {
+          logger.debug("set " + KEY_SCHEMA_LOCKING_TIMEOUT + " to " + String.valueOf(schemaLockingTimeout));
+        }
+      } else if (key.equals(KEY_READ_ONLY_MODE)) {
+        accessMode = AccessMode.fromString(keyValue[1]);
+        if (logger.isDebugEnabled()) {
+          logger.debug("set " + KEY_READ_ONLY_MODE + " to " + accessMode.toString());
+        }
       } else {
         throw new XNWH_GeneralPersistenceLayerException("unknown key: " + key);
       }
@@ -424,6 +447,37 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
   SQLErrorHandlingLogger getCreateTableLogger() {
     return sqlUtilsLoggerCreateTable;
   }
+
+  protected enum AccessMode {
+    READ_DATA("read-data"), READ_WRITE("read-write"), READ_ONLY("read-only");
+
+    private final String name;
+
+    AccessMode(final String name) {
+      this.name = name;
+    }
+
+    public String toString() {
+      return this.name;
+    };
+
+    public static AccessMode fromString(final String val) {
+      if (val == null || val.isEmpty())
+        throw new IllegalArgumentException("value can not be empty");
+
+      switch (val) {
+        case "read-only":
+          return READ_ONLY;
+        case "read-write":
+          return READ_WRITE;
+        case "read-data":
+          return READ_DATA;
+        default:
+          throw new IllegalArgumentException("invalid value: " + val);
+      }
+
+    }
+  };
   
   //basiert auf den inneren (echten) connections. cache räumt sich automatisch auf, wenn die connections nicht mehr verwendet werden
   //auf die pooledconnection kann man den cache nicht basieren, weil dieser innen seine connection austauschen kann
@@ -431,9 +485,24 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
   private WeakHashMap<Connection, StatementCache> statementCaches = new WeakHashMap<Connection, StatementCache>();
   private boolean useDurableStatementCache = false;
   private boolean zippedBlobs = false;
+  private boolean enableSchmeaLocking = false;
+  private AccessMode accessMode = AccessMode.READ_WRITE;
+  private int schemaLockingTimeout = -1;
   
   boolean useZippedBlobs() {
     return zippedBlobs;
+  }
+
+  boolean useSchemaLocking() {
+    return enableSchmeaLocking;
+  }
+
+  int getSchemaLockingTimeout() {
+    return schemaLockingTimeout;
+  }
+
+  AccessMode getAccessMode() {
+    return accessMode;
   }
 
   SQLUtils createSQLUtils(boolean isDedicated) throws PersistenceLayerException {
