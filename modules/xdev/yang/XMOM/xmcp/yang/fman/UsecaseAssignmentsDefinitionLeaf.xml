@@ -37,11 +37,18 @@
       </Receive>
     </Function>
     <Mappings ID="3398" Label="Mapping">
+      <Input>
+        <Data ID="4663" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData4663">
+          <Source RefID="3398"/>
+        </Data>
+        <Source RefID="109"/>
+      </Input>
       <Output>
         <Data ID="3400" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition3400"/>
         <Target RefID="3401"/>
       </Output>
-      <Mapping>%0%.dataPath="%0%.value"</Mapping>
+      <Mapping>%1%.dataPath="%0%.value"</Mapping>
+      <Mapping>%1%.disabled=%0%.loadYangAssignmentsData.isNotSupportedDeviation</Mapping>
     </Mappings>
     <Mappings ID="3374" Label="Mapping">
       <Input>
@@ -83,6 +90,14 @@
       <Mapping>%0%.dataPath="%0%.loadYangAssignmentsData.description"</Mapping>
       <Mapping>%0%.hideIfEmpty="true"</Mapping>
     </Mappings>
+    <Mappings ID="4259" Label="Mapping">
+      <Output>
+        <Data ID="4260" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition4260"/>
+        <Target RefID="4261"/>
+      </Output>
+      <Mapping>%0%.dataPath="%0%.loadYangAssignmentsData.deviationInfo"</Mapping>
+      <Mapping>%0%.hideIfEmpty="true"</Mapping>
+    </Mappings>
     <Mappings ID="3211" Label="Mapping">
       <Input>
         <Data ID="3213" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition3213"/>
@@ -120,16 +135,28 @@
           </Meta>
         </Source>
       </Input>
+      <Input>
+        <Data ID="4302" Label="Text Item Definition 2" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition4302">
+          <Source RefID="3211"/>
+        </Data>
+        <Source RefID="4261">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
       <Output>
         <Data ID="3218" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3218"/>
         <Target RefID="3210"/>
       </Output>
-      <Mapping>%5%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
-      <Mapping>%5%.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
-      <Mapping>%5%.children["2"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%2%</Mapping>
-      <Mapping>%5%.children["3"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%4%</Mapping>
-      <Mapping>%5%.label=%3%.yangPath</Mapping>
-      <Mapping>%5%.closable="true"</Mapping>
+      <Mapping>%6%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
+      <Mapping>%6%.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
+      <Mapping>%6%.children["2"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%2%</Mapping>
+      <Mapping>%6%.children["3"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%4%</Mapping>
+      <Mapping>%6%.children["4"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%5%</Mapping>
+      <Mapping>%6%.label=%3%.yangPath</Mapping>
+      <Mapping>%6%.closable="true"</Mapping>
+      <Mapping>%6%.disabled=%3%.loadYangAssignmentsData.isNotSupportedDeviation</Mapping>
     </Mappings>
     <Choice ID="4105" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="109"/>
@@ -138,7 +165,7 @@
         <Data ID="4112" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData4112"/>
         <Source RefID="109"/>
       </Input>
-      <Case Alias="" ID="4106" Label="true" Premise="%0%.loadYangAssignmentsData.status!=null">
+      <Case ID="4106" Label="true" Premise="%0%.loadYangAssignmentsData.status!=null">
         <Mappings ID="4114" Label="Mapping">
           <Input>
             <Data ID="4117" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData4117"/>
@@ -168,7 +195,7 @@
           </Copy>
         </Assign>
       </Case>
-      <Case Alias="" ID="4107" Label="false">
+      <Case ID="4107" Label="false">
         <Mappings ID="4206" Label="Mapping">
           <Input>
             <Data ID="4242" Label="Form Panel Definition IN" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4242">
@@ -213,6 +240,7 @@
     <Data ID="4225" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4225">
       <Source RefID="4105"/>
     </Data>
+    <Data ID="4261" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition4261"/>
     <Assign ID="1">
       <Source RefID="4225"/>
       <Target RefID="150"/>

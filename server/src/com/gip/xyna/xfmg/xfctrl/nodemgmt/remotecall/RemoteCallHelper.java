@@ -145,9 +145,10 @@ public class RemoteCallHelper {
       //TODO ersteinmal nicht vorgesehen, da keine generischen Timeouts definiert sind
     }
     
+    RemoteCallXynaOrderCreationParameter xocp;
     for( int retry = 0; retry < 100; ++retry ) {
       FactoryNodeCaller fnc = getFactoryNodeCaller(target);
-      RemoteCallXynaOrderCreationParameter xocp = new RemoteCallXynaOrderCreationParameter(new DestinationKey(orderType, target.context), input);
+      xocp = new RemoteCallXynaOrderCreationParameter(correlatedXynaOrder.getRevision(), new DestinationKey(orderType, target.context), input);
       StartOrderNotification startOrder = new StartOrderNotification(xocp);
       fnc.enqueue( startOrder );
       if( logger.isDebugEnabled() ) {

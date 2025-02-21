@@ -16,9 +16,9 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="build_server" default="build" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+<project name="build_server" default="build" basedir="." >
 
-  <import file="../installation/build/ant-xyna.xml" xmlns:resolver="antlib:org.apache.maven.resolver.ant"/>
+  <import file="../installation/build/ant-xyna.xml" />
   <import file="../installation/build/macros.xml" />
 
   <property name="project.name" value="xynafactory" />
@@ -31,21 +31,14 @@
   <!-- set default for release.number (used by localbuild)  -->
   <property name="release.number" value="${user.name}_${timestamp}" />
 
-  
-  
-  <resolver:pom file="${basedir}/pom.xml" id="pom"/>
-  
+   
   <property name="target.dir" value="${basedir}/lib" />
   
-  
+ 
   <target name="resolve">
-    <resolver:resolve>
-      <resolver:dependencies pomRef="pom"/>
-      <resolver:files refid="files" dir="${target.dir}" layout="{artifactId}-{classifier}-{version}.{extension}" /> <!--scopes="compile"-->
-      <resolver:files refid="internalFiles" dir="${target.dir}/internal_xyna" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/>
-    </resolver:resolve>
+    <resolve pomFile="${basedir}/pom.xml" dir="${target.dir}" />
+    <resolve pomFile="${basedir}/pom.xml" dir="${target.dir}/internal_xyna" scopes="runtime" />
     <loadLicenses targetDir="${target.dir}" />
-    <!-- delete generated-resources ? -->
   </target>
 
 

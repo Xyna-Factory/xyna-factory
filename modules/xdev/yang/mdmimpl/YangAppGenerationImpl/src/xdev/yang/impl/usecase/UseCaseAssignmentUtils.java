@@ -18,12 +18,12 @@
 package xdev.yang.impl.usecase;
 
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -62,28 +62,30 @@ import xmcp.yang.UseCaseAssignmentTableData;
 import xmcp.yang.YangModuleCollection;
 
 
-
 public class UseCaseAssignmentUtils {
 
-
+  private static Logger _logger = Logger.getLogger(UseCaseAssignmentUtils.class);
+  
   public static List<UseCaseAssignmentTableData> loadPossibleAssignments(List<Module> modules, String rpcName, String rpcNs,
                                                                          LoadYangAssignmentsData data, Document meta,
                                                                          List<String> supportedFeatures) {
     Rpc rpc = findRpc(modules, rpcName, rpcNs);
+    DeviationList deviations = DeviationList.build(modules);
     Input input = rpc.getInput();
     List<ListConfiguration> listConfigs = ListConfiguration.loadListConfigurations(meta);
-    List<YangStatement> elements =
-        traverseYang(data.getTotalYangPath(), data.getTotalNamespaces(), data.getTotalKeywords(), input, listConfigs, supportedFeatures);
-    List<UseCaseAssignmentTableData> result = loadAssignments(elements, data, supportedFeatures);
+    List<YangStatement> elements = traverseYang(data.getTotalYangPath(), data.getTotalNamespaces(), data.getTotalKeywords(), 
+                                                input, listConfigs, supportedFeatures);
+    List<UseCaseAssignmentTableData> result = loadAssignments(elements, data, supportedFeatures, deviations);
     return result;
   }
 
 
   private static List<YangStatement> traverseYang(String path, String namespaces, String keywords, YangStatement element,
                                                   List<ListConfiguration> listConfigs, List<String> supportedFeatures) {
-    String[] parts = path.split("\\/");
-    String[] namespaceParts = namespaces.split(Constants.NS_SEPARATOR);
-    String[] keywordParts = keywords.split(" ");
+    LoadYangAssignmentsDataContent content = new LoadYangAssignmentsDataContent(path, namespaces, keywords);
+    String[] parts = content.getParts();
+    String[] namespaceParts = content.getNamespaceParts();
+    String[] keywordParts = content.getKeywordParts();
     for (int i = 1; i < parts.length; i++) { //ignore initial "/<rpcName>"
       String part = parts[i];
       String namespace = namespaceParts[i];
@@ -181,9 +183,12 @@ public class UseCaseAssignmentUtils {
   }
 
 
-  private static List<UseCaseAssignmentTableData> loadAssignments(List<YangStatement> subElements, LoadYangAssignmentsData data, List<String> supportedFeatures) {
+  private static List<UseCaseAssignmentTableData> loadAssignments(List<YangStatement> subElements, LoadYangAssignmentsData data, 
+                                                                  List<String> supportedFeatures, DeviationList moduleDeviations) {
     YangSubelementContentHelper helper = new YangSubelementContentHelper();
+    DeviationTools deviationTools = new DeviationTools();
     List<UseCaseAssignmentTableData> result = new ArrayList<>();
+    
     for (YangStatement element : subElements) {
       if (isSupportedElement(element, supportedFeatures) && helper.getConfigSubelementValueBoolean(element)) {
         String localName = YangStatementTranslation.getLocalName(element);
@@ -195,11 +200,17 @@ public class UseCaseAssignmentUtils {
         updatedData.unversionedSetTotalNamespaces(updatedData.getTotalNamespaces() + Constants.NS_SEPARATOR + namespace);
         updatedData.unversionedSetTotalKeywords(updatedData.getTotalKeywords() + " " + keyword);
         updatedData.unversionedSetWarning(null);
+        updatedData.unversionedSetDeviationInfo(null);
+        updatedData.unversionedSetSubelementDeviationInfo(null);
+        updatedData.unversionedSetIsNotSupportedDeviation(false);
         helper.copyRelevantSubelementValues(element, updatedData);
-        builder.loadYangAssignmentsData(updatedData);
-        builder.yangPath(localName);
-        builder.type(getYangType(element));
-        result.add(builder.instance());
+        deviationTools.handleDeviationsForElement(moduleDeviations, element, data, updatedData);
+        if (!updatedData.getIsNotSupportedDeviation()) {
+          builder.loadYangAssignmentsData(updatedData);
+          builder.yangPath(localName);
+          builder.type(getYangType(element));
+          result.add(builder.instance());
+        }
       }
     }
     return result;
@@ -239,6 +250,7 @@ public class UseCaseAssignmentUtils {
     return "Unknown: " + element.getClass().getCanonicalName();
   }
 
+  
   private static Rpc findRpc(List<Module> modules, String rpcName, String rpcNs) {
     for (Module module : modules) {
       Rpc result = module.getRpc(rpcName);
@@ -248,7 +260,7 @@ public class UseCaseAssignmentUtils {
     }
     throw new RuntimeException("rpc " + rpcName + " in namespace " + rpcNs + " not found.");
   }
-
+  
   public static List<Rpc> findRpcs(List<Module> modules, String rpcName) {
     List<Rpc> result = new ArrayList<>();
     for (Module module : modules) {
@@ -260,8 +272,8 @@ public class UseCaseAssignmentUtils {
     return result;
   }
 
-  public static List<Module> loadModules(String workspaceName) {
-    List<Module> result = new ArrayList<>();
+  public static List<ModuleGroup> loadModules(String workspaceName) {
+    List<ModuleGroup> result = new ArrayList<>();
     XynaFactoryControl xynaFactoryCtrl = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl();
     XmomDbInteraction interaction = new XmomDbInteraction();
     RevisionManagement revMgmt = xynaFactoryCtrl.getRevisionManagement();
@@ -276,19 +288,22 @@ public class UseCaseAssignmentUtils {
       Long entryRevision;
       try {
         entryRevision = revMgmt.getRevision(entry.getRuntimeContext());
-        result.addAll(loadModulesFromDt(entry.getFqName(), entryRevision));
+        ModuleGroup group = loadModulesFromDt(entry.getFqName(), entryRevision);
+        result.add(group);
       } catch (Exception e) {
-        throw new RuntimeException(e);
+        _logger.error(e.getMessage(), e);
+        throw new RuntimeException(e.getMessage(), e);
       }
     }
     return result;
   }
 
-  private static List<Module> loadModulesFromDt(String fqName, Long entryRevision) throws Exception {
+  
+  private static ModuleGroup loadModulesFromDt(String fqName, Long entryRevision) throws Exception {
+    ModuleGroup result = new ModuleGroup();
     DOM dom = DOM.getOrCreateInstance(fqName, new GenerationBaseCache(), entryRevision);
     dom.parseGeneration(true, false);
     List<String> metaTags = dom.getUnknownMetaTags();
-    List<Module> result = new ArrayList<Module>();
     for(String meta : metaTags) {
       Document xml = XMLUtils.parseString(meta, true);
       if (!xml.getDocumentElement().getNodeName().equals(Constants.TAG_YANG)) {
@@ -298,20 +313,23 @@ public class UseCaseAssignmentUtils {
       if (yangTypeNode == null || !Constants.VAL_MODULECOLLECTION.equals(yangTypeNode.getNodeValue())) {
         continue;
       }
-      List<Element> modules = XMLUtils.getChildElementsByName(xml.getDocumentElement(), "module");
-      for(Element module : modules) {
-        addModulesFromTag(module, result);
+      List<Element> xmlModules = XMLUtils.getChildElementsByName(xml.getDocumentElement(), "module");
+      for(Element module : xmlModules) {
+        ModuleParseData parsed = parseModulesFromTag(module);
+        result.add(parsed);
       }
-    }
+    }    
     return result;
   }
 
 
-  private static void addModulesFromTag(Element module, List<Module> modules) throws Exception {
-    java.io.ByteArrayInputStream is = new java.io.ByteArrayInputStream(Base64.decode(module.getTextContent()));
+  private static ModuleParseData parseModulesFromTag(Element module) throws Exception {
+    byte[] decoded = Base64.decode(module.getTextContent());
+    java.io.ByteArrayInputStream is = new java.io.ByteArrayInputStream(decoded);
     YangSchemaContext context = YangYinParser.parse(is, "module.yang", null);
-    context.validate();
-    modules.addAll(context.getModules());
+    context.validate();    
+    ModuleParseData parsed = new ModuleParseData(decoded, context.getModules());
+    return parsed;
   }
 
   public static Pair<Integer, Document> loadOperationMeta(String fqn, String workspaceName, String usecase) {
@@ -391,11 +409,11 @@ public class UseCaseAssignmentUtils {
   }
 
   public static String loadRpcNs(String rpc, String deviceFqn, String workspaceName) {
-    List<Module> modules = UseCaseAssignmentUtils.loadModules(workspaceName);
+    List<ModuleGroup> modules = UseCaseAssignmentUtils.loadModules(workspaceName);
     //filter modules to supported by device
     List<YangDeviceCapability> capabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
-    modules = YangCapabilityUtils.filterModules(modules, capabilities);
-    List<Rpc> candidates = UseCaseAssignmentUtils.findRpcs(modules, rpc);
+    List<Module> filtered = YangCapabilityUtils.filterModules(modules, capabilities);
+    List<Rpc> candidates = UseCaseAssignmentUtils.findRpcs(filtered, rpc);
     if (candidates.size() != 1) {
       throw new RuntimeException("Could not determine rpc namespace. There are " + candidates.size() + " candidates.");
     }
