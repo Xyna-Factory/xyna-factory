@@ -42,7 +42,9 @@ import xmcp.gitintegration.repository.RepositoryUser;
 
 public class UserManagementStorage {
 
-  public static final String SEC_STORE_DESTINATION = "repositoryusers";
+  public static final String SEC_STORE_PW_DESTINATION = "repositoryusers";
+  public static final String SEC_STORE_KEY_DESTINATION = "repositoryusers.key";
+  public static final String SEC_STORE_PASSPHRASE_DESTINATION = "repositoryusers.passPhrase";
   public static final String CLI_USERNAME = "<CLI_USER>";
 
   private static PreparedQueryCache queryCache = new PreparedQueryCache();
@@ -61,15 +63,36 @@ public class UserManagementStorage {
 
   public String loadPassword(String factoryUser, String repository) throws XynaException {
     String id = RepositoryUserStorable.createIdentifier(factoryUser, repository);
-    return (String) SecureStorage.getInstance().retrieve(SEC_STORE_DESTINATION, id);
+    return (String) SecureStorage.getInstance().retrieve(SEC_STORE_PW_DESTINATION, id);
   }
 
 
-  public void AddUserToRepository(String factoryUser, String repoUser, String repository, String password, String mail) {
+  public String loadPrivateKey(String factoryUser, String repository) throws XynaException {
+    String id = RepositoryUserStorable.createIdentifier(factoryUser, repository);
+    return (String) SecureStorage.getInstance().retrieve(SEC_STORE_KEY_DESTINATION, id);
+  }
+
+
+  public String loadPassphrase(String factoryUser, String repository) throws XynaException {
+    String id = RepositoryUserStorable.createIdentifier(factoryUser, repository);
+    return (String) SecureStorage.getInstance().retrieve(SEC_STORE_PASSPHRASE_DESTINATION, id);
+  }
+  
+
+  public void AddUserToRepository(String factoryUser, String repoUser, String repository, String pw, String keyPath, String keyphrase, String mail) {
     try {
       buildExecutor().execute(new AddUserToRepository(factoryUser, repoUser, repository, mail));
       SecureStorage sec = SecureStorage.getInstance();
-      sec.store(SEC_STORE_DESTINATION, RepositoryUserStorable.createIdentifier(factoryUser, repository), password);
+      String identifier = RepositoryUserStorable.createIdentifier(factoryUser, repository);
+      if (pw != null && !pw.isEmpty()) {
+        sec.store(SEC_STORE_PW_DESTINATION, identifier, pw);
+      }
+      if (keyPath != null && !keyPath.isEmpty()) {
+        sec.store(SEC_STORE_KEY_DESTINATION, identifier, keyPath);
+      }
+      if (keyphrase != null && !keyphrase.isEmpty()) {
+        sec.store(SEC_STORE_PASSPHRASE_DESTINATION, identifier, keyphrase);
+      }
     } catch (Exception e) {
       throw new RuntimeException("Could not add user to Repository");
     }

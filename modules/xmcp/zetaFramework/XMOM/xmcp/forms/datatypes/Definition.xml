@@ -25,4 +25,5 @@
       <Type>String</Type>
     </Meta>
   </Data>
+  <Data Label="Trigger Clear Data Change State" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="triggerClearDataChangeState"/>
 </DataType>
