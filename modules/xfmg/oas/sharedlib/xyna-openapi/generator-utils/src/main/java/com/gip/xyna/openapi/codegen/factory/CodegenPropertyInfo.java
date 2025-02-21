@@ -67,16 +67,30 @@ class CodegenPropertyHolder implements CodegenPropertyInfo{
   private CodegenProperty property;
   private CodegenPropertyInfo items;
   private CodegenPropertyInfo mostInnerItems;
+  private boolean useComplexType;
 
   CodegenPropertyHolder(CodegenProperty property) {
     this.property = property;
+    useComplexType = false;
+  }
+
+  
+  CodegenPropertyHolder(CodegenProperty property, boolean useComplexTypeAsName) {
+    this.property = property;
+    useComplexType = useComplexTypeAsName;
   }
 
   public String getBaseName() {
+    if (useComplexType) {
+      return getComplexType();
+    }
     return property.baseName;
   }
   
   public String getName() {
+    if (useComplexType) {
+      return getComplexType();
+    }
     return property.name;
   }
   
