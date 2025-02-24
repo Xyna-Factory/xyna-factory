@@ -170,13 +170,13 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
   @Override
   public Document writeJSONListWithOptions(List<GeneralXynaObject> jSONBaseModel, JSONWritingOptions jSONWritingOptions) {
     JsonOptions options = convertWritingOptions(jSONWritingOptions);
-    return writeJSONList(jSONBaseModel, options, OASScope.valueOfOrNone(jSONWritingOptions.getOASMessageType()), jSONWritingOptions.getXynaObjectDecider());
+    return writeJSONList(jSONBaseModel, options, OASScope.valueOfOrNone(jSONWritingOptions.getOASMessageType()), jSONWritingOptions.getObjectDecider());
   }
 
   @Override
   public Document writeJSONWithOptions(GeneralXynaObject jSONBaseModel, JSONWritingOptions jSONWritingOptions) {
     JsonOptions options = convertWritingOptions(jSONWritingOptions);
-    return writeJSON(jSONBaseModel, options, OASScope.valueOfOrNone(jSONWritingOptions.getOASMessageType()), jSONWritingOptions.getXynaObjectDecider());
+    return writeJSON(jSONBaseModel, options, OASScope.valueOfOrNone(jSONWritingOptions.getOASMessageType()), jSONWritingOptions.getObjectDecider());
   }
 
 
