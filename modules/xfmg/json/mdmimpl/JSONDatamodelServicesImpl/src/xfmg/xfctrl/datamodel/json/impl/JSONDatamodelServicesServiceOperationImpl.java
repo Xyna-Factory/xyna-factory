@@ -191,7 +191,8 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
     if(tokens.get(0).type.equals(JSONTokenType.curleyBraceOpen)) {
       JSONObject job = new JSONObject();
       jp.fillObject(tokens, 0, job);
-      fillXynaObjectRecursivly(xo, job, "", options, decider);
+      GeneralXynaObject continueObject = determineContinueObject(xo, job, decider);
+      fillXynaObjectRecursivly(continueObject, job, "", options, decider);
     } else if (tokens.get(0).type.equals(JSONTokenType.squareBraceOpen) && options.listwrapper.contains(xo.getClass().getCanonicalName())) {
       List<JSONValue> job = new ArrayList<>();
       jp.fillArray(tokens, 0, job);

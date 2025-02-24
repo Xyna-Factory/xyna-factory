@@ -85,6 +85,9 @@ return (com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject)getClass().getClassLo
           </Meta>
         </Data>
       </Output>
+      <Meta>
+        <Documentation>During writeJsonWithOptions, when the writer encounters an object, this method is called to determine which object to write. The default behavior returns the object passed to this method, but any xyna object may be used instead.</Documentation>
+      </Meta>
       <SourceCode>
         <CodeSnippet Type="Java">return anyType996;</CodeSnippet>
       </SourceCode>
@@ -105,6 +108,9 @@ return (com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject)getClass().getClassLo
           </Meta>
         </Data>
       </Output>
+      <Meta>
+        <Documentation>When the JsonParser encounters an Object, the decideObjectOnRead method is called. The resulting object is passed to this method. The object returned by this method is filled with the information of the json by the JsonParser.</Documentation>
+      </Meta>
       <SourceCode>
         <CodeSnippet Type="Java">return anyType;</CodeSnippet>
       </SourceCode>
@@ -125,6 +131,9 @@ return (com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject)getClass().getClassLo
           </Meta>
         </Data>
       </Output>
+      <Meta>
+        <Documentation>When the JsonParser encounters an object, this method is called to create an object of the correct type. The resulting object should be either of the genericType passed to the method, or of a class derived from genericType.</Documentation>
+      </Meta>
       <SourceCode>
         <CodeSnippet Type="Java">return decide(genericType, jSONObject11);</CodeSnippet>
       </SourceCode>
