@@ -37,22 +37,21 @@
     </Meta>
   </Data>
   <Service Label="JSONValue" TypeName="JSONValue">
-    <Operation Label="From Json" Name="fromJson" IsStatic="true">
+    <Operation IsStatic="true" Label="From Json" Name="fromJson">
       <Input>
-        <Data Label="Document" VariableName="document2" ReferenceName="Document" ReferencePath="xact.templates" />
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document2"/>
       </Input>
       <Output>
-        <Data Label="JsonValue" VariableName="jsonObject1" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json" />
+        <Data Label="JsonValue" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jsonObject1"/>
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return (JSONValue)JSONDatamodelServices.parseObjectFromJSONWithOptions(document2, new JSONValue(), new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions.Builder().processAllInputGenerically(false).instance());</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation Label="To Json" Name="toJson" IsStatic="false">
-      <Input>
-      </Input>
+    <Operation IsStatic="false" Label="To Json" Name="toJson">
+      <Input/>
       <Output>
-        <Data Label="Document" VariableName="document3" ReferenceName="Document" ReferencePath="xact.templates" />
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document3"/>
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return JSONDatamodelServices.writeJSONWithOptions(this, new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions.Builder().processAllInputGenerically(false).instance());</CodeSnippet>
