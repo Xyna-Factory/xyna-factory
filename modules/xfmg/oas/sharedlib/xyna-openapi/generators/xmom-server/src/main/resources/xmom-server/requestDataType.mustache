@@ -84,6 +84,7 @@ for (xact.http.HeaderField headerField: httpRequest1.getHeader().getHeaderField(
 {{/headerParams}}
 }
 {{#hasBody}}
+xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
 {{>jsonOptions}}
 
 xact.templates.Document document = httpRequest1.getBody();
