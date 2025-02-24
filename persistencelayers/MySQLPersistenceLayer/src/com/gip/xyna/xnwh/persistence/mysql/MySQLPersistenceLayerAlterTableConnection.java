@@ -41,80 +41,9 @@ import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabaseIndexCollision.IndexM
 import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabasePersistenceLayerConnectionWithAlterTableSupport;
 import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabasePersistenceLayerWithAlterTableSupportHelper;
 
-class MySQLPersistenceLayerAlterTableConnection
-        implements DatabasePersistenceLayerConnectionWithAlterTableSupport, AutoCloseable {
+class MySQLPersistenceLayerAlterTableConnection implements DatabasePersistenceLayerConnectionWithAlterTableSupport {
 
     static final Logger logger = CentralFactoryLogging.getLogger(MySQLPersistenceLayerAlterTableConnection.class);
-
-    private String lock;
-
-    boolean tryLock(String lock, int plTimeout) {
-        if (!this.mySQLPersistenceLayer.useSchemaLocking())
-            return false;
-
-        if (isLocked())
-            throw new IllegalStateException(
-                    "Lock with name " + this.lock + " exists. Can not create new lock for " + lock);
-
-        int timeout = plTimeout < 0 ? -1 : plTimeout;
-        if (logger.isDebugEnabled()) {
-            logger.debug("locking database for pliID " + pliID + "(" + mySQLPersistenceLayer.getSchemaName() + ") with "
-                    + lock + " with timeout " + String.valueOf(timeout));
-        }
-
-        long waittime = 0;
-        if (logger.isDebugEnabled()) {
-            waittime = System.currentTimeMillis();
-        }
-
-        Integer result = sqlUtils.queryInt("select get_lock(?, ?)",
-                new com.gip.xyna.utils.db.Parameter(lock, timeout));
-
-        if (logger.isDebugEnabled()) {
-            waittime = System.currentTimeMillis() - waittime;
-            logger.debug("locking database for pliID " + pliID + "(" + mySQLPersistenceLayer.getSchemaName() + ") with "
-                    + lock + " took (ms) " + String.valueOf(waittime));
-        }
-
-        if (result == null || result == 0) {
-            logger.error("locking database for pliID " + pliID + "(" + mySQLPersistenceLayer.getSchemaName() + ") with "
-                    + lock + " with timeout " + String.valueOf(timeout) + " failed. result = "
-                    + (result != null ? String.valueOf(result) : "NULL"));
-            return false;
-        }
-
-        this.lock = lock;
-        return result > 0;
-    }
-
-    boolean isLocked() {
-        return this.lock != null && !this.lock.isEmpty();
-    }
-
-    void unlock() {
-        if (!this.mySQLPersistenceLayer.useSchemaLocking())
-            return;
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("unlocking database for pliID " + pliID + " (" + mySQLPersistenceLayer.getSchemaName()
-                    + ") with lock " + this.lock + ". Database is "
-                    + ((isLocked()) ? "locked" : "not locked."));
-        }
-
-        if (!isLocked())
-            return;
-
-        Integer result = sqlUtils.queryInt("select release_lock(?)",
-                new com.gip.xyna.utils.db.Parameter(this.lock));
-
-        if (result == null || result == 0)
-            logger.error("unlocking of database for pliID " + pliID + "(" + mySQLPersistenceLayer.getSchemaName()
-                    + ") for lock " + this.lock + " failed. result = "
-                    + (result != null ? String.valueOf(result) : "NULL"));
-        else {
-            this.lock = null;
-        }
-    }
 
     private static String numberToStringUsingAllChars(int num) {
         StringBuilder back = new StringBuilder();
@@ -174,8 +103,6 @@ class MySQLPersistenceLayerAlterTableConnection
 
     private SQLUtils sqlUtils;
 
-    private Long pliID;
-
     // Maximale Länge des Hashs, bei dem es noch Sinn macht zu modulon. Alles
     // darüber übertrifft Integer.MAX_VALUE und ergibt somit keinen Sinn mehr
     private final int MAX_HASH = (int) (Math.log(Integer.MAX_VALUE) / Math.log(36));
@@ -185,7 +112,6 @@ class MySQLPersistenceLayerAlterTableConnection
         this.mySQLPersistenceLayerConnection = plCon;
         this.mySQLPersistenceLayer = pl;
         this.sqlUtils = utils;
-        this.pliID = this.mySQLPersistenceLayer.getPersistenceLayerInstanceID();
     }
 
     @SuppressWarnings("rawtypes")
@@ -300,11 +226,10 @@ class MySQLPersistenceLayerAlterTableConnection
                     if (col.name().equalsIgnoreCase(colInfo.getName())) {
                         colInfo.setStorableClass(klass);
                         if (this.mySQLPersistenceLayer.getColumnMap().get(col) == null ||
-                                this.mySQLPersistenceLayer.getColumnMap().get(col).getIndexType() != colInfo
-                                        .getIndexType()
-                                || this.mySQLPersistenceLayer.getColumnMap().get(col).getType() != colInfo.getType()) {
-                            colInfo.next = this.mySQLPersistenceLayer.getColumnMap().get(col);
-                            // evtl. vorherige Einträge
+                                this.mySQLPersistenceLayer.getColumnMap().get(col).getIndexType() != colInfo.getIndexType() ||
+                                this.mySQLPersistenceLayer.getColumnMap().get(col).getType() != colInfo.getType()) {
+                            colInfo.next = this.mySQLPersistenceLayer.getColumnMap().get(col); // evtl. vorherige
+                                                                                               // Einträge
                             // aufheben: es kann mehrere
                             // Einträge ...
                             // ... in "colInfos" zu einem Eintrag in "cols" geben
@@ -317,9 +242,8 @@ class MySQLPersistenceLayerAlterTableConnection
             Set<DatabaseIndexCollision> collisions = new HashSet<DatabaseIndexCollision>();
             if (!isView(tableNameWithSchemaPrefix)) {
                 if (addColumnString.length() > 0) {
-                    String ddl = "ALTER TABLE " + tableNameWithSchemaPrefix + "\n" + addColumnString.toString();
-                    validateAccessMode(ddl);
-                    sqlUtils.executeDDL(ddl, null);
+                    sqlUtils.executeDDL("ALTER TABLE " + tableNameWithSchemaPrefix + "\n" + addColumnString.toString(),
+                            null);
                 }
 
                 // indizes überprüfen
@@ -380,9 +304,6 @@ class MySQLPersistenceLayerAlterTableConnection
 
     @SuppressWarnings("rawtypes")
     public <T extends Storable> void createTable(Persistable persistable, Class<T> klass, Column[] cols) {
-
-        validateAccessMode(klass.getCanonicalName());
-
         String tableName = persistable.tableName().toLowerCase();
         StringBuilder createTableStatement = new StringBuilder("CREATE TABLE ").append(tableName).append(" (\n");
         for (Column col : cols) {
@@ -451,12 +372,11 @@ class MySQLPersistenceLayerAlterTableConnection
     }
 
     public long getPersistenceLayerInstanceId() {
-        return this.pliID;
+        return this.mySQLPersistenceLayer.getPersistenceLayerInstanceID();
     }
 
     @SuppressWarnings("rawtypes")
     public <T extends Storable> void modifyColumnsCompatible(Column col, Class<T> klass, String tableName) {
-        validateAccessMode(klass.getCanonicalName());
         if (!isView(tableName)) {
             MySqlType recommendedType = getDefaultMySQLColTypeForStorableColumn(col, klass);
             String sql = new StringBuffer("ALTER TABLE ").append(tableName).append(" CHANGE ").append(col.name())
@@ -475,7 +395,6 @@ class MySQLPersistenceLayerAlterTableConnection
 
     @SuppressWarnings("rawtypes")
     public <T extends Storable> void widenColumnsCompatible(Column col, Class<T> klass, String tableName) {
-        validateAccessMode(klass.getCanonicalName());
         if (!isView(tableName)) {
             MySqlType recommendedType = getDefaultMySQLColTypeForStorableColumn(col, klass);
             StringBuffer sql = new StringBuffer("ALTER TABLE ").append(tableName).append(" CHANGE ").append(col.name())
@@ -635,9 +554,6 @@ class MySQLPersistenceLayerAlterTableConnection
     }
 
     private void executeDDL(String ddl) {
-
-        validateAccessMode(ddl);
-
         // Ausführen des Statements ddl und Warn-Log, falls dies nicht erfolgreich war
         boolean created = false;
         try {
@@ -730,16 +646,5 @@ class MySQLPersistenceLayerAlterTableConnection
 
     }
 
-    @Override
-    public void close() throws Exception {
-        unlock();
-    }
 
-    private void validateAccessMode(final String details) {
-        MySQLPersistenceLayer.AccessMode mode = this.mySQLPersistenceLayer.getAccessMode();
-        if (!mode.equals(MySQLPersistenceLayer.AccessMode.READ_WRITE)) {
-            String msg = "Can not change data because of access mode " + mode + ". " + details;
-            throw new IllegalStateException(msg);
-        }
-    }
 }
