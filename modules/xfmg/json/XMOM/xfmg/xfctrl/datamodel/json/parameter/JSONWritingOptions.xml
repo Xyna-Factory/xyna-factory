@@ -26,15 +26,7 @@
       <Type>boolean</Type>
     </Meta>
   </Data>
-  <Data Label="OAS Message Type" VariableName="oASMessageType">
-    <Meta>
-      <Type>String</Type>
-      <Documentation>Valid Values: Request, Response
-When set to Request, the Json will not contain any membervars that are marked as readOnly in their OAS datamodel Meta data.
-When set to Response, the Json will not contain any membervars that are marked as writeOnly in their OAS datamodel Meta data.
-If not set or set to a different value no membervars will be skipped.</Documentation>
-    </Meta>
-  </Data>
+  <Data Label="Object Decider" ReferenceName="XynaObjectDecider" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="objectDecider"/>
   <Data IsList="true" Label="List Wrapper" ReferenceName="ListWrapper" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="listWrapper"/>
   <Data Label="Process All Input Generically" VariableName="processAllInputGenerically">
     <Meta>
@@ -49,5 +41,13 @@ generic serialization: { "members": [ {"key": "key", value: { "type": "STRING", 
       </Documentation>
     </Meta>
   </Data>
-  <Data Label="Xyna Object Decider" ReferenceName="XynaObjectDecider" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="xynaObjectDecider"/>
+  <Data Label="OAS Message Type" VariableName="oASMessageType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Valid Values: Request, Response
+When set to Request, the Json will not contain any membervars that are marked as readOnly in their OAS datamodel Meta data.
+When set to Response, the Json will not contain any membervars that are marked as writeOnly in their OAS datamodel Meta data.
+If not set or set to a different value no membervars will be skipped.</Documentation>
+    </Meta>
+  </Data>
 </DataType>
