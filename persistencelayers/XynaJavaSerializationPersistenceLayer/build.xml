@@ -21,7 +21,7 @@
   <import file="../../installation/build/ant-xyna.xml" />
   <import file="../../installation/build/macros.xml" />
 
-  <property name="project.name" value="XynaJavaSerializationPersistenceLayer" />
+  <property name="project.name.local" value="XynaJavaSerializationPersistenceLayer" />
 
   <property name="target.dir" value="${basedir}/deploy" />
 
@@ -36,7 +36,7 @@
 	         target: build             
 	        ================================= -->
   <target name="build" depends="resolve">
-    <buildJar destfile="${target.dir}/${project.name}.jar" />
+    <buildJar destfile="${target.dir}/${project.name.local}.jar" />
   </target>
 
   <target name="resolve">
@@ -45,7 +45,7 @@
   </target>
 
   <target name="installMavenArtifact" depends="build" description="install artifact to maven repository">
-     <install-maven-artifact artifactFile="${target.dir}/${project.name}.jar" pomFile="${basedir}/pom.xml" />
+     <install-maven-artifact artifactFile="${target.dir}/${project.name.local}.jar" pomFile="${basedir}/pom.xml" />
   </target>
 
 </project>
