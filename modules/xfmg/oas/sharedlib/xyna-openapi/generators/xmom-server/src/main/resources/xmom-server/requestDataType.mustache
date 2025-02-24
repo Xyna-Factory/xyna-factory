@@ -84,18 +84,12 @@ for (xact.http.HeaderField headerField: httpRequest1.getHeader().getHeaderField(
 {{/headerParams}}
 }
 {{#hasBody}}
-xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
-jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
-jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
-jsonOptions.setUseLabels(true);
-jsonOptions.setProcessAllInputGenerically(false);
-jsonOptions.setListWrapper((List){{listWrapperPath}}.ListWrapperProvider.getListWrapper());
+{{>jsonOptions}}
 
 xact.templates.Document document = httpRequest1.getBody();
 try {
   {{#bodyParams}}
     {{^isPrimitive}}
-    jsonOptions.setObjectDecider(new {{deciderPath}}.OASDecider());
       {{^isList}}
     {{propFQN}} {{propVarName}} = ({{propFQN}})xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new {{propFQN}}(), jsonOptions);
       {{/isList}}
