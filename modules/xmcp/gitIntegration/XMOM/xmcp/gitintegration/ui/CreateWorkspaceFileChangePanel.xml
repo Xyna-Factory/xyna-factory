@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Create Workspace File Change Panel" TypeName="CreateWorkspaceFileChangePanel" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Create Workspace File Change Panel" Name="CreateWorkspaceFileChangePanel">
+    <Input>
+      <Data ID="203" Label="Workspace File Change List" ReferenceName="WorkspaceFileChangeList" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceFileChangeList203"/>
+    </Input>
+    <Output>
+      <Data ID="372" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition372"/>
+    </Output>
+    <ServiceReference ID="693" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="692"/>
+      <Target RefID="692"/>
+    </ServiceReference>
+    <Mappings ID="394" Label="Mapping">
+      <Input>
+        <Data ID="486" Label="Workspace File Change List" ReferenceName="WorkspaceFileChangeList" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceFileChangeList486">
+          <Source RefID="394"/>
+        </Data>
+        <Source RefID="203"/>
+      </Input>
+      <Output>
+        <Data ID="495" IsList="true" Label="Indexed Workspace File Change" ReferenceName="IndexedWorkspaceFileChange" ReferencePath="xmcp.gitintegration.repository" VariableName="indexedWorkspaceFileChange495">
+          <Source RefID="394"/>
+        </Data>
+        <Target RefID="496"/>
+      </Output>
+      <Mapping>%1%=%0%.indexedFileChangeList</Mapping>
+    </Mappings>
+    <Foreach ID="643">
+      <Source RefID="496"/>
+      <Target RefID="645"/>
+      <InputList RefID="496">
+        <Data ID="644" Label="Indexed Workspace File Change" ReferenceName="IndexedWorkspaceFileChange" ReferencePath="xmcp.gitintegration.repository" VariableName="indexedWorkspaceFileChange644"/>
+      </InputList>
+      <OutputList RefID="645">
+        <Data ID="514" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition514">
+          <Source RefID="325"/>
+        </Data>
+      </OutputList>
+      <Mappings ID="325" Label="Mapping">
+        <Input>
+          <Data ID="403" Label="Indexed Workspace File Change" ReferenceName="IndexedWorkspaceFileChange" ReferencePath="xmcp.gitintegration.repository" VariableName="indexedWorkspaceFileChange403">
+            <Source RefID="325"/>
+          </Data>
+          <Source RefID="644"/>
+        </Input>
+        <Input>
+          <Data ID="666" Label="Workspace File Change List" ReferenceName="WorkspaceFileChangeList" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceFileChangeList666">
+            <Source RefID="325"/>
+          </Data>
+          <Source RefID="203"/>
+        </Input>
+        <Output>
+          <Data ID="513" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition513">
+            <Source RefID="325"/>
+          </Data>
+          <Target RefID="514"/>
+        </Output>
+        <Mapping>%2%.label=concat(%0%.type, ":  ", %0%.fileSubpath)</Mapping>
+        <Mapping>%2%.dataPath=concat("%0%.fileChangeList.", %1%.workspaceIndex, ".fileChangeList.", %0%.index, ".selected")</Mapping>
+      </Mappings>
+    </Foreach>
+    <Function ID="692" Label="get Own RuntimeContext">
+      <Source RefID="693"/>
+      <Target RefID="693"/>
+      <Target RefID="691"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="693"/>
+      <Receive ServiceID="693">
+        <Target RefID="691"/>
+      </Receive>
+    </Function>
+    <Mappings ID="712" Label="Mapping">
+      <Input>
+        <Data ID="714" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext714"/>
+        <Source RefID="691"/>
+      </Input>
+      <Input>
+        <Data ID="949" Label="Workspace File Change List" ReferenceName="WorkspaceFileChangeList" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceFileChangeList949">
+          <Source RefID="712"/>
+        </Data>
+        <Source RefID="203"/>
+      </Input>
+      <Output>
+        <Data ID="715" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition715"/>
+        <Target RefID="711"/>
+      </Output>
+      <Mapping>%2%.dataPath=concat("%0%, %0%.fileChangeList.", %1%.workspaceIndex)</Mapping>
+      <Mapping>%2%.serviceRTC=%0%</Mapping>
+      <Mapping>%2%.serviceFQN="xmcp.gitintegration.ui.ExecutePushAllOfWorkspace"</Mapping>
+      <Mapping>%2%.label="Push all files of workspace"</Mapping>
+    </Mappings>
+    <Mappings ID="360" Label="Mapping">
+      <Input>
+        <Data ID="362" IsList="true" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition362"/>
+        <Source RefID="645"/>
+      </Input>
+      <Input>
+        <Data ID="421" Label="Workspace File Change List" ReferenceName="WorkspaceFileChangeList" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceFileChangeList421">
+          <Source RefID="360"/>
+        </Data>
+        <Source RefID="203"/>
+      </Input>
+      <Input>
+        <Data ID="796" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition796">
+          <Source RefID="360"/>
+        </Data>
+        <Source RefID="711"/>
+      </Input>
+      <Output>
+        <Data ID="363" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition363"/>
+        <Target RefID="385"/>
+      </Output>
+      <Mapping>%3%.label=concat(%1%.workspaceName, " (", %1%.workspacePath, ")")</Mapping>
+      <Mapping>%3%.children=%0%</Mapping>
+      <Mapping>%3%.header.leftArea.children["0"]=%2%</Mapping>
+    </Mappings>
+    <Data ID="385" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition385"/>
+    <Data ID="496" IsList="true" Label="Indexed Workspace File Change" ReferenceName="IndexedWorkspaceFileChange" ReferencePath="xmcp.gitintegration.repository" VariableName="indexedWorkspaceFileChange496">
+      <Source RefID="394"/>
+    </Data>
+    <Data ID="645" IsList="true" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition645">
+      <Source RefID="643"/>
+      <Target RefID="645"/>
+    </Data>
+    <Data ID="691" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext691"/>
+    <Data ID="711" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition711"/>
+    <Assign ID="1">
+      <Source RefID="385"/>
+      <Target RefID="372"/>
+      <Copy>
+        <Source RefID="385"/>
+        <Target RefID="372"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

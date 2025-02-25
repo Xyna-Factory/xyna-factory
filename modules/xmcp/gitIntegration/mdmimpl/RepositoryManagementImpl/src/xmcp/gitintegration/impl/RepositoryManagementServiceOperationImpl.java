@@ -110,6 +110,8 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
 
   @Override
   public List<? extends RepositoryConnectionGroup> listRepositoryConnectionGroups() {
+    return RepositoryManagementImpl.listRepositoryConnectionGroups();
+    /*
     List<RepositoryConnection> connections = RepositoryManagementImpl.listRepositoryConnections();
     List<RepositoryConnectionGroup> result = new ArrayList<>();
     Map<String, List<RepositoryConnection>> groups = new HashMap<>();
@@ -124,6 +126,7 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
       result.add(group);
     }
     return result;
+    */
   }
 
 
@@ -265,7 +268,8 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
 
 
   @Override
-  public ChangeSet loadChangeSet(Repository repository) {    
+  public ChangeSet loadChangeSet(Repository repository) {
+    if (repository == null) { throw new IllegalArgumentException("Parameter repository is empty."); }
     try {
       return new RepositoryInteraction().loadChanges(repository.getPath());
     } 

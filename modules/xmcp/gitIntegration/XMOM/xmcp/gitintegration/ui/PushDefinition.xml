@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,17 +18,204 @@
 --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Push Definition" TypeName="PushDefinition" TypePath="xmcp.gitintegration.ui" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Push Definition" Name="PushDefinition">
     <Input>
-      <Data ID="32" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository32"/>
+      <Data ID="5057" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData5057"/>
     </Input>
     <Output>
       <Data ID="10" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10"/>
+      <Data ID="1879" Label="Push Input" ReferenceName="PushInput" ReferencePath="xmcp.gitintegration.repository" VariableName="pushInput1879"/>
     </Output>
+    <ServiceReference ID="696" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="695"/>
+      <Target RefID="695"/>
+    </ServiceReference>
+    <ServiceReference ID="5022" Label="Create Workspace File Change Panel List" ReferenceName="CreateWorkspaceFileChangePanelList" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="5021"/>
+      <Target RefID="5021"/>
+    </ServiceReference>
+    <ServiceReference ID="70" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="69"/>
+      <Target RefID="69"/>
+    </ServiceReference>
+    <Mappings ID="5094" Label="Mapping">
+      <Input>
+        <Data ID="5160" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData5160">
+          <Source RefID="5094"/>
+        </Data>
+        <Source RefID="5057"/>
+      </Input>
+      <Output>
+        <Data ID="4435" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository4435"/>
+        <Target RefID="5127"/>
+      </Output>
+      <Mapping>%1%=%0%.repositoryConnectionGroup.repository</Mapping>
+    </Mappings>
+    <Function ID="695" Label="get Own RuntimeContext">
+      <Source RefID="696"/>
+      <Target RefID="696"/>
+      <Target RefID="698"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="696"/>
+      <Receive ServiceID="696">
+        <Target RefID="698"/>
+      </Receive>
+    </Function>
+    <Mappings ID="771" Label="Mapping">
+      <Input>
+        <Data ID="918" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext918">
+          <Source RefID="771"/>
+        </Data>
+        <Source RefID="698"/>
+      </Input>
+      <Output>
+        <Data ID="796" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition796">
+          <Source RefID="771"/>
+        </Data>
+        <Target RefID="797"/>
+      </Output>
+      <Mapping>%1%.dataPath="%0%"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.serviceFQN="xmcp.gitintegration.ui.ExecutePush"</Mapping>
+      <Mapping>%1%.label="Push selected files"</Mapping>
+    </Mappings>
+    <Choice ID="3267" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="5127"/>
+      <Target RefID="4839"/>
+      <Input>
+        <Data ID="4764" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository4764">
+          <Source RefID="3267"/>
+        </Data>
+        <Source RefID="5127"/>
+      </Input>
+      <Case ID="3268" Label="true" Premise="(%0%!=null)&amp;&amp;(%0%.path!=null)">
+        <Function ID="69" Label="Load Change Set">
+          <Source RefID="70"/>
+          <Source RefID="5127"/>
+          <Target RefID="70"/>
+          <Target RefID="4688"/>
+          <Invoke Operation="loadChangeSet" ServiceID="70">
+            <Source RefID="5127"/>
+          </Invoke>
+          <Receive ServiceID="70">
+            <Target RefID="4688"/>
+          </Receive>
+        </Function>
+        <Assign ID="3271">
+          <Source RefID="4688"/>
+          <Target RefID="4839"/>
+          <Copy>
+            <Source RefID="4688"/>
+            <Target RefID="4839"/>
+          </Copy>
+        </Assign>
+        <Data ID="4688" Label="Change Set" ReferenceName="ChangeSet" ReferencePath="xmcp.gitintegration.repository" VariableName="changeSet4688">
+          <Source RefID="69"/>
+        </Data>
+      </Case>
+      <Case ID="3269" Label="false">
+        <Mappings ID="3347" Label="Mapping">
+          <Output>
+            <Data ID="3372" Label="Change Set" ReferenceName="ChangeSet" ReferencePath="xmcp.gitintegration.repository" VariableName="changeSet3372">
+              <Source RefID="3347"/>
+            </Data>
+            <Target RefID="4713"/>
+          </Output>
+        </Mappings>
+        <Assign ID="3273">
+          <Source RefID="4713"/>
+          <Target RefID="4839"/>
+          <Copy>
+            <Source RefID="4713"/>
+            <Target RefID="4839"/>
+          </Copy>
+        </Assign>
+        <Data ID="4713" Label="Change Set" ReferenceName="ChangeSet" ReferencePath="xmcp.gitintegration.repository" VariableName="changeSet4713">
+          <Source RefID="3347"/>
+        </Data>
+      </Case>
+    </Choice>
+    <Choice ID="3567" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="4839"/>
+      <Target RefID="5388"/>
+      <Target RefID="5649"/>
+      <Input>
+        <Data ID="3598" Label="Change Set" ReferenceName="ChangeSet" ReferencePath="xmcp.gitintegration.repository" VariableName="changeSet3598">
+          <Source RefID="3567"/>
+        </Data>
+        <Source RefID="4839"/>
+      </Input>
+      <Case ID="3568" Label="true" Premise="length(%0%.changes)&gt;&quot;0&quot;">
+        <Function ID="5021" Label="Create Workspace File Change Panel List">
+          <Source RefID="5022"/>
+          <Source RefID="5057"/>
+          <Source RefID="4839"/>
+          <Target RefID="5022"/>
+          <Target RefID="5024"/>
+          <Target RefID="5454"/>
+          <Invoke Operation="CreateWorkspaceFileChangePanelList" ServiceID="5022">
+            <Source RefID="5057"/>
+            <Source RefID="4839"/>
+          </Invoke>
+          <Receive ServiceID="5022">
+            <Target RefID="5024"/>
+            <Target RefID="5454"/>
+          </Receive>
+        </Function>
+        <Assign ID="3571">
+          <Source RefID="5024"/>
+          <Source RefID="5454"/>
+          <Target RefID="5388"/>
+          <Target RefID="5649"/>
+          <Copy>
+            <Source RefID="5024"/>
+            <Target RefID="5388"/>
+          </Copy>
+          <Copy>
+            <Source RefID="5454"/>
+            <Target RefID="5649"/>
+          </Copy>
+        </Assign>
+        <Data ID="5024" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5024">
+          <Source RefID="5021"/>
+        </Data>
+      </Case>
+      <Case ID="3569" Label="false">
+        <Mappings ID="3779" Label="Mapping">
+          <Output>
+            <Data ID="5386" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5386">
+              <Source RefID="3779"/>
+            </Data>
+            <Target RefID="5387"/>
+          </Output>
+        </Mappings>
+        <Mappings ID="3832" Label="Mapping">
+          <Output>
+            <Data ID="5647" IsList="true" Label="Workspace Selected File Change List" ReferenceName="WorkspaceSelectedFileChangeList" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceSelectedFileChangeList5647">
+              <Source RefID="3832"/>
+            </Data>
+            <Target RefID="5648"/>
+          </Output>
+        </Mappings>
+        <Assign ID="3573">
+          <Source RefID="5387"/>
+          <Source RefID="5648"/>
+          <Target RefID="5388"/>
+          <Target RefID="5649"/>
+          <Copy>
+            <Source RefID="5387"/>
+            <Target RefID="5388"/>
+          </Copy>
+          <Copy>
+            <Source RefID="5648"/>
+            <Target RefID="5649"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
     <Mappings ID="23" Label="Mapping">
       <Input>
-        <Data ID="55" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository55">
+        <Data ID="5453" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5453">
           <Source RefID="23"/>
         </Data>
-        <Source RefID="32"/>
+        <Source RefID="5388"/>
       </Input>
       <Output>
         <Data ID="45" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition45">
@@ -36,17 +223,151 @@
         </Data>
         <Target RefID="46"/>
       </Output>
-      <Mapping>%1%.label="Push"</Mapping>
+      <Mapping>%1%.label="Changes"</Mapping>
+      <Mapping>%1%.children=%0%</Mapping>
     </Mappings>
+    <Mappings ID="5859" Label="Mapping">
+      <Input>
+        <Data ID="5860" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext5860"/>
+        <Source RefID="698"/>
+      </Input>
+      <Output>
+        <Data ID="5861" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition5861"/>
+        <Target RefID="5862"/>
+      </Output>
+      <Mapping>%1%.dataPath="%0%"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.serviceFQN="xmcp.gitintegration.ui.ExecutePushAll"</Mapping>
+      <Mapping>%1%.label="Push all files"</Mapping>
+    </Mappings>
+    <Mappings ID="6440" Label="Mapping">
+      <Output>
+        <Data ID="6473" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition6473">
+          <Source RefID="6440"/>
+        </Data>
+        <Target RefID="6474"/>
+      </Output>
+      <Mapping>%0%.dataPath="%0%.message"</Mapping>
+      <Mapping>%0%.label="Commit message"</Mapping>
+    </Mappings>
+    <Mappings ID="1172" Label="Mapping">
+      <Input>
+        <Data ID="1174" Label="Start Order Button Definition 1" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1174"/>
+        <Source RefID="797">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="5927" Label="Start Order Button Definition 2" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition5927">
+          <Source RefID="1172"/>
+        </Data>
+        <Source RefID="5862">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="1346" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1346">
+          <Source RefID="1172"/>
+        </Data>
+        <Source RefID="46">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="6683" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition6683">
+          <Source RefID="1172"/>
+        </Data>
+        <Source RefID="6474"/>
+      </Input>
+      <Output>
+        <Data ID="1176" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1176"/>
+        <Target RefID="1177"/>
+      </Output>
+      <Mapping>%4%.label="Push"</Mapping>
+      <Mapping>%4%.header.leftArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%0%</Mapping>
+      <Mapping>%4%.children["0"]=%3%</Mapping>
+      <Mapping>%4%.children["1"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%2%</Mapping>
+      <Mapping>%4%.header.leftArea.children["1"]=%1%</Mapping>
+    </Mappings>
+    <Mappings ID="1611" Label="Mapping">
+      <Input>
+        <Data ID="1686" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository1686">
+          <Source RefID="1611"/>
+        </Data>
+        <Source RefID="5127"/>
+      </Input>
+      <Input>
+        <Data ID="5682" IsList="true" Label="Workspace Selected File Change List" ReferenceName="WorkspaceSelectedFileChangeList" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceSelectedFileChangeList5682">
+          <Source RefID="1611"/>
+        </Data>
+        <Source RefID="5649"/>
+      </Input>
+      <Output>
+        <Data ID="1636" Label="Push Input" ReferenceName="PushInput" ReferencePath="xmcp.gitintegration.repository" VariableName="pushInput1636">
+          <Source RefID="1611"/>
+        </Data>
+        <Target RefID="1637"/>
+      </Output>
+      <Mapping>%2%.repository=%0%</Mapping>
+      <Mapping>%2%.fileChangeList=%1%</Mapping>
+      <Mapping>%2%.message=null</Mapping>
+    </Mappings>
+    <Data ID="698" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext698">
+      <Source RefID="695"/>
+    </Data>
+    <Data ID="797" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition797">
+      <Source RefID="771"/>
+    </Data>
     <Data ID="46" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition46">
       <Source RefID="23"/>
     </Data>
+    <Data ID="1177" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1177"/>
+    <Data ID="4839" Label="Change Set" ReferenceName="ChangeSet" ReferencePath="xmcp.gitintegration.repository" VariableName="changeSet4839">
+      <Source RefID="3267"/>
+    </Data>
+    <Data ID="1637" Label="Push Input" ReferenceName="PushInput" ReferencePath="xmcp.gitintegration.repository" VariableName="pushInput1637">
+      <Source RefID="1611"/>
+    </Data>
+    <Data ID="5127" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository5127"/>
+    <Data ID="5387" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5387">
+      <Source RefID="3779"/>
+    </Data>
+    <Data ID="5388" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5388">
+      <Source RefID="3567"/>
+    </Data>
+    <Data ID="5454" IsList="true" Label="Workspace Selected File Change List" ReferenceName="WorkspaceSelectedFileChangeList" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceSelectedFileChangeList5454"/>
+    <Data ID="5648" IsList="true" Label="Workspace Selected File Change List" ReferenceName="WorkspaceSelectedFileChangeList" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceSelectedFileChangeList5648">
+      <Source RefID="3832"/>
+    </Data>
+    <Data ID="5649" IsList="true" Label="Workspace Selected File Change List" ReferenceName="WorkspaceSelectedFileChangeList" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceSelectedFileChangeList5649">
+      <Source RefID="3567"/>
+    </Data>
+    <Data ID="5862" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition5862"/>
+    <Data ID="6474" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition6474">
+      <Source RefID="6440"/>
+    </Data>
     <Assign ID="1">
-      <Source RefID="46"/>
+      <Source RefID="1177"/>
+      <Source RefID="1637"/>
       <Target RefID="10"/>
+      <Target RefID="1879"/>
       <Copy>
-        <Source RefID="46"/>
+        <Source RefID="1177">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
         <Target RefID="10"/>
+      </Copy>
+      <Copy>
+        <Source RefID="1637"/>
+        <Target RefID="1879"/>
       </Copy>
     </Assign>
   </Operation>

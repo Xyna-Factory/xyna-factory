@@ -15,9 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Change Set" TypeName="ChangeSet" TypePath="xmcp.gitintegration.repository" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Workspace File Change List" TypeName="WorkspaceFileChangeList" TypePath="xmcp.gitintegration.repository" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data IsList="true" Label="Changes" ReferenceName="WorkspaceFileChangeList" ReferencePath="xmcp.gitintegration.repository" VariableName="changes"/>
+  <Data Label="Workspace Name" VariableName="workspaceName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Workspace Path" VariableName="workspacePath">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="Indexed File Change List" ReferenceName="IndexedWorkspaceFileChange" ReferencePath="xmcp.gitintegration.repository" VariableName="indexedFileChangeList"/>
+  <Data Label="Workspace Index" VariableName="workspaceIndex">
+    <Meta>
+      <Type>int</Type>
+    </Meta>
+  </Data>
 </DataType>
