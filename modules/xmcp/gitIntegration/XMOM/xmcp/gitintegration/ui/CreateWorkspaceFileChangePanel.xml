@@ -128,7 +128,7 @@
       </Output>
       <Mapping>%3%.label=concat(%1%.workspaceName, " (", %1%.workspacePath, ")")</Mapping>
       <Mapping>%3%.children=%0%</Mapping>
-      <Mapping>%3%.header.leftArea.children["0"]=%2%</Mapping>
+      <Mapping>%3%.header.rightArea.children["0"]=%2%</Mapping>
     </Mappings>
     <Data ID="385" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition385"/>
     <Data ID="496" IsList="true" Label="Indexed Workspace File Change" ReferenceName="IndexedWorkspaceFileChange" ReferencePath="xmcp.gitintegration.repository" VariableName="indexedWorkspaceFileChange496">

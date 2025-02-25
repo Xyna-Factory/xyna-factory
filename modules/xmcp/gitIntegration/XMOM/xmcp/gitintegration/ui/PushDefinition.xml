@@ -210,6 +210,16 @@
         </Assign>
       </Case>
     </Choice>
+    <Mappings ID="6440" Label="Mapping">
+      <Output>
+        <Data ID="6473" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition6473">
+          <Source RefID="6440"/>
+        </Data>
+        <Target RefID="7452"/>
+      </Output>
+      <Mapping>%0%.dataPath="%0%.message"</Mapping>
+      <Mapping>%0%.label="Commit message"</Mapping>
+    </Mappings>
     <Mappings ID="23" Label="Mapping">
       <Input>
         <Data ID="5453" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5453">
@@ -217,14 +227,21 @@
         </Data>
         <Source RefID="5388"/>
       </Input>
+      <Input>
+        <Data ID="6683" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition6683">
+          <Source RefID="1172"/>
+        </Data>
+        <Source RefID="7452"/>
+      </Input>
       <Output>
         <Data ID="45" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition45">
           <Source RefID="23"/>
         </Data>
         <Target RefID="46"/>
       </Output>
-      <Mapping>%1%.label="Changes"</Mapping>
-      <Mapping>%1%.children=%0%</Mapping>
+      <Mapping>%2%.label="Changes"</Mapping>
+      <Mapping>%2%.children["0"]=%1%</Mapping>
+      <Mapping>%2%.children=concatlists(%2%.children, %0%)</Mapping>
     </Mappings>
     <Mappings ID="5859" Label="Mapping">
       <Input>
@@ -239,16 +256,6 @@
       <Mapping>%1%.serviceRTC=%0%</Mapping>
       <Mapping>%1%.serviceFQN="xmcp.gitintegration.ui.ExecutePushAll"</Mapping>
       <Mapping>%1%.label="Push all files"</Mapping>
-    </Mappings>
-    <Mappings ID="6440" Label="Mapping">
-      <Output>
-        <Data ID="6473" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition6473">
-          <Source RefID="6440"/>
-        </Data>
-        <Target RefID="6474"/>
-      </Output>
-      <Mapping>%0%.dataPath="%0%.message"</Mapping>
-      <Mapping>%0%.label="Commit message"</Mapping>
     </Mappings>
     <Mappings ID="1172" Label="Mapping">
       <Input>
@@ -279,21 +286,14 @@
           </Meta>
         </Source>
       </Input>
-      <Input>
-        <Data ID="6683" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition6683">
-          <Source RefID="1172"/>
-        </Data>
-        <Source RefID="6474"/>
-      </Input>
       <Output>
         <Data ID="1176" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1176"/>
         <Target RefID="1177"/>
       </Output>
-      <Mapping>%4%.label="Push"</Mapping>
-      <Mapping>%4%.header.leftArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%0%</Mapping>
-      <Mapping>%4%.children["0"]=%3%</Mapping>
-      <Mapping>%4%.children["1"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%2%</Mapping>
-      <Mapping>%4%.header.leftArea.children["1"]=%1%</Mapping>
+      <Mapping>%3%.label="Push"</Mapping>
+      <Mapping>%3%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%0%</Mapping>
+      <Mapping>%3%.children["0"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%2%</Mapping>
+      <Mapping>%3%.header.rightArea.children["1"]=%1%</Mapping>
     </Mappings>
     <Mappings ID="1611" Label="Mapping">
       <Input>
@@ -316,7 +316,7 @@
       </Output>
       <Mapping>%2%.repository=%0%</Mapping>
       <Mapping>%2%.fileChangeList=%1%</Mapping>
-      <Mapping>%2%.message=null</Mapping>
+      <Mapping>%2%.message="New Commit"</Mapping>
     </Mappings>
     <Data ID="698" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext698">
       <Source RefID="695"/>
@@ -349,7 +349,7 @@
       <Source RefID="3567"/>
     </Data>
     <Data ID="5862" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition5862"/>
-    <Data ID="6474" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition6474">
+    <Data ID="7452" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition7452">
       <Source RefID="6440"/>
     </Data>
     <Assign ID="1">
