@@ -116,22 +116,6 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
   @Override
   public List<? extends RepositoryConnectionGroup> listRepositoryConnectionGroups() {
     return RepositoryManagementImpl.listRepositoryConnectionGroups();
-    /*
-    List<RepositoryConnection> connections = RepositoryManagementImpl.listRepositoryConnections();
-    List<RepositoryConnectionGroup> result = new ArrayList<>();
-    Map<String, List<RepositoryConnection>> groups = new HashMap<>();
-    for(RepositoryConnection connection: connections) {
-      groups.putIfAbsent(connection.getPath(), new ArrayList<>());
-      groups.get(connection.getPath()).add(connection);
-    }
-    for(String repoGroup : groups.keySet()) {
-      Repository repo = new Repository.Builder().path(repoGroup).instance();
-      List<RepositoryConnection> conns = groups.get(repoGroup);
-      RepositoryConnectionGroup group = new RepositoryConnectionGroup.Builder().repository(repo).repositoryConnection(conns).instance();
-      result.add(group);
-    }
-    return result;
-    */
   }
 
 

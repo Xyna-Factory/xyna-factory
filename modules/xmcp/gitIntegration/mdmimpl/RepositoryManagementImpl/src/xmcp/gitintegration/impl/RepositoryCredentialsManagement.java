@@ -50,7 +50,8 @@ public class RepositoryCredentialsManagement {
     String password = storage.loadPassword(user, path);
     String privateKey = storage.loadPrivateKey(user, path);
     String passphrase = storage.loadPassphrase(user, path);
-    UsernamePasswordCredentialsProvider userNamePw = password == null ? null : new UsernamePasswordCredentialsProvider(repositoryUsername, password);
+    UsernamePasswordCredentialsProvider userNamePw = (password == null) ? null : 
+                                                     new UsernamePasswordCredentialsProvider(repositoryUsername, password);
     SshTransportConfigCallback sshCallback = new SshTransportConfigCallback(privateKey, passphrase);
     return new XynaRepoCredentials(userNamePw, sshCallback);
   }

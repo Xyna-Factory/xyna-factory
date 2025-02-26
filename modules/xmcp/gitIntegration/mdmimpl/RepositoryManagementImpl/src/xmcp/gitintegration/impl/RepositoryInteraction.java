@@ -129,7 +129,7 @@ public class RepositoryInteraction {
 
 
   private RepositoryCredentialsManagement getCredentialsMgmt() {
-    if (credMgmt == null) {
+    if(credMgmt == null) {
       credMgmt = new RepositoryCredentialsManagement();
     }
     return credMgmt;
@@ -321,7 +321,8 @@ public class RepositoryInteraction {
       CheckoutCommand checkoutCommand = git.checkout();
       checkoutCommand.setName(branch);
       if (!existsLocalBranch(git, branch) && existsRemoteBranch(git, branch)) {
-        checkoutCommand.setCreateBranch(true).setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM).setStartPoint("origin/" + branch);
+        checkoutCommand.setCreateBranch(true).setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM)
+            .setStartPoint("origin/" + branch);
       }
       checkoutCommand.call();
 
@@ -524,7 +525,7 @@ public class RepositoryInteraction {
       String repoPath = exec.repoPath;
       String filePath = Path.of(container.repository, repoPath).toString();
       Pair<String, String> fqnAndWorkspace = getFqnAndWorkspaceFromRepoPath(repoPath, container.repository);
-      if (fqnAndWorkspace == null) {
+      if(fqnAndWorkspace == null) {
         exceptions.add(new Triple<>(exec.execType, "unknown", exec.repoPath));
         continue;
       }
@@ -1121,7 +1122,7 @@ public class RepositoryInteraction {
 
 
     public static PullExecType convert(ChangeType type) {
-      return type == ChangeType.DELETE ? delete : deploy;
+      return type == ChangeType.DELETE ? delete: deploy;
     }
   }
 
