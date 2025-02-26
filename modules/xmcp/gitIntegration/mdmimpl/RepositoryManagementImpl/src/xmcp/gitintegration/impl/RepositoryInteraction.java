@@ -42,6 +42,7 @@ import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PushCommand;
+import org.eclipse.jgit.api.RmCommand;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.StatusCommand;
 import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
@@ -1000,21 +1001,44 @@ public class RepositoryInteraction {
     }
   }
 
+  private boolean isDeletedFile(String path, GitDataContainer container) {
+    if (path == null) { return false; }
+    for (DiffEntry diff : container.localDiffs) {
+      if (diff.getChangeType() != ChangeType.DELETE) { continue; }
+      if (path.equals(diff.getOldPath())) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   private void processPushs(Git git, Repository repository, GitDataContainer container, String msg, List<String> filePatterns)
       throws Exception {
     AddCommand add = git.add();
+    RmCommand rm = git.rm();
+    boolean foundAdd = false;
+    boolean foundRm = false;
+    
     if ((filePatterns == null) || (filePatterns.size() < 1)) {
       git.add().addFilepattern(".");
     } else {
       for (String str : filePatterns) {
-        add.addFilepattern(str);
-        logger.warn("### got pattern: " + str);
+        if (isDeletedFile(str, container)) {
+          rm.addFilepattern(str);
+          foundRm = true;
+        }
+        else {
+          add.addFilepattern(str);
+          foundAdd = true;
+        }
       }
     }
-    //git.add().addFilepattern(".").call();
-    add.call();
-
+    if (foundAdd) {
+      add.call();
+    }    
+    if (foundRm) {
+      rm.call();
+    }    
     CommitCommand commitCmd = git.commit().setAuthor(container.user, container.mail).setMessage(msg);
     commitCmd.call();
 

@@ -30,6 +30,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
+
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
@@ -63,6 +66,8 @@ import xmcp.gitintegration.storage.UserManagementStorage;
 
 public class RepositoryManagementServiceOperationImpl implements ExtendedDeploymentTask, RepositoryManagementServiceOperation {
 
+  private static Logger _logger = CentralFactoryLogging.getLogger(RepositoryManagementServiceOperationImpl.class);
+  
   public void onDeployment() throws XynaException {
     RepositoryManagementImpl.init();
     UserManagementStorage.init();
@@ -260,6 +265,7 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
                              arg2.stream().filter(Objects::nonNull).map(x -> x.getPath()).collect(Collectors.toList());
       new RepositoryInteraction().push(arg0.getPath(), arg1.getText(), false, user, adapted);
     } catch (Exception e) {
+      _logger.warn(e.getMessage(), e);
       return new Text("Exception during push: " + e.getMessage());
     }
 
