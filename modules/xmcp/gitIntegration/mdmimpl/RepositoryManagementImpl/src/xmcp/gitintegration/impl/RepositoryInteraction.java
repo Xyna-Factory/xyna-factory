@@ -281,12 +281,6 @@ public class RepositoryInteraction {
   }
 
 
-  public void push(String repository, String message, boolean dryrun, String user, String[] filePatterns) throws Exception {
-    List<String> list = filePatterns == null ? new ArrayList<String>() : Arrays.asList(filePatterns);
-    push(repository, message, dryrun, user, list);
-  }
-
-
   public void push(String repository, String message, boolean dryrun, String user, List<String> filePatterns) throws Exception {
     if (message == null) { throw new IllegalArgumentException("Commit message is empty"); }
     Repository repo = loadRepo(repository, true);
@@ -1019,8 +1013,10 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
     boolean foundRm = false;
     
     if ((filePatterns == null) || (filePatterns.size() < 1)) {
-      git.add().addFilepattern(".");
-    } else {
+      add.addFilepattern(".");
+      foundAdd = true;
+    } 
+    else {
       for (String str : filePatterns) {
         if (isDeletedFile(str, container)) {
           rm.addFilepattern(str);
@@ -1032,6 +1028,7 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
         }
       }
     }
+    
     if (foundAdd) {
       add.call();
     }    
