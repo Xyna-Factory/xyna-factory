@@ -546,8 +546,8 @@ public class RepositoryInteraction {
     }
 
     List<Long> revisionsSorted = sortRevisions(toDeployByRevision.keySet());
-    for (Long revision : revisionsSorted) {
-      if (logger.isDebugEnabled()) {
+    for(Long revision : revisionsSorted) {
+      if(logger.isDebugEnabled()) {
         logger.debug("depolying " + toDeployByRevision.get(revision).size() + " objects in revision " + revision);
       }
       deployRevision(revision, toDeployByRevision.get(revision), exceptions);
@@ -563,7 +563,7 @@ public class RepositoryInteraction {
 
   private List<Long> sortRevisions(Set<Long> revisions) {
     RuntimeContextDependencyManagement rtcMgmt =
-        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
+XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
     List<Long> revisionsOrdered = new ArrayList<>();
     for (Long candidate : revisions) {
       sortRevision(candidate, revisionsOrdered, revisions, rtcMgmt);
@@ -626,7 +626,6 @@ public class RepositoryInteraction {
       return Optional.empty();
     }
   }
-
 
   private HashMap<String, List<? extends RepositoryConnectionStorable>> repoCache = new HashMap<>();
 
@@ -715,7 +714,7 @@ public class RepositoryInteraction {
   }
 
 
-  private String formatXmomRegistrationException(Triple<PullExecType, String, String> input) {
+  private String formatXmomRegistrationException(Triple<PullExecType , String, String> input) {
     StringBuilder sb = new StringBuilder();
     sb.append("Cound not ").append(input.getFirst()).append(" ");
     sb.append(input.getThird()).append("' in workspace '");
@@ -984,7 +983,7 @@ public class RepositoryInteraction {
 
   private String getTrackingBranch(Repository repository) throws Exception {
     String trackingBranch = new BranchConfig(repository.getConfig(), repository.getBranch()).getTrackingBranch();
-    if (trackingBranch == null) {
+    if(trackingBranch == null) {
       throw new TrackingBranchNotFound(repository.getBranch());
     }
     return trackingBranch;
@@ -992,7 +991,7 @@ public class RepositoryInteraction {
 
 
   private void fetch(Git git, Repository repository, GitDataContainer container) throws Exception {
-    FetchCommand cmd = git.fetch();
+    FetchCommand cmd =  git.fetch();
     getCredentialsMgmt().addCredentialsToCommand(cmd, repository, container.creds);
 
     FetchResult result = cmd.call();
@@ -1096,12 +1095,10 @@ public class RepositoryInteraction {
       return sb.toString();
     }
 
-
     public boolean containsWarnings() {
       return !warnings.isEmpty();
     }
   }
-
 
   private static class PullExec {
 
@@ -1131,7 +1128,6 @@ public class RepositoryInteraction {
 
     private String fqn;
     private String fileName;
-
 
     public ObjectToDeploy(String fqn, String fileName) {
       this.fqn = fqn;
