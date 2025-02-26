@@ -644,8 +644,7 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
       logger.debug("getSubPathAndWorkspace candidates: " + candidates.size());
     }
 
-    Optional<? extends RepositoryConnectionStorable> o =
-        candidates.stream().filter(x -> pathInRepo.startsWith(x.getSubpath() + "/")).findAny();
+    Optional<? extends RepositoryConnectionStorable> o = candidates.stream().filter(x -> pathInRepo.startsWith(x.getSubpath() + "/")).findAny();
 
     if (logger.isDebugEnabled()) {
       System.out.println("getSubPathAndWorkspace result: " + (o.isEmpty() ? "null" : o.get()));
@@ -1125,7 +1124,6 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
 
 
   private static class ObjectToDeploy {
-
     private String fqn;
     private String fileName;
 
