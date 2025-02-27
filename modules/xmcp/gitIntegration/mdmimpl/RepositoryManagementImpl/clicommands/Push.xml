@@ -20,4 +20,5 @@
   <Argument Name="repository" Description="Path to the repository" />
   <BoolOption Name="d" LongName="dryrun" Description="only print repository state, don't push" Optional="true" />
   <Argument Name="message" Description="commit message" />
+  <Argument Name="filePatterns" Description="Patterns for files to add, commit and push" MultipleValues="true" Optional="true"/>
 </XynaCommandLineCommand>
