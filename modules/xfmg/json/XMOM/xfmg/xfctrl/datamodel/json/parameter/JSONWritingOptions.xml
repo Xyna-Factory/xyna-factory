@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="JSON Writing Options" TypeName="JSONWritingOptions" TypePath="xfmg.xfctrl.datamodel.json.parameter" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="JSON Writing Options" TypeName="JSONWritingOptions" TypePath="xfmg.xfctrl.datamodel.json.parameter" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
@@ -27,6 +26,21 @@
       <Type>boolean</Type>
     </Meta>
   </Data>
+  <Data Label="Object Decider" ReferenceName="XynaObjectDecider" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="objectDecider"/>
+  <Data IsList="true" Label="List Wrapper" ReferenceName="ListWrapper" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="listWrapper"/>
+  <Data Label="Process All Input Generically" VariableName="processAllInputGenerically">
+    <Meta>
+      <Type>Boolean</Type>
+      <Documentation>
+        <![CDATA[When set to true, xfmg.xfctrl.datamodel.json.JSONObject and xfmg.xfctrl.datamodel.json.JSONValue are written using the generic serialization process. 
+When set to false or null, xfmg.xfctrl.datamodel.json.JSONObject and xfmg.xfctrl.datamodel.json.JSONValue are written inline.
+Example json for a xfmg.xfctrl.datamodel.json.JSONObject with one member "key" that has a value of "value":
+inline: { "key": "value" }
+generic serialization: { "members": [ {"key": "key", value: { "type": "STRING", "stringOrNumberValue": "value" }}]}
+]]>
+      </Documentation>
+    </Meta>
+  </Data>
   <Data Label="OAS Message Type" VariableName="oASMessageType">
     <Meta>
       <Type>String</Type>
@@ -34,18 +48,6 @@
 When set to Request, the Json will not contain any membervars that are marked as readOnly in their OAS datamodel Meta data.
 When set to Response, the Json will not contain any membervars that are marked as writeOnly in their OAS datamodel Meta data.
 If not set or set to a different value no membervars will be skipped.</Documentation>
-    </Meta>
-  </Data>
-  <Data Label="List Wrapper" VariableName="listWrapper" IsList="true" ReferenceName="ListWrapper" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" />
-  <Data Label="Process All Input Generically" VariableName="processAllInputGenerically">
-    <Meta>
-      <Type>Boolean</Type>
-      <Documentation>When set to true, xfmg.xfctrl.datamodel.json.JSONObject and xfmg.xfctrl.datamodel.json.JSONValue are written using the generic serialization process. 
-When set to false or null, xfmg.xfctrl.datamodel.json.JSONObject and xfmg.xfctrl.datamodel.json.JSONValue are written inline.
-Example json for a xfmg.xfctrl.datamodel.json.JSONObject with one member "key" that has a value of "value":
-inline: { "key": "value" }
-generic serialization: { "members": [ {"key": "key", value: { "type": "STRING", "stringOrNumberValue": "value" }}]}
-</Documentation>
     </Meta>
   </Data>
 </DataType>

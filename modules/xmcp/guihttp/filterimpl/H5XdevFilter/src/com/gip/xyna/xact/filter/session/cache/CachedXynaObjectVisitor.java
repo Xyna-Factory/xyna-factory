@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@
 
 package com.gip.xyna.xact.filter.session.cache;
 
+
+
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,35 +27,32 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.gip.xyna.xact.filter.util.xo.XynaObjectVisitor;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 
+
+
 public class CachedXynaObjectVisitor extends XynaObjectVisitor {
 
   private JsonVisitorCache cache;
-  
+
+
   public CachedXynaObjectVisitor(JsonVisitorCache cache) {
     this.cache = cache;
   }
-  
+
+
   @Override
   protected Field oFindField(Class<? extends GeneralXynaObject> clazz, String label) {
-    
-    Map<String, Field> map = cache.getFromCache(clazz);
-    if(map == null) {
-      map = new ConcurrentHashMap<String, Field>();
-      cache.insertIntoCache(clazz, map);
-      map = cache.getFromCache(clazz);
-      Field field = super.findField(clazz, label);
-      map.put(label, field);
-    }
-    
-    Field result = map.get(label);
-    
-    if (result == null) {
-      result = super.findField(clazz, label);
-      if (result != null) {
-        map.put(label, result);
-      }
+
+    if (clazz == null || label == null || label.isEmpty()) {
+      return null;
     }
 
-    return result;
+    Map<String, Field> map = cache.getFromCache(clazz);
+    if (map == null) {
+      map = new ConcurrentHashMap<>();
+      cache.insertIntoCache(clazz, map);
+      map = cache.getFromCache(clazz);
+    }
+
+    return map.computeIfAbsent(label, key -> super.findField(clazz, key));
   }
 }
