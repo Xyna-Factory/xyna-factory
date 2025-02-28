@@ -38,4 +38,10 @@
     </Meta>
   </Data>
   <Data IsList="true" Label="On Startorder Result Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="onStartorderResultEvent"/>
+  <Data Label="Encode Data Path" VariableName="encodeDataPath">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
 </DataType>
+
