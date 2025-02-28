@@ -349,7 +349,7 @@ public class XynaObjectJsonBuilder {
       return xfctl.getRevisionManagement().getRuntimeContext(crevision);
     } catch(Exception e) {
       // Try to add content of revisions array to exception
-      if(revisions != null and revisions.length > 0) {
+      if(revisions.length > 0) {
           StringBuilder sb = new StringBuilder();
           sb.append("Could not get RTC from fqn:").append(fqn).append(" in revisions ");
           sb.append(revisions[0]);
