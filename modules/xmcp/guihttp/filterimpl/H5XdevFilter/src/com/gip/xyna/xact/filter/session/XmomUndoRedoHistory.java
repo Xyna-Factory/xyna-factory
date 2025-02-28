@@ -56,6 +56,10 @@ public class XmomUndoRedoHistory {
   private HashMap<FQName, LinkedList<XMOMHistoryItem>> xmomUndoHistory;
   private HashMap<FQName, LinkedList<XMOMHistoryItem>> xmomRedoHistory;
 
+  public XmomUndoRedoHistory() {
+    xmomUndoHistory = new HashMap<>();
+    xmomRedoHistory = new HashMap<>();
+  }
 
   public void save(FQName fqName) {
     LinkedList<XMOMHistoryItem> undoHistoryItems = xmomUndoHistory.get(fqName);
@@ -144,11 +148,11 @@ public class XmomUndoRedoHistory {
 
   
   public boolean canUndo(FQName fqName) {
-    return xmomRedoHistory.containsKey(fqName) && !xmomRedoHistory.get(fqName).isEmpty();
+    return xmomUndoHistory.containsKey(fqName) && !xmomUndoHistory.get(fqName).isEmpty();
   }
   
   public boolean canRedo(FQName fqName) {
-    return xmomUndoHistory.containsKey(fqName) && !xmomUndoHistory.get(fqName).isEmpty();
+    return xmomRedoHistory.containsKey(fqName) && !xmomRedoHistory.get(fqName).isEmpty();
   }
 
   private void setSavedAndModified(XMOMHistoryItem item) {

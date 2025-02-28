@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.gip.xyna.utils.collections.Optional;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.filter.HTMLBuilder.HTMLPart;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
@@ -33,8 +34,11 @@ import com.gip.xyna.xact.filter.actions.PathElements;
 import com.gip.xyna.xact.filter.actions.auth.utils.AuthUtils;
 import com.gip.xyna.xact.filter.actions.metatags.MetaTagActionUtils.MetaTagProcessingInfoContainer;
 import com.gip.xyna.xact.filter.actions.startorder.Endpoint;
+import com.gip.xyna.xact.filter.session.FQName;
 import com.gip.xyna.xact.filter.session.GenerationBaseObject;
 import com.gip.xyna.xact.filter.session.XMOMGui;
+import com.gip.xyna.xact.filter.session.XMOMGuiReply;
+import com.gip.xyna.xact.filter.session.SessionBasedData.XmomObjectModification;
 import com.gip.xyna.xact.filter.util.Utils;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
@@ -103,9 +107,21 @@ public class MetaTagAddAction extends RuntimeContextDependendAction implements E
     if (!checkLoginAndRights(tc, actionInstance, GuiRight.PROCESS_MODELLER.getKey(), Rights.EDIT_MDM.toString())) {
       return actionInstance;
     }
-
+    
+    String sessionId = getSession(tc).getId();
+    String path = url.getPathElement(2);
+    String name = url.getPathElement(3);
+    FQName fqName = new FQName(revision, rc, path, name);
+    String payload = tc.getPayload();
+    XmomObjectModification modification = new AddMetaTagModification(sessionId, revision, url, payload, xmomGui);
+    
     try {
-      addMetaTag(getSession(tc).getId(), revision, url, tc.getPayload());
+      Optional<XMOMGuiReply> result = xmomGui.getSessionBasedData(sessionId).executeXmomObjectModification(fqName, true, modification);
+      if(result.isPresent()) {
+        XMOMGuiReply reply = result.get();
+        actionInstance.sendJson(tc, reply.getHttpStatus(), reply.getJson());
+        return actionInstance;
+      }
     } catch (Exception e) {
       AuthUtils.replyError(tc, actionInstance, e);
     }
@@ -120,22 +136,47 @@ public class MetaTagAddAction extends RuntimeContextDependendAction implements E
     try {
       RTCInfo info = extractRTCInfo(url);
       URLPath urlNoRtc = url.subURL(2);
-      addMetaTag(creds.getSessionId(), info.revision, urlNoRtc, payload);
+      XmomObjectModification modification = new AddMetaTagModification(creds.getSessionId(), info.revision, urlNoRtc, payload, xmomGui);
+      modification.execute();
     } catch (Exception e) {
     }
     return null;
   }
 
 
-  private void addMetaTag(String sessionId, Long revision, URLPath url, String payload) throws Exception {
-    Long guiHttpRevision = Utils.getGuiHttpRevision();
-    MetaTag metaTag = ((MetaTagRequest) Utils.convertJsonToGeneralXynaObject(payload, guiHttpRevision)).getMetaTag();
-    MetaTagProcessingInfoContainer data = MetaTagActionUtils.createProcessingInfoContainer(url, sessionId, xmomGui, revision);
-    String tag = metaTag.getTag();
-    MetaTagAddFunction func = metaTagAddFunctions.get(data.getType());
-    func.addMetaTag(data.getGbo(), data.getElementName(), tag);
-  }
+  private static final class AddMetaTagModification implements XmomObjectModification {
 
+    private final String sessionId;
+    private final Long revision;
+    private final URLPath urlPath;
+    private final String payload;
+    private final XMOMGui xmomGui;
+
+
+    public AddMetaTagModification(String sessionId, Long revision, URLPath urlPath, String payload, XMOMGui xmomGui) {
+      this.sessionId = sessionId;
+      this.revision = revision;
+      this.urlPath = urlPath;
+      this.payload = payload;
+      this.xmomGui = xmomGui;
+    }
+
+
+    @Override
+    public void execute() throws Exception {
+      addMetaTag(sessionId, revision, urlPath, payload);
+    }
+
+
+    private void addMetaTag(String sessionId, Long revision, URLPath url, String payload) throws Exception {
+      Long guiHttpRevision = Utils.getGuiHttpRevision();
+      MetaTag metaTag = ((MetaTagRequest) Utils.convertJsonToGeneralXynaObject(payload, guiHttpRevision)).getMetaTag();
+      MetaTagProcessingInfoContainer data = MetaTagActionUtils.createProcessingInfoContainer(url, sessionId, xmomGui, revision);
+      String tag = metaTag.getTag();
+      MetaTagAddFunction func = metaTagAddFunctions.get(data.getType());
+      func.addMetaTag(data.getGbo(), data.getElementName(), tag);
+    }
+  }
 
   private static void addMemberMetaTag(GenerationBaseObject gbo, String objectName, String content) {
     AVariable member = gbo.getDOM().getMemberVars().stream().filter(x -> x.getVarName().equals(objectName)).findFirst().get();

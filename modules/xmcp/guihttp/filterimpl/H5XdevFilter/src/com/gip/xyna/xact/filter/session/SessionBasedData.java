@@ -45,6 +45,7 @@ import com.gip.xyna.FileUtils;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.utils.StringUtils;
+import com.gip.xyna.utils.collections.Optional;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.misc.JsonBuilder;
@@ -1694,9 +1695,14 @@ public class SessionBasedData {
   }
   
   private String getCurrentXML(XMOMGuiRequest request) throws XynaException {
-    GenerationBaseObject gbo = gbos.get(request.getFQName());
-    PersistJson persistRequest = new PersistJson(request.getRevision().intValue(), true); 
-    Persistence persistence = new Persistence(gbo, request.getRevision(), persistRequest, session);
+    return getCurrentXML(request.getFQName(), request.getRevision());
+  }
+  
+  
+  private String getCurrentXML(FQName fqName, Long revision) throws XynaException {
+    GenerationBaseObject gbo = gbos.get(fqName);
+    PersistJson persistRequest = new PersistJson(revision.intValue(), true); 
+    Persistence persistence = new Persistence(gbo, revision, persistRequest, session);
     return persistence.createXML();
   }
 
@@ -1827,54 +1833,22 @@ public class SessionBasedData {
     }
 
     FQName fqName = request.getFQName();
-    if(isLockedNotByMe(fqName)) {
-      return XMOMGuiReply.fail(Status.forbidden, createLockMessage(fqName));
-    }
-
-    lock(fqName);
-    
     GenerationBaseObject gbo = gbos.get(fqName);
-
-    // Undo-History 
-    undoRedoHistory.createXmomUndoHistoryItem(fqName, gbo, getCurrentXML(request));
-    
-    // Every change makes any existing redo impossible
-    undoRedoHistory.resetRedo(fqName);
-    
     Modification mod = getOrCreateModification(fqName);
-
-    // apply modification
-    
-    try {
-      switch (gbo.getType()) {
-        case DATATYPE:
-        case EXCEPTION:
-          mod.modify(objectId, request.getOperation(), request.getJson() );
-          gbo.incrementRevision();
-          break;
-        case WORKFLOW:
-          gbo.createDataflow(getOrCreateWFWarningsHandler(gbo.getFQName())); // calculate dataflow before modifiy operation to backup connection information in dataflow
-          mod.modify(objectId, request.getOperation(), request.getJson() );
-          gbo.getDataflow().applyDataflowToGB(); // apply backuped connection information since indices of variables might have changed
-          break;
-        default:
-          break;
-      }
-    } catch (MergeConflictException e) {
-      throw e;
-    } catch (Exception e) {
-      // rollback
-      XMOMHistoryItem historyItem = undoRedoHistory.undo(request.getFQName());
-      gbo = loadGboFromHistory(fqName, historyItem);
-      refreshGbo(gbo);
-      publishXmomModification(fqName, getNextAutosaveCount(fqName), getCurrentXML(request));
-      unlock(fqName, false);
-
-      throw e;
+    boolean publish = request.getOperation() != com.gip.xyna.xact.filter.session.XMOMGuiRequest.Operation.CopyToClipboard;
+    XmomObjectModification modification = null;
+    if(gbo.getType().equals(XMOMType.WORKFLOW)) {
+      WorkflowWarningsHandler warningsHandler = getOrCreateWFWarningsHandler(gbo.getFQName());
+      modification = new GenericWorkflowModification(gbo, mod, objectId, request, warningsHandler);
+    } else if(gbo.getType().equals(XMOMType.DATATYPE) || gbo.getType().equals(XMOMType.EXCEPTION)) {
+      modification = new GenericDoEModification(gbo, mod, objectId, request);
     }
-
-    if (request.getOperation() != com.gip.xyna.xact.filter.session.XMOMGuiRequest.Operation.CopyToClipboard) {
-      publishXmomModification(fqName, getNextAutosaveCount(fqName), getCurrentXML(request));
+    
+    if(modification != null) {
+      Optional<XMOMGuiReply> result = executeXmomObjectModification(fqName, publish, modification);
+      if(result.isPresent()) {
+        return result.get();
+      }
     }
 
     XMOMGuiReply reply = new XMOMGuiReply();
@@ -1882,6 +1856,44 @@ public class SessionBasedData {
     reply.setXynaObject(mod.getXoRepresentation());
 
     return reply;
+  }
+
+  
+  public Optional<XMOMGuiReply> executeXmomObjectModification(FQName fqName, boolean publishXmomModification, XmomObjectModification modification) throws Exception {
+    if(isLockedNotByMe(fqName)) {
+      return Optional.of(XMOMGuiReply.fail(Status.forbidden, createLockMessage(fqName)));
+    }
+
+    lock(fqName);
+    
+    GenerationBaseObject gbo = gbos.get(fqName);
+
+    // Undo-History 
+    undoRedoHistory.createXmomUndoHistoryItem(fqName, gbo, getCurrentXML(fqName, fqName.getRevision()));
+    
+    // Every change makes any existing redo impossible
+    undoRedoHistory.resetRedo(fqName);
+    
+    try {
+      modification.execute();
+      gbo.markAsModified();
+    } catch (MergeConflictException e) {
+      throw e;
+    } catch (Exception e) {
+      // rollback
+      XMOMHistoryItem historyItem = undoRedoHistory.undo(fqName);
+      gbo = loadGboFromHistory(fqName, historyItem);
+      refreshGbo(gbo);
+      publishXmomModification(fqName, getNextAutosaveCount(fqName), getCurrentXML(fqName, fqName.getRevision()));
+      unlock(fqName, false);
+
+      throw e;
+    }
+
+    if (publishXmomModification) {
+      publishXmomModification(fqName, getNextAutosaveCount(fqName), getCurrentXML(fqName, fqName.getRevision()));
+    }
+    return Optional.empty();
   }
 
   private XMOMGuiReply deleteWarning(XMOMGuiRequest request) throws Exception {
@@ -2026,4 +2038,60 @@ public class SessionBasedData {
     return clipboard;
   }
 
+
+  public XmomUndoRedoHistory getXmomUndoRedoHistory() {
+    return undoRedoHistory;
+  }
+
+  
+  public interface XmomObjectModification {
+    public void execute() throws Exception;
+  }
+  
+  private static class GenericDoEModification implements XmomObjectModification {
+
+    private GenerationBaseObject gbo;
+    private Modification mod;
+    private String objectId;
+    private XMOMGuiRequest request;
+    
+    public GenericDoEModification(GenerationBaseObject gbo, Modification mod, String objectId, XMOMGuiRequest request) {
+      this.gbo = gbo;
+      this.mod = mod;
+      this.objectId = objectId;
+      this.request = request;
+    }
+    
+
+    @Override
+    public void execute() throws Exception {
+      mod.modify(objectId, request.getOperation(), request.getJson());
+      gbo.incrementRevision();
+    }
+  }
+
+  private static class GenericWorkflowModification implements XmomObjectModification {
+
+    private GenerationBaseObject gbo;
+    private Modification mod;
+    private String objectId;
+    private XMOMGuiRequest request;
+    private WorkflowWarningsHandler warningsHandler;
+
+    public GenericWorkflowModification(GenerationBaseObject gbo, Modification mod, String objectId, XMOMGuiRequest request, WorkflowWarningsHandler warningsHandler) {
+      this.gbo = gbo;
+      this.mod = mod;
+      this.objectId = objectId;
+      this.request = request;
+      this.warningsHandler = warningsHandler;
+    }
+    
+
+    @Override
+    public void execute() throws Exception {
+      gbo.createDataflow(warningsHandler); // calculate dataflow before modifiy operation to backup connection information in dataflow
+      mod.modify(objectId, request.getOperation(), request.getJson());
+      gbo.getDataflow().applyDataflowToGB(); // apply backuped connection information since indices of variables might have changed
+    }
+  }
 }
