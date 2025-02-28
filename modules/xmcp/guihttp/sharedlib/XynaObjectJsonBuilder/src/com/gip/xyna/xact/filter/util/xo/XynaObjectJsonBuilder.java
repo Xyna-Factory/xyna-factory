@@ -348,7 +348,19 @@ public class XynaObjectJsonBuilder {
       Long crevision = xfctl.getRuntimeContextDependencyManagement().getRevisionDefiningXMOMObject(fqn, revisions[0]);
       return xfctl.getRevisionManagement().getRuntimeContext(crevision);
     } catch(Exception e) {
-      logger.error("Could not get RTC from fqn: " + fqn);
+      // Try to add content of revisions array to exception
+      if(revisions != null and revisions.length > 0) {
+          StringBuilder sb = new StringBuilder();
+          sb.append("Could not get RTC from fqn:").append(fqn).append(" in revisions ");
+          sb.append(revisions[0]);
+          for(int i=1; i<revisions.length; i++) {
+            sb.append(", ").append(revisions[i]);
+          }
+          logger.error(sb.toString(),e);
+      }
+      else {
+          logger.error("Could not get RTC from fqn: " + fqn,e);
+      }
       return null;
     }
   }
