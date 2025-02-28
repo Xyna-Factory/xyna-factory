@@ -1,5 +1,6 @@
-/*
- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,27 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- */
-package com.gip.xyna.xnwh.persistence.mysql;
-
-import com.gip.xyna.xnwh.persistence.Command;
-import com.gip.xyna.xnwh.persistence.PreparedCommand;
-
-
-public class MySQLPreparedCommand implements PreparedCommand {
-
-  private Command cmd;
-  
-  public MySQLPreparedCommand(Command cmd) {
-    this.cmd = cmd;    
-  }
-  
-  public String getTable() {
-    return cmd.getTable();
-  }
-  
-  public String getSqlString() {
-    return cmd.getSqlString();
-  }
-
-}
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Workspace Selected File Change List" TypeName="WorkspaceSelectedFileChangeList" TypePath="xmcp.gitintegration.repository" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data IsList="true" Label="File Change List" ReferenceName="SelectedFileChange" ReferencePath="xmcp.gitintegration.repository" VariableName="fileChangeList"/>
+</DataType>

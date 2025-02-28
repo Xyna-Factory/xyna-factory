@@ -218,6 +218,7 @@ build_xyna_factory() {
   mkdir -p release
   
   compose_checkscripts
+  compose_scripts
   compose_components
   compose_dhcpd
   compose_doc
@@ -355,10 +356,14 @@ compose_dhcpd() {
 
 }
 
-
 compose_checkscripts() {
   cd $SCRIPT_DIR/../release
   cp -r ../installation/CheckScripts .
+}
+
+compose_scripts() {
+  cd $SCRIPT_DIR/../release
+  cp -r ../installation/scripts .
 }
 
 compose_files() {
