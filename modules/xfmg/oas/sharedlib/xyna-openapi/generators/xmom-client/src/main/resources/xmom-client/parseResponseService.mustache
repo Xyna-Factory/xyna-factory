@@ -47,12 +47,7 @@ TypeName="{{parseResponseRefName}}" TypePath="{{parseResponseRefPath}}" Label="{
         <CodeSnippet Type="Java">
 int statusCode = hTTPStatusCode2.getCode();
 xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
-jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
-jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
-jsonOptions.setUseLabels(true);
-jsonOptions.setObjectDecider(new {{deciderPath}}.OASDecider());
-jsonOptions.setProcessAllInputGenerically(false);
-jsonOptions.setListWrapper((List){{listWrapperPath}}.ListWrapperProvider.getListWrapper());
+{{>jsonOptions}}
 xact.templates.Document document = document8;
 {{#responses}}
 if (statusCode == {{code}}) {
