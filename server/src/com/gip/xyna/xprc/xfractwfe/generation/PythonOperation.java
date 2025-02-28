@@ -23,9 +23,12 @@ import java.util.stream.Collectors;
 
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.ATT;
 import com.gip.xyna.xprc.xfractwfe.python.PythonGeneration;
+import com.gip.xyna.xprc.xfractwfe.python.PythonMdmGeneration;
 
 public class PythonOperation extends CodeOperation {
 
+  private PythonMdmGeneration _pythonMdmGeneration = new PythonMdmGeneration(); 
+  
   public PythonOperation(DOM parent) {
     super(parent, ATT.PYTHON);
   }
@@ -91,7 +94,7 @@ public class PythonOperation extends CodeOperation {
     if(!isStatic()) {
       input = "this" + (input.length() > 0 ? ", " : "") + input;
     }
-    pythonscript.append("def ").append(getNameWithoutVersion()).append("(").append(input).append("):");
+    pythonscript.append("def ").append(getAdaptedNameWithoutVersion()).append("(").append(input).append("):");
     String impl = getImpl().replaceAll("(?m)^", "  ");
     impl = impl.replaceAll("\"", "\\\\\\\"");
     impl = impl.replaceAll("\n", "\\\\n");
@@ -100,7 +103,7 @@ public class PythonOperation extends CodeOperation {
     if (getOutputVars().size() > 0) {
       pythonscript.append("\\n(").append(output).append(") = ");
     }
-    pythonscript.append(getNameWithoutVersion()).append("(").append(input).append(")");
+    pythonscript.append(getAdaptedNameWithoutVersion()).append("(").append(input).append(")");
 
     cb.addLine("interpreter.exec(\"" + pythonscript + "\")");
   }
@@ -160,7 +163,7 @@ public class PythonOperation extends CodeOperation {
     if (getOutputVars() != null && !getOutputVars().isEmpty()) {
       cb.append("return ");
     }
-    cb.append("impl.").append(getNameWithoutVersion()).append("(");
+    cb.append("impl.").append(getAdaptedNameWithoutVersion()).append("(");
     if (requiresXynaOrder()) {
       cb.append("correlatedXynaOrder");
       if (!getInputVars().isEmpty()) {
@@ -176,4 +179,15 @@ public class PythonOperation extends CodeOperation {
     }
     return impl;
   }
+  
+  
+  public String getAdaptedNameWithoutVersion() {
+    String ret = super.getNameWithoutVersion();    
+    if (_pythonMdmGeneration.getPythonKeywords().contains(ret)) {
+      ret = ret + "_";
+    }
+    return ret;
+  }
+  
+  
 }

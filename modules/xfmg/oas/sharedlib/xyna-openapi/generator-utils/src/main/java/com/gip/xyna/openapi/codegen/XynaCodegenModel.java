@@ -32,6 +32,7 @@ import com.gip.xyna.openapi.codegen.utils.GeneratorProperty;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
 
 import org.openapitools.codegen.CodegenModel;
+import org.openapitools.codegen.CodegenProperty;
 import org.openapitools.codegen.DefaultCodegen;
 
 public class XynaCodegenModel {
@@ -53,13 +54,16 @@ public class XynaCodegenModel {
   //discriminator
   final boolean hasDiscriminator;
   final String discriminatorKey;
+  final String discriminatorProp;
   final List<DiscriminatorMap> discriminatorMap;
 
   final boolean isListWrapper;
+  final boolean isOrWrapper;
   
   public XynaCodegenModel(XynaCodegenFactory factory, CodegenModel model, DefaultCodegen gen) {
     label = model.name;
     isListWrapper = isListWrapper(model, gen.additionalProperties());
+    isOrWrapper = isOrWrapper(model);
     typeName = buildTypeName(model);
     typePath = buildTypePath(gen);
     description = buildDescription(model);
@@ -67,20 +71,34 @@ public class XynaCodegenModel {
 
     allowableValues = EnumData.buildFromMap(model.allowableValues);
     
-    if (isEnum) {
-      vars = List.of(factory.getOrCreateXynaCodegenEnumProperty(model.allowableValues, typeName));
-    } else {
-      vars = model.vars.stream().map(prop -> factory.getOrCreateXynaCodegenProperty(prop, typeName)).collect(Collectors.toList());
-    }
-    if (model.isAdditionalPropertiesTrue) {
-      vars.add(factory.getPropertyToAddionalPropertyWrapper(model.getAdditionalProperties(), typeName));
-    }
-
     if (model.parent != null && model.parentModel != null) {
       // maybe we should find the correct model, then building a new one.
       parent = factory.getOrCreateXynaCodegenModel(model.parentModel);
     } else {
       parent = OASBASE;
+    }
+
+    String discProp = null;
+    
+    if (isEnum) {
+      vars = List.of(factory.getOrCreateXynaCodegenEnumProperty(model.allowableValues, typeName));
+    } else if (isOrWrapper) {
+      vars = model.getComposedSchemas().getOneOf().stream().
+          map(prop -> factory.getOrCreateXynaCodegenPropertyUsingComplexType(prop, typeName)).
+          collect(Collectors.toList());
+      CodegenProperty discriminator = model.getAllVars().stream().
+          filter(var -> model.discriminator.getPropertyBaseName().equals(var.baseName)).
+          findAny().get();
+      XynaCodegenProperty xynaProp = factory.getOrCreateXynaCodegenProperty(discriminator, typeName);
+      vars.add(xynaProp);
+      discProp = xynaProp.propVarName;
+    } else {
+      vars = model.getAllVars().stream().
+          map(prop -> factory.getOrCreateXynaCodegenProperty(prop, typeName)).
+          collect(Collectors.toList());
+    }
+    if (model.isAdditionalPropertiesTrue) {
+      vars.add(factory.getPropertyToAddionalPropertyWrapper(model.getAdditionalProperties(), typeName));
     }
     
     hasDiscriminator = model.getHasDiscriminatorWithNonEmptyMapping();
@@ -89,12 +107,22 @@ public class XynaCodegenModel {
       discriminatorMap = new ArrayList<DiscriminatorMap>();
       for (MappedModel mappedModel: model.discriminator.getMappedModels()) {
         String fqn = getFQN(mappedModel.getModel(), gen);
-        discriminatorMap.add(new DiscriminatorMap(mappedModel.getMappingName(), fqn));
+        if (isOrWrapper) {
+          XynaCodegenProperty prop = vars.stream().
+              filter(var -> var.getPropFQN().equals(fqn)).
+              findAny().
+              // if it fails, then we will fail to generate the method continueReadWithObject in OASDiceder.
+              get();
+          discriminatorMap.add(new DiscriminatorMap(mappedModel.getMappingName(), fqn, prop.propVarName));
+        } else {
+          discriminatorMap.add(new DiscriminatorMap(mappedModel.getMappingName(), fqn));
+        }
       }
     } else {
       discriminatorKey = null;
       discriminatorMap = null;
     }
+    discriminatorProp = discProp;
   }
   
   public static String buildTypeName(CodegenModel model) {
@@ -142,7 +170,10 @@ public class XynaCodegenModel {
       sb.append(String.join(", ", originals)).append('\n');
     }
     if(isListWrapper) {
-      sb.append("This is a listWrapper!\n");
+      sb.append("This is a Listwrapper!\n");
+    }
+    if(isOrWrapper) {
+      sb.append("This is an Orwrapper!\n");
     }
     sb.append("        ");
     return sb.toString();
@@ -159,8 +190,10 @@ public class XynaCodegenModel {
     description = "";
     hasDiscriminator = false;
     discriminatorKey = null;
+    discriminatorProp = null;
     discriminatorMap = null;
     isListWrapper = false;
+    isOrWrapper = false;
     allowableValues = new ArrayList<>();
   }
 
@@ -211,15 +244,25 @@ public class XynaCodegenModel {
   static class DiscriminatorMap {
     String keyValue;
     String fqn;
+    String varName;
     
     DiscriminatorMap(String keyValue, String fqn) {
+      this(keyValue, fqn, "");
+    }
+    
+    DiscriminatorMap(String keyValue, String fqn, String varName) {
       this.keyValue = keyValue;
       this.fqn = fqn;
+      this.varName = varName;
     }
   }
   
   public static boolean isListWrapper(CodegenModel model, Map<String, Object> additionalProperties) {
     return model.isArray && (boolean)additionalProperties.getOrDefault("createListWrappers", false);
+  }
+  
+  public static boolean isOrWrapper(CodegenModel model) {
+    return !model.oneOf.isEmpty() && model.getHasDiscriminatorWithNonEmptyMapping();
   }
 }
 
