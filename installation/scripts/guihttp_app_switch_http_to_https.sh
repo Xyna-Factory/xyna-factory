@@ -19,22 +19,26 @@ set -e
 
 DRYRUN="no"
 INSTANCE="001"
+GUIHTTP_APP_VERSION=""
 KEYSTORENAME=""
 PORT="4245"
 SSL="TLSv1.3"
 
 usage() {
-  echo "Usage: $0 -d (Dry run) -i <INSTANCE> (Default: ${INSTANCE}) -k <KEYSTORENAME> (Default: Select keystore with xynafactory.sh listkeystores) -p <PORT> (Default: ${PORT}) -s <SSL> (Default: ${SSL})"
+  echo "Usage: $0 -d (Dry run) -i <INSTANCE> (Default: ${INSTANCE}) -v <GUIHTTP_APP_VERSION> (Default: Select version with xynafactory.sh listapplications -applicationName GuiHttp) -k <KEYSTORENAME> (Default: Select keystore with xynafactory.sh listkeystores) -p <PORT> (Default: ${PORT}) -s <SSL> (Default: ${SSL})"
   exit 1
 }
 
-while getopts "di:k:p:s:h" option; do
+while getopts "di:v:k:p:s:h" option; do
   case "${option}" in
     d)
       DRYRUN="yes"
       ;;
     i)
       INSTANCE=${OPTARG}
+      ;;
+    v)
+      GUIHTTP_APP_VERSION=${OPTARG}
       ;;
     k)
       KEYSTORENAME=${OPTARG}
@@ -61,74 +65,89 @@ if [[ ! -f /etc/opt/xyna/environment/black_edition_${INSTANCE}.properties ]] ; t
 fi
 
 XYNA_PATH=$(grep "installation.folder" /etc/opt/xyna/environment/black_edition_${INSTANCE}.properties|cut -d'=' -f2)
-XYNA_FACTORY_SH=${XYNA_PATH}/server/xynafactory.sh
+XYNAFACTORY_SH=${XYNA_PATH}/server/xynafactory.sh
 
-if [[ ! -f ${XYNA_FACTORY_SH} ]] ; then
-  echo "${XYNA_FACTORY_SH} does not exist!"
+if [[ ! -f ${XYNAFACTORY_SH} ]] ; then
+  echo "${XYNAFACTORY_SH} does not exist!"
   exit 1
 fi
 
-
 # Get Version of Application GuiHttp
-GUI_HTTP_APP_VERSION=$(${XYNA_FACTORY_SH} listapplications -applicationName GuiHttp | tail -n -1 | awk '{split($0,a," "); print a[2]}' | sed  "s/'//g")
+if [[ -z ${GUIHTTP_APP_VERSION} ]]; then
+  GUIHTTP_APP_COUNT=$(${XYNAFACTORY_SH} listapplications -applicationName GuiHttp -t | tail -n +3 | awk '{split($3,a," "); print a[1]}' | wc -l)
+  if [[ "$GUIHTTP_APP_COUNT" == "0" ]]; then
+    echo "No available GuiHttp application version found! (${XYNAFACTORY_SH} listapplications -applicationName GuiHttp -t)"
+    exit 1
+  elif [[ "$GUIHTTP_APP_COUNT" != "1" ]]; then
+    GUIHTTP_APP_LIST=$(${XYNAFACTORY_SH} listapplications -applicationName GuiHttp -t | tail -n +3 | awk '{split($3,a," "); print a[1]}' | awk -v RS="" '{gsub (/\n/," ")}1')
+    echo "More then 1 available GuiHttp application versions ($GUIHTTP_APP_LIST) found! (${XYNAFACTORY_SH} listapplications -applicationName GuiHttp -t)"
+    echo "Use -v <GUIHTTP_APP_VERSION> to select the desired version!"
+    exit 1
+  fi
+  GUIHTTP_APP_VERSION=$(${XYNAFACTORY_SH} listapplications -applicationName GuiHttp -t | tail -n -1 | awk '{split($3,a," "); print a[1]}')
+fi
+
 
 # Get keystorename
 if [[ -z ${KEYSTORENAME} ]]; then
-  KEYSTORE_COUNT=$(${XYNA_FACTORY_SH} listkeystores | tail -n +3 | awk '{split($0,a," "); print a[1]}' | wc -l)
+  KEYSTORE_COUNT=$(${XYNAFACTORY_SH} listkeystores | tail -n +3 | awk '{split($0,a," "); print a[1]}' | wc -l)
   if [[ "$KEYSTORE_COUNT" == "0" ]]; then
-    echo "No available keystore found!"
+    echo "No available keystore name found! (${XYNAFACTORY_SH} listkeystores)"
     exit 1
   elif [[ "$KEYSTORE_COUNT" != "1" ]]; then
-    KEYSTORE_LIST=$(${XYNA_FACTORY_SH} listkeystores | tail -n +3 | awk '{split($0,a," "); print a[1]}' | awk -v RS="" '{gsub (/\n/," ")}1')
-    echo "More then 1 available keystores ($KEYSTORE_LIST) found!"
+    KEYSTORE_LIST=$(${XYNAFACTORY_SH} listkeystores | tail -n +3 | awk '{split($0,a," "); print a[1]}' | awk -v RS="" '{gsub (/\n/," ")}1')
+    echo "More then 1 available keystore names ($KEYSTORE_LIST) found! (${XYNAFACTORY_SH} listkeystores)"
+	echo "Use -k <KEYSTORENAME> to select the desired keystore name!"
     exit 1
   fi
-  KEYSTORENAME=$(${XYNA_FACTORY_SH} listkeystores | tail -n -1 | awk '{split($0,a," "); print a[1]}')
+  KEYSTORENAME=$(${XYNAFACTORY_SH} listkeystores | tail -n -1 | awk '{split($0,a," "); print a[1]}')
 fi
 
 if [[ "$DRYRUN" == "yes" ]]; then
-  echo "# dry run"
+  echo "# Dry run"
+else
+  echo "# Run"
 fi
-echo "# Configuration: (INSTANCE=${INSTANCE}, KEYSTORENAME=${KEYSTORENAME}, GUI_HTTP_APP_VERSION=${GUI_HTTP_APP_VERSION}, PORT=${PORT}, SSL=${SSL})"
+echo "# Configuration: (INSTANCE=${INSTANCE}, GUIHTTP_APP_VERSION=${GUIHTTP_APP_VERSION}, KEYSTORENAME=${KEYSTORENAME}, PORT=${PORT}, SSL=${SSL})"
 
 echo "# Step 1: Stop the GuiHttp application" 
-echo "${XYNA_FACTORY_SH} stopapplication -applicationName GuiHttp -versionName ${GUI_HTTP_APP_VERSION}"
+echo "${XYNAFACTORY_SH} stopapplication -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION}"
 if [[ "$DRYRUN" == "no" ]]; then
-  ${XYNA_FACTORY_SH} stopapplication -applicationName GuiHttp -versionName ${GUI_HTTP_APP_VERSION}
+  ${XYNAFACTORY_SH} stopapplication -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION}
 fi
 
 echo "# Step 2: Deploy a new https trigger instance" 
-echo "${XYNA_FACTORY_SH} deploytrigger -applicationName GuiHttp -versionName ${GUI_HTTP_APP_VERSION} -triggerName Http -triggerInstanceName Https -startParameters port=${PORT} https=KEY_MGMT clientauth=none keystorename=${KEYSTORENAME} ssl=${SSL}"
+echo "${XYNAFACTORY_SH} deploytrigger -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION} -triggerName Http -triggerInstanceName Https -startParameters port=${PORT} https=KEY_MGMT clientauth=none keystorename=${KEYSTORENAME} ssl=${SSL}"
 if [[ "$DRYRUN" == "no" ]]; then
-  ${XYNA_FACTORY_SH} deploytrigger -applicationName GuiHttp -versionName ${GUI_HTTP_APP_VERSION} -triggerName Http -triggerInstanceName Https -startParameters port=${PORT} https=KEY_MGMT clientauth=none keystorename=${KEYSTORENAME} ssl=${SSL}
+  ${XYNAFACTORY_SH} deploytrigger -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION} -triggerName Http -triggerInstanceName Https -startParameters port=${PORT} https=KEY_MGMT clientauth=none keystorename=${KEYSTORENAME} ssl=${SSL}
 fi
 
 echo "# Step 3: Remove the old filter instance H5XdevFilterinstance connected to the http trigger" 
-echo "${XYNA_FACTORY_SH} undeployfilter -applicationName GuiHttp -versionName ${GUI_HTTP_APP_VERSION} -filterInstanceName H5XdevFilterinstance"
+echo "${XYNAFACTORY_SH} undeployfilter -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION} -filterInstanceName H5XdevFilterinstance"
 if [[ "$DRYRUN" == "no" ]]; then
-  ${XYNA_FACTORY_SH} undeployfilter -applicationName GuiHttp -versionName ${GUI_HTTP_APP_VERSION} -filterInstanceName H5XdevFilterinstance
+  ${XYNAFACTORY_SH} undeployfilter -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION} -filterInstanceName H5XdevFilterinstance
 fi
 
 echo "# Step 4: Remove the old filter instance HttpIni connected to the http trigger"
-echo "${XYNA_FACTORY_SH} undeployfilter -applicationName GuiHttp -versionName ${GUI_HTTP_APP_VERSION} -filterInstanceName HttpIni"
+echo "${XYNAFACTORY_SH} undeployfilter -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION} -filterInstanceName HttpIni"
 if [[ "$DRYRUN" == "no" ]]; then
-  ${XYNA_FACTORY_SH} undeployfilter -applicationName GuiHttp -versionName ${GUI_HTTP_APP_VERSION} -filterInstanceName HttpIni
+  ${XYNAFACTORY_SH} undeployfilter -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION} -filterInstanceName HttpIni
 fi
 
 echo "# Step 5: Deploy new filter instance HttpIni connected to the https trigger"
-echo "${XYNA_FACTORY_SH} deployfilter -applicationName GuiHttp -versionName ${GUI_HTTP_APP_VERSION} -filterName GUIHTTP -filterInstanceName HttpIni -triggerInstanceName Https"
+echo "${XYNAFACTORY_SH} deployfilter -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION} -filterName GUIHTTP -filterInstanceName HttpIni -triggerInstanceName Https"
 if [[ "$DRYRUN" == "no" ]]; then
-  ${XYNA_FACTORY_SH} deployfilter -applicationName GuiHttp -versionName ${GUI_HTTP_APP_VERSION} -filterName GUIHTTP -filterInstanceName HttpIni -triggerInstanceName Https
+  ${XYNAFACTORY_SH} deployfilter -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION} -filterName GUIHTTP -filterInstanceName HttpIni -triggerInstanceName Https
 fi
 
 echo "# Step 6: Deploy new filter instance H5XdevFilterinstance connected to the https trigger"
-echo "${XYNA_FACTORY_SH} deployfilter -applicationName GuiHttp -versionName ${GUI_HTTP_APP_VERSION} -filterName H5XdevFilter -filterInstanceName H5XdevFilterinstance -triggerInstanceName Https"
+echo "${XYNAFACTORY_SH} deployfilter -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION} -filterName H5XdevFilter -filterInstanceName H5XdevFilterinstance -triggerInstanceName Https"
 if [[ "$DRYRUN" == "no" ]]; then
-  ${XYNA_FACTORY_SH} deployfilter -applicationName GuiHttp -versionName ${GUI_HTTP_APP_VERSION} -filterName H5XdevFilter -filterInstanceName H5XdevFilterinstance -triggerInstanceName Https
+  ${XYNAFACTORY_SH} deployfilter -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION} -filterName H5XdevFilter -filterInstanceName H5XdevFilterinstance -triggerInstanceName Https
 fi
 
 echo "# Step 7: Start the GuiHttp application"
-echo "${XYNA_FACTORY_SH} startapplication -applicationName GuiHttp -versionName ${GUI_HTTP_APP_VERSION}"
+echo "${XYNAFACTORY_SH} startapplication -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION}"
 if [[ "$DRYRUN" == "no" ]]; then
-  ${XYNA_FACTORY_SH} startapplication -applicationName GuiHttp -versionName ${GUI_HTTP_APP_VERSION}
+  ${XYNAFACTORY_SH} startapplication -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION}
 fi
