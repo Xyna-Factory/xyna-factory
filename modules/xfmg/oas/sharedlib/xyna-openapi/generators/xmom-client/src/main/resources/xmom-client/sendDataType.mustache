@@ -48,6 +48,7 @@ BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype">
 return xact.http.HTTPService.send(hTTPConnection1, sendParameter2);
 {{/hasBody}}
 {{#hasBody}}
+xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
 {{>jsonOptions}}
 {{#bodyParams}}
 

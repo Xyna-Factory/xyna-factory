@@ -22,7 +22,7 @@ BaseTypeName="XynaObjectDecider" BaseTypePath="xfmg.xfctrl.datamodel.json.parame
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
   <Service Label="OASDecider" TypeName="OASDecider">
-    <Operation Label="Decide" Name="decide" IsStatic="false">
+    <Operation Label="Decide Object on Read" Name="decideObjectOnRead" IsStatic="false">
       <Input>
         <Data ID="16" Label="Generic Type" VariableName="string16">
           <Meta>
@@ -42,6 +42,7 @@ BaseTypeName="XynaObjectDecider" BaseTypePath="xfmg.xfctrl.datamodel.json.parame
         <CodeSnippet Type="Java">
 {{#xynaModels}}
 {{#hasDiscriminator}}
+{{^isOrWrapper}}
 if (string16.equals("{{modelFQN}}")) {
   String dyntype = "";
   xfmg.xfctrl.datamodel.json.JSONValue value = jSONObject2.getMember("{{discriminatorKey}}");
@@ -54,6 +55,7 @@ if (string16.equals("{{modelFQN}}")) {
   }
   {{/discriminatorMap}}
 }
+{{/isOrWrapper}}
 {{/hasDiscriminator}}
 {{/xynaModels}}
 try {
@@ -63,19 +65,108 @@ try {
 }</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation Label="On Unknown Member" Name="onUnknownMember" IsStatic="false">
+    <Operation Label="Continue Read with Object" Name="continueReadWithObject" IsStatic="false">
       <Input>
-        <Data ID="23" Label="xyna object" VariableName="xo" ReferenceName="AnyType" ReferencePath="base">
+        <Data ID="10" Label="AnyType" VariableName="anytype" ReferenceName="AnyType" ReferencePath="base">
           <Meta>
             <Type>GeneralXynaObject</Type>
           </Meta>
         </Data>
-        <Data ID="27" Label="Variable Name" VariableName="varName">
+        <Data ID="11" Label="JSON Object" VariableName="jSONObject" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json">
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="12" Label="AnyType" VariableName="anytype1" ReferenceName="AnyType" ReferencePath="base">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <Meta>
+        <HasBeenPersisted>false</HasBeenPersisted>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+{{#xynaModels}}
+{{#isOrWrapper}}
+try {
+  if (anytype.getClass().getCanonicalName().equals("{{modelFQN}}")) {
+    String dyntype = "";
+    xfmg.xfctrl.datamodel.json.JSONValue value = jSONObject.getMember("{{discriminatorKey}}");
+    if (value != null) {
+      dyntype = value.getStringOrNumberValue();
+    }
+    anytype.set("{{discriminatorProp}}", dyntype);
+    {{#discriminatorMap}}
+    if (dyntype.equals("{{keyValue}}")) {
+      {{fqn}} child = new {{fqn}}();
+      anytype.set("{{varName}}", child);
+      return child;
+    }
+    {{/discriminatorMap}}
+  }
+} catch(Exception e) {
+  return null;
+}
+{{/isOrWrapper}}
+{{/xynaModels}}
+return anytype;
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="Decide Object on Write" Name="decideObjectOnWrite" IsStatic="false">
+      <Input>
+        <Data ID="13" Label="AnyType" VariableName="anytype" ReferenceName="AnyType" ReferencePath="base">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="14" Label="AnyType" VariableName="anytype" ReferenceName="AnyType" ReferencePath="base">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <Meta>
+        <HasBeenPersisted>false</HasBeenPersisted>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+{{#xynaModels}}
+{{#isOrWrapper}}
+try {
+  if (anytype.getClass().getCanonicalName().equals("{{modelFQN}}")) {
+    String dyntype = (String) anytype.get("{{discriminatorProp}}");
+    {{#discriminatorMap}}
+    if (dyntype.equals("{{keyValue}}")) {
+      return ({{fqn}}) anytype.get("{{varName}}");
+    }
+    {{/discriminatorMap}}
+  }
+} catch(Exception e) {
+  return null;
+}
+{{/isOrWrapper}}
+{{/xynaModels}}
+return anytype;
+      </CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation Label="On Unknown Member" Name="onUnknownMember" IsStatic="false">
+      <Input>
+        <Data ID="20" Label="xyna object" VariableName="xo" ReferenceName="AnyType" ReferencePath="base">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data ID="21" Label="Variable Name" VariableName="varName">
           <Meta>
             <Type>String</Type>
           </Meta>
         </Data>
-        <Data ID="30" Label="JSON Value" VariableName="jSONValue30" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json">
+        <Data ID="22" Label="JSON Value" VariableName="jSONValue30" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json">
         </Data>
       </Input>
       <Output>
