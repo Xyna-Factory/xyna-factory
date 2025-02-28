@@ -737,8 +737,8 @@ class MySQLPersistenceLayerAlterTableConnection
 
     private void validateAccessMode(final String details) {
         MySQLPersistenceLayer.AccessMode mode = this.mySQLPersistenceLayer.getAccessMode();
-        if (!mode.equals(MySQLPersistenceLayer.AccessMode.READ_WRITE)) {
-            String msg = "Can not change data because of access mode " + mode + ". " + details;
+        if (mode.equals(MySQLPersistenceLayer.AccessMode.READ_ONLY)) {
+            String msg = "Can not change schema because of access mode " + mode + ". " + details;
             throw new IllegalStateException(msg);
         }
     }

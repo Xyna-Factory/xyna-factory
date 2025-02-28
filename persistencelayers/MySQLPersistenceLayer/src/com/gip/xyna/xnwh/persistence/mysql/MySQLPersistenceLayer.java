@@ -126,7 +126,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
   private static final String KEY_ZIPPED_BLOBS = "zippedBlobs";
   private static final String KEY_ENABLE_SCHEMA_LOCKING = "schemaLocking";
   private static final String KEY_SCHEMA_LOCKING_TIMEOUT = "schemaLockingTimeout";
-  private static final String KEY_READ_ONLY_MODE = "readOnlyMode";
+  private static final String KEY_ACCESS_MODE = "accessMode";
 
 
   public PersistenceLayerConnection getConnection() throws PersistenceLayerException {
@@ -196,8 +196,8 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
             + KEY_DURABLE_STATEMENT_CACHE + " (true/false), default: false" + "\n"
             + KEY_ZIPPED_BLOBS + " (true/false), default: false" + "\n"
             + KEY_ENABLE_SCHEMA_LOCKING + " (true/false), default: false" + "\n"
-            + KEY_SCHEMA_LOCKING_TIMEOUT + " (integer), default: -1" + "\n"
-            + KEY_READ_ONLY_MODE + " (read-data/readonly/read-write), default: read-write"
+            + KEY_SCHEMA_LOCKING_TIMEOUT + " (integer), default: " + String.valueOf(Integer.MAX_VALUE) + "\n"
+            + KEY_ACCESS_MODE + " (read-data/read-only/read-write), default: read-write"
     };
   }
 
@@ -332,10 +332,10 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
         if (logger.isDebugEnabled()) {
           logger.debug("set " + KEY_SCHEMA_LOCKING_TIMEOUT + " to " + String.valueOf(schemaLockingTimeout));
         }
-      } else if (key.equals(KEY_READ_ONLY_MODE)) {
+      } else if (key.equals(KEY_ACCESS_MODE)) {
         accessMode = AccessMode.fromString(keyValue[1]);
         if (logger.isDebugEnabled()) {
-          logger.debug("set " + KEY_READ_ONLY_MODE + " to " + accessMode.toString());
+          logger.debug("set " + KEY_ACCESS_MODE + " to " + accessMode.toString());
         }
       } else {
         throw new XNWH_GeneralPersistenceLayerException("unknown key: " + key);
@@ -487,7 +487,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
   private boolean zippedBlobs = false;
   private boolean enableSchmeaLocking = false;
   private AccessMode accessMode = AccessMode.READ_WRITE;
-  private int schemaLockingTimeout = -1;
+  private int schemaLockingTimeout = Integer.MAX_VALUE;
   
   boolean useZippedBlobs() {
     return zippedBlobs;

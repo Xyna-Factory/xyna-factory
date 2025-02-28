@@ -148,8 +148,10 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
                     schemaName = this.mySQLPersistenceLayer.getSchemaName().toLowerCase();
 
                 // create lock for schema and table and wait at most for timeout
-                if (!alterTableConn.tryLock(schemaName + "_" + tableName,
-                        this.mySQLPersistenceLayer.getSchemaLockingTimeout())) {
+                String lock = schemaName + "_" + tableName;
+                if (lock.length() > 64)
+                    lock = lock.substring(0, 64);
+                if (!alterTableConn.tryLock(lock, this.mySQLPersistenceLayer.getSchemaLockingTimeout())) {
                     throw new XNWH_GeneralPersistenceLayerException(
                             "Storable " + Storable.getPersistable(klass).tableName()
                                     + " could not be locked in " + MySQLPersistenceLayer.class.getSimpleName());
