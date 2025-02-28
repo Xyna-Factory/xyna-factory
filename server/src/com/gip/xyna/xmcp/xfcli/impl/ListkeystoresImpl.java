@@ -72,7 +72,7 @@ public class ListkeystoresImpl extends XynaCommandImplementation<Listkeystores> 
 
     @Override
     public List<String> getHeader() {
-      return Arrays.asList("name", "type");
+      return Arrays.asList("name", "type", "filename");
     }
     
   }
