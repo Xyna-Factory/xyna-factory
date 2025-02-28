@@ -22,10 +22,12 @@ public class KeyStoreInformation {
   
   private final String name;
   private final String type;
+  private final String filename;
   
-  public KeyStoreInformation(String name, String type) {
+  public KeyStoreInformation(String name, String type, String filename) {
     this.name = name;
     this.type = type;
+    this.filename = filename;
   }
   
   KeyStoreInformation(KeyStoreStorable storable) {
@@ -38,6 +40,10 @@ public class KeyStoreInformation {
   
   public String getType() {
     return type;
+  }
+  
+  public String getFilename() {
+    return filename;
   }
 
 }

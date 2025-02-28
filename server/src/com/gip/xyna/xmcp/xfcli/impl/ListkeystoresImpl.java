@@ -60,6 +60,7 @@ public class ListkeystoresImpl extends XynaCommandImplementation<Listkeystores> 
         List<String> row = new ArrayList<String>();
         row.add(ks.getName());
         row.add(ks.getType());
+        row.add(ks.getFilename());
         rows.add(row);
       }
     }
