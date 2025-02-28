@@ -15,33 +15,25 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package com.gip.xyna.xnwh.persistence.mysql;
+package com.gip.xyna.xnwh.persistence.sql;
 
-import com.gip.xyna.xnwh.persistence.PreparedQuery;
-import com.gip.xyna.xnwh.persistence.Query;
-import com.gip.xyna.xnwh.persistence.ResultSetReader;
+public interface SqlBaseType<T extends Enum<T> & SqlBaseType<T>> {
+    /**
+     * gibt zurück, ob der übergebene typ größergleich ist. OTHER.isCompatibleTo(TIME) = false
+     * NUMBER.isCompatibleTo(TEXT_ENCODED) = true
+     * @param otherType
+     * @return
+     */
+    public boolean isCompatibleTo(T otherType);
 
+    public default T[] getValues() {
+        return getEnumClass().getEnumConstants();
+    }
 
-public class MySQLPreparedQuery<T> implements PreparedQuery<T> {
+    public Class<T> getEnumClass();
 
-  private Query<T> query;
-  
-  public MySQLPreparedQuery(Query<T> query) {
-    this.query = query;
-    String existingTableName = query.getTable();
-    this.query.modifyTargetTable(existingTableName.toLowerCase());
-  }
-  
-  public ResultSetReader<? extends T> getReader() {
-    return query.getReader();
-  }
-
-  public String getTable() {
-    return query.getTable();
-  }
-  
-  public Query<T> getQuery() {
-    return query;
-  }
+    default T valueFor(String name) {
+        return Enum.valueOf(getEnumClass(), name);
+    }
 
 }
