@@ -31,7 +31,7 @@ public class KeyStoreInformation {
   }
   
   KeyStoreInformation(KeyStoreStorable storable) {
-    this(storable.getName(), storable.getType());
+    this(storable.getName(), storable.getType(), storable.getFilename());
   }
   
   public String getName() {
