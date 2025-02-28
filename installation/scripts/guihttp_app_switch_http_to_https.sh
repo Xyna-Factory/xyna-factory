@@ -25,7 +25,19 @@ PORT="4245"
 SSL="TLSv1.3"
 
 usage() {
-  echo "Usage: $0 -d (Dry run) -i <INSTANCE> (Default: ${INSTANCE}) -v <GUIHTTP_APP_VERSION> (Default: Select version with xynafactory.sh listapplications -applicationName GuiHttp) -k <KEYSTORENAME> (Default: Select keystore with xynafactory.sh listkeystores) -p <PORT> (Default: ${PORT}) -s <SSL> (Default: ${SSL})"
+  echo "Usage: $0"
+  echo " -h : print this help"
+  echo " -d : Dry run, whih print the commands to be executed"
+  echo " -i <INSTANCE> : Instance of the xyna-factory"
+  echo "                 Default value: ${INSTANCE}"
+  echo " -v <GUIHTTP_APP_VERSION> : Version of the GuiHttp Application"
+  echo "                            Default value: the version is determined with the command: 'xynafactory.sh listapplications -applicationName GuiHttp'"
+  echo " -k <KEYSTORENAME> : Name of the keystore in the xyna-factoy"
+  echo "                     Default value: the keystore namedetermined with the command: 'xynafactory.sh listkeystores'"
+  echo " -p <PORT> : Parameter Port of the https trigger"
+  echo "             Default value: ${PORT}"
+  echo " -s <SSL> : Parameter ssl of the https trigger"
+  echo "            Default value: ${SSL}"
   exit 1
 }
 
@@ -103,51 +115,53 @@ if [[ -z ${KEYSTORENAME} ]]; then
   KEYSTORENAME=$(${XYNAFACTORY_SH} listkeystores | tail -n -1 | awk '{split($0,a," "); print a[1]}')
 fi
 
-if [[ "$DRYRUN" == "yes" ]]; then
-  echo "# Dry run"
-else
-  echo "# Run"
-fi
-echo "# Configuration: (INSTANCE=${INSTANCE}, GUIHTTP_APP_VERSION=${GUIHTTP_APP_VERSION}, KEYSTORENAME=${KEYSTORENAME}, PORT=${PORT}, SSL=${SSL})"
+echo "# Date: $(date)"
+echo "# Configuration"
+echo "#   Dry run             : ${DRYRUN}"
+echo "#   INSTANCE            : ${INSTANCE}"
+echo "#   GUIHTTP_APP_VERSION : ${GUIHTTP_APP_VERSION}"
+echo "#   KEYSTORENAME        : ${KEYSTORENAME}"
+echo "#   PORT                : ${PORT}"
+echo "#   SSL                 : ${SSL})"
 
 echo "# Step 1: Stop the GuiHttp application" 
 echo "${XYNAFACTORY_SH} stopapplication -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION}"
-if [[ "$DRYRUN" == "no" ]]; then
+if [[ "${DRYRUN}" == "no" ]]; then
   ${XYNAFACTORY_SH} stopapplication -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION}
 fi
 
 echo "# Step 2: Deploy a new https trigger instance" 
 echo "${XYNAFACTORY_SH} deploytrigger -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION} -triggerName Http -triggerInstanceName Https -startParameters port=${PORT} https=KEY_MGMT clientauth=none keystorename=${KEYSTORENAME} ssl=${SSL}"
-if [[ "$DRYRUN" == "no" ]]; then
+if [[ "${DRYRUN}" == "no" ]]; then
   ${XYNAFACTORY_SH} deploytrigger -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION} -triggerName Http -triggerInstanceName Https -startParameters port=${PORT} https=KEY_MGMT clientauth=none keystorename=${KEYSTORENAME} ssl=${SSL}
 fi
 
 echo "# Step 3: Remove the old filter instance H5XdevFilterinstance connected to the http trigger" 
 echo "${XYNAFACTORY_SH} undeployfilter -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION} -filterInstanceName H5XdevFilterinstance"
-if [[ "$DRYRUN" == "no" ]]; then
+if [[ "${DRYRUN}" == "no" ]]; then
   ${XYNAFACTORY_SH} undeployfilter -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION} -filterInstanceName H5XdevFilterinstance
 fi
 
 echo "# Step 4: Remove the old filter instance HttpIni connected to the http trigger"
 echo "${XYNAFACTORY_SH} undeployfilter -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION} -filterInstanceName HttpIni"
-if [[ "$DRYRUN" == "no" ]]; then
+if [[ "${DRYRUN}" == "no" ]]; then
   ${XYNAFACTORY_SH} undeployfilter -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION} -filterInstanceName HttpIni
 fi
 
 echo "# Step 5: Deploy new filter instance HttpIni connected to the https trigger"
 echo "${XYNAFACTORY_SH} deployfilter -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION} -filterName GUIHTTP -filterInstanceName HttpIni -triggerInstanceName Https"
-if [[ "$DRYRUN" == "no" ]]; then
+if [[ "${DRYRUN}" == "no" ]]; then
   ${XYNAFACTORY_SH} deployfilter -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION} -filterName GUIHTTP -filterInstanceName HttpIni -triggerInstanceName Https
 fi
 
 echo "# Step 6: Deploy new filter instance H5XdevFilterinstance connected to the https trigger"
 echo "${XYNAFACTORY_SH} deployfilter -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION} -filterName H5XdevFilter -filterInstanceName H5XdevFilterinstance -triggerInstanceName Https"
-if [[ "$DRYRUN" == "no" ]]; then
+if [[ "${DRYRUN}" == "no" ]]; then
   ${XYNAFACTORY_SH} deployfilter -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION} -filterName H5XdevFilter -filterInstanceName H5XdevFilterinstance -triggerInstanceName Https
 fi
 
 echo "# Step 7: Start the GuiHttp application"
 echo "${XYNAFACTORY_SH} startapplication -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION}"
-if [[ "$DRYRUN" == "no" ]]; then
+if [[ "${DRYRUN}" == "no" ]]; then
   ${XYNAFACTORY_SH} startapplication -applicationName GuiHttp -versionName ${GUIHTTP_APP_VERSION}
 fi
