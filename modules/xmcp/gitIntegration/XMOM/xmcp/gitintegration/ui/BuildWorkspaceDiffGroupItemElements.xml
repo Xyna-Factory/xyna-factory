@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Build Workspace Diff Group Item Elements" TypeName="BuildWorkspaceDiffGroupItemElements" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Build Workspace Diff Group Item Elements" Name="BuildWorkspaceDiffGroupItemElements">
+    <Input>
+      <Data ID="10087" Label="Info Workspace Content Diff Item" ReferenceName="InfoWorkspaceContentDiffItem" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffItem10087"/>
+      <Data ID="10903" Label="Info Workspace Content Diff Group" ReferenceName="InfoWorkspaceContentDiffGroup" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroup10903"/>
+      <Data ID="9916" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext9916"/>
+    </Input>
+    <Output>
+      <Data ID="10638" Label="Base Definition" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="baseDefinition10638"/>
+    </Output>
+    <Mappings ID="10180" Label="Mapping">
+      <Input>
+        <Data ID="10948" Label="Info Workspace Content Diff Group" ReferenceName="InfoWorkspaceContentDiffGroup" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroup10948">
+          <Source RefID="10180"/>
+        </Data>
+        <Source RefID="10903"/>
+      </Input>
+      <Input>
+        <Data ID="10240" Label="Info Workspace Content Diff Item" ReferenceName="InfoWorkspaceContentDiffItem" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffItem10240">
+          <Source RefID="10180"/>
+        </Data>
+        <Source RefID="10087"/>
+      </Input>
+      <Output>
+        <Data ID="10358" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition10358">
+          <Source RefID="10180"/>
+        </Data>
+        <Target RefID="10359"/>
+      </Output>
+      <Mapping>%2%.dataPath=concat("%0%.infoWorkspaceContentDiffGroup.", %0%.groupIndex, ".differenceList.", %1%.itemIndex, ".differenceInfo")</Mapping>
+      <Mapping>%2%.numberOfLines=%1%.numberOfLines</Mapping>
+    </Mappings>
+    <Mappings ID="9593" Label="Mapping">
+      <Input>
+        <Data ID="10249" Label="Info Workspace Content Diff Item" ReferenceName="InfoWorkspaceContentDiffItem" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffItem10249">
+          <Source RefID="9593"/>
+        </Data>
+        <Source RefID="10087"/>
+      </Input>
+      <Output>
+        <Data ID="10197" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition10197">
+          <Source RefID="9593"/>
+        </Data>
+        <Target RefID="10198"/>
+      </Output>
+      <Mapping>%1%.disabled="false"</Mapping>
+    </Mappings>
+    <Choice ID="10786" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Case ID="10787" Label="true" Premise="&quot;true&quot;">
+        <Assign ID="10790"/>
+      </Case>
+      <Case ID="10788" Label="false">
+        <Mappings ID="10283" Label="Mapping">
+          <Input>
+            <Data ID="10524" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition10524">
+              <Source RefID="10283"/>
+            </Data>
+            <Source RefID="10359"/>
+          </Input>
+          <Input>
+            <Data ID="10533" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition10533">
+              <Source RefID="10283"/>
+            </Data>
+            <Source RefID="10198"/>
+          </Input>
+          <Output>
+            <Data ID="10292" Label="Panel Box Definition" ReferenceName="PanelBoxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="panelBoxDefinition10292">
+              <Source RefID="10283"/>
+            </Data>
+            <Target RefID="11035"/>
+          </Output>
+          <Mapping>%2%.leftArea.children["0"]#cast("xmcp.forms.datatypes.TextAreaDefinition")=%0%</Mapping>
+          <Mapping>%2%.rightArea.children["0"]#cast("xmcp.forms.datatypes.CheckboxDefinition")=%1%</Mapping>
+        </Mappings>
+        <Assign ID="10792"/>
+        <Data ID="11035" Label="Panel Box Definition" ReferenceName="PanelBoxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="panelBoxDefinition11035">
+          <Source RefID="10283"/>
+        </Data>
+      </Case>
+    </Choice>
+    <Mappings ID="10667" Label="Mapping">
+      <Input>
+        <Data ID="10668" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition10668"/>
+        <Source RefID="10359"/>
+      </Input>
+      <Input>
+        <Data ID="10669" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition10669"/>
+        <Source RefID="10198"/>
+      </Input>
+      <Output>
+        <Data ID="10680" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10680">
+          <Source RefID="10667"/>
+        </Data>
+        <Target RefID="11044"/>
+      </Output>
+      <Mapping>%2%.header.leftArea.children["0"]#cast("xmcp.forms.datatypes.TextAreaDefinition")=%0%</Mapping>
+      <Mapping>%2%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.CheckboxDefinition")=%1%</Mapping>
+    </Mappings>
+    <Data ID="10198" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition10198">
+      <Source RefID="9593"/>
+    </Data>
+    <Data ID="10359" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition10359">
+      <Source RefID="10180"/>
+    </Data>
+    <Data ID="11044" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition11044">
+      <Source RefID="10667"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="11044"/>
+      <Target RefID="10638"/>
+      <Copy>
+        <Source RefID="11044">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="10638"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

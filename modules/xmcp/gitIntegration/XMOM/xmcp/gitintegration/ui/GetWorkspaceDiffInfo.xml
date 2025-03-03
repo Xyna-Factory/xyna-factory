@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Workspace Diff Info" TypeName="GetWorkspaceDiffInfo" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Get Workspace Diff Info" Name="GetWorkspaceDiffInfo">
+    <Input>
+      <Data ID="7846" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection7846"/>
+    </Input>
+    <Output>
+      <Data ID="9140" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList9140"/>
+    </Output>
+    <ServiceReference ID="8236" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="8235"/>
+      <Target RefID="8235"/>
+    </ServiceReference>
+    <ServiceReference ID="8125" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="8124"/>
+      <Target RefID="8124"/>
+    </ServiceReference>
+    <ServiceReference ID="8289" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="8288"/>
+      <Target RefID="8288"/>
+    </ServiceReference>
+    <ServiceReference ID="8154" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="8153"/>
+      <Target RefID="8153"/>
+    </ServiceReference>
+    <ServiceReference ID="8191" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="8190"/>
+      <Target RefID="8190"/>
+    </ServiceReference>
+    <Mappings ID="8348" Label="Mapping">
+      <Input>
+        <Data ID="8463" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection8463">
+          <Source RefID="8348"/>
+        </Data>
+        <Source RefID="7846"/>
+      </Input>
+      <Output>
+        <Data ID="8405" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace8405">
+          <Source RefID="8348"/>
+        </Data>
+        <Target RefID="8406"/>
+      </Output>
+      <Mapping>%1%.name=%0%.workspaceName</Mapping>
+    </Mappings>
+    <Function ID="8235" Label="Get Path to Workspace Xml">
+      <Source RefID="8236"/>
+      <Source RefID="8406"/>
+      <Target RefID="8236"/>
+      <Target RefID="8238"/>
+      <Invoke Operation="getPathToWorkspaceXml" ServiceID="8236">
+        <Source RefID="8406"/>
+      </Invoke>
+      <Receive ServiceID="8236">
+        <Target RefID="8238"/>
+      </Receive>
+    </Function>
+    <Function ID="8190" Label="Create Workspace Content From File">
+      <Source RefID="8191"/>
+      <Source RefID="8238"/>
+      <Target RefID="8191"/>
+      <Target RefID="8193"/>
+      <Invoke Operation="createWorkspaceContentFromFile" ServiceID="8191">
+        <Source RefID="8238"/>
+      </Invoke>
+      <Receive ServiceID="8191">
+        <Target RefID="8193"/>
+      </Receive>
+    </Function>
+    <Function ID="8288" Label="Create Workspace Content">
+      <Source RefID="8289"/>
+      <Source RefID="8406"/>
+      <Target RefID="8289"/>
+      <Target RefID="8291"/>
+      <Invoke Operation="createWorkspaceContent" ServiceID="8289">
+        <Source RefID="8406"/>
+      </Invoke>
+      <Receive ServiceID="8289">
+        <Target RefID="8291"/>
+      </Receive>
+    </Function>
+    <Function ID="8153" Label="Compare Workspace Content">
+      <Source RefID="8154"/>
+      <Source RefID="8193"/>
+      <Source RefID="8291"/>
+      <Target RefID="8154"/>
+      <Target RefID="8156"/>
+      <Invoke Operation="compareWorkspaceContent" ServiceID="8154">
+        <Source RefID="8193">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="8291">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="8154">
+        <Target RefID="8156"/>
+      </Receive>
+    </Function>
+    <Mappings ID="8856" Label="Mapping">
+      <Input>
+        <Data ID="8971" Label="Workspace Content Differences" ReferenceName="WorkspaceContentDifferences" ReferencePath="xmcp.gitintegration" VariableName="workspaceContentDifferences8971">
+          <Source RefID="8856"/>
+        </Data>
+        <Source RefID="8156"/>
+      </Input>
+      <Output>
+        <Data ID="8913" Label="List Id" ReferenceName="ListId" ReferencePath="xmcp.gitintegration" VariableName="listId8913">
+          <Source RefID="8856"/>
+        </Data>
+        <Target RefID="8914"/>
+      </Output>
+      <Mapping>%1%.listId=%0%.listId</Mapping>
+    </Mappings>
+    <Function ID="8124" Label="Adapt Workspace Difference List">
+      <Source RefID="8125"/>
+      <Source RefID="8914"/>
+      <Target RefID="8125"/>
+      <Target RefID="8127"/>
+      <Invoke Operation="adaptWorkspaceDifferenceList" ServiceID="8125">
+        <Source RefID="8914"/>
+      </Invoke>
+      <Receive ServiceID="8125">
+        <Target RefID="8127"/>
+      </Receive>
+    </Function>
+    <Data ID="8127" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList8127">
+      <Source RefID="8124"/>
+    </Data>
+    <Data ID="8156" Label="Workspace Content Differences" ReferenceName="WorkspaceContentDifferences" ReferencePath="xmcp.gitintegration" VariableName="workspaceContentDifferences8156">
+      <Source RefID="8153"/>
+    </Data>
+    <Data ID="8193" Label="Workspace Content" ReferenceName="WorkspaceContent" ReferencePath="xmcp.gitintegration" VariableName="workspaceContent8193">
+      <Source RefID="8190"/>
+    </Data>
+    <Data ID="8238" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file8238">
+      <Source RefID="8235"/>
+    </Data>
+    <Data ID="8291" Label="Workspace Content" ReferenceName="WorkspaceContent" ReferencePath="xmcp.gitintegration" VariableName="workspaceContent8291">
+      <Source RefID="8288"/>
+    </Data>
+    <Data ID="8406" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace8406">
+      <Source RefID="8348"/>
+    </Data>
+    <Data ID="8914" Label="List Id" ReferenceName="ListId" ReferencePath="xmcp.gitintegration" VariableName="listId8914">
+      <Source RefID="8856"/>
+    </Data>
+    <Data ID="9307" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList9307">
+      <Source RefID="9261"/>
+    </Data>
+    <Exception ID="9214" Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception9214"/>
+    <Assign ID="1">
+      <Source RefID="8127"/>
+      <Target RefID="9140"/>
+      <Copy>
+        <Source RefID="8127"/>
+        <Target RefID="9140"/>
+      </Copy>
+    </Assign>
+    <Catch ExceptionID="9214" ID="9215">
+      <Mappings ID="9261" Label="Mapping">
+        <Output>
+          <Data ID="9306" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList9306">
+            <Source RefID="9261"/>
+          </Data>
+          <Target RefID="9307"/>
+        </Output>
+      </Mappings>
+      <Assign>
+        <Source RefID="9307"/>
+        <Target RefID="9140"/>
+        <Copy>
+          <Source RefID="9307"/>
+          <Target RefID="9140"/>
+        </Copy>
+      </Assign>
+    </Catch>
+  </Operation>
+</Service>
