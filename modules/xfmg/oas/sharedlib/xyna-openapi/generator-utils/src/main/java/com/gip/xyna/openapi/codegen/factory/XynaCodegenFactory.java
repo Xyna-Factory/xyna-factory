@@ -77,6 +77,11 @@ public class XynaCodegenFactory {
     CodegenPropertyHolder holder = new CodegenPropertyHolder(property);
     return getOrCreateXynaCodegenProperty(holder, className);
   }
+  
+  public XynaCodegenProperty getOrCreateXynaCodegenPropertyUsingComplexType(CodegenProperty property, String className) {
+    CodegenPropertyHolder holder = new CodegenPropertyHolder(property, true);
+    return getOrCreateXynaCodegenProperty(holder, className);
+  }
 
   public XynaCodegenProperty getOrCreateXynaCodegenProperty(CodegenParameter parameter, String className) {
     CodegenParameterHolder holder = new CodegenParameterHolder(parameter);
