@@ -33,7 +33,7 @@ usage() {
   echo " -v GUIHTTP_APP_VERSION : Version of the GuiHttp Application"
   echo "                          Default value: the version is determined with the command: 'xynafactory.sh listapplications -applicationName GuiHttp'"
   echo " -k KEYSTORENAME : Name of the keystore in the xyna-factoy"
-  echo "                   Default value: the keystore namedetermined with the command: 'xynafactory.sh listkeystores'"
+  echo "                   Default value: the keystore name is determined with the command: 'xynafactory.sh listkeystores'"
   echo " -p PORT : Parameter Port of the https trigger"
   echo "           Default value: ${PORT}"
   echo " -s SSL : Parameter ssl of the https trigger"
