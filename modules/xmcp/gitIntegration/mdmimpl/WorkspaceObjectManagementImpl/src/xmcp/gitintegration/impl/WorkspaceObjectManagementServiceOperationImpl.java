@@ -29,6 +29,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTi
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 
 import xmcp.gitintegration.Flag;
+import xmcp.gitintegration.InfoWorkspaceContentDiffGroupList;
 import xmcp.gitintegration.ListId;
 import xmcp.gitintegration.WorkspaceContent;
 import xmcp.gitintegration.WorkspaceContentDifferences;
@@ -94,8 +95,7 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
 
 
   public WorkspaceContent createWorkspaceContentFromFile(File file8) {
-    // Implemented as code snippet!
-    return null;
+    return new WorkspaceStatusTools().createWorkspaceContentFromFile(file8);
   }
 
 
@@ -129,6 +129,24 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
   public void updateWorkspaceContent(Workspace workspace) {
     // TODO Auto-generated method stub
     
+  }
+
+
+  @Override
+  public Text getWorkspaceXmlStatus() {
+    return new WorkspaceStatusTools().getWorkspaceXmlStatus();
+  }
+
+
+  @Override
+  public InfoWorkspaceContentDiffGroupList adaptWorkspaceDifferenceList(ListId listid) {
+    return new WorkspaceStatusTools().adaptWorkspaceDifferenceList(listid);
+  }
+
+
+  @Override
+  public File getPathToWorkspaceXml(Workspace workspace) {
+    return new WorkspaceStatusTools().getPathToWorkspaceXml(workspace);
   }
 
 }
