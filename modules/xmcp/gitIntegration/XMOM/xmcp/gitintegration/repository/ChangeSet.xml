@@ -19,5 +19,5 @@
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data IsList="true" Label="Changes" ReferenceName="FileChange" ReferencePath="xmcp.gitintegration.repository" VariableName="changes"/>
+  <Data IsList="true" Label="Changes" ReferenceName="WorkspaceFileChangeList" ReferencePath="xmcp.gitintegration.repository" VariableName="changes"/>
 </DataType>

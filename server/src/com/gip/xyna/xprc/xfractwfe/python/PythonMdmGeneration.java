@@ -350,10 +350,7 @@ public class PythonMdmGeneration {
     if (info.members != null && !info.members.isEmpty()) {
       for (Pair<String, String> member : info.members) {
         sb.append("    self.");
-        sb.append(member.getFirst());
-        if (pythonKeywords.contains(member.getFirst())) {
-          sb.append("_");  // append _ if the member variable is a python keyword
-        }
+        appendAndEscapeIfKeyword(member.getFirst(), sb);
         typeHint(sb, ": " + member.getSecond(), typeHints);
         sb.append(" = None\n");
       }
@@ -369,10 +366,17 @@ public class PythonMdmGeneration {
     sb.append("\n");
   }
 
+  
+  private void appendAndEscapeIfKeyword(String id, StringBuilder sb) {
+    sb.append(id);
+    if (pythonKeywords.contains(id)) {
+      sb.append("_");  // append _ if the member variable is a python keyword
+    }
+  }
 
   private void addXynaObjectMethod(StringBuilder sb, String fqn, MethodInformation info, boolean withImpl, boolean typeHints) {
     sb.append("  def ");
-    sb.append(info.name);
+    appendAndEscapeIfKeyword(info.name, sb);
     sb.append("(");
     if (!info.isStatic) {
       sb.append("self");

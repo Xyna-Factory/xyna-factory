@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,10 +22,6 @@
       <Data ID="53" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition53"/>
       <Data ID="1711" IsList="true" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData1711"/>
     </Output>
-    <ServiceReference ID="1487" Label="Create Repository Connection Panel" ReferenceName="CreateRepositoryConnectionPanel" ReferencePath="xmcp.gitintegration.ui">
-      <Source RefID="1486"/>
-      <Target RefID="1486"/>
-    </ServiceReference>
     <ServiceReference ID="1340" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
       <Source RefID="1339"/>
       <Target RefID="1339"/>
@@ -33,6 +29,10 @@
     <ServiceReference ID="1671" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData.RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui">
       <Source RefID="1670"/>
       <Target RefID="1670"/>
+    </ServiceReference>
+    <ServiceReference ID="1487" Label="Create Repository Connection Panel" ReferenceName="CreateRepositoryConnectionPanel" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="1486"/>
+      <Target RefID="1486"/>
     </ServiceReference>
     <Mappings ID="673" Label="Mapping">
       <Output>

@@ -24,10 +24,13 @@ import base.Text;
 import base.math.IntegerNumber;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
+
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
@@ -61,6 +64,8 @@ import xmcp.gitintegration.storage.UserManagementStorage;
 
 public class RepositoryManagementServiceOperationImpl implements ExtendedDeploymentTask, RepositoryManagementServiceOperation {
 
+  private static Logger _logger = CentralFactoryLogging.getLogger(RepositoryManagementServiceOperationImpl.class);
+  
   public void onDeployment() throws XynaException {
     RepositoryManagementImpl.init();
     UserManagementStorage.init();
@@ -108,20 +113,7 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
 
   @Override
   public List<? extends RepositoryConnectionGroup> listRepositoryConnectionGroups() {
-    List<RepositoryConnection> connections = RepositoryManagementImpl.listRepositoryConnections();
-    List<RepositoryConnectionGroup> result = new ArrayList<>();
-    Map<String, List<RepositoryConnection>> groups = new HashMap<>();
-    for(RepositoryConnection connection: connections) {
-      groups.putIfAbsent(connection.getPath(), new ArrayList<>());
-      groups.get(connection.getPath()).add(connection);
-    }
-    for(String repoGroup : groups.keySet()) {
-      Repository repo = new Repository.Builder().path(repoGroup).instance();
-      List<RepositoryConnection> conns = groups.get(repoGroup);
-      RepositoryConnectionGroup group = new RepositoryConnectionGroup.Builder().repository(repo).repositoryConnection(conns).instance();
-      result.add(group);
-    }
-    return result;
+    return RepositoryManagementImpl.listRepositoryConnectionGroups();
   }
 
 
@@ -251,8 +243,11 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
   public Text push(XynaOrderServerExtension order, Repository arg0, Text arg1, List<? extends File> arg2) {
     String user = getUserFromSession(order.getSessionId());
     try {
-      new RepositoryInteraction().push(arg0.getPath(), arg1.getText(), false, user);
+      List<String> adapted = (arg2 == null) ? new ArrayList<String>() :
+                             arg2.stream().filter(Objects::nonNull).map(x -> x.getPath()).collect(Collectors.toList());
+      new RepositoryInteraction().push(arg0.getPath(), arg1.getText(), false, user, adapted);
     } catch (Exception e) {
+      _logger.warn(e.getMessage(), e);
       return new Text("Exception during push: " + e.getMessage());
     }
 
@@ -262,8 +257,13 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
 
   @Override
   public ChangeSet loadChangeSet(Repository repository) {
-    // TODO Auto-generated method stub
-    return null;
+    if (repository == null) { throw new IllegalArgumentException("Parameter repository is empty."); }
+    try {
+      return new RepositoryInteraction().loadChanges(repository.getPath());
+    } 
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
   
 }

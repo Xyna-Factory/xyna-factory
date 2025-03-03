@@ -58,7 +58,9 @@ import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoException
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoResult;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutor;
 
+import xmcp.gitintegration.repository.Repository;
 import xmcp.gitintegration.repository.RepositoryConnection;
+import xmcp.gitintegration.repository.RepositoryConnectionGroup;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -615,4 +617,21 @@ public class RepositoryManagementImpl {
   }
 
 
+  public static List<? extends RepositoryConnectionGroup> listRepositoryConnectionGroups() {
+    List<RepositoryConnection> connections = RepositoryManagementImpl.listRepositoryConnections();
+    List<RepositoryConnectionGroup> result = new ArrayList<>();
+    Map<String, List<RepositoryConnection>> groups = new HashMap<>();
+    for(RepositoryConnection connection: connections) {
+      groups.putIfAbsent(connection.getPath(), new ArrayList<>());
+      groups.get(connection.getPath()).add(connection);
+    }
+    for(String repoGroup : groups.keySet()) {
+      Repository repo = new Repository.Builder().path(repoGroup).instance();
+      List<RepositoryConnection> conns = groups.get(repoGroup);
+      RepositoryConnectionGroup group = new RepositoryConnectionGroup.Builder().repository(repo).repositoryConnection(conns).instance();
+      result.add(group);
+    }
+    return result;
+  }
+  
 }
