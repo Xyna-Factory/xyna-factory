@@ -68,7 +68,6 @@ public class WorkspaceStatusTools {
   
   public InfoWorkspaceContentDiffGroupList adaptWorkspaceDifferenceList(ListId listid) {
     if (listid == null) { throw new IllegalArgumentException("Parameter list id is empty"); }
-    if (listid.getListId() == null) { throw new IllegalArgumentException("Parameterlist id is empty"); }
     InfoWorkspaceContentDiffGroupList ret = new InfoWorkspaceContentDiffGroupList();
     Map<String, InfoWorkspaceContentDiffGroup> groupmap = new TreeMap<>();
     try {
@@ -85,6 +84,7 @@ public class WorkspaceStatusTools {
       }
       if (difflist == null) { return ret; }
       if (difflist.getDifferences() == null) { return ret; }
+      ret.setListId(listid.getListId());
       for (WorkspaceContentDifference diff : difflist.getDifferences()) {
         OutputCreator<WorkspaceContentItem, WorkspaceContentDifference, WorkspaceContentItemDifferenceSelector> outputCreator = 
           new OutputCreator<WorkspaceContentItem, WorkspaceContentDifference, WorkspaceContentItemDifferenceSelector>(

@@ -15,21 +15,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Workspace Diff Info" TypeName="GetWorkspaceDiffInfo" TypePath="xmcp.gitintegration.ui" Version="1.8">
-  <Operation ID="0" IsStatic="false" Label="Get Workspace Diff Info" Name="GetWorkspaceDiffInfo">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Create Workspace Diff" TypeName="CreateWorkspaceDiff" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Create Workspace Diff" Name="CreateWorkspaceDiff">
     <Input>
       <Data ID="7846" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection7846"/>
     </Input>
     <Output>
-      <Data ID="9140" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList9140"/>
+      <Data ID="10093" Label="List Id" ReferenceName="ListId" ReferencePath="xmcp.gitintegration" VariableName="listId10093"/>
     </Output>
-    <ServiceReference ID="8236" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="8235"/>
-      <Target RefID="8235"/>
-    </ServiceReference>
-    <ServiceReference ID="8125" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="8124"/>
-      <Target RefID="8124"/>
+    <ServiceReference ID="8191" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="8190"/>
+      <Target RefID="8190"/>
     </ServiceReference>
     <ServiceReference ID="8289" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
       <Source RefID="8288"/>
@@ -39,9 +35,9 @@
       <Source RefID="8153"/>
       <Target RefID="8153"/>
     </ServiceReference>
-    <ServiceReference ID="8191" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="8190"/>
-      <Target RefID="8190"/>
+    <ServiceReference ID="8236" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="8235"/>
+      <Target RefID="8235"/>
     </ServiceReference>
     <Mappings ID="8348" Label="Mapping">
       <Input>
@@ -124,28 +120,13 @@
         <Source RefID="8156"/>
       </Input>
       <Output>
-        <Data ID="8913" Label="List Id" ReferenceName="ListId" ReferencePath="xmcp.gitintegration" VariableName="listId8913">
+        <Data ID="10168" Label="List Id" ReferenceName="ListId" ReferencePath="xmcp.gitintegration" VariableName="listId10168">
           <Source RefID="8856"/>
         </Data>
-        <Target RefID="8914"/>
+        <Target RefID="10169"/>
       </Output>
       <Mapping>%1%.listId=%0%.listId</Mapping>
     </Mappings>
-    <Function ID="8124" Label="Adapt Workspace Difference List">
-      <Source RefID="8125"/>
-      <Source RefID="8914"/>
-      <Target RefID="8125"/>
-      <Target RefID="8127"/>
-      <Invoke Operation="adaptWorkspaceDifferenceList" ServiceID="8125">
-        <Source RefID="8914"/>
-      </Invoke>
-      <Receive ServiceID="8125">
-        <Target RefID="8127"/>
-      </Receive>
-    </Function>
-    <Data ID="8127" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList8127">
-      <Source RefID="8124"/>
-    </Data>
     <Data ID="8156" Label="Workspace Content Differences" ReferenceName="WorkspaceContentDifferences" ReferencePath="xmcp.gitintegration" VariableName="workspaceContentDifferences8156">
       <Source RefID="8153"/>
     </Data>
@@ -161,36 +142,36 @@
     <Data ID="8406" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace8406">
       <Source RefID="8348"/>
     </Data>
-    <Data ID="8914" Label="List Id" ReferenceName="ListId" ReferencePath="xmcp.gitintegration" VariableName="listId8914">
+    <Data ID="10169" Label="List Id" ReferenceName="ListId" ReferencePath="xmcp.gitintegration" VariableName="listId10169">
       <Source RefID="8856"/>
     </Data>
-    <Data ID="9307" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList9307">
+    <Data ID="10315" Label="List Id" ReferenceName="ListId" ReferencePath="xmcp.gitintegration" VariableName="listId10315">
       <Source RefID="9261"/>
     </Data>
     <Exception ID="9214" Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception9214"/>
     <Assign ID="1">
-      <Source RefID="8127"/>
-      <Target RefID="9140"/>
+      <Source RefID="10169"/>
+      <Target RefID="10093"/>
       <Copy>
-        <Source RefID="8127"/>
-        <Target RefID="9140"/>
+        <Source RefID="10169"/>
+        <Target RefID="10093"/>
       </Copy>
     </Assign>
     <Catch ExceptionID="9214" ID="9215">
       <Mappings ID="9261" Label="Mapping">
         <Output>
-          <Data ID="9306" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList9306">
+          <Data ID="10314" Label="List Id" ReferenceName="ListId" ReferencePath="xmcp.gitintegration" VariableName="listId10314">
             <Source RefID="9261"/>
           </Data>
-          <Target RefID="9307"/>
+          <Target RefID="10315"/>
         </Output>
       </Mappings>
       <Assign>
-        <Source RefID="9307"/>
-        <Target RefID="9140"/>
+        <Source RefID="10315"/>
+        <Target RefID="10093"/>
         <Copy>
-          <Source RefID="9307"/>
-          <Target RefID="9140"/>
+          <Source RefID="10315"/>
+          <Target RefID="10093"/>
         </Copy>
       </Assign>
     </Catch>

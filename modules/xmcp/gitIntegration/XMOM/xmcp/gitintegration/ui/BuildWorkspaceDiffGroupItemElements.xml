@@ -45,28 +45,46 @@
         <Target RefID="10359"/>
       </Output>
       <Mapping>%2%.dataPath=concat("%0%.infoWorkspaceContentDiffGroup.", %0%.groupIndex, ".differenceList.", %1%.itemIndex, ".differenceInfo")</Mapping>
-      <Mapping>%2%.numberOfLines=%1%.numberOfLines</Mapping>
+      <Mapping>%2%.numberOfLines=%1%.numberOfLines+"1"</Mapping>
+      <Mapping>%2%.disabled="true"</Mapping>
     </Mappings>
-    <Mappings ID="9593" Label="Mapping">
+    <Mappings ID="11133" Label="Mapping">
       <Input>
-        <Data ID="10249" Label="Info Workspace Content Diff Item" ReferenceName="InfoWorkspaceContentDiffItem" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffItem10249">
-          <Source RefID="9593"/>
-        </Data>
+        <Data ID="11134" Label="Info Workspace Content Diff Group" ReferenceName="InfoWorkspaceContentDiffGroup" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroup11134"/>
+        <Source RefID="10903"/>
+      </Input>
+      <Input>
+        <Data ID="11135" Label="Info Workspace Content Diff Item" ReferenceName="InfoWorkspaceContentDiffItem" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffItem11135"/>
         <Source RefID="10087"/>
       </Input>
       <Output>
         <Data ID="10197" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition10197">
           <Source RefID="9593"/>
         </Data>
-        <Target RefID="10198"/>
+        <Target RefID="11155"/>
       </Output>
-      <Mapping>%1%.disabled="false"</Mapping>
+      <Mapping>%2%.dataPath=concat("%0%.infoWorkspaceContentDiffGroup.", %0%.groupIndex, ".differenceList.", %1%.itemIndex, ".differenceInfo")</Mapping>
+      <Mapping>%2%.label="Resolve Difference"</Mapping>
     </Mappings>
     <Choice ID="10786" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Case ID="10787" Label="true" Premise="&quot;true&quot;">
         <Assign ID="10790"/>
       </Case>
       <Case ID="10788" Label="false">
+        <Mappings ID="9593" Label="Mapping">
+          <Input>
+            <Data ID="10249" Label="Info Workspace Content Diff Item" ReferenceName="InfoWorkspaceContentDiffItem" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffItem10249">
+              <Source RefID="9593"/>
+            </Data>
+            <Source RefID="10087"/>
+          </Input>
+          <Output>
+            <Data ID="11188" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition11188">
+              <Source RefID="9593"/>
+            </Data>
+            <Target RefID="11189"/>
+          </Output>
+        </Mappings>
         <Mappings ID="10283" Label="Mapping">
           <Input>
             <Data ID="10524" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition10524">
@@ -78,19 +96,43 @@
             <Data ID="10533" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition10533">
               <Source RefID="10283"/>
             </Data>
-            <Source RefID="10198"/>
+            <Source RefID="11189">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
           </Input>
           <Output>
             <Data ID="10292" Label="Panel Box Definition" ReferenceName="PanelBoxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="panelBoxDefinition10292">
               <Source RefID="10283"/>
             </Data>
-            <Target RefID="11035"/>
+            <Target RefID="11099"/>
           </Output>
           <Mapping>%2%.leftArea.children["0"]#cast("xmcp.forms.datatypes.TextAreaDefinition")=%0%</Mapping>
           <Mapping>%2%.rightArea.children["0"]#cast("xmcp.forms.datatypes.CheckboxDefinition")=%1%</Mapping>
         </Mappings>
+        <Mappings ID="11230" Label="Mapping">
+          <Input>
+            <Data ID="11231" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition11231"/>
+            <Source RefID="10359"/>
+          </Input>
+          <Input>
+            <Data ID="11232" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition11232"/>
+            <Source RefID="11189">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="11233" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition11233"/>
+            <Target RefID="11234"/>
+          </Output>
+          <Mapping>%2%.header.leftArea.children["0"]#cast("xmcp.forms.datatypes.TextAreaDefinition")=%0%</Mapping>
+          <Mapping>%2%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.CheckboxDefinition")=%1%</Mapping>
+        </Mappings>
         <Assign ID="10792"/>
-        <Data ID="11035" Label="Panel Box Definition" ReferenceName="PanelBoxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="panelBoxDefinition11035">
+        <Data ID="11099" Label="Panel Box Definition" ReferenceName="PanelBoxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="panelBoxDefinition11099">
           <Source RefID="10283"/>
         </Data>
       </Case>
@@ -102,31 +144,35 @@
       </Input>
       <Input>
         <Data ID="10669" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition10669"/>
-        <Source RefID="10198"/>
+        <Source RefID="11155"/>
       </Input>
       <Output>
         <Data ID="10680" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10680">
           <Source RefID="10667"/>
         </Data>
-        <Target RefID="11044"/>
+        <Target RefID="11108"/>
       </Output>
-      <Mapping>%2%.header.leftArea.children["0"]#cast("xmcp.forms.datatypes.TextAreaDefinition")=%0%</Mapping>
-      <Mapping>%2%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.CheckboxDefinition")=%1%</Mapping>
+      <Mapping>%2%.children["0"]#cast("xmcp.forms.datatypes.TextAreaDefinition")=%0%</Mapping>
+      <Mapping>%2%.children["1"]#cast("xmcp.forms.datatypes.CheckboxDefinition")=%1%</Mapping>
     </Mappings>
-    <Data ID="10198" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition10198">
-      <Source RefID="9593"/>
-    </Data>
     <Data ID="10359" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition10359">
       <Source RefID="10180"/>
     </Data>
-    <Data ID="11044" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition11044">
+    <Data ID="11108" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition11108">
       <Source RefID="10667"/>
     </Data>
+    <Data ID="11155" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition11155">
+      <Source RefID="9593"/>
+    </Data>
+    <Data ID="11189" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition11189">
+      <Source RefID="9593"/>
+    </Data>
+    <Data ID="11234" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition11234"/>
     <Assign ID="1">
-      <Source RefID="11044"/>
+      <Source RefID="11108"/>
       <Target RefID="10638"/>
       <Copy>
-        <Source RefID="11044">
+        <Source RefID="11108">
           <Meta>
             <LinkType>UserConnected</LinkType>
           </Meta>

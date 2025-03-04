@@ -98,7 +98,7 @@
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java"/>
+        <CodeSnippet Type="Java">xmcp.gitintegration.WorkspaceObjectManagementImpl.closeWorkspaceDifferencesList(listId17);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Update Workspace Content" Name="updateWorkspaceContent">
@@ -132,13 +132,13 @@
     </Operation>
     <Operation IsStatic="true" Label="Adapt Workspace Difference List" Name="adaptWorkspaceDifferenceList">
       <Input>
-        <Data ID="22" Label="List Id" ReferenceName="ListId" ReferencePath="xmcp.gitintegration" VariableName="listId22"/>
+        <Data ID="9361" Label="List Id" ReferenceName="ListId" ReferencePath="xmcp.gitintegration" VariableName="listId9361"/>
       </Input>
       <Output>
         <Data ID="23" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList23"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.gitintegration.WorkspaceObjectManagementImpl.adaptWorkspaceDifferenceList(listId22);</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.WorkspaceObjectManagementImpl.adaptWorkspaceDifferenceList(listId9361);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

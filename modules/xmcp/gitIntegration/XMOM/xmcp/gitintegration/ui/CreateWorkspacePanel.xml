@@ -82,7 +82,7 @@
         <Data ID="4149" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text4149"/>
         <Target RefID="4150"/>
       </Output>
-      <Mapping>%2%.text=concat(",%1%.", %0%.value, ".infoWorkspaceLists.", %1%.value)</Mapping>
+      <Mapping>%2%.text=concat(",%1%.", %0%.value, ".workspaceDiffsListIds.", %1%.value)</Mapping>
     </Mappings>
     <Mappings ID="88" Label="Mapping">
       <Input>
@@ -161,7 +161,7 @@
       </Output>
       <Mapping>%2%.dataPath=%1%.text</Mapping>
       <Mapping>%2%.rTC=%0%</Mapping>
-      <Mapping>%2%.fQN="xmcp.gitintegration.ui.WorkspaceConfigDefinition"</Mapping>
+      <Mapping>%2%.fQN="xmcp.gitintegration.ui.WorkspaceDiffListsDefinition"</Mapping>
     </Mappings>
     <Mappings ID="2004" Label="Mapping">
       <Input>
