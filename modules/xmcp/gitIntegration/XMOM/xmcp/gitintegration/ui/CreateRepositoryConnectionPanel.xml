@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -102,12 +102,41 @@
       </Output>
       <Mapping>%1%.text=concat("%0%.", %0%.value, ".repositoryConnectionGroup.repository")</Mapping>
     </Mappings>
+    <Mappings ID="3736" Label="Mapping">
+      <Input>
+        <Data ID="3737" Label="Group Index - IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber3737"/>
+        <Source RefID="1720">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="3738" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text3738"/>
+        <Target RefID="3739"/>
+      </Output>
+      <Mapping>%1%.text=concat("%0%.", %0%.value)</Mapping>
+    </Mappings>
     <Mappings ID="1817" Label="Mapping">
       <Input>
-        <Data ID="2545" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text2545">
+        <Data ID="2545" Label="Repository Path Text" ReferenceName="Text" ReferencePath="base" VariableName="text2545">
           <Source RefID="1817"/>
         </Data>
-        <Source RefID="2580"/>
+        <Source RefID="2580">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="3812" Label="Group Path Text" ReferenceName="Text" ReferencePath="base" VariableName="text3812">
+          <Source RefID="1817"/>
+        </Data>
+        <Source RefID="3739">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
       </Input>
       <Input>
         <Data ID="3435" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext3435">
@@ -139,25 +168,25 @@
         </Data>
         <Target RefID="1889"/>
       </Output>
-      <Mapping>%2%.label="pull"</Mapping>
-      <Mapping>%2%.dataPath=%0%.text</Mapping>
-      <Mapping>%2%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").dataPath=%0%.text</Mapping>
-      <Mapping>%2%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%1%</Mapping>
-      <Mapping>%2%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.PullDefinition"</Mapping>
-      <Mapping>%3%.label="push"</Mapping>
-      <Mapping>%3%.dataPath=%0%.text</Mapping>
+      <Mapping>%3%.label="pull"</Mapping>
+      <Mapping>%3%.dataPath=null</Mapping>
       <Mapping>%3%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").dataPath=%0%.text</Mapping>
-      <Mapping>%3%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%1%</Mapping>
-      <Mapping>%3%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.PushDefinition"</Mapping>
-      <Mapping>%4%.label="checkout"</Mapping>
-      <Mapping>%4%.dataPath=%0%.text</Mapping>
-      <Mapping>%4%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").dataPath=%0%.text</Mapping>
-      <Mapping>%4%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%1%</Mapping>
-      <Mapping>%4%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.CheckoutDefinition"</Mapping>
-      <Mapping>%5%.label="manage credentials"</Mapping>
+      <Mapping>%3%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%2%</Mapping>
+      <Mapping>%3%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.PullDefinition"</Mapping>
+      <Mapping>%4%.label="push"</Mapping>
+      <Mapping>%4%.dataPath=null</Mapping>
+      <Mapping>%4%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").dataPath=%1%.text</Mapping>
+      <Mapping>%4%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%2%</Mapping>
+      <Mapping>%4%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.PushDefinition"</Mapping>
+      <Mapping>%5%.label="checkout"</Mapping>
+      <Mapping>%5%.dataPath=%0%.text</Mapping>
       <Mapping>%5%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").dataPath=%0%.text</Mapping>
-      <Mapping>%5%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%1%</Mapping>
-      <Mapping>%5%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.ManageCredentialsDefinition"</Mapping>
+      <Mapping>%5%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%2%</Mapping>
+      <Mapping>%5%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.CheckoutDefinition"</Mapping>
+      <Mapping>%6%.label="manage credentials"</Mapping>
+      <Mapping>%6%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").dataPath=%0%.text</Mapping>
+      <Mapping>%6%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%2%</Mapping>
+      <Mapping>%6%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.ManageCredentialsDefinition"</Mapping>
     </Mappings>
     <Mappings ID="309" Label="Mapping">
       <Input>
@@ -327,6 +356,7 @@
     <Data ID="3410" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext3410">
       <Source RefID="3407"/>
     </Data>
+    <Data ID="3739" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text3739"/>
     <Assign ID="1">
       <Source RefID="33"/>
       <Target RefID="10"/>

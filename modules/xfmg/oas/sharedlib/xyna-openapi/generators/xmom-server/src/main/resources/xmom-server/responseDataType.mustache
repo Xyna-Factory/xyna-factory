@@ -72,6 +72,7 @@ BaseTypeName="{{responseRefName}}" BaseTypePath="{{responseRefPath}}">
 return new xact.templates.Document();
 {{/body}}
 {{#body}}
+xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
 {{>jsonOptions}}
 
 xact.templates.Document body;

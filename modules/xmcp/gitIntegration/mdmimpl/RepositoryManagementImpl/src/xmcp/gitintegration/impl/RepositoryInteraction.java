@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -35,11 +36,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.CheckoutCommand;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PushCommand;
+import org.eclipse.jgit.api.RmCommand;
+import org.eclipse.jgit.api.Status;
+import org.eclipse.jgit.api.StatusCommand;
 import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
 import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
@@ -93,9 +98,13 @@ import xmcp.gitintegration.impl.processing.ReferenceSupport;
 import xmcp.gitintegration.impl.references.InternalReference;
 import xmcp.gitintegration.repository.Branch;
 import xmcp.gitintegration.repository.BranchData;
+import xmcp.gitintegration.repository.ChangeSet;
 import xmcp.gitintegration.repository.Commit;
+import xmcp.gitintegration.repository.IndexedWorkspaceFileChange;
 import xmcp.gitintegration.repository.RepositoryConnection;
+import xmcp.gitintegration.repository.RepositoryConnectionGroup;
 import xmcp.gitintegration.repository.RepositoryUser;
+import xmcp.gitintegration.repository.WorkspaceFileChangeList;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
 import xmcp.gitintegration.storage.UserManagementStorage;
@@ -117,7 +126,7 @@ public class RepositoryInteraction {
     }
     return dism;
   }
-  
+
 
   private RepositoryCredentialsManagement getCredentialsMgmt() {
     if(credMgmt == null) {
@@ -200,7 +209,80 @@ public class RepositoryInteraction {
   }
 
 
-  public void push(String repository, String message, boolean dryrun, String user) throws Exception {
+  public ChangeSet loadChanges(String repository) throws Exception {
+    if (repository == null) { throw new IllegalArgumentException("Parameter repository is empty."); }
+    Repository repo = loadRepo(repository, true);
+    List<? extends RepositoryConnectionGroup> grouplist = RepositoryManagementImpl.listRepositoryConnectionGroups();
+    RepositoryConnectionGroup group = selectGroup(grouplist, repository);
+    ChangeSet ret = prepareChangeSet(group);
+    try (Git git = new Git(repo)) {
+      StatusCommand cmd = git.status();
+      Status status = cmd.call();
+      for (String str : status.getChanged()) {
+        handleFileChange(str, "Changed", ret);
+      }
+      for (String str : status.getModified()) {
+        handleFileChange(str, "Modified", ret);
+      }
+      for (String str : status.getMissing()) {
+        handleFileChange(str, "Deleted", ret);
+      }
+      for (String str : status.getUntracked()) {
+        handleFileChange(str, "New", ret);
+      }
+    }
+    return ret;
+  }
+  
+  
+  private ChangeSet prepareChangeSet(RepositoryConnectionGroup group) {
+    ChangeSet ret = new ChangeSet();
+    int i = 0;
+    for (RepositoryConnection conn : group.getRepositoryConnection()) {      
+      WorkspaceFileChangeList wfcl = new WorkspaceFileChangeList();
+      wfcl.setWorkspacePath(conn.getSubpath());
+      wfcl.setWorkspaceName(conn.getWorkspaceName());
+      wfcl.setWorkspaceIndex(i);
+      ret.addToChanges(wfcl);
+      i++;
+    }
+    return ret;
+  }
+  
+  private RepositoryConnectionGroup selectGroup(List<? extends RepositoryConnectionGroup> grouplist, String repository) {
+    for (RepositoryConnectionGroup group : grouplist) {
+      String path = group.getRepository().getPath();
+      if (repository.equals(path)) {
+        return group;
+      }
+    }
+    throw new RuntimeException("Could not find data for repository " + repository);
+  }
+  
+
+  private void handleFileChange(String path, String typestr, ChangeSet cs) {
+    IndexedWorkspaceFileChange change = new IndexedWorkspaceFileChange();
+    change.setFileFullPath(path);
+    change.setType(typestr);
+    for (WorkspaceFileChangeList wfcl : cs.getChanges()) {
+      String wspath = wfcl.getWorkspacePath();
+      if (path.startsWith(wspath) && (path.length() > wspath.length())) {
+        String subpath = path.substring(wspath.length() + 1);
+        change.setFileSubpath(subpath);
+        if (wfcl.getIndexedFileChangeList() == null) {
+          change.setIndex(0);
+        }
+        else {
+          change.setIndex(wfcl.getIndexedFileChangeList().size());
+        }
+        wfcl.addToIndexedFileChangeList(change);
+      }
+    }
+  }
+
+
+  public void push(String repository, String message, boolean dryrun, String user, List<String> filePatterns) throws Exception {
+    if (message == null) { throw new IllegalArgumentException("Commit message is empty"); }
     Repository repo = loadRepo(repository, true);
     GitDataContainer container;
 
@@ -214,7 +296,7 @@ public class RepositoryInteraction {
       if (!container.pull.isEmpty()) {
         throw new RuntimeException("pulls required: " + String.join(", ", container.pull));
       }
-      processPushs(git, repo, container, message);
+      processPushs(git, repo, container, message, filePatterns);
     }
   }
 
@@ -267,6 +349,7 @@ public class RepositoryInteraction {
       }
     }
   }
+
 
   private boolean existsLocalBranch(Git git, String branchName) {
     try {
@@ -455,7 +538,7 @@ public class RepositoryInteraction {
         exceptions.add(new Triple<>(exec.execType, workspace, fqn));
       }
     }
-    
+
     List<Long> revisionsSorted = sortRevisions(toDeployByRevision.keySet());
     for(Long revision : revisionsSorted) {
       if(logger.isDebugEnabled()) {
@@ -463,17 +546,18 @@ public class RepositoryInteraction {
       }
       deployRevision(revision, toDeployByRevision.get(revision), exceptions);
     }
-    
+
 
     if (!exceptions.isEmpty()) {
       List<String> e = exceptions.stream().map(this::formatXmomRegistrationException).collect(Collectors.toList());
       container.warnings = e;
     }
   }
-  
-  
+
+
   private List<Long> sortRevisions(Set<Long> revisions) {
-    RuntimeContextDependencyManagement rtcMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
+    RuntimeContextDependencyManagement rtcMgmt =
+XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
     List<Long> revisionsOrdered = new ArrayList<>();
     for (Long candidate : revisions) {
       sortRevision(candidate, revisionsOrdered, revisions, rtcMgmt);
@@ -500,8 +584,8 @@ public class RepositoryInteraction {
     }
     sorted.add(candidate);
   }
-  
-  
+
+
   private void deployRevision(Long revision, List<ObjectToDeploy> objectFiles, List<Triple<PullExecType, String, String>> exceptions) {
     Map<XMOMType, List<String>> items = new HashMap<>();
     String workspace = String.valueOf(revision);
@@ -536,7 +620,7 @@ public class RepositoryInteraction {
       return Optional.empty();
     }
   }
-  
+
   private HashMap<String, List<? extends RepositoryConnectionStorable>> repoCache = new HashMap<>();
 
 
@@ -902,7 +986,7 @@ public class RepositoryInteraction {
   private void fetch(Git git, Repository repository, GitDataContainer container) throws Exception {
     FetchCommand cmd =  git.fetch();
     getCredentialsMgmt().addCredentialsToCommand(cmd, repository, container.creds);
-    
+
     FetchResult result = cmd.call();
     if (logger.isDebugEnabled()) {
       List<String> names = result.getAdvertisedRefs().stream().map(x -> x.getName()).collect(Collectors.toList());
@@ -910,13 +994,50 @@ public class RepositoryInteraction {
     }
   }
 
+  private boolean isDeletedFile(String path, GitDataContainer container) {
+    if (path == null) { return false; }
+    for (DiffEntry diff : container.localDiffs) {
+      if (diff.getChangeType() != ChangeType.DELETE) { continue; }
+      if (path.equals(diff.getOldPath())) {
+        return true;
+      }
+    }
+    return false;
+  }
 
-  private void processPushs(Git git, Repository repository, GitDataContainer container, String msg) throws Exception {
-    git.add().addFilepattern(".").call();
+  private void processPushs(Git git, Repository repository, GitDataContainer container, String msg, List<String> filePatterns)
+      throws Exception {
+    AddCommand add = git.add();
+    RmCommand rm = git.rm();
+    boolean foundAdd = false;
+    boolean foundRm = false;
     
+    if ((filePatterns == null) || (filePatterns.size() < 1)) {
+      add.addFilepattern(".");
+      foundAdd = true;
+    } 
+    else {
+      for (String str : filePatterns) {
+        if (isDeletedFile(str, container)) {
+          rm.addFilepattern(str);
+          foundRm = true;
+        }
+        else {
+          add.addFilepattern(str);
+          foundAdd = true;
+        }
+      }
+    }
+    
+    if (foundAdd) {
+      add.call();
+    }    
+    if (foundRm) {
+      rm.call();
+    }    
     CommitCommand commitCmd = git.commit().setAuthor(container.user, container.mail).setMessage(msg);
     commitCmd.call();
-    
+
     PushCommand pushCmd = git.push();
     getCredentialsMgmt().addCredentialsToCommand(pushCmd, repository, container.creds);
     pushCmd.call();
@@ -924,8 +1045,6 @@ public class RepositoryInteraction {
       logger.debug("executed push.");
     }
   }
-  
-
 
 
   private List<String> listOpenDifferencesLists(String connectedWorkspace) {
@@ -934,7 +1053,7 @@ public class RepositoryInteraction {
     List<String> result = list.stream().map(x -> String.valueOf(x.getListId())).collect(Collectors.toList());
     return result;
   }
-
+   
 
   public static class GitDataContainer {
 
@@ -971,24 +1090,25 @@ public class RepositoryInteraction {
       }
       return sb.toString();
     }
-    
+
     public boolean containsWarnings() {
       return !warnings.isEmpty();
     }
   }
-  
-  
+
   private static class PullExec {
+
     private PullExecType execType;
     private String repoPath;
-    
+
+
     public PullExec(PullExecType execType, String repoPath) {
       this.execType = execType;
       this.repoPath = repoPath;
     }
-    
+
   }
-  
+
   private enum PullExecType {
 
     delete, deploy;
@@ -998,13 +1118,12 @@ public class RepositoryInteraction {
       return type == ChangeType.DELETE ? delete: deploy;
     }
   }
-  
-  
-  
+
+
   private static class ObjectToDeploy {
     private String fqn;
     private String fileName;
-  
+
     public ObjectToDeploy(String fqn, String fileName) {
       this.fqn = fqn;
       this.fileName = fileName;

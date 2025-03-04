@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="GitIntegration" factoryVersion="" versionName="0.1.12" xmlVersion="1.1">
+--><Application applicationName="GitIntegration" factoryVersion="" versionName="0.1.14" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>GuiHttp</ApplicationName>
-        <VersionName>1.3.12</VersionName>
+        <VersionName>1.3.15</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
@@ -34,7 +34,35 @@
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.gitintegration.ui.CreateWorkspaceFileChangeList</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.gitintegration.ui.CreateWorkspaceFileChangePanel</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.gitintegration.ui.CreateWorkspaceFileChangePanelList</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
       <DestinationKey>xmcp.gitintegration.ui.CreateWorkspacePanel</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.gitintegration.ui.ExecuteManageCredentials</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.gitintegration.ui.ExecutePush</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.gitintegration.ui.ExecutePushAll</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.gitintegration.ui.ExecutePushAllOfWorkspace</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -283,6 +311,14 @@
       <FqName>xmcp.gitintegration.repository.FileChange</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.gitintegration.repository.IndexedWorkspaceFileChange</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.gitintegration.repository.PushInput</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.gitintegration.repository.Repository</FqName>
       <Type>DATATYPE</Type>
@@ -303,6 +339,18 @@
       <FqName>xmcp.gitintegration.repository.RepositoryUserCreationData</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.gitintegration.repository.SelectedFileChange</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.gitintegration.repository.WorkspaceFileChangeList</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.gitintegration.repository.WorkspaceSelectedFileChangeList</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.gitintegration.ui.CheckoutDefinition</FqName>
       <Type>WORKFLOW</Type>
@@ -311,8 +359,36 @@
       <FqName>xmcp.gitintegration.ui.CreateRepositoryConnectionPanel</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.gitintegration.ui.CreateWorkspaceFileChangeList</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.gitintegration.ui.CreateWorkspaceFileChangePanel</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.gitintegration.ui.CreateWorkspaceFileChangePanelList</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.gitintegration.ui.CreateWorkspacePanel</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.gitintegration.ui.ExecuteManageCredentials</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.gitintegration.ui.ExecutePush</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.gitintegration.ui.ExecutePushAll</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.gitintegration.ui.ExecutePushAllOfWorkspace</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">

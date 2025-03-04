@@ -196,7 +196,7 @@ public class XmomServerGenerator extends DefaultCodegen {
     property.baseName = "Value";
     property.name = "value";
   }
-    
+  
   private void setInheritance(Map<String, ModelMap> modelMap) {
     for (Entry<String, ModelMap> model: modelMap.entrySet()) {
       if (model.getValue().getModel().getName().equals(model.getValue().getModel().parent)) {
@@ -204,8 +204,8 @@ public class XmomServerGenerator extends DefaultCodegen {
       }
       ModelMap parent = modelMap.get(model.getValue().getModel().parent);
       if (parent != null) {
-        for(CodegenProperty var: model.getValue().getModel().vars) {
-          for(CodegenProperty parentVar: parent.getModel().vars) {
+        for(CodegenProperty var: model.getValue().getModel().getAllVars()) {
+          for(CodegenProperty parentVar: parent.getModel().getAllVars()) {
             if(parentVar.getName().equals(var.getName())) {
               var.isInherited = true;
             }
@@ -217,7 +217,7 @@ public class XmomServerGenerator extends DefaultCodegen {
   
   private void updateDiscriminatorMapping(Map<String, ModelMap> modelMap) {
     for (Entry<String, ModelMap> model: modelMap.entrySet()) {
-      if (model.getValue().getModel().getHasDiscriminatorWithNonEmptyMapping()) {
+      if (model.getValue().getModel().getHasDiscriminatorWithNonEmptyMapping() && model.getValue().getModel().oneOf.isEmpty()) {
         List<MappedModel> toRemove = new ArrayList<>();
         for (MappedModel mapping: model.getValue().getModel().getDiscriminator().getMappedModels()) {
           CodegenModel mo = mapping.getModel();
