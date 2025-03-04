@@ -26,10 +26,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.w3c.dom.Document;
-import org.yangcentral.yangkit.base.YangContext;
 import org.yangcentral.yangkit.model.api.stmt.Module;
-import org.yangcentral.yangkit.model.impl.schema.YangSchemaContextImpl;
-
 import com.gip.xyna.utils.collections.Pair;
 
 import xdev.yang.impl.Constants;
