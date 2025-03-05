@@ -22,7 +22,98 @@
     </Input>
     <Output>
       <Data ID="10" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10"/>
+      <Data ID="1874" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1874"/>
+      <Data ID="1397" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository1397"/>
+      <Data ID="1737" Label="Branch Data" ReferenceName="BranchData" ReferencePath="xmcp.gitintegration.repository" VariableName="branchData1737"/>
     </Output>
+    <ServiceReference ID="1662" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="1661"/>
+      <Target RefID="1661"/>
+    </ServiceReference>
+    <ServiceReference ID="1448" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="1447"/>
+      <Target RefID="1447"/>
+    </ServiceReference>
+    <Function ID="1661" Label="List Branches">
+      <Source RefID="1662"/>
+      <Source RefID="32"/>
+      <Target RefID="1662"/>
+      <Target RefID="1664"/>
+      <Invoke Operation="listBranches" ServiceID="1662">
+        <Source RefID="32"/>
+      </Invoke>
+      <Receive ServiceID="1662">
+        <Target RefID="1664"/>
+      </Receive>
+    </Function>
+    <Mappings ID="64" Label="Mapping">
+      <Output>
+        <Data ID="107" Label="Branch - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition107">
+          <Source RefID="64"/>
+        </Data>
+        <Target RefID="108"/>
+      </Output>
+      <Mapping>%0%.label="Current Branch"</Mapping>
+      <Mapping>%0%.dataPath="%2%.currentBranch.name"</Mapping>
+    </Mappings>
+    <Function ID="1447" Label="get Own RuntimeContext">
+      <Source RefID="1448"/>
+      <Target RefID="1448"/>
+      <Target RefID="1450"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="1448"/>
+      <Receive ServiceID="1448">
+        <Target RefID="1450"/>
+      </Receive>
+    </Function>
+    <Mappings ID="546" Label="Mapping">
+      <Input>
+        <Data ID="1467" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1467">
+          <Source RefID="546"/>
+        </Data>
+        <Source RefID="1450"/>
+      </Input>
+      <Output>
+        <Data ID="2542" Label="pull - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition2542">
+          <Source RefID="546"/>
+        </Data>
+        <Target RefID="2543"/>
+      </Output>
+      <Mapping>%1%.label="Pull"</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="gitintegration_pull_update-result"</Mapping>
+      <Mapping>%1%.serviceFQN="xmcp.gitintegration.ui.ExecutePull"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.dataPath="%1%"</Mapping>
+    </Mappings>
+    <Mappings ID="825" Label="Mapping">
+      <Output>
+        <Data ID="834" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition834">
+          <Source RefID="825"/>
+        </Data>
+        <Target RefID="835"/>
+      </Output>
+      <Mapping>%0%.label="Result"</Mapping>
+      <Mapping>%0%.numberOfLines="20"</Mapping>
+      <Mapping>%0%.disabled="true"</Mapping>
+      <Mapping>%0%.dataPath="%0%.text"</Mapping>
+    </Mappings>
+    <Mappings ID="972" Label="Mapping">
+      <Input>
+        <Data ID="1040" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition1040">
+          <Source RefID="972"/>
+        </Data>
+        <Source RefID="835"/>
+      </Input>
+      <Output>
+        <Data ID="1121" Label="Result - Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition1121">
+          <Source RefID="972"/>
+        </Data>
+        <Target RefID="1122"/>
+      </Output>
+      <Mapping>%1%.children["0"]#cast("xmcp.forms.datatypes.TextAreaDefinition")=%0%</Mapping>
+      <Mapping>%1%.triggerChangeChildren.eventId="gitintegration_pull_update-result"</Mapping>
+    </Mappings>
     <Mappings ID="23" Label="Mapping">
       <Input>
         <Data ID="55" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository55">
@@ -30,23 +121,96 @@
         </Data>
         <Source RefID="32"/>
       </Input>
+      <Input>
+        <Data ID="149" Label="Branch - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition149">
+          <Source RefID="23"/>
+        </Data>
+        <Source RefID="108"/>
+      </Input>
+      <Input>
+        <Data ID="565" Label="pull - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition565">
+          <Source RefID="546"/>
+        </Data>
+        <Source RefID="2543"/>
+      </Input>
+      <Input>
+        <Data ID="1163" Label="Result - Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition1163">
+          <Source RefID="23"/>
+        </Data>
+        <Source RefID="1122">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
       <Output>
         <Data ID="45" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition45">
           <Source RefID="23"/>
         </Data>
         <Target RefID="46"/>
       </Output>
-      <Mapping>%1%.label="Pull"</Mapping>
+      <Mapping>%4%.label="Pull"</Mapping>
+      <Mapping>%4%.children["0"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%1%</Mapping>
+      <Mapping>%4%.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%2%</Mapping>
+      <Mapping>%4%.children["2"]#cast("xmcp.forms.datatypes.FormDefinition")=%3%</Mapping>
+    </Mappings>
+    <Mappings ID="1903" Label="Mapping">
+      <Output>
+        <Data ID="1928" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1928">
+          <Source RefID="1903"/>
+        </Data>
+        <Target RefID="1929"/>
+      </Output>
+      <Mapping>%0%.text="&lt;no result&gt;"</Mapping>
     </Mappings>
     <Data ID="46" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition46">
       <Source RefID="23"/>
     </Data>
+    <Data ID="108" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition108">
+      <Source RefID="64"/>
+    </Data>
+    <Data ID="835" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition835">
+      <Source RefID="825"/>
+    </Data>
+    <Data ID="1122" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition1122">
+      <Source RefID="972"/>
+    </Data>
+    <Data ID="1450" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1450">
+      <Source RefID="1447"/>
+    </Data>
+    <Data ID="1664" Label="Branch Data" ReferenceName="BranchData" ReferencePath="xmcp.gitintegration.repository" VariableName="branchData1664">
+      <Source RefID="1661"/>
+    </Data>
+    <Data ID="1929" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1929">
+      <Source RefID="1903"/>
+    </Data>
+    <Data ID="2543" Label="pull - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition2543">
+      <Source RefID="546"/>
+    </Data>
     <Assign ID="1">
       <Source RefID="46"/>
+      <Source RefID="1929"/>
+      <Source RefID="32"/>
+      <Source RefID="1664"/>
       <Target RefID="10"/>
+      <Target RefID="1874"/>
+      <Target RefID="1397"/>
+      <Target RefID="1737"/>
       <Copy>
         <Source RefID="46"/>
         <Target RefID="10"/>
+      </Copy>
+      <Copy>
+        <Source RefID="1929"/>
+        <Target RefID="1874"/>
+      </Copy>
+      <Copy>
+        <Source RefID="32"/>
+        <Target RefID="1397"/>
+      </Copy>
+      <Copy>
+        <Source RefID="1664"/>
+        <Target RefID="1737"/>
       </Copy>
     </Assign>
   </Operation>
