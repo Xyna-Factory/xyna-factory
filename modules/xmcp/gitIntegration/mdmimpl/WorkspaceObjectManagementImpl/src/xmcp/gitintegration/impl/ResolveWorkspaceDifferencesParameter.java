@@ -51,6 +51,9 @@ public class ResolveWorkspaceDifferencesParameter {
     this.entry = entry;
   }
 
+  public void setEntry(Long entry) {
+    this.entry = Optional.ofNullable(entry);
+  }
 
   public Optional<String> getResolution() {
     return resolution;
@@ -61,6 +64,9 @@ public class ResolveWorkspaceDifferencesParameter {
     this.resolution = resolution;
   }
 
+  public void setResolution(String resolution) {
+    this.resolution = Optional.ofNullable(resolution);
+  }
 
   public boolean getAll() {
     return all;

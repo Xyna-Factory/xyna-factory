@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Execute Resolve Diff Group List" TypeName="ExecuteResolveDiffGroupList" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Execute Resolve Diff Group List" Name="ExecuteResolveDiffGroupList">
+    <Input>
+      <Data ID="1140" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList1140"/>
+    </Input>
+    <Output/>
+    <ServiceReference ID="1208" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="1207"/>
+      <Target RefID="1207"/>
+    </ServiceReference>
+    <ServiceReference ID="1244" Label="Construct Resolutions for Diff Group" ReferenceName="ConstructResolutionsForDiffGroup" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="1243"/>
+      <Target RefID="1243"/>
+    </ServiceReference>
+    <Mappings ID="1076" Label="Mapping">
+      <Input>
+        <Data ID="1169" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList1169">
+          <Source RefID="1076"/>
+        </Data>
+        <Source RefID="1140"/>
+      </Input>
+      <Output>
+        <Data ID="1271" IsList="true" Label="Info Workspace Content Diff Group" ReferenceName="InfoWorkspaceContentDiffGroup" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroup1271">
+          <Source RefID="1076"/>
+        </Data>
+        <Target RefID="1272"/>
+      </Output>
+      <Mapping>%1%=%0%.infoWorkspaceContentDiffGroup</Mapping>
+    </Mappings>
+    <Foreach ID="1321">
+      <Source RefID="1272"/>
+      <Target RefID="1323"/>
+      <InputList RefID="1272">
+        <Data ID="1322" Label="Info Workspace Content Diff Group" ReferenceName="InfoWorkspaceContentDiffGroup" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroup1322"/>
+      </InputList>
+      <OutputList RefID="1323">
+        <Data ID="1246" IsList="true" Label="Workspace Content Differences Resolution" ReferenceName="WorkspaceContentDifferencesResolution" ReferencePath="xmcp.gitintegration" VariableName="workspaceContentDifferencesResolution1246">
+          <Source RefID="1243"/>
+        </Data>
+      </OutputList>
+      <Function ID="1243" Label="Construct Resolutions for Diff Group">
+        <Source RefID="1244"/>
+        <Source RefID="1322"/>
+        <Target RefID="1244"/>
+        <Target RefID="1246"/>
+        <Invoke Operation="ConstructResolutionsForDiffGroup" ServiceID="1244">
+          <Source RefID="1322"/>
+        </Invoke>
+        <Receive ServiceID="1244">
+          <Target RefID="1246"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <Mappings ID="1195" Label="Mapping">
+      <Input>
+        <Data ID="1197" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList1197"/>
+        <Source RefID="1140"/>
+      </Input>
+      <Output>
+        <Data ID="1198" Label="List Id" ReferenceName="ListId" ReferencePath="xmcp.gitintegration" VariableName="listId1198"/>
+        <Target RefID="1194"/>
+      </Output>
+      <Mapping>%1%.listId=%0%.listId</Mapping>
+    </Mappings>
+    <Function ID="1207" Label="Resolve Workspace Differences">
+      <Source RefID="1208"/>
+      <Source RefID="1194"/>
+      <Source RefID="1323"/>
+      <Target RefID="1208"/>
+      <Invoke Operation="resolveWorkspaceDifferences" ServiceID="1208">
+        <Source RefID="1194"/>
+        <Source RefID="1323"/>
+      </Invoke>
+      <Receive ServiceID="1208"/>
+    </Function>
+    <Data ID="1194" Label="List Id" ReferenceName="ListId" ReferencePath="xmcp.gitintegration" VariableName="listId1194"/>
+    <Data ID="1272" IsList="true" Label="Info Workspace Content Diff Group" ReferenceName="InfoWorkspaceContentDiffGroup" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroup1272">
+      <Source RefID="1076"/>
+    </Data>
+    <Data ID="1323" IsList="true" Label="Workspace Content Differences Resolution" ReferenceName="WorkspaceContentDifferencesResolution" ReferencePath="xmcp.gitintegration" VariableName="workspaceContentDifferencesResolution1323">
+      <Source RefID="1321"/>
+      <Target RefID="1323"/>
+    </Data>
+    <Assign ID="1"/>
+  </Operation>
+</Service>

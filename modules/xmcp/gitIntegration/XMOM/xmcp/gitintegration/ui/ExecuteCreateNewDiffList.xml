@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Execute Create New Diff List" TypeName="ExecuteCreateNewDiffList" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Execute Create New Diff List" Name="ExecuteCreateNewDiffList">
+    <Input>
+      <Data ID="1198" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection1198"/>
+    </Input>
+    <Output/>
+    <ServiceReference ID="1243" Label="Create Workspace Diff" ReferenceName="CreateWorkspaceDiff" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="1242"/>
+      <Target RefID="1242"/>
+    </ServiceReference>
+    <Function ID="1242" Label="Create Workspace Diff">
+      <Source RefID="1243"/>
+      <Source RefID="1198"/>
+      <Target RefID="1243"/>
+      <Target RefID="1245"/>
+      <Invoke Operation="CreateWorkspaceDiff" ServiceID="1243">
+        <Source RefID="1198"/>
+      </Invoke>
+      <Receive ServiceID="1243">
+        <Target RefID="1245"/>
+      </Receive>
+    </Function>
+    <Data ID="1245" Label="List Id" ReferenceName="ListId" ReferencePath="xmcp.gitintegration" VariableName="listId1245">
+      <Source RefID="1242"/>
+    </Data>
+    <Assign ID="1"/>
+  </Operation>
+</Service>

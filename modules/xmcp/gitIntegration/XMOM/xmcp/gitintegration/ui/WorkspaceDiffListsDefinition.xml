@@ -26,10 +26,23 @@
       <Data ID="4200" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection4200"/>
       <Data ID="3967" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds3967"/>
     </Output>
+    <ServiceReference ID="4692" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="4691"/>
+      <Target RefID="4691"/>
+    </ServiceReference>
     <ServiceReference ID="4046" Label="Create Diff List Id Panel" ReferenceName="CreateDiffListIdPanel" ReferencePath="xmcp.gitintegration.ui">
       <Source RefID="4045"/>
       <Target RefID="4045"/>
     </ServiceReference>
+    <Function ID="4691" Label="get Own RuntimeContext">
+      <Source RefID="4692"/>
+      <Target RefID="4692"/>
+      <Target RefID="4690"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="4692"/>
+      <Receive ServiceID="4692">
+        <Target RefID="4690"/>
+      </Receive>
+    </Function>
     <Mappings ID="4105" Label="Mapping">
       <Input>
         <Data ID="4183" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds4183">
@@ -59,16 +72,92 @@
       <Function ID="4045" Label="Create Diff List Id Panel">
         <Source RefID="4046"/>
         <Source RefID="4157"/>
+        <Source RefID="4690"/>
         <Target RefID="4046"/>
         <Target RefID="4048"/>
         <Invoke Operation="CreateDiffListIdPanel" ServiceID="4046">
           <Source RefID="4157"/>
+          <Source RefID="4690"/>
         </Invoke>
         <Receive ServiceID="4046">
           <Target RefID="4048"/>
         </Receive>
       </Function>
     </Foreach>
+    <Mappings ID="4257" Label="Mapping">
+      <Input>
+        <Data ID="4258" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection4258"/>
+        <Source RefID="3837"/>
+      </Input>
+      <Input>
+        <Data ID="4259" IsList="true" Label="WorkspacePanels - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4259"/>
+        <Source RefID="4158"/>
+      </Input>
+      <Output>
+        <Data ID="4260" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4260"/>
+        <Target RefID="4261"/>
+      </Output>
+      <Mapping>%2%.label="Saved difference lists"</Mapping>
+      <Mapping>%2%.children=%1%</Mapping>
+    </Mappings>
+    <Mappings ID="4652" Label="Mapping">
+      <Input>
+        <Data ID="4654" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext4654"/>
+        <Source RefID="4690"/>
+      </Input>
+      <Output>
+        <Data ID="4657" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4657"/>
+        <Target RefID="4651"/>
+      </Output>
+      <Mapping>%1%.label="Save new difference list of workspace-xml and current config"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.dataPath="%0%"</Mapping>
+      <Mapping>%1%.serviceFQN="xmcp.gitintegration.ui.ExecuteCreateNewDiffList"</Mapping>
+    </Mappings>
+    <Mappings ID="5283" Label="Mapping">
+      <Input>
+        <Data ID="5284" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext5284"/>
+        <Source RefID="4690"/>
+      </Input>
+      <Output>
+        <Data ID="5285" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition5285"/>
+        <Target RefID="5286"/>
+      </Output>
+      <Mapping>%1%.label="Overwrite workspace-xml with current config"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.dataPath="%0%"</Mapping>
+      <Mapping>%1%.serviceFQN="xmcp.gitintegration.ui.ExecuteSaveCurrentConfigToWorkspaceXml"</Mapping>
+    </Mappings>
+    <Mappings ID="4391" Label="Mapping">
+      <Input>
+        <Data ID="4945" Label="Start Order Button Definition 1" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4945">
+          <Source RefID="4391"/>
+        </Data>
+        <Source RefID="4651">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="4970" Label="Start Order Button Definition 2" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4970">
+          <Source RefID="4391"/>
+        </Data>
+        <Source RefID="5286">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="4424" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4424">
+          <Source RefID="4391"/>
+        </Data>
+        <Target RefID="4425"/>
+      </Output>
+      <Mapping>%2%.header.leftArea.children["0"]=%0%</Mapping>
+      <Mapping>%2%.header.leftArea.children["1"]=%1%</Mapping>
+    </Mappings>
     <Mappings ID="23" Label="Mapping">
       <Input>
         <Data ID="155" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection155">
@@ -77,10 +166,24 @@
         <Source RefID="3837"/>
       </Input>
       <Input>
-        <Data ID="551" IsList="true" Label="WorkspacePanels - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition551">
+        <Data ID="4350" Label="Form Panel Definition Buttons" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4350">
           <Source RefID="23"/>
         </Data>
-        <Source RefID="4158"/>
+        <Source RefID="4425">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="4458" Label="Form Panel Definition List Ids" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4458">
+          <Source RefID="23"/>
+        </Data>
+        <Source RefID="4261">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
       </Input>
       <Output>
         <Data ID="32" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition32">
@@ -88,8 +191,9 @@
         </Data>
         <Target RefID="33"/>
       </Output>
-      <Mapping>%2%.label=%0%.workspaceName</Mapping>
-      <Mapping>%2%.children=%1%</Mapping>
+      <Mapping>%3%.label=%0%.workspaceName</Mapping>
+      <Mapping>%3%.children["0"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%1%</Mapping>
+      <Mapping>%3%.children["1"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%2%</Mapping>
     </Mappings>
     <Data ID="33" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition33">
       <Source RefID="23"/>
@@ -101,6 +205,13 @@
       <Source RefID="4156"/>
       <Target RefID="4158"/>
     </Data>
+    <Data ID="4261" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4261"/>
+    <Data ID="4425" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4425">
+      <Source RefID="4391"/>
+    </Data>
+    <Data ID="4651" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4651"/>
+    <Data ID="4690" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext4690"/>
+    <Data ID="5286" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition5286"/>
     <Assign ID="1">
       <Source RefID="33"/>
       <Source RefID="3837"/>
@@ -109,7 +220,11 @@
       <Target RefID="4200"/>
       <Target RefID="3967"/>
       <Copy>
-        <Source RefID="33"/>
+        <Source RefID="33">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
         <Target RefID="10"/>
       </Copy>
       <Copy>

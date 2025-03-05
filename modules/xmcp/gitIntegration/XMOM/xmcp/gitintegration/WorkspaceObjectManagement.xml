@@ -103,11 +103,11 @@
     </Operation>
     <Operation IsStatic="true" Label="Update Workspace Content" Name="updateWorkspaceContent">
       <Input>
-        <Data ID="18" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace18"/>
+        <Data ID="9362" Label="Workspace Xml Creation Config" ReferenceName="WorkspaceXmlCreationConfig" ReferencePath="xmcp.gitintegration" VariableName="workspaceXmlCreationConfig9362"/>
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java"/>
+        <CodeSnippet Type="Java">xmcp.gitintegration.WorkspaceObjectManagementImpl.updateWorkspaceContent(workspaceXmlCreationConfig9362);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Get Workspace Xml Status" Name="getWorkspaceXmlStatus">

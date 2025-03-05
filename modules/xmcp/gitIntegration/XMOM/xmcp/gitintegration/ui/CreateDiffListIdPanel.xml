@@ -19,23 +19,11 @@
   <Operation ID="0" IsStatic="false" Label="Create Diff List Id Panel" Name="CreateDiffListIdPanel">
     <Input>
       <Data ID="4618" Label="Workspace Diff List Id" ReferenceName="WorkspaceDiffListId" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffListId4618"/>
+      <Data ID="5197" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext5197"/>
     </Input>
     <Output>
       <Data ID="107" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition107"/>
     </Output>
-    <ServiceReference ID="2154" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
-      <Source RefID="2153"/>
-      <Target RefID="2153"/>
-    </ServiceReference>
-    <Function ID="2153" Label="get Own RuntimeContext">
-      <Source RefID="2154"/>
-      <Target RefID="2154"/>
-      <Target RefID="2156"/>
-      <Invoke Operation="getOwnRuntimeContext" ServiceID="2154"/>
-      <Receive ServiceID="2154">
-        <Target RefID="2156"/>
-      </Receive>
-    </Function>
     <Mappings ID="4167" Label="Mapping">
       <Input>
         <Data ID="4727" Label="Workspace Diff List Id" ReferenceName="WorkspaceDiffListId" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffListId4727">
@@ -54,7 +42,7 @@
         <Data ID="3772" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext3772">
           <Source RefID="3617"/>
         </Data>
-        <Source RefID="2156"/>
+        <Source RefID="5197"/>
       </Input>
       <Input>
         <Data ID="3869" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text3869">
@@ -70,7 +58,7 @@
       </Output>
       <Mapping>%2%.dataPath=%1%.text</Mapping>
       <Mapping>%2%.rTC=%0%</Mapping>
-      <Mapping>%2%.fQN="xmcp.gitintegration.ui.WorkspaceConfigDefinition"</Mapping>
+      <Mapping>%2%.fQN="xmcp.gitintegration.ui.DifferenceDetailsDefinition"</Mapping>
     </Mappings>
     <Mappings ID="2004" Label="Mapping">
       <Input>
@@ -85,7 +73,7 @@
         </Data>
         <Target RefID="3432"/>
       </Output>
-      <Mapping>%1%.label="Show Difference List"</Mapping>
+      <Mapping>%1%.label="Show"</Mapping>
       <Mapping>%1%.dataPath=null</Mapping>
       <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%0%</Mapping>
     </Mappings>
@@ -110,12 +98,9 @@
         <Data ID="18" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition18"/>
         <Target RefID="10"/>
       </Output>
-      <Mapping>%2%.label=concat("Difference Id ", %1%.listId)</Mapping>
+      <Mapping>%2%.label=concat("Difference list id = ", %1%.listId)</Mapping>
       <Mapping>%2%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%0%</Mapping>
     </Mappings>
-    <Data ID="2156" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext2156">
-      <Source RefID="2153"/>
-    </Data>
     <Data ID="3432" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition3432">
       <Source RefID="2004"/>
     </Data>

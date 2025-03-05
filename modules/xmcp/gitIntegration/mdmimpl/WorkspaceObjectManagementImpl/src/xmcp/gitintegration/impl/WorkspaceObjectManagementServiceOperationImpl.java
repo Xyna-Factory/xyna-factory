@@ -36,7 +36,11 @@ import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceContentDifferencesResolution;
 import xprc.xpce.Workspace;
 import xmcp.gitintegration.WorkspaceObjectManagementServiceOperation;
+import xmcp.gitintegration.WorkspaceXmlCreationConfig;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
+import xmcp.gitintegration.cli.tools.CreateWorkspaceXmlTools;
+import xmcp.gitintegration.cli.tools.ResolveWorkspaceDiffsTools;
+import xmcp.gitintegration.cli.tools.WorkspaceStatusTools;
 import xmcp.gitintegration.storage.WorkspaceDifferenceListStorage;
 
 
@@ -100,7 +104,7 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
 
 
   public WorkspaceContent createWorkspaceContentFromText(Text text9) {
-    // Implemented as code snippet!
+    // TODO
     return null;
   }
 
@@ -114,27 +118,26 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
 
   @Override
   public void resolveWorkspaceDifferences(ListId listId, List<? extends WorkspaceContentDifferencesResolution> list) {
-    // TODO Auto-generated method stub
+    new ResolveWorkspaceDiffsTools().resolveWorkspaceDifferences(listId, list);
   }
 
 
   @Override
   public void closeWorkspaceDifferencesList(ListId listId) {
-    // TODO Auto-generated method stub
-    
+    new ResolveWorkspaceDiffsTools().closeWorkspaceDifferencesList(listId);
   }
 
 
   @Override
-  public void updateWorkspaceContent(Workspace workspace) {
-    // TODO Auto-generated method stub
-    
+  public void updateWorkspaceContent(WorkspaceXmlCreationConfig conf) {
+    new CreateWorkspaceXmlTools().createWorkspaceXml(conf);    
   }
 
 
   @Override
   public Text getWorkspaceXmlStatus() {
-    return new WorkspaceStatusTools().getWorkspaceXmlStatus();
+    //TODO
+    return new Text();
   }
 
 

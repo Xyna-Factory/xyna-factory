@@ -16,16 +16,14 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.gitintegration.impl;
+package xmcp.gitintegration.cli.tools;
 
 import java.io.File;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 
-import base.Text;
 import xmcp.gitintegration.InfoWorkspaceContentDiffGroup;
 import xmcp.gitintegration.InfoWorkspaceContentDiffGroupList;
 import xmcp.gitintegration.InfoWorkspaceContentDiffItem;
@@ -34,6 +32,9 @@ import xmcp.gitintegration.WorkspaceContent;
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceContentItem;
+import xmcp.gitintegration.impl.OutputCreator;
+import xmcp.gitintegration.impl.WorkspaceContentCreator;
+import xmcp.gitintegration.impl.WorkspaceContentItemDifferenceSelector;
 import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
 import xmcp.gitintegration.storage.WorkspaceDifferenceListStorage;
 import xprc.xpce.Workspace;
@@ -42,19 +43,7 @@ import xprc.xpce.Workspace;
 public class WorkspaceStatusTools {
 
   private static Logger _logger = Logger.getLogger(WorkspaceStatusTools.class);
-  
-  
-  public Text getWorkspaceXmlStatus() {
-    Text ret = new Text();
-    ret.setText("status ok");
-    return ret;
-  }
-    
-  
-  public void updateWorkspaceContent(Workspace workspace) {
-    
-  }
-  
+     
   
   public WorkspaceContent createWorkspaceContentFromFile(base.File fileIn) {
     if (fileIn == null) { throw new IllegalArgumentException("Parameter file is empty"); }
@@ -73,7 +62,8 @@ public class WorkspaceStatusTools {
     try {
       WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
       WorkspaceDifferenceListStorage storage = new WorkspaceDifferenceListStorage();
-      //WorkspaceContentDifferences difflist = storage.loadDifferences(listid.getListId());
+      WorkspaceContentDifferences difflist = storage.loadDifferences(listid.getListId());
+      /*
       List<? extends WorkspaceContentDifferences> alldiffs = storage.loadAllDifferencesLists();
       WorkspaceContentDifferences difflist = null;
       for (WorkspaceContentDifferences wcd : alldiffs) {
@@ -82,6 +72,7 @@ public class WorkspaceStatusTools {
           break;
         }
       }
+      */
       if (difflist == null) { return ret; }
       if (difflist.getDifferences() == null) { return ret; }
       ret.setListId(listid.getListId());
@@ -104,6 +95,9 @@ public class WorkspaceStatusTools {
         group.addToDifferenceList(item);
         item.setItemIndex(group.getDifferenceList().size() - 1);
         item.setNumberOfLines(output.split("\n").length);
+        item.setEntryId(diff.getEntryId());
+        String suggested = (diff.getDifferenceType() == null) ? null : diff.getDifferenceType().getClass().getSimpleName(); 
+        item.setSuggestedResolution(suggested);
       }      
     }
     catch (Exception e) {
@@ -123,20 +117,5 @@ public class WorkspaceStatusTools {
     ret.setPath(file.getPath());
     return ret;
   }
-  
-  
-  /*
-  public WorkspaceContentDifferences compareWorkspaceXmlWithCurrentConfig(Workspace workspace) {
-    
-    String workspaceName = workspace.getName();
-    WorkspaceContentCreator creator = new WorkspaceContentCreator();
-    File file = creator.determineWorkspaceXMLFile(workspaceName);
-    WorkspaceContent xmlConfig = creator.createWorkspaceContentFromFile(file);
-    WorkspaceContent factoryConfig = creator.createWorkspaceContentForWorkspace(workspaceName);
-    WorkspaceContentComparator comparator = new WorkspaceContentComparator();
-    WorkspaceContentDifferences differences = comparator.compareWorkspaceContent(factoryConfig, xmlConfig, true);
-    return differences;
-  }
-  */
-  
+      
 }
