@@ -18,7 +18,7 @@
 --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Execute Save Current Config to Workspace Xml" TypeName="ExecuteSaveCurrentConfigToWorkspaceXml" TypePath="xmcp.gitintegration.ui" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Execute Save Current Config to Workspace Xml" Name="ExecuteSaveCurrentConfigToWorkspaceXml">
     <Input>
-      <Data ID="1198" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection1198"/>
+      <Data ID="1265" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName1265"/>
     </Input>
     <Output/>
     <ServiceReference ID="1229" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
@@ -27,10 +27,10 @@
     </ServiceReference>
     <Mappings ID="1076" Label="Mapping">
       <Input>
-        <Data ID="1211" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection1211">
+        <Data ID="1318" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName1318">
           <Source RefID="1076"/>
         </Data>
-        <Source RefID="1198"/>
+        <Source RefID="1265"/>
       </Input>
       <Output>
         <Data ID="1247" Label="Workspace Xml Creation Config" ReferenceName="WorkspaceXmlCreationConfig" ReferencePath="xmcp.gitintegration" VariableName="workspaceXmlCreationConfig1247">
@@ -38,7 +38,7 @@
         </Data>
         <Target RefID="1248"/>
       </Output>
-      <Mapping>%1%.workspaceName=%0%.workspaceName</Mapping>
+      <Mapping>%1%.workspaceName=%0%.workspaceName0</Mapping>
       <Mapping>%1%.splitResult="false"</Mapping>
       <Mapping>%1%.force="false"</Mapping>
     </Mappings>

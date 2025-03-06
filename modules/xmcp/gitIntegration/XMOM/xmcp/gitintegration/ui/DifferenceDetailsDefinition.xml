@@ -18,17 +18,13 @@
 --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Difference Details Definition" TypeName="DifferenceDetailsDefinition" TypePath="xmcp.gitintegration.ui" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Difference Details Definition" Name="DifferenceDetailsDefinition">
     <Input>
-      <Data ID="11029" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection11029"/>
+      <Data ID="14269" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName14269"/>
       <Data ID="11957" Label="Workspace Diff List Id" ReferenceName="WorkspaceDiffListId" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffListId11957"/>
     </Input>
     <Output>
       <Data ID="7659" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition7659"/>
       <Data ID="11102" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList11102"/>
     </Output>
-    <ServiceReference ID="9901" Label="Build Workspace Diff Group Panel" ReferenceName="BuildWorkspaceDiffGroupPanel" ReferencePath="xmcp.gitintegration.ui">
-      <Source RefID="9900"/>
-      <Target RefID="9900"/>
-    </ServiceReference>
     <ServiceReference ID="11567" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
       <Source RefID="11566"/>
       <Target RefID="11566"/>
@@ -36,6 +32,10 @@
     <ServiceReference ID="7690" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="7689"/>
       <Target RefID="7689"/>
+    </ServiceReference>
+    <ServiceReference ID="9901" Label="Build Workspace Diff Group Panel" ReferenceName="BuildWorkspaceDiffGroupPanel" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="9900"/>
+      <Target RefID="9900"/>
     </ServiceReference>
     <Function ID="7689" Label="get Own RuntimeContext">
       <Source RefID="7690"/>
@@ -133,6 +133,9 @@
       <Mapping>%2%.serviceRTC=%0%</Mapping>
       <Mapping>%2%.dataPath="%0%"</Mapping>
       <Mapping>%2%.serviceFQN="xmcp.gitintegration.ui.ExecuteResolveDiffGroupList"</Mapping>
+      <Mapping>%2%.synchronously="true"</Mapping>
+      <Mapping>%2%.onStartorderResultEvent["0"].eventId="git_int_diffs_refresh"</Mapping>
+      <Mapping>%2%.onStartorderResultEvent["1"].eventId="git_int_diff_details_close"</Mapping>
     </Mappings>
     <Mappings ID="12827" Label="Mapping">
       <Input>
@@ -151,6 +154,9 @@
       <Mapping>%2%.serviceRTC=%0%</Mapping>
       <Mapping>%2%.dataPath="%0%"</Mapping>
       <Mapping>%2%.serviceFQN="xmcp.gitintegration.ui.ExecuteCloseDiffList"</Mapping>
+      <Mapping>%2%.synchronously="true"</Mapping>
+      <Mapping>%2%.onStartorderResultEvent["0"].eventId="git_int_diffs_refresh"</Mapping>
+      <Mapping>%2%.onStartorderResultEvent["1"].eventId="git_int_diff_details_close"</Mapping>
     </Mappings>
     <Mappings ID="12929" Label="Mapping">
       <Input>
@@ -230,6 +236,9 @@
       </Output>
       <Mapping>%3%.label=concat("Difference Details (List-ID = ", %1%.listId, ")")</Mapping>
       <Mapping>%3%.children=concatlists(%2%, %0%)</Mapping>
+      <Mapping>%3%.closable="true"</Mapping>
+      <Mapping>%3%.triggerClose.eventId="git_int_diff_details_close"</Mapping>
+      <Mapping>%3%.triggerChangeChildren.eventId="git_int_diff_details_refresh"</Mapping>
     </Mappings>
     <Data ID="7688" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext7688"/>
     <Data ID="9645" IsList="true" Label="Info Workspace Content Diff Group" ReferenceName="InfoWorkspaceContentDiffGroup" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroup9645">

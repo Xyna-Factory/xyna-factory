@@ -76,6 +76,7 @@ public class WorkspaceStatusTools {
       if (difflist == null) { return ret; }
       if (difflist.getDifferences() == null) { return ret; }
       ret.setListId(listid.getListId());
+      ret.setWorkspaceName(difflist.getWorkspaceName());
       for (WorkspaceContentDifference diff : difflist.getDifferences()) {
         OutputCreator<WorkspaceContentItem, WorkspaceContentDifference, WorkspaceContentItemDifferenceSelector> outputCreator = 
           new OutputCreator<WorkspaceContentItem, WorkspaceContentDifference, WorkspaceContentItemDifferenceSelector>(

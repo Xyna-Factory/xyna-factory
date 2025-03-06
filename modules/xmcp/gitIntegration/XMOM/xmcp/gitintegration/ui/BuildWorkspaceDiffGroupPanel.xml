@@ -88,6 +88,8 @@
       <Mapping>%2%.serviceRTC=%0%</Mapping>
       <Mapping>%2%.dataPath=concat("%0%.infoWorkspaceContentDiffGroup.", %1%.groupIndex, ",%0%")</Mapping>
       <Mapping>%2%.serviceFQN="xmcp.gitintegration.ui.ExecuteResolveDiffGroup"</Mapping>
+      <Mapping>%2%.onStartorderResultEvent["0"].eventId="git_int_diff_details_refresh"</Mapping>
+      <Mapping>%2%.synchronously="true"</Mapping>
     </Mappings>
     <Mappings ID="9566" Label="Mapping">
       <Input>

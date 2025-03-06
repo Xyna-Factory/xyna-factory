@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Refresh Diff Details Child Elements" TypeName="RefreshDiffDetailsChildElements" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Refresh Diff Details Child Elements" Name="RefreshDiffDetailsChildElements">
+    <Input>
+      <Data ID="3527" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList3527"/>
+    </Input>
+    <Output>
+      <Data ID="2628" IsList="true" Label="Base Definition" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="baseDefinition2628"/>
+      <Data ID="3836" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList3836"/>
+    </Output>
+    <ServiceReference ID="3483" Label="Difference Details Definition" ReferenceName="DifferenceDetailsDefinition" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="3482"/>
+      <Target RefID="3482"/>
+    </ServiceReference>
+    <Mappings ID="3565" Label="Mapping">
+      <Input>
+        <Data ID="3618" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList3618">
+          <Source RefID="3565"/>
+        </Data>
+        <Source RefID="3527"/>
+      </Input>
+      <Output>
+        <Data ID="3600" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName3600">
+          <Source RefID="3565"/>
+        </Data>
+        <Target RefID="3601"/>
+      </Output>
+      <Mapping>%1%.workspaceName0=%0%.workspaceName</Mapping>
+    </Mappings>
+    <Mappings ID="3548" Label="Mapping">
+      <Input>
+        <Data ID="3699" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList3699">
+          <Source RefID="3548"/>
+        </Data>
+        <Source RefID="3527"/>
+      </Input>
+      <Output>
+        <Data ID="3582" Label="Workspace Diff List Id" ReferenceName="WorkspaceDiffListId" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffListId3582">
+          <Source RefID="3548"/>
+        </Data>
+        <Target RefID="3583"/>
+      </Output>
+      <Mapping>%1%.listId=%0%.listId</Mapping>
+    </Mappings>
+    <Function ID="3482" Label="Difference Details Definition">
+      <Source RefID="3483"/>
+      <Source RefID="3601"/>
+      <Source RefID="3583"/>
+      <Target RefID="3483"/>
+      <Target RefID="3485"/>
+      <Target RefID="3486"/>
+      <Invoke Operation="DifferenceDetailsDefinition" ServiceID="3483">
+        <Source RefID="3601"/>
+        <Source RefID="3583"/>
+      </Invoke>
+      <Receive ServiceID="3483">
+        <Target RefID="3485"/>
+        <Target RefID="3486"/>
+      </Receive>
+    </Function>
+    <Mappings ID="2038" Label="Mapping">
+      <Input>
+        <Data ID="2137" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition2137">
+          <Source RefID="2038"/>
+        </Data>
+        <Source RefID="3485"/>
+      </Input>
+      <Output>
+        <Data ID="2071" IsList="true" Label="Base Definition" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="baseDefinition2071">
+          <Source RefID="2038"/>
+        </Data>
+        <Target RefID="2072"/>
+      </Output>
+      <Mapping>%1%=%0%.children</Mapping>
+    </Mappings>
+    <Data ID="2072" IsList="true" Label="Base Definition" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="baseDefinition2072">
+      <Source RefID="2038"/>
+    </Data>
+    <Data ID="3485" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3485">
+      <Source RefID="3482"/>
+    </Data>
+    <Data ID="3486" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList3486">
+      <Source RefID="3482"/>
+    </Data>
+    <Data ID="3583" Label="Workspace Diff List Id" ReferenceName="WorkspaceDiffListId" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffListId3583">
+      <Source RefID="3548"/>
+    </Data>
+    <Data ID="3601" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName3601">
+      <Source RefID="3565"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="2072"/>
+      <Source RefID="3486"/>
+      <Target RefID="2628"/>
+      <Target RefID="3836"/>
+      <Copy>
+        <Source RefID="2072"/>
+        <Target RefID="2628"/>
+      </Copy>
+      <Copy>
+        <Source RefID="3486">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="3836"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

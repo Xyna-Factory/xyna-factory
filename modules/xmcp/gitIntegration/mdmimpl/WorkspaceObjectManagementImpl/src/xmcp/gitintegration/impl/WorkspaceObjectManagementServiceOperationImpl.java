@@ -41,6 +41,7 @@ import xmcp.gitintegration.cli.generated.OverallInformationProvider;
 import xmcp.gitintegration.cli.tools.CreateWorkspaceXmlTools;
 import xmcp.gitintegration.cli.tools.ResolveWorkspaceDiffsTools;
 import xmcp.gitintegration.cli.tools.WorkspaceStatusTools;
+import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
 import xmcp.gitintegration.storage.WorkspaceDifferenceListStorage;
 
 
@@ -124,7 +125,8 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
 
   @Override
   public void closeWorkspaceDifferencesList(ListId listId) {
-    new ResolveWorkspaceDiffsTools().closeWorkspaceDifferencesList(listId);
+    WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
+    portal.closeDifferenceList(listId.getListId());
   }
 
 

@@ -18,8 +18,8 @@
 
 package xmcp.gitintegration.cli.tools;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import xmcp.gitintegration.ListId;
 import xmcp.gitintegration.WorkspaceContentDifferencesResolution;
@@ -28,25 +28,18 @@ import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
 
 
 public class ResolveWorkspaceDiffsTools {
-
-  public void closeWorkspaceDifferencesList(ListId listId) {    
+    
+  public void resolveWorkspaceDifferences(ListId listId, List<? extends WorkspaceContentDifferencesResolution> inputlist) {
     WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
-    ResolveWorkspaceDifferencesParameter param = new ResolveWorkspaceDifferencesParameter();
-    param.setWorkspaceDifferenceListId(listId.getListId());
-    param.setClose(true);
-    portal.resolve(param);
-  }
-  
-  
-  public void resolveWorkspaceDifferences(ListId listId, List<? extends WorkspaceContentDifferencesResolution> list) {
-    WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
-    for (WorkspaceContentDifferencesResolution res : list) {
+    List<ResolveWorkspaceDifferencesParameter> paramlist = new ArrayList<>();
+      
+    for (WorkspaceContentDifferencesResolution res : inputlist) {
       ResolveWorkspaceDifferencesParameter param = new ResolveWorkspaceDifferencesParameter();
-      param.setWorkspaceDifferenceListId(listId.getListId());
-      param.setEntry(res.getEntryId());
       param.setResolution(res.getResolution());
-      portal.resolve(param);
-    }
+      param.setEntry(res.getEntryId());
+      paramlist.add(param);
+    }    
+    portal.resolveList(listId.getListId(), paramlist);    
   }
     
 }
