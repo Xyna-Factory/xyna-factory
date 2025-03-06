@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.yangcentral.yangkit.model.api.stmt.Module;
@@ -147,46 +146,59 @@ public class YangCapabilityUtils {
       YangDeviceCapability devCapability = new YangDeviceCapability();
       String textContent = ce.getTextContent().trim();
       devCapability.rawInfo = textContent;
-      try {
-        URI uri = new URI(textContent.replace(":", "/"));
-        List<Pair<String, String>> queryList = null;
-        if (uri.getQuery() != null) {
-          queryList = new ArrayList<Pair<String, String>>();
-          for (String kvp : uri.getQuery().split("&|;")) {
-            String attribute = null;
-            String value = null;
-            int idx = kvp.indexOf('=');
-            if (idx > 0) {
-              attribute = kvp.substring(0, idx);
-              value = kvp.substring(idx + 1);
-            } else {
-              attribute = kvp;
-            }
-            queryList.add(new Pair<String, String>(URLDecoder.decode(attribute, "UTF-8"), URLDecoder.decode(value, "UTF-8")));
-          }
-        }
-
-        if (queryList != null) {
-          devCapability.nameSpace = textContent.split("\\?")[0];
-          for (Pair<String, String> q : queryList) {
-            String queryAttribute = q.getFirst();
-            if (queryAttribute.equals(Constants.TAG_MODULE_REVISION)) {
-              devCapability.revision = q.getSecond();
-            }
-            if (queryAttribute.equals(Constants.TAG_MODULE)) {
-              devCapability.moduleName = q.getSecond();
-            }
-            if (queryAttribute.equals(Constants.TAG_MODULE_FEATURES)) {
-              devCapability.features = Arrays.asList(q.getSecond().split(","));
-            }
-          }
-        }
-      } catch (URISyntaxException | DOMException | UnsupportedEncodingException e) {
-        logger.warn("Invalid capability format: " + ce.getTextContent());
-      }
+      List<Pair<String, String>> queryList = createQueryList(textContent);
       result.add(devCapability);
+
+      if (queryList.isEmpty()) {
+        if(textContent.startsWith(Constants.NETCONF_CAPABILITY_URL)) {
+          String featureName = textContent.substring(Constants.NETCONF_CAPABILITY_URL.length(), textContent.lastIndexOf(":"));
+          devCapability.moduleName = "ietf-netconf";
+          devCapability.nameSpace = Constants.NETCONF_NS;
+          devCapability.features = Arrays.asList(featureName);
+        }
+       continue;
+      }
+      
+      devCapability.nameSpace = textContent.split("\\?")[0];
+      for (Pair<String, String> q : queryList) {
+        String queryAttribute = q.getFirst();
+        if (queryAttribute.equals(Constants.TAG_MODULE_REVISION)) {
+          devCapability.revision = q.getSecond();
+        }
+        if (queryAttribute.equals(Constants.TAG_MODULE)) {
+          devCapability.moduleName = q.getSecond();
+        }
+        if (queryAttribute.equals(Constants.TAG_MODULE_FEATURES)) {
+          devCapability.features = Arrays.asList(q.getSecond().split(","));
+        }
+      }
     }
+
     return result;
+  }
+  
+  private static List<Pair<String, String>> createQueryList(String textContent) {
+    List<Pair<String, String>> queryList = new ArrayList<Pair<String, String>>();
+    try {
+      URI uri = new URI(textContent.replace(":", "/"));
+      if (uri.getQuery() != null) {
+        for (String kvp : uri.getQuery().split("&|;")) {
+          String attribute = null;
+          String value = null;
+          int idx = kvp.indexOf('=');
+          if (idx > 0) {
+            attribute = kvp.substring(0, idx);
+            value = kvp.substring(idx + 1);
+          } else {
+            attribute = kvp;
+          }
+          queryList.add(new Pair<String, String>(URLDecoder.decode(attribute, "UTF-8"), URLDecoder.decode(value, "UTF-8")));
+        }
+      }
+    } catch (URISyntaxException | UnsupportedEncodingException e) {
+      logger.warn("Invalid capability format: " + textContent);
+    }
+    return queryList;
   }
 
 
