@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2024 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
 
-
+import com.gip.xyna.xsor.common.XSORUtil;
 
 public class XSORMemoryDebugger {
 
@@ -91,7 +91,11 @@ public class XSORMemoryDebugger {
         writeHex(w, (byte[]) pk);
       } else {
         w.write(pk.toString());
+        w.write(", pk(type)=");
+        w.write(pk.getClass().getName());
       }
+      w.write(", objectIndex=");
+      w.write(String.valueOf(objectIndex));
       w.write(", state=");
       w.write(state);
       w.write(", modTime=");
@@ -102,6 +106,10 @@ public class XSORMemoryDebugger {
       w.write(String.valueOf(checkSum));
       w.write(", lock=");
       w.write(String.valueOf(lockTID));
+      w.write(", modTimeISO=");
+      w.write(XSORUtil.timestampToISO(modTime));
+      w.write(", releaseTimeISO=");
+      w.write(XSORUtil.timestampToISO(releaseTime));
       w.newLine();
     } catch (IOException e) {
       throw new RuntimeException(e);
