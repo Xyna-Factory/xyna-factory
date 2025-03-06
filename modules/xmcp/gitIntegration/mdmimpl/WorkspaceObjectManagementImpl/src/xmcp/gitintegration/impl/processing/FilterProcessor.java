@@ -25,6 +25,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -277,6 +278,7 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
         for (ReferenceStorable storable : storage.getReferencetorableList(revision, filter.getFilterName(), ReferenceObjectType.FILTER)) {
           refList.add(new Reference(storable.getPath(), storable.getReftype()));
         }
+        Collections.sort(refList, (x, y) -> x.getPath().compareTo(y.getPath()));
         filter.setReferences(refList);
 
         ssl = StringSerializableList.autoSeparator(String.class, ":|/;\\@-_.+#=[]?§$%&!", ':');
@@ -290,6 +292,8 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+    
+    Collections.sort(tiList, (x, y) -> x.getFilterName().compareTo(y.getFilterName()));
     return tiList;
   }
 
