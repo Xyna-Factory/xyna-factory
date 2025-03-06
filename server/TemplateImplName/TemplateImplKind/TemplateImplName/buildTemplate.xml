@@ -23,14 +23,14 @@
 
 
 	<fail message="Unsupported Java version: ${java.version}. Expected 11">
- 	    <condition>
- 		    <not> 
-    		     <and> 
-                     <antversion atleast="1.10.2" />
-                     <javaversion exactly="11" />
- 		         </and>
- 		    </not>
- 	    </condition> 
+        <condition>
+            <not> 
+                <and> 
+                    <antversion atleast="1.10.2" />
+                    <javaversion exactly="11" />
+                </and>
+            </not>
+        </condition> 
 	</fail>
 
 	<condition property="server.available">
