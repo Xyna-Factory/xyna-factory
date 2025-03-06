@@ -21,12 +21,18 @@ import pathlib
 from lxml import etree
 from dataclasses import dataclass
 
-
 @dataclass
 class ApplicationInfo:
   path: str
   applicationName: str
   versionName: str
+  
+@dataclass
+class ProcessedDependencyInfo:
+  status: str
+  name: str
+  fromVersion: str
+  toVersion: str
 
 def link_applicationxml_to_apps(apps_paths, application_name, verbose):
   if verbose:
@@ -37,17 +43,17 @@ def link_applicationxml_to_apps(apps_paths, application_name, verbose):
   if not application_name in all_application_info_by_name:
     raise Exception(f"Application-Name {application_name} not found!")
 
-  application_info = all_application_info_by_name[application_name]
+  application_info_by_name = all_application_info_by_name[application_name]
 
-  if len(application_info) > 1:
+  if len(application_info_by_name) > 1:
     raise Exception(f"Application-Name {application_name} not unique!")
 
-  path = application_info[0].path
+  path = application_info_by_name[0].path
   processed_dependencies = update_RuntimeContextRequirements(path, all_application_info_by_name)
 
   print(f"Path: {path}: Processed RuntimeContextRequirements")
-  for processed_dependency in processed_dependencies:
-    print(processed_dependency)
+  for processed_dependency_info in processed_dependencies:
+    print(processed_dependency_info)
 
 def create_all_application_info(apps_paths, verbose):
   target_list = []  
@@ -93,29 +99,25 @@ def update_RuntimeContextRequirements(path, all_application_info_by_name):
       continue
 
     from_version_name = get_value_from_rtcr(rtcr, 'VersionName')
-    processed_dependency = {}
-    processed_dependency['Status'] = ''
-    processed_dependency['Name'] = rtcr_name
-    processed_dependency['From Version'] = str(from_version_name) if from_version_name is not None else ""
-    processed_dependency['To Version'] = ''
+    processed_dependency_info = ProcessedDependencyInfo('',rtcr_name, str(from_version_name) if from_version_name is not None else "", '')
 
     if rtcr_name not in all_application_info_by_name:
-      processed_dependency['Status'] = 'Warning!: No associated application.xml found!'
-      processed_dependencies.append(processed_dependency)
+      processed_dependency_info.status = 'Warning!: No associated application.xml found!'
+      processed_dependencies.append(processed_dependency_info)
       continue
 
     application_info_by_name = all_application_info_by_name[rtcr_name]
     if len(application_info_by_name) > 1:
       count = len(application_info_by_name)
-      processed_dependency['Status'] = f"Warning!: Not updated, because more then one associated application.xml found! (Count: {count})"
-      processed_dependencies.append(processed_dependency)
+      processed_dependency_info.status = f"Warning!: Not updated, because more then one associated application.xml found! (Count: {count})"
+      processed_dependencies.append(processed_dependency_info)
       continue
 
     to_version_name = application_info_by_name[0].versionName
-    processed_dependency['To Version'] = to_version_name
+    processed_dependency_info.toVersion = to_version_name
     if from_version_name != to_version_name:
       update_required = True
-      processed_dependency['Status'] = 'Updated'
+      processed_dependency_info.status = 'Updated'
       if rtcr_type == 'Application':
         set_value_to_rtcr(rtcr, 'VersionName', to_version_name)
       else:
@@ -123,9 +125,9 @@ def update_RuntimeContextRequirements(path, all_application_info_by_name):
         add_tag_to_rtcr(rtcr, 'VersionName', to_version_name)
         remove_tag_from_rtcr(rtcr, 'WorkspaceName')
     else:
-      processed_dependency['Status'] = 'No update required'
+      processed_dependency_info.status = 'No update required'
 
-    processed_dependencies.append(processed_dependency)
+    processed_dependencies.append(processed_dependency_info)
   if update_required:
     write_xml(path, tree)
 
