@@ -49,10 +49,10 @@ def link_applicationxml_to_apps(apps_paths, application_name, verbose):
     raise Exception(f"Application-Name {application_name} not unique!")
 
   path = application_info_by_name[0].path
-  processed_dependencies = update_RuntimeContextRequirements(path, all_application_info_by_name)
+  processed_dependency_info_list = update_RuntimeContextRequirements(path, all_application_info_by_name)
 
   print(f"Path: {path}: Processed RuntimeContextRequirements")
-  for processed_dependency_info in processed_dependencies:
+  for processed_dependency_info in processed_dependency_info_list:
     print(processed_dependency_info)
 
 def create_all_application_info(apps_paths, verbose):
@@ -84,7 +84,7 @@ def create_all_application_info_by_name(all_application_info):
   return target_dict
 
 def update_RuntimeContextRequirements(path, all_application_info_by_name):
-  processed_dependencies = []
+  processed_dependency_info_list = []
   parser = etree.XMLParser(remove_blank_text=True)
   tree = etree.parse(path, parser=parser)
   root = tree.getroot()
@@ -103,14 +103,14 @@ def update_RuntimeContextRequirements(path, all_application_info_by_name):
 
     if rtcr_name not in all_application_info_by_name:
       processed_dependency_info.status = 'Warning!: No associated application.xml found!'
-      processed_dependencies.append(processed_dependency_info)
+      processed_dependency_info_list.append(processed_dependency_info)
       continue
 
     application_info_by_name = all_application_info_by_name[rtcr_name]
     if len(application_info_by_name) > 1:
       count = len(application_info_by_name)
       processed_dependency_info.status = f"Warning!: Not updated, because more then one associated application.xml found! (Count: {count})"
-      processed_dependencies.append(processed_dependency_info)
+      processed_dependency_info_list.append(processed_dependency_info)
       continue
 
     to_version_name = application_info_by_name[0].versionName
@@ -127,11 +127,11 @@ def update_RuntimeContextRequirements(path, all_application_info_by_name):
     else:
       processed_dependency_info.status = 'No update required'
 
-    processed_dependencies.append(processed_dependency_info)
+    processed_dependency_info_list.append(processed_dependency_info)
   if update_required:
     write_xml(path, tree)
 
-  return processed_dependencies
+  return processed_dependency_info_list
 
 def get_value_from_rtcr(rtcr, tag_name):
   value = None
