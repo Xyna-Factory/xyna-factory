@@ -136,9 +136,28 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
     @SuppressWarnings("rawtypes")
     public <T extends Storable> void addTable(Class<T> klass, boolean forceWidening, Properties props)
             throws PersistenceLayerException {
-        try {
-            MySQLPersistenceLayerAlterTableConnection alterTableConn = new MySQLPersistenceLayerAlterTableConnection(
-                    mySQLPersistenceLayer, this, sqlUtils);
+        try (MySQLPersistenceLayerAlterTableConnection alterTableConn = new MySQLPersistenceLayerAlterTableConnection(
+                mySQLPersistenceLayer, this, sqlUtils)) {
+
+            String tableName = Storable.getPersistable(klass).tableName().toLowerCase();
+
+            // locking of access to schema for table
+            if (this.mySQLPersistenceLayer.useSchemaLocking()) {
+                String schemaName = "";
+                if (this.mySQLPersistenceLayer.getSchemaName() != null)
+                    schemaName = this.mySQLPersistenceLayer.getSchemaName().toLowerCase();
+
+                // create lock for schema and table and wait at most for timeout
+                String lock = schemaName + "_" + tableName;
+                if (lock.length() > 64)
+                    lock = lock.substring(0, 64);
+                if (!alterTableConn.tryLock(lock, this.mySQLPersistenceLayer.getSchemaLockingTimeout())) {
+                    throw new XNWH_GeneralPersistenceLayerException(
+                            "Storable " + Storable.getPersistable(klass).tableName()
+                                    + " could not be locked in " + MySQLPersistenceLayer.class.getSimpleName());
+                }
+            }
+
             if (forceWidening) {
                 boolean previousSetting = this.mySQLPersistenceLayer.useAutomaticColumnTypeWidening();
                 this.mySQLPersistenceLayer.enableAutomaticColumnTypeWidening();
@@ -147,10 +166,12 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
             } else {
                 DatabasePersistenceLayerWithAlterTableSupportHelper.addTable(alterTableConn, klass);
             }
-            MySQLPersistenceLayer.getTableClassMap().put(Storable.getPersistable(klass).tableName().toLowerCase(),
-                    klass);
+            MySQLPersistenceLayer.getTableClassMap().put(tableName, klass);
         } catch (com.gip.xyna.xnwh.exception.SQLRuntimeException e) {
             validateConnection();
+            throw new XNWH_GeneralPersistenceLayerException("Storable " + Storable.getPersistable(klass).tableName()
+                    + " could not be registered in " + MySQLPersistenceLayer.class.getSimpleName(), e);
+        } catch (Exception e) {
             throw new XNWH_GeneralPersistenceLayerException("Storable " + Storable.getPersistable(klass).tableName()
                     + " could not be registered in " + MySQLPersistenceLayer.class.getSimpleName(), e);
         }
@@ -229,6 +250,9 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
     @SuppressWarnings("rawtypes")
     private <T extends Storable> void deleteSingleElement(T storable, String deleteString)
             throws PersistenceLayerException {
+
+        validateAccessMode(storable.getClass().getCanonicalName());
+
         com.gip.xyna.utils.db.Parameter paras = new com.gip.xyna.utils.db.ExtendedParameter();
         Column colPK = MySQLPersistenceLayer.getColumnForPrimaryKey(storable);
         this.mySQLPersistenceLayer.addToParameter(paras, colPK, storable.getPrimaryKey(), storable);
@@ -245,6 +269,9 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
 
     @SuppressWarnings("rawtypes")
     public <T extends Storable> void deleteAll(Class<T> klass) throws PersistenceLayerException {
+
+        validateAccessMode(klass.getCanonicalName());
+
         String delete = "truncate table " + Storable.getPersistable(klass).tableName().toLowerCase();
         try {
             sqlUtils.executeDML(delete, null);
@@ -260,7 +287,11 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
         if (!(cmdInterface instanceof MySQLPreparedCommand)) {
             throw new XNWH_IncompatiblePreparedObjectException(PreparedCommand.class.getSimpleName());
         }
+        
         MySQLPreparedCommand cmd = (MySQLPreparedCommand) cmdInterface;
+
+        validateAccessMode(cmd.getSqlString());
+
         ensureOpen();
         com.gip.xyna.utils.db.Parameter sqlUtilsParas = null;
         if (paras != null) {
@@ -359,6 +390,9 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
         // TODO merging von objekten mit dem gleichen pk
 
         final T firstElement = storableCollection.iterator().next();
+
+        validateAccessMode(firstElement.getClass().getCanonicalName());
+
         // gibt bytearray als string zurück
         ResultSetReader<Object> resultSetReaderForPK = MySQLPersistenceLayer
                 .getResultSetReaderForPrimaryKey(firstElement.getPrimaryKey());
@@ -502,6 +536,8 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
 
     @SuppressWarnings("rawtypes")
     public <T extends Storable> boolean persistObject(T storable) throws PersistenceLayerException {
+
+        validateAccessMode(storable.getClass().getCanonicalName());
 
         // FIXME dieser Code ist aus OraclePersistenceLayer kopiert. Aufgrund der
         // Ähnlichkeiten sollte er
@@ -854,6 +890,14 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
         MySQLPersistenceLayer.getTableClassMap().remove(Storable.getPersistable(arg0).tableName().toLowerCase());
         for (Column col : Storable.getColumns(arg0)) {
             this.mySQLPersistenceLayer.getColumnMap().remove(col);
+        }
+    }
+
+    private void validateAccessMode(final String details) throws XNWH_GeneralPersistenceLayerException {
+        MySQLPersistenceLayer.AccessMode mode = this.mySQLPersistenceLayer.getAccessMode();
+        if (!mode.equals(MySQLPersistenceLayer.AccessMode.READ_WRITE)) {
+            String msg = "Can not change data because of access mode " + mode +". " + details;
+            throw new XNWH_GeneralPersistenceLayerException(msg);
         }
     }
 

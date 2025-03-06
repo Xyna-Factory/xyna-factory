@@ -34,6 +34,7 @@ import xact.http.URLPath;
 import xact.http.URLPathQuery;
 import xact.http.enums.httpmethods.HTTPMethod;
 import xdev.yang.impl.GuiHttpInteraction;
+import xdev.yang.impl.usecase.AsyncDeployment.DeployData;
 import xmcp.processmodeller.datatypes.response.GetServiceGroupResponse;
 
 
@@ -216,6 +217,11 @@ public class Usecase implements AutoCloseable {
   public void deploy() {
     URLPath url = new URLPath(baseUrl + "/deploy", null, null);
     String payload = "{\"revision\":3}";
+    if(AsyncDeployment.PROP_ASYNC_DEPLOY.get()) {
+      DeployData data = new DeployData(getRunnable(), url);
+      AsyncDeployment.getInstance().requestAsyncDeploy(data);
+      return;
+    }
     executeRunnable(runnable, url, GuiHttpInteraction.METHOD_POST, payload, "Could not deploy datatype.");
   }
 
