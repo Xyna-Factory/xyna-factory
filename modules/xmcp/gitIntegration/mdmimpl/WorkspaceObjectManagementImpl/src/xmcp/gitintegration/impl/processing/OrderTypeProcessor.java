@@ -21,6 +21,7 @@ package xmcp.gitintegration.impl.processing;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -721,6 +722,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
     List<OrderType> otList = new ArrayList<OrderType>();
     try {
       List<OrdertypeParameter> otpList = getOrderTypeManagement().listOrdertypes(revision);
+      otpList.removeIf(x -> !x.containsCustomConfig());
       for (OrdertypeParameter otp : otpList) {
         OrderType ot = new OrderType();
         ot.setName(otp.getOrdertypeName());
@@ -772,6 +774,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
               irList.add(ir);
             }
           }
+          Collections.sort(irList, this::compareInharitanceRules);
         }
 
         // Capacities
@@ -785,6 +788,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
             cap.setCardinality(capEntry.getCardinality());
             capList.add(cap);
           }
+          Collections.sort(capList, (x, y) -> x.getCapacityName().compareTo(y.getCapacityName()));
         }
 
         // Priority
@@ -798,9 +802,24 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+    
+    Collections.sort(otList, (x, y) -> x.getName().compareTo(y.getName()));
     return otList;
   }
+  
 
+  private int compareInharitanceRules(InheritanceRule rule1, InheritanceRule rule2) {
+    int result = rule1.getParameterType().compareTo(rule2.getParameterType());
+    if (result != 0) {
+      return result;
+    }
+    result = rule1.getPrecedence().compareTo(rule2.getPrecedence());
+    if (result != 0) {
+      return result;
+    }
+    result = rule1.getChildFilter().compareTo(rule2.getChildFilter());
+    return result;
+  }
 
   @Override
   public void create(OrderType item, long revision) {

@@ -21,6 +21,7 @@ package xmcp.gitintegration.impl.processing;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -177,6 +178,7 @@ public class FilterInstanceProcessor implements WorkspaceContentProcessor<Filter
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+    Collections.sort(fiList, (x, y) -> x.getFilterInstanceName().compareTo(y.getFilterInstanceName()));
     return fiList;
   }
 

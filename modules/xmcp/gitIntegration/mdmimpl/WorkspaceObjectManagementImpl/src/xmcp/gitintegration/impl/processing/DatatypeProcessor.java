@@ -21,6 +21,7 @@ package xmcp.gitintegration.impl.processing;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -181,17 +182,20 @@ public class DatatypeProcessor implements WorkspaceContentProcessor<Datatype> {
   public List<Datatype> createItems(Long revision) {
     List<Datatype> dtList = new ArrayList<Datatype>();
     Map<String, List<ReferenceStorable>> rsMap = getReferenceStorableListGroupMyFQName(revision);
-    if (!rsMap.isEmpty()) {
-      for (Map.Entry<String, List<ReferenceStorable>> entry : rsMap.entrySet()) {
-        Datatype dd = new Datatype();
-        dd.setFQName(entry.getKey());
-        List<Reference> refList = new ArrayList<Reference>();
-        dd.setReferences(refList);
-        for (ReferenceStorable refStorable : entry.getValue()) {
-          refList.add(new Reference(refStorable.getPath(), refStorable.getReftype()));
-        }
-        dtList.add(dd);
+    if (rsMap.isEmpty()) {
+      return dtList;
+    }
+    for (Map.Entry<String, List<ReferenceStorable>> entry : rsMap.entrySet()) {
+      Datatype dd = new Datatype();
+      dd.setFQName(entry.getKey());
+      List<Reference> refList = new ArrayList<Reference>();
+      dd.setReferences(refList);
+      List<ReferenceStorable> refStorables = entry.getValue();
+      Collections.sort(refStorables, (x, y) -> x.getIndex().compareTo(y.getIndex()));
+      for (ReferenceStorable refStorable : refStorables) {
+        refList.add(new Reference(refStorable.getPath(), refStorable.getReftype()));
       }
+      dtList.add(dd);
     }
     return dtList;
   }
@@ -203,9 +207,7 @@ public class DatatypeProcessor implements WorkspaceContentProcessor<Datatype> {
     List<ReferenceStorable> refStorablList = storage.getAllReferencesForType(revision, ReferenceObjectType.DATATYPE);
     if (refStorablList != null) {
       for (ReferenceStorable refStorable : refStorablList) {
-        if (resultMap.get(refStorable.getObjectName()) == null) {
-          resultMap.put(refStorable.getObjectName(), new ArrayList<ReferenceStorable>());
-        }
+        resultMap.putIfAbsent(refStorable.getObjectName(), new ArrayList<ReferenceStorable>());
         resultMap.get(refStorable.getObjectName()).add(refStorable);
       }
     }

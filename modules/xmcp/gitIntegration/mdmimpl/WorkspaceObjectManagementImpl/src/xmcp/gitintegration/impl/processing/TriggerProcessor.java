@@ -25,6 +25,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -262,6 +263,7 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
         for (ReferenceStorable storable : storage.getReferencetorableList(revision, trig.getTriggerName(), ReferenceObjectType.TRIGGER)) {
           refList.add(new Reference(storable.getPath(), storable.getReftype()));
         }
+        Collections.sort(refList, (x, y) -> x.getPath().compareTo(y.getPath()));
         trig.setReferences(refList);
 
         ssl = StringSerializableList.autoSeparator(String.class, ":|/;\\@-_.+#=[]?§$%&!", ':');
@@ -273,6 +275,7 @@ public class TriggerProcessor implements WorkspaceContentProcessor<Trigger> {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+    Collections.sort(tiList, (x, y) -> x.getTriggerName().compareTo(y.getTriggerName()));
     return tiList;
   }
 

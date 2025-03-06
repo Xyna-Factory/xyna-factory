@@ -21,6 +21,7 @@ package xmcp.gitintegration.impl.processing;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -261,6 +262,7 @@ public class OrderInputSourceProcessor implements WorkspaceContentProcessor<Orde
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+    Collections.sort(resultList, (x, y) -> x.getName().compareTo(y.getName()));
     return resultList;
   }
 
