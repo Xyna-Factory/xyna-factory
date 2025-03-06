@@ -19,30 +19,37 @@
 import argparse
 import pathlib
 from lxml import etree
+from dataclasses import dataclass
+
+
+@dataclass
+class ApplicationInfo:
+  path: str
+  applicationName: str
+  versionName: str
 
 def link_applicationxml_to_apps(apps_paths, application_name, verbose):
   if verbose:
     print(apps_paths, application_name)
-  application_dict_list = create_application_dict_list(apps_paths, verbose)
-  application_name_dict = create_application_name_dict(application_dict_list)
+  all_application_info = create_all_application_info(apps_paths, verbose)
+  all_application_info_by_name = create_all_application_info_by_name(all_application_info)
 
-  if not application_name in application_name_dict:
+  if not application_name in all_application_info_by_name:
     raise Exception(f"Application-Name {application_name} not found!")
 
-  application_dict_list = application_name_dict[application_name]
+  application_info = all_application_info_by_name[application_name]
 
-  if len(application_dict_list) > 1:
+  if len(application_info) > 1:
     raise Exception(f"Application-Name {application_name} not unique!")
 
-  path = application_dict_list[0]['Path']
-  target_list = update_RuntimeContextRequirements(path, application_name_dict)
+  path = application_info[0].path
+  processed_dependencies = update_RuntimeContextRequirements(path, all_application_info_by_name)
 
   print(f"Path: {path}: Processed RuntimeContextRequirements")
-  if target_list:
-    for target_dict in target_list:
-      print(target_dict)
+  for processed_dependency in processed_dependencies:
+    print(processed_dependency)
 
-def create_application_dict_list(apps_paths, verbose):
+def create_all_application_info(apps_paths, verbose):
   target_list = []  
   app_path_list = apps_paths.split(",")
   if verbose:
@@ -52,124 +59,100 @@ def create_application_dict_list(apps_paths, verbose):
       tree = etree.parse(str(path))
       root = tree.getroot()
       if 'applicationName' in root.attrib and 'versionName' in  root.attrib:
-        target_dict = {}
-        target_dict['Path'] = str(path)
-        target_dict['ApplicationName'] = root.attrib['applicationName']
-        target_dict['VersionName'] =  root.attrib['versionName']
-        target_list.append(target_dict)
+        app_info = ApplicationInfo(str(path), root.attrib['applicationName'], root.attrib['versionName'])
+        target_list.append(app_info)
         if verbose:
-          print(target_dict)
+          print(app_info)
   return target_list
 
-def create_application_name_dict(application_dict_list):
+def create_all_application_info_by_name(all_application_info):
   target_dict = {}
-  for application_dict in application_dict_list:
-    applicationName = application_dict['ApplicationName']
+  for application_info in all_application_info:
+    applicationName = application_info.applicationName
     if not applicationName in target_dict:
       target_list = []
-      target_list.append(application_dict)
+      target_list.append(application_info)
       target_dict[applicationName] = target_list
     else: 
-      target_dict[applicationName].append(application_dict)
+      target_dict[applicationName].append(application_info)
   return target_dict
 
-def update_RuntimeContextRequirements(path, application_name_dict):
-  target_list = []
+def update_RuntimeContextRequirements(path, all_application_info_by_name):
+  processed_dependencies = []
   parser = etree.XMLParser(remove_blank_text=True)
   tree = etree.parse(path, parser=parser)
   root = tree.getroot()
   update_required = False
   for rtcr in root.iter('RuntimeContextRequirement'):
-    rtcr_name = get_application_name_from_rtcr(rtcr)
+    rtcr_name = get_value_from_rtcr(rtcr, 'ApplicationName')
     rtcr_type = 'Application'
     if not rtcr_name:
-      rtcr_name = get_workspace_name_from_rtcr(rtcr)
+      rtcr_name = get_value_from_rtcr(rtcr, 'WorkspaceName')
       rtcr_type = 'Workspace'
     if not rtcr_name:
       continue
 
-    from_version_name = get_version_name_from_rtcr(rtcr)
-    target_dict = {}
-    target_dict['Status'] = ''
-    target_dict['Name'] = rtcr_name
-    target_dict['From Version'] = str(from_version_name) if from_version_name is not None else ""
-    target_dict['To Version'] = ''
+    from_version_name = get_value_from_rtcr(rtcr, 'VersionName')
+    processed_dependency = {}
+    processed_dependency['Status'] = ''
+    processed_dependency['Name'] = rtcr_name
+    processed_dependency['From Version'] = str(from_version_name) if from_version_name is not None else ""
+    processed_dependency['To Version'] = ''
 
-    if rtcr_name not in application_name_dict:
-      target_dict['Status'] = 'Warning!: No associated application.xml found!'
-      target_list.append(target_dict)
+    if rtcr_name not in all_application_info_by_name:
+      processed_dependency['Status'] = 'Warning!: No associated application.xml found!'
+      processed_dependencies.append(processed_dependency)
       continue
 
-    application_dict_list = application_name_dict[rtcr_name]
-    if len(application_dict_list) > 1:
-      count = len(application_dict_list)
-      target_dict['Status'] = f"Warning!: Not updated, because more then one associated application.xml found! (Count: {count})"
-      target_list.append(target_dict)
+    application_info_by_name = all_application_info_by_name[rtcr_name]
+    if len(application_info_by_name) > 1:
+      count = len(application_info_by_name)
+      processed_dependency['Status'] = f"Warning!: Not updated, because more then one associated application.xml found! (Count: {count})"
+      processed_dependencies.append(processed_dependency)
       continue
 
-    to_version_name = application_dict_list[0]['VersionName']
-    target_dict['To Version'] = to_version_name
+    to_version_name = application_info_by_name[0].versionName
+    processed_dependency['To Version'] = to_version_name
     if from_version_name != to_version_name:
       update_required = True
-      target_dict['Status'] = 'Updated'
+      processed_dependency['Status'] = 'Updated'
       if rtcr_type == 'Application':
-        set_version_name_to_rtcr(rtcr, to_version_name)
+        set_value_to_rtcr(rtcr, 'VersionName', to_version_name)
       else:
-        add_application_name_to_rtcr(rtcr, rtcr_name)
-        add_version_name_to_rtcr(rtcr, to_version_name)
-        remove_workspace_name_from_rtcr(rtcr)
+        add_tag_to_rtcr(rtcr, 'ApplicationName', rtcr_name)
+        add_tag_to_rtcr(rtcr, 'VersionName', to_version_name)
+        remove_tag_from_rtcr(rtcr, 'WorkspaceName')
     else:
-      target_dict['Status'] = 'No update required'
+      processed_dependency['Status'] = 'No update required'
 
-    target_list.append(target_dict)
+    processed_dependencies.append(processed_dependency)
   if update_required:
     write_xml(path, tree)
 
-  return target_list
+  return processed_dependencies
 
-def get_application_name_from_rtcr(rtcr):
-  applicaton_name = None
+def get_value_from_rtcr(rtcr, tag_name):
+  value = None
   for entry in rtcr:
-    if entry.tag == 'ApplicationName':
-      applicaton_name = entry.text
+    if entry.tag == tag_name:
+      value = entry.text
       break
-  return applicaton_name
+  return value
 
-def add_application_name_to_rtcr(rtcr, applicaton_name):
-  child = etree.Element("ApplicationName")
-  child.text = applicaton_name
+def set_value_to_rtcr(rtcr, tag_name, value):
+  for entry in rtcr:
+    if entry.tag == tag_name:
+      entry.text = value
+      break
+
+def add_tag_to_rtcr(rtcr, tag_name, value):
+  child = etree.Element(tag_name)
+  child.text = value
   rtcr.append(child)
 
-def get_version_name_from_rtcr(rtcr):
-  version_name = None
+def remove_tag_from_rtcr(rtcr, tag_name):
   for entry in rtcr:
-    if entry.tag == 'VersionName':
-      version_name = entry.text
-      break
-  return version_name
-
-def set_version_name_to_rtcr(rtcr, version_name):
-  for entry in rtcr:
-    if entry.tag == 'VersionName':
-      entry.text = version_name
-      break
-
-def add_version_name_to_rtcr(rtcr, version_name):
-  child = etree.Element("VersionName")
-  child.text = version_name
-  rtcr.append(child)
-
-def get_workspace_name_from_rtcr(rtcr):
-  workspace_name = None
-  for entry in rtcr:
-    if entry.tag == 'WorkspaceName':
-      workspace_name = entry.text
-      break
-  return workspace_name
-
-def remove_workspace_name_from_rtcr(rtcr):
-  for entry in rtcr:
-    if entry.tag == 'WorkspaceName':
+    if entry.tag == tag_name:
       rtcr.remove(entry)
       break
 
@@ -181,10 +164,11 @@ def write_xml(path, tree):
   with open(path, 'w') as dest:
     dest.write('<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n' + data)
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--apps_paths',type=str,required=True,help='Directories in which the application.xml files are searched (comma separated)')
-parser.add_argument('--application_name',type=str,required=True,help='Application name whose RuntimeContextRequirements should be updated')
-parser.add_argument('-v', '--verbose', action='store_true')
+if __name__ == '__main__':
+  parser = argparse.ArgumentParser()
+  parser.add_argument('--apps_paths',type=str,required=True,help='Directories in which the application.xml files are searched (comma separated)')
+  parser.add_argument('--application_name',type=str,required=True,help='Application name whose RuntimeContextRequirements should be updated')
+  parser.add_argument('-v', '--verbose', action='store_true')
 
-args=parser.parse_args()
-link_applicationxml_to_apps(args.apps_paths, args.application_name, args.verbose)
+  args=parser.parse_args()
+  link_applicationxml_to_apps(args.apps_paths, args.application_name, args.verbose)
