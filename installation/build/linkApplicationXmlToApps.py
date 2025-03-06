@@ -72,7 +72,7 @@ def create_application_name_dict(application_dict_list):
     else: 
       target_dict[applicationName].append(application_dict)
   return target_dict
-       
+
 def update_RuntimeContextRequirements(path, application_name_dict):
   target_list = []
   parser = etree.XMLParser(remove_blank_text=True)
