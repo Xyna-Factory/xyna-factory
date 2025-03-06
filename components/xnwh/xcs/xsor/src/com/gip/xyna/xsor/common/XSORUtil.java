@@ -28,6 +28,10 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
+import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 
 import com.gip.xyna.debug.Debugger;
 import com.gip.xyna.xsor.indices.management.IndexSearchResult;
@@ -307,5 +311,8 @@ public class XSORUtil {
     }
   }
   
+  public static String timestampToISO(long timestamp) {
+    return LocalDateTime.ofInstant( Instant.ofEpochMilli( timestamp ), ZoneOffset.UTC ).toString();
+  }
   
 }
