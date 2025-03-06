@@ -40,7 +40,7 @@ public class XynaCodegenFactory {
 
 
   private DefaultCodegen gen;
-  
+
   public XynaCodegenFactory(DefaultCodegen generator) {
     setGenerator(generator);
   }
@@ -77,7 +77,7 @@ public class XynaCodegenFactory {
     CodegenPropertyHolder holder = new CodegenPropertyHolder(property);
     return getOrCreateXynaCodegenProperty(holder, className);
   }
-  
+
   public XynaCodegenProperty getOrCreateXynaCodegenPropertyUsingComplexType(CodegenProperty property, String className) {
     CodegenPropertyHolder holder = new CodegenPropertyHolder(property, true);
     return getOrCreateXynaCodegenProperty(holder, className);
@@ -88,11 +88,11 @@ public class XynaCodegenFactory {
     return getOrCreateXynaCodegenProperty(holder, className);
   }
 
-  public XynaCodegenProperty getOrCreateXynaCodegenEnumProperty(Map<String, Object> allowableValues, String className) {
-    CodegenEnum holder = new CodegenEnum(allowableValues);
+  public XynaCodegenProperty getOrCreateXynaCodegenEnumProperty(CodegenModel model, String className) {
+    CodegenEnum holder = new CodegenEnum(model.allowableValues, model.getDataType());
     return getOrCreateXynaCodegenProperty(holder, className);
   }
-  
+
   public XynaCodegenProperty getOrCreateXynaCodegenProperty(AdditionalPropertyWrapper wrapper, String className) {
     CodegenPropertyInfo propInfo = new AdditionalProperty(wrapper);
     return getOrCreateXynaCodegenProperty(propInfo, className);
@@ -103,7 +103,7 @@ public class XynaCodegenFactory {
     xynaProperties.putIfAbsent(newProperty, newProperty);
     return xynaProperties.get(newProperty);
   }
-  
+
   public AdditionalPropertyWrapper getOrCreateAdditionalPropertyWrapper(CodegenProperty property, String userFQN) {
     CodegenPropertyHolder holder = new CodegenPropertyHolder(property);
     XynaCodegenProperty xynaProperty = getOrCreateXynaCodegenProperty(holder, "AdditionalPropertyWrapper");
@@ -116,17 +116,11 @@ public class XynaCodegenFactory {
     return getOrCreateAdditionalPropertyWrapper(xynaProperty, userFQN);
   }
 
-  public AdditionalPropertyWrapper getOrCreateAdditionalPropertyWrapper(Map<String, Object> allowableValues, String userFQN) {
-    CodegenEnum holder = new CodegenEnum(allowableValues);
-    XynaCodegenProperty xynaProperty =  getOrCreateXynaCodegenProperty(holder, "AdditionalPropertyWrapper");
-    return getOrCreateAdditionalPropertyWrapper(xynaProperty, userFQN);
-  }  
-  
   public AdditionalPropertyWrapper getOrCreateAdditionalPropertyWrapper(CodegenPropertyInfo info, String userFQN) {
     XynaCodegenProperty xynaProperty = getOrCreateXynaCodegenProperty(info, "AdditionalPropertyWrapper");
     return getOrCreateAdditionalPropertyWrapper(xynaProperty, userFQN);
   }
-  
+
   public AdditionalPropertyWrapper getOrCreateAdditionalPropertyWrapper(XynaCodegenProperty property, String userFQN) {
     AdditionalPropertyWrapper newWrapper = new AdditionalPropertyWrapper(property, gen);
     additionalPropertyWrapper.putIfAbsent(newWrapper, newWrapper);
@@ -136,8 +130,8 @@ public class XynaCodegenFactory {
     }
     return ret;
   }
-  
-  
+
+
   public XynaCodegenProperty getPropertyToAddionalPropertyWrapper(CodegenProperty additionalProperty, String className) {
     AdditionalPropertyWrapper wrapper = getOrCreateAdditionalPropertyWrapper(additionalProperty, null);
     return getOrCreateXynaCodegenProperty(wrapper, className);
