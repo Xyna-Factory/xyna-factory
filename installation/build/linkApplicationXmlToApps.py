@@ -132,6 +132,7 @@ def get_application_name_from_rtcr(rtcr):
   for entry in rtcr:
     if entry.tag == 'ApplicationName':
       applicaton_name = entry.text
+      break
   return applicaton_name
 
 def add_application_name_to_rtcr(rtcr, applicaton_name):
@@ -144,12 +145,14 @@ def get_version_name_from_rtcr(rtcr):
   for entry in rtcr:
     if entry.tag == 'VersionName':
       version_name = entry.text
+      break
   return version_name
 
 def set_version_name_to_rtcr(rtcr, version_name):
   for entry in rtcr:
     if entry.tag == 'VersionName':
       entry.text = version_name
+      break
 
 def add_version_name_to_rtcr(rtcr, version_name):
   child = etree.Element("VersionName")
@@ -161,6 +164,7 @@ def get_workspace_name_from_rtcr(rtcr):
   for entry in rtcr:
     if entry.tag == 'WorkspaceName':
       workspace_name = entry.text
+      break
   return workspace_name
 
 def remove_workspace_name_from_rtcr(rtcr):
