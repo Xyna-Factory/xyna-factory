@@ -57,6 +57,7 @@ import com.gip.xyna.xact.filter.actions.starttestcase.StarttestcaseAction;
 import com.gip.xyna.xact.filter.actions.xacm.CreateUserAction;
 import com.gip.xyna.xact.filter.actions.xacm.UpdateUserAction;
 import com.gip.xyna.xact.filter.session.XMOMGui;
+import com.gip.xyna.xact.filter.session.XmomUndoRedoHistory;
 import com.gip.xyna.xact.filter.session.XMOMGuiReply.Status;
 import com.gip.xyna.xact.filter.util.Utils;
 import com.gip.xyna.xact.filter.util.xo.DomOrExceptionStructure;
@@ -424,6 +425,9 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     STRICT_TRANSPORT_SECURITY.registerDependency(UserType.Filter, NAME);
     STRICT_TRANSPORT_SECURITY_MAX_AGE.registerDependency(UserType.Filter, NAME);
     
+    XmomUndoRedoHistory.REDO_LIMIT.registerDependency(UserType.Filter, NAME);
+    XmomUndoRedoHistory.UNDO_LIMIT.registerDependency(UserType.Filter, NAME);
+    
     super.onDeployment(triggerInstance);
   }
 
@@ -455,6 +459,9 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     AVARCONSTANTS.unregister();
     STRICT_TRANSPORT_SECURITY.unregister();
     STRICT_TRANSPORT_SECURITY_MAX_AGE.unregister();
+    
+    XmomUndoRedoHistory.REDO_LIMIT.unregister();
+    XmomUndoRedoHistory.UNDO_LIMIT.unregister();
   }
 
 
