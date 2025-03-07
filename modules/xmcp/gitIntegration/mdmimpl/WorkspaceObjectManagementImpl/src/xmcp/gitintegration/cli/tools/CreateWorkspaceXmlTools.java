@@ -79,7 +79,7 @@ public class CreateWorkspaceXmlTools {
     }
     repositoryConnection.setSplitted(conf.getSplitResult());
     RepositoryManagement.updateRepositoryConnection(repositoryConnection);
-        
+    
     String path = RevisionManagement.getPathForRevision(PathType.ROOT, revision);
     if (!conf.getSplitResult()) {
       removeExistingFiles(path);
