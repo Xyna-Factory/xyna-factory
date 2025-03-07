@@ -43,6 +43,7 @@ import xdev.yang.cli.generated.OverallInformationProvider;
 import xdev.yang.impl.YangApplicationGeneration.YangApplicationGenerationData;
 import xdev.yang.impl.usecase.AddUsecase;
 import xdev.yang.impl.usecase.AddVariableToUsecaseSignature;
+import xdev.yang.impl.usecase.AsyncDeployment;
 import xdev.yang.impl.usecase.ConfigureList;
 import xdev.yang.impl.usecase.DeleteUsecaseAssignmentAction;
 import xdev.yang.impl.usecase.DetermineUseCaseAssignments;
@@ -68,6 +69,7 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
     OverallInformationProvider.onDeployment();
     PluginManagement.registerPlugin(this.getClass());
     UseCaseCache.PROP_USECASE_CACHE_SIZE.registerDependency(UserType.Service, "YangAppGenerationService");
+    AsyncDeployment.PROP_ASYNC_DEPLOY.registerDependency(UserType.Service, "YangAppGenerationService");
   }
 
 
@@ -75,6 +77,7 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
     OverallInformationProvider.onUndeployment();
     PluginManagement.unregisterPlugin(this.getClass());
     UseCaseCache.PROP_USECASE_CACHE_SIZE.unregister();
+    AsyncDeployment.PROP_ASYNC_DEPLOY.unregister();
   }
 
   public Long getOnUnDeploymentTimeout() {
