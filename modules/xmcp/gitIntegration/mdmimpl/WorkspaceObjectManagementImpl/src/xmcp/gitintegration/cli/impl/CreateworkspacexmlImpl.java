@@ -39,10 +39,10 @@ public class CreateworkspacexmlImpl extends XynaCommandImplementation<Creatework
     conf.setForce(payload.getForce());
     
     XmlCreationMode mode = payload.getPrintResult() ? XmlCreationMode.ONLY_CREATE_STRING : XmlCreationMode.WRITE_FILE; 
-    String xml = tools.execute(conf, mode);    
+    String xml = tools.execute(conf, mode);
     if (payload.getPrintResult()) {
       writeLineToCommandLine(statusOutputStream, xml);
-    }    
+    }
   }
   
 }
