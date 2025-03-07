@@ -51,7 +51,7 @@ return result.getResult();
         <Data ID="2" Label="{{label}}" VariableName="varName" ReferenceName="{{typeName}}" ReferencePath="{{typePath}}"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return new {{typeName}}(&quot;{{javaEscaped}}&quot;);</CodeSnippet>
+        <CodeSnippet Type="Java">return new {{typeName}}({{javaEscaped}});</CodeSnippet>
      </SourceCode>
     </Operation>
     <Operation Label="is {{enumLabel}}" Name="is{{methodname}}" IsStatic="false">
@@ -64,7 +64,7 @@ return result.getResult();
         </Data>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return &quot;{{javaEscaped}}&quot;.equals(this.getValue());</CodeSnippet>
+        <CodeSnippet Type="Java">return {{checkIsEqual}};</CodeSnippet>
      </SourceCode>
     </Operation>{{/allowableValues}}
   </Service>

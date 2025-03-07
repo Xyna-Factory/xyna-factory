@@ -31,6 +31,26 @@ import org.openapitools.codegen.model.OperationsMap;
 
 public class XynaModelUtils {
 
+  private static final Map<String, String> typeMapping = Map.ofEntries(
+    Map.entry("boolean", "Boolean"),
+    Map.entry("integer", "Long"),
+    Map.entry("long", "Long"),
+    Map.entry("double", "Double"),
+    Map.entry("float", "Double"),
+    Map.entry("number", "Double"),
+    Map.entry("string", "String"),
+    Map.entry("DateTime", "DateTimeType"),
+    Map.entry("date", "DateType"),
+    Map.entry("password", "String"),
+    Map.entry("byte", "String"),
+    Map.entry("binary", "String"),
+    Map.entry("URI", "String")
+  );
+
+  public static Map<String, String> getTypeMapping() {
+    return typeMapping;
+  }
+
   public static Map<String, ModelMap> getModelsFromSupportingFileData(Map<String, Object> objs) {
     @SuppressWarnings("unchecked")
     List<ModelMap> models = (List<ModelMap>) objs.get("models");

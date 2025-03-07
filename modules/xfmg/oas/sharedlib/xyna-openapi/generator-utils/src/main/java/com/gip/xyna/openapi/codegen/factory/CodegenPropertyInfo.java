@@ -26,7 +26,7 @@ import org.openapitools.codegen.CodegenProperty;
 import com.gip.xyna.openapi.codegen.AdditionalPropertyWrapper;
 
 public interface CodegenPropertyInfo {
-  
+
   public String getBaseName();
   public String getName();
   public boolean getIsInherited();
@@ -63,7 +63,7 @@ public interface CodegenPropertyInfo {
 }
 
 class CodegenPropertyHolder implements CodegenPropertyInfo{
-  
+
   private CodegenProperty property;
   private CodegenPropertyInfo items;
   private CodegenPropertyInfo mostInnerItems;
@@ -74,7 +74,7 @@ class CodegenPropertyHolder implements CodegenPropertyInfo{
     useComplexType = false;
   }
 
-  
+
   CodegenPropertyHolder(CodegenProperty property, boolean useComplexTypeAsName) {
     this.property = property;
     useComplexType = useComplexTypeAsName;
@@ -86,80 +86,80 @@ class CodegenPropertyHolder implements CodegenPropertyInfo{
     }
     return property.baseName;
   }
-  
+
   public String getName() {
     if (useComplexType) {
       return getComplexType();
     }
     return property.name;
   }
-  
+
   public boolean getIsInherited() {
     return property.isInherited;
   }
-  
+
   public boolean getIsContainer() {
     return property.isContainer;
   }
-  
+
   public boolean getIsPrimitiveType() {
     return property.isPrimitiveType;
   }
-  
+
   public boolean getIsEnumOrRef() {
     return property.getIsEnumOrRef();
   }
-  
+
   public String getComplexType() {
     return property.getComplexType();
   }
-  
+
   public CodegenPropertyInfo getItems() {
     if (items == null && property.items != null) {
       items = new CodegenPropertyHolder(property.items);
     }
     return items;
   }
-  
+
   public CodegenPropertyInfo getMostInnerItems() {
     if (mostInnerItems == null && property.mostInnerItems != null) {
       mostInnerItems = new CodegenPropertyHolder(property.mostInnerItems);
     }
     return mostInnerItems;
   }
-  
+
   public String getDataType() {
     return property.dataType;
   }
-  
+
   public String getDescription() {
     return property.description;
   }
-  
+
   public String getFormat() {
     return property.getFormat();
   }
-  
+
   public String getMinimum() {
     return property.minimum;
   }
-  
+
   public String getMaximum() {
     return property.maximum;
   }
-  
+
   public boolean getExclusiveMinimum() {
     return property.exclusiveMinimum;
   }
-  
+
   public boolean getExclusiveMaximum() {
     return property.exclusiveMaximum;
   }
-  
+
   public Number getMultipleOf() {
     return property.multipleOf;
   }
-  
+
   public String getDataFormat() {
     return property.dataFormat;
   }
@@ -175,15 +175,15 @@ class CodegenPropertyHolder implements CodegenPropertyInfo{
   public Integer getMaxLength() {
     return property.maxLength;
   }
-  
+
   public Integer getMinItems() {
     return property.minItems;
   }
-  
+
   public Integer getMaxItems() {
     return property.maxItems;
   }
-  
+
   public boolean getRequired() {
     return property.required;
   }
@@ -214,11 +214,11 @@ class CodegenPropertyHolder implements CodegenPropertyInfo{
 }
 
 class CodegenParameterHolder implements CodegenPropertyInfo{
-  
+
   private CodegenParameter parameter;
   private CodegenPropertyInfo items;
   private CodegenPropertyInfo mostInnerItems;
- 
+
   CodegenParameterHolder(CodegenParameter parameter) {
     this.parameter = parameter;
   }
@@ -226,77 +226,77 @@ class CodegenParameterHolder implements CodegenPropertyInfo{
   public String getBaseName() {
     return parameter.baseName;
   }
-  
+
   public String getName() {
     return parameter.paramName;
   }
-  
+
   public boolean getIsInherited() {
     return false;
   }
-  
+
   public boolean getIsContainer() {
     return parameter.isContainer;
   }
-  
+
   public boolean getIsPrimitiveType() {
     return parameter.isPrimitiveType;
   }
-  
+
   public boolean getIsEnumOrRef() {
     return parameter.getIsEnumOrRef();
   }
-  
+
   public String getComplexType() {
     return parameter.getComplexType();
   }
-  
+
   public CodegenPropertyInfo getItems() {
     if (items == null && parameter.items != null) {
       items = new CodegenPropertyHolder(parameter.items);
     }
     return items;
   }
-  
+
   public CodegenPropertyInfo getMostInnerItems() {
     if (mostInnerItems == null && parameter.mostInnerItems != null) {
       mostInnerItems = new CodegenPropertyHolder(parameter.mostInnerItems);
     }
     return mostInnerItems;
   }
-  
+
   public String getDataType() {
     return parameter.dataType;
   }
-  
+
   public String getDescription() {
     return parameter.description;
   }
-  
+
   public String getFormat() {
     return parameter.getFormat();
   }
-  
+
   public String getMinimum() {
     return parameter.minimum;
   }
-  
+
   public String getMaximum() {
     return parameter.maximum;
   }
-  
+
   public boolean getExclusiveMinimum() {
     return parameter.exclusiveMinimum;
   }
-  
+
   public boolean getExclusiveMaximum() {
     return parameter.exclusiveMaximum;
   }
-  
+
   public Number getMultipleOf() {
     return parameter.multipleOf;
   }
-  
+
   public String getDataFormat() {
     return parameter.dataFormat;
   }
@@ -320,7 +320,7 @@ class CodegenParameterHolder implements CodegenPropertyInfo{
   public Integer getMaxItems() {
     return parameter.maxItems;
   }
-  
+
   public boolean getRequired() {
     return parameter.required;
   }
@@ -348,85 +348,91 @@ class CodegenParameterHolder implements CodegenPropertyInfo{
   public String getOpenApiType() {
     return parameter.getBaseType();
   }
-  
+
 }
 
-class CodegenEnum implements CodegenPropertyInfo{
-   
+
+
+class CodegenEnum implements CodegenPropertyInfo {
+
   private Map<String, Object> allowableValues;
-  
-  CodegenEnum(Map<String, Object> allowableValues) {
+  private String enumType;
+
+
+  CodegenEnum(Map<String, Object> allowableValues, String enumType) {
     this.allowableValues = allowableValues;
+    this.enumType = enumType;
   }
-  
+
+
   public String getBaseName() {
     return "Value";
   }
-  
+
   public String getName() {
     return "value";
   }
-  
+
   public boolean getIsInherited() {
     return false;
   }
-  
+
   public boolean getIsContainer() {
     return false;
   }
-  
+
   public boolean getIsPrimitiveType() {
     return true;
   }
-  
+
   public boolean getIsEnumOrRef() {
     return true;
   }
-  
+
   public String getComplexType() {
     return null;
   }
-  
+
   public CodegenPropertyInfo getItems() {
     return null;
   }
-  
+
   public CodegenPropertyInfo getMostInnerItems() {
     return null;
   }
-  
+
   public String getDataType() {
-    return "Enum";
+    return enumType;
   }
-  
+
   public String getDescription() {
     return "";
   }
-  
+
   public String getFormat() {
     return null;
   }
-  
+
   public String getMinimum() {
     return null;
   }
-  
+
   public String getMaximum() {
     return null;
   }
-  
+
   public boolean getExclusiveMinimum() {
     return false;
   }
-  
+
   public boolean getExclusiveMaximum() {
     return false;
   }
-  
+
   public Number getMultipleOf() {
     return null;
   }
-  
+
   public String getDataFormat() {
     return null;
   }
@@ -481,94 +487,94 @@ class CodegenEnum implements CodegenPropertyInfo{
 }
 
 class AdditionalProperty implements CodegenPropertyInfo{
-  
+
   private AdditionalPropertyWrapper wrapper;
   private boolean isList;
   private CodegenPropertyInfo item;
-  
+
   AdditionalProperty(AdditionalPropertyWrapper wrapper) {
     this(wrapper, true);
   }
-  
+
   private AdditionalProperty(AdditionalPropertyWrapper wrapper, boolean isList) {
     this.wrapper = wrapper;
     this.isList = isList;
   }
-  
+
   public String getBaseName() {
     return "Additional Properties";
   }
-  
+
   public String getName() {
     return "additionalProperties";
   }
-  
+
   public boolean getIsInherited() {
     return false;
   }
-  
+
   public boolean getIsContainer() {
     return isList;
   }
-  
+
   public boolean getIsPrimitiveType() {
     return false;
   }
-  
+
   public boolean getIsEnumOrRef() {
     return false;
   }
-  
+
   public String getComplexType() {
     return wrapper.wrapperName;
   }
-  
+
   public CodegenPropertyInfo getItems() {
     if (isList && item == null) {
       item = new AdditionalProperty(wrapper, false);
     }
     return item;
   }
-  
+
   public CodegenPropertyInfo getMostInnerItems() {
     if (isList && item == null) {
       item = new AdditionalProperty(wrapper, false);
     }
     return item;
   }
-  
+
   public String getDataType() {
     return wrapper.wrapperName;
   }
-  
+
   public String getDescription() {
     return "Reference to additional property wrapper.";
   }
-  
+
   public String getFormat() {
     return null;
   }
-  
+
   public String getMinimum() {
     return null;
   }
-  
+
   public String getMaximum() {
     return null;
   }
-  
+
   public boolean getExclusiveMinimum() {
     return false;
   }
-  
+
   public boolean getExclusiveMaximum() {
     return false;
   }
-  
+
   public Number getMultipleOf() {
     return null;
   }
-  
+
   public String getDataFormat() {
     return null;
   }
@@ -620,7 +626,7 @@ class AdditionalProperty implements CodegenPropertyInfo{
   public String getOpenApiType() {
     return wrapper.wrapperName;
   }
-  
+
   public String getAddionalPath() {
     return ".wrapper";
   }
