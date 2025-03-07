@@ -219,6 +219,7 @@
         <xmlproperty file="application.xml" collapseAttributes="true" />
         <property name="applicationname" value="${Application.applicationName}" />
         <property name="applicationversion" value="${Application.versionName}" />
+        <property name="apps.paths" value="${root.dir}" />
 
         <!-- create application.xml -->
        <if>
@@ -234,8 +235,17 @@
         <!-- copy application.xml from xyna server-->
         <default-scp-from-remote fromfile="/tmp/application.xml" todir="${basedir}" />
 
+        <antcall target="postprocess-application-xml" />
     </target>
-	
+
+
+    <!-- ================================= 
+         target: postprocess-application-xml             
+         ================================= -->
+    <target name="postprocess-application-xml" description="postprocess-application-xml">
+        <!-- leer, überschreibbar im build.xml -->
+    </target>
+
 
     <!-- ================================= 
          target: update-stub        
