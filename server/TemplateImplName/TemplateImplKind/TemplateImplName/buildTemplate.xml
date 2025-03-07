@@ -22,12 +22,12 @@
 	<!--import file="${root.dir}/installation/build/ant-xyna.xml" /-->
 
 
-	<fail message="Unsupported Java version: ${java.version}. Expected 11">
+	<fail message="Unsupported Java version: ${java.version}. Expected at leaset Java 11 and Ant 1.10.2">
         <condition>
             <not> 
                 <and> 
                     <antversion atleast="1.10.2" />
-                    <javaversion exactly="11" />
+                    <javaversion atleast="11" />
                 </and>
             </not>
         </condition> 
