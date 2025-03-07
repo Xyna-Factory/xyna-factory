@@ -15,8 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Difference Details Definition" TypeName="DifferenceDetailsDefinition" TypePath="xmcp.gitintegration.ui" Version="1.8">
-  <Operation ID="0" IsStatic="false" Label="Difference Details Definition" Name="DifferenceDetailsDefinition">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Workspace Diff Details Definition" TypeName="WorkspaceDiffDetailsDefinition" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Workspace Diff Details Definition" Name="WorkspaceDiffDetailsDefinition">
     <Input>
       <Data ID="14269" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName14269"/>
       <Data ID="11957" Label="Workspace Diff List Id" ReferenceName="WorkspaceDiffListId" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffListId11957"/>
@@ -25,13 +25,13 @@
       <Data ID="7659" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition7659"/>
       <Data ID="11102" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList11102"/>
     </Output>
-    <ServiceReference ID="11567" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="11566"/>
-      <Target RefID="11566"/>
-    </ServiceReference>
     <ServiceReference ID="7690" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="7689"/>
       <Target RefID="7689"/>
+    </ServiceReference>
+    <ServiceReference ID="11567" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="11566"/>
+      <Target RefID="11566"/>
     </ServiceReference>
     <ServiceReference ID="9901" Label="Build Workspace Diff Group Panel" ReferenceName="BuildWorkspaceDiffGroupPanel" ReferencePath="xmcp.gitintegration.ui">
       <Source RefID="9900"/>
@@ -72,6 +72,32 @@
       <Receive ServiceID="11567">
         <Target RefID="11565"/>
       </Receive>
+      <Catch ExceptionID="14303" ID="14304">
+        <Mappings ID="14334" Label="Mapping">
+          <Input>
+            <Data ID="14449" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName14449">
+              <Source RefID="14334"/>
+            </Data>
+            <Source RefID="14269"/>
+          </Input>
+          <Output>
+            <Data ID="14363" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList14363">
+              <Source RefID="14334"/>
+            </Data>
+            <Target RefID="14364"/>
+          </Output>
+          <Mapping>%1%.workspaceName=%0%.workspaceName0</Mapping>
+          <Mapping>%1%.listId="-1"</Mapping>
+        </Mappings>
+        <Assign>
+          <Source RefID="14364"/>
+          <Target RefID="11565"/>
+          <Copy>
+            <Source RefID="14364"/>
+            <Target RefID="11565"/>
+          </Copy>
+        </Assign>
+      </Catch>
     </Function>
     <Mappings ID="9516" Label="Mapping">
       <Input>
@@ -261,6 +287,10 @@
     <Data ID="13548" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition13548">
       <Source RefID="13449"/>
     </Data>
+    <Data ID="14364" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList14364">
+      <Source RefID="14334"/>
+    </Data>
+    <Exception ID="14303" Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception14303"/>
     <Assign ID="1">
       <Source RefID="10200"/>
       <Source RefID="11565"/>

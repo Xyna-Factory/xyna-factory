@@ -24,7 +24,7 @@
       <Data ID="2628" IsList="true" Label="Base Definition" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="baseDefinition2628"/>
       <Data ID="3836" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList3836"/>
     </Output>
-    <ServiceReference ID="3483" Label="Difference Details Definition" ReferenceName="DifferenceDetailsDefinition" ReferencePath="xmcp.gitintegration.ui">
+    <ServiceReference ID="3483" Label="Workspace Diff Details Definition" ReferenceName="WorkspaceDiffDetailsDefinition" ReferencePath="xmcp.gitintegration.ui">
       <Source RefID="3482"/>
       <Target RefID="3482"/>
     </ServiceReference>
@@ -58,14 +58,14 @@
       </Output>
       <Mapping>%1%.listId=%0%.listId</Mapping>
     </Mappings>
-    <Function ID="3482" Label="Difference Details Definition">
+    <Function ID="3482" Label="Workspace Diff Details Definition">
       <Source RefID="3483"/>
       <Source RefID="3601"/>
       <Source RefID="3583"/>
       <Target RefID="3483"/>
       <Target RefID="3485"/>
       <Target RefID="3486"/>
-      <Invoke Operation="DifferenceDetailsDefinition" ServiceID="3483">
+      <Invoke Operation="WorkspaceDiffDetailsDefinition" ServiceID="3483">
         <Source RefID="3601"/>
         <Source RefID="3583"/>
       </Invoke>

@@ -25,13 +25,13 @@
       <Data ID="6662" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName6662"/>
       <Data ID="3967" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds3967"/>
     </Output>
-    <ServiceReference ID="4692" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
-      <Source RefID="4691"/>
-      <Target RefID="4691"/>
-    </ServiceReference>
     <ServiceReference ID="4046" Label="Create Diff List Id Panel" ReferenceName="CreateDiffListIdPanel" ReferencePath="xmcp.gitintegration.ui">
       <Source RefID="4045"/>
       <Target RefID="4045"/>
+    </ServiceReference>
+    <ServiceReference ID="4692" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="4691"/>
+      <Target RefID="4691"/>
     </ServiceReference>
     <Mappings ID="6067" Label="Mapping">
       <Input>
@@ -148,6 +148,26 @@
       <Mapping>%1%.dataPath="%0%"</Mapping>
       <Mapping>%1%.serviceFQN="xmcp.gitintegration.ui.ExecuteSaveCurrentConfigToWorkspaceXml"</Mapping>
     </Mappings>
+    <Mappings ID="6699" Label="Mapping">
+      <Input>
+        <Data ID="6700" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext6700"/>
+        <Source RefID="4690">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="6701" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition6701"/>
+        <Target RefID="6702"/>
+      </Output>
+      <Mapping>%1%.label="Refresh"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.dataPath="%0%"</Mapping>
+      <Mapping>%1%.serviceFQN="xmcp.gitintegration.ui.ExecuteRefreshDiffLists"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="git_int_diffs_refresh"</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
+    </Mappings>
     <Mappings ID="4391" Label="Mapping">
       <Input>
         <Data ID="4945" Label="Start Order Button Definition 1" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4945">
@@ -169,14 +189,25 @@
           </Meta>
         </Source>
       </Input>
+      <Input>
+        <Data ID="6799" Label="Start Order Button Definition 3" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition6799">
+          <Source RefID="4391"/>
+        </Data>
+        <Source RefID="6702">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
       <Output>
         <Data ID="4424" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4424">
           <Source RefID="4391"/>
         </Data>
         <Target RefID="4425"/>
       </Output>
-      <Mapping>%2%.header.leftArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%0%</Mapping>
-      <Mapping>%2%.header.leftArea.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
+      <Mapping>%3%.header.leftArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%0%</Mapping>
+      <Mapping>%3%.header.leftArea.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
+      <Mapping>%3%.header.leftArea.children["2"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%2%</Mapping>
     </Mappings>
     <Mappings ID="23" Label="Mapping">
       <Input>
@@ -215,6 +246,7 @@
       <Mapping>%3%.children["0"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%0%</Mapping>
       <Mapping>%3%.children["1"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%1%</Mapping>
       <Mapping>%3%.triggerChangeChildren.eventId="git_int_diffs_refresh"</Mapping>
+      <Mapping>%3%.closable="true"</Mapping>
     </Mappings>
     <Data ID="33" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition33">
       <Source RefID="23"/>
@@ -236,6 +268,7 @@
     <Data ID="6348" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName6348">
       <Source RefID="6067"/>
     </Data>
+    <Data ID="6702" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition6702"/>
     <Assign ID="1">
       <Source RefID="33"/>
       <Source RefID="6348"/>

@@ -43,8 +43,8 @@ import xprc.xpce.Workspace;
 public class WorkspaceStatusTools {
 
   private static Logger _logger = Logger.getLogger(WorkspaceStatusTools.class);
-     
-  
+
+
   public WorkspaceContent createWorkspaceContentFromFile(base.File fileIn) {
     if (fileIn == null) { throw new IllegalArgumentException("Parameter file is empty"); }
     if (fileIn.getPath() == null) { throw new IllegalArgumentException("Parameter file is empty"); }
@@ -63,16 +63,6 @@ public class WorkspaceStatusTools {
       WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
       WorkspaceDifferenceListStorage storage = new WorkspaceDifferenceListStorage();
       WorkspaceContentDifferences difflist = storage.loadDifferences(listid.getListId());
-      /*
-      List<? extends WorkspaceContentDifferences> alldiffs = storage.loadAllDifferencesLists();
-      WorkspaceContentDifferences difflist = null;
-      for (WorkspaceContentDifferences wcd : alldiffs) {
-        if (listid.getListId() == wcd.getListId()) {
-          difflist = wcd;
-          break;
-        }
-      }
-      */
       if (difflist == null) { return ret; }
       if (difflist.getDifferences() == null) { return ret; }
       ret.setListId(listid.getListId());
@@ -118,5 +108,5 @@ public class WorkspaceStatusTools {
     ret.setPath(file.getPath());
     return ret;
   }
-      
+
 }

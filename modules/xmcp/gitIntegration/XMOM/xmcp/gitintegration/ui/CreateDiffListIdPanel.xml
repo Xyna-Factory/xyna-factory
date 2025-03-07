@@ -58,7 +58,7 @@
       </Output>
       <Mapping>%2%.dataPath=%1%.text</Mapping>
       <Mapping>%2%.rTC=%0%</Mapping>
-      <Mapping>%2%.fQN="xmcp.gitintegration.ui.DifferenceDetailsDefinition"</Mapping>
+      <Mapping>%2%.fQN="xmcp.gitintegration.ui.WorkspaceDiffDetailsDefinition"</Mapping>
     </Mappings>
     <Mappings ID="2004" Label="Mapping">
       <Input>

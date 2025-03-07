@@ -41,5 +41,5 @@ public class ResolveWorkspaceDiffsTools {
     }    
     portal.resolveList(listId.getListId(), paramlist);    
   }
-    
+
 }

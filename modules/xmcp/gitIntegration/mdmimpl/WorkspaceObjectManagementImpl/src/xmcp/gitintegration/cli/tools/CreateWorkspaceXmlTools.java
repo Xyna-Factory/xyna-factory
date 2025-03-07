@@ -69,10 +69,10 @@ public class CreateWorkspaceXmlTools {
 
     if (mode == XmlCreationMode.ONLY_CREATE_STRING) {
       return xml;
-    }    
+    }
     RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     Long revision = rm.getRevision(null, null, workspaceName);
-    RepositoryConnection repositoryConnection = RepositoryManagement.getRepositoryConnection(new Workspace(workspaceName));   
+    RepositoryConnection repositoryConnection = RepositoryManagement.getRepositoryConnection(new Workspace(workspaceName));
  
     if(repositoryConnection.getSplitted() != conf.getSplitResult() && !conf.getForce()) {
       throw new RuntimeException("Use force to change the configuration between single file and splitted");

@@ -340,7 +340,7 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
   private void resolveSingleDifference(ResolveWorkspaceDifferencesParameter param, WorkspaceContentDifferences differences,
                                        StringBuilder sb) {
     if (!param.getEntry().isPresent()) { return; }
-    long entryId = param.getEntry().get();    
+    long entryId = param.getEntry().get();
     Optional<? extends WorkspaceContentDifference> entryOptional = findEntry(differences, entryId);
     if (entryOptional.isEmpty()) {
       long id = differences.getListId();
