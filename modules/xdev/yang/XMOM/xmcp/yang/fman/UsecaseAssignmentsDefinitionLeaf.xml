@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,30 +37,68 @@
       </Receive>
     </Function>
     <Mappings ID="3398" Label="Mapping">
+      <Input>
+        <Data ID="4663" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData4663">
+          <Source RefID="3398"/>
+        </Data>
+        <Source RefID="109"/>
+      </Input>
       <Output>
         <Data ID="3400" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition3400"/>
         <Target RefID="3401"/>
       </Output>
-      <Mapping>%0%.dataPath="%0%.value"</Mapping>
+      <Mapping>%1%.dataPath="%0%.value"</Mapping>
+      <Mapping>%1%.disabled=%0%.loadYangAssignmentsData.isNotSupportedDeviation</Mapping>
+    </Mappings>
+    <Mappings ID="4688" Label="Mapping">
+      <Input>
+        <Data ID="4878" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData4878">
+          <Source RefID="4688"/>
+        </Data>
+        <Source RefID="109"/>
+      </Input>
+      <Output>
+        <Data ID="4763" Label="Refresh - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent4763">
+          <Source RefID="4688"/>
+        </Data>
+        <Target RefID="4764"/>
+      </Output>
+      <Mapping>%1%.eventId=concat("yang_assignment_refresh_", substring(%0%.loadYangAssignmentsData.totalYangPath, "0", ((length(%0%.loadYangAssignmentsData.totalYangPath)-length(%0%.yangPath))-"1")))</Mapping>
     </Mappings>
     <Mappings ID="3374" Label="Mapping">
       <Input>
         <Data ID="3375" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext3375"/>
         <Source RefID="22"/>
       </Input>
+      <Input>
+        <Data ID="4797" Label="Refresh - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent4797">
+          <Source RefID="3374"/>
+        </Data>
+        <Source RefID="4764"/>
+      </Input>
       <Output>
         <Data ID="3378" Label="save - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition3378"/>
         <Target RefID="3379"/>
       </Output>
-      <Mapping>%1%.dataPath="%0%"</Mapping>
-      <Mapping>%1%.serviceFQN="xmcp.yang.fman.SaveUseCaseAssignment"</Mapping>
-      <Mapping>%1%.serviceRTC=%0%</Mapping>
-      <Mapping>%1%.label="Save"</Mapping>
+      <Mapping>%2%.dataPath="%0%"</Mapping>
+      <Mapping>%2%.label="Save"</Mapping>
+      <Mapping>%2%.onStartorderResultEvent["0"].eventId="yang_leaf_clean"</Mapping>
+      <Mapping>%2%.onStartorderResultEvent["1"].eventId="yang_leaf_close"</Mapping>
+      <Mapping>%2%.onStartorderResultEvent["2"]=%1%</Mapping>
+      <Mapping>%2%.serviceFQN="xmcp.yang.fman.SaveUseCaseAssignment"</Mapping>
+      <Mapping>%2%.serviceRTC=%0%</Mapping>
+      <Mapping>%2%.synchronously="true"</Mapping>
     </Mappings>
     <Mappings ID="3189" Label="Mapping">
       <Input>
         <Data ID="3191" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext3191"/>
         <Source RefID="22"/>
+      </Input>
+      <Input>
+        <Data ID="5503" Label="Refresh - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent5503">
+          <Source RefID="3189"/>
+        </Data>
+        <Source RefID="4764"/>
       </Input>
       <Output>
         <Data ID="3267" Label="delete - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition3267">
@@ -68,10 +106,14 @@
         </Data>
         <Target RefID="3268"/>
       </Output>
-      <Mapping>%1%.dataPath="%0%"</Mapping>
-      <Mapping>%1%.serviceFQN="xmcp.yang.fman.DeleteUseCaseAssignment"</Mapping>
-      <Mapping>%1%.serviceRTC=%0%</Mapping>
-      <Mapping>%1%.label="Delete"</Mapping>
+      <Mapping>%2%.dataPath="%0%"</Mapping>
+      <Mapping>%2%.serviceFQN="xmcp.yang.fman.DeleteUseCaseAssignment"</Mapping>
+      <Mapping>%2%.serviceRTC=%0%</Mapping>
+      <Mapping>%2%.label="Delete"</Mapping>
+      <Mapping>%2%.onStartorderResultEvent["0"].eventId="yang_leaf_clean"</Mapping>
+      <Mapping>%2%.onStartorderResultEvent["0"].eventId="yang_leaf_close"</Mapping>
+      <Mapping>%2%.onStartorderResultEvent["0"]=%1%</Mapping>
+      <Mapping>%2%.synchronously="true"</Mapping>
     </Mappings>
     <Mappings ID="3838" Label="Mapping">
       <Output>
@@ -81,6 +123,14 @@
         <Target RefID="3864"/>
       </Output>
       <Mapping>%0%.dataPath="%0%.loadYangAssignmentsData.description"</Mapping>
+      <Mapping>%0%.hideIfEmpty="true"</Mapping>
+    </Mappings>
+    <Mappings ID="4259" Label="Mapping">
+      <Output>
+        <Data ID="4260" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition4260"/>
+        <Target RefID="4261"/>
+      </Output>
+      <Mapping>%0%.dataPath="%0%.loadYangAssignmentsData.deviationInfo"</Mapping>
       <Mapping>%0%.hideIfEmpty="true"</Mapping>
     </Mappings>
     <Mappings ID="3211" Label="Mapping">
@@ -120,16 +170,30 @@
           </Meta>
         </Source>
       </Input>
+      <Input>
+        <Data ID="4302" Label="Text Item Definition 2" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition4302">
+          <Source RefID="3211"/>
+        </Data>
+        <Source RefID="4261">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
       <Output>
         <Data ID="3218" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3218"/>
         <Target RefID="3210"/>
       </Output>
-      <Mapping>%5%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
-      <Mapping>%5%.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
-      <Mapping>%5%.children["2"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%2%</Mapping>
-      <Mapping>%5%.children["3"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%4%</Mapping>
-      <Mapping>%5%.label=%3%.yangPath</Mapping>
-      <Mapping>%5%.closable="true"</Mapping>
+      <Mapping>%6%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
+      <Mapping>%6%.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
+      <Mapping>%6%.children["2"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%2%</Mapping>
+      <Mapping>%6%.children["3"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%4%</Mapping>
+      <Mapping>%6%.children["4"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%5%</Mapping>
+      <Mapping>%6%.label=%3%.yangPath</Mapping>
+      <Mapping>%6%.closable="true"</Mapping>
+      <Mapping>%6%.disabled=%3%.loadYangAssignmentsData.isNotSupportedDeviation</Mapping>
+      <Mapping>%6%.triggerClose.eventId="yang_leaf_close"</Mapping>
+      <Mapping>%6%.triggerClearDataChangeState.eventId="yang_leaf_clean"</Mapping>
     </Mappings>
     <Choice ID="4105" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="109"/>
@@ -138,7 +202,7 @@
         <Data ID="4112" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData4112"/>
         <Source RefID="109"/>
       </Input>
-      <Case Alias="" ID="4106" Label="true" Premise="%0%.loadYangAssignmentsData.status!=null">
+      <Case ID="4106" Label="true" Premise="%0%.loadYangAssignmentsData.status!=null">
         <Mappings ID="4114" Label="Mapping">
           <Input>
             <Data ID="4117" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData4117"/>
@@ -168,7 +232,7 @@
           </Copy>
         </Assign>
       </Case>
-      <Case Alias="" ID="4107" Label="false">
+      <Case ID="4107" Label="false">
         <Mappings ID="4206" Label="Mapping">
           <Input>
             <Data ID="4242" Label="Form Panel Definition IN" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4242">
@@ -212,6 +276,10 @@
     </Data>
     <Data ID="4225" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4225">
       <Source RefID="4105"/>
+    </Data>
+    <Data ID="4261" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition4261"/>
+    <Data ID="4764" Label="Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent4764">
+      <Source RefID="4688"/>
     </Data>
     <Assign ID="1">
       <Source RefID="4225"/>

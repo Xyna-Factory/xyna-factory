@@ -16,20 +16,16 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="prepareXmomCompile" default="deploy" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+<project name="prepareXmomCompile" default="deploy" basedir="." >
 
     <import file="../ant-xyna.xml" />
-
-    <resolver:pom file="${basedir}/pom.xml" id="pom"/>
+    <import file="../macros.xml" />
 
     <!-- ================================= 
                target: resolve             
           =================================  -->
-      <target name="resolve">
-        <resolver:resolve>
-          <resolver:dependencies pomRef="pom"/>
-          <resolver:files refid="files" dir="${basedir}/factory" layout="{artifactId}-{classifier}-{version}.{extension}"/>
-        </resolver:resolve>
-      </target>
+    <target name="resolve">
+        <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/factory" />
+    </target>
 
 </project>

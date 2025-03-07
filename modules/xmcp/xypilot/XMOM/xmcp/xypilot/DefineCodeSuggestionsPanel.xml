@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Define Code Suggestions Panel" TypeName="DefineCodeSuggestionsPanel" TypePath="xmcp.xypilot" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Define Code Suggestions Panel" Name="DefineCodeSuggestionsPanel">
+    <Input>
+      <Data ID="31" Label="Context" ReferenceName="Context" ReferencePath="xmcp.yggdrasil.plugin" VariableName="context31"/>
+    </Input>
+    <Output>
+      <Data ID="124" IsList="true" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition124"/>
+      <Data ID="3403" IsList="true" Label="Gui Suggestion" ReferenceName="GuiSuggestion" ReferencePath="xmcp.xypilot" VariableName="guiSuggestion3403"/>
+    </Output>
+    <ServiceReference ID="3722" Label="Iteration Index Builder" ReferenceName="IterationIndexBuilder.IterationIndexBuilder" ReferencePath="xmcp.xypilot">
+      <Source RefID="3721"/>
+      <Target RefID="3721"/>
+    </ServiceReference>
+    <ServiceReference ID="12" Label="PromptGenerator" ReferenceName="PromptGenerator.PromptGenerator" ReferencePath="xmcp.xypilot">
+      <Source RefID="11"/>
+      <Target RefID="11"/>
+    </ServiceReference>
+    <ServiceReference ID="3912" Label="Iteration Index Builder" ReferenceName="IterationIndexBuilder.IterationIndexBuilder" ReferencePath="xmcp.xypilot">
+      <Source RefID="3911"/>
+      <Target RefID="3911"/>
+    </ServiceReference>
+    <ServiceReference ID="3641" Label="Gui Suggestion" ReferenceName="GuiSuggestion.GuiSuggestion" ReferencePath="xmcp.xypilot">
+      <Source RefID="3640"/>
+      <Target RefID="3640"/>
+    </ServiceReference>
+    <Function ID="11" Label="Generate Code Suggestions">
+      <Source RefID="12"/>
+      <Source RefID="31"/>
+      <Target RefID="12"/>
+      <Target RefID="7619"/>
+      <Invoke Operation="generateCodeSuggestions" ServiceID="12">
+        <Source RefID="31"/>
+      </Invoke>
+      <Receive ServiceID="12">
+        <Target RefID="7619"/>
+      </Receive>
+    </Function>
+    <Foreach ID="7620">
+      <Source RefID="7619"/>
+      <Target RefID="7622"/>
+      <InputList RefID="7619">
+        <Data ID="7621" Label="Code Suggestion" ReferenceName="CodeSuggestion" ReferencePath="xmcp.xypilot" VariableName="codeSuggestion7621"/>
+      </InputList>
+      <OutputList RefID="7622">
+        <Data ID="3643" Label="Gui Suggestion" ReferenceName="GuiSuggestion" ReferencePath="xmcp.xypilot" VariableName="guiSuggestion3643">
+          <Source RefID="3640"/>
+        </Data>
+      </OutputList>
+      <Function ID="3640" Label="from Code Suggestion">
+        <Source RefID="3641"/>
+        <Source RefID="3695"/>
+        <Source RefID="7621"/>
+        <Target RefID="3641"/>
+        <Target RefID="3643"/>
+        <Invoke Operation="fromCodeSuggestion" ServiceID="3641">
+          <Source RefID="3695">
+            <Meta>
+              <LinkType>Constant</LinkType>
+            </Meta>
+          </Source>
+          <Source RefID="7621"/>
+        </Invoke>
+        <Receive ServiceID="3641">
+          <Target RefID="3643"/>
+        </Receive>
+      </Function>
+      <Data ID="3695" Label="Gui Suggestion" ReferenceName="GuiSuggestion" ReferencePath="xmcp.xypilot" VariableName="const_GuiSuggestion3695"/>
+    </Foreach>
+    <Function ID="3721" Label="Build Suggestion iterable">
+      <Source RefID="3722"/>
+      <Source RefID="7622"/>
+      <Target RefID="3722"/>
+      <Target RefID="3724"/>
+      <Invoke Operation="buildSuggestionIterable" ServiceID="3722">
+        <Source RefID="7622"/>
+      </Invoke>
+      <Receive ServiceID="3722">
+        <Target RefID="3724"/>
+      </Receive>
+    </Function>
+    <Foreach ID="3872">
+      <Source RefID="3724"/>
+      <Target RefID="3916"/>
+      <Target RefID="4085"/>
+      <Target RefID="4473"/>
+      <Target RefID="5278"/>
+      <Target RefID="5802"/>
+      <InputList RefID="3724">
+        <Data ID="3873" Label="Suggestion Iteration" ReferenceName="SuggestionIteration" ReferencePath="xmcp.xypilot" VariableName="suggestionIteration3873"/>
+      </InputList>
+      <OutputList RefID="3916">
+        <Data ID="3915" IsList="true" Label="Metric Iteration" ReferenceName="MetricIteration" ReferencePath="xmcp.xypilot" VariableName="metricIteration3915">
+          <Source RefID="438"/>
+        </Data>
+      </OutputList>
+      <OutputList RefID="4085">
+        <Data ID="4084" IsList="true" Label="GUI Metric" ReferenceName="GUIMetric" ReferencePath="xmcp.xypilot" VariableName="gUIMetric4084">
+          <Source RefID="438"/>
+        </Data>
+      </OutputList>
+      <OutputList RefID="4473">
+        <Data ID="4472" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition4472">
+          <Source RefID="438"/>
+        </Data>
+      </OutputList>
+      <OutputList RefID="5278">
+        <Data ID="5277" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5277">
+          <Source RefID="438"/>
+        </Data>
+      </OutputList>
+      <OutputList RefID="5802">
+        <Data ID="5801" IsList="true" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition5801">
+          <Source RefID="438"/>
+        </Data>
+      </OutputList>
+      <Choice ID="438" TypeName="BaseChoiceTypeFormula" TypePath="server">
+        <Source RefID="3873"/>
+        <Target RefID="5801"/>
+        <Target RefID="4472"/>
+        <Target RefID="3915"/>
+        <Target RefID="4084"/>
+        <Target RefID="5277"/>
+        <Meta>
+          <OuterConditionPart>%0%?</OuterConditionPart>
+        </Meta>
+        <Input>
+          <Data ID="3757" Label="Suggestion Iteration" ReferenceName="SuggestionIteration" ReferencePath="xmcp.xypilot" VariableName="suggestionIteration3757">
+            <Source RefID="438"/>
+          </Data>
+          <Source RefID="3873"/>
+        </Input>
+        <Case ID="439" IsDefault="true" Label="default">
+          <Mappings ID="705" Label="Mapping">
+            <Input>
+              <Data ID="3957" Label="Suggestion Iteration" ReferenceName="SuggestionIteration" ReferencePath="xmcp.xypilot" VariableName="suggestionIteration3957">
+                <Source RefID="705"/>
+              </Data>
+              <Source RefID="3873">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Output>
+              <Data ID="4082" IsList="true" Label="GUI Metric" ReferenceName="GUIMetric" ReferencePath="xmcp.xypilot" VariableName="gUIMetric4082">
+                <Source RefID="705"/>
+              </Data>
+              <Target RefID="4083"/>
+            </Output>
+            <Mapping>%1%=%0%.suggestion.guiMetric</Mapping>
+          </Mappings>
+          <Function ID="3911" Label="Build Metric iterable">
+            <Source RefID="3912"/>
+            <Source RefID="4083"/>
+            <Target RefID="3912"/>
+            <Target RefID="3914"/>
+            <Invoke Operation="buildMetricIterable" ServiceID="3912">
+              <Source RefID="4083"/>
+            </Invoke>
+            <Receive ServiceID="3912">
+              <Target RefID="3914"/>
+            </Receive>
+          </Function>
+          <Foreach ID="4469">
+            <Source RefID="3914"/>
+            <Target RefID="4471"/>
+            <InputList RefID="3914">
+              <Data ID="4470" Label="Metric Iteration" ReferenceName="MetricIteration" ReferencePath="xmcp.xypilot" VariableName="metricIteration4470"/>
+            </InputList>
+            <OutputList RefID="4471">
+              <Data ID="3302" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition3302">
+                <Source RefID="1053"/>
+              </Data>
+            </OutputList>
+            <Mappings ID="1053" Label="Build Metric">
+              <Input>
+                <Data ID="4428" Label="Metric Iteration" ReferenceName="MetricIteration" ReferencePath="xmcp.xypilot" VariableName="metricIteration4428">
+                  <Source RefID="1053"/>
+                </Data>
+                <Source RefID="4470"/>
+              </Input>
+              <Output>
+                <Data ID="3301" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition3301">
+                  <Source RefID="1053"/>
+                </Data>
+                <Target RefID="3302"/>
+              </Output>
+              <Mapping>%1%.dataPath=concat("guiMetric.", %0%.index, ".score")</Mapping>
+              <Mapping>%1%.disabled="true"</Mapping>
+              <Mapping>%1%.label=%0%.guiMetric.name</Mapping>
+            </Mappings>
+          </Foreach>
+          <Mappings ID="531" Label="Build Code Text Area">
+            <Output>
+              <Data ID="548" IsList="true" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition548">
+                <Source RefID="531"/>
+              </Data>
+              <Target RefID="549"/>
+            </Output>
+            <Mapping>%0%["0"].dataPath="code"</Mapping>
+            <Mapping>%0%["0"].disabled="true"</Mapping>
+            <Mapping>%0%["0"].label="Code Suggestion"</Mapping>
+            <Mapping>%0%["0"].numberOfLines="10"</Mapping>
+          </Mappings>
+          <Mappings ID="300" Label="Build Form Panel Definition">
+            <Input>
+              <Data ID="5034" Label="Suggestion Iteration" ReferenceName="SuggestionIteration" ReferencePath="xmcp.xypilot" VariableName="suggestionIteration5034">
+                <Source RefID="300"/>
+              </Data>
+              <Source RefID="3873">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Input>
+              <Data ID="624" IsList="true" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition624">
+                <Source RefID="300"/>
+              </Data>
+              <Source RefID="549"/>
+            </Input>
+            <Input>
+              <Data ID="3386" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition3386">
+                <Source RefID="300"/>
+              </Data>
+              <Source RefID="4471"/>
+            </Input>
+            <Output>
+              <Data ID="5275" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5275">
+                <Source RefID="300"/>
+              </Data>
+              <Target RefID="5276"/>
+            </Output>
+            <Mapping>%3%.children=concatlists(%2%, %1%)</Mapping>
+            <Mapping>%3%.dataPath=concat("%0%.", %0%.index)</Mapping>
+            <Mapping>%3%.label=concat("Suggestion ", (%0%.index+"1"))</Mapping>
+          </Mappings>
+          <Assign ID="441">
+            <Source RefID="549"/>
+            <Source RefID="4471"/>
+            <Source RefID="3914"/>
+            <Source RefID="4083"/>
+            <Source RefID="5276"/>
+            <Target RefID="5801"/>
+            <Target RefID="4472"/>
+            <Target RefID="3915"/>
+            <Target RefID="4084"/>
+            <Target RefID="5277"/>
+            <Copy>
+              <Source RefID="549"/>
+              <Target RefID="5801"/>
+            </Copy>
+            <Copy>
+              <Source RefID="4471"/>
+              <Target RefID="4472"/>
+            </Copy>
+            <Copy>
+              <Source RefID="3914"/>
+              <Target RefID="3915"/>
+            </Copy>
+            <Copy>
+              <Source RefID="4083"/>
+              <Target RefID="4084"/>
+            </Copy>
+            <Copy>
+              <Source RefID="5276"/>
+              <Target RefID="5277"/>
+            </Copy>
+          </Assign>
+          <Data ID="3914" IsList="true" Label="Metric Iteration" ReferenceName="MetricIteration" ReferencePath="xmcp.xypilot" VariableName="metricIteration3914">
+            <Source RefID="3911"/>
+          </Data>
+        </Case>
+      </Choice>
+      <Data ID="4083" IsList="true" Label="GUI Metric" ReferenceName="GUIMetric" ReferencePath="xmcp.xypilot" VariableName="gUIMetric4083">
+        <Source RefID="705"/>
+      </Data>
+      <Data ID="5276" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5276">
+        <Source RefID="300"/>
+      </Data>
+      <Data ID="549" IsList="true" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition549">
+        <Source RefID="531"/>
+      </Data>
+      <Data ID="4471" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition4471">
+        <Source RefID="4469"/>
+        <Target RefID="4471"/>
+      </Data>
+    </Foreach>
+    <Data ID="3724" IsList="true" Label="Suggestion Iteration" ReferenceName="SuggestionIteration" ReferencePath="xmcp.xypilot" VariableName="suggestionIteration3724">
+      <Source RefID="3721"/>
+    </Data>
+    <Data ID="3916" IsList="true" Label="Metric Iteration" ReferenceName="MetricIteration" ReferencePath="xmcp.xypilot" VariableName="metricIteration3916">
+      <Source RefID="3872"/>
+      <Target RefID="3916"/>
+    </Data>
+    <Data ID="4085" IsList="true" Label="GUI Metric" ReferenceName="GUIMetric" ReferencePath="xmcp.xypilot" VariableName="gUIMetric4085">
+      <Source RefID="3872"/>
+      <Target RefID="4085"/>
+    </Data>
+    <Data ID="4473" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition4473">
+      <Source RefID="3872"/>
+      <Target RefID="4473"/>
+    </Data>
+    <Data ID="5278" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5278">
+      <Source RefID="3872"/>
+      <Target RefID="5278"/>
+    </Data>
+    <Data ID="5802" IsList="true" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition5802">
+      <Source RefID="3872"/>
+      <Target RefID="5802"/>
+    </Data>
+    <Data ID="7619" IsList="true" Label="Code Suggestion" ReferenceName="CodeSuggestion" ReferencePath="xmcp.xypilot" VariableName="codeSuggestion7619">
+      <Source RefID="11"/>
+    </Data>
+    <Data ID="7622" IsList="true" Label="Gui Suggestion" ReferenceName="GuiSuggestion" ReferencePath="xmcp.xypilot" VariableName="guiSuggestion7622">
+      <Source RefID="7620"/>
+      <Target RefID="7622"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="5278"/>
+      <Source RefID="7622"/>
+      <Target RefID="124"/>
+      <Target RefID="3403"/>
+      <Copy>
+        <Source RefID="5278"/>
+        <Target RefID="124"/>
+      </Copy>
+      <Copy>
+        <Source RefID="7622"/>
+        <Target RefID="3403"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

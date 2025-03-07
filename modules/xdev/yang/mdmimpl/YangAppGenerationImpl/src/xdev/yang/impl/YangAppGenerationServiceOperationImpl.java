@@ -31,6 +31,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import com.gip.xyna.xfmg.xfctrl.filemgmt.FileManagement;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.UserType;
 import com.gip.xyna.xmcp.xfcli.generated.Importapplication;
 import com.gip.xyna.xmcp.xfcli.impl.ImportapplicationImpl;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
@@ -42,6 +43,7 @@ import xdev.yang.cli.generated.OverallInformationProvider;
 import xdev.yang.impl.YangApplicationGeneration.YangApplicationGenerationData;
 import xdev.yang.impl.usecase.AddUsecase;
 import xdev.yang.impl.usecase.AddVariableToUsecaseSignature;
+import xdev.yang.impl.usecase.AsyncDeployment;
 import xdev.yang.impl.usecase.ConfigureList;
 import xdev.yang.impl.usecase.DeleteUsecaseAssignmentAction;
 import xdev.yang.impl.usecase.DetermineUseCaseAssignments;
@@ -50,6 +52,7 @@ import xdev.yang.impl.usecase.LoadUsecasesTable;
 import xdev.yang.impl.usecase.RemoveVariableFromUsecaseSignature;
 import xdev.yang.impl.usecase.SaveUsecaseAssignmentAction;
 import xdev.yang.impl.usecase.UpdateVariableInUsecaseSignature;
+import xdev.yang.impl.usecase.UseCaseCache;
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.UseCaseAssignmentTableData;
 import xmcp.yang.UseCaseTableData;
@@ -65,12 +68,16 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   public void onDeployment() throws XynaException {
     OverallInformationProvider.onDeployment();
     PluginManagement.registerPlugin(this.getClass());
+    UseCaseCache.PROP_USECASE_CACHE_SIZE.registerDependency(UserType.Service, "YangAppGenerationService");
+    AsyncDeployment.PROP_ASYNC_DEPLOY.registerDependency(UserType.Service, "YangAppGenerationService");
   }
 
 
   public void onUndeployment() throws XynaException {
     OverallInformationProvider.onUndeployment();
     PluginManagement.unregisterPlugin(this.getClass());
+    UseCaseCache.PROP_USECASE_CACHE_SIZE.unregister();
+    AsyncDeployment.PROP_ASYNC_DEPLOY.unregister();
   }
 
   public Long getOnUnDeploymentTimeout() {

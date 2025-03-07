@@ -218,6 +218,7 @@ build_xyna_factory() {
   mkdir -p release
   
   compose_checkscripts
+  compose_scripts
   compose_components
   compose_dhcpd
   compose_doc
@@ -355,10 +356,14 @@ compose_dhcpd() {
 
 }
 
-
 compose_checkscripts() {
   cd $SCRIPT_DIR/../release
   cp -r ../installation/CheckScripts .
+}
+
+compose_scripts() {
+  cd $SCRIPT_DIR/../release
+  cp -r ../installation/scripts .
 }
 
 compose_files() {
@@ -455,8 +460,8 @@ compose_server_persistencelayers() {
 
 compose_server_orderinpoutsourcetypes() {
   cd $SCRIPT_DIR/../release/server
+  rm -rf $SCRIPT_DIR/../localbuild/server/orderinputsourcetypes/*/xyna
   cp -r $SCRIPT_DIR/../localbuild/server/orderinputsourcetypes .
-  rm -rf $SCRIPT_DIR/../localbuild/server/orderinputsourcetypes/deploy/*/xyna
 }
 
 compose_server_lib() {

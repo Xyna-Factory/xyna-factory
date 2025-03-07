@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="JSON Parsing Options" TypeName="JSONParsingOptions" TypePath="xfmg.xfctrl.datamodel.json.parameter" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="JSON Parsing Options" TypeName="JSONParsingOptions" TypePath="xfmg.xfctrl.datamodel.json.parameter" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
@@ -32,7 +31,7 @@
       <Documentation>When a json Object is encountered, the decide() Method of this object will be called to determine the Object to be created. If no object decider is specified, an object of the static member type will be created.</Documentation>
     </Meta>
   </Data>
-  <Data Label="List Wrapper" VariableName="listWrapper" IsList="true" ReferenceName="ListWrapper" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" />
+  <Data IsList="true" Label="List Wrapper" ReferenceName="ListWrapper" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="listWrapper"/>
   <Data Label="Process All Input Generically" VariableName="processAllInputGenerically">
     <Meta>
       <Type>Boolean</Type>
@@ -44,4 +43,3 @@ generic serialization: { "members": [ {"key": "key", value: { "type": "STRING", 
     </Meta>
   </Data>
 </DataType>
-

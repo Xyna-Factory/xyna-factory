@@ -24,12 +24,14 @@ import base.Text;
 import base.math.IntegerNumber;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
+
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
-import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
@@ -62,6 +64,8 @@ import xmcp.gitintegration.storage.UserManagementStorage;
 
 public class RepositoryManagementServiceOperationImpl implements ExtendedDeploymentTask, RepositoryManagementServiceOperation {
 
+  private static Logger _logger = CentralFactoryLogging.getLogger(RepositoryManagementServiceOperationImpl.class);
+  
   public void onDeployment() throws XynaException {
     RepositoryManagementImpl.init();
     UserManagementStorage.init();
@@ -109,20 +113,7 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
 
   @Override
   public List<? extends RepositoryConnectionGroup> listRepositoryConnectionGroups() {
-    List<RepositoryConnection> connections = RepositoryManagementImpl.listRepositoryConnections();
-    List<RepositoryConnectionGroup> result = new ArrayList<>();
-    Map<String, List<RepositoryConnection>> groups = new HashMap<>();
-    for(RepositoryConnection connection: connections) {
-      groups.putIfAbsent(connection.getPath(), new ArrayList<>());
-      groups.get(connection.getPath()).add(connection);
-    }
-    for(String repoGroup : groups.keySet()) {
-      Repository repo = new Repository.Builder().path(repoGroup).instance();
-      List<RepositoryConnection> conns = groups.get(repoGroup);
-      RepositoryConnectionGroup group = new RepositoryConnectionGroup.Builder().repository(repo).repositoryConnection(conns).instance();
-      result.add(group);
-    }
-    return result;
+    return RepositoryManagementImpl.listRepositoryConnectionGroups();
   }
 
 
@@ -131,8 +122,7 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
   }
 
 
-  private Pair<String, String> getUserNameAndDecodePassword(String encodedPassword, String sessionId) throws PersistenceLayerException {
-    SessionManagement sessionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement();
+  private String getToken(String sessionId) throws PersistenceLayerException {
     ManagedSession session = new ManagedSession(sessionId, null, null);
     ODS ods = XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getODS();
     ODSConnection con = ods.openConnection();
@@ -144,9 +134,7 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
       con.closeConnection();
     }
 
-    String userName = sessionManagement.resolveSessionToUser(sessionId);
-    String password = DeEncoder.decode(encodedPassword, sessionId, session.getToken());
-    return new Pair<>(userName, password);
+    return session.getToken();
   }
 
 
@@ -175,17 +163,27 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
   
   @Override
   public void addUserToRepository(XynaOrderServerExtension order, RepositoryUserCreationData data) {
+    SessionManagement sessionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement();
     String repo = data.getRepository().getPath();
     String encodedPassword = data.getEncodedPassword();
+    String encodedKey = data.getEncodedKey();
+    String encodedKeyPhrase = data.getEncodedKeyPassphrase();
     String repoUser = data.getUsername();
     String mail = data.getMail();
-    Pair<String, String> usernamePassword;
+    String sessionId = order.getSessionId();
+    String username = sessionManagement.resolveSessionToUser(sessionId);
+    String password = null;
+    String key = null;
+    String keyPhrase = null;
     try {
-      usernamePassword = getUserNameAndDecodePassword(encodedPassword, order.getSessionId());
+      String token = getToken(order.getSessionId());
+      password = DeEncoder.decode(encodedPassword, sessionId, token);
+      key = DeEncoder.decode(encodedKey, sessionId, token);
+      keyPhrase = DeEncoder.decode(encodedKeyPhrase, sessionId, token);
     } catch (PersistenceLayerException e) {
       throw new RuntimeException(e);
     }
-    new UserManagementStorage().AddUserToRepository(usernamePassword.getFirst(), repoUser, repo, usernamePassword.getSecond(), mail);
+    new UserManagementStorage().AddUserToRepository(username, repoUser, repo, password, key, keyPhrase, mail);
   }
 
   
@@ -245,8 +243,11 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
   public Text push(XynaOrderServerExtension order, Repository arg0, Text arg1, List<? extends File> arg2) {
     String user = getUserFromSession(order.getSessionId());
     try {
-      new RepositoryInteraction().push(arg0.getPath(), arg1.getText(), false, user);
+      List<String> adapted = (arg2 == null) ? new ArrayList<String>() :
+                             arg2.stream().filter(Objects::nonNull).map(x -> x.getPath()).collect(Collectors.toList());
+      new RepositoryInteraction().push(arg0.getPath(), arg1.getText(), false, user, adapted);
     } catch (Exception e) {
+      _logger.warn(e.getMessage(), e);
       return new Text("Exception during push: " + e.getMessage());
     }
 
@@ -256,8 +257,13 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
 
   @Override
   public ChangeSet loadChangeSet(Repository repository) {
-    // TODO Auto-generated method stub
-    return null;
+    if (repository == null) { throw new IllegalArgumentException("Parameter repository is empty."); }
+    try {
+      return new RepositoryInteraction().loadChanges(repository.getPath());
+    } 
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
   
 }

@@ -16,17 +16,15 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="build" default="build" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+<project name="build" default="build" basedir="." >
 
   <import file="../../installation/build/ant-xyna.xml" />
   <import file="../../installation/build/macros.xml" />
 
-  <property name="project.name" value="XynaMemoryPersistenceLayer" />
+  <property name="project.name.local2" value="XynaMemoryPersistenceLayer" />
 
   <property name="target.dir" value="${basedir}/deploy" />
   <property name="target.dir.test" value="${basedir}/deploy.test" />
-
-        <resolver:pom file="${basedir}/pom.xml" id="pom"/>
 
         <path id="libraries">
                 <fileset dir="${basedir}/lib/xyna">
@@ -39,7 +37,7 @@
 	         target: build             
 	        ================================= -->
   <target name="build" depends="resolve">
-    <buildJar destfile="${target.dir}/${project.name}.jar" />
+    <buildJar destfile="${target.dir}/${project.name.local2}.jar" />
   </target>
 
   	<!-- ================================= 
@@ -76,7 +74,7 @@
       </classpath>
     </javac>
     <mkdir dir="${target.dir.test}" />
-    <jar destfile="${target.dir.test}/${project.name}-test.jar">
+    <jar destfile="${target.dir.test}/${project.name.local2}-test.jar">
       <fileset dir="${basedir}/classes" includes="**/*.class" />
       <fileset dir="${basedir}">
         <include name="Exceptions.xml" />
@@ -84,19 +82,14 @@
     </jar>
   </target>
 
-      <target name="resolve">
-        <resolver:resolve>
-          <resolver:dependencies pomRef="pom"/>
-          <resolver:files refid="files" dir="${basedir}/lib/xyna" layout="{artifactId}-{classifier}-{version}.{extension}"/>
-          <resolver:files refid="files" dir="${basedir}/lib.test" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="test"/>
-          <!--resolver:files refid="files" dir="${basedir}/lib" layout="{artifactId}-{classifier}-{version}.{extension}" scopes="runtime"/-->
-        </resolver:resolve>
-        <loadLicenses targetDir="${basedir}/lib" />
-        <!-- delete generated-resources ? -->
-      </target>
+  <target name="resolve">
+    <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib/xyna" />
+    <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib/test" scopes="test" />
+    <loadLicenses targetDir="${basedir}/lib" />
+  </target>
 
   <target name="installMavenArtifact" depends="build" description="install artifact to maven repository">
-     <install-maven-artifact artifactFile="${target.dir}/${project.name}.jar" pomFile="${basedir}/pom.xml" />
+     <install-maven-artifact artifactFile="${target.dir}/${project.name.local2}.jar" pomFile="${basedir}/pom.xml" />
   </target>
 
 </project>

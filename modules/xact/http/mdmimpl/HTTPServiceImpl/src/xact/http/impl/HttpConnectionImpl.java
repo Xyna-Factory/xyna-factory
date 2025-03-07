@@ -86,13 +86,13 @@ import org.apache.http.message.BasicHttpRequest;
 
 public class HttpConnectionImpl {
 
-  
+
   private static Logger logger = CentralFactoryLogging.getLogger(HttpConnectionImpl.class);
-  
+
   private HttpHost host;
   private Authentication authentication;
   private AbsRelTime timeout;
-  
+
   private HttpClientContext context;
   private CloseableHttpClient httpClient;
   private String userAgent;
@@ -118,7 +118,7 @@ public class HttpConnectionImpl {
     }
     host = host(connectParameter);
   }
-  
+
   private HttpHost host(ConnectParameter connectParameter) {
     if( connectParameter instanceof ConnectParameterHostPort ) {
       ConnectParameterHostPort cphp = (ConnectParameterHostPort)connectParameter;
@@ -146,22 +146,22 @@ public class HttpConnectionImpl {
   public HttpHost getHost() {
     return host;
   }
-  
-  
+
+
   public void connect(boolean https) throws ConnectException, TimeoutException {
-    
+
     context = HttpClientContext.create();
     context.setTargetHost(host);
-    
+
     httpClient = HttpClients.custom()
         .setConnectionManager(createConnectionManager(https, createConnectionFactoryLookup()))
         .setUserAgent(userAgent)
         .setRoutePlanner( createHttpRoutePlanner(new HttpRoute(host,null,https)) )
         .setDefaultCredentialsProvider( createCredentialsProvider() )
         .build();
-    
+
   }
-  
+
   private Lookup<ConnectionSocketFactory> createConnectionFactoryLookup() throws ConnectException {
     return RegistryBuilder.<ConnectionSocketFactory>create()
                           .register("http", new PlainConnectionSocketFactory())
@@ -174,25 +174,25 @@ public class HttpConnectionImpl {
       SSLContext sslcontext;
       if (authentication instanceof ManagedKeyStoreAuthentication) {
         ManagedKeyStoreAuthentication mksa = (ManagedKeyStoreAuthentication)authentication;
-        
+
         KeyManagement km = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getKeyManagement();
 
         KeyManagerFactory kmf = null;
-        if (mksa.getIdentityKeyStoreName() != null && 
+        if (mksa.getIdentityKeyStoreName() != null &&
             mksa.getIdentityKeyStoreName().length() > 0) {
           Map<String, String> params = new HashMap<String, String>();
           kmf = km.getKeyStore(mksa.getIdentityKeyStoreName(), KeyManagerFactory.class, params);
         }
-        
+
         TrustManagerFactory tmf = null;
-        if (mksa.getTrustManagerKeyStoreName() != null && 
+        if (mksa.getTrustManagerKeyStoreName() != null &&
             mksa.getTrustManagerKeyStoreName().length() > 0) {
           Map<String, String> params = new HashMap<String, String>();
           tmf = km.getKeyStore(mksa.getTrustManagerKeyStoreName(), TrustManagerFactory.class, params);
         }
-        
+
         sslcontext = SSLContext.getInstance("TLS");
-        sslcontext.init(kmf == null ? null : kmf.getKeyManagers(), 
+        sslcontext.init(kmf == null ? null : kmf.getKeyManagers(),
                         tmf == null ? null : tmf.getTrustManagers(),
                         null);
       } else {
@@ -200,7 +200,7 @@ public class HttpConnectionImpl {
     }
        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
                                                                         sslcontext,
-                                                                        new String[] { "TLSv1.2","TLSv1.1","TLSv1" },
+                                                                        new String[] { "TLSv1.3, TLSv1.2","TLSv1.1","TLSv1" },
                                                                         null,
                                                                         SSLConnectionSocketFactory.getDefaultHostnameVerifier());
 
@@ -225,11 +225,11 @@ public class HttpConnectionImpl {
     } else {
       throw new IllegalArgumentException("Unexpected Authentication of type "+ authentication.getClass().getSimpleName() );
     }
-    
+
   }
 
-  
-  
+
+
   private HttpRoutePlanner createHttpRoutePlanner(final HttpRoute route) {
     return new HttpRoutePlanner() {
       public HttpRoute determineRoute(HttpHost arg0, HttpRequest arg1, HttpContext arg2) throws org.apache.http.HttpException {
@@ -237,11 +237,11 @@ public class HttpConnectionImpl {
       }
     };
   }
-  
+
 
   private HttpClientConnectionManager createConnectionManager(boolean https, Lookup<ConnectionSocketFactory> lookup) throws TimeoutException, ConnectException {
     BasicHttpClientConnectionManager conManager = new BasicHttpClientConnectionManager(lookup);
-    
+
     //FIXME setSocketConfig
     /*
     conManager.setSocketConfig(route.getTargetHost(),SocketConfig.custom().
@@ -254,7 +254,7 @@ public class HttpConnectionImpl {
       // Request new connection. This can be a long process
       ConnectionRequest connRequest = conManager.requestConnection(route, null);
       HttpClientConnection connection = connRequest.get(timeout.getTime(), TimeUnit.MILLISECONDS);
-      
+
       if (!connection.isOpen()) {
         try {
           // establish connection based on its route info
@@ -265,9 +265,9 @@ public class HttpConnectionImpl {
           throw new ConnectException(e);
         }
       }
-      
+
       conManager.releaseConnection(connection, null, 0, TimeUnit.SECONDS);
-      
+
     } catch (ConnectionPoolTimeoutException e ) {
       throw new TimeoutException(e);
     } catch (InterruptedException e) {
@@ -277,8 +277,8 @@ public class HttpConnectionImpl {
     } catch (org.apache.http.HttpException e) {
       throw new ConnectException(e);
     }
-    
-    
+
+
     return conManager;
   }
 
@@ -289,7 +289,7 @@ public class HttpConnectionImpl {
       throw new HttpException(e);
     }
   }
-  
+
 
   public HttpResponse send(HttpRequestBase request) throws HttpException {
     if( lastResponse != null ) {
@@ -308,7 +308,7 @@ public class HttpConnectionImpl {
     }
     return lastResponse;
   }
-  
+
   public HttpEntity receive() {
     if( lastResponse != null ) {
       return lastResponse.getEntity();
