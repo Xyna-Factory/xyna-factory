@@ -64,7 +64,7 @@
           </Data>
           <Target RefID="10034"/>
         </Output>
-        <Mapping>%1%.workspaceName0=%0%.workspaceName</Mapping>
+        <Mapping>%1%.workspaceName=%0%.workspaceName</Mapping>
       </Mappings>
     </Foreach>
     <Foreach ID="10036">

@@ -25,13 +25,13 @@
       <Data ID="1632" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName1632"/>
       <Data ID="1330" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds1330"/>
     </Output>
-    <ServiceReference ID="1571" Label="Refresh Diff List Child Elements" ReferenceName="RefreshDiffListChildElements" ReferencePath="xmcp.gitintegration.ui">
-      <Source RefID="1570"/>
-      <Target RefID="1570"/>
-    </ServiceReference>
     <ServiceReference ID="1187" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
       <Source RefID="1186"/>
       <Target RefID="1186"/>
+    </ServiceReference>
+    <ServiceReference ID="1571" Label="Refresh Diff List Child Elements" ReferenceName="RefreshDiffListChildElements" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="1570"/>
+      <Target RefID="1570"/>
     </ServiceReference>
     <Mappings ID="1076" Label="Mapping">
       <Input>
@@ -70,7 +70,7 @@
         </Data>
         <Target RefID="1686"/>
       </Output>
-      <Mapping>%1%.workspaceName0=%0%.workspaceName</Mapping>
+      <Mapping>%1%.workspaceName=%0%.workspaceName</Mapping>
     </Mappings>
     <Function ID="1570" Label="Refresh Diff List Child Elements">
       <Source RefID="1571"/>

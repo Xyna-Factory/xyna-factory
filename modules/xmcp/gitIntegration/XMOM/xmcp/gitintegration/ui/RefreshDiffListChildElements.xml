@@ -46,7 +46,7 @@
         </Data>
         <Target RefID="3128"/>
       </Output>
-      <Mapping>%1%.name=%0%.workspaceName0</Mapping>
+      <Mapping>%1%.name=%0%.workspaceName</Mapping>
     </Mappings>
     <Function ID="1857" Label="Get Workspace List Ids">
       <Source RefID="1858"/>

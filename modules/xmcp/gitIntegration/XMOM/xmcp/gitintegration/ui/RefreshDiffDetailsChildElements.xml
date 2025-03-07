@@ -41,7 +41,7 @@
         </Data>
         <Target RefID="3601"/>
       </Output>
-      <Mapping>%1%.workspaceName0=%0%.workspaceName</Mapping>
+      <Mapping>%1%.workspaceName=%0%.workspaceName</Mapping>
     </Mappings>
     <Mappings ID="3548" Label="Mapping">
       <Input>

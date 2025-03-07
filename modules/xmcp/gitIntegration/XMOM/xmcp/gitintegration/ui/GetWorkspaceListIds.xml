@@ -49,7 +49,7 @@
         </Data>
         <Target RefID="11284"/>
       </Output>
-      <Mapping>%1%.name=%0%.workspaceName0</Mapping>
+      <Mapping>%1%.name=%0%.workspaceName</Mapping>
     </Mappings>
     <Function ID="9354" Label="List Open Workspace Differences Lists">
       <Source RefID="9355"/>

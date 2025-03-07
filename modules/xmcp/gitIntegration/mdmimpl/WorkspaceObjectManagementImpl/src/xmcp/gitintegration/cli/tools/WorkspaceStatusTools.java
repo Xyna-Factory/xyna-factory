@@ -65,31 +65,31 @@ public class WorkspaceStatusTools {
       WorkspaceContentDifferences difflist = storage.loadDifferences(listid.getListId());
       if (difflist == null) { return ret; }
       if (difflist.getDifferences() == null) { return ret; }
-      ret.setListId(listid.getListId());
-      ret.setWorkspaceName(difflist.getWorkspaceName());
+      ret.unversionedSetListId(listid.getListId());
+      ret.unversionedSetWorkspaceName(difflist.getWorkspaceName());
+      OutputCreator<WorkspaceContentItem, WorkspaceContentDifference, WorkspaceContentItemDifferenceSelector> outputCreator = 
+        new OutputCreator<WorkspaceContentItem, WorkspaceContentDifference, WorkspaceContentItemDifferenceSelector>(
+          new WorkspaceContentItemDifferenceSelector());
       for (WorkspaceContentDifference diff : difflist.getDifferences()) {
-        OutputCreator<WorkspaceContentItem, WorkspaceContentDifference, WorkspaceContentItemDifferenceSelector> outputCreator = 
-          new OutputCreator<WorkspaceContentItem, WorkspaceContentDifference, WorkspaceContentItemDifferenceSelector>(
-            new WorkspaceContentItemDifferenceSelector());
         String output = outputCreator.createOutput(diff, portal);
         InfoWorkspaceContentDiffGroup group = groupmap.get(diff.getContentType());
         if (group == null) {
           group = new InfoWorkspaceContentDiffGroup();
-          group.setContentType(diff.getContentType());
+          group.unversionedSetContentType(diff.getContentType());
           ret.addToInfoWorkspaceContentDiffGroup(group);
-          group.setGroupIndex(ret.getInfoWorkspaceContentDiffGroup().size() - 1);
+          group.unversionedSetGroupIndex(ret.getInfoWorkspaceContentDiffGroup().size() - 1);
           groupmap.put(diff.getContentType(), group);
         }
         InfoWorkspaceContentDiffItem item = new InfoWorkspaceContentDiffItem();
-        item.setDifferenceInfo(output);
-        item.setDifferenceType(diff.getDifferenceType());
+        item.unversionedSetDifferenceInfo(output);
+        item.unversionedSetDifferenceType(diff.getDifferenceType());
         group.addToDifferenceList(item);
-        item.setItemIndex(group.getDifferenceList().size() - 1);
-        item.setNumberOfLines(output.split("\n").length);
-        item.setEntryId(diff.getEntryId());
+        item.unversionedSetItemIndex(group.getDifferenceList().size() - 1);
+        item.unversionedSetNumberOfLines(output.split("\n").length);
+        item.unversionedSetEntryId(diff.getEntryId());
         String suggested = (diff.getDifferenceType() == null) ? null : diff.getDifferenceType().getClass().getSimpleName(); 
-        item.setSuggestedResolution(suggested);
-      }      
+        item.unversionedSetSuggestedResolution(suggested);
+      }
     }
     catch (Exception e) {
       _logger.error(e.getMessage(), e);

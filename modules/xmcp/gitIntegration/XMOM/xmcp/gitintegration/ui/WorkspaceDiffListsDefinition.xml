@@ -46,7 +46,7 @@
         </Data>
         <Target RefID="6348"/>
       </Output>
-      <Mapping>%1%.workspaceName0=%0%.workspaceName</Mapping>
+      <Mapping>%1%.workspaceName=%0%.workspaceName</Mapping>
     </Mappings>
     <Function ID="4691" Label="get Own RuntimeContext">
       <Source RefID="4692"/>

@@ -244,7 +244,6 @@ public class WorkspaceDifferenceListStorage {
       Collection<WorkspaceContentDifferencesStorable> collection = con.loadCollection(WorkspaceContentDifferencesStorable.class);
       Collection<WorkspaceContentDifferenceStorable> entries = loadContent ? con.loadCollection(WorkspaceContentDifferenceStorable.class) : new ArrayList<>();
 
-      int i = 0;
       for(WorkspaceContentDifferencesStorable storable : collection) {
         if(!Objects.equals(workspace, storable.getWorkspacename())) {
           continue;
@@ -259,10 +258,9 @@ public class WorkspaceDifferenceListStorage {
         }
         
         result.add(differences.instance());
-        result.get(i).setIndex(i);
-        i++;
+        int index = result.size() - 1;
+        result.get(index).unversionedSetIndex(index);
       }
-      
       return result;
     }
     

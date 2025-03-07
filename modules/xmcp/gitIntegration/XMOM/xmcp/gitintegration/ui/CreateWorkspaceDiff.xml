@@ -27,17 +27,17 @@
       <Source RefID="8235"/>
       <Target RefID="8235"/>
     </ServiceReference>
-    <ServiceReference ID="8154" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="8153"/>
-      <Target RefID="8153"/>
+    <ServiceReference ID="8289" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="8288"/>
+      <Target RefID="8288"/>
     </ServiceReference>
     <ServiceReference ID="8191" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
       <Source RefID="8190"/>
       <Target RefID="8190"/>
     </ServiceReference>
-    <ServiceReference ID="8289" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="8288"/>
-      <Target RefID="8288"/>
+    <ServiceReference ID="8154" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="8153"/>
+      <Target RefID="8153"/>
     </ServiceReference>
     <Mappings ID="8348" Label="Mapping">
       <Input>
@@ -52,7 +52,7 @@
         </Data>
         <Target RefID="8406"/>
       </Output>
-      <Mapping>%1%.name=%0%.workspaceName0</Mapping>
+      <Mapping>%1%.name=%0%.workspaceName</Mapping>
     </Mappings>
     <Function ID="8235" Label="Get Path to Workspace Xml">
       <Source RefID="8236"/>

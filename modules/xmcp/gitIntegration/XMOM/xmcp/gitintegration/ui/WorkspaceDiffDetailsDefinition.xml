@@ -25,13 +25,13 @@
       <Data ID="7659" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition7659"/>
       <Data ID="11102" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList11102"/>
     </Output>
-    <ServiceReference ID="7690" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
-      <Source RefID="7689"/>
-      <Target RefID="7689"/>
-    </ServiceReference>
     <ServiceReference ID="11567" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
       <Source RefID="11566"/>
       <Target RefID="11566"/>
+    </ServiceReference>
+    <ServiceReference ID="7690" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="7689"/>
+      <Target RefID="7689"/>
     </ServiceReference>
     <ServiceReference ID="9901" Label="Build Workspace Diff Group Panel" ReferenceName="BuildWorkspaceDiffGroupPanel" ReferencePath="xmcp.gitintegration.ui">
       <Source RefID="9900"/>
@@ -86,7 +86,7 @@
             </Data>
             <Target RefID="14364"/>
           </Output>
-          <Mapping>%1%.workspaceName=%0%.workspaceName0</Mapping>
+          <Mapping>%1%.workspaceName=%0%.workspaceName</Mapping>
           <Mapping>%1%.listId="-1"</Mapping>
         </Mappings>
         <Assign>

@@ -19,7 +19,7 @@
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Workspace Name" VariableName="workspaceName0">
+  <Data Label="Workspace Name" VariableName="workspaceName">
     <Meta>
       <Type>String</Type>
     </Meta>
