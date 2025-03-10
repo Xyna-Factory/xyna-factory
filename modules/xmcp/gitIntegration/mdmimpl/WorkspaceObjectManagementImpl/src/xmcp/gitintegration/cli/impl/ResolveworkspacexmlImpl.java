@@ -18,8 +18,9 @@
 package xmcp.gitintegration.cli.impl;
 
 
-
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -29,18 +30,26 @@ import xmcp.gitintegration.impl.ResolveWorkspaceDifferencesParameter;
 import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
 
 
-
 public class ResolveworkspacexmlImpl extends XynaCommandImplementation<Resolveworkspacexml> {
 
   public void execute(OutputStream statusOutputStream, Resolveworkspacexml payload) throws XynaException {
     WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
-    ResolveWorkspaceDifferencesParameter param = new ResolveWorkspaceDifferencesParameter();
-    param.setWorkspaceDifferenceListId(Long.valueOf(payload.getId()));
-    param.setEntry(payload.getEntry() == null ? Optional.empty() : Optional.of(Long.valueOf(payload.getEntry())));
-    param.setResolution(payload.getResolution() == null ? Optional.empty() : Optional.of(payload.getResolution()));
-    param.setAll(payload.getAll());
-    param.setClose(payload.getClose());
-    String result = portal.resolve(param);
+    long listid = Long.valueOf(payload.getId());
+    String result = "";
+    if (payload.getClose()) {
+      result = portal.closeDifferenceList(listid);
+    }
+    else if ((payload.getEntry() != null) && !payload.getAll()) {
+      result = portal.resolveAll(listid, Optional.ofNullable(payload.getResolution()));
+    }
+    else {
+      ResolveWorkspaceDifferencesParameter param = new ResolveWorkspaceDifferencesParameter();
+      param.setEntry(Long.valueOf(payload.getEntry()));
+      param.setResolution(payload.getResolution());
+      List<ResolveWorkspaceDifferencesParameter> list = new ArrayList<>();
+      list.add(param);      
+      result = portal.resolveList(listid, list);
+    }
     writeToCommandLine(statusOutputStream, result);
   }
 
