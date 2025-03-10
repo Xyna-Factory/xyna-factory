@@ -25,9 +25,11 @@ import org.openapitools.codegen.model.OperationMap;
 import org.openapitools.codegen.utils.ModelUtils;
 
 import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
+import com.gip.xyna.openapi.codegen.utils.Camelizer;
 import com.gip.xyna.openapi.codegen.utils.GeneratorProperty;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
 import com.gip.xyna.openapi.codegen.utils.XynaModelUtils;
+import com.gip.xyna.openapi.codegen.utils.Camelizer.Case;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -70,6 +72,10 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     return GeneratorProperty.getModelPath(this) + ".decider";
   }
   
+  public String getFilteName() {
+    return GeneratorProperty.getFilterName(this);
+  }
+  
   /**
    * any special handling of the entire OpenAPI spec document 
    */
@@ -100,6 +106,12 @@ public class XmomDataModelGenerator extends DefaultCodegen {
       }
     }
     
+    // determine name of Filter
+    String xFilterName = vendorExtentions != null? (String)vendorExtentions.get("x-filter-name") : info.getTitle();
+    xFilterName = xFilterName != null && !xFilterName.trim().isEmpty()? xFilterName : info.getTitle();
+    xFilterName = Camelizer.camelize(Sanitizer.sanitize(xFilterName.replace('-', ' ').replace('_', ' ')), Case.PASCAL);
+
+    GeneratorProperty.setFilterName(this, xFilterName);
     
     /**
      * Supporting Files.  You can write single files for the generator with the
@@ -187,6 +199,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     objs.put("xynaModels", xModels);
     objs.put("addPropWrapper", addPropWappers);
     objs.put("deciderPath", getDeciderPath());
+    objs.put("filterName", getFilteName());
     return objs;
   }
   

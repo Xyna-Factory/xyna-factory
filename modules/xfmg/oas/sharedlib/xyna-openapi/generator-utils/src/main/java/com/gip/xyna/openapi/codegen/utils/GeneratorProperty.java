@@ -45,6 +45,14 @@ public class GeneratorProperty {
     return (String) gen.additionalProperties().get("x-clientPath");
   }
   
+  public static void setFilterName(DefaultCodegen gen, String name) {
+    gen.additionalProperties().put("x-filterName", name);
+  }
+  
+  public static String getFilterName(DefaultCodegen gen) {
+    return (String) gen.additionalProperties().get("x-filterName");
+  }
+  
   // external Properties
   
   public static void setCreateListWrappers(DefaultCodegen gen, boolean createListWrappers) {
