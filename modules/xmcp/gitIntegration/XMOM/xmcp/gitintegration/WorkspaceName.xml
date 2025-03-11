@@ -15,13 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="List Id" TypeName="ListId" TypePath="xmcp.gitintegration" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Workspace Name" TypeName="WorkspaceName" TypePath="xmcp.gitintegration" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="List Id" VariableName="listId">
+  <Data Label="Workspace Name" VariableName="workspaceName">
     <Meta>
-      <Type>long</Type>
+      <Type>String</Type>
     </Meta>
   </Data>
 </DataType>

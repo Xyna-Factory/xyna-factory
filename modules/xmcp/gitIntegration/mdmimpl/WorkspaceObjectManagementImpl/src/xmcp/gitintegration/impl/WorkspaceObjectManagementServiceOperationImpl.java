@@ -29,13 +29,19 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTi
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 
 import xmcp.gitintegration.Flag;
+import xmcp.gitintegration.InfoWorkspaceContentDiffGroupList;
 import xmcp.gitintegration.ListId;
 import xmcp.gitintegration.WorkspaceContent;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceContentDifferencesResolution;
 import xprc.xpce.Workspace;
 import xmcp.gitintegration.WorkspaceObjectManagementServiceOperation;
+import xmcp.gitintegration.WorkspaceXmlCreationConfig;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
+import xmcp.gitintegration.cli.tools.CreateWorkspaceXmlTools;
+import xmcp.gitintegration.cli.tools.ResolveWorkspaceDiffsTools;
+import xmcp.gitintegration.cli.tools.WorkspaceStatusTools;
+import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
 import xmcp.gitintegration.storage.WorkspaceDifferenceListStorage;
 
 
@@ -94,13 +100,12 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
 
 
   public WorkspaceContent createWorkspaceContentFromFile(File file8) {
-    // Implemented as code snippet!
-    return null;
+    return new WorkspaceStatusTools().createWorkspaceContentFromFile(file8);
   }
 
 
   public WorkspaceContent createWorkspaceContentFromText(Text text9) {
-    // Implemented as code snippet!
+    // TODO
     return null;
   }
 
@@ -114,21 +119,39 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
 
   @Override
   public void resolveWorkspaceDifferences(ListId listId, List<? extends WorkspaceContentDifferencesResolution> list) {
-    // TODO Auto-generated method stub
+    new ResolveWorkspaceDiffsTools().resolveWorkspaceDifferences(listId, list);
   }
 
 
   @Override
   public void closeWorkspaceDifferencesList(ListId listId) {
-    // TODO Auto-generated method stub
-    
+    WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
+    portal.closeDifferenceList(listId.getListId());
   }
 
 
   @Override
-  public void updateWorkspaceContent(Workspace workspace) {
-    // TODO Auto-generated method stub
-    
+  public void updateWorkspaceContent(WorkspaceXmlCreationConfig conf) {
+    new CreateWorkspaceXmlTools().execute(conf.getWorkspaceName());
+  }
+
+
+  @Override
+  public Text getWorkspaceXmlStatus() {
+    //TODO
+    return new Text();
+  }
+
+
+  @Override
+  public InfoWorkspaceContentDiffGroupList adaptWorkspaceDifferenceList(ListId listid) {
+    return new WorkspaceStatusTools().adaptWorkspaceDifferenceList(listid);
+  }
+
+
+  @Override
+  public File getPathToWorkspaceXml(Workspace workspace) {
+    return new WorkspaceStatusTools().getPathToWorkspaceXml(workspace);
   }
 
 }

@@ -258,8 +258,9 @@ public class WorkspaceDifferenceListStorage {
         }
         
         result.add(differences.instance());
+        int index = result.size() - 1;
+        result.get(index).unversionedSetIndex(index);
       }
-      
       return result;
     }
     
