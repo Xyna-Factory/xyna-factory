@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="GitIntegration" factoryVersion="" versionName="0.1.15" xmlVersion="1.1">
+--><Application applicationName="GitIntegration" factoryVersion="" versionName="0.1.16" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
