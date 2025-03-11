@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,11 +38,9 @@
         <Target RefID="2156"/>
       </Receive>
     </Function>
-    <Mappings ID="88" Label="Mapping">
+    <Mappings ID="4143" Label="Mapping">
       <Input>
-        <Data ID="2743" Label="group index - IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber2743">
-          <Source RefID="88"/>
-        </Data>
+        <Data ID="4144" Label="group index - IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber4144"/>
         <Source RefID="2246">
           <Meta>
             <LinkType>UserConnected</LinkType>
@@ -50,7 +48,28 @@
         </Source>
       </Input>
       <Input>
-        <Data ID="1808" Label="connection index - IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber1808">
+        <Data ID="4145" Label="connection index - IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber4145"/>
+        <Source RefID="43">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="4149" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text4149"/>
+        <Target RefID="4150"/>
+      </Output>
+      <Mapping>%2%.text=concat("%1%.", %0%.value, ".workspaceDiffsListIds.", %1%.value)</Mapping>
+    </Mappings>
+    <Mappings ID="88" Label="Mapping">
+      <Input>
+        <Data ID="1725" IsList="true" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection1725">
+          <Source RefID="88"/>
+        </Data>
+        <Source RefID="75"/>
+      </Input>
+      <Input>
+        <Data ID="4545" Label="connection index - IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber4545">
           <Source RefID="88"/>
         </Data>
         <Source RefID="43">
@@ -60,10 +79,16 @@
         </Source>
       </Input>
       <Input>
-        <Data ID="1725" IsList="true" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection1725">
+        <Data ID="4431" Label="Text 1" ReferenceName="Text" ReferencePath="base" VariableName="text4431">
           <Source RefID="88"/>
         </Data>
-        <Source RefID="75"/>
+        <Source RefID="4150"/>
+      </Input>
+      <Input>
+        <Data ID="4448" Label="Text 2" ReferenceName="Text" ReferencePath="base" VariableName="text4448">
+          <Source RefID="88"/>
+        </Data>
+        <Source RefID="4150"/>
       </Input>
       <Output>
         <Data ID="1715" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection1715">
@@ -71,53 +96,37 @@
         </Data>
         <Target RefID="1716"/>
       </Output>
-      <Output>
-        <Data ID="2661" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text2661">
-          <Source RefID="88"/>
-        </Data>
-        <Target RefID="2662"/>
-      </Output>
-      <Mapping>%3%=%2%[%1%.value]</Mapping>
-      <Mapping>%4%.text=concat("%0%.", %0%.value, ".repositoryConnectionGroup.repositoryConnection.", %1%.value)</Mapping>
+      <Mapping>%4%=%0%[%1%.value]</Mapping>
     </Mappings>
-    <Mappings ID="3106" Label="Mapping">
+    <Mappings ID="3617" Label="Mapping">
       <Input>
-        <Data ID="3254" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection3254">
-          <Source RefID="3106"/>
+        <Data ID="3772" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext3772">
+          <Source RefID="3617"/>
         </Data>
-        <Source RefID="1716">
-          <Meta>
-            <LinkType>UserConnected</LinkType>
-          </Meta>
-        </Source>
+        <Source RefID="2156"/>
       </Input>
       <Input>
-        <Data ID="3335" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text3335">
-          <Source RefID="3106"/>
+        <Data ID="3869" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text3869">
+          <Source RefID="3617"/>
         </Data>
-        <Source RefID="2662"/>
+        <Source RefID="4150"/>
       </Input>
       <Output>
-        <Data ID="3123" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3123">
-          <Source RefID="3106"/>
+        <Data ID="3634" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow3634">
+          <Source RefID="3617"/>
         </Data>
-        <Target RefID="3124"/>
+        <Target RefID="3635"/>
       </Output>
-      <Mapping>%2%.label=concat(%0%.workspaceName, " Configuration")</Mapping>
       <Mapping>%2%.dataPath=%1%.text</Mapping>
+      <Mapping>%2%.rTC=%0%</Mapping>
+      <Mapping>%2%.fQN="xmcp.gitintegration.ui.WorkspaceDiffListsDefinition"</Mapping>
     </Mappings>
     <Mappings ID="2004" Label="Mapping">
       <Input>
-        <Data ID="3057" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text3057">
+        <Data ID="3950" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow3950">
           <Source RefID="2004"/>
         </Data>
-        <Source RefID="2662"/>
-      </Input>
-      <Input>
-        <Data ID="3141" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3141">
-          <Source RefID="2004"/>
-        </Data>
-        <Source RefID="3124"/>
+        <Source RefID="3635"/>
       </Input>
       <Output>
         <Data ID="2013" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition2013">
@@ -125,9 +134,9 @@
         </Data>
         <Target RefID="3432"/>
       </Output>
-      <Mapping>%2%.label="manage config"</Mapping>
-      <Mapping>%2%.dataPath=%0%.text</Mapping>
-      <Mapping>%2%.detailsDefinitionReference#cast("xmcp.forms.datatypes.FormPanelDefinition")=%1%</Mapping>
+      <Mapping>%1%.label="manage config"</Mapping>
+      <Mapping>%1%.dataPath=null</Mapping>
+      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%0%</Mapping>
     </Mappings>
     <Mappings ID="11" Label="Mapping">
       <Input>
@@ -170,24 +179,18 @@
     <Data ID="2156" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext2156">
       <Source RefID="2153"/>
     </Data>
-    <Data ID="2662" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text2662">
-      <Source RefID="88"/>
-    </Data>
-    <Data ID="3124" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3124">
-      <Source RefID="3106"/>
-    </Data>
     <Data ID="3432" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition3432">
       <Source RefID="2004"/>
     </Data>
+    <Data ID="3635" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow3635">
+      <Source RefID="3617"/>
+    </Data>
+    <Data ID="4150" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text4150"/>
     <Assign ID="1">
       <Source RefID="10"/>
       <Target RefID="107"/>
       <Copy>
-        <Source RefID="10">
-          <Meta>
-            <LinkType>UserConnected</LinkType>
-          </Meta>
-        </Source>
+        <Source RefID="10"/>
         <Target RefID="107"/>
       </Copy>
     </Assign>

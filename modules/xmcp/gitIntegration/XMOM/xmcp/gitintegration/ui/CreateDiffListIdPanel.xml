@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Create Diff List Id Panel" TypeName="CreateDiffListIdPanel" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Create Diff List Id Panel" Name="CreateDiffListIdPanel">
+    <Input>
+      <Data ID="4618" Label="Workspace Diff List Id" ReferenceName="WorkspaceDiffListId" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffListId4618"/>
+      <Data ID="5197" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext5197"/>
+    </Input>
+    <Output>
+      <Data ID="107" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition107"/>
+    </Output>
+    <Mappings ID="4167" Label="Mapping">
+      <Input>
+        <Data ID="4727" Label="Workspace Diff List Id" ReferenceName="WorkspaceDiffListId" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffListId4727">
+          <Source RefID="4167"/>
+        </Data>
+        <Source RefID="4618"/>
+      </Input>
+      <Output>
+        <Data ID="4173" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text4173"/>
+        <Target RefID="4174"/>
+      </Output>
+      <Mapping>%1%.text=concat("%0%,%1%.workspaceListIds.", %0%.index)</Mapping>
+    </Mappings>
+    <Mappings ID="3617" Label="Mapping">
+      <Input>
+        <Data ID="3772" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext3772">
+          <Source RefID="3617"/>
+        </Data>
+        <Source RefID="5197"/>
+      </Input>
+      <Input>
+        <Data ID="3869" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text3869">
+          <Source RefID="3617"/>
+        </Data>
+        <Source RefID="4174"/>
+      </Input>
+      <Output>
+        <Data ID="3634" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow3634">
+          <Source RefID="3617"/>
+        </Data>
+        <Target RefID="3635"/>
+      </Output>
+      <Mapping>%2%.dataPath=%1%.text</Mapping>
+      <Mapping>%2%.rTC=%0%</Mapping>
+      <Mapping>%2%.fQN="xmcp.gitintegration.ui.WorkspaceDiffDetailsDefinition"</Mapping>
+    </Mappings>
+    <Mappings ID="2004" Label="Mapping">
+      <Input>
+        <Data ID="3950" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow3950">
+          <Source RefID="2004"/>
+        </Data>
+        <Source RefID="3635"/>
+      </Input>
+      <Output>
+        <Data ID="2013" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition2013">
+          <Source RefID="2004"/>
+        </Data>
+        <Target RefID="3432"/>
+      </Output>
+      <Mapping>%1%.label="Show"</Mapping>
+      <Mapping>%1%.dataPath=null</Mapping>
+      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%0%</Mapping>
+    </Mappings>
+    <Mappings ID="11" Label="Mapping">
+      <Input>
+        <Data ID="2023" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition2023">
+          <Source RefID="1886"/>
+        </Data>
+        <Source RefID="3432">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="4892" Label="Workspace Diff List Id" ReferenceName="WorkspaceDiffListId" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffListId4892">
+          <Source RefID="11"/>
+        </Data>
+        <Source RefID="4618"/>
+      </Input>
+      <Output>
+        <Data ID="18" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition18"/>
+        <Target RefID="10"/>
+      </Output>
+      <Mapping>%2%.label=concat("Difference list id = ", %1%.listId)</Mapping>
+      <Mapping>%2%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%0%</Mapping>
+    </Mappings>
+    <Data ID="3432" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition3432">
+      <Source RefID="2004"/>
+    </Data>
+    <Data ID="3635" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow3635">
+      <Source RefID="3617"/>
+    </Data>
+    <Data ID="4174" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text4174"/>
+    <Data ID="10" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10"/>
+    <Assign ID="1">
+      <Source RefID="10"/>
+      <Target RefID="107"/>
+      <Copy>
+        <Source RefID="10"/>
+        <Target RefID="107"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
