@@ -25,13 +25,13 @@
       <Data ID="6662" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName6662"/>
       <Data ID="3967" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds3967"/>
     </Output>
-    <ServiceReference ID="4046" Label="Create Diff List Id Panel" ReferenceName="CreateDiffListIdPanel" ReferencePath="xmcp.gitintegration.ui">
-      <Source RefID="4045"/>
-      <Target RefID="4045"/>
-    </ServiceReference>
     <ServiceReference ID="4692" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="4691"/>
       <Target RefID="4691"/>
+    </ServiceReference>
+    <ServiceReference ID="4046" Label="Create Diff List Id Panel" ReferenceName="CreateDiffListIdPanel" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="4045"/>
+      <Target RefID="4045"/>
     </ServiceReference>
     <Mappings ID="6067" Label="Mapping">
       <Input>
@@ -147,6 +147,8 @@
       <Mapping>%1%.serviceRTC=%0%</Mapping>
       <Mapping>%1%.dataPath="%0%"</Mapping>
       <Mapping>%1%.serviceFQN="xmcp.gitintegration.ui.ExecuteSaveCurrentConfigToWorkspaceXml"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="git_int_diffs_refresh"</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
     </Mappings>
     <Mappings ID="6699" Label="Mapping">
       <Input>
