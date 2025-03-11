@@ -347,6 +347,15 @@ public class RepositoryManagementImpl {
             return "Error: Could not create symbolic link '" + revisionPath.resolve(CONFIG) + "' within the factory!";
           }
         }
+        //TODO: link for ws-xml
+        Path workspaceXmlPath = workspaceXmlPathMap.get(workspaceName);
+        Path filename = workspaceXmlPath.getFileName();
+        try {
+          Files.createSymbolicLink(workspaceXmlPath, revisionPath.resolve(filename));
+        } catch (IOException e) {
+          e.printStackTrace();
+          return "Error: Could not create symbolic link '" + revisionPath.resolve(SAVED).resolve(XMOM) + "' within the factory!";
+        }
       }
       // persist storable
       String subPathString = subPath.toString().substring(basePath.toString().length() + 1); //+1 for "/"
