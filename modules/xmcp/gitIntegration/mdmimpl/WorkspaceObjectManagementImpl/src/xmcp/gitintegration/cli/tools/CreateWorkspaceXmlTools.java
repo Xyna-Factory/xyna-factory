@@ -47,9 +47,14 @@ public class CreateWorkspaceXmlTools {
     ONLY_CREATE_STRING, WRITE_FILE
   }
   
-  public void createWorkspaceXml(WorkspaceXmlCreationConfig conf) {
+  public void execute(String workspaceName) {
     try {
-      execute(conf, XmlCreationMode.WRITE_FILE);
+      RepositoryConnection repositoryConnection = RepositoryManagement.getRepositoryConnection(new Workspace(workspaceName));
+      WorkspaceXmlCreationConfig conf = new WorkspaceXmlCreationConfig();
+      conf.unversionedSetWorkspaceName(workspaceName);
+      conf.unversionedSetForce(false);
+      conf.unversionedSetSplitResult(repositoryConnection.getSplitted());
+      executeImpl(conf, XmlCreationMode.WRITE_FILE);
     }
     catch (RuntimeException e) {
       throw e;
@@ -61,25 +66,31 @@ public class CreateWorkspaceXmlTools {
   
   
   public String execute(WorkspaceXmlCreationConfig conf, XmlCreationMode mode) throws XynaException {
-    String workspaceName = conf.getWorkspaceName();
-    WorkspaceContentCreator contentCreator = new WorkspaceContentCreator();
-    WorkspaceContent content = contentCreator.createWorkspaceContentForWorkspace(workspaceName);
-    WorkspaceContentXmlConverter converter = new WorkspaceContentXmlConverter();
-    String xml = converter.convertToXml(content);
-
     if (mode == XmlCreationMode.ONLY_CREATE_STRING) {
-      return xml;
+      return executeImpl(conf, mode);
     }
-    RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
-    Long revision = rm.getRevision(null, null, workspaceName);
+    String workspaceName = conf.getWorkspaceName();
     RepositoryConnection repositoryConnection = RepositoryManagement.getRepositoryConnection(new Workspace(workspaceName));
- 
     if(repositoryConnection.getSplitted() != conf.getSplitResult() && !conf.getForce()) {
       throw new RuntimeException("Use force to change the configuration between single file and splitted");
     }
     repositoryConnection.setSplitted(conf.getSplitResult());
     RepositoryManagement.updateRepositoryConnection(repositoryConnection);
-    
+    return executeImpl(conf, mode);
+  }
+  
+  
+  private String executeImpl(WorkspaceXmlCreationConfig conf, XmlCreationMode mode) throws XynaException {
+    String workspaceName = conf.getWorkspaceName();
+    WorkspaceContentCreator contentCreator = new WorkspaceContentCreator();
+    WorkspaceContent content = contentCreator.createWorkspaceContentForWorkspace(workspaceName);
+    WorkspaceContentXmlConverter converter = new WorkspaceContentXmlConverter();
+    String xml = converter.convertToXml(content);    
+    if (mode == XmlCreationMode.ONLY_CREATE_STRING) {
+      return xml;
+    }
+    RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+    Long revision = rm.getRevision(null, null, workspaceName);
     String path = RevisionManagement.getPathForRevision(PathType.ROOT, revision);
     if (!conf.getSplitResult()) {
       removeExistingFiles(path);

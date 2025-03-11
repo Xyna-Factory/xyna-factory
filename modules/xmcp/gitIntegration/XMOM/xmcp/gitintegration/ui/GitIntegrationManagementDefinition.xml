@@ -23,9 +23,9 @@
       <Data ID="1711" IsList="true" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData1711"/>
       <Data ID="2104" IsList="true" Label="Info Diff Repository" ReferenceName="InfoDiffRepository" ReferencePath="xmcp.gitintegration" VariableName="infoDiffRepository2104"/>
     </Output>
-    <ServiceReference ID="1340" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="1339"/>
-      <Target RefID="1339"/>
+    <ServiceReference ID="1487" Label="Create Repository Connection Panel" ReferenceName="CreateRepositoryConnectionPanel" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="1486"/>
+      <Target RefID="1486"/>
     </ServiceReference>
     <ServiceReference ID="1671" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData.RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui">
       <Source RefID="1670"/>
@@ -35,9 +35,9 @@
       <Source RefID="2057"/>
       <Target RefID="2057"/>
     </ServiceReference>
-    <ServiceReference ID="1487" Label="Create Repository Connection Panel" ReferenceName="CreateRepositoryConnectionPanel" ReferencePath="xmcp.gitintegration.ui">
-      <Source RefID="1486"/>
-      <Target RefID="1486"/>
+    <ServiceReference ID="1340" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="1339"/>
+      <Target RefID="1339"/>
     </ServiceReference>
     <Mappings ID="673" Label="Mapping">
       <Output>
@@ -161,15 +161,6 @@
       <Mapping>%2%~=%0%</Mapping>
       <Mapping>%2%.children=concatlists(%0%.children, %1%)</Mapping>
     </Mappings>
-    <Mappings ID="1792" Label="Mapping">
-      <Output>
-        <Data ID="1825" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1825">
-          <Source RefID="1792"/>
-        </Data>
-        <Target RefID="1826"/>
-      </Output>
-      <Mapping>%0%.text="test 123"</Mapping>
-    </Mappings>
     <Data ID="44" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition44"/>
     <Data ID="298" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition298">
       <Source RefID="230"/>
@@ -186,9 +177,6 @@
     <Data ID="1676" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1676">
       <Source RefID="1674"/>
       <Target RefID="1676"/>
-    </Data>
-    <Data ID="1826" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1826">
-      <Source RefID="1792"/>
     </Data>
     <Data ID="2063" IsList="true" Label="Info Diff Repository" ReferenceName="InfoDiffRepository" ReferencePath="xmcp.gitintegration" VariableName="infoDiffRepository2063">
       <Source RefID="2061"/>

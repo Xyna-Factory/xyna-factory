@@ -132,7 +132,7 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
 
   @Override
   public void updateWorkspaceContent(WorkspaceXmlCreationConfig conf) {
-    new CreateWorkspaceXmlTools().createWorkspaceXml(conf);
+    new CreateWorkspaceXmlTools().execute(conf.getWorkspaceName());
   }
 
 

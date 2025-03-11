@@ -25,29 +25,14 @@
       <Data ID="3423" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName3423"/>
       <Data ID="1398" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds1398"/>
     </Output>
-    <ServiceReference ID="1858" Label="Get Workspace List Ids" ReferenceName="GetWorkspaceListIds" ReferencePath="xmcp.gitintegration.ui">
-      <Source RefID="1857"/>
-      <Target RefID="1857"/>
-    </ServiceReference>
     <ServiceReference ID="3362" Label="Workspace Diff Lists Definition" ReferenceName="WorkspaceDiffListsDefinition" ReferencePath="xmcp.gitintegration.ui">
       <Source RefID="3361"/>
       <Target RefID="3361"/>
     </ServiceReference>
-    <Mappings ID="3102" Label="Mapping">
-      <Input>
-        <Data ID="3153" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName3153">
-          <Source RefID="3102"/>
-        </Data>
-        <Source RefID="3013"/>
-      </Input>
-      <Output>
-        <Data ID="3127" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace3127">
-          <Source RefID="3102"/>
-        </Data>
-        <Target RefID="3128"/>
-      </Output>
-      <Mapping>%1%.name=%0%.workspaceName</Mapping>
-    </Mappings>
+    <ServiceReference ID="1858" Label="Get Workspace List Ids" ReferenceName="GetWorkspaceListIds" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="1857"/>
+      <Target RefID="1857"/>
+    </ServiceReference>
     <Function ID="1857" Label="Get Workspace List Ids">
       <Source RefID="1858"/>
       <Source RefID="3013"/>
@@ -94,9 +79,6 @@
     <Data ID="1860" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds1860"/>
     <Data ID="2072" IsList="true" Label="Base Definition" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="baseDefinition2072">
       <Source RefID="2038"/>
-    </Data>
-    <Data ID="3128" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace3128">
-      <Source RefID="3102"/>
     </Data>
     <Data ID="3364" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3364">
       <Source RefID="3361"/>
