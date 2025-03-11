@@ -52,7 +52,7 @@ public class WorkspaceContentXmlConverter {
     WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
     XmlBuilder builder = new XmlBuilder();
 
-    builder.append(XynaProperty.XML_HEADER_COMMENT.get());
+    builder.append("<!--" + XynaProperty.XML_HEADER_COMMENT.get() + "-->\n");
 
     openTag(builder, content);
     if (content.getWorkspaceContentItems() != null) {
