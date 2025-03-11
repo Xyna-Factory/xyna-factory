@@ -66,6 +66,7 @@ public class XynaCodegenProperty {
   final boolean isInherited;
   final boolean isList;
   final boolean isPrimitive;
+  final boolean isEnum;
 
   final String propDescription;
 
@@ -84,6 +85,7 @@ public class XynaCodegenProperty {
   final Integer minItems;
   final Integer maxItems;
 
+
   public XynaCodegenProperty(CodegenPropertyInfo propertyInfo, DefaultCodegen gen, String className) {
     propClassName = className;
     propLabel = propertyInfo.getBaseName();
@@ -91,10 +93,19 @@ public class XynaCodegenProperty {
     getPropVarName = "get" + camelize(propVarName, Case.PASCAL) + "()";
     setPropVarName = "set" + camelize(propVarName, Case.PASCAL);
     isList = isList(propertyInfo);
+    isEnum = propertyInfo.getIsEnumOrRef();
     isInherited = propertyInfo.getIsInherited();
-    isPrimitive = isPrimitive(propertyInfo);
     isRequired = propertyInfo.getRequired();
-    dataType = buildDatatype(propertyInfo);
+
+    allowableValues = buildFromMap(propertyInfo.getAllowableValues());
+    if (isEnum && !allowableValues.isEmpty()) {
+      dataType = allowableValues.get(0).dataType;
+      isPrimitive = allowableValues.get(0).isPrimitiveType;
+    } else {
+      dataType = buildDatatype(propertyInfo);
+      isPrimitive = isPrimitive(propertyInfo);
+    }
+
     javaType = isPrimitive ? DatatypeMap.getOrDefault(dataType, DatatypeMap.get("Default")).javaType : null;
 
     if (isPrimitive) {
@@ -117,8 +128,6 @@ public class XynaCodegenProperty {
         minItems = null;
         maxItems = null;
     }
-
-    allowableValues = buildFromMap(propertyInfo.getAllowableValues());
 
     validatorClassConstructor = buildValidatorClassConstructor();
     validatorConfig = buildValidatorConfig(propertyInfo);
@@ -190,9 +199,7 @@ public class XynaCodegenProperty {
   }
 
   private boolean isString(CodegenPropertyInfo property) {
-    return property.getIsString()
-      || "string".equalsIgnoreCase(property.getOpenApiType())
-      || property.getIsEnumOrRef();
+    return property.getIsString() || "string".equalsIgnoreCase(property.getOpenApiType());
   }
 
 
@@ -337,6 +344,7 @@ public class XynaCodegenProperty {
         Objects.equals(propDescription, that.propDescription) &&
         isInherited == that.isInherited &&
         isList == that.isList &&
+        isEnum == that.isEnum &&
         Objects.equals(minItems, that.minItems) &&
         Objects.equals(maxItems, that.maxItems) &&
         isPrimitive == that.isPrimitive &&
@@ -352,7 +360,7 @@ public class XynaCodegenProperty {
 
   @Override
   public int hashCode() {
-    return Objects.hash(propClassName, propLabel, propVarName, getPropVarName, setPropVarName, propDescription, isInherited, isList,
+    return Objects.hash(propClassName, propLabel, propVarName, getPropVarName, setPropVarName, propDescription, isInherited, isList, isEnum,
                         isPrimitive, dataType, javaType, validatorClassConstructor, validatorConfig, propRefType, propRefPath);
   }
 
@@ -367,6 +375,7 @@ public class XynaCodegenProperty {
     sb.append(",\n    ").append("setPropVarName='").append(setPropVarName).append('\'');
     sb.append(",\n    ").append("isInherited='").append(isInherited).append('\'');
     sb.append(",\n    ").append("isList='").append(isList).append('\'');
+    sb.append(",\n    ").append("isEnum='").append(isEnum).append('\'');
     sb.append(",\n    ").append("minItems='").append(minItems).append('\'');
     sb.append(",\n    ").append("maxItems='").append(maxItems).append('\'');
     sb.append(",\n    ").append("isPrimitive='").append(isPrimitive).append('\'');

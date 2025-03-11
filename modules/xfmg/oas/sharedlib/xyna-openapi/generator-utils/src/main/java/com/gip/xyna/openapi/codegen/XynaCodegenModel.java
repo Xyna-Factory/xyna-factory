@@ -288,6 +288,8 @@ class EnumData<T> {
   final String javaEscaped;
   final String methodname;
   final String checkIsEqual;
+  final String dataType;
+  final Boolean isPrimitiveType;
 
 
   EnumData(T original) {
@@ -301,16 +303,22 @@ class EnumData<T> {
       javaEscaped = "\"" + matcher.replaceAll((result) -> "\\\\" + result.group()) + "\"" ;
       methodname = originalString.replaceAll("[^a-zA-Z0-9_]", "").toUpperCase();
       checkIsEqual = javaEscaped + ".equals(this.getValue())";
+      dataType = "String";
+      isPrimitiveType = true;
     } else if (original instanceof Integer) {
       enumLabel = original.toString();
       javaEscaped = enumLabel + "L";
       methodname = "Integer_" + sanitizeNumberString(original.toString());
       checkIsEqual = javaEscaped + " == this.getValue()";
+      dataType = "Long";
+      isPrimitiveType = true;
     } else if (original instanceof BigDecimal) {
       enumLabel = original.toString();
       javaEscaped = enumLabel + "D";
       methodname = "Double_" + sanitizeNumberString(original.toString());
       checkIsEqual = javaEscaped + " == this.getValue()";
+      dataType = "Double";
+      isPrimitiveType = true;
     } else {
       throw new RuntimeException("Unsupported enum type " + original.getClass());
     }
