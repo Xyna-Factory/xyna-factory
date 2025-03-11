@@ -115,10 +115,12 @@ public class XmomClientGenerator extends DefaultCodegen {
     }
     
     // determine name of Filter
-    String xFilterName = vendorExtentions != null? (String)vendorExtentions.get("x-filter-name") : info.getTitle();
-    xFilterName = xFilterName != null && !xFilterName.trim().isEmpty()? xFilterName : info.getTitle();
-    xFilterName = Camelizer.camelize(Sanitizer.sanitize(xFilterName.replace('-', ' ').replace('_', ' ')), Case.PASCAL);
-
+    String xFilterName = "OASFilter";
+    if (!GeneratorProperty.getLegacyFilterNames(this)) {
+      xFilterName = vendorExtentions != null? (String)vendorExtentions.get("x-filter-name") : info.getTitle();
+      xFilterName = xFilterName != null && !xFilterName.trim().isEmpty()? xFilterName : info.getTitle();
+      xFilterName = Camelizer.camelize(Sanitizer.sanitize(xFilterName.replace('-', ' ').replace('_', ' ')), Case.PASCAL);
+    }
     GeneratorProperty.setFilterName(this, xFilterName);
     
     /**

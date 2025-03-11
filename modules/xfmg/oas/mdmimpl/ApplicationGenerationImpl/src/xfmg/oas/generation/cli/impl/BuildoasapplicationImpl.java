@@ -173,7 +173,8 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
         .setGeneratorName(generatorName)
         .setInputSpec(specFile)
         .addAdditionalProperty("generateAliasAsModel", ApplicationGenerationServiceOperationImpl.createListWrappers.get())
-        .addAdditionalProperty("createListWrappers", ApplicationGenerationServiceOperationImpl.createListWrappers.get())
+        .addAdditionalProperty("x-createListWrappers", ApplicationGenerationServiceOperationImpl.createListWrappers.get())
+        .addAdditionalProperty("x-legacyFilterNames", ApplicationGenerationServiceOperationImpl.legacyFilterNames.get())
         .setOutputDir(target);
 
 
@@ -289,52 +290,38 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
     }
   }
 
-  
-  private FilenameFilter findOASFilterJava = new FilenameFilter() {
-
-    @Override
-    public boolean accept(File dir, String name) {
-      return name.endsWith("_oasFilter.java") || Files.isDirectory(Path.of(dir.getAbsolutePath(), name));
-    }
-  };
-
 
   private void compileFilter(String target) {
-    
-    List<File> filterJava = new ArrayList<>();
-    FileUtils.findFilesRecursively(Path.of(target, "filter").toFile(), filterJava, findOASFilterJava);
-    
-    for (File javaFile: filterJava) {
-     
-     String filterName = javaFile.getName().substring(0, javaFile.getName().lastIndexOf("_"));
+    Path filterJavaFile = Path.of(target, "filter", "OASFilter", "OASFilter.java");
+    if (!filterJavaFile.toFile().exists()) {
+      return;
+    }
 
-      //build mdm.jar
-      Path mdmJarPath = Path.of(target, "mdm.jar");
-      Long revision = null;
-      Long httpRevision = null;
-      try {
-        ClassLoaderBase clb = (ClassLoaderBase) getClass().getClassLoader();
-        revision = clb.getRevision();
-        httpRevision = getHttpRevision(revision);
-        Support4Eclipse.buildMDMJarFileRecursively(new File(target), revision, true, null);
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
-      XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
-      String httpBasePath = RevisionManagement.getPathForRevision(PathType.TRIGGER, httpRevision, true);
-      Path httpTriggerJar = Path.of(httpBasePath, "HTTPTrigger", "HTTPTrigger.jar");
-      Path filterOutputDir = Path.of(target, "filter", filterName, filterName + ".jar");
+    //build mdm.jar
+    Path mdmJarPath = Path.of(target, "mdm.jar");
+    Long revision = null;
+    Long httpRevision = null;
+    try {
+      ClassLoaderBase clb = (ClassLoaderBase) getClass().getClassLoader();
+      revision = clb.getRevision();
+      httpRevision = getHttpRevision(revision);
+      Support4Eclipse.buildMDMJarFileRecursively(new File(target), revision, true, null);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+    String httpBasePath = RevisionManagement.getPathForRevision(PathType.TRIGGER, httpRevision, true);
+    Path httpTriggerJar = Path.of(httpBasePath, "HTTPTrigger", "HTTPTrigger.jar");
+    Path filterOutputDir = Path.of(target, "filter", "OASFilter", "OASFilter.jar");
 
-      InMemoryCompilationSet cs = new InMemoryCompilationSet(false, false, false);
-      try {
-        cs.addToCompile(new JavaSourceFromString("src.com.gip.xyna.xact.filter." + filterName, Files.readString(javaFile.toPath())));
-        cs.addToClassPath(mdmJarPath.toString());
-        cs.addToClassPath(httpTriggerJar.toString());
-        cs.compileToJar(filterOutputDir.toFile(), false);
-        FileUtils.deleteFileWithRetries(javaFile);
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
+    InMemoryCompilationSet cs = new InMemoryCompilationSet(false, false, false);
+    try {
+      cs.addToCompile(new JavaSourceFromString("src.com.gip.xyna.xact.filter.OASFilter", Files.readString(filterJavaFile)));
+      cs.addToClassPath(mdmJarPath.toString());
+      cs.addToClassPath(httpTriggerJar.toString());
+      cs.compileToJar(filterOutputDir.toFile(), false);
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
   }
 

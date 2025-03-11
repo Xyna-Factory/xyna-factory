@@ -62,7 +62,7 @@ public class XynaCodegenModel {
   
   public XynaCodegenModel(XynaCodegenFactory factory, CodegenModel model, DefaultCodegen gen) {
     label = model.name;
-    isListWrapper = isListWrapper(model, gen.additionalProperties());
+    isListWrapper = isListWrapper(model, gen);
     isOrWrapper = isOrWrapper(model);
     typeName = buildTypeName(model);
     typePath = buildTypePath(gen);
@@ -257,8 +257,8 @@ public class XynaCodegenModel {
     }
   }
   
-  public static boolean isListWrapper(CodegenModel model, Map<String, Object> additionalProperties) {
-    return model.isArray && (boolean)additionalProperties.getOrDefault("createListWrappers", false);
+  public static boolean isListWrapper(CodegenModel model, DefaultCodegen gen) {
+    return model.isArray && GeneratorProperty.getCreateListWrappers(gen);
   }
   
   public static boolean isOrWrapper(CodegenModel model) {

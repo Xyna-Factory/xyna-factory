@@ -22,35 +22,35 @@ import org.openapitools.codegen.DefaultCodegen;
 public class GeneratorProperty {
   
   public static void setModelPath(DefaultCodegen gen, String path) {
-    gen.additionalProperties().put("x-modelPath", path);
+    gen.additionalProperties().put("x-model-path", path);
   }
   
   public static String getModelPath(DefaultCodegen gen) {
-    return (String) gen.additionalProperties().get("x-modelPath");
+    return (String) gen.additionalProperties().get("x-model-path");
   }
   
   public static void setProviderPath(DefaultCodegen gen, String path) {
-    gen.additionalProperties().put("x-providerPath", path);
+    gen.additionalProperties().put("x-provider-path", path);
   }
   
   public static String getProviderPath(DefaultCodegen gen) {
-    return (String) gen.additionalProperties().get("x-providerPath");
+    return (String) gen.additionalProperties().get("x-provider-path");
   }
   
   public static void setClientPath(DefaultCodegen gen, String path) {
-    gen.additionalProperties().put("x-clientPath", path);
+    gen.additionalProperties().put("x-client-path", path);
   }
   
   public static String getClientPath(DefaultCodegen gen) {
-    return (String) gen.additionalProperties().get("x-clientPath");
+    return (String) gen.additionalProperties().get("x-client-path");
   }
   
   public static void setFilterName(DefaultCodegen gen, String name) {
-    gen.additionalProperties().put("x-filterName", name);
+    gen.additionalProperties().put("x-filter-name", name);
   }
   
   public static String getFilterName(DefaultCodegen gen) {
-    return (String) gen.additionalProperties().get("x-filterName");
+    return (String) gen.additionalProperties().get("x-filter-name");
   }
   
   // external Properties
@@ -60,11 +60,15 @@ public class GeneratorProperty {
   }
   
   public static boolean getCreateListWrappers(DefaultCodegen gen) {
-    Object propertyEntry = gen.additionalProperties().get("x-createListWrappers");
-    if (propertyEntry == null) {
-      return false;
-    }
-    return (boolean) propertyEntry;
+    return (boolean) gen.additionalProperties().getOrDefault("x-createListWrappers", false);
+  }
+  
+  public static void setLegacyFilterNames(DefaultCodegen gen, boolean legacyFilterNames) {
+    gen.additionalProperties().put("x-legacyFilterNames", legacyFilterNames);
+  }
+  
+  public static boolean getLegacyFilterNames(DefaultCodegen gen) {
+    return (boolean) gen.additionalProperties().getOrDefault("x-legacyFilterNames", true);
   }
   
   public static void setDebugXO(DefaultCodegen gen, boolean debug) {
