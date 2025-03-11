@@ -39,8 +39,6 @@
         <Target RefID="1248"/>
       </Output>
       <Mapping>%1%.workspaceName=%0%.workspaceName</Mapping>
-      <Mapping>%1%.splitResult="false"</Mapping>
-      <Mapping>%1%.force="false"</Mapping>
     </Mappings>
     <Function ID="1228" Label="Update Workspace Content">
       <Source RefID="1229"/>
