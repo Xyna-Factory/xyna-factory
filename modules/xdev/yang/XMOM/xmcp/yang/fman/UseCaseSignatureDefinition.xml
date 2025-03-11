@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,13 +27,13 @@
       <Data ID="3364" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData3364"/>
       <Data ID="3647" Label="UsecaseSignatureEntry" ReferenceName="UsecaseSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="usecaseSignatureEntry3647"/>
     </Output>
-    <ServiceReference ID="64" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
-      <Source RefID="63"/>
-      <Target RefID="63"/>
-    </ServiceReference>
     <ServiceReference ID="3401" Label="Define Add To Usecase Signature Dialog " ReferenceName="DefineAddToUsecaseSignatureDialog" ReferencePath="xmcp.yang.fman">
       <Source RefID="3400"/>
       <Target RefID="3400"/>
+    </ServiceReference>
+    <ServiceReference ID="64" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="63"/>
+      <Target RefID="63"/>
     </ServiceReference>
     <Function ID="63" Label="get Own RuntimeContext">
       <Source RefID="64"/>
@@ -88,7 +88,7 @@
         <Target RefID="2774"/>
       </Output>
       <Mapping>%3%.label=concat("Add ", %0%.text)</Mapping>
-      <Mapping>%3%.dialogDefinitionReference=%2%</Mapping>
+      <Mapping>%3%.dialogDefinitionReference#cast("xmcp.forms.datatypes.FormDefinition")=%2%</Mapping>
     </Mappings>
     <Mappings ID="83" Label="Mapping">
       <Input>
@@ -136,6 +136,7 @@
       <Mapping>%4%.dataPath="%1%"</Mapping>
       <Mapping>%4%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDialogButtonDefinition")=%3%</Mapping>
       <Mapping>%4%.selectionDataPath="%i%, %1%"</Mapping>
+      <Mapping>%4%.triggerRefresh.eventId="yang_uc_sig_refresh"</Mapping>
     </Mappings>
     <Choice ID="1931" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="31"/>

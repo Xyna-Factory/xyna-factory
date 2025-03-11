@@ -22,6 +22,7 @@ package com.gip.xyna.xact.filter.actions.metatags;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.gip.xyna.utils.collections.Optional;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.filter.HTMLBuilder.HTMLPart;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
@@ -32,8 +33,11 @@ import com.gip.xyna.xact.filter.actions.PathElements;
 import com.gip.xyna.xact.filter.actions.auth.utils.AuthUtils;
 import com.gip.xyna.xact.filter.actions.metatags.MetaTagActionUtils.MetaTagProcessingInfoContainer;
 import com.gip.xyna.xact.filter.actions.startorder.Endpoint;
+import com.gip.xyna.xact.filter.session.FQName;
 import com.gip.xyna.xact.filter.session.GenerationBaseObject;
 import com.gip.xyna.xact.filter.session.XMOMGui;
+import com.gip.xyna.xact.filter.session.XMOMGuiReply;
+import com.gip.xyna.xact.filter.session.SessionBasedData.XmomObjectModification;
 import com.gip.xyna.xact.filter.session.gb.ObjectId.ObjectIdPrefix;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
@@ -100,8 +104,19 @@ public class MetaTagRmvAction extends RuntimeContextDependendAction implements E
       return actionInstance;
     }
 
+    String sessionId = getSession(tc).getId();
+    String path = url.getPathElement(2);
+    String name = url.getPathElement(3);
+    FQName fqName = new FQName(revision, rc, path, name);
+    
     try {
-      rmvMetaTag(getSession(tc).getId(), revision, url);
+      RmvMetaTagModification modification = new RmvMetaTagModification(sessionId, revision, url, xmomGui);
+      Optional<XMOMGuiReply> result = xmomGui.getSessionBasedData(sessionId).executeXmomObjectModification(fqName, true, modification);
+      if(result.isPresent()) {
+        XMOMGuiReply reply = result.get();
+        actionInstance.sendJson(tc, reply.getHttpStatus(), reply.getJson());
+        return actionInstance;
+      }
     } catch (Exception e) {
       AuthUtils.replyError(tc, actionInstance, e);
     }
@@ -116,21 +131,44 @@ public class MetaTagRmvAction extends RuntimeContextDependendAction implements E
     try {
       RTCInfo info = extractRTCInfo(url);
       URLPath urlNoRtc = url.subURL(2);
-      rmvMetaTag(creds.getSessionId(), info.revision, urlNoRtc);
+      RmvMetaTagModification modification = new RmvMetaTagModification(creds.getSessionId(), info.revision, urlNoRtc, xmomGui);
+      modification.execute();
     } catch (Exception e) {
     }
     return null;
   }
 
+  
+  private static final class RmvMetaTagModification implements XmomObjectModification {
 
-  private void rmvMetaTag(String sessionId, Long revision, URLPath url) throws Exception {
-    URLPathQuery id = url.getQuery("metaTagId");
-    MetaTagProcessingInfoContainer data = MetaTagActionUtils.createProcessingInfoContainer(url, sessionId, xmomGui, revision);
-    int index = Integer.valueOf(ObjectIdPrefix.metaTag.getBaseId(id.getValue()));
-    MetaTagRmvFunction func = metaTagRmvFunctions.get(data.getType());
-    func.rmvMetaTag(data.getGbo(), data.getElementName(), index);
+    private final String sessionId;
+    private final Long revision;
+    private final URLPath urlPath;
+    private final XMOMGui xmomGui;
+
+
+    public RmvMetaTagModification(String sessionId, Long revision, URLPath urlPath, XMOMGui xmomGui) {
+      this.sessionId = sessionId;
+      this.revision = revision;
+      this.urlPath = urlPath;
+      this.xmomGui = xmomGui;
+    }
+
+
+    @Override
+    public void execute() throws Exception {
+      rmvMetaTag(sessionId, revision, urlPath);
+    }
+
+
+    private void rmvMetaTag(String sessionId, Long revision, URLPath url) throws Exception {
+      URLPathQuery id = url.getQuery("metaTagId");
+      MetaTagProcessingInfoContainer data = MetaTagActionUtils.createProcessingInfoContainer(url, sessionId, xmomGui, revision);
+      int index = Integer.valueOf(ObjectIdPrefix.metaTag.getBaseId(id.getValue()));
+      MetaTagRmvFunction func = metaTagRmvFunctions.get(data.getType());
+      func.rmvMetaTag(data.getGbo(), data.getElementName(), index);
+    }
   }
-
 
   private static void rmvMemberMetaTag(GenerationBaseObject gbo, String objectName, int index) {
     AVariable member = gbo.getDOM().getMemberVars().stream().filter(x -> x.getVarName().equals(objectName)).findFirst().get();

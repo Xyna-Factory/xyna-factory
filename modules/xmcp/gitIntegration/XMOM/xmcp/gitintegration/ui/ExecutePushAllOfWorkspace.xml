@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Execute Push All Of Workspace" TypeName="ExecutePushAllOfWorkspace" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Execute Push All Of Workspace" Name="ExecutePushAllOfWorkspace">
+    <Input>
+      <Data ID="1076" Label="Push Input" ReferenceName="PushInput" ReferencePath="xmcp.gitintegration.repository" VariableName="pushInput1076"/>
+      <Data ID="972" Label="Workspace Selected File Change List" ReferenceName="WorkspaceSelectedFileChangeList" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceSelectedFileChangeList972"/>
+    </Input>
+    <Output/>
+    <ServiceReference ID="129" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="128"/>
+      <Target RefID="128"/>
+    </ServiceReference>
+    <Mappings ID="1106" Label="Mapping">
+      <Input>
+        <Data ID="1108" Label="Push Input" ReferenceName="PushInput" ReferencePath="xmcp.gitintegration.repository" VariableName="pushInput1108"/>
+        <Source RefID="1076"/>
+      </Input>
+      <Output>
+        <Data ID="1109" Label="Message - Text" ReferenceName="Text" ReferencePath="base" VariableName="text1109"/>
+        <Target RefID="1105"/>
+      </Output>
+      <Mapping>%1%.text=%0%.message</Mapping>
+    </Mappings>
+    <Mappings ID="1127" Label="Mapping">
+      <Input>
+        <Data ID="1129" Label="Push Input" ReferenceName="PushInput" ReferencePath="xmcp.gitintegration.repository" VariableName="pushInput1129"/>
+        <Source RefID="1076"/>
+      </Input>
+      <Output>
+        <Data ID="1130" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository1130"/>
+        <Target RefID="1126"/>
+      </Output>
+      <Mapping>%1%=%0%.repository</Mapping>
+    </Mappings>
+    <Mappings ID="527" Label="Mapping">
+      <Input>
+        <Data ID="544" Label="Workspace Selected File Change List" ReferenceName="WorkspaceSelectedFileChangeList" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceSelectedFileChangeList544">
+          <Source RefID="527"/>
+        </Data>
+        <Source RefID="972"/>
+      </Input>
+      <Output>
+        <Data ID="563" IsList="true" Label="Selected File Change" ReferenceName="SelectedFileChange" ReferencePath="xmcp.gitintegration.repository" VariableName="selectedFileChange563">
+          <Source RefID="527"/>
+        </Data>
+        <Target RefID="564"/>
+      </Output>
+      <Mapping>%1%=%0%.fileChangeList</Mapping>
+    </Mappings>
+    <Foreach ID="977">
+      <Source RefID="564"/>
+      <Target RefID="979"/>
+      <InputList RefID="564">
+        <Data ID="978" Label="Selected File Change" ReferenceName="SelectedFileChange" ReferencePath="xmcp.gitintegration.repository" VariableName="selectedFileChange978"/>
+      </InputList>
+      <OutputList RefID="979">
+        <Data ID="952" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file952">
+          <Source RefID="729"/>
+        </Data>
+      </OutputList>
+      <Mappings ID="729" Label="Mapping">
+        <Input>
+          <Data ID="838" Label="Selected File Change" ReferenceName="SelectedFileChange" ReferencePath="xmcp.gitintegration.repository" VariableName="selectedFileChange838">
+            <Source RefID="729"/>
+          </Data>
+          <Source RefID="978"/>
+        </Input>
+        <Output>
+          <Data ID="746" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file746">
+            <Source RefID="729"/>
+          </Data>
+          <Target RefID="952"/>
+        </Output>
+        <Mapping>%1%=%0%.fileChange.file</Mapping>
+      </Mappings>
+    </Foreach>
+    <Function ID="128" Label="Push">
+      <Source RefID="129"/>
+      <Source RefID="1126"/>
+      <Source RefID="1105"/>
+      <Source RefID="979"/>
+      <Target RefID="129"/>
+      <Target RefID="131"/>
+      <Invoke Operation="push" ServiceID="129">
+        <Source RefID="1126"/>
+        <Source RefID="1105"/>
+        <Source RefID="979"/>
+      </Invoke>
+      <Receive ServiceID="129">
+        <Target RefID="131"/>
+      </Receive>
+    </Function>
+    <Data ID="131" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text131">
+      <Source RefID="128"/>
+    </Data>
+    <Data ID="564" IsList="true" Label="Selected File Change" ReferenceName="SelectedFileChange" ReferencePath="xmcp.gitintegration.repository" VariableName="selectedFileChange564">
+      <Source RefID="527"/>
+    </Data>
+    <Data ID="979" IsList="true" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file979">
+      <Source RefID="977"/>
+      <Target RefID="979"/>
+    </Data>
+    <Data ID="1105" Label="Message - Text" ReferenceName="Text" ReferencePath="base" VariableName="text1105"/>
+    <Data ID="1126" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository1126"/>
+    <Assign ID="1"/>
+  </Operation>
+</Service>

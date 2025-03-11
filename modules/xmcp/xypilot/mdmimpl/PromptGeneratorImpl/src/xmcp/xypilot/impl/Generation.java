@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,17 +19,25 @@ package xmcp.xypilot.impl;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xmcp.xguisupport.messagebus.transfer.MessageInputParameter;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 
+import base.Text;
+import xmcp.xypilot.CodeAnalysisResult;
+import xmcp.xypilot.CodeSuggestion;
 import xmcp.xypilot.Documentation;
 import xmcp.xypilot.ExceptionMessage;
+import xmcp.xypilot.Mapping;
+import xmcp.xypilot.MemberReference;
 import xmcp.xypilot.MemberVariable;
 import xmcp.xypilot.MethodDefinition;
+import xmcp.xypilot.MetricEvaluationResult;
 import xmcp.xypilot.NoXyPilotUserConfigException;
 import xmcp.xypilot.XMOMItemReference;
 import xmcp.xypilot.XypilotUserConfig;
@@ -40,11 +48,14 @@ import xmcp.xypilot.impl.gen.model.DomModel;
 import xmcp.xypilot.impl.gen.model.DomVariableModel;
 import xmcp.xypilot.impl.gen.model.ExceptionModel;
 import xmcp.xypilot.impl.gen.model.ExceptionVariableModel;
+import xmcp.xypilot.impl.gen.model.MappingModel;
 import xmcp.xypilot.impl.gen.pipeline.Pipeline;
 import xmcp.xypilot.impl.gen.util.FilterCallbackInteractionUtils;
 import xmcp.xypilot.impl.locator.DataModelLocator;
 import xmcp.xypilot.impl.locator.PipelineLocator;
 import xmcp.xypilot.metrics.Code;
+import xmcp.xypilot.metrics.Metric;
+import xmcp.xypilot.metrics.Score;
 import xmcp.yggdrasil.plugin.Context;
 import xprc.xpce.Workspace;
 
@@ -182,7 +193,7 @@ public class Generation {
   public XypilotUserConfig getConfigFromOrder(XynaOrderServerExtension order) throws PersistenceLayerException, NoXyPilotUserConfigException {
     String sessionId = order.getSessionId();
     String user = XynaFactory.getInstance().resolveSessionToUser(sessionId);
-    XypilotUserConfigStorage storage = new XypilotUserConfigStorage();
+    XypilotUserConfigStorage storage = new XypilotUserConfigStorage(order);
     XypilotUserConfig config = storage.loadConfig(user);
     if(config == null) {
       throw new NoXyPilotUserConfigException(user);
@@ -213,7 +224,74 @@ public class Generation {
     FilterCallbackInteractionUtils.updateDomMethodImpl(code, order, xmomItemReference, context.getObjectId());
     publishUpdateMessage(xmomItemReference, "DataType");
   }
+  
+  
+  public void genMappingLabel(XynaOrderServerExtension order, Context context) throws Exception {
+    XypilotUserConfig config = getConfigFromOrder(order);
+    XMOMItemReference xmomItemReference = buildItemFromContext(context);
+    MemberReference.Builder builder = new MemberReference.Builder();
+    builder.member(context.getObjectId()).item(xmomItemReference);
+    MemberReference memberReference = builder.instance();
+    MappingModel model = DataModelLocator.getMappingModel(memberReference, order);
+    Pipeline<Text, MappingModel> pipeline = PipelineLocator.getPipeline(config, "mapping-label");
+    Text text = pipeline.run(model, config.getUri()).firstChoice();
+    String labelAreaId = String.format("labelArea%s", context.getObjectId().substring(4)); // ObjectId = "step[ID]"
+    FilterCallbackInteractionUtils.updateMappingLabel(text.getText(), order, memberReference.getItem(), labelAreaId);
+    publishUpdateMessage(xmomItemReference, "Workflow");
+  }
+  
+  public void genMappingAssignments(XynaOrderServerExtension order, Context context) throws Exception {
+    XypilotUserConfig config = getConfigFromOrder(order);
+    XMOMItemReference xmomItemReference = buildItemFromContext(context);
+    MemberReference.Builder builder = new MemberReference.Builder();
+    builder.member(context.getObjectId()).item(xmomItemReference);
+    MemberReference memberReference = builder.instance();
+    MappingModel model = DataModelLocator.getMappingModel(memberReference, order);
+    Pipeline<Mapping, MappingModel> pipeline = PipelineLocator.getPipeline(config, "mapping-assignments");
+    Mapping mapping = pipeline.run(model, config.getUri()).firstChoice();
+    var expressions = model.getMapping().getRawExpressions();
+    int lastAssignmentId = model.getMapping().getRawExpressions().size() - 1;
+    String exp = lastAssignmentId > -1 ? expressions.get(lastAssignmentId) : "";
+    FilterCallbackInteractionUtils.updateMappingAssignments(mapping, order, xmomItemReference, context.getObjectId(), lastAssignmentId, exp);
+    publishUpdateMessage(xmomItemReference, "Workflow");
+  }
 
+  public List<? extends CodeSuggestion> genCodeSuggestions(XynaOrderServerExtension order, Context context) throws Exception {
+    XypilotUserConfig config = getConfigFromOrder(order);
+    XMOMItemReference xmomItemReference = buildItemFromContext(context);
+    String type = DataModelLocator.datatypesTypeName;
+    DomMethodModel model = DataModelLocator.getDomMethodModel(xmomItemReference, order, context.getObjectId(), type);
+    Pipeline<Code, DomMethodModel> pipeline = PipelineLocator.getPipeline(config, "dom-method-implementation");
+    List<Code> code = pipeline.run(model, config.getUri()).choices();
+    if (config.getMaxSuggestions() < code.size()) {
+      code = code.subList(0, config.getMaxSuggestions());
+    }
+    var metrics = config.getSelectedMetricList().stream().filter(x -> x.getSelected()).map(x -> x.getMetric()).collect(Collectors.toList());
+    return evaludateCodeSuggestions(code, metrics);
+  }
+
+  
+  private List<? extends CodeSuggestion> evaludateCodeSuggestions(List<Code> codes, List<? extends Metric> metrics) {
+    CodeAnalysisResult.Builder codeAnalysisResultBuilder = new CodeAnalysisResult.Builder();
+    MetricEvaluationResult.Builder metricResultBuilder;
+    List<MetricEvaluationResult> metricResults = new ArrayList<>(codes.size());
+    List<Score> scores;
+    for(Metric metric : metrics) {
+      metric.init();
+      scores = new ArrayList<>(codes.size());
+      for(Code code: codes) {
+        Score score = metric.computeScore(code);
+        scores.add(score);
+      }
+      @SuppressWarnings("unchecked")
+      List<Score> normalizedScores = (List<Score>) metric.normalizeScores(scores);
+      metricResultBuilder = new MetricEvaluationResult.Builder();
+      metricResultBuilder.metric(metric).scores(scores).normalizedScores(normalizedScores);
+      metricResults.add(metricResultBuilder.instance());
+    }
+    codeAnalysisResultBuilder.codes(codes).metricResults(metricResults);
+    return codeAnalysisResultBuilder.instance().buildSuggestions();
+  }
 
   @FunctionalInterface
   public interface GenerationInterface {

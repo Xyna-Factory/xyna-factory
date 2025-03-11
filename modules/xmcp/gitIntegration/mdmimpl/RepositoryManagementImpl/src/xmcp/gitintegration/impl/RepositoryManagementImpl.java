@@ -58,7 +58,9 @@ import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoException
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoResult;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutor;
 
+import xmcp.gitintegration.repository.Repository;
 import xmcp.gitintegration.repository.RepositoryConnection;
+import xmcp.gitintegration.repository.RepositoryConnectionGroup;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -357,11 +359,24 @@ public class RepositoryManagementImpl {
   }
 
 
-  public static String listRepositoryConnections() {
-    return String.join("\n", loadRepositoryConnections().stream().map(storable -> "Workspace: '" + storable.getWorkspacename()
-        + "', Path: '" + storable.getPath() + "', SubPath: '" + storable.getSubpath() + "', Splitted: '" + storable.getSplitted() + "'").collect(Collectors.toList()));
+  public static List<RepositoryConnection> listRepositoryConnections() {
+    List<RepositoryConnection> result = new ArrayList<>();
+    List<RepositoryConnectionStorable> storables = loadRepositoryConnections();
+    for(RepositoryConnectionStorable storable : storables) {
+      result.add(convert(storable));
+    }
+    return result;
   }
 
+  private static RepositoryConnection convert(RepositoryConnectionStorable storable) {
+    RepositoryConnection.Builder result = new RepositoryConnection.Builder();
+    result.path(storable.getPath())
+        .savedinrepo(storable.getSavedinrepo())
+        .splitted(storable.getSplitted())
+        .subpath(storable.getSubpath())
+        .workspaceName(storable.getWorkspacename());
+    return result.instance();
+  }
 
   public static String removeRepositoryConnection(String workspace, boolean full, boolean delete) {
     List<? extends RepositoryConnectionStorable> storables = loadRepositoryConnections();
@@ -376,34 +391,12 @@ public class RepositoryManagementImpl {
         return "Error: Workspace '" + workspaceName + "' does not exist within the factory!";
       }
       Path revisionPath = Path.of(Constants.BASEDIR, Constants.REVISION_PATH, Constants.PREFIX_REVISION + revision);
-      Path subPath = Path.of(storable.getSubpath());
-      // make sure, saved/XMOM or XMOM is located in sub path
-      if (!subPath.resolve(SAVED).resolve(XMOM).toFile().isDirectory() && !subPath.resolve(XMOM).toFile().isDirectory()) {
-        return "Error: Sub path of workspace.xml for workspace '" + workspaceName + "' does not contain the " + SAVED + "/" + XMOM + " or "
-            + XMOM + " directory!";
+      String error = replaceSymbolicLinks(revisionPath, storable);
+      if(error != null) {
+        return error;
       }
-      // check, whether saved/XMOM exists
-      String error;
-      if (subPath.resolve(SAVED).resolve(XMOM).toFile().isDirectory()) {
-        error = replaceSymbolicLink(revisionPath);
-        if (error != null) {
-          return error;
-        }
-      } else {
-        error = replaceSymbolicLink(revisionPath.resolve(SAVED).resolve(XMOM));
-        if (error != null) {
-          return error;
-        }
-        if (Files.isSymbolicLink(revisionPath.resolve(CONFIG))) {
-          error = replaceSymbolicLink(revisionPath.resolve(CONFIG));
-          if (error != null) {
-            return error;
-          }
-        }
-      }
-      // delete storable
+
       deleteRepositoryConnectionStorable(workspaceName);
-      // delete workspace, if requested
       if (delete) {
         deleteWorkspace(workspaceName);
       }
@@ -412,6 +405,22 @@ public class RepositoryManagementImpl {
     return "Successfully removed " + count + " workspace(s) from the repository.";
   }
 
+
+  private static String replaceSymbolicLinks(Path revisionPath, RepositoryConnectionStorable storable) {
+    String error = null;
+    List<Path> toReplace = new ArrayList<>();
+    toReplace.add(storable.getSavedinrepo() ? revisionPath : revisionPath.resolve(SAVED).resolve(XMOM));
+    if (storable.getSplitted() && Files.isSymbolicLink(revisionPath.resolve(CONFIG))) {
+      toReplace.add(revisionPath.resolve(CONFIG));
+    }
+    for (Path pathToReplace : toReplace) {
+      error = replaceSymbolicLink(pathToReplace);
+      if (error != null) {
+        return error;
+      }
+    }
+    return error;
+  }
 
   private static class LoadRepositoryConnections implements WarehouseRetryExecutableNoException<List<RepositoryConnectionStorable>> {
 
@@ -422,7 +431,7 @@ public class RepositoryManagementImpl {
   }
 
 
-  public static List<? extends RepositoryConnectionStorable> loadRepositoryConnections() {
+  public static List<RepositoryConnectionStorable> loadRepositoryConnections() {
     List<RepositoryConnectionStorable> result;
     try {
       result = WarehouseRetryExecutor.buildMinorExecutor().connection(ODSConnectionType.HISTORY)
@@ -608,4 +617,21 @@ public class RepositoryManagementImpl {
   }
 
 
+  public static List<? extends RepositoryConnectionGroup> listRepositoryConnectionGroups() {
+    List<RepositoryConnection> connections = RepositoryManagementImpl.listRepositoryConnections();
+    List<RepositoryConnectionGroup> result = new ArrayList<>();
+    Map<String, List<RepositoryConnection>> groups = new HashMap<>();
+    for(RepositoryConnection connection: connections) {
+      groups.putIfAbsent(connection.getPath(), new ArrayList<>());
+      groups.get(connection.getPath()).add(connection);
+    }
+    for(String repoGroup : groups.keySet()) {
+      Repository repo = new Repository.Builder().path(repoGroup).instance();
+      List<RepositoryConnection> conns = groups.get(repoGroup);
+      RepositoryConnectionGroup group = new RepositoryConnectionGroup.Builder().repository(repo).repositoryConnection(conns).instance();
+      result.add(group);
+    }
+    return result;
+  }
+  
 }

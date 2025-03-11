@@ -21,7 +21,7 @@
   </Meta>
   <Data IsList="true" Label="Members" ReferenceName="JSONKeyValue" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="members"/>
   <Service Label="JSONObject" TypeName="JSONObject">
-    <Operation Label="get Member" Name="getMember" IsStatic="false">
+    <Operation IsStatic="false" Label="get Member" Name="getMember">
       <Input>
         <Data ID="3" Label="Key" VariableName="key">
           <Meta>
@@ -30,31 +30,30 @@
         </Data>
       </Input>
       <Output>
-        <Data Label="Value" VariableName="value" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json"/>
+        <Data Label="Value" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="value"/>
       </Output>
       <Meta>
         <Documentation>Get JSONValue of member with given Key. Returns null if member does not exist</Documentation>
       </Meta>
       <SourceCode>
-        <CodeSnippet Type="Java">return this.getMembers()== null ? null : this.getMembers().stream().filter(x -> key.equals(x.getKey())).map(x -> x.getValue()).findFirst().orElseGet(() -> null);</CodeSnippet>
+        <CodeSnippet Type="Java">return this.getMembers()== null ? null : this.getMembers().stream().filter(x -&gt; key.equals(x.getKey())).map(x -&gt; x.getValue()).findFirst().orElseGet(() -&gt; null);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation Label="From Json" Name="fromJson" IsStatic="true">
+    <Operation IsStatic="true" Label="From Json" Name="fromJson">
       <Input>
-        <Data Label="Document" VariableName="document2" ReferenceName="Document" ReferencePath="xact.templates" />
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document2"/>
       </Input>
       <Output>
-        <Data Label="JsonObject" VariableName="jsonObject1" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" />
+        <Data Label="JsonObject" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jsonObject1"/>
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return (JSONObject)JSONDatamodelServices.parseObjectFromJSONWithOptions(document2, new JSONObject(), new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions.Builder().processAllInputGenerically(false).instance());</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation Label="To Json" Name="toJson" IsStatic="false">
-      <Input>
-      </Input>
+    <Operation IsStatic="false" Label="To Json" Name="toJson">
+      <Input/>
       <Output>
-        <Data Label="Document" VariableName="document3" ReferenceName="Document" ReferencePath="xact.templates" />
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document3"/>
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return JSONDatamodelServices.writeJSONWithOptions(this, new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions.Builder().processAllInputGenerically(false).instance());</CodeSnippet>

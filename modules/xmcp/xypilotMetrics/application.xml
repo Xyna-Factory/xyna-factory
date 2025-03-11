@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- --><Application applicationName="XyPilotMetrics" comment="" factoryVersion="" versionName="1.0.7" xmlVersion="1.1">
+ --><Application applicationName="XyPilotMetrics" comment="" factoryVersion="" versionName="1.0.8" xmlVersion="1.1">
   <Ordertypes>
     <Ordertype implicitDependency="false">
       <DestinationKey>xmcp.xypilot.metrics.GetMetrics</DestinationKey>
@@ -33,6 +33,18 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.xypilot.metrics.Metric</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.metrics.SelectedMetric</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.metrics.IndexedMetric</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.xypilot.metrics.IndexedMetricTools</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">

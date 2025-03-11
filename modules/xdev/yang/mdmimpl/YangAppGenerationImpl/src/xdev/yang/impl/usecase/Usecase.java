@@ -34,6 +34,7 @@ import xact.http.URLPath;
 import xact.http.URLPathQuery;
 import xact.http.enums.httpmethods.HTTPMethod;
 import xdev.yang.impl.GuiHttpInteraction;
+import xdev.yang.impl.usecase.AsyncDeployment.DeployData;
 import xmcp.processmodeller.datatypes.response.GetServiceGroupResponse;
 
 
@@ -172,11 +173,19 @@ public class Usecase implements AutoCloseable {
     return result;
   }
 
+  private void reloadInputVarNames() {
+    URLPath url = new URLPath(baseUrl, null, null);
+    HTTPMethod method = GuiHttpInteraction.METHOD_GET;
+    GetServiceGroupResponse obj = (GetServiceGroupResponse) executeRunnable(runnable, url, method, null, "could not open datatype");
+    inputVarNames = GuiHttpInteraction.loadVarNames(obj, Integer.valueOf(serviceNumber));
+  }
 
+  
   public void addOutput(String fqn) {
     URLPath url = new URLPath(baseUrl + "/objects/methodVarArea" + serviceNumber + "_output/insert", null, null);
     String payload = "{\"index\":-1,\"content\":{\"type\":\"variable\",\"label\":\"Document\",\"fqn\":\"xact.templates.Document\",\"isList\":false}}";
     executeRunnable(runnable, url, GuiHttpInteraction.METHOD_POST, payload, "Could not add output variable to service.");
+    reloadInputVarNames();
   }
 
 
@@ -185,6 +194,7 @@ public class Usecase implements AutoCloseable {
     URLPath url = new URLPath(endPoint, null, null);
     String payload = "{\"index\":-1,\"content\":{\"type\":\"variable\",\"label\":\""+varName+"\",\"fqn\":\"" + fqn+ "\",\"isList\":false}}";
     executeRunnable(runnable, url, GuiHttpInteraction.METHOD_POST, payload, "Could not add input variable to service.");
+    reloadInputVarNames();
   }
   
   public void deleteInput(int indexOfAdditionalInput) {
@@ -193,7 +203,7 @@ public class Usecase implements AutoCloseable {
     URLPath url = new URLPath(endPoint, null, null);
     String payload = "{\"force\":false}";
     executeRunnable(runnable, url, GuiHttpInteraction.METHOD_POST, payload, "Could not remove input variable from service.");
-
+    reloadInputVarNames();
   }
 
 
@@ -201,11 +211,17 @@ public class Usecase implements AutoCloseable {
     URLPath url = new URLPath(baseUrl + "/save", null, null);
     String payload = "{\"force\":false,\"revision\":2,\"path\":\"" + path + "\",\"label\":\"" + label + "\"}";
     executeRunnable(runnable, url, GuiHttpInteraction.METHOD_POST, payload, "Could not save datatype.");
+    reloadInputVarNames();
   }
   
   public void deploy() {
     URLPath url = new URLPath(baseUrl + "/deploy", null, null);
     String payload = "{\"revision\":3}";
+    if(AsyncDeployment.PROP_ASYNC_DEPLOY.get()) {
+      DeployData data = new DeployData(getRunnable(), url);
+      AsyncDeployment.getInstance().requestAsyncDeploy(data);
+      return;
+    }
     executeRunnable(runnable, url, GuiHttpInteraction.METHOD_POST, payload, "Could not deploy datatype.");
   }
 

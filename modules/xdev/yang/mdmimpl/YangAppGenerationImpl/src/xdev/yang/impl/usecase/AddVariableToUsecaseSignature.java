@@ -18,7 +18,7 @@
 package xdev.yang.impl.usecase;
 
 
-
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 
 import com.gip.xyna.xprc.XynaOrderServerExtension;
@@ -26,8 +26,9 @@ import xmcp.yang.UseCaseTableData;
 import xmcp.yang.fman.UsecaseSignatureEntry;
 
 
-
 public class AddVariableToUsecaseSignature {
+
+  private static Logger _logger = Logger.getLogger(AddVariableToUsecaseSignature.class);
 
   public void addVariable(XynaOrderServerExtension order, UseCaseTableData usecase, UsecaseSignatureEntry signature) {
     String fqn = usecase.getUsecaseGroup();
@@ -38,12 +39,18 @@ public class AddVariableToUsecaseSignature {
       Document meta = uc.getMeta();
       UsecaseSignatureVariable variable = new UsecaseSignatureVariable(signature.getFqn(), signature.getVariableName());
       variable.createAndAddElement(meta, signature.getLocation().toLowerCase());
-      
+
       uc.updateMeta();
       uc.addInput(signature.getVariableName(), signature.getFqn());
+      UsecaseImplementationProvider implProvider = new UsecaseImplementationProvider();
+      String newImpl = implProvider.createImpl(meta, uc.getInputVarNames());
+      uc.updateImplementation(newImpl);
       uc.save();
       uc.deploy();
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
+      _logger.error(e.getMessage(), e);
     }
   }
+  
 }

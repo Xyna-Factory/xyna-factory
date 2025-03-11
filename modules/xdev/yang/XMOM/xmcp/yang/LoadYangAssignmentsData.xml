@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
- * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,36 @@
     </Meta>
   </Data>
   <Data Label="TotalKeywords" VariableName="totalKeywords">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Status" VariableName="status">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Description" VariableName="description">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Warning" VariableName="warning">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Deviation Info" VariableName="deviationInfo">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Is Not Supported Deviation" VariableName="isNotSupportedDeviation">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+  <Data Label="Subelement Deviation Info" VariableName="subelementDeviationInfo">
     <Meta>
       <Type>String</Type>
     </Meta>

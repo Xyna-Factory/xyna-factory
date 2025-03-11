@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  -->
-<project name="macros" basedir=".">
+<project name="macros" basedir="." xmlns:resolver="antlib:org.apache.maven.resolver.ant" >
 
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
         <classpath>
@@ -351,4 +351,37 @@
         </sequential>
     </macrodef>
 
+    <!-- ================================= 
+        macro: install-maven-artifact
+        ================================= -->
+    <macrodef name="install-maven-artifact">
+        <attribute name="artifactFile" />
+        <attribute name="pomFile" />
+        <sequential>
+            <resolver:artifacts id="output">
+                <artifact file="@{artifactFile}"/>
+            </resolver:artifacts>
+            <resolver:install artifactsref="output" >
+                <pom file="@{pomFile}" />
+            </resolver:install>
+        </sequential>
+    </macrodef>
+
+    <!-- ================================= 
+        macro: resolve
+        ================================= -->
+    <macrodef name="resolve">
+        <attribute name="pomFile"/>
+        <attribute name="dir"/>
+        <attribute name="layout" default="{artifactId}-{classifier}-{version}.{extension}" />
+        <attribute name="scopes" default="" />
+        <sequential>
+            <resolver:pom file="@{pomFile}" id="pom"/>
+            <resolver:resolve>
+                <resolver:dependencies pomRef="pom"/>
+                <resolver:files refid="files" dir="@{dir}" layout="@{layout}" scopes="@{scopes}"/>
+            </resolver:resolve>
+        </sequential>
+    </macrodef>
+  
 </project>

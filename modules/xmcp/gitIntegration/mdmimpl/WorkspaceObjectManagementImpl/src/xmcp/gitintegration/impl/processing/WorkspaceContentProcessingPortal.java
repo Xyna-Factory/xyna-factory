@@ -121,7 +121,7 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
 
     int id = 0;
     for (WorkspaceContentDifference difference : result) {
-      difference.setId(id++);
+      difference.setEntryId(id++);
     }
 
     return result;
@@ -269,21 +269,37 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
   }
 
 
-  public String resolve(ResolveWorkspaceDifferencesParameter param) {
+  public String closeDifferenceList(long listid) {
     WorkspaceDifferenceListStorage storage = new WorkspaceDifferenceListStorage();
-    if (param.getClose()) {
-      storage.deleteWorkspaceDifferenceList(param.getWorkspaceDifferenceListId());
-      return "Workspace Difference List with id " + param.getWorkspaceDifferenceListId() + " closed.";
-    }
-
+    storage.deleteWorkspaceDifferenceList(listid);
+    return "Workspace Difference List with id " + listid + " closed.";
+  }
+  
+  
+  public String resolveList(long diffListId, List<ResolveWorkspaceDifferencesParameter> paramlist) {
+    WorkspaceDifferenceListStorage storage = new WorkspaceDifferenceListStorage();
     StringBuilder sb = new StringBuilder();
-    WorkspaceContentDifferences differences = storage.loadDifferences(param.getWorkspaceDifferenceListId());
-    if (param.getEntry().isPresent()) {
+    WorkspaceContentDifferences differences = storage.loadDifferences(diffListId);
+    for (ResolveWorkspaceDifferencesParameter param : paramlist) {
       resolveSingleDifference(param, differences, sb);
-    } else {
-      resolveAllDifferences(param, differences, sb);
     }
-
+    finishResolve(storage, differences, sb);
+    return sb.toString();
+  }
+  
+  
+  public String resolveAll(long diffListId, Optional<String> resolution) {
+    WorkspaceDifferenceListStorage storage = new WorkspaceDifferenceListStorage();
+    StringBuilder sb = new StringBuilder();
+    WorkspaceContentDifferences differences = storage.loadDifferences(diffListId);
+    resolveAllDifferencesImpl(resolution, differences, sb);
+    finishResolve(storage, differences, sb);
+    return sb.toString();
+  }
+  
+  
+  private void finishResolve(WorkspaceDifferenceListStorage storage, WorkspaceContentDifferences differences,
+                             StringBuilder sb) {
     if (differences.getDifferences().size() > 0) {
       storage.persist(differences);
       sb.append("There are " + differences.getDifferences().size() + " differences left in list " + differences.getListId());
@@ -292,8 +308,6 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
       storage.deleteWorkspaceDifferenceList(differences.getListId());
       sb.append("All differences in list " + differences.getListId() + " have been resolved. List closed");
     }
-
-    return sb.toString();
   }
 
 
@@ -303,19 +317,19 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
       return true;
     } catch (Exception e) {
       //if there is an exception, do not remove the entry
-      sb.append("Exception occurred while resolving item " + entry.getId() + ". It remains in the list. Details: " + e.getMessage());
+      sb.append("Exception occurred while resolving item " + entry.getEntryId() + ". It remains in the list. Details: " + e.getMessage());
       sb.append("\n");
     }
     return false;
   }
 
 
-  private void resolveAllDifferences(ResolveWorkspaceDifferencesParameter param, WorkspaceContentDifferences differences,
-                                     StringBuilder sb) {
+  private void resolveAllDifferencesImpl(Optional<String> resolution, WorkspaceContentDifferences differences,
+                                         StringBuilder sb) {
     List<? extends WorkspaceContentDifference> differenceList = differences.getDifferences();
     for (int i = differenceList.size() - 1; i >= 0; i--) {
       WorkspaceContentDifference entry = differenceList.get(i);
-      boolean success = tryResolveItem(entry, differences.getWorkspaceName(), param.getResolution(), sb);
+      boolean success = tryResolveItem(entry, differences.getWorkspaceName(), resolution, sb);
       if (success) {
         differenceList.remove(entry);
       }
@@ -325,6 +339,7 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
 
   private void resolveSingleDifference(ResolveWorkspaceDifferencesParameter param, WorkspaceContentDifferences differences,
                                        StringBuilder sb) {
+    if (!param.getEntry().isPresent()) { return; }
     long entryId = param.getEntry().get();
     Optional<? extends WorkspaceContentDifference> entryOptional = findEntry(differences, entryId);
     if (entryOptional.isEmpty()) {
@@ -340,7 +355,7 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
 
 
   private Optional<? extends WorkspaceContentDifference> findEntry(WorkspaceContentDifferences diffs, long entryId) {
-    return diffs.getDifferences().stream().filter(x -> x.getId() == entryId).findFirst();
+    return diffs.getDifferences().stream().filter(x -> x.getEntryId() == entryId).findFirst();
   }
 
 

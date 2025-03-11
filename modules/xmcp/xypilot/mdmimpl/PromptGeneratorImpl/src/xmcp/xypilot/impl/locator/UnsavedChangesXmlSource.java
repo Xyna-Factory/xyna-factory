@@ -17,9 +17,18 @@
  */
 package xmcp.xypilot.impl.locator;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.w3c.dom.Document;
 
 import com.gip.xyna.exceptions.Ex_FileAccessException;
+import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase.XMOMType;
 import com.gip.xyna.xprc.exceptions.XPRC_XmlParsingException;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.FactoryManagedRevisionXMLSource;
@@ -47,5 +56,24 @@ public class UnsavedChangesXmlSource extends FactoryManagedRevisionXMLSource {
       return xml;
     }
     return super.getOrParseXML(generator, fromDeploy);
+  }
+  
+
+  @Override
+  public XMOMType determineXMOMTypeOf(String fqName, Long originalRevision) throws Ex_FileAccessException, XPRC_XmlParsingException {
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    var xmlSource = new DOMSource(xml);
+    var outputTarget = new StreamResult(outputStream);
+    try {
+      TransformerFactory.newInstance().newTransformer().transform(xmlSource, outputTarget);
+    } catch (Exception e) {
+      return super.determineXMOMTypeOf(fqName, originalRevision);
+    }
+    try (InputStream is = new ByteArrayInputStream(outputStream.toByteArray())) {
+      return XMOMType.getXMOMTypeByRootTag(XMLUtils.getRootElementName(is));
+    } catch (Exception e) {
+
+    }
+    return super.determineXMOMTypeOf(fqName, originalRevision);
   }
 }
