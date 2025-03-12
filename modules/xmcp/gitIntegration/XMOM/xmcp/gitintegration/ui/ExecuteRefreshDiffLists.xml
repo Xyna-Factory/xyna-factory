@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Execute Refresh Diff Lists" TypeName="ExecuteRefreshDiffLists" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Execute Refresh Diff Lists" Name="ExecuteRefreshDiffLists">
+    <Input>
+      <Data ID="2774" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName2774"/>
+    </Input>
+    <Output>
+      <Data ID="2628" IsList="true" Label="Base Definition" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="baseDefinition2628"/>
+      <Data ID="3038" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName3038"/>
+      <Data ID="1398" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds1398"/>
+    </Output>
+    <ServiceReference ID="2953" Label="Refresh Diff List Child Elements" ReferenceName="RefreshDiffListChildElements" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="2952"/>
+      <Target RefID="2952"/>
+    </ServiceReference>
+    <Function ID="2952" Label="Refresh Diff List Child Elements">
+      <Source RefID="2953"/>
+      <Source RefID="2774"/>
+      <Target RefID="2953"/>
+      <Target RefID="2955"/>
+      <Target RefID="2956"/>
+      <Target RefID="2957"/>
+      <Invoke Operation="RefreshDiffListChildElements" ServiceID="2953">
+        <Source RefID="2774"/>
+      </Invoke>
+      <Receive ServiceID="2953">
+        <Target RefID="2955"/>
+        <Target RefID="2956"/>
+        <Target RefID="2957"/>
+      </Receive>
+    </Function>
+    <Data ID="2955" IsList="true" Label="Base Definition" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="baseDefinition2955">
+      <Source RefID="2952"/>
+    </Data>
+    <Data ID="2956" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName2956">
+      <Source RefID="2952"/>
+    </Data>
+    <Data ID="2957" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds2957">
+      <Source RefID="2952"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="2955"/>
+      <Source RefID="2956"/>
+      <Source RefID="2957"/>
+      <Target RefID="2628"/>
+      <Target RefID="3038"/>
+      <Target RefID="1398"/>
+      <Copy>
+        <Source RefID="2955"/>
+        <Target RefID="2628"/>
+      </Copy>
+      <Copy>
+        <Source RefID="2956">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="3038"/>
+      </Copy>
+      <Copy>
+        <Source RefID="2957"/>
+        <Target RefID="1398"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Execute Resolve Diff Group" TypeName="ExecuteResolveDiffGroup" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Execute Resolve Diff Group" Name="ExecuteResolveDiffGroup">
+    <Input>
+      <Data ID="1094" Label="Info Workspace Content Diff Group" ReferenceName="InfoWorkspaceContentDiffGroup" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroup1094"/>
+      <Data ID="1271" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList1271"/>
+    </Input>
+    <Output>
+      <Data ID="1768" IsList="true" Label="Base Definition" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="baseDefinition1768"/>
+      <Data ID="1805" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList1805"/>
+    </Output>
+    <ServiceReference ID="1145" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="1144"/>
+      <Target RefID="1144"/>
+    </ServiceReference>
+    <ServiceReference ID="1641" Label="Construct Resolutions for Diff Group" ReferenceName="ConstructResolutionsForDiffGroup" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="1640"/>
+      <Target RefID="1640"/>
+    </ServiceReference>
+    <ServiceReference ID="1732" Label="Refresh Diff Details Child Elements" ReferenceName="RefreshDiffDetailsChildElements" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="1731"/>
+      <Target RefID="1731"/>
+    </ServiceReference>
+    <Function ID="1640" Label="Construct Resolutions for Diff Group">
+      <Source RefID="1641"/>
+      <Source RefID="1094"/>
+      <Target RefID="1641"/>
+      <Target RefID="1668"/>
+      <Invoke Operation="ConstructResolutionsForDiffGroup" ServiceID="1641">
+        <Source RefID="1094"/>
+      </Invoke>
+      <Receive ServiceID="1641">
+        <Target RefID="1668"/>
+      </Receive>
+    </Function>
+    <Mappings ID="1076" Label="Mapping">
+      <Input>
+        <Data ID="1348" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList1348">
+          <Source RefID="1076"/>
+        </Data>
+        <Source RefID="1271"/>
+      </Input>
+      <Output>
+        <Data ID="1197" Label="List Id" ReferenceName="ListId" ReferencePath="xmcp.gitintegration" VariableName="listId1197">
+          <Source RefID="1076"/>
+        </Data>
+        <Target RefID="1198"/>
+      </Output>
+      <Mapping>%1%.listId=%0%.listId</Mapping>
+    </Mappings>
+    <Function ID="1144" Label="Resolve Workspace Differences">
+      <Source RefID="1145"/>
+      <Source RefID="1198"/>
+      <Source RefID="1668"/>
+      <Target RefID="1145"/>
+      <Invoke Operation="resolveWorkspaceDifferences" ServiceID="1145">
+        <Source RefID="1198"/>
+        <Source RefID="1668"/>
+      </Invoke>
+      <Receive ServiceID="1145"/>
+    </Function>
+    <Function ID="1731" Label="Refresh Diff Details Child Elements">
+      <Source RefID="1732"/>
+      <Source RefID="1271"/>
+      <Target RefID="1732"/>
+      <Target RefID="1734"/>
+      <Target RefID="1735"/>
+      <Invoke Operation="RefreshDiffDetailsChildElements" ServiceID="1732">
+        <Source RefID="1271"/>
+      </Invoke>
+      <Receive ServiceID="1732">
+        <Target RefID="1734"/>
+        <Target RefID="1735"/>
+      </Receive>
+    </Function>
+    <Data ID="1198" Label="List Id" ReferenceName="ListId" ReferencePath="xmcp.gitintegration" VariableName="listId1198">
+      <Source RefID="1076"/>
+    </Data>
+    <Data ID="1668" IsList="true" Label="Workspace Content Differences Resolution" ReferenceName="WorkspaceContentDifferencesResolution" ReferencePath="xmcp.gitintegration" VariableName="workspaceContentDifferencesResolution1668">
+      <Source RefID="1640"/>
+    </Data>
+    <Data ID="1734" IsList="true" Label="Base Definition" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="baseDefinition1734">
+      <Source RefID="1731"/>
+    </Data>
+    <Data ID="1735" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList1735">
+      <Source RefID="1731"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="1734"/>
+      <Source RefID="1735"/>
+      <Target RefID="1768"/>
+      <Target RefID="1805"/>
+      <Copy>
+        <Source RefID="1734"/>
+        <Target RefID="1768"/>
+      </Copy>
+      <Copy>
+        <Source RefID="1735">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="1805"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

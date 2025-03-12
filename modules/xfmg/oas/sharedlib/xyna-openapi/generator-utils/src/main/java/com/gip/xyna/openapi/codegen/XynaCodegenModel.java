@@ -17,6 +17,7 @@
  */
 package com.gip.xyna.openapi.codegen;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,27 +31,28 @@ import org.openapitools.codegen.CodegenDiscriminator.MappedModel;
 import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
 import com.gip.xyna.openapi.codegen.utils.GeneratorProperty;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
+import com.gip.xyna.openapi.codegen.utils.XynaModelUtils;
 
 import org.openapitools.codegen.CodegenModel;
 import org.openapitools.codegen.CodegenProperty;
 import org.openapitools.codegen.DefaultCodegen;
 
 public class XynaCodegenModel {
-  
+
   final static XynaCodegenModel OASBASE = new XynaCodegenModel();
 
   final String label;
   final String typeName;
   final String typePath;
   final String description;
-  
+
   final XynaCodegenModel parent;
   final List<XynaCodegenProperty> vars;
-  
+
   final boolean isEnum;
   // enum
-  final List<EnumData> allowableValues;
-  
+  final List<? extends EnumData<?>> allowableValues;
+
   //discriminator
   final boolean hasDiscriminator;
   final String discriminatorKey;
@@ -59,7 +61,7 @@ public class XynaCodegenModel {
 
   final boolean isListWrapper;
   final boolean isOrWrapper;
-  
+
   public XynaCodegenModel(XynaCodegenFactory factory, CodegenModel model, DefaultCodegen gen) {
     label = model.name;
     isListWrapper = isListWrapper(model, gen);
@@ -69,8 +71,8 @@ public class XynaCodegenModel {
     description = buildDescription(model);
     isEnum = model.isEnum;
 
-    allowableValues = EnumData.buildFromMap(model.allowableValues);
-    
+    allowableValues = buildFromMap(model.allowableValues);
+
     if (model.parent != null && model.parentModel != null) {
       // maybe we should find the correct model, then building a new one.
       parent = factory.getOrCreateXynaCodegenModel(model.parentModel);
@@ -79,9 +81,10 @@ public class XynaCodegenModel {
     }
 
     String discProp = null;
-    
+
     if (isEnum) {
-      vars = List.of(factory.getOrCreateXynaCodegenEnumProperty(model.allowableValues, typeName));
+      model.setDataType(XynaModelUtils.getTypeMapping().get(model.getDataType()));
+      vars = List.of(factory.getOrCreateXynaCodegenEnumProperty(model, typeName));
     } else if (isOrWrapper) {
       vars = model.getComposedSchemas().getOneOf().stream().
           map(prop -> factory.getOrCreateXynaCodegenPropertyUsingComplexType(prop, typeName)).
@@ -100,7 +103,7 @@ public class XynaCodegenModel {
     if (model.isAdditionalPropertiesTrue) {
       vars.add(factory.getPropertyToAddionalPropertyWrapper(model.getAdditionalProperties(), typeName));
     }
-    
+
     hasDiscriminator = model.getHasDiscriminatorWithNonEmptyMapping();
     if (hasDiscriminator) {
       discriminatorKey = model.discriminator.getPropertyBaseName();
@@ -124,27 +127,27 @@ public class XynaCodegenModel {
     }
     discriminatorProp = discProp;
   }
-  
+
   public static String buildTypeName(CodegenModel model) {
     return Sanitizer.sanitize(model.classname);
   }
-  
+
   public static String buildTypePath(DefaultCodegen gen) {
     return Sanitizer.sanitize(GeneratorProperty.getModelPath(gen));
   }
-  
+
   public String getModelFQN() {
     return getFQN(typePath, typeName);
   }
-  
+
   public static String getFQN(CodegenModel model, DefaultCodegen gen) {
     return getFQN(buildTypePath(gen), buildTypeName(model));
   }
-  
+
   private static String getFQN(String path, String name) {
     return path + '.' + name;
   }
-  
+
   private String buildDescription(CodegenModel model) {
     StringBuilder sb = new StringBuilder();
     if (model.description != null) {
@@ -178,7 +181,7 @@ public class XynaCodegenModel {
     sb.append("        ");
     return sb.toString();
   }
-  
+
   // Construct OAS Base
   private XynaCodegenModel() {
     typeName = "OASBaseType";
@@ -220,7 +223,7 @@ public class XynaCodegenModel {
                           parent, vars, isEnum, allowableValues,
                           hasDiscriminator, discriminatorKey, discriminatorMap);
   }
-  
+
   @Override
   public String toString() {
       final StringBuilder sb = new StringBuilder("XynaCodegenModel{");
@@ -240,56 +243,88 @@ public class XynaCodegenModel {
       sb.append("\n}");
       return sb.toString();
   }
-  
+
   static class DiscriminatorMap {
     String keyValue;
     String fqn;
     String varName;
-    
+
     DiscriminatorMap(String keyValue, String fqn) {
       this(keyValue, fqn, "");
     }
-    
+
     DiscriminatorMap(String keyValue, String fqn, String varName) {
       this.keyValue = keyValue;
       this.fqn = fqn;
       this.varName = varName;
     }
   }
-  
+
   public static boolean isListWrapper(CodegenModel model, DefaultCodegen gen) {
     return model.isArray && GeneratorProperty.getCreateListWrappers(gen);
   }
-  
+
   public static boolean isOrWrapper(CodegenModel model) {
     return !model.oneOf.isEmpty() && model.getHasDiscriminatorWithNonEmptyMapping();
   }
+
+
+  public static List<? extends EnumData<?>> buildFromMap(Map<String, Object> allowableValuesMap) {
+    if (allowableValuesMap != null) {
+      List<?> enumValues = (List<?>) allowableValuesMap.getOrDefault(("values"), List.of());
+      return enumValues.stream().map(value -> new EnumData<>(value)).collect(Collectors.toList());
+    } else {
+      return new ArrayList<>();
+    }
+  }
 }
 
-class EnumData {
-  final String original;
+
+
+class EnumData<T> {
+
+  final T original;
   final String enumLabel;
   final String javaEscaped;
   final String methodname;
-  
-  static List<EnumData> buildFromMap(Map<String, Object> allowableValuesMap) {
-    if (allowableValuesMap != null) {
-      @SuppressWarnings("unchecked")
-      List<String> enumValues = (List<String>) allowableValuesMap.getOrDefault(("values"), List.of());
-      return enumValues.stream().map(
-         value -> new EnumData(value)
-      ).collect(Collectors.toList());
-    } else {
-      return new ArrayList<>();
-    }    
-  }
-  
-  EnumData(String original) {
+  final String checkIsEqual;
+  final String dataType;
+  final Boolean isPrimitiveType;
+
+
+  EnumData(T original) {
     this.original = original;
-    enumLabel = original.toUpperCase();
-    Pattern exp = Pattern.compile("(\\\"|\\'|\\\\)");
-    Matcher matcher = exp.matcher(original);
-    javaEscaped = matcher.replaceAll((result) -> "\\\\" + result.group());
-    methodname = original.replaceAll("[^a-zA-Z0-9_]", "").toUpperCase();
+
+    if (original instanceof String) {
+      String originalString = (String) original;
+      enumLabel = originalString.toUpperCase();
+      Pattern exp = Pattern.compile("(\\\"|\\'|\\\\)");
+      Matcher matcher = exp.matcher(originalString);
+      javaEscaped = "\"" + matcher.replaceAll((result) -> "\\\\" + result.group()) + "\"" ;
+      methodname = originalString.replaceAll("[^a-zA-Z0-9_]", "").toUpperCase();
+      checkIsEqual = javaEscaped + ".equals(this.getValue())";
+      dataType = "String";
+      isPrimitiveType = true;
+    } else if (original instanceof Integer) {
+      enumLabel = original.toString();
+      javaEscaped = enumLabel + "L";
+      methodname = "Integer_" + sanitizeNumberString(original.toString());
+      checkIsEqual = javaEscaped + " == this.getValue()";
+      dataType = "Long";
+      isPrimitiveType = true;
+    } else if (original instanceof BigDecimal) {
+      enumLabel = original.toString();
+      javaEscaped = enumLabel + "D";
+      methodname = "Double_" + sanitizeNumberString(original.toString());
+      checkIsEqual = javaEscaped + " == this.getValue()";
+      dataType = "Double";
+      isPrimitiveType = true;
+    } else {
+      throw new RuntimeException("Unsupported enum type " + original.getClass());
+    }
+  }
+
+  private String sanitizeNumberString(String numberString) {
+    return numberString.replaceAll("-", "minus").replaceAll("\\+", "plus").replaceAll("\\.", "point");
   }
 }
