@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="GitIntegration" factoryVersion="" versionName="0.1.16" xmlVersion="1.1">
+--><Application applicationName="GitIntegration" factoryVersion="" versionName="0.1.17" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -71,6 +71,10 @@
     </Ordertype>
     <Ordertype implicitDependency="true">
       <DestinationKey>xmcp.gitintegration.ui.ExecuteCheckout</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.gitintegration.ui.ExecutePull</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="false">
@@ -513,6 +517,10 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.gitintegration.ui.ExecuteCheckout</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.gitintegration.ui.ExecutePull</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
