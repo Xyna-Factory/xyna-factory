@@ -64,11 +64,9 @@ public class CreateWorkspaceXmlTools {
       conf.unversionedSetForce(false);
       conf.unversionedSetSplitResult(repositoryConnection.getSplitted());
       executeImpl(conf, XmlCreationMode.WRITE_FILE, Optional.ofNullable(repositoryConnection), SplitModeChange.NOT_CHANGED);
-    }
-    catch (RuntimeException e) {
+    } catch (RuntimeException e) {
       throw e;
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new RuntimeException(e.getMessage(), e);
     }
   }
@@ -119,15 +117,13 @@ public class CreateWorkspaceXmlTools {
           deleteWsXmlComplete(path, repositoryConnection);
         }
         writeSplit(content, path, repositoryConnection);
-      }
-      else {
+      } else {
         if (splitModeChange == SplitModeChange.CHANGED) {
           deleteConfigDirComplete(path, repositoryConnection);
         }
         writeWsXml(path, repositoryConnection, xml);
       }
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       throw new RuntimeException(e.getMessage(), e);
     }
     return xml;
@@ -245,21 +241,16 @@ public class CreateWorkspaceXmlTools {
   private void deleteConfigDir(RepositoryConnection repconn) throws IOException {
     Path configDir = getPathOfConfigDir(repconn);
     if (Files.exists(configDir)) {
-      deleteConfigDirContentImpl(configDir);
-      Files.delete(configDir);
+      FileUtils.deleteDirectory(configDir.toFile());
     }
   }
   
   private void deleteConfigDirContent(RepositoryConnection repconn) throws IOException {
     Path configDir = getPathOfConfigDir(repconn);
     if (Files.exists(configDir)) {
-      deleteConfigDirContentImpl(configDir);
-    }
-  }
-  
-  private void deleteConfigDirContentImpl(Path configDir) throws IOException {
-    try (Stream<Path> files = Files.list(configDir)) {
-      files.forEach(x -> FileUtils.deleteFileWithRetries(x.toFile()));
+      try (Stream<Path> files = Files.list(configDir)) {
+        files.forEach(x -> FileUtils.deleteFileWithRetries(x.toFile()));
+      }
     }
   }
   
