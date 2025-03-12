@@ -66,11 +66,11 @@ import com.gip.xyna.xdev.xfractmod.xmdm.EventListener;
 import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.exceptions.XFMG_MDMObjectClassLoaderNotFoundException;
 
-public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
+public class {{filterName}} extends ConnectionFilter<HTTPTriggerConnection> {
 
   private static final long serialVersionUID = 1L;
 
-  private static Logger logger = CentralFactoryLogging.getLogger(OASFilter.class);
+  private static Logger logger = CentralFactoryLogging.getLogger({{filterName}}.class);
 
   private static final Map<Pair<String, Long>, GeneralXynaObject> fqnInstanceDatatypeMapSucceed = new HashMap<>();
 
@@ -366,7 +366,7 @@ public class OASFilter extends ConnectionFilter<HTTPTriggerConnection> {
 
     int instancesWithSameFilterAndRevison = 0;
     try {
-      instancesWithSameFilterAndRevison = XynaFactory.getInstance().getActivation().getActivationTrigger().getFilterInstancesForFilter("OASFilter", getRevision()).size();
+      instancesWithSameFilterAndRevison = XynaFactory.getInstance().getActivation().getActivationTrigger().getFilterInstancesForFilter("{{filterName}}", getRevision()).size();
     } catch (Exception e) {
       throw new RuntimeException(e);
     } finally {
