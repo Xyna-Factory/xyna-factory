@@ -71,20 +71,20 @@ public class XmomClientGenerator extends DefaultCodegen {
   public String getName() {
     return "xmom-client";
   }
-  
+
   public String getDeciderPath() {
     return GeneratorProperty.getModelPath(this) + ".decider";
   }
 
   /**
-   * any special handling of the entire OpenAPI spec document 
+   * any special handling of the entire OpenAPI spec document
    */
   @Override
   public void preprocessOpenAPI(OpenAPI openAPI) {
     super.preprocessOpenAPI(openAPI);
 
     Info info = openAPI.getInfo();
-    
+
     // replace spaces, "-", "." with underscores in info.title
     info.setTitle(sanitizeName(info.getTitle()));
 
@@ -114,7 +114,7 @@ public class XmomClientGenerator extends DefaultCodegen {
      */
     supportingFiles.add(new SupportingFile("application.mustache", "", "application.xml"));
   }
-  
+
   @Override
   public OperationsMap postProcessOperationsWithModels(OperationsMap objs, List<ModelMap> allModels) {
     OperationsMap results = super.postProcessOperationsWithModels(objs, allModels);
@@ -127,7 +127,7 @@ public class XmomClientGenerator extends DefaultCodegen {
       ops.put("apiRefName", tag + "Api");
       ops.put("apiRefPath", GeneratorProperty.getClientPath(this));
     }
-    
+
     List<XynaCodegenOperation> xoperationList = new ArrayList<XynaCodegenOperation>(opList.size());
 
     int index = 0;
@@ -144,14 +144,14 @@ public class XmomClientGenerator extends DefaultCodegen {
     objs.put("deciderPath", getDeciderPath());
     return results;
   }
-  
+
   @Override
   public Map<String, Object> postProcessSupportingFileData(Map<String, Object> objs) {
     objs = super.postProcessSupportingFileData(objs);
     Map<String, ModelMap> modelMap = XynaModelUtils.getModelsFromSupportingFileData(objs);
     setInheritance(modelMap);
     updateDiscriminatorMapping(modelMap);
-    
+
     List<XynaCodegenModel> xModels = new ArrayList<XynaCodegenModel>();
     Set<AdditionalPropertyWrapper> addPropWappers = new HashSet<AdditionalPropertyWrapper>();
     for(ModelMap model: modelMap.values()) {
@@ -187,12 +187,12 @@ public class XmomClientGenerator extends DefaultCodegen {
     objs.put("deciderPath", getDeciderPath());
     return objs;
   }
- 
+
   private void refineAdditionalProperty(CodegenProperty property) {
     property.baseName = "Value";
     property.name = "value";
   }
-  
+
   private void setInheritance(Map<String, ModelMap> modelMap) {
     for (Entry<String, ModelMap> model: modelMap.entrySet()) {
       if (model.getValue().getModel().getName().equals(model.getValue().getModel().parent)) {
@@ -210,7 +210,7 @@ public class XmomClientGenerator extends DefaultCodegen {
       }
     }
   }
-  
+
   private void updateDiscriminatorMapping(Map<String, ModelMap> modelMap) {
     for (Entry<String, ModelMap> model: modelMap.entrySet()) {
       if (model.getValue().getModel().getHasDiscriminatorWithNonEmptyMapping() && model.getValue().getModel().oneOf.isEmpty()) {
@@ -232,7 +232,7 @@ public class XmomClientGenerator extends DefaultCodegen {
   @SuppressWarnings("rawtypes")
   protected void addParentFromContainer(CodegenModel model, Schema schema) {
   }
-  
+
   /**
    * Returns human-friendly help for the generator.  Provide the consumer with help
    * tips, parameters here
@@ -259,11 +259,11 @@ public class XmomClientGenerator extends DefaultCodegen {
     apiTemplateFiles.put("parseResponseService.mustache", "_parseResponseServices_toSplit.xml");
     apiTemplateFiles.put("requestWorkflow.mustache", "_requestWorkflows_toSplit.xml");
     apiTemplateFiles.put("requestWorkflowWithProcessing.mustache", "_requestWorkflowWithProcessing_toSplit.xml");
-    
+
     templateDir = "xmom-client";
 
     /**
-     * path of the XMOM objects, 
+     * path of the XMOM objects,
      * can be changed via "x-model-path" and "x-client-path" in the info section of the spec file
      */
     modelPackage = "model.generated";
@@ -297,19 +297,7 @@ public class XmomClientGenerator extends DefaultCodegen {
     );
 
     typeMapping.clear();
-    typeMapping.put("boolean", "Boolean");
-    typeMapping.put("integer", "Long");
-    typeMapping.put("long", "Long");
-    typeMapping.put("double", "Double");
-    typeMapping.put("float", "Double");
-    typeMapping.put("number", "Double");
-    typeMapping.put("string", "String");
-    typeMapping.put("DateTime", "String");
-    typeMapping.put("date", "String");
-    typeMapping.put("password", "String");
-    typeMapping.put("byte", "String");
-    typeMapping.put("binary", "String");
-    typeMapping.put("URI", "String");
+    XynaModelUtils.getTypeMapping().forEach(typeMapping::putIfAbsent);
   }
 
   /**
@@ -343,15 +331,15 @@ public class XmomClientGenerator extends DefaultCodegen {
   @Override
   protected ImmutableMap.Builder<String, Lambda> addMustacheLambdas() {
     ImmutableMap.Builder<String, Lambda> lambdaBuilder = super.addMustacheLambdas();
-    
+
     lambdaBuilder.put("index", new IndexLambda(1));
     lambdaBuilder.put("statuscode", new StatusCodeLambda());
     lambdaBuilder.put("pathparam", new PathParameterLambda());
 
     return lambdaBuilder;
   }
-  
-  
+
+
   @SuppressWarnings("rawtypes")
   public Schema unaliasSchema(Schema schema) {
     if (schema == null) {
