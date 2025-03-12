@@ -349,8 +349,7 @@ public class RepositoryManagementImpl {
             _logger.error(e.getMessage(), e);
             return "Error: Could not create symbolic link '" + revisionPath.resolve(CONFIG) + "' within the factory!";
           }
-        }
-        else {
+        } else {
           Path workspaceXmlPath = workspaceXmlPathMap.get(workspaceName);
           Path filename = workspaceXmlPath.getFileName();
           try {
