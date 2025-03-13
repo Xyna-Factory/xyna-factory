@@ -28,9 +28,11 @@ import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
 import com.gip.xyna.openapi.codegen.templating.mustache.IndexLambda;
 import com.gip.xyna.openapi.codegen.templating.mustache.PathParameterLambda;
 import com.gip.xyna.openapi.codegen.templating.mustache.StatusCodeLambda;
+import com.gip.xyna.openapi.codegen.utils.Camelizer;
 import com.gip.xyna.openapi.codegen.utils.GeneratorProperty;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
 import com.gip.xyna.openapi.codegen.utils.XynaModelUtils;
+import com.gip.xyna.openapi.codegen.utils.Camelizer.Case;
 import com.google.common.collect.ImmutableMap;
 import com.samskivert.mustache.Mustache.Lambda;
 
@@ -75,7 +77,11 @@ public class XmomClientGenerator extends DefaultCodegen {
   public String getDeciderPath() {
     return GeneratorProperty.getModelPath(this) + ".decider";
   }
-
+  
+  public String getFilteName() {
+    return GeneratorProperty.getFilterName(this);
+  }
+  
   /**
    * any special handling of the entire OpenAPI spec document
    */
@@ -107,6 +113,16 @@ public class XmomClientGenerator extends DefaultCodegen {
         GeneratorProperty.setClientPath(this, apiPackage);
       }
     }
+    
+    // determine name of Filter
+    String xFilterName = "OASFilter";
+    if (!GeneratorProperty.getLegacyFilterNames(this)) {
+      xFilterName = vendorExtentions != null? (String)vendorExtentions.get("x-filter-name") : info.getTitle();
+      xFilterName = xFilterName != null && !xFilterName.trim().isEmpty()? xFilterName : info.getTitle();
+      xFilterName = Camelizer.camelize(Sanitizer.sanitize(xFilterName.replace('-', ' ').replace('_', ' ')), Case.PASCAL);
+    }
+    GeneratorProperty.setFilterName(this, xFilterName);
+    
     /**
      * Supporting Files.  You can write single files for the generator with the
      * entire object tree available.  If the input file has a suffix of `.mustache
@@ -185,6 +201,7 @@ public class XmomClientGenerator extends DefaultCodegen {
     objs.put("xynaModels", xModels);
     objs.put("addPropWrapper", addPropWappers);
     objs.put("deciderPath", getDeciderPath());
+    objs.put("filterName", getFilteName());
     return objs;
   }
 
