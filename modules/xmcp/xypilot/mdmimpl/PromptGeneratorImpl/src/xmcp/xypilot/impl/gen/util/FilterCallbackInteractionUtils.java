@@ -109,7 +109,12 @@ public class FilterCallbackInteractionUtils {
     if (step instanceof StepMapping && stepId.equals(step.getStepId())) {
       return (StepMapping) step;
     }
-    for (Step child : step.getChildSteps()) {
+    List<Step> childSteps = step.getChildSteps();
+    if (childSteps == null || childSteps.isEmpty()) {
+      return null;
+    }
+    
+    for (Step child : childSteps) {
       StepMapping result = findStepMapping(stepId, child);
       if (result != null) {
         return result;
