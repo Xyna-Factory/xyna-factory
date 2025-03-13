@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="GitIntegration" factoryVersion="" versionName="0.1.18" xmlVersion="1.1">
+--><Application applicationName="GitIntegration" factoryVersion="" versionName="0.1.19" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -25,6 +25,10 @@
     </RuntimeContextRequirements>
   </ApplicationInfo>
   <Ordertypes>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.gitintegration.ui.AddWorkspaceConnectionDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
     <Ordertype implicitDependency="true">
       <DestinationKey>xmcp.gitintegration.ui.BuildWorkspaceDiffGroupItemElements</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
@@ -70,11 +74,7 @@
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.gitintegration.ui.ExecuteManageCredentials</DestinationKey>
-      <OrderContextMapping>false</OrderContextMapping>
-    </Ordertype>
-    <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.gitintegration.ui.ExecutePull</DestinationKey>
+      <DestinationKey>xmcp.gitintegration.ui.ExecuteAddWorkspaceConnection</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="false">
@@ -83,6 +83,14 @@
     </Ordertype>
     <Ordertype implicitDependency="false">
       <DestinationKey>xmcp.gitintegration.ui.ExecuteCreateNewDiffList</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.gitintegration.ui.ExecuteManageCredentials</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.gitintegration.ui.ExecutePull</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="false">
@@ -451,6 +459,10 @@
       <FqName>xmcp.gitintegration.repository.SelectedFileChange</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.gitintegration.repository.WorkspaceConnectionData</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
     <XMOMEntry implicitDependency="true">
       <FqName>xmcp.gitintegration.repository.WorkspaceFileChangeList</FqName>
       <Type>DATATYPE</Type>
@@ -458,6 +470,10 @@
     <XMOMEntry implicitDependency="true">
       <FqName>xmcp.gitintegration.repository.WorkspaceSelectedFileChangeList</FqName>
       <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.gitintegration.ui.AddWorkspaceConnectionDefinition</FqName>
+      <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
       <FqName>xmcp.gitintegration.ui.BuildWorkspaceDiffGroupItemElements</FqName>
@@ -504,11 +520,7 @@
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.gitintegration.ui.ExecuteManageCredentials</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.gitintegration.ui.ExecutePull</FqName>
+      <FqName>xmcp.gitintegration.ui.ExecuteAddWorkspaceConnection</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
@@ -517,6 +529,14 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
       <FqName>xmcp.gitintegration.ui.ExecuteCreateNewDiffList</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.gitintegration.ui.ExecuteManageCredentials</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.gitintegration.ui.ExecutePull</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
