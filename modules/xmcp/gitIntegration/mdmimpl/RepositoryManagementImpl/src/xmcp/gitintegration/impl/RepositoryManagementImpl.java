@@ -36,6 +36,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
+
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.exceptions.XFMG_CouldNotBuildNewWorkspace;
@@ -70,6 +72,7 @@ import java.util.HashSet;
 
 public class RepositoryManagementImpl {
 
+  private static Logger _logger = Logger.getLogger(RepositoryManagementImpl.class); 
   private static Pattern pattern = Pattern.compile("<workspaceConfig workspaceName=\"(.*?)\">");
 
   private static PreparedQueryCache queryCache = new PreparedQueryCache();
@@ -101,21 +104,21 @@ public class RepositoryManagementImpl {
         return "Error: Could not follow symbolic link '" + linkPath + "'!";
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      _logger.error(e.getMessage(), e);
       return "Error: Could not find symbolic link '" + linkPath + "'!";
     }
     // delete symbolic link
     try {
       Files.delete(linkPath);
     } catch (IOException e) {
-      e.printStackTrace();
+      _logger.error(e.getMessage(), e);
       return "Error: Could not delete symbolic link '" + linkPath + "'!";
     }
     // create new directory at link path
     try {
       Files.createDirectory(linkPath);
     } catch (IOException e) {
-      e.printStackTrace();
+      _logger.error(e.getMessage(), e);
       return "Error: Could not create directory '" + linkPath + "'!";
     }
     // copy content from target path to newly created link path
@@ -144,7 +147,7 @@ public class RepositoryManagementImpl {
         }
       });
     } catch (IOException e) {
-      e.printStackTrace();
+      _logger.error(e.getMessage(), e);
       return false;
     }
     return true;
@@ -169,7 +172,7 @@ public class RepositoryManagementImpl {
         }
       });
     } catch (IOException e) {
-      e.printStackTrace();
+      _logger.error(e.getMessage(), e);
       return false;
     }
     return true;
@@ -183,7 +186,7 @@ public class RepositoryManagementImpl {
     try {
       Files.delete(path);
     } catch (IOException e) {
-      e.printStackTrace();
+      _logger.error(e.getMessage(), e);
       return false;
     }
     return true;
@@ -243,7 +246,7 @@ public class RepositoryManagementImpl {
     try {
       wsXmls.addAll(Files.find(basePath, Integer.MAX_VALUE, RepositoryManagementImpl::matchWsFile).collect(Collectors.toList()));
     } catch (IOException e) {
-      e.printStackTrace();
+      _logger.error(e.getMessage(), e);
       return "Error: Exception occured while searching for workspace.xml files!";
     }
     // map workspace name to workspace xml paths
@@ -260,7 +263,7 @@ public class RepositoryManagementImpl {
           }
         }
       } catch (IOException e) {
-        e.printStackTrace();
+        _logger.error(e.getMessage(), e);
       }
     });
     if (full && workspaceXmlPathMap.isEmpty()) {
@@ -322,20 +325,20 @@ public class RepositoryManagementImpl {
         try {
           Files.createSymbolicLink(revisionPath, subPath);
         } catch (IOException e) {
-          e.printStackTrace();
+          _logger.error(e.getMessage(), e);
           return "Error: Could not create symbolic link '" + revisionPath + "' within the factory!";
         }
       } else {
         try {
           Files.createDirectory(revisionPath.resolve(SAVED));
         } catch (IOException e) {
-          e.printStackTrace();
+          _logger.error(e.getMessage(), e);
           return "Error: Could not create directory '" + revisionPath.resolve(SAVED) + "' within the factory!";
         }
         try {
           Files.createSymbolicLink(revisionPath.resolve(SAVED).resolve(XMOM), subPath.resolve(XMOM));
         } catch (IOException e) {
-          e.printStackTrace();
+          _logger.error(e.getMessage(), e);
           return "Error: Could not create symbolic link '" + revisionPath.resolve(SAVED).resolve(XMOM) + "' within the factory!";
         }
         // create symlink for config directory, if any
@@ -343,8 +346,17 @@ public class RepositoryManagementImpl {
           try {
             Files.createSymbolicLink(revisionPath.resolve(CONFIG), subPath.resolve(CONFIG));
           } catch (IOException e) {
-            e.printStackTrace();
+            _logger.error(e.getMessage(), e);
             return "Error: Could not create symbolic link '" + revisionPath.resolve(CONFIG) + "' within the factory!";
+          }
+        } else {
+          Path workspaceXmlPath = workspaceXmlPathMap.get(workspaceName);
+          Path filename = workspaceXmlPath.getFileName();
+          try {
+            Files.createSymbolicLink(revisionPath.resolve(filename), workspaceXmlPath);
+          } catch (IOException e) {
+            _logger.error(e.getMessage(), e);
+            return "Error: Could not create symbolic link '" + revisionPath.resolve(filename) + "' within the factory!";
           }
         }
       }

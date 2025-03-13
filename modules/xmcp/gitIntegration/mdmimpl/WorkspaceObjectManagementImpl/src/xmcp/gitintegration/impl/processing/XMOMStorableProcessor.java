@@ -21,6 +21,7 @@ package xmcp.gitintegration.impl.processing;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -202,6 +203,7 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+    Collections.sort(xmomStorableList, (x, y) -> createItemKeyString(x).compareTo(createItemKeyString(y)));
     return xmomStorableList;
   }
 
