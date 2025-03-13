@@ -52,12 +52,12 @@ import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueManagement;
 import com.gip.xyna.xprc.xsched.timeconstraint.AbsRelTime;
 import com.gip.xyna.xprc.xsched.xynaobjects.Date;
 import com.gip.xyna.xprc.xsched.xynaobjects.Forever;
+import com.ibm.mq.jms.JMSC;
 import com.ibm.mq.jms.MQQueue;
 import com.ibm.mq.jms.MQQueueConnection;
 import com.ibm.mq.jms.MQQueueConnectionFactory;
 import com.ibm.mq.jms.MQQueueReceiver;
 import com.ibm.mq.jms.MQQueueSession;
-import com.ibm.msg.client.wmq.WMQConstants;
 
 
 /**
@@ -88,7 +88,7 @@ public class WebSphereMQueue {
       connectionFactory = new MQQueueConnectionFactory();
       connectionFactory.setHostName(config.getHostname());
       connectionFactory.setPort(config.getPort());
-      connectionFactory.setTransportType(WMQConstants.WMQ_CM_DIRECT_TCPIP);
+      connectionFactory.setTransportType(JMSC.MQJMS_TP_CLIENT_MQ_TCPIP);
       connectionFactory.setQueueManager(config.getQueueManager());
       connectionFactory.setChannel(config.getChannel());
       

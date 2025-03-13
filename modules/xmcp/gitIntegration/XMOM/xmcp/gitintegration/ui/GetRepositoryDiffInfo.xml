@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Repository Diff Info" TypeName="GetRepositoryDiffInfo" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Get Repository Diff Info" Name="GetRepositoryDiffInfo">
+    <Input>
+      <Data ID="9382" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData9382"/>
+    </Input>
+    <Output>
+      <Data ID="9517" Label="Info Diff Repository" ReferenceName="InfoDiffRepository" ReferencePath="xmcp.gitintegration" VariableName="infoDiffRepository9517"/>
+    </Output>
+    <ServiceReference ID="9990" Label="Get Workspace List Ids" ReferenceName="GetWorkspaceListIds" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="9989"/>
+      <Target RefID="9989"/>
+    </ServiceReference>
+    <Mappings ID="9373" Label="Mapping">
+      <Input>
+        <Data ID="9436" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData9436">
+          <Source RefID="9373"/>
+        </Data>
+        <Source RefID="9382"/>
+      </Input>
+      <Output>
+        <Data ID="7846" IsList="true" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection7846"/>
+        <Target RefID="9395"/>
+      </Output>
+      <Mapping>%1%=%0%.repositoryConnectionGroup.repositoryConnection</Mapping>
+    </Mappings>
+    <Foreach ID="9854">
+      <Source RefID="9395"/>
+      <Target RefID="10035"/>
+      <InputList RefID="9395">
+        <Data ID="9855" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection9855"/>
+      </InputList>
+      <OutputList RefID="10035">
+        <Data ID="10034" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName10034">
+          <Source RefID="9802"/>
+        </Data>
+      </OutputList>
+      <Mappings ID="9802" Label="Mapping">
+        <Input>
+          <Data ID="9837" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection9837">
+            <Source RefID="9802"/>
+          </Data>
+          <Source RefID="9855"/>
+        </Input>
+        <Output>
+          <Data ID="10033" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName10033">
+            <Source RefID="9802"/>
+          </Data>
+          <Target RefID="10034"/>
+        </Output>
+        <Mapping>%1%.workspaceName=%0%.workspaceName</Mapping>
+      </Mappings>
+    </Foreach>
+    <Foreach ID="10036">
+      <Source RefID="10035"/>
+      <Target RefID="10038"/>
+      <InputList RefID="10035">
+        <Data ID="10037" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName10037"/>
+      </InputList>
+      <OutputList RefID="10038">
+        <Data ID="9992" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds9992">
+          <Source RefID="9989"/>
+        </Data>
+      </OutputList>
+      <Function ID="9989" Label="Get Workspace List Ids">
+        <Source RefID="9990"/>
+        <Source RefID="10037"/>
+        <Target RefID="9990"/>
+        <Target RefID="9992"/>
+        <Invoke Operation="GetWorkspaceListIds" ServiceID="9990">
+          <Source RefID="10037"/>
+        </Invoke>
+        <Receive ServiceID="9990">
+          <Target RefID="9992"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <Mappings ID="9554" Label="Mapping">
+      <Input>
+        <Data ID="9753" IsList="true" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds9753">
+          <Source RefID="9554"/>
+        </Data>
+        <Source RefID="10038"/>
+      </Input>
+      <Output>
+        <Data ID="9571" Label="Info Diff Repository" ReferenceName="InfoDiffRepository" ReferencePath="xmcp.gitintegration" VariableName="infoDiffRepository9571">
+          <Source RefID="9554"/>
+        </Data>
+        <Target RefID="9572"/>
+      </Output>
+      <Mapping>%1%.workspaceDiffsListIds=%0%</Mapping>
+    </Mappings>
+    <Data ID="9395" IsList="true" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection9395"/>
+    <Data ID="9572" Label="Info Diff Repository" ReferenceName="InfoDiffRepository" ReferencePath="xmcp.gitintegration" VariableName="infoDiffRepository9572">
+      <Source RefID="9554"/>
+    </Data>
+    <Data ID="10035" IsList="true" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName10035">
+      <Source RefID="9854"/>
+      <Target RefID="10035"/>
+    </Data>
+    <Data ID="10038" IsList="true" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds10038">
+      <Source RefID="10036"/>
+      <Target RefID="10038"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="9572"/>
+      <Target RefID="9517"/>
+      <Copy>
+        <Source RefID="9572"/>
+        <Target RefID="9517"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Build Workspace Diff Group Item Elements" TypeName="BuildWorkspaceDiffGroupItemElements" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Build Workspace Diff Group Item Elements" Name="BuildWorkspaceDiffGroupItemElements">
+    <Input>
+      <Data ID="10087" Label="Info Workspace Content Diff Item" ReferenceName="InfoWorkspaceContentDiffItem" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffItem10087"/>
+      <Data ID="10903" Label="Info Workspace Content Diff Group" ReferenceName="InfoWorkspaceContentDiffGroup" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroup10903"/>
+      <Data ID="9916" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext9916"/>
+    </Input>
+    <Output>
+      <Data ID="10638" Label="Base Definition" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="baseDefinition10638"/>
+    </Output>
+    <Mappings ID="10180" Label="Mapping">
+      <Input>
+        <Data ID="10948" Label="Info Workspace Content Diff Group" ReferenceName="InfoWorkspaceContentDiffGroup" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroup10948">
+          <Source RefID="10180"/>
+        </Data>
+        <Source RefID="10903"/>
+      </Input>
+      <Input>
+        <Data ID="10240" Label="Info Workspace Content Diff Item" ReferenceName="InfoWorkspaceContentDiffItem" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffItem10240">
+          <Source RefID="10180"/>
+        </Data>
+        <Source RefID="10087"/>
+      </Input>
+      <Output>
+        <Data ID="10358" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition10358">
+          <Source RefID="10180"/>
+        </Data>
+        <Target RefID="10359"/>
+      </Output>
+      <Mapping>%2%.dataPath=concat("%0%.infoWorkspaceContentDiffGroup.", %0%.groupIndex, ".differenceList.", %1%.itemIndex, ".differenceInfo")</Mapping>
+      <Mapping>%2%.numberOfLines=%1%.numberOfLines+"1"</Mapping>
+      <Mapping>%2%.disabled="true"</Mapping>
+    </Mappings>
+    <Mappings ID="11243" Label="Mapping">
+      <Input>
+        <Data ID="11294" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext11294">
+          <Source RefID="11243"/>
+        </Data>
+        <Source RefID="9916"/>
+      </Input>
+      <Input>
+        <Data ID="11456" Label="Info Workspace Content Diff Group" ReferenceName="InfoWorkspaceContentDiffGroup" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroup11456">
+          <Source RefID="11243"/>
+        </Data>
+        <Source RefID="10903"/>
+      </Input>
+      <Input>
+        <Data ID="11465" Label="Info Workspace Content Diff Item" ReferenceName="InfoWorkspaceContentDiffItem" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffItem11465">
+          <Source RefID="11243"/>
+        </Data>
+        <Source RefID="10087"/>
+      </Input>
+      <Output>
+        <Data ID="11252" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition11252">
+          <Source RefID="11243"/>
+        </Data>
+        <Target RefID="11253"/>
+      </Output>
+      <Mapping>%3%.label="Resolve"</Mapping>
+      <Mapping>%3%.serviceRTC=%0%</Mapping>
+      <Mapping>%3%.dataPath=concat("%0%.infoWorkspaceContentDiffGroup.", %1%.groupIndex, ".differenceList.", %2%.itemIndex, ",%0%")</Mapping>
+      <Mapping>%3%.serviceFQN="xmcp.gitintegration.ui.ExecuteResolveSingleDiff"</Mapping>
+      <Mapping>%3%.synchronously="true"</Mapping>
+      <Mapping>%3%.onStartorderResultEvent["0"].eventId="git_int_diff_details_refresh"</Mapping>
+    </Mappings>
+    <Mappings ID="10667" Label="Mapping">
+      <Input>
+        <Data ID="10668" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition10668"/>
+        <Source RefID="10359"/>
+      </Input>
+      <Input>
+        <Data ID="11379" Label="Start Order Button Definition 1" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition11379">
+          <Source RefID="10667"/>
+        </Data>
+        <Source RefID="11253">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="10680" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10680">
+          <Source RefID="10667"/>
+        </Data>
+        <Target RefID="11108"/>
+      </Output>
+      <Mapping>%2%.children["0"]#cast("xmcp.forms.datatypes.TextAreaDefinition")=%0%</Mapping>
+      <Mapping>%2%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
+    </Mappings>
+    <Data ID="10359" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition10359">
+      <Source RefID="10180"/>
+    </Data>
+    <Data ID="11108" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition11108">
+      <Source RefID="10667"/>
+    </Data>
+    <Data ID="11253" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition11253">
+      <Source RefID="11243"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="11108"/>
+      <Target RefID="10638"/>
+      <Copy>
+        <Source RefID="11108">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="10638"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -25,9 +25,11 @@ import org.openapitools.codegen.model.OperationMap;
 import org.openapitools.codegen.utils.ModelUtils;
 
 import com.gip.xyna.openapi.codegen.factory.XynaCodegenFactory;
+import com.gip.xyna.openapi.codegen.utils.Camelizer;
 import com.gip.xyna.openapi.codegen.utils.GeneratorProperty;
 import com.gip.xyna.openapi.codegen.utils.Sanitizer;
 import com.gip.xyna.openapi.codegen.utils.XynaModelUtils;
+import com.gip.xyna.openapi.codegen.utils.Camelizer.Case;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -43,7 +45,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
   protected String sourceFolder = "XMOM";
   protected String xynaFactoryVersion = "CURRENT_VERSION";
   private XynaCodegenFactory codegenFactory= new XynaCodegenFactory(this);
-  
+
   public static final String XYNA_FACTORY_VERSION = "xynaFactoryVersion";
 
   /**
@@ -69,18 +71,22 @@ public class XmomDataModelGenerator extends DefaultCodegen {
   public String getDeciderPath() {
     return GeneratorProperty.getModelPath(this) + ".decider";
   }
+
+  public String getFilteName() {
+    return GeneratorProperty.getFilterName(this);
+  }
   
   /**
-   * any special handling of the entire OpenAPI spec document 
+   * any special handling of the entire OpenAPI spec document
    */
   @Override
   public void preprocessOpenAPI(OpenAPI openAPI) {
     super.preprocessOpenAPI(openAPI);
     Info info = openAPI.getInfo();
-    
+
     // replace spaces, "-", "." with underscores in info.title
     info.setTitle(sanitizeName(info.getTitle()));
-    
+
     Map<String, Object> vendorExtentions = info.getExtensions();
 
     // change the path of the generated XMOMs
@@ -100,6 +106,14 @@ public class XmomDataModelGenerator extends DefaultCodegen {
       }
     }
     
+    // determine name of Filter
+    String xFilterName = "OASFilter";
+    if (!GeneratorProperty.getLegacyFilterNames(this)) {
+      xFilterName = vendorExtentions != null? (String)vendorExtentions.get("x-filter-name") : info.getTitle();
+      xFilterName = xFilterName != null && !xFilterName.trim().isEmpty()? xFilterName : info.getTitle();
+      xFilterName = Camelizer.camelize(Sanitizer.sanitize(xFilterName.replace('-', ' ').replace('_', ' ')), Case.PASCAL);
+    }
+    GeneratorProperty.setFilterName(this, xFilterName);
     
     /**
      * Supporting Files.  You can write single files for the generator with the
@@ -138,7 +152,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     }
     return objs;
   }
-  
+
   @Override
   public Map<String, Object> postProcessSupportingFileData(Map<String, Object> objs) {
     objs = super.postProcessSupportingFileData(objs);
@@ -146,7 +160,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     setInheritance(modelMap);
     updateDiscriminatorMapping(modelMap);
     setListWrapper(modelMap);
-    
+
     List<String> listWrapper = new ArrayList<String>();
     List<XynaCodegenModel> xModels = new ArrayList<XynaCodegenModel>();
     Set<AdditionalPropertyWrapper> addPropWappers = new HashSet<AdditionalPropertyWrapper>();
@@ -187,13 +201,14 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     objs.put("xynaModels", xModels);
     objs.put("addPropWrapper", addPropWappers);
     objs.put("deciderPath", getDeciderPath());
+    objs.put("filterName", getFilteName());
     return objs;
   }
-  
+
   private void setListWrapper(Map<String, ModelMap> modelMap) {
     for (ModelMap model: modelMap.values()) {
       CodegenModel mo = model.getModel();
-      if (XynaCodegenModel.isListWrapper(mo, additionalProperties)) {
+      if (XynaCodegenModel.isListWrapper(mo, this)) {
         CodegenProperty item = mo.getItems();
         CodegenProperty inner = item.mostInnerItems == null ? item.clone() : item.mostInnerItems;
         item.isContainer = true;
@@ -202,7 +217,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
       }
     }
   }
-  
+
   private void setInheritance(Map<String, ModelMap> modelMap) {
     for (Entry<String, ModelMap> model: modelMap.entrySet()) {
       if (model.getValue().getModel().getName().equals(model.getValue().getModel().parent)) {
@@ -220,7 +235,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
       }
     }
   }
-  
+
   private void updateDiscriminatorMapping(Map<String, ModelMap> modelMap) {
     for (Entry<String, ModelMap> model: modelMap.entrySet()) {
       if (model.getValue().getModel().getHasDiscriminatorWithNonEmptyMapping() && model.getValue().getModel().oneOf.isEmpty()) {
@@ -238,12 +253,12 @@ public class XmomDataModelGenerator extends DefaultCodegen {
       }
     }
   }
-  
+
   private void refineAdditionalProperty(CodegenProperty property) {
     property.baseName = "Value";
     property.name = "value";
   }
-  
+
 
   @SuppressWarnings("rawtypes")
   protected void addParentFromContainer(CodegenModel model, Schema schema) {
@@ -282,7 +297,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     templateDir = "xmom-data-model";
 
     /**
-     * path of the XMOM objects, 
+     * path of the XMOM objects,
      * can be changed via "x-model-path" in the info section of the spec file
      */
     modelPackage = "model.generated";
@@ -318,19 +333,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     );
 
     typeMapping.clear();
-    typeMapping.put("boolean", "Boolean");
-    typeMapping.put("integer", "Long");
-    typeMapping.put("long", "Long");
-    typeMapping.put("double", "Double");
-    typeMapping.put("float", "Double");
-    typeMapping.put("number", "Double");
-    typeMapping.put("string", "String");
-    typeMapping.put("DateTime", "DateTimeType");
-    typeMapping.put("date", "DateType");
-    typeMapping.put("password", "String");
-    typeMapping.put("byte", "String");
-    typeMapping.put("binary", "String");
-    typeMapping.put("URI", "String");
+    XynaModelUtils.getTypeMapping().forEach(typeMapping::putIfAbsent);
   }
 
   /**
@@ -356,8 +359,8 @@ public class XmomDataModelGenerator extends DefaultCodegen {
   public void postProcess() {
     System.out.println("generation of data-model finished");
   }
-  
-  
+
+
   @SuppressWarnings("rawtypes")
   public Schema unaliasSchema(Schema schema) {
     if(schema == null) {
@@ -370,7 +373,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     }
     return ret;
 }
-  
+
   @SuppressWarnings("rawtypes")
   public CodegenProperty fromProperty(String name, Schema p, boolean required, boolean schemaIsFromAdditionalProperties) {
     CodegenProperty property = super.fromProperty(name, p, required, schemaIsFromAdditionalProperties);
@@ -378,7 +381,7 @@ public class XmomDataModelGenerator extends DefaultCodegen {
       property.name = p.getName();
       property.baseName = p.getName();
     }
-    
+
     return property;
   }
 }

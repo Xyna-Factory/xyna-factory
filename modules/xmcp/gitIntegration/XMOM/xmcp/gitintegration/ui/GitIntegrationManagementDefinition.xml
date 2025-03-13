@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,18 +21,23 @@
     <Output>
       <Data ID="53" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition53"/>
       <Data ID="1711" IsList="true" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData1711"/>
+      <Data ID="2104" IsList="true" Label="Info Diff Repository" ReferenceName="InfoDiffRepository" ReferencePath="xmcp.gitintegration" VariableName="infoDiffRepository2104"/>
     </Output>
-    <ServiceReference ID="1340" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="1339"/>
-      <Target RefID="1339"/>
+    <ServiceReference ID="1487" Label="Create Repository Connection Panel" ReferenceName="CreateRepositoryConnectionPanel" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="1486"/>
+      <Target RefID="1486"/>
     </ServiceReference>
     <ServiceReference ID="1671" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData.RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui">
       <Source RefID="1670"/>
       <Target RefID="1670"/>
     </ServiceReference>
-    <ServiceReference ID="1487" Label="Create Repository Connection Panel" ReferenceName="CreateRepositoryConnectionPanel" ReferencePath="xmcp.gitintegration.ui">
-      <Source RefID="1486"/>
-      <Target RefID="1486"/>
+    <ServiceReference ID="2058" Label="Get Repository Diff Info" ReferenceName="GetRepositoryDiffInfo" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="2057"/>
+      <Target RefID="2057"/>
+    </ServiceReference>
+    <ServiceReference ID="1340" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="1339"/>
+      <Target RefID="1339"/>
     </ServiceReference>
     <Mappings ID="673" Label="Mapping">
       <Output>
@@ -78,6 +83,30 @@
         <Target RefID="1673"/>
       </Receive>
     </Function>
+    <Foreach ID="2061">
+      <Source RefID="1673"/>
+      <Target RefID="2063"/>
+      <InputList RefID="1673">
+        <Data ID="2062" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData2062"/>
+      </InputList>
+      <OutputList RefID="2063">
+        <Data ID="2060" Label="Info Diff Repository" ReferenceName="InfoDiffRepository" ReferencePath="xmcp.gitintegration" VariableName="infoDiffRepository2060">
+          <Source RefID="2057"/>
+        </Data>
+      </OutputList>
+      <Function ID="2057" Label="Get Repository Diff Info">
+        <Source RefID="2058"/>
+        <Source RefID="2062"/>
+        <Target RefID="2058"/>
+        <Target RefID="2060"/>
+        <Invoke Operation="GetRepositoryDiffInfo" ServiceID="2058">
+          <Source RefID="2062"/>
+        </Invoke>
+        <Receive ServiceID="2058">
+          <Target RefID="2060"/>
+        </Receive>
+      </Function>
+    </Foreach>
     <Foreach ID="1674">
       <Source RefID="1673"/>
       <Target RefID="1676"/>
@@ -149,11 +178,17 @@
       <Source RefID="1674"/>
       <Target RefID="1676"/>
     </Data>
+    <Data ID="2063" IsList="true" Label="Info Diff Repository" ReferenceName="InfoDiffRepository" ReferencePath="xmcp.gitintegration" VariableName="infoDiffRepository2063">
+      <Source RefID="2061"/>
+      <Target RefID="2063"/>
+    </Data>
     <Assign ID="1">
       <Source RefID="298"/>
       <Source RefID="1673"/>
+      <Source RefID="2063"/>
       <Target RefID="53"/>
       <Target RefID="1711"/>
+      <Target RefID="2104"/>
       <Copy>
         <Source RefID="298">
           <Meta>
@@ -165,6 +200,10 @@
       <Copy>
         <Source RefID="1673"/>
         <Target RefID="1711"/>
+      </Copy>
+      <Copy>
+        <Source RefID="2063"/>
+        <Target RefID="2104"/>
       </Copy>
     </Assign>
   </Operation>
