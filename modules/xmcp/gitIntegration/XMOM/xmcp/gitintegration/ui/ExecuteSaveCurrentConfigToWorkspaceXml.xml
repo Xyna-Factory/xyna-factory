@@ -20,10 +20,18 @@
     <Input>
       <Data ID="1265" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName1265"/>
     </Input>
-    <Output/>
+    <Output>
+      <Data ID="1381" IsList="true" Label="Base Definition" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="baseDefinition1381"/>
+      <Data ID="1410" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName1410"/>
+      <Data ID="1439" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds1439"/>
+    </Output>
     <ServiceReference ID="1229" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
       <Source RefID="1228"/>
       <Target RefID="1228"/>
+    </ServiceReference>
+    <ServiceReference ID="1355" Label="Refresh Diff List Child Elements" ReferenceName="RefreshDiffListChildElements" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="1354"/>
+      <Target RefID="1354"/>
     </ServiceReference>
     <Mappings ID="1076" Label="Mapping">
       <Input>
@@ -49,9 +57,51 @@
       </Invoke>
       <Receive ServiceID="1229"/>
     </Function>
+    <Function ID="1354" Label="Refresh Diff List Child Elements">
+      <Source RefID="1355"/>
+      <Source RefID="1265"/>
+      <Target RefID="1355"/>
+      <Target RefID="1351"/>
+      <Target RefID="1352"/>
+      <Target RefID="1353"/>
+      <Invoke Operation="RefreshDiffListChildElements" ServiceID="1355">
+        <Source RefID="1265"/>
+      </Invoke>
+      <Receive ServiceID="1355">
+        <Target RefID="1351"/>
+        <Target RefID="1352"/>
+        <Target RefID="1353"/>
+      </Receive>
+    </Function>
     <Data ID="1248" Label="Workspace Xml Creation Config" ReferenceName="WorkspaceXmlCreationConfig" ReferencePath="xmcp.gitintegration" VariableName="workspaceXmlCreationConfig1248">
       <Source RefID="1076"/>
     </Data>
-    <Assign ID="1"/>
+    <Data ID="1351" IsList="true" Label="Base Definition" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="baseDefinition1351"/>
+    <Data ID="1352" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName1352"/>
+    <Data ID="1353" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds1353"/>
+    <Assign ID="1">
+      <Source RefID="1351"/>
+      <Source RefID="1352"/>
+      <Source RefID="1353"/>
+      <Target RefID="1381"/>
+      <Target RefID="1410"/>
+      <Target RefID="1439"/>
+      <Copy>
+        <Source RefID="1351"/>
+        <Target RefID="1381"/>
+      </Copy>
+      <Copy>
+        <Source RefID="1352">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="1410"/>
+      </Copy>
+      <Copy>
+        <Source RefID="1353"/>
+        <Target RefID="1439"/>
+      </Copy>
+    </Assign>
   </Operation>
 </Service>

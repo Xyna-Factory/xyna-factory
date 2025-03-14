@@ -21,6 +21,7 @@ package xmcp.gitintegration.impl.processing;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -140,6 +141,7 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       throw new RuntimeException(e);
     }
+    Collections.sort(rcdList, (x, y) -> format(x).compareTo(format(y)));
     return rcdList;
   }
 
