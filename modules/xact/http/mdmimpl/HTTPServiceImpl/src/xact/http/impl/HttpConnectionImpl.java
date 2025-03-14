@@ -27,6 +27,7 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.http.HttpClientConnection;
@@ -65,6 +66,7 @@ import xact.http.ConnectParameter;
 import xact.http.ConnectParameterHostPort;
 import xact.http.ConnectParameterURL;
 import xact.http.ManagedKeyStoreAuthentication;
+import xact.http.KeyStoreWithoutTrustChecksAuthentication;
 import xact.http.NoAuthentication;
 import xact.http.UserPasswordAuthentication;
 import xact.http.enums.Scheme;
@@ -172,35 +174,41 @@ public class HttpConnectionImpl {
   private LayeredConnectionSocketFactory createSslSocketFactory() throws ConnectException {
     try {
       SSLContext sslcontext;
-      if (authentication instanceof ManagedKeyStoreAuthentication) {
-        ManagedKeyStoreAuthentication mksa = (ManagedKeyStoreAuthentication)authentication;
-
+      if ((authentication instanceof ManagedKeyStoreAuthentication) ||
+          (authentication instanceof KeyStoreWithoutTrustChecksAuthentication)) {
         KeyManagement km = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getKeyManagement();
-
+        String keystoreName = null;
         KeyManagerFactory kmf = null;
-        if (mksa.getIdentityKeyStoreName() != null &&
-            mksa.getIdentityKeyStoreName().length() > 0) {
-          Map<String, String> params = new HashMap<String, String>();
-          kmf = km.getKeyStore(mksa.getIdentityKeyStoreName(), KeyManagerFactory.class, params);
-        }
-
-        TrustManagerFactory tmf = null;
-        if (mksa.getTrustManagerKeyStoreName() != null &&
-            mksa.getTrustManagerKeyStoreName().length() > 0) {
-          Map<String, String> params = new HashMap<String, String>();
-          tmf = km.getKeyStore(mksa.getTrustManagerKeyStoreName(), TrustManagerFactory.class, params);
-        }
-
         sslcontext = SSLContext.getInstance("TLS");
+        TrustManager[] trustManagers = null;
+        if (authentication instanceof ManagedKeyStoreAuthentication) {
+          ManagedKeyStoreAuthentication mksa = (ManagedKeyStoreAuthentication)authentication;
+          keystoreName = mksa.getIdentityKeyStoreName();
+          TrustManagerFactory tmf = null;
+          if (mksa.getTrustManagerKeyStoreName() != null &&
+              mksa.getTrustManagerKeyStoreName().length() > 0) {
+            Map<String, String> params = new HashMap<String, String>();
+            tmf = km.getKeyStore(mksa.getTrustManagerKeyStoreName(), TrustManagerFactory.class, params);
+          }
+          trustManagers = tmf == null ? null : tmf.getTrustManagers();
+          
+        } else if (authentication instanceof KeyStoreWithoutTrustChecksAuthentication) {
+          trustManagers = new TrustManager[] { new TrustManagerTrustAll() };
+          keystoreName = ((KeyStoreWithoutTrustChecksAuthentication)authentication).getIdentityKeyStoreName();
+        }
+        if ((keystoreName != null) && (keystoreName.length() > 0)) {
+          Map<String, String> params = new HashMap<String, String>();
+          kmf = km.getKeyStore(keystoreName, KeyManagerFactory.class, params);
+        }
         sslcontext.init(kmf == null ? null : kmf.getKeyManagers(),
-                        tmf == null ? null : tmf.getTrustManagers(),
+                        trustManagers,
                         null);
       } else {
         sslcontext = SSLContexts.createSystemDefault();
-    }
-       SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+      }
+      SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
                                                                         sslcontext,
-                                                                        new String[] { "TLSv1.3, TLSv1.2","TLSv1.1","TLSv1" },
+                                                                        new String[] { "TLSv1.3","TLSv1.2","TLSv1.1","TLSv1" },
                                                                         null,
                                                                         SSLConnectionSocketFactory.getDefaultHostnameVerifier());
 
@@ -221,6 +229,8 @@ public class HttpConnectionImpl {
               new UsernamePasswordCredentials(upa.getUsername(), upa.getPassword()));
       return credsProvider;
     } else if (authentication instanceof ManagedKeyStoreAuthentication) {
+      return null;
+    } else if (authentication instanceof KeyStoreWithoutTrustChecksAuthentication) {
       return null;
     } else {
       throw new IllegalArgumentException("Unexpected Authentication of type "+ authentication.getClass().getSimpleName() );
