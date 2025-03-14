@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -460,6 +459,12 @@ public class RepositoryInteraction {
         //changes to a datatype with reference?
         Long revision = getRevision(fqnAndWs.getSecond());
         RepositoryConnection con = RepositoryManagementImpl.getRepositoryConnection(fqnAndWs.getSecond());
+        if (con == null) {
+          if (logger.isErrorEnabled()) {
+            logger.error("Could not find a repositoryConnection for '" + fqnAndWs.getSecond() + "'.");
+          }
+          continue;
+        }
         Optional<ReferenceStorable> opt = references.stream().filter(x -> matchNameAndRevision(x, fqnAndWs.getFirst(), revision)).findAny();
         if (opt.isPresent()) {
           InternalReference internalRef = new InternalReference();

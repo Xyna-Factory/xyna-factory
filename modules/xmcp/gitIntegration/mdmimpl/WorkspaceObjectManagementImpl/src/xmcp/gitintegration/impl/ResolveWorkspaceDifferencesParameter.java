@@ -15,32 +15,16 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
+
 package xmcp.gitintegration.impl;
-
-
 
 import java.util.Optional;
 
 
-
 public class ResolveWorkspaceDifferencesParameter {
 
-  private long workspaceDifferenceListId;
   private Optional<Long> entry;
   private Optional<String> resolution; //SimpleName of class
-  private boolean all;
-  private boolean close;
-
-
-  public long getWorkspaceDifferenceListId() {
-    return workspaceDifferenceListId;
-  }
-
-
-  public void setWorkspaceDifferenceListId(long workspaceDifferenceListId) {
-    this.workspaceDifferenceListId = workspaceDifferenceListId;
-  }
-
 
   public Optional<Long> getEntry() {
     return entry;
@@ -51,6 +35,9 @@ public class ResolveWorkspaceDifferencesParameter {
     this.entry = entry;
   }
 
+  public void setEntry(Long entry) {
+    this.entry = Optional.ofNullable(entry);
+  }
 
   public Optional<String> getResolution() {
     return resolution;
@@ -61,23 +48,8 @@ public class ResolveWorkspaceDifferencesParameter {
     this.resolution = resolution;
   }
 
-
-  public boolean getAll() {
-    return all;
+  public void setResolution(String resolution) {
+    this.resolution = Optional.ofNullable(resolution);
   }
 
-
-  public void setAll(boolean all) {
-    this.all = all;
-  }
-
-
-  public boolean getClose() {
-    return close;
-  }
-
-
-  public void setClose(boolean close) {
-    this.close = close;
-  }
 }
