@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Add Workspace Connection Definition" TypeName="AddWorkspaceConnectionDefinition" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Add Workspace Connection Definition" Name="AddWorkspaceConnectionDefinition">
+    <Input>
+      <Data ID="220" IsList="true" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData220"/>
+      <Data ID="322" IsList="true" Label="Info Diff Repository" ReferenceName="InfoDiffRepository" ReferencePath="xmcp.gitintegration" VariableName="infoDiffRepository322"/>
+    </Input>
+    <Output>
+      <Data ID="708" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition708"/>
+      <Data ID="1687" Label="Workspace Connection Data" ReferenceName="WorkspaceConnectionData" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceConnectionData1687"/>
+    </Output>
+    <ServiceReference ID="986" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="985"/>
+      <Target RefID="985"/>
+    </ServiceReference>
+    <Function ID="985" Label="get Own RuntimeContext">
+      <Source RefID="986"/>
+      <Target RefID="986"/>
+      <Target RefID="988"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="986"/>
+      <Receive ServiceID="986">
+        <Target RefID="988"/>
+      </Receive>
+    </Function>
+    <Mappings ID="1708" Label="Workspace Connection Data">
+      <Output>
+        <Data ID="1725" Label="Workspace Connection Data" ReferenceName="WorkspaceConnectionData" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceConnectionData1725">
+          <Source RefID="1708"/>
+        </Data>
+        <Target RefID="1726"/>
+      </Output>
+    </Mappings>
+    <Mappings ID="160" Label="Path Input">
+      <Output>
+        <Data ID="169" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition169">
+          <Source RefID="160"/>
+        </Data>
+        <Target RefID="170"/>
+      </Output>
+      <Mapping>%0%.label="Path to the Repository"</Mapping>
+      <Mapping>%0%.dataPath="%0%.path"</Mapping>
+    </Mappings>
+    <Mappings ID="753" Label="Workspace Input">
+      <Output>
+        <Data ID="754" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition754"/>
+        <Target RefID="755"/>
+      </Output>
+      <Mapping>%0%.label="Workspace Name (Optional)"</Mapping>
+      <Mapping>%0%.dataPath="%0%.workspace"</Mapping>
+    </Mappings>
+    <Mappings ID="764" Label="Checkbox: Full">
+      <Output>
+        <Data ID="824" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition824">
+          <Source RefID="764"/>
+        </Data>
+        <Target RefID="825"/>
+      </Output>
+      <Mapping>%0%.label="Full (Optional)"</Mapping>
+      <Mapping>%0%.dataPath="%0%.full"</Mapping>
+    </Mappings>
+    <Mappings ID="933" Label="Create Start order Button: Add Connection">
+      <Input>
+        <Data ID="1005" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1005">
+          <Source RefID="933"/>
+        </Data>
+        <Source RefID="988"/>
+      </Input>
+      <Output>
+        <Data ID="942" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition942">
+          <Source RefID="933"/>
+        </Data>
+        <Target RefID="943"/>
+      </Output>
+      <Mapping>%1%.label="Add Connection"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.serviceFQN="xmcp.gitintegration.ui.ExecuteAddWorkspaceConnection"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="gitintegration_add-workspace-connection_clean"</Mapping>
+    </Mappings>
+    <Mappings ID="48" Label="Create Details Panel">
+      <Input>
+        <Data ID="211" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition211">
+          <Source RefID="48"/>
+        </Data>
+        <Source RefID="170">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="799" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition799">
+          <Source RefID="48"/>
+        </Data>
+        <Source RefID="755">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="850" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition850">
+          <Source RefID="48"/>
+        </Data>
+        <Source RefID="825"/>
+      </Input>
+      <Input>
+        <Data ID="1086" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1086">
+          <Source RefID="48"/>
+        </Data>
+        <Source RefID="943"/>
+      </Input>
+      <Output>
+        <Data ID="859" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition859">
+          <Source RefID="48"/>
+        </Data>
+        <Target RefID="860"/>
+      </Output>
+      <Mapping>%4%.label="New Workspace Connection"</Mapping>
+      <Mapping>%4%.dataPath="%0%"</Mapping>
+      <Mapping>%4%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
+      <Mapping>%4%.children["1"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%1%</Mapping>
+      <Mapping>%4%.children["2"]#cast("xmcp.forms.datatypes.CheckboxDefinition")=%2%</Mapping>
+      <Mapping>%4%.children["3"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%3%</Mapping>
+      <Mapping>%4%.triggerClearDataChangeState.eventId="gitintegration_add-workspace-connection_clean"</Mapping>
+      <Mapping>%4%.closable="true"</Mapping>
+    </Mappings>
+    <Data ID="170" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition170">
+      <Source RefID="160"/>
+    </Data>
+    <Data ID="755" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition755"/>
+    <Data ID="825" Label="Checkbox Definition" ReferenceName="CheckboxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="checkboxDefinition825">
+      <Source RefID="764"/>
+    </Data>
+    <Data ID="860" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition860">
+      <Source RefID="48"/>
+    </Data>
+    <Data ID="943" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition943">
+      <Source RefID="933"/>
+    </Data>
+    <Data ID="988" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext988">
+      <Source RefID="985"/>
+    </Data>
+    <Data ID="1726" Label="Workspace Connection Data" ReferenceName="WorkspaceConnectionData" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceConnectionData1726">
+      <Source RefID="1708"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="860"/>
+      <Source RefID="1726"/>
+      <Target RefID="708"/>
+      <Target RefID="1687"/>
+      <Copy>
+        <Source RefID="860"/>
+        <Target RefID="708"/>
+      </Copy>
+      <Copy>
+        <Source RefID="1726"/>
+        <Target RefID="1687"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
