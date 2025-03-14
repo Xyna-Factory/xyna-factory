@@ -604,7 +604,7 @@ public class RepositoryManagementImpl {
   public static RepositoryConnection getRepositoryConnection(String workspaceName) {
     Optional<RepositoryConnectionStorable> opt = loadRepositoryConnectionForWorkspace(workspaceName);
     if(opt.isEmpty()) {
-      throw new RuntimeException("No RepositoryConnection found (Workspace: " + workspaceName + ")");
+      return null;
     }
     RepositoryConnection repositoryConnection = new RepositoryConnection();
     repositoryConnection.setWorkspaceName(workspaceName);
