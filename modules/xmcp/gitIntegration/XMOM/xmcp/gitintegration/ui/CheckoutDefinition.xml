@@ -22,7 +22,120 @@
     </Input>
     <Output>
       <Data ID="10" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10"/>
+      <Data ID="2176" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository2176"/>
+      <Data ID="1059" Label="Branch Data" ReferenceName="BranchData" ReferencePath="xmcp.gitintegration.repository" VariableName="branchData1059"/>
+      <Data ID="4479" Label="Branch Name" ReferenceName="BranchName" ReferencePath="xmcp.gitintegration.repository" VariableName="branchName4479"/>
     </Output>
+    <ServiceReference ID="74" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="73"/>
+      <Target RefID="73"/>
+    </ServiceReference>
+    <ServiceReference ID="1884" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="1883"/>
+      <Target RefID="1883"/>
+    </ServiceReference>
+    <Function ID="73" Label="List Branches">
+      <Source RefID="74"/>
+      <Source RefID="32"/>
+      <Target RefID="74"/>
+      <Target RefID="76"/>
+      <Invoke Operation="listBranches" ServiceID="74">
+        <Source RefID="32"/>
+      </Invoke>
+      <Receive ServiceID="74">
+        <Target RefID="76"/>
+      </Receive>
+    </Function>
+    <Mappings ID="2601" Label="Mapping">
+      <Input>
+        <Data ID="2652" Label="Branch Data" ReferenceName="BranchData" ReferencePath="xmcp.gitintegration.repository" VariableName="branchData2652">
+          <Source RefID="2601"/>
+        </Data>
+        <Source RefID="76"/>
+      </Input>
+      <Output>
+        <Data ID="3824" IsList="true" Label="Branch" ReferenceName="Branch" ReferencePath="xmcp.gitintegration.repository" VariableName="branch3824">
+          <Source RefID="2601"/>
+        </Data>
+        <Target RefID="3825"/>
+      </Output>
+      <Output>
+        <Data ID="4508" Label="Branch Name" ReferenceName="BranchName" ReferencePath="xmcp.gitintegration.repository" VariableName="branchName4508">
+          <Source RefID="2601"/>
+        </Data>
+        <Target RefID="4509"/>
+      </Output>
+      <Mapping>%2%.name=%0%.currentBranch.name</Mapping>
+      <Mapping>%1%=%0%.branches</Mapping>
+    </Mappings>
+    <Mappings ID="93" Label="Mapping">
+      <Input>
+        <Data ID="1354" Label="Branch Data" ReferenceName="BranchData" ReferencePath="xmcp.gitintegration.repository" VariableName="branchData1354">
+          <Source RefID="93"/>
+        </Data>
+        <Source RefID="76"/>
+      </Input>
+      <Output>
+        <Data ID="110" Label="Dropdown Definition" ReferenceName="DropdownDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="dropdownDefinition110">
+          <Source RefID="93"/>
+        </Data>
+        <Target RefID="111"/>
+      </Output>
+      <Mapping>%1%.label="Branch"</Mapping>
+      <Mapping>%1%.possibleValues.listItemLabelPath="name"</Mapping>
+      <Mapping>%1%.possibleValues.listItemValuePath="name"</Mapping>
+      <Mapping>%1%.possibleValues.dataPath="%1%.branches"</Mapping>
+      <Mapping>%1%.dataPath="%2%.name"</Mapping>
+    </Mappings>
+    <Function ID="1883" Label="get Own RuntimeContext">
+      <Source RefID="1884"/>
+      <Target RefID="1884"/>
+      <Target RefID="4774"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="1884"/>
+      <Receive ServiceID="1884">
+        <Target RefID="4774"/>
+      </Receive>
+    </Function>
+    <Mappings ID="128" Label="Mapping">
+      <Input>
+        <Data ID="4823" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext4823">
+          <Source RefID="128"/>
+        </Data>
+        <Source RefID="4774"/>
+      </Input>
+      <Output>
+        <Data ID="145" Label="Checkout - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition145">
+          <Source RefID="128"/>
+        </Data>
+        <Target RefID="146"/>
+      </Output>
+      <Mapping>%1%.label="Checkout"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.serviceFQN="xmcp.gitintegration.ui.ExecuteCheckout"</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="git_init_checkout_refresh"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["1"].eventId="git_int_checkout_clear"</Mapping>
+      <Mapping>%1%.dataPath="%0%, %2%"</Mapping>
+    </Mappings>
+    <Mappings ID="1798" Label="Mapping">
+      <Input>
+        <Data ID="1911" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1911">
+          <Source RefID="1798"/>
+        </Data>
+        <Source RefID="4774"/>
+      </Input>
+      <Output>
+        <Data ID="1815" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition1815">
+          <Source RefID="1798"/>
+        </Data>
+        <Target RefID="1816"/>
+      </Output>
+      <Mapping>%1%.tableWorkflowRTC=%0%</Mapping>
+      <Mapping>%1%.tableWorkflowFQN="xmcp.gitintegration.ui.LoadGitLog"</Mapping>
+      <Mapping>%1%.label="History"</Mapping>
+      <Mapping>%1%.dataPath="%0%, %2%"</Mapping>
+      <Mapping>%1%.triggerRefresh.eventId="git_init_checkout_refresh"</Mapping>
+    </Mappings>
     <Mappings ID="23" Label="Mapping">
       <Input>
         <Data ID="55" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository55">
@@ -30,23 +143,93 @@
         </Data>
         <Source RefID="32"/>
       </Input>
+      <Input>
+        <Data ID="329" Label="Dropdown Definition" ReferenceName="DropdownDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="dropdownDefinition329">
+          <Source RefID="23"/>
+        </Data>
+        <Source RefID="111"/>
+      </Input>
+      <Input>
+        <Data ID="625" Label="Checkout - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition625">
+          <Source RefID="23"/>
+        </Data>
+        <Source RefID="146">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="1833" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition1833">
+          <Source RefID="23"/>
+        </Data>
+        <Source RefID="1816"/>
+      </Input>
       <Output>
         <Data ID="45" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition45">
           <Source RefID="23"/>
         </Data>
         <Target RefID="46"/>
       </Output>
-      <Mapping>%1%.label="Checkout"</Mapping>
+      <Mapping>%4%.label="Checkout"</Mapping>
+      <Mapping>%4%.children["0"]#cast("xmcp.forms.datatypes.DropdownDefinition")=%1%</Mapping>
+      <Mapping>%4%.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%2%</Mapping>
+      <Mapping>%4%.children["2"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%3%</Mapping>
+      <Mapping>%4%.closable="true"</Mapping>
+      <Mapping>%4%.triggerClearDataChangeState.eventId="git_int_checkout_clear"</Mapping>
     </Mappings>
     <Data ID="46" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition46">
       <Source RefID="23"/>
     </Data>
+    <Data ID="76" Label="Branch Data" ReferenceName="BranchData" ReferencePath="xmcp.gitintegration.repository" VariableName="branchData76">
+      <Source RefID="73"/>
+    </Data>
+    <Data ID="111" Label="Dropdown Definition" ReferenceName="DropdownDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="dropdownDefinition111">
+      <Source RefID="93"/>
+    </Data>
+    <Data ID="146" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition146">
+      <Source RefID="128"/>
+    </Data>
+    <Data ID="1816" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition1816">
+      <Source RefID="1798"/>
+    </Data>
+    <Data ID="3825" IsList="true" Label="Branch" ReferenceName="Branch" ReferencePath="xmcp.gitintegration.repository" VariableName="branch3825">
+      <Source RefID="2601"/>
+    </Data>
+    <Data ID="4509" Label="Branch Name" ReferenceName="BranchName" ReferencePath="xmcp.gitintegration.repository" VariableName="branchName4509">
+      <Source RefID="2601"/>
+    </Data>
+    <Data ID="4774" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext4774">
+      <Source RefID="1883"/>
+    </Data>
     <Assign ID="1">
       <Source RefID="46"/>
+      <Source RefID="32"/>
+      <Source RefID="76"/>
+      <Source RefID="4509"/>
       <Target RefID="10"/>
+      <Target RefID="2176"/>
+      <Target RefID="1059"/>
+      <Target RefID="4479"/>
       <Copy>
-        <Source RefID="46"/>
+        <Source RefID="46">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
         <Target RefID="10"/>
+      </Copy>
+      <Copy>
+        <Source RefID="32"/>
+        <Target RefID="2176"/>
+      </Copy>
+      <Copy>
+        <Source RefID="76"/>
+        <Target RefID="1059"/>
+      </Copy>
+      <Copy>
+        <Source RefID="4509"/>
+        <Target RefID="4479"/>
       </Copy>
     </Assign>
   </Operation>
