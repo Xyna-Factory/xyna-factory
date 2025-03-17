@@ -138,8 +138,7 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
 
   @Override
   public Text getWorkspaceXmlStatus() {
-    //TODO
-    return new Text();
+    return new WorkspaceStatusTools().getWorkspaceXmlStatus();
   }
 
 

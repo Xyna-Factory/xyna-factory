@@ -265,5 +265,15 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
       throw new RuntimeException(e);
     }
   }
+
+
+  @Override
+  public Text getFileContentInCurrentOriginBranch(Repository repository, File file) {try {
+      return new RepositoryInteraction().getFileContentInCurrentOriginBranch(repository.getPath(), file.getPath());
+    } 
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
   
 }

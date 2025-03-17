@@ -22,7 +22,7 @@
     </Input>
     <Output>
       <Data ID="10" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10"/>
-      <Data ID="6662" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName6662"/>
+      <Data ID="7128" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection7128"/>
       <Data ID="3967" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds3967"/>
     </Output>
     <ServiceReference ID="4692" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
@@ -33,20 +33,20 @@
       <Source RefID="4045"/>
       <Target RefID="4045"/>
     </ServiceReference>
-    <Mappings ID="6067" Label="Mapping">
+    <Mappings ID="6908" Label="Mapping">
       <Input>
-        <Data ID="6154" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds6154">
-          <Source RefID="6067"/>
+        <Data ID="6959" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds6959">
+          <Source RefID="6908"/>
         </Data>
         <Source RefID="3890"/>
       </Input>
       <Output>
-        <Data ID="6347" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName6347">
-          <Source RefID="6067"/>
+        <Data ID="6933" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection6933">
+          <Source RefID="6908"/>
         </Data>
-        <Target RefID="6348"/>
+        <Target RefID="6934"/>
       </Output>
-      <Mapping>%1%.workspaceName=%0%.workspaceName</Mapping>
+      <Mapping>%1%=%0%.repositoryConnection</Mapping>
     </Mappings>
     <Function ID="4691" Label="get Own RuntimeContext">
       <Source RefID="4692"/>
@@ -267,16 +267,16 @@
     <Data ID="4651" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4651"/>
     <Data ID="4690" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext4690"/>
     <Data ID="5286" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition5286"/>
-    <Data ID="6348" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName6348">
-      <Source RefID="6067"/>
-    </Data>
     <Data ID="6702" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition6702"/>
+    <Data ID="6934" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection6934">
+      <Source RefID="6908"/>
+    </Data>
     <Assign ID="1">
       <Source RefID="33"/>
-      <Source RefID="6348"/>
+      <Source RefID="6934"/>
       <Source RefID="3890"/>
       <Target RefID="10"/>
-      <Target RefID="6662"/>
+      <Target RefID="7128"/>
       <Target RefID="3967"/>
       <Copy>
         <Source RefID="33">
@@ -287,8 +287,8 @@
         <Target RefID="10"/>
       </Copy>
       <Copy>
-        <Source RefID="6348"/>
-        <Target RefID="6662"/>
+        <Source RefID="6934"/>
+        <Target RefID="7128"/>
       </Copy>
       <Copy>
         <Source RefID="3890"/>

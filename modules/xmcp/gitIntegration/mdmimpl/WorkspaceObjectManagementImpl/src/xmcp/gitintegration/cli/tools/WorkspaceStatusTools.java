@@ -19,11 +19,17 @@
 package xmcp.gitintegration.cli.tools;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jgit.lib.BranchConfig;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
+import base.Text;
 import xmcp.gitintegration.InfoWorkspaceContentDiffGroup;
 import xmcp.gitintegration.InfoWorkspaceContentDiffGroupList;
 import xmcp.gitintegration.InfoWorkspaceContentDiffItem;
@@ -108,5 +114,16 @@ public class WorkspaceStatusTools {
     ret.setPath(file.getPath());
     return ret;
   }
-
+  
+  
+  public Text getWorkspaceXmlStatus() {
+    Text txt = new Text();
+    
+    
+    
+    txt.setText("Out test 1");
+    return txt;
+  }
+  
+    
 }

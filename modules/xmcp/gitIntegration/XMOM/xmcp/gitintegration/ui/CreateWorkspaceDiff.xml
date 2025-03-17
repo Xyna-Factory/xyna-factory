@@ -18,7 +18,7 @@
 --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Create Workspace Diff" TypeName="CreateWorkspaceDiff" TypePath="xmcp.gitintegration.ui" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Create Workspace Diff" Name="CreateWorkspaceDiff">
     <Input>
-      <Data ID="10499" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName10499"/>
+      <Data ID="10612" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection10612"/>
     </Input>
     <Output>
       <Data ID="10093" Label="List Id" ReferenceName="ListId" ReferencePath="xmcp.gitintegration" VariableName="listId10093"/>
@@ -26,10 +26,6 @@
     <ServiceReference ID="8236" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
       <Source RefID="8235"/>
       <Target RefID="8235"/>
-    </ServiceReference>
-    <ServiceReference ID="8289" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="8288"/>
-      <Target RefID="8288"/>
     </ServiceReference>
     <ServiceReference ID="8191" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
       <Source RefID="8190"/>
@@ -39,12 +35,16 @@
       <Source RefID="8153"/>
       <Target RefID="8153"/>
     </ServiceReference>
+    <ServiceReference ID="8289" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="8288"/>
+      <Target RefID="8288"/>
+    </ServiceReference>
     <Mappings ID="8348" Label="Mapping">
       <Input>
-        <Data ID="10574" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName10574">
+        <Data ID="10723" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection10723">
           <Source RefID="8348"/>
         </Data>
-        <Source RefID="10499"/>
+        <Source RefID="10612"/>
       </Input>
       <Output>
         <Data ID="8405" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace8405">

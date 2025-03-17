@@ -25,4 +25,5 @@
     </Meta>
   </Data>
   <Data IsList="true" Label="Workspace List Ids" ReferenceName="WorkspaceDiffListId" ReferencePath="xmcp.gitintegration" VariableName="workspaceListIds"/>
+  <Data Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection"/>
 </DataType>

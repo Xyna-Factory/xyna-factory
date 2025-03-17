@@ -56,15 +56,23 @@ import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.lib.BranchConfig;
+import org.eclipse.jgit.lib.Config;
+import org.eclipse.jgit.lib.ConfigConstants;
+import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectLoader;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTree;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+import org.eclipse.jgit.treewalk.TreeWalk;
+import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.util.FS;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -89,6 +97,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.DeploymentMode;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.WorkflowProtectionMode;
 
+import base.Text;
 import xmcp.gitintegration.Flag;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceObjectManagement;
@@ -168,6 +177,46 @@ public class RepositoryInteraction {
   }
 
 
+  public Text getFileContentInCurrentOriginBranch(String repository, String file) throws Exception {
+    Text txt = new Text();
+    Repository repo = loadRepo(repository, false);
+    try (Git git = new Git(repo)) {
+      String currentBranchName = repo.getFullBranch();
+      String[] parts = currentBranchName.split("/");
+      String currentShort = parts[parts.length - 1];
+      List<Ref> branches = git.branchList().setListMode(ListMode.REMOTE).call();
+      String branchShort = "";
+      Ref originRef = null;
+      for (Ref branch : branches) {
+        parts = branch.getName().split("/");
+        branchShort = parts[parts.length - 1];
+        if (currentShort.equals(branchShort)) {
+          originRef = branch;
+          break; 
+        }
+      }
+      ObjectId id = repo.resolve(originRef.getObjectId().getName());
+      try (RevWalk revWalk = new RevWalk(repo)) {
+        RevCommit commit = revWalk.parseCommit(id);
+        RevTree tree = commit.getTree();
+        try (TreeWalk treeWalk = new TreeWalk(repo)) {
+          treeWalk.addTree(tree);
+          treeWalk.setRecursive(true);
+          treeWalk.setFilter(PathFilter.create(file));
+          if (!treeWalk.next()) {
+            throw new RuntimeException("Did not find expected file " + file);
+          }
+          ObjectId objectId = treeWalk.getObjectId(0);
+          ObjectLoader loader = repo.open(objectId);
+          txt.setText(new String(loader.getBytes()));
+        }
+        revWalk.dispose();
+      }
+    }
+    return txt;
+  }
+  
+  
   public BranchData listBranches(String repository) throws Exception {
     BranchData.Builder result = new BranchData.Builder();
     List<Branch> resultBranches = new ArrayList<>();
