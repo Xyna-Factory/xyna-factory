@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
 
 
 
-//FIXME duplicate code, ist auch im scriptexecutorservice so ähnlich
+//FIXME duplicate code, ist auch im scriptexecutorservice so ï¿½hnlich
 public class ProcessUtil {
 
   // Das kill Programm liegt bei SunOS z.B. unter /usr/bin/kill (der Default),
@@ -84,31 +84,8 @@ public class ProcessUtil {
 
 
   private int findPid(Process process) {
-    int pid;
     // return the process id (pid) to the caller
-    // HACK to access a private field of java.lang.UNIXProcess
-    if (process.getClass().getName().equals("java.lang.UNIXProcess")) {
-      Field field;
-      try {
-        field = process.getClass().getDeclaredField("pid");
-      } catch (SecurityException e) {
-        throw new RuntimeException("Failed to access field 'pid' within process object", e);
-      } catch (NoSuchFieldException e) {
-        throw new RuntimeException("Failed to access field 'pid' within process object", e);
-      }
-      field.setAccessible(true);
-      try {
-        pid = field.getInt(process);
-      } catch (IllegalArgumentException e) {
-        throw new RuntimeException("Failed to access field 'pid' within process object", e);
-      } catch (IllegalAccessException e) {
-        throw new RuntimeException("Failed to access field 'pid' within process object", e);
-      }
-      logger.debug("process id " + pid);
-      return pid;
-    } else {
-      return Integer.MIN_VALUE;
-    }
+    return (int) process.pid();
   }
 
 
@@ -167,7 +144,7 @@ public class ProcessUtil {
       }
 
       try {
-        Thread.sleep(200 / maxCnt * cnt); //durchschnittlich 100ms warten, am anfang weniger, später mehr
+        Thread.sleep(200 / maxCnt * cnt); //durchschnittlich 100ms warten, am anfang weniger, spï¿½ter mehr
       } catch (InterruptedException ex) {
       }
     }

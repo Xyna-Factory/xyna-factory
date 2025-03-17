@@ -410,9 +410,15 @@ public class NetworkAvailability {
       }
     }
     if (percentage < percentageLow) {
+      if (logger.isInfoEnabled() && getState()!=NetworkState.ERROR) {
+    	  logger.info("Communication Quality is below "+percentageLow+", changing state to "+NetworkState.ERROR);
+      }
       changeState(NetworkState.ERROR);
     } else if (percentage > percentageHigh) {
-      changeState(NetworkState.OK);
+        if (logger.isInfoEnabled()&& getState()!=NetworkState.OK) {
+      	  logger.info("Communication Quality is over "+percentageHigh+", changing state to "+NetworkState.OK);
+        }
+        changeState(NetworkState.OK);
     }
   }
 
