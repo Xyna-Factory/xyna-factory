@@ -25,9 +25,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jgit.lib.BranchConfig;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 import base.Text;
 import xmcp.gitintegration.InfoWorkspaceContentDiffGroup;
