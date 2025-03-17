@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Load Git Log" TypeName="LoadGitLog" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Load Git Log" Name="LoadGitLog">
+    <Input>
+      <Data ID="1926" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo1926"/>
+      <Data ID="64" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository64"/>
+      <Data ID="3151" Label="Branch Name" ReferenceName="BranchName" ReferencePath="xmcp.gitintegration.repository" VariableName="branchName3151"/>
+    </Input>
+    <Output>
+      <Data ID="1852" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo1852"/>
+      <Data ID="1905" IsList="true" Label="Commit" ReferenceName="Commit" ReferencePath="xmcp.gitintegration.repository" VariableName="commit1905"/>
+    </Output>
+    <ServiceReference ID="2105" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="2104"/>
+      <Target RefID="2104"/>
+    </ServiceReference>
+    <ServiceReference ID="45" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="44"/>
+      <Target RefID="44"/>
+    </ServiceReference>
+    <Choice ID="1979" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="1926"/>
+      <Target RefID="2108"/>
+      <Input>
+        <Data ID="2002" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo2002">
+          <Source RefID="1979"/>
+        </Data>
+        <Source RefID="1926"/>
+      </Input>
+      <Case ID="1980" Label="true" Premise="%0%.bootstrap==&quot;true&quot;">
+        <Function ID="2104" Label="Build TableInfo and Select Columns">
+          <Source RefID="2105"/>
+          <Source RefID="1926"/>
+          <Source RefID="2191"/>
+          <Source RefID="2580"/>
+          <Target RefID="2105"/>
+          <Target RefID="2107"/>
+          <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="2105">
+            <Source RefID="1926"/>
+            <Source RefID="2191">
+              <Meta>
+                <LinkType>Constant</LinkType>
+                <ExpectedType>xmcp.gitintegration.repository.Commit</ExpectedType>
+              </Meta>
+            </Source>
+            <Source RefID="2580">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="2105">
+            <Target RefID="2107"/>
+          </Receive>
+        </Function>
+        <Assign ID="1983">
+          <Source RefID="2107"/>
+          <Target RefID="2108"/>
+          <Copy>
+            <Source RefID="2107"/>
+            <Target RefID="2108"/>
+          </Copy>
+        </Assign>
+        <Data ID="2107" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo2107">
+          <Source RefID="2104"/>
+        </Data>
+      </Case>
+      <Case ID="1981" Label="false">
+        <Mappings ID="2051" Label="Mapping">
+          <Input>
+            <Data ID="2068" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo2068">
+              <Source RefID="2051"/>
+            </Data>
+            <Source RefID="1926"/>
+          </Input>
+          <Output>
+            <Data ID="2085" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo2085">
+              <Source RefID="2051"/>
+            </Data>
+            <Target RefID="2086"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign ID="1985">
+          <Source RefID="2086"/>
+          <Target RefID="2108"/>
+          <Copy>
+            <Source RefID="2086"/>
+            <Target RefID="2108"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Mappings ID="85" Label="Mapping">
+      <Input>
+        <Data ID="3216" Label="Branch Name" ReferenceName="BranchName" ReferencePath="xmcp.gitintegration.repository" VariableName="branchName3216">
+          <Source RefID="85"/>
+        </Data>
+        <Source RefID="3151"/>
+      </Input>
+      <Output>
+        <Data ID="102" Label="IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber102">
+          <Source RefID="85"/>
+        </Data>
+        <Target RefID="103"/>
+      </Output>
+      <Output>
+        <Data ID="2699" Label="Branch" ReferenceName="Branch" ReferencePath="xmcp.gitintegration.repository" VariableName="branch2699">
+          <Source RefID="85"/>
+        </Data>
+        <Target RefID="2700"/>
+      </Output>
+      <Mapping>%1%.value="10"</Mapping>
+      <Mapping>%2%.name=%0%.name</Mapping>
+    </Mappings>
+    <Function ID="44" Label="List Commits">
+      <Source RefID="45"/>
+      <Source RefID="64"/>
+      <Source RefID="2700"/>
+      <Source RefID="103"/>
+      <Target RefID="45"/>
+      <Target RefID="47"/>
+      <Invoke Operation="listCommits" ServiceID="45">
+        <Source RefID="64"/>
+        <Source RefID="2700"/>
+        <Source RefID="103"/>
+      </Invoke>
+      <Receive ServiceID="45">
+        <Target RefID="47"/>
+      </Receive>
+    </Function>
+    <Data ID="47" IsList="true" Label="Commit" ReferenceName="Commit" ReferencePath="xmcp.gitintegration.repository" VariableName="commit47">
+      <Source RefID="44"/>
+    </Data>
+    <Data ID="103" Label="IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber103">
+      <Source RefID="85"/>
+    </Data>
+    <Data ID="2086" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo2086">
+      <Source RefID="2051"/>
+    </Data>
+    <Data ID="2108" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo2108">
+      <Source RefID="1979"/>
+    </Data>
+    <Data ID="2191" Label="Commit" ReferenceName="Commit" ReferencePath="xmcp.gitintegration.repository" VariableName="const_Commit2191"/>
+    <Data ID="2580" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="const_TableColumn2580">
+      <Value>
+        <Data ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
+          <Data VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>authorName</Value>
+          </Data>
+          <Data VariableName="break0">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="pre">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="shrink">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>Author</Value>
+          </Data>
+          <Data VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>true</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
+          <Data VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>authorEmail</Value>
+          </Data>
+          <Data VariableName="break0">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="pre">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="shrink">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>Email</Value>
+          </Data>
+          <Data VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>true</Value>
+          </Data>
+        </Data>
+      </Value>
+      <Value>
+        <Data Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn">
+          <Data VariableName="disableFilter">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="path">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>comment</Value>
+          </Data>
+          <Data VariableName="break0">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="pre">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="shrink">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>false</Value>
+          </Data>
+          <Data VariableName="name">
+            <Meta>
+              <Type>String</Type>
+            </Meta>
+            <Value>Comment</Value>
+          </Data>
+          <Data VariableName="disableSort">
+            <Meta>
+              <Type>boolean</Type>
+            </Meta>
+            <Value>true</Value>
+          </Data>
+        </Data>
+      </Value>
+    </Data>
+    <Data ID="2700" Label="Branch" ReferenceName="Branch" ReferencePath="xmcp.gitintegration.repository" VariableName="branch2700">
+      <Source RefID="85"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="2108"/>
+      <Source RefID="47"/>
+      <Target RefID="1852"/>
+      <Target RefID="1905"/>
+      <Copy>
+        <Source RefID="2108">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="1852"/>
+      </Copy>
+      <Copy>
+        <Source RefID="47"/>
+        <Target RefID="1905"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

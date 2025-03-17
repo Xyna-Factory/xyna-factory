@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -179,7 +179,7 @@
       <Mapping>%4%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%2%</Mapping>
       <Mapping>%4%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.PushDefinition"</Mapping>
       <Mapping>%5%.label="checkout"</Mapping>
-      <Mapping>%5%.dataPath=%0%.text</Mapping>
+      <Mapping>%5%.dataPath=null</Mapping>
       <Mapping>%5%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").dataPath=%0%.text</Mapping>
       <Mapping>%5%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%2%</Mapping>
       <Mapping>%5%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.CheckoutDefinition"</Mapping>

@@ -23,95 +23,110 @@
     </Input>
     <Output/>
     <Throws>
-      <Exception Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception" VariableName="validationException2039"/>
+      <Exception Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception" VariableName="validationException2210"/>
     </Throws>
     <ServiceReference ID="25" Label="OAS Base Type" ReferenceName="OASBaseType.OASBaseType" ReferencePath="xmcp.oas.datatype">
       <Source RefID="24"/>
       <Target RefID="24"/>
     </ServiceReference>
-    <Function ID="24" Label="Validate">
-      <Source RefID="25"/>
-      <Source RefID="10"/>
-      <Target RefID="25"/>
-      <Target RefID="2015"/>
-      <Invoke Operation="validate" ServiceID="25">
-        <Source RefID="10"/>
-      </Invoke>
-      <Receive ServiceID="25">
-        <Target RefID="2015"/>
-      </Receive>
-    </Function>
-    <Choice ID="285" TypeName="BaseChoiceTypeFormula" TypePath="server">
-      <Source RefID="2015"/>
+    <Choice ID="2038" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="1978"/>
       <Input>
-        <Data ID="308" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult308">
-          <Source RefID="285"/>
+        <Data ID="2069" Label="Validate" ReferenceName="Validate" ReferencePath="xmcp.oas.datatype" VariableName="validate2069">
+          <Source RefID="2038"/>
         </Data>
-        <Source RefID="2015"/>
+        <Source RefID="1978"/>
       </Input>
-      <Case ID="286" Label="true" Premise="%0%.isValid">
-        <Assign ID="289"/>
+      <Case ID="2039" Label="true" Premise="%0%.validate">
+        <Function ID="24" Label="Validate">
+          <Source RefID="25"/>
+          <Source RefID="10"/>
+          <Target RefID="25"/>
+          <Target RefID="2142"/>
+          <Invoke Operation="validate" ServiceID="25">
+            <Source RefID="10"/>
+          </Invoke>
+          <Receive ServiceID="25">
+            <Target RefID="2142"/>
+          </Receive>
+        </Function>
+        <Choice ID="285" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="2142"/>
+          <Input>
+            <Data ID="308" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult308">
+              <Source RefID="285"/>
+            </Data>
+            <Source RefID="2142"/>
+          </Input>
+          <Case ID="286" Label="true" Premise="%0%.isValid">
+            <Assign ID="289"/>
+          </Case>
+          <Case ID="287" Label="false">
+            <Mappings ID="680" Label="Build Validation Error">
+              <Input>
+                <Data ID="682" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult682"/>
+                <Source RefID="2142"/>
+              </Input>
+              <Output>
+                <Data ID="683" Label="Validation Error" ReferenceName="ValidationError" ReferencePath="xmcp.oas.datatype" VariableName="validationError683"/>
+                <Target RefID="679"/>
+              </Output>
+              <Mapping>%1%.code="400 Bad Request"</Mapping>
+              <Mapping>%1%.reason="Validation Error"</Mapping>
+              <Mapping>%1%.message=concat(%0%.errorMessages)</Mapping>
+            </Mappings>
+            <Mappings ID="365" Label="Build Validation Error Response">
+              <Input>
+                <Data ID="829" Label="Validation Error" ReferenceName="ValidationError" ReferencePath="xmcp.oas.datatype" VariableName="validationError829">
+                  <Source RefID="365"/>
+                </Data>
+                <Source RefID="679"/>
+              </Input>
+              <Output>
+                <Data ID="390" Label="Validation Error Response" ReferenceName="ValidationErrorResponse" ReferencePath="xmcp.oas.datatype.provider" VariableName="validationErrorResponse390">
+                  <Source RefID="365"/>
+                </Data>
+                <Target RefID="391"/>
+              </Output>
+              <Mapping>%1%.returnCode="400 Bad Request"</Mapping>
+              <Mapping>%1%.error=%0%</Mapping>
+            </Mappings>
+            <Mappings ID="1084" Label="Build Validation Exception">
+              <Input>
+                <Data ID="1159" Label="Validation Error Response" ReferenceName="ValidationErrorResponse" ReferencePath="xmcp.oas.datatype.provider" VariableName="validationErrorResponse1159">
+                  <Source RefID="1084"/>
+                </Data>
+                <Source RefID="391"/>
+              </Input>
+              <Output>
+                <Exception ID="1133" Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception" VariableName="validationException1133">
+                  <Source RefID="1084"/>
+                </Exception>
+                <Target RefID="1134"/>
+              </Output>
+              <Mapping>%1%.errorResponse=%0%</Mapping>
+            </Mappings>
+            <Throw ExceptionID="1134" ID="1943" Label="Throw Validation Exception">
+              <Meta>
+                <PreferedExceptionType>xmcp.oas.exception.ValidationException</PreferedExceptionType>
+              </Meta>
+              <Source RefID="1134"/>
+            </Throw>
+            <Assign ID="291"/>
+            <Data ID="679" Label="Validation Error" ReferenceName="ValidationError" ReferencePath="xmcp.oas.datatype" VariableName="validationError679"/>
+          </Case>
+        </Choice>
+        <Assign ID="2042"/>
+        <Data ID="2142" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult2142">
+          <Source RefID="24"/>
+        </Data>
       </Case>
-      <Case ID="287" Label="false">
-        <Mappings ID="680" Label="Build Validation Error">
-          <Input>
-            <Data ID="682" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult682"/>
-            <Source RefID="2015"/>
-          </Input>
-          <Output>
-            <Data ID="683" Label="Validation Error" ReferenceName="ValidationError" ReferencePath="xmcp.oas.datatype" VariableName="validationError683"/>
-            <Target RefID="679"/>
-          </Output>
-          <Mapping>%1%.code="400 Bad Request"</Mapping>
-          <Mapping>%1%.reason="Validation Error"</Mapping>
-          <Mapping>%1%.message=concat(%0%.errorMessages)</Mapping>
-        </Mappings>
-        <Mappings ID="365" Label="Build Validation Error Response">
-          <Input>
-            <Data ID="829" Label="Validation Error" ReferenceName="ValidationError" ReferencePath="xmcp.oas.datatype" VariableName="validationError829">
-              <Source RefID="365"/>
-            </Data>
-            <Source RefID="679"/>
-          </Input>
-          <Output>
-            <Data ID="390" Label="Validation Error Response" ReferenceName="ValidationErrorResponse" ReferencePath="xmcp.oas.datatype.provider" VariableName="validationErrorResponse390">
-              <Source RefID="365"/>
-            </Data>
-            <Target RefID="391"/>
-          </Output>
-          <Mapping>%1%.returnCode="400 Bad Request"</Mapping>
-          <Mapping>%1%.error=%0%</Mapping>
-        </Mappings>
-        <Mappings ID="1084" Label="Build Validation Exception">
-          <Input>
-            <Data ID="1159" Label="Validation Error Response" ReferenceName="ValidationErrorResponse" ReferencePath="xmcp.oas.datatype.provider" VariableName="validationErrorResponse1159">
-              <Source RefID="1084"/>
-            </Data>
-            <Source RefID="391"/>
-          </Input>
-          <Output>
-            <Exception ID="1133" Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception" VariableName="validationException1133">
-              <Source RefID="1084"/>
-            </Exception>
-            <Target RefID="1134"/>
-          </Output>
-          <Mapping>%1%.errorResponse=%0%</Mapping>
-        </Mappings>
-        <Throw ExceptionID="1134" ID="1943" Label="Throw Validation Exception">
-          <Meta>
-            <PreferedExceptionType>xmcp.oas.exception.ValidationException</PreferedExceptionType>
-          </Meta>
-          <Source RefID="1134"/>
-        </Throw>
-        <Assign ID="291"/>
-        <Data ID="679" Label="Validation Error" ReferenceName="ValidationError" ReferencePath="xmcp.oas.datatype" VariableName="validationError679"/>
+      <Case ID="2040" Label="false">
+        <Assign ID="2044"/>
       </Case>
     </Choice>
     <Data ID="391" Label="Validation Error Response" ReferenceName="ValidationErrorResponse" ReferencePath="xmcp.oas.datatype.provider" VariableName="validationErrorResponse391">
       <Source RefID="365"/>
-    </Data>
-    <Data ID="2015" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult2015">
-      <Source RefID="24"/>
     </Data>
     <Exception ID="1134" Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception" VariableName="validationException1134">
       <Target RefID="1943"/>

@@ -21,6 +21,7 @@ package xmcp.gitintegration.impl.processing;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -381,7 +382,11 @@ public class ApplicationDefinitionProcessor implements WorkspaceContentProcessor
         ceList.add(ceBuilder.instance());
       }
       adList.add(adBuilder.instance());
+      
+      Collections.sort(rcdList, (x, y) -> x.getDepName().compareTo(y.getDepName()));
+      Collections.sort(ceList, (x, y) -> x.getFQName().compareTo(y.getFQName()));
     }
+    Collections.sort(adList, (x, y) -> x.getName().compareTo(y.getName()));
     return adList;
   }
 

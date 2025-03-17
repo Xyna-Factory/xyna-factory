@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -98,16 +98,47 @@
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java"/>
+        <CodeSnippet Type="Java">xmcp.gitintegration.WorkspaceObjectManagementImpl.closeWorkspaceDifferencesList(listId17);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Update Workspace Content" Name="updateWorkspaceContent">
       <Input>
-        <Data ID="18" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace18"/>
+        <Data ID="9362" Label="Workspace Xml Creation Config" ReferenceName="WorkspaceXmlCreationConfig" ReferencePath="xmcp.gitintegration" VariableName="workspaceXmlCreationConfig9362"/>
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java"/>
+        <CodeSnippet Type="Java">xmcp.gitintegration.WorkspaceObjectManagementImpl.updateWorkspaceContent(workspaceXmlCreationConfig9362);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Workspace Xml Status" Name="getWorkspaceXmlStatus">
+      <Input/>
+      <Output>
+        <Data ID="19" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text19"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.WorkspaceObjectManagementImpl.getWorkspaceXmlStatus();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Path to Workspace Xml" Name="getPathToWorkspaceXml">
+      <Input>
+        <Data ID="20" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace20"/>
+      </Input>
+      <Output>
+        <Data ID="21" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file21"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.WorkspaceObjectManagementImpl.getPathToWorkspaceXml(workspace20);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Adapt Workspace Difference List" Name="adaptWorkspaceDifferenceList">
+      <Input>
+        <Data ID="9361" Label="List Id" ReferenceName="ListId" ReferencePath="xmcp.gitintegration" VariableName="listId9361"/>
+      </Input>
+      <Output>
+        <Data ID="23" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList23"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.WorkspaceObjectManagementImpl.adaptWorkspaceDifferenceList(listId9361);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
