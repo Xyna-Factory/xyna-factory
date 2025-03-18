@@ -204,7 +204,7 @@ public class RepositoryInteraction {
           treeWalk.setRecursive(true);
           treeWalk.setFilter(PathFilter.create(file));
           if (!treeWalk.next()) {
-            throw new RuntimeException("Did not find expected file " + file);
+            throw new RuntimeException("Did not find expected file in git remote branch: " + file);
           }
           ObjectId objectId = treeWalk.getObjectId(0);
           ObjectLoader loader = repo.open(objectId);
