@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
 
 
 
-//FIXME duplicate code, ist auch im scriptexecutorservice so ï¿½hnlich
+//FIXME duplicate code, ist auch im scriptexecutorservice so ähnlich
 public class ProcessUtil {
 
   // Das kill Programm liegt bei SunOS z.B. unter /usr/bin/kill (der Default),
@@ -144,7 +144,7 @@ public class ProcessUtil {
       }
 
       try {
-        Thread.sleep(200 / maxCnt * cnt); //durchschnittlich 100ms warten, am anfang weniger, spï¿½ter mehr
+        Thread.sleep(200 / maxCnt * cnt); //durchschnittlich 100ms warten, am anfang weniger, später mehr
       } catch (InterruptedException ex) {
       }
     }
