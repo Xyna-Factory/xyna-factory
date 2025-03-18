@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.gitintegration.cli.tools;
+package xmcp.gitintegration.tools;
 
 import java.io.File;
 import java.io.IOException;
