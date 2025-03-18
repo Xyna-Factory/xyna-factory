@@ -224,10 +224,6 @@ public class CreateWorkspaceXmlTools {
   }
   
   
-  public Path getWsXmlFileSubPath(RepositoryConnection repconn) throws IOException {
-    return Paths.get(repconn.getSubpath(), WorkspaceContentCreator.WORKSPACE_XML_FILENAME);
-  }
-  
   private Path getWsXmlFilePath(RepositoryConnection repconn) throws IOException {
     Path rootPath = getWorkspacePath(repconn);
     return rootPath.resolve(WorkspaceContentCreator.WORKSPACE_XML_FILENAME);
