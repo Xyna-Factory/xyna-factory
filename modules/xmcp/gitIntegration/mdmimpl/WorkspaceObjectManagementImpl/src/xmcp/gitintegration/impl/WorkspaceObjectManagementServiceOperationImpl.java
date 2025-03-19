@@ -110,8 +110,8 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
 
 
   @Override
-  public WorkspaceContent createWorkspaceContentFromText(Text text) {
-    return new WorkspaceStatusTools().createWorkspaceContentFromText(text);
+  public WorkspaceContent createWorkspaceContentFromText(List<? extends Text> list) {
+    return new WorkspaceStatusTools().createWorkspaceContentFromText(list);
   }
 
 

@@ -177,8 +177,8 @@ public class RepositoryInteraction {
   }
 
 
-  public Text getFileContentInCurrentOriginBranch(String repository, String file) throws Exception {
-    Text txt = new Text();
+  public List<? extends Text> getFileContentInCurrentOriginBranch(String repository, String file) throws Exception {
+    List<Text> ret = new ArrayList<>();
     Repository repo = loadRepo(repository, false);
     try (Git git = new Git(repo)) {
       String currentBranchName = repo.getFullBranch();
@@ -192,7 +192,7 @@ public class RepositoryInteraction {
         branchShort = parts[parts.length - 1];
         if (currentShort.equals(branchShort)) {
           originRef = branch;
-          break; 
+          break;
         }
       }
       ObjectId id = repo.resolve(originRef.getObjectId().getName());
@@ -203,17 +203,21 @@ public class RepositoryInteraction {
           treeWalk.addTree(tree);
           treeWalk.setRecursive(true);
           treeWalk.setFilter(PathFilter.create(file));
-          if (!treeWalk.next()) {
-            throw new RuntimeException("Did not find expected file in git remote branch: " + file);
+          while (treeWalk.next()) {
+            String path = treeWalk.getPathString();
+            if (path.endsWith(".xml")) {
+              ObjectId objectId = treeWalk.getObjectId(0);
+              ObjectLoader loader = repo.open(objectId);
+              Text txt = new Text();
+              txt.setText(new String(loader.getBytes()));
+              ret.add(txt);
+            }
           }
-          ObjectId objectId = treeWalk.getObjectId(0);
-          ObjectLoader loader = repo.open(objectId);
-          txt.setText(new String(loader.getBytes()));
         }
         revWalk.dispose();
       }
     }
-    return txt;
+    return ret;
   }
   
   

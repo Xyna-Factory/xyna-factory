@@ -23,26 +23,6 @@
     <Output>
       <Data ID="2763" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text2763"/>
     </Output>
-    <ServiceReference ID="695" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="694"/>
-      <Target RefID="694"/>
-    </ServiceReference>
-    <ServiceReference ID="745" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="744"/>
-      <Target RefID="744"/>
-    </ServiceReference>
-    <ServiceReference ID="9213" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="9212"/>
-      <Target RefID="9212"/>
-    </ServiceReference>
-    <ServiceReference ID="1204" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="1203"/>
-      <Target RefID="1203"/>
-    </ServiceReference>
-    <ServiceReference ID="1987" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="1986"/>
-      <Target RefID="1986"/>
-    </ServiceReference>
     <ServiceReference ID="1079" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
       <Source RefID="1078"/>
       <Target RefID="1078"/>
@@ -54,6 +34,26 @@
     <ServiceReference ID="1814" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
       <Source RefID="1813"/>
       <Target RefID="1813"/>
+    </ServiceReference>
+    <ServiceReference ID="1204" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="1203"/>
+      <Target RefID="1203"/>
+    </ServiceReference>
+    <ServiceReference ID="745" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="744"/>
+      <Target RefID="744"/>
+    </ServiceReference>
+    <ServiceReference ID="1987" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="1986"/>
+      <Target RefID="1986"/>
+    </ServiceReference>
+    <ServiceReference ID="9213" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="9212"/>
+      <Target RefID="9212"/>
+    </ServiceReference>
+    <ServiceReference ID="695" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="694"/>
+      <Target RefID="694"/>
     </ServiceReference>
     <ServiceReference ID="8594" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
       <Source RefID="8593"/>
@@ -441,7 +441,7 @@
     <Data ID="1816" Label="Workspace Content Differences" ReferenceName="WorkspaceContentDifferences" ReferencePath="xmcp.gitintegration" VariableName="workspaceContentDifferences1816">
       <Source RefID="1813"/>
     </Data>
-    <Data ID="1989" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1989">
+    <Data ID="1989" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1989">
       <Source RefID="1986"/>
     </Data>
     <Data ID="2378" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository2378">

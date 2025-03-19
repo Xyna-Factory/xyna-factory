@@ -19,12 +19,13 @@
 package xmcp.gitintegration.tools;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -44,7 +45,6 @@ import xmcp.gitintegration.impl.WorkspaceContentItemDifferenceSelector;
 import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
 import xmcp.gitintegration.repository.RepositoryConnection;
 import xmcp.gitintegration.storage.WorkspaceDifferenceListStorage;
-import xprc.xpce.Workspace;
 
 
 public class WorkspaceStatusTools {
@@ -52,11 +52,12 @@ public class WorkspaceStatusTools {
   private static Logger _logger = Logger.getLogger(WorkspaceStatusTools.class);
 
 
-  public WorkspaceContent createWorkspaceContentFromText(Text txt) {
-    if (txt == null) { throw new IllegalArgumentException("Parameter text is empty"); }
-    if (txt.getText() == null) { throw new IllegalArgumentException("Parameter text is empty"); }
+  public WorkspaceContent createWorkspaceContentFromText(List<? extends Text> list) {
+    if (list == null) { throw new IllegalArgumentException("Parameter text list is empty"); }
+    if (list.size() < 1) { throw new IllegalArgumentException("Parameter text is empty"); }
     WorkspaceContentCreator creator = new WorkspaceContentCreator();
-    WorkspaceContent ret = creator.createWorkspaceContentFromText(txt.getText());
+    List<String> adapted = list.stream().filter(Objects::nonNull).map(x -> x.getText()).collect(Collectors.toList());
+    WorkspaceContent ret = creator.createWorkspaceContentFromText(adapted);
     return ret;
   }
   
@@ -125,8 +126,7 @@ public class WorkspaceStatusTools {
       ret.setPathInRevisionDir(file.getPath());
       ret.setRepositoryPath(repconn.getPath());
       if (repconn.getSplitted()) {
-        Path path = Paths.get(repconn.getSubpath(), WorkspaceContentCreator.WORKSPACE_XML_SPLITNAME, 
-                              WorkspaceContentCreator.WORKSPACE_XML_FILENAME);
+        Path path = Paths.get(repconn.getSubpath(), WorkspaceContentCreator.WORKSPACE_XML_SPLITNAME);
         ret.setRepositorySubpath(path.toString());
       } else {
         Path path = Paths.get(repconn.getSubpath(), WorkspaceContentCreator.WORKSPACE_XML_FILENAME);

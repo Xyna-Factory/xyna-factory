@@ -61,7 +61,7 @@
     </Operation>
     <Operation IsStatic="true" Label="Create Workspace Content From Text" Name="createWorkspaceContentFromText">
       <Input>
-        <Data ID="9" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text9"/>
+        <Data ID="9" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text9"/>
       </Input>
       <Output>
         <Data ID="10" Label="Workspace Content" ReferenceName="WorkspaceContent" ReferencePath="xmcp.gitintegration" VariableName="workspaceContent10"/>

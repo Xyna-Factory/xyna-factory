@@ -193,10 +193,10 @@
     <Operation IsStatic="true" Label="Get File Content In Current Origin Branch" Name="getFileContentInCurrentOriginBranch">
       <Input>
         <Data ID="52" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository52"/>
-        <Data ID="50" Label="File" ReferenceName="File" ReferencePath="base" VariableName="file50"/>
+        <Data ID="50" Label="Path" ReferenceName="File" ReferencePath="base" VariableName="file50"/>
       </Input>
       <Output>
-        <Data ID="51" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text51"/>
+        <Data ID="51" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text51"/>
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.getFileContentInCurrentOriginBranch(repository52, file50);</CodeSnippet>
