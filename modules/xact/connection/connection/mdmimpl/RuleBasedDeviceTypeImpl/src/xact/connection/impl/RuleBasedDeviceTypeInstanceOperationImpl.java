@@ -578,7 +578,7 @@ public class RuleBasedDeviceTypeInstanceOperationImpl extends RuleBasedDeviceTyp
     
     int restriction = restrictionLength.get();
     if (restriction > 0 && // restriction <=0 = no restriction
-        response.length() > restriction) {
+        responseMinusIgnored.length() > restriction) {
       responseMinusIgnored = responseMinusIgnored.substring(responseMinusIgnored.length() - restriction, responseMinusIgnored.length());
     }
     
