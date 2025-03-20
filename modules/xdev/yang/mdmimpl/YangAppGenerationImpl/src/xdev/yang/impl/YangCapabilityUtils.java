@@ -44,7 +44,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
-import xdev.yang.impl.usecase.ModuleGroup;
+import xdev.yang.impl.operation.ModuleGroup;
 import xmcp.yang.YangDevice;
 
 

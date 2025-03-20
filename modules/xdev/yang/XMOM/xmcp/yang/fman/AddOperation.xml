@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Add Operation" TypeName="AddOperation" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Add Operation" Name="AddOperation">
+    <Input>
+      <Data ID="37" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text37"/>
+      <Data ID="58" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text58"/>
+      <Data ID="111" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace111"/>
+      <Data ID="112" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text112"/>
+      <Data ID="129" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text129"/>
+      <Data ID="162" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text162"/>
+    </Input>
+    <Output/>
+    <ServiceReference ID="19" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
+      <Source RefID="18"/>
+      <Target RefID="18"/>
+    </ServiceReference>
+    <Function ID="18" Label="Add Operation">
+      <Source RefID="19"/>
+      <Source RefID="37"/>
+      <Source RefID="58"/>
+      <Source RefID="111"/>
+      <Source RefID="112"/>
+      <Source RefID="129"/>
+      <Source RefID="162"/>
+      <Target RefID="19"/>
+      <Invoke Operation="addOperation" ServiceID="19">
+        <Source RefID="37">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="58">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="111"/>
+        <Source RefID="112">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="129">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="162">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="19"/>
+    </Function>
+    <Assign ID="1"/>
+  </Operation>
+</Service>

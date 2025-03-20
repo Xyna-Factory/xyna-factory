@@ -18,12 +18,12 @@
 --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Configure List Dialog Definition" TypeName="ConfigureListDialogDefinition" TypePath="xmcp.yang.fman" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Configure List Dialog Definition" Name="ConfigureListDialogDefinition">
     <Input>
-      <Data ID="242" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData242"/>
+      <Data ID="242" Label="Operation Assignment Table Data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData242"/>
     </Input>
     <Output>
       <Data ID="68" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition68"/>
       <Data ID="171" Label="ListConfiguration" ReferenceName="ListConfiguration" ReferencePath="xmcp.yang.fman" VariableName="listConfiguration171"/>
-      <Data ID="150" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData150"/>
+      <Data ID="150" Label="Operation Assignment Table Data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData150"/>
     </Output>
     <ServiceReference ID="50" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="49"/>

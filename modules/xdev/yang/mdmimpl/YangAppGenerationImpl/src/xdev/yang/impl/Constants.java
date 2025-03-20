@@ -66,7 +66,7 @@ public class Constants {
   public static final String TAG_MODULE_REVISION = "revision";
   public static final String TAG_MODULE_FEATURES = "features";
 
-  public static final String VAL_USECASE = "Usecase";
+  public static final String VAL_OPERATION = "Operation";
   public static final String VAL_MODULECOLLECTION = "ModuleCollection";
   public static final String VAL_DEVICE = "Capabilities";
 

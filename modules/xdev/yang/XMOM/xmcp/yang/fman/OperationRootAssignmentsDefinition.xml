@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2024 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Operation root assignments Definition" TypeName="OperationRootAssignmentsDefinition" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Operation root assignments Definition" Name="OperationRootAssignmentsDefinition">
+    <Input>
+      <Data ID="446" Label="Operation Table Data" ReferenceName="OperationTableData" ReferencePath="xmcp.yang" VariableName="operationTableData446"/>
+    </Input>
+    <Output>
+      <Data ID="344" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition344"/>
+      <Data ID="485" Label="Operation Assignment Table Data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData485"/>
+      <Data ID="2032" Label="Operation Table Data" ReferenceName="OperationTableData" ReferencePath="xmcp.yang" VariableName="operationTableData2032"/>
+      <Data ID="2085" Label="OperationSignatureEntry" ReferenceName="OperationSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="operationSignatureEntry2085"/>
+    </Output>
+    <ServiceReference ID="1815" Label="Operation signature Definition" ReferenceName="OperationSignatureDefinition" ReferencePath="xmcp.yang.fman">
+      <Source RefID="1814"/>
+      <Target RefID="1814"/>
+    </ServiceReference>
+    <ServiceReference ID="2002" Label="Operation assignments Definition" ReferenceName="OperationAssignmentsDefinition" ReferencePath="xmcp.yang.fman">
+      <Source RefID="2001"/>
+      <Target RefID="2001"/>
+    </ServiceReference>
+    <Mappings ID="411" Label="Mapping">
+      <Input>
+        <Data ID="467" Label="Operation Table Data" ReferenceName="OperationTableData" ReferencePath="xmcp.yang" VariableName="operationTableData467">
+          <Source RefID="411"/>
+        </Data>
+        <Source RefID="446"/>
+      </Input>
+      <Output>
+        <Data ID="428" Label="Operation Assignment Table Data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData428">
+          <Source RefID="411"/>
+        </Data>
+        <Target RefID="429"/>
+      </Output>
+      <Mapping>%1%.loadYangAssignmentsData.fqn=%0%.operationGroup</Mapping>
+      <Mapping>%1%.loadYangAssignmentsData.totalNamespaces=%0%.rpcNamespace</Mapping>
+      <Mapping>%1%.loadYangAssignmentsData.totalYangPath=%0%.rpcName</Mapping>
+      <Mapping>%1%.loadYangAssignmentsData.operation=%0%.operation</Mapping>
+      <Mapping>%1%.loadYangAssignmentsData.workspaceName=%0%.runtimeContext</Mapping>
+      <Mapping>%1%.loadYangAssignmentsData.totalKeywords="rpc"</Mapping>
+      <Mapping>%1%.type="Rpc"</Mapping>
+      <Mapping>%1%.yangPath=%0%.rpcName</Mapping>
+    </Mappings>
+    <Function ID="1814" Label="Operation signature Definition">
+      <Source RefID="1815"/>
+      <Source RefID="1842"/>
+      <Source RefID="446"/>
+      <Target RefID="1815"/>
+      <Target RefID="1817"/>
+      <Target RefID="1843"/>
+      <Target RefID="2006"/>
+      <Target RefID="2007"/>
+      <Invoke Operation="OperationSignatureDefinition" ServiceID="1815">
+        <Source RefID="1842">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="446"/>
+      </Invoke>
+      <Receive ServiceID="1815">
+        <Target RefID="1817"/>
+        <Target RefID="1843"/>
+        <Target RefID="2006"/>
+        <Target RefID="2007"/>
+      </Receive>
+    </Function>
+    <Function ID="2001" Label="Operation assignments Definition">
+      <Source RefID="2002"/>
+      <Source RefID="429"/>
+      <Target RefID="2002"/>
+      <Target RefID="2004"/>
+      <Target RefID="2005"/>
+      <Invoke Operation="OperationAssignmentsDefinition" ServiceID="2002">
+        <Source RefID="429"/>
+      </Invoke>
+      <Receive ServiceID="2002">
+        <Target RefID="2004"/>
+        <Target RefID="2005"/>
+      </Receive>
+    </Function>
+    <Mappings ID="586" Label="Mapping">
+      <Input>
+        <Data ID="1796" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1796">
+          <Source RefID="586"/>
+        </Data>
+        <Source RefID="1817">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="713" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition713">
+          <Source RefID="586"/>
+        </Data>
+        <Source RefID="2004">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="2451" Label="Operation Table Data" ReferenceName="OperationTableData" ReferencePath="xmcp.yang" VariableName="operationTableData2451">
+          <Source RefID="586"/>
+        </Data>
+        <Source RefID="2006">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="611" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition611">
+          <Source RefID="586"/>
+        </Data>
+        <Target RefID="612"/>
+      </Output>
+      <Mapping>%3%.children["0"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%0%</Mapping>
+      <Mapping>%3%.children["1"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%1%</Mapping>
+      <Mapping>%3%.label=%2%.operation</Mapping>
+    </Mappings>
+    <Data ID="429" Label="Operation Assignment Table Data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData429">
+      <Source RefID="411"/>
+    </Data>
+    <Data ID="612" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition612">
+      <Source RefID="586"/>
+    </Data>
+    <Data ID="1817" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1817">
+      <Source RefID="1814"/>
+    </Data>
+    <Data ID="1842" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="const_Text1842">
+      <Data VariableName="text">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>Input</Value>
+      </Data>
+    </Data>
+    <Data ID="1843" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1843"/>
+    <Data ID="2004" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition2004">
+      <Source RefID="2001"/>
+    </Data>
+    <Data ID="2005" Label="Operation Assignment Table Data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData2005">
+      <Source RefID="2001"/>
+    </Data>
+    <Data ID="2006" Label="Operation Table Data" ReferenceName="OperationTableData" ReferencePath="xmcp.yang" VariableName="operationTableData2006"/>
+    <Data ID="2007" Label="OperationSignatureEntry" ReferenceName="OperationSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="operationSignatureEntry2007"/>
+    <Assign ID="1">
+      <Source RefID="612"/>
+      <Source RefID="2005"/>
+      <Source RefID="2006"/>
+      <Source RefID="2007"/>
+      <Target RefID="344"/>
+      <Target RefID="485"/>
+      <Target RefID="2032"/>
+      <Target RefID="2085"/>
+      <Copy>
+        <Source RefID="612">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="344"/>
+      </Copy>
+      <Copy>
+        <Source RefID="2005">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="485"/>
+      </Copy>
+      <Copy>
+        <Source RefID="2006">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="2032"/>
+      </Copy>
+      <Copy>
+        <Source RefID="2007"/>
+        <Target RefID="2085"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

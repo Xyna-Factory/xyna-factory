@@ -138,11 +138,11 @@ public class GuiHttpInteraction {
     executeRunnable(runnable, url, method, payload, "Could not close datatype.");
   }
   
-  public static void setMetaTag(String path, String label, String workspace, String usecase, String tag, XynaOrderServerExtension order) {
+  public static void setMetaTag(String path, String label, String workspace, String operation, String tag, XynaOrderServerExtension order) {
     RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
     String workspaceNameEscaped = urlEncode(workspace);
     String baseUrl = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + path + "/" + label;
-    URLPath url = new URLPath(baseUrl + "/services/" + usecase + "/meta", null, null);
+    URLPath url = new URLPath(baseUrl + "/services/" + operation + "/meta", null, null);
     String payload = "{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.request.MetaTagRequest\"},"
         + "\"metaTag\":{\"$meta\":{\"fqn\":\"xmcp.processmodeller.datatypes.MetaTag\"},\"deletable\":true,\"tag\":\"" + tag + "\"}}";
     executeRunnable(runnable, url, GuiHttpInteraction.METHOD_PUT, payload, "Could not add meta tag to service.");
