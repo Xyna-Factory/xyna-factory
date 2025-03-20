@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="YangBase" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
+--><Application applicationName="YangBase" factoryVersion="" versionName="1.1.0" xmlVersion="1.1">
   <XMOMEntries>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yang.MessageId</FqName>
@@ -30,7 +30,7 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.YangUsecaseImplementation</FqName>
+      <FqName>xmcp.yang.YangOperationImplementation</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
   </XMOMEntries>
