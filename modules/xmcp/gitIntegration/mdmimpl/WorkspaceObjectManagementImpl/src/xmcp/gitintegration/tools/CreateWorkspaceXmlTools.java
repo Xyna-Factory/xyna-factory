@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.gitintegration.cli.tools;
+package xmcp.gitintegration.tools;
 
 import java.io.File;
 import java.io.IOException;
@@ -228,7 +228,6 @@ public class CreateWorkspaceXmlTools {
     Path rootPath = getWorkspacePath(repconn);
     return rootPath.resolve(WorkspaceContentCreator.WORKSPACE_XML_FILENAME);
   }
-  
   
   private Path getWorkspacePath(RepositoryConnection repconn) throws IOException {
     return Paths.get(repconn.getPath(), repconn.getSubpath());

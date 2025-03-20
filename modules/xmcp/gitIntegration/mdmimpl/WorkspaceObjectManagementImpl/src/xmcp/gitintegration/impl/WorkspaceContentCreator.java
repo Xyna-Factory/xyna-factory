@@ -22,6 +22,7 @@ package xmcp.gitintegration.impl;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.gip.xyna.XynaFactory;
@@ -115,4 +116,23 @@ public class WorkspaceContentCreator {
     WorkspaceContent result = converter.convertFromXml(xml);
     return result;
   }
+
+  
+  public WorkspaceContent createWorkspaceContentFromText(List<String> list) {
+    WorkspaceContentXmlConverter converter = new WorkspaceContentXmlConverter();
+    List<WorkspaceContentItem> items = new ArrayList<>();
+    String name = null;
+    for (String input : list) {
+      WorkspaceContent tmp = converter.convertFromXml(input);
+      if (tmp.getWorkspaceName() != null) {
+        name = tmp.getWorkspaceName();
+      }
+      items.addAll(tmp.getWorkspaceContentItems());
+    }
+    WorkspaceContent result = new WorkspaceContent();
+    result.setWorkspaceName(name);
+    result.setWorkspaceContentItems(items);
+    return result;
+  }
+  
 }
