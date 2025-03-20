@@ -332,13 +332,13 @@ public class OperationAssignmentUtils {
     return parsed;
   }
 
-  public static Pair<Integer, Document> loadOperationMeta(String fqn, String workspaceName, String operation) {
+  public static Pair<Integer, Document> loadOperationMeta(String fqn, String workspaceName, String yangOperation) {
     try {
       RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
       Long revision = revMgmt.getRevision(null, null, workspaceName);
       DOM dom = DOM.getOrCreateInstance(fqn, new GenerationBaseCache(), revision);
       dom.parseGeneration(false, false);
-      Operation operation = dom.getOperationByName(operation);
+      Operation operation = dom.getOperationByName(yangOperation);
       List<String> unknownMetaTags = operation.getUnknownMetaTags();
       if(unknownMetaTags == null) {
         return null;
