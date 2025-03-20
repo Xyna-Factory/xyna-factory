@@ -30,21 +30,6 @@
       <Source RefID="3954"/>
       <Target RefID="3954"/>
     </ServiceReference>
-    <Mappings ID="3565" Label="Mapping">
-      <Input>
-        <Data ID="3618" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList3618">
-          <Source RefID="3565"/>
-        </Data>
-        <Source RefID="3527"/>
-      </Input>
-      <Output>
-        <Data ID="3600" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName3600">
-          <Source RefID="3565"/>
-        </Data>
-        <Target RefID="3601"/>
-      </Output>
-      <Mapping>%1%.workspaceName=%0%.workspaceName</Mapping>
-    </Mappings>
     <Mappings ID="3548" Label="Mapping">
       <Input>
         <Data ID="3699" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList3699">
@@ -98,9 +83,6 @@
     </Data>
     <Data ID="3583" Label="Workspace Diff List Id" ReferenceName="WorkspaceDiffListId" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffListId3583">
       <Source RefID="3548"/>
-    </Data>
-    <Data ID="3601" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName3601">
-      <Source RefID="3565"/>
     </Data>
     <Data ID="3957" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3957">
       <Source RefID="3954"/>

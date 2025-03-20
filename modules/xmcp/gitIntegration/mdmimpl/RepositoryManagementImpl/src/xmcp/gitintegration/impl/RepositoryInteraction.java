@@ -56,9 +56,7 @@ import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.lib.BranchConfig;
-import org.eclipse.jgit.lib.Config;
-import org.eclipse.jgit.lib.ConfigConstants;
-import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.lib.BranchTrackingStatus;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
 import org.eclipse.jgit.lib.ObjectReader;
@@ -181,21 +179,9 @@ public class RepositoryInteraction {
     List<Text> ret = new ArrayList<>();
     Repository repo = loadRepo(repository, false);
     try (Git git = new Git(repo)) {
-      String currentBranchName = repo.getFullBranch();
-      String[] parts = currentBranchName.split("/");
-      String currentShort = parts[parts.length - 1];
-      List<Ref> branches = git.branchList().setListMode(ListMode.REMOTE).call();
-      String branchShort = "";
-      Ref originRef = null;
-      for (Ref branch : branches) {
-        parts = branch.getName().split("/");
-        branchShort = parts[parts.length - 1];
-        if (currentShort.equals(branchShort)) {
-          originRef = branch;
-          break;
-        }
-      }
-      ObjectId id = repo.resolve(originRef.getObjectId().getName());
+      BranchTrackingStatus tracking = BranchTrackingStatus.of(repo, repo.getFullBranch());
+      String remoteBranch = tracking.getRemoteTrackingBranch();
+      ObjectId id = repo.resolve(remoteBranch);
       try (RevWalk revWalk = new RevWalk(repo)) {
         RevCommit commit = revWalk.parseCommit(id);
         RevTree tree = commit.getTree();
