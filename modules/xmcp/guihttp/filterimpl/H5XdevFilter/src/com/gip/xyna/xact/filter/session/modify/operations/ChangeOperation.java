@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
@@ -41,6 +42,7 @@ import com.gip.xyna.xact.filter.session.exceptions.ModificationNotAllowedExcepti
 import com.gip.xyna.xact.filter.session.exceptions.UnknownObjectIdException;
 import com.gip.xyna.xact.filter.session.exceptions.UnsupportedOperationException;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.Case;
+import com.gip.xyna.xact.filter.session.gb.GBBaseObject.DTMetaTag;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.FormulaInfo;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.MemberMethodInfo;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.MemberVarInfo;
@@ -49,14 +51,15 @@ import com.gip.xyna.xact.filter.session.gb.GBBaseObject.QuerySelectionMask;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.QuerySortCriterion;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.Variable;
 import com.gip.xyna.xact.filter.session.gb.GBSubObject;
+import com.gip.xyna.xact.filter.session.gb.GBSubObjectUtils;
 import com.gip.xyna.xact.filter.session.gb.ObjectId;
 import com.gip.xyna.xact.filter.session.gb.vars.IdentifiedVariables;
 import com.gip.xyna.xact.filter.session.gb.vars.IdentifiedVariablesStepFunction;
 import com.gip.xyna.xact.filter.session.workflowwarnings.FormulaChangeNotification;
 import com.gip.xyna.xact.filter.session.workflowwarnings.WorkflowWarningsHandler;
+import com.gip.xyna.xact.filter.util.AVariableIdentification;
 import com.gip.xyna.xact.filter.util.AVariableIdentification.ThrowExceptionIdProvider;
 import com.gip.xyna.xact.filter.util.AVariableIdentification.VarUsageType;
-import com.gip.xyna.xact.filter.util.AVariableIdentification;
 import com.gip.xyna.xact.filter.util.ExpressionUtils;
 import com.gip.xyna.xact.filter.util.QueryUtils;
 import com.gip.xyna.xact.filter.util.Utils;
@@ -70,6 +73,7 @@ import com.gip.xyna.xprc.exceptions.XPRC_XmlParsingException;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable.PrimitiveType;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable.UnsupportedJavaTypeException;
+import com.gip.xyna.xprc.xfractwfe.generation.CodeOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM.OperationInformation;
 import com.gip.xyna.xprc.xfractwfe.generation.DatatypeVariable;
@@ -80,11 +84,10 @@ import com.gip.xyna.xprc.xfractwfe.generation.ExceptionVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.generation.HasDocumentation;
-import com.gip.xyna.xprc.xfractwfe.generation.CodeOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.JavaOperation;
-import com.gip.xyna.xprc.xfractwfe.generation.PythonOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.PersistenceTypeInformation;
+import com.gip.xyna.xprc.xfractwfe.generation.PythonOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.Step;
 import com.gip.xyna.xprc.xfractwfe.generation.StepChoice;
 import com.gip.xyna.xprc.xfractwfe.generation.StepForeach;
@@ -708,6 +711,13 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
     setAbstract(dtOrException, change.isAbstract());
   }
   
+  @Override
+  protected void modifyMetaTag(DOM dom) {
+    int idx = ObjectId.getMetaTagIdx(object.getId());
+    DTMetaTag newTag = GBSubObjectUtils.createDTMetaTag(change.getTag());
+    object.getMetaTagListAdapter().set(idx, newTag);
+  }
+
   @Override
   protected void modifyOrderInputSource(Step step)
       throws XynaException, UnknownObjectIdException, MissingObjectException, InvalidJSONException, UnexpectedJSONContentException {

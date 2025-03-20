@@ -202,8 +202,8 @@ public class InsertOperation extends ModifyOperationBase<InsertJson> {
     Insertion insertion = new Insertion(object, insert);
     insertion.wrapWhenNeeded(modification.getObject()); // Hinzufuegen von fuer Insert evtl. benoetigten Wrapper-Schritten
     insertion.inferWhere(object); // Feststellen wohin inserted wird, dies ist leider nicht eindeutig - TODO: muss bei Undo auch wieder entfernt werden
-    insertion.inferPossibleContent(); // Überlegen was im Content stehen könnte, dies ist leider nicht eindeutig
-    Pair<PossibleContent, ? extends XMOMGuiJson> content = insertion.parseContent(insert); // Parsen der möglichen Contents
+    insertion.inferPossibleContent(); // Ãœberlegen was im Content stehen kÃ¶nnte, dies ist leider nicht eindeutig
+    Pair<PossibleContent, ? extends XMOMGuiJson> content = insertion.parseContent(insert); // Parsen der mÃ¶glichen Contents
 
 
     
@@ -653,6 +653,10 @@ public class InsertOperation extends ModifyOperationBase<InsertJson> {
     insert();
   }
 
+  @Override
+  protected void modifyMetaTagArea(DOM dom) throws UnsupportedOperationException, UnknownObjectIdException, MissingObjectException, XynaException, InvalidJSONException, UnexpectedJSONContentException {
+    insert();
+  }
 
   @Override
   public void modifyMethodVarArea(DomOrExceptionGenerationBase dtOrException) throws UnsupportedOperationException, UnknownObjectIdException, MissingObjectException, XynaException, InvalidJSONException, UnexpectedJSONContentException, ModificationNotAllowedException {

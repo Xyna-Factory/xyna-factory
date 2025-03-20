@@ -26,17 +26,19 @@ import com.gip.xyna.xact.filter.util.AVariableIdentification.VarUsageType;
 import com.gip.xyna.xact.filter.util.Utils;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
+import com.gip.xyna.xprc.xfractwfe.generation.DOM.OperationInformation;
 import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.Step;
 import com.gip.xyna.xprc.xfractwfe.generation.StepCatch;
 import com.gip.xyna.xprc.xfractwfe.generation.StepFunction;
 import com.gip.xyna.xprc.xfractwfe.generation.WF;
-import com.gip.xyna.xprc.xfractwfe.generation.DOM.OperationInformation;
+
+import xmcp.processmodeller.datatypes.MetaTag;
 
 public class GBBaseObject {
-  
-  private final ObjectType type; // FIXME: better use sub-classes, instead
+
+  protected ObjectType type; // FIXME: better use sub-classes, instead
   protected Step step;
   protected WF workflow;
   protected Variable variable;
@@ -67,6 +69,7 @@ public class GBBaseObject {
   protected MethodVarInfo methodVarInfo;
   protected Operation operation;
   protected Integer operationIndex;
+  protected DTMetaTag metaTag;
 
   public GBBaseObject() {
     this.type = ObjectType.clipboardEntry;
@@ -182,6 +185,12 @@ public class GBBaseObject {
     this.dtOrException = dtOrException;
     this.memberMethod = memberMethod;
     this.operation = memberMethod.getOperation();
+  }
+
+  public GBBaseObject(DomOrExceptionGenerationBase dtOrException, DTMetaTag metaTag) {
+    this.type = ObjectType.metaTag;
+    this.dtOrException = dtOrException;
+    this.metaTag = metaTag;
   }
 
   public GBBaseObject(DomOrExceptionGenerationBase dtOrException, ObjectType objectType) {
@@ -376,6 +385,10 @@ public class GBBaseObject {
   
   public Integer getOperationIndex() {
     return operationIndex;
+  }
+  
+  public DTMetaTag getMetaTag() {
+    return metaTag;
   }
   
   public QuerySelectionMask getQuerySelectionMask() {
@@ -686,6 +699,19 @@ public class GBBaseObject {
 
     public Operation getOperation() {
       return operation;
+    }
+  }
+
+  public static class DTMetaTag {
+
+    private MetaTag metaTag;
+
+    public DTMetaTag(MetaTag metaTag) {
+      this.metaTag = metaTag;
+    }
+
+    public MetaTag getMetaTag() {
+      return metaTag;
     }
   }
   

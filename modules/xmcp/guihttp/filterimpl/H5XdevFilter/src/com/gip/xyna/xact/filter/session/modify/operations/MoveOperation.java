@@ -29,9 +29,9 @@ import com.gip.xyna.utils.misc.JsonParser.InvalidJSONException;
 import com.gip.xyna.utils.misc.JsonParser.UnexpectedJSONContentException;
 import com.gip.xyna.xact.filter.json.FQNameJson;
 import com.gip.xyna.xact.filter.session.Clipboard;
+import com.gip.xyna.xact.filter.session.Clipboard.ClipboardCopyDirection;
 import com.gip.xyna.xact.filter.session.Dataflow;
 import com.gip.xyna.xact.filter.session.FQName;
-import com.gip.xyna.xact.filter.session.Clipboard.ClipboardCopyDirection;
 import com.gip.xyna.xact.filter.session.exceptions.MergeConflictException;
 import com.gip.xyna.xact.filter.session.exceptions.MissingObjectException;
 import com.gip.xyna.xact.filter.session.exceptions.UnknownObjectIdException;
@@ -51,8 +51,8 @@ import com.gip.xyna.xact.filter.session.gb.vars.IdentifiedVariablesStepChoice;
 import com.gip.xyna.xact.filter.session.modify.Insertion;
 import com.gip.xyna.xact.filter.session.modify.Insertion.QueryInsertStep;
 import com.gip.xyna.xact.filter.session.workflowwarnings.ReferenceInvalidatedNotification;
-import com.gip.xyna.xact.filter.util.AVariableIdentification.VarUsageType;
 import com.gip.xyna.xact.filter.util.AVariableIdentification;
+import com.gip.xyna.xact.filter.util.AVariableIdentification.VarUsageType;
 import com.gip.xyna.xact.filter.util.DirectVarIdentification;
 import com.gip.xyna.xact.filter.util.HintGeneration;
 import com.gip.xyna.xact.filter.util.QueryUtils;
@@ -67,10 +67,9 @@ import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.Distinction.BranchInfo;
 import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
-import com.gip.xyna.xprc.xfractwfe.generation.ExceptionVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.JavaOperation;
-import com.gip.xyna.xprc.xfractwfe.generation.PythonOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
+import com.gip.xyna.xprc.xfractwfe.generation.PythonOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.ServiceVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.Step;
 import com.gip.xyna.xprc.xfractwfe.generation.Step.DistinctionType;
@@ -146,7 +145,7 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
     insertion.setQueryInsertStep(queryInsertStep);
     insertion.wrapWhenNeeded(modification.getObject()); // Hinzufuegen von fuer Insert evtl. benoetigten Wrapper-Schritten
     insertion.inferWhere(object); //Feststellen wohin inserted wird, dies ist leider nicht eindeutig
-    insertion.inferPossibleContent(); //Überlegen was im Content stehen könnte, dies ist leider nicht eindeutig
+    insertion.inferPossibleContent(); //Ãœberlegen was im Content stehen kÃ¶nnte, dies ist leider nicht eindeutig
 
     if (isOperationInSelf(relativeToObject)) {
       throw new UnsupportedOperationException("move", UnsupportedOperationException.MOVE_IN_YOURSELF_IS_NOT_POSSIBLE);
@@ -472,6 +471,10 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
       varIdent = newVariable.getVariable().getVariable();
     }
     gbsNewMethod.getIdentifiedVariables().getListAdapter(varUsageType).add(varIdent);
+  }
+
+  protected void modifyMetaTag(DOM dom) throws UnknownObjectIdException, MissingObjectException, XynaException, UnsupportedOperationException, MergeConflictException {
+    move(object);
   }
 
 }

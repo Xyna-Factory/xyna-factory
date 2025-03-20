@@ -22,8 +22,8 @@ import com.gip.xyna.xact.filter.HasXoRepresentation;
 import com.gip.xyna.xact.filter.session.GenerationBaseObject;
 import com.gip.xyna.xact.filter.session.exceptions.UnknownObjectIdException;
 import com.gip.xyna.xact.filter.session.gb.ObjectId;
-import com.gip.xyna.xact.filter.session.gb.ObjectType;
 import com.gip.xyna.xact.filter.session.gb.ObjectId.ObjectPart;
+import com.gip.xyna.xact.filter.session.gb.ObjectType;
 import com.gip.xyna.xact.filter.session.gb.vars.IdentifiedVariables;
 import com.gip.xyna.xact.filter.session.gb.vars.IdentifiedVariablesService;
 import com.gip.xyna.xact.filter.util.AVariableIdentification.VarUsageType;
@@ -37,8 +37,8 @@ import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.JavaOperation;
-import com.gip.xyna.xprc.xfractwfe.generation.PythonOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
+import com.gip.xyna.xprc.xfractwfe.generation.PythonOperation;
 import com.gip.xyna.xprc.xfractwfe.generation.WorkflowCall;
 
 import xmcp.processmodeller.datatypes.TextArea;
@@ -137,7 +137,7 @@ public class DatatypeMethodXo implements HasXoRepresentation {
                                                       identifiedVariables, ServiceUtils.getServiceTag(VarUsageType.thrown), 
                                                       new String[] {MetaXmomContainers.EXCEPTION_FQN}, 
                                                       identifiedVariables.isReadOnly()));
-    method.addToAreas(DomOrExceptionXo.createMetaTagArea(operation.getUnknownMetaTags(), identifiedVariables.isReadOnly()));
+    method.addToAreas(DomOrExceptionXo.createMetaTagArea(operation.getUnknownMetaTags(), identifiedVariables.isReadOnly(), methodId.getObjectId()));
     return method;
   }
   

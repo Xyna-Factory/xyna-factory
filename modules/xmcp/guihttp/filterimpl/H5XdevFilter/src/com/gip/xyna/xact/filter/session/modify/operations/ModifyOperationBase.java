@@ -42,6 +42,7 @@ import com.gip.xyna.xact.filter.session.exceptions.UnsupportedOperationException
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.Branch;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.Case;
+import com.gip.xyna.xact.filter.session.gb.GBBaseObject.DTMetaTag;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.Formula;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.FormulaInfo;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.Lib;
@@ -76,6 +77,7 @@ import com.gip.xyna.xact.filter.xmom.workflows.json.MappingJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.MemberMethodJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.MemberServiceJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.MemberVarJson;
+import com.gip.xyna.xact.filter.xmom.workflows.json.MetaTagJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.ParallelismJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.PositionJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.RetryJson;
@@ -114,6 +116,9 @@ import com.gip.xyna.xprc.xfractwfe.generation.StepSerial;
 import com.gip.xyna.xprc.xfractwfe.generation.StepThrow;
 import com.gip.xyna.xprc.xfractwfe.generation.WF;
 import com.gip.xyna.xprc.xfractwfe.generation.WF.WFStep;
+
+import xmcp.processmodeller.datatypes.MetaTag;
+import xmcp.processmodeller.datatypes.request.MetaTagRequest;
 
 public abstract class ModifyOperationBase<T extends XMOMGuiJson> {
 
@@ -241,6 +246,15 @@ public abstract class ModifyOperationBase<T extends XMOMGuiJson> {
   }  
 
   protected void modifyMemberMethodArea(DOM dom) throws UnsupportedOperationException,
+      UnknownObjectIdException, MissingObjectException, XynaException, InvalidJSONException, UnexpectedJSONContentException {
+    throw new java.lang.UnsupportedOperationException();
+  }
+  
+  protected void modifyMetaTag(DOM dom) throws UnknownObjectIdException, MissingObjectException, XynaException, UnsupportedOperationException, MergeConflictException {
+    throw new java.lang.UnsupportedOperationException();
+  }
+  
+  protected void modifyMetaTagArea(DOM dom) throws UnsupportedOperationException,
       UnknownObjectIdException, MissingObjectException, XynaException, InvalidJSONException, UnexpectedJSONContentException {
     throw new java.lang.UnsupportedOperationException();
   }
@@ -384,6 +398,12 @@ public abstract class ModifyOperationBase<T extends XMOMGuiJson> {
     case memberMethodsArea: // method in data type
       modifyMemberMethodArea((DOM)object.getDtOrException());
       break;
+    case metaTag:
+      modifyMetaTag((DOM)object.getDtOrException());
+      break;
+    case metaTagArea:
+      modifyMetaTagArea((DOM)object.getDtOrException());
+      break;
     case typeInfoArea:
       modifyTypeInfoArea(object.getDtOrException());
       break;
@@ -442,6 +462,8 @@ public abstract class ModifyOperationBase<T extends XMOMGuiJson> {
       return createMemberVar(parent, (MemberVarJson)content.getSecond() );
     case memberMethod:
       return createMemberMethod(parent, (MemberMethodJson)content.getSecond() );
+    case metaTag:
+      return createMetaTag(parent, (MetaTagJson)content.getSecond() );
     case choice:
       return createStepChoice(parent, (DistinctionJson)content.getSecond() );
     case mapping:
@@ -638,7 +660,15 @@ public abstract class ModifyOperationBase<T extends XMOMGuiJson> {
     
     return varIds;
   }
-  
+
+  private GBBaseObject createMetaTag(final GBSubObject parent, MetaTagJson content) throws XynaException {
+    DOM dataType = (DOM) object.getDtOrException();
+    Long guiHttpRevision = Utils.getGuiHttpRevision();
+    MetaTag metaTag = ((MetaTagRequest) Utils.convertJsonToGeneralXynaObject(content.getTag(), guiHttpRevision)).getMetaTag();
+
+    return new GBBaseObject(dataType, new DTMetaTag(metaTag));
+  }
+
   private GBBaseObject createStepChoice( GBSubObject parent, DistinctionJson content) throws XynaException {
     StepChoice sc = new StepChoice(getParentScope(parent), object.getRoot().getWorkflow() );
     String condition = content.getCondition() != null ? content.getCondition() : "";

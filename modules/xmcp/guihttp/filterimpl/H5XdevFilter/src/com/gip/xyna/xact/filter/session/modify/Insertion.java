@@ -56,6 +56,7 @@ import com.gip.xyna.xact.filter.xmom.workflows.json.MappingJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.MemberMethodJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.MemberServiceJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.MemberVarJson;
+import com.gip.xyna.xact.filter.xmom.workflows.json.MetaTagJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.ParallelismJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.PositionJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.PositionJson.RelativePosition;
@@ -68,8 +69,8 @@ import com.gip.xyna.xact.filter.xmom.workflows.json.UpdateResponseJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.VariableJson;
 import com.gip.xyna.xprc.exceptions.XPRC_InvalidServiceIdException;
 import com.gip.xyna.xprc.xfractwfe.generation.Step;
-import com.gip.xyna.xprc.xfractwfe.generation.StepAssign;
 import com.gip.xyna.xprc.xfractwfe.generation.Step.Catchable;
+import com.gip.xyna.xprc.xfractwfe.generation.StepAssign;
 import com.gip.xyna.xprc.xfractwfe.generation.StepCatch;
 import com.gip.xyna.xprc.xfractwfe.generation.StepChoice;
 import com.gip.xyna.xprc.xfractwfe.generation.StepForeach;
@@ -127,6 +128,11 @@ public class Insertion {
     variable() {
       public JsonVisitor<VariableJson> getJsonVisitor() {
         return new VariableJson.VariableJsonVisitor();
+      }
+    },
+    metaTag() {
+      public JsonVisitor<MetaTagJson> getJsonVisitor() {
+        return new MetaTagJson.MetaTagJsonVisitor();
       }
     },
     distinctionBranch() {
@@ -391,7 +397,7 @@ public class Insertion {
       }
     } else {
       insideObject = relativeToObject.getParent();
-      // übergeordnetes Objekt finden
+      // Ã¼bergeordnetes Objekt finden
       // TODO reicht das?
     }
     
@@ -627,7 +633,7 @@ public class Insertion {
       default:
         break;
     }
-    return new UpdateResponseJson(insideObject);//TODO für parent bei transfer ebenso?
+    return new UpdateResponseJson(insideObject);//TODO fÃ¼r parent bei transfer ebenso?
   }
   
   private <T> void process(Process process, ObjectAdapter<T> oa, GBBaseObject object, GBSubObject parent) {
@@ -715,6 +721,8 @@ public class Insertion {
           return inferPossibleContent_InsideMemberMethodArea();
         case methodVarArea:
           return inferPossibleContent_InsideMethodVarArea();
+        case metaTagArea:
+          return inferPossibleContent_InsideMetaTagArea();
         case libs:
           return inferPossibleContent_InsideLibs();
         default:
@@ -794,6 +802,10 @@ public class Insertion {
     
     private EnumSet<PossibleContent> inferPossibleContent_InsideMethodVarArea() {
       return EnumSet.of(PossibleContent.variable);
+    }
+
+    private EnumSet<PossibleContent> inferPossibleContent_InsideMetaTagArea() {
+      return EnumSet.of(PossibleContent.metaTag);
     }
 
     private EnumSet<PossibleContent> inferPossibleContent_InsideLibs() {
@@ -881,6 +893,10 @@ public class Insertion {
         break;
       case memberVar:
         if( possibleContent.contains( PossibleContent.memberVar ) ) {
+          return;
+        }
+      case metaTag:
+        if( possibleContent.contains( PossibleContent.metaTag ) ) {
           return;
         }
       case distinctionCase:
