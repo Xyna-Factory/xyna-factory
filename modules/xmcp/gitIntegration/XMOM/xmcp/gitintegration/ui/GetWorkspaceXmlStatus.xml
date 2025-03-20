@@ -336,7 +336,7 @@
                 <Data ID="4068" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text4068"/>
                 <Target RefID="4069"/>
               </Output>
-              <Mapping>%0%.text="Local differences"</Mapping>
+              <Mapping>%0%.text="Local changes"</Mapping>
             </Mappings>
             <Assign ID="3355">
               <Source RefID="4069"/>
@@ -378,7 +378,7 @@
                 <Data ID="4144" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text4144"/>
                 <Target RefID="4145"/>
               </Output>
-              <Mapping>%0%.text="Remote differences"</Mapping>
+              <Mapping>%0%.text="Remote changes"</Mapping>
             </Mappings>
             <Assign ID="4142">
               <Source RefID="4145"/>
