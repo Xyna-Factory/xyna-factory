@@ -97,6 +97,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.StepSerial;
 import com.gip.xyna.xprc.xfractwfe.generation.WF;
 import com.gip.xyna.xprc.xfractwfe.generation.WF.WFStep;
 import com.gip.xyna.xprc.xfractwfe.generation.WorkflowCallInService;
+import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 import xnwh.persistence.QueryParameter;
 import xnwh.persistence.SelectionMask;
@@ -712,7 +713,8 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
   }
   
   @Override
-  protected void modifyMetaTag(DOM dom) {
+  protected void modifyMetaTag(DOM dom) throws XPRC_XmlParsingException {
+    XMLUtils.parseString(change.getTag()); // validate whether tag content is valid XML
     int idx = ObjectId.getMetaTagIdx(object.getId());
     DTMetaTag newTag = GBSubObjectUtils.createDTMetaTag(change.getTag());
     object.getMetaTagListAdapter().set(idx, newTag);

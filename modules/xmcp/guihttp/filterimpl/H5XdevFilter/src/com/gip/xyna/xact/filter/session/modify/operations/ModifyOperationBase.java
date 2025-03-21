@@ -115,6 +115,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.StepRetry;
 import com.gip.xyna.xprc.xfractwfe.generation.StepSerial;
 import com.gip.xyna.xprc.xfractwfe.generation.StepThrow;
 import com.gip.xyna.xprc.xfractwfe.generation.WF;
+import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 import com.gip.xyna.xprc.xfractwfe.generation.WF.WFStep;
 
 import xmcp.processmodeller.datatypes.MetaTag;
@@ -665,6 +666,7 @@ public abstract class ModifyOperationBase<T extends XMOMGuiJson> {
     DOM dataType = (DOM) object.getDtOrException();
     Long guiHttpRevision = Utils.getGuiHttpRevision();
     MetaTag metaTag = ((MetaTagRequest) Utils.convertJsonToGeneralXynaObject(content.getTag(), guiHttpRevision)).getMetaTag();
+    XMLUtils.parseString(metaTag.getTag()); // validate whether tag content is valid XML 
 
     return new GBBaseObject(dataType, new DTMetaTag(metaTag));
   }
