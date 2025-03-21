@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.xdev.xfractmod.xmomlocks.LockManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Workspace;
@@ -120,7 +121,12 @@ public class XmomTypeEvent extends MessageOutputParameterEvent {
       if (m.matches()) {
         type = m.group(1);
         path = m.group(2);
-        rtc = new Workspace(m.group(3));
+        //String wsname = LockManagement.unmask(m.group(3));
+        String wsname = m.group(3);
+        //logger.warn("### read and masked workspace from corr id: " + wsname);
+        logger.warn("### read workspace from corr id: " + wsname);
+        //rtc = new Workspace(m.group(3));
+        rtc = new Workspace(wsname);
       }
     }
     xmomType = new XmomType(type, path, rtc);
