@@ -82,7 +82,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.StepSerial;
 import com.gip.xyna.xprc.xfractwfe.generation.StepThrow;
 
 public class Insertion {
-  
+
   public static enum QueryInsertStep {
     mapping, function, mappingOutput;
   }
