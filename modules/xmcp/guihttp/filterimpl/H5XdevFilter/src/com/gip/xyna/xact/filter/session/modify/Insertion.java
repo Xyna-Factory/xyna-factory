@@ -397,7 +397,7 @@ public class Insertion {
       }
     } else {
       insideObject = relativeToObject.getParent();
-      // Ã¼bergeordnetes Objekt finden
+      // übergeordnetes Objekt finden
       // TODO reicht das?
     }
     
@@ -633,7 +633,7 @@ public class Insertion {
       default:
         break;
     }
-    return new UpdateResponseJson(insideObject);//TODO fÃ¼r parent bei transfer ebenso?
+    return new UpdateResponseJson(insideObject);//TODO für parent bei transfer ebenso?
   }
   
   private <T> void process(Process process, ObjectAdapter<T> oa, GBBaseObject object, GBSubObject parent) {
