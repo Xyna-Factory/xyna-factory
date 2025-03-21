@@ -18,63 +18,63 @@
 --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Execute Refresh Diff Lists" TypeName="ExecuteRefreshDiffLists" TypePath="xmcp.gitintegration.ui" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Execute Refresh Diff Lists" Name="ExecuteRefreshDiffLists">
     <Input>
-      <Data ID="2774" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName2774"/>
+      <Data ID="3104" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection3104"/>
     </Input>
     <Output>
       <Data ID="2628" IsList="true" Label="Base Definition" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="baseDefinition2628"/>
-      <Data ID="3038" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName3038"/>
+      <Data ID="3173" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection3173"/>
       <Data ID="1398" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds1398"/>
     </Output>
-    <ServiceReference ID="2953" Label="Refresh Diff List Child Elements" ReferenceName="RefreshDiffListChildElements" ReferencePath="xmcp.gitintegration.ui">
-      <Source RefID="2952"/>
-      <Target RefID="2952"/>
+    <ServiceReference ID="3075" Label="Refresh Diff List Child Elements" ReferenceName="RefreshDiffListChildElements" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="3074"/>
+      <Target RefID="3074"/>
     </ServiceReference>
-    <Function ID="2952" Label="Refresh Diff List Child Elements">
-      <Source RefID="2953"/>
-      <Source RefID="2774"/>
-      <Target RefID="2953"/>
-      <Target RefID="2955"/>
-      <Target RefID="2956"/>
-      <Target RefID="2957"/>
-      <Invoke Operation="RefreshDiffListChildElements" ServiceID="2953">
-        <Source RefID="2774"/>
+    <Function ID="3074" Label="Refresh Diff List Child Elements">
+      <Source RefID="3075"/>
+      <Source RefID="3104"/>
+      <Target RefID="3075"/>
+      <Target RefID="3077"/>
+      <Target RefID="3078"/>
+      <Target RefID="3079"/>
+      <Invoke Operation="RefreshDiffListChildElements" ServiceID="3075">
+        <Source RefID="3104"/>
       </Invoke>
-      <Receive ServiceID="2953">
-        <Target RefID="2955"/>
-        <Target RefID="2956"/>
-        <Target RefID="2957"/>
+      <Receive ServiceID="3075">
+        <Target RefID="3077"/>
+        <Target RefID="3078"/>
+        <Target RefID="3079"/>
       </Receive>
     </Function>
-    <Data ID="2955" IsList="true" Label="Base Definition" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="baseDefinition2955">
-      <Source RefID="2952"/>
+    <Data ID="3077" IsList="true" Label="Base Definition" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="baseDefinition3077">
+      <Source RefID="3074"/>
     </Data>
-    <Data ID="2956" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName2956">
-      <Source RefID="2952"/>
+    <Data ID="3078" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection3078">
+      <Source RefID="3074"/>
     </Data>
-    <Data ID="2957" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds2957">
-      <Source RefID="2952"/>
+    <Data ID="3079" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds3079">
+      <Source RefID="3074"/>
     </Data>
     <Assign ID="1">
-      <Source RefID="2955"/>
-      <Source RefID="2956"/>
-      <Source RefID="2957"/>
+      <Source RefID="3077"/>
+      <Source RefID="3078"/>
+      <Source RefID="3079"/>
       <Target RefID="2628"/>
-      <Target RefID="3038"/>
+      <Target RefID="3173"/>
       <Target RefID="1398"/>
       <Copy>
-        <Source RefID="2955"/>
+        <Source RefID="3077"/>
         <Target RefID="2628"/>
       </Copy>
       <Copy>
-        <Source RefID="2956">
+        <Source RefID="3078">
           <Meta>
             <LinkType>UserConnected</LinkType>
           </Meta>
         </Source>
-        <Target RefID="3038"/>
+        <Target RefID="3173"/>
       </Copy>
       <Copy>
-        <Source RefID="2957"/>
+        <Source RefID="3079"/>
         <Target RefID="1398"/>
       </Copy>
     </Assign>

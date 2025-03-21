@@ -17,21 +17,57 @@
  */
 package com.gip.xyna.openapi;
 
+
+
+import java.util.List;
+
+
+
 public class PrimitiveTypeValidator<T> extends BaseValidator {
 
-    private T value;
+  private T value;
+  private List<T> allowableValues;
 
-    public void setValue(T value) {
-      this.value = value;
-    }
-    
-    public T getValue() {
-        return value;
+
+  @SuppressWarnings("unchecked")
+  public void setAllowableValues(T... values) {
+    allowableValues = List.of(values);
+  }
+
+
+  public void setValue(T value) {
+    this.value = value;
+  }
+
+
+  public T getValue() {
+    return value;
+  }
+
+
+  @Override
+  boolean isNull() {
+    return value == null;
+  }
+
+
+  @Override
+  public List<String> checkValid() {
+    List<String> errorMessages = super.checkValid();
+
+    if (!checkPossibleValues()) {
+      errorMessages.add(String.format("%s: Enum value \"%s\" is not one of %s", getName(), getValue(), allowableValues.toString()));
     }
 
-    @Override
-    boolean isNull() {
-        return value == null;
+    return errorMessages;
+  }
+
+
+  private boolean checkPossibleValues() {
+    if (allowableValues != null) {
+      return -1 != allowableValues.indexOf(getValue());
     }
+    return true;
+  }
 
 }

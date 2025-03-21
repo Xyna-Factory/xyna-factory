@@ -22,31 +22,35 @@
     </Input>
     <Output>
       <Data ID="10" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10"/>
-      <Data ID="6662" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName6662"/>
+      <Data ID="7128" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection7128"/>
       <Data ID="3967" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds3967"/>
     </Output>
-    <ServiceReference ID="4046" Label="Create Diff List Id Panel" ReferenceName="CreateDiffListIdPanel" ReferencePath="xmcp.gitintegration.ui">
-      <Source RefID="4045"/>
-      <Target RefID="4045"/>
+    <ServiceReference ID="8065" Label="Get Workspace Xml Status" ReferenceName="GetWorkspaceXmlStatus" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="8064"/>
+      <Target RefID="8064"/>
     </ServiceReference>
     <ServiceReference ID="4692" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="4691"/>
       <Target RefID="4691"/>
     </ServiceReference>
-    <Mappings ID="6067" Label="Mapping">
+    <ServiceReference ID="4046" Label="Create Diff List Id Panel" ReferenceName="CreateDiffListIdPanel" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="4045"/>
+      <Target RefID="4045"/>
+    </ServiceReference>
+    <Mappings ID="6908" Label="Mapping">
       <Input>
-        <Data ID="6154" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds6154">
-          <Source RefID="6067"/>
+        <Data ID="6959" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds6959">
+          <Source RefID="6908"/>
         </Data>
         <Source RefID="3890"/>
       </Input>
       <Output>
-        <Data ID="6347" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName6347">
-          <Source RefID="6067"/>
+        <Data ID="6933" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection6933">
+          <Source RefID="6908"/>
         </Data>
-        <Target RefID="6348"/>
+        <Target RefID="6934"/>
       </Output>
-      <Mapping>%1%.workspaceName=%0%.workspaceName</Mapping>
+      <Mapping>%1%=%0%.repositoryConnection</Mapping>
     </Mappings>
     <Function ID="4691" Label="get Own RuntimeContext">
       <Source RefID="4692"/>
@@ -147,6 +151,8 @@
       <Mapping>%1%.serviceRTC=%0%</Mapping>
       <Mapping>%1%.dataPath="%0%"</Mapping>
       <Mapping>%1%.serviceFQN="xmcp.gitintegration.ui.ExecuteSaveCurrentConfigToWorkspaceXml"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="git_int_diffs_refresh"</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
     </Mappings>
     <Mappings ID="6699" Label="Mapping">
       <Input>
@@ -209,6 +215,33 @@
       <Mapping>%3%.header.leftArea.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
       <Mapping>%3%.header.leftArea.children["2"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%2%</Mapping>
     </Mappings>
+    <Function ID="8064" Label="Get Workspace Xml Status">
+      <Source RefID="8065"/>
+      <Source RefID="6934"/>
+      <Target RefID="8065"/>
+      <Target RefID="8067"/>
+      <Invoke Operation="GetWorkspaceXmlStatus" ServiceID="8065">
+        <Source RefID="6934"/>
+      </Invoke>
+      <Receive ServiceID="8065">
+        <Target RefID="8067"/>
+      </Receive>
+    </Function>
+    <Mappings ID="7237" Label="Mapping">
+      <Input>
+        <Data ID="8100" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text8100">
+          <Source RefID="7237"/>
+        </Data>
+        <Source RefID="8067"/>
+      </Input>
+      <Output>
+        <Data ID="7796" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition7796">
+          <Source RefID="7237"/>
+        </Data>
+        <Target RefID="7797"/>
+      </Output>
+      <Mapping>%1%.label=concat("Workspace Xml Status = ", %0%.text)</Mapping>
+    </Mappings>
     <Mappings ID="23" Label="Mapping">
       <Input>
         <Data ID="4350" Label="Form Panel Definition Buttons" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4350">
@@ -236,17 +269,28 @@
         </Data>
         <Source RefID="3890"/>
       </Input>
+      <Input>
+        <Data ID="7870" Label="Form Panel Definition Status" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition7870">
+          <Source RefID="23"/>
+        </Data>
+        <Source RefID="7797">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
       <Output>
         <Data ID="32" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition32">
           <Source RefID="23"/>
         </Data>
         <Target RefID="33"/>
       </Output>
-      <Mapping>%3%.label=%2%.workspaceName</Mapping>
-      <Mapping>%3%.children["0"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%0%</Mapping>
-      <Mapping>%3%.children["1"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%1%</Mapping>
-      <Mapping>%3%.triggerChangeChildren.eventId="git_int_diffs_refresh"</Mapping>
-      <Mapping>%3%.closable="true"</Mapping>
+      <Mapping>%4%.label=%2%.workspaceName</Mapping>
+      <Mapping>%4%.children["0"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%0%</Mapping>
+      <Mapping>%4%.children["1"]=%3%</Mapping>
+      <Mapping>%4%.children["2"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%1%</Mapping>
+      <Mapping>%4%.triggerChangeChildren.eventId="git_int_diffs_refresh"</Mapping>
+      <Mapping>%4%.closable="true"</Mapping>
     </Mappings>
     <Data ID="33" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition33">
       <Source RefID="23"/>
@@ -265,16 +309,22 @@
     <Data ID="4651" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4651"/>
     <Data ID="4690" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext4690"/>
     <Data ID="5286" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition5286"/>
-    <Data ID="6348" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName6348">
-      <Source RefID="6067"/>
-    </Data>
     <Data ID="6702" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition6702"/>
+    <Data ID="6934" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection6934">
+      <Source RefID="6908"/>
+    </Data>
+    <Data ID="7797" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition7797">
+      <Source RefID="7237"/>
+    </Data>
+    <Data ID="8067" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text8067">
+      <Source RefID="8064"/>
+    </Data>
     <Assign ID="1">
       <Source RefID="33"/>
-      <Source RefID="6348"/>
+      <Source RefID="6934"/>
       <Source RefID="3890"/>
       <Target RefID="10"/>
-      <Target RefID="6662"/>
+      <Target RefID="7128"/>
       <Target RefID="3967"/>
       <Copy>
         <Source RefID="33">
@@ -285,8 +335,8 @@
         <Target RefID="10"/>
       </Copy>
       <Copy>
-        <Source RefID="6348"/>
-        <Target RefID="6662"/>
+        <Source RefID="6934"/>
+        <Target RefID="7128"/>
       </Copy>
       <Copy>
         <Source RefID="3890"/>

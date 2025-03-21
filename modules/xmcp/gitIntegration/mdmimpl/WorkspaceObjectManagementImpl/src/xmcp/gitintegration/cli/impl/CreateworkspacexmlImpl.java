@@ -21,28 +21,29 @@ package xmcp.gitintegration.cli.impl;
 import java.io.OutputStream;
 
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xmcp.xfcli.ReturnCode;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 
 import xmcp.gitintegration.WorkspaceXmlCreationConfig;
 import xmcp.gitintegration.cli.generated.Createworkspacexml;
-import xmcp.gitintegration.cli.tools.CreateWorkspaceXmlTools;
-import xmcp.gitintegration.cli.tools.CreateWorkspaceXmlTools.XmlCreationMode;
+import xmcp.gitintegration.tools.CreateWorkspaceXmlTools;
 
 
 public class CreateworkspacexmlImpl extends XynaCommandImplementation<Createworkspacexml> {
 
   public void execute(OutputStream statusOutputStream, Createworkspacexml payload) throws XynaException {
     CreateWorkspaceXmlTools tools = new CreateWorkspaceXmlTools();
-    WorkspaceXmlCreationConfig conf = new WorkspaceXmlCreationConfig();
-    conf.setWorkspaceName(payload.getWorkspaceName());
-    conf.setSplitResult(payload.getSplitResult());
-    conf.setForce(payload.getForce());
-    
-    XmlCreationMode mode = payload.getPrintResult() ? XmlCreationMode.ONLY_CREATE_STRING : XmlCreationMode.WRITE_FILE; 
-    String xml = tools.execute(conf, mode);
     if (payload.getPrintResult()) {
+      String xml = tools.createWorkspaceXmlString(payload.getWorkspaceName());
       writeLineToCommandLine(statusOutputStream, xml);
+    } else {
+      WorkspaceXmlCreationConfig conf = new WorkspaceXmlCreationConfig();
+      conf.unversionedSetWorkspaceName(payload.getWorkspaceName());
+      conf.unversionedSetSplitResult(payload.getSplitResult());
+      conf.unversionedSetForce(payload.getForce());
+      tools.execute(conf);
     }
+    writeEndToCommandLine(statusOutputStream, ReturnCode.SUCCESS);
   }
   
 }
