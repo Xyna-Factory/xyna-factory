@@ -50,6 +50,8 @@ public enum ObjectType {
   memberMethod,
   memberMethodsArea,
   overriddenMethodsArea,
+  metaTag,
+  metaTagArea,
 
   queryFilterCriterion,
   querySortCriterion,

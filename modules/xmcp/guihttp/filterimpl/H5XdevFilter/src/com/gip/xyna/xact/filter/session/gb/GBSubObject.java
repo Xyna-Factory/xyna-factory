@@ -36,6 +36,7 @@ import com.gip.xyna.xact.filter.session.gb.GBSubObjectUtils.FormulaListAdapter;
 import com.gip.xyna.xact.filter.session.gb.GBSubObjectUtils.LibListAdapter;
 import com.gip.xyna.xact.filter.session.gb.GBSubObjectUtils.MemberMethodListAdapter;
 import com.gip.xyna.xact.filter.session.gb.GBSubObjectUtils.MemberVarListAdapter;
+import com.gip.xyna.xact.filter.session.gb.GBSubObjectUtils.MetaTagListAdapter;
 import com.gip.xyna.xact.filter.session.gb.GBSubObjectUtils.QueryFilterListAdapter;
 import com.gip.xyna.xact.filter.session.gb.GBSubObjectUtils.QuerySelectionMaskListAdapter;
 import com.gip.xyna.xact.filter.session.gb.GBSubObjectUtils.QuerySortListAdapter;
@@ -60,9 +61,9 @@ import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResult;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResultEntry;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSelect;
 import com.gip.xyna.xmcp.XynaMultiChannelPortal;
-import com.gip.xyna.xnwh.selection.parsing.ArchiveIdentifier;
 import com.gip.xyna.xnwh.selection.parsing.SearchRequestBean;
 import com.gip.xyna.xnwh.selection.parsing.SelectionParser;
+import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM.OperationInformation;
 import com.gip.xyna.xprc.xfractwfe.generation.Distinction;
@@ -72,7 +73,6 @@ import com.gip.xyna.xprc.xfractwfe.generation.FormulaContainer;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.Step;
 import com.gip.xyna.xprc.xfractwfe.generation.Step.Catchable;
-import com.gip.xyna.xprc.xfractwfe.generation.Step.DistinctionType;
 import com.gip.xyna.xprc.xfractwfe.generation.StepCatch;
 import com.gip.xyna.xprc.xfractwfe.generation.StepChoice;
 import com.gip.xyna.xprc.xfractwfe.generation.StepForeach;
@@ -340,6 +340,41 @@ public class GBSubObject extends GBBaseObject {
       return new GBSubObject(gbo, oi, (DomOrExceptionGenerationBase)gbo.getGenerationBase(), new MemberVarInfo(ObjectId.parseMemberVarNumber(oi)));
     case memberMethod:
       return new GBSubObject(gbo, oi, (DomOrExceptionGenerationBase)gbo.getGenerationBase(), new MemberMethodInfo(ObjectId.parseMemberMethodNumber(oi)));
+    case metaTag:
+    case metaTagArea:
+      GBSubObject subObject = new GBSubObject(gbo, oi, (DomOrExceptionGenerationBase)gbo.getGenerationBase(), oi.getType());
+      int metaTagIdx = oi.getType() == ObjectType.metaTag ? ObjectId.getMetaTagIdx(oi) : -1;
+      String rawMetaTag = null;
+
+      if (oi.getBaseId() != null && oi.getBaseId().length() > 0) {
+        ObjectId subOi = ObjectId.parse(oi.getBaseId());
+        if (subOi.getType() == ObjectType.memberVar) {
+          // meta tag area of a member variable
+          subObject.memberVarInfo = new MemberVarInfo(ObjectId.parseMemberVarNumber(subOi));
+
+          if (oi.getType() == ObjectType.metaTag) {
+            AVariable var = gbo.getDOM().getMemberVars().get(subObject.memberVarInfo.getIndex());
+            rawMetaTag = var.getUnknownMetaTags().get(metaTagIdx).strip();
+          }
+        } else if (subOi.getType() == ObjectType.memberMethod || subOi.getType() == ObjectType.staticMethod) {
+          // meta tag area of a member service
+          subObject.memberMethodInfo = new MemberMethodInfo(ObjectId.parseMemberMethodNumber(subOi));
+          
+          if (oi.getType() == ObjectType.metaTag) {
+            Operation op = gbo.getDOM().getOperations().get(subObject.memberMethodInfo.getIndex());
+            rawMetaTag = op.getUnknownMetaTags().get(metaTagIdx).strip();
+          }
+        }
+      } else if (oi.getType() == ObjectType.metaTag) {
+        // global meta tag area of data type
+        rawMetaTag = gbo.getDOM().getUnknownMetaTags().get(metaTagIdx).strip();
+      }
+
+      if (rawMetaTag != null) {GBSubObjectUtils.createDTMetaTag(rawMetaTag);
+        subObject.metaTag = GBSubObjectUtils.createDTMetaTag(rawMetaTag);
+      }
+
+      return subObject;
     case memberVarArea:
     case memberMethodsArea:
     case typeInfoArea:
@@ -422,6 +457,27 @@ public class GBSubObject extends GBBaseObject {
         case memberVar:
         case typeInfoArea:
           return new GBSubObject(root, new ObjectId(ObjectType.datatype, null), getDtOrException());
+        case metaTag:
+          GBSubObject subObject = new GBSubObject(root, new ObjectId(ObjectType.datatype, null), getDtOrException());
+
+          if (objectId.getBaseId() != null && objectId.getBaseId().length() > 0) {
+            ObjectId subOi;
+            try {
+              subOi = ObjectId.parse(objectId.getBaseId());
+            } catch (UnknownObjectIdException e) {
+              return null;
+            }
+
+            if (subOi.getType() == ObjectType.memberVar) {
+              // meta tag area of a member variable
+              subObject.memberVarInfo = new MemberVarInfo(ObjectId.parseMemberVarNumber(subOi));
+            } else {
+              // meta tag area of a member service
+              subObject.memberMethodInfo = new MemberMethodInfo(ObjectId.parseMemberMethodNumber(subOi));
+            }
+          }
+
+          return subObject;
         case methodVarArea:
           return new GBSubObject(root, new ObjectId(ObjectType.operation, String.valueOf(Utils.getOperationIndex(getOperation()))), getDtOrException(), getOperation());
         case variable:
@@ -692,6 +748,10 @@ public class GBSubObject extends GBBaseObject {
   
   public List<StaticMethod> getStaticMethodListAdapter() {
     return new StaticMethodListAdapter((DOM)dtOrException);
+  }
+
+  public List<DTMetaTag> getMetaTagListAdapter() {
+    return new MetaTagListAdapter((DOM)dtOrException, memberVarInfo, memberMethodInfo);
   }
 
   public List<Lib> getLibListAdapter() {

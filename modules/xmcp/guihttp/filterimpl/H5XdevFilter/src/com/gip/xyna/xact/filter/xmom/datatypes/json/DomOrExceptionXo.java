@@ -140,15 +140,20 @@ public abstract class DomOrExceptionXo implements HasXoRepresentation {
     return area;
   }
   
-  public static MetaTagArea createEmptyMetaTagArea() {
+  public static MetaTagArea createEmptyMetaTagArea(String baseId) {
     MetaTagArea area = new MetaTagArea();
     area.unversionedSetName(Tags.META_TAG_AREA);
+    area.setId(ObjectId.createId(ObjectType.metaTagArea, baseId));
     return area;
   }
 
 
   public static MetaTagArea createMetaTagArea(List<String> unknownMetaTags, boolean readonly) {
-    MetaTagArea result = createEmptyMetaTagArea();
+	  return createMetaTagArea(unknownMetaTags, readonly, null);
+  }
+
+  public static MetaTagArea createMetaTagArea(List<String> unknownMetaTags, boolean readonly, String baseId) {
+    MetaTagArea result = createEmptyMetaTagArea(baseId);
     result.unversionedSetItemTypes(List.of(MetaTag.class.getCanonicalName()));
     List<Item> list = new ArrayList<Item>();
     if (unknownMetaTags == null) {
@@ -156,7 +161,7 @@ public abstract class DomOrExceptionXo implements HasXoRepresentation {
     }
     for (int i = 0; i < unknownMetaTags.size(); i++) {
       MetaTag tag = new MetaTag.Builder()
-          .id(ObjectId.createMetaTagId(i))
+          .id(ObjectId.createMetaTagId(i, baseId))
           .tag(unknownMetaTags.get(i))
           .instance();
       list.add(tag);

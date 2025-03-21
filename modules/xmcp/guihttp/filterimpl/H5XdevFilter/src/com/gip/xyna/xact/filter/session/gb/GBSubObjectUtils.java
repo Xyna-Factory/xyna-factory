@@ -19,6 +19,7 @@ package com.gip.xyna.xact.filter.session.gb;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.log4j.Logger;
 
@@ -31,10 +32,13 @@ import com.gip.xyna.xact.filter.session.exceptions.MissingObjectException;
 import com.gip.xyna.xact.filter.session.exceptions.UnknownObjectIdException;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.Branch;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.Case;
+import com.gip.xyna.xact.filter.session.gb.GBBaseObject.DTMetaTag;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.Formula;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.Lib;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.MemberMethod;
+import com.gip.xyna.xact.filter.session.gb.GBBaseObject.MemberMethodInfo;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.MemberVar;
+import com.gip.xyna.xact.filter.session.gb.GBBaseObject.MemberVarInfo;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.StaticMethod;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.Variable;
 import com.gip.xyna.xact.filter.session.gb.adapter.ListAdapter;
@@ -42,8 +46,8 @@ import com.gip.xyna.xact.filter.session.gb.vars.IdentifiedVariables;
 import com.gip.xyna.xact.filter.session.gb.vars.IdentifiedVariablesStepMapping;
 import com.gip.xyna.xact.filter.session.gb.vars.IdentifiedVariablesStepWithWfVars;
 import com.gip.xyna.xact.filter.util.AVariableIdentification;
-import com.gip.xyna.xact.filter.util.ExpressionUtils;
 import com.gip.xyna.xact.filter.util.AVariableIdentification.VarUsageType;
+import com.gip.xyna.xact.filter.util.ExpressionUtils;
 import com.gip.xyna.xact.filter.util.QueryUtils;
 import com.gip.xyna.xact.filter.util.Utils;
 import com.gip.xyna.xact.filter.xmom.workflows.enums.Tags;
@@ -56,6 +60,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.Distinction.BranchInfo;
 import com.gip.xyna.xprc.xfractwfe.generation.Distinction.CaseInfo;
 import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.FormulaContainer;
+import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.Step;
 import com.gip.xyna.xprc.xfractwfe.generation.StepCatch;
 import com.gip.xyna.xprc.xfractwfe.generation.StepChoice;
@@ -64,6 +69,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.StepMapping;
 import com.gip.xyna.xprc.xfractwfe.generation.StepParallel;
 import com.gip.xyna.xprc.xfractwfe.generation.StepSerial;
 
+import xmcp.processmodeller.datatypes.MetaTag;
 import xnwh.persistence.QueryParameter;
 import xnwh.persistence.SelectionMask;
 import xnwh.persistence.SortCriterion;
@@ -712,6 +718,88 @@ public class GBSubObjectUtils {
 
   }
 
+  public static class MetaTagListAdapter extends ListAdapter<DTMetaTag> {
+
+    private DOM dataType;
+    private MemberVarInfo memberVarInfo;
+    private MemberMethodInfo memberMethodInfo;
+
+    public MetaTagListAdapter(DOM dataType, MemberVarInfo memberVarInfo, MemberMethodInfo memberMethodInfo) {
+      this.dataType = dataType;
+      this.memberVarInfo = memberVarInfo;
+      this.memberMethodInfo = memberMethodInfo;
+    }
+
+    @Override
+    public DTMetaTag get(int index) {
+      String tagXml = getMetaTags().get(index);
+      return createDTMetaTag(tagXml);
+    }
+
+    @Override
+    public DTMetaTag set(int index, DTMetaTag element) {
+      getMetaTags().set(index, element.getMetaTag().getTag());
+      return get(index);
+    }
+
+    @Override
+    public int size() {
+      return getMetaTags().size();
+    }
+
+    @Override
+    public void add(int index, DTMetaTag element) {
+      List<String> metaTags = getMetaTags();
+      metaTags.add(index, element.getMetaTag().getTag());
+    }
+
+    @Override
+    public DTMetaTag remove(int index) {
+      List<String> metaTags = getMetaTags();
+      DTMetaTag removedTag = createDTMetaTag(metaTags.get(index));
+      metaTags.remove(index);
+
+      return removedTag;
+    }
+
+    @Override
+    public int indexOf(Object o) {
+      DTMetaTag dtMetaTag = ((DTMetaTag)o);
+      String metaTag = dtMetaTag.getMetaTag().getTag(); 
+      List<String> metaTags = getMetaTags();
+      for (int i = 0; i < metaTags.size(); i++) {
+        if (Objects.equals(metaTags.get(i).strip(), metaTag.strip())) {
+          return i;
+        }
+      }
+
+      return -1;
+    }
+
+    private List<String> getMetaTags() {
+      List<String> metaTags;
+      if (memberVarInfo != null) {
+        AVariable var = dataType.getMemberVars().get(memberVarInfo.getIndex());
+        metaTags = var.getUnknownMetaTags() != null ? var.getUnknownMetaTags() : new ArrayList<String>();
+        var.setUnknownMetaTags(metaTags);
+      } else if (memberMethodInfo != null) {
+        Operation operation = dataType.getOperations().get(memberMethodInfo.getIndex());
+        metaTags = operation.getUnknownMetaTags() != null ? operation.getUnknownMetaTags() : new ArrayList<String>();
+        operation.setUnknownMetaTags(metaTags);
+      } else {
+        metaTags = dataType.getUnknownMetaTags() != null ? dataType.getUnknownMetaTags() : new ArrayList<String>();
+        dataType.setUnknownMetaTags(metaTags);
+      }
+      
+      return metaTags;
+    }
+    
+  }
+
+  public static DTMetaTag createDTMetaTag(String xml) {
+    MetaTag metaTag = new MetaTag(xml.strip());
+    return new DTMetaTag(metaTag);
+  }
 
   public static abstract class ObjectAdapter<T> {
 
@@ -741,6 +829,8 @@ public class GBSubObjectUtils {
         return new MemberMethodObjectAdapter();
       case staticMethod:
         return new StaticMethodObjectAdapter();
+      case metaTag:
+        return new MetaTagObjectAdapter();
       case serviceGroupLib:
         return new LibObjectAdapter();
       default:
@@ -945,6 +1035,20 @@ public class GBSubObjectUtils {
       return object.getMemberVar();
     }
     
+  }
+
+  public static class MetaTagObjectAdapter extends ObjectAdapter<DTMetaTag> {
+
+    @Override
+    public List<DTMetaTag> getListAdapter(GBSubObject object) {
+      return object.getMetaTagListAdapter();
+    }
+
+    @Override
+    public DTMetaTag getObject(GBBaseObject object) {
+      return object.getMetaTag();
+    }
+
   }
 
   public static class LibObjectAdapter extends ObjectAdapter<Lib> {
