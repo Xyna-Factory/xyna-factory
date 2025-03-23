@@ -116,7 +116,12 @@ public class MessageBusSubscription implements Serializable, Pathable {
       return true;
     }
     if (filterPattern == null) {
-      filterPattern = Pattern.compile(mask(filter));
+      //filterPattern = Pattern.compile(filter);
+      if (filter.startsWith("CORRID__")) {
+        filterPattern = Pattern.compile(mask(filter));
+      } else {
+        filterPattern = Pattern.compile(filter);
+      }
     }
     Matcher filterMatcher = filterPattern.matcher(correlation);
     //return filterMatcher.matches();
@@ -126,6 +131,7 @@ public class MessageBusSubscription implements Serializable, Pathable {
     return matches;
   }
 
+  
   public static String mask(String input) {
     String tmp = input.replace("\\", "\\\\");
     tmp = tmp.replaceAll("[(]", "\\\\(");
