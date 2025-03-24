@@ -295,10 +295,10 @@ System.out.println("shortenedVarName: " + shortenedVarName);
 }</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation ID="6" IsStatic="false" Label="Get Member List Value" Name="getMemberListValue">
+    <Operation ID="14" IsStatic="false" Label="Get Member List Value" Name="getMemberListValue">
       <Input/>
       <Output>
-        <Data ID="5" Label="list" VariableName="list" IsList="true">
+        <Data ID="13" Label="list" VariableName="list" IsList="true">
           <Meta>
             <Type>String</Type>
           </Meta>
