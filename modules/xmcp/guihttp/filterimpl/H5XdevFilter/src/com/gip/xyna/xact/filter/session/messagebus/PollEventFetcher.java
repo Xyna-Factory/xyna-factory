@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
+
 import com.gip.xyna.Department;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.SerializablePair;
@@ -317,10 +318,10 @@ public class PollEventFetcher {
       if (correlationToSubscriptionIds.keySet().contains(correlationId)) {
         return;
       }
-
-      addSubscription(correlationId, PredefinedMessagePath.XYNA_MODELLER_LOCKS);
-      addSubscription(correlationId, PredefinedMessagePath.XYNA_MODELLER_UNLOCKS);
-      addSubscription(correlationId, PredefinedMessagePath.XYNA_MODELLER_AUTOSAVES);
+      
+      addSubscriptionMasked(correlationId, PredefinedMessagePath.XYNA_MODELLER_LOCKS);
+      addSubscriptionMasked(correlationId, PredefinedMessagePath.XYNA_MODELLER_UNLOCKS);      
+      addSubscriptionMasked(correlationId, PredefinedMessagePath.XYNA_MODELLER_AUTOSAVES);
     } catch (Exception e) {
       Utils.logError("Multiuser: Could not add message bus subscriptions for " + gbo.getFQName().getFqName(), e);
     }
@@ -341,7 +342,7 @@ public class PollEventFetcher {
         if (!correlationToSubscriptionIds.keySet().contains(correlationId)) {
           return;
         }
-  
+
         removeSubscription(correlationId);
       }
     } catch (Exception e) {
@@ -350,27 +351,52 @@ public class PollEventFetcher {
   }
 
 
-  private void addSubscription(String correlationId, PredefinedMessagePath messagePath) {
-    addSubscription(correlationId, messagePath.getProduct(), messagePath.getContext());
+  private void addSubscriptionMasked(String correlationId, PredefinedMessagePath messagePath) {
+    String masked = mask(correlationId);
+    addSubscription(correlationId, messagePath.getProduct(), messagePath.getContext(), masked);
   }
 
+  private void addSubscription(String correlationId, PredefinedMessagePath messagePath) {
+    addSubscription(correlationId, messagePath.getProduct(), messagePath.getContext(), correlationId);
+  }
 
   private void addSubscription(String correlationId, String product, String context) {
+    addSubscription(correlationId, product, context, correlationId);
+  }
+  
+  private void addSubscription(String correlationIdForMap, String product, String context, String correlationIdForPortal) {
     synchronized(pollRequestUUIDToEventsMap) {
       Set<Long> subscriptionIds;
-      if (!correlationToSubscriptionIds.containsKey(correlationId)) {
+      if (!correlationToSubscriptionIds.containsKey(correlationIdForMap)) {
         subscriptionIds = ConcurrentHashMap.newKeySet();
-        correlationToSubscriptionIds.put(correlationId, subscriptionIds);
+        correlationToSubscriptionIds.put(correlationIdForMap, subscriptionIds);
       } else {
-        subscriptionIds = correlationToSubscriptionIds.get(correlationId);
+        subscriptionIds = correlationToSubscriptionIds.get(correlationIdForMap);
       }
 
-      MessageSubscriptionParameter subscriptionParameter = new MessageSubscriptionParameter(subscriptionIdGenerator.getAndIncrement(), product, context, correlationId);
+      MessageSubscriptionParameter subscriptionParameter = new MessageSubscriptionParameter(subscriptionIdGenerator.getAndIncrement(), 
+                                                                                            product, context, correlationIdForPortal);
       subscriptionIds.add(subscriptionParameter.getId());
       messageBusManagementPortal.addSubscription(sessionId, subscriptionParameter);
     }
   }
 
+  public static String mask(String input) {
+    String tmp = input.replace("\\", "\\\\");
+    tmp = tmp.replaceAll("[(]", "\\\\(");
+    tmp = tmp.replaceAll("[)]", "\\\\)");
+    tmp = tmp.replaceAll("[.]", "\\\\.");
+    tmp = tmp.replaceAll("[*]", "\\\\*");
+    tmp = tmp.replaceAll("[+]", "\\\\+");
+    tmp = tmp.replaceAll("[^]", "\\\\^");
+    tmp = tmp.replaceAll("[?]", "\\\\?");
+    tmp = tmp.replaceAll("[{]", "\\\\{");
+    tmp = tmp.replaceAll("[}]", "\\\\}");
+    tmp = tmp.replaceAll("[\\[]", "\\\\[");
+    tmp = tmp.replaceAll("[\\]]", "\\\\]");
+    return tmp;
+  }
+  
 
   private void removeSubscription(String correlationId) {
     if (!correlationToSubscriptionIds.containsKey(correlationId)) {

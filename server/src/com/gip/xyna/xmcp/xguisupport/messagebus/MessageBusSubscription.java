@@ -116,30 +116,17 @@ public class MessageBusSubscription implements Serializable, Pathable {
       return true;
     }
     if (filterPattern == null) {
-      //filterPattern = Pattern.compile(filter);
-      if (filter.startsWith("CORRID__")) {
-        filterPattern = Pattern.compile(mask(filter));
-      } else {
-        filterPattern = Pattern.compile(filter);
-      }
+      filterPattern = Pattern.compile(filter);
     }
     Matcher filterMatcher = filterPattern.matcher(correlation);
-    //return filterMatcher.matches();
     boolean matches = filterMatcher.matches();
-    _logger.warn("### trying to match pattern " + filterPattern.toString() + " with correlation " + correlation + 
-                 " -> " + matches);
+    if (_logger.isDebugEnabled()) {
+      _logger.debug("Trying to match pattern " + filterPattern.toString() + " with correlation " + correlation +
+                    " -> " + matches); 
+    }
     return matches;
   }
 
-  
-  public static String mask(String input) {
-    String tmp = input.replace("\\", "\\\\");
-    tmp = tmp.replaceAll("[(]", "\\\\(");
-    tmp = tmp.replaceAll("[)]", "\\\\)");
-    tmp = tmp.replaceAll("[.]", "\\\\.");
-    return tmp;
-  }
-  
 
   public String[] getPath() { // cache path
     if (filter == null) {

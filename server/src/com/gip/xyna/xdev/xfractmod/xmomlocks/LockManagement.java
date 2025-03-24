@@ -24,9 +24,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import org.apache.log4j.Logger;
-
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.Department;
 import com.gip.xyna.FunctionGroup;
 import com.gip.xyna.XynaFactory;
@@ -54,8 +51,6 @@ import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 
 public class LockManagement extends FunctionGroup implements LockManagementPortal, SessionFinalizationHandler { // rename or separate Autosaves?
 
-  private static Logger _logger = CentralFactoryLogging.getLogger(LockManagement.class);
-  
   public final static String DEFAULT_NAME = "Lock Management";
   
   public final static String MESSAGE_PAYLOAD_KEY_DOCUMENT = "Document";
@@ -341,44 +336,9 @@ public class LockManagement extends FunctionGroup implements LockManagementPorta
       // we expect this to throw
       revisionManagement.getWorkspace(path.getRevision());
     }
-    //String contextname = context.getName().replaceAll("[^_a-zA-Z0-9]", "_");
-    String contextname = context.getName(); //.replaceAll("[^_a-zA-Z0-9]", "_");
-    _logger.warn("### contextname for correlationid: " + contextname);
-    return "CORRID__" + type + "-" + path.getPath() + "-WS:\"" + context.getName()+"\"";
-    //String ret = type + "-" + path.getPath() + "-WS:\"" + mask(contextname)+"\"";
-    //_logger.warn("### created corr id: " + ret);
-    //return ret;
+    return type + "-" + path.getPath() + "-WS:\"" + context.getName()+"\"";
   }
   
-  public static String createMaskedCorrelation(Path path, String type) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
-    String ret = mask(createCorrelation(path, type));
-    _logger.warn("### created masked corr id: " + ret);
-    return ret;
-  }
-  
-  public static String mask(String input) {
-    String tmp = input.replace("\\", "\\\\");
-    tmp = tmp.replaceAll("[(]", "\\\\(");
-    tmp = tmp.replaceAll("[)]", "\\\\)");
-    tmp = tmp.replaceAll("[.]", "\\\\.");
-    return tmp;
-  }
-  
-  public static String unmask(String input) {
-    String[] parts = input.split("\\\\\\\\", -1);
-    String ret = "";
-    int i = 0;
-    for (String str : parts) {
-      ret += str.replace("\\", "");
-      if (i < parts.length - 1) {
-        ret += "\\";
-      }
-      i++;
-    }
-    return ret;
-  }
-  
-
   private static Pair<String, Path> splitCorrelation(String correlation) {
     String[] splitted = correlation.split("-", 3);
     String type = splitted[0];
