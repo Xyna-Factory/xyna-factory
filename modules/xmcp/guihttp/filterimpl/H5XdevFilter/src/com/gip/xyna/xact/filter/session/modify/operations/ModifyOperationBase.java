@@ -251,11 +251,11 @@ public abstract class ModifyOperationBase<T extends XMOMGuiJson> {
     throw new java.lang.UnsupportedOperationException();
   }
   
-  protected void modifyMetaTag(DOM dom) throws UnknownObjectIdException, MissingObjectException, XynaException, UnsupportedOperationException, MergeConflictException {
+  protected void modifyMetaTag(DomOrExceptionGenerationBase dtOrException) throws UnknownObjectIdException, MissingObjectException, XynaException, UnsupportedOperationException, MergeConflictException {
     throw new java.lang.UnsupportedOperationException();
   }
   
-  protected void modifyMetaTagArea(DOM dom) throws UnsupportedOperationException,
+  protected void modifyMetaTagArea(DomOrExceptionGenerationBase dtOrException) throws UnsupportedOperationException,
       UnknownObjectIdException, MissingObjectException, XynaException, InvalidJSONException, UnexpectedJSONContentException {
     throw new java.lang.UnsupportedOperationException();
   }
@@ -400,10 +400,10 @@ public abstract class ModifyOperationBase<T extends XMOMGuiJson> {
       modifyMemberMethodArea((DOM)object.getDtOrException());
       break;
     case metaTag:
-      modifyMetaTag((DOM)object.getDtOrException());
+      modifyMetaTag((DomOrExceptionGenerationBase)object.getDtOrException());
       break;
     case metaTagArea:
-      modifyMetaTagArea((DOM)object.getDtOrException());
+      modifyMetaTagArea((DomOrExceptionGenerationBase)object.getDtOrException());
       break;
     case typeInfoArea:
       modifyTypeInfoArea(object.getDtOrException());
@@ -663,12 +663,12 @@ public abstract class ModifyOperationBase<T extends XMOMGuiJson> {
   }
 
   private GBBaseObject createMetaTag(final GBSubObject parent, MetaTagJson content) throws XynaException {
-    DOM dataType = (DOM) object.getDtOrException();
+    DomOrExceptionGenerationBase dtOrException = (DomOrExceptionGenerationBase) object.getDtOrException();
     Long guiHttpRevision = Utils.getGuiHttpRevision();
-    MetaTag metaTag = ((MetaTagRequest) Utils.convertJsonToGeneralXynaObject(content.getTag(), guiHttpRevision)).getMetaTag();
+    MetaTag metaTag = (MetaTag)Utils.convertJsonToGeneralXynaObject(content.getTag(), guiHttpRevision);
     XMLUtils.parseString(metaTag.getTag()); // validate whether tag content is valid XML 
 
-    return new GBBaseObject(dataType, new DTMetaTag(metaTag));
+    return new GBBaseObject(dtOrException, new DTMetaTag(metaTag));
   }
 
   private GBBaseObject createStepChoice( GBSubObject parent, DistinctionJson content) throws XynaException {

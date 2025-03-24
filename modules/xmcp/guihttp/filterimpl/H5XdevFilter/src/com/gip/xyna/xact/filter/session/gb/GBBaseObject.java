@@ -705,13 +705,27 @@ public class GBBaseObject {
   public static class DTMetaTag {
 
     private MetaTag metaTag;
+    private Integer idx;
 
     public DTMetaTag(MetaTag metaTag) {
+      this(metaTag, null);
+    }
+
+    public DTMetaTag(MetaTag metaTag, Integer idx) {
       this.metaTag = metaTag;
+      this.idx = idx;
     }
 
     public MetaTag getMetaTag() {
       return metaTag;
+    }
+
+    public Integer getIdx() {
+      return idx;
+    }
+
+    public void setIdx(Integer idx) {
+      this.idx = idx;
     }
   }
   

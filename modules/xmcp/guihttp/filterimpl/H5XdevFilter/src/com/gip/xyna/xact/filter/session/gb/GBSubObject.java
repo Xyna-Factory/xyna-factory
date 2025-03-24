@@ -342,39 +342,7 @@ public class GBSubObject extends GBBaseObject {
       return new GBSubObject(gbo, oi, (DomOrExceptionGenerationBase)gbo.getGenerationBase(), new MemberMethodInfo(ObjectId.parseMemberMethodNumber(oi)));
     case metaTag:
     case metaTagArea:
-      GBSubObject subObject = new GBSubObject(gbo, oi, (DomOrExceptionGenerationBase)gbo.getGenerationBase(), oi.getType());
-      int metaTagIdx = oi.getType() == ObjectType.metaTag ? ObjectId.getMetaTagIdx(oi) : -1;
-      String rawMetaTag = null;
-
-      if (oi.getBaseId() != null && oi.getBaseId().length() > 0) {
-        ObjectId subOi = ObjectId.parse(oi.getBaseId());
-        if (subOi.getType() == ObjectType.memberVar) {
-          // meta tag area of a member variable
-          subObject.memberVarInfo = new MemberVarInfo(ObjectId.parseMemberVarNumber(subOi));
-
-          if (oi.getType() == ObjectType.metaTag) {
-            AVariable var = gbo.getDOM().getMemberVars().get(subObject.memberVarInfo.getIndex());
-            rawMetaTag = var.getUnknownMetaTags().get(metaTagIdx).strip();
-          }
-        } else if (subOi.getType() == ObjectType.memberMethod || subOi.getType() == ObjectType.staticMethod) {
-          // meta tag area of a member service
-          subObject.memberMethodInfo = new MemberMethodInfo(ObjectId.parseMemberMethodNumber(subOi));
-          
-          if (oi.getType() == ObjectType.metaTag) {
-            Operation op = gbo.getDOM().getOperations().get(subObject.memberMethodInfo.getIndex());
-            rawMetaTag = op.getUnknownMetaTags().get(metaTagIdx).strip();
-          }
-        }
-      } else if (oi.getType() == ObjectType.metaTag) {
-        // global meta tag area of data type
-        rawMetaTag = gbo.getDOM().getUnknownMetaTags().get(metaTagIdx).strip();
-      }
-
-      if (rawMetaTag != null) {GBSubObjectUtils.createDTMetaTag(rawMetaTag);
-        subObject.metaTag = GBSubObjectUtils.createDTMetaTag(rawMetaTag);
-      }
-
-      return subObject;
+      return createMetaTagOrArea(gbo, oi);
     case memberVarArea:
     case memberMethodsArea:
     case typeInfoArea:
@@ -397,6 +365,42 @@ public class GBSubObject extends GBBaseObject {
     }
   }
   
+  private static GBSubObject createMetaTagOrArea(GenerationBaseObject gbo, ObjectId oi) throws UnknownObjectIdException {
+    GBSubObject subObject = new GBSubObject(gbo, oi, (DomOrExceptionGenerationBase)gbo.getGenerationBase(), oi.getType());
+    int metaTagIdx = oi.getType() == ObjectType.metaTag ? ObjectId.getMetaTagIdx(oi) : -1;
+    String rawMetaTag = null;
+
+    if (oi.getBaseId() != null && oi.getBaseId().length() > 0) {
+      ObjectId subOi = ObjectId.parse(oi.getBaseId());
+      if (subOi.getType() == ObjectType.memberVar) {
+        // meta tag area of a member variable
+        subObject.memberVarInfo = new MemberVarInfo(ObjectId.parseMemberVarNumber(subOi));
+
+        if (oi.getType() == ObjectType.metaTag) {
+          AVariable var = gbo.getDOM().getMemberVars().get(subObject.memberVarInfo.getIndex());
+          rawMetaTag = var.getUnknownMetaTags().get(metaTagIdx).strip();
+        }
+      } else if (subOi.getType() == ObjectType.memberMethod || subOi.getType() == ObjectType.staticMethod) {
+        // meta tag area of a member service
+        subObject.memberMethodInfo = new MemberMethodInfo(ObjectId.parseMemberMethodNumber(subOi));
+        
+        if (oi.getType() == ObjectType.metaTag) {
+          Operation op = gbo.getDOM().getOperations().get(subObject.memberMethodInfo.getIndex());
+          rawMetaTag = op.getUnknownMetaTags().get(metaTagIdx).strip();
+        }
+      }
+    } else if (oi.getType() == ObjectType.metaTag) {
+      // global meta tag area of data type
+      rawMetaTag = gbo.getDOM().getUnknownMetaTags().get(metaTagIdx).strip();
+    }
+
+    if (rawMetaTag != null) {
+      subObject.metaTag = GBSubObjectUtils.createDTMetaTag(rawMetaTag, metaTagIdx);
+    }
+
+    return subObject;
+  }
+
   public GBSubObject getParent() {
     if(step != null) {
       ObjectId stepId = ObjectId.createStepId(step);
@@ -751,7 +755,7 @@ public class GBSubObject extends GBBaseObject {
   }
 
   public List<DTMetaTag> getMetaTagListAdapter() {
-    return new MetaTagListAdapter((DOM)dtOrException, memberVarInfo, memberMethodInfo);
+    return new MetaTagListAdapter((DomOrExceptionGenerationBase)dtOrException, memberVarInfo, memberMethodInfo);
   }
 
   public List<Lib> getLibListAdapter() {

@@ -19,7 +19,6 @@ package com.gip.xyna.xact.filter.session.gb;
 
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xact.filter.session.exceptions.UnknownObjectIdException;
-import com.gip.xyna.xact.filter.session.gb.ObjectId.ObjectIdPrefix;
 import com.gip.xyna.xact.filter.util.AVariableIdentification.VarUsageType;
 import com.gip.xyna.xprc.xfractwfe.generation.Step;
 import com.gip.xyna.xprc.xfractwfe.generation.WF.WFStep;

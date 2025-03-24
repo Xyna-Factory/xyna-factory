@@ -654,7 +654,7 @@ public class InsertOperation extends ModifyOperationBase<InsertJson> {
   }
 
   @Override
-  protected void modifyMetaTagArea(DOM dom) throws UnsupportedOperationException, UnknownObjectIdException, MissingObjectException, XynaException, InvalidJSONException, UnexpectedJSONContentException {
+  protected void modifyMetaTagArea(DomOrExceptionGenerationBase dtOrException) throws UnsupportedOperationException, UnknownObjectIdException, MissingObjectException, XynaException, InvalidJSONException, UnexpectedJSONContentException {
     insert();
   }
 

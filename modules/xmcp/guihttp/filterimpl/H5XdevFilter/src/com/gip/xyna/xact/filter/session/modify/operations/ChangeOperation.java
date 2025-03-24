@@ -713,10 +713,10 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
   }
   
   @Override
-  protected void modifyMetaTag(DOM dom) throws XPRC_XmlParsingException {
+  protected void modifyMetaTag(DomOrExceptionGenerationBase dtOrException) throws XPRC_XmlParsingException {
     XMLUtils.parseString(change.getTag()); // validate whether tag content is valid XML
     int idx = ObjectId.getMetaTagIdx(object.getId());
-    DTMetaTag newTag = GBSubObjectUtils.createDTMetaTag(change.getTag());
+    DTMetaTag newTag = GBSubObjectUtils.createDTMetaTag(change.getTag(), idx);
     object.getMetaTagListAdapter().set(idx, newTag);
   }
 

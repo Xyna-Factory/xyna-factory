@@ -720,12 +720,12 @@ public class GBSubObjectUtils {
 
   public static class MetaTagListAdapter extends ListAdapter<DTMetaTag> {
 
-    private DOM dataType;
+    private DomOrExceptionGenerationBase dtOrException;
     private MemberVarInfo memberVarInfo;
     private MemberMethodInfo memberMethodInfo;
 
-    public MetaTagListAdapter(DOM dataType, MemberVarInfo memberVarInfo, MemberMethodInfo memberMethodInfo) {
-      this.dataType = dataType;
+    public MetaTagListAdapter(DomOrExceptionGenerationBase dtOrException, MemberVarInfo memberVarInfo, MemberMethodInfo memberMethodInfo) {
+      this.dtOrException = dtOrException;
       this.memberVarInfo = memberVarInfo;
       this.memberMethodInfo = memberMethodInfo;
     }
@@ -733,7 +733,7 @@ public class GBSubObjectUtils {
     @Override
     public DTMetaTag get(int index) {
       String tagXml = getMetaTags().get(index);
-      return createDTMetaTag(tagXml);
+      return createDTMetaTag(tagXml, index);
     }
 
     @Override
@@ -751,12 +751,13 @@ public class GBSubObjectUtils {
     public void add(int index, DTMetaTag element) {
       List<String> metaTags = getMetaTags();
       metaTags.add(index, element.getMetaTag().getTag());
+      element.setIdx(index);
     }
 
     @Override
     public DTMetaTag remove(int index) {
       List<String> metaTags = getMetaTags();
-      DTMetaTag removedTag = createDTMetaTag(metaTags.get(index));
+      DTMetaTag removedTag = createDTMetaTag(metaTags.get(index), index);
       metaTags.remove(index);
 
       return removedTag;
@@ -765,30 +766,22 @@ public class GBSubObjectUtils {
     @Override
     public int indexOf(Object o) {
       DTMetaTag dtMetaTag = ((DTMetaTag)o);
-      String metaTag = dtMetaTag.getMetaTag().getTag(); 
-      List<String> metaTags = getMetaTags();
-      for (int i = 0; i < metaTags.size(); i++) {
-        if (Objects.equals(metaTags.get(i).strip(), metaTag.strip())) {
-          return i;
-        }
-      }
-
-      return -1;
+      return dtMetaTag.getIdx();
     }
 
     private List<String> getMetaTags() {
       List<String> metaTags;
       if (memberVarInfo != null) {
-        AVariable var = dataType.getMemberVars().get(memberVarInfo.getIndex());
+        AVariable var = dtOrException.getMemberVars().get(memberVarInfo.getIndex());
         metaTags = var.getUnknownMetaTags() != null ? var.getUnknownMetaTags() : new ArrayList<String>();
         var.setUnknownMetaTags(metaTags);
       } else if (memberMethodInfo != null) {
-        Operation operation = dataType.getOperations().get(memberMethodInfo.getIndex());
+        Operation operation = ((DOM)dtOrException).getOperations().get(memberMethodInfo.getIndex());
         metaTags = operation.getUnknownMetaTags() != null ? operation.getUnknownMetaTags() : new ArrayList<String>();
         operation.setUnknownMetaTags(metaTags);
       } else {
-        metaTags = dataType.getUnknownMetaTags() != null ? dataType.getUnknownMetaTags() : new ArrayList<String>();
-        dataType.setUnknownMetaTags(metaTags);
+        metaTags = dtOrException.getUnknownMetaTags() != null ? dtOrException.getUnknownMetaTags() : new ArrayList<String>();
+        dtOrException.setUnknownMetaTags(metaTags);
       }
       
       return metaTags;
@@ -796,9 +789,9 @@ public class GBSubObjectUtils {
     
   }
 
-  public static DTMetaTag createDTMetaTag(String xml) {
+  public static DTMetaTag createDTMetaTag(String xml, int idx) {
     MetaTag metaTag = new MetaTag(xml.strip());
-    return new DTMetaTag(metaTag);
+    return new DTMetaTag(metaTag, idx);
   }
 
   public static abstract class ObjectAdapter<T> {

@@ -473,7 +473,8 @@ public class MoveOperation extends ModifyOperationBase<MoveJson> {
     gbsNewMethod.getIdentifiedVariables().getListAdapter(varUsageType).add(varIdent);
   }
 
-  protected void modifyMetaTag(DOM dom) throws UnknownObjectIdException, MissingObjectException, XynaException, UnsupportedOperationException, MergeConflictException {
+  @Override
+  protected void modifyMetaTag(DomOrExceptionGenerationBase dtOrException) throws UnknownObjectIdException, MissingObjectException, XynaException, UnsupportedOperationException, MergeConflictException {
     move(object);
   }
 

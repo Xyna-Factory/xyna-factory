@@ -302,7 +302,7 @@ public class DeleteOperation extends ModifyOperationBase<DeleteJson> {
   }
 
   @Override
-  protected void modifyMetaTag(DOM dom) {
+  protected void modifyMetaTag(DomOrExceptionGenerationBase dtOrException) {
     int idx = ObjectId.getMetaTagIdx(object.getId());
     object.getMetaTagListAdapter().remove(idx);
   }

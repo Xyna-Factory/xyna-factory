@@ -149,7 +149,7 @@ public abstract class DomOrExceptionXo implements HasXoRepresentation {
 
 
   public static MetaTagArea createMetaTagArea(List<String> unknownMetaTags, boolean readonly) {
-	  return createMetaTagArea(unknownMetaTags, readonly, null);
+    return createMetaTagArea(unknownMetaTags, readonly, null);
   }
 
   public static MetaTagArea createMetaTagArea(List<String> unknownMetaTags, boolean readonly, String baseId) {
