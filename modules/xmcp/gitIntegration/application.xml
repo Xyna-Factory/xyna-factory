@@ -138,6 +138,10 @@
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.gitintegration.ui.GetWorkspaceXmlStatus</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
       <DestinationKey>xmcp.gitintegration.ui.GitIntegrationManagementDefinition</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
@@ -407,6 +411,10 @@
       <FqName>xmcp.gitintegration.WorkspaceXmlCreationConfig</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.gitintegration.WorkspaceXmlPath</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.gitintegration.XMOMStorable</FqName>
       <Type>DATATYPE</Type>
@@ -593,6 +601,10 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
       <FqName>xmcp.gitintegration.ui.GetWorkspaceListIds</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.gitintegration.ui.GetWorkspaceXmlStatus</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
