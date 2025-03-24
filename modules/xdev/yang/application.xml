@@ -15,26 +15,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="YangAppGenerator" factoryVersion="" versionName="1.0.13" xmlVersion="1.1">
+--><Application applicationName="YangAppGenerator" factoryVersion="" versionName="1.1.0" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>GuiHttp</ApplicationName>
-        <VersionName>1.3.15</VersionName>
+        <VersionName>1.3.16</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>YangBase</ApplicationName>
-        <VersionName>1.0.1</VersionName>
+        <VersionName>1.1.0</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
   <Ordertypes>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.AddUseCase</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.AddOperation</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.AddVariableToUsecaseSignature</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.AddVariableToOperationSignature</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -46,11 +46,11 @@
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.DefineAddToUsecaseSignatureDialog</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.DefineAddToOperationSignatureDialog</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.DefineAddUsecaseDialog</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.DefineAddOperationDialog</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -62,11 +62,11 @@
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.DeleteUseCaseAssignment</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.DeleteOperationAssignment</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.DeleteVariableFromUsecaseSignature</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.DeleteVariableFromOperationSignature</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -78,55 +78,55 @@
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.SaveUseCaseAssignment</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.SaveOperationAssignment</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="false">
-      <DestinationKey>xmcp.yang.fman.UpdateVariableInUsecaseSignature</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.UpdateVariableInOperationSignature</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.UseCaseAssignmentTableInfo</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.OperationAssignmentTableInfo</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.UseCaseAssignmentsDefinition</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.OperationAssignmentsDefinition</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.UseCaseDefinition</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.OperationDefinition</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.UseCaseRootAssignmentsDefinition</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.OperationRootAssignmentsDefinition</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.UseCaseSignatureDefinition</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.OperationSignatureDefinition</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.UseCaseSignatureDetailsDefinition</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.OperationSignatureDetailsDefinition</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.UseCaseSignatureInputTableInfo</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.OperationSignatureInputTableInfo</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.UseCaseTableInfo</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.OperationTableInfo</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.UsecaseAssignmentsDefinitionContainer</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.OperationAssignmentsDefinitionContainer</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.UsecaseAssignmentsDefinitionLeaf</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.OperationAssignmentsDefinitionLeaf</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.UsecaseAssignmentsDefinitionList</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.OperationAssignmentsDefinitionList</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -153,11 +153,11 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.UseCaseAssignmentTableData</FqName>
+      <FqName>xmcp.yang.OperationAssignmentTableData</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.UseCaseTableData</FqName>
+      <FqName>xmcp.yang.OperationTableData</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -165,11 +165,11 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.AddUseCase</FqName>
+      <FqName>xmcp.yang.fman.AddOperation</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.AddVariableToUsecaseSignature</FqName>
+      <FqName>xmcp.yang.fman.AddVariableToOperationSignature</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -181,11 +181,11 @@
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.DefineAddToUsecaseSignatureDialog</FqName>
+      <FqName>xmcp.yang.fman.DefineAddToOperationSignatureDialog</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.DefineAddUsecaseDialog</FqName>
+      <FqName>xmcp.yang.fman.DefineAddOperationDialog</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -197,11 +197,11 @@
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.DeleteUseCaseAssignment</FqName>
+      <FqName>xmcp.yang.fman.DeleteOperationAssignment</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.DeleteVariableFromUsecaseSignature</FqName>
+      <FqName>xmcp.yang.fman.DeleteVariableFromOperationSignature</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -217,59 +217,59 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.SaveUseCaseAssignment</FqName>
+      <FqName>xmcp.yang.fman.SaveOperationAssignment</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
-      <FqName>xmcp.yang.fman.UpdateVariableInUsecaseSignature</FqName>
+      <FqName>xmcp.yang.fman.UpdateVariableInOperationSignature</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.UseCaseAssignmentTableInfo</FqName>
+      <FqName>xmcp.yang.fman.OperationAssignmentTableInfo</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.UseCaseAssignmentsDefinition</FqName>
+      <FqName>xmcp.yang.fman.OperationAssignmentsDefinition</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
-      <FqName>xmcp.yang.fman.UseCaseDefinition</FqName>
+      <FqName>xmcp.yang.fman.OperationDefinition</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.UseCaseRootAssignmentsDefinition</FqName>
+      <FqName>xmcp.yang.fman.OperationRootAssignmentsDefinition</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.UseCaseSignatureDefinition</FqName>
+      <FqName>xmcp.yang.fman.OperationSignatureDefinition</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.UseCaseSignatureDetailsDefinition</FqName>
+      <FqName>xmcp.yang.fman.OperationSignatureDetailsDefinition</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.UseCaseSignatureInputTableInfo</FqName>
+      <FqName>xmcp.yang.fman.OperationSignatureInputTableInfo</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.UseCaseTableInfo</FqName>
+      <FqName>xmcp.yang.fman.OperationTableInfo</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.UsecaseAssignmentsDefinitionContainer</FqName>
+      <FqName>xmcp.yang.fman.OperationAssignmentsDefinitionContainer</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.UsecaseAssignmentsDefinitionLeaf</FqName>
+      <FqName>xmcp.yang.fman.OperationAssignmentsDefinitionLeaf</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.UsecaseAssignmentsDefinitionList</FqName>
+      <FqName>xmcp.yang.fman.OperationAssignmentsDefinitionList</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.UsecaseSignatureEntry</FqName>
+      <FqName>xmcp.yang.fman.OperationSignatureEntry</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">

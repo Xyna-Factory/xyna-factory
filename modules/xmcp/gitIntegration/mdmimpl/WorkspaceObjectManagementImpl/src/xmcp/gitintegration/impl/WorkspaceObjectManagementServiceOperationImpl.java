@@ -37,11 +37,13 @@ import xmcp.gitintegration.WorkspaceContentDifferencesResolution;
 import xprc.xpce.Workspace;
 import xmcp.gitintegration.WorkspaceObjectManagementServiceOperation;
 import xmcp.gitintegration.WorkspaceXmlCreationConfig;
+import xmcp.gitintegration.WorkspaceXmlPath;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
-import xmcp.gitintegration.cli.tools.CreateWorkspaceXmlTools;
-import xmcp.gitintegration.cli.tools.ResolveWorkspaceDiffsTools;
-import xmcp.gitintegration.cli.tools.WorkspaceStatusTools;
+import xmcp.gitintegration.tools.CreateWorkspaceXmlTools;
+import xmcp.gitintegration.tools.ResolveWorkspaceDiffsTools;
+import xmcp.gitintegration.tools.WorkspaceStatusTools;
 import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
+import xmcp.gitintegration.repository.RepositoryConnection;
 import xmcp.gitintegration.storage.WorkspaceDifferenceListStorage;
 
 
@@ -83,6 +85,7 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
   }
 
 
+  @Override
   public WorkspaceContentDifferences compareWorkspaceContent(WorkspaceContent workspaceContent3, WorkspaceContent workspaceContent4) {
     WorkspaceContentComparator comparator = new WorkspaceContentComparator();
     // first parameter: from => XML
@@ -92,6 +95,7 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
   }
 
 
+  @Override
   public WorkspaceContent createWorkspaceContent(Workspace workspace) {
     WorkspaceContentCreator contentCreator = new WorkspaceContentCreator();
     WorkspaceContent result = contentCreator.createWorkspaceContentForWorkspace(workspace.getName());
@@ -99,14 +103,15 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
   }
 
 
+  @Override
   public WorkspaceContent createWorkspaceContentFromFile(File file8) {
     return new WorkspaceStatusTools().createWorkspaceContentFromFile(file8);
   }
 
 
-  public WorkspaceContent createWorkspaceContentFromText(Text text9) {
-    // TODO
-    return null;
+  @Override
+  public WorkspaceContent createWorkspaceContentFromText(List<? extends Text> list) {
+    return new WorkspaceStatusTools().createWorkspaceContentFromText(list);
   }
 
 
@@ -137,21 +142,14 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
 
 
   @Override
-  public Text getWorkspaceXmlStatus() {
-    //TODO
-    return new Text();
-  }
-
-
-  @Override
   public InfoWorkspaceContentDiffGroupList adaptWorkspaceDifferenceList(ListId listid) {
     return new WorkspaceStatusTools().adaptWorkspaceDifferenceList(listid);
   }
 
 
   @Override
-  public File getPathToWorkspaceXml(Workspace workspace) {
-    return new WorkspaceStatusTools().getPathToWorkspaceXml(workspace);
+  public WorkspaceXmlPath getPathToWorkspaceXml(RepositoryConnection conn) {
+    return new WorkspaceStatusTools().getPathToWorkspaceXml(conn);
   }
 
 }

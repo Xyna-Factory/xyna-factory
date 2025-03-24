@@ -24,7 +24,9 @@ import org.w3c.dom.Node;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import com.gip.xyna.XynaFactory;
@@ -50,14 +52,14 @@ import xmcp.gitintegration.storage.WorkspaceDifferenceListStorage;
 public class WorkspaceContentProcessingPortal implements XynaContentProcessingPortal<WorkspaceContentItem, WorkspaceContentDifference>{
 
   //String is the tagName
-  protected static final HashMap<String, WorkspaceContentProcessor<? extends WorkspaceContentItem>> parserTypes = new HashMap<>();
-  protected static final HashMap<Class<? extends WorkspaceContentType>, WorkspaceContentProcessor<? extends WorkspaceContentItem>> registeredTypes =
+  protected static final Map<String, WorkspaceContentProcessor<? extends WorkspaceContentItem>> parserTypes = new HashMap<>();
+  protected static final Map<Class<? extends WorkspaceContentType>, WorkspaceContentProcessor<? extends WorkspaceContentItem>> registeredTypes =
       createRegisteredTypesMap();
 
 
-  private static HashMap<Class<? extends WorkspaceContentType>, WorkspaceContentProcessor<? extends WorkspaceContentItem>> createRegisteredTypesMap() {
-    HashMap<Class<? extends WorkspaceContentType>, WorkspaceContentProcessor<? extends WorkspaceContentItem>> result = new HashMap<>();
-
+  private static Map<Class<? extends WorkspaceContentType>, WorkspaceContentProcessor<? extends WorkspaceContentItem>> createRegisteredTypesMap() {
+    Map<Class<? extends WorkspaceContentType>, WorkspaceContentProcessor<? extends WorkspaceContentItem>> result;
+    result = new TreeMap<>((x, y) -> x.getCanonicalName().compareTo(y.getCanonicalName()));
     //register WorkspaceContentProcessors here: addToMap(result, new <WorkspaceContentType>Processor());
     addToMap(result, new RuntimeContextDependencyProcessor());
     addToMap(result, new ApplicationDefinitionProcessor());
@@ -86,7 +88,7 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
 
 
   @SuppressWarnings("unchecked")
-  protected static void addToMap(HashMap<Class<? extends WorkspaceContentType>, WorkspaceContentProcessor<? extends WorkspaceContentItem>> map,
+  protected static void addToMap(Map<Class<? extends WorkspaceContentType>, WorkspaceContentProcessor<? extends WorkspaceContentItem>> map,
                                  WorkspaceContentProcessor<? extends WorkspaceContentItem> toAdd) {
     map.put((Class<? extends WorkspaceContentType>) getWorkspaceContentTypeFromProcessor(toAdd), toAdd);
     parserTypes.put(toAdd.getTagName(), toAdd);

@@ -18,7 +18,7 @@
 --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Workspace List Ids" TypeName="GetWorkspaceListIds" TypePath="xmcp.gitintegration.ui" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Get Workspace List Ids" Name="GetWorkspaceListIds">
     <Input>
-      <Data ID="11219" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName11219"/>
+      <Data ID="11335" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection11335"/>
     </Input>
     <Output>
       <Data ID="10534" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds10534"/>
@@ -38,10 +38,10 @@
     </Mappings>
     <Mappings ID="11270" Label="Mapping">
       <Input>
-        <Data ID="11297" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName11297">
+        <Data ID="11362" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection11362">
           <Source RefID="11270"/>
         </Data>
-        <Source RefID="11219"/>
+        <Source RefID="11335"/>
       </Input>
       <Output>
         <Data ID="11283" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace11283">
@@ -106,14 +106,21 @@
         </Data>
         <Source RefID="11284"/>
       </Input>
+      <Input>
+        <Data ID="11429" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection11429">
+          <Source RefID="10451"/>
+        </Data>
+        <Source RefID="11335"/>
+      </Input>
       <Output>
         <Data ID="10492" Label="Workspace Diffs List Ids" ReferenceName="WorkspaceDiffsListIds" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffsListIds10492">
           <Source RefID="10451"/>
         </Data>
         <Target RefID="10493"/>
       </Output>
-      <Mapping>%2%.workspaceListIds=%0%</Mapping>
-      <Mapping>%2%.workspaceName=%1%.name</Mapping>
+      <Mapping>%3%.workspaceListIds=%0%</Mapping>
+      <Mapping>%3%.workspaceName=%1%.name</Mapping>
+      <Mapping>%3%.repositoryConnection=%2%</Mapping>
     </Mappings>
     <Data ID="9357" IsList="true" Label="Workspace Content Differences" ReferenceName="WorkspaceContentDifferences" ReferencePath="xmcp.gitintegration" VariableName="workspaceContentDifferences9357">
       <Source RefID="9354"/>

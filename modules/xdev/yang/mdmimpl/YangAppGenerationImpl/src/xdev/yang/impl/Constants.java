@@ -66,7 +66,7 @@ public class Constants {
   public static final String TAG_MODULE_REVISION = "revision";
   public static final String TAG_MODULE_FEATURES = "features";
 
-  public static final String VAL_USECASE = "Usecase";
+  public static final String VAL_OPERATION = "Operation";
   public static final String VAL_MODULECOLLECTION = "ModuleCollection";
   public static final String VAL_DEVICE = "Capabilities";
 
@@ -102,7 +102,8 @@ public class Constants {
 
   public static final String NETCONF_NS = "urn:ietf:params:xml:ns:netconf:base:1.0";
   public static final String NETCONF_BASE_CAPABILITY_NO_VERSION = "urn:ietf:params:netconf:base:";
-  
+  public static final String NETCONF_CAPABILITY_URL = "urn:ietf:params:netconf:capability:";
+
   /* from RFC 7950;
      schema node: A node in the schema tree.  One of action, container,
      leaf, leaf-list, list, choice, case, rpc, input, output,

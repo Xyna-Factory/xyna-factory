@@ -78,25 +78,13 @@
           </Meta>
         </Source>
       </Input>
-      <Input>
-        <Data ID="4431" Label="Text 1" ReferenceName="Text" ReferencePath="base" VariableName="text4431">
-          <Source RefID="88"/>
-        </Data>
-        <Source RefID="4150"/>
-      </Input>
-      <Input>
-        <Data ID="4448" Label="Text 2" ReferenceName="Text" ReferencePath="base" VariableName="text4448">
-          <Source RefID="88"/>
-        </Data>
-        <Source RefID="4150"/>
-      </Input>
       <Output>
         <Data ID="1715" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection1715">
           <Source RefID="88"/>
         </Data>
         <Target RefID="1716"/>
       </Output>
-      <Mapping>%4%=%0%[%1%.value]</Mapping>
+      <Mapping>%2%=%0%[%1%.value]</Mapping>
     </Mappings>
     <Mappings ID="3617" Label="Mapping">
       <Input>
