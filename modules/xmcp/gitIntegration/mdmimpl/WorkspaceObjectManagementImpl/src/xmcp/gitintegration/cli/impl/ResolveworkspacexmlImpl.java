@@ -18,6 +18,7 @@
 package xmcp.gitintegration.cli.impl;
 
 
+
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ import xmcp.gitintegration.impl.ResolveWorkspaceDifferencesParameter;
 import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
 
 
+
 public class ResolveworkspacexmlImpl extends XynaCommandImplementation<Resolveworkspacexml> {
 
   public void execute(OutputStream statusOutputStream, Resolveworkspacexml payload) throws XynaException {
@@ -38,16 +40,14 @@ public class ResolveworkspacexmlImpl extends XynaCommandImplementation<Resolvewo
     String result = "";
     if (payload.getClose()) {
       result = portal.closeDifferenceList(listid);
-    }
-    else if ((payload.getEntry() != null) && !payload.getAll()) {
+    } else if (payload.getEntry() == null && payload.getAll()) {
       result = portal.resolveAll(listid, Optional.ofNullable(payload.getResolution()));
-    }
-    else {
+    } else {
       ResolveWorkspaceDifferencesParameter param = new ResolveWorkspaceDifferencesParameter();
       param.setEntry(Long.valueOf(payload.getEntry()));
       param.setResolution(payload.getResolution());
       List<ResolveWorkspaceDifferencesParameter> list = new ArrayList<>();
-      list.add(param);      
+      list.add(param);
       result = portal.resolveList(listid, list);
     }
     writeToCommandLine(statusOutputStream, result);

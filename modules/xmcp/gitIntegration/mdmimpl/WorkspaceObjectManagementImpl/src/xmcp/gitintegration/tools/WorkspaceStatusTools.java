@@ -16,14 +16,20 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.gitintegration.cli.tools;
+package xmcp.gitintegration.tools;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
+import base.Text;
 import xmcp.gitintegration.InfoWorkspaceContentDiffGroup;
 import xmcp.gitintegration.InfoWorkspaceContentDiffGroupList;
 import xmcp.gitintegration.InfoWorkspaceContentDiffItem;
@@ -32,12 +38,13 @@ import xmcp.gitintegration.WorkspaceContent;
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceContentItem;
+import xmcp.gitintegration.WorkspaceXmlPath;
 import xmcp.gitintegration.impl.OutputCreator;
 import xmcp.gitintegration.impl.WorkspaceContentCreator;
 import xmcp.gitintegration.impl.WorkspaceContentItemDifferenceSelector;
 import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
+import xmcp.gitintegration.repository.RepositoryConnection;
 import xmcp.gitintegration.storage.WorkspaceDifferenceListStorage;
-import xprc.xpce.Workspace;
 
 
 public class WorkspaceStatusTools {
@@ -45,6 +52,16 @@ public class WorkspaceStatusTools {
   private static Logger _logger = Logger.getLogger(WorkspaceStatusTools.class);
 
 
+  public WorkspaceContent createWorkspaceContentFromText(List<? extends Text> list) {
+    if (list == null) { throw new IllegalArgumentException("Parameter text list is empty"); }
+    if (list.size() < 1) { throw new IllegalArgumentException("Parameter text is empty"); }
+    WorkspaceContentCreator creator = new WorkspaceContentCreator();
+    List<String> adapted = list.stream().filter(Objects::nonNull).map(x -> x.getText()).collect(Collectors.toList());
+    WorkspaceContent ret = creator.createWorkspaceContentFromText(adapted);
+    return ret;
+  }
+  
+  
   public WorkspaceContent createWorkspaceContentFromFile(base.File fileIn) {
     if (fileIn == null) { throw new IllegalArgumentException("Parameter file is empty"); }
     if (fileIn.getPath() == null) { throw new IllegalArgumentException("Parameter file is empty"); }
@@ -99,14 +116,26 @@ public class WorkspaceStatusTools {
   }
 
 
-  public base.File getPathToWorkspaceXml(Workspace workspace) {
-    if (workspace == null) { throw new IllegalArgumentException("Parameter workspace is empty"); }
-    if (workspace.getName() == null) { throw new IllegalArgumentException("Parameter workspace is empty"); }
-    WorkspaceContentCreator creator = new WorkspaceContentCreator();
-    File file = creator.determineWorkspaceXMLFile(workspace.getName());
-    base.File ret = new base.File();
-    ret.setPath(file.getPath());
-    return ret;
+  public WorkspaceXmlPath getPathToWorkspaceXml(RepositoryConnection repconn) {
+    if (repconn == null) { throw new IllegalArgumentException("Parameter repositoryConnection is empty"); }
+    if (repconn.getWorkspaceName() == null) { throw new IllegalArgumentException("Parameter repositoryConnection is incomplete"); }
+    try {
+      WorkspaceContentCreator creator = new WorkspaceContentCreator();
+      File file = creator.determineWorkspaceXMLFile(repconn.getWorkspaceName());
+      WorkspaceXmlPath ret = new WorkspaceXmlPath();
+      ret.setPathInRevisionDir(file.getPath());
+      ret.setRepositoryPath(repconn.getPath());
+      if (repconn.getSplitted()) {
+        Path path = Paths.get(repconn.getSubpath(), WorkspaceContentCreator.WORKSPACE_XML_SPLITNAME);
+        ret.setRepositorySubpath(path.toString());
+      } else {
+        Path path = Paths.get(repconn.getSubpath(), WorkspaceContentCreator.WORKSPACE_XML_FILENAME);
+        ret.setRepositorySubpath(path.toString());
+      }
+      return ret;
+    } catch (Exception e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
   }
 
 }

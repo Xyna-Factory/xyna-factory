@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.gitintegration.cli.tools;
+package xmcp.gitintegration.tools;
 
 import java.util.ArrayList;
 import java.util.List;
