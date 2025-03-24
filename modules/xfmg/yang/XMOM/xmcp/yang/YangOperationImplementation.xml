@@ -15,23 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="YangBase" factoryVersion="" versionName="1.1.0" xmlVersion="1.1">
-  <XMOMEntries>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.MessageId</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.YangDevice</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.YangModuleCollection</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.YangOperationImplementation</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-  </XMOMEntries>
-</Application>
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="true" Label="YangOperationImplementation" TypeName="YangOperationImplementation" TypePath="xmcp.yang" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+</DataType>
