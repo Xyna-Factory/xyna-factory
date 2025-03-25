@@ -21,6 +21,9 @@ import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xmcp.xguisupport.messagebus.TrappedPathTree.Pathable;
 import com.gip.xyna.xmcp.xguisupport.messagebus.TrappedPathTree.Trap;
 import com.gip.xyna.xmcp.xguisupport.messagebus.transfer.MessageOutputParameter;
@@ -28,6 +31,8 @@ import com.gip.xyna.xmcp.xguisupport.messagebus.transfer.MessageOutputParameter;
 
 public class MessageBusSubscription implements Serializable, Pathable {
 
+  private static Logger _logger = CentralFactoryLogging.getLogger(MessageBusSubscription.class);
+  
   private static final long serialVersionUID = 4209231871153821458L;
   private static Pattern fuzzyCorrelationPatter = Pattern.compile(".*[|.+*].*",Pattern.MULTILINE);
   
@@ -114,7 +119,12 @@ public class MessageBusSubscription implements Serializable, Pathable {
       filterPattern = Pattern.compile(filter);
     }
     Matcher filterMatcher = filterPattern.matcher(correlation);
-    return filterMatcher.matches();
+    boolean matches = filterMatcher.matches();
+    if (_logger.isDebugEnabled()) {
+      _logger.debug("Trying to match pattern " + filterPattern.toString() + " with correlation " + correlation +
+                    " -> " + matches); 
+    }
+    return matches;
   }
 
 
