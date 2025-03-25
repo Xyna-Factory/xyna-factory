@@ -381,14 +381,14 @@ public class PollEventFetcher {
     }
   }
 
-  public static String mask(String input) {
+  private static String mask(String input) {
     String tmp = input.replace("\\", "\\\\");
     tmp = tmp.replaceAll("[(]", "\\\\(");
     tmp = tmp.replaceAll("[)]", "\\\\)");
     tmp = tmp.replaceAll("[.]", "\\\\.");
     tmp = tmp.replaceAll("[*]", "\\\\*");
     tmp = tmp.replaceAll("[+]", "\\\\+");
-    tmp = tmp.replaceAll("[^]", "\\\\^");
+    tmp = tmp.replaceAll("[\\^]", "\\\\^");
     tmp = tmp.replaceAll("[?]", "\\\\?");
     tmp = tmp.replaceAll("[{]", "\\\\{");
     tmp = tmp.replaceAll("[}]", "\\\\}");
