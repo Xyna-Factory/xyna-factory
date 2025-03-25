@@ -22,6 +22,9 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Workspace;
@@ -89,7 +92,9 @@ public class XmomTypeEvent extends MessageOutputParameterEvent {
   }
 
   private static final long serialVersionUID = 1L;
-
+  
+  private static Logger logger = CentralFactoryLogging.getLogger(XmomTypeEvent.class);
+  
   private XmomType xmomType;
 
 

@@ -339,6 +339,7 @@ public class LockManagement extends FunctionGroup implements LockManagementPorta
     return type + "-" + path.getPath() + "-WS:\"" + context.getName()+"\"";
   }
   
+
   private static Pair<String, Path> splitCorrelation(String correlation) {
     String[] splitted = correlation.split("-", 3);
     String type = splitted[0];
