@@ -75,7 +75,7 @@
       </Output>
       <Mapping>%3%.label="Resolve"</Mapping>
       <Mapping>%3%.serviceRTC=%0%</Mapping>
-      <Mapping>%3%.dataPath=concat("%0%.infoWorkspaceContentDiffGroup.", %1%.groupIndex, ".differenceList.", %2%.itemIndex, ",%0%")</Mapping>
+      <Mapping>%3%.dataPath=concat("%0%.infoWorkspaceContentDiffGroup.", %1%.groupIndex, ".differenceList.", %2%.itemIndex, ",%0%,%1%")</Mapping>
       <Mapping>%3%.serviceFQN="xmcp.gitintegration.ui.ExecuteResolveSingleDiff"</Mapping>
       <Mapping>%3%.synchronously="true"</Mapping>
       <Mapping>%3%.onStartorderResultEvent["0"].eventId="git_int_diff_details_refresh"</Mapping>

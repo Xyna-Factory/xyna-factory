@@ -26,7 +26,7 @@ import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 
 import xmcp.gitintegration.WorkspaceXmlCreationConfig;
 import xmcp.gitintegration.cli.generated.Createworkspacexml;
-import xmcp.gitintegration.cli.tools.CreateWorkspaceXmlTools;
+import xmcp.gitintegration.tools.CreateWorkspaceXmlTools;
 
 
 public class CreateworkspacexmlImpl extends XynaCommandImplementation<Createworkspacexml> {
