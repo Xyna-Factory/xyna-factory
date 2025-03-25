@@ -71,9 +71,9 @@ public class LoadChangesTools {
     int i = 0;
     for (RepositoryConnection conn : group.getRepositoryConnection()) {
       WorkspaceFileChangeList wfcl = new WorkspaceFileChangeList();
-      wfcl.setWorkspacePath(conn.getSubpath());
-      wfcl.setWorkspaceName(conn.getWorkspaceName());
-      wfcl.setWorkspaceIndex(i);
+      wfcl.unversionedSetWorkspacePath(conn.getSubpath());
+      wfcl.unversionedSetWorkspaceName(conn.getWorkspaceName());
+      wfcl.unversionedSetWorkspaceIndex(i);
       ret.addToChanges(wfcl);
       i++;
     }
@@ -93,18 +93,18 @@ public class LoadChangesTools {
 
   private void handleFileChange(String path, String typestr, ChangeSet cs) {
     IndexedWorkspaceFileChange change = new IndexedWorkspaceFileChange();
-    change.setFileFullPath(path);
-    change.setType(typestr);
+    change.unversionedSetFileFullPath(path);
+    change.unversionedSetType(typestr);
     for (WorkspaceFileChangeList wfcl : cs.getChanges()) {
       String wspath = wfcl.getWorkspacePath();
       if (path.startsWith(wspath) && (path.length() > wspath.length())) {
         String subpath = path.substring(wspath.length() + 1);
-        change.setFileSubpath(subpath);
+        change.unversionedSetFileSubpath(subpath);
         if (wfcl.getIndexedFileChangeList() == null) {
-          change.setIndex(0);
+          change.unversionedSetIndex(0);
         }
         else {
-          change.setIndex(wfcl.getIndexedFileChangeList().size());
+          change.unversionedSetIndex(wfcl.getIndexedFileChangeList().size());
         }
         wfcl.addToIndexedFileChangeList(change);
       }
