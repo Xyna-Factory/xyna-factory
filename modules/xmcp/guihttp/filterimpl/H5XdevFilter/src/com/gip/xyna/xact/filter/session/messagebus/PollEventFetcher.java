@@ -31,7 +31,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
-
 import com.gip.xyna.Department;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.SerializablePair;
@@ -318,9 +317,8 @@ public class PollEventFetcher {
       if (correlationToSubscriptionIds.keySet().contains(correlationId)) {
         return;
       }
-      
       addSubscriptionMasked(correlationId, PredefinedMessagePath.XYNA_MODELLER_LOCKS);
-      addSubscriptionMasked(correlationId, PredefinedMessagePath.XYNA_MODELLER_UNLOCKS);      
+      addSubscriptionMasked(correlationId, PredefinedMessagePath.XYNA_MODELLER_UNLOCKS);
       addSubscriptionMasked(correlationId, PredefinedMessagePath.XYNA_MODELLER_AUTOSAVES);
     } catch (Exception e) {
       Utils.logError("Multiuser: Could not add message bus subscriptions for " + gbo.getFQName().getFqName(), e);
