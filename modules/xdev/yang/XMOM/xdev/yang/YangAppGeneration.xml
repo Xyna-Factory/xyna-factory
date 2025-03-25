@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,22 +27,28 @@
         <Datatype>xmcp.forms.plugin.PluginManagement</Datatype>
       </AdditionalDependencies>
     </Meta>
-    <Operation IsStatic="true" Label="Import Module Collection Application" Name="importModuleCollectionApplication">
+    <Operation IsStatic="true" Label="Import Module Collection Application" Name="importModuleCollectionApplication" RequiresXynaOrder="true">
       <Input>
         <Data ID="1" Label="Yang App Generation Input Parameter" ReferenceName="YangAppGenerationInputParameter" ReferencePath="xdev.yang" VariableName="yangAppGenerationInputParameter1"/>
       </Input>
       <Output/>
+      <Throws>
+        <Exception ID="31" Label="Application Import Exception" ReferenceName="ApplicationImportException" ReferencePath="xdev.yang.exceptions" VariableName="applicationImportException31"/>
+      </Throws>
       <SourceCode>
-        <CodeSnippet Type="Java">YangAppGenerationImpl.importModuleCollectionApplication(yangAppGenerationInputParameter1);</CodeSnippet>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.importModuleCollectionApplication(correlatedXynaOrder, yangAppGenerationInputParameter1);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Create Yang Device App" Name="createYangDeviceApp">
+    <Operation IsStatic="true" Label="Create Yang Device App" Name="createYangDeviceApp" RequiresXynaOrder="true">
       <Input>
         <Data ID="2" Label="Yang App Generation Input Parameter" ReferenceName="YangAppGenerationInputParameter" ReferencePath="xdev.yang" VariableName="yangAppGenerationInputParameter2"/>
       </Input>
       <Output/>
+      <Throws>
+        <Exception ID="30" Label="Application Import Exception" ReferenceName="ApplicationImportException" ReferencePath="xdev.yang.exceptions" VariableName="applicationImportException30"/>
+      </Throws>
       <SourceCode>
-        <CodeSnippet Type="Java">YangAppGenerationImpl.createYangDeviceApp(yangAppGenerationInputParameter2);</CodeSnippet>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.createYangDeviceApp(correlatedXynaOrder, yangAppGenerationInputParameter2);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Load Assignments" Name="loadAssignments">

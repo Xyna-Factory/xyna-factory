@@ -19,12 +19,8 @@ package xdev.yang.impl;
 
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.Container;
@@ -40,6 +36,7 @@ import base.Text;
 import xdev.yang.YangAppGenerationInputParameter;
 import xdev.yang.YangAppGenerationServiceOperation;
 import xdev.yang.cli.generated.OverallInformationProvider;
+import xdev.yang.exceptions.ApplicationImportException;
 import xdev.yang.impl.YangApplicationGeneration.YangApplicationGenerationData;
 import xdev.yang.impl.operation.AddOperation;
 import xdev.yang.impl.operation.AddVariableToOperationSignature;
@@ -63,8 +60,6 @@ import xprc.xpce.Workspace;
 
 public class YangAppGenerationServiceOperationImpl implements ExtendedDeploymentTask, YangAppGenerationServiceOperation {
 
-  private static final Logger logger = CentralFactoryLogging.getLogger(YangAppGenerationServiceOperationImpl.class);
-  
   public void onDeployment() throws XynaException {
     OverallInformationProvider.onDeployment();
     PluginManagement.registerPlugin(this.getClass());
@@ -97,29 +92,24 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
     return null;
   }
 
-  public void createYangDeviceApp(YangAppGenerationInputParameter yangAppGenerationInputParameter2) {
-    String id = null;
-    try (YangApplicationGenerationData appData = YangApplicationGeneration.createDeviceApp(yangAppGenerationInputParameter2)) {
-      id = appData.getId();
-    } catch (IOException e) {
-      if (logger.isWarnEnabled()) {
-        logger.warn("Could not clean up temporary files for " + yangAppGenerationInputParameter2.getApplicationName(), e);
-      }
-    }
-    importApplication(id);
 
+  public void createYangDeviceApp(XynaOrderServerExtension order, YangAppGenerationInputParameter input) throws ApplicationImportException {
+    try (YangApplicationGenerationData appData = YangApplicationGeneration.createDeviceApp(input)) {
+      String id = appData.getId();
+      importApplication(id);
+    } catch (Exception e) {
+      throw new ApplicationImportException(order.getId(), e);
+    }
   }
 
-  public void importModuleCollectionApplication(YangAppGenerationInputParameter yangAppGenerationInputParameter1) {
-    String id = null;
-    try (YangApplicationGenerationData appData = YangApplicationGeneration.createModuleCollectionApp(yangAppGenerationInputParameter1)) {
-      id = appData.getId();
-    } catch (IOException e) {
-      if (logger.isWarnEnabled()) {
-        logger.warn("Could not clean up temporary files for " + yangAppGenerationInputParameter1.getApplicationName(), e);
-      }
+
+  public void importModuleCollectionApplication(XynaOrderServerExtension order, YangAppGenerationInputParameter input) throws ApplicationImportException {
+    try (YangApplicationGenerationData appData = YangApplicationGeneration.createModuleCollectionApp(input)) {
+      String id = appData.getId();
+      importApplication(id);
+    } catch (Exception e) {
+      throw new ApplicationImportException(order.getId(), e);
     }
-    importApplication(id);
   }
   
   private void importApplication(String id) {
