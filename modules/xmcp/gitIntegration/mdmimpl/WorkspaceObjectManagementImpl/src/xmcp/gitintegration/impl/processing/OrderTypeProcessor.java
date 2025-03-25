@@ -20,6 +20,7 @@ package xmcp.gitintegration.impl.processing;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -83,7 +84,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
   public static final String DISPATCHERNAME_PLANNING = "PlanningDispatcher";
   public static final String DISPATCHERNAME_EXECUTION = "ExecutionDispatcher";
   public static final String DISPATCHERNAME_CLEANUP = "CleanupDispatcher";
-  
+
   private static OrdertypeManagement orderTypeManagement;
   private static RevisionManagement revisionManagement;
 
@@ -94,7 +95,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
     }
     return orderTypeManagement;
   }
-  
+
   private static RevisionManagement getRevisionManagement() {
     if (revisionManagement == null) {
       revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
@@ -139,6 +140,11 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
           int toMonitotingLevel = 0;
           if (toEntry.getMonitoringLevel() != null) {
             toMonitotingLevel = toEntry.getMonitoringLevel();
+          }
+          // workaround: set default inheritance rule explicitly instead of using value null
+          if (fromEntry.getInheritanceRules() != null && toEntry.getInheritanceRules() == null) {
+            toEntry.setInheritanceRules(Arrays.asList(new InheritanceRule.Builder().parameterType("MonitoringLevel").value("")
+                .childFilter("").precedence("0").instance()));
           }
           if (!Objects.equals(fromEntry.getDocumentation(), toEntry.getDocumentation())
               || (getDispatcherDestinationDiffTypeMap(fromEntry, toEntry).size() > 0)
@@ -532,7 +538,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
       }
     }
 
-    // Create CREATE List 
+    // Create CREATE List
     if (to.getDispatcherDestinations() != null) {
       List<DispatcherDestination> createList = new ArrayList<DispatcherDestination>();
       for (DispatcherDestination dd : to.getDispatcherDestinations()) {
@@ -545,7 +551,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
       }
     }
 
-    // Create DELETE List 
+    // Create DELETE List
     if (from.getDispatcherDestinations() != null) {
       List<DispatcherDestination> deleteList = new ArrayList<DispatcherDestination>();
       for (DispatcherDestination dd : from.getDispatcherDestinations()) {
@@ -567,7 +573,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
           DispatcherDestination toDd = toMap.get(dd.getDispatcherName());
           if (!fromDd.getDestinationType().equals(fromDd.getDestinationType())
               || !fromDd.getDestinationValue().equals(fromDd.getDestinationValue())) {
-            // modifyList has 2 Elements (from,to) 
+            // modifyList has 2 Elements (from,to)
             modifyList.add(fromDd);
             modifyList.add(toDd);
           }
@@ -602,7 +608,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
       }
     }
 
-    // Create CREATE List 
+    // Create CREATE List
     if (to.getInheritanceRules() != null) {
       List<InheritanceRule> createList = new ArrayList<InheritanceRule>();
       for (InheritanceRule ir : to.getInheritanceRules()) {
@@ -615,7 +621,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
       }
     }
 
-    // Create DELETE List 
+    // Create DELETE List
     if (from.getInheritanceRules() != null) {
       List<InheritanceRule> deleteList = new ArrayList<InheritanceRule>();
       for (InheritanceRule ir : from.getInheritanceRules()) {
@@ -638,7 +644,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
           if (!fromIr.getValue().equals(toIr.getValue())
               || ((fromIr.getPrecedence() != null) && !fromIr.getPrecedence().equals(toIr.getPrecedence()))
               || ((toIr.getPrecedence() != null) && !toIr.getPrecedence().equals(fromIr.getPrecedence()))) {
-            // modifyList has 2 Elements (from,to) 
+            // modifyList has 2 Elements (from,to)
             modifyList.add(fromIr);
             modifyList.add(toIr);
           }
@@ -669,7 +675,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
       }
     }
 
-    // Create CREATE List 
+    // Create CREATE List
     if (to.getCapacities() != null) {
       List<Capacity> createList = new ArrayList<Capacity>();
       for (Capacity cap : to.getCapacities()) {
@@ -682,7 +688,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
       }
     }
 
-    // Create DELETE List 
+    // Create DELETE List
     if (from.getCapacities() != null) {
       List<Capacity> deleteList = new ArrayList<Capacity>();
       for (Capacity cap : from.getCapacities()) {
@@ -703,7 +709,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
           Capacity fromCap = cap;
           Capacity toCap = toMap.get(cap.getCapacityName());
           if (fromCap.getCardinality() != toCap.getCardinality()) {
-            // modifyList has 2 Elements (from,to) 
+            // modifyList has 2 Elements (from,to)
             modifyList.add(fromCap);
             modifyList.add(toCap);
           }
@@ -802,11 +808,11 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-    
+
     Collections.sort(otList, (x, y) -> x.getName().compareTo(y.getName()));
     return otList;
   }
-  
+
 
   private int compareInharitanceRules(InheritanceRule rule1, InheritanceRule rule2) {
     int result = rule1.getParameterType().compareTo(rule2.getParameterType());
@@ -880,21 +886,20 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
     }
 
     // Capacities
+    Set<com.gip.xyna.xprc.xpce.planning.Capacity> capacitySet = new HashSet<com.gip.xyna.xprc.xpce.planning.Capacity>();
     if ((item.getCapacities() != null) && (item.getCapacities().size() > 0)) {
-      Set<com.gip.xyna.xprc.xpce.planning.Capacity> capacitySet = new HashSet<com.gip.xyna.xprc.xpce.planning.Capacity>();
       for (Capacity cap : item.getCapacities()) {
         com.gip.xyna.xprc.xpce.planning.Capacity capacity = new com.gip.xyna.xprc.xpce.planning.Capacity();
         capacity.setCapName(cap.getCapacityName());
         capacity.setCardinality(cap.getCardinality());
         capacitySet.add(capacity);
       }
-      orderTypeParameter.setRequiredCapacities(capacitySet);
     }
-
+    orderTypeParameter.setRequiredCapacities(capacitySet);
 
     // InheritanceRules
+    Map<ParameterType, List<com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule>> ruleMap = new HashMap<>();
     if ((item.getInheritanceRules() != null) && (item.getInheritanceRules().size() > 0)) {
-      Map<ParameterType, List<com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule>> ruleMap = new HashMap<>();
       for (InheritanceRule ir : item.getInheritanceRules()) {
         ParameterType pt = ParameterType.valueOf(ir.getParameterType());
         ruleMap.putIfAbsent(pt, new ArrayList<>());
@@ -903,8 +908,8 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
         ruleMap.get(pt).add(pt.createInheritanceRuleBuilder(ir.getValue()).precedence(precedence).childFilter(ir.getChildFilter()).build());
 
       }
-      orderTypeParameter.setParameterInheritanceRules(ruleMap);
     }
+    orderTypeParameter.setParameterInheritanceRules(ruleMap);
 
     // PrioritySetting
     if (item.getPrioritySetting() != null) {

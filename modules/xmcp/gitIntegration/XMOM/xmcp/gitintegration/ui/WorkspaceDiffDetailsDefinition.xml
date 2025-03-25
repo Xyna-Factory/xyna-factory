@@ -18,17 +18,14 @@
 --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Workspace Diff Details Definition" TypeName="WorkspaceDiffDetailsDefinition" TypePath="xmcp.gitintegration.ui" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Workspace Diff Details Definition" Name="WorkspaceDiffDetailsDefinition">
     <Input>
-      <Data ID="14269" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName14269"/>
+      <Data ID="14479" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection14479"/>
       <Data ID="11957" Label="Workspace Diff List Id" ReferenceName="WorkspaceDiffListId" ReferencePath="xmcp.gitintegration" VariableName="workspaceDiffListId11957"/>
     </Input>
     <Output>
       <Data ID="7659" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition7659"/>
       <Data ID="11102" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList11102"/>
+      <Data ID="14778" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection14778"/>
     </Output>
-    <ServiceReference ID="11567" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="11566"/>
-      <Target RefID="11566"/>
-    </ServiceReference>
     <ServiceReference ID="7690" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="7689"/>
       <Target RefID="7689"/>
@@ -36,6 +33,10 @@
     <ServiceReference ID="9901" Label="Build Workspace Diff Group Panel" ReferenceName="BuildWorkspaceDiffGroupPanel" ReferencePath="xmcp.gitintegration.ui">
       <Source RefID="9900"/>
       <Target RefID="9900"/>
+    </ServiceReference>
+    <ServiceReference ID="11567" Label="Workspace Object Management" ReferenceName="WorkspaceObjectManagement.WorkspaceObjectManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="11566"/>
+      <Target RefID="11566"/>
     </ServiceReference>
     <Function ID="7689" Label="get Own RuntimeContext">
       <Source RefID="7690"/>
@@ -75,10 +76,10 @@
       <Catch ExceptionID="14303" ID="14304">
         <Mappings ID="14334" Label="Mapping">
           <Input>
-            <Data ID="14449" Label="Workspace Name" ReferenceName="WorkspaceName" ReferencePath="xmcp.gitintegration" VariableName="workspaceName14449">
+            <Data ID="14811" Label="Repository Connection" ReferenceName="RepositoryConnection" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnection14811">
               <Source RefID="14334"/>
             </Data>
-            <Source RefID="14269"/>
+            <Source RefID="14479"/>
           </Input>
           <Output>
             <Data ID="14363" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList14363">
@@ -145,44 +146,34 @@
         <Data ID="12177" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext12177"/>
         <Source RefID="7688"/>
       </Input>
-      <Input>
-        <Data ID="12216" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList12216">
-          <Source RefID="12175"/>
-        </Data>
-        <Source RefID="11565"/>
-      </Input>
       <Output>
         <Data ID="12180" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition12180"/>
         <Target RefID="12174"/>
       </Output>
-      <Mapping>%2%.label="Resolve complete difference list"</Mapping>
-      <Mapping>%2%.serviceRTC=%0%</Mapping>
-      <Mapping>%2%.dataPath="%0%"</Mapping>
-      <Mapping>%2%.serviceFQN="xmcp.gitintegration.ui.ExecuteResolveDiffGroupList"</Mapping>
-      <Mapping>%2%.synchronously="true"</Mapping>
-      <Mapping>%2%.onStartorderResultEvent["0"].eventId="git_int_diffs_refresh"</Mapping>
-      <Mapping>%2%.onStartorderResultEvent["1"].eventId="git_int_diff_details_close"</Mapping>
+      <Mapping>%1%.label="Resolve complete difference list"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.dataPath="%0%,%1%"</Mapping>
+      <Mapping>%1%.serviceFQN="xmcp.gitintegration.ui.ExecuteResolveDiffGroupList"</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="git_int_diffs_refresh"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["1"].eventId="git_int_diff_details_close"</Mapping>
     </Mappings>
     <Mappings ID="12827" Label="Mapping">
       <Input>
         <Data ID="12828" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext12828"/>
         <Source RefID="7688"/>
       </Input>
-      <Input>
-        <Data ID="12829" Label="Info Workspace Content Diff Group List" ReferenceName="InfoWorkspaceContentDiffGroupList" ReferencePath="xmcp.gitintegration" VariableName="infoWorkspaceContentDiffGroupList12829"/>
-        <Source RefID="11565"/>
-      </Input>
       <Output>
         <Data ID="12830" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition12830"/>
         <Target RefID="12831"/>
       </Output>
-      <Mapping>%2%.label="Delete difference list without change to config"</Mapping>
-      <Mapping>%2%.serviceRTC=%0%</Mapping>
-      <Mapping>%2%.dataPath="%0%"</Mapping>
-      <Mapping>%2%.serviceFQN="xmcp.gitintegration.ui.ExecuteCloseDiffList"</Mapping>
-      <Mapping>%2%.synchronously="true"</Mapping>
-      <Mapping>%2%.onStartorderResultEvent["0"].eventId="git_int_diffs_refresh"</Mapping>
-      <Mapping>%2%.onStartorderResultEvent["1"].eventId="git_int_diff_details_close"</Mapping>
+      <Mapping>%1%.label="Delete difference list without change to config"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.dataPath="%0%,%1%"</Mapping>
+      <Mapping>%1%.serviceFQN="xmcp.gitintegration.ui.ExecuteCloseDiffList"</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="git_int_diffs_refresh"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["1"].eventId="git_int_diff_details_close"</Mapping>
     </Mappings>
     <Mappings ID="12929" Label="Mapping">
       <Input>
@@ -294,8 +285,10 @@
     <Assign ID="1">
       <Source RefID="10200"/>
       <Source RefID="11565"/>
+      <Source RefID="14479"/>
       <Target RefID="7659"/>
       <Target RefID="11102"/>
+      <Target RefID="14778"/>
       <Copy>
         <Source RefID="10200">
           <Meta>
@@ -307,6 +300,10 @@
       <Copy>
         <Source RefID="11565"/>
         <Target RefID="11102"/>
+      </Copy>
+      <Copy>
+        <Source RefID="14479"/>
+        <Target RefID="14778"/>
       </Copy>
     </Assign>
   </Operation>

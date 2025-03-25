@@ -19,7 +19,7 @@
   <Operation ID="0" IsStatic="false" Label="Configure List" Name="ConfigureList">
     <Input>
       <Data ID="22" Label="ListConfiguration" ReferenceName="ListConfiguration" ReferencePath="xmcp.yang.fman" VariableName="listConfiguration22"/>
-      <Data ID="47" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData47"/>
+      <Data ID="47" Label="Operation Assignment Table Data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData47"/>
     </Input>
     <Output/>
     <ServiceReference ID="57" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
@@ -28,7 +28,7 @@
     </ServiceReference>
     <Mappings ID="75" Label="Mapping">
       <Input>
-        <Data ID="110" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData110">
+        <Data ID="110" Label="Operation Assignment Table Data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData110">
           <Source RefID="75"/>
         </Data>
         <Source RefID="47"/>
