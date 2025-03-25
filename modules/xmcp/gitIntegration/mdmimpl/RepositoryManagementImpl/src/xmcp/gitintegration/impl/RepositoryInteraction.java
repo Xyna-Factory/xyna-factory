@@ -114,6 +114,7 @@ import xmcp.gitintegration.repository.WorkspaceFileChangeList;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
 import xmcp.gitintegration.storage.UserManagementStorage;
+import xmcp.gitintegration.tools.LoadChangesTools;
 import xprc.xpce.Workspace;
 
 
@@ -250,74 +251,9 @@ public class RepositoryInteraction {
   public ChangeSet loadChanges(String repository) throws Exception {
     if (repository == null) { throw new IllegalArgumentException("Parameter repository is empty."); }
     Repository repo = loadRepo(repository, true);
-    List<? extends RepositoryConnectionGroup> grouplist = RepositoryManagementImpl.listRepositoryConnectionGroups();
-    RepositoryConnectionGroup group = selectGroup(grouplist, repository);
-    ChangeSet ret = prepareChangeSet(group);
-    try (Git git = new Git(repo)) {
-      StatusCommand cmd = git.status();
-      Status status = cmd.call();
-      for (String str : status.getChanged()) {
-        handleFileChange(str, "Changed", ret);
-      }
-      for (String str : status.getModified()) {
-        handleFileChange(str, "Modified", ret);
-      }
-      for (String str : status.getMissing()) {
-        handleFileChange(str, "Deleted", ret);
-      }
-      for (String str : status.getUntracked()) {
-        handleFileChange(str, "New", ret);
-      }
-    }
-    return ret;
+    return new LoadChangesTools().loadChanges(repository, repo);
   }
   
-  
-  private ChangeSet prepareChangeSet(RepositoryConnectionGroup group) {
-    ChangeSet ret = new ChangeSet();
-    int i = 0;
-    for (RepositoryConnection conn : group.getRepositoryConnection()) {      
-      WorkspaceFileChangeList wfcl = new WorkspaceFileChangeList();
-      wfcl.setWorkspacePath(conn.getSubpath());
-      wfcl.setWorkspaceName(conn.getWorkspaceName());
-      wfcl.setWorkspaceIndex(i);
-      ret.addToChanges(wfcl);
-      i++;
-    }
-    return ret;
-  }
-  
-  private RepositoryConnectionGroup selectGroup(List<? extends RepositoryConnectionGroup> grouplist, String repository) {
-    for (RepositoryConnectionGroup group : grouplist) {
-      String path = group.getRepository().getPath();
-      if (repository.equals(path)) {
-        return group;
-      }
-    }
-    throw new RuntimeException("Could not find data for repository " + repository);
-  }
-  
-
-  private void handleFileChange(String path, String typestr, ChangeSet cs) {
-    IndexedWorkspaceFileChange change = new IndexedWorkspaceFileChange();
-    change.setFileFullPath(path);
-    change.setType(typestr);
-    for (WorkspaceFileChangeList wfcl : cs.getChanges()) {
-      String wspath = wfcl.getWorkspacePath();
-      if (path.startsWith(wspath) && (path.length() > wspath.length())) {
-        String subpath = path.substring(wspath.length() + 1);
-        change.setFileSubpath(subpath);
-        if (wfcl.getIndexedFileChangeList() == null) {
-          change.setIndex(0);
-        }
-        else {
-          change.setIndex(wfcl.getIndexedFileChangeList().size());
-        }
-        wfcl.addToIndexedFileChangeList(change);
-      }
-    }
-  }
-
 
   public void push(String repository, String message, boolean dryrun, String user, List<String> filePatterns) throws Exception {
     if (message == null) { throw new IllegalArgumentException("Commit message is empty"); }
