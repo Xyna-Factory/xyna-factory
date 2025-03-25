@@ -30,38 +30,22 @@ import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 
 import xact.http.URLPath;
 import xact.http.enums.httpmethods.HTTPMethod;
+import xdev.yang.OperationCreationParameter;
 import xdev.yang.impl.Constants;
 import xdev.yang.impl.GuiHttpInteraction;
 import xmcp.processmodeller.datatypes.response.GetDataTypeResponse;
 import xmcp.processmodeller.datatypes.response.UpdateXMOMItemResponse;
-import xprc.xpce.Workspace;
 
 
 
 public class AddOperation {
 
-  public void addOperation(String fqn, String operationName, Workspace workspace, XynaOrderServerExtension order, String rpc, String deviceFqn, String rpcNs) {
+  public void addOperation(XynaOrderServerExtension order, OperationCreationParameter parameter) {
+    String fqn = parameter.getOperationGroupFqn();
     String label = fqn.substring(fqn.lastIndexOf(".") + 1);
     String path = fqn.substring(0, fqn.lastIndexOf("."));
-    OperationCreationParameter parameter = new OperationCreationParameter();
-    parameter.deviceFqn = deviceFqn;
-    parameter.label = label;
-    parameter.order = order;
-    parameter.path = path;
-    parameter.rpc = rpc;
-    parameter.rpcNs = rpcNs;
-    parameter.workspace = workspace.getName();
-    parameter.operation = operationName;
-    createOperation(parameter);
-  }
-  
-  public void createOperation(OperationCreationParameter parameter) {
-    String path = parameter.path;
-    String label = parameter.label;
-    String workspace = parameter.workspace;
-    XynaOrderServerExtension order = parameter.order;
-    String operation = parameter.operation;
-    String fqn = path + "." + label;
+    String workspace = parameter.getWorkspaceName();
+    String operation = parameter.getOperationName();
     try {
       RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
       Long revision = revMgmt.getRevision(null, null, workspace);
@@ -75,7 +59,7 @@ public class AddOperation {
       throw new RuntimeException(e);
     }
 
-    addOperationToDatatype(parameter);
+    addOperationToDatatype(order, parameter);
     try (Operation result = Operation.open(order, fqn, workspace, operation)) {
       result.addInput("MessageId", "xmcp.yang.MessageId");
       result.addOutput("xact.templates.Document");
@@ -84,7 +68,6 @@ public class AddOperation {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-
   }
 
 
@@ -145,17 +128,18 @@ public class AddOperation {
     GuiHttpInteraction.executeRunnable(runnable, url, GuiHttpInteraction.METHOD_PUT, payload, "Could not add supertype to datatype.");
   }
   
-  public static void addOperationToDatatype(OperationCreationParameter parameter) {
-    String rpcNs = parameter.rpcNs;
-    String deviceFqn = parameter.deviceFqn;
-    String rpc = parameter.rpc;
-    String workspaceName = parameter.workspace;
-    String path = parameter.path;
-    String label = parameter.label;
-    String operation = parameter.operation;
+  public static void addOperationToDatatype(XynaOrderServerExtension order, OperationCreationParameter parameter) {
+    String rpcNs = parameter.getRpcNamespace();
+    String deviceFqn = parameter.getDeviceFqn();
+    String rpc = parameter.getRpc();
+    String workspaceName = parameter.getWorkspaceName();
+    String fqn = parameter.getOperationGroupFqn();
+    String label = fqn.substring(fqn.lastIndexOf(".") + 1);
+    String path = fqn.substring(0, fqn.lastIndexOf("."));
+    String operation = parameter.getOperationName();
     rpcNs = rpcNs == null || rpcNs.isBlank() ? OperationAssignmentUtils.loadRpcNs(rpc, deviceFqn, workspaceName) : rpcNs;
 
-    UpdateXMOMItemResponse json = createService(parameter);
+    UpdateXMOMItemResponse json = createService(order, parameter);
     String serviceNumber = String.valueOf(GuiHttpInteraction.loadServiceId(json, operation));
     if (serviceNumber.equals("-1")) {
       throw new RuntimeException("could not add service " + operation + " to datatype " + path + "." + label);
@@ -163,38 +147,28 @@ public class AddOperation {
     
     String meta = createMetaTag(deviceFqn, rpc, rpcNs);
     meta = meta.replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"");
-    GuiHttpInteraction.setMetaTag(path, label, workspaceName, operation, meta, parameter.order);
+    GuiHttpInteraction.setMetaTag(path, label, workspaceName, operation, meta, order);
     
-    GuiHttpInteraction.saveDatatype(path, path, label, workspaceName, "datatypes", parameter.order);
+    GuiHttpInteraction.saveDatatype(path, path, label, workspaceName, "datatypes", order);
   }
 
   
 
 
-  private static UpdateXMOMItemResponse createService(OperationCreationParameter parameter) {
-    String operation = parameter.operation;
-    String workspaceNameEscaped = GuiHttpInteraction.urlEncode(parameter.workspace);
-    String fqnUrl = parameter.path + "/" + parameter.label;
-    RunnableForFilterAccess runnable = parameter.order.getRunnableForFilterAccess("H5XdevFilter");
+  private static UpdateXMOMItemResponse createService(XynaOrderServerExtension order, OperationCreationParameter parameter) {
+    String operation = parameter.getOperationName();
+    String workspaceNameEscaped = GuiHttpInteraction.urlEncode(parameter.getWorkspaceName());
+    String fqn = parameter.getOperationGroupFqn();
+    String label = fqn.substring(fqn.lastIndexOf(".") + 1);
+    String path = fqn.substring(0, fqn.lastIndexOf("."));
+    String fqnUrl = path + "/" + label;
+    RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
     String endPoint = "/runtimeContext/" + workspaceNameEscaped + "/xmom/servicegroups/" + fqnUrl + "/objects/memberMethodsArea/insert";
     URLPath url = new URLPath(endPoint, null, null);
     String payload = "{\"index\":-1,\"content\":{\"type\":\"memberService\",\"label\":\"" + operation + "\"}}";
     String errorMsg = "Could not add service to datatype.";
     HTTPMethod method = GuiHttpInteraction.METHOD_POST;
     return (UpdateXMOMItemResponse) GuiHttpInteraction.executeRunnable(runnable, url, method, payload, errorMsg);
-  }
-  
-  
-  public static class OperationCreationParameter {
-
-    private XynaOrderServerExtension order;
-    private String path;
-    private String label;
-    private String workspace;
-    private String operation;
-    private String rpc;
-    private String rpcNs;
-    private String deviceFqn;
   }
 
 }

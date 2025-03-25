@@ -73,16 +73,14 @@
     </Operation>
     <Operation IsStatic="true" Label="Add Operation" Name="addOperation" RequiresXynaOrder="true">
       <Input>
-        <Data ID="2" Label="OperationGroupFqn" ReferenceName="Text" ReferencePath="base" VariableName="text2"/>
-        <Data ID="3" Label="OperationName" ReferenceName="Text" ReferencePath="base" VariableName="text3"/>
-        <Data ID="5" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace5"/>
-        <Data ID="8" Label="RPC" ReferenceName="Text" ReferencePath="base" VariableName="text8"/>
-        <Data ID="9" Label="Device Fqn" ReferenceName="Text" ReferencePath="base" VariableName="text9"/>
-        <Data ID="11" Label="Rpc Namespace" ReferenceName="Text" ReferencePath="base" VariableName="text11"/>
+        <Data ID="33" Label="Operation Creation Parameter" ReferenceName="OperationCreationParameter" ReferencePath="xdev.yang" VariableName="operationCreationParameter33"/>
       </Input>
       <Output/>
+      <Throws>
+        <Exception ID="32" Label="Operation Creation Exception" ReferenceName="OperationCreationException" ReferencePath="xdev.yang.exceptions" VariableName="operationCreationException32"/>
+      </Throws>
       <SourceCode>
-        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.addOperation(correlatedXynaOrder, text2, text3, workspace5, text8, text9, text11);</CodeSnippet>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.addOperation(correlatedXynaOrder, operationCreationParameter33);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Save Assignment" Name="saveAssignment" RequiresXynaOrder="true">
