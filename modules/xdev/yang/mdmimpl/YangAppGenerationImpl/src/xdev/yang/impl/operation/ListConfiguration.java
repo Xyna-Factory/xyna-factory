@@ -149,7 +149,8 @@ public class ListConfiguration {
     public abstract void updateNode(Element element);
     public abstract int getNumberOfCandidateEntries();
     public abstract String createCandidateName(int i);
-
+    public abstract String toConfigString();
+    
     public static ListLengthConfig loadFromElement(Element element) {
       String type = element.getAttribute(Constants.ATT_LIST_CONFIG_TYPE);
       return loadFromElementFunctions.get(type).apply(element);
@@ -178,6 +179,11 @@ public class ListConfiguration {
     @Override
     public String createCandidateName(int i) {
       return String.valueOf(i);
+    }
+    
+    @Override
+    public String toConfigString() {
+      return String.valueOf(length);
     }
     
     public ConstantListLengthConfig(int length) {
@@ -225,6 +231,11 @@ public class ListConfiguration {
     @Override
     public String createCandidateName(int i) {
       return variable;
+    }
+    
+    @Override
+    public String toConfigString() {
+      return String.format("%s:%s", variable, path);
     }
     
     public String getVariable() {

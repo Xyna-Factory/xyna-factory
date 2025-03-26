@@ -153,5 +153,16 @@
         <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.updateVariableInOperationSignature(correlatedXynaOrder, operationTableData28, operationSignatureEntry29);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Load List Configuration" Name="loadListConfiguration" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="34" Label="Load Yang Assignments Data" ReferenceName="LoadYangAssignmentsData" ReferencePath="xmcp.yang" VariableName="loadYangAssignmentsData34"/>
+      </Input>
+      <Output>
+        <Data ID="35" Label="ListConfiguration" ReferenceName="ListConfiguration" ReferencePath="xmcp.yang.fman" VariableName="listConfiguration35"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadListConfiguration(correlatedXynaOrder, loadYangAssignmentsData34);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

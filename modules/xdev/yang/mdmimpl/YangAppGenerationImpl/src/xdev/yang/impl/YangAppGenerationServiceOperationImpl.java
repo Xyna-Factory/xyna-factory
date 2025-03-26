@@ -50,6 +50,7 @@ import xdev.yang.impl.operation.LoadOperationsTable;
 import xdev.yang.impl.operation.RemoveVariableFromOperationSignature;
 import xdev.yang.impl.operation.SaveOperationAssignmentAction;
 import xdev.yang.impl.operation.UpdateVariableInOperationSignature;
+import xdev.yang.impl.operation.listconfig.LoadListConfig;
 import xdev.yang.impl.operation.OperationCache;
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.OperationAssignmentTableData;
@@ -191,6 +192,12 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   public void updateVariableInOperationSignature(XynaOrderServerExtension order, OperationTableData operation, OperationSignatureEntry signature) {
     UpdateVariableInOperationSignature executor = new UpdateVariableInOperationSignature();
     executor.updateVariable(order, operation, signature);
+  }
+
+
+  @Override
+  public ListConfiguration loadListConfiguration(XynaOrderServerExtension order, LoadYangAssignmentsData data) {
+    return new LoadListConfig().load(order, data);
   }
 
 }

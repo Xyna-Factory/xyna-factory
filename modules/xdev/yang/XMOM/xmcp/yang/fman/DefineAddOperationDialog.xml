@@ -101,6 +101,7 @@
       <Mapping>%7%.serviceRTC=%0%</Mapping>
       <Mapping>%7%.serviceFQN="xmcp.yang.fman.AddOperation"</Mapping>
       <Mapping>%7%.synchronously="true"</Mapping>
+      <Mapping>%7%.showResult="true"</Mapping>
     </Mappings>
     <Mappings ID="27" Label="Mapping">
       <Input>
