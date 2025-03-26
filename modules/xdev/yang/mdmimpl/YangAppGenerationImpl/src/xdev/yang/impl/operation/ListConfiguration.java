@@ -101,6 +101,9 @@ public class ListConfiguration {
   public static ListConfiguration fromDatatype(String yang, String ns, String keywords, xmcp.yang.fman.ListConfiguration dtConfig) {
     ListLengthConfig config;
     String configString = dtConfig.getConfig();
+    if(configString.isBlank()) {
+      return new ListConfiguration(yang, ns, keywords, new ConstantListLengthConfig(0));
+    }
     if(configString.contains(":")) {
       String variable = configString.substring(0, configString.indexOf(":"));
       String path = configString.substring(configString.indexOf(":") + 1);
