@@ -73,8 +73,20 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
         wcd.setContentType(TAG_XMOMSTORABLE);
         wcd.setExistingItem(fromEntry);
         if (toEntry != null) {
-          if (!Objects.equals(fromEntry.getPath(), toEntry.getPath()) || !Objects.equals(fromEntry.getODSName(), toEntry.getODSName())
-              || !Objects.equals(fromEntry.getColumnName(), toEntry.getColumnName())) {
+          boolean pathsMatch = Objects.equals(fromEntry.getPath(), toEntry.getPath());
+          boolean colnamesMatch = Objects.equals(fromEntry.getColumnName(), toEntry.getColumnName());
+          boolean odsnamesMatch = Objects.equals(fromEntry.getODSName(), toEntry.getODSName());
+          boolean fqPathEmpty = (fromEntry.getFQPath() == null) || (fromEntry.getFQPath().isBlank()); 
+          boolean modified = false;
+          if (fqPathEmpty) {
+            modified = !odsnamesMatch;
+          } else {
+            modified = !pathsMatch || !colnamesMatch; 
+          }
+          if (modified) {
+            if (!fqPathEmpty) {
+              toEntry.setODSName(fromEntry.getODSName());
+            }
             wcd.setDifferenceType(new MODIFY());
             wcd.setNewItem(toEntry);
             toWorkingList.remove(toEntry); // remove entry from to-list
@@ -229,11 +241,51 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
 
   @Override
   public void modify(XMOMStorable from, XMOMStorable to, long revision) {
+    if ((to.getFQPath() != null) && !to.getFQPath().isBlank()) {
+      modifySingleColumnEntry(from, to, revision);
+      return;
+    }
     this.delete(from, revision);
     this.create(to, revision);
+    if (!Objects.equals(from.getODSName(), to.getODSName())) {
+      modifyTablenameOfColumnEntries(from, to, revision);
+    }
   }
 
+  private void modifyTablenameOfColumnEntries(XMOMStorable from, XMOMStorable to, long revision) {
+    try {
+      Collection<XMOMODSMapping> entries = XMOMODSMappingUtils.getAllMappingsForRootType(from.getXMLName(), revision);
+      for (XMOMODSMapping item : entries) {
+        if (item.isTableConfig()) { continue; }
+        if (!Objects.equals(from.getODSName(), item.getTablename())) { continue; }
+        item.setTablename(to.getODSName());
+        XMOMODSMappingUtils.storeMapping(item);
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
 
+  private void modifySingleColumnEntry(XMOMStorable from, XMOMStorable to, long revision) {
+    try {
+      Collection<XMOMODSMapping> entries = XMOMODSMappingUtils.getAllMappingsForRootType(from.getXMLName(), revision);
+      for (XMOMODSMapping item : entries) {
+        if (item.isTableConfig()) { continue; }
+        if (!Objects.equals(from.getFQPath(), item.getFqpath())) { continue; }
+        if (!Objects.equals(from.getPath(), item.getPath())) { continue; }
+        if (!Objects.equals(from.getColumnName(), item.getColumnname())) { continue; }
+        item.setFqpath(to.getFQPath());
+        item.setPath(to.getPath());
+        item.setColumnname(to.getColumnName());
+        XMOMODSMappingUtils.storeMapping(item);
+        return;
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+  
+  
   @Override
   public void delete(XMOMStorable item, long revision) {
     try {
