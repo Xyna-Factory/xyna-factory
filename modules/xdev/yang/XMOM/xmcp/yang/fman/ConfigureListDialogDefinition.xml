@@ -76,6 +76,7 @@
       <Mapping>%3%.dataPath="%0%, %1%"</Mapping>
       <Mapping>%3%.synchronously="true"</Mapping>
       <Mapping>%4%=%1%.loadYangAssignmentsData</Mapping>
+      <Mapping>%3%.onStartorderResultEvent["0"].eventId=concat("yang_assignment_refresh_", %1%.loadYangAssignmentsData.totalYangPath)</Mapping>
     </Mappings>
     <Mappings ID="30" Label="Mapping">
       <Input>
