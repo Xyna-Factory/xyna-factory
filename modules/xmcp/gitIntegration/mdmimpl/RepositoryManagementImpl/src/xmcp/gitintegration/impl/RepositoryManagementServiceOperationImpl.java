@@ -65,7 +65,7 @@ import xmcp.gitintegration.storage.UserManagementStorage;
 public class RepositoryManagementServiceOperationImpl implements ExtendedDeploymentTask, RepositoryManagementServiceOperation {
 
   private static Logger _logger = CentralFactoryLogging.getLogger(RepositoryManagementServiceOperationImpl.class);
-  
+
   public void onDeployment() throws XynaException {
     RepositoryManagementImpl.init();
     UserManagementStorage.init();
@@ -160,7 +160,7 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     RepositoryManagementImpl.updatetRepositoryConnection(repositoryConnection);
   }
 
-  
+
   @Override
   public void addUserToRepository(XynaOrderServerExtension order, RepositoryUserCreationData data) {
     SessionManagement sessionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement();
@@ -186,7 +186,17 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     new UserManagementStorage().AddUserToRepository(username, repoUser, repo, password, key, keyPhrase, mail);
   }
 
-  
+
+  @Override
+  public RepositoryUser getCurrentRepositoryUser(XynaOrderServerExtension order, Repository repository) {
+    String user = getUserFromSession(order.getSessionId());
+    try {
+      return new UserManagementStorage().loadUser(user, repository.getPath());
+    } catch (Exception e) {
+      return new RepositoryUser();
+    }
+  }
+
 
   @Override
   public BranchData listBranches(Repository repository) {
@@ -217,7 +227,7 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     }
   }
 
-  
+
   private String getUserFromSession(String session) {
     SessionManagement sessionMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement();
     return sessionMgmt.resolveSessionToUser(session);
@@ -260,7 +270,7 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
     if (repository == null) { throw new IllegalArgumentException("Parameter repository is empty."); }
     try {
       return new RepositoryInteraction().loadChanges(repository.getPath());
-    } 
+    }
     catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -276,5 +286,5 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
       throw new RuntimeException(e);
     }
   }
-  
+
 }
