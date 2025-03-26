@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -104,6 +104,8 @@
       <Mapping>%2%.serviceRTC=%0%</Mapping>
       <Mapping>%2%.serviceFQN="xmcp.gitintegration.ui.ExecutePushAllOfWorkspace"</Mapping>
       <Mapping>%2%.label="Push all files of workspace"</Mapping>
+      <Mapping>%2%.onStartorderResultEvent["0"].eventId="git_int_push_clear"</Mapping>
+      <Mapping>%2%.onStartorderResultEvent["1"].eventId="git_int_push_close"</Mapping>
     </Mappings>
     <Mappings ID="360" Label="Mapping">
       <Input>
@@ -128,7 +130,7 @@
       </Output>
       <Mapping>%3%.label=concat(%1%.workspaceName, " (", %1%.workspacePath, ")")</Mapping>
       <Mapping>%3%.children=%0%</Mapping>
-      <Mapping>%3%.header.rightArea.children["0"]=%2%</Mapping>
+      <Mapping>%3%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%2%</Mapping>
     </Mappings>
     <Data ID="385" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition385"/>
     <Data ID="496" IsList="true" Label="Indexed Workspace File Change" ReferenceName="IndexedWorkspaceFileChange" ReferencePath="xmcp.gitintegration.repository" VariableName="indexedWorkspaceFileChange496">
