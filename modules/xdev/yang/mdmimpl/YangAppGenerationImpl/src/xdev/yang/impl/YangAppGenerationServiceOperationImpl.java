@@ -50,11 +50,13 @@ import xdev.yang.impl.operation.LoadOperationsTable;
 import xdev.yang.impl.operation.RemoveVariableFromOperationSignature;
 import xdev.yang.impl.operation.SaveOperationAssignmentAction;
 import xdev.yang.impl.operation.UpdateVariableInOperationSignature;
+import xdev.yang.impl.operation.anyxml.AnyXmlSubstatementConfigManager;
 import xdev.yang.impl.operation.listconfig.LoadListConfig;
 import xdev.yang.impl.operation.OperationCache;
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.OperationAssignmentTableData;
 import xmcp.yang.OperationTableData;
+import xmcp.yang.fman.AnyXmlSubstatementConfiguration;
 import xmcp.yang.fman.ListConfiguration;
 import xmcp.yang.fman.OperationSignatureEntry;
 
@@ -198,6 +200,13 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   @Override
   public ListConfiguration loadListConfiguration(XynaOrderServerExtension order, LoadYangAssignmentsData data) {
     return new LoadListConfig().load(order, data);
+  }
+
+
+  @Override
+  public void configureAnyxmlSubstantement(XynaOrderServerExtension order, LoadYangAssignmentsData data,
+                                           AnyXmlSubstatementConfiguration config) {
+    new AnyXmlSubstatementConfigManager().configure(order, data, config);
   }
 
 }
