@@ -21,7 +21,6 @@ package xdev.yang.cli.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 
 import org.apache.log4j.Logger;
@@ -65,7 +64,7 @@ public class CreateyangdeviceappImpl extends XynaCommandImplementation<Createyan
     try (YangApplicationGenerationData appData = YangApplicationGeneration.createDeviceApp(genParameter)) {
       writeToCommandLine(statusOutputStream, appName + " ManagedFileId: " + appData.getId() + " ");
       appFileId = appData.getId();
-    } catch (IOException e) {
+    } catch (Exception e) {
       writeToCommandLine(statusOutputStream, "Could not clean up temporary files for " + appName + "\n");
       if (logger.isWarnEnabled()) {
         logger.warn("Could not clean up temporary files for " + appName + "\n", e);
