@@ -101,8 +101,8 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
 
   //used by GUIHTTP as well!
   public static final XynaPropertyString ACCESS_CONTROL_ALLOW_ORIGIN = new XynaPropertyString("xmcp.guihttp.access_control_allow_origin", "")
-      .setDefaultDocumentation(DocumentationLanguage.EN, "Cross-origin resource sharing (CORS): Comma separated list of origins or *. A origin is of format http[s]://<fqhostname>[:port]")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Cross-origin resource sharing (CORS): Kommaseparierte Liste von Origins oder *. Ein Origin hat Format http[s]://<fqhostname>[:port]");
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Cross-origin resource sharing (CORS): Comma separated list of origins or *. An origin is of format http[s]://<fqhostname>[:port]")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Cross-origin resource sharing (CORS): Kommaseparierte Liste von Origins oder *. Ein Origin hat das Format http[s]://<fqhostname>[:port]");
 
   public static final XynaPropertyBuilds<Long> DEFAULT_WORKSPACE =
       new XynaPropertyBuilds<Long>("xmcp.guihttp.default_workspace", new WorkspaceRevisionBuilder(), Long.valueOf(-1L))
@@ -112,33 +112,32 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
   private static final String cache_size_property_name = "xmcp.guihttp.xmom_cache_size";
   
   public static final XynaPropertyInt GENERATION_BASE_CACHE_SIZE = new XynaPropertyInt(cache_size_property_name, 100)
-      .setDefaultDocumentation(DocumentationLanguage.EN, "Number of XMOM Objects held in cache. Shared across all users")
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Number of XMOM Objects held in cache. Shared across all users.")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Anzahl an XMOM Objekten, die maximal im Cache gehalten werden. Dieser Cache wird zwischen allen Benutzern geteilt.");
 
   public static final XynaPropertyBoolean USE_CACHE = new XynaPropertyBoolean("xmcp.guihttp.use_cache", true)
-      .setDefaultDocumentation(DocumentationLanguage.EN, "Use a cache to store recently used objects. Cache size is determined by " + cache_size_property_name)
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Verwende einen Cache um auf zuletzt verwendete Objekte schneller zugreifen zu können. Größe des Caches is bestimmt durch " + cache_size_property_name);
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Use a cache to store recently used objects. Cache size is determined by " + cache_size_property_name + ".")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Cache verwenden, um auf zuletzt verwendete Objekte schneller zugreifen zu können. Die Größe des Caches wird durch " + cache_size_property_name + " bestimmt.");
 
-  public static final XynaPropertyBoolean AVARCONSTANTS = new XynaPropertyBoolean("xmcp.guihttp.new_constants", true).
-      setDefaultDocumentation(DocumentationLanguage.EN, "Prevent instantiation problems by using a different approach to convert json to constants.");
+  public static final XynaPropertyBoolean AVARCONSTANTS = new XynaPropertyBoolean("xmcp.guihttp.new_constants", true)
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Prevent instantiation problems by using a different approach to convert JSONs to constants.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Durch alternativen Ansatz zur Konvertierung von JSONs in Konstanten Probleme mit Instanziierung umgehen.");
   
   public static final XynaPropertyBoolean CompressResponse = new XynaPropertyBoolean("xmcp.guihttp.compress_response", true)
-      .setDefaultDocumentation(DocumentationLanguage.EN, "compress response of requests using gzip, if supported by caller")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Komprimiere Antworten mit gzip, wenn es vom Aufrufer unterstützt wird");
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Compress response of requests using gzip, if supported by caller.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Antwort mit gzip komprimieren, wenn es vom Aufrufer unterstützt wird.");
   
   public static final XynaPropertyBoolean STRICT_TRANSPORT_SECURITY = new XynaPropertyBoolean("xmcp.guihttp.sts", true)
-      .setDefaultDocumentation(DocumentationLanguage.EN, "Send Session Cookie as __Secure- and add Strict-Transport-Security header")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Sende Session Cookie als __Secure- und füge Strict-Transport-Security header ein");
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Send Session Cookie as __Secure- and add Strict-Transport-Security header. Requires an HTTPS Trigger.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Session Cookie als __Secure- senden und Strict-Transport-Security Header einfügen. Benötigt einen HTTPS-Trigger.");
 
   public static final XynaPropertyDuration STRICT_TRANSPORT_SECURITY_MAX_AGE = new XynaPropertyDuration("xmcp.guihttp.sts.maxage", "730 d" )
       .setDefaultDocumentation(DocumentationLanguage.EN, "Max-age of Strict-Transport-Security header.")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Max-age des Strict-Transport-Security header.");
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Max-age des Strict-Transport-Security Headers.");
 
   public static final XynaPropertyString VALIDATION_WORKFLOW = new XynaPropertyString("xmcp.guihttp.startorder.preprocess_workflow", "")
-      .setDefaultDocumentation(DocumentationLanguage.EN,
-                               "If set, all startorder Requests outside of guihttp are first processed by the given workflow. Inputs are Document and OrderType, output is Document. Format: <fqn>@<rtc>. <rtc> is either workspaceName or applicationName/versionName.")
-      .setDefaultDocumentation(DocumentationLanguage.DE,
-                               "Wenn gesetzt, werden alle startorder Requests außerhalb von guihttp zuerst vom angegebenen Workflow verarbeitet. Inputs sind Document und Ordertype, Output ist Document. Format: <fqn>@<rtc>. <rtc> ist entweder workspaceName oder applicationName/versionName");
+      .setDefaultDocumentation(DocumentationLanguage.EN, "If set, all startorder Requests outside of GuiHttp are first processed by the given Workflow. Inputs are Document and OrderType, output is Document. Format: <fqn>@<rtc>. <rtc> is either workspaceName or applicationName/versionName.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Falls gesetzt, werden alle startorder-Requests außerhalb von GuiHttp zuerst vom angegebenen Workflow verarbeitet. Inputs sind Document und Ordertype, Output ist Document. Format: <fqn>@<rtc>. <rtc> ist entweder workspaceName oder applicationName/versionName.");
 
 
 
