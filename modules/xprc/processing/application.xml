@@ -17,7 +17,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <!--                                               ################# Version auch in blackedition_lib.sh updaten ########### -->
-<Application applicationName="Processing" comment="" factoryVersion="" versionName="1.0.22" xmlVersion="1.1">
+<Application applicationName="Processing" comment="" factoryVersion="" versionName="1.0.23" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Konfiguration im Planning-Workflow, Starten von Aufträgen</Description>
     <Description Lang="EN">Configuration in Planning workflow, starting orders</Description>
