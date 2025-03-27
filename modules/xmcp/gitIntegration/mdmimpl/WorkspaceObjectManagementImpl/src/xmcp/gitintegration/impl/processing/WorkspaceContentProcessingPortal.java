@@ -19,6 +19,7 @@ package xmcp.gitintegration.impl.processing;
 
 
 
+import java.util.ArrayList;
 import java.util.Collection;
 import org.w3c.dom.Node;
 import java.util.HashMap;
@@ -135,8 +136,10 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
                                                                                               WorkspaceContentProcessor<T> processor) {
     Class<T> expectedClass = (Class<T>) getWorkspaceContentTypeFromProcessor(processor);
     List<WorkspaceContentDifference> result = new LinkedList<>();
-    List<T> from = (List<T>) c1.getWorkspaceContentItems().stream().filter(x -> matchClass(x, expectedClass)).collect(Collectors.toList());
-    List<T> to = (List<T>) c2.getWorkspaceContentItems().stream().filter(x -> matchClass(x, expectedClass)).collect(Collectors.toList());
+    List<T> from = (List<T>) c1.getWorkspaceContentItems();
+    List<T> to = (List<T>) c2.getWorkspaceContentItems();
+    from = from == null ? new ArrayList<>() : from.stream().filter(x -> matchClass(x, expectedClass)).collect(Collectors.toList());
+    to = to == null ? new ArrayList<>() : to.stream().filter(x -> matchClass(x, expectedClass)).collect(Collectors.toList());
 
     result.addAll(processor.compare(from, to));
 
@@ -276,8 +279,8 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
     storage.deleteWorkspaceDifferenceList(listid);
     return "Workspace Difference List with id " + listid + " closed.";
   }
-  
-  
+
+
   public String resolveList(long diffListId, List<ResolveWorkspaceDifferencesParameter> paramlist) {
     WorkspaceDifferenceListStorage storage = new WorkspaceDifferenceListStorage();
     StringBuilder sb = new StringBuilder();
@@ -288,8 +291,8 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
     finishResolve(storage, differences, sb);
     return sb.toString();
   }
-  
-  
+
+
   public String resolveAll(long diffListId, Optional<String> resolution) {
     WorkspaceDifferenceListStorage storage = new WorkspaceDifferenceListStorage();
     StringBuilder sb = new StringBuilder();
@@ -298,8 +301,8 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
     finishResolve(storage, differences, sb);
     return sb.toString();
   }
-  
-  
+
+
   private void finishResolve(WorkspaceDifferenceListStorage storage, WorkspaceContentDifferences differences,
                              StringBuilder sb) {
     if (differences.getDifferences().size() > 0) {
@@ -397,7 +400,7 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
   /***
    * Returns either the resolution to use, or the empty string, if nothing needs to be done to resolve this entry
    * @param suggested
-   * 'natural' resolution to 
+   * 'natural' resolution to
    * @param desired
    * resolution provided by the user
    * @return

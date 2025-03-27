@@ -46,7 +46,7 @@ public class OperationImplementationProvider {
     result
         .append("com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder builder = new com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder();\n")
         .append("builder.startElementWithAttributes(\"rpc\");\n")
-        .append("builder.addAttribute(\"message-Id\", ").append(inputVarNames.get(0)).append(".getId());\n")
+        .append("builder.addAttribute(\"message-id\", ").append(inputVarNames.get(0)).append(".getId());\n")
         .append("builder.addAttribute(\"xmlns\", \"").append(Constants.NETCONF_NS).append("\");\n")
         .append("builder.endAttributes();\n")
         .append("builder.startElementWithAttributes(\"").append(rpcName).append("\");\n")
