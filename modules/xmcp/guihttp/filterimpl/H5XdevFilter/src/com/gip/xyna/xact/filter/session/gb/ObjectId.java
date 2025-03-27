@@ -296,6 +296,16 @@ public class ObjectId {
       return new ObjectId(ObjectType.reference, baseId);
     }
 
+    if( ObjectIdPrefix.metaTagArea.match(id) ) {
+      String baseId = ObjectIdPrefix.metaTagArea.getBaseId(id);
+      return new ObjectId(ObjectType.metaTagArea, baseId, part, objectId);
+    }
+
+    if( ObjectIdPrefix.metaTag.match(id) ) {
+      String baseId = ObjectIdPrefix.metaTag.getBaseId(id);
+      return new ObjectId(ObjectType.metaTag, baseId, part, objectId);
+    }
+
     throw new UnknownObjectIdException(objectId);
   }
 
@@ -435,11 +445,28 @@ public class ObjectId {
   public static String createOperationImplementationAreaId(String baseId) {
     return ObjectIdPrefix.implementationArea.getPrefix() + emptyIfNull(baseId);
   }
-  
-  public static String createMetaTagId(int idx) {
-    return ObjectIdPrefix.metaTag.getPrefix() + idx;
+
+  public static String createMetaTagId(int idx, String baseId) {
+    String id = ObjectIdPrefix.metaTag.getPrefix() + idx;
+    if (emptyIfNull(baseId).length() > 0) {
+      id += SEPARATOR + baseId;
+    }
+
+    return id;
   }
-  
+
+  public static int getMetaTagIdx(ObjectId objectId) {
+    int idx;
+    if (objectId.getBaseId().length() > 0) {
+      int startPosBaseId = objectId.getObjectId().indexOf(ObjectId.SEPARATOR);
+      idx = Integer.parseInt(objectId.getObjectId().substring(ObjectId.ObjectIdPrefix.metaTag.getPrefix().length(), startPosBaseId));
+    } else {
+      idx = Integer.parseInt(objectId.getObjectId().substring(ObjectId.ObjectIdPrefix.metaTag.getPrefix().length()));
+    }
+
+    return idx;
+  }
+
   public static String createIdForCase(String baseId, String branchId, String caseId) {
     return baseId + SEPARATOR + ObjectIdPrefix.distinctionBranch +  branchId + SEPARATOR + ObjectIdPrefix.distinctionCase + caseId;
   }
@@ -935,12 +962,34 @@ public class ObjectId {
         return id.substring(prefix.length());
       }
     },
-    metaTag("metaTag"){
+    metaTagArea("metaTagArea"){
       public boolean match(String objectId) {
         return objectId.startsWith(prefix);
       }
       public String getBaseId(String id) {
         return id.substring(prefix.length());
+      }
+    },
+    metaTag("metaTag"){
+      public boolean match(String objectId) {
+        return objectId.startsWith(prefix);
+      }
+      public String getBaseId(String id) {
+        return id.contains(SEPARATOR + "") ? id.substring(id.indexOf(SEPARATOR) + 1) : ""; 
+      }
+    },
+    metaTagDeprecated("metaTag"){
+      public boolean match(String objectId) {
+        return objectId.startsWith(prefix);
+      }
+      public String getBaseId(String id) {
+        if (id != null && id.contains(SEPARATOR + "")) {
+          // meta tag of a member
+          return id.substring(prefix.length(), id.indexOf(SEPARATOR));
+        } else {
+          // meta tag of a data type
+          return id.substring(prefix.length());
+        }
       }
     }
     ;
@@ -1045,6 +1094,8 @@ public class ObjectId {
         return warning;
       case reference:
         return reference;
+      case metaTagArea:
+        return metaTagArea;
       default:
         return null;
       }

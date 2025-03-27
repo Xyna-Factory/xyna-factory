@@ -164,7 +164,7 @@ public class MetaTagRmvAction extends RuntimeContextDependendAction implements E
     private void rmvMetaTag(String sessionId, Long revision, URLPath url) throws Exception {
       URLPathQuery id = url.getQuery("metaTagId");
       MetaTagProcessingInfoContainer data = MetaTagActionUtils.createProcessingInfoContainer(url, sessionId, xmomGui, revision);
-      int index = Integer.valueOf(ObjectIdPrefix.metaTag.getBaseId(id.getValue()));
+      int index = Integer.valueOf(ObjectIdPrefix.metaTagDeprecated.getBaseId(id.getValue()));
       MetaTagRmvFunction func = metaTagRmvFunctions.get(data.getType());
       func.rmvMetaTag(data.getGbo(), data.getElementName(), index);
     }

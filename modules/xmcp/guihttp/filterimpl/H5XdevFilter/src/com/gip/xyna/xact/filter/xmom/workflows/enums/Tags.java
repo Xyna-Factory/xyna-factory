@@ -116,7 +116,10 @@ public class Tags {
   public static final String FOREACH_OUTPUT = "output";
 
   public static final String META_TAG_AREA = "metaTags";
-  
+  public static final String META_TAG = "metaTag";
+
+  public static final String TAG = "tag";
+
   // signature
   public static final String SIGNATURE_INPUTS = "inputs";
   public static final String SIGNATURE_OUTPUTS = "outputs";
