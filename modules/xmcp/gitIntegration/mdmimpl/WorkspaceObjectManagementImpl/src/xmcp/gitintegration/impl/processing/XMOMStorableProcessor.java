@@ -73,18 +73,16 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
         wcd.setContentType(TAG_XMOMSTORABLE);
         wcd.setExistingItem(fromEntry);
         if (toEntry != null) {
-          boolean pathsMatch = Objects.equals(fromEntry.getPath(), toEntry.getPath());
-          boolean colnamesMatch = Objects.equals(fromEntry.getColumnName(), toEntry.getColumnName());
-          boolean odsnamesMatch = Objects.equals(fromEntry.getODSName(), toEntry.getODSName());
-          boolean fqPathEmpty = (fromEntry.getFQPath() == null) || (fromEntry.getFQPath().isBlank()); 
+          boolean fqPathEmpty = (fromEntry.getFQPath() == null) || (fromEntry.getFQPath().isBlank());
           boolean modified = false;
           if (fqPathEmpty) {
-            modified = !odsnamesMatch;
+            modified = !Objects.equals(fromEntry.getODSName(), toEntry.getODSName());
           } else {
-            modified = !pathsMatch || !colnamesMatch; 
+            modified = !Objects.equals(fromEntry.getColumnName(), toEntry.getColumnName()); 
           }
           if (modified) {
             if (!fqPathEmpty) {
+              // ignore possible tablename change in entries for column change
               toEntry.setODSName(fromEntry.getODSName());
             }
             wcd.setDifferenceType(new MODIFY());
@@ -174,20 +172,10 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
   public String createDifferencesString(XMOMStorable from, XMOMStorable to) {
     StringBuffer ds = new StringBuffer();
 
-    if (!Objects.equals(from.getPath(), to.getPath())) {
-      ds.append("\n");
-      ds.append("    " + TAG_PATH + " ");
-      ds.append(MODIFY.class.getSimpleName() + " \"" + from.getPath() + "\"=>\"" + to.getPath() + "\"");
-    }
     if (!Objects.equals(from.getODSName(), to.getODSName())) {
       ds.append("\n");
       ds.append("    " + TAG_ODSNAME + " ");
       ds.append(MODIFY.class.getSimpleName() + " \"" + from.getODSName() + "\"=>\"" + to.getODSName() + "\"");
-    }
-    if (!Objects.equals(from.getFQPath(), to.getFQPath())) {
-      ds.append("\n");
-      ds.append("    " + TAG_FQPATH + " ");
-      ds.append(MODIFY.class.getSimpleName() + " \"" + from.getFQPath() + "\"=>\"" + to.getFQPath() + "\"");
     }
     if (!Objects.equals(from.getColumnName(), to.getColumnName())) {
       ds.append("\n");
@@ -274,8 +262,6 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
         if (!Objects.equals(from.getFQPath(), item.getFqpath())) { continue; }
         if (!Objects.equals(from.getPath(), item.getPath())) { continue; }
         if (!Objects.equals(from.getColumnName(), item.getColumnname())) { continue; }
-        item.setFqpath(to.getFQPath());
-        item.setPath(to.getPath());
         item.setColumnname(to.getColumnName());
         XMOMODSMappingUtils.storeMapping(item);
         return;
