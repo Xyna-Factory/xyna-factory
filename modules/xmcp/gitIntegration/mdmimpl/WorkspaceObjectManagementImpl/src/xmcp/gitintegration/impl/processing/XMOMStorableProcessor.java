@@ -32,6 +32,16 @@ import org.w3c.dom.NodeList;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMODSMapping;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMODSMappingUtils;
+import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache;
+import com.gip.xyna.xnwh.persistence.xmom.XMOMPersistenceManagement.StructureCacheRegistrator;
+import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache.XMOMStorableStructureInformation;
+import com.gip.xyna.xprc.exceptions.XPRC_DeploymentHandlerException;
+import com.gip.xyna.xprc.exceptions.XPRC_InheritedConcurrentDeploymentException;
+import com.gip.xyna.xprc.exceptions.XPRC_InvalidPackageNameException;
+import com.gip.xyna.xprc.exceptions.XPRC_MDMDeploymentException;
+import com.gip.xyna.xprc.xfractwfe.generation.DOM;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.AssumedDeadlockException;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.DeploymentMode;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 
 import xmcp.gitintegration.CREATE;
@@ -231,14 +241,17 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
   public void modify(XMOMStorable from, XMOMStorable to, long revision) {
     if ((to.getFQPath() != null) && !to.getFQPath().isBlank()) {
       modifySingleColumnEntry(from, to, revision);
-      return;
     }
-    this.delete(from, revision);
-    this.create(to, revision);
-    if (!Objects.equals(from.getODSName(), to.getODSName())) {
-      modifyTablenameOfColumnEntries(from, to, revision);
+    else {
+      this.delete(from, revision);
+      this.create(to, revision);
+      if (!Objects.equals(from.getODSName(), to.getODSName())) {
+        modifyTablenameOfColumnEntries(from, to, revision);
+      }
     }
+    refreshStorableCache(from, revision);
   }
+
 
   private void modifyTablenameOfColumnEntries(XMOMStorable from, XMOMStorable to, long revision) {
     try {
@@ -253,6 +266,7 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
       throw new RuntimeException(e);
     }
   }
+
 
   private void modifySingleColumnEntry(XMOMStorable from, XMOMStorable to, long revision) {
     try {
@@ -280,4 +294,39 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
       throw new RuntimeException(e);
     }
   }
+  
+  
+  public void refreshStorableCache(XMOMStorable item, long revision) {
+    Long aRevision = revision;
+    XMOMStorableStructureCache xssc = XMOMStorableStructureCache.getInstance(aRevision);
+    XMOMStorableStructureInformation info = xssc.getStructuralInformation(item.getXMLName());
+      /*
+      Collection<XMOMStorableStructureInformation> infos = xssc.getAllStorableStructureInformation();
+      for (XMOMStorableStructureInformation xssi : infos) {
+        StructureCacheHandlerForUnreachableRevisions ruc = new StructureCacheHandlerForUnreachableRevisions(unreachableRevs);
+        xssi.traverse(ruc); //also removes obsolete subtypeentries
+        if (ruc.storableRefersToUnreachableRevisions()) {
+          allRootsToRebuild.add(xssi);
+        }
+      }
+      */
+    
+    try {
+      StructureCacheRegistrator scr = new StructureCacheRegistrator();
+      scr.begin();
+      /*
+      for (XMOMStorableStructureInformation aRoot : allRootsToRebuild) {
+        DOM dom = DOM.generateUncachedInstance(aRoot.getFqXmlName(), true, aRoot.getDefiningRevision());
+        scr.exec(dom, DeploymentMode.codeChanged);
+      }
+      */
+      DOM dom = DOM.generateUncachedInstance(info.getFqXmlName(), true, info.getDefiningRevision());
+      scr.exec(dom, DeploymentMode.reload);
+      scr.finish(true);
+    } catch (XPRC_InvalidPackageNameException | XPRC_InheritedConcurrentDeploymentException | AssumedDeadlockException | 
+             XPRC_MDMDeploymentException | XPRC_DeploymentHandlerException e) {
+      throw new RuntimeException("Error while trying to update StorableStructureCache", e);
+    }
+  }
+  
 }
