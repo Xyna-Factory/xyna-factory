@@ -19,17 +19,30 @@ package xmcp.gitintegration.impl.processing;
 
 
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.utils.collections.Triple;
+import com.gip.xyna.xfmg.Constants;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
+import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
+import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase.XMOMType;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMODSMapping;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMODSMappingUtils;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache;
@@ -40,8 +53,10 @@ import com.gip.xyna.xprc.exceptions.XPRC_InheritedConcurrentDeploymentException;
 import com.gip.xyna.xprc.exceptions.XPRC_InvalidPackageNameException;
 import com.gip.xyna.xprc.exceptions.XPRC_MDMDeploymentException;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.AssumedDeadlockException;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.DeploymentMode;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.WorkflowProtectionMode;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 
 import xmcp.gitintegration.CREATE;
@@ -54,6 +69,8 @@ import xmcp.gitintegration.XMOMStorable;
 
 public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStorable> {
 
+  private static Logger _logger = CentralFactoryLogging.getLogger(XMOMStorableProcessor.class);
+  
   private static final String TAG_XMOMSTORABLE = "xmomstorable";
   private static final String TAG_XMLNAME = "xmlname";
   private static final String TAG_PATH = "path";
@@ -249,7 +266,7 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
         modifyTablenameOfColumnEntries(from, to, revision);
       }
     }
-    refreshStorableCache(from, revision);
+    deployIfNoFurtherChanges(from, revision);
   }
 
 
@@ -296,36 +313,22 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
   }
   
   
-  public void refreshStorableCache(XMOMStorable item, long revision) {
-    Long aRevision = revision;
-    XMOMStorableStructureCache xssc = XMOMStorableStructureCache.getInstance(aRevision);
-    XMOMStorableStructureInformation info = xssc.getStructuralInformation(item.getXMLName());
-      /*
-      Collection<XMOMStorableStructureInformation> infos = xssc.getAllStorableStructureInformation();
-      for (XMOMStorableStructureInformation xssi : infos) {
-        StructureCacheHandlerForUnreachableRevisions ruc = new StructureCacheHandlerForUnreachableRevisions(unreachableRevs);
-        xssi.traverse(ruc); //also removes obsolete subtypeentries
-        if (ruc.storableRefersToUnreachableRevisions()) {
-          allRootsToRebuild.add(xssi);
-        }
-      }
-      */
-    
+  public void deployIfNoFurtherChanges(XMOMStorable item, long revision) {
     try {
-      StructureCacheRegistrator scr = new StructureCacheRegistrator();
-      scr.begin();
-      /*
-      for (XMOMStorableStructureInformation aRoot : allRootsToRebuild) {
-        DOM dom = DOM.generateUncachedInstance(aRoot.getFqXmlName(), true, aRoot.getDefiningRevision());
-        scr.exec(dom, DeploymentMode.codeChanged);
-      }
-      */
-      DOM dom = DOM.generateUncachedInstance(info.getFqXmlName(), true, info.getDefiningRevision());
-      scr.exec(dom, DeploymentMode.reload);
-      scr.finish(true);
-    } catch (XPRC_InvalidPackageNameException | XPRC_InheritedConcurrentDeploymentException | AssumedDeadlockException | 
-             XPRC_MDMDeploymentException | XPRC_DeploymentHandlerException e) {
-      throw new RuntimeException("Error while trying to update StorableStructureCache", e);
+      Path subpath = Path.of(item.getXMLName().replaceAll("\\.", Constants.fileSeparator) + ".xml");
+      Path savedpath = Path.of(RevisionManagement.getPathForRevision(PathType.XMOM, revision, false)).resolve(subpath);
+      Path deployedpath = Path.of(RevisionManagement.getPathForRevision(PathType.XMOM, revision, true)).resolve(subpath);
+      String savedXml = Files.readString(savedpath, StandardCharsets.UTF_8);
+      String deployedXml = Files.readString(deployedpath, StandardCharsets.UTF_8);
+      if (!savedXml.equals(deployedXml)) { return; }
+      Map<XMOMType, List<String>> items = new HashMap<>();
+      XMOMType type = XMOMType.DATATYPE;
+      items.putIfAbsent(type, new LinkedList<String>());
+      items.get(type).add(item.getXMLName());    
+      GenerationBase.deploy(items, DeploymentMode.codeChanged, false, WorkflowProtectionMode.FORCE_DEPLOYMENT, revision, "gitIntegration");
+    } catch (Exception e) {
+      _logger.error(e.getMessage(), e);
+      throw new RuntimeException(e.getMessage(), e);
     }
   }
   
