@@ -237,6 +237,7 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+    deployIfNoFurtherChanges(item, revision);
   }
 
 
