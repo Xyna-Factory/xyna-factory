@@ -22,6 +22,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xact.filter.HasXoRepresentation;
 import com.gip.xyna.xact.filter.json.ObjectIdentifierJson;
 import com.gip.xyna.xact.filter.session.GenerationBaseObject;
@@ -33,7 +38,9 @@ import com.gip.xyna.xact.filter.xmom.datatypes.json.Utils.ExtendedContextBuilder
 import com.gip.xyna.xact.filter.xmom.workflows.enums.Tags;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaExceptionBase;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase.XMOMType;
+import com.gip.xyna.xprc.exceptions.XPRC_XmlParsingException;
 import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
+import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 import xmcp.processmodeller.datatypes.DataTypeTypeLabelArea;
 import xmcp.processmodeller.datatypes.Item;
@@ -46,12 +53,16 @@ import xmcp.processmodeller.datatypes.datatypemodeller.MemberVariableArea;
 
 public abstract class DomOrExceptionXo implements HasXoRepresentation {
 
+  static final String ROOT_XML_NS = "http://www.gip.com/xyna/xdev/xfractmod";
+  static final String XML_NS = "xmlns";
+
   private final DomOrExceptionGenerationBase domOrExceptionGbo;
   private final XMOMType type;
   private final List<DatatypeMemberXo> variables;
   private final ObjectIdentifierJson baseType;
   protected final ExtendedContextBuilder contextBuilder;
   protected final GuiHttpPluginManagement pluginMgmt;
+  private static final Logger logger = CentralFactoryLogging.getLogger(DomOrExceptionXo.class);
   
   public DomOrExceptionXo(GenerationBaseObject gbo) {
     this.domOrExceptionGbo = (DomOrExceptionGenerationBase)gbo.getGenerationBase();
@@ -154,10 +165,11 @@ public abstract class DomOrExceptionXo implements HasXoRepresentation {
     if (unknownMetaTags == null) {
       return result;
     }
+    
     for (int i = 0; i < unknownMetaTags.size(); i++) {
       MetaTag tag = new MetaTag.Builder()
           .id(ObjectId.createMetaTagId(i))
-          .tag(unknownMetaTags.get(i))
+          .tag(removeXmlNs(unknownMetaTags.get(i), ROOT_XML_NS))
           .instance();
       list.add(tag);
     }
@@ -167,6 +179,23 @@ public abstract class DomOrExceptionXo implements HasXoRepresentation {
   }
   
   
+  private static String removeXmlNs(String xml, String rootXmlNs) {
+    try {
+      Element element = XMLUtils.parseString(xml).getDocumentElement();
+      for (int i = 0; i < element.getAttributes().getLength(); i++) {
+        Node attribute = element.getAttributes().item(i);
+        if (attribute.getNodeName().startsWith(XML_NS) && attribute.getNodeValue().startsWith(rootXmlNs)) {
+          element.removeAttribute(attribute.getNodeName());
+        }
+      }
+
+      return XMLUtils.getXMLString(element, false);
+    } catch (XPRC_XmlParsingException e) {
+      logger.warn("Failed to remove namespace attribute from XML tag " + xml, e);
+      return xml;
+    }
+  }
+
   public List<DatatypeMemberXo> getVariables() {
     return variables;
   }

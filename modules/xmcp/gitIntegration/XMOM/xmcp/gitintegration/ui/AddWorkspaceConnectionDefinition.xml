@@ -91,6 +91,8 @@
       <Mapping>%1%.serviceRTC=%0%</Mapping>
       <Mapping>%1%.serviceFQN="xmcp.gitintegration.ui.ExecuteAddWorkspaceConnection"</Mapping>
       <Mapping>%1%.onStartorderResultEvent["0"].eventId="gitintegration_add-workspace-connection_clean"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["1"].eventId="gitintegration_add-workspace-connection_update"</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
     </Mappings>
     <Mappings ID="48" Label="Create Details Panel">
       <Input>
