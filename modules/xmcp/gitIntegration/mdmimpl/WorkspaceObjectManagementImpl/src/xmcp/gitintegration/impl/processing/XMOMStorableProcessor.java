@@ -311,7 +311,7 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
       Map<XMOMType, List<String>> items = new HashMap<>();
       XMOMType type = XMOMType.DATATYPE;
       items.putIfAbsent(type, new LinkedList<String>());
-      items.get(type).add(item.getXMLName());    
+      items.get(type).add(item.getXMLName());
       GenerationBase.deploy(items, DeploymentMode.codeChanged, false, WorkflowProtectionMode.FORCE_DEPLOYMENT, revision, "gitIntegration");
     } catch (Exception e) {
       _logger.error(e.getMessage(), e);
