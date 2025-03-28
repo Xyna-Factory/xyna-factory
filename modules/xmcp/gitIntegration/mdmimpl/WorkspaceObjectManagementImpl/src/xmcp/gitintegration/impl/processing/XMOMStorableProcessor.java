@@ -17,8 +17,6 @@
  */
 package xmcp.gitintegration.impl.processing;
 
-
-
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,7 +28,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Node;
@@ -38,23 +35,13 @@ import org.w3c.dom.NodeList;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
-import com.gip.xyna.utils.collections.Triple;
 import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase.XMOMType;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMODSMapping;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMODSMappingUtils;
-import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache;
-import com.gip.xyna.xnwh.persistence.xmom.XMOMPersistenceManagement.StructureCacheRegistrator;
-import com.gip.xyna.xnwh.persistence.xmom.XMOMStorableStructureCache.XMOMStorableStructureInformation;
-import com.gip.xyna.xprc.exceptions.XPRC_DeploymentHandlerException;
-import com.gip.xyna.xprc.exceptions.XPRC_InheritedConcurrentDeploymentException;
-import com.gip.xyna.xprc.exceptions.XPRC_InvalidPackageNameException;
-import com.gip.xyna.xprc.exceptions.XPRC_MDMDeploymentException;
-import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
-import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.AssumedDeadlockException;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.DeploymentMode;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.WorkflowProtectionMode;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
@@ -64,7 +51,6 @@ import xmcp.gitintegration.DELETE;
 import xmcp.gitintegration.MODIFY;
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.XMOMStorable;
-
 
 
 public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStorable> {
