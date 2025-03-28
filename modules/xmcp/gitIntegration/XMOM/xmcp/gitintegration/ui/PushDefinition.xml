@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -75,6 +75,8 @@
       <Mapping>%1%.serviceRTC=%0%</Mapping>
       <Mapping>%1%.serviceFQN="xmcp.gitintegration.ui.ExecutePush"</Mapping>
       <Mapping>%1%.label="Push selected files"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="git_int_push_clear"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["1"].eventId="git_int_push_close"</Mapping>
     </Mappings>
     <Choice ID="3267" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="5127"/>
@@ -240,7 +242,7 @@
         <Target RefID="46"/>
       </Output>
       <Mapping>%2%.label="Changes"</Mapping>
-      <Mapping>%2%.children["0"]=%1%</Mapping>
+      <Mapping>%2%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%1%</Mapping>
       <Mapping>%2%.children=concatlists(%2%.children, %0%)</Mapping>
     </Mappings>
     <Mappings ID="5859" Label="Mapping">
@@ -253,9 +255,11 @@
         <Target RefID="5862"/>
       </Output>
       <Mapping>%1%.dataPath="%0%"</Mapping>
-      <Mapping>%1%.serviceRTC=%0%</Mapping>
-      <Mapping>%1%.serviceFQN="xmcp.gitintegration.ui.ExecutePushAll"</Mapping>
       <Mapping>%1%.label="Push all files"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="git_int_push_clear"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["1"].eventId="git_int_push_close"</Mapping>
+      <Mapping>%1%.serviceFQN="xmcp.gitintegration.ui.ExecutePushAll"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
     </Mappings>
     <Mappings ID="1172" Label="Mapping">
       <Input>
@@ -293,7 +297,10 @@
       <Mapping>%3%.label="Push"</Mapping>
       <Mapping>%3%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%0%</Mapping>
       <Mapping>%3%.children["0"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%2%</Mapping>
-      <Mapping>%3%.header.rightArea.children["1"]=%1%</Mapping>
+      <Mapping>%3%.header.rightArea.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
+      <Mapping>%3%.closable="true"</Mapping>
+      <Mapping>%3%.triggerClose.eventId="git_int_push_close"</Mapping>
+      <Mapping>%3%.triggerClearDataChangeState.eventId="git_int_push_clear"</Mapping>
     </Mappings>
     <Mappings ID="1611" Label="Mapping">
       <Input>

@@ -23,25 +23,13 @@
       <Data ID="1711" IsList="true" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData1711"/>
       <Data ID="2104" IsList="true" Label="Info Diff Repository" ReferenceName="InfoDiffRepository" ReferencePath="xmcp.gitintegration" VariableName="infoDiffRepository2104"/>
     </Output>
-    <ServiceReference ID="1487" Label="Create Repository Connection Panel" ReferenceName="CreateRepositoryConnectionPanel" ReferencePath="xmcp.gitintegration.ui">
-      <Source RefID="1486"/>
-      <Target RefID="1486"/>
-    </ServiceReference>
     <ServiceReference ID="3842" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="3841"/>
       <Target RefID="3841"/>
     </ServiceReference>
-    <ServiceReference ID="1340" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="1339"/>
-      <Target RefID="1339"/>
-    </ServiceReference>
-    <ServiceReference ID="2058" Label="Get Repository Diff Info" ReferenceName="GetRepositoryDiffInfo" ReferencePath="xmcp.gitintegration.ui">
-      <Source RefID="2057"/>
-      <Target RefID="2057"/>
-    </ServiceReference>
-    <ServiceReference ID="1671" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData.RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui">
-      <Source RefID="1670"/>
-      <Target RefID="1670"/>
+    <ServiceReference ID="5285" Label="Create Main Panel Child Elements" ReferenceName="CreateMainPanelChildElements" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="5284"/>
+      <Target RefID="5284"/>
     </ServiceReference>
     <Function ID="3841" Label="get Own RuntimeContext">
       <Source RefID="3842"/>
@@ -83,79 +71,19 @@
       <Mapping>%1%.label="Repository Connections"</Mapping>
       <Mapping>%1%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%0%</Mapping>
     </Mappings>
-    <Function ID="1339" Label="List Repository Connection Groups">
-      <Source RefID="1340"/>
-      <Target RefID="1340"/>
-      <Target RefID="1342"/>
-      <Invoke Operation="listRepositoryConnectionGroups" ServiceID="1340"/>
-      <Receive ServiceID="1340">
-        <Target RefID="1342"/>
+    <Function ID="5284" Label="Create Main Panel Child Elements">
+      <Source RefID="5285"/>
+      <Target RefID="5285"/>
+      <Target RefID="5287"/>
+      <Target RefID="5288"/>
+      <Target RefID="5289"/>
+      <Invoke Operation="CreateMainPanelChildElements" ServiceID="5285"/>
+      <Receive ServiceID="5285">
+        <Target RefID="5287"/>
+        <Target RefID="5288"/>
+        <Target RefID="5289"/>
       </Receive>
     </Function>
-    <Function ID="1670" Label="Translate">
-      <Source RefID="1671"/>
-      <Source RefID="1342"/>
-      <Target RefID="1671"/>
-      <Target RefID="1673"/>
-      <Invoke Operation="translate" ServiceID="1671">
-        <Source RefID="1342"/>
-      </Invoke>
-      <Receive ServiceID="1671">
-        <Target RefID="1673"/>
-      </Receive>
-    </Function>
-    <Foreach ID="2061">
-      <Source RefID="1673"/>
-      <Target RefID="2063"/>
-      <InputList RefID="1673">
-        <Data ID="2062" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData2062"/>
-      </InputList>
-      <OutputList RefID="2063">
-        <Data ID="2060" Label="Info Diff Repository" ReferenceName="InfoDiffRepository" ReferencePath="xmcp.gitintegration" VariableName="infoDiffRepository2060">
-          <Source RefID="2057"/>
-        </Data>
-      </OutputList>
-      <Function ID="2057" Label="Get Repository Diff Info">
-        <Source RefID="2058"/>
-        <Source RefID="2062"/>
-        <Target RefID="2058"/>
-        <Target RefID="2060"/>
-        <Invoke Operation="GetRepositoryDiffInfo" ServiceID="2058">
-          <Source RefID="2062"/>
-        </Invoke>
-        <Receive ServiceID="2058">
-          <Target RefID="2060"/>
-        </Receive>
-      </Function>
-    </Foreach>
-    <Foreach ID="1674">
-      <Source RefID="1673"/>
-      <Target RefID="1676"/>
-      <InputList RefID="1673">
-        <Data ID="1678" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData1678"/>
-      </InputList>
-      <OutputList RefID="1676">
-        <Data ID="1489" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1489">
-          <Source RefID="1486"/>
-        </Data>
-      </OutputList>
-      <Function ID="1486" Label="Create Repository Connection Panel">
-        <Source RefID="1487"/>
-        <Source RefID="1678"/>
-        <Target RefID="1487"/>
-        <Target RefID="1489"/>
-        <Invoke Operation="CreateRepositoryConnectionPanel" ServiceID="1487">
-          <Source RefID="1678">
-            <Meta>
-              <LinkType>UserConnected</LinkType>
-            </Meta>
-          </Source>
-        </Invoke>
-        <Receive ServiceID="1487">
-          <Target RefID="1489"/>
-        </Receive>
-      </Function>
-    </Foreach>
     <Mappings ID="230" Label="Add Elements to Main Panel">
       <Input>
         <Data ID="247" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition247">
@@ -171,7 +99,7 @@
         <Data ID="264" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition264">
           <Source RefID="230"/>
         </Data>
-        <Source RefID="1676"/>
+        <Source RefID="5287"/>
       </Input>
       <Output>
         <Data ID="297" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition297">
@@ -180,25 +108,12 @@
         <Target RefID="298"/>
       </Output>
       <Mapping>%2%~=%0%</Mapping>
-      <Mapping>%2%.children=concatlists(%0%.children, %1%)</Mapping>
+      <Mapping>%2%.children=%1%</Mapping>
+      <Mapping>%2%.triggerChangeChildren.eventId="gitintegration_add-workspace-connection_update"</Mapping>
     </Mappings>
     <Data ID="44" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition44"/>
     <Data ID="298" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition298">
       <Source RefID="230"/>
-    </Data>
-    <Data ID="1342" IsList="true" Label="Repository Connection Group" ReferenceName="RepositoryConnectionGroup" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryConnectionGroup1342">
-      <Source RefID="1339"/>
-    </Data>
-    <Data ID="1673" IsList="true" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData1673">
-      <Source RefID="1670"/>
-    </Data>
-    <Data ID="1676" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1676">
-      <Source RefID="1674"/>
-      <Target RefID="1676"/>
-    </Data>
-    <Data ID="2063" IsList="true" Label="Info Diff Repository" ReferenceName="InfoDiffRepository" ReferencePath="xmcp.gitintegration" VariableName="infoDiffRepository2063">
-      <Source RefID="2061"/>
-      <Target RefID="2063"/>
     </Data>
     <Data ID="3844" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext3844">
       <Source RefID="3841"/>
@@ -206,10 +121,19 @@
     <Data ID="4207" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition4207">
       <Source RefID="673"/>
     </Data>
+    <Data ID="5287" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5287">
+      <Source RefID="5284"/>
+    </Data>
+    <Data ID="5288" IsList="true" Label="Repository Connection Group Gui Data" ReferenceName="RepositoryConnectionGroupGuiData" ReferencePath="xmcp.gitintegration.ui" VariableName="repositoryConnectionGroupGuiData5288">
+      <Source RefID="5284"/>
+    </Data>
+    <Data ID="5289" IsList="true" Label="Info Diff Repository" ReferenceName="InfoDiffRepository" ReferencePath="xmcp.gitintegration" VariableName="infoDiffRepository5289">
+      <Source RefID="5284"/>
+    </Data>
     <Assign ID="1">
       <Source RefID="298"/>
-      <Source RefID="1673"/>
-      <Source RefID="2063"/>
+      <Source RefID="5288"/>
+      <Source RefID="5289"/>
       <Target RefID="53"/>
       <Target RefID="1711"/>
       <Target RefID="2104"/>
@@ -222,11 +146,11 @@
         <Target RefID="53"/>
       </Copy>
       <Copy>
-        <Source RefID="1673"/>
+        <Source RefID="5288"/>
         <Target RefID="1711"/>
       </Copy>
       <Copy>
-        <Source RefID="2063"/>
+        <Source RefID="5289"/>
         <Target RefID="2104"/>
       </Copy>
     </Assign>

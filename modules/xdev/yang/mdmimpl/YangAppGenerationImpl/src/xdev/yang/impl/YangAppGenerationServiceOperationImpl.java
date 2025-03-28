@@ -19,12 +19,8 @@ package xdev.yang.impl;
 
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.Container;
@@ -36,10 +32,12 @@ import com.gip.xyna.xmcp.xfcli.generated.Importapplication;
 import com.gip.xyna.xmcp.xfcli.impl.ImportapplicationImpl;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 
-import base.Text;
+import xdev.yang.OperationCreationParameter;
 import xdev.yang.YangAppGenerationInputParameter;
 import xdev.yang.YangAppGenerationServiceOperation;
 import xdev.yang.cli.generated.OverallInformationProvider;
+import xdev.yang.exceptions.ApplicationImportException;
+import xdev.yang.exceptions.OperationCreationException;
 import xdev.yang.impl.YangApplicationGeneration.YangApplicationGenerationData;
 import xdev.yang.impl.operation.AddOperation;
 import xdev.yang.impl.operation.AddVariableToOperationSignature;
@@ -52,19 +50,17 @@ import xdev.yang.impl.operation.LoadOperationsTable;
 import xdev.yang.impl.operation.RemoveVariableFromOperationSignature;
 import xdev.yang.impl.operation.SaveOperationAssignmentAction;
 import xdev.yang.impl.operation.UpdateVariableInOperationSignature;
+import xdev.yang.impl.operation.listconfig.LoadListConfig;
 import xdev.yang.impl.operation.OperationCache;
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.OperationAssignmentTableData;
 import xmcp.yang.OperationTableData;
 import xmcp.yang.fman.ListConfiguration;
 import xmcp.yang.fman.OperationSignatureEntry;
-import xprc.xpce.Workspace;
 
 
 public class YangAppGenerationServiceOperationImpl implements ExtendedDeploymentTask, YangAppGenerationServiceOperation {
 
-  private static final Logger logger = CentralFactoryLogging.getLogger(YangAppGenerationServiceOperationImpl.class);
-  
   public void onDeployment() throws XynaException {
     OverallInformationProvider.onDeployment();
     PluginManagement.registerPlugin(this.getClass());
@@ -97,29 +93,24 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
     return null;
   }
 
-  public void createYangDeviceApp(YangAppGenerationInputParameter yangAppGenerationInputParameter2) {
-    String id = null;
-    try (YangApplicationGenerationData appData = YangApplicationGeneration.createDeviceApp(yangAppGenerationInputParameter2)) {
-      id = appData.getId();
-    } catch (IOException e) {
-      if (logger.isWarnEnabled()) {
-        logger.warn("Could not clean up temporary files for " + yangAppGenerationInputParameter2.getApplicationName(), e);
-      }
-    }
-    importApplication(id);
 
+  public void createYangDeviceApp(XynaOrderServerExtension order, YangAppGenerationInputParameter input) throws ApplicationImportException {
+    try (YangApplicationGenerationData appData = YangApplicationGeneration.createDeviceApp(input)) {
+      String id = appData.getId();
+      importApplication(id);
+    } catch (Exception e) {
+      throw new ApplicationImportException(order.getId(), e);
+    }
   }
 
-  public void importModuleCollectionApplication(YangAppGenerationInputParameter yangAppGenerationInputParameter1) {
-    String id = null;
-    try (YangApplicationGenerationData appData = YangApplicationGeneration.createModuleCollectionApp(yangAppGenerationInputParameter1)) {
-      id = appData.getId();
-    } catch (IOException e) {
-      if (logger.isWarnEnabled()) {
-        logger.warn("Could not clean up temporary files for " + yangAppGenerationInputParameter1.getApplicationName(), e);
-      }
+
+  public void importModuleCollectionApplication(XynaOrderServerExtension order, YangAppGenerationInputParameter input) throws ApplicationImportException {
+    try (YangApplicationGenerationData appData = YangApplicationGeneration.createModuleCollectionApp(input)) {
+      String id = appData.getId();
+      importApplication(id);
+    } catch (Exception e) {
+      throw new ApplicationImportException(order.getId(), e);
     }
-    importApplication(id);
   }
   
   private void importApplication(String id) {
@@ -140,8 +131,12 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   }
 
   @Override
-  public void addOperation(XynaOrderServerExtension order, Text operationGroupFqn, Text operationName, Workspace ws, Text rpc, Text deviceFqn, Text rpcNs) {
-      new AddOperation().addOperation(operationGroupFqn.getText(), operationName.getText(), ws, order, rpc.getText(), deviceFqn.getText(), rpcNs.getText());
+  public void addOperation(XynaOrderServerExtension order, OperationCreationParameter parameter) throws OperationCreationException {
+    try {
+      new AddOperation().addOperation(order, parameter);
+    } catch (Exception e) {
+      throw new OperationCreationException(order.getId(), e);
+    }
   }
 
   @Override
@@ -197,6 +192,12 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   public void updateVariableInOperationSignature(XynaOrderServerExtension order, OperationTableData operation, OperationSignatureEntry signature) {
     UpdateVariableInOperationSignature executor = new UpdateVariableInOperationSignature();
     executor.updateVariable(order, operation, signature);
+  }
+
+
+  @Override
+  public ListConfiguration loadListConfiguration(XynaOrderServerExtension order, LoadYangAssignmentsData data) {
+    return new LoadListConfig().load(order, data);
   }
 
 }

@@ -19,7 +19,6 @@ package xdev.yang.impl;
 
 
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -244,7 +243,7 @@ public class YangApplicationGeneration {
   }
 
 
-  public static class YangApplicationGenerationData implements Closeable {
+  public static class YangApplicationGenerationData implements AutoCloseable {
 
     private final String id;
     private final List<File> files;
@@ -267,7 +266,7 @@ public class YangApplicationGeneration {
 
 
     @Override
-    public void close() throws IOException {
+    public void close() {
       for (File f : files) {
         if (f.isFile()) {
           f.delete();

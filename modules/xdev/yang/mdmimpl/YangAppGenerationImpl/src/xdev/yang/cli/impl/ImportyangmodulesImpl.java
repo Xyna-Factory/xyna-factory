@@ -70,7 +70,7 @@ public class ImportyangmodulesImpl extends XynaCommandImplementation<Importyangm
     try (YangApplicationGenerationData appData = YangApplicationGeneration.createModuleCollectionApp(genParameter)) {
       writeToCommandLine(statusOutputStream, appName + " ManagedFileId: " + appData.getId() + " ");
       appFileId = appData.getId();
-    } catch (IOException e) {
+    } catch (Exception e) {
       writeToCommandLine(statusOutputStream, "Could not clean up temporary files for " + appName + "\n");
       if (logger.isWarnEnabled()) {
         logger.warn("Could not clean up temporary files for " + appName + "\n", e);
