@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Node;
@@ -223,6 +224,11 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
 
   @Override
   public void create(XMOMStorable item, long revision) {
+    Optional<XMOMStorable> matched = getOptionalExistingEntry(item, revision);
+    if (matched.isPresent()) {
+      modify(matched.get(), item, revision);
+      return;
+    }
     XMOMODSMapping mapping = new XMOMODSMapping();
     mapping.setId(XynaFactory.getInstance().getXynaNetworkWarehouse().getXMOMPersistence().getXMOMPersistenceManagement().genId());
     mapping.setRevision(revision);
@@ -270,8 +276,44 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
       throw new RuntimeException(e);
     }
   }
+  
+  
+  private Optional<XMOMStorable> getOptionalExistingEntry(XMOMStorable to, long revision) {
+    try {
+      Collection<XMOMODSMapping> entries = XMOMODSMappingUtils.getAllMappingsForRootType(to.getXMLName(), revision);
+      boolean isTableConfig = ((to.getFQPath() != null) && !to.getFQPath().isBlank());
+      for (XMOMODSMapping item : entries) {
+        boolean matches = false;
+        if (isTableConfig) {
+          matches = item.isTableConfig();
+        } else {
+          matches = (!item.isTableConfig()) &&
+                    Objects.equals(to.getFQPath(), item.getFqpath()) &&
+                    Objects.equals(to.getPath(), item.getPath());
+        }
+        if (matches) {
+          XMOMStorable ret = adapt(item);
+          return Optional.of(ret);
+        }
+      }
+      return Optional.empty();
+    } catch (Exception e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
 
+  
+  public XMOMStorable adapt(XMOMODSMapping item) {
+    XMOMStorable ret = new XMOMStorable();
+    ret.setPath(item.getPath());
+    ret.setFQPath(item.getFqpath());
+    ret.setXMLName(item.getFqxmlname());
+    ret.setODSName(item.getTablename());
+    ret.setColumnName(item.getColumnname());
+    return ret;
+  }
 
+  
   private void modifySingleColumnEntry(XMOMStorable from, XMOMStorable to, long revision) {
     try {
       Collection<XMOMODSMapping> entries = XMOMODSMappingUtils.getAllMappingsForRootType(from.getXMLName(), revision);
