@@ -281,15 +281,15 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
   private Optional<XMOMStorable> getOptionalExistingEntry(XMOMStorable to, long revision) {
     try {
       Collection<XMOMODSMapping> entries = XMOMODSMappingUtils.getAllMappingsForRootType(to.getXMLName(), revision);
-      boolean isTableConfig = ((to.getFQPath() != null) && !to.getFQPath().isBlank());
+      boolean isColEntry = ((to.getFQPath() != null) && !to.getFQPath().isBlank());
       for (XMOMODSMapping item : entries) {
         boolean matches = false;
-        if (isTableConfig) {
-          matches = item.isTableConfig();
-        } else {
+        if (isColEntry) {
           matches = (!item.isTableConfig()) &&
                     Objects.equals(to.getFQPath(), item.getFqpath()) &&
                     Objects.equals(to.getPath(), item.getPath());
+        } else {
+          matches = item.isTableConfig();
         }
         if (matches) {
           XMOMStorable ret = adapt(item);
