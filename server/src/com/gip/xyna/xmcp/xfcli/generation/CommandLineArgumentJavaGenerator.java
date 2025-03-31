@@ -536,7 +536,7 @@ public class CommandLineArgumentJavaGenerator {
     cb.addLine("}").addLB(); // end getAllOptions
 
     cb.addLine("protected void setFieldsByParsedOptions(", Option.class.getSimpleName(), "[] options) {");
-    if(!argumentInfoList.isEmpty()) {
+    if(!argumentInfoList.isEmpty() || !boolOptionInfoList.isEmpty()) {
       cb.addLine("for (", Option.class.getSimpleName(), " o: options) {");
       for (ArgumentOptionInformation info : argumentInfoList) {
         cb.addLine("if (\"", info.name, "\".equals(o.getOpt())) {");
