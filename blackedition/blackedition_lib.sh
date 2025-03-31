@@ -898,10 +898,10 @@ update_xynafactory () {
   replace_dir server/lib ${INSTALL_PREFIX}/server/lib
   replace_child_dirs server/orderinputsourcetypes
   replace_child_dirs server/persistencelayers
-  copy_dir server/storage ${INSTALL_PREFIX}/server/storage
-  copy_dir server/resources ${INSTALL_PREFIX}/server/resources
-  copy_dir server/exceptions ${INSTALL_PREFIX}/server/exceptions
-  copy_dir func_lib ${INSTALL_PREFIX}/server/func_lib
+  copy_dir server/storage ${INSTALL_PREFIX}/server
+  copy_dir server/resources ${INSTALL_PREFIX}/server
+  copy_dir server/exceptions ${INSTALL_PREFIX}/server
+  copy_dir func_lib ${INSTALL_PREFIX}/server
   copy_file server/product_lib.sh ${INSTALL_PREFIX}/server
   copy_file server/Exceptions.xml ${INSTALL_PREFIX}/server
   copy_file server/TemplateImplNew.zip ${INSTALL_PREFIX}/server
