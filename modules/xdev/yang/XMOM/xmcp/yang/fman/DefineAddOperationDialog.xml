@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,7 @@
     <Input/>
     <Output>
       <Data ID="14" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition14"/>
-      <Data ID="531" Label="UC Group - Text" ReferenceName="Text" ReferencePath="base" VariableName="text531"/>
-      <Data ID="561" Label="UC Name - Text" ReferenceName="Text" ReferencePath="base" VariableName="text561"/>
-      <Data ID="636" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace636"/>
-      <Data ID="812" Label="RPC - Text" ReferenceName="Text" ReferencePath="base" VariableName="text812"/>
-      <Data ID="1127" Label="Device - Text" ReferenceName="Text" ReferencePath="base" VariableName="text1127"/>
-      <Data ID="1499" Label="Rpc Namespace - Text" ReferenceName="Text" ReferencePath="base" VariableName="text1499"/>
+      <Data ID="1585" Label="Operation Creation Parameter" ReferenceName="OperationCreationParameter" ReferencePath="xdev.yang" VariableName="operationCreationParameter1585"/>
     </Output>
     <ServiceReference ID="752" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="751"/>
@@ -90,22 +85,23 @@
         <Target RefID="458"/>
       </Output>
       <Mapping>%1%.label="Operation Group"</Mapping>
-      <Mapping>%1%.dataPath="%0%.text"</Mapping>
+      <Mapping>%1%.dataPath="%0%.operationGroupFqn"</Mapping>
       <Mapping>%2%.label="Operation Name"</Mapping>
-      <Mapping>%2%.dataPath="%1%.text"</Mapping>
+      <Mapping>%2%.dataPath="%0%.operationName"</Mapping>
       <Mapping>%3%.label="Workspace"</Mapping>
-      <Mapping>%3%.dataPath="%2%.name"</Mapping>
+      <Mapping>%3%.dataPath="%0%.workspaceName"</Mapping>
       <Mapping>%4%.label="RPC"</Mapping>
-      <Mapping>%4%.dataPath="%3%.text"</Mapping>
+      <Mapping>%4%.dataPath="%0%.rpc"</Mapping>
       <Mapping>%5%.label="Device Fqn"</Mapping>
-      <Mapping>%5%.dataPath="%4%.text"</Mapping>
+      <Mapping>%5%.dataPath="%0%.deviceFqn"</Mapping>
       <Mapping>%6%.label="(Optional) RPC Namespace"</Mapping>
-      <Mapping>%6%.dataPath="%5%.text"</Mapping>
-      <Mapping>%7%.dataPath="%0%, %1%, %2%, %3%, %4%, %5%"</Mapping>
+      <Mapping>%6%.dataPath="%0%.rpcNamespace"</Mapping>
+      <Mapping>%7%.dataPath="%0%"</Mapping>
       <Mapping>%7%.label="Create Operation"</Mapping>
       <Mapping>%7%.serviceRTC=%0%</Mapping>
       <Mapping>%7%.serviceFQN="xmcp.yang.fman.AddOperation"</Mapping>
       <Mapping>%7%.synchronously="true"</Mapping>
+      <Mapping>%7%.showResult="true"</Mapping>
     </Mappings>
     <Mappings ID="27" Label="Mapping">
       <Input>
@@ -204,90 +200,35 @@
     <Data ID="458" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition458">
       <Source RefID="102"/>
     </Data>
-    <Data ID="544" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="const_Text544"/>
-    <Data ID="582" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="const_Text582"/>
-    <Data ID="649" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="const_Workspace649"/>
     <Data ID="754" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext754">
       <Source RefID="751"/>
     </Data>
-    <Data ID="849" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="const_Text849"/>
     <Data ID="1110" Label="RPC - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition1110">
       <Source RefID="102"/>
     </Data>
-    <Data ID="1164" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="const_Text1164"/>
     <Data ID="1198" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition1198">
       <Source RefID="102"/>
     </Data>
     <Data ID="1257" Label="Device - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition1257">
       <Source RefID="102"/>
     </Data>
-    <Data ID="1536" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="const_Text1536"/>
+    <Data ID="1702" Label="Operation Creation Parameter" ReferenceName="OperationCreationParameter" ReferencePath="xdev.yang" VariableName="const_OperationCreationParameter1702"/>
     <Assign ID="1">
       <Source RefID="37"/>
-      <Source RefID="544"/>
-      <Source RefID="582"/>
-      <Source RefID="649"/>
-      <Source RefID="849"/>
-      <Source RefID="1164"/>
-      <Source RefID="1536"/>
+      <Source RefID="1702"/>
       <Target RefID="14"/>
-      <Target RefID="531"/>
-      <Target RefID="561"/>
-      <Target RefID="636"/>
-      <Target RefID="812"/>
-      <Target RefID="1127"/>
-      <Target RefID="1499"/>
+      <Target RefID="1585"/>
       <Copy>
         <Source RefID="37"/>
         <Target RefID="14"/>
       </Copy>
       <Copy>
-        <Source RefID="544">
+        <Source RefID="1702">
           <Meta>
             <LinkType>Constant</LinkType>
           </Meta>
         </Source>
-        <Target RefID="531"/>
-      </Copy>
-      <Copy>
-        <Source RefID="582">
-          <Meta>
-            <LinkType>Constant</LinkType>
-          </Meta>
-        </Source>
-        <Target RefID="561"/>
-      </Copy>
-      <Copy>
-        <Source RefID="649">
-          <Meta>
-            <LinkType>Constant</LinkType>
-          </Meta>
-        </Source>
-        <Target RefID="636"/>
-      </Copy>
-      <Copy>
-        <Source RefID="849">
-          <Meta>
-            <LinkType>Constant</LinkType>
-          </Meta>
-        </Source>
-        <Target RefID="812"/>
-      </Copy>
-      <Copy>
-        <Source RefID="1164">
-          <Meta>
-            <LinkType>Constant</LinkType>
-          </Meta>
-        </Source>
-        <Target RefID="1127"/>
-      </Copy>
-      <Copy>
-        <Source RefID="1536">
-          <Meta>
-            <LinkType>Constant</LinkType>
-          </Meta>
-        </Source>
-        <Target RefID="1499"/>
+        <Target RefID="1585"/>
       </Copy>
     </Assign>
   </Operation>
