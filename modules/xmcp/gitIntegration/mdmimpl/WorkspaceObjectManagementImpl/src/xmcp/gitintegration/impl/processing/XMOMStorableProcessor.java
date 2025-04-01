@@ -346,7 +346,9 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
     try {
       Path subpath = Path.of(item.getXMLName().replaceAll("\\.", Constants.fileSeparator) + ".xml");
       Path savedpath = Path.of(RevisionManagement.getPathForRevision(PathType.XMOM, revision, false)).resolve(subpath);
+      if (!Files.exists(savedpath)) { return; }
       Path deployedpath = Path.of(RevisionManagement.getPathForRevision(PathType.XMOM, revision, true)).resolve(subpath);
+      if (!Files.exists(deployedpath)) { return; }
       String savedXml = Files.readString(savedpath, StandardCharsets.UTF_8);
       String deployedXml = Files.readString(deployedpath, StandardCharsets.UTF_8);
       if (!savedXml.equals(deployedXml)) { return; }
