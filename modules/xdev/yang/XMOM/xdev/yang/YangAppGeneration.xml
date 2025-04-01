@@ -164,5 +164,15 @@
         <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadListConfiguration(correlatedXynaOrder, loadYangAssignmentsData34);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Configure Anyxml Substantement" Name="configureAnyxmlSubstantement" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="37" Label="Load Yang Assignments Data" ReferenceName="LoadYangAssignmentsData" ReferencePath="xmcp.yang" VariableName="loadYangAssignmentsData37"/>
+        <Data ID="36" Label="AnyXml Substatement Configuration" ReferenceName="AnyXmlSubstatementConfiguration" ReferencePath="xmcp.yang.fman" VariableName="anyXmlSubstatementConfiguration36"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.configureAnyxmlSubstantement(correlatedXynaOrder, loadYangAssignmentsData37, anyXmlSubstatementConfiguration36);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

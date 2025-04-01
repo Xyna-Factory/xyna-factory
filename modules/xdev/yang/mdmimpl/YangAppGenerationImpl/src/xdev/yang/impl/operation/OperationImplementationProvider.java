@@ -106,6 +106,7 @@ public class OperationImplementationProvider {
     result.append("\n//").append(mapping.getMappingYangPath()).append(" -> ").append(mapping.getValue()).append("\n");
     
     List<MappingPathElement> mappingList = mapping.createPathList();
+    mappingList.removeIf(x -> hiddenYangKeywords.contains(x.getKeyword()));
     int insertIndex = 0;
     for (int i = 0; i < position.size(); i++) {
       if (mappingList.size() < i) {
