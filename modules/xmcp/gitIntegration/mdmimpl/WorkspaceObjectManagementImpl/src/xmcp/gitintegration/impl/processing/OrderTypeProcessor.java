@@ -39,6 +39,7 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Workspace;
 import com.gip.xyna.xfmg.xods.ordertypemanagement.OrdertypeManagement;
 import com.gip.xyna.xfmg.xods.ordertypemanagement.OrdertypeParameter;
 import com.gip.xyna.xfmg.xods.ordertypemanagement.OrdertypeParameter.DestinationValueParameter;
+import com.gip.xyna.xprc.XynaOrderServerExtension.ExecutionType;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 import com.gip.xyna.xprc.xpce.parameterinheritance.ParameterInheritanceManagement.ParameterType;
 
@@ -827,11 +828,12 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
     return result;
   }
 
+
   @Override
   public void create(OrderType item, long revision) {
     try {
       OrdertypeParameter orderTypeParameter = createOrdertypeParameter(item, revision);
-      orderTypeManagement.createOrdertype(orderTypeParameter);
+      getOrderTypeManagement().createOrUpdateOrdertypes(new ArrayList<>(List.of(orderTypeParameter)), true);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -842,7 +844,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
   public void modify(OrderType from, OrderType to, long revision) {
     try {
       OrdertypeParameter orderTypeParameter = createOrdertypeParameter(to, revision);
-      orderTypeManagement.modifyOrdertype(orderTypeParameter);
+      getOrderTypeManagement().modifyOrdertype(orderTypeParameter);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -853,7 +855,24 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
   public void delete(OrderType item, long revision) {
     try {
       OrdertypeParameter orderTypeParameter = createOrdertypeParameter(item, revision);
-      orderTypeManagement.deleteOrdertype(orderTypeParameter);
+      if (orderTypeParameter.getOrdertypeName().equals(orderTypeParameter.getExecutionDestinationValue().getFullQualifiedName())) {
+        // set default order type for workflow
+        OrdertypeParameter newPara = new OrdertypeParameter();
+        newPara.setOrdertypeName(orderTypeParameter.getOrdertypeName());
+        newPara.setRuntimeContext(orderTypeParameter.getRuntimeContext());
+        String destinationType = ExecutionType.XYNA_FRACTAL_WORKFLOW.getTypeAsString();
+        newPara.setCleanupDestinationValue(new DestinationValueParameter("Empty", destinationType));
+        newPara.setExecutionDestinationValue(new DestinationValueParameter(orderTypeParameter.getOrdertypeName(), destinationType));
+        newPara.setPlanningDestinationValue(new DestinationValueParameter("DefaultPlanning", destinationType));
+        newPara.setParameterInheritanceRules(new HashMap<>(Map.of(ParameterType.MonitoringLevel, new ArrayList<>(),
+                                                                  ParameterType.SuspensionBackupMode, new ArrayList<>(),
+                                                                  ParameterType.BackupWhenRemoteCall, new ArrayList<>())));
+        newPara.setRequiredCapacities(new HashSet<>());
+        getOrderTypeManagement().modifyOrdertype(newPara);
+      } else {
+        // delete additional custom order type
+        getOrderTypeManagement().deleteOrdertype(orderTypeParameter);
+      }
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
