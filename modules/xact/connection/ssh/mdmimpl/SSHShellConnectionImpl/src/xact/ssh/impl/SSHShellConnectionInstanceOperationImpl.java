@@ -19,58 +19,33 @@ package xact.ssh.impl;
 
 
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
-import java.util.zip.ZipInputStream;
 
+import com.gip.xyna.xfmg.Constants;
+
+import net.schmizz.sshj.connection.channel.direct.Session.Shell;
 import xact.connection.Command;
-import xact.connection.CommandResponseTuple;
-import xact.connection.ConnectionAlreadyClosed;
-import xact.connection.ConnectionParameter;
 import xact.connection.ConnectionTypeSpecificExtension;
-import xact.connection.DetectedError;
 import xact.connection.DeviceType;
-import xact.connection.ManagedConnection;
 import xact.connection.ReadTimeout;
 import xact.connection.Response;
 import xact.connection.SendParameter;
-import xact.ssh.AuthenticationMode;
-import xact.ssh.PassPhrase;
-import xact.ssh.Password;
-import xact.ssh.PublicKey;
 import xact.ssh.SSHConnectionParameter;
 import xact.ssh.SSHMessagePayload;
 import xact.ssh.SSHSendParameter;
 import xact.ssh.SSHShellConnection;
 import xact.ssh.SSHShellConnectionInstanceOperation;
+import xact.ssh.SSHShellConnectionParameter;
 import xact.ssh.SSHShellConnectionSuperProxy;
 import xact.ssh.SSHShellPromptExtractor;
 import xact.ssh.SSHShellResponse;
 import xact.ssh.SSHSpecificExtension;
 import xact.templates.CommandLineInterface;
-import xact.templates.Document;
 import xact.templates.DocumentType;
 import xfmg.xfmon.protocolmsg.ProtocolMessage;
-
-import com.gip.xyna.xfmg.Constants;
-
-import com.gip.xyna.xfmg.xfctrl.classloading.persistence.SerializableClassloadedObject;
-
-import net.schmizz.sshj.SSHClient;
-import net.schmizz.sshj.common.Factory;
-import net.schmizz.sshj.connection.channel.direct.Session;
-import net.schmizz.sshj.connection.channel.direct.Session.Shell;
-import net.schmizz.sshj.userauth.keyprovider.FileKeyProvider;
-import net.schmizz.sshj.userauth.keyprovider.KeyFormat;
-import net.schmizz.sshj.userauth.keyprovider.KeyPairWrapper;
-import net.schmizz.sshj.userauth.keyprovider.KeyProviderUtil;
 
 
 
@@ -97,7 +72,28 @@ public class SSHShellConnectionInstanceOperationImpl extends SSHShellConnectionS
           terminalType = sshConParams.getTerminalType().trim();
         }
       }
-      getSession().allocatePTY(terminalType, 5000, 5000, 5000, 5000, Collections.emptyMap());
+
+      int terminalWidthColumns = 5000;
+      int terminalHeightRows = 5000;
+      int terminalWidhtPixels = 5000;
+      int terminalHeightPixels = 5000;
+      if (instanceVar.getConnectionParameter() instanceof SSHShellConnectionParameter) {
+        SSHShellConnectionParameter sscp = (SSHShellConnectionParameter) instanceVar.getConnectionParameter();
+        if (sscp.getTerminalHeightPixels() != 0) {
+          terminalHeightPixels = sscp.getTerminalHeightPixels();
+        }
+        if (sscp.getTerminalHeightRows() != 0) {
+          terminalHeightRows = sscp.getTerminalHeightRows();
+        }
+        if (sscp.getTerminalWidthColumns() != 0) {
+          terminalWidthColumns = sscp.getTerminalWidthColumns();
+        }
+        if (sscp.getTerminalWidthPixels() != 0) {
+          terminalWidhtPixels = sscp.getTerminalWidthPixels();
+        }
+      }
+      getSession().allocatePTY(terminalType, terminalWidthColumns, terminalHeightRows, terminalWidhtPixels, terminalHeightPixels,
+                               Collections.emptyMap());
 
       Shell shell = getSession().startShell();
       setChannelAndStreams(shell);
@@ -170,7 +166,7 @@ public class SSHShellConnectionInstanceOperationImpl extends SSHShellConnectionS
           } else if (lineSeperator.equals("\\r\\n")) {
             lineSeperator = "\r\n";
           } else if (lineSeperator == null || lineSeperator.length() == 0) {
-            lineSeperator = ""; //dafür verwendet, dass man z.b. ctrl-c drückt. das wird nicht mit enter bestätigt.
+            lineSeperator = ""; //dafï¿½r verwendet, dass man z.b. ctrl-c drï¿½ckt. das wird nicht mit enter bestï¿½tigt.
           }
         }
       }
