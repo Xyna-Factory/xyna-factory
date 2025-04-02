@@ -299,7 +299,7 @@ public class OperationAssignmentUtils {
   }
 
   
-  private static ModuleGroup loadModulesFromDt(String fqName, Long entryRevision) throws Exception {
+  public static ModuleGroup loadModulesFromDt(String fqName, Long entryRevision) throws Exception {
     ModuleGroup result = new ModuleGroup();
     DOM dom = DOM.getOrCreateInstance(fqName, new GenerationBaseCache(), entryRevision);
     dom.parseGeneration(true, false);

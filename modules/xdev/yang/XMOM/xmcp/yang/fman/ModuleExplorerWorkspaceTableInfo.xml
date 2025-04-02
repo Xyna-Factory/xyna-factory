@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Module Explorer Workspace TableInfo" TypeName="ModuleExplorerWorkspaceTableInfo" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Module Explorer Workspace TableInfo" Name="ModuleExplorerWorkspaceTableInfo">
+    <Input>
+      <Data ID="268" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo268"/>
+    </Input>
+    <Output>
+      <Data ID="343" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo343"/>
+      <Data ID="1013" IsList="true" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace1013"/>
+    </Output>
+    <ServiceReference ID="604" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
+      <Source RefID="603"/>
+      <Target RefID="603"/>
+    </ServiceReference>
+    <ServiceReference ID="238" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="237"/>
+      <Target RefID="237"/>
+    </ServiceReference>
+    <Choice ID="227" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="268"/>
+      <Target RefID="153"/>
+      <Input>
+        <Data ID="234" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo234"/>
+        <Source RefID="268"/>
+      </Input>
+      <Case ID="228" Label="true" Premise="%0%.bootstrap==&quot;true&quot;">
+        <Mappings ID="551" Label="Mapping">
+          <Output>
+            <Data ID="574" IsList="true" Label="Selected Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn574">
+              <Source RefID="551"/>
+            </Data>
+            <Target RefID="575"/>
+          </Output>
+          <Mapping>%0%["0"].path="name"</Mapping>
+          <Mapping>%0%["0"].name="Workspace Name"</Mapping>
+        </Mappings>
+        <Mappings ID="295" Label="Mapping">
+          <Output>
+            <Data ID="735" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace735">
+              <Source RefID="295"/>
+            </Data>
+            <Target RefID="736"/>
+          </Output>
+        </Mappings>
+        <Function ID="237" Label="Build TableInfo and Select Columns">
+          <Source RefID="238"/>
+          <Source RefID="268"/>
+          <Source RefID="736"/>
+          <Source RefID="575"/>
+          <Target RefID="238"/>
+          <Target RefID="236"/>
+          <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="238">
+            <Source RefID="268"/>
+            <Source RefID="736">
+              <Meta>
+                <ExpectedType>xprc.xpce.Workspace</ExpectedType>
+              </Meta>
+            </Source>
+            <Source RefID="575"/>
+          </Invoke>
+          <Receive ServiceID="238">
+            <Target RefID="236"/>
+          </Receive>
+        </Function>
+        <Assign>
+          <Source RefID="236"/>
+          <Target RefID="153"/>
+          <Copy>
+            <Source RefID="236"/>
+            <Target RefID="153"/>
+          </Copy>
+        </Assign>
+        <Data ID="236" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo236"/>
+      </Case>
+      <Case ID="229" Label="false">
+        <Mappings ID="243" Label="Mapping">
+          <Input>
+            <Data ID="244" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo244"/>
+            <Source RefID="268"/>
+          </Input>
+          <Output>
+            <Data ID="245" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo245"/>
+            <Target RefID="152"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign>
+          <Source RefID="152"/>
+          <Target RefID="153"/>
+          <Copy>
+            <Source RefID="152"/>
+            <Target RefID="153"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Function ID="603" Label="Load Workspace List">
+      <Source RefID="604"/>
+      <Target RefID="604"/>
+      <Target RefID="606"/>
+      <Invoke Operation="loadWorkspaceList" ServiceID="604"/>
+      <Receive ServiceID="604">
+        <Target RefID="606"/>
+      </Receive>
+    </Function>
+    <Data ID="152" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo152"/>
+    <Data ID="153" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo153"/>
+    <Data ID="575" IsList="true" Label="Selected Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn575">
+      <Source RefID="551"/>
+    </Data>
+    <Data ID="606" IsList="true" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace606">
+      <Source RefID="603"/>
+    </Data>
+    <Data ID="736" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace736">
+      <Source RefID="295"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="153"/>
+      <Source RefID="606"/>
+      <Target RefID="343"/>
+      <Target RefID="1013"/>
+      <Copy>
+        <Source RefID="153">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="343"/>
+      </Copy>
+      <Copy>
+        <Source RefID="606"/>
+        <Target RefID="1013"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
