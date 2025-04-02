@@ -166,7 +166,7 @@ public class SSHShellConnectionInstanceOperationImpl extends SSHShellConnectionS
           } else if (lineSeperator.equals("\\r\\n")) {
             lineSeperator = "\r\n";
           } else if (lineSeperator == null || lineSeperator.length() == 0) {
-            lineSeperator = ""; //daf�r verwendet, dass man z.b. ctrl-c dr�ckt. das wird nicht mit enter best�tigt.
+            lineSeperator = ""; //is used to press e.g. ctrl-c, this is not confirmed with "enter"
           }
         }
       }
