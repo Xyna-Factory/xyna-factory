@@ -19,6 +19,8 @@
 package xdev.yang.impl.tools;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.gip.xyna.XynaFactory;
@@ -32,6 +34,25 @@ import xprc.xpce.Application;
 
 public class LoadApplicationList {
 
+  public static class ApplicationComparator implements Comparator<Application> {
+    @Override
+    public int compare(Application obj1, Application obj2) {
+      if ((obj1 == null) && (obj2 == null)) { return 0; }
+      if (obj1 == null) { return -1; }
+      if (obj2 == null) { return 1; }
+      if ((obj1.getName() == null) && (obj2.getName() == null)) { return 0; }
+      if (obj1.getName() == null) { return -1; }
+      if (obj2.getName() == null) { return 1; }
+      int val = obj1.getName().compareTo(obj2.getName());
+      if (val != 0) { return val; }
+      if ((obj1.getVersion() == null) && (obj2.getVersion() == null)) { return 0; }
+      if (obj1.getVersion() == null) { return -1; }
+      if (obj2.getVersion() == null) { return 1; }
+      return obj1.getVersion().compareTo(obj2.getVersion());
+    }
+  }
+  
+  
   public List<? extends Application> execute() {
     try {
       return getApplicationListImpl();
@@ -52,6 +73,7 @@ public class LoadApplicationList {
              .version(application.getVersion());
       ret.add(builder.instance());
     }
+    Collections.sort(ret, new ApplicationComparator());
     return ret;
   }
   

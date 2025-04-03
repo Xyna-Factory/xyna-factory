@@ -20,7 +20,10 @@ package xdev.yang.impl.tools;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.log4j.Logger;
 import org.yangcentral.yangkit.model.api.stmt.Module;
@@ -39,6 +42,7 @@ import xdev.yang.impl.XmomDbInteraction;
 import xdev.yang.impl.operation.ModuleGroup;
 import xdev.yang.impl.operation.ModuleParseData;
 import xdev.yang.impl.operation.OperationAssignmentUtils;
+import xdev.yang.impl.tools.LoadApplicationList.ApplicationComparator;
 import xmcp.yang.YangModuleCollection;
 import xprc.xpce.Application;
 import xprc.xpce.RuntimeContext;
@@ -47,6 +51,32 @@ import xprc.xpce.Workspace;
 
 public class LoadModules {
 
+  public static class YangModuleDetailsComparator implements Comparator<YangModuleDetails> {
+    @Override
+    public int compare(YangModuleDetails obj1, YangModuleDetails obj2) {
+      if ((obj1 == null) && (obj2 == null)) { return 0; }
+      if (obj1 == null) { return -1; }
+      if (obj2 == null) { return 1; }
+      if ((obj1.getRTCLabel() == null) && (obj2.getRTCLabel() == null)) { return 0; }
+      if (obj1.getRTCLabel() == null) { return -1; }
+      if (obj2.getRTCLabel() == null) { return 1; }
+      int val = obj1.getRTCLabel().compareTo(obj2.getRTCLabel());
+      if (val != 0) { return val; }
+      
+      if ((obj1.getFQDatatype() == null) && (obj2.getFQDatatype() == null)) { return 0; }
+      if (obj1.getFQDatatype() == null) { return -1; }
+      if (obj2.getFQDatatype() == null) { return 1; }
+      val = obj1.getFQDatatype().compareTo(obj2.getFQDatatype());
+      if (val != 0) { return val; }
+      
+      if ((obj1.getModuleName() == null) && (obj2.getModuleName() == null)) { return 0; }
+      if (obj1.getModuleName() == null) { return -1; }
+      if (obj2.getModuleName() == null) { return 1; }
+      return obj1.getModuleName().compareTo(obj2.getModuleName());
+    }
+  }
+  
+  
   private static Logger _logger = CentralFactoryLogging.getLogger(LoadModules.class);
   
   
@@ -54,6 +84,7 @@ public class LoadModules {
     try {
       List<YangModuleDetails> ret = new ArrayList<>();
       loadModules(ret, rtc);
+      Collections.sort(ret, new YangModuleDetailsComparator());
       return ret;
     } catch (Exception e) {
       _logger.error(e.getMessage(), e);
@@ -78,17 +109,17 @@ public class LoadModules {
       rtcLabel = app.getName() + " / " + app.getVersion();
       followReferencesOfApp(ret, revMgmt, revision);
     }
-    loadModulesImpl(ret, revision, rtcLabel, rtc);
+    loadModulesImpl(ret, revision, rtcLabel, rtc, revMgmt);
   }
   
   
-  private void loadModulesImpl(List<YangModuleDetails> ret, Long revision, String rtcLabel, RuntimeContext rtc) throws Exception {
-    _logger.warn("### Checking for yang modules in rtc " + rtcLabel);
-    
+  private void loadModulesImpl(List<YangModuleDetails> ret, Long revision, String rtcLabel, RuntimeContext rtc,
+                               RevisionManagement revMgmt) throws Exception {
     XmomDbInteraction interaction = new XmomDbInteraction();
     List<XMOMDatabaseSearchResultEntry> xmomDbResult = interaction.searchYangDTs(YangModuleCollection.class.getCanonicalName(), 
                                                                                  List.of(revision));
     for (XMOMDatabaseSearchResultEntry entry : xmomDbResult) {
+      if (!Objects.equals(revision, revMgmt.getRevision(entry.getRuntimeContext()))) { continue; }
       ModuleGroup group = OperationAssignmentUtils.loadModulesFromDt(entry.getFqName(), revision);
       for (ModuleParseData parsed : group.getAllModuleParseData()) {
         for (Module mod : parsed.getModuleList()) {

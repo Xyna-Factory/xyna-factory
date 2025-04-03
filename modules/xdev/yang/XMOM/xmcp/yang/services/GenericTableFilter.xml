@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Generic Table Filter" TypeName="GenericTableFilter" TypePath="xmcp.yang.services" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="Generic Table Filter" TypeName="GenericTableFilter">
+    <Operation IsStatic="true" Label="Apply Filter" Name="applyFilter">
+      <Input>
+        <Data ID="1" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo1"/>
+        <Data ID="2" IsList="true" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType2">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="3" IsList="true" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType3">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">if (tableInfo1 == null) { return anyType2; }
+if (tableInfo1.getColumns() == null) { return anyType2; }
+List&lt;GeneralXynaObject&gt; ret = new ArrayList&lt;&gt;();
+if (anyType2 == null) { return ret; }
+for (GeneralXynaObject item: anyType2) {
+  boolean filterok = true;  
+  for (xmcp.tables.datatypes.TableColumn col : tableInfo1.getColumns()) {
+    String filter = col.getFilter();
+    if (filter == null) { continue; }
+    String path = col.getPath();
+    try {
+      String val = item.get(path).toString();
+      if (val == null) {
+        filterok = false;
+        break;
+      }
+      filter = filter.replaceAll("\\*", "\\.\\*");
+      if (!val.matches(filter)) {
+        filterok = false;
+        break;
+      }
+    } catch (Exception e) { continue; }  
+  }  
+  if (filterok) {
+    ret.add(item);
+  }
+}
+
+return ret;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

@@ -19,6 +19,8 @@
 package xdev.yang.impl.tools;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.gip.xyna.XynaFactory;
@@ -30,6 +32,20 @@ import xprc.xpce.Workspace;
 
 public class LoadWorkspaceList {
 
+  public static class WorkspaceComparator implements Comparator<Workspace> {
+    @Override
+    public int compare(Workspace obj1, Workspace obj2) {
+      if ((obj1 == null) && (obj2 == null)) { return 0; }
+      if (obj1 == null) { return -1; }
+      if (obj2 == null) { return 1; }
+      if ((obj1.getName() == null) && (obj2.getName() == null)) { return 0; }
+      if (obj1.getName() == null) { return -1; }
+      if (obj2.getName() == null) { return 1; }
+      return obj1.getName().compareTo(obj2.getName());
+    }
+  }
+  
+  
   public List<? extends Workspace> execute() {
     try {
       return getWorkspaceListImpl();
@@ -48,6 +64,7 @@ public class LoadWorkspaceList {
       builder.name(workspace.getWorkspace().getName());
       ret.add(builder.instance());
     }
+    Collections.sort(ret, new WorkspaceComparator());
     return ret;
   }
   

@@ -81,7 +81,7 @@
       <Mapping>%2%.tableWorkflowFQN="xmcp.yang.fman.ModuleExplorerWorkspaceTableInfo"</Mapping>
       <Mapping>%2%.tableWorkflowRTC=%0%</Mapping>
       <Mapping>%2%.dataPath="%0%"</Mapping>
-      <Mapping>%2%.detailsDefinitionReference=%1%</Mapping>
+      <Mapping>%2%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%1%</Mapping>
     </Mappings>
     <Data ID="33" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition33">
       <Source RefID="23"/>

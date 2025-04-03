@@ -28,6 +28,10 @@
       <Source RefID="603"/>
       <Target RefID="603"/>
     </ServiceReference>
+    <ServiceReference ID="1101" Label="Generic Table Filter" ReferenceName="GenericTableFilter.GenericTableFilter" ReferencePath="xmcp.yang.services">
+      <Source RefID="1100"/>
+      <Target RefID="1100"/>
+    </ServiceReference>
     <ServiceReference ID="238" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
       <Source RefID="237"/>
       <Target RefID="237"/>
@@ -119,6 +123,32 @@
         <Target RefID="606"/>
       </Receive>
     </Function>
+    <Function ID="1100" Label="Apply Filter">
+      <Source RefID="1101"/>
+      <Source RefID="153"/>
+      <Source RefID="606"/>
+      <Target RefID="1101"/>
+      <Target RefID="1103"/>
+      <Invoke Operation="applyFilter" ServiceID="1101">
+        <Source RefID="153">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="606">
+          <Meta>
+            <ExpectedType>xprc.xpce.Workspace</ExpectedType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="1101">
+        <Target RefID="1103">
+          <Meta>
+            <ExpectedType>xprc.xpce.Workspace</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
     <Data ID="152" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo152"/>
     <Data ID="153" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo153"/>
     <Data ID="575" IsList="true" Label="Selected Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn575">
@@ -130,9 +160,10 @@
     <Data ID="736" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace736">
       <Source RefID="295"/>
     </Data>
+    <Data ID="1103" IsList="true" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace1103"/>
     <Assign ID="1">
       <Source RefID="153"/>
-      <Source RefID="606"/>
+      <Source RefID="1103"/>
       <Target RefID="343"/>
       <Target RefID="1013"/>
       <Copy>
@@ -144,7 +175,11 @@
         <Target RefID="343"/>
       </Copy>
       <Copy>
-        <Source RefID="606"/>
+        <Source RefID="1103">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
         <Target RefID="1013"/>
       </Copy>
     </Assign>

@@ -18,7 +18,7 @@
 --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Module Explorer Module Definition" TypeName="ModuleExplorerModuleDefinition" TypePath="xmcp.yang.fman" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Module Explorer Module Definition" Name="ModuleExplorerModuleDefinition">
     <Input>
-      <Data ID="556" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace556"/>
+      <Data ID="709" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext709"/>
     </Input>
     <Output>
       <Data ID="10" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition10"/>
@@ -58,13 +58,18 @@
       <Mapping>%1%.tableWorkflowFQN="xmcp.yang.fman.ModuleExplorerModuleTableInfo"</Mapping>
       <Mapping>%1%.tableWorkflowRTC=%0%</Mapping>
       <Mapping>%1%.dataPath="%0%"</Mapping>
+      <Mapping>%1%.closable="true"</Mapping>
     </Mappings>
     <Mappings ID="593" Label="Mapping">
       <Input>
-        <Data ID="628" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace628">
+        <Data ID="778" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext778">
           <Source RefID="593"/>
         </Data>
-        <Source RefID="556"/>
+        <Source RefID="709">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
       </Input>
       <Output>
         <Data ID="610" Label="Yang Module Details" ReferenceName="YangModuleDetails" ReferencePath="xdev.yang.datatypes" VariableName="yangModuleDetails610">

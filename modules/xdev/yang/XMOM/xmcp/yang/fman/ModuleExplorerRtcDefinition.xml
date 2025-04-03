@@ -21,13 +21,13 @@
     <Output>
       <Data ID="248" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition248"/>
     </Output>
-    <ServiceReference ID="496" Label="Module Explorer App Definition" ReferenceName="ModuleExplorerAppDefinition" ReferencePath="xmcp.yang.fman">
-      <Source RefID="495"/>
-      <Target RefID="495"/>
-    </ServiceReference>
     <ServiceReference ID="600" Label="Module Explorer Workspace Definition" ReferenceName="ModuleExplorerWorkspaceDefinition" ReferencePath="xmcp.yang.fman">
       <Source RefID="599"/>
       <Target RefID="599"/>
+    </ServiceReference>
+    <ServiceReference ID="496" Label="Module Explorer App Definition" ReferenceName="ModuleExplorerAppDefinition" ReferencePath="xmcp.yang.fman">
+      <Source RefID="495"/>
+      <Target RefID="495"/>
     </ServiceReference>
     <Function ID="599" Label="Module Explorer Workspace Definition">
       <Source RefID="600"/>
@@ -77,6 +77,7 @@
       <Mapping>%2%.label="Module Explorer: Select Runtime Context"</Mapping>
       <Mapping>%2%.children["0"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%0%</Mapping>
       <Mapping>%2%.children["1"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%1%</Mapping>
+      <Mapping>%2%.closable="true"</Mapping>
     </Mappings>
     <Data ID="215" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition215">
       <Source RefID="197"/>

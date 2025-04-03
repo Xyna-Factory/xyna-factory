@@ -33,6 +33,10 @@
       <Source RefID="237"/>
       <Target RefID="237"/>
     </ServiceReference>
+    <ServiceReference ID="2917" Label="Generic Table Filter" ReferenceName="GenericTableFilter.GenericTableFilter" ReferencePath="xmcp.yang.services">
+      <Source RefID="2916"/>
+      <Target RefID="2916"/>
+    </ServiceReference>
     <Choice ID="227" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="268"/>
       <Target RefID="153"/>
@@ -143,6 +147,32 @@
         <Target RefID="1267"/>
       </Receive>
     </Function>
+    <Function ID="2916" Label="Apply Filter">
+      <Source RefID="2917"/>
+      <Source RefID="153"/>
+      <Source RefID="1267"/>
+      <Target RefID="2917"/>
+      <Target RefID="2919"/>
+      <Invoke Operation="applyFilter" ServiceID="2917">
+        <Source RefID="153">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="1267">
+          <Meta>
+            <ExpectedType>xdev.yang.datatypes.YangModuleDetails</ExpectedType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="2917">
+        <Target RefID="2919">
+          <Meta>
+            <ExpectedType>xdev.yang.datatypes.YangModuleDetails</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
     <Data ID="152" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo152"/>
     <Data ID="153" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo153"/>
     <Data ID="575" IsList="true" Label="Selected Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn575">
@@ -157,9 +187,10 @@
     <Data ID="2786" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext2786">
       <Source RefID="2754"/>
     </Data>
+    <Data ID="2919" IsList="true" Label="Yang Module Details" ReferenceName="YangModuleDetails" ReferencePath="xdev.yang.datatypes" VariableName="yangModuleDetails2919"/>
     <Assign ID="1">
       <Source RefID="153"/>
-      <Source RefID="1267"/>
+      <Source RefID="2919"/>
       <Target RefID="343"/>
       <Target RefID="1351"/>
       <Copy>
@@ -171,7 +202,11 @@
         <Target RefID="343"/>
       </Copy>
       <Copy>
-        <Source RefID="1267"/>
+        <Source RefID="2919">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
         <Target RefID="1351"/>
       </Copy>
     </Assign>

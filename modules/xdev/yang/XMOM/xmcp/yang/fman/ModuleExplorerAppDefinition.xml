@@ -34,6 +34,18 @@
         <Target RefID="102"/>
       </Receive>
     </Function>
+    <Mappings ID="169" Label="Mapping">
+      <Input>
+        <Data ID="171" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext171"/>
+        <Source RefID="102"/>
+      </Input>
+      <Output>
+        <Data ID="172" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow172"/>
+        <Target RefID="168"/>
+      </Output>
+      <Mapping>%1%.fQN="xmcp.yang.fman.ModuleExplorerModuleDefinition"</Mapping>
+      <Mapping>%1%.rTC=%0%</Mapping>
+    </Mappings>
     <Mappings ID="23" Label="Mapping">
       <Input>
         <Data ID="119" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext119">
@@ -41,16 +53,23 @@
         </Data>
         <Source RefID="102"/>
       </Input>
+      <Input>
+        <Data ID="189" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow189">
+          <Source RefID="23"/>
+        </Data>
+        <Source RefID="168"/>
+      </Input>
       <Output>
         <Data ID="32" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition32">
           <Source RefID="23"/>
         </Data>
         <Target RefID="33"/>
       </Output>
-      <Mapping>%1%.label="Applications"</Mapping>
-      <Mapping>%1%.tableWorkflowFQN="xmcp.yang.fman.ModuleExplorerAppTableInfo"</Mapping>
-      <Mapping>%1%.tableWorkflowRTC=%0%</Mapping>
-      <Mapping>%1%.dataPath="%0%"</Mapping>
+      <Mapping>%2%.label="Applications"</Mapping>
+      <Mapping>%2%.tableWorkflowFQN="xmcp.yang.fman.ModuleExplorerAppTableInfo"</Mapping>
+      <Mapping>%2%.tableWorkflowRTC=%0%</Mapping>
+      <Mapping>%2%.dataPath="%0%"</Mapping>
+      <Mapping>%2%.detailsDefinitionReference=%1%</Mapping>
     </Mappings>
     <Data ID="33" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition33">
       <Source RefID="23"/>
@@ -58,6 +77,7 @@
     <Data ID="102" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext102">
       <Source RefID="99"/>
     </Data>
+    <Data ID="168" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow168"/>
     <Assign ID="1">
       <Source RefID="33"/>
       <Target RefID="10"/>
