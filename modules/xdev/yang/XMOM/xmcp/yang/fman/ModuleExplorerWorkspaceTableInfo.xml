@@ -24,17 +24,17 @@
       <Data ID="343" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo343"/>
       <Data ID="1013" IsList="true" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace1013"/>
     </Output>
-    <ServiceReference ID="604" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
-      <Source RefID="603"/>
-      <Target RefID="603"/>
-    </ServiceReference>
-    <ServiceReference ID="1101" Label="Generic Table Filter" ReferenceName="GenericTableFilter.GenericTableFilter" ReferencePath="xmcp.yang.services">
-      <Source RefID="1100"/>
-      <Target RefID="1100"/>
-    </ServiceReference>
     <ServiceReference ID="238" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
       <Source RefID="237"/>
       <Target RefID="237"/>
+    </ServiceReference>
+    <ServiceReference ID="1417" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="1416"/>
+      <Target RefID="1416"/>
+    </ServiceReference>
+    <ServiceReference ID="604" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
+      <Source RefID="603"/>
+      <Target RefID="603"/>
     </ServiceReference>
     <Choice ID="227" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="268"/>
@@ -54,25 +54,18 @@
           <Mapping>%0%["0"].path="name"</Mapping>
           <Mapping>%0%["0"].name="Workspace Name"</Mapping>
         </Mappings>
-        <Mappings ID="295" Label="Mapping">
-          <Output>
-            <Data ID="735" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace735">
-              <Source RefID="295"/>
-            </Data>
-            <Target RefID="736"/>
-          </Output>
-        </Mappings>
         <Function ID="237" Label="Build TableInfo and Select Columns">
           <Source RefID="238"/>
           <Source RefID="268"/>
-          <Source RefID="736"/>
+          <Source RefID="1182"/>
           <Source RefID="575"/>
           <Target RefID="238"/>
           <Target RefID="236"/>
           <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="238">
             <Source RefID="268"/>
-            <Source RefID="736">
+            <Source RefID="1182">
               <Meta>
+                <LinkType>Constant</LinkType>
                 <ExpectedType>xprc.xpce.Workspace</ExpectedType>
               </Meta>
             </Source>
@@ -123,13 +116,13 @@
         <Target RefID="606"/>
       </Receive>
     </Function>
-    <Function ID="1100" Label="Apply Filter">
-      <Source RefID="1101"/>
+    <Function ID="1416" Label="TableHelper Sort Filter Limit">
+      <Source RefID="1417"/>
       <Source RefID="153"/>
       <Source RefID="606"/>
-      <Target RefID="1101"/>
-      <Target RefID="1103"/>
-      <Invoke Operation="applyFilter" ServiceID="1101">
+      <Target RefID="1417"/>
+      <Target RefID="1419"/>
+      <Invoke Operation="tableHelperSortFilterLimit" ServiceID="1417">
         <Source RefID="153">
           <Meta>
             <LinkType>UserConnected</LinkType>
@@ -137,12 +130,13 @@
         </Source>
         <Source RefID="606">
           <Meta>
+            <LinkType>UserConnected</LinkType>
             <ExpectedType>xprc.xpce.Workspace</ExpectedType>
           </Meta>
         </Source>
       </Invoke>
-      <Receive ServiceID="1101">
-        <Target RefID="1103">
+      <Receive ServiceID="1417">
+        <Target RefID="1419">
           <Meta>
             <ExpectedType>xprc.xpce.Workspace</ExpectedType>
           </Meta>
@@ -157,13 +151,11 @@
     <Data ID="606" IsList="true" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace606">
       <Source RefID="603"/>
     </Data>
-    <Data ID="736" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace736">
-      <Source RefID="295"/>
-    </Data>
-    <Data ID="1103" IsList="true" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace1103"/>
+    <Data ID="1182" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="const_Workspace1182"/>
+    <Data ID="1419" IsList="true" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace1419"/>
     <Assign ID="1">
       <Source RefID="153"/>
-      <Source RefID="1103"/>
+      <Source RefID="1419"/>
       <Target RefID="343"/>
       <Target RefID="1013"/>
       <Copy>
@@ -175,7 +167,7 @@
         <Target RefID="343"/>
       </Copy>
       <Copy>
-        <Source RefID="1103">
+        <Source RefID="1419">
           <Meta>
             <LinkType>UserConnected</LinkType>
           </Meta>

@@ -24,17 +24,17 @@
       <Data ID="343" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo343"/>
       <Data ID="877" IsList="true" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application877"/>
     </Output>
-    <ServiceReference ID="806" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
-      <Source RefID="805"/>
-      <Target RefID="805"/>
-    </ServiceReference>
-    <ServiceReference ID="1277" Label="Generic Table Filter" ReferenceName="GenericTableFilter.GenericTableFilter" ReferencePath="xmcp.yang.services">
-      <Source RefID="1276"/>
-      <Target RefID="1276"/>
+    <ServiceReference ID="1618" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="1617"/>
+      <Target RefID="1617"/>
     </ServiceReference>
     <ServiceReference ID="238" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
       <Source RefID="237"/>
       <Target RefID="237"/>
+    </ServiceReference>
+    <ServiceReference ID="806" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
+      <Source RefID="805"/>
+      <Target RefID="805"/>
     </ServiceReference>
     <Choice ID="227" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="268"/>
@@ -56,25 +56,18 @@
           <Mapping>%0%["1"].name="Version"</Mapping>
           <Mapping>%0%["1"].path="version"</Mapping>
         </Mappings>
-        <Mappings ID="295" Label="Mapping">
-          <Output>
-            <Data ID="1227" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application1227">
-              <Source RefID="295"/>
-            </Data>
-            <Target RefID="1228"/>
-          </Output>
-        </Mappings>
         <Function ID="237" Label="Build TableInfo and Select Columns">
           <Source RefID="238"/>
           <Source RefID="268"/>
-          <Source RefID="1228"/>
+          <Source RefID="1399"/>
           <Source RefID="575"/>
           <Target RefID="238"/>
           <Target RefID="236"/>
           <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="238">
             <Source RefID="268"/>
-            <Source RefID="1228">
+            <Source RefID="1399">
               <Meta>
+                <LinkType>Constant</LinkType>
                 <ExpectedType>xprc.xpce.Application</ExpectedType>
               </Meta>
             </Source>
@@ -125,13 +118,13 @@
         <Target RefID="808"/>
       </Receive>
     </Function>
-    <Function ID="1276" Label="Apply Filter">
-      <Source RefID="1277"/>
+    <Function ID="1617" Label="TableHelper Sort Filter Limit">
+      <Source RefID="1618"/>
       <Source RefID="153"/>
       <Source RefID="808"/>
-      <Target RefID="1277"/>
-      <Target RefID="1279"/>
-      <Invoke Operation="applyFilter" ServiceID="1277">
+      <Target RefID="1618"/>
+      <Target RefID="1620"/>
+      <Invoke Operation="tableHelperSortFilterLimit" ServiceID="1618">
         <Source RefID="153">
           <Meta>
             <LinkType>UserConnected</LinkType>
@@ -143,8 +136,8 @@
           </Meta>
         </Source>
       </Invoke>
-      <Receive ServiceID="1277">
-        <Target RefID="1279">
+      <Receive ServiceID="1618">
+        <Target RefID="1620">
           <Meta>
             <ExpectedType>xprc.xpce.Application</ExpectedType>
           </Meta>
@@ -159,13 +152,11 @@
     <Data ID="808" IsList="true" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application808">
       <Source RefID="805"/>
     </Data>
-    <Data ID="1228" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application1228">
-      <Source RefID="295"/>
-    </Data>
-    <Data ID="1279" IsList="true" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application1279"/>
+    <Data ID="1399" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="const_Application1399"/>
+    <Data ID="1620" IsList="true" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application1620"/>
     <Assign ID="1">
       <Source RefID="153"/>
-      <Source RefID="1279"/>
+      <Source RefID="1620"/>
       <Target RefID="343"/>
       <Target RefID="877"/>
       <Copy>
@@ -177,7 +168,7 @@
         <Target RefID="343"/>
       </Copy>
       <Copy>
-        <Source RefID="1279">
+        <Source RefID="1620">
           <Meta>
             <LinkType>UserConnected</LinkType>
           </Meta>

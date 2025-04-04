@@ -348,9 +348,5 @@
       <FqName>xmcp.yang.fman.YangImportDefinition</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="true">
-      <FqName>xmcp.yang.services.GenericTableFilter</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
   </XMOMEntries>
 </Application>

@@ -21,13 +21,13 @@
     <Output>
       <Data ID="317" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition317"/>
     </Output>
-    <ServiceReference ID="1749" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
-      <Source RefID="1748"/>
-      <Target RefID="1748"/>
-    </ServiceReference>
     <ServiceReference ID="1506" Label="Operation Definition" ReferenceName="OperationDefinition" ReferencePath="xmcp.yang.fman">
       <Source RefID="1505"/>
       <Target RefID="1505"/>
+    </ServiceReference>
+    <ServiceReference ID="1749" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="1748"/>
+      <Target RefID="1748"/>
     </ServiceReference>
     <Function ID="1505" Label="Operation Definition">
       <Source RefID="1506"/>
@@ -72,20 +72,12 @@
         </Data>
         <Target RefID="49"/>
       </Output>
-      <Output>
-        <Data ID="58" Label="Operations - Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition58">
-          <Source RefID="10"/>
-        </Data>
-        <Target RefID="59"/>
-      </Output>
       <Mapping>%2%.label="Import Yang module collection"</Mapping>
       <Mapping>%2%.dialogDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%1%</Mapping>
       <Mapping>%2%.dialogDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.yang.fman.DefineImportModuleCollectionDialog"</Mapping>
       <Mapping>%3%.label="Import Yang device application"</Mapping>
       <Mapping>%3%.dialogDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%1%</Mapping>
       <Mapping>%3%.dialogDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.yang.fman.DefineImportYangDeviceDialog"</Mapping>
-      <Mapping>%4%.label="Open Operations"</Mapping>
-      <Mapping>%4%.detailsDefinitionReference#cast("xmcp.forms.datatypes.TablePanelDefinition")=%0%</Mapping>
     </Mappings>
     <Mappings ID="2056" Label="Operation Button Definition">
       <Input>
@@ -126,7 +118,7 @@
         <Target RefID="2922"/>
       </Output>
       <Mapping>%1%.label="Explore Yang Modules"</Mapping>
-      <Mapping>%1%.detailsDefinitionReference=%0%</Mapping>
+      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%0%</Mapping>
     </Mappings>
     <Mappings ID="2599" Label="Mapping">
       <Input>
@@ -212,7 +204,7 @@
       <Mapping>%6%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDialogButtonDefinition")=%0%</Mapping>
       <Mapping>%6%.header.rightArea.children["1"]#cast("xmcp.forms.datatypes.OpenDialogButtonDefinition")=%1%</Mapping>
       <Mapping>%6%.header.rightArea.children["2"]#cast("xmcp.forms.datatypes.OpenDialogButtonDefinition")=%2%</Mapping>
-      <Mapping>%6%.header.rightArea.children["3"]=%5%</Mapping>
+      <Mapping>%6%.header.rightArea.children["3"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%5%</Mapping>
       <Mapping>%6%.label="Operations"</Mapping>
       <Mapping>%6%.tableWorkflowFQN="xmcp.yang.fman.OperationTableInfo"</Mapping>
       <Mapping>%6%.tableWorkflowRTC=%3%</Mapping>
@@ -224,9 +216,6 @@
       <Source RefID="10"/>
     </Data>
     <Data ID="49" Label="Open Dialog Button Definition" ReferenceName="OpenDialogButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDialogButtonDefinition49">
-      <Source RefID="10"/>
-    </Data>
-    <Data ID="59" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition59">
       <Source RefID="10"/>
     </Data>
     <Data ID="1508" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition1508">
