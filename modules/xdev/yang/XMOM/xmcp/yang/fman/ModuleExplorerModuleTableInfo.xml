@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Module Explorer Module TableInfo" TypeName="ModuleExplorerModuleTableInfo" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Module Explorer Module TableInfo" Name="ModuleExplorerModuleTableInfo">
+    <Input>
+      <Data ID="268" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo268"/>
+      <Data ID="2623" Label="Yang Module Details" ReferenceName="YangModuleDetails" ReferencePath="xdev.yang.datatypes" VariableName="yangModuleDetails2623"/>
+    </Input>
+    <Output>
+      <Data ID="343" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo343"/>
+      <Data ID="1351" IsList="true" Label="Yang Module Details" ReferenceName="YangModuleDetails" ReferencePath="xdev.yang.datatypes" VariableName="yangModuleDetails1351"/>
+    </Output>
+    <ServiceReference ID="238" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="237"/>
+      <Target RefID="237"/>
+    </ServiceReference>
+    <ServiceReference ID="1265" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
+      <Source RefID="1264"/>
+      <Target RefID="1264"/>
+    </ServiceReference>
+    <ServiceReference ID="3265" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="3264"/>
+      <Target RefID="3264"/>
+    </ServiceReference>
+    <Choice ID="227" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="268"/>
+      <Target RefID="153"/>
+      <Input>
+        <Data ID="234" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo234"/>
+        <Source RefID="268"/>
+      </Input>
+      <Case ID="228" Label="true" Premise="%0%.bootstrap==&quot;true&quot;">
+        <Mappings ID="551" Label="Mapping">
+          <Output>
+            <Data ID="574" IsList="true" Label="Selected Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn574">
+              <Source RefID="551"/>
+            </Data>
+            <Target RefID="575"/>
+          </Output>
+          <Mapping>%0%["0"].name="Datatype"</Mapping>
+          <Mapping>%0%["0"].path="fQDatatype"</Mapping>
+          <Mapping>%0%["1"].name="RTC"</Mapping>
+          <Mapping>%0%["1"].path="rTCLabel"</Mapping>
+          <Mapping>%0%["2"].name="Module"</Mapping>
+          <Mapping>%0%["2"].path="moduleName"</Mapping>
+        </Mappings>
+        <Function ID="237" Label="Build TableInfo and Select Columns">
+          <Source RefID="238"/>
+          <Source RefID="268"/>
+          <Source RefID="3014"/>
+          <Source RefID="575"/>
+          <Target RefID="238"/>
+          <Target RefID="236"/>
+          <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="238">
+            <Source RefID="268"/>
+            <Source RefID="3014">
+              <Meta>
+                <LinkType>Constant</LinkType>
+                <ExpectedType>xdev.yang.datatypes.YangModuleDetails</ExpectedType>
+              </Meta>
+            </Source>
+            <Source RefID="575"/>
+          </Invoke>
+          <Receive ServiceID="238">
+            <Target RefID="236"/>
+          </Receive>
+        </Function>
+        <Assign>
+          <Source RefID="236"/>
+          <Target RefID="153"/>
+          <Copy>
+            <Source RefID="236"/>
+            <Target RefID="153"/>
+          </Copy>
+        </Assign>
+        <Data ID="236" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo236"/>
+      </Case>
+      <Case ID="229" Label="false">
+        <Mappings ID="243" Label="Mapping">
+          <Input>
+            <Data ID="244" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo244"/>
+            <Source RefID="268"/>
+          </Input>
+          <Output>
+            <Data ID="245" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo245"/>
+            <Target RefID="152"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign>
+          <Source RefID="152"/>
+          <Target RefID="153"/>
+          <Copy>
+            <Source RefID="152"/>
+            <Target RefID="153"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Mappings ID="2754" Label="Mapping">
+      <Input>
+        <Data ID="2817" Label="Yang Module Details" ReferenceName="YangModuleDetails" ReferencePath="xdev.yang.datatypes" VariableName="yangModuleDetails2817">
+          <Source RefID="2754"/>
+        </Data>
+        <Source RefID="2623"/>
+      </Input>
+      <Output>
+        <Data ID="2785" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext2785">
+          <Source RefID="2754"/>
+        </Data>
+        <Target RefID="2786"/>
+      </Output>
+      <Mapping>%1%=%0%.runtimeContext</Mapping>
+    </Mappings>
+    <Function ID="1264" Label="Load Modules">
+      <Source RefID="1265"/>
+      <Source RefID="2786"/>
+      <Target RefID="1265"/>
+      <Target RefID="1267"/>
+      <Invoke Operation="loadModules" ServiceID="1265">
+        <Source RefID="2786"/>
+      </Invoke>
+      <Receive ServiceID="1265">
+        <Target RefID="1267"/>
+      </Receive>
+    </Function>
+    <Function ID="3264" Label="TableHelper Sort Filter Limit">
+      <Source RefID="3265"/>
+      <Source RefID="153"/>
+      <Source RefID="1267"/>
+      <Target RefID="3265"/>
+      <Target RefID="3267"/>
+      <Invoke Operation="tableHelperSortFilterLimit" ServiceID="3265">
+        <Source RefID="153">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="1267">
+          <Meta>
+            <ExpectedType>xdev.yang.datatypes.YangModuleDetails</ExpectedType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="3265">
+        <Target RefID="3267">
+          <Meta>
+            <ExpectedType>xdev.yang.datatypes.YangModuleDetails</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
+    <Data ID="152" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo152"/>
+    <Data ID="153" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo153"/>
+    <Data ID="575" IsList="true" Label="Selected Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn575">
+      <Source RefID="551"/>
+    </Data>
+    <Data ID="1267" IsList="true" Label="Yang Module Details" ReferenceName="YangModuleDetails" ReferencePath="xdev.yang.datatypes" VariableName="yangModuleDetails1267">
+      <Source RefID="1264"/>
+    </Data>
+    <Data ID="2786" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext2786">
+      <Source RefID="2754"/>
+    </Data>
+    <Data ID="3014" Label="Yang Module Details" ReferenceName="YangModuleDetails" ReferencePath="xdev.yang.datatypes" VariableName="const_YangModuleDetails3014"/>
+    <Data ID="3267" IsList="true" Label="Yang Module Details" ReferenceName="YangModuleDetails" ReferencePath="xdev.yang.datatypes" VariableName="yangModuleDetails3267"/>
+    <Assign ID="1">
+      <Source RefID="153"/>
+      <Source RefID="3267"/>
+      <Target RefID="343"/>
+      <Target RefID="1351"/>
+      <Copy>
+        <Source RefID="153">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="343"/>
+      </Copy>
+      <Copy>
+        <Source RefID="3267">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="1351"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
