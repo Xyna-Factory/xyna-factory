@@ -30,9 +30,9 @@ ALL_DATAMODELTYPES=("mib","tr069","xsd");
 #ACHTUNG: Version auch bei addRequirement zu default workspace berücksichtigen
 ALL_APPLICATIONS="Base Processing"; #Default-Applications, die immer installiert sein sollten
 APPMGMTVERSION=1.0.10
-GUIHTTPVERSION=1.3.17
+GUIHTTPVERSION=1.3.20
 SNMPSTATVERSION=1.0.3
-PROCESSINGVERSION=1.0.22
+PROCESSINGVERSION=1.0.23
 ALL_REPOSITORYACCESSES=("svn");
 INSTANCE_NUMBER="1" #1 ist default
 
@@ -898,10 +898,10 @@ update_xynafactory () {
   replace_dir server/lib ${INSTALL_PREFIX}/server/lib
   replace_child_dirs server/orderinputsourcetypes
   replace_child_dirs server/persistencelayers
-  copy_dir server/storage ${INSTALL_PREFIX}/server/storage
-  copy_dir server/resources ${INSTALL_PREFIX}/server/resources
-  copy_dir server/exceptions ${INSTALL_PREFIX}/server/exceptions
-  copy_dir func_lib ${INSTALL_PREFIX}/server/func_lib
+  copy_dir server/storage ${INSTALL_PREFIX}/server
+  copy_dir server/resources ${INSTALL_PREFIX}/server
+  copy_dir server/exceptions ${INSTALL_PREFIX}/server
+  copy_dir func_lib ${INSTALL_PREFIX}/server
   copy_file server/product_lib.sh ${INSTALL_PREFIX}/server
   copy_file server/Exceptions.xml ${INSTALL_PREFIX}/server
   copy_file server/TemplateImplNew.zip ${INSTALL_PREFIX}/server
