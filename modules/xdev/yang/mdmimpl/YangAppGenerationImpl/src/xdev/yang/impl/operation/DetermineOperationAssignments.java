@@ -59,22 +59,26 @@ public class DetermineOperationAssignments {
     String deviceFqn = OperationAssignmentUtils.readDeviceFqn(operationMeta);
     List<YangDeviceCapability> moduleCapabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
     List<String> supportedFeatures = YangCapabilityUtils.getSupportedFeatureNames(moduleCapabilities);
-    
-    List<Module> filteredModules = null;
-    Optional<List<Module>> opt = OperationCache.getInstance().get(data);
-    if (opt.isPresent()) {
-      filteredModules = opt.get();
-    }
-    else {
-      List<ModuleGroup> groups = OperationAssignmentUtils.loadModules(workspaceName);
-      filteredModules = new ModuleFilterTools().filterAndReload(groups, moduleCapabilities);
-      OperationCache.getInstance().put(data, filteredModules);
-    }
+    List<Module> filteredModules = getFilteredModules(data, workspaceName, moduleCapabilities);
+
     result = OperationAssignmentUtils.loadPossibleAssignments(filteredModules, rpcName, rpcNamespace, data, operationMeta, supportedFeatures);
     fillValuesAndWarnings(operationMeta, filteredModules, result);
     return result;
   }
 
+  
+  private List<Module> getFilteredModules(LoadYangAssignmentsData data, String workspaceName, List<YangDeviceCapability> capabilities) {
+    List<Module> filteredModules = null;
+    Optional<List<Module>> opt = OperationCache.getInstance().get(data);
+    if (opt.isPresent()) {
+      filteredModules = opt.get();
+    } else {
+      List<ModuleGroup> groups = OperationAssignmentUtils.loadModules(workspaceName);
+      filteredModules = new ModuleFilterTools().filterAndReload(groups, capabilities);
+      OperationCache.getInstance().put(data, filteredModules);
+    }
+    return filteredModules;
+  }
 
   private void fillValuesAndWarnings(Document meta, List<Module> modules, List<OperationAssignmentTableData> entries) {
     List<OperationMapping> mappings = OperationMapping.loadMappings(meta);
