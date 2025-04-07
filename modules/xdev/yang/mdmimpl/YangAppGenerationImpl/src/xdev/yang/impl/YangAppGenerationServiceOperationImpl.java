@@ -36,6 +36,7 @@ import xdev.yang.OperationCreationParameter;
 import xdev.yang.YangAppGenerationInputParameter;
 import xdev.yang.YangAppGenerationServiceOperation;
 import xdev.yang.cli.generated.OverallInformationProvider;
+import xdev.yang.datatypes.YangModuleDetails;
 import xdev.yang.exceptions.ApplicationImportException;
 import xdev.yang.exceptions.OperationCreationException;
 import xdev.yang.impl.YangApplicationGeneration.YangApplicationGenerationData;
@@ -51,12 +52,18 @@ import xdev.yang.impl.operation.RemoveVariableFromOperationSignature;
 import xdev.yang.impl.operation.SaveOperationAssignmentAction;
 import xdev.yang.impl.operation.UpdateVariableInOperationSignature;
 import xdev.yang.impl.operation.listconfig.LoadListConfig;
+import xdev.yang.impl.tools.LoadApplicationList;
+import xdev.yang.impl.tools.LoadModules;
+import xdev.yang.impl.tools.LoadWorkspaceList;
 import xdev.yang.impl.operation.OperationCache;
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.OperationAssignmentTableData;
 import xmcp.yang.OperationTableData;
 import xmcp.yang.fman.ListConfiguration;
 import xmcp.yang.fman.OperationSignatureEntry;
+import xprc.xpce.Application;
+import xprc.xpce.RuntimeContext;
+import xprc.xpce.Workspace;
 
 
 public class YangAppGenerationServiceOperationImpl implements ExtendedDeploymentTask, YangAppGenerationServiceOperation {
@@ -198,6 +205,24 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   @Override
   public ListConfiguration loadListConfiguration(XynaOrderServerExtension order, LoadYangAssignmentsData data) {
     return new LoadListConfig().load(order, data);
+  }
+
+
+  @Override
+  public List<? extends Application> loadApplicationList() {
+    return new LoadApplicationList().execute();
+  }
+
+
+  @Override
+  public List<? extends Workspace> loadWorkspaceList() {
+    return new LoadWorkspaceList().execute();
+  }
+
+
+  @Override
+  public List<? extends YangModuleDetails> loadModules(RuntimeContext rtc) {
+    return new LoadModules().execute(rtc);
   }
 
 }
