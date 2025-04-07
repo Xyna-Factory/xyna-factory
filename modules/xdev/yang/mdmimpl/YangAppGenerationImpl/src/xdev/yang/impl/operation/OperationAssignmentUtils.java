@@ -72,6 +72,7 @@ public class OperationAssignmentUtils {
     Rpc rpc = findRpc(modules, rpcName, rpcNs);
     DeviationList deviations = DeviationList.build(modules);
     Input input = rpc.getInput();
+    new AugmentTools().handleAugment(modules, input);
     List<ListConfiguration> listConfigs = ListConfiguration.loadListConfigurations(meta);
     List<YangStatement> elements = traverseYang(data.getTotalYangPath(), data.getTotalNamespaces(), data.getTotalKeywords(), 
                                                 input, listConfigs, supportedFeatures);

@@ -76,12 +76,12 @@ public class DeviationTools {
   }
   
   
-  protected boolean identifiersAreEqual(String id1, String id2) {
+  public boolean identifiersAreEqual(String id1, String id2) {
     return removeOptionalPrefix(id1).equals(removeOptionalPrefix(id2));
   }
   
   
-  protected String removeOptionalPrefix(String id) {
+  private String removeOptionalPrefix(String id) {
     if (id == null) { return ""; }
     if (!id.contains(":")) { return id; }
     return id.substring(id.indexOf(":") + 1);
