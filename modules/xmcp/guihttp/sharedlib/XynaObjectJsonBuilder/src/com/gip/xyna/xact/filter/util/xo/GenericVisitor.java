@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,9 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package xmcp.factorymanager.impl.converter.payload;
+package com.gip.xyna.xact.filter.util.xo;
+
+
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,6 +31,7 @@ import com.gip.xyna.utils.misc.JsonParser.Position;
 import com.gip.xyna.utils.misc.JsonParser.UnexpectedJSONContentException;
 
 
+
 public class GenericVisitor implements JsonVisitor<GenericResult> {
 
   private Map<String, Pair<String, Type>> attributes;
@@ -36,7 +39,8 @@ public class GenericVisitor implements JsonVisitor<GenericResult> {
   private Map<String, GenericResult> objects;
   private Map<String, List<GenericResult>> objectLists;
   private Set<String> emptyLists;
-  
+
+
   public GenericVisitor() {
     attributes = new HashMap<>();
     lists = new HashMap<>();
@@ -44,11 +48,12 @@ public class GenericVisitor implements JsonVisitor<GenericResult> {
     objectLists = new HashMap<>();
     emptyLists = new HashSet<>();
   }
-  
-  
+
+
   public GenericResult get() {
     return new GenericResult(attributes, lists, objects, objectLists, emptyLists);
   }
+
 
   public GenericResult getAndReset() {
     GenericResult result = new GenericResult(attributes, lists, objects, objectLists, emptyLists);
@@ -60,33 +65,40 @@ public class GenericVisitor implements JsonVisitor<GenericResult> {
     return result;
   }
 
+
   public void currentPosition(Position position) {
   }
+
 
   public JsonVisitor<?> objectStarts(String label) throws UnexpectedJSONContentException {
     return new GenericVisitor();
   }
 
+
   public void attribute(String label, String value, Type type) throws UnexpectedJSONContentException {
     attributes.put(String.valueOf(label), Pair.of(value, type));
   }
+
 
   public void list(String label, List<String> values, Type type) throws UnexpectedJSONContentException {
     lists.put(String.valueOf(label), Pair.of(values, type));
   }
 
+
   public void object(String label, Object value) throws UnexpectedJSONContentException {
     objects.put(String.valueOf(label), (GenericResult) value);
   }
+
 
   @SuppressWarnings({"unchecked", "rawtypes"})
   public void objectList(String label, List<Object> values) throws UnexpectedJSONContentException {
     objectLists.put(String.valueOf(label), (List) values);
   }
 
+
   public void emptyList(String label) throws UnexpectedJSONContentException {
     emptyLists.add(String.valueOf(label));
   }
-  
-  
+
+
 }

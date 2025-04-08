@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 package xmcp.factorymanager.impl;
 
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,6 +32,11 @@ import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.misc.JsonParser;
 import com.gip.xyna.utils.misc.JsonParser.InvalidJSONException;
 import com.gip.xyna.utils.misc.JsonParser.UnexpectedJSONContentException;
+import com.gip.xyna.xact.filter.util.xo.GenericResult;
+import com.gip.xyna.xact.filter.util.xo.GenericVisitor;
+import com.gip.xyna.xact.filter.util.xo.Util;
+import com.gip.xyna.xact.filter.util.xo.XynaObjectJsonBuilder;
+import com.gip.xyna.xact.filter.util.xo.XynaObjectVisitor;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
@@ -77,11 +83,6 @@ import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
 import xmcp.RuntimeContext;
 import xmcp.factorymanager.OrderInputSourcesServicesServiceOperation;
 import xmcp.factorymanager.impl.converter.OrderInputSourceConverter;
-import xmcp.factorymanager.impl.orderinputconverter.json.GenericResult;
-import xmcp.factorymanager.impl.orderinputconverter.json.GenericVisitor;
-import xmcp.factorymanager.impl.orderinputconverter.json.Util;
-import xmcp.factorymanager.impl.orderinputconverter.json.XynaObjectJsonBuilder;
-import xmcp.factorymanager.impl.orderinputconverter.json.XynaObjectVisitor;
 import xmcp.factorymanager.orderinputsources.CreateOrderInputSourceRequest;
 import xmcp.factorymanager.orderinputsources.FrequencyControlledTaskId;
 import xmcp.factorymanager.orderinputsources.GenerateOrderInputRequest;
@@ -108,8 +109,9 @@ import xmcp.tables.datatypes.TableInfo;
 import xmcp.zeta.TableHelper;
 
 
+
 public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDeploymentTask, OrderInputSourcesServicesServiceOperation {
-  
+
   private static final String TABLE_KEY_NAME = "name";
   private static final String TABLE_KEY_ORDER_TYPE = "orderType";
   private static final String TABLE_KEY_APPLICATION = "applicationName";
@@ -118,13 +120,13 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
   private static final String TABLE_KEY_SOURCE_TYPE = "sourceType.label";
   private static final String TABLE_KEY_STATE = "state";
   private static final String TABLE_KEY_REFERENCED_INPUT_SOURCE_COUNT = "referencedInputSourceCount";
-  
+
   private static final String PARAMETER_KEY_INPUT_DATA = "inputData";
-  
+
   private static final String FREQUENCY_CONTROLLED_TASK_TYPE_RATE = "Rate";
   private static final String FREQUENCY_CONTROLLED_TASK_TYPE_LOAD = "Load";
-  
-  
+
+
   private final OrderInputSourceManagement orderInputSourceManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryManagementODS().getOrderInputSourceManagement();
   private final RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
   private final OrdertypeManagement ordertypeManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryManagementODS().getOrderTypeManagement();
@@ -156,7 +158,7 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
     // If null is returned, the factory default <IGNORE> will be used.
     return null;
   }
-  
+
   @Override
   public GenerateOrderInputResponse generateOrderInput(GenerateOrderInputRequest request) throws GenerateOrderInputException {
     OptionalOISGenerateMetaInformation parameters = new OptionalOISGenerateMetaInformation();
@@ -167,7 +169,7 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
     }
     try {
       XynaOrderCreationParameter xynaOrderCreationParameter = orderInputSourceManagement.generateOrderInput(request.getOrderInputSourceId().getId(), parameters);
-      
+
       RemoteXynaOrderCreationParameter rxocp = null;
       if (xynaOrderCreationParameter instanceof RemoteXynaOrderCreationParameter) {
         rxocp = (RemoteXynaOrderCreationParameter) xynaOrderCreationParameter;
@@ -178,7 +180,7 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
       } else {
         rxocp = new RemoteXynaOrderCreationParameter(xynaOrderCreationParameter);
       }
-      
+
       GenerateOrderInputResponse response = new GenerateOrderInputResponse();
       OrderInputCustomContainer customContainer = new OrderInputCustomContainer();
       customContainer.setCustom0(rxocp.getCustom0());
@@ -195,13 +197,13 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
       throw new GenerateOrderInputException(e.getMessage(), e);
     }
   }
-  
+
   @Override
   public FrequencyControlledTaskId startFrequencyControlledTask(StartFrequencyControlledTaskParameter request) throws StartFrequencyControlledTaskException {
     try {
       FrequencyControlledTaskCreationParameter r = null;
       List<XynaOrderCreationParameter> orderCreationParameter = new ArrayList<>(1);
-      
+
       GeneralXynaObject inputData = null;
       for (Parameter param : request.getOrderInputSource().getParameter()) {
         if(PARAMETER_KEY_INPUT_DATA.equals(param.getKey())) {
@@ -220,22 +222,22 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
       if(FREQUENCY_CONTROLLED_TASK_TYPE_LOAD.equalsIgnoreCase(request.getType())) {
         if(request.getCreateInputOnce() != null && request.getCreateInputOnce()) {
           r = new LoadControlledOrderCreationTaskCreationParameter(
-                     request.getName(), request.getNumberOfOrders(), 
+                     request.getName(), request.getNumberOfOrders(),
                      (long)request.getValue(), 1, orderCreationParameter);
         } else {
           r = new FrequencyControlledOrderInputSourceUsingTaskCreationParameter(
-                     request.getName(), request.getNumberOfOrders(), 
-                     new long[] {request.getOrderInputSource().getId()}, 
+                     request.getName(), request.getNumberOfOrders(),
+                     new long[] {request.getOrderInputSource().getId()},
                      new LoadControlledCreationParameterBean((long)request.getValue(), 1));
         }
       } else if (FREQUENCY_CONTROLLED_TASK_TYPE_RATE.equalsIgnoreCase(request.getType())) {
         if(request.getCreateInputOnce() != null && request.getCreateInputOnce()) {
           r = new RateControlledOrderCreationTaskCreationParameter(
-                     request.getName(), request.getNumberOfOrders(), 
+                     request.getName(), request.getNumberOfOrders(),
                      request.getValue(), orderCreationParameter);
         } else {
           r = new FrequencyControlledOrderInputSourceUsingTaskCreationParameter(
-                     request.getName(), request.getNumberOfOrders(), 
+                     request.getName(), request.getNumberOfOrders(),
                      new long[] {request.getOrderInputSource().getId()},
                      new RateControlledCreationParameterBean(request.getValue()));
         }
@@ -249,7 +251,7 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
         else
           r.setDelay("null");
         r.setTimezone(request.getTimezone());
-        
+
         long taskId = XynaFactory.getInstance().getXynaMultiChannelPortal().startFrequencyControlledTask(r);
         return new FrequencyControlledTaskId(taskId);
       }
@@ -258,7 +260,7 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
       throw new StartFrequencyControlledTaskException(e.getMessage(), e);
     }
   }
-  
+
   @Override
   public void deleteOrderInputSouce(OrderInputSourceId id) throws DeleteOrderInputSourceException {
     try {
@@ -267,14 +269,14 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
       throw new DeleteOrderInputSourceException(e.getMessage(), e);
     }
   }
-  
+
   @Override
   public void changeOrderInputSource(OrderInputSource orderInputSource) throws OrderInputSourceUpdateException {
     try {
       OrderInputSourceStorable oiss = orderInputSourceManagement.getInputSourceByName(orderInputSource.getRevision(), orderInputSource.getName(), false);
       if(oiss == null)
         throw new OrderInputSourceUpdateException("OrderInputSource not found");
-      
+
       Map<String, String> parameters = new HashMap<>(orderInputSource.getParameter().size());
       orderInputSource.getParameter().forEach(param -> {
         if(PARAMETER_KEY_INPUT_DATA.equals(param.getKey())) {
@@ -288,15 +290,15 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
           parameters.put(param.getKey(), param.getValue());
         }
       });
-      
-      OrderInputSourceStorable newOiss = new OrderInputSourceStorable(oiss.getName(), orderInputSource.getSourceType().getName(), orderInputSource.getOrderType().getType(), 
+
+      OrderInputSourceStorable newOiss = new OrderInputSourceStorable(oiss.getName(), orderInputSource.getSourceType().getName(), orderInputSource.getOrderType().getType(),
                                                                    oiss.getApplicationName(), oiss.getVersionName(), oiss.getWorkspaceName(), orderInputSource.getDocumentation(), parameters);
       orderInputSourceManagement.modifyOrderInputSource(newOiss);
     } catch (XynaException e) {
       throw new OrderInputSourceUpdateException(e.getMessage(), e);
     }
   }
-  
+
   @Override
   public OrderInputSource getOrderInputSource(GetOrderInputSourceRequest request) throws LoadOrderInputSourceException {
     try {
@@ -304,7 +306,7 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
       if(oiss == null)
         throw new LoadOrderInputSourceException("OrderInputSource not found");
       OrderInputSource orderInputSource = OrderInputSourceConverter.convert(oiss);
-      
+
       // Spezielle Behandlung des Prameter inputData. Das Backend liefert XML, das Frontend erwartet Json
       orderInputSource.getParameter().stream()
         .filter(param -> PARAMETER_KEY_INPUT_DATA.equals(param.getKey()))
@@ -325,7 +327,7 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
       throw new LoadOrderInputSourceException(e.getMessage(), e);
     }
   }
-  
+
   private String convertInputDataFromXmlToJson(String xml, long revision) throws XPRC_XmlParsingException, XPRC_InvalidXMLForObjectCreationException, XPRC_MDMObjectCreationException {
     if (xml == null || xml.isEmpty()) {
       return null;
@@ -335,7 +337,7 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
     XynaObjectJsonBuilder builder = new XynaObjectJsonBuilder(revision);
     return builder.buildJson(generalXynaObject);
   }
-  
+
   @Override
   public void createOrderInputSource(CreateOrderInputSourceRequest request) throws OrderInputSourceCreateException, OrderInputSourceNotUniqueException {
     try {
@@ -375,7 +377,7 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
       throw new OrderInputSourceCreateException(e.getMessage(), e);
     }
   }
-  
+
   private GeneralXynaObject convertInputDataFromJsonToGeneralXynaObject(String json, long revision) {
     if(json == null)
       return null;
@@ -390,7 +392,7 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
       throw new RuntimeException(e.getMessage(), e);
     }
   }
-  
+
   @Override
   public List<SourceType> getOrderSourceTypes() {
     List<PluginDescription> pluginDescriptions = orderInputSourceManagement.listOrderInputSourceTypes();
@@ -398,13 +400,13 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
         .map(plugin -> OrderInputSourceConverter.createSourceTypeFromName(plugin.getName()))
         .collect(Collectors.toList());
   }
-  
+
   @Override
   public List<OrderType> getGeneratingOrderTypes(RuntimeContext guiRuntimeContext, OrderType executionOrderType) throws LoadGeneratingOrderTypesException {
     try {
       com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext runtimeContext = revisionManagement.getRuntimeContext(guiRuntimeContext.getRevision());
       List<OrdertypeParameter> ordertypeParameters = ordertypeManagement.listOrdertypes(SearchOrdertypeParameter.hierarchy(runtimeContext));
-      
+
       OrdertypeParameter executionOrdertypeParameter = null;
       for (OrdertypeParameter otp : ordertypeParameters) {
         if(otp.getOrdertypeName() != null && otp.getOrdertypeName().equals(executionOrderType.getName())) {
@@ -414,11 +416,11 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
       };
       if(executionOrdertypeParameter == null)
         throw new Exception("Execution Ordertype not found");
-      
-      if(executionOrdertypeParameter.getExecutionDestinationValue().getDestinationTypeEnum() == ExecutionType.XYNA_FRACTAL_WORKFLOW) {        
+
+      if(executionOrdertypeParameter.getExecutionDestinationValue().getDestinationTypeEnum() == ExecutionType.XYNA_FRACTAL_WORKFLOW) {
         DeploymentItemState deploymentItemStateExecutionWorkflow = deploymentItemStateManagement.get(executionOrdertypeParameter.getExecutionDestinationValue().getFullQualifiedName(), guiRuntimeContext.getRevision());
-        
-        
+
+
         return ordertypeParameters.stream()
             .filter(otp -> {
               if(otp.getExecutionDestinationValue() != null && otp.getExecutionDestinationValue().getDestinationTypeEnum() == ExecutionType.XYNA_FRACTAL_WORKFLOW) {
@@ -452,9 +454,9 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
       throw new LoadGeneratingOrderTypesException(e.getMessage(), e);
     }
   }
-  
+
   /**
-   * Überprüft, ob die Output Parameter des erzeugenden Workflow zu den Inputparameter des aufzurufenden Workflow passen.
+   * checks if the output parameters of the generating workflow matches the input parameters of the workflow to be executed
    * @param generatingWorkflow
    * @param executionWorkflow
    * @return
@@ -475,15 +477,15 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
     }
     return false;
   }
-  
+
   /**
-   * Überprüft, ob das aufzurufende OperationInterface zu dem aufrufenden OperationInterface passt.
+   * checks if the OperationInterface to be called matches the calling OperationInterface
    * @param caller
    * @param interfaceToCall
    * @return
    */
   private boolean mayCall(OperationInterface caller, OperationInterface interfaceToCall) {
-    //nun kann der caller noch den zusätzlichen xprc.xpce.OrderCreationParameter parameter haben, den man beim vergleich ignorieren muss
+    //the caller can have the additional parameter xprc.xpce.OrderCreationParameter that has to be ignored in the comparison
 
     List<TypeInterface> input = new ArrayList<>();
     for (TypeInterface ti : caller.getOutput()) {
@@ -501,7 +503,7 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
 
   @Override
   public List<? extends OrderInputSource> getListEntries(TableInfo tableInfo) throws LoadOrderInputSourcesException {
-    
+
     final TableHelper<OrderInputSource, TableInfo> tableHelper = TableHelper.<OrderInputSource, TableInfo>init(tableInfo)
         .limitConfig(TableInfo::getLimit)
         .sortConfig(ti -> {
@@ -512,9 +514,9 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
           }
           return null;
         })
-        .filterConfig(ti -> 
+        .filterConfig(ti ->
           ti.getColumns().stream()
-          .filter(tableColumn -> 
+          .filter(tableColumn ->
             !tableColumn.getDisableFilter() && tableColumn.getPath() != null && tableColumn.getFilter() != null && tableColumn.getFilter().length() > 0
           )
           .map(tc -> new TableHelper.Filter(tc.getPath(), tc.getFilter()))
@@ -536,31 +538,31 @@ public class OrderInputSourcesServicesServiceOperationImpl implements ExtendedDe
         .addTableToDbMapping(TABLE_KEY_WORKSPACE, OrderInputSourceStorable.COL_WORKSPACENAME)
         .addTableToDbMapping(TABLE_KEY_STATE, OrderInputSourceColumn.STATE.getColumnName())  // OrderInputSourceStorable.COL_STATE exisitiert nicht
         .addTableToDbMapping(TABLE_KEY_REFERENCED_INPUT_SOURCE_COUNT, OrderInputSourceColumn.REFERENCE_COUNT.getColumnName());  // OrderInputSourceStorable.COL_REFERENCED_INPUT_SOURCE_COUNT existiert nicht
-        
-    
+
+
     List<OrderInputSource> result = new ArrayList<>();
     try {
       SearchRequestBean srb = tableHelper.createSearchRequest(ArchiveIdentifier.orderInputSource);
       String selection = srb.getSelection();
       selection += ", " + OrderInputSourceStorable.COL_ID;
       srb.setSelection(selection);
-      
+
       SearchResult<?> inputSources = orderInputSourceManagement.searchInputSources(srb);
       if(inputSources == null || inputSources.getCount() == 0)
         return result;
       @SuppressWarnings("unchecked")
       List<OrderInputSourceStorable> allOrderInputSources = (List<OrderInputSourceStorable>) inputSources.getResult();
-      
+
       // convert and filter
       result = allOrderInputSources.stream()
         .map(OrderInputSourceConverter::convert)
         .filter(tableHelper.filter())
         .collect(Collectors.toList());
-      
+
       tableHelper.sort(result);
-      return tableHelper.limit(result);      
+      return tableHelper.limit(result);
     } catch (PersistenceLayerException | XNWH_SelectParserException | XNWH_InvalidSelectStatementException e) {
       throw new LoadOrderInputSourcesException(e.getMessage(), e);
     }
-  }  
+  }
 }

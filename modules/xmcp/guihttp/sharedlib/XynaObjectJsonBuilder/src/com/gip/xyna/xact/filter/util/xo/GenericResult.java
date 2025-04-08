@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,9 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package xmcp.factorymanager.impl.converter.payload;
+package com.gip.xyna.xact.filter.util.xo;
+
+
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,19 +30,19 @@ import com.gip.xyna.utils.misc.JsonParser.JsonVisitor;
 import com.gip.xyna.utils.misc.JsonParser.JsonVisitor.Type;
 import com.gip.xyna.utils.misc.JsonParser.UnexpectedJSONContentException;
 
+
+
 public class GenericResult {
-  
+
   private final Map<String, Pair<String, Type>> attributes;
   private final Map<String, Pair<List<String>, Type>> lists;
   private final Map<String, GenericResult> objects;
   private final Map<String, List<GenericResult>> objectLists;
   private final Set<String> emptyLists;
-  
-  public GenericResult(Map<String, Pair<String, Type>> attributes,
-                       Map<String, Pair<List<String>, Type>> lists,
-                       Map<String, GenericResult> objects,
-                       Map<String, List<GenericResult>> objectLists, 
-                       Set<String> emptyLists) {
+
+
+  public GenericResult(Map<String, Pair<String, Type>> attributes, Map<String, Pair<List<String>, Type>> lists,
+                       Map<String, GenericResult> objects, Map<String, List<GenericResult>> objectLists, Set<String> emptyLists) {
     this.attributes = attributes;
     this.lists = lists;
     this.objects = objects;
@@ -48,46 +50,53 @@ public class GenericResult {
     this.emptyLists = emptyLists;
   }
 
-  
+
   public Pair<String, Type> getAttribute(String label) {
     return attributes.get(label);
   }
 
+
   public Pair<List<String>, Type> getList(String label) {
     return lists.get(label);
   }
-  
+
+
   public GenericResult getObject(String label) {
     return objects.get(label);
   }
-  
+
+
   public List<GenericResult> getObjectList(String label) {
     return objectLists.get(label);
   }
-  
+
+
   public Map<String, Pair<String, Type>> getAttributes() {
     return attributes;
   }
 
+
   public Map<String, Pair<List<String>, Type>> getLists() {
     return lists;
   }
-  
+
+
   public Map<String, GenericResult> getObjects() {
     return objects;
   }
 
+
   public Map<String, List<GenericResult>> getObjectLists() {
     return objectLists;
   }
-  
+
   /*@Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    append(sb, "");  
+    append(sb, "");
     return sb.toString();
   }
-  
+
   public void append(StringBuilder sb, String indent) {
     sb.append(indent).append("GenericResult @" + System.identityHashCode(this)).append(Constants.LINE_SEPARATOR)
       .append(indent).append("  ").append("attributes: " + attributes.keySet()).append(Constants.LINE_SEPARATOR)
@@ -109,14 +118,13 @@ public class GenericResult {
     sb.append(Constants.LINE_SEPARATOR)
       .toString();
   }*/
-  
-  
-  
-  
+
+
   public <T> T visit(JsonVisitor<T> visitor) throws UnexpectedJSONContentException {
-    return visit(visitor, Collections.<String>emptyList());
+    return visit(visitor, Collections.<String> emptyList());
   }
-  
+
+
   public <T> T visit(JsonVisitor<T> visitor, List<String> visitationPrecedence) throws UnexpectedJSONContentException {
     visitByPrecedence(visitor, visitationPrecedence);
     for (String key : attributes.keySet()) {
@@ -156,12 +164,15 @@ public class GenericResult {
   private <T> void visitAttribute(String label, JsonVisitor<T> visitor) throws UnexpectedJSONContentException {
     visitor.attribute(label, attributes.get(label).getFirst(), attributes.get(label).getSecond());
   }
-  
+
+
   private <T> void visitList(String label, JsonVisitor<T> visitor) throws UnexpectedJSONContentException {
     visitor.list(label, lists.get(label).getFirst(), lists.get(label).getSecond());
   }
-  
-  private <T> void visitObject(String label, JsonVisitor<T> visitor, List<String> visitationPrecedence) throws UnexpectedJSONContentException {
+
+
+  private <T> void visitObject(String label, JsonVisitor<T> visitor, List<String> visitationPrecedence)
+      throws UnexpectedJSONContentException {
     String adjustedLabel = label;
     if (label.equals("null")) {
       adjustedLabel = null;
@@ -170,8 +181,10 @@ public class GenericResult {
     Object subResult = objects.get(label).visit(newVisitor, visitationPrecedence);
     visitor.object(adjustedLabel, subResult);
   }
-  
-  private <T> void visitObjectList(String label, JsonVisitor<T> visitor, List<String> visitationPrecedence) throws UnexpectedJSONContentException {
+
+
+  private <T> void visitObjectList(String label, JsonVisitor<T> visitor, List<String> visitationPrecedence)
+      throws UnexpectedJSONContentException {
     String adjustedLabel = label;
     if ("null".equals(label)) {
       adjustedLabel = null;
@@ -184,7 +197,8 @@ public class GenericResult {
     }
     visitor.objectList(adjustedLabel, subResults);
   }
-  
+
+
   private void visitByPrecedence(JsonVisitor<?> visitor, List<String> visitationPrecedence) throws UnexpectedJSONContentException {
     for (String label : visitationPrecedence) {
       if (attributes.containsKey(label)) {
@@ -200,6 +214,6 @@ public class GenericResult {
       }
     }
   }
-  
-  
+
+
 }
