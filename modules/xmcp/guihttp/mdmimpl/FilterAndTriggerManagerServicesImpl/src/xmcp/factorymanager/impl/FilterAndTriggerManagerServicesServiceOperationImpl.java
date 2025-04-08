@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,6 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeDependencyContext.RuntimeDependencyContextType;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
-import com.gip.xyna.xmcp.xfcli.StringParameterFormatter;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
@@ -49,7 +48,6 @@ import xact.http.enums.httpmethods.HTTPMethod;
 import xact.templates.Document;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -377,7 +375,7 @@ public class FilterAndTriggerManagerServicesServiceOperationImpl implements Exte
   @Override
   public GeneralXynaObject invokeGuiHttpEndpoint(XynaOrderServerExtension order, URLPath url, HTTPMethod method, Document payload) {
     try {
-      RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
+      RunnableForFilterAccess runnable = order.getRootOrder().getRunnableForFilterAccess("H5XdevFilter");
       Object result = runnable.execute(url, method, payload.getText());
       if(result != null) {
         if(result instanceof GeneralXynaObject) {

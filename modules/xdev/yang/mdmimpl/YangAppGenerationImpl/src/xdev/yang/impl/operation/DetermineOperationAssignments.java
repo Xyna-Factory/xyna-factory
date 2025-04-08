@@ -39,6 +39,11 @@ import xmcp.yang.OperationAssignmentTableData;
 
 public class DetermineOperationAssignments {
 
+  public static class FilteredModuleData {
+    boolean fromCache = false;
+    List<Module> filteredModules;
+  }
+  
   private static final Set<String> primitives = Set.of(Constants.TYPE_LEAF, Constants.TYPE_ANYXML, Constants.TYPE_ANYDATA);
 
   public List<OperationAssignmentTableData> determineOperationAssignments(LoadYangAssignmentsData data) {
@@ -59,25 +64,27 @@ public class DetermineOperationAssignments {
     String deviceFqn = OperationAssignmentUtils.readDeviceFqn(operationMeta);
     List<YangDeviceCapability> moduleCapabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
     List<String> supportedFeatures = YangCapabilityUtils.getSupportedFeatureNames(moduleCapabilities);
-    
-    List<Module> filteredModules = null;
-    Optional<List<Module>> opt = OperationCache.getInstance().get(data);
-    boolean fromCache = false;
-    if (opt.isPresent()) {
-      filteredModules = opt.get();
-      fromCache = true;
-    }
-    else {
-      List<ModuleGroup> groups = OperationAssignmentUtils.loadModules(workspaceName);
-      filteredModules = new ModuleFilterTools().filterAndReload(groups, moduleCapabilities);
-      OperationCache.getInstance().put(data, filteredModules);
-    }
-    result = OperationAssignmentUtils.loadPossibleAssignments(filteredModules, rpcName, rpcNamespace, data, operationMeta, 
-                                                              supportedFeatures, fromCache);
-    fillValuesAndWarnings(operationMeta, filteredModules, result);
+    FilteredModuleData filtered = getFilteredModules(data, workspaceName, moduleCapabilities);
+    result = OperationAssignmentUtils.loadPossibleAssignments(filtered.filteredModules, rpcName, rpcNamespace, data, operationMeta,
+                                                              supportedFeatures, filtered.fromCache);
+    fillValuesAndWarnings(operationMeta, filtered.filteredModules, result);
     return result;
   }
 
+  
+  private FilteredModuleData getFilteredModules(LoadYangAssignmentsData data, String workspaceName, List<YangDeviceCapability> capabilities) {
+    FilteredModuleData ret = new FilteredModuleData();
+    Optional<List<Module>> opt = OperationCache.getInstance().get(data);
+    if (opt.isPresent()) {
+      ret.filteredModules = opt.get();
+      ret.fromCache = true;
+    } else {
+      List<ModuleGroup> groups = OperationAssignmentUtils.loadModules(workspaceName);
+      ret.filteredModules = new ModuleFilterTools().filterAndReload(groups, capabilities);
+      OperationCache.getInstance().put(data, ret.filteredModules);
+    }
+    return ret;
+  }
 
   private void fillValuesAndWarnings(Document meta, List<Module> modules, List<OperationAssignmentTableData> entries) {
     List<OperationMapping> mappings = OperationMapping.loadMappings(meta);
