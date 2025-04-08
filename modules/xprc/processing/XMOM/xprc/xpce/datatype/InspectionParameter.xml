@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,15 @@
   <Data Label="documentation recursion stop marker" VariableName="documentationRecursionStopMarker">
     <Meta>
       <Type>String</Type>
+    </Meta>
+  </Data>  
+  <Data Label="recursion" VariableName="recursion">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Defines the type of the recursion that is done: Supported values are {"none", "instance"}. May be extended to include "datatype" later on.
+      "none": No recursion
+      "instance" (default): Recursion over the types/objects of the connected datatype instance
+      "datatype": Recursion over the structure of the datatype without having a connected datatype instance. Even without support for this recursion type its description is helpful to understand the others.</Documentation>
     </Meta>
   </Data>
 </DataType>

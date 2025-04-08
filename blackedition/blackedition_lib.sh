@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Copyright 2024 Xyna GmbH, Germany
+# Copyright 2025 Xyna GmbH, Germany
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ ALL_APPLICATIONS="Base Processing"; #Default-Applications, die immer installiert
 APPMGMTVERSION=1.0.10
 GUIHTTPVERSION=1.3.20
 SNMPSTATVERSION=1.0.3
-PROCESSINGVERSION=1.0.23
+PROCESSINGVERSION=1.0.24
 ALL_REPOSITORYACCESSES=("svn");
 INSTANCE_NUMBER="1" #1 ist default
 
