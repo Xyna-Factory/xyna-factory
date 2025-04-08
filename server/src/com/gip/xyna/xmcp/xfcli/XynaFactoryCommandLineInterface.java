@@ -650,7 +650,7 @@ public class XynaFactoryCommandLineInterface extends Thread {
 
   private static void savePidToFile() {
     String pidFileFolder = System.getProperty(PID_FOLDER_PROPERTY);
-    final File f = pidFileFolder == null ? new File("xynafactory.pid") : new File(pidFileFolder, "xynafactory.pid");
+    final File f = pidFileFolder == null || pidFileFolder.isBlank() ? new File("xynafactory.pid") : new File(pidFileFolder, "xynafactory.pid");
     if (f.exists()) {
       //server wurde nicht korrekt runtergefahren => backup anlegen, evtl lebt prozess ja noch.
       SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
