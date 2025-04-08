@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,10 @@
       <Source RefID="49"/>
       <Target RefID="49"/>
     </ServiceReference>
+    <ServiceReference ID="293" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
+      <Source RefID="292"/>
+      <Target RefID="292"/>
+    </ServiceReference>
     <Function ID="49" Label="get Own RuntimeContext">
       <Source RefID="50"/>
       <Target RefID="50"/>
@@ -43,6 +47,12 @@
         <Data ID="18" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext18"/>
         <Source RefID="48"/>
       </Input>
+      <Input>
+        <Data ID="370" Label="Operation Assignment Table Data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData370">
+          <Source RefID="16"/>
+        </Data>
+        <Source RefID="242"/>
+      </Input>
       <Output>
         <Data ID="19" Label="Length - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition19"/>
         <Target RefID="14"/>
@@ -51,14 +61,22 @@
         <Data ID="20" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition20"/>
         <Target RefID="15"/>
       </Output>
-      <Mapping>%1%.label="Length"</Mapping>
-      <Mapping>%1%.placeholder="0"</Mapping>
-      <Mapping>%1%.dataPath="%0%.config"</Mapping>
-      <Mapping>%2%.label="Save"</Mapping>
-      <Mapping>%2%.serviceRTC=%0%</Mapping>
-      <Mapping>%2%.serviceFQN="xmcp.yang.fman.ConfigureList"</Mapping>
-      <Mapping>%2%.dataPath="%0%, %1%"</Mapping>
-      <Mapping>%2%.synchronously="true"</Mapping>
+      <Output>
+        <Data ID="344" Label="Load Yang Assignments Data" ReferenceName="LoadYangAssignmentsData" ReferencePath="xmcp.yang" VariableName="loadYangAssignmentsData344">
+          <Source RefID="16"/>
+        </Data>
+        <Target RefID="345"/>
+      </Output>
+      <Mapping>%2%.label="Length"</Mapping>
+      <Mapping>%2%.placeholder="0"</Mapping>
+      <Mapping>%2%.dataPath="%0%.config"</Mapping>
+      <Mapping>%3%.label="Save"</Mapping>
+      <Mapping>%3%.serviceRTC=%0%</Mapping>
+      <Mapping>%3%.serviceFQN="xmcp.yang.fman.ConfigureList"</Mapping>
+      <Mapping>%3%.dataPath="%0%, %1%"</Mapping>
+      <Mapping>%3%.synchronously="true"</Mapping>
+      <Mapping>%4%=%1%.loadYangAssignmentsData</Mapping>
+      <Mapping>%3%.onStartorderResultEvent["0"].eventId=concat("yang_assignment_refresh_", %1%.loadYangAssignmentsData.totalYangPath)</Mapping>
     </Mappings>
     <Mappings ID="30" Label="Mapping">
       <Input>
@@ -77,14 +95,31 @@
       <Mapping>%2%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
       <Mapping>%2%.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
     </Mappings>
+    <Function ID="292" Label="Load List Configuration">
+      <Source RefID="293"/>
+      <Source RefID="345"/>
+      <Target RefID="293"/>
+      <Target RefID="295"/>
+      <Invoke Operation="loadListConfiguration" ServiceID="293">
+        <Source RefID="345"/>
+      </Invoke>
+      <Receive ServiceID="293">
+        <Target RefID="295"/>
+      </Receive>
+    </Function>
     <Data ID="14" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition14"/>
     <Data ID="15" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition15"/>
     <Data ID="29" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition29"/>
     <Data ID="48" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext48"/>
-    <Data ID="192" Label="ListConfiguration" ReferenceName="ListConfiguration" ReferencePath="xmcp.yang.fman" VariableName="const_ListConfiguration192"/>
+    <Data ID="295" Label="ListConfiguration" ReferenceName="ListConfiguration" ReferencePath="xmcp.yang.fman" VariableName="listConfiguration295">
+      <Source RefID="292"/>
+    </Data>
+    <Data ID="345" Label="Load Yang Assignments Data" ReferenceName="LoadYangAssignmentsData" ReferencePath="xmcp.yang" VariableName="loadYangAssignmentsData345">
+      <Source RefID="16"/>
+    </Data>
     <Assign ID="1">
       <Source RefID="29"/>
-      <Source RefID="192"/>
+      <Source RefID="295"/>
       <Source RefID="242"/>
       <Target RefID="68"/>
       <Target RefID="171"/>
@@ -94,11 +129,7 @@
         <Target RefID="68"/>
       </Copy>
       <Copy>
-        <Source RefID="192">
-          <Meta>
-            <LinkType>Constant</LinkType>
-          </Meta>
-        </Source>
+        <Source RefID="295"/>
         <Target RefID="171"/>
       </Copy>
       <Copy>

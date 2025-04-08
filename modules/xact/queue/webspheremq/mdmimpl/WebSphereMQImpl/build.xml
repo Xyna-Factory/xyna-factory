@@ -34,12 +34,10 @@
     <import file="${root.dir}/installation/build/buildService.xml" />
 
     <target name="prepareLibs" description="Build for application">
-        <copy file="${module.dir}/common/lib/mdm.jar" todir="${basedir}/lib/xyna"/> 
-        
-        <ant antfile="build.xml" target="copyLibs" inheritAll="false" dir="${module.dir}/webspheremq/sharedlib/webspheremq">
+        <ant antfile="build.xml" target="build" inheritAll="false" dir="${module.dir}/webspheremq/sharedlib/webspheremq">
             <property name="target.dir" value="${basedir}/lib/xyna" />
         </ant>
-        
+
         <ant antfile="build.xml" target="copyLibs" inheritAll="false" dir="${module.dir}/queue/mdmimpl/QueueImpl">
             <property name="target.dir" value="${basedir}/lib/xyna" />
         </ant>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="YangAppGenerator" factoryVersion="" versionName="1.1.0" xmlVersion="1.1">
+--><Application applicationName="YangAppGenerator" factoryVersion="" versionName="1.1.2" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>GuiHttp</ApplicationName>
-        <VersionName>1.3.16</VersionName>
+        <VersionName>1.3.20</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>YangBase</ApplicationName>
@@ -38,6 +38,14 @@
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.ConfigureAnyXml</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.ConfigureAnyXmlDialogDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
       <DestinationKey>xmcp.yang.fman.ConfigureList</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
@@ -46,11 +54,11 @@
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.DefineAddToOperationSignatureDialog</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.DefineAddOperationDialog</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.DefineAddOperationDialog</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.DefineAddToOperationSignatureDialog</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -77,12 +85,32 @@
       <DestinationKey>xmcp.yang.fman.ImportYangModuleCollectionApplication</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
-    <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.SaveOperationAssignment</DestinationKey>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.yang.fman.ModuleExplorerAppDefinition</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="false">
-      <DestinationKey>xmcp.yang.fman.UpdateVariableInOperationSignature</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.ModuleExplorerAppTableInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.yang.fman.ModuleExplorerModuleDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.yang.fman.ModuleExplorerModuleTableInfo</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.yang.fman.ModuleExplorerRtcDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.yang.fman.ModuleExplorerWorkspaceDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.yang.fman.ModuleExplorerWorkspaceTableInfo</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -91,6 +119,22 @@
     </Ordertype>
     <Ordertype implicitDependency="true">
       <DestinationKey>xmcp.yang.fman.OperationAssignmentsDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.OperationAssignmentsDefinitionAnyXml</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.OperationAssignmentsDefinitionContainer</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.OperationAssignmentsDefinitionLeaf</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.OperationAssignmentsDefinitionList</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -118,15 +162,11 @@
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.OperationAssignmentsDefinitionContainer</DestinationKey>
+      <DestinationKey>xmcp.yang.fman.SaveOperationAssignment</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
-    <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.OperationAssignmentsDefinitionLeaf</DestinationKey>
-      <OrderContextMapping>false</OrderContextMapping>
-    </Ordertype>
-    <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.yang.fman.OperationAssignmentsDefinitionList</DestinationKey>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.yang.fman.UpdateVariableInOperationSignature</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -140,6 +180,10 @@
     </SharedLib>
   </SharedLibs>
   <XMOMEntries>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.yang.OperationCreationParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xdev.yang.YangAppGeneration</FqName>
       <Type>DATATYPE</Type>
@@ -147,6 +191,18 @@
     <XMOMEntry implicitDependency="false">
       <FqName>xdev.yang.YangAppGenerationInputParameter</FqName>
       <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.yang.datatypes.YangModuleDetails</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.yang.exceptions.ApplicationImportException</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xdev.yang.exceptions.OperationCreationException</FqName>
+      <Type>EXCEPTION</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yang.LoadYangAssignmentsData</FqName>
@@ -172,6 +228,18 @@
       <FqName>xmcp.yang.fman.AddVariableToOperationSignature</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.AnyXmlSubstatementConfiguration</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.ConfigureAnyXml</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.ConfigureAnyXmlDialogDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yang.fman.ConfigureList</FqName>
       <Type>WORKFLOW</Type>
@@ -181,11 +249,11 @@
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.DefineAddToOperationSignatureDialog</FqName>
+      <FqName>xmcp.yang.fman.DefineAddOperationDialog</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.DefineAddOperationDialog</FqName>
+      <FqName>xmcp.yang.fman.DefineAddToOperationSignatureDialog</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -216,12 +284,32 @@
       <FqName>xmcp.yang.fman.ListConfiguration</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.SaveOperationAssignment</FqName>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.ModuleExplorerAppDefinition</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
-      <FqName>xmcp.yang.fman.UpdateVariableInOperationSignature</FqName>
+      <FqName>xmcp.yang.fman.ModuleExplorerAppTableInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.ModuleExplorerModuleDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.ModuleExplorerModuleTableInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.ModuleExplorerRtcDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.ModuleExplorerWorkspaceDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.ModuleExplorerWorkspaceTableInfo</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -230,6 +318,22 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yang.fman.OperationAssignmentsDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.OperationAssignmentsDefinitionAnyXml</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.OperationAssignmentsDefinitionContainer</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.OperationAssignmentsDefinitionLeaf</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.OperationAssignmentsDefinitionList</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
@@ -249,6 +353,10 @@
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.fman.OperationSignatureEntry</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yang.fman.OperationSignatureInputTableInfo</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
@@ -257,20 +365,12 @@
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.OperationAssignmentsDefinitionContainer</FqName>
+      <FqName>xmcp.yang.fman.SaveOperationAssignment</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.OperationAssignmentsDefinitionLeaf</FqName>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.UpdateVariableInOperationSignature</FqName>
       <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.OperationAssignmentsDefinitionList</FqName>
-      <Type>WORKFLOW</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.fman.OperationSignatureEntry</FqName>
-      <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yang.fman.YangImportDefinition</FqName>

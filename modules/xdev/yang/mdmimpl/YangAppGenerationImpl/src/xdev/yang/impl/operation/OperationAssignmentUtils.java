@@ -57,6 +57,9 @@ import xdev.yang.impl.YangCapabilityUtils.YangDeviceCapability;
 import xdev.yang.impl.YangStatementTranslator;
 import xdev.yang.impl.YangStatementTranslator.YangStatementTranslation;
 import xdev.yang.impl.operation.ListConfiguration.ListLengthConfig;
+import xdev.yang.impl.operation.anyxml.AnyXmlSubstatementConfigManager;
+import xdev.yang.impl.operation.anyxml.AnyXmlSubstatementFinder;
+import xdev.yang.impl.operation.anyxml.AnyXmlSubstatementConfigManager.AnyXmlConfigTag;
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.OperationAssignmentTableData;
 import xmcp.yang.YangModuleCollection;
@@ -73,15 +76,17 @@ public class OperationAssignmentUtils {
     DeviationList deviations = DeviationList.build(modules);
     Input input = rpc.getInput();
     List<ListConfiguration> listConfigs = ListConfiguration.loadListConfigurations(meta);
+    AnyXmlSubstatementFinder finder = new AnyXmlSubstatementFinder(modules);
+    List<AnyXmlConfigTag> anyXmlConfig = new AnyXmlSubstatementConfigManager().loadAnyXmlConfigs(meta);
     List<YangStatement> elements = traverseYang(data.getTotalYangPath(), data.getTotalNamespaces(), data.getTotalKeywords(), 
-                                                input, listConfigs, supportedFeatures);
+                                                input, listConfigs, supportedFeatures, finder, anyXmlConfig);
     List<OperationAssignmentTableData> result = loadAssignments(elements, data, supportedFeatures, deviations);
     return result;
   }
 
 
   private static List<YangStatement> traverseYang(String path, String namespaces, String keywords, YangStatement element,
-                                                  List<ListConfiguration> listConfigs, List<String> supportedFeatures) {
+                                                  List<ListConfiguration> listConfigs, List<String> supportedFeatures, AnyXmlSubstatementFinder finder, List<AnyXmlConfigTag> anyXmlConfig) {
     LoadYangAssignmentsDataContent content = new LoadYangAssignmentsDataContent(path, namespaces, keywords);
     String[] parts = content.getParts();
     String[] namespaceParts = content.getNamespaceParts();
@@ -90,7 +95,22 @@ public class OperationAssignmentUtils {
       String part = parts[i];
       String namespace = namespaceParts[i];
       String keyword = keywordParts[i];
-      element = traverseYangOneLayer(part, namespace, element, supportedFeatures);
+
+      if (Constants.TYPE_ANYXML.equals(keyword)) {
+        if (i == parts.length - 1) {
+          break;
+        }
+        i++;
+        part = parts[i];
+        namespace = namespaceParts[i];
+        keyword = keywordParts[i];
+        element = tarverseYangAnyXml(element, part, namespace, content, i, finder, anyXmlConfig);
+        continue;
+      }
+      
+      if (!Constants.TYPE_ANYXML.equals(keyword)) {
+        element = traverseYangOneLayer(part, namespace, element, supportedFeatures);
+      }
       if (Constants.TYPE_LIST.equals(keyword)) {
         //do not traverse this layer because it is synthetic
         i++;
@@ -106,9 +126,43 @@ public class OperationAssignmentUtils {
       case Constants.TYPE_LIST :
         ListConfiguration listConfig = getListConfig(listConfigs, path, namespaces);
         return getListCandidates(element, listConfig);
+      case Constants.TYPE_ANYXML:
+        return getAnyXmlCandidates(element, path, namespaces, finder, anyXmlConfig);
       default :
         return getCandidates(element, supportedFeatures);
     }
+  }
+  
+  private static YangStatement tarverseYangAnyXml(YangStatement element, String pathStep, String namespace, LoadYangAssignmentsDataContent content, int index, AnyXmlSubstatementFinder finder, List<AnyXmlConfigTag> anyXmlConfig) {
+    String modPath = String.join("/", List.of(content.getParts()).subList(0, index));
+    String modNamespaces = String.join(Constants.NS_SEPARATOR, List.of(content.getNamespaceParts()).subList(0, index));
+    List<YangStatement> candidates = getAnyXmlCandidates(element, modPath, modNamespaces, finder, anyXmlConfig);
+    for(YangStatement candidate : candidates) {
+      if (YangStatementTranslation.getLocalName(candidate).equals(pathStep)
+          && Objects.equals(YangStatementTranslation.getNamespace(candidate), namespace)){
+        return candidate;
+      }
+    }
+    return null;
+  }
+
+
+  private static List<YangStatement> getAnyXmlCandidates(YangStatement element, String path, String namespaces,
+                                                         AnyXmlSubstatementFinder finder, List<AnyXmlConfigTag> anyXmlConfig) {
+    List<YangStatement> result = new ArrayList<>();
+    for (AnyXmlConfigTag tag : anyXmlConfig) {
+      if (!tag.getNamespaces().equals(namespaces) || !tag.getYang().equals(path)) {
+        continue;
+      }
+      String name = tag.getTag();
+      String namespace = tag.getNamespace();
+      YangStatement statement = finder.find(name, namespace);
+      if (statement != null) {
+        result.add(statement);
+      }
+
+    }
+    return result;
   }
 
 
@@ -299,7 +353,7 @@ public class OperationAssignmentUtils {
   }
 
   
-  private static ModuleGroup loadModulesFromDt(String fqName, Long entryRevision) throws Exception {
+  public static ModuleGroup loadModulesFromDt(String fqName, Long entryRevision) throws Exception {
     ModuleGroup result = new ModuleGroup();
     DOM dom = DOM.getOrCreateInstance(fqName, new GenerationBaseCache(), entryRevision);
     dom.parseGeneration(true, false);

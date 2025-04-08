@@ -17,21 +17,34 @@
  */
 package xmcp.gitintegration.impl.processing;
 
-
-
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.xfmg.Constants;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
+import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
+import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase.XMOMType;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMODSMapping;
 import com.gip.xyna.xnwh.persistence.xmom.XMOMODSMappingUtils;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.DeploymentMode;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.WorkflowProtectionMode;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 
 import xmcp.gitintegration.CREATE;
@@ -41,9 +54,10 @@ import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.XMOMStorable;
 
 
-
 public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStorable> {
 
+  private static Logger _logger = CentralFactoryLogging.getLogger(XMOMStorableProcessor.class);
+  
   private static final String TAG_XMOMSTORABLE = "xmomstorable";
   private static final String TAG_XMLNAME = "xmlname";
   private static final String TAG_PATH = "path";
@@ -73,8 +87,18 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
         wcd.setContentType(TAG_XMOMSTORABLE);
         wcd.setExistingItem(fromEntry);
         if (toEntry != null) {
-          if (!Objects.equals(fromEntry.getPath(), toEntry.getPath()) || !Objects.equals(fromEntry.getODSName(), toEntry.getODSName())
-              || !Objects.equals(fromEntry.getColumnName(), toEntry.getColumnName())) {
+          boolean fqPathEmpty = (fromEntry.getFQPath() == null) || (fromEntry.getFQPath().isBlank());
+          boolean modified = false;
+          if (fqPathEmpty) {
+            modified = !Objects.equals(fromEntry.getODSName(), toEntry.getODSName());
+          } else {
+            modified = !Objects.equals(fromEntry.getColumnName(), toEntry.getColumnName()); 
+          }
+          if (modified) {
+            if (!fqPathEmpty) {
+              // ignore possible tablename change in entries for column change
+              toEntry.setODSName(fromEntry.getODSName());
+            }
             wcd.setDifferenceType(new MODIFY());
             wcd.setNewItem(toEntry);
             toWorkingList.remove(toEntry); // remove entry from to-list
@@ -162,20 +186,10 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
   public String createDifferencesString(XMOMStorable from, XMOMStorable to) {
     StringBuffer ds = new StringBuffer();
 
-    if (!Objects.equals(from.getPath(), to.getPath())) {
-      ds.append("\n");
-      ds.append("    " + TAG_PATH + " ");
-      ds.append(MODIFY.class.getSimpleName() + " \"" + from.getPath() + "\"=>\"" + to.getPath() + "\"");
-    }
     if (!Objects.equals(from.getODSName(), to.getODSName())) {
       ds.append("\n");
       ds.append("    " + TAG_ODSNAME + " ");
       ds.append(MODIFY.class.getSimpleName() + " \"" + from.getODSName() + "\"=>\"" + to.getODSName() + "\"");
-    }
-    if (!Objects.equals(from.getFQPath(), to.getFQPath())) {
-      ds.append("\n");
-      ds.append("    " + TAG_FQPATH + " ");
-      ds.append(MODIFY.class.getSimpleName() + " \"" + from.getFQPath() + "\"=>\"" + to.getFQPath() + "\"");
     }
     if (!Objects.equals(from.getColumnName(), to.getColumnName())) {
       ds.append("\n");
@@ -210,6 +224,11 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
 
   @Override
   public void create(XMOMStorable item, long revision) {
+    Optional<XMOMStorable> matched = getOptionalExistingEntry(item, revision);
+    if (matched.isPresent()) {
+      modify(matched.get(), item, revision);
+      return;
+    }
     XMOMODSMapping mapping = new XMOMODSMapping();
     mapping.setId(XynaFactory.getInstance().getXynaNetworkWarehouse().getXMOMPersistence().getXMOMPersistenceManagement().genId());
     mapping.setRevision(revision);
@@ -224,16 +243,95 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+    deployIfNoFurtherChanges(item, revision);
   }
 
 
   @Override
   public void modify(XMOMStorable from, XMOMStorable to, long revision) {
-    this.delete(from, revision);
-    this.create(to, revision);
+    if ((to.getFQPath() != null) && !to.getFQPath().isBlank()) {
+      modifySingleColumnEntry(from, to, revision);
+    }
+    else {
+      this.delete(from, revision);
+      this.create(to, revision);
+      if (!Objects.equals(from.getODSName(), to.getODSName())) {
+        modifyTablenameOfColumnEntries(from, to, revision);
+      }
+    }
+    deployIfNoFurtherChanges(from, revision);
   }
 
 
+  private void modifyTablenameOfColumnEntries(XMOMStorable from, XMOMStorable to, long revision) {
+    try {
+      Collection<XMOMODSMapping> entries = XMOMODSMappingUtils.getAllMappingsForRootType(from.getXMLName(), revision);
+      for (XMOMODSMapping item : entries) {
+        if (item.isTableConfig()) { continue; }
+        if (!Objects.equals(from.getODSName(), item.getTablename())) { continue; }
+        item.setTablename(to.getODSName());
+        XMOMODSMappingUtils.storeMapping(item);
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+  
+  
+  private Optional<XMOMStorable> getOptionalExistingEntry(XMOMStorable to, long revision) {
+    try {
+      Collection<XMOMODSMapping> entries = XMOMODSMappingUtils.getAllMappingsForRootType(to.getXMLName(), revision);
+      boolean isColEntry = ((to.getFQPath() != null) && !to.getFQPath().isBlank());
+      for (XMOMODSMapping item : entries) {
+        boolean matches = false;
+        if (isColEntry) {
+          matches = (!item.isTableConfig()) &&
+                    Objects.equals(to.getFQPath(), item.getFqpath()) &&
+                    Objects.equals(to.getPath(), item.getPath());
+        } else {
+          matches = item.isTableConfig();
+        }
+        if (matches) {
+          XMOMStorable ret = adapt(item);
+          return Optional.of(ret);
+        }
+      }
+      return Optional.empty();
+    } catch (Exception e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
+
+  
+  public XMOMStorable adapt(XMOMODSMapping item) {
+    XMOMStorable ret = new XMOMStorable();
+    ret.setPath(item.getPath());
+    ret.setFQPath(item.getFqpath());
+    ret.setXMLName(item.getFqxmlname());
+    ret.setODSName(item.getTablename());
+    ret.setColumnName(item.getColumnname());
+    return ret;
+  }
+
+  
+  private void modifySingleColumnEntry(XMOMStorable from, XMOMStorable to, long revision) {
+    try {
+      Collection<XMOMODSMapping> entries = XMOMODSMappingUtils.getAllMappingsForRootType(from.getXMLName(), revision);
+      for (XMOMODSMapping item : entries) {
+        if (item.isTableConfig()) { continue; }
+        if (!Objects.equals(from.getFQPath(), item.getFqpath())) { continue; }
+        if (!Objects.equals(from.getPath(), item.getPath())) { continue; }
+        if (!Objects.equals(from.getColumnName(), item.getColumnname())) { continue; }
+        item.setColumnname(to.getColumnName());
+        XMOMODSMappingUtils.storeMapping(item);
+        return;
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+  
+  
   @Override
   public void delete(XMOMStorable item, long revision) {
     try {
@@ -242,4 +340,27 @@ public class XMOMStorableProcessor implements WorkspaceContentProcessor<XMOMStor
       throw new RuntimeException(e);
     }
   }
+  
+  
+  public void deployIfNoFurtherChanges(XMOMStorable item, long revision) {
+    try {
+      Path subpath = Path.of(item.getXMLName().replaceAll("\\.", Constants.fileSeparator) + ".xml");
+      Path savedpath = Path.of(RevisionManagement.getPathForRevision(PathType.XMOM, revision, false)).resolve(subpath);
+      if (!Files.exists(savedpath)) { return; }
+      Path deployedpath = Path.of(RevisionManagement.getPathForRevision(PathType.XMOM, revision, true)).resolve(subpath);
+      if (!Files.exists(deployedpath)) { return; }
+      String savedXml = Files.readString(savedpath, StandardCharsets.UTF_8);
+      String deployedXml = Files.readString(deployedpath, StandardCharsets.UTF_8);
+      if (!savedXml.equals(deployedXml)) { return; }
+      Map<XMOMType, List<String>> items = new HashMap<>();
+      XMOMType type = XMOMType.DATATYPE;
+      items.putIfAbsent(type, new LinkedList<String>());
+      items.get(type).add(item.getXMLName());
+      GenerationBase.deploy(items, DeploymentMode.codeChanged, false, WorkflowProtectionMode.FORCE_DEPLOYMENT, revision, "gitIntegration");
+    } catch (Exception e) {
+      _logger.error(e.getMessage(), e);
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
+  
 }
