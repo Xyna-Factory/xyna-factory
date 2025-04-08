@@ -50,6 +50,9 @@ import xdev.yang.impl.YangStatementTranslator.YangStatementTranslation;
 
 public class AugmentTools {
 
+  private PathTools _pathTools = new PathTools();
+  
+  
   public void handleAugment(List<Module> modules, Input input) {
     for (Module mod : modules) {
       if (mod.getAugments() == null) { continue; }
@@ -149,7 +152,7 @@ public class AugmentTools {
       String localname = YangStatementTranslation.getLocalName(node);
     if (index < path.size()) {
       QName qname = path.get(index);
-      if (new DeviationTools().identifiersAreEqual(localname, qname.getLocalName()) &&
+      if (_pathTools.identifiersAreEqual(localname, qname.getLocalName()) &&
           Objects.equals(namespace, qname.getNamespace().toString())) {
         if (index == path.size() - 1) {
           return Optional.ofNullable(node);
