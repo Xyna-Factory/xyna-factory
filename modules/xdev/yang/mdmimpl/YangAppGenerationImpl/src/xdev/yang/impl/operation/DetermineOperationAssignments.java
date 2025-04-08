@@ -62,15 +62,18 @@ public class DetermineOperationAssignments {
     
     List<Module> filteredModules = null;
     Optional<List<Module>> opt = OperationCache.getInstance().get(data);
+    boolean fromCache = false;
     if (opt.isPresent()) {
       filteredModules = opt.get();
+      fromCache = true;
     }
     else {
       List<ModuleGroup> groups = OperationAssignmentUtils.loadModules(workspaceName);
       filteredModules = new ModuleFilterTools().filterAndReload(groups, moduleCapabilities);
       OperationCache.getInstance().put(data, filteredModules);
     }
-    result = OperationAssignmentUtils.loadPossibleAssignments(filteredModules, rpcName, rpcNamespace, data, operationMeta, supportedFeatures);
+    result = OperationAssignmentUtils.loadPossibleAssignments(filteredModules, rpcName, rpcNamespace, data, operationMeta, 
+                                                              supportedFeatures, fromCache);
     fillValuesAndWarnings(operationMeta, filteredModules, result);
     return result;
   }

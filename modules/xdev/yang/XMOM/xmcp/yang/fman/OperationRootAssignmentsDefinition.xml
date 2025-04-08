@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,13 +26,13 @@
       <Data ID="2032" Label="Operation Table Data" ReferenceName="OperationTableData" ReferencePath="xmcp.yang" VariableName="operationTableData2032"/>
       <Data ID="2085" Label="OperationSignatureEntry" ReferenceName="OperationSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="operationSignatureEntry2085"/>
     </Output>
-    <ServiceReference ID="1815" Label="Operation signature Definition" ReferenceName="OperationSignatureDefinition" ReferencePath="xmcp.yang.fman">
-      <Source RefID="1814"/>
-      <Target RefID="1814"/>
-    </ServiceReference>
     <ServiceReference ID="2002" Label="Operation assignments Definition" ReferenceName="OperationAssignmentsDefinition" ReferencePath="xmcp.yang.fman">
       <Source RefID="2001"/>
       <Target RefID="2001"/>
+    </ServiceReference>
+    <ServiceReference ID="1815" Label="Operation signature Definition" ReferenceName="OperationSignatureDefinition" ReferencePath="xmcp.yang.fman">
+      <Source RefID="1814"/>
+      <Target RefID="1814"/>
     </ServiceReference>
     <Mappings ID="411" Label="Mapping">
       <Input>
@@ -94,6 +94,26 @@
         <Target RefID="2005"/>
       </Receive>
     </Function>
+    <Mappings ID="2656" Label="Mapping">
+      <Input>
+        <Data ID="2681" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition2681">
+          <Source RefID="2656"/>
+        </Data>
+        <Source RefID="2004">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="2706" Label="Form Panel Definition 2" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition2706">
+          <Source RefID="2656"/>
+        </Data>
+        <Target RefID="2707"/>
+      </Output>
+      <Mapping>%1%=%0%</Mapping>
+      <Mapping>%1%.closable="false"</Mapping>
+    </Mappings>
     <Mappings ID="586" Label="Mapping">
       <Input>
         <Data ID="1796" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1796">
@@ -106,10 +126,10 @@
         </Source>
       </Input>
       <Input>
-        <Data ID="713" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition713">
+        <Data ID="713" Label="Form Panel Definition 2" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition713">
           <Source RefID="586"/>
         </Data>
-        <Source RefID="2004">
+        <Source RefID="2707">
           <Meta>
             <LinkType>UserConnected</LinkType>
           </Meta>
@@ -134,6 +154,7 @@
       <Mapping>%3%.children["0"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%0%</Mapping>
       <Mapping>%3%.children["1"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%1%</Mapping>
       <Mapping>%3%.label=%2%.operation</Mapping>
+      <Mapping>%3%.closable="true"</Mapping>
     </Mappings>
     <Data ID="429" Label="Operation Assignment Table Data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData429">
       <Source RefID="411"/>
@@ -161,6 +182,9 @@
     </Data>
     <Data ID="2006" Label="Operation Table Data" ReferenceName="OperationTableData" ReferencePath="xmcp.yang" VariableName="operationTableData2006"/>
     <Data ID="2007" Label="OperationSignatureEntry" ReferenceName="OperationSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="operationSignatureEntry2007"/>
+    <Data ID="2707" Label="Form Panel Definition 2" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition2707">
+      <Source RefID="2656"/>
+    </Data>
     <Assign ID="1">
       <Source RefID="612"/>
       <Source RefID="2005"/>

@@ -160,6 +160,7 @@
       <Mapping>%3%.children["0"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%0%</Mapping>
       <Mapping>%3%.children["1"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%1%</Mapping>
       <Mapping>%3%.label=%2%.yangPath</Mapping>
+      <Mapping>%3%.closable="true"</Mapping>
     </Mappings>
     <Choice ID="5408" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="109"/>

@@ -68,11 +68,13 @@ public class OperationAssignmentUtils {
   
   public static List<OperationAssignmentTableData> loadPossibleAssignments(List<Module> modules, String rpcName, String rpcNs,
                                                                          LoadYangAssignmentsData data, Document meta,
-                                                                         List<String> supportedFeatures) {
+                                                                         List<String> supportedFeatures, boolean fromCache) {
     Rpc rpc = findRpc(modules, rpcName, rpcNs);
     DeviationList deviations = DeviationList.build(modules);
     Input input = rpc.getInput();
-    new AugmentTools().handleAugment(modules, input);
+    if (!fromCache) {
+      new AugmentTools().handleAugment(modules, input);
+    }
     List<ListConfiguration> listConfigs = ListConfiguration.loadListConfigurations(meta);
     List<YangStatement> elements = traverseYang(data.getTotalYangPath(), data.getTotalNamespaces(), data.getTotalKeywords(), 
                                                 input, listConfigs, supportedFeatures);
