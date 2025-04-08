@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,9 +29,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
-
-import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.filter.monitor.MonitorSession.MonitorSessionInstance;
 import com.gip.xyna.xact.filter.monitor.auditpreprocessing.MissingImportsRestorer.MissingImport;
@@ -43,6 +41,8 @@ import com.gip.xyna.xact.filter.util.AVariableIdentification;
 import com.gip.xyna.xact.filter.util.Utils;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Workspace;
+import com.gip.xyna.xfmg.xods.configuration.Configuration;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyWithDefaultValue;
 import com.gip.xyna.xprc.xfractwfe.generation.Step;
 import com.gip.xyna.xprc.xfractwfe.generation.WF.WFStep;
 
@@ -63,8 +63,12 @@ import xprc.xpce.RuntimeContext;
 
 public class GetAuditRequestProcessor {
 
-  private static final Logger logger = CentralFactoryLogging.getLogger(GetAuditRequestProcessor.class);
+  private static Configuration config = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryManagementODS().getConfiguration();
 
+  public static String CUSTOM_FIELD_PROPERTY_PREFIX  = "xyna.processmonitor.customColumn";
+  public static String CUSTOM_FIELD_PROPERTY_ENABLED = "enabled";
+  public static String CUSTOM_FIELD_PROPERTY_LABEL   = "label";
+  
 
   public GetAuditResponse processGetAuditRequestFromUpload(MonitorSessionInstance session, String fileId) throws NoAuditData {
     try {
@@ -194,10 +198,8 @@ public class GetAuditRequestProcessor {
   private List<CustomField> getCustomFields(MonitorAudit monitorAudit) {
     List<CustomField> result = new ArrayList<>();
     
-    MonitorV2 impl = new MonitorV2();
-    
     CustomField customField = new CustomField();
-    String label = impl.getCustomFieldLabel(0);
+    String label = getCustomFieldLabel(0);
     String value = monitorAudit.getCustom0();
     label = (label == null || label.length() == 0) ? "Custom 1" : label;
     value = (value == null) ? "" : value;
@@ -206,7 +208,7 @@ public class GetAuditRequestProcessor {
     result.add(customField);
     
     customField = new CustomField();    
-    label = impl.getCustomFieldLabel(1);
+    label = getCustomFieldLabel(1);
     value = monitorAudit.getCustom1();
     label = (label == null || label.length() == 0) ? "Custom 2" : label; 
     value = (value == null) ? "" : value;
@@ -215,7 +217,7 @@ public class GetAuditRequestProcessor {
     result.add(customField);
     
     customField = new CustomField();
-    label = impl.getCustomFieldLabel(2);
+    label = getCustomFieldLabel(2);
     value = monitorAudit.getCustom2();
     label = (label == null || label.length() == 0) ? "Custom 3" : label;
     value = (value == null) ? "" : value;
@@ -224,7 +226,7 @@ public class GetAuditRequestProcessor {
     result.add(customField);
     
     customField = new CustomField();
-    label = impl.getCustomFieldLabel(3);
+    label = getCustomFieldLabel(3);
     value = monitorAudit.getCustom3();
     label = (label == null || label.length() == 0) ? "Custom 4" : label;
     value = (value == null) ? "" : value;
@@ -284,5 +286,25 @@ public class GetAuditRequestProcessor {
   private Workflow fillWorkflow(MonitorAudit monitorAudit) {
     com.gip.xyna.xact.filter.xmom.workflows.json.Workflow jsonWorkflow = new com.gip.xyna.xact.filter.xmom.workflows.json.Workflow(monitorAudit.getWorkflowGbo());
     return (Workflow) jsonWorkflow.getXoRepresentation();
+  }
+
+
+  private boolean isCustomFieldEnabled(int fieldIndex) {
+    String propName = String.format("%s%d.%s", CUSTOM_FIELD_PROPERTY_PREFIX, fieldIndex, CUSTOM_FIELD_PROPERTY_ENABLED);
+    XynaPropertyWithDefaultValue enabledProperty = config.getPropertyWithDefaultValue(propName);
+    if (enabledProperty == null || enabledProperty.getValueOrDefValue() == null) {
+      return false;
+    }
+    return Boolean.TRUE.toString().equalsIgnoreCase(enabledProperty.getValueOrDefValue());
+  }
+
+
+  private String getCustomFieldLabel(int fieldIndex) {
+    if (!isCustomFieldEnabled(fieldIndex)) {
+      return null;
+    }
+    String propName = String.format("%s%d.%s", CUSTOM_FIELD_PROPERTY_PREFIX, fieldIndex, CUSTOM_FIELD_PROPERTY_LABEL);
+    XynaPropertyWithDefaultValue labelProperty = config.getPropertyWithDefaultValue(propName);
+    return (labelProperty != null) ? labelProperty.getValueOrDefValue() : null;
   }
 }

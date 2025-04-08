@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAccessor;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -37,14 +38,12 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
-import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -80,8 +79,6 @@ import com.gip.xyna.xprc.xprcods.orderarchive.audit.EnhancedAudit;
 public class MonitorAudit {
   
   public static final String IMPORTED = "Imported ";
-  
-  private static final Logger logger = CentralFactoryLogging.getLogger(MonitorAudit.class);
 
   private static XynaMultiChannelPortal multiChannelPortal =
       ((XynaMultiChannelPortal) XynaFactory.getInstance().getXynaMultiChannelPortal());
@@ -361,7 +358,7 @@ public class MonitorAudit {
     wf.getWfAsStep().addIdsToParameter();
 
     for (Step topLevelStep : wf.getWfAsStep().getChildSteps()) {
-      for (Step step : com.gip.xyna.xact.filter.monitor.Dataflow.collectAllSteps(topLevelStep)) {
+      for (Step step : collectAllSteps(topLevelStep)) {
         // labels of variables are not contained in the parameter-tags of the audit and need to be set separately
         step.addLabelsToParameter();
         
@@ -370,7 +367,22 @@ public class MonitorAudit {
       }
     }
   }
-  
+
+
+  private static List<Step> collectAllSteps(Step rootStep) {
+    List<Step> steps = new ArrayList<>();
+    steps.add(rootStep);
+
+    if (rootStep.getChildSteps() != null) {
+      for (Step childStep : rootStep.getChildSteps()) {
+        steps.addAll(collectAllSteps(childStep));
+      }
+    }
+
+    return steps;
+  }
+
+
   private static ExecutionType getExecutionType(String destinationType) {
     if(destinationType == null) {
       return ExecutionType.UNKOWN;
