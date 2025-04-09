@@ -56,7 +56,6 @@
         <fileset dir="@{basedir}">
           <include name="**/*" />
           <exclude name="**/*Macros.xml" />
-          <exclude name="delivery/svn.xml" />
           <exclude name="integration/ciMacros.xml" />
           <exclude name="build.xml" />
           <exclude name="**/installDB.xml" />
@@ -85,7 +84,6 @@
           <include name="build/xynaMacros.xml" />
           <include name="build/antlib.xml" />
           <include name="delivery/deliveryMacros.xml" />
-          <include name="delivery/svn.xml" />
           <include name="integration/ciMacros.xml" />
         </fileset>
       </copy>

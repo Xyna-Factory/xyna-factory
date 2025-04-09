@@ -27,24 +27,14 @@
 	<!-- =================================
               target: release
           ================================= -->
-	<target name="release" description="build a delivery from specified SVN-tag" >
+	<target name="release" description="build a delivery from specified GIT-tag" >
 		<property name="root.dir" value="${delivery.dir}/checkout_${timestamp}" />
 		<property name="build.dir" value="${delivery.dir}/build_${timestamp}" />
 
 		<mkdir dir="${root.dir}" />
 
-		<!--exec failonerror="true" executable="${basedir}/check_trunk.sh" /-->
-		<!--update />
-		<exec failonerror="true" executable="svn">
-		  <arg value="commit" />
-		  <arg value="-m" />
-		  <arg value="delivery ${release.number}" />
-		  <arg value="delivery.properties"/>
-		</exec--> 
-		
-		
 		<!-- tag erstellen (welches unterverzeichnis ist hier egal) -->
-		<git_checkout branch="${svn.branch}" project="clusterproviders" destdir="${root.dir}/clusterproviders" />
+		<git_checkout branch="${git.branch}" project="clusterproviders" destdir="${root.dir}/clusterproviders" />
 		<unzip src="${root.dir}/clusterproviders.zip" dest="${root.dir}"/>
 
 		<!-- einzelverzeichnisse -->
