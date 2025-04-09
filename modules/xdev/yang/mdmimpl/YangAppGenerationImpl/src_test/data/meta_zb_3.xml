@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Yang type="Capabilities" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
+  <yang-library
+       xmlns="urn:ietf:params:xml:ns:yang:ietf-yang-library"
+       xmlns:ds="urn:ietf:params:xml:ns:yang:ietf-datastores">
+     <module-set>
+       <name>misc-modules</name>
+       <module>
+         <name>misc</name>
+         <revision>2018-02-20</revision>
+         <namespace>http://www.gip.com/xyna/yang/test/testrpc_zb_3</namespace>
+       </module>
+     </module-set>
+   </yang-library>
+</Yang>

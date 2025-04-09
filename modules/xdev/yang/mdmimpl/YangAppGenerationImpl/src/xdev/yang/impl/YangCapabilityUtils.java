@@ -126,20 +126,30 @@ public class YangCapabilityUtils {
   public static List<YangDeviceCapability> loadCapabilities(String deviceFqn, String workspaceName) {
     DOM deviceDatatype = loadDeviceDatatype(deviceFqn, workspaceName);
     List<String> unknownMetaTags = deviceDatatype.getUnknownMetaTags();
+    return loadCapabilitiesImpl(unknownMetaTags);
+  }
+  
+  public static List<YangDeviceCapability> loadCapabilitiesImpl(List<String> unknownMetaTags) {
     Document deviceMeta = loadDeviceMeta(unknownMetaTags);
 
-    Element helloElement = XMLUtils.getChildElementByName(deviceMeta.getDocumentElement(), Constants.TAG_HELLO);
+    Element helloElement = XMLUtils.getChildElementByName(deviceMeta.getDocumentElement(), Constants.TAG_HELLO, 
+                                                          Constants.NETCONF_NS);
     if (helloElement != null) {
       return loadCapabilitiesFromHelloMessage(helloElement);
     } else {
-      return loadCapabilitiesFromYangLibrary(XMLUtils.getChildElementByName(deviceMeta.getDocumentElement(), Constants.TAG_YANG_LIBRARY));
+      Element libElem = XMLUtils.getChildElementByName(deviceMeta.getDocumentElement(), Constants.TAG_YANG_LIBRARY, 
+                                                       Constants.YANG_LIB_NS);
+      if (libElem == null) {
+        throw new IllegalArgumentException("Could not find capabilities in xml string");
+      }
+      return loadCapabilitiesFromYangLibrary(libElem);
     }
   }
 
 
-  private static List<YangDeviceCapability> loadCapabilitiesFromHelloMessage(Element ele) {
-    ele = XMLUtils.getChildElementByName(ele, Constants.TAG_CAPABILITIES);
-    List<Element> capabilityElements = XMLUtils.getChildElementsByName(ele, Constants.TAG_CAPABILITY);
+  public static List<YangDeviceCapability> loadCapabilitiesFromHelloMessage(Element ele) {
+    ele = XMLUtils.getChildElementByName(ele, Constants.TAG_CAPABILITIES, ele.getNamespaceURI());
+    List<Element> capabilityElements = XMLUtils.getChildElementsByName(ele, Constants.TAG_CAPABILITY, ele.getNamespaceURI());
     List<YangDeviceCapability> result = new ArrayList<YangDeviceCapability>();
 
     for (Element ce : capabilityElements) {
@@ -204,21 +214,23 @@ public class YangCapabilityUtils {
 
   private static List<YangDeviceCapability> loadCapabilitiesFromYangLibrary(Element ele) {
     List<YangDeviceCapability> result = new ArrayList<YangDeviceCapability>();
-    List<Element> moduleSets = XMLUtils.getChildElementsByName(ele, Constants.TAG_MODULE_SET);
+    List<Element> moduleSets = XMLUtils.getChildElementsByName(ele, Constants.TAG_MODULE_SET, ele.getNamespaceURI());
 
     for (Element mset : moduleSets) {
-      List<Element> modules = XMLUtils.getChildElementsByName(mset, Constants.TAG_MODULE);
+      List<Element> modules = XMLUtils.getChildElementsByName(mset, Constants.TAG_MODULE, mset.getNamespaceURI());
       for (Element module : modules) {
         YangDeviceCapability devCapability = new YangDeviceCapability();
-        devCapability.moduleName = XMLUtils.getChildElementByName(module, Constants.TAG_MODULE_NAME).getTextContent().trim();
-        devCapability.nameSpace = XMLUtils.getChildElementByName(module, Constants.TAG_MODULE_NAMESPACE).getTextContent().trim();
-        Element revisionElement = XMLUtils.getChildElementByName(module, Constants.TAG_MODULE_REVISION);
+        devCapability.moduleName = XMLUtils.getChildElementByName(module, Constants.TAG_MODULE_NAME, module.getNamespaceURI())
+                                           .getTextContent().trim();
+        devCapability.nameSpace = XMLUtils.getChildElementByName(module, Constants.TAG_MODULE_NAMESPACE, module.getNamespaceURI())
+                                          .getTextContent().trim();
+        Element revisionElement = XMLUtils.getChildElementByName(module, Constants.TAG_MODULE_REVISION, module.getNamespaceURI());
         if (revisionElement != null) {
           devCapability.revision = revisionElement.getTextContent().trim();
         }
 
         List<String> features = new ArrayList<String>();
-        XMLUtils.getChildElementsByName(module, Constants.TAG_MODULE_FEATURES).forEach(e -> {
+        XMLUtils.getChildElementsByName(module, Constants.TAG_MODULE_FEATURES, module.getNamespaceURI()).forEach(e -> {
           features.add(e.getTextContent().trim());
         });
         devCapability.features = features;
@@ -233,8 +245,8 @@ public class YangCapabilityUtils {
   private static Document loadDeviceMeta(List<String> unknownMetaTags) {
     try {
       for (String unknownMetaTag : unknownMetaTags) {
-        Document d = XMLUtils.parseString(unknownMetaTag);
-        boolean isYang = d.getDocumentElement().getTagName().equals(Constants.TAG_YANG);
+        Document d = XMLUtils.parseString(unknownMetaTag, true);
+        boolean isYang = d.getDocumentElement().getLocalName().equals(Constants.TAG_YANG);
         boolean isDevice = Constants.VAL_DEVICE.equals(d.getDocumentElement().getAttribute(Constants.ATT_YANG_TYPE));
         if (isYang && isDevice) {
           return d;
