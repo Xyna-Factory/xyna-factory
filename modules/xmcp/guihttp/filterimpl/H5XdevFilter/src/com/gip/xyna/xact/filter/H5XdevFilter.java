@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
  */
 package com.gip.xyna.xact.filter;
 
+
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +31,8 @@ import com.gip.xyna.xact.filter.CallStatistics.StatisticsEntry;
 import com.gip.xyna.xact.filter.FilterAction.FilterActionInstance;
 import com.gip.xyna.xact.filter.actions.*;
 import com.gip.xyna.xact.filter.actions.auth.ChangePasswordAction;
-import com.gip.xyna.xact.filter.actions.auth.ExternalUserLoginAction;
 import com.gip.xyna.xact.filter.actions.auth.ExternalCredentialsLoginAction;
+import com.gip.xyna.xact.filter.actions.auth.ExternalUserLoginAction;
 import com.gip.xyna.xact.filter.actions.auth.ExternalUserLoginInformationAction;
 import com.gip.xyna.xact.filter.actions.auth.InfoAction;
 import com.gip.xyna.xact.filter.actions.auth.LoginAction;
@@ -57,12 +59,9 @@ import com.gip.xyna.xact.filter.actions.starttestcase.StarttestcaseAction;
 import com.gip.xyna.xact.filter.actions.xacm.CreateUserAction;
 import com.gip.xyna.xact.filter.actions.xacm.UpdateUserAction;
 import com.gip.xyna.xact.filter.session.XMOMGui;
-import com.gip.xyna.xact.filter.session.XmomUndoRedoHistory;
 import com.gip.xyna.xact.filter.session.XMOMGuiReply.Status;
+import com.gip.xyna.xact.filter.session.XmomUndoRedoHistory;
 import com.gip.xyna.xact.filter.util.Utils;
-import com.gip.xyna.xact.filter.util.xo.DomOrExceptionStructure;
-import com.gip.xyna.xact.filter.util.xo.DomOrExceptionSubtypes;
-import com.gip.xyna.xact.filter.util.xo.ServiceSignature;
 import com.gip.xyna.xact.filter.xmom.datatypes.json.GuiHttpPluginManagement;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
@@ -85,6 +84,8 @@ import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyString
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.ODSConnectionType;
 import com.gip.xyna.xprc.xsched.CapacityStorable;
+
+
 
 public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
 
@@ -110,7 +111,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
           .setDefaultDocumentation(DocumentationLanguage.DE, "Default Workspace");
 
   private static final String cache_size_property_name = "xmcp.guihttp.xmom_cache_size";
-  
+
   public static final XynaPropertyInt GENERATION_BASE_CACHE_SIZE = new XynaPropertyInt(cache_size_property_name, 100)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Number of XMOM Objects held in cache. Shared across all users.")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Anzahl an XMOM Objekten, die maximal im Cache gehalten werden. Dieser Cache wird zwischen allen Benutzern geteilt.");
@@ -122,11 +123,11 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
   public static final XynaPropertyBoolean AVARCONSTANTS = new XynaPropertyBoolean("xmcp.guihttp.new_constants", true)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Prevent instantiation problems by using a different approach to convert JSONs to constants.")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Durch alternativen Ansatz zur Konvertierung von JSONs in Konstanten Probleme mit Instanziierung umgehen.");
-  
+
   public static final XynaPropertyBoolean CompressResponse = new XynaPropertyBoolean("xmcp.guihttp.compress_response", true)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Compress response of requests using gzip, if supported by caller.")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Antwort mit gzip komprimieren, wenn es vom Aufrufer unterstützt wird.");
-  
+
   public static final XynaPropertyBoolean STRICT_TRANSPORT_SECURITY = new XynaPropertyBoolean("xmcp.guihttp.sts", true)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Send Session Cookie as __Secure- and add Strict-Transport-Security header. Requires an HTTPS Trigger.")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Session Cookie als __Secure- senden und Strict-Transport-Security Header einfügen. Benötigt einen HTTPS-Trigger.");
@@ -190,11 +191,11 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
   /**
    * Called once for each filter instance when it is deployed and again on each classloader change (e.g. when changing corresponding implementation jars).
    * @param triggerInstance trigger instance this filter instance is registered to
-   * @throws XynaException 
+   * @throws XynaException
    */
   @SuppressWarnings("rawtypes")
   public void onDeployment(EventListener triggerInstance) {
-    
+
     Long revision = null;
     try {
       ClassLoaderBase clb = (ClassLoaderBase) getClass().getClassLoader();
@@ -202,15 +203,15 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     } catch(Exception e) {
       return;
     }
-    
+
     CustomOrderEntryInformation entry = new CustomOrderEntryInformation();
     entry.setName(ORDERENTRYNAME);
     entry.setDefiningRevision(revision);
     entry.setDescription("allows H5XdevFilter to start orders");
     entry.setDefaultBehavior(RevisionOrderControl.CustomOrderEntryInformation.DefaultBehavior.alwaysOpen);
     RevisionOrderControl.registerCustomOrderEntryType(revision, entry);
-    
-    
+
+
     try {
       xmomGui = new XMOMGui();
     } catch (XynaException e) {
@@ -266,7 +267,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add(new DatatypesPathNameObjectsIdTemplateCallAction(xmomGui));
     allFilterActions.add(new DatatypesPathNameObjectsIdReferenceCandidatesAction(xmomGui));
     allFilterActions.add(new DatatypesPathNameRelationsAction(xmomGui) );
-    
+
     allFilterActions.add(new ExceptionsAction(xmomGui));
     allFilterActions.add(new ExceptionsPathNameAction(xmomGui));
     allFilterActions.add(new ExceptionsPathNameDeployAction(xmomGui));
@@ -284,7 +285,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add(new ExceptionsPathNameObjectsIdChangeAction(xmomGui));
     allFilterActions.add(new ExceptionsPathNameObjectsIdDeleteAction(xmomGui));
     allFilterActions.add(new ExceptionsPathNameRelationsAction(xmomGui) );
-    
+
     allFilterActions.add( new ServiceGroupsAction(xmomGui) );
     allFilterActions.add( new ServiceGroupsPathNameAction(xmomGui) );
     allFilterActions.add( new ServiceGroupsPathNameObjectsIdAction(xmomGui) );
@@ -346,13 +347,13 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add(new WorkflowsPathNameObjectsIdType(xmomGui));
     allFilterActions.add(new WorkflowsPathNameObjectsIdConvert(xmomGui));
     allFilterActions.add(new WorkfowsPathNameObjectsIdXml(xmomGui));
-    
+
     allFilterActions.add(new WorkflowsPathNameObjectsIdConstant(xmomGui));
     allFilterActions.add(new WorkflowsPathNameObjectsIdConstantDelete(xmomGui));
-    
+
 
     allFilterActions.add(new WorkflowsPathNameObjectsIdModelledExpressions(xmomGui));
-    
+
     allFilterActions.add(new ClipboardAction(xmomGui));
     allFilterActions.add(new ClipboardClearAction(xmomGui));
 
@@ -362,7 +363,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add(new UnsubscribeProjectEventsAction(xmomGui));
 
     allFilterActions.add(new RemoteDestinationsAction());
-    
+
     allFilterActions.add(sfa);
     allFilterActions.add(new StatisticsAction(applicationVersion, NAME, callStatistics));
     allFilterActions.add(new OptionsAction(ACCESS_CONTROL_ALLOW_ORIGIN));
@@ -383,35 +384,35 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     allFilterActions.add(new OrderinputdetailsAction());
     allFilterActions.add(new GenerateinputAction());
 
-    allFilterActions.add( new DomOrExceptionStructure() );
-    allFilterActions.add( new DomOrExceptionSubtypes() );
-    allFilterActions.add( new ServiceSignature() );
-    
+    allFilterActions.add( new DomOrExceptionStructureAction() );
+    allFilterActions.add( new DomOrExceptionSubtypesAction() );
+    allFilterActions.add( new ServiceSignatureAction() );
+
     allFilterActions.add( new CreateUserAction() );
     allFilterActions.add( new UpdateUserAction() );
-    
+
     allFilterActions.add( new OpenAuditAction() );
     allFilterActions.add( new ImportedAuditsAction() );
     allFilterActions.add( new AuditsOrderIdDownloadAction() );
-    
+
     allFilterActions.add( new EncodeAction() );
     allFilterActions.add( new DecodeAction() );
-    
+
     allFilterActions.add( new JavaLibAddAction(xmomGui) );
-    allFilterActions.add( new JavaLibDeleteAction(xmomGui) );    
+    allFilterActions.add( new JavaLibDeleteAction(xmomGui) );
     allFilterActions.add( new PythonLibAddAction(xmomGui) );
     allFilterActions.add( new PythonLibDeleteAction(xmomGui) );
-    
+
     allFilterActions.add( new MetaTagAddAction(xmomGui) );
     allFilterActions.add( new MetaTagRmvAction(xmomGui) );
-    
+
     List<Endpoint> endpoints = new ArrayList<>();
     for(FilterAction fa : allFilterActions) {
       if(fa instanceof Endpoint) {
         endpoints.add((Endpoint)fa);
       }
     }
-    
+
     soa.setEndpoints(endpoints);
     GuiHttpPluginManagement.getInstance().start();
 
@@ -423,10 +424,10 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     AVARCONSTANTS.registerDependency(UserType.Filter, NAME);
     STRICT_TRANSPORT_SECURITY.registerDependency(UserType.Filter, NAME);
     STRICT_TRANSPORT_SECURITY_MAX_AGE.registerDependency(UserType.Filter, NAME);
-    
+
     XmomUndoRedoHistory.REDO_LIMIT.registerDependency(UserType.Filter, NAME);
     XmomUndoRedoHistory.UNDO_LIMIT.registerDependency(UserType.Filter, NAME);
-    
+
     super.onDeployment(triggerInstance);
   }
 
@@ -437,7 +438,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
    */
   @SuppressWarnings("rawtypes")
   public void onUndeployment(EventListener triggerInstance) {
-    
+
     if(xmomGui != null) {
       try {
         xmomGui.quitSessionsForAllKnownLogins();
@@ -445,11 +446,11 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
         Utils.logError(ex);
       }
     }
-    
+
     GuiHttpPluginManagement.getInstance().stop();
-    
+
     super.onUndeployment(triggerInstance);
-    
+
     STATIC_FILES.unregister();
     ACCESS_CONTROL_ALLOW_ORIGIN.unregister();
     DEFAULT_WORKSPACE.unregister();
@@ -458,7 +459,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     AVARCONSTANTS.unregister();
     STRICT_TRANSPORT_SECURITY.unregister();
     STRICT_TRANSPORT_SECURITY_MAX_AGE.unregister();
-    
+
     XmomUndoRedoHistory.REDO_LIMIT.unregister();
     XmomUndoRedoHistory.UNDO_LIMIT.unregister();
   }
@@ -469,7 +470,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
    * This method returns a FilterResponse object, which includes the XynaOrder if the filter is responsible for the request.
    * # If this filter is not responsible the returned object must be: FilterResponse.notResponsible()
    * # If this filter is responsible the returned object must be: FilterResponse.responsible(XynaOrder order)
-   * # If this filter is responsible but the request is handled without creating a XynaOrder the 
+   * # If this filter is responsible but the request is handled without creating a XynaOrder the
    *   returned object must be: FilterResponse.responsibleWithoutXynaorder()
    * # If this filter is responsible but the request should be handled by an older version of the filter in another application version, the returned
    *    object must be: FilterResponse.responsibleButTooNew().
@@ -497,7 +498,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     logger.info(NAME + " called : \"" + url + "\"");
     StatisticsEntry statisticsEntry = callStatistics.newRequest(url.getPath(), tc.getMethodEnum(), tc);
 
-    
+
     try {
       for (FilterAction fa : allFilterActions) {
         if (matchAction(fa, url, tc.getMethodEnum())) {
@@ -531,7 +532,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     return FilterResponse.notResponsible();
   }
 
-  
+
   private boolean matchAction(FilterAction fa, URLPath url, Method method) {
     try {
       return fa.match(url, method);
@@ -597,7 +598,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
         sb.append(" on node ").append(ownBinding);
       }
     }
-    
+
     return sb.toString();
   }
 }

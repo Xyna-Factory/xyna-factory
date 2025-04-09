@@ -34,11 +34,11 @@ import com.gip.xyna.utils.misc.JsonParser.UnexpectedJSONContentException;
 
 public class GenericVisitor implements JsonVisitor<GenericResult> {
 
-  private Map<String, Pair<String, Type>> attributes;
-  private Map<String, Pair<List<String>, Type>> lists;
-  private Map<String, GenericResult> objects;
-  private Map<String, List<GenericResult>> objectLists;
-  private Set<String> emptyLists;
+  protected Map<String, Pair<String, Type>> attributes;
+  protected Map<String, Pair<List<String>, Type>> lists;
+  protected Map<String, GenericResult> objects;
+  protected Map<String, List<GenericResult>> objectLists;
+  protected Set<String> emptyLists;
 
 
   public GenericVisitor() {

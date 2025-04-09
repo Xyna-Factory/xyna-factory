@@ -186,14 +186,18 @@ public class GenericResult {
   private <T> void visitObjectList(String label, JsonVisitor<T> visitor, List<String> visitationPrecedence)
       throws UnexpectedJSONContentException {
     String adjustedLabel = label;
-    if ("null".equals(label)) {
+    if (label.equals("null")) {
       adjustedLabel = null;
     }
     List<Object> subResults = new ArrayList<>();
     for (GenericResult object : objectLists.get(label)) {
       JsonVisitor<?> newVisitor = visitor.objectStarts(adjustedLabel);
-      Object subResult = object.visit(newVisitor, visitationPrecedence);
-      subResults.add(subResult);
+      if (object != null) {
+        Object subResult = object.visit(newVisitor, visitationPrecedence);
+        subResults.add(subResult);
+      } else {
+        subResults.add(null);
+      }
     }
     visitor.objectList(adjustedLabel, subResults);
   }

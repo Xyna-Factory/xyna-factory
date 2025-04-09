@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,17 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package com.gip.xyna.xact.filter.util.xo;
+package com.gip.xyna.xact.filter.actions;
+
+
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -59,6 +59,12 @@ import com.gip.xyna.xact.filter.monitor.MonitorSession;
 import com.gip.xyna.xact.filter.monitor.auditpreprocessing.OrderItemWithoutAudit;
 import com.gip.xyna.xact.filter.monitor.auditpreprocessing.OrderItemWithoutAuditLoader;
 import com.gip.xyna.xact.filter.monitor.auditpreprocessing.RemoveOperationTagFilter;
+import com.gip.xyna.xact.filter.util.xo.GenericResult;
+import com.gip.xyna.xact.filter.util.xo.GenericVisitor;
+import com.gip.xyna.xact.filter.util.xo.MetaInfo;
+import com.gip.xyna.xact.filter.util.xo.RuntimeContextVisitor;
+import com.gip.xyna.xact.filter.util.xo.Util;
+import com.gip.xyna.xact.filter.util.xo.XynaObjectVisitor;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
 import com.gip.xyna.xdev.xlibdev.repository.RepositoryManagement;
@@ -66,7 +72,6 @@ import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl.BasicApplicationName;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
-import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext.RuntimeContextType;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase.XMOMType;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement.Rights;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
@@ -92,13 +97,13 @@ import com.gip.xyna.xprc.xprcods.orderarchive.audit.EnhancedAudit;
 
 
 
-public class DomOrExceptionStructure extends RuntimeContextDependendAction {
+public class DomOrExceptionStructureAction extends RuntimeContextDependendAction {
 
-  
-  private static final Logger logger = CentralFactoryLogging.getLogger(DomOrExceptionStructure.class);
-  
+
+  private static final Logger logger = CentralFactoryLogging.getLogger(DomOrExceptionStructureAction.class);
+
   private final ExpiringMap<Long, EnhancedAudit> auditCache = new ExpiringMap<>(5, TimeUnit.MINUTES, true);
-  
+
 
   public void appendIndexPage(HTMLPart arg0) {
   }
@@ -118,13 +123,13 @@ public class DomOrExceptionStructure extends RuntimeContextDependendAction {
   protected boolean matchRuntimeContextIndependent(URLPath url, Method method) {
     return url.getPath().equals("/structure") && Method.POST == method;
   }
-  
+
   public static class SubtypesStructureRequest {
     public Long orderId;
     public Boolean isUploadedAudit = false;
     public final List<XMOMObjectIdentifier> objects = new ArrayList<>();
   }
-  
+
   public static class XMOMObjectIdentifier {
     public String fqn;
     public RuntimeContext rtc;
@@ -157,9 +162,9 @@ public class DomOrExceptionStructure extends RuntimeContextDependendAction {
     private static final String OBJECTS = "objects";
     private static final String FQN = "fqn";
     private static final String RTC = "rtc";
-    
+
     private SubtypesStructureRequest req = new SubtypesStructureRequest();
-    
+
     @Override
     public SubtypesStructureRequest get() {
       return req;
@@ -193,7 +198,7 @@ public class DomOrExceptionStructure extends RuntimeContextDependendAction {
           i.fqn = fqn;
           GenericResult rtc = gr.getObject(RTC);
           if (rtc != null) {
-            i.rtc = rtc.visit(new RuntimeContextVisitor()); 
+            i.rtc = rtc.visit(new RuntimeContextVisitor());
           }
           req.objects.add(i);
         }
@@ -208,9 +213,9 @@ public class DomOrExceptionStructure extends RuntimeContextDependendAction {
     @Override
     public void emptyList(String label) throws UnexpectedJSONContentException {
     }
-    
+
   }
-  
+
   @Override
   public FilterActionInstance act(URLPath url, HTTPTriggerConnection tc) throws XynaException {
     JsonParser jp = new JsonParser();
@@ -234,7 +239,7 @@ public class DomOrExceptionStructure extends RuntimeContextDependendAction {
     if (!checkLoginAndRights(tc, jfai, Rights.READ_MDM.toString())) {
       return jfai;
     }
-    
+
     //parsing
     JsonParser jp = new JsonParser();
     SubtypesStructureRequest ssr;
@@ -244,7 +249,7 @@ public class DomOrExceptionStructure extends RuntimeContextDependendAction {
       AuthUtils.replyError(tc, jfai, e);
       return jfai;
     }
-    
+
     //create Generationbase Objects
     GenerationBaseCache commonCache = new GenerationBaseCache();
     List<Pair<String, DomOrExceptionGenerationBase>> parsedObjects = new ArrayList<>();
@@ -267,7 +272,7 @@ public class DomOrExceptionStructure extends RuntimeContextDependendAction {
               xmlsWfAndImports.putIfAbsent(curImport.getFqn(), curImport.getDocument());
             }
             StringXMLSource inputSource = new StringXMLSource(xmlsWfAndImports);
-            
+
             List<AuditImport> imports = orderItem.getImports();
             for (AuditImport auditImport : imports) {
               if(auditImport.getFqn().equals(i.fqn)) {
@@ -283,10 +288,10 @@ public class DomOrExceptionStructure extends RuntimeContextDependendAction {
         }
       } else {
         RepositoryManagement repo = XynaFactory.getInstance().getXynaDevelopment().getXynaLibraryDevelopment().getRepositoryManagement();
-        
+
         EnhancedAudit au = getEnhancedAudit(auditOrderId);
         long repositoryRevision = au.getRepositoryRevision();
-        
+
         runtimeContextMap = createRuntimeContextMap(ssr.objects, au.getWorkflowContext(), au.getImports());
 
         for (XMOMObjectIdentifier i : ssr.objects) {
@@ -334,8 +339,8 @@ public class DomOrExceptionStructure extends RuntimeContextDependendAction {
     jfai.sendJson(tc, jb.toString());
     return jfai;
   }
-  
-  
+
+
   private EnhancedAudit getEnhancedAudit(Long orderId) {
     EnhancedAudit au = auditCache.get(orderId);
     if (au != null) {
@@ -357,8 +362,8 @@ public class DomOrExceptionStructure extends RuntimeContextDependendAction {
     } catch (ParserConfigurationException | SAXException | TransformerException | TransformerFactoryConfigurationError e) {
       throw new RuntimeException(e);
     }
-    
-    
+
+
     au = xmlHelper.auditFromXml(shortenedXml, false);
     auditCache.put(orderId, au);
     return au;
@@ -375,7 +380,7 @@ public class DomOrExceptionStructure extends RuntimeContextDependendAction {
     }
     return map;
   }
-  
+
   private DomOrExceptionGenerationBase getGenerationBaseFromXml(String fqName, String xml, XMLSourceAbstraction inputSource)
       throws XynaException {
     String rootTag;
@@ -386,9 +391,9 @@ public class DomOrExceptionStructure extends RuntimeContextDependendAction {
     } catch (XMLStreamException e) {
       throw new RuntimeException(e);
     }
-    
-    
-    
+
+
+
 //    XMLInputSource inputSource = new XMLInputSource() {
 //
 //      @Override
@@ -400,9 +405,9 @@ public class DomOrExceptionStructure extends RuntimeContextDependendAction {
     XMOMType type = XMOMType.getXMOMTypeByRootTag(rootTag);
     switch (type) {
       case DATATYPE :
-        return DOM.getOrCreateInstance(fqName, new GenerationBaseCache(), -100L /* gibts nicht, wird nicht benötigt */, inputSource);
+        return DOM.getOrCreateInstance(fqName, new GenerationBaseCache(), StringXMLSource.REVISION /* doesn't exist, is not needed */, inputSource);
       case EXCEPTION :
-        return ExceptionGeneration.getOrCreateInstance(fqName, new GenerationBaseCache(), -100L /* gibts nicht, wird nicht benötigt */, inputSource);
+        return ExceptionGeneration.getOrCreateInstance(fqName, new GenerationBaseCache(), StringXMLSource.REVISION /* doesn't exist, is not needed */, inputSource);
       default :
         throw new RuntimeException("unsupported type: " + type);
     }
@@ -424,7 +429,7 @@ public class DomOrExceptionStructure extends RuntimeContextDependendAction {
       throw new RuntimeException(e);
     }
     XMLSourceAbstraction inputSource = new StringXMLSource(null) {
-      
+
       private String getXml(String fqName) {
         RuntimeContext rc = runtimeContextMap.get(fqName);
         if (rc == null) {
@@ -439,7 +444,7 @@ public class DomOrExceptionStructure extends RuntimeContextDependendAction {
         }
         return xml;
       }
-      
+
       public Document getOrParseXML(GenerationBase obj, boolean fileFromDeploymentLocation)
           throws Ex_FileAccessException, XPRC_XmlParsingException {
         String xml = getXml(obj.getOriginalFqName());
@@ -467,9 +472,9 @@ public class DomOrExceptionStructure extends RuntimeContextDependendAction {
     XMOMType type = XMOMType.getXMOMTypeByRootTag(rootTag);
     switch (type) {
       case DATATYPE :
-        return DOM.getOrCreateInstance(fqName, cache, -100L /* gibts nicht, wird nicht benötigt */, inputSource);
+        return DOM.getOrCreateInstance(fqName, cache, StringXMLSource.REVISION /* doesn't exist, is not needed */, inputSource);
       case EXCEPTION :
-        return ExceptionGeneration.getOrCreateInstance(fqName, cache, -100L /* gibts nicht, wird nicht benötigt */, inputSource);
+        return ExceptionGeneration.getOrCreateInstance(fqName, cache, StringXMLSource.REVISION /* doesn't exist, is not needed */, inputSource);
       default :
         throw new RuntimeException("unsupported type: " + type);
     }

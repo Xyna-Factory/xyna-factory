@@ -49,6 +49,9 @@ public class Util {
 
 
   private static void distributeMetaInfoRecursivly(GenericResult gr, RuntimeContext parentRc) throws UnexpectedJSONContentException {
+    if (gr == null)
+      return;
+
     RuntimeContext nextRC = parentRc;
     if (shouldContainMeta(gr)) {
       GenericResult meta = gr.getObject(XynaObjectVisitor.META_TAG);
@@ -77,6 +80,7 @@ public class Util {
       nextRC = rc.visit(new RuntimeContextVisitor());
       // TODO jetzt noch fqName ableiten
     }
+
     for (Entry<String, GenericResult> entry : gr.getObjects().entrySet()) {
       if (entry.getKey().equals(XynaObjectVisitor.META_TAG)) {
         continue;
@@ -97,7 +101,7 @@ public class Util {
   private static RuntimeContext deriveRelevantRuntimeContext(GenericResult meta, RuntimeContext parentRc) {
     Pair<String, Type> fqPair = meta.getAttribute(MetaInfo.FULL_QUALIFIED_NAME);
     if (fqPair == null) {
-      //throw new RuntimeException("No fqName");
+      // throw new RuntimeException("No fqName");
       return parentRc;
     }
     try {
@@ -113,6 +117,9 @@ public class Util {
 
 
   private static boolean shouldContainMeta(GenericResult gr) {
+    if (gr == null)
+      return false;
+
     return gr.getAttributes().size() > 0 || gr.getLists().size() > 0 || gr.getObjects().size() > 0;
   }
 

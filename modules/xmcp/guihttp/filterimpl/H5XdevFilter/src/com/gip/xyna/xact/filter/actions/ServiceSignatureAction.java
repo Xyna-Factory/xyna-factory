@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package com.gip.xyna.xact.filter.util.xo;
+package com.gip.xyna.xact.filter.actions;
 
 
 
@@ -44,7 +44,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.WF;
 
 
 
-public class ServiceSignature extends RuntimeContextDependendAction {
+public class ServiceSignatureAction extends RuntimeContextDependendAction {
 
   private static final String SIGNATURE = "signature";
   private static final String ANYTYPE_FQN = GenerationBase.ANYTYPE_REFERENCE_PATH + "." + GenerationBase.ANYTYPE_REFERENCE_NAME;
@@ -74,7 +74,7 @@ public class ServiceSignature extends RuntimeContextDependendAction {
   @Override
   protected FilterActionInstance act(RuntimeContext rc, Long revision, URLPath url, Method method, HTTPTriggerConnection tc) throws XynaException {
     JsonFilterActionInstance jfai = new JsonFilterActionInstance();
-    
+
     if (!checkLoginAndRights(tc, jfai, GuiRight.PROCESS_MODELLER.getKey())) {
       return jfai;
     }
@@ -95,7 +95,7 @@ public class ServiceSignature extends RuntimeContextDependendAction {
 
     /*TODO: Service Groups unterstuetzen:
        - ja mit DOM.getOrCreateIinstance sollte das entsprechend gehen
-       - also für service groups
+       - also fuer service groups
        - die einzelnen services sind dann darin abzufragen
        - also das xml zu einer servicegroup entspricht einem DOM
        - und darin sind dann viele services enthalten*/
