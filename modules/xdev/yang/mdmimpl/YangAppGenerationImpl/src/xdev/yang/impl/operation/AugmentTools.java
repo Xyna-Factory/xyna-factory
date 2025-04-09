@@ -20,12 +20,10 @@ package xdev.yang.impl.operation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.yangcentral.yangkit.base.YangContext;
 import org.yangcentral.yangkit.base.YangElement;
-import org.yangcentral.yangkit.common.api.QName;
 import org.yangcentral.yangkit.model.api.stmt.Anydata;
 import org.yangcentral.yangkit.model.api.stmt.Anyxml;
 import org.yangcentral.yangkit.model.api.stmt.Augment;
@@ -54,10 +52,17 @@ public class AugmentTools {
   
   
   public void handleAugment(List<Module> modules, Input input) {
+    if (input == null) { return; }
+    if (input.getSubElements() == null) { return; }
     for (Module mod : modules) {
       if (mod.getAugments() == null) { continue; }
       for (Augment aug : mod.getAugments()) {
-        handleAugment(input, aug);
+        List<YangElement> sublist = YangStatementTranslation.getSubStatements(input);
+        for (YangElement elem : sublist) {
+          if (elem instanceof YangStatement) {
+            handleAugment((YangStatement)elem, aug);
+          }
+        }
       }
     }
   }
@@ -67,7 +72,7 @@ public class AugmentTools {
     if (root == null) { return; }
     if (aug == null) { return; }
     if (aug.getTargetPath() == null) { return; }
-    Optional<YangStatement> opt = navigateToPath(root, aug.getTargetPath().getPath(), 0);
+    Optional<YangStatement> opt = _pathTools.navigateToPath(root, aug.getTargetPath().getPath(), 0);
     if (!opt.isPresent()) { return; }
     List<YangElement> filtered = filterElementsToAdd(aug);
     for (YangElement elem : filtered) {
@@ -142,38 +147,5 @@ public class AugmentTools {
   }
   
   
-  private Optional<YangStatement> navigateToPath(YangElement nodeIn, List<QName> path, int index) {
-    if (nodeIn == null) { return Optional.empty(); }
-    if (path == null) { return Optional.empty(); }
-    if (!(nodeIn instanceof YangStatement)) { return Optional.empty(); }
-    YangStatement node = (YangStatement) nodeIn;
-    
-      String namespace = YangStatementTranslation.getNamespace(node);
-      String localname = YangStatementTranslation.getLocalName(node);
-    if (index < path.size()) {
-      QName qname = path.get(index);
-      if (_pathTools.identifiersAreEqual(localname, qname.getLocalName()) &&
-          Objects.equals(namespace, qname.getNamespace().toString())) {
-        if (index == path.size() - 1) {
-          return Optional.ofNullable(node);
-        }
-      }
-    }
-    List<YangElement> sublist = YangStatementTranslation.getSubStatements(node);
-    if (sublist == null) { return Optional.empty(); }
-    for (YangElement elem : sublist) {
-      Optional<YangStatement> result = navigateToPath(elem, path, index + 1);
-      if (!result.isEmpty()) {
-        return result;
-      }
-      if (elem instanceof Container) {
-        result = navigateToPath(elem, path, 0);
-        if (!result.isEmpty()) {
-          return result;
-        }
-      }
-    }
-    return Optional.empty();
-  }
   
 }
