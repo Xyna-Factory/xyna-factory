@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,9 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package com.gip.xyna.xact.filter.util.xo;
+package com.gip.xyna.xact.filter.actions;
+
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +35,14 @@ import com.gip.xyna.xact.filter.HTMLBuilder.HTMLPart;
 import com.gip.xyna.xact.filter.JsonFilterActionInstance;
 import com.gip.xyna.xact.filter.RuntimeContextDependendAction;
 import com.gip.xyna.xact.filter.URLPath;
+import com.gip.xyna.xact.filter.actions.DomOrExceptionStructureAction.SubtypesStructureRequest;
+import com.gip.xyna.xact.filter.actions.DomOrExceptionStructureAction.SubtypesStructureRequestParser;
+import com.gip.xyna.xact.filter.actions.DomOrExceptionStructureAction.XMOMObjectIdentifier;
 import com.gip.xyna.xact.filter.actions.auth.utils.AuthUtils;
-import com.gip.xyna.xact.filter.util.xo.DomOrExceptionStructure.SubtypesStructureRequest;
-import com.gip.xyna.xact.filter.util.xo.DomOrExceptionStructure.SubtypesStructureRequestParser;
-import com.gip.xyna.xact.filter.util.xo.DomOrExceptionStructure.XMOMObjectIdentifier;
+import com.gip.xyna.xact.filter.util.Utils;
+import com.gip.xyna.xact.filter.util.xo.MetaInfo;
+import com.gip.xyna.xact.filter.util.xo.Util;
+import com.gip.xyna.xact.filter.util.xo.XynaObjectVisitor;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
 import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
@@ -50,9 +56,11 @@ import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 
-public class DomOrExceptionSubtypes extends RuntimeContextDependendAction {
-  
-  private static final Logger logger = CentralFactoryLogging.getLogger(DomOrExceptionSubtypes.class);
+
+
+public class DomOrExceptionSubtypesAction extends RuntimeContextDependendAction {
+
+  private static final Logger logger = CentralFactoryLogging.getLogger(DomOrExceptionSubtypesAction.class);
 
   private static RuntimeContextDependencyManagement rcdm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
   private static RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
@@ -80,15 +88,15 @@ public class DomOrExceptionSubtypes extends RuntimeContextDependendAction {
   @Override
   protected FilterActionInstance act(RuntimeContext rc, Long revision, URLPath url, Method method, HTTPTriggerConnection tc) throws XynaException {
     JsonFilterActionInstance jfai = new JsonFilterActionInstance();
-    
+
     if (!checkLoginAndRights(tc, jfai, Rights.READ_MDM.toString())) {
       return jfai;
     }
 
     Long rev = rm.getRevision(rc);
-    
+
     JsonParser jp = new JsonParser();
-    
+
     SubtypesStructureRequest gr;
     try {
       gr = jp.parse(tc.getPayload(), new SubtypesStructureRequestParser());
@@ -96,7 +104,7 @@ public class DomOrExceptionSubtypes extends RuntimeContextDependendAction {
       AuthUtils.replyError(tc, jfai, e);
       return jfai;
     }
-    
+
     GenerationBaseCache commonCache = new GenerationBaseCache();
     JsonBuilder jb = new JsonBuilder();
     jb.startObject(); {
@@ -106,7 +114,7 @@ public class DomOrExceptionSubtypes extends RuntimeContextDependendAction {
         } jb.endList();
       }
     } jb.endObject();
-    
+
     jfai.sendJson(tc, jb.toString());
     return jfai;
   }
@@ -119,13 +127,13 @@ public class DomOrExceptionSubtypes extends RuntimeContextDependendAction {
           (DomOrExceptionGenerationBase)GenerationBase.getOrCreateInstance(fqn, commonCache, rootRev);
       gb.parseGeneration(true /*deployed*/, false, false);
 
-      List<GenerationBase> subTypes = new ArrayList<>(Util.getSubTypes(fqn, commonCache, rootRev));
-      subTypes.add(gb); //Obertyp soll auch zurück gegeben und sortiert werden
+      List<GenerationBase> subTypes = new ArrayList<>(Utils.getSubTypes(fqn, commonCache, rootRev));
+      subTypes.add(gb); // the supertype should also be returned and sorted
       subTypes.sort((gb1,gb2) -> gb1.getOriginalFqName().compareToIgnoreCase(gb2.getOriginalFqName())); //Subtypen sortieren
-      
+
       for (GenerationBase subType : subTypes) {
         if (!isReachable(subType, rootRev)) {
-          //keine subtypen zurückgeben, die in der revision nicht erreichbar sind
+          // don't return subtypes that are not accessible in this revision
           continue;
         }
         write(jb, subType, rootRev);
@@ -151,7 +159,8 @@ public class DomOrExceptionSubtypes extends RuntimeContextDependendAction {
         jb.addBooleanAttribute(XynaObjectVisitor.IS_ABSTRACT_TAG, ((DomOrExceptionGenerationBase) subType).isAbstract());
         jb.addStringAttribute(XynaObjectVisitor.DOCU_TAG, ((DomOrExceptionGenerationBase) subType).getDocumentation());
       }
-    } jb.endObject();
+    }
+    jb.endObject();
   }
 
 
