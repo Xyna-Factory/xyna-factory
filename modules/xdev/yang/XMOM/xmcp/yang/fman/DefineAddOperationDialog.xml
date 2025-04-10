@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Define Add Operation Dialog" TypeName="DefineAddOperationDialog" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Define Add Operation Dialog" Name="DefineAddOperationDialog">
+    <Input/>
+    <Output>
+      <Data ID="14" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition14"/>
+      <Data ID="1585" Label="Operation Creation Parameter" ReferenceName="OperationCreationParameter" ReferencePath="xdev.yang" VariableName="operationCreationParameter1585"/>
+    </Output>
+    <ServiceReference ID="752" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="751"/>
+      <Target RefID="751"/>
+    </ServiceReference>
+    <Function ID="751" Label="get Own RuntimeContext">
+      <Source RefID="752"/>
+      <Target RefID="752"/>
+      <Target RefID="754"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="752"/>
+      <Receive ServiceID="752">
+        <Target RefID="754"/>
+      </Receive>
+    </Function>
+    <Mappings ID="102" Label="Mapping">
+      <Input>
+        <Data ID="771" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext771">
+          <Source RefID="102"/>
+        </Data>
+        <Source RefID="754"/>
+      </Input>
+      <Output>
+        <Data ID="330" Label="UC Group - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition330">
+          <Source RefID="102"/>
+        </Data>
+        <Target RefID="331"/>
+      </Output>
+      <Output>
+        <Data ID="340" Label="UC Name - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition340">
+          <Source RefID="102"/>
+        </Data>
+        <Target RefID="341"/>
+      </Output>
+      <Output>
+        <Data ID="350" Label="Workspace - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition350">
+          <Source RefID="102"/>
+        </Data>
+        <Target RefID="351"/>
+      </Output>
+      <Output>
+        <Data ID="866" Label="RPC - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition866">
+          <Source RefID="102"/>
+        </Data>
+        <Target RefID="1110"/>
+      </Output>
+      <Output>
+        <Data ID="1197" Label="Device - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition1197">
+          <Source RefID="102"/>
+        </Data>
+        <Target RefID="1198"/>
+      </Output>
+      <Output>
+        <Data ID="1256" Label="Rpc Namespace - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition1256">
+          <Source RefID="102"/>
+        </Data>
+        <Target RefID="1257"/>
+      </Output>
+      <Output>
+        <Data ID="457" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition457">
+          <Source RefID="102"/>
+        </Data>
+        <Target RefID="458"/>
+      </Output>
+      <Mapping>%1%.label="Operation Group"</Mapping>
+      <Mapping>%1%.dataPath="%0%.operationGroupFqn"</Mapping>
+      <Mapping>%2%.label="Operation Name"</Mapping>
+      <Mapping>%2%.dataPath="%0%.operationName"</Mapping>
+      <Mapping>%3%.label="Workspace"</Mapping>
+      <Mapping>%3%.dataPath="%0%.workspaceName"</Mapping>
+      <Mapping>%4%.label="RPC"</Mapping>
+      <Mapping>%4%.dataPath="%0%.rpc"</Mapping>
+      <Mapping>%5%.label="Device Fqn"</Mapping>
+      <Mapping>%5%.dataPath="%0%.deviceFqn"</Mapping>
+      <Mapping>%6%.label="(Optional) RPC Namespace"</Mapping>
+      <Mapping>%6%.dataPath="%0%.rpcNamespace"</Mapping>
+      <Mapping>%7%.dataPath="%0%"</Mapping>
+      <Mapping>%7%.label="Create Operation"</Mapping>
+      <Mapping>%7%.serviceRTC=%0%</Mapping>
+      <Mapping>%7%.serviceFQN="xmcp.yang.fman.AddOperation"</Mapping>
+      <Mapping>%7%.synchronously="true"</Mapping>
+      <Mapping>%7%.showResult="true"</Mapping>
+    </Mappings>
+    <Mappings ID="27" Label="Mapping">
+      <Input>
+        <Data ID="237" Label="UC Group - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition237">
+          <Source RefID="27"/>
+        </Data>
+        <Source RefID="331">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="280" Label="UC Name - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition280">
+          <Source RefID="27"/>
+        </Data>
+        <Source RefID="341">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="297" Label="Workspace - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition297">
+          <Source RefID="27"/>
+        </Data>
+        <Source RefID="351">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="900" Label="RPC - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition900">
+          <Source RefID="27"/>
+        </Data>
+        <Source RefID="1110">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="1231" Label="Device - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition1231">
+          <Source RefID="27"/>
+        </Data>
+        <Source RefID="1198">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="1418" Label="Rpc Namespace - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition1418">
+          <Source RefID="27"/>
+        </Data>
+        <Source RefID="1257">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="448" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition448">
+          <Source RefID="27"/>
+        </Data>
+        <Source RefID="458"/>
+      </Input>
+      <Output>
+        <Data ID="36" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition36">
+          <Source RefID="27"/>
+        </Data>
+        <Target RefID="37"/>
+      </Output>
+      <Mapping>%7%.label="Add Operation"</Mapping>
+      <Mapping>%7%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
+      <Mapping>%7%.children["1"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%1%</Mapping>
+      <Mapping>%7%.children["2"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%2%</Mapping>
+      <Mapping>%7%.children["3"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%3%</Mapping>
+      <Mapping>%7%.children["4"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%4%</Mapping>
+      <Mapping>%7%.children["5"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%5%</Mapping>
+      <Mapping>%7%.children["6"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%6%</Mapping>
+    </Mappings>
+    <Data ID="37" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition37">
+      <Source RefID="27"/>
+    </Data>
+    <Data ID="331" Label="UC Group - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition331">
+      <Source RefID="102"/>
+    </Data>
+    <Data ID="341" Label="UC Name - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition341">
+      <Source RefID="102"/>
+    </Data>
+    <Data ID="351" Label="Workspace - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition351">
+      <Source RefID="102"/>
+    </Data>
+    <Data ID="458" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition458">
+      <Source RefID="102"/>
+    </Data>
+    <Data ID="754" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext754">
+      <Source RefID="751"/>
+    </Data>
+    <Data ID="1110" Label="RPC - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition1110">
+      <Source RefID="102"/>
+    </Data>
+    <Data ID="1198" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition1198">
+      <Source RefID="102"/>
+    </Data>
+    <Data ID="1257" Label="Device - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition1257">
+      <Source RefID="102"/>
+    </Data>
+    <Data ID="1702" Label="Operation Creation Parameter" ReferenceName="OperationCreationParameter" ReferencePath="xdev.yang" VariableName="const_OperationCreationParameter1702"/>
+    <Assign ID="1">
+      <Source RefID="37"/>
+      <Source RefID="1702"/>
+      <Target RefID="14"/>
+      <Target RefID="1585"/>
+      <Copy>
+        <Source RefID="37"/>
+        <Target RefID="14"/>
+      </Copy>
+      <Copy>
+        <Source RefID="1702">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="1585"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -202,5 +202,16 @@
         <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.getFileContentInCurrentOriginBranch(repository52, file50);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Get Current Repository User" Name="getCurrentRepositoryUser" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="53" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository53"/>
+      </Input>
+      <Output>
+        <Data ID="54" Label="Repository User" ReferenceName="RepositoryUser" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryUser54"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.getCurrentRepositoryUser(correlatedXynaOrder, repository53);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

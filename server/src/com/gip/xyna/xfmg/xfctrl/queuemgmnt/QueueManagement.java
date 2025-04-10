@@ -28,6 +28,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.gip.xyna.FunctionGroup;
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -88,8 +89,8 @@ public class QueueManagement extends FunctionGroup {
     ods = ODSImpl.getInstance();
     ods.registerStorable(Queue.class);
 
-    // TODO performance: alle Einträge nach DEFAULT kopieren und bei Lesezugriffen dadurch Caching
-    //                   auf Applikations-Ebene erlauben (Konfiguration von DEFAULT auf Memory)
+    // TODO performance: copy all entries to DEFAULT to allow for caching on application level during read access
+    //                   (configuration of DEFAULT set to Memory)
 
   }
 
@@ -194,7 +195,7 @@ public class QueueManagement extends FunctionGroup {
       }
     }
   }
-  
+
   public static QueueConnectData createQueueConnectData(QueueType qtype, String[] connectParams) throws IllegalArgumentException {
     QueueConnectData result = null;
 
@@ -257,26 +258,43 @@ public class QueueManagement extends FunctionGroup {
     return false;
   }
 
+
   /**
    * @param name
    * @return
-   * @throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY 
-   * @throws PersistenceLayerException 
+   * @throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY
+   * @throws PersistenceLayerException
    */
   public Object buildQueueInstance(long revision, String name) throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
     Queue queue = getQueue(name);
-    QueueInstanceBuilder builder = queueInstanceBuilders.get( queue.getQueueType(), revision );
-    if( builder == null ) {
-      throw new IllegalArgumentException("No registered QueueImplBuilder for queue "+name+" ("+queue.getQueueType()+") in revision "+revision);
+    QueueInstanceBuilder builder = queueInstanceBuilders.get(queue.getQueueType(), revision);
+    if (builder == null) {
+      throw new IllegalArgumentException("No registered QueueInstanceBuilder for queue " + name + " (" + queue.getQueueType()
+          + ") in revision " + revision);
     }
     return builder.build(queue);
   }
 
+
+  public Object buildQueueInstance(Set<Long> revisions, String name)
+      throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
+    Queue queue = getQueue(name);
+    for (Long rev : revisions) {
+      QueueInstanceBuilder builder = queueInstanceBuilders.get(queue.getQueueType(), rev);
+      if (builder != null) {
+        return builder.build(queue);
+      }
+    }
+    throw new IllegalArgumentException("No registered QueueInstanceBuilder for queue " + name + " (" + queue.getQueueType()
+        + ") in given revisions");
+  }
+
+
   public interface QueueInstanceBuilder {
-    
+
     //TODO wie kann richtiger XynaObject-Typ xact.queue.Queue hier bekannt sein?
     Object build(Queue queue);
-    
+
   }
 
   public void registerQueueInstanceBuilder(QueueType type, long revision,
@@ -284,17 +302,17 @@ public class QueueManagement extends FunctionGroup {
     logger.info("##### Registering QueueInstanceBuilder for "+type+" in revision "+revision);
     queueInstanceBuilders.put(type,revision, queueInstanceBuilder );
   }
-  
+
   public void unregisterQueueInstanceBuilder(QueueType type, long revision) {
     logger.info("##### Unregistering QueueInstanceBuilder for "+type+" in revision "+revision);
     queueInstanceBuilders.remove(type,revision);
   }
-  
+
   private static class QueueInstanceBuilders {
 
     private EnumMap<QueueType, Map<Long,QueueInstanceBuilder>> map =
         new EnumMap<QueueType, Map<Long,QueueInstanceBuilder>>(QueueType.class);
-    
+
     public void put(QueueType type, long revision, QueueInstanceBuilder queueInstanceBuilder) {
       synchronized(this) {
         Map<Long,QueueInstanceBuilder> revMap = map.get(type);
@@ -324,5 +342,5 @@ public class QueueManagement extends FunctionGroup {
     }
 
   }
-  
+
 }

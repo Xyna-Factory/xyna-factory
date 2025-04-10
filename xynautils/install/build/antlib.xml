@@ -24,8 +24,6 @@
 	
 	<taskdef resource="com/gip/xyna/utils/delivery/deliveryMacros.xml" />
 	
-	<taskdef resource="com/gip/xyna/utils/delivery/svn.xml" />
-   
-   <taskdef resource="com/gip/xyna/utils/integration/ciMacros.xml" />
+	<taskdef resource="com/gip/xyna/utils/integration/ciMacros.xml" />
 
 </antlib>

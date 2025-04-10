@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,9 @@
       <Data ID="135" Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId135"/>
     </Input>
     <Output/>
+    <Throws>
+      <Exception Label="Application Import Exception" ReferenceName="ApplicationImportException" ReferencePath="xdev.yang.exceptions" VariableName="applicationImportException442"/>
+    </Throws>
     <ServiceReference ID="11" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
       <Source RefID="10"/>
       <Target RefID="10"/>

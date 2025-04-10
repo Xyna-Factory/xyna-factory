@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 package com.gip.xyna.xact.filter.session.modify.operations;
+
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,7 +65,6 @@ import com.gip.xyna.xact.filter.util.AVariableIdentification.VarUsageType;
 import com.gip.xyna.xact.filter.util.ExpressionUtils;
 import com.gip.xyna.xact.filter.util.QueryUtils;
 import com.gip.xyna.xact.filter.util.Utils;
-import com.gip.xyna.xact.filter.util.xo.Util;
 import com.gip.xyna.xact.filter.xmom.workflows.enums.GuiLabels;
 import com.gip.xyna.xact.filter.xmom.workflows.json.ChangeJson;
 import com.gip.xyna.xact.filter.xmom.workflows.json.ServiceUtils;
@@ -103,17 +104,19 @@ import xnwh.persistence.QueryParameter;
 import xnwh.persistence.SelectionMask;
 import xnwh.persistence.Storable;
 
+
+
 public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
-  
+
   private static final Logger logger = CentralFactoryLogging.getLogger(ChangeOperation.class);
-  
+
   private ChangeJson change;
-  
+
   @Override
   public int parseRequest(String jsonRequest) throws InvalidJSONException, UnexpectedJSONContentException {
     JsonParser jp = new JsonParser();
     change = jp.parse(jsonRequest, ChangeJson.getJsonVisitor());
-    
+
     return change.getRevision();
   }
 
@@ -161,7 +164,7 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
     String label = change.getText();
     if( label != null ) {
       workflow.setLabel(label);
-    } 
+    }
   }
 
   @Override
@@ -175,24 +178,24 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
 
     handleChangeCast(variable);
   }
-  
-  
+
+
   private void handleChangeCast(Variable variable) throws UnsupportedOperationException, XynaException, ModificationNotAllowedException{
     String castToFqn = change.getCastToFqn();
     if( castToFqn == null ) {
       return;
     }
-    
+
     if (isQuery(object)) {
       changeQuerySelectionMask(castToFqn);
       return;
     }
-      
+
     if (!(variable.getIdentifiedVariables() instanceof IdentifiedVariablesStepFunction)) {
       throw new UnsupportedOperationException(UnsupportedOperationException.OPERATION_DYNAMIC_TYPING,
                                               UnsupportedOperationException.DYNAMIC_TYPING_ONLY_FOR_SERVICE_CALLS);
     }
-    
+
     IdentifiedVariablesStepFunction identifiedVariables = (IdentifiedVariablesStepFunction) variable.getIdentifiedVariables();
     if (castToFqn.length() > 0) {
       String superFqn = identifiedVariables.getOriginalVarFqn(variable.getUsage(), variable.getIndex());
@@ -217,14 +220,14 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
     }
 
   }
-  
+
 
   @Override
   protected void modifyFormulaArea(Step step) throws XynaException, UnknownObjectIdException, MissingObjectException, InvalidJSONException, UnexpectedJSONContentException {
     if (step instanceof StepMapping) {
       StepMapping stepMapping = (StepMapping)step;
       stepMapping.sortFormulas();
-      
+
       //update warnings - remove existing and check new
       FQName fqn = modification.getObject().getFQName();
       String objectId = ObjectId.createStepId(step).getObjectId();
@@ -237,7 +240,7 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
         FormulaChangeNotification notification = new FormulaChangeNotification(expression, stepMapping);
         modification.getSession().getWFWarningsHandler(fqn).handleChange(formulaId, notification);
       }
-      
+
     }
   }
 
@@ -245,7 +248,7 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
     return variable.getVariable().getIdentifiedVariable().isJavaBaseType() &&
         variable.getVariable().getIdentifiedVariable().getJavaTypeEnum() == PrimitiveType.ANYTYPE;
   }
-  
+
   private void handleIsList(Variable variable) throws XynaException {
     Boolean isList = change.isList();
     if( isList != null ) {
@@ -255,14 +258,14 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
       }
 
       variable.getVariable().getIdentifiedVariable().setIsList(isList);
-      
+
       //update other variable
       if(!(variable.getVariable().idprovider instanceof ThrowExceptionIdProvider)) {
         String idToFind = variable.getVariable().idprovider.getId();
-        
+
         if(idToFind.equals(variable.getVariable().getIdentifiedVariable().getId()))
           return;
-        
+
         AVariable other = null;
         StepForeach parentSF = StepForeach.getParentStepForeachOrNull(object.getStep());
         //find variable with id == idToFind.
@@ -274,7 +277,7 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
           }
           catch(Exception e) {
             throw new RuntimeException("Variable not found");
-          }         
+          }
         }
         else {
           List<AVariable> candidates = parentSF.getOutputVarsSingle(false);
@@ -285,16 +288,16 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
             }
           }
         }
-        
+
         if(other == null)
           throw new RuntimeException("could not find variable.");
-        
+
         other.setIsList(isList);
       }
     }
   }
-  
-  
+
+
   @Override
   protected void modifyFormula(FormulaInfo formulaInfo) {
     Step step = object.getStep();
@@ -308,7 +311,7 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
     } else if( step instanceof StepMapping ) {
       StepMapping stepMapping = (StepMapping)step;
       stepMapping.replaceFormula( formulaInfo.getIndex(), change.getExpression() );
-      
+
       //if mapping is Template, we might need to update inputs as well
       if(stepMapping.isTemplateMapping()) {
         List<AVariable> inputsToRemove = getUnusedInputs(stepMapping.getInputVars(), change.getExpression());
@@ -327,19 +330,19 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
       modification.getSession().getWFWarningsHandler(fqn).handleChange(object.getId(), notification);
     }
   }
-  
-  
+
+
   private List<AVariable> getUnusedInputs(List<AVariable> inputs, String expression){
     List<AVariable> result = new ArrayList<AVariable>();
-    
+
     for(int i=0; i<inputs.size(); i++) {
       String searchString = String.format("%%%d%%", i);
       if(!expression.contains(searchString)) {
         result.add(inputs.get(i));
       }
     }
-    
-    
+
+
     return result;
   }
 
@@ -359,7 +362,7 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
   protected void modifyBranchArea(Step step) throws XynaException, UnknownObjectIdException, MissingObjectException, InvalidJSONException, UnexpectedJSONContentException {
     Distinction distinction;
     if (step instanceof StepFunction) {
-      distinction = (Distinction)( ((StepFunction)step).getProxyForCatch() ); 
+      distinction = (Distinction)( ((StepFunction)step).getProxyForCatch() );
     } else if (step instanceof WFStep) {
       StepSerial stepContainer = ((WFStep)step).getChildStep();
       distinction = (Distinction)stepContainer.getProxyForCatch();
@@ -384,11 +387,11 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
         modification.getObject().getDataflow().addConnectionForBranch(varSubObject, step);
       }
     }
-    
-    
-    
-    
-    
+
+
+
+
+
     object.getRoot().getStepMap().updateStep((Step)distinction);
   }
 
@@ -411,7 +414,7 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
       QueryUtils.refreshQueryHelperMappingExpression(object);
     }
   }
-  
+
 
   @Override
   protected void modifyQuerySorting(QuerySortCriterion querySortCriterion)
@@ -433,7 +436,7 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
       }
     }
   }
-  
+
   @Override
   protected void modifyQuerySelectionMask(QuerySelectionMask querySelectionMask)
       throws XynaException, UnknownObjectIdException, MissingObjectException, InvalidJSONException, UnexpectedJSONContentException {
@@ -444,10 +447,10 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
       QueryUtils.saveSelectionMask(object, object.getRoot().getDataflow(), selectionMask);
     }
   }
-  
+
 
   private void changeQuerySelectionMask(String castToFqn) throws UnsupportedOperationException, XynaException {
-    
+
     SelectionMask selectionMask = QueryUtils.getSelectionMask(object);
     if(selectionMask != null) {
       if(castToFqn != null && !castToFqn.isEmpty()) {
@@ -462,7 +465,7 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
       } else {
         selectionMask.setRootType(Storable.class.getName());
       }
-      
+
       QueryUtils.saveSelectionMask(object, modification.getObject().getDataflow(), selectionMask);
       QueryUtils.refreshRootType(object, (DOM)modification.load(FQNameJson.ofPathAndName(selectionMask.getRootType())).getGenerationBase());
     }
@@ -475,7 +478,7 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
 
     String fqn = change.getFqn();
     String primitiveType = change.getPrimitiveType();
-    if ( (fqn != null && !Util.isExcludedType(fqn)) || (primitiveType != null) ) {
+    if ( (fqn != null && !Utils.isExcludedType(fqn)) || (primitiveType != null) ) {
       changeType(fqn, primitiveType, dtOrException, var);
     }
 
@@ -526,17 +529,17 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
       throw new UnsupportedOperationException(UnsupportedOperationException.OPERATION_CHANGE_TYPE, UnsupportedOperationException.CHANGE_TYPE_MUTUALLY_EXCLUSIVE);
     }
 
-    if (Util.isExcludedType(fqn)) {
+    if (Utils.isExcludedType(fqn)) {
       throw new UnsupportedOperationException(UnsupportedOperationException.OPERATION_CHANGE_TYPE, UnsupportedOperationException.INVALID_TYPE);
     }
 
     AVariable newVar;
-    
+
     if(fqn == null || !fqn.contains(".")) {
       DatatypeVariable dtVar = new DatatypeVariable(dtOrException);
       dtVar.create(PrimitiveType.create(primitiveType));
       newVar = dtVar;
-    } else if (Util.isSubtypeOf(fqn, GenerationBase.CORE_EXCEPTION, dtOrException.getRevision())) {
+    } else if (Utils.isSubtypeOf(fqn, GenerationBase.CORE_EXCEPTION, dtOrException.getRevision())) {
       ExceptionVariable exceptionVar = new ExceptionVariable(dtOrException);
       String path = fqn.substring(0, fqn.lastIndexOf('.'));
       String name = fqn.substring(Math.min(fqn.lastIndexOf('.')+1, fqn.length()));
@@ -626,7 +629,7 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
       newOperation.setDocumentation(operation.getDocumentation());
       dom.replaceOperation(operation, newOperation);
       operation = newOperation;
-      
+
       object.refreshIdentifiedVariables();
     }
 
@@ -669,7 +672,7 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
     }
 
     String baseTypeFqn = change.getBaseType();
-    if (baseTypeFqn != null && Util.isExcludedType(baseTypeFqn)) {
+    if (baseTypeFqn != null && Utils.isExcludedType(baseTypeFqn)) {
       throw new ModificationNotAllowedException(UnsupportedOperationException.INVALID_BASE_TYPE);
     }
 
@@ -688,7 +691,7 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
       } else  if (baseType != null) {
         ((ExceptionGeneration) dtOrException).replaceParent((ExceptionGeneration) baseType);
       }
-      
+
       List<String> inheritedNames = new ArrayList<>();
       List<String> usedNames = new ArrayList<>();
       List<AVariable> allVars = dtOrException.getAllMemberVarsIncludingInherited();
@@ -697,8 +700,8 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
           inheritedNames.add(v.getVarName());
         }
         usedNames.add(v.getVarName());
-      } 
-      
+      }
+
       List<AVariable> vars = dtOrException.getMemberVars();
       for (AVariable var : vars) {
         if(inheritedNames.contains(var.getVarName())) {
@@ -706,12 +709,12 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
           var.setVarName(varName);
           usedNames.add(varName);
         }
-      }      
+      }
     }
 
     setAbstract(dtOrException, change.isAbstract());
   }
-  
+
   @Override
   protected void modifyMetaTag(DomOrExceptionGenerationBase dtOrException) throws XPRC_XmlParsingException {
     XMLUtils.parseString(change.getTag()); // validate whether tag content is valid XML
@@ -758,7 +761,7 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
       serviceGroup.deleteSharedLib(libToChange.getName());
     }
   }
-  
+
   @Override
   protected void modifyRemoteDestination(StepFunction step) {
     ServiceUtils.setRemoteDestination(step, change.getName());

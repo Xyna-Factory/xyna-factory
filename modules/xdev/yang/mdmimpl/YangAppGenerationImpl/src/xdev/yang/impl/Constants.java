@@ -41,6 +41,11 @@ public class Constants {
 
   public static final String ATT_LIST_CONFIG_DYNAMIC_VARIABLE = "variable";
   public static final String ATT_LIST_CONFIG_DYNAMIC_PATH = "path";
+  
+  public static final String ATT_ANYXMLCONFIG_YANG = "yang";
+  public static final String ATT_ANYXMLCONFIG_NAMESPACES = "namespaces";
+  public static final String ATT_ANYXMLCONFIG_TAG = "tag";
+  public static final String ATT_ANYXMLCONFIG_NAMESPACE = "namespace";
 
   public static final String TAG_YANG = "Yang";
   public static final String TAG_RPC = "Rpc";
@@ -50,6 +55,9 @@ public class Constants {
   public static final String TAG_MAPPING = "Mapping";
   public static final String TAG_SIGNATURE = "Signature";
   public static final String TAG_SIGNATURE_ENTRY = "SignatureEntry";
+  
+  public static final String TAG_ANYXMLCONFIGS = "AnyXmlConfigurations";
+  public static final String TAG_ANYXMLCONFIG = "AnyXmlConfiguration";
 
   public static final String TAG_LISTCONFIGS = "ListConfigurations";
   public static final String TAG_LISTCONFIG = "ListConfiguration";
@@ -66,7 +74,7 @@ public class Constants {
   public static final String TAG_MODULE_REVISION = "revision";
   public static final String TAG_MODULE_FEATURES = "features";
 
-  public static final String VAL_USECASE = "Usecase";
+  public static final String VAL_OPERATION = "Operation";
   public static final String VAL_MODULECOLLECTION = "ModuleCollection";
   public static final String VAL_DEVICE = "Capabilities";
 

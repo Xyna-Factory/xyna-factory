@@ -19,12 +19,8 @@ package xdev.yang.impl;
 
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.Container;
@@ -36,39 +32,48 @@ import com.gip.xyna.xmcp.xfcli.generated.Importapplication;
 import com.gip.xyna.xmcp.xfcli.impl.ImportapplicationImpl;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 
-import base.Text;
+import xdev.yang.OperationCreationParameter;
 import xdev.yang.YangAppGenerationInputParameter;
 import xdev.yang.YangAppGenerationServiceOperation;
 import xdev.yang.cli.generated.OverallInformationProvider;
+import xdev.yang.datatypes.YangModuleDetails;
+import xdev.yang.exceptions.ApplicationImportException;
+import xdev.yang.exceptions.OperationCreationException;
 import xdev.yang.impl.YangApplicationGeneration.YangApplicationGenerationData;
-import xdev.yang.impl.usecase.AddUsecase;
-import xdev.yang.impl.usecase.AddVariableToUsecaseSignature;
-import xdev.yang.impl.usecase.AsyncDeployment;
-import xdev.yang.impl.usecase.ConfigureList;
-import xdev.yang.impl.usecase.DeleteUsecaseAssignmentAction;
-import xdev.yang.impl.usecase.DetermineUseCaseAssignments;
-import xdev.yang.impl.usecase.LoadUsecaseSignature;
-import xdev.yang.impl.usecase.LoadUsecasesTable;
-import xdev.yang.impl.usecase.RemoveVariableFromUsecaseSignature;
-import xdev.yang.impl.usecase.SaveUsecaseAssignmentAction;
-import xdev.yang.impl.usecase.UpdateVariableInUsecaseSignature;
-import xdev.yang.impl.usecase.UseCaseCache;
+import xdev.yang.impl.operation.AddOperation;
+import xdev.yang.impl.operation.AddVariableToOperationSignature;
+import xdev.yang.impl.operation.AsyncDeployment;
+import xdev.yang.impl.operation.ConfigureList;
+import xdev.yang.impl.operation.DeleteOperationAssignmentAction;
+import xdev.yang.impl.operation.DetermineOperationAssignments;
+import xdev.yang.impl.operation.LoadOperationSignature;
+import xdev.yang.impl.operation.LoadOperationsTable;
+import xdev.yang.impl.operation.RemoveVariableFromOperationSignature;
+import xdev.yang.impl.operation.SaveOperationAssignmentAction;
+import xdev.yang.impl.operation.UpdateVariableInOperationSignature;
+import xdev.yang.impl.operation.anyxml.AnyXmlSubstatementConfigManager;
+import xdev.yang.impl.operation.listconfig.LoadListConfig;
+import xdev.yang.impl.tools.LoadApplicationList;
+import xdev.yang.impl.tools.LoadModules;
+import xdev.yang.impl.tools.LoadWorkspaceList;
+import xdev.yang.impl.operation.OperationCache;
 import xmcp.yang.LoadYangAssignmentsData;
-import xmcp.yang.UseCaseAssignmentTableData;
-import xmcp.yang.UseCaseTableData;
+import xmcp.yang.OperationAssignmentTableData;
+import xmcp.yang.OperationTableData;
+import xmcp.yang.fman.AnyXmlSubstatementConfiguration;
 import xmcp.yang.fman.ListConfiguration;
-import xmcp.yang.fman.UsecaseSignatureEntry;
+import xmcp.yang.fman.OperationSignatureEntry;
+import xprc.xpce.Application;
+import xprc.xpce.RuntimeContext;
 import xprc.xpce.Workspace;
 
 
 public class YangAppGenerationServiceOperationImpl implements ExtendedDeploymentTask, YangAppGenerationServiceOperation {
 
-  private static final Logger logger = CentralFactoryLogging.getLogger(YangAppGenerationServiceOperationImpl.class);
-  
   public void onDeployment() throws XynaException {
     OverallInformationProvider.onDeployment();
     PluginManagement.registerPlugin(this.getClass());
-    UseCaseCache.PROP_USECASE_CACHE_SIZE.registerDependency(UserType.Service, "YangAppGenerationService");
+    OperationCache.PROP_OPERATION_CACHE_SIZE.registerDependency(UserType.Service, "YangAppGenerationService");
     AsyncDeployment.PROP_ASYNC_DEPLOY.registerDependency(UserType.Service, "YangAppGenerationService");
   }
 
@@ -76,7 +81,7 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   public void onUndeployment() throws XynaException {
     OverallInformationProvider.onUndeployment();
     PluginManagement.unregisterPlugin(this.getClass());
-    UseCaseCache.PROP_USECASE_CACHE_SIZE.unregister();
+    OperationCache.PROP_OPERATION_CACHE_SIZE.unregister();
     AsyncDeployment.PROP_ASYNC_DEPLOY.unregister();
   }
 
@@ -97,29 +102,24 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
     return null;
   }
 
-  public void createYangDeviceApp(YangAppGenerationInputParameter yangAppGenerationInputParameter2) {
-    String id = null;
-    try (YangApplicationGenerationData appData = YangApplicationGeneration.createDeviceApp(yangAppGenerationInputParameter2)) {
-      id = appData.getId();
-    } catch (IOException e) {
-      if (logger.isWarnEnabled()) {
-        logger.warn("Could not clean up temporary files for " + yangAppGenerationInputParameter2.getApplicationName(), e);
-      }
-    }
-    importApplication(id);
 
+  public void createYangDeviceApp(XynaOrderServerExtension order, YangAppGenerationInputParameter input) throws ApplicationImportException {
+    try (YangApplicationGenerationData appData = YangApplicationGeneration.createDeviceApp(input)) {
+      String id = appData.getId();
+      importApplication(id);
+    } catch (Exception e) {
+      throw new ApplicationImportException(order.getId(), e);
+    }
   }
 
-  public void importModuleCollectionApplication(YangAppGenerationInputParameter yangAppGenerationInputParameter1) {
-    String id = null;
-    try (YangApplicationGenerationData appData = YangApplicationGeneration.createModuleCollectionApp(yangAppGenerationInputParameter1)) {
-      id = appData.getId();
-    } catch (IOException e) {
-      if (logger.isWarnEnabled()) {
-        logger.warn("Could not clean up temporary files for " + yangAppGenerationInputParameter1.getApplicationName(), e);
-      }
+
+  public void importModuleCollectionApplication(XynaOrderServerExtension order, YangAppGenerationInputParameter input) throws ApplicationImportException {
+    try (YangApplicationGenerationData appData = YangApplicationGeneration.createModuleCollectionApp(input)) {
+      String id = appData.getId();
+      importApplication(id);
+    } catch (Exception e) {
+      throw new ApplicationImportException(order.getId(), e);
     }
-    importApplication(id);
   }
   
   private void importApplication(String id) {
@@ -135,47 +135,51 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   }
 
   @Override
-  public List<? extends UseCaseTableData> loadUsecases() {
-    return new LoadUsecasesTable().loadUsecases();
+  public List<? extends OperationTableData> loadOperations() {
+    return new LoadOperationsTable().loadOperations();
   }
 
   @Override
-  public void addUsecase(XynaOrderServerExtension order, Text usecaseGroupFqn, Text usecaseName, Workspace ws, Text rpc, Text deviceFqn, Text rpcNs) {
-      new AddUsecase().addUsecase(usecaseGroupFqn.getText(), usecaseName.getText(), ws, order, rpc.getText(), deviceFqn.getText(), rpcNs.getText());
+  public void addOperation(XynaOrderServerExtension order, OperationCreationParameter parameter) throws OperationCreationException {
+    try {
+      new AddOperation().addOperation(order, parameter);
+    } catch (Exception e) {
+      throw new OperationCreationException(order.getId(), e);
+    }
   }
 
   @Override
-  public List<? extends UseCaseAssignmentTableData> loadAssignments(LoadYangAssignmentsData data) {
-    DetermineUseCaseAssignments executor = new DetermineUseCaseAssignments();
-    return executor.determineUseCaseAssignments(data);
-  }
-
-
-  @Override
-  public void saveAssignment(XynaOrderServerExtension order, UseCaseAssignmentTableData data) {
-    SaveUsecaseAssignmentAction executor = new SaveUsecaseAssignmentAction();
-    executor.saveUsecaseAssignment(order, data);
+  public List<? extends OperationAssignmentTableData> loadAssignments(LoadYangAssignmentsData data) {
+    DetermineOperationAssignments executor = new DetermineOperationAssignments();
+    return executor.determineOperationAssignments(data);
   }
 
 
   @Override
-  public void addVariableToUsecaseSignature(XynaOrderServerExtension order, UseCaseTableData usecase, UsecaseSignatureEntry signature) {
-    AddVariableToUsecaseSignature executor = new AddVariableToUsecaseSignature();
-    executor.addVariable(order, usecase, signature);
+  public void saveAssignment(XynaOrderServerExtension order, OperationAssignmentTableData data) {
+    SaveOperationAssignmentAction executor = new SaveOperationAssignmentAction();
+    executor.saveOperationAssignment(order, data);
   }
 
 
   @Override
-  public Container loadUsecaseSignature(UseCaseTableData usecase) {
-    LoadUsecaseSignature executor = new LoadUsecaseSignature();
-    return executor.loadSignature(usecase);
+  public void addVariableToOperationSignature(XynaOrderServerExtension order, OperationTableData operation, OperationSignatureEntry signature) {
+    AddVariableToOperationSignature executor = new AddVariableToOperationSignature();
+    executor.addVariable(order, operation, signature);
   }
 
 
   @Override
-  public void removeVariableFromUsecaseSignature(XynaOrderServerExtension order, UseCaseTableData usecase, UsecaseSignatureEntry signature) {
-    RemoveVariableFromUsecaseSignature executor = new RemoveVariableFromUsecaseSignature();
-    executor.removeVariable(order, usecase, signature);
+  public Container loadOperationSignature(OperationTableData operation) {
+    LoadOperationSignature executor = new LoadOperationSignature();
+    return executor.loadSignature(operation);
+  }
+
+
+  @Override
+  public void removeVariableFromOperationSignature(XynaOrderServerExtension order, OperationTableData operation, OperationSignatureEntry signature) {
+    RemoveVariableFromOperationSignature executor = new RemoveVariableFromOperationSignature();
+    executor.removeVariable(order, operation, signature);
   }
 
 
@@ -187,16 +191,47 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
 
 
   @Override
-  public void deleteAssignment(XynaOrderServerExtension order, UseCaseAssignmentTableData data) {
-    DeleteUsecaseAssignmentAction executor = new DeleteUsecaseAssignmentAction();
-    executor.deleteUsecaseAssignment(order, data);
+  public void deleteAssignment(XynaOrderServerExtension order, OperationAssignmentTableData data) {
+    DeleteOperationAssignmentAction executor = new DeleteOperationAssignmentAction();
+    executor.deleteOperationAssignment(order, data);
 
   }
   
   @Override
-  public void updateVariableInUsecaseSignature(XynaOrderServerExtension order, UseCaseTableData usecase, UsecaseSignatureEntry signature) {
-    UpdateVariableInUsecaseSignature executor = new UpdateVariableInUsecaseSignature();
-    executor.updateVariable(order, usecase, signature);
+  public void updateVariableInOperationSignature(XynaOrderServerExtension order, OperationTableData operation, OperationSignatureEntry signature) {
+    UpdateVariableInOperationSignature executor = new UpdateVariableInOperationSignature();
+    executor.updateVariable(order, operation, signature);
+  }
+
+
+  @Override
+  public ListConfiguration loadListConfiguration(XynaOrderServerExtension order, LoadYangAssignmentsData data) {
+    return new LoadListConfig().load(order, data);
+  }
+
+
+  @Override
+  public List<? extends Application> loadApplicationList() {
+    return new LoadApplicationList().execute();
+  }
+
+
+  @Override
+  public List<? extends Workspace> loadWorkspaceList() {
+    return new LoadWorkspaceList().execute();
+  }
+
+
+  @Override
+  public List<? extends YangModuleDetails> loadModules(RuntimeContext rtc) {
+    return new LoadModules().execute(rtc);
+  }
+
+
+  @Override
+  public void configureAnyxmlSubstantement(XynaOrderServerExtension order, LoadYangAssignmentsData data,
+                                           AnyXmlSubstatementConfiguration config) {
+    new AnyXmlSubstatementConfigManager().configure(order, data, config);
   }
 
 }

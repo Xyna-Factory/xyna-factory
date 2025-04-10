@@ -69,11 +69,11 @@ public class ActiveMQServiceOperationImpl implements ExtendedDeploymentTask {
     // If null is returned, the factory default <IGNORE> will be used.
     return null;
   }
-  
+
   private QueueManagement getQueueManagement() {
-    return XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getQueueManagement(); 
+    return XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getQueueManagement();
   }
-  
+
   public static class ActiveMQBuilder implements QueueInstanceBuilder {
 
     @Override
@@ -82,18 +82,16 @@ public class ActiveMQServiceOperationImpl implements ExtendedDeploymentTask {
       cfg.setName_externalQueue(queue.getExternalName());
       cfg.setName_unique(new QueueName(queue.getUniqueName()));
       QueueConnectData connData = queue.getConnectData();
-      if( connData instanceof ActiveMQConnectData ) {
-        ActiveMQConnectData amcd = (ActiveMQConnectData)connData;
+      if (connData instanceof ActiveMQConnectData) {
+        ActiveMQConnectData amcd = (ActiveMQConnectData) connData;
         cfg.setHostname(amcd.getHostname());
         cfg.setPort(amcd.getPort());
       } else {
-        throw new IllegalStateException("Expected ActiveMQConnectData, got "+connData);
+        throw new IllegalStateException("Expected ActiveMQConnectData, got " + connData);
       }
-      return null; //FIXME new ActiveMQ(cfg);
+      return new ActiveMQ(cfg);
     }
-    
+
   }
 
-  
-  
 }
