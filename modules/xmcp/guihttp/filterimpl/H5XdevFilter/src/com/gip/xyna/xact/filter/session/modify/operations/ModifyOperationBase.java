@@ -119,7 +119,6 @@ import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 import com.gip.xyna.xprc.xfractwfe.generation.WF.WFStep;
 
 import xmcp.processmodeller.datatypes.MetaTag;
-import xmcp.processmodeller.datatypes.request.MetaTagRequest;
 
 public abstract class ModifyOperationBase<T extends XMOMGuiJson> {
 
@@ -664,11 +663,10 @@ public abstract class ModifyOperationBase<T extends XMOMGuiJson> {
 
   private GBBaseObject createMetaTag(final GBSubObject parent, MetaTagJson content) throws XynaException {
     DomOrExceptionGenerationBase dtOrException = (DomOrExceptionGenerationBase) object.getDtOrException();
-    Long guiHttpRevision = Utils.getGuiHttpRevision();
-    MetaTag metaTag = (MetaTag)Utils.convertJsonToGeneralXynaObject(content.getTag(), guiHttpRevision);
-    XMLUtils.parseString(metaTag.getTag()); // validate whether tag content is valid XML 
+    XMLUtils.parseString(content.getTag()); // validate whether tag content is valid XML 
+    DTMetaTag dtMetaTag = new DTMetaTag(new MetaTag(content.getTag()));
 
-    return new GBBaseObject(dtOrException, new DTMetaTag(metaTag));
+    return new GBBaseObject(dtOrException, dtMetaTag);
   }
 
   private GBBaseObject createStepChoice( GBSubObject parent, DistinctionJson content) throws XynaException {
