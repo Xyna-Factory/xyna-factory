@@ -79,13 +79,8 @@ public class YangTest1 {
       String txt = readFile_v2("mdmimpl/YangAppGenerationImpl/src_test/data/cap_zb_1.xml");
       _logger.info(txt);
       Document doc = XMLUtils.parseString(txt, true);
-      
-      //Element elem = XMLUtils.getChildElementByName(doc.getDocumentElement(), Constants.TAG_CAPABILITIES);
-      
       Element elem = XMLUtils.getChildElementByName(doc.getDocumentElement(), Constants.TAG_CAPABILITIES, 
                                                     doc.getDocumentElement().getNamespaceURI());
-                                                    
-      //Element elem = doc.getDocumentElement();
       _logger.info(elem.getNodeName());
       _logger.info(elem.getLocalName());
       _logger.info(elem.getTagName());
@@ -141,7 +136,6 @@ public class YangTest1 {
       String txt = readFile_v2("mdmimpl/YangAppGenerationImpl/src_test/data/cap_zb_1.xml");
       _logger.info(txt);
       Document doc = XMLUtils.parseString(txt, true);
-      
       List<YangDeviceCapability> list = YangCapabilityUtils.loadCapabilitiesFromHelloMessage(doc.getDocumentElement());
       for (YangDeviceCapability cap : list) {
         _logger.info(writeYangDeviceCapability(cap));
@@ -157,11 +151,8 @@ public class YangTest1 {
   @Test
   public void testCap_2() throws Exception {
     try {
-      //String txt = readFile_v2("mdmimpl/YangAppGenerationImpl/src_test/data/cap_zb_1.xml");
       String txt = readFile_v2("mdmimpl/YangAppGenerationImpl/src_test/data/meta_zb_2.xml");
       _logger.info(txt);
-      //Document doc = XMLUtils.parseString(txt, true);
-      //List<YangDeviceCapability> list = YangCapabilityUtils.loadCapabilitiesFromHelloMessage(doc.getDocumentElement());
       List<YangDeviceCapability> list = YangCapabilityUtils.loadCapabilitiesImpl(List.of(txt));
       for (YangDeviceCapability cap : list) {
         _logger.info(writeYangDeviceCapability(cap));
@@ -177,11 +168,8 @@ public class YangTest1 {
   @Test
   public void testCap_3() throws Exception {
     try {
-      //String txt = readFile_v2("mdmimpl/YangAppGenerationImpl/src_test/data/cap_zb_1.xml");
       String txt = readFile_v2("mdmimpl/YangAppGenerationImpl/src_test/data/meta_zb_3.xml");
       _logger.info(txt);
-      //Document doc = XMLUtils.parseString(txt, true);
-      //List<YangDeviceCapability> list = YangCapabilityUtils.loadCapabilitiesFromHelloMessage(doc.getDocumentElement());
       List<YangDeviceCapability> list = YangCapabilityUtils.loadCapabilitiesImpl(List.of(txt));
       for (YangDeviceCapability cap : list) {
         _logger.info(writeYangDeviceCapability(cap));
@@ -197,11 +185,8 @@ public class YangTest1 {
   @Test
   public void testCap_4() throws Exception {
     try {
-      //String txt = readFile_v2("mdmimpl/YangAppGenerationImpl/src_test/data/cap_zb_1.xml");
       String txt = readFile_v2("mdmimpl/YangAppGenerationImpl/src_test/data/meta_zb_4.xml");
       _logger.info(txt);
-      //Document doc = XMLUtils.parseString(txt, true);
-      //List<YangDeviceCapability> list = YangCapabilityUtils.loadCapabilitiesFromHelloMessage(doc.getDocumentElement());
       List<YangDeviceCapability> list = YangCapabilityUtils.loadCapabilitiesImpl(List.of(txt));
       assertEquals(list.size(), 1);
       assertEquals("http://www.gip.com/xyna/yang/test/testrpc_zb_4", list.get(0).getNameSpace());
@@ -220,7 +205,6 @@ public class YangTest1 {
   
   public static void main(String[] args) {
     try {
-      //new YangTest1().testXml_1();
       new YangTest1().testCap_4();
     }
     catch (Throwable e) {
