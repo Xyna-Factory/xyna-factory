@@ -74,17 +74,17 @@ public class YangTest1 {
   @Test
   public void testXml_1() throws Exception {
     try {
-      String txt = readFile("mdmimpl/YangAppGenerationImpl/src_test/data/cap_zb_1.xml");
-      _logger.info(txt);
+      String txt = readFile("mdmimpl/YangAppGenerationImpl/test/data/cap_zb_1.xml");
+      log(txt);
       Document doc = XMLUtils.parseString(txt, true);
       Element elem = XMLUtils.getChildElementByName(doc.getDocumentElement(), Constants.TAG_CAPABILITIES, 
                                                     doc.getDocumentElement().getNamespaceURI());
-      _logger.info(elem.getNodeName());
-      _logger.info(elem.getLocalName());
-      _logger.info(elem.getTagName());
-      _logger.info(elem.getNamespaceURI());
-      _logger.info(elem.getPrefix());
-      _logger.info(elem.lookupNamespaceURI(elem.getPrefix()));
+      log(elem.getNodeName());
+      log(elem.getLocalName());
+      log(elem.getTagName());
+      log(elem.getNamespaceURI());
+      log(elem.getPrefix());
+      log(elem.lookupNamespaceURI(elem.getPrefix()));
       
       assertEquals("capabilities", elem.getNodeName());
       assertEquals("capabilities", elem.getLocalName());
@@ -92,7 +92,7 @@ public class YangTest1 {
       assertEquals(Constants.NETCONF_NS, elem.getNamespaceURI());
       assertEquals(null, elem.getPrefix());
     } catch (Exception e) {
-      _logger.error(e.getMessage(), e);
+      e.printStackTrace();
       throw new RuntimeException(e);
     }
   }
@@ -100,8 +100,8 @@ public class YangTest1 {
   @Test
   public void testXml_2() throws Exception {
     try {
-      String txt = readFile("mdmimpl/YangAppGenerationImpl/src_test/data/cap_zb_2.xml");
-      _logger.info(txt);
+      String txt = readFile("mdmimpl/YangAppGenerationImpl/test/data/cap_zb_2.xml");
+      log(txt);
     
       InputStream stream = new ByteArrayInputStream(txt.getBytes("UTF-8"));
   
@@ -111,11 +111,11 @@ public class YangTest1 {
       Document doc = builder.parse(stream);
       Element elem = doc.getDocumentElement();
     
-      _logger.info(elem.getNodeName());
-      _logger.info(elem.getLocalName());
-      _logger.info(elem.getNamespaceURI());
-      _logger.info(elem.getPrefix());
-      _logger.info(elem.lookupNamespaceURI(elem.getPrefix()));
+      log(elem.getNodeName());
+      log(elem.getLocalName());
+      log(elem.getNamespaceURI());
+      log(elem.getPrefix());
+      log(elem.lookupNamespaceURI(elem.getPrefix()));
       
       assertEquals("nsp:hello", elem.getNodeName());
       assertEquals("hello", elem.getLocalName());
@@ -123,7 +123,7 @@ public class YangTest1 {
       assertEquals(Constants.NETCONF_NS, elem.getNamespaceURI());
       assertEquals("nsp", elem.getPrefix());
     } catch (Exception e) {
-      _logger.error(e.getMessage(), e);
+      e.printStackTrace();
       throw new RuntimeException(e);
     }
   }
@@ -131,17 +131,17 @@ public class YangTest1 {
   @Test
   public void testCap_1() throws Exception {
     try {
-      String txt = readFile("mdmimpl/YangAppGenerationImpl/src_test/data/cap_zb_1.xml");
-      _logger.info(txt);
+      String txt = readFile("mdmimpl/YangAppGenerationImpl/test/data/cap_zb_1.xml");
+      log(txt);
       Document doc = XMLUtils.parseString(txt, true);
       List<YangDeviceCapability> list = YangCapabilityUtils.loadCapabilitiesFromHelloMessage(doc.getDocumentElement());
       for (YangDeviceCapability cap : list) {
-        _logger.info(writeYangDeviceCapability(cap));
+        log(writeYangDeviceCapability(cap));
       }
       assertEquals(list.size(), 1);
       assertEquals("http://www.gip.com/xyna/yang/test/testrpc_zb_1", list.get(0).getRawInfo());
     } catch (Exception e) {
-      _logger.error(e.getMessage(), e);
+      e.printStackTrace();
       throw new RuntimeException(e);
     }
   }
@@ -149,16 +149,16 @@ public class YangTest1 {
   @Test
   public void testCap_2() throws Exception {
     try {
-      String txt = readFile("mdmimpl/YangAppGenerationImpl/src_test/data/meta_zb_2.xml");
-      _logger.info(txt);
+      String txt = readFile("mdmimpl/YangAppGenerationImpl/test/data/meta_zb_2.xml");
+      log(txt);
       List<YangDeviceCapability> list = YangCapabilityUtils.loadCapabilitiesImpl(List.of(txt));
       for (YangDeviceCapability cap : list) {
-        _logger.info(writeYangDeviceCapability(cap));
+        log(writeYangDeviceCapability(cap));
       }
       assertEquals(list.size(), 1);
       assertEquals("http://www.gip.com/xyna/yang/test/testrpc_zb_2", list.get(0).getRawInfo());
     } catch (Exception e) {
-      _logger.error(e.getMessage(), e);
+      e.printStackTrace();
       throw new RuntimeException(e);
     }
   }
@@ -166,16 +166,16 @@ public class YangTest1 {
   @Test
   public void testCap_3() throws Exception {
     try {
-      String txt = readFile("mdmimpl/YangAppGenerationImpl/src_test/data/meta_zb_3.xml");
-      _logger.info(txt);
+      String txt = readFile("mdmimpl/YangAppGenerationImpl/test/data/meta_zb_3.xml");
+      log(txt);
       List<YangDeviceCapability> list = YangCapabilityUtils.loadCapabilitiesImpl(List.of(txt));
       for (YangDeviceCapability cap : list) {
-        _logger.info(writeYangDeviceCapability(cap));
+        log(writeYangDeviceCapability(cap));
       }
       assertEquals(list.size(), 1);
       assertEquals("http://www.gip.com/xyna/yang/test/testrpc_zb_3", list.get(0).getNameSpace());
     } catch (Exception e) {
-      _logger.error(e.getMessage(), e);
+      e.printStackTrace();
       throw new RuntimeException(e);
     }
   }
@@ -183,13 +183,13 @@ public class YangTest1 {
   @Test
   public void testCap_4() throws Exception {
     try {
-      String txt = readFile("mdmimpl/YangAppGenerationImpl/src_test/data/meta_zb_4.xml");
-      _logger.info(txt);
+      String txt = readFile("mdmimpl/YangAppGenerationImpl/test/data/meta_zb_4.xml");
+      log(txt);
       List<YangDeviceCapability> list = YangCapabilityUtils.loadCapabilitiesImpl(List.of(txt));
       assertEquals(list.size(), 1);
       assertEquals("http://www.gip.com/xyna/yang/test/testrpc_zb_4", list.get(0).getNameSpace());
     } catch (Exception e) {
-      _logger.error(e.getMessage(), e);
+      e.printStackTrace();
       throw new RuntimeException(e);
     }
   }
@@ -200,6 +200,11 @@ public class YangTest1 {
     s.append("### ").append(cap.getNameSpace());
     return s.toString();
   }
+  
+  private void log(String txt) {
+    System.out.println(txt);
+  }
+  
   
   public static void main(String[] args) {
     try {
