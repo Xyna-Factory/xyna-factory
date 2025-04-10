@@ -44,6 +44,7 @@ import com.gip.xyna.xact.filter.session.exceptions.ModificationNotAllowedExcepti
 import com.gip.xyna.xact.filter.session.exceptions.UnknownObjectIdException;
 import com.gip.xyna.xact.filter.session.exceptions.UnsupportedOperationException;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.Case;
+import com.gip.xyna.xact.filter.session.gb.GBBaseObject.DTMetaTag;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.FormulaInfo;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.MemberMethodInfo;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.MemberVarInfo;
@@ -52,6 +53,7 @@ import com.gip.xyna.xact.filter.session.gb.GBBaseObject.QuerySelectionMask;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.QuerySortCriterion;
 import com.gip.xyna.xact.filter.session.gb.GBBaseObject.Variable;
 import com.gip.xyna.xact.filter.session.gb.GBSubObject;
+import com.gip.xyna.xact.filter.session.gb.GBSubObjectUtils;
 import com.gip.xyna.xact.filter.session.gb.ObjectId;
 import com.gip.xyna.xact.filter.session.gb.vars.IdentifiedVariables;
 import com.gip.xyna.xact.filter.session.gb.vars.IdentifiedVariablesStepFunction;
@@ -96,6 +98,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.StepSerial;
 import com.gip.xyna.xprc.xfractwfe.generation.WF;
 import com.gip.xyna.xprc.xfractwfe.generation.WF.WFStep;
 import com.gip.xyna.xprc.xfractwfe.generation.WorkflowCallInService;
+import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 import xnwh.persistence.QueryParameter;
 import xnwh.persistence.SelectionMask;
@@ -710,6 +713,14 @@ public class ChangeOperation extends ModifyOperationBase<ChangeJson> {
     }
 
     setAbstract(dtOrException, change.isAbstract());
+  }
+
+  @Override
+  protected void modifyMetaTag(DomOrExceptionGenerationBase dtOrException) throws XPRC_XmlParsingException {
+    XMLUtils.parseString(change.getTag()); // validate whether tag content is valid XML
+    int idx = ObjectId.getMetaTagIdx(object.getId());
+    DTMetaTag newTag = GBSubObjectUtils.createDTMetaTag(change.getTag(), idx);
+    object.getMetaTagListAdapter().set(idx, newTag);
   }
 
   @Override
