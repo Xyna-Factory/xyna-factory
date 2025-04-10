@@ -27,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -74,7 +75,7 @@ public class YangTest1 {
   @Test
   public void testXml_1() throws Exception {
     try {
-      String txt = readFile("mdmimpl/YangAppGenerationImpl/test/data/cap_zb_1.xml");
+      String txt = getDataFile("cap_zb_1.xml");
       log(txt);
       Document doc = XMLUtils.parseString(txt, true);
       Element elem = XMLUtils.getChildElementByName(doc.getDocumentElement(), Constants.TAG_CAPABILITIES, 
@@ -100,7 +101,7 @@ public class YangTest1 {
   @Test
   public void testXml_2() throws Exception {
     try {
-      String txt = readFile("mdmimpl/YangAppGenerationImpl/test/data/cap_zb_2.xml");
+      String txt = getDataFile("cap_zb_2.xml");
       log(txt);
     
       InputStream stream = new ByteArrayInputStream(txt.getBytes("UTF-8"));
@@ -131,7 +132,7 @@ public class YangTest1 {
   @Test
   public void testCap_1() throws Exception {
     try {
-      String txt = readFile("mdmimpl/YangAppGenerationImpl/test/data/cap_zb_1.xml");
+      String txt = getDataFile("cap_zb_1.xml");
       log(txt);
       Document doc = XMLUtils.parseString(txt, true);
       List<YangDeviceCapability> list = YangCapabilityUtils.loadCapabilitiesFromHelloMessage(doc.getDocumentElement());
@@ -149,7 +150,7 @@ public class YangTest1 {
   @Test
   public void testCap_2() throws Exception {
     try {
-      String txt = readFile("mdmimpl/YangAppGenerationImpl/test/data/meta_zb_2.xml");
+      String txt = getDataFile("meta_zb_2.xml");
       log(txt);
       List<YangDeviceCapability> list = YangCapabilityUtils.loadCapabilitiesImpl(List.of(txt));
       for (YangDeviceCapability cap : list) {
@@ -166,7 +167,7 @@ public class YangTest1 {
   @Test
   public void testCap_3() throws Exception {
     try {
-      String txt = readFile("mdmimpl/YangAppGenerationImpl/test/data/meta_zb_3.xml");
+      String txt = getDataFile("meta_zb_3.xml");
       log(txt);
       List<YangDeviceCapability> list = YangCapabilityUtils.loadCapabilitiesImpl(List.of(txt));
       for (YangDeviceCapability cap : list) {
@@ -183,7 +184,9 @@ public class YangTest1 {
   @Test
   public void testCap_4() throws Exception {
     try {
-      String txt = readFile("mdmimpl/YangAppGenerationImpl/test/data/meta_zb_4.xml");
+      //String txt = readFile("mdmimpl/YangAppGenerationImpl/test/data/meta_zb_4.xml");
+      //String txt = readFile("../data/meta_zb_4.xml");
+      String txt = getDataFile("meta_zb_4.xml");
       log(txt);
       List<YangDeviceCapability> list = YangCapabilityUtils.loadCapabilitiesImpl(List.of(txt));
       assertEquals(list.size(), 1);
@@ -205,6 +208,20 @@ public class YangTest1 {
     System.out.println(txt);
   }
   
+  private String getDataFilePath(String filename) throws Exception {
+    Path path = getBasePath();  // classes dir
+    path = path.getParent().resolve("test").resolve("data").resolve(filename);
+    return path.toString();
+  }
+  
+  private String getDataFile(String filename) throws Exception {
+    String path = getDataFilePath(filename);
+    return readFile(path);
+  }
+  
+  private Path getBasePath() throws Exception {
+    return Path.of(getClass().getClassLoader().getResource("").toURI());
+  }
   
   public static void main(String[] args) {
     try {
