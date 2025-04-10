@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,27 +20,18 @@ package com.gip.xyna.xmcp.xfcli.undisclosed;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
-import java.lang.reflect.Field;
 import java.util.Date;
-import java.util.Map.Entry;
-
-import org.apache.log4j.Logger;
-
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xfmg.Constants;
 import com.gip.xyna.xmcp.xfcli.AllArgs;
 import com.gip.xyna.xmcp.xfcli.CommandLineWriter;
 import com.gip.xyna.xmcp.xfcli.XynaFactoryCLIConnection.CommandExecution;
 
 
-/**
- *
- */
+
 public class ListThreadInfo implements CommandExecution {
 
   public void execute(AllArgs allArgs, CommandLineWriter clw) {
     int minStackTraceLength = 0;
-    boolean showStackSize = false;
     String nameFilter = null;
     if( allArgs.getArgCount() > 0 ) {
       String currentName = null;
@@ -56,8 +47,6 @@ public class ListThreadInfo implements CommandExecution {
             }
           } else if (currentName.equals("-name")) {
             nameFilter = allArgs.getArg(i);
-          } else if (currentName.equals("-showstacksize")) {
-            showStackSize = Boolean.valueOf(allArgs.getArg(i));
           } else if (currentName.length() == 0) {
             clw.writeLineToCommandLine("Ignoring empty parameter");
           } else {
@@ -96,18 +85,6 @@ public class ListThreadInfo implements CommandExecution {
             sb.append("ms\n");
           }
         }
-        if (showStackSize) {
-          //stacksize von threads sind typischerweise immer gleich (vgl listsysteminfo) - ausser wenn man sie bei der threaderstellung spezifisch abändert!
-          Entry<Thread, StackTraceElement[]> threadByID = KillThread.getThreadByID(ti.getThreadId()); //TODO performance quadratisch, weil nochmal alle threads geholt werden!
-          if (threadByID != null) {
-            Thread t = threadByID.getKey();
-            long ss = getStackSize(t);
-            if (ss != 0) {
-              sb.append("stacksize=").append(ss / 1024).append("kB\n");
-            }
-          }
-          
-        }
         sb.append(getThreadInfo(ti));
       }
     }
@@ -123,40 +100,6 @@ public class ListThreadInfo implements CommandExecution {
       }
     }
     clw.writeLineToCommandLine(sb.toString());
-  }
-
-
-  private static final Logger logger = CentralFactoryLogging.getLogger(ListThreadInfo.class);
-
-  private static final Field stackSizeField;
-  static {
-    Field f;
-    try {
-      f = Thread.class.getDeclaredField("stackSize");
-      f.setAccessible(true);
-    } catch (SecurityException e) {
-      logger.trace(null, e);
-      f = null;
-    } catch (NoSuchFieldException e) {
-      logger.trace(null, e);
-      f = null;
-    }
-    stackSizeField = f;
-  }
-
-  private long getStackSize(Thread t) {
-    if (stackSizeField != null) {
-      try {
-        return (Long) stackSizeField.get(t);
-      } catch (IllegalArgumentException e) {
-        logger.trace(null, e);
-      } catch (IllegalAccessException e) {
-        logger.trace(null, e);
-      } catch (ClassCastException e) {
-        logger.trace(null, e);
-      }
-    }
-    return 0;
   }
 
 
