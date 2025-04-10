@@ -83,7 +83,7 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
     }
     return revisionManagement;
   }
-  
+
   private static XynaActivationBase getXynaActivation() {
     if(xynaActivation == null) {
       xynaActivation = XynaFactory.getInstance().getActivation();
@@ -207,7 +207,7 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
   @Override
   public String createDifferencesString(Filter from, Filter to) {
     StringBuffer ds = new StringBuffer();
-    
+
     if (!Objects.equals(from.getFQFilterClassName(), to.getFQFilterClassName())) {
       ds.append("\n");
       ds.append("    " + TAG_FQFILTERCLASSNAME + " ");
@@ -292,7 +292,7 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-    
+
     Collections.sort(tiList, (x, y) -> x.getFilterName().compareTo(y.getFilterName()));
     return tiList;
   }
@@ -340,8 +340,8 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
     String workspaceName = ReferenceUpdater.getWorkspaceName(revision);
     for (Reference reference : item.getReferences() != null ? item.getReferences() : new ArrayList<Reference>()) {
       ReferenceData.Builder builder = new ReferenceData.Builder();
-      builder.objectName(item.getTriggerName()).objectType(ReferenceObjectType.FILTER.toString()).path(reference.getPath())
-      .referenceType(reference.getType()).workspaceName(workspaceName);
+      builder.objectName(item.getFilterName()).objectType(ReferenceObjectType.FILTER.toString()).path(reference.getPath())
+          .referenceType(reference.getType()).workspaceName(workspaceName);
       ReferenceManagement.addReference(builder.instance());
     }
     // create filter
@@ -368,8 +368,8 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
     }
     try {
       List<File> jarFilesList = copyToSavedIfNecessary(jarFilesArray, item.getFQFilterClassName(), revision);
-      xynaActivation.getActivationTrigger().addFilter(item.getFilterName(), jarFilesList.toArray(new File[jarFilesList.size()]),
-                                                      item.getFQFilterClassName(), item.getTriggerName(), sharedLibs, null, revision);
+      getXynaActivation().getActivationTrigger().addFilter(item.getFilterName(), jarFilesList.toArray(new File[jarFilesList.size()]),
+                                                           item.getFQFilterClassName(), item.getTriggerName(), sharedLibs, null, revision);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
