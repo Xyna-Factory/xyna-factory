@@ -19,7 +19,7 @@
 
 package pkg;
 
-//import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.Test;  // if Junit 5 is used?
 import static org.junit.Assert.assertEquals;
 
 import java.io.BufferedReader;
@@ -49,14 +49,12 @@ public class YangTest1 {
   public static Logger _logger = Logger.getLogger(YangTest1.class);
 
   
-  public String readFile_v2(String filename) {
+  public String readFile(String filename) {
     try {
       String line;
       StringBuilder builder = new StringBuilder("");
       BufferedReader f = new BufferedReader(
-             //new InputStreamReader(new FileInputStream(filename)));
            new InputStreamReader(new FileInputStream(filename), "UTF8"));
-                                            //new FileReader(filename));
       try {
         while ((line = f.readLine()) != null) {
           builder.append(line).append("\n");
@@ -69,14 +67,14 @@ public class YangTest1 {
     }
     catch (Exception e) {
       throw new RuntimeException(e);
-      //e.printStackTrace();
     }
   }
 
+  
   @Test
   public void testXml_1() throws Exception {
     try {
-      String txt = readFile_v2("mdmimpl/YangAppGenerationImpl/src_test/data/cap_zb_1.xml");
+      String txt = readFile("mdmimpl/YangAppGenerationImpl/src_test/data/cap_zb_1.xml");
       _logger.info(txt);
       Document doc = XMLUtils.parseString(txt, true);
       Element elem = XMLUtils.getChildElementByName(doc.getDocumentElement(), Constants.TAG_CAPABILITIES, 
@@ -102,7 +100,7 @@ public class YangTest1 {
   @Test
   public void testXml_2() throws Exception {
     try {
-      String txt = readFile_v2("mdmimpl/YangAppGenerationImpl/src_test/data/cap_zb_2.xml");
+      String txt = readFile("mdmimpl/YangAppGenerationImpl/src_test/data/cap_zb_2.xml");
       _logger.info(txt);
     
       InputStream stream = new ByteArrayInputStream(txt.getBytes("UTF-8"));
@@ -133,7 +131,7 @@ public class YangTest1 {
   @Test
   public void testCap_1() throws Exception {
     try {
-      String txt = readFile_v2("mdmimpl/YangAppGenerationImpl/src_test/data/cap_zb_1.xml");
+      String txt = readFile("mdmimpl/YangAppGenerationImpl/src_test/data/cap_zb_1.xml");
       _logger.info(txt);
       Document doc = XMLUtils.parseString(txt, true);
       List<YangDeviceCapability> list = YangCapabilityUtils.loadCapabilitiesFromHelloMessage(doc.getDocumentElement());
@@ -151,7 +149,7 @@ public class YangTest1 {
   @Test
   public void testCap_2() throws Exception {
     try {
-      String txt = readFile_v2("mdmimpl/YangAppGenerationImpl/src_test/data/meta_zb_2.xml");
+      String txt = readFile("mdmimpl/YangAppGenerationImpl/src_test/data/meta_zb_2.xml");
       _logger.info(txt);
       List<YangDeviceCapability> list = YangCapabilityUtils.loadCapabilitiesImpl(List.of(txt));
       for (YangDeviceCapability cap : list) {
@@ -168,7 +166,7 @@ public class YangTest1 {
   @Test
   public void testCap_3() throws Exception {
     try {
-      String txt = readFile_v2("mdmimpl/YangAppGenerationImpl/src_test/data/meta_zb_3.xml");
+      String txt = readFile("mdmimpl/YangAppGenerationImpl/src_test/data/meta_zb_3.xml");
       _logger.info(txt);
       List<YangDeviceCapability> list = YangCapabilityUtils.loadCapabilitiesImpl(List.of(txt));
       for (YangDeviceCapability cap : list) {
@@ -185,7 +183,7 @@ public class YangTest1 {
   @Test
   public void testCap_4() throws Exception {
     try {
-      String txt = readFile_v2("mdmimpl/YangAppGenerationImpl/src_test/data/meta_zb_4.xml");
+      String txt = readFile("mdmimpl/YangAppGenerationImpl/src_test/data/meta_zb_4.xml");
       _logger.info(txt);
       List<YangDeviceCapability> list = YangCapabilityUtils.loadCapabilitiesImpl(List.of(txt));
       assertEquals(list.size(), 1);

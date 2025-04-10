@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
- *****************************************************
- * Copyright GIP Exyr GmbH 2015
- * (http://www.gip.com)
- *
- * Hechtsheimer Str. 35-37
- * 55131 Mainz
- *
- * $Revision: 212412 $
- * $Date: 2018-02-07 11:23:50 +0100 (Mi, 07. Feb 2018) $
- *****************************************************
- -->
 <Configuration status="INFO">
   <Appenders>
     <Console name="Console" target="SYSTEM_OUT">
