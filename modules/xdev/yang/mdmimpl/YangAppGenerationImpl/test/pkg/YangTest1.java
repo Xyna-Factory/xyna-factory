@@ -184,8 +184,6 @@ public class YangTest1 {
   @Test
   public void testCap_4() throws Exception {
     try {
-      //String txt = readFile("mdmimpl/YangAppGenerationImpl/test/data/meta_zb_4.xml");
-      //String txt = readFile("../data/meta_zb_4.xml");
       String txt = getDataFile("meta_zb_4.xml");
       log(txt);
       List<YangDeviceCapability> list = YangCapabilityUtils.loadCapabilitiesImpl(List.of(txt));
