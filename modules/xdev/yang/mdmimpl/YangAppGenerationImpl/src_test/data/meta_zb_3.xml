@@ -7,7 +7,6 @@
        <name>misc-modules</name>
        <module>
          <name>misc</name>
-         <revision>2018-02-20</revision>
          <namespace>http://www.gip.com/xyna/yang/test/testrpc_zb_3</namespace>
        </module>
      </module-set>
