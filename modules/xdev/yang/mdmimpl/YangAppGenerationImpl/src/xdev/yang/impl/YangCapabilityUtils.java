@@ -132,12 +132,12 @@ public class YangCapabilityUtils {
   public static List<YangDeviceCapability> loadCapabilitiesImpl(List<String> unknownMetaTags) {
     Document deviceMeta = loadDeviceMeta(unknownMetaTags);
 
-    Element helloElement = XMLUtils.getChildElementByName(deviceMeta.getDocumentElement(), Constants.TAG_HELLO, 
+    Element helloElement = XMLUtils.getChildElementByName(deviceMeta.getDocumentElement(), Constants.TAG_HELLO,
                                                           Constants.NETCONF_NS);
     if (helloElement != null) {
       return loadCapabilitiesFromHelloMessage(helloElement);
     } else {
-      Element libElem = XMLUtils.getChildElementByName(deviceMeta.getDocumentElement(), Constants.TAG_YANG_LIBRARY, 
+      Element libElem = XMLUtils.getChildElementByName(deviceMeta.getDocumentElement(), Constants.TAG_YANG_LIBRARY,
                                                        Constants.YANG_LIB_NS);
       if (libElem == null) {
         throw new IllegalArgumentException("Could not find capabilities in xml string");

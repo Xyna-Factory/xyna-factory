@@ -17,7 +17,6 @@
  */
 
 
-
 package pkg;
 
 //import org.junit.jupiter.api.Test;
@@ -43,6 +42,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 import xdev.yang.impl.Constants;
 import xdev.yang.impl.YangCapabilityUtils;
 import xdev.yang.impl.YangCapabilityUtils.YangDeviceCapability;
+
 
 public class YangTest1 {
 
