@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,9 @@
 
     <target name="prepareLibs" description="Prepare Libs">
         <ant antfile="build.xml" target="build" inheritAll="false" dir="${root.dir}/modules/xmcp/zetaFramework/sharedlib/ZetaTools">
+            <property name="target.dir" value="${basedir}/lib/xyna" />
+        </ant>
+        <ant antfile="build.xml" target="build" inheritAll="false" dir="${root.dir}/modules/xmcp/guihttp/sharedlib/XynaObjectJsonBuilder">
             <property name="target.dir" value="${basedir}/lib/xyna" />
         </ant>
     </target>

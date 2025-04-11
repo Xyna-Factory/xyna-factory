@@ -412,25 +412,6 @@
 			</else>
 		</if>
 
-		<if>
-			<isset property="svn.tag" />
-			<then>
-				<replace file="${xservercon.dir}/src/com/gip/xyna/blackedition/ApplicationVersionManagement.as"
-                     token="LOCAL_SVN_TAG"
-                     value="${svn.tag}"/>
-				<echo message="SVN tag: ${svn.tag}"/>
-			</then>
-		</if>
-
-		<if>
-			<isset property="svn.branch" />
-			<then>
-				<replace file="${xservercon.dir}/src/com/gip/xyna/blackedition/ApplicationVersionManagement.as"
-                     token="LOCAL_SVN_BRANCH"
-                     value="${svn.branch}"/>
-				<echo message="SVN branch: ${svn.branch}"/>
-			</then>
-		</if>
 	</then>
 </if>
 
@@ -851,9 +832,6 @@
 			<include name="**.sh"/>
 		</fileset>
 	</copy>
-	<exec executable="svn" failonerror="true">
-		<arg line="export ${func_lib.svn.url} ${build.dir}/func_lib" />
-	</exec>
 	<replace file="${build.dir}/func_lib/func_lib.sh"
                token="TOKEN_RELEASE_NUMBER"
                value="${release.number}" />

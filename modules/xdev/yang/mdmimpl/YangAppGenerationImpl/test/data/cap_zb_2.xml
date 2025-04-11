@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nsp:hello xmlns:nsp="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <nsp:capabilities>
+    <nsp:capability>http://www.gip.com/xyna/yang/test/testrpc_zb_2</nsp:capability>
+  </nsp:capabilities>
+  <nsp:session-id>1234</nsp:session-id>
+</nsp:hello>
