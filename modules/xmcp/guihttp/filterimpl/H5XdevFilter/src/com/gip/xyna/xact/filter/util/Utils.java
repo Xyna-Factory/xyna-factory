@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
  */
 package com.gip.xyna.xact.filter.util;
 
+
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -32,12 +34,14 @@ import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.misc.JsonBuilder;
 import com.gip.xyna.utils.misc.JsonParser;
 import com.gip.xyna.utils.misc.JsonParser.InvalidJSONException;
 import com.gip.xyna.utils.misc.JsonParser.UnexpectedJSONContentException;
 import com.gip.xyna.xact.filter.H5XdevFilter;
+import com.gip.xyna.xact.filter.json.RuntimeContextJson;
 import com.gip.xyna.xact.filter.session.GenerationBaseObject;
 import com.gip.xyna.xact.filter.session.cache.CachedXynaObjectJsonBuilder;
 import com.gip.xyna.xact.filter.session.cache.CachedXynaObjectVisitor;
@@ -46,10 +50,10 @@ import com.gip.xyna.xact.filter.session.cache.JsonVisitorCache;
 import com.gip.xyna.xact.filter.session.gb.StepMap;
 import com.gip.xyna.xact.filter.session.gb.StepMap.RecursiveVisitor;
 import com.gip.xyna.xact.filter.util.xo.GenericResult;
-import com.gip.xyna.xact.filter.util.xo.ListTypeAwareVistor;
 import com.gip.xyna.xact.filter.util.xo.Util;
 import com.gip.xyna.xact.filter.util.xo.XynaObjectJsonBuilder;
 import com.gip.xyna.xact.filter.util.xo.XynaObjectVisitor;
+import com.gip.xyna.xact.filter.xmom.workflows.enums.Tags;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
@@ -60,41 +64,48 @@ import com.gip.xyna.xmcp.SharedLib;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.selection.parsing.ArchiveIdentifier;
 import com.gip.xyna.xnwh.selection.parsing.SearchRequestBean;
+import com.gip.xyna.xprc.exceptions.XPRC_InvalidPackageNameException;
 import com.gip.xyna.xprc.exceptions.XPRC_OperationUnknownException;
+import com.gip.xyna.xprc.exceptions.XPRC_XmlParsingException;
 import com.gip.xyna.xprc.xfractwfe.generation.AVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.DOM;
+import com.gip.xyna.xprc.xfractwfe.generation.DOM.OperationInformation;
 import com.gip.xyna.xprc.xfractwfe.generation.DatatypeVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
-import com.gip.xyna.xprc.xfractwfe.generation.DOM.OperationInformation;
+import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.ScopeStep;
+import com.gip.xyna.xprc.xfractwfe.generation.ScopeStep.VariableIdentification;
 import com.gip.xyna.xprc.xfractwfe.generation.Service;
 import com.gip.xyna.xprc.xfractwfe.generation.ServiceVariable;
-import com.gip.xyna.xprc.xfractwfe.generation.ScopeStep.VariableIdentification;
 import com.gip.xyna.xprc.xfractwfe.generation.Step;
 import com.gip.xyna.xprc.xfractwfe.generation.StepFunction;
 import com.gip.xyna.xprc.xfractwfe.generation.StepParallel;
 import com.gip.xyna.xprc.xfractwfe.generation.StepSerial;
 import com.gip.xyna.xprc.xfractwfe.generation.WF;
 import com.gip.xyna.xprc.xfractwfe.generation.WF.WFStep;
+import com.gip.xyna.xprc.xprcods.workflowdb.WorkflowDatabase;
 
 import xmcp.processmodeller.datatypes.Error;
 import xmcp.processmodeller.datatypes.ErrorKeyValuePair;
 
+
+
 public class Utils {
-  
+
   public static final Integer MAX_RECURSIVE_PARENT_SEARCH = 1000;
-  
   private static final Logger logger = CentralFactoryLogging.getLogger(Utils.class);
-  
   public static final String APP_NAME = "GuiHttp";
-  
-  private static final RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
-  
+  private static final RevisionManagement revisionManagement =
+      XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
   private static final JsonBuilderCache builderCache = new JsonBuilderCache();
-  
   private static final JsonVisitorCache visitorCache = new JsonVisitorCache();
-  
+  public static final String EXCEPTION_BASE_TYPE = "core.exception.XynaException";
+  public static final String EXCEPTION_BASE_TYPE_GUI = "core.exception.XynaExceptionBase";
+
+
   private Utils() {
     // nothing
   }
@@ -113,18 +124,18 @@ public class Utils {
     OperationInformation[] operationInformations = dom.collectOperationsOfDOMHierarchy(true);
     return operationInformations[index].getOperation();
   }
-  
+
   public static Integer getOperationIndex(Operation operation) {
     OperationInformation[] operationInformations = operation.getParent().collectOperationsOfDOMHierarchy(true);
     for (int i = 0; i < operationInformations.length; i++) {
-      if(operationInformations[i].getOperation().getParent().equals(operation.getParent()) 
+      if(operationInformations[i].getOperation().getParent().equals(operation.getParent())
           && operationInformations[i].getOperation().equals(operation)) {
         return i;
       }
     }
     return null;
   }
-  
+
   public static RuntimeContext getGuiHttpRtc() {
     ApplicationManagementImpl am = (ApplicationManagementImpl)XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getApplicationManagement();
     String highestRunningVersion = am.getHighestVersion(APP_NAME, true);
@@ -133,7 +144,7 @@ public class Utils {
     }
     return new Application(APP_NAME, highestRunningVersion);
   }
-  
+
   public static String xoToJson(GeneralXynaObject generalXynaObject) {
     try {
       return xoToJson(generalXynaObject, getGuiHttpRevision());
@@ -141,35 +152,35 @@ public class Utils {
       throw new RuntimeException(e);
     }
   }
-  
+
   public static String xoToJson(GeneralXynaObject generalXynaObject, long revision) {
     StringWriter writer = new StringWriter();
     JsonBuilder jsonBuilder = new JsonBuilder(writer);
-    XynaObjectJsonBuilder builder = H5XdevFilter.USE_CACHE.get() ? 
-      new CachedXynaObjectJsonBuilder(revision, jsonBuilder, builderCache, visitorCache) : 
+    XynaObjectJsonBuilder builder = H5XdevFilter.USE_CACHE.get() ?
+      new CachedXynaObjectJsonBuilder(revision, jsonBuilder, builderCache, visitorCache) :
       new XynaObjectJsonBuilder(revision, jsonBuilder);
     builder.build(generalXynaObject);
     return writer.toString();
   }
-  
+
   public static String xoToJson(GeneralXynaObject generalXynaObject, long revision, long[] backupRevisions) {
     StringWriter writer = new StringWriter();
     JsonBuilder jsonBuilder = new JsonBuilder(writer);
-    XynaObjectJsonBuilder builder = H5XdevFilter.USE_CACHE.get() ? 
-        new CachedXynaObjectJsonBuilder(revision, backupRevisions, jsonBuilder, builderCache, visitorCache) : 
+    XynaObjectJsonBuilder builder = H5XdevFilter.USE_CACHE.get() ?
+        new CachedXynaObjectJsonBuilder(revision, backupRevisions, jsonBuilder, builderCache, visitorCache) :
         new XynaObjectJsonBuilder(revision, backupRevisions, jsonBuilder);
     builder.build(generalXynaObject);
-    return writer.toString();    
+    return writer.toString();
   }
-  
+
   public static Long getRtcRevision(RuntimeContext rtc) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
     return revisionManagement.getRevision(rtc);
   }
-  
+
   public static Long getWorkspaceRtcRevision(String workspace) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
     return revisionManagement.getRevision(null, null, workspace);
   }
-  
+
   public static xmcp.processmodeller.datatypes.RuntimeContext getModellerRtc(Long revision) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY{
     RuntimeContext context = revisionManagement.getRuntimeContext(revision);
     if(context instanceof Application) {
@@ -204,7 +215,7 @@ public class Utils {
   public static GeneralXynaObject convertJsonToGeneralXynaObjectUsingGuiHttp(String json) {
     long revision = -1;
     try {
-      revision = Utils.getGuiHttpRevision();
+      revision = getGuiHttpRevision();
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       throw new RuntimeException(e.getMessage(), e);
     }
@@ -212,7 +223,7 @@ public class Utils {
     return convertJsonToGeneralXynaObject(json, revision);
   }
 
-  
+
   public static AVariable convertJsonToAVariable(String json, long revision) {
     if (json == null) {
       return null;
@@ -228,7 +239,7 @@ public class Utils {
       throw new RuntimeException(e.getMessage(), e);
     }
   }
-  
+
 
   public static GeneralXynaObject convertJsonToGeneralXynaObject(String json) {
     return convertJsonToGeneralXynaObject(json, null);
@@ -250,24 +261,24 @@ public class Utils {
       throw new RuntimeException(e.getMessage(), e);
     }
   }
-  
+
   public static Error error(String message) {
     Error e = new Error();
     e.setMessage(message);
     return e;
   }
-  
+
   public static Error error(XynaException[] xynaExceptions) {
     return error(xynaExceptions[0]);
   }
-  
+
   public static Error error(String message, Throwable throwable) {
     Error error = error(throwable);
     error.setMessage(message);
     return error;
   }
 
- 
+
   public static Error error(Throwable throwable) {
     logError(throwable);
     Error error = new Error();
@@ -275,26 +286,26 @@ public class Utils {
     if( throwable instanceof XynaException ) {
       error.setErrorCode(((XynaException)throwable).getCode());
     }
-    
+
     StringBuilder sb = new StringBuilder();
     appendException(sb, throwable);
     error.addToParams(new ErrorKeyValuePair("stackTrace", sb.toString()));
     return error;
   }
-  
+
   public static void logError(Throwable throwable) {
     logError(throwable.getMessage(), throwable);
   }
-  
+
   public static void logError(String msg, Throwable throwable) {
     if (logger.isTraceEnabled()) {
       if (throwable == null) {
-        logger.trace(msg); 
+        logger.trace(msg);
       } else {
         logger.trace(msg, throwable);
       }
     } else if (logger.isDebugEnabled()) {
-      logger.debug(msg); 
+      logger.debug(msg);
     }
   }
 
@@ -309,11 +320,11 @@ public class Utils {
       sb.append("null");
     }
   }
-  
+
   public static Long getGuiHttpRevision() throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
     return revisionManagement.getRevision(getGuiHttpRtc());
   }
-  
+
   /**
    * if lane has no child steps then remove it from wrapping stepParallel and check stepParallel validity
    */
@@ -331,7 +342,7 @@ public class Utils {
     StepParallel stepParallel = (StepParallel)wraper;
     List<Step> lanes = stepParallel.getChildSteps();
     lanes.remove(lane);
-    
+
     removeWrapperIfSingleLane(gbo.getStepMap(), stepParallel);
   }
 
@@ -418,18 +429,18 @@ public class Utils {
   private static class FindGlobalConstVarVisitor extends RecursiveVisitor{
     private AVariable result;
     private String idToFind;
-    
-    
+
+
     public FindGlobalConstVarVisitor(String idToFind) {
       this.idToFind = idToFind;
     }
-    
+
     @Override
     public void visit(Step step) {
-      
+
       if(!(step instanceof ScopeStep))
         return;
-      
+
       try {
         VariableIdentification vi = ((ScopeStep)step).identifyVariable(idToFind);
         result = vi.getVariable();
@@ -437,66 +448,66 @@ public class Utils {
       catch(Exception e) {
         //variable may be in a different scope
       }
-      
+
     }
 
     @Override
     public boolean beforeRecursion(Step parent, Collection<Step> children) {
       return true;
     }
-    
-    
+
+
     public AVariable getResult() {
       return result;
     }
-    
+
   }
-  
+
   public static AVariable getGlobalConstVar(String id, Step wfStep) {
     AVariable result = null;
     FindGlobalConstVarVisitor visitor = new FindGlobalConstVarVisitor(id);
-    
+
     wfStep.visit(visitor);
-    
+
     result = visitor.getResult();
-    
+
     if(result == null) {
       throw new RuntimeException("Global id '" + id + "' not found.");
     }
-    
-      
+
+
     return result;
   }
-  
+
   public static void updateScopeOfSubSteps(Step step) {
     RecursiveVisitor v = new RecursiveVisitor() {
-      
+
       private ScopeStep scope = step.getParentScope();
-      
+
       @Override
       public void visit(Step step) {
         step.setParentScope(scope);
         logger.debug("updated Scope of " + step + " to " + scope);
       }
-      
+
       @Override
       public void visitScopeStep(ScopeStep step) {
         //stop here - do not update beyond this step
         step.setParentScope(scope);
         logger.debug("stop updating scopes. we found a ScopeStep: " + step);
       }
-      
-      
+
+
       @Override
       public boolean beforeRecursion(Step parent, Collection<Step> children) {
         return true;
       }
     };
-    
+
     step.visit(v);
   }
-  
-  
+
+
   public static boolean variableExists(AVariable avar) {
 
     if (avar == null) {
@@ -514,15 +525,15 @@ public class Utils {
 
     return true;
   }
-  
-  
+
+
   public static boolean isValidWorkflowReference(DOM dom, Operation operation, WF wf) {
 
     List<DomOrExceptionGenerationBase> operationInputs =  new ArrayList<DomOrExceptionGenerationBase>();
     List<DomOrExceptionGenerationBase> operationOutputs = new ArrayList<DomOrExceptionGenerationBase>();
     List<DomOrExceptionGenerationBase> wfInputs = new ArrayList<DomOrExceptionGenerationBase>();
     List<DomOrExceptionGenerationBase> wfOutputs = new ArrayList<DomOrExceptionGenerationBase>();
-    
+
     operationInputs.add(dom);
     for (AVariable var : operation.getInputVars()) {
       operationInputs.add(var.getDomOrExceptionObject());
@@ -539,11 +550,11 @@ public class Utils {
     for (AVariable var : wf.getOutputVars()) {
       wfOutputs.add(var.getDomOrExceptionObject());
     }
-    
+
     if (operationInputs.size() != wfInputs.size() || operationOutputs.size() != wfOutputs.size()) {
       return false;
     }
-    
+
     for (int i = 0; i < operationInputs.size(); i++) {
       DomOrExceptionGenerationBase operationInput = operationInputs.get(i);
       DomOrExceptionGenerationBase wfInput = wfInputs.get(i);
@@ -561,10 +572,10 @@ public class Utils {
         return false;
       }
     }
-    
+
     return true;
   }
-  
+
   public static  List<AVariable> getServiceInputVars(StepFunction step) {
     Service service = step.getService();
     if (service.getWF() != null) {
@@ -655,7 +666,7 @@ public class Utils {
       return numberPattern.matcher(string).matches();
     }
   }
-  
+
   public static SearchRequestBean createReferencesSearchRequestBean(String selection, HashMap<String, String> filters) {
     SearchRequestBean srb = new SearchRequestBean();
     srb.setArchiveIdentifier(ArchiveIdentifier.xmomcache);
@@ -665,6 +676,101 @@ public class Utils {
       srb.setFilterEntries(filters);
     }
     return srb;
+  }
+
+
+  public static void writeMetaData(JsonBuilder jb, String fqn, boolean includeRtc) {
+    jb.addObjectAttribute(Tags.META); {
+      jb.addStringAttribute(Tags.FQN, fqn);
+
+      if (includeRtc) {
+        jb.addObjectAttribute(Tags.RTC); {
+          getRtcXmomContainers().toJson(jb);
+        } jb.endObject();
+      }
+    } jb.endObject();
+  }
+
+
+  private static RuntimeContextJson getRtcXmomContainers() {
+    return new RuntimeContextJson(getGuiHttpRtc());
+  }
+
+
+  public static Set<GenerationBase> getSubTypes(String fqn, GenerationBaseCache commonCache, Long rootRev) throws XPRC_InvalidPackageNameException, Ex_FileAccessException, XPRC_XmlParsingException {
+    if (!fqn.equals(DatatypeVariable.ANY_TYPE)) {
+      DomOrExceptionGenerationBase gb = (DomOrExceptionGenerationBase)GenerationBase.getOrCreateInstance(fqn, commonCache, rootRev);
+      return gb.getSubTypes(commonCache);
+    }
+
+    // get all data types and exception types
+    WorkflowDatabase workflowDatabase = XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getWorkflowDatabase();
+
+    // filter out the ones that are visible from the given RTC
+
+    Set<GenerationBase> subTypes = new HashSet<>();
+    Set<Long> visibleRevs = new HashSet<>();
+    visibleRevs.add(rootRev);
+    XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement().getDependenciesRecursivly(rootRev, visibleRevs);
+
+    HashMap<Long, List<String>> dtsByRev = workflowDatabase.getDeployedDatatypes();
+    for (long rev : dtsByRev.keySet()) {
+      if (visibleRevs.contains(rev)) {
+        for (String visibleFqn : dtsByRev.get(rev)) {
+          if (isExcludedType(visibleFqn) ) {
+            continue;
+          }
+
+          try {
+            DOM dom = DOM.getOrCreateInstance(visibleFqn, commonCache, rev);
+            dom.parseGeneration(true /*deployed*/, false, false);
+            subTypes.add(dom);
+          } catch (Exception e) {
+            logger.warn("Could not parse type " + visibleFqn, e);
+          }
+        }
+      }
+    }
+
+    HashMap<Long, List<String>> exceptionsByRev = workflowDatabase.getDeployedExceptions();
+    for (long rev : exceptionsByRev.keySet()) {
+      if (visibleRevs.contains(rev)) {
+        for (String visibleFqn : exceptionsByRev.get(rev)) {
+          if (isExcludedType(visibleFqn) ) {
+            continue;
+          }
+
+          try {
+            ExceptionGeneration exceptionGeneration = ExceptionGeneration.getOrCreateInstance(visibleFqn, commonCache, rev);
+            exceptionGeneration.parseGeneration(true /*deployed*/, false, false);
+            subTypes.add(exceptionGeneration);
+          } catch (Exception e) {
+            logger.warn("Could not parse type " + visibleFqn, e);
+          }
+        }
+      }
+    }
+
+    return subTypes;
+  }
+
+
+  public static boolean isSubtypeOf(String fqnSubClass, String fqnSuperClass, Long rootRev) throws XPRC_InvalidPackageNameException, Ex_FileAccessException, XPRC_XmlParsingException {
+    Set<GenerationBase> subTypes = getSubTypes(fqnSuperClass, new GenerationBaseCache(), rootRev);
+    for (GenerationBase subType : subTypes) {
+      if (subType.getOriginalFqName().equals(fqnSubClass)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+
+  public static boolean isExcludedType(String fqn) {
+    return GenerationBase.CORE_EXCEPTION.equals(fqn) ||
+        EXCEPTION_BASE_TYPE.equals(fqn) ||
+        EXCEPTION_BASE_TYPE_GUI.equals(fqn);
   }
 
 }
