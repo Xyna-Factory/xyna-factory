@@ -154,6 +154,7 @@
       <Mapping>%5%.children["2"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%3%</Mapping>
       <Mapping>%5%.children["3"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%4%</Mapping>
       <Mapping>%5%.label=%0%.yangPath</Mapping>
+      <Mapping>%5%.closable="true"</Mapping>
     </Mappings>
     <Choice ID="3836" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="109"/>
