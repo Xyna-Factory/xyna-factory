@@ -54,6 +54,11 @@
                 </fileset>
             </classpath>
         </javaCompile>
+        <copy todir="${basedir}/classes" flatten="false">
+          <fileset dir="${basedir}/src/main/resources">
+            <include name="**/*.mustache"/>
+          </fileset>
+        </copy>
         <jar destfile="${target.dir}/${lib.name}-${release.number}.jar">
             <manifest>
                 <attribute name="Vendor" value="${vendor.name}" />
@@ -62,6 +67,7 @@
             </manifest>
             <fileset dir="${basedir}/classes">
                 <include name="**/*.class" />
+                <include name="**/*.mustache" />
             </fileset>
         </jar>
 
