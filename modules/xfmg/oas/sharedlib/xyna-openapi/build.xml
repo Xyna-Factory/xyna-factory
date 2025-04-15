@@ -30,29 +30,6 @@
     <import file="${root.dir}/installation/build/buildSharedLib.xml" />
 
     <target name="prepareLibs" description="prepareLibs">
-      <!--
-      <exec executable="mvn" failonerror="true">
-        <arg value="package"/>
-      </exec>
-      -->
-      <!--<resolve pomFile="${basedir}/pom.xml"/>
-      <mvn-install pomFile="${basedir}/pom.xml" />-->
-
-      <!--
-      <copy todir="${target.dir}">
-        <fileset dir="${basedir}/../target/" />
-      </copy>
-
-      <copy todir="${target.dir}">
-        <fileset dir="${basedir}/generator-utils/target">
-          <include name="*.jar" />
-        </fileset>
-      </copy>
-      -->
-      <!--
-      <delete dir="${target.dir}" />
-      <mkdir dir="${target.dir}" />
-      -->
       <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/generator-utils/">
         <property name="target.dir" value="${target.dir}" />
         <property name="base.lib.dir" value="${basedir}/lib" />
