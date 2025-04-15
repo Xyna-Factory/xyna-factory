@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Module Explorer Rtc Definition" TypeName="ModuleExplorerRtcDefinition" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Module Explorer Rtc Definition" Name="ModuleExplorerRtcDefinition">
+    <Input/>
+    <Output>
+      <Data ID="248" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition248"/>
+    </Output>
+    <ServiceReference ID="600" Label="Module Explorer Workspace Definition" ReferenceName="ModuleExplorerWorkspaceDefinition" ReferencePath="xmcp.yang.fman">
+      <Source RefID="599"/>
+      <Target RefID="599"/>
+    </ServiceReference>
+    <ServiceReference ID="496" Label="Module Explorer App Definition" ReferenceName="ModuleExplorerAppDefinition" ReferencePath="xmcp.yang.fman">
+      <Source RefID="495"/>
+      <Target RefID="495"/>
+    </ServiceReference>
+    <Function ID="599" Label="Module Explorer Workspace Definition">
+      <Source RefID="600"/>
+      <Target RefID="600"/>
+      <Target RefID="602"/>
+      <Invoke Operation="ModuleExplorerWorkspaceDefinition" ServiceID="600"/>
+      <Receive ServiceID="600">
+        <Target RefID="602"/>
+      </Receive>
+    </Function>
+    <Function ID="495" Label="Module Explorer App Definition">
+      <Source RefID="496"/>
+      <Target RefID="496"/>
+      <Target RefID="498"/>
+      <Invoke Operation="ModuleExplorerAppDefinition" ServiceID="496"/>
+      <Receive ServiceID="496">
+        <Target RefID="498"/>
+      </Receive>
+    </Function>
+    <Mappings ID="197" Label="Mapping">
+      <Input>
+        <Data ID="397" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition397">
+          <Source RefID="197"/>
+        </Data>
+        <Source RefID="602">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="523" Label="Table Panel Definition 2" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition523">
+          <Source RefID="197"/>
+        </Data>
+        <Source RefID="498">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="214" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition214">
+          <Source RefID="197"/>
+        </Data>
+        <Target RefID="215"/>
+      </Output>
+      <Mapping>%2%.label="Module Explorer: Select Runtime Context"</Mapping>
+      <Mapping>%2%.children["0"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%0%</Mapping>
+      <Mapping>%2%.children["1"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%1%</Mapping>
+      <Mapping>%2%.closable="true"</Mapping>
+    </Mappings>
+    <Data ID="215" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition215">
+      <Source RefID="197"/>
+    </Data>
+    <Data ID="498" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition498">
+      <Source RefID="495"/>
+    </Data>
+    <Data ID="602" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition602">
+      <Source RefID="599"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="215"/>
+      <Target RefID="248"/>
+      <Copy>
+        <Source RefID="215">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="248"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

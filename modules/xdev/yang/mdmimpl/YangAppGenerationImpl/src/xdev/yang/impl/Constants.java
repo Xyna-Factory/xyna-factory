@@ -41,6 +41,11 @@ public class Constants {
 
   public static final String ATT_LIST_CONFIG_DYNAMIC_VARIABLE = "variable";
   public static final String ATT_LIST_CONFIG_DYNAMIC_PATH = "path";
+  
+  public static final String ATT_ANYXMLCONFIG_YANG = "yang";
+  public static final String ATT_ANYXMLCONFIG_NAMESPACES = "namespaces";
+  public static final String ATT_ANYXMLCONFIG_TAG = "tag";
+  public static final String ATT_ANYXMLCONFIG_NAMESPACE = "namespace";
 
   public static final String TAG_YANG = "Yang";
   public static final String TAG_RPC = "Rpc";
@@ -50,6 +55,9 @@ public class Constants {
   public static final String TAG_MAPPING = "Mapping";
   public static final String TAG_SIGNATURE = "Signature";
   public static final String TAG_SIGNATURE_ENTRY = "SignatureEntry";
+  
+  public static final String TAG_ANYXMLCONFIGS = "AnyXmlConfigurations";
+  public static final String TAG_ANYXMLCONFIG = "AnyXmlConfiguration";
 
   public static final String TAG_LISTCONFIGS = "ListConfigurations";
   public static final String TAG_LISTCONFIG = "ListConfiguration";
@@ -103,6 +111,9 @@ public class Constants {
   public static final String NETCONF_NS = "urn:ietf:params:xml:ns:netconf:base:1.0";
   public static final String NETCONF_BASE_CAPABILITY_NO_VERSION = "urn:ietf:params:netconf:base:";
   public static final String NETCONF_CAPABILITY_URL = "urn:ietf:params:netconf:capability:";
+  
+  // from RFC 8525
+  public static final String YANG_LIB_NS = "urn:ietf:params:xml:ns:yang:ietf-yang-library";
 
   /* from RFC 7950;
      schema node: A node in the schema tree.  One of action, container,

@@ -164,5 +164,44 @@
         <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadListConfiguration(correlatedXynaOrder, loadYangAssignmentsData34);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Load Workspace List" Name="loadWorkspaceList">
+      <Input/>
+      <Output>
+        <Data ID="37" IsList="true" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace37"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadWorkspaceList();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Load Application List" Name="loadApplicationList">
+      <Input/>
+      <Output>
+        <Data ID="38" IsList="true" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application38"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadApplicationList();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Load Modules" Name="loadModules">
+      <Input>
+        <Data ID="39" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext39"/>
+      </Input>
+      <Output>
+        <Data ID="40" IsList="true" Label="Yang Module Details" ReferenceName="YangModuleDetails" ReferencePath="xdev.yang.datatypes" VariableName="yangModuleDetails40"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadModules(runtimeContext39);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Configure Anyxml Substantement" Name="configureAnyxmlSubstantement" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="41" Label="Load Yang Assignments Data" ReferenceName="LoadYangAssignmentsData" ReferencePath="xmcp.yang" VariableName="loadYangAssignmentsData41"/>
+        <Data ID="42" Label="AnyXml Substatement Configuration" ReferenceName="AnyXmlSubstatementConfiguration" ReferencePath="xmcp.yang.fman" VariableName="anyXmlSubstatementConfiguration42"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.configureAnyxmlSubstantement(correlatedXynaOrder, loadYangAssignmentsData41, anyXmlSubstatementConfiguration42);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

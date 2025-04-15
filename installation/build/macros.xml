@@ -343,7 +343,7 @@
                     <property name="command" value="cd ${server.path}; echo workingset" />
                 </then>
                 <else>
-                    <property name="command" value="cd ${server.path}; ./xynafactory.sh printrevision -workspaceName '@{workspacename}'" />
+                    <property name="command" value="cd ${server.path}; ./xynafactory.sh printrevision -workspaceName '@{workspacename}' | xargs echo -n" />
                 </else>
             </if>
             <custom-ssh-exec host="${server.host}" username="${server.userid}" command="${command}" outputproperty="@{outputproperty}" />

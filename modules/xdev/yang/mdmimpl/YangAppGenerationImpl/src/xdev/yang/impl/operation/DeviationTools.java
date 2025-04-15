@@ -33,6 +33,9 @@ import xmcp.yang.LoadYangAssignmentsData;
 
 public class DeviationTools {
 
+  private PathTools _pathTools = new PathTools();
+  
+  
   public DeviationList filterByPath(DeviationList list, SchemaNodePath path) {
     List<Deviation> filtered = new ArrayList<>();
     for (Deviation dev : list.getDeviations()) {
@@ -70,24 +73,12 @@ public class DeviationTools {
       String localname = path.getLocalnameList().get(i);
       String namespace = path.getNamespaceList().get(i);
       if (!namespace.equals(devNamespace)) { return false; }
-      if (!identifiersAreEqual(localname, devLocalname)) { return false; }
+      if (!_pathTools.identifiersAreEqual(localname, devLocalname)) { return false; }
     }
     return true;
   }
   
   
-  protected boolean identifiersAreEqual(String id1, String id2) {
-    return removeOptionalPrefix(id1).equals(removeOptionalPrefix(id2));
-  }
-  
-  
-  protected String removeOptionalPrefix(String id) {
-    if (id == null) { return ""; }
-    if (!id.contains(":")) { return id; }
-    return id.substring(id.indexOf(":") + 1);
-  }
-
-
   public void handleDeviationsForElement(DeviationList unfiltered, YangStatement node, 
                                          LoadYangAssignmentsData parentData,
                                          LoadYangAssignmentsData nodeData) {
@@ -99,7 +90,7 @@ public class DeviationTools {
     for (Deviation dev : deviationsFilteredByParent.getDeviations()) {
       String devLocalname = dev.getTargetPath().getLast().getLocalName();
       String devNamespace = dev.getTargetPath().getLast().getNamespace().toString();
-      if (identifiersAreEqual(localname, devLocalname) && namespace.equals(devNamespace)) {
+      if (_pathTools.identifiersAreEqual(localname, devLocalname) && namespace.equals(devNamespace)) {
         if (hasDeviateType(dev, DeviateType.NOT_SUPPORTED)) {
           nodeData.unversionedSetIsNotSupportedDeviation(true);
           return;
@@ -142,7 +133,7 @@ public class DeviationTools {
     for (Deviation dev : filtered.getDeviations()) {
       String devLocalname = dev.getTargetPath().getLast().getLocalName();
       String devNamespace = dev.getTargetPath().getLast().getNamespace().toString();
-      if (identifiersAreEqual(localname, devLocalname) && namespace.equals(devNamespace)) {
+      if (_pathTools.identifiersAreEqual(localname, devLocalname) && namespace.equals(devNamespace)) {
         if (hasDeviateType(dev, DeviateType.NOT_SUPPORTED)) {
           if (subinfo.length() < 1) { 
             subinfo.append("Deviation removed sub-elements: "); 
