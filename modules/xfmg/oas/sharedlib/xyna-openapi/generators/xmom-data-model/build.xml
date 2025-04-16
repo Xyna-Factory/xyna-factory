@@ -21,6 +21,7 @@
     <property name="lib.name" value="xmom-data-model-openapi-generator" />
     <property name="release.number" value="1.0.0" />
 
+    <property name="generator.utils.dir" value="${basedir}/../../generator-utils" />
     <!-- this is the absolute path to the root -->
     <pathconvert property="root.dir" >
         <path location="${basedir}/../../../../../../.."/>
@@ -59,6 +60,9 @@
             <include name="**/*.mustache"/>
           </fileset>
         </copy>
+        <ant antfile="build.xml" target="execJavaCompile" inheritAll="false" dir="${generator.utils.dir}">
+            <property name="classes.dir" value="${basedir}/classes" />
+        </ant>
         <jar destfile="${target.dir}/${lib.name}-${release.number}.jar">
             <manifest>
                 <attribute name="Vendor" value="${vendor.name}" />

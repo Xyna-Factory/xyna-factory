@@ -21,6 +21,7 @@
     <property name="lib.name" value="generator-utils" />
     <property name="release.number" value="1.0.0" />
 
+    <property name="classes.dir" value="${basedir}/classes" />
     <!-- this is the absolute path to the root -->
     <pathconvert property="root.dir" >
         <path location="${basedir}/../../../../../.."/>
@@ -33,11 +34,10 @@
         <available file="${basedir}/src" />
     </condition>
 
-    <target name="build" if="src.dir.available" depends="" description="build">
-        <delete dir="${basedir}/classes" />
-        <mkdir dir="${basedir}/classes" />
-        <javaCompile>
-            <classpath path="${basedir}/classes" />
+
+    <target name="execJavaCompile" if="src.dir.available" depends="" description="execJavaCompile">
+        <javaCompile destdir="${classes.dir}">
+            <classpath path="${classes.dir}" />
             <classpath>
                 <fileset dir="${base.lib.dir}" erroronmissingdir="false">
                     <include name="**/*.jar" />
@@ -54,6 +54,16 @@
                 </fileset>
             </classpath>
         </javaCompile>
+    </target>
+
+
+    <target name="cleanClassesDir" depends="" description="cleanClassesDir">
+        <delete dir="${basedir}/classes" />
+        <mkdir dir="${basedir}/classes" />
+    </target>
+
+
+    <target name="build" if="src.dir.available" depends="cleanClassesDir, execJavaCompile" description="build">
         <jar destfile="${target.dir}/${lib.name}-${release.number}.jar">
             <manifest>
                 <attribute name="Vendor" value="${vendor.name}" />
@@ -64,7 +74,6 @@
                 <include name="**/*.class" />
             </fileset>
         </jar>
-
     </target>
 
 </project>

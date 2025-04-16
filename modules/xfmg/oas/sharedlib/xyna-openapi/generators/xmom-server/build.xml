@@ -21,6 +21,7 @@
     <property name="lib.name" value="xmom-server-openapi-generator" />
     <property name="release.number" value="1.0.0" />
 
+    <property name="generator.utils.dir" value="${basedir}/../../generator-utils" />
     <!-- this is the absolute path to the root -->
     <pathconvert property="root.dir" >
         <path location="${basedir}/../../../../../../.."/>
@@ -54,6 +55,9 @@
                 </fileset>
             </classpath>
         </javaCompile>
+        <ant antfile="build.xml" target="execJavaCompile" inheritAll="false" dir="${generator.utils.dir}">
+            <property name="classes.dir" value="${basedir}/classes" />
+        </ant>
         <copy todir="${basedir}/classes" flatten="false">
           <fileset dir="${basedir}/src/main/resources">
             <include name="**/*.mustache"/>
