@@ -22,6 +22,9 @@
     <property name="release.number" value="1.0.0" />
 
     <property name="generator.utils.dir" value="${basedir}/../../generator-utils" />
+    <property name="tmp.metainf.dir" value="${basedir}/classes/meta_inf" />
+    <property name="tmp.metainf.services.dir" value="${tmp.metainf.dir}/services" />
+
     <!-- this is the absolute path to the root -->
     <pathconvert property="root.dir" >
         <path location="${basedir}/../../../../../../.."/>
@@ -55,13 +58,14 @@
                 </fileset>
             </classpath>
         </javaCompile>
-        <ant antfile="build.xml" target="execJavaCompile" inheritAll="false" dir="${generator.utils.dir}">
-            <property name="classes.dir" value="${basedir}/classes" />
-        </ant>
         <copy todir="${basedir}/classes" flatten="false">
           <fileset dir="${basedir}/src/main/resources">
             <include name="**/*.mustache"/>
           </fileset>
+        </copy>
+        <mkdir dir="${tmp.metainf.services.dir}" />
+        <copy todir="${tmp.metainf.services.dir}">
+          <filelist dir="${basedir}" files="org.openapitools.codegen.CodegenConfig" />
         </copy>
         <jar destfile="${target.dir}/${lib.name}-${release.number}.jar">
             <manifest>
@@ -73,8 +77,8 @@
                 <include name="**/*.class" />
                 <include name="**/*.mustache" />
             </fileset>
+            <metainf dir="${tmp.metainf.dir}" />
         </jar>
-
     </target>
 
 </project>
