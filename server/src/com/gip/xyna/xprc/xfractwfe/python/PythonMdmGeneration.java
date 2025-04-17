@@ -342,10 +342,10 @@ public class PythonMdmGeneration {
     sb.append("(");
     sb.append(PythonGeneration.convertToPythonFqn(info.parent));
     sb.append("):\n");
-    sb.append("  def __init__(self):\n");
-    sb.append("    super().__init__(\"");
-    sb.append(info.fqn); //original FQN
-    sb.append("\")\n");
+    sb.append("  def __init__(self, fqn");
+    typeHint(sb, ": str", typeHints);
+    sb.append(" = \"").append(info.fqn).append("\"):\n");
+    sb.append("    super().__init__(fqn)\n");
 
     if (info.members != null && !info.members.isEmpty()) {
       for (Pair<String, String> member : info.members) {

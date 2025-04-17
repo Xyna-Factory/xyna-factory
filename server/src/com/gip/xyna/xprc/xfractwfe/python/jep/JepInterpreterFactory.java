@@ -172,7 +172,18 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
       Class<? extends GeneralXynaObject> clazz = (Class<? extends GeneralXynaObject>) cl.loadClass(fqn);
       resultObj = clazz.getDeclaredConstructor().newInstance();
 
-      for (Field f : clazz.getDeclaredFields()) {
+      List<Field> allFields = new ArrayList<>(); 
+      if (!(resultObj instanceof XynaObject)) {
+        allFields = List.of(clazz.getDeclaredFields());
+      } else {
+        XynaObject xo = (XynaObject) resultObj;
+        for (Field f : getFieldsOfXynaObject(clazz)) {
+          if (xo.getVariableNames().contains(f.getName())) {
+            allFields.add(f);
+          }
+        }
+      }
+      for (Field f : allFields) {
         if (f.getModifiers() == 2) { // private members
           String fieldName = f.getName();
           String pyFieldName = mgmt.getPythonKeywords().contains(fieldName) ? fieldName + "_" : fieldName;
@@ -190,6 +201,22 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     return resultObj;
   }
 
+  
+  private List<Field> getFieldsOfXynaObject(Class<?> clazz) {
+    List<Field> ret = new ArrayList<>();
+    if (!XynaObject.class.isAssignableFrom(clazz)) {
+      return ret;
+    }
+    if (clazz.isAssignableFrom(XynaObject.class)) {
+      // clazz is XynaObject itself or supertype, abort recursion
+      return ret;
+    }
+    ret.addAll(List.of(clazz.getDeclaredFields()));
+    Class<?> superclass = clazz.getSuperclass();
+    ret.addAll(getFieldsOfXynaObject(superclass));
+    return ret;
+  }
+  
 
   @Override
   public Object invokeService(Context context, String fqn, String serviceName, List<Object> args) {
