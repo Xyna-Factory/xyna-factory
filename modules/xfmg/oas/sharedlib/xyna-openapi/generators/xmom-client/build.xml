@@ -36,7 +36,7 @@
         <available file="${basedir}/src" />
     </condition>
 
-    <target name="build" if="src.dir.available" depends="" description="build">
+    <target name="build" if="src.dir.available" description="build">
         <delete dir="${basedir}/classes" />
         <mkdir dir="${basedir}/classes" />
         <javaCompile>

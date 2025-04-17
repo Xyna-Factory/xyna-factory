@@ -35,7 +35,7 @@
     </condition>
 
 
-    <target name="execJavaCompile" if="src.dir.available" depends="" description="execJavaCompile">
+    <target name="execJavaCompile" if="src.dir.available" description="execJavaCompile">
         <javaCompile destdir="${classes.dir}">
             <classpath path="${classes.dir}" />
             <classpath>
@@ -57,7 +57,7 @@
     </target>
 
 
-    <target name="cleanClassesDir" depends="" description="cleanClassesDir">
+    <target name="cleanClassesDir" description="cleanClassesDir">
         <delete dir="${basedir}/classes" />
         <mkdir dir="${basedir}/classes" />
     </target>
