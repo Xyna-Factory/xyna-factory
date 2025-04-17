@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -182,12 +182,12 @@ public class ParameterInheritanceStorage {
 
   private InheritanceRuleStorable getInheritanceRuleForUpdate(ODSConnection con, ParameterType parameterType, String orderType, Long revision, String childFilter) throws PersistenceLayerException {
     String sql = childFilter == null || childFilter.length() == 0 ? QUERY_GET_INHERITANCE_RULE_OWN : QUERY_GET_INHERITANCE_RULE_CHILD;
-    PreparedQuery<InheritanceRuleStorable> pq =
-                    queryCache.getQueryFromCache(sql, con, InheritanceRuleStorable.reader);
-    List<InheritanceRuleStorable> list =
-                    con.query(pq,
-                              new Parameter(parameterType.toString(), orderType, revision,
-                                            childFilter), -1);
+    PreparedQuery<InheritanceRuleStorable> pq = queryCache.getQueryFromCache(sql, con, InheritanceRuleStorable.reader);
+    Parameter parameter = new Parameter(parameterType.toString(), orderType, revision);
+    if (childFilter != null && childFilter.length() != 0) {
+      parameter.add(childFilter);
+    }
+    List<InheritanceRuleStorable> list = con.query(pq, parameter, -1);
     if (list.size() > 1) {
       throw new RuntimeException("InheritanceRule of type '" + parameterType + "' for orderType '" + orderType + "' and childFilter '" + childFilter + "' not unique.");
     }

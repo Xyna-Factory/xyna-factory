@@ -25,24 +25,30 @@
 
     <property name="sharedLib.folder.name" value="xyna-openapi" />
     <property name="sharedLib.name" value="xyna-openapi" />
+    <property name="target.dir" value="${basedir}/deploy/" />
 
     <import file="${root.dir}/installation/build/buildSharedLib.xml" />
 
-    <target name="prepareLibs">
-      <exec executable="mvn" failonerror="true">
-        <arg value="package"/>
-      </exec>
-
-      <copy todir="${target.dir}">
-        <fileset dir="${basedir}/../target/" />
-      </copy>
-
-      <copy todir="${target.dir}">
-        <fileset dir="${basedir}/generator-utils/target">
-          <include name="*.jar" />
-        </fileset>
-      </copy>
-
+    <target name="prepareLibs" description="prepareLibs">
+      <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/generator-utils/">
+        <property name="target.dir" value="${target.dir}" />
+        <property name="base.lib.dir" value="${basedir}/lib" />
+      </ant>
+      <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/generators/xmom-client/">
+        <property name="target.dir" value="${target.dir}" />
+        <property name="base.lib.dir" value="${basedir}/lib" />
+        <property name="additional.lib.dir" value="${target.dir}" />
+      </ant>
+      <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/generators/xmom-data-model/">
+        <property name="target.dir" value="${target.dir}" />
+        <property name="base.lib.dir" value="${basedir}/lib" />
+        <property name="additional.lib.dir" value="${target.dir}" />
+      </ant>
+      <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/generators/xmom-server/">
+        <property name="target.dir" value="${target.dir}" />
+        <property name="base.lib.dir" value="${basedir}/lib" />
+        <property name="additional.lib.dir" value="${target.dir}" />
+      </ant>
     </target>
 
 </project>
