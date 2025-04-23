@@ -174,7 +174,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
   private static final XynaPropertyBoolean use_tcp_keepalive = new XynaPropertyBoolean(
       "xact.connection.ssh.tcp_keepalive.enable", true)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Enable TCP Keepalive");
-                           private static final Thread pipedStreamHolder = new Thread(new Runnable() {
+  private static final Thread pipedStreamHolder = new Thread(new Runnable() {
     public void run() {
       while (!XynaFactory.getInstance().isShuttingDown()) {
         try {
