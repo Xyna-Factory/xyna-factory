@@ -639,12 +639,10 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
     if (from.getInheritanceRules() != null) {
       List<InheritanceRule> modifyList = new ArrayList<InheritanceRule>();
       for (InheritanceRule ir : from.getInheritanceRules()) {
-        if (toMap.get(ir.getParameterType() + ":" + ir.getChildFilter()) != null) {
+        InheritanceRule toIr = toMap.get(ir.getParameterType() + ":" + ir.getChildFilter());
+        if (toIr != null) {
           InheritanceRule fromIr = ir;
-          InheritanceRule toIr = toMap.get(ir.getParameterType() + ":" + ir.getChildFilter());
-          if (!fromIr.getValue().equals(toIr.getValue())
-              || ((fromIr.getPrecedence() != null) && !fromIr.getPrecedence().equals(toIr.getPrecedence()))
-              || ((toIr.getPrecedence() != null) && !toIr.getPrecedence().equals(fromIr.getPrecedence()))) {
+          if (!Objects.equals(fromIr.getValue(), toIr.getValue()) || !Objects.equals(fromIr.getPrecedence(), toIr.getPrecedence())) {
             // modifyList has 2 Elements (from,to)
             modifyList.add(fromIr);
             modifyList.add(toIr);
