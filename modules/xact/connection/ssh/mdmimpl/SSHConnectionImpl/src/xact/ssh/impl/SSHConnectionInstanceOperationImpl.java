@@ -48,6 +48,8 @@ import java.util.stream.Collectors;
 import javax.management.RuntimeErrorException;
 import javax.net.SocketFactory;
 
+import jdk.net.ExtendedSocketOptions;
+
 import org.apache.log4j.Logger;
 
 import xact.connection.Command;
@@ -163,7 +165,16 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
   public static final XynaPropertyInt substringLengthProperty = new XynaPropertyInt("xact.connection.ssh.partialResponseLength", 0);
   private static final XynaPropertyBoolean legacyErrorMessage = new XynaPropertyBoolean("xact.ssh.connect.timeout.errormessage.legacy", false)
                                .setDefaultDocumentation(DocumentationLanguage.EN, "Error message when socket connect fails with timeout is similar to what jsch creates when not using a socketfactory (\"timeout: socket is not established\")");
-  private static final Thread pipedStreamHolder = new Thread(new Runnable() {
+  private static final XynaPropertyInt tcp_keepalive_idle = new XynaPropertyInt(
+      "xact.connection.ssh.tcp_keepalive.idle_seconds", 7200);
+  private static final XynaPropertyInt tcp_keepalive_interval = new XynaPropertyInt(
+      "xact.connection.ssh.tcp_keepalive.interval_seconds", 75);
+  private static final XynaPropertyInt tcp_keepalive_count = new XynaPropertyInt(
+      "xact.connection.ssh.tcp_keepalive.count", 9);
+  private static final XynaPropertyBoolean use_tcp_keepalive = new XynaPropertyBoolean(
+      "xact.connection.ssh.tcp_keepalive.enable", true)
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Enable TCP Keepalive");
+                           private static final Thread pipedStreamHolder = new Thread(new Runnable() {
     public void run() {
       while (!XynaFactory.getInstance().isShuttingDown()) {
         try {
@@ -274,81 +285,84 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
 
     client.setSocketFactory(new SocketFactory() {
 
-      // client uses only socketFactory.createSocket()
-      @Override
-      public Socket createSocket() throws IOException {
+      private Socket buildSocket() throws IOException {
         Socket s;
         if (proxy.isPresent()) {
           s = new Socket(proxy.get());
         } else {
           s = new Socket();
         }
-        s.setKeepAlive(true);
+        return adjustSocketOptions(s);
+      }
+
+      private Socket adjustSocketOptions(Socket s) throws IOException {
+        if (use_tcp_keepalive.get()) {
+          s.setKeepAlive(true);
+
+          if (tcp_keepalive_idle.get() > 0) {
+            s.setOption(ExtendedSocketOptions.TCP_KEEPIDLE, tcp_keepalive_idle.get());
+          }
+          if (tcp_keepalive_count.get() > 0) {
+            s.setOption(ExtendedSocketOptions.TCP_KEEPCOUNT, tcp_keepalive_count.get());
+          }
+          if (tcp_keepalive_interval.get() > 0) {
+            s.setOption(ExtendedSocketOptions.TCP_KEEPINTERVAL, tcp_keepalive_interval.get());
+          }
+        } else {
+          s.setKeepAlive(false);
+        }
+
         s.setTcpNoDelay(true);
         return s;
       }
 
+      // client uses only socketFactory.createSocket()
+      @Override
+      public Socket createSocket() throws IOException {
+        return buildSocket();
+      }
 
-      // Client uses only socketFactory.createSocket(), method is required but will not have an effect!
+      // Client uses only socketFactory.createSocket(), method is required but will
+      // not have an effect!
       @Override
       public Socket createSocket(String host, int port) throws IOException, UnknownHostException {
-        Socket s;
-        if (proxy.isPresent()) {
-          s = new Socket(proxy.get());
-        } else {
-          s = new Socket();
-        }
+        Socket s = buildSocket();
         connectSocket(s, new InetSocketAddress(host, port));
         return s;
       }
 
-
-      // Client uses only socketFactory.createSocket(), method is required but will not have an effect!
+      // Client uses only socketFactory.createSocket(), method is required but will
+      // not have an effect!
       @Override
-      public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException, UnknownHostException {
-        Socket s;
-        if (proxy.isPresent()) {
-          s = new Socket(proxy.get());
-        } else {
-          s = new Socket();
-        }
+      public Socket createSocket(String host, int port, InetAddress localHost, int localPort)
+          throws IOException, UnknownHostException {
+        Socket s = buildSocket();
         connectSocket(s, new InetSocketAddress(host, port));
         return s;
       }
 
-
-      // Client uses only socketFactory.createSocket(), method is required but will not have an effect!
+      // Client uses only socketFactory.createSocket(), method is required but will
+      // not have an effect!
       @Override
       public Socket createSocket(InetAddress host, int port) throws IOException {
-        Socket s;
-        if (proxy.isPresent()) {
-          s = new Socket(proxy.get());
-        } else {
-          s = new Socket();
-        }
+        Socket s = buildSocket();
         connectSocket(s, new InetSocketAddress(host, port));
         return s;
       }
 
-
-      // Client uses only socketFactory.createSocket(), method is required but will not have an effect!
+      // Client uses only socketFactory.createSocket(), method is required but will
+      // not have an effect!
       @Override
-      public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort) throws IOException {
-        Socket s;
-        if (proxy.isPresent()) {
-          s = new Socket(proxy.get());
-        } else {
-          s = new Socket();
-        }
+      public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort)
+          throws IOException {
+        Socket s = buildSocket();
         connectSocket(s, new InetSocketAddress(address, port));
         return s;
       }
 
-
-      // Client uses only socketFactory.createSocket(), sub-method will not have an effect!
+      // Client uses only socketFactory.createSocket(), sub-method will not have an
+      // effect!
       private void connectSocket(Socket s, InetSocketAddress host) throws IOException {
-        s.setKeepAlive(true);
-        s.setTcpNoDelay(true);
         if (connectionTimeout > 0) {
           s.connect(host, connectionTimeout);
         } else {
@@ -358,18 +372,29 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
 
     });
 
+
     try {
       // TODO Default Settings unsupported vs login-server
 
       Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
  
       // Client uses only socketFactory.createSocket() and overrides with setConnectTimeout and setTimeout
-      client.setConnectTimeout(connectionTimeout);
+      if (connectionTimeout >= 0) {
+        client.setConnectTimeout(connectionTimeout);
+        client.setTimeout(connectionTimeout);
+      }
 
       XynaIdentityRepository idRepo = new IdentityStorableRepository(client.getTransport().getConfig());
       client.connect(conParams.getHost(), port);
       setAuthNone=true;
       authenticate(conParams, idRepo);
+
+      // reset Socket timeout an handle connection via read timeouts
+      client.setTimeout(0);
+      if (client.getSocket() != null) {
+        client.getSocket().setSoTimeout(0);
+      }
+
       return client.startSession();
 
     } catch (IOException e) {
