@@ -291,7 +291,7 @@
 			</else>
 		</if>
 		<local name="command" />
-		<property name="command" value="cd ${server.path}; ./xynafactory.sh printrevision ${where}" />
+		<property name="command" value="cd ${server.path}; ./xynafactory.sh printrevision ${where} | xargs echo -n" />
 		<echo message="executing command: ${command}" />
 		<custom-ssh-exec host="${server.host}" username="${server.userid}" command="${command}" outputproperty="revision" />
 		<echo message="got revision=${revision}" />

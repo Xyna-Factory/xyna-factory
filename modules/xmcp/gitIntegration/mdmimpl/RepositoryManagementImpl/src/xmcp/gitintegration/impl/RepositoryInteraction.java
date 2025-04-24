@@ -56,15 +56,21 @@ import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.lib.BranchConfig;
+import org.eclipse.jgit.lib.BranchTrackingStatus;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectLoader;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTree;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+import org.eclipse.jgit.treewalk.TreeWalk;
+import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.util.FS;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -89,6 +95,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.DeploymentMode;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.WorkflowProtectionMode;
 
+import base.Text;
 import xmcp.gitintegration.Flag;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceObjectManagement;
@@ -107,6 +114,7 @@ import xmcp.gitintegration.repository.WorkspaceFileChangeList;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
 import xmcp.gitintegration.storage.UserManagementStorage;
+import xmcp.gitintegration.tools.LoadChangesTools;
 import xprc.xpce.Workspace;
 
 
@@ -168,6 +176,38 @@ public class RepositoryInteraction {
   }
 
 
+  public List<? extends Text> getFileContentInCurrentOriginBranch(String repository, String file) throws Exception {
+    List<Text> ret = new ArrayList<>();
+    Repository repo = loadRepo(repository, false);
+    try (Git git = new Git(repo)) {
+      BranchTrackingStatus tracking = BranchTrackingStatus.of(repo, repo.getFullBranch());
+      String remoteBranch = tracking.getRemoteTrackingBranch();
+      ObjectId id = repo.resolve(remoteBranch);
+      try (RevWalk revWalk = new RevWalk(repo)) {
+        RevCommit commit = revWalk.parseCommit(id);
+        RevTree tree = commit.getTree();
+        try (TreeWalk treeWalk = new TreeWalk(repo)) {
+          treeWalk.addTree(tree);
+          treeWalk.setRecursive(true);
+          treeWalk.setFilter(PathFilter.create(file));
+          while (treeWalk.next()) {
+            String path = treeWalk.getPathString();
+            if (path.endsWith(".xml")) {
+              ObjectId objectId = treeWalk.getObjectId(0);
+              ObjectLoader loader = repo.open(objectId);
+              Text txt = new Text();
+              txt.setText(new String(loader.getBytes()));
+              ret.add(txt);
+            }
+          }
+        }
+        revWalk.dispose();
+      }
+    }
+    return ret;
+  }
+  
+  
   public BranchData listBranches(String repository) throws Exception {
     BranchData.Builder result = new BranchData.Builder();
     List<Branch> resultBranches = new ArrayList<>();
@@ -211,74 +251,9 @@ public class RepositoryInteraction {
   public ChangeSet loadChanges(String repository) throws Exception {
     if (repository == null) { throw new IllegalArgumentException("Parameter repository is empty."); }
     Repository repo = loadRepo(repository, true);
-    List<? extends RepositoryConnectionGroup> grouplist = RepositoryManagementImpl.listRepositoryConnectionGroups();
-    RepositoryConnectionGroup group = selectGroup(grouplist, repository);
-    ChangeSet ret = prepareChangeSet(group);
-    try (Git git = new Git(repo)) {
-      StatusCommand cmd = git.status();
-      Status status = cmd.call();
-      for (String str : status.getChanged()) {
-        handleFileChange(str, "Changed", ret);
-      }
-      for (String str : status.getModified()) {
-        handleFileChange(str, "Modified", ret);
-      }
-      for (String str : status.getMissing()) {
-        handleFileChange(str, "Deleted", ret);
-      }
-      for (String str : status.getUntracked()) {
-        handleFileChange(str, "New", ret);
-      }
-    }
-    return ret;
+    return new LoadChangesTools().loadChanges(repository, repo);
   }
   
-  
-  private ChangeSet prepareChangeSet(RepositoryConnectionGroup group) {
-    ChangeSet ret = new ChangeSet();
-    int i = 0;
-    for (RepositoryConnection conn : group.getRepositoryConnection()) {      
-      WorkspaceFileChangeList wfcl = new WorkspaceFileChangeList();
-      wfcl.setWorkspacePath(conn.getSubpath());
-      wfcl.setWorkspaceName(conn.getWorkspaceName());
-      wfcl.setWorkspaceIndex(i);
-      ret.addToChanges(wfcl);
-      i++;
-    }
-    return ret;
-  }
-  
-  private RepositoryConnectionGroup selectGroup(List<? extends RepositoryConnectionGroup> grouplist, String repository) {
-    for (RepositoryConnectionGroup group : grouplist) {
-      String path = group.getRepository().getPath();
-      if (repository.equals(path)) {
-        return group;
-      }
-    }
-    throw new RuntimeException("Could not find data for repository " + repository);
-  }
-  
-
-  private void handleFileChange(String path, String typestr, ChangeSet cs) {
-    IndexedWorkspaceFileChange change = new IndexedWorkspaceFileChange();
-    change.setFileFullPath(path);
-    change.setType(typestr);
-    for (WorkspaceFileChangeList wfcl : cs.getChanges()) {
-      String wspath = wfcl.getWorkspacePath();
-      if (path.startsWith(wspath) && (path.length() > wspath.length())) {
-        String subpath = path.substring(wspath.length() + 1);
-        change.setFileSubpath(subpath);
-        if (wfcl.getIndexedFileChangeList() == null) {
-          change.setIndex(0);
-        }
-        else {
-          change.setIndex(wfcl.getIndexedFileChangeList().size());
-        }
-        wfcl.addToIndexedFileChangeList(change);
-      }
-    }
-  }
-
 
   public void push(String repository, String message, boolean dryrun, String user, List<String> filePatterns) throws Exception {
     if (message == null) { throw new IllegalArgumentException("Commit message is empty"); }

@@ -19,7 +19,6 @@ package xdev.yang.impl;
 
 
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -90,10 +89,12 @@ public class YangApplicationGeneration {
     String capabilitiesFile = fileMgmt.getAbsolutePath(genParameter.getFileID().getId());
     Document capabilities;
     try {
-      capabilities = XMLUtils.parse(capabilitiesFile);
-      String docElementTagName = capabilities.getDocumentElement().getTagName();
+      capabilities = XMLUtils.parse(capabilitiesFile, true);
+      String docElementTagName = capabilities.getDocumentElement().getLocalName();
       if (docElementTagName.equals(Constants.TAG_HELLO) || docElementTagName.equals(Constants.TAG_YANG_LIBRARY)){
-        capabilities = XMLUtils.parseString("<Yang type=\""+ Constants.VAL_DEVICE + "\">"+XMLUtils.getXMLString(capabilities.getDocumentElement(), false)+"</Yang>");
+        capabilities = XMLUtils.parseString("<Yang type=\""+ Constants.VAL_DEVICE + "\">"+
+                                            XMLUtils.getXMLString(capabilities.getDocumentElement(), false)+
+                                            "</Yang>", true);
       }
       else {
         throw new XPRC_XmlParsingException("Format of capabilities file not supported.");
@@ -244,7 +245,7 @@ public class YangApplicationGeneration {
   }
 
 
-  public static class YangApplicationGenerationData implements Closeable {
+  public static class YangApplicationGenerationData implements AutoCloseable {
 
     private final String id;
     private final List<File> files;
@@ -267,7 +268,7 @@ public class YangApplicationGeneration {
 
 
     @Override
-    public void close() throws IOException {
+    public void close() {
       for (File f : files) {
         if (f.isFile()) {
           f.delete();

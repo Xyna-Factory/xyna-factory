@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Operation assignments Definition" TypeName="OperationAssignmentsDefinition" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Operation assignments Definition" Name="OperationAssignmentsDefinition">
+    <Input>
+      <Data ID="357" Label="Operation Assignment Table Data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignment357"/>
+    </Input>
+    <Output>
+      <Data ID="344" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition344"/>
+      <Data ID="1401" Label="Operation Assignment Table Data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData1401"/>
+    </Output>
+    <ServiceReference ID="3141" Label="Operation Assignments Definition - Container" ReferenceName="OperationAssignmentsDefinitionContainer" ReferencePath="xmcp.yang.fman">
+      <Source RefID="3140"/>
+      <Target RefID="3140"/>
+    </ServiceReference>
+    <ServiceReference ID="5906" Label="Operation Assignments Definition - AnyXml" ReferenceName="OperationAssignmentsDefinitionAnyXml" ReferencePath="xmcp.yang.fman">
+      <Source RefID="5905"/>
+      <Target RefID="5905"/>
+    </ServiceReference>
+    <ServiceReference ID="3112" Label="Operation Assignments Definition - Leaf" ReferenceName="OperationAssignmentsDefinitionLeaf" ReferencePath="xmcp.yang.fman">
+      <Source RefID="3111"/>
+      <Target RefID="3111"/>
+    </ServiceReference>
+    <ServiceReference ID="3311" Label="Operation Assignments Definition - Container" ReferenceName="OperationAssignmentsDefinitionContainer" ReferencePath="xmcp.yang.fman">
+      <Source RefID="3310"/>
+      <Target RefID="3310"/>
+    </ServiceReference>
+    <ServiceReference ID="3998" Label="Operation Assignments Definition - List" ReferenceName="OperationAssignmentsDefinitionList" ReferencePath="xmcp.yang.fman">
+      <Source RefID="3997"/>
+      <Target RefID="3997"/>
+    </ServiceReference>
+    <ServiceReference ID="511" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="510"/>
+      <Target RefID="510"/>
+    </ServiceReference>
+    <Function ID="510" Label="get Own RuntimeContext">
+      <Source RefID="511"/>
+      <Target RefID="511"/>
+      <Target RefID="2753"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="511"/>
+      <Receive ServiceID="511">
+        <Target RefID="2753"/>
+      </Receive>
+    </Function>
+    <Choice ID="2971" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="357"/>
+      <Target RefID="6081"/>
+      <Meta>
+        <OuterConditionPart>%0%.type==?</OuterConditionPart>
+      </Meta>
+      <Input>
+        <Data ID="2991" Label="Operation Assignment Table Data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData2991">
+          <Source RefID="2971"/>
+        </Data>
+        <Source RefID="357"/>
+      </Input>
+      <Case ID="3040" Label="" Premise="%0%.type==&quot;leaf&quot;">
+        <Function ID="3111" Label="Operation Assignments Definition - Leaf">
+          <Source RefID="3112"/>
+          <Source RefID="357"/>
+          <Target RefID="3112"/>
+          <Target RefID="3114"/>
+          <Invoke Operation="OperationAssignmentsDefinitionLeaf" ServiceID="3112">
+            <Source RefID="357"/>
+          </Invoke>
+          <Receive ServiceID="3112">
+            <Target RefID="3114"/>
+          </Receive>
+        </Function>
+        <Assign ID="3042">
+          <Source RefID="3114"/>
+          <Target RefID="6081"/>
+          <Copy>
+            <Source RefID="3114"/>
+            <Target RefID="6081"/>
+          </Copy>
+        </Assign>
+        <Data ID="3114" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3114">
+          <Source RefID="3111"/>
+        </Data>
+      </Case>
+      <Case Alias="3040" ID="5730" Label="" Premise="%0%.type==&quot;anydata&quot;"/>
+      <Case ID="3075" Label="" Premise="%0%.type==&quot;container&quot;">
+        <Function ID="3140" Label="Operation Assignments Definition - Container">
+          <Source RefID="3141"/>
+          <Source RefID="357"/>
+          <Target RefID="3141"/>
+          <Target RefID="3143"/>
+          <Invoke Operation="OperationAssignmentsDefinitionContainer" ServiceID="3141">
+            <Source RefID="357"/>
+          </Invoke>
+          <Receive ServiceID="3141">
+            <Target RefID="3143"/>
+          </Receive>
+        </Function>
+        <Assign ID="3077">
+          <Source RefID="3143"/>
+          <Target RefID="6081"/>
+          <Copy>
+            <Source RefID="3143"/>
+            <Target RefID="6081"/>
+          </Copy>
+        </Assign>
+        <Data ID="3143" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3143">
+          <Source RefID="3140"/>
+        </Data>
+      </Case>
+      <Case Alias="3075" ID="3478" Label="" Premise="%0%.type==&quot;choice&quot;"/>
+      <Case Alias="3075" ID="3604" Label="" Premise="%0%.type==&quot;case&quot;"/>
+      <Case Alias="3075" ID="3730" Label="" Premise="%0%.type==&quot;uses&quot;"/>
+      <Case ID="3893" Label="" Premise="%0%.type==&quot;leaf-list&quot;">
+        <Function ID="3997" Label="Operation Assignments Definition - List">
+          <Source RefID="3998"/>
+          <Source RefID="357"/>
+          <Target RefID="3998"/>
+          <Target RefID="4000"/>
+          <Invoke Operation="OperationAssignmentsDefinitionList" ServiceID="3998">
+            <Source RefID="357"/>
+          </Invoke>
+          <Receive ServiceID="3998">
+            <Target RefID="4000"/>
+          </Receive>
+        </Function>
+        <Assign ID="3895">
+          <Source RefID="4000"/>
+          <Target RefID="6081"/>
+          <Copy>
+            <Source RefID="4000"/>
+            <Target RefID="6081"/>
+          </Copy>
+        </Assign>
+        <Data ID="4000" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4000">
+          <Source RefID="3997"/>
+        </Data>
+      </Case>
+      <Case Alias="3893" ID="4149" Label="" Premise="%0%.type==&quot;list&quot;"/>
+      <Case ID="5781" Label="" Premise="%0%.type==&quot;anyxml&quot;">
+        <Function ID="5905" Label="Operation Assignments Definition - AnyXml">
+          <Source RefID="5906"/>
+          <Source RefID="357"/>
+          <Target RefID="5906"/>
+          <Target RefID="5908"/>
+          <Invoke Operation="OperationAssignmentsDefinitionAnyXml" ServiceID="5906">
+            <Source RefID="357"/>
+          </Invoke>
+          <Receive ServiceID="5906">
+            <Target RefID="5908"/>
+          </Receive>
+        </Function>
+        <Assign ID="5783">
+          <Source RefID="5908"/>
+          <Target RefID="6081"/>
+          <Copy>
+            <Source RefID="5908"/>
+            <Target RefID="6081"/>
+          </Copy>
+        </Assign>
+        <Data ID="5908" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5908">
+          <Source RefID="5905"/>
+        </Data>
+      </Case>
+      <Case ID="2972" IsDefault="true" Label="default">
+        <Function ID="3310" Label="Operation Assignments Definition - Container">
+          <Source RefID="3311"/>
+          <Source RefID="357"/>
+          <Target RefID="3311"/>
+          <Target RefID="3313"/>
+          <Invoke Operation="OperationAssignmentsDefinitionContainer" ServiceID="3311">
+            <Source RefID="357"/>
+          </Invoke>
+          <Receive ServiceID="3311">
+            <Target RefID="3313"/>
+          </Receive>
+        </Function>
+        <Assign ID="2974">
+          <Source RefID="3313"/>
+          <Target RefID="6081"/>
+          <Copy>
+            <Source RefID="3313"/>
+            <Target RefID="6081"/>
+          </Copy>
+        </Assign>
+        <Data ID="3313" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3313">
+          <Source RefID="3310"/>
+        </Data>
+      </Case>
+    </Choice>
+    <Data ID="2753" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext2753">
+      <Source RefID="510"/>
+    </Data>
+    <Data ID="6081" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition6081">
+      <Source RefID="2971"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="6081"/>
+      <Source RefID="357"/>
+      <Target RefID="344"/>
+      <Target RefID="1401"/>
+      <Copy>
+        <Source RefID="6081"/>
+        <Target RefID="344"/>
+      </Copy>
+      <Copy>
+        <Source RefID="357"/>
+        <Target RefID="1401"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

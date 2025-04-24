@@ -295,5 +295,44 @@ System.out.println("shortenedVarName: " + shortenedVarName);
 }</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation ID="14" IsStatic="false" Label="Get Member List Value" Name="getMemberListValue">
+      <Input/>
+      <Output>
+        <Data ID="13" Label="list" VariableName="list" IsList="true">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">Object current = getUntypedMemberValue(varName);
+          if (!isList) {
+            throw new RuntimeException("Member var must be a list");
+          }
+          if (current == null) {
+            return null;
+          } else {
+            List&lt;String&gt; sl = new ArrayList&lt;&gt;();
+            for (Object o : (List&lt;?&gt;)current) {
+              sl.add(o == null ? null : String.valueOf(o));
+            }
+            return sl;
+          }
+        </CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation ID="16" IsStatic="false" Label="Get Member Object List" Name="getMemberObjectList">
+      <Input/>
+      <Output>
+        <Data ID="15" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" IsList="true" VariableName="anyType"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">try {
+    return (List&lt;GeneralXynaObject&gt;)parentObject.get(varName);
+  } catch( Exception e ) {
+    throw new RuntimeException(e);
+  }</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

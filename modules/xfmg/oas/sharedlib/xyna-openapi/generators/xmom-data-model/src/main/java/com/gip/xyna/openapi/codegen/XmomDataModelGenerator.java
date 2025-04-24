@@ -223,10 +223,10 @@ public class XmomDataModelGenerator extends DefaultCodegen {
       if (model.getValue().getModel().getName().equals(model.getValue().getModel().parent)) {
         model.getValue().getModel().parent = null;
       }
-      ModelMap parent = modelMap.get(model.getValue().getModel().parent);
+      CodegenModel parent = model.getValue().getModel().parentModel;
       if (parent != null) {
         for(CodegenProperty var: model.getValue().getModel().getAllVars()) {
-          for(CodegenProperty parentVar: parent.getModel().getAllVars()) {
+          for(CodegenProperty parentVar: parent.getAllVars()) {
             if(parentVar.getName().equals(var.getName())) {
               var.isInherited = true;
             }

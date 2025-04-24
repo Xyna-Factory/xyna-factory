@@ -158,7 +158,7 @@ public abstract class CodeOperation extends Operation {
     if (getOutputVars().size() > 1) {
       int cnt = 0;
       for (AVariable outputVar : getOutputVars()) {
-        if (!importedClassesFqStrings.contains(outputVar.getFQClassName())) {
+        if ((outputVar.getFQClassName() != null) && !importedClassesFqStrings.contains(outputVar.getFQClassName())) {
           cnt++;
           cb.addLine(outputVar.getFQClassName() + " dummyVarForMissingImport" + cnt + " = null");
         }

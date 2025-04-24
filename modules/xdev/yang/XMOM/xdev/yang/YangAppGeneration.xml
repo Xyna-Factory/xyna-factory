@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,22 +27,28 @@
         <Datatype>xmcp.forms.plugin.PluginManagement</Datatype>
       </AdditionalDependencies>
     </Meta>
-    <Operation IsStatic="true" Label="Import Module Collection Application" Name="importModuleCollectionApplication">
+    <Operation IsStatic="true" Label="Import Module Collection Application" Name="importModuleCollectionApplication" RequiresXynaOrder="true">
       <Input>
         <Data ID="1" Label="Yang App Generation Input Parameter" ReferenceName="YangAppGenerationInputParameter" ReferencePath="xdev.yang" VariableName="yangAppGenerationInputParameter1"/>
       </Input>
       <Output/>
+      <Throws>
+        <Exception ID="31" Label="Application Import Exception" ReferenceName="ApplicationImportException" ReferencePath="xdev.yang.exceptions" VariableName="applicationImportException31"/>
+      </Throws>
       <SourceCode>
-        <CodeSnippet Type="Java">YangAppGenerationImpl.importModuleCollectionApplication(yangAppGenerationInputParameter1);</CodeSnippet>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.importModuleCollectionApplication(correlatedXynaOrder, yangAppGenerationInputParameter1);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Create Yang Device App" Name="createYangDeviceApp">
+    <Operation IsStatic="true" Label="Create Yang Device App" Name="createYangDeviceApp" RequiresXynaOrder="true">
       <Input>
         <Data ID="2" Label="Yang App Generation Input Parameter" ReferenceName="YangAppGenerationInputParameter" ReferencePath="xdev.yang" VariableName="yangAppGenerationInputParameter2"/>
       </Input>
       <Output/>
+      <Throws>
+        <Exception ID="30" Label="Application Import Exception" ReferenceName="ApplicationImportException" ReferencePath="xdev.yang.exceptions" VariableName="applicationImportException30"/>
+      </Throws>
       <SourceCode>
-        <CodeSnippet Type="Java">YangAppGenerationImpl.createYangDeviceApp(yangAppGenerationInputParameter2);</CodeSnippet>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.createYangDeviceApp(correlatedXynaOrder, yangAppGenerationInputParameter2);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Load Assignments" Name="loadAssignments">
@@ -50,74 +56,72 @@
         <Data ID="7" Label="Load Yang Assignments Data" ReferenceName="LoadYangAssignmentsData" ReferencePath="xmcp.yang" VariableName="loadYangAssignmentsData7"/>
       </Input>
       <Output>
-        <Data ID="6" IsList="true" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData6"/>
+        <Data ID="6" IsList="true" Label="Operation Assignement Table Data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData6"/>
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadAssignments(loadYangAssignmentsData7);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Load Usecases" Name="loadUsecases">
+    <Operation IsStatic="true" Label="Load Operations" Name="loadOperations">
       <Input/>
       <Output>
-        <Data ID="1" IsList="true" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData1"/>
+        <Data ID="1" IsList="true" Label="Operation Table Data" ReferenceName="OperationTableData" ReferencePath="xmcp.yang" VariableName="operationTableData1"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadUsecases();</CodeSnippet>
+        <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadOperations();</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Add Usecase" Name="addUsecase" RequiresXynaOrder="true">
+    <Operation IsStatic="true" Label="Add Operation" Name="addOperation" RequiresXynaOrder="true">
       <Input>
-        <Data ID="2" Label="UsecaseGroupFqn" ReferenceName="Text" ReferencePath="base" VariableName="text2"/>
-        <Data ID="3" Label="UsecaseName" ReferenceName="Text" ReferencePath="base" VariableName="text3"/>
-        <Data ID="5" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace5"/>
-        <Data ID="8" Label="RPC" ReferenceName="Text" ReferencePath="base" VariableName="text8"/>
-        <Data ID="9" Label="Device Fqn" ReferenceName="Text" ReferencePath="base" VariableName="text9"/>
-        <Data ID="11" Label="Rpc Namespace" ReferenceName="Text" ReferencePath="base" VariableName="text11"/>
+        <Data ID="33" Label="Operation Creation Parameter" ReferenceName="OperationCreationParameter" ReferencePath="xdev.yang" VariableName="operationCreationParameter33"/>
       </Input>
       <Output/>
+      <Throws>
+        <Exception ID="32" Label="Operation Creation Exception" ReferenceName="OperationCreationException" ReferencePath="xdev.yang.exceptions" VariableName="operationCreationException32"/>
+      </Throws>
       <SourceCode>
-        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.addUsecase(correlatedXynaOrder, text2, text3, workspace5, text8, text9, text11);</CodeSnippet>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.addOperation(correlatedXynaOrder, operationCreationParameter33);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Save Assignment" Name="saveAssignment" RequiresXynaOrder="true">
       <Input>
-        <Data ID="10" Label="Use Case Assignement Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData10"/>
+        <Data ID="10" Label="Operation Assignement Table Data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData10"/>
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.saveAssignment(correlatedXynaOrder, useCaseAssignmentTableData10);</CodeSnippet>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.saveAssignment(correlatedXynaOrder, operationAssignmentTableData10);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Load Usecase Signature" Name="loadUsecaseSignature">
+    <Operation IsStatic="true" Label="Load Operation Signature" Name="loadOperationSignature">
       <Input>
-        <Data ID="16" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData16"/>
+        <Data ID="16" Label="Operation Table Data" ReferenceName="OperationTableData" ReferencePath="xmcp.yang" VariableName="operationTableData16"/>
       </Input>
       <Output>
-        <Data ID="17" IsList="true" Label="Inputs - UsecaseSignatureEntry" ReferenceName="UsecaseSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="usecaseSignatureEntry17"/>
-        <Data ID="18" IsList="true" Label="Outputs - UsecaseSignatureEntry" ReferenceName="UsecaseSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="usecaseSignatureEntry18"/>
+        <Data ID="17" IsList="true" Label="Inputs - OperationSignatureEntry" ReferenceName="OperationSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="operationSignatureEntry17"/>
+        <Data ID="18" IsList="true" Label="Outputs - OperationSignatureEntry" ReferenceName="OperationSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="operationSignatureEntry18"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadUsecaseSignature(useCaseTableData16);</CodeSnippet>
+        <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadOperationSignature(operationTableData16);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Remove Variable From Usecase Signature" Name="removeVariableFromUsecaseSignature" RequiresXynaOrder="true">
+    <Operation IsStatic="true" Label="Remove Variable From Operation Signature" Name="removeVariableFromOperationSignature" RequiresXynaOrder="true">
       <Input>
-        <Data ID="23" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData23"/>
-        <Data ID="24" Label="UsecaseSignatureEntry" ReferenceName="UsecaseSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="usecaseSignatureEntry24"/>
+        <Data ID="23" Label="Operation Table Data" ReferenceName="OperationTableData" ReferencePath="xmcp.yang" VariableName="operationTableData23"/>
+        <Data ID="24" Label="OperationSignatureEntry" ReferenceName="OperationSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="operationSignatureEntry24"/>
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.removeVariableFromUsecaseSignature(correlatedXynaOrder, useCaseTableData23, usecaseSignatureEntry24);</CodeSnippet>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.removeVariableFromOperationSignature(correlatedXynaOrder, operationTableData23, operationSignatureEntry24);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Add Variable To Usecase Signature" Name="addVariableToUsecaseSignature" RequiresXynaOrder="true">
+    <Operation IsStatic="true" Label="Add Variable To Operation Signature" Name="addVariableToOperationSignature" RequiresXynaOrder="true">
       <Input>
-        <Data ID="21" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData21"/>
-        <Data ID="22" Label="UsecaseSignatureEntry" ReferenceName="UsecaseSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="usecaseSignatureEntry22"/>
+        <Data ID="21" Label="Operation Table Data" ReferenceName="OperationTableData" ReferencePath="xmcp.yang" VariableName="operationTableData21"/>
+        <Data ID="22" Label="OperationSignatureEntry" ReferenceName="OperationSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="operationSignatureEntry22"/>
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.addVariableToUsecaseSignature(correlatedXynaOrder, useCaseTableData21, usecaseSignatureEntry22);</CodeSnippet>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.addVariableToOperationSignature(correlatedXynaOrder, operationTableData21, operationSignatureEntry22);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Configure List" Name="configureList" RequiresXynaOrder="true">
@@ -132,21 +136,71 @@
     </Operation>
     <Operation IsStatic="true" Label="Delete Assignment" Name="deleteAssignment" RequiresXynaOrder="true">
       <Input>
-        <Data ID="27" Label="Use Case Assignment Table Data" ReferenceName="UseCaseAssignmentTableData" ReferencePath="xmcp.yang" VariableName="useCaseAssignmentTableData27"/>
+        <Data ID="27" Label="Operation Assignment Table Data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData27"/>
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.deleteAssignment(correlatedXynaOrder, useCaseAssignmentTableData27);</CodeSnippet>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.deleteAssignment(correlatedXynaOrder, operationAssignmentTableData27);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Update Variable In Usecase Signature" Name="updateVariableInUsecaseSignature" RequiresXynaOrder="true">
+    <Operation IsStatic="true" Label="Update Variable In Operation Signature" Name="updateVariableInOperationSignature" RequiresXynaOrder="true">
       <Input>
-        <Data ID="28" Label="Use Case Table Data" ReferenceName="UseCaseTableData" ReferencePath="xmcp.yang" VariableName="useCaseTableData28"/>
-        <Data ID="29" Label="UsecaseSignatureEntry" ReferenceName="UsecaseSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="usecaseSignatureEntry29"/>
+        <Data ID="28" Label="Operation Table Data" ReferenceName="OperationTableData" ReferencePath="xmcp.yang" VariableName="operationTableData28"/>
+        <Data ID="29" Label="OperationSignatureEntry" ReferenceName="OperationSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="operationSignatureEntry29"/>
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.updateVariableInUsecaseSignature(correlatedXynaOrder, useCaseTableData28, usecaseSignatureEntry29);</CodeSnippet>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.updateVariableInOperationSignature(correlatedXynaOrder, operationTableData28, operationSignatureEntry29);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Load List Configuration" Name="loadListConfiguration" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="34" Label="Load Yang Assignments Data" ReferenceName="LoadYangAssignmentsData" ReferencePath="xmcp.yang" VariableName="loadYangAssignmentsData34"/>
+      </Input>
+      <Output>
+        <Data ID="35" Label="ListConfiguration" ReferenceName="ListConfiguration" ReferencePath="xmcp.yang.fman" VariableName="listConfiguration35"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadListConfiguration(correlatedXynaOrder, loadYangAssignmentsData34);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Load Workspace List" Name="loadWorkspaceList">
+      <Input/>
+      <Output>
+        <Data ID="37" IsList="true" Label="Workspace" ReferenceName="Workspace" ReferencePath="xprc.xpce" VariableName="workspace37"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadWorkspaceList();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Load Application List" Name="loadApplicationList">
+      <Input/>
+      <Output>
+        <Data ID="38" IsList="true" Label="Application" ReferenceName="Application" ReferencePath="xprc.xpce" VariableName="application38"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadApplicationList();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Load Modules" Name="loadModules">
+      <Input>
+        <Data ID="39" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext39"/>
+      </Input>
+      <Output>
+        <Data ID="40" IsList="true" Label="Yang Module Details" ReferenceName="YangModuleDetails" ReferencePath="xdev.yang.datatypes" VariableName="yangModuleDetails40"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xdev.yang.YangAppGenerationImpl.loadModules(runtimeContext39);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Configure Anyxml Substantement" Name="configureAnyxmlSubstantement" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="41" Label="Load Yang Assignments Data" ReferenceName="LoadYangAssignmentsData" ReferencePath="xmcp.yang" VariableName="loadYangAssignmentsData41"/>
+        <Data ID="42" Label="AnyXml Substatement Configuration" ReferenceName="AnyXmlSubstatementConfiguration" ReferencePath="xmcp.yang.fman" VariableName="anyXmlSubstatementConfiguration42"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xdev.yang.YangAppGenerationImpl.configureAnyxmlSubstantement(correlatedXynaOrder, loadYangAssignmentsData41, anyXmlSubstatementConfiguration42);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

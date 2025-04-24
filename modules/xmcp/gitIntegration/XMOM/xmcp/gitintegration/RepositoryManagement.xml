@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -188,6 +188,29 @@
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.loadChangeSet(repository49);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get File Content In Current Origin Branch" Name="getFileContentInCurrentOriginBranch">
+      <Input>
+        <Data ID="52" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository52"/>
+        <Data ID="50" Label="Path" ReferenceName="File" ReferencePath="base" VariableName="file50"/>
+      </Input>
+      <Output>
+        <Data ID="51" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text51"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.getFileContentInCurrentOriginBranch(repository52, file50);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Current Repository User" Name="getCurrentRepositoryUser" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="53" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository53"/>
+      </Input>
+      <Output>
+        <Data ID="54" Label="Repository User" ReferenceName="RepositoryUser" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryUser54"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.getCurrentRepositoryUser(correlatedXynaOrder, repository53);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
