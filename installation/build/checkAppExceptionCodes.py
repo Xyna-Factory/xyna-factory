@@ -73,9 +73,9 @@ class ExceptionXmlUtils:
       if not code_prefix:
         code_prefix = exception_info.code_prefix
       if code_prefix == exception_info.code_prefix:
-        processed_exception_info = ProcessedExceptionInfo(xmom_path, CheckTypeConstants.CODE_PREFIX.value, 'OK')
+        processed_exception_info = ProcessedExceptionInfo(exception_info.path, CheckTypeConstants.CODE_PREFIX.value, 'OK')
       else:
-        processed_exception_info = ProcessedExceptionInfo(xmom_path, CheckTypeConstants.CODE_PREFIX.value, 'NOK:expected: ' + code_prefix + ', actual: ' + exception_info.code_prefix + ') path: ' + exception_info.path)
+        processed_exception_info = ProcessedExceptionInfo(exception_info.path, CheckTypeConstants.CODE_PREFIX.value, 'NOK:expected: ' + code_prefix + ', actual: ' + exception_info.code_prefix)
       processed_exception_info_list.append(processed_exception_info)
     return processed_exception_info_list
 
@@ -85,9 +85,9 @@ class ExceptionXmlUtils:
     for exception_info in exception_info_list:
       if exception_info.code_number not in code_number_dict:
         code_number_dict[exception_info.code_number] = exception_info
-        processed_exception_info = ProcessedExceptionInfo(xmom_path, CheckTypeConstants.CODE_NUMBER.value, 'OK')
+        processed_exception_info = ProcessedExceptionInfo(exception_info.path, CheckTypeConstants.CODE_NUMBER.value, 'OK')
       else:
-        processed_exception_info = ProcessedExceptionInfo(xmom_path, CheckTypeConstants.CODE_NUMBER.value, 'NOK:not unique: ' + exception_info.code_number + ') paths: ' + exception_info.path + ', ' + code_number_dict[exception_info.code_number].path)
+        processed_exception_info = ProcessedExceptionInfo(exception_info.path, CheckTypeConstants.CODE_NUMBER.value, 'NOK:not unique: ' + exception_info.code_number + ') path: ' + code_number_dict[exception_info.code_number].path)
       processed_exception_info_list.append(processed_exception_info)
     return processed_exception_info_list
 
