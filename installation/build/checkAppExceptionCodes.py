@@ -56,7 +56,7 @@ class ProcessedExceptionInfo:
   info: str
 
   def __repr__(self):
-     return f"'{self.check_type}\', '{self.status}\', '{self.info}\', \'{self.path}\')"
+     return f"\'{self.status}\', '{self.check_type}\', '{self.info}\', \'{self.path}\')"
 
 class ExceptionXmlUtils:
 
@@ -70,7 +70,7 @@ class ExceptionXmlUtils:
       for processed_exception_info in processed_exception_info_list:
         if verbose or (not verbose and processed_exception_info.status == ProcessedExceptionInfoStatusConstants.NOK.value): 
           print(processed_exception_info)
-    
+
 
   def check_code_prefix(self, xmom_path, exception_info_list):
     processed_exception_info_list = []
