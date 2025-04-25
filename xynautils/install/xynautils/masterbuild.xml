@@ -24,9 +24,8 @@
   <property name="release.dir"
             value="${ant.file.xynautils_masterbuild}/../../../releases" />
 
-  <property name="svn.root" value="svn://svn.gip.local" />
-  <property name="svn.tag" value="${project.name}-${release.number}" />
-  <property name="svn.project" value="xyna/utils/${utils.name}" />
+  <property name="git.tag" value="${project.name}-${release.number}" />
+  <property name="git.project" value="xyna/utils/${utils.name}" />
 
   <property name="vendor.name" value="Xyna GmbH" />
 
@@ -37,7 +36,6 @@
   <property name="root.dir" value="${release.dir}/checkout_${timestamp}" />
   <property name="release.build.dir" value="${root.dir}/build_${timestamp}" />
 
-  <typedef file="${ant.file.xynautils_masterbuild}/../../delivery/svn.xml" />
   <typedef file="${ant.file.xynautils_masterbuild}/../../build/buildMacros.xml" />
   <typedef file="${ant.file.xynautils_masterbuild}/../../delivery/deliveryMacros.xml" />
 
@@ -78,9 +76,9 @@
           depends="checkRelease"
           description="Create new release.">
     <if>
-      <isset property="svn.branch" />
+      <isset property="git.branch" />
       <then>
-        <checkout branch="${svn.branch}" />
+        <checkout branch="${git.branch}" />
       </then>
       <else>
         <checkout />
@@ -212,7 +210,6 @@
       <fileset dir="${basedir}">
         <include name="**/*" />
         <exclude name=".metadata/**" />
-        <exclude name="**/.svn" />
         <exclude name="**/classes/**" />
         <exclude name="**/deploy" />
         <!--<exclude name="delivery/**" />-->

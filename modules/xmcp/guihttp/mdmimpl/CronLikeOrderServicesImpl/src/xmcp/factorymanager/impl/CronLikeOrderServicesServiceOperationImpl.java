@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,11 @@ import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.utils.misc.JsonParser;
 import com.gip.xyna.utils.misc.JsonParser.InvalidJSONException;
 import com.gip.xyna.utils.misc.JsonParser.UnexpectedJSONContentException;
+import com.gip.xyna.xact.filter.util.xo.GenericResult;
+import com.gip.xyna.xact.filter.util.xo.GenericVisitor;
+import com.gip.xyna.xact.filter.util.xo.Util;
+import com.gip.xyna.xact.filter.util.xo.XynaObjectJsonBuilder;
+import com.gip.xyna.xact.filter.util.xo.XynaObjectVisitor;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
@@ -66,11 +71,6 @@ import xmcp.factorymanager.cronlikeorders.exceptions.LoadCronLikeOrderException;
 import xmcp.factorymanager.cronlikeorders.exceptions.LoadCronLikeOrdersException;
 import xmcp.factorymanager.cronlikeorders.exceptions.UpdateCronLikeOrderException;
 import xmcp.factorymanager.impl.converter.TimeWindowConverter;
-import xmcp.factorymanager.impl.converter.payload.GenericResult;
-import xmcp.factorymanager.impl.converter.payload.GenericVisitor;
-import xmcp.factorymanager.impl.converter.payload.Util;
-import xmcp.factorymanager.impl.converter.payload.XynaObjectJsonBuilder;
-import xmcp.factorymanager.impl.converter.payload.XynaObjectVisitor;
 import xmcp.factorymanager.shared.OrderCustoms;
 import xmcp.factorymanager.shared.OrderDestination;
 import xmcp.factorymanager.shared.OrderExecutionTime;
@@ -93,7 +93,7 @@ public class CronLikeOrderServicesServiceOperationImpl implements ExtendedDeploy
   private static final String TABLE_PATH_START_TIME = "executionTime.startTime";
   private static final String TABLE_PATH_TIMEZONE = "executionTime.timezone";
   private static final String TABLE_PATH_STATUS = "status";
-  
+
   private static final String STATUS_ACTIVE = "Active";
   private static final String STATUS_DISABLED = "Disabled";
 
@@ -145,7 +145,7 @@ public class CronLikeOrderServicesServiceOperationImpl implements ExtendedDeploy
                                                                    cronLikeOrder.getExecutionTime().getTimezone(),
                                                                    cronLikeOrder.getExecutionTime().getConsiderDST());
       }
-      CronLikeOrderCreationParameterBuilder<? extends CronLikeOrderCreationParameter> builder = 
+      CronLikeOrderCreationParameterBuilder<? extends CronLikeOrderCreationParameter> builder =
         CronLikeOrderCreationParameter.newClocpForCreate(destinationKey)
                                       .calendarDefinition(calendarDefinition)
                                       .custom0(cronLikeOrder.getCronLikeOrderCustoms().getCustom0())
@@ -158,7 +158,7 @@ public class CronLikeOrderServicesServiceOperationImpl implements ExtendedDeploy
                                       .startTime(cronLikeOrder.getExecutionTime().getStartTime())
                                       .timeZoneId(cronLikeOrder.getExecutionTime().getTimezone())
                                       .useDST(cronLikeOrder.getExecutionTime().getConsiderDST() != null ? cronLikeOrder.getExecutionTime().getConsiderDST() : Boolean.FALSE);
-      if (cronLikeOrder.getPayload() != null && cronLikeOrder.getPayload().trim().length() > 0) { 
+      if (cronLikeOrder.getPayload() != null && cronLikeOrder.getPayload().trim().length() > 0) {
         GeneralXynaObject payload = convertInputDataFromJsonToGeneralXynaObject(cronLikeOrder.getPayload(), cronLikeOrder.getDestination().getRuntimeContext().getRevision());
         builder.inputPayload(payload);
       }
@@ -201,7 +201,7 @@ public class CronLikeOrderServicesServiceOperationImpl implements ExtendedDeploy
                                                                    cronLikeOrder.getExecutionTime().getTimezone(),
                                                                    cronLikeOrder.getExecutionTime().getConsiderDST());
       }
-      
+
       CronLikeOrderCreationParameter clocp = CronLikeOrderCreationParameter.newClocpForModify()
         .calendarDefinition(calendarDefinition)
         .custom0(cronLikeOrder.getCronLikeOrderCustoms().getCustom0())
@@ -217,9 +217,9 @@ public class CronLikeOrderServicesServiceOperationImpl implements ExtendedDeploy
         .timeZoneId(cronLikeOrder.getExecutionTime().getTimezone())
         .useDST(cronLikeOrder.getExecutionTime().getConsiderDST() != null ? cronLikeOrder.getExecutionTime().getConsiderDST() : Boolean.FALSE)
         .build();
-      
+
       cronLikeScheduler.modifyTimeControlledOrder(cronLikeOrder.getID(), clocp);
-      
+
     } catch (XPRC_CronLikeOrderStorageException | XPRC_InvalidCronLikeOrderParametersException | XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       throw new UpdateCronLikeOrderException(e.getMessage(), e);
     }
@@ -412,12 +412,12 @@ public class CronLikeOrderServicesServiceOperationImpl implements ExtendedDeploy
     r.setNextExecutionTime(in.getNextExecution());
     if (in.getOnError() != null)
       r.setOnerror(in.getOnError().name());
-    
+
     if(in.isEnabled() != null && in.isEnabled())
       r.setStatus(STATUS_ACTIVE);
     else
       r.setStatus(STATUS_DISABLED);
-    
+
     r.setVersion(in.getVersionName());
     r.setWorkspace(in.getWorkspaceName());
     r.setName(in.getLabel());

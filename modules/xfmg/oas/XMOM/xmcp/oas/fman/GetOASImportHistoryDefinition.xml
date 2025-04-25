@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get OAS Import History Definition" TypeName="GetOASImportHistoryDefinition" TypePath="xmcp.oas.fman" Version="1.8">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get OAS Import History Definition" TypeName="GetOASImportHistoryDefinition" TypePath="xmcp.oas.fman" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Get OAS Import History Definition" Name="GetOASImportHistoryDefinition">
     <Input/>
     <Output>
       <Data ID="14" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition14"/>
     </Output>
-    <ServiceReference ID="8471" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
-      <Source RefID="8470"/>
-      <Target RefID="8470"/>
-    </ServiceReference>
     <ServiceReference ID="8135" Label="Set Runtime Context" ReferenceName="SetRuntimeContext" ReferencePath="xmcp.oas.fman">
       <Source RefID="8134"/>
       <Target RefID="8134"/>
+    </ServiceReference>
+    <ServiceReference ID="8471" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="8470"/>
+      <Target RefID="8470"/>
     </ServiceReference>
     <Function ID="8470" Label="get Own RuntimeContext">
       <Source RefID="8471"/>
@@ -129,6 +129,7 @@
       <Mapping>%3%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDialogButtonDefinition")=%2%</Mapping>
       <Mapping>%3%.label="OAS Import History"</Mapping>
       <Mapping>%3%.tableWorkflowFQN="xmcp.oas.fman.OASImportTableInfo"</Mapping>
+      <Mapping>%3%.triggerRefresh.eventId="oas_imp_hist_refresh"</Mapping>
     </Mappings>
     <Data ID="2275" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition2275">
       <Source RefID="2265"/>

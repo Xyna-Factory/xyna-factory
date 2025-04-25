@@ -432,6 +432,11 @@ abort_waiting_for_factory_start() {
   local TARGET_FILE="${PID_FOLDER}/xynafactory.pid"
   local MAX_TICK_FOR_PID=12; #nach soviel Ticks muss PID vorliegen
   local MAX_TICK_FOR_NOT_STARTING=10; #nach soviel Ticks muss Factory-Status STARTING sein
+
+  if [[ -z "${PID_FOLDER}" ]]; then
+    TARGET_FILE="${INSTALL_PREFIX}/server/xynafactory.pid"
+  fi
+
   if [[ ${TICK} -ge ${MAX_TICK_FOR_PID} ]] ; then
     if [[ ! -f "${TARGET_FILE}" ]]; then
       #echo "PID does not exist in tick ${TICK}";
@@ -557,6 +562,11 @@ f_get_xynafactory_pid () {
   local ret_val="false"
   local TARGET_FILE="${PID_FOLDER}/xynafactory.pid"
   local XYNA_PID
+
+  if [[ -z "${PID_FOLDER}" ]]; then
+    echo "pid folder not set. Expecting pid file at ${INSTALL_PREFIX}/server/xynafactory.pid"
+    TARGET_FILE="${INSTALL_PREFIX}/server/xynafactory.pid"
+  fi
 
   #  File can be found
   if [[ -f "${TARGET_FILE}" ]]; then

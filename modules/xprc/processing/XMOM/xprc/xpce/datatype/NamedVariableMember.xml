@@ -321,5 +321,18 @@ System.out.println("shortenedVarName: " + shortenedVarName);
         </CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation ID="16" IsStatic="false" Label="Get Member Object List" Name="getMemberObjectList">
+      <Input/>
+      <Output>
+        <Data ID="15" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" IsList="true" VariableName="anyType"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">try {
+    return (List&lt;GeneralXynaObject&gt;)parentObject.get(varName);
+  } catch( Exception e ) {
+    throw new RuntimeException(e);
+  }</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

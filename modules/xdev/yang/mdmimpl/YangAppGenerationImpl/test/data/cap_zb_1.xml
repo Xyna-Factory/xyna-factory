@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hello xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <capabilities>
+    <capability>http://www.gip.com/xyna/yang/test/testrpc_zb_1</capability>
+  </capabilities>
+  <session-id>1234</session-id>
+</hello>

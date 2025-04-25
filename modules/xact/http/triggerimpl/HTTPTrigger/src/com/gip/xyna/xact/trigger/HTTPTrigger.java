@@ -108,7 +108,7 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
   private AtomicLong receivedCounter = new AtomicLong(0);
   private AtomicLong rejectCounter = new AtomicLong(0);
 
-  public static final XynaPropertyString PROP_DEFAULT_ENCODING = new XynaPropertyString("xact.http.default_encoding", "")
+  public static final XynaPropertyString PROP_DEFAULT_ENCODING = new XynaPropertyString("xact.http.default_encoding", "UTF-8")
     .setDefaultDocumentation(DocumentationLanguage.EN,
     "Default encoding for incoming http-messages if none is provided in the http header")
     .setDefaultDocumentation(DocumentationLanguage.DE,
