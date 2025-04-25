@@ -98,12 +98,11 @@ class ExceptionXmlUtils:
       for xml_path in pathlib.Path(xmom_path).rglob('*.xml'):
         tree = etree.parse(str(xml_path))
         root = tree.getroot()
-        if verbose:
-          print(root.tag)
         if root.tag == ExceptionTagConstants.EXCEPTIONS_STORE.value:
           if verbose:
             print('found: '+ root.tag)
           for exception_type in root.iter(ExceptionTagConstants.EXCEPTION_TYPE.value):
+            print(exception_type)
             code_split = exception_type.attrib[ExceptionAttribConstants.CODE.value].split('-')
             exception_info = ExceptionInfo(str(xml_path),
                                            exception_type.attrib[ExceptionAttribConstants.TYPE_NAME.value],
