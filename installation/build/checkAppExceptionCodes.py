@@ -91,20 +91,15 @@ class ExceptionXmlUtils:
   def create_all_exception_info_by_xmom_path(self, path, verbose):
     target_dict = {}
     for xmom_path in pathlib.Path(path).rglob('XMOM'):
-      if verbose:
-        print(xmom_path)
       target_list = []
       target_dict[xmom_path] = target_list
       for xml_path in pathlib.Path(xmom_path).rglob('*.xml'):
         tree = etree.parse(str(xml_path))
         root = tree.getroot()
         if root.tag == ExceptionTagConstants.EXCEPTIONS_STORE.value:
-          if verbose:
-            print('found: '+ root.tag)
           for exception_type in root.iter(ExceptionTagConstants.EXCEPTION_TYPE.value):
-            print(exception_type)
-            print(exception_type.attrib[ExceptionAttribConstants.CODE.value])
-            code_split = exception_type.attrib[ExceptionAttribConstants.CODE.value].split('-')
+            code_split = exception_type.attrib[ExceptionAttribConstants.CODE.value].s.rsplit('-', 1)
+            
             exception_info = ExceptionInfo(str(xml_path),
                                            exception_type.attrib[ExceptionAttribConstants.TYPE_NAME.value],
                                            exception_type.attrib[ExceptionAttribConstants.TYPE_PATH.value],
