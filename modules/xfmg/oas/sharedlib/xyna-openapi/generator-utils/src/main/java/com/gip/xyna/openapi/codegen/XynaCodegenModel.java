@@ -101,9 +101,9 @@ public class XynaCodegenModel {
           collect(Collectors.toList());
     }
 
-    boolean hasAdditionalProperties = model.getModel().isAdditionalPropertiesTrue;
-    boolean additionalPropertiesSet = model.getModel().getAdditionalProperties() != null;
-    boolean noParentHasAdditionalProperties = !XynaModelUtils.parentModelHasAdditionalProperties(model.getModel().getParentModel());
+    boolean hasAdditionalProperties = model.isAdditionalPropertiesTrue;
+    boolean additionalPropertiesSet = model.getAdditionalProperties() != null;
+    boolean noParentHasAdditionalProperties = !XynaModelUtils.parentModelHasAdditionalProperties(model.getParentModel());
     if (hasAdditionalProperties && additionalPropertiesSet && noParentHasAdditionalProperties) {
       vars.add(factory.getPropertyToAddionalPropertyWrapper(model.getAdditionalProperties(), typeName));
     }
