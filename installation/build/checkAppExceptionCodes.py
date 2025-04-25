@@ -18,7 +18,7 @@
 
 import argparse
 import pathlib
-from xml import etree
+from lxml import etree
 from dataclasses import dataclass
 from enum import Enum
 

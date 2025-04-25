@@ -18,7 +18,7 @@
 
 import argparse
 import pathlib
-import xml.etree.ElementTree as ET
+from lxml import etree
 from dataclasses import dataclass
 from enum import Enum
 
@@ -81,7 +81,7 @@ class ApplicationXmlUtils:
       print(f"Determine application.xml in Path: {apps_paths}")
     for app_path in app_path_list:
       for path in pathlib.Path(app_path).rglob('application.xml'):
-        tree = ET.parse(str(path))
+        tree = etree.parse(str(path))
         root = tree.getroot()
         if ApplicationAttribConstants.APPLICATION_NAME.value in root.attrib and ApplicationAttribConstants.VERSION_NAME.value in root.attrib:
           app_info = ApplicationInfo(str(path), root.attrib[ApplicationAttribConstants.APPLICATION_NAME.value], root.attrib[ApplicationAttribConstants.VERSION_NAME.value])
