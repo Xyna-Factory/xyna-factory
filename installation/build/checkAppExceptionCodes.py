@@ -32,6 +32,10 @@ class ExceptionAttribConstants(Enum):
   TYPE_PATH = 'TypePath'
   IS_ABSTRACT = 'IsAbstract'
 
+class CheckTypeConstants(Enum):
+  CODE_NUMBER = 'code_number'
+  CODE_PREFIX = 'code_prefix'
+
 @dataclass
 class ExceptionInfo:
   path: str
@@ -42,27 +46,25 @@ class ExceptionInfo:
   
 @dataclass
 class ProcessedExceptionInfo:
-  xmom_path: str
-  fqdn_name: str
+  path: str
+  check_type: str
   status: str
 
   def __repr__(self):
-     return f"'{self.status}\', \'{self.xmom_path}\', '{self.fqdn_name}\')"
+     return f"'{self.check_type}\', '{self.status}\', \'{self.path}\')"
 
 class ExceptionXmlUtils:
 
   def check_exception_codes(self, path, verbose):
-    if verbose:
-      print(path)
-
     all_exception_info_by_xmom_path = self.create_all_exception_info_by_xmom_path(path, verbose)
     processed_exception_info_list = []
     for xmom_path, exception_info_list in all_exception_info_by_xmom_path.items():
       processed_exception_info_list = self.check_code_prefix(xmom_path, exception_info_list)
-      processed_exception_info_list.append(self.check_code_number(xmom_path, exception_info_list))
+      processed_exception_info_list.extends(self.check_code_number(xmom_path, exception_info_list))
 
     for processed_exception_info in processed_exception_info_list:
-      print(processed_exception_info)
+      if verbose or (not verbose and processed_exception_info.status != 'ok'): 
+        print(processed_exception_info)
 
   def check_code_prefix(self, xmom_path, exception_info_list):
     processed_exception_info_list = []
@@ -70,11 +72,10 @@ class ExceptionXmlUtils:
     for exception_info in exception_info_list:
       if not code_prefix:
         code_prefix = exception_info.code_prefix
-      fqdn_name = exception_info.type_path + '.' +  exception_info.type_name  
       if code_prefix == exception_info.code_prefix:
-        processed_exception_info = ProcessedExceptionInfo(xmom_path, fqdn_name, 'OK')
+        processed_exception_info = ProcessedExceptionInfo(xmom_path, CheckTypeConstants.CODE_PREFIX.value, 'OK')
       else:
-        processed_exception_info = ProcessedExceptionInfo(xmom_path, fqdn_name, 'NOK:code_prefix (expected: ' + code_prefix + ', actual: ' + exception_info.code_prefix + ') path: ' + exception_info.path)
+        processed_exception_info = ProcessedExceptionInfo(xmom_path, CheckTypeConstants.CODE_PREFIX.value, 'NOK:expected: ' + code_prefix + ', actual: ' + exception_info.code_prefix + ') path: ' + exception_info.path)
       processed_exception_info_list.append(processed_exception_info)
     return processed_exception_info_list
 
@@ -82,12 +83,11 @@ class ExceptionXmlUtils:
     processed_exception_info_list = []
     code_number_dict = {}
     for exception_info in exception_info_list:
-      fqdn_name = exception_info.type_path + '.' +  exception_info.type_name
       if exception_info.code_number not in code_number_dict:
         code_number_dict[exception_info.code_number] = exception_info
-        processed_exception_info = ProcessedExceptionInfo(xmom_path, fqdn_name, 'OK')
+        processed_exception_info = ProcessedExceptionInfo(xmom_path, CheckTypeConstants.CODE_NUMBER.value, 'OK')
       else:
-        processed_exception_info = ProcessedExceptionInfo(xmom_path, fqdn_name, 'NOK:code_number (not unique: ' + exception_info.code_number + ') paths: ' + exception_info.path + ', ' + code_number_dict[exception_info.code_number].path)
+        processed_exception_info = ProcessedExceptionInfo(xmom_path, CheckTypeConstants.CODE_NUMBER.value, 'NOK:not unique: ' + exception_info.code_number + ') paths: ' + exception_info.path + ', ' + code_number_dict[exception_info.code_number].path)
       processed_exception_info_list.append(processed_exception_info)
     return processed_exception_info_list
 
