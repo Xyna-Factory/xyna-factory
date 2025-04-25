@@ -23,7 +23,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 class ExceptionTagConstants(Enum):
-  EXCEPTIONS_STORE = '{http://www.gip.com/xyna/3.0/utils/message/storage/1.1}ExceptionStore'
+  EXCEPTIONS_STORE = 'ExceptionStore'
   EXCEPTION_TYPE = 'ExceptionType'
 
 class ExceptionAttribConstants(Enum):
@@ -100,7 +100,7 @@ class ExceptionXmlUtils:
         root = tree.getroot()
         if verbose:
           print(root.tag)
-        if str(root.tag) == ExceptionTagConstants.EXCEPTIONS_STORE:
+        if root.tag.endswith(ExceptionTagConstants.EXCEPTIONS_STORE):
           if verbose:
             print('found: '+ root.tag)
           for exception_type in root.iter(ExceptionTagConstants.EXCEPTION_TYPE.value):
