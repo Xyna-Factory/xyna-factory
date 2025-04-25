@@ -85,7 +85,7 @@ class ExceptionXmlUtils:
         code_number_dict[exception_info.code_number] = exception_info
         processed_exception_info = ProcessedExceptionInfo(xmom_path, 'OK')
       else:
-        processed_exception_info = ProcessedExceptionInfo(xmom_path, 'NOK:code_number (not unique: ' + exception_info.code_number + ') paths: ' + exception_info.path + ', ' + code_number_dict)
+        processed_exception_info = ProcessedExceptionInfo(xmom_path, 'NOK:code_number (not unique: ' + exception_info.code_number + ') paths: ' + exception_info.path + ', ' + code_number_dict[exception_info.code_number])
       processed_exception_info_list.append(processed_exception_info)
     return processed_exception_info_list
 
