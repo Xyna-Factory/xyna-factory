@@ -24,7 +24,7 @@ from enum import Enum
 
 class ExceptionTagConstants(Enum):
   EXCEPTIONS_STORE = '{http://www.gip.com/xyna/3.0/utils/message/storage/1.1}ExceptionStore'
-  EXCEPTION_TYPE = 'ExceptionType'
+  EXCEPTION_TYPE = '{http://www.gip.com/xyna/3.0/utils/message/storage/1.1}ExceptionType'
 
 class ExceptionAttribConstants(Enum):
   CODE = 'Code'
@@ -101,7 +101,7 @@ class ExceptionXmlUtils:
         if root.tag == ExceptionTagConstants.EXCEPTIONS_STORE.value:
           if verbose:
             print('found: '+ root.tag)
-          for exception_type in root.iter():
+          for exception_type in root.iter(ExceptionTagConstants.EXCEPTION_TYPE.value):
             print(exception_type)
             code_split = exception_type.attrib[ExceptionAttribConstants.CODE.value].split('-')
             exception_info = ExceptionInfo(str(xml_path),
