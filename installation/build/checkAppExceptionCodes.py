@@ -23,7 +23,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 class ExceptionTagConstants(Enum):
-  EXCEPTIONS_STORE = 'ExceptionStore'
+  EXCEPTIONS_STORE = '{http://www.gip.com/xyna/3.0/utils/message/storage/1.1}ExceptionStore'
   EXCEPTION_TYPE = 'ExceptionType'
 
 class ExceptionAttribConstants(Enum):
