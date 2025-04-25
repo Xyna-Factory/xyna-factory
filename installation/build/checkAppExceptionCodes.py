@@ -91,6 +91,8 @@ class ExceptionXmlUtils:
   def create_all_exception_info_by_xmom_path(self, path, verbose):
     target_dict = {}
     for xmom_path in pathlib.Path(path).rglob('XMOM'):
+      if verbose:
+        print(xmom_path)
       target_list = []
       target_dict[xmom_path] = target_list
       for xml_path in pathlib.Path(xmom_path).rglob('*.xml'):
