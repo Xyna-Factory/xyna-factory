@@ -96,8 +96,12 @@ class ExceptionXmlUtils:
       target_list = []
       target_dict[xmom_path] = target_list
       for xml_path in pathlib.Path(xmom_path).rglob('*.xml'):
+        if verbose:
+          print(xml_path)
         tree = etree.parse(str(xml_path))
         root = tree.getroot()
+        if verbose:
+          print(root.tag)
         if root.tag == ExceptionTagConstants.EXCEPTIONS_STORE:
           for exception_type in root.iter(ExceptionTagConstants.EXCEPTION_TYPE.value):
             code_split = exception_type.attrib[ExceptionAttribConstants.CODE.value].split('-')
