@@ -100,7 +100,7 @@ class ExceptionXmlUtils:
         root = tree.getroot()
         if verbose:
           print(root.tag)
-        if root.tag == ExceptionTagConstants.EXCEPTIONS_STORE:
+        if str(root.tag) == ExceptionTagConstants.EXCEPTIONS_STORE:
           if verbose:
             print('found: '+ root.tag)
           for exception_type in root.iter(ExceptionTagConstants.EXCEPTION_TYPE.value):
