@@ -37,7 +37,6 @@ class ExceptionInfo:
   path: str
   type_name: str
   type_path: str
-  is_abstract: str
   code_prefix: str
   code_number: str
   
@@ -107,7 +106,6 @@ class ExceptionXmlUtils:
               exception_info = ExceptionInfo(str(xml_path),
                                              exception_type.attrib[ExceptionAttribConstants.TYPE_NAME.value],
                                              exception_type.attrib[ExceptionAttribConstants.TYPE_PATH.value],
-                                             exception_type.attrib[ExceptionAttribConstants.IS_ABSTRACT.value],
                                              code_split[0],
                                              code_split[1])
               target_list.append(exception_info)
