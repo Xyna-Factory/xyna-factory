@@ -101,7 +101,9 @@ class ExceptionXmlUtils:
         if root.tag == ExceptionTagConstants.EXCEPTIONS_STORE.value:
           for exception_type in root.iter(ExceptionTagConstants.EXCEPTION_TYPE.value):
             code_split = exception_type.attrib[ExceptionAttribConstants.CODE.value].rsplit('-', 1)
-            
+            print("--->")
+            for s in code_split:
+              print(s)
             exception_info = ExceptionInfo(str(xml_path),
                                            exception_type.attrib[ExceptionAttribConstants.TYPE_NAME.value],
                                            exception_type.attrib[ExceptionAttribConstants.TYPE_PATH.value],
