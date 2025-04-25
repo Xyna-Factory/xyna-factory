@@ -30,12 +30,14 @@ class ExceptionAttribConstants(Enum):
   CODE = 'Code'
   TYPE_NAME = 'TypeName'
   TYPE_PATH = 'TypePath'
+  IS_ABSTRACT = 'IsAbstract'
 
 @dataclass
 class ExceptionInfo:
   path: str
   type_name: str
   type_path: str
+  is_abstract: str
   code_prefix: str
   code_number: str
   
@@ -100,18 +102,17 @@ class ExceptionXmlUtils:
         root = tree.getroot()
         if root.tag == ExceptionTagConstants.EXCEPTIONS_STORE.value:
           for exception_type in root.iter(ExceptionTagConstants.EXCEPTION_TYPE.value):
-            code_split = exception_type.attrib[ExceptionAttribConstants.CODE.value].rsplit('-', 1)
-            print(xml_path ,exception_type.attrib[ExceptionAttribConstants.CODE.value], "--->")
-            for s in code_split:
-              print(s)
-            exception_info = ExceptionInfo(str(xml_path),
-                                           exception_type.attrib[ExceptionAttribConstants.TYPE_NAME.value],
-                                           exception_type.attrib[ExceptionAttribConstants.TYPE_PATH.value],
-                                           code_split[0],
-                                           code_split[1])
-            target_list.append(exception_info)
-            if verbose:
-              print(exception_info)
+            if exception_type.attrib[ExceptionAttribConstants.IS_ABSTRACT.value] == 'false':
+              code_split = exception_type.attrib[ExceptionAttribConstants.CODE.value].rsplit('-', 1)
+              exception_info = ExceptionInfo(str(xml_path),
+                                             exception_type.attrib[ExceptionAttribConstants.TYPE_NAME.value],
+                                             exception_type.attrib[ExceptionAttribConstants.TYPE_PATH.value],
+                                             exception_type.attrib[ExceptionAttribConstants.IS_ABSTRACT.value],
+                                             code_split[0],
+                                             code_split[1])
+              target_list.append(exception_info)
+              if verbose:
+                print(exception_info)
 
     return target_dict 
 
