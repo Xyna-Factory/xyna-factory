@@ -101,6 +101,7 @@ class ExceptionXmlUtils:
         root = tree.getroot()
         if root.tag == ExceptionTagConstants.EXCEPTIONS_STORE.value:
           for exception_type in root.iter(ExceptionTagConstants.EXCEPTION_TYPE.value):
+            print(xml_path)
             if exception_type.attrib[ExceptionAttribConstants.IS_ABSTRACT.value] == 'false':
               code_split = exception_type.attrib[ExceptionAttribConstants.CODE.value].rsplit('-', 1)
               exception_info = ExceptionInfo(str(xml_path),
