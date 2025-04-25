@@ -101,7 +101,7 @@ class ExceptionXmlUtils:
         if root.tag == ExceptionTagConstants.EXCEPTIONS_STORE.value:
           if verbose:
             print('found: '+ root.tag)
-          for exception_type in root.iter(ExceptionTagConstants.EXCEPTION_TYPE.value):
+          for exception_type in root.iter():
             print(exception_type)
             code_split = exception_type.attrib[ExceptionAttribConstants.CODE.value].split('-')
             exception_info = ExceptionInfo(str(xml_path),
