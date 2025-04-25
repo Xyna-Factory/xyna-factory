@@ -103,6 +103,7 @@ class ExceptionXmlUtils:
             print('found: '+ root.tag)
           for exception_type in root.iter(ExceptionTagConstants.EXCEPTION_TYPE.value):
             print(exception_type)
+            print(exception_type.attrib[ExceptionAttribConstants.CODE.value])
             code_split = exception_type.attrib[ExceptionAttribConstants.CODE.value].split('-')
             exception_info = ExceptionInfo(str(xml_path),
                                            exception_type.attrib[ExceptionAttribConstants.TYPE_NAME.value],
