@@ -61,24 +61,39 @@ class ExceptionXmlUtils:
     for xmom_path, exception_info_list in all_exception_info_by_xmom_path.items():
       print('Check:' , xmom_path)
       processed_exception_info_list.extend(self.check_code(xmom_path, exception_info_list))
-    
+ 
     for processed_exception_info in processed_exception_info_list:
       if verbose or (not verbose and processed_exception_info.status == ProcessedExceptionInfoStatusConstants.NOK.value): 
         print(processed_exception_info)
 
 
   def check_code(self, xmom_path, exception_info_list):
+    all_exception_info_by_code = {}
+    for exception_info in exception_info_list:
+      if exception_info.code:
+        if exception_info.code not in code_dict:
+          code_list = []
+          code_list.append(exception_info)
+          all_exception_info_by_code[exception_info.code] = code_list
+        else:
+          all_exception_info_by_code[exception_info.code].append(exception_info)
+
     processed_exception_info_list = []
     code_dict = {}
     for exception_info in exception_info_list:
+      processed_exception_info = None
       if exception_info.is_abstract == False and not exception_info.code:
         processed_exception_info = ProcessedExceptionInfo(exception_info.path, ProcessedExceptionInfoStatusConstants.NOK.value, 'Not defined')
-      elif exception_info.code not in code_dict:
-        code_dict[exception_info.code] = exception_info
-        processed_exception_info = ProcessedExceptionInfo(exception_info.path, ProcessedExceptionInfoStatusConstants.OK.value, '')
+      elif exception_info.code in all_exception_info_by_code and len(all_exception_info_by_code[exception_info.code]) > 1:
+        path = ''
+        for path in all_exception_info_by_code[exception_info.code]:
+          if exception_info.path != path:
+            paths += path + ' '
+        processed_exception_info = ProcessedExceptionInfo(exception_info.path, ProcessedExceptionInfoStatusConstants.NOK.value, 'Not unique: ' + exception_info.code + ', see paths: ' + paths)
       else:
-        processed_exception_info = ProcessedExceptionInfo(exception_info.path, ProcessedExceptionInfoStatusConstants.NOK.value, 'Not unique: ' + exception_info.code + ', see path: ' + code_dict[exception_info.code].path)
-      processed_exception_info_list.append(processed_exception_info)
+        processed_exception_info = ProcessedExceptionInfo(exception_info.path, ProcessedExceptionInfoStatusConstants.OK.value, '')
+      if processed_exception_info:
+        processed_exception_info_list.append(processed_exception_info)
     return processed_exception_info_list
 
   def create_all_exception_info_by_xmom_path(self, path, verbose):
