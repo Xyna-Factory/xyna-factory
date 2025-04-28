@@ -71,7 +71,7 @@ class ExceptionXmlUtils:
     all_exception_info_by_code = {}
     for exception_info in exception_info_list:
       if exception_info.code:
-        if exception_info.code not in code_dict:
+        if exception_info.code not in exception_info:
           code_list = []
           code_list.append(exception_info)
           all_exception_info_by_code[exception_info.code] = code_list
@@ -79,7 +79,6 @@ class ExceptionXmlUtils:
           all_exception_info_by_code[exception_info.code].append(exception_info)
 
     processed_exception_info_list = []
-    code_dict = {}
     for exception_info in exception_info_list:
       processed_exception_info = None
       if exception_info.is_abstract == False and not exception_info.code:
