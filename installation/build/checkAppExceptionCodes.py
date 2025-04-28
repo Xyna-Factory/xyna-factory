@@ -84,7 +84,7 @@ class ExceptionXmlUtils:
       if exception_info.is_abstract == False and not exception_info.code:
         processed_exception_info = ProcessedExceptionInfo(exception_info.path, ProcessedExceptionInfoStatusConstants.NOK.value, 'Not defined')
       elif exception_info.code in all_exception_info_by_code and len(all_exception_info_by_code[exception_info.code]) > 1:
-        path = ''
+        paths = ''
         for path in all_exception_info_by_code[exception_info.code]:
           if exception_info.path != path:
             paths += path + ' '
