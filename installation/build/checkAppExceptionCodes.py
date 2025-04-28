@@ -117,7 +117,6 @@ class ExceptionXmlUtils:
                                            is_abstract,
                                            code)
             target_list.append(exception_info)
-
     return target_dict 
 
 if __name__ == '__main__':
