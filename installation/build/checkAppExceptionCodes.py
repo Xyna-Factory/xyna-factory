@@ -45,6 +45,7 @@ class ExceptionInfo:
   path: str
   type_name: str
   type_path: str
+  is_abstract: bool
   code_prefix: str
   code_number: str
   
@@ -89,7 +90,9 @@ class ExceptionXmlUtils:
     processed_exception_info_list = []
     code_number_dict = {}
     for exception_info in exception_info_list:
-      if exception_info.code_number not in code_number_dict:
+      if exception_info.is_abstract == False and not exception_info.code_number:
+        processed_exception_info = ProcessedExceptionInfo(exception_info.path, CheckTypeConstants.CODE_NUMBER.value, ProcessedExceptionInfoStatusConstants.NOK.value, 'Not defined')
+      elif exception_info.code_number not in code_number_dict:
         code_number_dict[exception_info.code_number] = exception_info
         processed_exception_info = ProcessedExceptionInfo(exception_info.path, CheckTypeConstants.CODE_NUMBER.value, ProcessedExceptionInfoStatusConstants.OK.value, '')
       else:
@@ -111,7 +114,18 @@ class ExceptionXmlUtils:
           for exception_type in root.iter(ExceptionTagConstants.EXCEPTION_TYPE.value):
             is_abstract = False
             if ExceptionAttribConstants.IS_ABSTRACT.value in exception_type.attrib and exception_type.attrib[ExceptionAttribConstants.IS_ABSTRACT.value] == 'true':
-                is_abstract = True
+              is_abstract = True
+            else:
+              is_abstract = False
+            
+            code_prefix = ''
+            code_number = ''
+            if ExceptionAttribConstants.CODE.value in exception_type.attrib:
+              code_split = exception_type.attrib[ExceptionAttribConstants.CODE.value].rsplit('-', 1)
+              if len(code_split) > 1:
+                code_prefix = code_split[0]
+                code_number = code_split[1]
+
             if not is_abstract:
               if ExceptionAttribConstants.CODE.value not in exception_type.attrib:
                 print("---->" , str(xml_path))
@@ -119,8 +133,9 @@ class ExceptionXmlUtils:
               exception_info = ExceptionInfo(str(xml_path),
                                              exception_type.attrib[ExceptionAttribConstants.TYPE_NAME.value],
                                              exception_type.attrib[ExceptionAttribConstants.TYPE_PATH.value],
-                                             code_split[0],
-                                             code_split[1])
+                                             is_abstract,
+                                             code_prefix,
+                                             code_number)
               target_list.append(exception_info)
               if verbose:
                 print(exception_info)
