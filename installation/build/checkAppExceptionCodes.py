@@ -71,7 +71,7 @@ class ExceptionXmlUtils:
     all_exception_info_by_code = {}
     for exception_info in exception_info_list:
       if exception_info.code:
-        if exception_info.code not in exception_info:
+        if exception_info.code not in all_exception_info_by_code:
           code_list = []
           code_list.append(exception_info)
           all_exception_info_by_code[exception_info.code] = code_list
