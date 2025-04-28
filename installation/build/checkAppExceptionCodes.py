@@ -56,7 +56,7 @@ class ProcessedExceptionInfo:
 class ExceptionXmlUtils:
 
   def check_exception_codes(self, path, verbose):
-    all_exception_info_by_xmom_path = self.create_all_exception_info_by_xmom_path(path, verbose)
+    all_exception_info_by_xmom_path = self.create_all_exception_info_by_xmom_path(path)
     processed_exception_info_list = []
     for xmom_path, exception_info_list in all_exception_info_by_xmom_path.items():
       print('Check:' , xmom_path)
@@ -91,11 +91,9 @@ class ExceptionXmlUtils:
         processed_exception_info_list.append(processed_exception_info)
     return processed_exception_info_list
 
-  def create_all_exception_info_by_xmom_path(self, path, verbose):
+  def create_all_exception_info_by_xmom_path(self, path):
     target_dict = {}
     for xmom_path in pathlib.Path(path).rglob('XMOM'):
-      if verbose:
-        print(xmom_path)
       target_list = []
       target_dict[xmom_path] = target_list
       for xml_path in pathlib.Path(xmom_path).rglob('*.xml'):
@@ -119,8 +117,6 @@ class ExceptionXmlUtils:
                                            is_abstract,
                                            code)
             target_list.append(exception_info)
-            if verbose:
-              print(exception_info)
 
     return target_dict 
 
