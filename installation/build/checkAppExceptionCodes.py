@@ -113,6 +113,8 @@ class ExceptionXmlUtils:
             if ExceptionAttribConstants.IS_ABSTRACT.value in exception_type.attrib and exception_type.attrib[ExceptionAttribConstants.IS_ABSTRACT.value] == 'true':
                 is_abstract = True
             if not is_abstract:
+              if ExceptionAttribConstants.CODE.value not in exception_type.attrib:
+                print("---->" , str(xml_path))
               code_split = exception_type.attrib[ExceptionAttribConstants.CODE.value].rsplit('-', 1)
               exception_info = ExceptionInfo(str(xml_path),
                                              exception_type.attrib[ExceptionAttribConstants.TYPE_NAME.value],
