@@ -67,7 +67,7 @@ class ExceptionXmlUtils:
     for xmom_path, exception_info_list in all_exception_info_by_xmom_path.items():
       processed_exception_info_list = self.check_code_prefix(xmom_path, exception_info_list)
       processed_exception_info_list.extend(self.check_code_number(xmom_path, exception_info_list))
-      print(xmom_path)
+      print('Check:' , xmom_path)
       for processed_exception_info in processed_exception_info_list:
         if verbose or (not verbose and processed_exception_info.status == ProcessedExceptionInfoStatusConstants.NOK.value): 
           print(processed_exception_info)
