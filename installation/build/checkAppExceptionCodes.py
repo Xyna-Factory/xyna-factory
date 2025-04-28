@@ -126,19 +126,15 @@ class ExceptionXmlUtils:
                 code_prefix = code_split[0]
                 code_number = code_split[1]
 
-            if not is_abstract:
-              if ExceptionAttribConstants.CODE.value not in exception_type.attrib:
-                print("---->" , str(xml_path))
-              code_split = exception_type.attrib[ExceptionAttribConstants.CODE.value].rsplit('-', 1)
-              exception_info = ExceptionInfo(str(xml_path),
-                                             exception_type.attrib[ExceptionAttribConstants.TYPE_NAME.value],
-                                             exception_type.attrib[ExceptionAttribConstants.TYPE_PATH.value],
-                                             is_abstract,
-                                             code_prefix,
-                                             code_number)
-              target_list.append(exception_info)
-              if verbose:
-                print(exception_info)
+            exception_info = ExceptionInfo(str(xml_path),
+                                           exception_type.attrib[ExceptionAttribConstants.TYPE_NAME.value],
+                                           exception_type.attrib[ExceptionAttribConstants.TYPE_PATH.value],
+                                           is_abstract,
+                                           code_prefix,
+                                           code_number)
+            target_list.append(exception_info)
+            if verbose:
+              print(exception_info)
 
     return target_dict 
 
