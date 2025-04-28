@@ -84,11 +84,7 @@ class ExceptionXmlUtils:
       if exception_info.is_abstract == False and not exception_info.code:
         processed_exception_info = ProcessedExceptionInfo(exception_info.path, ProcessedExceptionInfoStatusConstants.NOK.value, 'Not defined')
       elif exception_info.code in all_exception_info_by_code and len(all_exception_info_by_code[exception_info.code]) > 1:
-        paths = ''
-        for exc_info in all_exception_info_by_code[exception_info.code]:
-          if exception_info.path != exc_info.path:
-            paths += exc_info.path + ', '
-        processed_exception_info = ProcessedExceptionInfo(exception_info.path, ProcessedExceptionInfoStatusConstants.NOK.value, 'Not unique: ' + exception_info.code + ', see paths: ' + paths)
+        processed_exception_info = ProcessedExceptionInfo(exception_info.path, ProcessedExceptionInfoStatusConstants.NOK.value, 'Not unique' + exception_info.code)
       else:
         processed_exception_info = ProcessedExceptionInfo(exception_info.path, ProcessedExceptionInfoStatusConstants.OK.value, '')
       if processed_exception_info:
