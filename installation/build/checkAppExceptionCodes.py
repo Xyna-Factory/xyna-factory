@@ -32,10 +32,6 @@ class ExceptionAttribConstants(Enum):
   TYPE_PATH = 'TypePath'
   IS_ABSTRACT = 'IsAbstract'
 
-class CheckTypeConstants(Enum):
-  CODE_NUMBER = 'code_number'
-  CODE_PREFIX = 'code_prefix'
-
 class ProcessedExceptionInfoStatusConstants(Enum):
   OK = 'OK'
   NOK = 'NOK'
@@ -46,18 +42,16 @@ class ExceptionInfo:
   type_name: str
   type_path: str
   is_abstract: bool
-  code_prefix: str
-  code_number: str
+  code: str
   
 @dataclass
 class ProcessedExceptionInfo:
   path: str
-  check_type: str
   status: str
   info: str
 
   def __repr__(self):
-     return f"\'{self.status}\', '{self.check_type}\', '{self.info}\', \'{self.path}\')"
+     return f"\'{self.status}\', '{self.info}\', \'{self.path}\')"
 
 class ExceptionXmlUtils:
 
@@ -65,38 +59,24 @@ class ExceptionXmlUtils:
     all_exception_info_by_xmom_path = self.create_all_exception_info_by_xmom_path(path, verbose)
     processed_exception_info_list = []
     for xmom_path, exception_info_list in all_exception_info_by_xmom_path.items():
-      processed_exception_info_list = self.check_code_prefix(xmom_path, exception_info_list)
-      processed_exception_info_list.extend(self.check_code_number(xmom_path, exception_info_list))
+      processed_exception_info_list = self.check_code(xmom_path, exception_info_list)
       print('Check:' , xmom_path)
       for processed_exception_info in processed_exception_info_list:
         if verbose or (not verbose and processed_exception_info.status == ProcessedExceptionInfoStatusConstants.NOK.value): 
           print(processed_exception_info)
 
 
-  def check_code_prefix(self, xmom_path, exception_info_list):
+  def check_code(self, xmom_path, exception_info_list):
     processed_exception_info_list = []
-    code_prefix = None
+    code_dict = {}
     for exception_info in exception_info_list:
-      if not code_prefix:
-        code_prefix = exception_info.code_prefix
-      if code_prefix == exception_info.code_prefix:
-        processed_exception_info = ProcessedExceptionInfo(exception_info.path, CheckTypeConstants.CODE_PREFIX.value, ProcessedExceptionInfoStatusConstants.OK.value, '')
+      if exception_info.is_abstract == False and not exception_info.code:
+        processed_exception_info = ProcessedExceptionInfo(exception_info.path, ProcessedExceptionInfoStatusConstants.NOK.value, 'Not defined')
+      elif exception_info.code not in code_dict:
+        code_dict[exception_info.code] = exception_info
+        processed_exception_info = ProcessedExceptionInfo(exception_info.path, ProcessedExceptionInfoStatusConstants.OK.value, '')
       else:
-        processed_exception_info = ProcessedExceptionInfo(exception_info.path, CheckTypeConstants.CODE_PREFIX.value, ProcessedExceptionInfoStatusConstants.NOK.value, 'Expected: ' + code_prefix + ', actual: ' + exception_info.code_prefix)
-      processed_exception_info_list.append(processed_exception_info)
-    return processed_exception_info_list
-
-  def check_code_number(self, xmom_path, exception_info_list):
-    processed_exception_info_list = []
-    code_number_dict = {}
-    for exception_info in exception_info_list:
-      if exception_info.is_abstract == False and not exception_info.code_number:
-        processed_exception_info = ProcessedExceptionInfo(exception_info.path, CheckTypeConstants.CODE_NUMBER.value, ProcessedExceptionInfoStatusConstants.NOK.value, 'Not defined')
-      elif exception_info.code_number not in code_number_dict:
-        code_number_dict[exception_info.code_number] = exception_info
-        processed_exception_info = ProcessedExceptionInfo(exception_info.path, CheckTypeConstants.CODE_NUMBER.value, ProcessedExceptionInfoStatusConstants.OK.value, '')
-      else:
-        processed_exception_info = ProcessedExceptionInfo(exception_info.path, CheckTypeConstants.CODE_NUMBER.value, ProcessedExceptionInfoStatusConstants.NOK.value, 'Not unique: ' + exception_info.code_number + ', see path: ' + code_number_dict[exception_info.code_number].path)
+        processed_exception_info = ProcessedExceptionInfo(exception_info.path, ProcessedExceptionInfoStatusConstants.NOK.value, 'Not unique: ' + exception_info.code + ', see path: ' + code_dict[exception_info.code].path)
       processed_exception_info_list.append(processed_exception_info)
     return processed_exception_info_list
 
@@ -118,20 +98,15 @@ class ExceptionXmlUtils:
             else:
               is_abstract = False
             
-            code_prefix = ''
-            code_number = ''
+            code = ''
             if ExceptionAttribConstants.CODE.value in exception_type.attrib:
-              code_split = exception_type.attrib[ExceptionAttribConstants.CODE.value].rsplit('-', 1)
-              if len(code_split) > 1:
-                code_prefix = code_split[0]
-                code_number = code_split[1]
+              code = exception_type.attrib[ExceptionAttribConstants.CODE.value]
 
             exception_info = ExceptionInfo(str(xml_path),
                                            exception_type.attrib[ExceptionAttribConstants.TYPE_NAME.value],
                                            exception_type.attrib[ExceptionAttribConstants.TYPE_PATH.value],
                                            is_abstract,
-                                           code_prefix,
-                                           code_number)
+                                           code)
             target_list.append(exception_info)
             if verbose:
               print(exception_info)
