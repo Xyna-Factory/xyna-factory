@@ -59,7 +59,8 @@ class ExceptionXmlUtils:
     all_exception_info_by_xmom_path = self.create_all_exception_info_by_xmom_path(path)
     processed_exception_info_list = []
     for xmom_path, exception_info_list in all_exception_info_by_xmom_path.items():
-      print('Check:' , xmom_path)
+      if verbose:
+        print('Checked XMOM:' , xmom_path)
       processed_exception_info_list.extend(self.check_code(xmom_path, exception_info_list))
  
     for processed_exception_info in processed_exception_info_list:
