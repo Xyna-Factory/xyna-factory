@@ -64,14 +64,14 @@ class ExceptionXmlUtils:
         print('Checked XMOM:' , xmom_path)
       processed_exception_info_list.extend(self.check_code(xmom_path, exception_info_list))
  
-    is_failed = False
+    is_successful = True
     for processed_exception_info in processed_exception_info_list:
       if processed_exception_info.status == ProcessedExceptionInfoStatusConstants.NOK.value:
-        is_failed = True
+        is_successful = False
       if verbose or processed_exception_info.status == ProcessedExceptionInfoStatusConstants.NOK.value: 
         print(processed_exception_info)
     
-    return is_failed
+    return is_successful
 
   def check_code(self, xmom_path, exception_info_list):
     all_exception_info_by_code = {}
