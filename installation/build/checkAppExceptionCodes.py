@@ -16,6 +16,7 @@
 # limitations under the License.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+import sys
 import argparse
 import pathlib
 from lxml import etree
@@ -63,10 +64,14 @@ class ExceptionXmlUtils:
         print('Checked XMOM:' , xmom_path)
       processed_exception_info_list.extend(self.check_code(xmom_path, exception_info_list))
  
+    is_failed = False
     for processed_exception_info in processed_exception_info_list:
-      if verbose or (not verbose and processed_exception_info.status == ProcessedExceptionInfoStatusConstants.NOK.value): 
+      if processed_exception_info.status == ProcessedExceptionInfoStatusConstants.NOK.value:
+        is_failed = True
+      if verbose or processed_exception_info.status == ProcessedExceptionInfoStatusConstants.NOK.value: 
         print(processed_exception_info)
-
+    
+    return is_failed
 
   def check_code(self, xmom_path, exception_info_list):
     all_exception_info_by_code = {}
@@ -127,4 +132,5 @@ if __name__ == '__main__':
 
   args=parser.parse_args()
   exception_xml_utils = ExceptionXmlUtils()
-  exception_xml_utils.check_exception_codes(args.path, args.verbose)
+  if exception_xml_utils.check_exception_codes(args.path, args.verbose) == False:
+    sys.exit(1)
