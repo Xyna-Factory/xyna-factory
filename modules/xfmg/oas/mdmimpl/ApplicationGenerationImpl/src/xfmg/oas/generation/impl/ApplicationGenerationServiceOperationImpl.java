@@ -79,7 +79,7 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
       .setDefaultDocumentation(DocumentationLanguage.EN, "Create an XmomObject for Schemas of type array")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Erzeuge Xmom Objekte für Schemas mit Typ array");
   
-  public static final XynaPropertyBoolean legacyFilterNames = new XynaPropertyBoolean("xfmg.oas.legacyFilterNames", true)
+  public static final XynaPropertyBoolean legacyFilterNames = new XynaPropertyBoolean("xfmg.oas.legacyFilterNames", false)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Name the Filter always as OASFilter.")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Bennent den Filter immer OASFilter.");
 
