@@ -135,7 +135,11 @@ return (com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject)getClass().getClassLo
         <Documentation>When the JsonParser encounters an object, this method is called to create an object of the correct type. The resulting object should be either of the genericType passed to the method, or of a class derived from genericType.</Documentation>
       </Meta>
       <SourceCode>
-        <CodeSnippet Type="Java">return decide(genericType, jSONObject11);</CodeSnippet>
+        <CodeSnippet Type="Java">try {
+return (com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject)getClass().getClassLoader().loadClass(genericType).getConstructor().newInstance();
+} catch(Exception e) {
+return null;
+}</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
