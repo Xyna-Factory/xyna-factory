@@ -21,8 +21,6 @@ import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
-import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
-import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 import com.gip.xyna.xprc.exceptions.XPRC_DUPLICATE_CORRELATIONID;
 import com.gip.xyna.xprc.exceptions.XPRC_InvalidXMLForObjectCreationException;
@@ -36,9 +34,6 @@ import com.gip.xyna.xprc.xpce.WorkflowEngine;
 public class SynchronizationImpl {
   
   private static final String NULL_VALUE = "__NULL_VALUE_internal";
-  public static final XynaPropertyBoolean THROW_EXCEPTION = new XynaPropertyBoolean("xprc.synchronization.THROW_EXCEPTION", true)
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Ist die Synchronization Answer eine Exception, wird diese vom Await Schritt geworfen.")
-      .setDefaultDocumentation(DocumentationLanguage.EN, "If the synchronization answer is an exception, that exception is thrown by the await."); 
 
 
   public SynchronizationImpl() {
@@ -71,7 +66,7 @@ public class SynchronizationImpl {
     if (resultingAnswerString.equals(NULL_VALUE)) {
       return null;
     }
-    if (resultingAnswerString.startsWith("<Exception ") && THROW_EXCEPTION.get()) {
+    if (resultingAnswerString.startsWith("<Exception ")) {
       try {
         GeneralXynaObject obj = XynaObject.generalFromXml(resultingAnswerString, rootRevision);
         if (obj instanceof XynaException) {
