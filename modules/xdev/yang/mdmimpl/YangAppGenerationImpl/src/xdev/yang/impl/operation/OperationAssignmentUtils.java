@@ -76,7 +76,7 @@ public class OperationAssignmentUtils {
     DeviationList deviations = DeviationList.build(modules);
     Input input = rpc.getInput();
     if (!fromCache) {
-      new AugmentTools().handleAugment(modules, input);
+      new AugmentTools().handleAugment(modules);
     }
     List<ListConfiguration> listConfigs = ListConfiguration.loadListConfigurations(meta);
     AnyXmlSubstatementFinder finder = new AnyXmlSubstatementFinder(modules);
