@@ -106,15 +106,15 @@ public class OperationImplementationProvider {
     result.append("\n//").append(mapping.getMappingYangPath()).append(" -> ").append(mapping.getValue()).append("\n");
     
     List<MappingPathElement> mappingList = mapping.createPathList();
-    mappingList.removeIf(x -> hiddenYangKeywords.contains(x.getKeyword()));
     int insertIndex = 0;
     for (int i = 0; i < position.size(); i++) {
-      if (mappingList.size() < i) {
+      if (mappingList.size()-1 < i) {
         break;
       }
       MappingPathElement curPos = position.get(i);
       MappingPathElement mapPos = mappingList.get(i);
-      if (!Objects.equals(curPos, mapPos)) {
+      boolean bothHidden = hiddenYangKeywords.contains(curPos.getKeyword()) && hiddenYangKeywords.contains(mapPos.getKeyword());
+      if (!Objects.equals(curPos, mapPos) && !bothHidden) {
         break;
       }
       insertIndex = i;
@@ -136,18 +136,20 @@ public class OperationImplementationProvider {
           .append("for (int ").append(counterVarName).append(" = 0; ").append(counterVarName).append(" < ")
           .append(loopVareName).append("_list.size(); ").append(counterVarName).append("++) {\n")
           .append("Object ").append(loopVareName).append(" = ").append(loopVareName).append("_list.get(").append(counterVarName).append(");\n");
-        position.add(mappingList.get(i)); // dynamic lists are hidden, but we need to keep track of opened lists anyway
-      } else if(Constants.TYPE_LIST.equals(mappingList.get(i).getKeyword())) {
-        position.add(mappingList.get(i)); //static complex list
       }
+
       if(!hiddenYangKeywords.contains(mappingList.get(i).getKeyword())) {
         result.append("builder.startElementWithAttributes(\"").append(tag).append("\");\n")
           .append("builder.addAttribute(\"xmlns\", \"").append(mappingList.get(i).getNamespace()).append("\");\n");
         if (i != mappingList.size() - 1) { //do not close the final tag, because we want to set the value
           result.append("builder.endAttributes();\n");
-          position.add(mappingList.get(i)); //we close the final tag. As a result, we do not need to add that position
         }
       }
+
+      if (i != mappingList.size() - 1) {
+        position.add(mappingList.get(i)); //we will close the final tag. As a result, we do not need to add that position
+      }
+
     }
     String tag = cleanupTag(mappingList.get(mappingList.size() - 1).getYangPath());
     String value = determineMappingString(mapping.getValue());
@@ -194,13 +196,12 @@ public class OperationImplementationProvider {
 
 
   private String determineMappingString(String mappingValue) {
+    if (mappingValue.startsWith("\"")) {
+      return mappingValue;
+    }
     int firstDot = mappingValue.indexOf(".");
     if (firstDot == -1) {
-      if (mappingValue.startsWith("\"")) {
-        return mappingValue;
-      } else {
-        return String.format("String.valueOf(%s)", mappingValue);
-      }
+      return String.format("String.valueOf(%s)", mappingValue);
     } else {
       String variable = mappingValue.substring(0, firstDot);
       String path = mappingValue.substring(firstDot + 1);
