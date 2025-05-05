@@ -174,7 +174,7 @@ public class HTTPStartParameter extends EnhancedStartParameter {
   public static final StringParameter<String> SSL_CONTEXT_ALGORITHM =
       StringParameter.typeString("ssl")
           .documentation(Documentation.de("TLS-Protokoll").en("TLS protocol").build())
-          .defaultValue("TLS").pattern("^TLS(v1(\\.[1-3])?)?$").build();
+          .defaultValue("TLSv1.3").pattern("^TLS(v1(\\.[1-3])?)?$").build();
   public static final StringParameter<Boolean> SUPPRESS_LOGGING = StringParameter.typeBoolean("suppressRequestLogging").
                   documentation(Documentation.de("Unterdrücke requestabhängiges Logging").en("Suppress request dependent logging.").build()).
                   optional().defaultValue(false).build();
