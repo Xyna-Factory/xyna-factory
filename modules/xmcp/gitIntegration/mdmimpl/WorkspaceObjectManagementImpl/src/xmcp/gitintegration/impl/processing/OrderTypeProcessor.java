@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ package xmcp.gitintegration.impl.processing;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -142,11 +141,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
           if (toEntry.getMonitoringLevel() != null) {
             toMonitotingLevel = toEntry.getMonitoringLevel();
           }
-          // workaround: set default inheritance rule explicitly instead of using value null
-          if (fromEntry.getInheritanceRules() != null && toEntry.getInheritanceRules() == null) {
-            toEntry.setInheritanceRules(Arrays.asList(new InheritanceRule.Builder().parameterType("MonitoringLevel").value("")
-                .childFilter("").precedence("0").instance()));
-          }
+
           if (!Objects.equals(fromEntry.getDocumentation(), toEntry.getDocumentation())
               || (getDispatcherDestinationDiffTypeMap(fromEntry, toEntry).size() > 0)
               || (getInheritanceRuleDiffTypeMap(fromEntry, toEntry).size() > 0) || (getCapacityDiffTypeMap(fromEntry, toEntry).size() > 0)
@@ -847,6 +842,15 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
 
   @Override
   public void modify(OrderType from, OrderType to, long revision) {
+
+    // convert null to empty list, because modifyOrderType
+    // interprets null as 'no changes'. Instead, we want to
+    // explicitly remove all inheritance rules if none are
+    // configured.
+    if (to.getInheritanceRules() == null) {
+      to.setInheritanceRules(Collections.emptyList());
+    }
+
     try {
       OrdertypeParameter orderTypeParameter = createOrdertypeParameter(to, revision);
       getOrderTypeManagement().modifyOrdertype(orderTypeParameter);
