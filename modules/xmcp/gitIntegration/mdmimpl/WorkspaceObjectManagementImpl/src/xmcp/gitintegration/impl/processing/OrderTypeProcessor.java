@@ -254,7 +254,8 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
       } else if (childNode.getNodeName().equals(TAG_CHILDFILTER)) {
         ih.setChildFilter(childNode.getTextContent());
       } else if (childNode.getNodeName().equals(TAG_VALUE)) {
-        ih.setValue(childNode.getTextContent());
+        String value = childNode.getTextContent();
+        ih.setValue(value.equals("null") ? null : value);
       } else if (childNode.getNodeName().equals(TAG_PRECEDENCE)) {
         ih.setPrecedence(childNode.getTextContent());
       }
