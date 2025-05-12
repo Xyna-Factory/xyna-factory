@@ -639,12 +639,10 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
     if (from.getInheritanceRules() != null) {
       List<InheritanceRule> modifyList = new ArrayList<InheritanceRule>();
       for (InheritanceRule ir : from.getInheritanceRules()) {
-        if (toMap.get(ir.getParameterType() + ":" + ir.getChildFilter()) != null) {
+        InheritanceRule toIr = toMap.get(ir.getParameterType() + ":" + ir.getChildFilter());
+        if (toIr != null) {
           InheritanceRule fromIr = ir;
-          InheritanceRule toIr = toMap.get(ir.getParameterType() + ":" + ir.getChildFilter());
-          if (!fromIr.getValue().equals(toIr.getValue())
-              || ((fromIr.getPrecedence() != null) && !fromIr.getPrecedence().equals(toIr.getPrecedence()))
-              || ((toIr.getPrecedence() != null) && !toIr.getPrecedence().equals(fromIr.getPrecedence()))) {
+          if (!compareValue(fromIr.getValue(), toIr.getValue()) || !Objects.equals(fromIr.getPrecedence(), toIr.getPrecedence())) {
             // modifyList has 2 Elements (from,to)
             modifyList.add(fromIr);
             modifyList.add(toIr);
@@ -658,6 +656,13 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
     return resultMap;
   }
 
+  private static boolean compareValue(String val1, String val2) {
+    if(Objects.equals(val1, val2)) {
+      return true;
+    }
+    
+    return (val1 == null && val2.isEmpty()) || (val2 == null && val1.isEmpty());
+  }
 
   private static Map<WorkspaceContentDifferenceType, List<Capacity>> getCapacityDiffTypeMap(OrderType from, OrderType to) {
     Map<WorkspaceContentDifferenceType, List<Capacity>> resultMap = new HashMap<WorkspaceContentDifferenceType, List<Capacity>>();
