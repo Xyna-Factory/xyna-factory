@@ -23,6 +23,7 @@
         <path location="${basedir}/../../../" />
     </pathconvert>
     <property name="target.dir" value="${basedir}/deploy/" />
+    <property name="application.dir" value="${basedir}" />
     <property name="datamodelres" value="${basedir}/sharedlib/xyna-openapi/generators/xmom-data-model/src/main/resources/xmom-data-model/" />
 
     <target name="build">
