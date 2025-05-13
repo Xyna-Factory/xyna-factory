@@ -94,4 +94,14 @@ public class XynaModelUtils {
     }
     return null;
   }
+  
+  public static boolean parentModelHasAdditionalProperties(CodegenModel model) {
+    while (model != null) {
+      if (model.isAdditionalPropertiesTrue) {
+        return true;
+      }
+      model = model.getParentModel();
+    }
+    return false;
+  }
 }

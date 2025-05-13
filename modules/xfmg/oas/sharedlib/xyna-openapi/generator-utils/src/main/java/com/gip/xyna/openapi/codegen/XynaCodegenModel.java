@@ -100,7 +100,11 @@ public class XynaCodegenModel {
           map(prop -> factory.getOrCreateXynaCodegenProperty(prop, typeName)).
           collect(Collectors.toList());
     }
-    if (model.isAdditionalPropertiesTrue) {
+
+    boolean hasAdditionalProperties = model.isAdditionalPropertiesTrue;
+    boolean additionalPropertiesSet = model.getAdditionalProperties() != null;
+    boolean noParentHasAdditionalProperties = !XynaModelUtils.parentModelHasAdditionalProperties(model.getParentModel());
+    if (hasAdditionalProperties && additionalPropertiesSet && noParentHasAdditionalProperties) {
       vars.add(factory.getPropertyToAddionalPropertyWrapper(model.getAdditionalProperties(), typeName));
     }
 
