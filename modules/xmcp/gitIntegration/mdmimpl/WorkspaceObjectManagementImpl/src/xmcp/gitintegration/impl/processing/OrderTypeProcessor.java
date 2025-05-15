@@ -255,7 +255,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
         ih.setChildFilter(childNode.getTextContent());
       } else if (childNode.getNodeName().equals(TAG_VALUE)) {
         String value = childNode.getTextContent();
-        ih.setValue(value.equals("null") ? null : value);
+        ih.setValue(value.equals("null") ? "" : value);
       } else if (childNode.getNodeName().equals(TAG_PRECEDENCE)) {
         ih.setPrecedence(childNode.getTextContent());
       }
@@ -765,7 +765,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
           ddList.add(dd);
         }
 
-        // DispatcherDestination
+        // InheritanceRules
         List<InheritanceRule> irList = new ArrayList<InheritanceRule>();
         ot.setInheritanceRules(irList);
         Map<ParameterType, List<com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule>> irMap =
@@ -778,7 +778,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
               ir.setParameterType(ptEntry.toString());
               ir.setChildFilter(irEntry.getChildFilter());
               ir.setPrecedence(Integer.toString(irEntry.getPrecedence()));
-              ir.setValue(irEntry.getValueAsString());
+              ir.setValue(irEntry.getUnevaluatedValue());
               irList.add(ir);
             }
           }
@@ -843,15 +843,6 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
 
   @Override
   public void modify(OrderType from, OrderType to, long revision) {
-
-    // convert null to empty list, because modifyOrderType
-    // interprets null as 'no changes'. Instead, we want to
-    // explicitly remove all inheritance rules if none are
-    // configured.
-    if (to.getInheritanceRules() == null) {
-      to.setInheritanceRules(Collections.emptyList());
-    }
-
     try {
       OrdertypeParameter orderTypeParameter = createOrdertypeParameter(to, revision);
       getOrderTypeManagement().modifyOrdertype(orderTypeParameter);
@@ -927,7 +918,11 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
     orderTypeParameter.setRequiredCapacities(capacitySet);
 
     // InheritanceRules
-    Map<ParameterType, List<com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule>> ruleMap = new HashMap<>();
+    Map<ParameterType, List<com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule>> ruleMap;
+    ruleMap = new HashMap<>(Map.of(ParameterType.MonitoringLevel, new ArrayList<>(), 
+                                   ParameterType.SuspensionBackupMode, new ArrayList<>(),
+                                   ParameterType.BackupWhenRemoteCall, new ArrayList<>()));
+    orderTypeParameter.setParameterInheritanceRules(ruleMap);
     if ((item.getInheritanceRules() != null) && (item.getInheritanceRules().size() > 0)) {
       for (InheritanceRule ir : item.getInheritanceRules()) {
         ParameterType pt = ParameterType.valueOf(ir.getParameterType());
