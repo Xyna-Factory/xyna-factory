@@ -19,8 +19,13 @@
 package xdev.yang.impl.operation;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.yangcentral.yangkit.base.YangContext;
 import org.yangcentral.yangkit.base.YangElement;
@@ -32,7 +37,6 @@ import org.yangcentral.yangkit.model.api.stmt.Container;
 import org.yangcentral.yangkit.model.api.stmt.Description;
 import org.yangcentral.yangkit.model.api.stmt.Grouping;
 import org.yangcentral.yangkit.model.api.stmt.IfFeature;
-import org.yangcentral.yangkit.model.api.stmt.Input;
 import org.yangcentral.yangkit.model.api.stmt.Leaf;
 import org.yangcentral.yangkit.model.api.stmt.LeafList;
 import org.yangcentral.yangkit.model.api.stmt.Module;
@@ -43,24 +47,32 @@ import org.yangcentral.yangkit.model.api.stmt.YangList;
 import org.yangcentral.yangkit.model.api.stmt.YangStatement;
 import org.yangcentral.yangkit.model.impl.stmt.DescriptionImpl;
 
+import com.gip.xyna.utils.collections.Pair;
+
+import org.yangcentral.yangkit.common.api.QName;
+
 import xdev.yang.impl.YangStatementTranslator.YangStatementTranslation;
 
 
 public class AugmentTools {
 
+  private static Pattern qNamePattern = Pattern.compile("\\/([^:]*:)?([^\\/]+)");
+  
+  
   private PathTools _pathTools = new PathTools();
   
-  
-  public void handleAugment(List<Module> modules, Input input) {
-    if (input == null) { return; }
-    if (input.getSubElements() == null) { return; }
+  public void handleAugment(List<Module> modules) {
+    Map<String, Module> moduleNameMap = new HashMap<>();
     for (Module mod : modules) {
       if (mod.getAugments() == null) { continue; }
       for (Augment aug : mod.getAugments()) {
-        List<YangElement> sublist = YangStatementTranslation.getSubStatements(input);
+        Pair<List<QName>, Module> path = createQNamePath(aug, mod, modules, moduleNameMap);
+        if(path.getFirst().isEmpty()) { continue; }
+        List<YangElement> sublist = YangStatementTranslation.getSubStatements(path.getSecond());
+        
         for (YangElement elem : sublist) {
           if (elem instanceof YangStatement) {
-            handleAugment((YangStatement)elem, aug);
+            handleAugment((YangStatement)elem, aug, path.getFirst());
           }
         }
       }
@@ -68,11 +80,41 @@ public class AugmentTools {
   }
   
   
-  public void handleAugment(YangStatement root, Augment aug) {
+  private Pair<List<QName>, Module> createQNamePath(Augment aug, Module mod, List<Module> modules, Map<String, Module> moduleNameMap) {
+    List<QName> result = new ArrayList<QName>();
+    Matcher matcher = qNamePattern.matcher(aug.getArgStr());
+    Module firstMod = null;
+    while (matcher.find()) {
+      String importPrefix = matcher.group(1).substring(0, matcher.group(1).length() - 1);
+      String moduleName = mod.getImportByPrefix(importPrefix).getArgStr();
+      Module m = moduleNameMap.computeIfAbsent(moduleName, (s) -> findModule(modules, s));
+      if(m == null) { return new Pair<>(Collections.emptyList(), mod); }
+      if(firstMod == null) {
+        firstMod = m;
+      }
+      String namespace = m.getContext().getNamespace().getUri().toString();
+      QName name = new QName(namespace, matcher.group(2));
+      result.add(name);
+    }
+
+    return new Pair<>(result, firstMod);
+  }
+  
+  private Module findModule(List<Module> modules, String moduleName) {
+    for(Module m : modules) {
+      if(m.getArgStr().equals(moduleName)) {
+        return m;
+      }
+    }
+    return null;
+  }
+
+
+  public void handleAugment(YangStatement root, Augment aug, List<QName> path) {
     if (root == null) { return; }
     if (aug == null) { return; }
-    if (aug.getTargetPath() == null) { return; }
-    Optional<YangStatement> opt = _pathTools.navigateToPath(root, aug.getTargetPath().getPath(), 0);
+    if (path == null) { return; }
+    Optional<YangStatement> opt = _pathTools.navigateToPath(root, path, 0);
     if (!opt.isPresent()) { return; }
     List<YangElement> filtered = filterElementsToAdd(aug);
     for (YangElement elem : filtered) {
