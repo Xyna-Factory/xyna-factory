@@ -30,6 +30,7 @@ import org.yangcentral.yangkit.model.api.stmt.Anyxml;
 import org.yangcentral.yangkit.model.api.stmt.Case;
 import org.yangcentral.yangkit.model.api.stmt.Choice;
 import org.yangcentral.yangkit.model.api.stmt.Container;
+import org.yangcentral.yangkit.model.api.stmt.Grouping;
 import org.yangcentral.yangkit.model.api.stmt.Leaf;
 import org.yangcentral.yangkit.model.api.stmt.LeafList;
 import org.yangcentral.yangkit.model.api.stmt.Rpc;
@@ -101,6 +102,12 @@ public class YangStatementTranslator {
       if (statement instanceof Uses) {
         Uses uses = (Uses) statement; 
         if (uses.getRefGrouping() == null) {
+          if(uses.getContext() != null && uses.getContext().getCurModule() != null) {
+            Grouping grouping = uses.getContext().getCurModule().getGrouping(uses.getArgStr());
+            if(grouping != null) {
+              return grouping.getSubElements();
+            }
+          }
           return new ArrayList<YangElement>();
         }
         return uses.getRefGrouping().getSubElements();
