@@ -684,7 +684,7 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
 
   private String formatXmomRegistrationException(Triple<PullExecType , String, String> input) {
     StringBuilder sb = new StringBuilder();
-    sb.append("Cound not '").append(input.getFirst()).append(" ");
+    sb.append("Could not ").append(input.getFirst()).append(" '");
     sb.append(input.getThird()).append("' in workspace '");
     sb.append(input.getSecond()).append("'.");
     return sb.toString();
