@@ -16,6 +16,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><Application applicationName="YangBase" factoryVersion="" versionName="1.1.1" xmlVersion="1.1">
+  <ApplicationInfo>
+    <RuntimeContextRequirements>
+      <RuntimeContextRequirement>
+        <ApplicationName>Base</ApplicationName>
+        <VersionName>1.1.0</VersionName>
+      </RuntimeContextRequirement>
+    </RuntimeContextRequirements>
+  </ApplicationInfo>
   <XMOMEntries>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yang.MessageId</FqName>
