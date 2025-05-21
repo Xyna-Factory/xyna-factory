@@ -1,0 +1,65 @@
+/*
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ */
+package xmcp.yang.impl;
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+import base.Text;
+import xmcp.yang.TraceYangMappingCollection;
+import xmcp.yang.TraceYangMappingCollectionInstanceOperation;
+import xmcp.yang.TraceYangMappingCollectionSuperProxy;
+import xmcp.yang.YangMappingCollection;
+
+
+public class TraceYangMappingCollectionInstanceOperationImpl extends TraceYangMappingCollectionSuperProxy implements TraceYangMappingCollectionInstanceOperation {
+
+  private static final long serialVersionUID = 1L;
+
+  public TraceYangMappingCollectionInstanceOperationImpl(TraceYangMappingCollection instanceVar) {
+    super(instanceVar);
+  }
+
+  public YangMappingCollection merge(YangMappingCollection yangMappingCollection1) {
+    YangMappingCollection ret = super.merge(yangMappingCollection1);
+    getInstanceVar().setMappingList(adaptToText(ret.getMappings()));
+    getInstanceVar().setNamespaceList(adaptToText(ret.getNamespaces()));
+    return ret;
+  }
+  
+  private List<Text> adaptToText(List<String> list) {
+    List<Text> ret = new ArrayList<>();
+    if (list == null) { return ret; }
+    for (String item : list) {
+      Text text = new Text();
+      text.setText(item);
+      ret.add(text);
+    }
+    return ret;
+  }
+  
+  
+  @Override
+  public Object clone() {
+    TraceYangMappingCollectionInstanceOperationImpl ret = new TraceYangMappingCollectionInstanceOperationImpl(getInstanceVar());
+    cloneContent(ret);
+    return ret;
+  }
+  
+}

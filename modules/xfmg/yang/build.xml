@@ -23,8 +23,18 @@
         <path location="${basedir}/../../../" />
     </pathconvert>
     <property name="target.dir" value="${basedir}/deploy/" />
+    <property name="application.dir" value="${basedir}" />
 
     <target name="build">
+        <antcall target="prepare-mdm-jar-if-missing" />
+
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="${basedir}/mdmimpl/YangMappingCollectionImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
+
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="${basedir}/mdmimpl/TraceYangMappingCollectionImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
 
         <antcall target="build-application" />
     </target>
