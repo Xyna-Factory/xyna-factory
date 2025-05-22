@@ -639,7 +639,7 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
 
     String workspace = storable.getWorkspacename();
     String subPath = storable.getSubpath();
-    int offset = storable.getSavedinrepo() ? 12 : 5; // 5 => /XMOM/, 12 => /saved/XMOM/
+    int offset = storable.getSavedinrepo() ? 11 : 5; // 5 => XMOM/, 12 => saved/XMOM/
 
     if (pathInRepo.length() < subPath.length() + offset) {
       if (logger.isDebugEnabled()) {
