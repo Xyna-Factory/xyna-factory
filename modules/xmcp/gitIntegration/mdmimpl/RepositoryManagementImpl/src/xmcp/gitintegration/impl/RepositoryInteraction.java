@@ -42,8 +42,6 @@ import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PushCommand;
 import org.eclipse.jgit.api.RmCommand;
-import org.eclipse.jgit.api.Status;
-import org.eclipse.jgit.api.StatusCommand;
 import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
 import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
@@ -106,11 +104,8 @@ import xmcp.gitintegration.repository.Branch;
 import xmcp.gitintegration.repository.BranchData;
 import xmcp.gitintegration.repository.ChangeSet;
 import xmcp.gitintegration.repository.Commit;
-import xmcp.gitintegration.repository.IndexedWorkspaceFileChange;
 import xmcp.gitintegration.repository.RepositoryConnection;
-import xmcp.gitintegration.repository.RepositoryConnectionGroup;
 import xmcp.gitintegration.repository.RepositoryUser;
-import xmcp.gitintegration.repository.WorkspaceFileChangeList;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
 import xmcp.gitintegration.storage.UserManagementStorage;
@@ -644,7 +639,7 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
 
     String workspace = storable.getWorkspacename();
     String subPath = storable.getSubpath();
-    int offset = storable.getSavedinrepo() ? 12 : 5; // 5 => /XMOM/, 12 => /saved/XMOM/
+    int offset = storable.getSavedinrepo() ? 11 : 5; // 5 => XMOM/, 12 => saved/XMOM/
 
     if (pathInRepo.length() < subPath.length() + offset) {
       if (logger.isDebugEnabled()) {
@@ -677,9 +672,9 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
       logger.debug("pathInRepo: " + pathInRepo + ", subPath: " + subPath + " -- path: " + path);
     }
 
-    if (savedinrepo && path.startsWith("/saved/XMOM")) {
+    if (savedinrepo && path.startsWith("/saved/XMOM/")) {
       return true;
-    } else if (!savedinrepo && path.startsWith("/XMOM")) {
+    } else if (!savedinrepo && path.startsWith("/XMOM/")) {
       return true;
     }
 
@@ -689,7 +684,7 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
 
   private String formatXmomRegistrationException(Triple<PullExecType , String, String> input) {
     StringBuilder sb = new StringBuilder();
-    sb.append("Cound not ").append(input.getFirst()).append(" ");
+    sb.append("Could not ").append(input.getFirst()).append(" '");
     sb.append(input.getThird()).append("' in workspace '");
     sb.append(input.getSecond()).append("'.");
     return sb.toString();

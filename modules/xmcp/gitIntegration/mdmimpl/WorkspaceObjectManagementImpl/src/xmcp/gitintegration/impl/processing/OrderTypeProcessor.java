@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ package xmcp.gitintegration.impl.processing;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -142,11 +141,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
           if (toEntry.getMonitoringLevel() != null) {
             toMonitotingLevel = toEntry.getMonitoringLevel();
           }
-          // workaround: set default inheritance rule explicitly instead of using value null
-          if (fromEntry.getInheritanceRules() != null && toEntry.getInheritanceRules() == null) {
-            toEntry.setInheritanceRules(Arrays.asList(new InheritanceRule.Builder().parameterType("MonitoringLevel").value("")
-                .childFilter("").precedence("0").instance()));
-          }
+
           if (!Objects.equals(fromEntry.getDocumentation(), toEntry.getDocumentation())
               || (getDispatcherDestinationDiffTypeMap(fromEntry, toEntry).size() > 0)
               || (getInheritanceRuleDiffTypeMap(fromEntry, toEntry).size() > 0) || (getCapacityDiffTypeMap(fromEntry, toEntry).size() > 0)
@@ -259,7 +254,8 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
       } else if (childNode.getNodeName().equals(TAG_CHILDFILTER)) {
         ih.setChildFilter(childNode.getTextContent());
       } else if (childNode.getNodeName().equals(TAG_VALUE)) {
-        ih.setValue(childNode.getTextContent());
+        String value = childNode.getTextContent();
+        ih.setValue(value.equals("null") ? "" : value);
       } else if (childNode.getNodeName().equals(TAG_PRECEDENCE)) {
         ih.setPrecedence(childNode.getTextContent());
       }
@@ -769,7 +765,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
           ddList.add(dd);
         }
 
-        // DispatcherDestination
+        // InheritanceRules
         List<InheritanceRule> irList = new ArrayList<InheritanceRule>();
         ot.setInheritanceRules(irList);
         Map<ParameterType, List<com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule>> irMap =
@@ -782,7 +778,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
               ir.setParameterType(ptEntry.toString());
               ir.setChildFilter(irEntry.getChildFilter());
               ir.setPrecedence(Integer.toString(irEntry.getPrecedence()));
-              ir.setValue(irEntry.getValueAsString());
+              ir.setValue(irEntry.getUnevaluatedValue());
               irList.add(ir);
             }
           }
@@ -922,7 +918,11 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
     orderTypeParameter.setRequiredCapacities(capacitySet);
 
     // InheritanceRules
-    Map<ParameterType, List<com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule>> ruleMap = new HashMap<>();
+    Map<ParameterType, List<com.gip.xyna.xprc.xpce.parameterinheritance.rules.InheritanceRule>> ruleMap;
+    ruleMap = new HashMap<>(Map.of(ParameterType.MonitoringLevel, new ArrayList<>(), 
+                                   ParameterType.SuspensionBackupMode, new ArrayList<>(),
+                                   ParameterType.BackupWhenRemoteCall, new ArrayList<>()));
+    orderTypeParameter.setParameterInheritanceRules(ruleMap);
     if ((item.getInheritanceRules() != null) && (item.getInheritanceRules().size() > 0)) {
       for (InheritanceRule ir : item.getInheritanceRules()) {
         ParameterType pt = ParameterType.valueOf(ir.getParameterType());
