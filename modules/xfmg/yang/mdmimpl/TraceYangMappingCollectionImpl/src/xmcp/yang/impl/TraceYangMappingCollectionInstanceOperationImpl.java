@@ -38,25 +38,17 @@ public class TraceYangMappingCollectionInstanceOperationImpl extends TraceYangMa
 
   public YangMappingCollection merge(YangMappingCollection yangMappingCollection1) {
     YangMappingCollection ret = super.merge(yangMappingCollection1);
-    getInstanceVar().setMappingList(adaptToText(ret.getMappings()));
-    getInstanceVar().setNamespaceList(adaptToText(ret.getNamespaces()));
-    return ret;
-  }
-  
-  private List<Text> adaptToText(List<String> list) {
-    List<Text> ret = new ArrayList<>();
-    if (list == null) { return ret; }
-    for (String item : list) {
-      Text text = new Text();
-      text.setText(item);
-      ret.add(text);
-    }
+    getInstanceVar().setMappingList(new ArrayList<String>(ret.getMappings()));
+    getInstanceVar().setNamespaceList(new ArrayList<String>(ret.getNamespaces()));
     return ret;
   }
   
   
   @Override
   public Object clone() {
+    // Parameter to constructor below (instance-var) is irrelevant since it will be replaced later with the cloned instance-var
+    // (this clone()-method here is supposed to be called only implicitly when cloning the XMOM-class to which this impl-class belongs,
+    // i.e. the instance-var used below)
     TraceYangMappingCollectionInstanceOperationImpl ret = new TraceYangMappingCollectionInstanceOperationImpl(getInstanceVar());
     cloneContent(ret);
     return ret;

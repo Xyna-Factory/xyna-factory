@@ -19,13 +19,15 @@
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data IsList="true" Label="Mapping List" ReferenceName="Text" ReferencePath="base" VariableName="mappingList">
+  <Data IsList="true" Label="Mapping List" VariableName="mappingList">
     <Meta>
+      <Type>String</Type>
       <Documentation>Intended to be READ ONLY: Please do not make explicit assignments to this attribute</Documentation>
     </Meta>
   </Data>
-  <Data IsList="true" Label="Namespace List" ReferenceName="Text" ReferencePath="base" VariableName="namespaceList">
+  <Data IsList="true" Label="Namespace List" VariableName="namespaceList">
     <Meta>
+      <Type>String</Type>
       <Documentation>Intended to be READ ONLY: Please do not make explicit assignments to this attribute</Documentation>
     </Meta>
   </Data>

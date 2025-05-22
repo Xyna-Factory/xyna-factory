@@ -71,6 +71,9 @@ public class YangMappingCollectionInstanceOperationImpl extends YangMappingColle
 
   @Override
   public Object clone() {
+    // Parameter to constructor below (instance-var) is irrelevant since it will be replaced later with the cloned instance-var
+    // (this clone()-method here is supposed to be called only implicitly when cloning the XMOM-class to which this impl-class belongs,
+    // i.e. the instance-var used below)
     YangMappingCollectionInstanceOperationImpl ret = new YangMappingCollectionInstanceOperationImpl(getInstanceVar());
     cloneContent(ret);
     return ret;
