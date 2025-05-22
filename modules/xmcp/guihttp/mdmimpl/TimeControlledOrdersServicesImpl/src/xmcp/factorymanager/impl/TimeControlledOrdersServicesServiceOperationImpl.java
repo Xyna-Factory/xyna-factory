@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 package xmcp.factorymanager.impl;
+
 
 
 import java.text.DateFormat;
@@ -41,6 +42,11 @@ import com.gip.xyna.utils.misc.JsonParser;
 import com.gip.xyna.utils.misc.JsonParser.InvalidJSONException;
 import com.gip.xyna.utils.misc.JsonParser.UnexpectedJSONContentException;
 import com.gip.xyna.utils.timing.ExecutionPeriod.Type;
+import com.gip.xyna.xact.filter.util.xo.GenericResult;
+import com.gip.xyna.xact.filter.util.xo.GenericVisitor;
+import com.gip.xyna.xact.filter.util.xo.Util;
+import com.gip.xyna.xact.filter.util.xo.XynaObjectJsonBuilder;
+import com.gip.xyna.xact.filter.util.xo.XynaObjectVisitor;
 import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
@@ -82,11 +88,6 @@ import com.gip.xyna.xprc.xsched.timeconstraint.windows.TimeWindow;
 
 import xmcp.factorymanager.TimeControlledOrdersServicesServiceOperation;
 import xmcp.factorymanager.impl.converter.TimeWindowConverter;
-import xmcp.factorymanager.impl.converter.payload.GenericResult;
-import xmcp.factorymanager.impl.converter.payload.GenericVisitor;
-import xmcp.factorymanager.impl.converter.payload.Util;
-import xmcp.factorymanager.impl.converter.payload.XynaObjectJsonBuilder;
-import xmcp.factorymanager.impl.converter.payload.XynaObjectVisitor;
 import xmcp.factorymanager.shared.OrderCustoms;
 import xmcp.factorymanager.shared.OrderDestination;
 import xmcp.factorymanager.shared.OrderExecutionTime;
@@ -107,7 +108,7 @@ import xmcp.zeta.TableHelper.Filter;
 
 
 public class TimeControlledOrdersServicesServiceOperationImpl implements ExtendedDeploymentTask, TimeControlledOrdersServicesServiceOperation {
-  
+
   private static final String TABLE_PATH_ID = "id.id";
   private static final String TABLE_PATH_NAME = "name";
   private static final String TABLE_PATH_APPLICATION = "application";
@@ -117,15 +118,15 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
   private static final String TABLE_PATH_START_TIME = "startTime";
   private static final String TABLE_PATH_INTERVAL = "interval";
   private static final String TABLE_PATH_STATUS = "status";
-  
+
   private static final Logger logger = CentralFactoryLogging.getLogger(TimeControlledOrdersServicesServiceOperationImpl.class);
-  
+
   private static final ZoneId FACTORY_ZONE_ID = ZoneId.of("UTC");
-  
+
   private final BatchProcessManagement batchProcessManagement = XynaFactory.getInstance().getProcessing().getBatchProcessManagement();
 
   private final RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
-    
+
   public void onDeployment() throws XynaException {
     // This is executed again on each classloader-reload, that is each
     // time a dependent object is redeployed, for example a type of an input parameter.
@@ -152,7 +153,7 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
     // If null is returned, the factory default <IGNORE> will be used.
     return null;
   }
-  
+
   @Override
   public void updateTCO(TimeControlledOrder tco) throws UpdateTCOException {
     try {
@@ -167,7 +168,7 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
           success = batchProcessManagement.pauseBatchProcess(batchProcessId);
         }
       }
-      
+
       if(!success) {
         throw new UpdateTCOException("Update wasn't successfully.");
       }
@@ -176,7 +177,7 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
       throw new UpdateTCOException(ex.getMessage(), ex);
     }
   }
-  
+
   @Override
   public TimeControlledOrder getTCODetails(TCOId tcoId) throws LoadTCODetailsException {
     try {
@@ -191,7 +192,7 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
       throw new LoadTCODetailsException(ex.getMessage(), ex);
     }
   }
-  
+
   @Override
   public TCOId createTCO(TimeControlledOrder tco) throws CreateTCOException {
     try {
@@ -202,7 +203,7 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
       throw new CreateTCOException(ex.getMessage(), ex);
     }
   }
-  
+
   private TimeControlledOrder convert(BatchProcessInformation input) {
     if(input == null) {
       return null;
@@ -211,35 +212,35 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
     tco.setId(new TCOId(input.getBatchProcessId()));
     tco.setName(input.getLabel());
     tco.setArchived(input.getMasterOrderCreationParameter() == null);
-    
+
     TCOExecutionRestriction executionRestriction = new TCOExecutionRestriction();
-    
+
     OrderExecutionTime oet = new OrderExecutionTime();
     DestinationKey destinationKey = null;
-    
+
     if(input.getArchive() != null) {
       BatchProcessArchiveStorable archiv = input.getArchive();
       tco.setOrderCustoms(new OrderCustoms(archiv.getCustom0(), archiv.getCustom1(), archiv.getCustom2(), archiv.getCustom3()));
       executionRestriction.setMaximumExcecutions(archiv.getTotal());
       destinationKey = archiv.getDestinationKey();
     }
-    
+
     executionRestriction.setExecutionTimeout(null); // TODO Ist das wirklich immer null?
     executionRestriction.setTreatTimeoutsAsError(true); // TODO Ist das wirklich immer true?
-    
+
     if(destinationKey != null) {
       tco.setOrderDestination(new OrderDestination(destinationKey.getOrderType(), convert(destinationKey.getRuntimeContext())));
     }
-    
+
     String timeZone = null;
     Boolean considerDST = null;
-    
+
     if(input.getRestartInformation() != null) {
       BatchProcessRestartInformationStorable restartInfo = input.getRestartInformation();
       tco.setFilterCriteria(restartInfo.getInputQuery());
       tco.setSortCriteria(restartInfo.getInputSortCriteria());
       tco.setStorableFqn(restartInfo.getInputStorable());
-      
+
       if(restartInfo.getGuiRepresentationData() != null) {
         String[] split = restartInfo.getGuiRepresentationData().split("@");
         if(split.length == 2) {
@@ -249,7 +250,7 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
         oet.setConsiderDST(considerDST);
         oet.setTimezone(timeZone);
       }
-      
+
       if(restartInfo.getConstantInput() != null && !restartInfo.getConstantInput().isEmpty() && destinationKey != null) {
         try {
           tco.setInputPayload(convertInputDataFromXmlToJson(restartInfo.getConstantInput(), revisionManagement.getRevision(destinationKey.getRuntimeContext())));
@@ -264,13 +265,13 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
       if(restartInfo.getSlaveTimeConstraint() instanceof TimeConstraint_Start_Timeout) {
         TimeConstraint_Start_Timeout tct = (TimeConstraint_Start_Timeout)restartInfo.getSlaveTimeConstraint();
         Long serverEndtime = tct.getSchedulingTimeout().getAbsoluteTime();
-        
+
         oet.setEndTime(convertTimestampToTimeZone(serverEndtime, FACTORY_ZONE_ID, ZoneId.of(timeZone)));
       }
       if(restartInfo.getSlaveExecutionPeriod() != null) {
         executionRestriction.setExecutionInterval(restartInfo.getSlaveExecutionPeriod().getInterval());
       }
-      
+
       if(restartInfo.getMasterSchedulingData() != null) {
         SchedulingData schedulingData = restartInfo.getMasterSchedulingData();
         if(schedulingData.getTimeConstraint() != null) {
@@ -280,7 +281,7 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
         }
       }
     }
-    
+
     if(input.getRuntimeInformation() != null) {
       if(input.getRuntimeInformation().getState() == BatchProcessState.PAUSED) {
         tco.setEnabled(false);
@@ -288,7 +289,7 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
         tco.setEnabled(true);
       }
     }
-    
+
     if(input.getMasterOrderCreationParameter() != null) {
       RemoteXynaOrderCreationParameter ocp = input.getMasterOrderCreationParameter();
       tco.setOrderCustoms(new OrderCustoms(ocp.getCustom0(), ocp.getCustom1(), ocp.getCustom2(), ocp.getCustom3()));
@@ -299,19 +300,19 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
       oet.setStartTime(convertTimestampToTimeZone(tcd.startTime, FACTORY_ZONE_ID, ZoneId.of(timeZone)));
       oet.setEndTime(convertTimestampToTimeZone(tcd.endTime, FACTORY_ZONE_ID, ZoneId.of(timeZone)));
     }
-    
+
     tco.setPlanningHorizon(oet);
     tco.setTCOExecutionRestriction(executionRestriction);
-    
+
     return tco;
   }
-  
+
   private static class TimeConstraintData {
-    
+
     private Long startTime;
     private Long endTime;
-    
-    
+
+
     public TimeConstraintData(TimeConstraint tc) {
       if(tc instanceof TimeConstraint_Start) {
         TimeConstraint_Start tcs = (TimeConstraint_Start)tc;
@@ -328,23 +329,23 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
         endTime = d.endTime;
       }
     }
-    
+
   }
-  
+
   private Long convertTimestampToTimeZone(Long timestamp, ZoneId sourceTimeZone, ZoneId destinationTimeZone) {
-    
+
     if(timestamp == null || sourceTimeZone == null || destinationTimeZone == null) {
       return timestamp;
     }
-    
+
     int srcOffsetSeconds = sourceTimeZone.getRules().getOffset(Instant.now()).getTotalSeconds();
     int dstOffsetSeconds = destinationTimeZone.getRules().getOffset(Instant.now()).getTotalSeconds();
-    
+
     long utcTimestamp = timestamp - srcOffsetSeconds * 1000;
     return utcTimestamp + dstOffsetSeconds * 1000;
   }
 
-  
+
   private BatchProcessInput convert(TimeControlledOrder tco) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
     BatchProcessInput batchProcessInput = new BatchProcessInput();
     batchProcessInput.setLabel(tco.getName());
@@ -353,19 +354,19 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
     batchProcessInput.setMaxParallelism(1);
     batchProcessInput.setSlaveOrderType(tco.getOrderDestination().getOrderType());
     batchProcessInput.setPaused(!tco.getEnabled());
-    
-    OrderExecutionTime orderExecutionTime = tco.getPlanningHorizon(); 
+
+    OrderExecutionTime orderExecutionTime = tco.getPlanningHorizon();
     if(orderExecutionTime != null) {
       if(orderExecutionTime.getTimeWindow() != null) {
         batchProcessInput.setTimeWindowDefinition(TimeWindowConverter.convertTimeWindow(
-                                                        orderExecutionTime.getTimeWindow(), 
+                                                        orderExecutionTime.getTimeWindow(),
                                                         orderExecutionTime.getTimezone(),
                                                         orderExecutionTime.getConsiderDST())
         );
       }
       batchProcessInput.setGuiRepresentationData(orderExecutionTime.getTimezone() + "@" + Boolean.toString(orderExecutionTime.getConsiderDST()));
     }
-    
+
     TCOExecutionRestriction executionRestriction = tco.getTCOExecutionRestriction();
     TimeConstraint_Start slaveTimeConstraint = TimeConstraint.immediately();
     if(executionRestriction != null) {
@@ -378,10 +379,10 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
       }
     }
     batchProcessInput.setSlaveTimeConstraint(slaveTimeConstraint);
-    
+
     return batchProcessInput;
   }
-  
+
   private  RemoteXynaOrderCreationParameter generateMasterOrderCreationParameter(TimeControlledOrder tco) throws XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
     DestinationKey dk = new DestinationKey(XynaProperty.BATCH_DEFAULT_MASTER.get());
     dk.setRuntimeContext(revisionManagement.getRuntimeContext(tco.getOrderDestination().getRuntimeContext().getRevision()));
@@ -390,11 +391,11 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
     rxocp.setCustom1(tco.getOrderCustoms().getCustom1());
     rxocp.setCustom2(tco.getOrderCustoms().getCustom2());
     rxocp.setCustom3(tco.getOrderCustoms().getCustom3());
-    
-        
+
+
     if(tco.getPlanningHorizon() != null) {
       OrderExecutionTime oet = tco.getPlanningHorizon();
-      
+
       TimeConstraint_Start tc = TimeConstraint.immediately();
       if(oet.getStartTime() != null) {
         tc = TimeConstraint.at(convertTimestampToTimeZone(oet.getStartTime(), ZoneId.of(oet.getTimezone()), FACTORY_ZONE_ID));
@@ -406,10 +407,10 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
     } else {
       rxocp.setTimeConstraint(TimeConstraint.immediately());
     }
-    
+
     return rxocp;
   }
-  
+
   private InputGeneratorData generateInputGeneratorData(TimeControlledOrder tco) {
     InputGeneratorData inputGeneratorData;
     if (tco.getInputPayload() == null && tco.getStorableFqn() == null) {
@@ -445,7 +446,7 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
 
     return inputGeneratorData;
   }
-  
+
   private GeneralXynaObject convertInputDataFromJsonToGeneralXynaObject(String json, long revision) {
     if (json == null)
       return null;
@@ -460,7 +461,7 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
       throw new RuntimeException(e.getMessage(), e);
     }
   }
-  
+
   private String convertInputDataFromXmlToJson(String xml, long revision)
       throws XPRC_XmlParsingException, XPRC_InvalidXMLForObjectCreationException, XPRC_MDMObjectCreationException {
     if (xml == null)
@@ -469,7 +470,7 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
     XynaObjectJsonBuilder builder = new XynaObjectJsonBuilder(revision);
     return builder.buildJson(generalXynaObject);
   }
-  
+
   @Override
   public void killTCO(TCOId tcoId) throws KillTCOException {
     try {
@@ -482,7 +483,7 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
       throw new KillTCOException(e.getMessage(), e);
     }
   }
-  
+
   public List<? extends TimeControlledOrderTableEntry> getTCOs(TableInfo tableInfo, TCOTableFilter filter) throws LoadTCOsException {
     Function<TableInfo, List<Filter>> filterFunction = ti -> ti.getColumns().stream()
         .filter(tableColumn -> !tableColumn.getDisableFilter() && tableColumn.getPath() != null && tableColumn.getFilter() != null && tableColumn.getFilter().length() > 0)
@@ -507,10 +508,10 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
             .addSelectFunction(TABLE_PATH_STATUS, TimeControlledOrderTableEntry::getStatus);
     try {
       BatchProcessSelectImpl select = new BatchProcessSelectImpl();
-      
+
       List<TableHelper.Filter> filters = filterFunction.apply(tableInfo);
       filters.forEach(f -> addWhereClause(tableHelper, select, f));
-      
+
       List<BatchProcessInformation> batchProcessInformations = batchProcessManagement.searchBatchProcesses(select, (tableInfo.getLimit() != null) ? tableInfo.getLimit() : -1).getResult();
       List<TimeControlledOrderTableEntry> result = batchProcessInformations.stream()
           .filter(bi -> filter.getShowArchived() != null && (bi.getMasterOrderCreationParameter() != null || filter.getShowArchived()))
@@ -523,7 +524,7 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
       throw new LoadTCOsException(ex.getMessage(), ex);
     }
   }
-  
+
   private TimeControlledOrderTableEntry convertToTableEntry(BatchProcessInformation i) {
     if(i == null) {
       return null;
@@ -536,19 +537,19 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
     o.setVersion(i.getVersion());
     o.setWorkspace(i.getWorkspace());
     o.setArchived(i.getMasterOrderCreationParameter() == null);
-    
-    
+
+
     /*
      * MasterOrderCreationParameter sind nur gesetzt, wenn der BatchProzess noch aktiv ist
      * RestartInformation sind immer gesetzt
      */
-    
+
     RemoteXynaOrderCreationParameter masterOrderCreationParameter = i.getMasterOrderCreationParameter();
     BatchProcessRestartInformationStorable restartInfo = i.getRestartInformation();
     BatchProcessArchiveStorable archive = i.getArchive();
 
     OrderDestination orderType = new OrderDestination();
-    
+
     if(masterOrderCreationParameter != null) {
       if(masterOrderCreationParameter.getTimeConstraint() != null) {
         if(masterOrderCreationParameter.getTimeConstraint() instanceof TimeConstraint_Start_Timeout) {
@@ -562,7 +563,7 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
           o.setStartTime(generateAbsRelTime(timeConstraintWindow.getBeforeTimeConstraint().getStart()));
         }
       }
-      
+
     } else {
       if(restartInfo.getMasterSchedulingData() != null) {
         if(restartInfo.getMasterSchedulingData().getTimeConstraint() instanceof TimeConstraint_Start) {
@@ -579,9 +580,9 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
     }
     orderType.setRuntimeContext(convert(i.getRuntimeContext()));
     o.setOrderDestination(orderType);
-    
+
     StringBuilder interval = new StringBuilder();
-    
+
     if(restartInfo  != null) {
       if(i.getRestartInformation().getTimeWindowDefinition() != null) {
         TimeWindow timeWindow = i.getRestartInformation().getTimeWindowDefinition().constructTimeWindow();
@@ -606,7 +607,7 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
     }
     o.setInterval(interval.toString());
     return o;
-  }  
+  }
 
   private String convertMillis(final long millis) {
     if (millis < 0) {
@@ -641,7 +642,7 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
 
     return (sb.toString());
   }
-  
+
   private static String generateAbsRelTime(AbsRelTime time) {
     if (time == null) {
       return null;
@@ -704,14 +705,14 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
     }
     return timeString;
   }
-  
+
   private static SimpleDateFormat getDefaultDateFormat() {
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS"); 
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
     sdf.setTimeZone(TimeZone.getTimeZone(Constants.DEFAULT_TIMEZONE));
     sdf.setLenient(false);
     return sdf;
   }
-  
+
   private xmcp.RuntimeContext convert(com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext rtc){
     if (rtc instanceof Workspace)
       return convert((Workspace) rtc);
@@ -720,7 +721,7 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
     }
     return null;
   }
-  
+
   private xmcp.Application convert(com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application app) {
     xmcp.Application application = new xmcp.Application();
     application.setName(app.getName());
@@ -746,7 +747,7 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
     w.setType(workspace.getRuntimeDependencyContextType().name());
     return w;
   }
-  
+
   private void addWhereClause(final TableHelper<TimeControlledOrderTableEntry, TableInfo> tableHelper, BatchProcessSelectImpl select, TableHelper.Filter filter) {
     switch (filter.getPath()) {
       case TABLE_PATH_APPLICATION:

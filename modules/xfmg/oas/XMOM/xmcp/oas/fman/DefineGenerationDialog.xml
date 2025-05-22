@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Define Generation Dialog" TypeName="DefineGenerationDialog" TypePath="xmcp.oas.fman" Version="1.8">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Define Generation Dialog" TypeName="DefineGenerationDialog" TypePath="xmcp.oas.fman" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Define Generation Dialog" Name="DefineGenerationDialog">
     <Input/>
     <Output>
@@ -104,6 +104,7 @@
       <Mapping>%1%.serviceFQN="xmcp.oas.fman.ApplicationImport"</Mapping>
       <Mapping>%1%.synchronously="true"</Mapping>
       <Mapping>%1%.showResult="true"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="oas_imp_hist_refresh"</Mapping>
     </Mappings>
     <Mappings ID="5061" Label="spec file imput">
       <Output>

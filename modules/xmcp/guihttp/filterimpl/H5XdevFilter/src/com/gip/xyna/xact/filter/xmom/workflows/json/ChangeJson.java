@@ -53,6 +53,7 @@ public class ChangeJson extends XMOMGuiJson {
   private String exceptionMsgText;
   private String name;
   private Boolean isUsed;
+  private String tag;
   
   
   private ChangeJson() {
@@ -206,6 +207,10 @@ public class ChangeJson extends XMOMGuiJson {
         cj.isUsed = Boolean.valueOf(value);
         return;
       }
+      if( label.equals(Tags.TAG) ) {
+        cj.tag = value;
+        return;
+      }
     }
 
     @Override
@@ -334,6 +339,10 @@ public class ChangeJson extends XMOMGuiJson {
 
   public boolean isUsed() {
     return isUsed;
+  }
+
+  public String getTag() {
+    return tag;
   }
 
 }

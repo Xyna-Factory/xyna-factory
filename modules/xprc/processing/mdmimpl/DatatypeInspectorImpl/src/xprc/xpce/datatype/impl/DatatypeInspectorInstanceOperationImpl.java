@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ public class DatatypeInspectorInstanceOperationImpl extends DatatypeInspectorSup
   }
 
   public List<? extends NamedVariableMember> listAllVariableMembers() {
-    return listVariableMembersRecursivly(xynaObject, "", dom, xynaObject, new InspectionParameter(true, null));
+    return listVariableMembersRecursivly(xynaObject, "", dom, xynaObject, new InspectionParameter(true, null, null));
   }
 
   public List<? extends NamedVariableMember> listAllVariableMembersWithParams(InspectionParameter inspectionParameter) {
@@ -98,11 +98,17 @@ public class DatatypeInspectorInstanceOperationImpl extends DatatypeInspectorSup
     return new String[] {doc.getDocumentElement().getNodeName(), XMLUtils.getTextContent(doc.getDocumentElement())};
   }
   
+  private enum RecursionType {
+    NONE, INSTANCE;
+  }
 
   private List<NamedVariableMember> listVariableMembersRecursivly(GeneralXynaObject rootObject, String varNamePrefix,
                                                                   com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase currentGXOContext,
                                                                   GeneralXynaObject currentGXO,
                                                                   InspectionParameter inspectionParameter) {
+    RecursionType rt = inspectionParameter.getRecursion() == null ?
+        RecursionType.INSTANCE :
+        RecursionType.valueOf(inspectionParameter.getRecursion().toUpperCase());
     try {
       ArrayList<NamedVariableMember> list = new ArrayList<NamedVariableMember>();
       for (com.gip.xyna.xprc.xfractwfe.generation.AVariable var : currentGXOContext
@@ -130,13 +136,15 @@ public class DatatypeInspectorInstanceOperationImpl extends DatatypeInspectorSup
           list.add(nvm);
         }
         nvm.setParentObject(rootObject);
-        if (!var.isJavaBaseType()) {
+        if (!var.isJavaBaseType() && rt != RecursionType.NONE) {
           if (currentGXO == null) {
             /*
              * TODO support for recursion in this case. this changes the current behavior for the common usecase of just using an empty object-instance
              * => 1. configuration options for recursion over structure (backward compatible defaults)
              *    2. prevent cycles (endless recursion)
              *    3. maybe make it configurable to not have recursion even when object instance is set.
+             *    
+             *    compare https://github.com/Xyna-Factory/xyna-factory/issues/1602
              */
           } else {
             Object nextO = currentGXO.get(varName);

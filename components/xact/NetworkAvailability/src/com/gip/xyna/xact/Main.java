@@ -97,7 +97,7 @@ public class Main implements DemonWorker {
       demon.startDemonWorker();
 
     } catch (Exception e) {
-      logger.error("Exception while initializing DhcpAdapterDemon", e);
+      logger.error("Exception while initializing NetworkAvailabilityDemon", e);
       logger.error("Demon will be stopped now");
       main.terminate();
     }
@@ -133,7 +133,7 @@ public class Main implements DemonWorker {
 
 
   public void logStatus(Logger logger2) {
-    logger.info(na.getState());
+    logger.info("NAD: State is:"+na.getState());
   }
 
 
@@ -214,6 +214,7 @@ public class Main implements DemonWorker {
             pu.killProcess(p);     
             throw (IOException) new IOException("exception waiting for process").initCause(e);
           } catch (TimeoutException e) {
+            logger.info("Check command tooks longer than "+timeoutFactoryCheck+" milliseconds, now killing it");
             pu.killProcess(p);            
             return false;
           }
@@ -247,6 +248,7 @@ public class Main implements DemonWorker {
             logger.warn("command to be execute after state change could not be executed successfully.", e);
             return false;
           } catch (InterruptedException e) {
+        	logger.warn("command to be execute after state change could not be executed successfully.", e);
             return false;
           } finally {
             if (p != null) {
