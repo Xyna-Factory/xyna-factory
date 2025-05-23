@@ -54,7 +54,7 @@ import xprc.xpce.enums.orderhierarchy.Own;
 import xprc.xpce.enums.orderhierarchy.Parent;
 import xprc.xpce.enums.orderhierarchy.Root;
 import xprc.xpce.enums.orderhierarchy.Scope;
-
+import base.math.IntegerNumber;
 
 public class OrderControlServiceServiceOperationImpl implements ExtendedDeploymentTask, OrderControlServiceServiceOperation {
 
@@ -107,6 +107,11 @@ public class OrderControlServiceServiceOperationImpl implements ExtendedDeployme
   public void setLoggingContext(XynaOrderServerExtension correlatedXynaOrder, LoggingContext loggingContext) {
     String logString = loggingContext.getLoggingContext();
     correlatedXynaOrder.getOrderContext().setLoggingDiagnosisContext(logString);
+  }
+
+  @Override
+  public IntegerNumber getCurrentRetryCounter(XynaOrderServerExtension correlatedXynaOrder) {
+    return new base.math.IntegerNumber(correlatedXynaOrder.getExecutionProcessInstance().retryCounter.longValue());
   }
   
   /** 
