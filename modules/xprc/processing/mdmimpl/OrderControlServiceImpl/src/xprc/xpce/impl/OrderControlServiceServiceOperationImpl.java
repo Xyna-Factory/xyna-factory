@@ -111,7 +111,7 @@ public class OrderControlServiceServiceOperationImpl implements ExtendedDeployme
 
   @Override
   public IntegerNumber getCurrentRetryCounter(XynaOrderServerExtension correlatedXynaOrder) {
-    return new base.math.IntegerNumber(correlatedXynaOrder.getExecutionProcessInstance().retryCounter.longValue());
+    return new IntegerNumber(correlatedXynaOrder.getExecutionProcessInstance().retryCounter.longValue());
   }
   
   /** 
