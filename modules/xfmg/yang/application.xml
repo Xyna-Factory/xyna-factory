@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="YangBase" factoryVersion="" versionName="1.1.0" xmlVersion="1.1">
+--><Application applicationName="YangBase" factoryVersion="" versionName="1.1.1" xmlVersion="1.1">
+  <ApplicationInfo>
+    <RuntimeContextRequirements>
+      <RuntimeContextRequirement>
+        <ApplicationName>Base</ApplicationName>
+        <VersionName>1.1.1</VersionName>
+      </RuntimeContextRequirement>
+    </RuntimeContextRequirements>
+  </ApplicationInfo>
   <XMOMEntries>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yang.MessageId</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.TraceYangMappingCollection</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yang.YangDevice</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.YangMapping</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.yang.YangMappingCollection</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
