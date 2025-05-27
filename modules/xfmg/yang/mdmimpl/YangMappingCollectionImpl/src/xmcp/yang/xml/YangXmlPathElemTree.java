@@ -46,7 +46,6 @@ public class YangXmlPathElemTree {
   
   
   public YangXmlPathElemTree(YangXmlPathList list) {
-    //list.sort();
     for (YangXmlPath path : list.getPathList()) {
       addPath(path);
     }
@@ -54,12 +53,6 @@ public class YangXmlPathElemTree {
   
   
   private void addPath(YangXmlPath path) {
-    /*
-    for (TreeElem elem : _rootList) {
-      if (
-    }
-    */
-    
     if (path.getPath().size() == 0) { return; }
     if (_rootList.size() == 0) {
       insertInNewBranch(path, _rootList, 0);
@@ -88,13 +81,6 @@ public class YangXmlPathElemTree {
   
   
   private void insertInNewBranch(YangXmlPath path, List<TreeElem> listIn, int index) {
-    /*
-    if (index >= path.getPath().size()) { return; }
-    YangXmlPathElem current = path.getPath().get(index);
-    TreeElem next = new TreeElem(current);
-    list.add(next);
-    insertInNewBranch(path, next.getChildren(), index + 1);
-    */
     List<TreeElem> list = listIn;
     for (int i = index; i < path.getPath().size(); i++) {
       YangXmlPathElem current = path.getPath().get(i);
@@ -105,19 +91,9 @@ public class YangXmlPathElemTree {
     }
   }
   
-  /*
-  private void insertInNewBranch(YangXmlPath path, TreeElem parent, int index) {
-    insertInNewBranch(path, parent.getChildren(), index);
-  }
-  */
   
   public String toXml() {
     if (_rootList.size() < 1) { return ""; }
-    /*
-    XmlBuilder xml = new XmlBuilder();
-    
-    return xml.toString();
-    */
     Document doc = buildDocument();
     Element root = null;
     if (_rootList.size() == 1) {
@@ -145,8 +121,6 @@ public class YangXmlPathElemTree {
     catch (Exception e) {
       throw new RuntimeException(e);
     }
-    //Element docRoot = adaptElementAndChildren(_root, doc);
-    //doc.appendChild(docRoot);
     return doc;
   }
   
