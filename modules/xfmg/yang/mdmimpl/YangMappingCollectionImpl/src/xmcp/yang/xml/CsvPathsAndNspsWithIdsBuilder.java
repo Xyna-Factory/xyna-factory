@@ -50,4 +50,8 @@ public class CsvPathsAndNspsWithIdsBuilder {
     return _namespaceWithIdList;
   }
   
+  public CsvPathsAndNspsWithIds build() {
+    return new CsvPathsAndNspsWithIds(this);
+  }
+  
 }
