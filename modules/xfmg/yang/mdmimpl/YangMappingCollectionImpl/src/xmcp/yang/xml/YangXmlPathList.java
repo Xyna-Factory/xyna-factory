@@ -19,6 +19,7 @@
 package xmcp.yang.xml;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -31,34 +32,53 @@ public class YangXmlPathList {
     return _pathList;
   }
 
-
-  public List<String> toCsvList() {
-    return toCsvList(new CharEscapeTool());
+  public void add(YangXmlPath path) {
+    _pathList.add(path);
   }
   
   
-  public List<String> toCsvList(CharEscapeTool escaper) {
+  public List<String> toCsvList(IdOfNamespaceMap map) {
+    return toCsvList(map, new CharEscapeTool());
+  }
+  
+  
+  public List<String> toCsvList(IdOfNamespaceMap map, CharEscapeTool escaper) {
     List<String> ret = new ArrayList<>();
     for (YangXmlPath path : _pathList) {
-      String csv = path.toCsv(escaper);
+      String csv = path.toCsv(map, escaper);
       ret.add(csv);
     }
     return ret;
   }
   
   
-  public static YangXmlPathList fromCsv(List<String> csvList) {
-    return fromCsv(csvList, new CharEscapeTool());
+  public void sort() {
+    Collections.sort(_pathList);
   }
   
   
-  public static YangXmlPathList fromCsv(List<String> csvList, CharEscapeTool escaper) {
+  public static YangXmlPathList fromCsv(NamespaceOfIdMap map, List<String> csvList) {
+    return fromCsv(map, csvList, new CharEscapeTool());
+  }
+  
+  
+  public static YangXmlPathList fromCsv(NamespaceOfIdMap map, List<String> csvList, CharEscapeTool escaper) {
     YangXmlPathList ret = new YangXmlPathList();
     for (String csv : csvList) {
-      YangXmlPath path = YangXmlPath.fromCsv(csv, escaper);
+      YangXmlPath path = YangXmlPath.fromCsv(map, csv, escaper);
       ret._pathList.add(path);
     }
     return ret;
+  }
+  
+  
+  public String toXml() {
+    return toTree().toXml();
+  }
+  
+  
+  public YangXmlPathElemTree toTree() {
+    return new YangXmlPathElemTree(this);
   }
   
 }

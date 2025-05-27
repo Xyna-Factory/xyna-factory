@@ -18,11 +18,13 @@
 
 package xmcp.yang.xml;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 
-public class YangXmlPathElem {
+public class YangXmlPathElem implements Comparable<YangXmlPathElem> {
 
   private final String _elemName;
   private final String _namespace;
@@ -31,10 +33,19 @@ public class YangXmlPathElem {
   
   
   public YangXmlPathElem(String elemName, String namespace, String textValue, List<ListKey> listKeys) {
+    if (elemName == null) { throw new IllegalArgumentException("YangXmlPathElem: element name is missing"); }
+    if (listKeys == null) { throw new IllegalArgumentException("YangXmlPathElem: Got null list for list keys"); }
     this._elemName = elemName;
     this._namespace = namespace;
     this._textValue = textValue;
-    this._listKeys = listKeys;
+    if (listKeys instanceof ArrayList<?>) {
+      Collections.sort(listKeys);
+      this._listKeys = listKeys;
+    } else {
+      ArrayList<ListKey> tmp = new ArrayList<>(listKeys);
+      Collections.sort(tmp);
+      this._listKeys = tmp;
+    }
   }
   
   public static PathElemBuilder builder() {
@@ -70,19 +81,20 @@ public class YangXmlPathElem {
   }
   
   
-  public String toCsv() {
+  public String toCsv(IdOfNamespaceMap map) {
     StringBuilder str = new StringBuilder();
-    writeCsv(str, new CharEscapeTool());
+    writeCsv(map, str, new CharEscapeTool());
     return str.toString();
   }
   
   
-  public void writeCsv(StringBuilder str, CharEscapeTool escaper) {
+  public void writeCsv(IdOfNamespaceMap map, StringBuilder str, CharEscapeTool escaper) {
     str.append(escaper.escapeCharacters(_elemName));
     str.append(Constants.YangXmlCsv.SEP_PATH_ELEM_ATTR);
-    
-    // TODO: nsp -> id
-    str.append(escaper.escapeCharacters(_namespace));
+    if (_namespace != null) {
+      long id = map.getId(_namespace);
+      str.append(id);
+    }
     str.append(Constants.YangXmlCsv.SEP_PATH_ELEM_ATTR);
     str.append(escaper.escapeCharacters(_textValue));
     str.append(Constants.YangXmlCsv.SEP_PATH_ELEM_ATTR);
@@ -96,18 +108,20 @@ public class YangXmlPathElem {
   }
   
   
-  public static YangXmlPathElem fromCsv(String csv) {
-    return fromCsv(csv, new CharEscapeTool());
+  public static YangXmlPathElem fromCsv(NamespaceOfIdMap map, String csv) {
+    return fromCsv(map, csv, new CharEscapeTool());
   }
   
   
-  public static YangXmlPathElem fromCsv(String csv, CharEscapeTool escaper) {
+  public static YangXmlPathElem fromCsv(NamespaceOfIdMap map, String csv, CharEscapeTool escaper) {
     PathElemBuilder builder = new PathElemBuilder();
-    String[] parts = csv.split(Constants.YangXmlCsv.SEP_PATH_ELEM_ATTR);
+    String[] parts = csv.split(Constants.YangXmlCsv.SEP_PATH_ELEM_ATTR, -1);
     if (parts.length != 4) { throw new IllegalArgumentException("Could not parse csv for path element: " + csv); }
     builder.elemName(escaper.unescapeCharacters(parts[0]));
     if (parts[1].length() > 0) {
-      builder.namespace(escaper.unescapeCharacters(parts[1]));
+      long id = Long.parseLong(parts[1]);
+      if (!map.getNamespace(id).isPresent()) { throw new IllegalArgumentException("Could not find namespace for id: " + id); }
+      builder.namespace(map.getNamespace(id).get());
     }
     if (parts[2].length() > 0) {
       builder.textValue(escaper.unescapeCharacters(parts[2]));
@@ -125,6 +139,46 @@ public class YangXmlPathElem {
       ListKey lk = ListKey.fromCsv(item, escaper);
       builder.addListKey(lk);
     }
+  }
+
+  /*
+   * text value is not used for comparison
+   */
+  @Override
+  public int compareTo(YangXmlPathElem elem) {
+    if (hasNamespace() && !elem.hasNamespace()) {
+      return -1;
+    }
+    if (elem.hasNamespace() && !hasNamespace()) {
+      return 1;
+    }
+    int val = 0;
+    val = _namespace.compareTo(elem._namespace);
+    if (val != 0) { return val; }
+    val = _elemName.compareTo(elem._elemName);
+    if (val != 0) { return val; }
+    val = Integer.compare(_listKeys.size(), elem._listKeys.size());
+    if (val != 0) { return val; }
+    for (int i = 0; i < _listKeys.size(); i++) {
+      val = _listKeys.get(i).compareTo(elem._listKeys.get(i));
+      if (val != 0) { return val; }
+    }
+    return 0;
+  }
+  
+  
+  @Override 
+  public boolean equals(Object obj) {
+    if (obj instanceof YangXmlPathElem) {
+      return compareTo((YangXmlPathElem) obj) == 0;
+    }
+    return false;
+  }
+  
+  
+  @Override
+  public int hashCode() {
+    return _elemName.hashCode();
   }
   
 }

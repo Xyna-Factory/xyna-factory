@@ -49,10 +49,14 @@ public class IdOfNamespaceMap {
   public List<String> toPrefixNamespacePairList() {
     List<String> ret = new ArrayList<>();
     for (Entry<String, Long> entry : _map.entrySet()) {
-      String str = "p" + entry.getValue() + "=" + entry.getKey();
+      String str = idToPrefix(entry.getValue()) + Constants.SEP_PREFIX_NAMESPACE + entry.getKey();
       ret.add(str);
     }
     return ret;
+  }
+  
+  public String idToPrefix(long id) {
+    return Constants.PREFIX_OF_PREFIX + id;
   }
   
 }

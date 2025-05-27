@@ -19,7 +19,7 @@
 package xmcp.yang.xml;
 
 
-public class ListKey {
+public class ListKey implements Comparable<ListKey> {
 
   private final String _elementName;
   private final String _value;
@@ -45,7 +45,7 @@ public class ListKey {
     if (parts.length != 2) { throw new IllegalArgumentException("Could not parse csv for list key: " + csv); }
     String parts0 = escaper.unescapeCharacters(parts[0]);
     String parts1 = escaper.unescapeCharacters(parts[1]);
-    return new ListKeyBuilder().elementName(parts0).listKeyValue(parts1).build();
+    return new ListKeyBuilder().listKeyElemName(parts0).listKeyValue(parts1).build();
   }
   
   
@@ -60,6 +60,13 @@ public class ListKey {
     str.append(escaper.escapeCharacters(this.getElementName()));
     str.append(Constants.YangXmlCsv.SEP_LIST_KEY_VALUE);
     str.append(escaper.escapeCharacters(this.getValue()));
+  }
+
+  @Override
+  public int compareTo(ListKey lk) {
+    int val = _elementName.compareTo(lk.getElementName());
+    if (val != 0) { return val; }
+    return _value.compareTo(lk.getValue());
   }
   
 }

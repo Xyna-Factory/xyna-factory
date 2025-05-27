@@ -27,7 +27,7 @@ public class CharEscapeTool {
     ret = ret.replace("&", "&amp;");
     ret = ret.replace(",", "&comma;");
     ret = ret.replace("#", "&num;");
-    ret = ret.replace("|", "&vert;");
+    ret = ret.replace("%", "&percnt;");
     ret = ret.replace("=", "&equals;");
     return ret;
   }
@@ -38,7 +38,7 @@ public class CharEscapeTool {
     String ret = str;
     ret = ret.replace("&comma;", ",");
     ret = ret.replace("&num;", "#");
-    ret = ret.replace("&vert;", "|");
+    ret = ret.replace("&percnt;", "%");
     ret = ret.replace("&equals;", "=");
     ret = ret.replace("&amp;", "&");
     return ret;

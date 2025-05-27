@@ -18,6 +18,7 @@
 
 package xmcp.yang.xml;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,9 @@ public class NamespaceOfIdMap {
   }
   
   public Optional<String> getNamespace(String prefix) {
-    if (!prefix.startsWith("p")) { throw new IllegalArgumentException("Unexpected format in prefix: " + prefix); }
+    if (!prefix.startsWith(Constants.PREFIX_OF_PREFIX)) { 
+      throw new IllegalArgumentException("Unexpected format in prefix: " + prefix); 
+    }
     String digits = prefix.substring(1);
     long id = Long.parseLong(digits);
     return getNamespace(id);
@@ -46,10 +49,12 @@ public class NamespaceOfIdMap {
   }
   
   
-  public void initFromPrefixNamespacePairList(List<String> list) {
+  public void initFromPrefixNamespacePairs(Collection<String> list) {
     for (String item : list) {
-      if (!item.startsWith("p")) { throw new IllegalArgumentException("Could not parse prefix-namespace-pair string: " + item); }
-      int index = item.indexOf("=");
+      if (!item.startsWith(Constants.PREFIX_OF_PREFIX)) { 
+        throw new IllegalArgumentException("Could not parse prefix-namespace-pair string: " + item); 
+      }
+      int index = item.indexOf(Constants.SEP_PREFIX_NAMESPACE);
       if (index < 0) { throw new IllegalArgumentException("Could not parse prefix-namespace-pair string: " + item); }
       String digits = item.substring(1, index);
       long id = Long.parseLong(digits);

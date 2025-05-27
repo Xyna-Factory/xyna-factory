@@ -29,7 +29,7 @@ public class ListKeyBuilder {
     return new ListKey(_elementName, _value);
   }
   
-  public ListKeyBuilder elementName(String elementName) {
+  public ListKeyBuilder listKeyElemName(String elementName) {
     this._elementName = elementName;
     return this;
   }

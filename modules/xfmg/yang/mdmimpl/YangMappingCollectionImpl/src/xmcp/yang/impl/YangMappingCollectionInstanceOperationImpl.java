@@ -27,6 +27,8 @@ import xact.templates.Document;
 import xmcp.yang.YangMappingCollection;
 import xmcp.yang.YangMappingCollectionInstanceOperation;
 import xmcp.yang.YangMappingCollectionSuperProxy;
+import xmcp.yang.xml.NamespaceOfIdMap;
+import xmcp.yang.xml.YangXmlPathList;
 
 
 public class YangMappingCollectionInstanceOperationImpl extends YangMappingCollectionSuperProxy implements YangMappingCollectionInstanceOperation {
@@ -42,7 +44,13 @@ public class YangMappingCollectionInstanceOperationImpl extends YangMappingColle
   }
 
   public Document createXml() {
-    return null;
+    NamespaceOfIdMap map2 = new NamespaceOfIdMap();
+    map2.initFromPrefixNamespacePairs(_namespaces);
+    YangXmlPathList pathlist = YangXmlPathList.fromCsv(map2, _mappings);
+    String xml = pathlist.toXml();
+    Document ret = new Document();
+    ret.setText(xml);
+    return ret;
   }
 
   public List<String> getMappings() {
