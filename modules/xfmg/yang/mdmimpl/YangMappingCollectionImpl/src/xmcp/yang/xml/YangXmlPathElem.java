@@ -80,7 +80,6 @@ public class YangXmlPathElem implements Comparable<YangXmlPathElem> {
     return _listKeys;
   }
   
-  
   public String toCsv(IdOfNamespaceMap map) {
     StringBuilder str = new StringBuilder();
     writeCsv(map, str, new CharEscapeTool());
@@ -88,6 +87,9 @@ public class YangXmlPathElem implements Comparable<YangXmlPathElem> {
   }
   
   
+  /*
+   * format: element-name # namespace-id # text-value # list-key-name = list-key-value % list-key-name = list-key-value % ... 
+   */
   public void writeCsv(IdOfNamespaceMap map, StringBuilder str, CharEscapeTool escaper) {
     str.append(escaper.escapeCharacters(_elemName));
     str.append(Constants.YangXmlCsv.SEP_PATH_ELEM_ATTR);
@@ -98,7 +100,6 @@ public class YangXmlPathElem implements Comparable<YangXmlPathElem> {
     str.append(Constants.YangXmlCsv.SEP_PATH_ELEM_ATTR);
     str.append(escaper.escapeCharacters(_textValue));
     str.append(Constants.YangXmlCsv.SEP_PATH_ELEM_ATTR);
-    if (_listKeys == null) { return; }
     boolean isfirst = true;
     for (ListKey lk : getListKeys()) {
       if (isfirst) { isfirst = false; }
@@ -119,7 +120,7 @@ public class YangXmlPathElem implements Comparable<YangXmlPathElem> {
     if (parts.length != 4) { throw new IllegalArgumentException("Could not parse csv for path element: " + csv); }
     builder.elemName(escaper.unescapeCharacters(parts[0]));
     if (parts[1].length() > 0) {
-      long id = Long.parseLong(parts[1]);
+      int id = Integer.parseInt(parts[1]);
       if (!map.getNamespace(id).isPresent()) { throw new IllegalArgumentException("Could not find namespace for id: " + id); }
       builder.namespace(map.getNamespace(id).get());
     }

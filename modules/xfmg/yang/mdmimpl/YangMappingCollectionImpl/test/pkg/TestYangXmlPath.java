@@ -27,6 +27,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import xmcp.yang.xml.CsvPathsAndNspsWithIds;
 import xmcp.yang.xml.IdOfNamespaceMap;
 import xmcp.yang.xml.ListKeyBuilder;
 import xmcp.yang.xml.NamespaceOfIdMap;
@@ -121,6 +122,79 @@ public class TestYangXmlPath {
   }
   
   
+  @Test
+  public void testMerge() throws Exception {
+    try {
+      YangXmlPathList pathlist = new YangXmlPathList();
+      YangXmlPath path = new YangXmlPath();
+      path.add(YangXmlPathElem.builder().elemName("aa1").namespace("www.nsp-1.de/test-1").build());
+      path.add(YangXmlPathElem.builder().elemName("bb1").namespace("www.nsp-2.de/test-2").build());
+      path.add(YangXmlPathElem.builder().elemName("cc1").namespace("www.nsp-3.de/test-3").
+               addListKey(new ListKeyBuilder().listKeyElemName("dd3").listKeyValue("d-val-3").build()).build());
+      path.add(YangXmlPathElem.builder().elemName("dd1").namespace("www.nsp-3.de/test-3").textValue("d%val-1").build());
+      pathlist.add(path);
+      
+      path = new YangXmlPath();
+      path.add(YangXmlPathElem.builder().elemName("aa1").namespace("www.nsp-1.de/test-1").build());
+      path.add(YangXmlPathElem.builder().elemName("bb1").namespace("www.nsp-2.de/test-2").build());
+      path.add(YangXmlPathElem.builder().elemName("cc1").namespace("www.nsp-3.de/test-3").build());
+      path.add(YangXmlPathElem.builder().elemName("dd2").namespace("www.nsp-3.de/test-3").textValue("d%val-2").build());
+      pathlist.add(path);
+      
+      path = new YangXmlPath();
+      path.add(YangXmlPathElem.builder().elemName("aa1").namespace("www.nsp-1.de/test-1").build());
+      path.add(YangXmlPathElem.builder().elemName("bb1").namespace("www.nsp-2.de/test-2").build());
+      path.add(YangXmlPathElem.builder().elemName("cc1").namespace("www.nsp-3.de/test-3").
+               addListKey(new ListKeyBuilder().listKeyElemName("dd3").listKeyValue("d-val-3").build()).build());
+      path.add(YangXmlPathElem.builder().elemName("dd3").namespace("www.nsp-3.de/test-3").textValue("d%val-3").build());
+      pathlist.add(path);
+      
+      YangXmlPathList pathlist2 = new YangXmlPathList();
+      path = new YangXmlPath();
+      path.add(YangXmlPathElem.builder().elemName("aa1").namespace("www.nsp-1.de/test-1").build());
+      path.add(YangXmlPathElem.builder().elemName("bb2").namespace("www.nsp-1.de/test-1").build());
+      path.add(YangXmlPathElem.builder().elemName("cc2").namespace("www.nsp-3.de/test-3").build());
+      path.add(YangXmlPathElem.builder().elemName("dd4").namespace("www.nsp-4.de/test-4").textValue("d%val-4").build());
+      pathlist2.add(path);
+      
+      path = new YangXmlPath();
+      path.add(YangXmlPathElem.builder().elemName("aa2").namespace("www.nsp-1.de/test-1").build());
+      path.add(YangXmlPathElem.builder().elemName("bb3").namespace("www.nsp-2.de/test-2").build());
+      path.add(YangXmlPathElem.builder().elemName("cc3").namespace("www.nsp-3.de/test-3").build());
+      path.add(YangXmlPathElem.builder().elemName("dd4").namespace("www.nsp-4.de/test-4").textValue("d%val-5").build());
+      pathlist2.add(path);
+      
+      pathlist.sort();
+      pathlist2.sort();
+      
+      CsvPathsAndNspsWithIds csv1 = new CsvPathsAndNspsWithIds(pathlist);
+      log(csv1);
+      CsvPathsAndNspsWithIds csv2 = new CsvPathsAndNspsWithIds(pathlist2);
+      log(csv2);
+      CsvPathsAndNspsWithIds csv3 = csv1.merge(csv2);
+      log(csv3);
+      
+      YangXmlPathList pathlist3 = YangXmlPathList.fromCsv(csv3);
+      log(pathlist3.toXml());
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+  
+  
+  private void log(CsvPathsAndNspsWithIds csv) {
+    log("### csv:");
+    for (String str : csv.getCsvPathList()) {
+      log(str);
+    }    
+    log("### namespaces: ");
+    List<String> nsplist = csv.getNamespaceWithIdList();
+    for (String str : nsplist) {
+      log(str);
+    }
+  }
+  
   private void log(String txt) {
     System.out.println(txt);
   }
@@ -128,7 +202,7 @@ public class TestYangXmlPath {
   
   public static void main(String[] args) {
     try {
-      new TestYangXmlPath().test1();
+      new TestYangXmlPath().testMerge();
     }
     catch (Throwable e) {
       e.printStackTrace();

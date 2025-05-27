@@ -68,21 +68,21 @@ public class YangXmlPathElemTree {
   }
   
   
-  private void insertInExistingBranch(YangXmlPath path, List<TreeElem> list, int index) {
-    if (index >= path.getPath().size()) { return; }
-    YangXmlPathElem current = path.getPath().get(index);
+  private void insertInExistingBranch(YangXmlPath path, List<TreeElem> list, int pathIndex) {
+    if (pathIndex >= path.getPath().size()) { return; }
+    YangXmlPathElem current = path.getPath().get(pathIndex);
     Optional<TreeElem> matched = TreeElem.getOptionalMatchingListElement(current, list);
     if (matched.isPresent()) {
-      insertInExistingBranch(path, matched.get().getChildren(), index + 1);
+      insertInExistingBranch(path, matched.get().getChildren(), pathIndex + 1);
       return;
     }
-    insertInNewBranch(path, list, index);
+    insertInNewBranch(path, list, pathIndex);
   }
   
   
-  private void insertInNewBranch(YangXmlPath path, List<TreeElem> listIn, int index) {
+  private void insertInNewBranch(YangXmlPath path, List<TreeElem> listIn, int pathIndex) {
     List<TreeElem> list = listIn;
-    for (int i = index; i < path.getPath().size(); i++) {
+    for (int i = pathIndex; i < path.getPath().size(); i++) {
       YangXmlPathElem current = path.getPath().get(i);
       TreeElem next = new TreeElem(current);
       list.add(next);
@@ -95,15 +95,10 @@ public class YangXmlPathElemTree {
   public String toXml() {
     if (_rootList.size() < 1) { return ""; }
     Document doc = buildDocument();
-    Element root = null;
-    if (_rootList.size() == 1) {
-      root = _rootList.get(0).toW3cElement(doc);
-    } else {
-      root = doc.createElement(Constants.DEFAULT_ROOT_TAG_NAME);
-      for (TreeElem elem : _rootList) {
-        Element child = elem.toW3cElement(doc);
-        root.appendChild(child);
-      }
+    Element root = doc.createElement(Constants.DEFAULT_ROOT_TAG_NAME);
+    for (TreeElem elem : _rootList) {
+      Element child = elem.toW3cElement(doc);
+      root.appendChild(child);
     }
     doc.appendChild(root);
     return getDocumentString(doc);
@@ -126,7 +121,6 @@ public class YangXmlPathElemTree {
   
   
   private String getDocumentString(Document document) {
-    boolean withPI = false;
     StringWriter sw = new StringWriter();
     try {
       Source source = new DOMSource(document);
@@ -141,7 +135,7 @@ public class YangXmlPathElemTree {
       xformer.setOutputProperty(OutputKeys.METHOD, "xml");
       xformer.setOutputProperty(OutputKeys.INDENT, "yes");
       xformer.setOutputProperty(OutputKeys.ENCODING, StandardCharsets.UTF_8.name());
-      xformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, withPI ? "no" : "yes");
+      xformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
       xformer.transform(source, result);
     } catch (TransformerException f) {
       throw new RuntimeException(f);

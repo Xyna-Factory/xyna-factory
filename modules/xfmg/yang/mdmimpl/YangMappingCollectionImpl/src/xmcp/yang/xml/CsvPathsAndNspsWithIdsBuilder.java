@@ -19,44 +19,35 @@
 package xmcp.yang.xml;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 
-public class IdOfNamespaceMap {
+public class CsvPathsAndNspsWithIdsBuilder {
 
-  private int _nextId = 0;
-  private Map<String, Integer> _map = new HashMap<>();
+  private List<String> _csvPathList = new ArrayList<String>();
+  private List<String> _namespaceWithIdList = new ArrayList<String>();
   
   
-  public int getId(String namespace) {
-    Integer id = _map.get(namespace);
-    if (id == null) {
-      id = getNextId();
-      _map.put(namespace, id);
-    } 
-    return id;
-  }
-  
-  protected int getNextId() {
-    int ret = _nextId;
-    _nextId = _nextId +1;
-    return ret;
-  }
-  
-  public List<String> toPrefixNamespacePairList() {
-    List<String> ret = new ArrayList<>();
-    for (Entry<String, Integer> entry : _map.entrySet()) {
-      String str = idToPrefix(entry.getValue()) + Constants.SEP_PREFIX_NAMESPACE + entry.getKey();
-      ret.add(str);
+  public CsvPathsAndNspsWithIdsBuilder csvPaths(List<String> input) {
+    if (input != null) { 
+      _csvPathList.addAll(input);
     }
-    return ret;
+    return this;
   }
   
-  public String idToPrefix(int id) {
-    return Constants.PREFIX_OF_PREFIX + id;
+  public CsvPathsAndNspsWithIdsBuilder namespaces(List<String> input) {
+    if (input != null) { 
+      _namespaceWithIdList.addAll(input);
+    }
+    return this;
+  }
+  
+  public List<String> getCsvPathList() {
+    return _csvPathList;
+  }
+  
+  public List<String> getNamespaceWithIdList() {
+    return _namespaceWithIdList;
   }
   
 }

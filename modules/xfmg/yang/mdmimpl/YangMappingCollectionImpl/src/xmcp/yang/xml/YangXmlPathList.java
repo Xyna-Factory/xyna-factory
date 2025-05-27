@@ -57,6 +57,24 @@ public class YangXmlPathList {
   }
   
   
+  public void addAll(CsvPathsAndNspsWithIds input) {
+    YangXmlPathList toAdd = YangXmlPathList.fromCsv(input);
+    addAll(toAdd);
+  }
+  
+  
+  public void addAll(YangXmlPathList input) {
+    _pathList.addAll(input._pathList);
+  }
+  
+  
+  public static YangXmlPathList fromCsv(CsvPathsAndNspsWithIds input) {
+    NamespaceOfIdMap map = new NamespaceOfIdMap();
+    map.initFromPrefixNamespacePairs(input.getNamespaceWithIdList());
+    return fromCsv(map, input.getCsvPathList());
+  }
+  
+  
   public static YangXmlPathList fromCsv(NamespaceOfIdMap map, List<String> csvList) {
     return fromCsv(map, csvList, new CharEscapeTool());
   }

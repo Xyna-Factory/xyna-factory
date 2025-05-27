@@ -77,8 +77,7 @@ public class TreeElem implements Comparable<TreeElem> {
   public void addChildUnlessPresent(YangXmlPathElem input) {
     if (getOptionalMatchingChild(input).isPresent()) { return; }
     TreeElem child = new TreeElem(input);
-    _children.add(child);
-    Collections.sort(_children);
+    addChild(child);
   }
   
   

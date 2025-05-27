@@ -26,10 +26,10 @@ import java.util.Optional;
 
 public class NamespaceOfIdMap {
 
-  private Map<Long, String> _map = new HashMap<>();
+  private Map<Integer, String> _map = new HashMap<>();
 
   
-  public Optional<String> getNamespace(long id) {
+  public Optional<String> getNamespace(int id) {
     String val = _map.get(id);
     return Optional.ofNullable(val);
   }
@@ -39,16 +39,18 @@ public class NamespaceOfIdMap {
       throw new IllegalArgumentException("Unexpected format in prefix: " + prefix); 
     }
     String digits = prefix.substring(1);
-    long id = Long.parseLong(digits);
+    int id = Integer.parseInt(digits);
     return getNamespace(id);
   }
   
-  public void add(long id, String namespace) {
+  
+  public void add(int id, String namespace) {
     _map.put(id, namespace);
   }
   
   
   public void initFromPrefixNamespacePairs(Collection<String> list) {
+    if (list == null) { return; }
     for (String item : list) {
       if (!item.startsWith(Constants.PREFIX_OF_PREFIX)) { 
         throw new IllegalArgumentException("Could not parse prefix-namespace-pair string: " + item); 
@@ -56,7 +58,7 @@ public class NamespaceOfIdMap {
       int index = item.indexOf(Constants.SEP_PREFIX_NAMESPACE);
       if (index < 0) { throw new IllegalArgumentException("Could not parse prefix-namespace-pair string: " + item); }
       String digits = item.substring(1, index);
-      long id = Long.parseLong(digits);
+      int id = Integer.parseInt(digits);
       String nsp = item.substring(index + 1);
       add(id, nsp);
     }

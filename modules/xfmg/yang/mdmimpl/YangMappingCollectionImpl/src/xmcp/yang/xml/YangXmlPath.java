@@ -49,6 +49,9 @@ public class YangXmlPath implements Comparable<YangXmlPath> {
   }
   
   
+  /*
+   * format: path-elem , path-elem , ...
+   */
   public void writeCsv(IdOfNamespaceMap map, StringBuilder str, CharEscapeTool escaper) {
     boolean isfirst = true;
     for (YangXmlPathElem elem : _path) {
@@ -85,7 +88,6 @@ public class YangXmlPath implements Comparable<YangXmlPath> {
       if (atEnd2) { return 1; }
       int val = _path.get(i).compareTo(input._path.get(i));
       if (val != 0) { return val; }
-      i++;
     }
     return 0;
   }
