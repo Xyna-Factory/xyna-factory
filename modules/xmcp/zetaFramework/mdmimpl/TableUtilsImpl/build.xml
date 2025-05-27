@@ -20,15 +20,15 @@
 
     <!-- this is the absolute path to the root -->
     <pathconvert property="root.dir" >
-        <path location="${basedir}/../../../.."/>
+        <path location="${basedir}/../../../../.."/>
     </pathconvert>
     <property name="xmom.dir" value="${basedir}/../../XMOM" />
 
-    <property name="project.name" value="ISO8601ToUnixTimestampTransformationImpl" />
-	<property name="fqclassname" value="xmcp.tables.datatypes.transformation.ISO8601ToUnixTimestampTransformation" />
-	<property name="mdm.xml.path" value="xmcp/tables/datatypes/transformation" />
-	<property name="mdm.xml.filename" value="ISO8601ToUnixTimestampTransformation.xml" />
-    <property name="mdm.service.path" value="xmcp.tables.datatypes.transformation.ISO8601ToUnixTimestampTransformation" />
+    <property name="project.name" value="TableUtilsImpl" />
+    <property name="fqclassname" value="xmcp.tables.TableUtils" />
+    <property name="mdm.xml.path" value="xmcp/tables" />
+    <property name="mdm.xml.filename" value="TableUtils.xml" />
+    <property name="mdm.service.path" value="xmcp.tables.TableUtils" />
 
     <target name="prepareLibs" description="Prepare Libs">
         <ant antfile="build.xml" target="build" inheritAll="false" dir="${root.dir}/modules/xmcp/zetaFramework/sharedlib/ZetaTools">
