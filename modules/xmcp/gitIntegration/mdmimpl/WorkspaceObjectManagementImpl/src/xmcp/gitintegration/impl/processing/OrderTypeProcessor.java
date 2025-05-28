@@ -39,7 +39,13 @@ import com.gip.xyna.xfmg.xods.ordertypemanagement.OrdertypeManagement;
 import com.gip.xyna.xfmg.xods.ordertypemanagement.OrdertypeParameter;
 import com.gip.xyna.xfmg.xods.ordertypemanagement.OrdertypeParameter.DestinationValueParameter;
 import com.gip.xyna.xprc.XynaOrderServerExtension.ExecutionType;
+import com.gip.xyna.xprc.XynaProcessingBase;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
+import com.gip.xyna.xprc.xpce.XynaProcessCtrlExecution;
+import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
+import com.gip.xyna.xprc.xpce.dispatcher.DestinationValue;
+import com.gip.xyna.xprc.xpce.dispatcher.FractalWorkflowDestination;
+import com.gip.xyna.xprc.xpce.dispatcher.XynaDispatcher;
 import com.gip.xyna.xprc.xpce.parameterinheritance.ParameterInheritanceManagement.ParameterType;
 
 import xmcp.gitintegration.CREATE;
@@ -87,7 +93,15 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
 
   private static OrdertypeManagement orderTypeManagement;
   private static RevisionManagement revisionManagement;
+  private static XynaProcessingBase processing;
 
+
+  private static XynaProcessingBase getProcessing() {
+    if(processing == null) {
+      processing = XynaFactory.getInstance().getProcessing();
+    }
+    return processing;
+  }
 
   private static OrdertypeManagement getOrderTypeManagement() {
     if(orderTypeManagement == null) {
@@ -870,6 +884,13 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
                                                                   ParameterType.BackupWhenRemoteCall, new ArrayList<>())));
         newPara.setRequiredCapacities(new HashSet<>());
         getOrderTypeManagement().modifyOrdertype(newPara);
+
+        DestinationKey dk = new DestinationKey(newPara.getOrdertypeName(), newPara.getRuntimeContext());
+        DestinationValue dv = new FractalWorkflowDestination(orderTypeParameter.getOrdertypeName());
+        XynaProcessCtrlExecution xpce = getProcessing().getXynaProcessCtrlExecution();
+        xpce.getXynaPlanning().getPlanningDispatcher().setDestination(dk, XynaDispatcher.DESTINATION_DEFAULT_PLANNING, false);
+        xpce.getXynaExecution().getExecutionEngineDispatcher().setDestination(dk, dv, true);
+        xpce.getXynaCleanup().getCleanupEngineDispatcher().setDestination(dk, XynaDispatcher.DESTINATION_EMPTY_WORKFLOW, false);
       } else {
         // delete additional custom order type
         getOrderTypeManagement().deleteOrdertype(orderTypeParameter);
