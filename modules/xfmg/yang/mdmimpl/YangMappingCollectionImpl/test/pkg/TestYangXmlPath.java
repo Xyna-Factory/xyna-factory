@@ -85,7 +85,7 @@ public class TestYangXmlPath {
       for (String str : csvlist) {
         log(str);
       }
-      assertEquals("aa1#0##,bb1#1##,cc1#2##dd3=d-val-3,dd3#2#d&percnt;val-3#", csvlist.get(2));
+      assertEquals("aa1#0##,bb1#3##,cc1#1##dd3=d-val-3,dd1#1#d&percnt;val-1#", csvlist.get(2));
       
       log("namespaces: ");
       List<String> nsplist = map1.toPrefixNamespacePairList();
@@ -174,7 +174,12 @@ public class TestYangXmlPath {
       CsvPathsAndNspsWithIds csv3 = csv1.merge(csv2);
       log(csv3);
       
+      assertEquals(csv3.getCsvPathList().size(), 5);
+      assertEquals(csv3.getCsvPathList().get(2), "aa1#0##,bb1#1##,cc1#2##dd3=d-val-3,dd3#2#d&percnt;val-3#");
+      assertEquals(csv3.getCsvPathList().get(3), "aa1#0##,bb2#0##,cc2#2##,dd4#3#d&percnt;val-4#");
+      
       YangXmlPathList pathlist3 = YangXmlPathList.fromCsv(csv3);
+      pathlist3.sort();
       log(pathlist3.toXml());
     } catch (Exception e) {
       e.printStackTrace();
@@ -202,7 +207,7 @@ public class TestYangXmlPath {
   
   public static void main(String[] args) {
     try {
-      new TestYangXmlPath().testMerge();
+      new TestYangXmlPath().test1();
     }
     catch (Throwable e) {
       e.printStackTrace();

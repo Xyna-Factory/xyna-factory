@@ -19,15 +19,13 @@ package xmcp.yang.impl;
 
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import xact.templates.Document;
 import xmcp.yang.YangMappingCollection;
 import xmcp.yang.YangMappingCollectionInstanceOperation;
 import xmcp.yang.YangMappingCollectionSuperProxy;
-import xmcp.yang.xml.NamespaceOfIdMap;
+import xmcp.yang.xml.CsvPathsAndNspsWithIds;
 import xmcp.yang.xml.YangXmlPathList;
 
 
@@ -36,7 +34,7 @@ public class YangMappingCollectionInstanceOperationImpl extends YangMappingColle
   private static final long serialVersionUID = 1L;
   
   protected List<String> _mappings = new ArrayList<>();
-  protected Set<String> _namespaces = new HashSet<>();
+  protected List<String> _namespaces = new ArrayList<>();
   
   
   public YangMappingCollectionInstanceOperationImpl(YangMappingCollection instanceVar) {
@@ -44,9 +42,8 @@ public class YangMappingCollectionInstanceOperationImpl extends YangMappingColle
   }
 
   public Document createXml() {
-    NamespaceOfIdMap map2 = new NamespaceOfIdMap();
-    map2.initFromPrefixNamespacePairs(_namespaces);
-    YangXmlPathList pathlist = YangXmlPathList.fromCsv(map2, _mappings);
+    CsvPathsAndNspsWithIds csv = CsvPathsAndNspsWithIds.builder().csvPaths(_mappings).namespaces(_namespaces).build();
+    YangXmlPathList pathlist = YangXmlPathList.fromCsv(csv);
     String xml = pathlist.toXml();
     Document ret = new Document();
     ret.setText(xml);
@@ -58,21 +55,19 @@ public class YangMappingCollectionInstanceOperationImpl extends YangMappingColle
   }
 
   public List<String> getNamespaces() {
-    return new ArrayList<String>(_namespaces);
+    return _namespaces;
   }
 
   
   public xmcp.yang.YangMappingCollection merge(xmcp.yang.YangMappingCollection input) {
     if (input == null) { return getInstanceVar(); }
-    List<String> mappings = input.getMappings();
-    if (mappings != null) {
-      _mappings.addAll(mappings);
-      getInstanceVar().setMappingCount(_mappings.size());
-    }
-    List<String> namespaces = input.getNamespaces();
-    if (namespaces != null) {
-      _namespaces.addAll(namespaces);
-    }
+    CsvPathsAndNspsWithIds csv1 = CsvPathsAndNspsWithIds.builder().csvPaths(_mappings).namespaces(_namespaces).build();
+    CsvPathsAndNspsWithIds csv2 = CsvPathsAndNspsWithIds.builder().csvPaths(input.getMappings()).
+                                                                   namespaces(input.getNamespaces()).build();
+    CsvPathsAndNspsWithIds csv3 = csv1.merge(csv2);
+    _mappings = csv3.getCsvPathList();
+    _namespaces = csv3.getNamespaceWithIdList();
+    getInstanceVar().setMappingCount(_mappings.size());
     return getInstanceVar();
   }
 
