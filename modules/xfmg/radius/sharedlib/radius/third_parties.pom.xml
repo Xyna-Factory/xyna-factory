@@ -23,12 +23,11 @@
         <version>1.0.0</version>
         <relativePath>../../../../../installation/build/pom.xml</relativePath>
     </parent>
-    
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gip.xyna</groupId>
-    <artifactId>RADIUSServiceImpl</artifactId>
-    <version>1.0</version>
-    <packaging>jar</packaging>
+    <artifactId>radius_third_parties</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
@@ -36,17 +35,47 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>commons-pool</groupId>
-            <artifactId>commons-pool</artifactId>
-            <scope>runtime</scope>
+            <groupId>org.gnu</groupId>
+            <artifactId>gnu-crypto</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.gip.xyna</groupId>
-            <artifactId>xynafactory</artifactId>
+            <groupId>net.jradius</groupId>
+            <artifactId>jradius-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-configuration</groupId>
+                    <artifactId>commons-configuration</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+                <exclusion>
+				    <groupId>net.sf.ehcache</groupId>
+				    <artifactId>ehcache-core</artifactId>
+                </exclusion>
+                <exclusion>
+				    <groupId>org.slf4j</groupId>
+				    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+				    <groupId>org.springframework</groupId>
+				    <artifactId>spring-context</artifactId>
+                </exclusion>
+                <exclusion>
+				    <groupId>commons-chain</groupId>
+				    <artifactId>commons-chain</artifactId>
+                </exclusion>
+
+            </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.gip.xyna</groupId>
-            <artifactId>xynautils-exceptions</artifactId>
+            <groupId>net.jradius</groupId>
+            <artifactId>jradius-dictionary</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.jradius</groupId>
+            <artifactId>jradius-extended</artifactId>
         </dependency>
     </dependencies>
 </project>
