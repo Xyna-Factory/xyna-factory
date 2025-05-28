@@ -24,7 +24,7 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Processing</ApplicationName>
-        <VersionName>1.0.24</VersionName>
+        <VersionName>1.0.25</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

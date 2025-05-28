@@ -161,5 +161,17 @@
 	<CodeSnippet Type="Java">return xprc.xpce.OrderControlServiceImpl.getRootOrderType(correlatedXynaOrder);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="getCurrentRetryCounter" Name="getCurrentRetryCounter" RequiresXynaOrder="true">
+      <Input/>
+      <Output>
+        <Data ID="2" Label="Retry Counter" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="retryCounter"/>
+      </Output>
+      <Meta>
+        <Documentation>Returns the retry counter indicating the retry run in which the workflow is currently executed. If the retry feature is not in use it will return 0 to indicate it is the one and only run.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xprc.xpce.OrderControlServiceImpl.getCurrentRetryCounter(correlatedXynaOrder);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

@@ -201,8 +201,8 @@ public class RepositoryInteraction {
     }
     return ret;
   }
-  
-  
+
+
   public BranchData listBranches(String repository) throws Exception {
     BranchData.Builder result = new BranchData.Builder();
     List<Branch> resultBranches = new ArrayList<>();
@@ -248,7 +248,7 @@ public class RepositoryInteraction {
     Repository repo = loadRepo(repository, true);
     return new LoadChangesTools().loadChanges(repository, repo);
   }
-  
+
 
   public void push(String repository, String message, boolean dryrun, String user, List<String> filePatterns) throws Exception {
     if (message == null) { throw new IllegalArgumentException("Commit message is empty"); }
@@ -280,7 +280,7 @@ public class RepositoryInteraction {
         oldTreeParser.reset(reader, oldTreeId);
       }
 
-      // Check if local branch not exists and remote branch exists 
+      // Check if local branch not exists and remote branch exists
       CheckoutCommand checkoutCommand = git.checkout();
       checkoutCommand.setName(branch);
       if (!existsLocalBranch(git, branch) && existsRemoteBranch(git, branch)) {
@@ -494,17 +494,19 @@ public class RepositoryInteraction {
       String repoPath = exec.repoPath;
       String filePath = Path.of(container.repository, repoPath).toString();
       Pair<String, String> fqnAndWorkspace = getFqnAndWorkspaceFromRepoPath(repoPath, container.repository);
-      if(fqnAndWorkspace == null) {
+      if (fqnAndWorkspace == null) {
         exceptions.add(new Triple<>(exec.execType, "unknown", exec.repoPath));
         continue;
       }
       String fqn = fqnAndWorkspace.getFirst();
       String workspace = fqnAndWorkspace.getSecond();
       RemovexmomobjectImpl removeXmom = new RemovexmomobjectImpl();
+      SavexmomobjectImpl saveXmom = new SavexmomobjectImpl();
       try {
         if (exec.execType == PullExecType.delete) {
           removeXmom.removeXmomObject(workspace, fqn);
         } else {
+          saveXmom.saveXmomObject(workspace, fqn, false);
           Long revision = getRevisionMgmt().getRevision(null, null, workspace);
           toDeployByRevision.putIfAbsent(revision, new ArrayList<ObjectToDeploy>());
           toDeployByRevision.get(revision).add(new ObjectToDeploy(fqn, filePath));
@@ -515,8 +517,8 @@ public class RepositoryInteraction {
     }
 
     List<Long> revisionsSorted = sortRevisions(toDeployByRevision.keySet());
-    for(Long revision : revisionsSorted) {
-      if(logger.isDebugEnabled()) {
+    for (Long revision : revisionsSorted) {
+      if (logger.isDebugEnabled()) {
         logger.debug("depolying " + toDeployByRevision.get(revision).size() + " objects in revision " + revision);
       }
       deployRevision(revision, toDeployByRevision.get(revision), exceptions);
@@ -532,7 +534,7 @@ public class RepositoryInteraction {
 
   private List<Long> sortRevisions(Set<Long> revisions) {
     RuntimeContextDependencyManagement rtcMgmt =
-XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
+        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
     List<Long> revisionsOrdered = new ArrayList<>();
     for (Long candidate : revisions) {
       sortRevision(candidate, revisionsOrdered, revisions, rtcMgmt);
@@ -986,11 +988,11 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
     RmCommand rm = git.rm();
     boolean foundAdd = false;
     boolean foundRm = false;
-    
+
     if ((filePatterns == null) || (filePatterns.size() < 1)) {
       add.addFilepattern(".");
       foundAdd = true;
-    } 
+    }
     else {
       for (String str : filePatterns) {
         if (isDeletedFile(str, container)) {
@@ -1003,13 +1005,13 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
         }
       }
     }
-    
+
     if (foundAdd) {
       add.call();
-    }    
+    }
     if (foundRm) {
       rm.call();
-    }    
+    }
     CommitCommand commitCmd = git.commit().setAuthor(container.user, container.mail).setMessage(msg);
     commitCmd.call();
 
@@ -1028,7 +1030,7 @@ XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRunt
     List<String> result = list.stream().map(x -> String.valueOf(x.getListId())).collect(Collectors.toList());
     return result;
   }
-   
+
 
   public static class GitDataContainer {
 
