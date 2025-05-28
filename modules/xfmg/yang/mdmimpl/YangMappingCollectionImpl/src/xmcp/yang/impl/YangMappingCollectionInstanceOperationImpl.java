@@ -59,7 +59,7 @@ public class YangMappingCollectionInstanceOperationImpl extends YangMappingColle
   }
 
   
-  public xmcp.yang.YangMappingCollection merge(xmcp.yang.YangMappingCollection input) {
+  public YangMappingCollection merge(YangMappingCollection input) {
     if (input == null) { return getInstanceVar(); }
     CsvPathsAndNspsWithIds csv1 = CsvPathsAndNspsWithIds.builder().csvPaths(_mappings).namespaces(_namespaces).build();
     CsvPathsAndNspsWithIds csv2 = CsvPathsAndNspsWithIds.builder().csvPaths(input.getMappings()).
