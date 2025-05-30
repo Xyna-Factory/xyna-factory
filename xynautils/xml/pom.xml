@@ -61,8 +61,8 @@
             <artifactId>xmlparserv2</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sun.xml.ws</groupId>
-            <artifactId>jaxws-rt</artifactId>
+            <groupId>javax.xml.soap</groupId>
+            <artifactId>javax.xml.soap-api</artifactId>
         </dependency>
     </dependencies>
 </project>
