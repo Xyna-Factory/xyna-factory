@@ -60,5 +60,9 @@
         	<groupId>com.gip.xyna</groupId>
         	<artifactId>xynautils-xml</artifactId>
         </dependency>
+        <dependency>
+            <groupId>javax.xml.soap</groupId>
+            <artifactId>javax.xml.soap-api</artifactId>
+        </dependency>
     </dependencies>
 </project>
