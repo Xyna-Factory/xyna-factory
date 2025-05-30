@@ -100,6 +100,24 @@ build_xynautils_misc() {
   ant -Doracle.home=/tmp installMavenArtifact
 }
 
+build_xynautils_xml() {
+  echo "building xynautils-xml..."
+  cd $SCRIPT_DIR/../xynautils/xml
+  mkdir -p lib
+  mvn dependency:resolve
+  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
+  ant -Doracle.home=/tmp installMavenArtifact
+}
+
+build_xynautils_soap() {
+  echo "building xynautils-soap..."
+  cd $SCRIPT_DIR/../xynautils/soap
+  mkdir -p lib
+  mvn dependency:resolve
+  mvn -DoutputDirectory="$(pwd)/lib" dependency:copy-dependencies
+  ant -Doracle.home=/tmp installMavenArtifact
+}
+
 build_misc() {
   echo "building misc..."
   cd $SCRIPT_DIR/../misc
@@ -526,6 +544,8 @@ build_xynautils() {
   build_xynautils_snmp
   build_xynautils_ldap
   build_xynautils_misc
+  build_xynautils_xml
+  build_xynautils_soap
 }
 
 fill_lib() {
