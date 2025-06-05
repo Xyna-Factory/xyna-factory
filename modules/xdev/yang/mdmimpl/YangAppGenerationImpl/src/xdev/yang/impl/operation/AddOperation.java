@@ -61,10 +61,10 @@ public class AddOperation {
     try (Operation result = Operation.open(order, fqn, workspace, operation)) {
       if (parameter.getIsRpc()) {
         result.addInput("MessageId", "xmcp.yang.MessageId");
-        result.addOutput("xact.templates.Document");
+        result.addOutput("Document", "xact.templates.Document");
       } else {
         result.addInput("YangMappingCollection", "xmcp.yang.YangMappingCollection");
-        result.addOutput("YangMappingCollection");
+        result.addOutput("YangMappingCollection", "xmcp.yang.YangMappingCollection");
       }
       result.updateImplementation("return null;");
       result.save();
