@@ -32,6 +32,7 @@ import org.yangcentral.yangkit.model.api.stmt.YangStatement;
 import org.yangcentral.yangkit.parser.YangYinParser;
 
 import xdev.yang.impl.YangStatementTranslator.YangStatementTranslation;
+import xdev.yang.impl.operation.OperationAssignmentUtils;
 
 
 public class YangTest2 {
@@ -89,12 +90,12 @@ public class YangTest2 {
   }
   
   
-  public void test1() throws Exception {    
+  public void test1() throws Exception {
     try {
       String txt = getDataFile("test_module_zb_1_a.yang");
       YangSchemaContext context = null;
       context = YangYinParser.parse(textAsByteStream(txt), "module.yang", context);
-      
+      context.validate();
       List<Module> found = context.getModule("test_module_zb_1_a");
       assertEquals(found.size(), 1);
       Module mod = found.get(0);
@@ -103,10 +104,14 @@ public class YangTest2 {
       for (YangElement elem :  mod.getSubElements()) {
         logElement(elem, 0);
       }
-      List<YangStatement> list = mod.getSubStatement(new QName("http://www.gip.com/xyna/yang/test/testrpc_zb_1", "group_a"));
-      for (YangElement elem :  list) {
-        //logElement(elem, 0);
-      }
+      List<YangStatement> candidates = OperationAssignmentUtils.findRootLevelTags(found, "group_a");
+      assertEquals(candidates.size(), 1);
+      YangStatement ys = candidates.get(0);
+      String nsp = YangStatementTranslation.getNamespace(ys);
+      log(ys.getArgStr());
+      log(nsp);
+      assertEquals("group_a", ys.getArgStr());
+      assertEquals("http://www.gip.com/xyna/yang/test/testrpc_zb_1", );
     }
     catch (Exception e) {
       throw new RuntimeException(e);
