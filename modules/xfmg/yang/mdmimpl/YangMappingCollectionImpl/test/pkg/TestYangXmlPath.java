@@ -27,10 +27,13 @@ import java.util.List;
 
 import org.junit.Test;
 
+import xmcp.yang.YangMappingPath;
+import xmcp.yang.YangMappingPathElement;
 import xmcp.yang.xml.CsvPathsAndNspsWithIds;
 import xmcp.yang.xml.IdOfNamespaceMap;
 import xmcp.yang.xml.ListKeyBuilder;
 import xmcp.yang.xml.NamespaceOfIdMap;
+import xmcp.yang.xml.XmomPathAdapter;
 import xmcp.yang.xml.YangXmlPath;
 import xmcp.yang.xml.YangXmlPathElem;
 import xmcp.yang.xml.YangXmlPathList;
@@ -188,6 +191,38 @@ public class TestYangXmlPath {
   }
   
   
+  @Test
+  public void testXmomAdapter() throws Exception {
+    try {
+      YangMappingPath path = new YangMappingPath();
+      path.addToPath(buildYangMappingPathElement("aa1", "www.nsp-1.de/test-1"));
+      path.addToPath(buildYangMappingPathElement("bb2", "www.nsp-2.de/test-2"));
+      path.addToPath(buildYangMappingPathElement("cc3", "www.nsp-3.de/test-3"));
+      path.addToPath(new YangMappingPathElement.Builder().elementName("dd4").namespace("www.nsp-1.de/test-1").instance());
+      path.setValue("test-value-1");
+      
+      YangXmlPath adapted = new XmomPathAdapter().adapt(path);
+      YangXmlPathList pathlist = new YangXmlPathList();
+      pathlist.add(adapted);
+      
+      CsvPathsAndNspsWithIds csv = new CsvPathsAndNspsWithIds(pathlist);
+      log(csv);
+      assertEquals(csv.getCsvPathList().size(), 1);
+      assertEquals(csv.getCsvPathList().get(0), "aa1#0##,bb2#1##,cc3#2##,dd4#0#test-value-1#");
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+  
+  private YangMappingPathElement buildYangMappingPathElement(String name, String nsp) {
+    YangMappingPathElement ret = new YangMappingPathElement();
+    ret.setElementName(name);
+    ret.setNamespace(nsp);
+    return ret;
+  }
+  
+  
   private void log(CsvPathsAndNspsWithIds csv) {
     log("### csv:");
     for (String str : csv.getCsvPathList()) {
@@ -207,7 +242,7 @@ public class TestYangXmlPath {
   
   public static void main(String[] args) {
     try {
-      new TestYangXmlPath().test1();
+      new TestYangXmlPath().testXmomAdapter();
     }
     catch (Throwable e) {
       e.printStackTrace();

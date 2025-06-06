@@ -72,5 +72,16 @@
         <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getNamespaces();</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="false" Label="Overwrite Content" Name="overwriteContent">
+      <Input>
+        <Data ID="202" Label="Yang Mapping Path" ReferenceName="YangMappingPath" ReferencePath="xmcp.yang" VariableName="yangMappingPath202"/>
+      </Input>
+      <Output>
+        <Data ID="210" Label="Yang Mapping Collection" ReferenceName="YangMappingCollection" ReferencePath="xmcp.yang" VariableName="yangMappingCollection210"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().overwriteContent(yangMappingPath202);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>
