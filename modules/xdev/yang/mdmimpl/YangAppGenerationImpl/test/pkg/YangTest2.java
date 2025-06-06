@@ -89,7 +89,7 @@ public class YangTest2 {
     return Path.of(getClass().getClassLoader().getResource("").toURI());
   }
   
-  
+  @Test
   public void test1() throws Exception {
     try {
       String txt = getDataFile("test_module_zb_1_a.yang");
@@ -111,7 +111,7 @@ public class YangTest2 {
       log(ys.getArgStr());
       log(nsp);
       assertEquals("group_a", ys.getArgStr());
-      assertEquals("http://www.gip.com/xyna/yang/test/testrpc_zb_1", );
+      assertEquals("http://www.gip.com/xyna/yang/test/testrpc_zb_1", nsp);
     }
     catch (Exception e) {
       throw new RuntimeException(e);
