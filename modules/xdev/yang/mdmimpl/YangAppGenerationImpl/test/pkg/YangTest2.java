@@ -130,7 +130,7 @@ public class YangTest2 {
       for (YangElement elem :  mod.getSubElements()) {
         logElement(elem, 0);
       }
-      List<YangStatement> candidates = OperationAssignmentUtils.findRootLevelTags(found, "group_a");
+      List<YangStatement> candidates = OperationAssignmentUtils.findRootLevelStatements(found, "group_a");
       assertEquals(candidates.size(), 1);
       YangStatement ys = candidates.get(0);
       String nsp = YangStatementTranslation.getNamespace(ys);
@@ -205,7 +205,8 @@ public class YangTest2 {
       log(layer + " ## YangStatement: " + elem.toString()+ " / " + ys.getArgStr() +
                            " ### " + ys.getClass().getName() + 
                            " ### " + nsp +
-                           " ### " + ys.getYangKeyword().getQualifiedName() + " | " + ys.getYangKeyword().getNamespace()
+                           " ### " + ys.getYangKeyword().getLocalName() + " | " + 
+                                     ys.getYangKeyword().getQualifiedName() + " | " + ys.getYangKeyword().getNamespace()
           );
       for (YangElement child : this.getSubStatements(ys)) {
         logElement(child, layer + 1);
@@ -230,7 +231,7 @@ public class YangTest2 {
   
   public static void main(String[] args) {
     try {
-      new YangTest2().test2();
+      new YangTest2().test1();
     }
     catch (Throwable e) {
       e.printStackTrace();

@@ -52,6 +52,7 @@ public class Constants {
   public static final String TAG_RPC_NS = "RpcNamespace";
   public static final String TAG_YANG_TAG = "Tag";
   public static final String TAG_YANG_TAG_NS = "TagNamespace";
+  public static final String TAG_YANG_TAG_KEYWORD = "Keyword";
   
   public static final String TAG_DEVICE_FQN = "DeviceFqn";
   public static final String TAG_MAPPINGS = "Mappings";

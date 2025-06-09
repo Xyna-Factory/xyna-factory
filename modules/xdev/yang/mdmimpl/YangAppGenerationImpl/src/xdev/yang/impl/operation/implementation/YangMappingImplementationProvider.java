@@ -35,7 +35,7 @@ public class YangMappingImplementationProvider implements ImplementationProvider
     StringBuilder result = new StringBuilder();
     _tools.createVariables(result, meta, inputVarNames);
     List<OperationMapping> mappings = OperationMapping.loadMappings(meta);
-    result.append("YangMappingPath path = null;");
+    result.append("xmcp.yang.YangMappingPath path = null;");
     result.append("List<xmcp.yang.YangMappingPath> pathList = new ArrayList<>();").append("\n");
     
     for (int i = 0; i < mappings.size(); i++) {
@@ -44,17 +44,18 @@ public class YangMappingImplementationProvider implements ImplementationProvider
       result.append("path = new xmcp.yang.YangMappingPath();").append("\n");
       for (MappingPathElement elem : mappingList) {
         if (OpImplTools.hiddenYangKeywords.contains(elem.getKeyword())) { continue; }
-        result.append("path.addToPath(new xmcp.yang.YangMappingPathElement.Builder().elementName(").append(elem.getYangPath()).append(")");
-        result.append(".namespace(").append(elem.getNamespace()).append(").instance());").append("\n");
+        result.append("path.addToPath(new xmcp.yang.YangMappingPathElement.Builder().elementName(\"").append(elem.getYangPath()).append("\")");
+        result.append(".namespace(\"").append(elem.getNamespace()).append("\").instance());").append("\n");
       }
       String val = _tools.determineMappingString(mapping.getValue());
       result.append("path.setValue(").append(val).append(");").append("\n");
       result.append("pathList.add(path);").append("\n");
-      result.append("xmcp.yang.YangMappingCollection coll2 = new xmcp.yang.YangMappingCollection();").append("\n");
-      result.append("coll2.overwriteContent(pathList);").append("\n");
-      result.append("xmcp.yang.YangMappingCollection ret = ").append(inputVarNames.get(0)).append(".merge(coll2);").append("\n");
-      result.append("return ret;").append("\n");
     }
+    result.append("xmcp.yang.YangMappingCollection coll2 = new xmcp.yang.YangMappingCollection();").append("\n");
+    result.append("coll2.overwriteContent(pathList);").append("\n");
+    result.append("xmcp.yang.YangMappingCollection ret = ").append(inputVarNames.get(0)).append(".merge(coll2);").append("\n");
+    result.append("return ret;").append("\n");
+    
     return result.toString();
   }
   
