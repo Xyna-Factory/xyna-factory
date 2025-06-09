@@ -74,7 +74,7 @@
     </Operation>
     <Operation IsStatic="false" Label="Overwrite Content" Name="overwriteContent">
       <Input>
-        <Data ID="202" Label="Yang Mapping Path" ReferenceName="YangMappingPath" ReferencePath="xmcp.yang" VariableName="yangMappingPath202"/>
+        <Data ID="202" IsList="true" Label="Yang Mapping Path" ReferenceName="YangMappingPath" ReferencePath="xmcp.yang" VariableName="yangMappingPath202"/>
       </Input>
       <Output>
         <Data ID="210" Label="Yang Mapping Collection" ReferenceName="YangMappingCollection" ReferencePath="xmcp.yang" VariableName="yangMappingCollection210"/>

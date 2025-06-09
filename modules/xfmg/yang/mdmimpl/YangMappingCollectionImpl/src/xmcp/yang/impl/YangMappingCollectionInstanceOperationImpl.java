@@ -80,10 +80,13 @@ public class YangMappingCollectionInstanceOperationImpl extends YangMappingColle
 
 
   @Override
-  public YangMappingCollection overwriteContent(YangMappingPath input) {
-    YangXmlPath adapted = new XmomPathAdapter().adapt(input);
+  public YangMappingCollection overwriteContent(List<? extends YangMappingPath> input) {
+    if (input == null) { throw new IllegalArgumentException("Input is null"); }
     YangXmlPathList pathlist = new YangXmlPathList();
-    pathlist.add(adapted);
+    for (int i = 0; i < input.size(); i++) {
+      YangXmlPath adapted = new XmomPathAdapter().adapt(input.get(i));
+      pathlist.add(adapted);
+    }
     CsvPathsAndNspsWithIds csv = new CsvPathsAndNspsWithIds(pathlist);
     _mappings = csv.getCsvPathList();
     _namespaces = csv.getNamespaceWithIdList();
@@ -117,6 +120,5 @@ public class YangMappingCollectionInstanceOperationImpl extends YangMappingColle
     //change if needed to restore instance-context during deserialization of order
     s.defaultReadObject();
   }
-
 
 }
