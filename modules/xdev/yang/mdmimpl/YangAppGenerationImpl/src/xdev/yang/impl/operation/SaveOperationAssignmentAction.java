@@ -23,7 +23,7 @@ import org.w3c.dom.Element;
 
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 
-import xdev.yang.impl.operation.implementation.OperationImplementationProvider;
+import xdev.yang.impl.operation.implementation.RpcImplementationProvider;
 import xmcp.yang.OperationAssignmentTableData;
 
 public class SaveOperationAssignmentAction {
@@ -33,7 +33,7 @@ public class SaveOperationAssignmentAction {
     String fqn = data.getLoadYangAssignmentsData().getFqn();
     String workspaceName = data.getLoadYangAssignmentsData().getWorkspaceName();
     String operationName = data.getLoadYangAssignmentsData().getOperation();
-    OperationImplementationProvider implProvider = new OperationImplementationProvider();
+    RpcImplementationProvider implProvider = new RpcImplementationProvider();
 
     try(Operation operation = Operation.open(order, fqn, workspaceName, operationName)) {
       Document meta = operation.getMeta();

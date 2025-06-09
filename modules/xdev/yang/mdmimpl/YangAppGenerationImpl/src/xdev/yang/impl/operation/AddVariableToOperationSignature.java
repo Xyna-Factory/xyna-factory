@@ -23,7 +23,7 @@ import org.w3c.dom.Document;
 
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 
-import xdev.yang.impl.operation.implementation.OperationImplementationProvider;
+import xdev.yang.impl.operation.implementation.RpcImplementationProvider;
 import xmcp.yang.OperationTableData;
 import xmcp.yang.fman.OperationSignatureEntry;
 
@@ -44,7 +44,7 @@ public class AddVariableToOperationSignature {
 
       uc.updateMeta();
       uc.addInput(signature.getVariableName(), signature.getFqn());
-      OperationImplementationProvider implProvider = new OperationImplementationProvider();
+      RpcImplementationProvider implProvider = new RpcImplementationProvider();
       String newImpl = implProvider.createImpl(meta, uc.getInputVarNames());
       uc.updateImplementation(newImpl);
       uc.save();

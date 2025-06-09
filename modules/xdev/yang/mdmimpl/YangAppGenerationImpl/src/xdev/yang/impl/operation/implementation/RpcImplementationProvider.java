@@ -35,7 +35,7 @@ import xdev.yang.impl.operation.ListConfiguration.DynamicListLengthConfig;
 
 
 
-public class OperationImplementationProvider implements ImplementationProvider {
+public class RpcImplementationProvider implements ImplementationProvider {
   
   private final OpImplTools _tools = new OpImplTools();
   

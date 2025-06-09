@@ -54,7 +54,7 @@ import xdev.yang.impl.YangStatementTranslator.YangStatementTranslation;
 import xdev.yang.impl.operation.MappingPathElement;
 import xdev.yang.impl.operation.OperationAssignmentUtils;
 import xdev.yang.impl.operation.OperationMapping;
-import xdev.yang.impl.operation.implementation.OperationImplementationProvider;
+import xdev.yang.impl.operation.implementation.RpcImplementationProvider;
 import xmcp.yang.YangMappingCollection;
 import xmcp.yang.YangMappingPath;
 import xmcp.yang.YangMappingPathElement;
@@ -158,7 +158,7 @@ public class YangTest2 {
         
         YangMappingPath path = new YangMappingPath();
         for (MappingPathElement elem : mappingList) {
-          if (OperationImplementationProvider.hiddenYangKeywords.contains(elem.getKeyword())) { continue; }
+          if (RpcImplementationProvider.hiddenYangKeywords.contains(elem.getKeyword())) { continue; }
           path.addToPath(new YangMappingPathElement.Builder().elementName(elem.getYangPath())
                                                              .namespace(elem.getNamespace()).instance());
         }
