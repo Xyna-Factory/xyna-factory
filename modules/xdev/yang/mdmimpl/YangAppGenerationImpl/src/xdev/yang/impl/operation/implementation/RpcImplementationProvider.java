@@ -21,17 +21,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import org.w3c.dom.Document;
 
 import xdev.yang.impl.Constants;
 import xdev.yang.impl.operation.ListConfiguration;
+import xdev.yang.impl.operation.ListConfiguration.DynamicListLengthConfig;
 import xdev.yang.impl.operation.MappingPathElement;
 import xdev.yang.impl.operation.OperationAssignmentUtils;
 import xdev.yang.impl.operation.OperationMapping;
 import xdev.yang.impl.operation.OperationSignatureVariable;
-import xdev.yang.impl.operation.ListConfiguration.DynamicListLengthConfig;
 
 
 
@@ -54,7 +53,7 @@ public class RpcImplementationProvider implements ImplementationProvider {
         .append("builder.addAttribute(\"xmlns\", \"").append(rpcNs).append("\");\n")
         .append("builder.endAttributes();\n\n");
     
-    createVariables(result, meta, inputVarNames);
+    _tools.createVariables(result, meta, inputVarNames);
     createMappingImpl(result, meta);
     
     result
@@ -65,16 +64,6 @@ public class RpcImplementationProvider implements ImplementationProvider {
     return result.toString();
   }
   
-  private void createVariables(StringBuilder result, Document meta, List<String> inputVarNames) {
-    List<OperationSignatureVariable> variables = OperationSignatureVariable.loadSignatureEntries(meta, Constants.VAL_LOCATION_INPUT);  
-    for (int i = 0; i < variables.size(); i++) {
-      OperationSignatureVariable variable = variables.get(i);
-      String serviceInputVarName = inputVarNames.get(i + 1);
-      String fqn = variable.getFqn();
-      String customVarName = variable.getVarName();
-      result.append(fqn).append(" ").append(customVarName).append(" = ").append(serviceInputVarName).append(";\n");
-    }
-  }
 
   private void createMappingImpl(StringBuilder result, Document meta) {
     String rpcName = OperationAssignmentUtils.readRpcName(meta);
@@ -153,7 +142,7 @@ public class RpcImplementationProvider implements ImplementationProvider {
 
     }
     String tag = cleanupTag(mappingList.get(mappingList.size() - 1).getYangPath());
-    String value = determineMappingString(mapping.getValue());
+    String value = _tools.determineMappingString(mapping.getValue());
     result.append("builder.endAttributesAndElement(").append(value).append(", \"").append(tag).append("\");\n");
   }
   
@@ -192,21 +181,6 @@ public class RpcImplementationProvider implements ImplementationProvider {
       String variable = mappingValue.substring(0, firstDot);
       String path = mappingValue.substring(firstDot + 1);
       return String.format("%s.get(\"%s\")", variable, path);
-    }
-  }
-
-
-  private String determineMappingString(String mappingValue) {
-    if (mappingValue.startsWith("\"")) {
-      return mappingValue;
-    }
-    int firstDot = mappingValue.indexOf(".");
-    if (firstDot == -1) {
-      return String.format("String.valueOf(%s)", mappingValue);
-    } else {
-      String variable = mappingValue.substring(0, firstDot);
-      String path = mappingValue.substring(firstDot + 1);
-      return String.format("String.valueOf(((GeneralXynaObject)%s).get(\"%s\"))", variable, path);
     }
   }
 

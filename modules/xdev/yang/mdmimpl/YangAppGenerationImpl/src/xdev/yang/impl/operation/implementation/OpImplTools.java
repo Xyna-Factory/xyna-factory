@@ -18,9 +18,13 @@
 
 package xdev.yang.impl.operation.implementation;
 
+import java.util.List;
 import java.util.Set;
 
+import org.w3c.dom.Document;
+
 import xdev.yang.impl.Constants;
+import xdev.yang.impl.operation.OperationSignatureVariable;
 
 public class OpImplTools {
 
@@ -32,5 +36,32 @@ public class OpImplTools {
                                                               Constants.TYPE_LEAFLIST,
                                                               Constants.TYPE_LIST);
   
+  
+  public void createVariables(StringBuilder result, Document meta, List<String> inputVarNames) {
+    List<OperationSignatureVariable> variables = OperationSignatureVariable.loadSignatureEntries(meta, Constants.VAL_LOCATION_INPUT);  
+    for (int i = 0; i < variables.size(); i++) {
+      OperationSignatureVariable variable = variables.get(i);
+      String serviceInputVarName = inputVarNames.get(i + 1);
+      String fqn = variable.getFqn();
+      String customVarName = variable.getVarName();
+      result.append(fqn).append(" ").append(customVarName).append(" = ").append(serviceInputVarName).append(";\n");
+    }
+  }
+  
+  
+  public String determineMappingString(String mappingValue) {
+    if (mappingValue.startsWith("\"")) {
+      return mappingValue;
+    }
+    int firstDot = mappingValue.indexOf(".");
+    if (firstDot == -1) {
+      return String.format("String.valueOf(%s)", mappingValue);
+    } else {
+      String variable = mappingValue.substring(0, firstDot);
+      String path = mappingValue.substring(firstDot + 1);
+      return String.format("String.valueOf(((GeneralXynaObject)%s).get(\"%s\"))", variable, path);
+    }
+  }
+
   
 }
