@@ -15,7 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package xdev.yang.impl.operation;
+package xdev.yang.impl.operation.implementation;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +26,11 @@ import java.util.Set;
 import org.w3c.dom.Document;
 
 import xdev.yang.impl.Constants;
+import xdev.yang.impl.operation.ListConfiguration;
+import xdev.yang.impl.operation.MappingPathElement;
+import xdev.yang.impl.operation.OperationAssignmentUtils;
+import xdev.yang.impl.operation.OperationMapping;
+import xdev.yang.impl.operation.OperationSignatureVariable;
 import xdev.yang.impl.operation.ListConfiguration.DynamicListLengthConfig;
 
 

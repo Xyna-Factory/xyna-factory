@@ -163,8 +163,6 @@ public class AddOperation {
   }
 
   
-
-
   private static UpdateXMOMItemResponse createService(XynaOrderServerExtension order, OperationCreationParameter parameter) {
     String operation = parameter.getOperationName();
     String workspaceNameEscaped = GuiHttpInteraction.urlEncode(parameter.getWorkspaceName());

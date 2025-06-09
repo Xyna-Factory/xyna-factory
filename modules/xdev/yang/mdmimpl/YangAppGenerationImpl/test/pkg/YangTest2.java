@@ -1,11 +1,28 @@
-
-
+/*
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ */
 
 package pkg;
 
 //import org.junit.jupiter.api.Test;  // if Junit 5 is used?
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -31,8 +48,16 @@ import org.yangcentral.yangkit.model.api.stmt.Uses;
 import org.yangcentral.yangkit.model.api.stmt.YangStatement;
 import org.yangcentral.yangkit.parser.YangYinParser;
 
+import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
+
 import xdev.yang.impl.YangStatementTranslator.YangStatementTranslation;
+import xdev.yang.impl.operation.MappingPathElement;
 import xdev.yang.impl.operation.OperationAssignmentUtils;
+import xdev.yang.impl.operation.OperationMapping;
+import xdev.yang.impl.operation.implementation.OperationImplementationProvider;
+import xmcp.yang.YangMappingCollection;
+import xmcp.yang.YangMappingPath;
+import xmcp.yang.YangMappingPathElement;
 
 
 public class YangTest2 {
@@ -118,6 +143,56 @@ public class YangTest2 {
     }
   }
   
+  
+  @Test
+  public void test2() throws Exception {
+    try {
+      String txt = getDataFile("meta_1.xml");
+      Document doc = XMLUtils.parseString(txt, true);
+      
+      List<YangMappingPath> pathList = new ArrayList<>();
+      List<Element> mappings = OperationMapping.loadMappingElements(doc);
+      for(Element mappingEle : mappings) {
+        OperationMapping mapping = OperationMapping.loadOperationMapping(mappingEle);
+        List<MappingPathElement> mappingList = mapping.createPathList();
+        
+        YangMappingPath path = new YangMappingPath();
+        for (MappingPathElement elem : mappingList) {
+          if (OperationImplementationProvider.hiddenYangKeywords.contains(elem.getKeyword())) { continue; }
+          path.addToPath(new YangMappingPathElement.Builder().elementName(elem.getYangPath())
+                                                             .namespace(elem.getNamespace()).instance());
+        }
+        path.setValue(mapping.getValue());
+        pathList.add(path);
+      }
+      /*
+      YangMappingCollection ymc = new YangMappingCollection();
+      ymc.overwriteContent(pathList);
+      List<String> retMappings = ymc.getMappings();
+      List<String> retNsp = ymc.getNamespaces();
+      log("### Mappings: ");
+      for (String s : retMappings) {
+        log(s);
+      }
+      log("### namespaces: ");
+      for (String s : retNsp) {
+        log(s);
+      }
+      */
+      for (YangMappingPath retPath : pathList) {
+        log(" ### path:");
+        for (YangMappingPathElement retElem : retPath.getPath()) {
+          log(retElem.getElementName() + " [ " + retElem.getNamespace() + " ]");
+        }
+        log(" = " + retPath.getValue());
+      }
+    }
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+  
+  
   private void logElement(YangElement elem, int layer) {
     if (elem == null) { return; }
     if (elem instanceof YangStatement) {
@@ -154,7 +229,7 @@ public class YangTest2 {
   
   public static void main(String[] args) {
     try {
-      new YangTest2().test1();
+      new YangTest2().test2();
     }
     catch (Throwable e) {
       e.printStackTrace();

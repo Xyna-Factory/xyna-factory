@@ -25,6 +25,7 @@ import org.w3c.dom.Document;
 
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 
+import xdev.yang.impl.operation.implementation.OperationImplementationProvider;
 import xmcp.yang.OperationTableData;
 import xmcp.yang.fman.OperationSignatureEntry;
 
