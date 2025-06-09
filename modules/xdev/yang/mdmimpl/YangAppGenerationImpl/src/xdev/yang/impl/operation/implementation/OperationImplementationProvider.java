@@ -35,14 +35,10 @@ import xdev.yang.impl.operation.ListConfiguration.DynamicListLengthConfig;
 
 
 
-public class OperationImplementationProvider {
-  public static final Set<String> hiddenYangKeywords = Set.of(
-                                                              Constants.TYPE_GROUPING,
-                                                              Constants.TYPE_USES,
-                                                              Constants.TYPE_CHOICE, 
-                                                              Constants.TYPE_CASE,
-                                                              Constants.TYPE_LEAFLIST,
-                                                              Constants.TYPE_LIST);
+public class OperationImplementationProvider implements ImplementationProvider {
+  
+  private final OpImplTools _tools = new OpImplTools();
+  
 
   public String createImpl(Document meta, List<String> inputVarNames) {
     StringBuilder result = new StringBuilder();
@@ -118,7 +114,7 @@ public class OperationImplementationProvider {
       }
       MappingPathElement curPos = position.get(i);
       MappingPathElement mapPos = mappingList.get(i);
-      boolean bothHidden = hiddenYangKeywords.contains(curPos.getKeyword()) && hiddenYangKeywords.contains(mapPos.getKeyword());
+      boolean bothHidden = OpImplTools.hiddenYangKeywords.contains(curPos.getKeyword()) && OpImplTools.hiddenYangKeywords.contains(mapPos.getKeyword());
       if (!Objects.equals(curPos, mapPos) && !bothHidden) {
         break;
       }
@@ -143,7 +139,7 @@ public class OperationImplementationProvider {
           .append("Object ").append(loopVareName).append(" = ").append(loopVareName).append("_list.get(").append(counterVarName).append(");\n");
       }
 
-      if(!hiddenYangKeywords.contains(mappingList.get(i).getKeyword())) {
+      if(!OpImplTools.hiddenYangKeywords.contains(mappingList.get(i).getKeyword())) {
         result.append("builder.startElementWithAttributes(\"").append(tag).append("\");\n")
           .append("builder.addAttribute(\"xmlns\", \"").append(mappingList.get(i).getNamespace()).append("\");\n");
         if (i != mappingList.size() - 1) { //do not close the final tag, because we want to set the value
@@ -220,7 +216,7 @@ public class OperationImplementationProvider {
     for (int i = tags.size() - 1; i > index; i--) {
       MappingPathElement element = tags.get(i);
 
-      if (!hiddenYangKeywords.contains(element.getKeyword())) {
+      if (!OpImplTools.hiddenYangKeywords.contains(element.getKeyword())) {
         String tag = cleanupTag(element.getYangPath());
         sb.append("builder.endElement(\"").append(tag).append("\");\n");
 
@@ -230,7 +226,7 @@ public class OperationImplementationProvider {
         sb.append("}\n");
       }
 
-      if (!hiddenYangKeywords.contains(element.getKeyword())) {
+      if (!OpImplTools.hiddenYangKeywords.contains(element.getKeyword())) {
         tags.remove(i);
       }
     }
