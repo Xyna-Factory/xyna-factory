@@ -24,6 +24,7 @@ import org.w3c.dom.Element;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 
 import xdev.yang.impl.operation.implementation.ImplementationProvider;
+import xdev.yang.impl.operation.implementation.OpImplProviderSelection;
 import xdev.yang.impl.operation.implementation.RpcImplementationProvider;
 import xdev.yang.impl.operation.implementation.YangMappingImplementationProvider;
 import xmcp.yang.OperationAssignmentTableData;
@@ -35,21 +36,10 @@ public class SaveOperationAssignmentAction {
     String fqn = data.getLoadYangAssignmentsData().getFqn();
     String workspaceName = data.getLoadYangAssignmentsData().getWorkspaceName();
     String operationName = data.getLoadYangAssignmentsData().getOperation();
-    ImplementationProvider implProvider = null;
 
     try(Operation operation = Operation.open(order, fqn, workspaceName, operationName)) {
       Document meta = operation.getMeta();
-      
-      String rpcName = OperationAssignmentUtils.readRpcName(meta);
-      if (rpcName != null) {
-        implProvider = new RpcImplementationProvider();
-      } else {
-        String tagName = OperationAssignmentUtils.readTagName(meta);
-        if (tagName == null) {
-          throw new IllegalArgumentException("Missing meta data in xmom: Tag name");
-        }
-        implProvider = new YangMappingImplementationProvider();
-      }
+      ImplementationProvider implProvider = new OpImplProviderSelection().selectProvider(meta);
       updateMeta(meta, data);
       operation.updateMeta();
       String newImpl = implProvider.createImpl(meta, operation.getInputVarNames());
