@@ -20,9 +20,6 @@ package pkg;
 
 //import org.junit.jupiter.api.Test;  // if Junit 5 is used?
 import static org.junit.Assert.assertEquals;
-import org.junit.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -34,16 +31,12 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.yangcentral.yangkit.base.YangElement;
-import org.yangcentral.yangkit.common.api.QName;
 import org.yangcentral.yangkit.model.api.schema.YangSchemaContext;
-import org.yangcentral.yangkit.model.api.stmt.Augment;
-import org.yangcentral.yangkit.model.api.stmt.Deviate;
-import org.yangcentral.yangkit.model.api.stmt.Deviation;
-import org.yangcentral.yangkit.model.api.stmt.Include;
 import org.yangcentral.yangkit.model.api.stmt.Module;
-import org.yangcentral.yangkit.model.api.stmt.Revision;
-import org.yangcentral.yangkit.model.api.stmt.SchemaNode;
 import org.yangcentral.yangkit.model.api.stmt.Uses;
 import org.yangcentral.yangkit.model.api.stmt.YangStatement;
 import org.yangcentral.yangkit.parser.YangYinParser;
@@ -55,8 +48,6 @@ import xdev.yang.impl.operation.MappingPathElement;
 import xdev.yang.impl.operation.OperationAssignmentUtils;
 import xdev.yang.impl.operation.OperationMapping;
 import xdev.yang.impl.operation.implementation.OpImplTools;
-import xdev.yang.impl.operation.implementation.RpcImplementationProvider;
-import xmcp.yang.YangMappingCollection;
 import xmcp.yang.YangMappingPath;
 import xmcp.yang.YangMappingPathElement;
 
@@ -90,7 +81,7 @@ public class YangTest2 {
     return is;
   }
   
-  private ByteArrayInputStream fileAsByteStream(File file) throws IOException {
+  protected ByteArrayInputStream fileAsByteStream(File file) throws IOException {
     String text = readFile(file.getPath());
     java.io.ByteArrayInputStream is = new java.io.ByteArrayInputStream(text.getBytes());
     return is;
