@@ -1,11 +1,25 @@
-
-
+/*
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ */
 
 package pkg;
 
 //import org.junit.jupiter.api.Test;  // if Junit 5 is used?
 import static org.junit.Assert.assertEquals;
-import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -17,16 +31,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Test;
 import org.yangcentral.yangkit.base.YangElement;
-import org.yangcentral.yangkit.common.api.QName;
 import org.yangcentral.yangkit.model.api.schema.YangSchemaContext;
-import org.yangcentral.yangkit.model.api.stmt.Augment;
-import org.yangcentral.yangkit.model.api.stmt.Deviate;
-import org.yangcentral.yangkit.model.api.stmt.Deviation;
-import org.yangcentral.yangkit.model.api.stmt.Include;
 import org.yangcentral.yangkit.model.api.stmt.Module;
-import org.yangcentral.yangkit.model.api.stmt.Revision;
-import org.yangcentral.yangkit.model.api.stmt.SchemaNode;
 import org.yangcentral.yangkit.model.api.stmt.Uses;
 import org.yangcentral.yangkit.model.api.stmt.YangStatement;
 import org.yangcentral.yangkit.parser.YangYinParser;
@@ -64,7 +72,7 @@ public class YangTest2 {
     return is;
   }
   
-  private ByteArrayInputStream fileAsByteStream(File file) throws IOException {
+  protected ByteArrayInputStream fileAsByteStream(File file) throws IOException {
     String text = readFile(file.getPath());
     java.io.ByteArrayInputStream is = new java.io.ByteArrayInputStream(text.getBytes());
     return is;
