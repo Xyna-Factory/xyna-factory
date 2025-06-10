@@ -166,20 +166,6 @@ public class YangTest2 {
         path.setValue(mapping.getValue());
         pathList.add(path);
       }
-      /*
-      YangMappingCollection ymc = new YangMappingCollection();
-      ymc.overwriteContent(pathList);
-      List<String> retMappings = ymc.getMappings();
-      List<String> retNsp = ymc.getNamespaces();
-      log("### Mappings: ");
-      for (String s : retMappings) {
-        log(s);
-      }
-      log("### namespaces: ");
-      for (String s : retNsp) {
-        log(s);
-      }
-      */
       for (YangMappingPath retPath : pathList) {
         log(" ### path:");
         for (YangMappingPathElement retElem : retPath.getPath()) {
