@@ -142,6 +142,7 @@
 
   <taskdef resource="net/sf/antcontrib/antlib.xml"/>
   <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+  <taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" />
 
   <if>
     <and>
