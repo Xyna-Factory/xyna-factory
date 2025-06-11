@@ -61,6 +61,7 @@ install_libs() {
     echo "Error: ANT_CONTRIB_TASKS_VERSION is not set"; 
     exit 1
   fi
+  HTTP_CODE_OK=200
   
   mkdir -p ${HOME}/.ant/lib
   URL=https://repo1.maven.org/maven2/org/apache/maven/resolver/maven-resolver-ant-tasks/${MAVEN_RESOLVER_ANT_TASKS_VERSION}/maven-resolver-ant-tasks-${MAVEN_RESOLVER_ANT_TASKS_VERSION}-uber.jar
