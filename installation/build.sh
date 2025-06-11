@@ -57,8 +57,8 @@ checkout_factory() {
 install_libs() {
   echo "installing libs..."
   mkdir -p ${HOME}/.ant/lib
-  wget -O -P ${HOME}/.ant/lib https://repo1.maven.org/maven2/org/apache/maven/resolver/maven-resolver-ant-tasks/${MAVEN_RESOLVER_ANT_TASKS_VERSION}/maven-resolver-ant-tasks-${MAVEN_RESOLVER_ANT_TASKS_VERSION}-uber.jar
-  wget -O -P ${HOME}/.ant/lib https://repo1.maven.org/maven2/ant-contrib/ant-contrib/${ANT_CONTRIB_TASKS_VERSION}/ant-contrib-${ANT_CONTRIB_TASKS_VERSION}.jar
+  wget -O -P ${HOME}/.ant/lib https://repo1.maven.org/maven2/org/apache/maven/resolver/maven-resolver-ant-tasks/${MAVEN_RESOLVER_ANT_TASKS_VERSION}/maven-resolver-ant-tasks-${MAVEN_RESOLVER_ANT_TASKS_VERSION}-uber.jar || true
+  wget -O -P ${HOME}/.ant/lib https://repo1.maven.org/maven2/ant-contrib/ant-contrib/${ANT_CONTRIB_TASKS_VERSION}/ant-contrib-${ANT_CONTRIB_TASKS_VERSION}.jar || true
   echo "ls -l ${HOME}/.ant/lib"
   ls -l ${HOME}/.ant/lib
 }
