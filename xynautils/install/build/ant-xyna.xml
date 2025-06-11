@@ -159,7 +159,7 @@
     <then>
       <taskdef resource="tasks.properties" classpathref="classpath.cobertura" />
     </then>
-  </acif>
+  </ac:if>
 
   <!-- = = = = = = = = = = = = = = = = =
             macrodef: checkProperty          
