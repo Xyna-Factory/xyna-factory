@@ -144,7 +144,7 @@
   <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
   <taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" >
     <classpath>
-      <fileset dir=""${user.home}/.ant/lib" includes="ant-contrib-1.0b3.jar" />
+      <fileset dir="${user.home}/.ant/lib" includes="ant-contrib-1.0b3.jar" />
     </classpath>
   </taskdef>
 
