@@ -18,13 +18,6 @@
 
 set -e
 
-# https://mvnrepository.com/artifact/org.apache.maven.resolver/maven-resolver-ant-tasks
-MAVEN_RESOLVER_ANT_TASKS_VERSION="1.5.2"
-
-# https://mvnrepository.com/artifact/ant-contrib/ant-contrib
-ANT_CONTRIB_TASKS_VERSION="1.0b3"
-
-
 print_help() {
   echo "Usage: $0 xynautils"
   echo "Usage: $0 build"
@@ -33,7 +26,9 @@ print_help() {
   echo "Usage: $0 plugins"
   echo "Usage: $0 clusterproviders"
   echo "Usage: $0 conpooltypes"
-  echo "Usage: $0 install_libs"
+  echo "Usage: $0 install_libs -m <MAVEN_RESOLVER_ANT_TASKS_VERSION> -a <ANT_CONTRIB_TASKS_VERSION>"
+  echo "          <MAVEN_RESOLVER_ANT_TASKS_VERSION>: https://mvnrepository.com/artifact/org.apache.maven.resolver/maven-resolver-ant-tasks"
+  echo "          <ANT_CONTRIB_TASKS_VERSION>: https://mvnrepository.com/artifact/ant-contrib/ant-contrib"
 }
 
 check_dependencies() {
@@ -579,6 +574,8 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 prepare_build
 
 GIT_BRANCH_XYNA_MODELLER=""
+MAVEN_RESOLVER_ANT_TASKS_VERSION=""
+ANT_CONTRIB_TASKS_VERSION=""
 
 case $1 in
   "xynautils")
@@ -616,6 +613,21 @@ case $1 in
     build_conpooltypes
     ;;
   "install_libs")
+    OPTIND=2
+    while getopts ":m:a:" options; do
+      case "${options}" in 
+        b)
+          MAVEN_RESOLVER_ANT_TASKS_VERSION=${OPTARG}
+          ;;
+        a)
+          ANT_CONTRIB_TASKS_VERSION=${OPTARG}
+          ;;
+        *) # If unknown (any other) option:
+          print_help
+          exit 1
+          ;;
+      esac
+    done
     install_libs
     ;;
   *)
