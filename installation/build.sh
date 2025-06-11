@@ -27,8 +27,8 @@ print_help() {
   echo "Usage: $0 clusterproviders"
   echo "Usage: $0 conpooltypes"
   echo "Usage: $0 install_libs -m <MAVEN_RESOLVER_ANT_TASKS_VERSION> -a <ANT_CONTRIB_TASKS_VERSION>"
-  echo "          <MAVEN_RESOLVER_ANT_TASKS_VERSION>: https://mvnrepository.com/artifact/org.apache.maven.resolver/maven-resolver-ant-tasks"
-  echo "          <ANT_CONTRIB_TASKS_VERSION>: https://mvnrepository.com/artifact/ant-contrib/ant-contrib"
+  echo "                  <MAVEN_RESOLVER_ANT_TASKS_VERSION>: https://mvnrepository.com/artifact/org.apache.maven.resolver/maven-resolver-ant-tasks"
+  echo "                  <ANT_CONTRIB_TASKS_VERSION>: https://mvnrepository.com/artifact/ant-contrib/ant-contrib"
 }
 
 check_dependencies() {
