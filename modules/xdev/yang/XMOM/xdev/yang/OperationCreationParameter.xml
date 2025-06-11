@@ -29,7 +29,7 @@
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Rpc" VariableName="rpc">
+  <Data Label="Yang Tag Name" VariableName="yangTagName">
     <Meta>
       <Type>String</Type>
     </Meta>
@@ -39,7 +39,7 @@
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Rpc Namespace" VariableName="rpcNamespace">
+  <Data Label="Yang Tag Namespace" VariableName="yangTagNamespace">
     <Meta>
       <Type>String</Type>
       <Documentation>optional</Documentation>
@@ -48,6 +48,11 @@
   <Data Label="Workspace Name" VariableName="workspaceName">
     <Meta>
       <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Is Rpc" VariableName="isRpc">
+    <Meta>
+      <Type>boolean</Type>
     </Meta>
   </Data>
 </DataType>

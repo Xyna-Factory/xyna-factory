@@ -329,6 +329,24 @@ public class OperationAssignmentUtils {
     return result;
   }
 
+  
+  public static List<YangStatement> findRootLevelTags(List<Module> modules, String tagName) {
+    List<YangStatement> result = new ArrayList<>();
+    if (tagName == null) { return result; }
+    for (Module mod : modules) {
+      for (YangElement elem : mod.getSubElements()) {
+        if (!(elem instanceof YangStatement)) { continue; }
+        YangStatement ys = (YangStatement) elem;
+        String localName = ys.getArgStr();
+        if (tagName.equals(localName)) {
+          result.add(ys);
+        }
+      }
+    }
+    return result;
+  }
+  
+  
   public static List<ModuleGroup> loadModules(String workspaceName) {
     List<ModuleGroup> result = new ArrayList<>();
     XynaFactoryControl xynaFactoryCtrl = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl();
@@ -465,15 +483,28 @@ public class OperationAssignmentUtils {
     return deviceFqnEle.getTextContent();
   }
 
-  public static String loadRpcNs(String rpc, String deviceFqn, String workspaceName) {
+  public static String loadTagNamespace(String tag, String deviceFqn, String workspaceName, boolean isRpc) {
     List<ModuleGroup> modules = OperationAssignmentUtils.loadModules(workspaceName);
     //filter modules to supported by device
     List<YangDeviceCapability> capabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
     List<Module> filtered = YangCapabilityUtils.filterModules(modules, capabilities);
-    List<Rpc> candidates = OperationAssignmentUtils.findRpcs(filtered, rpc);
-    if (candidates.size() != 1) {
-      throw new RuntimeException("Could not determine rpc namespace. There are " + candidates.size() + " candidates.");
+    YangStatement matched = null;
+    if (isRpc) {
+      List<Rpc> candidates = OperationAssignmentUtils.findRpcs(filtered, tag);
+      if (candidates.size() != 1) {
+        throw new RuntimeException("Could not locate rpc " + tag + " in linked modules. " +
+                                   "There are " + candidates.size() + " candidates.");
+      }
+      matched = candidates.get(0);
+    } else {
+      List<YangStatement> candidates = OperationAssignmentUtils.findRootLevelTags(filtered, tag);
+      if (candidates.size() != 1) {
+        throw new RuntimeException("Could not locate yang tag " + tag + " in linked modules. " +
+                                   "There are " + candidates.size() + " candidates.");
+      }
+      matched = candidates.get(0);
     }
-    return YangStatementTranslation.getNamespace(candidates.get(0));
+    return YangStatementTranslation.getNamespace(matched);
   }
+  
 }
