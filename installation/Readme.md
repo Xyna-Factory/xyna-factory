@@ -13,7 +13,7 @@ The libs maven-resolver-ant-tasks and ant-contrib-tasks are required and must be
 to install the libs you can use:
 
 ```
-installation/build.sh install_libs
+installation/build.sh install_libs -m <MAVEN_RESOLVER_ANT_TASKS_VERSION> -a <ANT_CONTRIB_TASKS_VERSION>
 ```
 
 ## Build
