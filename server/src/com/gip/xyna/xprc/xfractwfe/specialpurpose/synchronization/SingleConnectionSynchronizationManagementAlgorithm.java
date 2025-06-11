@@ -211,7 +211,14 @@ public class SingleConnectionSynchronizationManagementAlgorithm implements Synch
       defaultConnection.queryOneRowForUpdate(possiblyWaitingEntry);
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       possiblyWaitingEntry.setNotified();
-      boolean updated = defaultConnection.persistObject(possiblyWaitingEntry);
+      boolean updated = false;
+      try {
+        updated = defaultConnection.persistObject(possiblyWaitingEntry);
+      } catch(RuntimeException ex) {
+        if(logger.isErrorEnabled()) {
+          logger.error("Error updating notified status for synchronization with correlationId " + correlationId, ex);
+        }
+      }
       if( updated ) { //Konkurrierend ist nun doch bereits ein Eintrag in der DB, deswegen Abbruch und Retry
         defaultConnection.rollback();
         throw new RetryException();
