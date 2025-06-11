@@ -54,7 +54,7 @@
 		<dependency>
 			<groupId>com.gip.xyna</groupId>
 			<artifactId>misc</artifactId>
-			<scope>compile</scope>
+			<scope>test</scope>
 		</dependency>
     </dependencies>
 </project>
