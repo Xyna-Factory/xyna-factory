@@ -146,30 +146,7 @@
     </path>
   </pathconvert>
 
-  <taskdef resource="net/sf/antcontrib/antcontrib.properties">
-    <classpath>
-      <pathelement location="${install.lib.dir}/ant-contrib.jar" />
-    </classpath>
-  </taskdef>
-
-  <taskdef name="for" classname="net.sf.antcontrib.logic.ForTask">
-    <classpath>
-      <pathelement location="${install.lib.dir}/ant-contrib.jar" />
-    </classpath>
-  </taskdef>
-
-  <taskdef name="var" classname="net.sf.antcontrib.property.Variable">
-    <classpath>
-      <pathelement location="${install.lib.dir}/ant-contrib.jar" />
-    </classpath>
-  </taskdef>
-
-  <taskdef name="propertyregex"
-           classname="net.sf.antcontrib.property.RegexTask">
-    <classpath>
-      <pathelement location="${install.lib.dir}/ant-contrib.jar" />
-    </classpath>
-  </taskdef>
+  <taskdef resource="net/sf/antcontrib/antlib.xml"/>
 
   <if>
     <and>
