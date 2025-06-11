@@ -142,13 +142,6 @@
 
   <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
 
-  <taskdef name="for" classname="net.sf.antcontrib.logic.ForTask" />
-
-  <taskdef name="var" classname="net.sf.antcontrib.property.Variable" />
-
-  <taskdef name="propertyregex" classname="net.sf.antcontrib.property.RegexTask" />
-
-
   <if>
     <and>
       <not>
