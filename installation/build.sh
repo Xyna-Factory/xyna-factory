@@ -33,6 +33,7 @@ print_help() {
   echo "Usage: $0 plugins"
   echo "Usage: $0 clusterproviders"
   echo "Usage: $0 conpooltypes"
+  echo "Usage: $0 install_libs"
 }
 
 check_dependencies() {
