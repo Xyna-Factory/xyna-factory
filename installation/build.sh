@@ -52,10 +52,12 @@ checkout_factory() {
 install_libs() {
   echo "installing libs..."
   if [[ -z ${MAVEN_RESOLVER_ANT_TASKS_VERSION} ]]; then
+    print_help
     echo "Error: MAVEN_RESOLVER_ANT_TASKS_VERSION is not set"; 
     exit 1
   fi
   if [[ -z ${ANT_CONTRIB_TASKS_VERSION} ]]; then
+    print_help
     echo "Error: ANT_CONTRIB_TASKS_VERSION is not set"; 
     exit 1
   fi
