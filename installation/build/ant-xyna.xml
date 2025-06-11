@@ -141,6 +141,7 @@
   </pathconvert>
 
   <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
 
   <if>
     <and>
