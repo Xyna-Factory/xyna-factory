@@ -642,7 +642,7 @@ case $1 in
     OPTIND=2
     while getopts ":m:a:" options; do
       case "${options}" in 
-        b)
+        m)
           MAVEN_RESOLVER_ANT_TASKS_VERSION=${OPTARG}
           ;;
         a)
