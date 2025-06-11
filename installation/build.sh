@@ -51,9 +51,33 @@ checkout_factory() {
 
 install_libs() {
   echo "installing libs..."
+  if [[ -z ${MAVEN_RESOLVER_ANT_TASKS_VERSION} ]]; then
+    echo "Error: MAVEN_RESOLVER_ANT_TASKS_VERSION is not set"; 
+    exit 1
+  fi
+  if [[ -z ${ANT_CONTRIB_TASKS_VERSION} ]]; then
+    echo "Error: ANT_CONTRIB_TASKS_VERSION is not set"; 
+    exit 1
+  fi
+  
   mkdir -p ${HOME}/.ant/lib
-  curl -s https://repo1.maven.org/maven2/org/apache/maven/resolver/maven-resolver-ant-tasks/${MAVEN_RESOLVER_ANT_TASKS_VERSION}/maven-resolver-ant-tasks-${MAVEN_RESOLVER_ANT_TASKS_VERSION}-uber.jar -o "${HOME}/.ant/lib/maven-resolver-ant-tasks-${MAVEN_RESOLVER_ANT_TASKS_VERSION}-uber.jar" && \
-  curl -s https://repo1.maven.org/maven2/ant-contrib/ant-contrib/${ANT_CONTRIB_TASKS_VERSION}/ant-contrib-${ANT_CONTRIB_TASKS_VERSION}.jar -o "${HOME}/.ant/lib/ant-contrib-${ANT_CONTRIB_TASKS_VERSION}.jar"
+  URL=https://repo1.maven.org/maven2/org/apache/maven/resolver/maven-resolver-ant-tasks/${MAVEN_RESOLVER_ANT_TASKS_VERSION}/maven-resolver-ant-tasks-${MAVEN_RESOLVER_ANT_TASKS_VERSION}-uber.jar
+  TARGET_FILE=${HOME}/.ant/lib/maven-resolver-ant-tasks-${MAVEN_RESOLVER_ANT_TASKS_VERSION}-uber.jar
+  HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" ${URL})
+  if [ "$HTTP_CODE" != "$HTTP_CODE_OK" ]; then 
+    echo "Error: HTTP_CODE=${HTTP_CODE}, URL=${URL}"; 
+    exit 1
+  fi
+  curl -s ${URL} -o "${TARGET_FILE}"
+  
+  URL=https://repo1.maven.org/maven2/ant-contrib/ant-contrib/${ANT_CONTRIB_TASKS_VERSION}/ant-contrib-${ANT_CONTRIB_TASKS_VERSION}.jar
+  TARGET_FILE="${HOME}/.ant/lib/ant-contrib-${ANT_CONTRIB_TASKS_VERSION}.jar"
+  HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" ${URL})
+  if [ "$HTTP_CODE" != "$HTTP_CODE_OK" ]; then 
+    echo "Error: HTTP_CODE=${HTTP_CODE}, URL=${URL}"; 
+    exit 1
+  fi
+  curl -s ${URL} -o "${TARGET_FILE}"
   echo "ls -l ${HOME}/.ant/lib"
   ls -l ${HOME}/.ant/lib
 }
