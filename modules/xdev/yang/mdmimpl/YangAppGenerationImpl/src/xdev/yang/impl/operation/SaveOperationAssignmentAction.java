@@ -18,6 +18,7 @@
 package xdev.yang.impl.operation;
 
 import java.util.List;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -25,12 +26,10 @@ import com.gip.xyna.xprc.XynaOrderServerExtension;
 
 import xdev.yang.impl.operation.implementation.ImplementationProvider;
 import xdev.yang.impl.operation.implementation.OpImplProviderSelection;
-import xdev.yang.impl.operation.implementation.RpcImplementationProvider;
-import xdev.yang.impl.operation.implementation.YangMappingImplementationProvider;
 import xmcp.yang.OperationAssignmentTableData;
 
-public class SaveOperationAssignmentAction {
 
+public class SaveOperationAssignmentAction {
 
   public void saveOperationAssignment(XynaOrderServerExtension order, OperationAssignmentTableData data) {
     String fqn = data.getLoadYangAssignmentsData().getFqn();

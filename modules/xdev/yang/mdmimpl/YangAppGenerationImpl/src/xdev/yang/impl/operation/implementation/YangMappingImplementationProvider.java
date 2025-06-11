@@ -34,14 +34,16 @@ public class YangMappingImplementationProvider implements ImplementationProvider
   public String createImpl(Document meta, List<String> inputVarNames) {
     StringBuilder result = new StringBuilder();
     _tools.createVariables(result, meta, inputVarNames);
+    result.append("\n");
     List<OperationMapping> mappings = OperationMapping.loadMappings(meta);
-    result.append("xmcp.yang.YangMappingPath path = null;");
+    result.append("xmcp.yang.YangMappingPath path = null;").append("\n");
     result.append("List<xmcp.yang.YangMappingPath> pathList = new ArrayList<>();").append("\n");
-    
     result.append("try {").append("\n");
     
     for (int i = 0; i < mappings.size(); i++) {
       OperationMapping mapping = mappings.get(i);
+      result.append("\n");
+      result.append("  //").append(mapping.getMappingYangPath()).append(" -> ").append(mapping.getValue()).append("\n");
       List<MappingPathElement> mappingList = mapping.createPathList();
       result.append("  path = new xmcp.yang.YangMappingPath();").append("\n");
       for (MappingPathElement elem : mappingList) {
