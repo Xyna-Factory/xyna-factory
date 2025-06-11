@@ -18,6 +18,13 @@
 
 set -e
 
+# https://mvnrepository.com/artifact/org.apache.maven.resolver/maven-resolver-ant-tasks
+MAVEN_RESOLVER_ANT_TASKS_VERSION="1.5.2"
+
+# https://mvnrepository.com/artifact/ant-contrib/ant-contrib
+ANT_CONTRIB_TASKS_VERSION="1.0b3"
+
+
 print_help() {
   echo "Usage: $0 xynautils"
   echo "Usage: $0 build"
@@ -44,6 +51,13 @@ check_dependencies_frontend() {
 checkout_factory() {
   echo "cheking out factory..."
   # $1 where to check out
+}
+
+install_libs() {
+  echo "installing libs..."
+  mkdir -p ${HOME}/.ant/lib
+  curl -s https://repo1.maven.org/maven2/org/apache/maven/resolver/maven-resolver-ant-tasks/${MAVEN_RESOLVER_ANT_TASKS_VERSION}/maven-resolver-ant-tasks-${MAVEN_RESOLVER_ANT_TASKS_VERSION}-uber.jar -o ${HOME}/.ant/lib
+  curl -s https://repo1.maven.org/maven2/ant-contrib/ant-contrib/${ANT_CONTRIB_TASKS_VERSION}/ant-contrib-${ANT_CONTRIB_TASKS_VERSION}.jar -o ${HOME}/.ant/lib
 }
 
 build_xynautils_exceptions() {
@@ -557,7 +571,6 @@ build() {
   build_oracle_aq_tools
 }
 
-
 check_dependencies
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 prepare_build
@@ -598,6 +611,9 @@ case $1 in
     ;;
   "conpooltypes")
     build_conpooltypes
+    ;;
+  "install_libs")
+    install_libs
     ;;
   *)
     print_help
