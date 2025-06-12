@@ -26,9 +26,6 @@ print_help() {
   echo "Usage: $0 plugins"
   echo "Usage: $0 clusterproviders"
   echo "Usage: $0 conpooltypes"
-  echo "Usage: $0 install_libs -m <MAVEN_RESOLVER_ANT_TASKS_VERSION> -a <ANT_CONTRIB_TASKS_VERSION>"
-  echo "                  <MAVEN_RESOLVER_ANT_TASKS_VERSION>: https://mvnrepository.com/artifact/org.apache.maven.resolver/maven-resolver-ant-tasks"
-  echo "                  <ANT_CONTRIB_TASKS_VERSION>: https://mvnrepository.com/artifact/ant-contrib/ant-contrib"
 }
 
 check_dependencies() {
@@ -554,6 +551,7 @@ prepare_build() {
   mkdir -p /opt/common
   cd $SCRIPT_DIR/build
   mvn install
+  install_libs
 }
 
 
@@ -596,6 +594,7 @@ build() {
   build_oracle_aq_tools
 }
 
+. ./build.conf
 check_dependencies
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 prepare_build
@@ -638,24 +637,6 @@ case $1 in
     ;;
   "conpooltypes")
     build_conpooltypes
-    ;;
-  "install_libs")
-    OPTIND=2
-    while getopts ":m:a:" options; do
-      case "${options}" in 
-        m)
-          MAVEN_RESOLVER_ANT_TASKS_VERSION=${OPTARG}
-          ;;
-        a)
-          ANT_CONTRIB_TASKS_VERSION=${OPTARG}
-          ;;
-        *) # If unknown (any other) option:
-          print_help
-          exit 1
-          ;;
-      esac
-    done
-    install_libs
     ;;
   *)
     print_help
