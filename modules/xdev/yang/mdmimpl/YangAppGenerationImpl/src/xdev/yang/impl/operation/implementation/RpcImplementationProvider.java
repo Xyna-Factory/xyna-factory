@@ -113,12 +113,12 @@ public class RpcImplementationProvider implements ImplementationProvider {
     }
 
     for (int i = insertIndex + 1; i < mappingList.size(); i++) {
-      String tag = cleanupTag(mappingList.get(i).getYangPath());
-      ListConfiguration listConfig = isDynamicList(mappingList.subList(0, i + 1), data.listConfigs);
+      String tag = _tools.cleanupTag(mappingList.get(i).getYangPath());
+      ListConfiguration listConfig = _tools.isDynamicList(mappingList.subList(0, i + 1), data.listConfigs);
       if(listConfig != null) {
         DynamicListLengthConfig dynListConfig = (DynamicListLengthConfig)listConfig.getConfig();
         String loopVareName = dynListConfig.getVariable();
-        String loopVarPath = determineMappingValueObject(dynListConfig.getPath());
+        String loopVarPath = _tools.determineMappingValueObject(dynListConfig.getPath());
         String counterVarName = String.format("i_%d", data.nextVariable++);
         result.append("List<?> ").append(loopVareName).append("_list = (List<?>)").append(loopVarPath).append(";\n")
           .append("for (int ").append(counterVarName).append(" = 0; ").append(counterVarName).append(" < ")
@@ -139,62 +139,24 @@ public class RpcImplementationProvider implements ImplementationProvider {
       }
 
     }
-    String tag = cleanupTag(mappingList.get(mappingList.size() - 1).getYangPath());
+    String tag = _tools.cleanupTag(mappingList.get(mappingList.size() - 1).getYangPath());
     String value = _tools.determineMappingString(mapping.getValue());
     result.append("builder.endAttributesAndElement(").append(value).append(", \"").append(tag).append("\");\n");
   }
   
   
-  private ListConfiguration isDynamicList(List<MappingPathElement> mappingElements, List<ListConfiguration> listConfigs) {
-    String keyword = mappingElements.get(mappingElements.size()-1).getKeyword();
-    if (Constants.TYPE_LEAFLIST.equals(keyword) || Constants.TYPE_LIST.equals(keyword)) {
-      for (ListConfiguration listConfig : listConfigs) {
-        if (!(listConfig.getConfig() instanceof DynamicListLengthConfig)) {
-          continue;
-        }
-        List<MappingPathElement> listPath = OperationMapping.createPathList(listConfig.getYang(), listConfig.getNamespaces(), listConfig.getKeywords());
-        if (MappingPathElement.compareLists(mappingElements, listPath) == 0) {
-          return listConfig;
-        }
-      }
-    }
-    return null;
-  }
-  
-
-  private String cleanupTag(String tag) {
-    int listIndexSeparatorIndex = tag.indexOf(Constants.LIST_INDEX_SEPARATOR);
-    if (listIndexSeparatorIndex > 0) {
-      tag = tag.substring(listIndexSeparatorIndex + Constants.LIST_INDEX_SEPARATOR.length());
-    }
-    return tag;
-  }
-  
-
-  private String determineMappingValueObject(String mappingValue) {
-    int firstDot = mappingValue.indexOf(".");
-    if (firstDot == -1 || mappingValue.startsWith("\"")) {
-      return mappingValue;
-    } else {
-      String variable = mappingValue.substring(0, firstDot);
-      String path = mappingValue.substring(firstDot + 1);
-      return String.format("%s.get(\"%s\")", variable, path);
-    }
-  }
-
-
   private void closeTags(StringBuilder sb, ImplCreationData data, int index) {
     List<MappingPathElement> tags = data.position;
     for (int i = tags.size() - 1; i > index; i--) {
       MappingPathElement element = tags.get(i);
 
       if (!OpImplTools.hiddenYangKeywords.contains(element.getKeyword())) {
-        String tag = cleanupTag(element.getYangPath());
+        String tag = _tools.cleanupTag(element.getYangPath());
         sb.append("builder.endElement(\"").append(tag).append("\");\n");
 
       }
 
-      if (isDynamicList(tags.subList(0, i + 1), data.listConfigs) != null) {
+      if (_tools.isDynamicList(tags.subList(0, i + 1), data.listConfigs) != null) {
         sb.append("}\n");
       }
 

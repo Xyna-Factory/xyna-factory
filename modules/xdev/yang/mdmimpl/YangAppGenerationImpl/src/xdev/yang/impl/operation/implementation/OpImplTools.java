@@ -24,7 +24,11 @@ import java.util.Set;
 import org.w3c.dom.Document;
 
 import xdev.yang.impl.Constants;
+import xdev.yang.impl.operation.ListConfiguration;
+import xdev.yang.impl.operation.MappingPathElement;
+import xdev.yang.impl.operation.OperationMapping;
 import xdev.yang.impl.operation.OperationSignatureVariable;
+import xdev.yang.impl.operation.ListConfiguration.DynamicListLengthConfig;
 
 public class OpImplTools {
 
@@ -63,5 +67,42 @@ public class OpImplTools {
     }
   }
 
+  
+  public ListConfiguration isDynamicList(List<MappingPathElement> mappingElements, List<ListConfiguration> listConfigs) {
+    String keyword = mappingElements.get(mappingElements.size()-1).getKeyword();
+    if (Constants.TYPE_LEAFLIST.equals(keyword) || Constants.TYPE_LIST.equals(keyword)) {
+      for (ListConfiguration listConfig : listConfigs) {
+        if (!(listConfig.getConfig() instanceof DynamicListLengthConfig)) {
+          continue;
+        }
+        List<MappingPathElement> listPath = OperationMapping.createPathList(listConfig.getYang(), listConfig.getNamespaces(), listConfig.getKeywords());
+        if (MappingPathElement.compareLists(mappingElements, listPath) == 0) {
+          return listConfig;
+        }
+      }
+    }
+    return null;
+  }
+  
+  
+  public String determineMappingValueObject(String mappingValue) {
+    int firstDot = mappingValue.indexOf(".");
+    if (firstDot == -1 || mappingValue.startsWith("\"")) {
+      return mappingValue;
+    } else {
+      String variable = mappingValue.substring(0, firstDot);
+      String path = mappingValue.substring(firstDot + 1);
+      return String.format("%s.get(\"%s\")", variable, path);
+    }
+  }
+
+  
+  public String cleanupTag(String tag) {
+    int listIndexSeparatorIndex = tag.indexOf(Constants.LIST_INDEX_SEPARATOR);
+    if (listIndexSeparatorIndex > 0) {
+      tag = tag.substring(listIndexSeparatorIndex + Constants.LIST_INDEX_SEPARATOR.length());
+    }
+    return tag;
+  }
   
 }
