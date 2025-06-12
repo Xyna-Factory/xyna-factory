@@ -45,7 +45,6 @@ import com.gip.xyna.xprc.xpce.XynaProcessCtrlExecution;
 import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
 import com.gip.xyna.xprc.xpce.dispatcher.DestinationValue;
 import com.gip.xyna.xprc.xpce.dispatcher.FractalWorkflowDestination;
-import com.gip.xyna.xprc.xpce.dispatcher.XynaDispatcher;
 import com.gip.xyna.xprc.xpce.parameterinheritance.ParameterInheritanceManagement.ParameterType;
 
 import xmcp.gitintegration.CREATE;
@@ -888,9 +887,9 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
         DestinationKey dk = new DestinationKey(newPara.getOrdertypeName(), newPara.getRuntimeContext());
         DestinationValue dv = new FractalWorkflowDestination(orderTypeParameter.getOrdertypeName());
         XynaProcessCtrlExecution xpce = getProcessing().getXynaProcessCtrlExecution();
-        xpce.getXynaPlanning().getPlanningDispatcher().setDestination(dk, XynaDispatcher.DESTINATION_DEFAULT_PLANNING, false);
-        xpce.getXynaExecution().getExecutionEngineDispatcher().setDestination(dk, dv, true);
-        xpce.getXynaCleanup().getCleanupEngineDispatcher().setDestination(dk, XynaDispatcher.DESTINATION_EMPTY_WORKFLOW, false);
+        xpce.getXynaPlanning().getPlanningDispatcher().removeCustomDestination(dk, dv);
+        xpce.getXynaExecution().getExecutionEngineDispatcher().removeCustomDestination(dk, dv);
+        xpce.getXynaCleanup().getCleanupEngineDispatcher().removeCustomDestination(dk, dv);
       } else {
         // delete additional custom order type
         getOrderTypeManagement().deleteOrdertype(orderTypeParameter);
