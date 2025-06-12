@@ -35,7 +35,7 @@ jobs:
 
      - name: Check out xyna-factory
        uses: actions/checkout@v4
-            
+
      - name: build
        run: |
           cd installation
