@@ -26,6 +26,7 @@ print_help() {
   echo "Usage: $0 plugins"
   echo "Usage: $0 clusterproviders"
   echo "Usage: $0 conpooltypes"
+  echo "Usage: $0 install_libs"
 }
 
 check_dependencies() {
@@ -569,7 +570,6 @@ prepare_build() {
   mkdir -p /opt/common
   cd $SCRIPT_DIR/build
   mvn install
-  install_libs
 }
 
 
@@ -657,6 +657,9 @@ case $1 in
     ;;
   "conpooltypes")
     build_conpooltypes
+    ;;
+  "install_libs")
+    install_libs
     ;;
   *)
     print_help
