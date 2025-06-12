@@ -9,13 +9,14 @@
 
 ### libs
 
-The libs maven-resolver-ant-tasks and ant-contrib-tasks are required and must be located in the directory ${HOME}/.ant/lib
-these libs can be installed by the following command:
+The libs maven-resolver-ant-tasks and ant-contrib-tasks are required and must be located in the directory "${HOME}/.ant/lib".
+The used versions are defined in the file build.conf und these libs can be installed by the following command:
 
 ```
 cd installation
 ./build.sh install_libs
 ```
+
 
 ## Build
 `> ./build.sh all`
