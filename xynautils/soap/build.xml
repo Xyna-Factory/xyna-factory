@@ -19,7 +19,7 @@
 <project name="xynautils-soap" basedir=".">
 
 	<!--Next release version for the archive file-->
-	<property name="release.number" value="2.3.0.0"/>
+	<property name="release.number" value="3.0.0.0"/>
 	<!--Name of the utils project-->
 	<property name="utils.name" value="soap"/>
 
