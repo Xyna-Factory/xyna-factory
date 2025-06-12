@@ -39,6 +39,7 @@ jobs:
      - name: build
        run: |
           cd installation
+          ./build.sh install_libs
           ./build.sh all -b main
 
      - name: Create Archive
