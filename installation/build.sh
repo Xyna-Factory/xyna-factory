@@ -614,9 +614,10 @@ build() {
   build_oracle_aq_tools
 }
 
-. ./build.conf
+
 check_dependencies
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+. ${SCRIPT_DIR}/build.conf
 prepare_build
 
 GIT_BRANCH_XYNA_MODELLER=""
