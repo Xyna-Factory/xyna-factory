@@ -49,7 +49,6 @@ checkout_factory() {
 
 install_libs() {
   echo "installing libs..."
-  echo "MAVEN_RESOLVER_ANT_TASKS_VERSION=${MAVEN_RESOLVER_ANT_TASKS_VERSION}"
   if [[ -z ${MAVEN_RESOLVER_ANT_TASKS_VERSION} ]]; then
     print_help
     echo "Error: MAVEN_RESOLVER_ANT_TASKS_VERSION is not set"; 
@@ -615,15 +614,12 @@ build() {
   build_oracle_aq_tools
 }
 
-
-check_dependencies
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 . ${SCRIPT_DIR}/build.conf
-prepare_build
-
 GIT_BRANCH_XYNA_MODELLER=""
-MAVEN_RESOLVER_ANT_TASKS_VERSION=""
-ANT_CONTRIB_TASKS_VERSION=""
+
+check_dependencies
+prepare_build
 
 case $1 in
   "xynautils")
