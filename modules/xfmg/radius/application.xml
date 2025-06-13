@@ -16,11 +16,10 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="Radius" comment="" factoryVersion="" versionName="1.0" xmlVersion="1.1">
+<Application applicationName="Radius" comment="" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Radius</Description>
     <Description Lang="EN">Radius</Description>
-    <BuildDate>2015.06.25 10:13:00</BuildDate>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>UserSessionMgmt</ApplicationName>
@@ -28,6 +27,11 @@
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>>
   </ApplicationInfo>
+  <SharedLibs>
+    <SharedLib implicitDependency="false">
+      <SharedLib>radius</SharedLib>
+    </SharedLib>
+  </SharedLibs>
   <XMOMEntries>
     <XMOMEntry implicitDependency="false">
       <FqName>xfmg.xopctrl.radius.RADIUSServerPort</FqName>

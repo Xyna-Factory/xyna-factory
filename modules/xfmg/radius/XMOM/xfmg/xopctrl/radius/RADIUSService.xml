@@ -17,12 +17,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="RADIUS Service" TypeName="RADIUSService" TypePath="xfmg.xopctrl.radius" Version="1.7">
-  <Libraries>jradius-extended-1.1.2.jar</Libraries>
-  <Libraries>commons-pool-1.5.4.jar</Libraries>
-  <Libraries>RADIUSServiceImpl.jar</Libraries>
-  <Libraries>jradius-dictionary-1.1.2.jar</Libraries>
-  <Libraries>gnu-crypto-2.0.1.jar</Libraries>
-  <Libraries>jradius-core-1.1.2.jar</Libraries>
+  <SharedLibraries>radius</SharedLibraries>
   <Service Label="RADIUS Service" TypeName="RADIUSService">
     <Operation IsStatic="true" Label="Remote Authentication" Name="remoteAuthentication" RequiresXynaOrder="true">
       <Input>
