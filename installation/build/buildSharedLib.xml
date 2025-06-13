@@ -73,7 +73,13 @@
 
         <custom-scp-to-remote fromdir="${target.dir}" frominclude="**/*" todir="${server.userid}:${server.password}@${server.host}:${server.sharedLib.path}" />
         <custom-scp-to-remote fromdir="${base.lib.dir}" frominclude="**/*" todir="${server.userid}:${server.password}@${server.host}:${server.sharedLib.path}" />
-        <custom-scp-to-remote fromdir="${unfree.lib.dir}" frominclude="**/*" todir="${server.userid}:${server.password}@${server.host}:${server.sharedLib.path}" />
+
+        <if>
+            <isset property="unfree.lib.dir" />
+            <then>
+                <default-scp-to-remote fromdir="${unfree.lib.dir}" frominclude="**/*" todir="${server.sharedLib.path}" />
+            </then>
+        </if>
 
         <custom-ssh-exec host="${server.host}" username="${server.userid}" command="cd ${server.path}; ./xynafactory.sh reloadsharedlib -sharedLibName ${sharedLib.folder.name} -workspaceName '${workspacename}'" />
     </target>
