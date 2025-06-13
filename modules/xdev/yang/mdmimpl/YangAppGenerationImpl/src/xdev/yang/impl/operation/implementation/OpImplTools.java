@@ -19,6 +19,7 @@
 package xdev.yang.impl.operation.implementation;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.w3c.dom.Document;
@@ -40,6 +41,10 @@ public class OpImplTools {
                                                               Constants.TYPE_LEAFLIST,
                                                               Constants.TYPE_LIST);
   
+  
+  public static final Set<String> listKeywords = Set.of(
+                                                              Constants.TYPE_LEAFLIST,
+                                                              Constants.TYPE_LIST);
   
   public void createVariables(StringBuilder result, Document meta, List<String> inputVarNames) {
     List<OperationSignatureVariable> variables = OperationSignatureVariable.loadSignatureEntries(meta, Constants.VAL_LOCATION_INPUT);  
@@ -103,6 +108,24 @@ public class OpImplTools {
       tag = tag.substring(listIndexSeparatorIndex + Constants.LIST_INDEX_SEPARATOR.length());
     }
     return tag;
+  }
+  
+  
+  public Optional<Integer> getOptionalConstListIndex(List<MappingPathElement> mappingList, int index) {
+    if (index >= mappingList.size()) { return Optional.empty(); }
+    // constant list index is written in element name of path element below list element
+    MappingPathElement elem = mappingList.get(index + 1);
+    String tag = elem.getYangPath();
+    int listIndexSeparatorIndex = tag.indexOf(Constants.LIST_INDEX_SEPARATOR);
+    if (listIndexSeparatorIndex < 1) { return Optional.empty(); }
+    String val = tag.substring(0, listIndexSeparatorIndex);
+    try {
+      int ret = Integer.valueOf(val);
+      return Optional.ofNullable(ret);
+    } catch (Exception e) {
+      // do nothing
+    }
+    return Optional.empty();
   }
   
 }
