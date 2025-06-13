@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -118,7 +118,7 @@ public class IdentifiedVariablesStepFunction extends IdentifiedVariablesStepWith
             service.getWF().parseGeneration(false, false, false);
           } catch (Exception e) { 
             if(logger.isDebugEnabled()) {
-              logger.debug("exception durin parseGeneration of " + service.getWF(), e );
+              logger.debug("exception during parseGeneration of " + service.getWF(), e );
             }
           }
         }
