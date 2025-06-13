@@ -56,17 +56,25 @@ public class DetermineOperationAssignments {
       return result;
     }
     Document operationMeta = meta.getSecond();
-    String rpcName = OperationAssignmentUtils.readRpcName(operationMeta);
-    String rpcNamespace = OperationAssignmentUtils.readRpcNamespace(operationMeta);
-    if(rpcName == null || rpcNamespace == null) {
-      return result;
-    }
     String deviceFqn = OperationAssignmentUtils.readDeviceFqn(operationMeta);
     List<YangDeviceCapability> moduleCapabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
     List<String> supportedFeatures = YangCapabilityUtils.getSupportedFeatureNames(moduleCapabilities);
     FilteredModuleData filtered = getFilteredModules(data, workspaceName, moduleCapabilities);
-    result = OperationAssignmentUtils.loadPossibleAssignments(filtered.filteredModules, rpcName, rpcNamespace, data, operationMeta,
-                                                              supportedFeatures, filtered.fromCache);
+    
+    String rpcName = OperationAssignmentUtils.readRpcName(operationMeta);
+    String rpcNamespace = OperationAssignmentUtils.readRpcNamespace(operationMeta);
+    if (rpcName == null || rpcNamespace == null) {
+      String elemName = OperationAssignmentUtils.readTagName(operationMeta);
+      String elemNamespace = OperationAssignmentUtils.readTagNamespace(operationMeta);
+      if (elemName == null || elemNamespace == null) {
+        return result;
+      }
+      result = OperationAssignmentUtils.loadPossibleAssignmentsGeneric(filtered.filteredModules, elemName, elemNamespace, data, 
+                                                                       operationMeta, supportedFeatures, filtered.fromCache);
+    } else {
+      result = OperationAssignmentUtils.loadPossibleAssignmentsRpc(filtered.filteredModules, rpcName, rpcNamespace, data, operationMeta,
+                                                                   supportedFeatures, filtered.fromCache);
+    }
     fillValuesAndWarnings(operationMeta, filtered.filteredModules, result);
     return result;
   }

@@ -19,9 +19,7 @@ package xmcp.yang.impl;
 
 
 import java.util.ArrayList;
-import java.util.List;
 
-import base.Text;
 import xmcp.yang.TraceYangMappingCollection;
 import xmcp.yang.TraceYangMappingCollectionInstanceOperation;
 import xmcp.yang.TraceYangMappingCollectionSuperProxy;
