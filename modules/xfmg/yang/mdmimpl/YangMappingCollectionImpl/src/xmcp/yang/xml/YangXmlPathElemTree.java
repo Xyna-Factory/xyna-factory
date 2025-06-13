@@ -97,8 +97,10 @@ public class YangXmlPathElemTree {
     Document doc = buildDocument();
     Element root = doc.createElement(Constants.DEFAULT_ROOT_TAG_NAME);
     for (TreeElem elem : _rootList) {
-      Element child = elem.toW3cElement(doc);
-      root.appendChild(child);
+      Optional<Element> child = elem.toW3cElement(doc);
+      if (child.isPresent()) {
+        root.appendChild(child.get());
+      }
     }
     doc.appendChild(root);
     return getDocumentString(doc);

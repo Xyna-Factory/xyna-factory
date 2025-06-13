@@ -31,5 +31,6 @@ public class Constants {
   public static final String PREFIX_OF_PREFIX = "p";
   public static final String SEP_PREFIX_NAMESPACE = "=";
   public static final String DEFAULT_ROOT_TAG_NAME = "root";
+  public static final String DEFAULT_LIST_INDEX_ELEM_NAME = "listIndex";
   
 }

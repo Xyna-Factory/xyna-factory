@@ -30,6 +30,10 @@ public class XmomPathAdapter {
     if (inputPath == null) { return ret; }
     if (inputPath.getPath() == null) { return ret; }
     for (YangMappingPathElement item : inputPath.getPath()) {
+      if ((item.getListIndex() != null) && (item.getListIndex() >= 0)) {
+        ret.add(YangXmlPathElem.buildListIndexElem(item.getListIndex()));
+        continue;
+      }
       PathElemBuilder builder = YangXmlPathElem.builder().elemName(item.getElementName())
                                        .namespace(item.getNamespace());
       if (ret.getPath().size() == inputPath.getPath().size() - 1) {

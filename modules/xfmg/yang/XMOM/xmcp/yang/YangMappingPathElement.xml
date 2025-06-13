@@ -29,4 +29,9 @@
       <Type>String</Type>
     </Meta>
   </Data>
+  <Data Label="List Index" VariableName="listIndex">
+    <Meta>
+      <Type>Integer</Type>
+    </Meta>
+  </Data>
 </DataType>
