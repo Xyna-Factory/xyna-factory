@@ -181,9 +181,10 @@ public class Operation implements AutoCloseable {
   }
 
   
-  public void addOutput(String fqn) {
+  public void addOutput(String varName, String fqn) {
     URLPath url = new URLPath(baseUrl + "/objects/methodVarArea" + serviceNumber + "_output/insert", null, null);
-    String payload = "{\"index\":-1,\"content\":{\"type\":\"variable\",\"label\":\"Document\",\"fqn\":\"xact.templates.Document\",\"isList\":false}}";
+    String payload = "{\"index\":-1,\"content\":{\"type\":\"variable\",\"label\":\"" + varName + 
+                     "\",\"fqn\":\"" + fqn + "\",\"isList\":false}}";
     executeRunnable(runnable, url, GuiHttpInteraction.METHOD_POST, payload, "Could not add output variable to service.");
     reloadInputVarNames();
   }

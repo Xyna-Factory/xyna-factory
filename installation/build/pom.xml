@@ -175,6 +175,11 @@
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
+                <artifactId>xynautils-xml</artifactId>
+                <version>3.0.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gip.xyna</groupId>
                 <artifactId>XynaXMLShellPersistenceLayer</artifactId>
                 <version>1.0.0</version>
             </dependency>
@@ -257,7 +262,7 @@
             <dependency>
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
-                <version>1.9.4</version>
+                <version>1.11.0</version>
             </dependency>
             <dependency>
                 <groupId>commons-beanutils</groupId>
@@ -443,6 +448,11 @@
                 <groupId>org.apache.velocity</groupId>
                 <artifactId>velocity-engine-core</artifactId>
                 <version>2.4.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.xmlbeans</groupId>
+                <artifactId>xmlbeans</artifactId>
+                <version>5.3.0</version>
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
