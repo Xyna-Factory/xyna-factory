@@ -26,6 +26,7 @@ print_help() {
   echo "Usage: $0 plugins"
   echo "Usage: $0 clusterproviders"
   echo "Usage: $0 conpooltypes"
+  echo "Usage: $0 install_libs"
 }
 
 check_dependencies() {
@@ -44,6 +45,42 @@ check_dependencies_frontend() {
 checkout_factory() {
   echo "cheking out factory..."
   # $1 where to check out
+}
+
+install_libs() {
+  echo "installing libs..."
+  if [[ -z ${MAVEN_RESOLVER_ANT_TASKS_VERSION} ]]; then
+    print_help
+    echo "Error: MAVEN_RESOLVER_ANT_TASKS_VERSION is not set"; 
+    exit 1
+  fi
+  if [[ -z ${ANT_CONTRIB_TASKS_VERSION} ]]; then
+    print_help
+    echo "Error: ANT_CONTRIB_TASKS_VERSION is not set"; 
+    exit 1
+  fi
+  HTTP_CODE_OK=200
+  
+  mkdir -p ${HOME}/.ant/lib
+  URL=https://repo1.maven.org/maven2/org/apache/maven/resolver/maven-resolver-ant-tasks/${MAVEN_RESOLVER_ANT_TASKS_VERSION}/maven-resolver-ant-tasks-${MAVEN_RESOLVER_ANT_TASKS_VERSION}-uber.jar
+  TARGET_FILE=${HOME}/.ant/lib/maven-resolver-ant-tasks-${MAVEN_RESOLVER_ANT_TASKS_VERSION}-uber.jar
+  HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" ${URL})
+  if [ "$HTTP_CODE" != "$HTTP_CODE_OK" ]; then 
+    echo "Error: HTTP_CODE=${HTTP_CODE}, URL=${URL}"; 
+    exit 1
+  fi
+  curl -s ${URL} -o "${TARGET_FILE}"
+  
+  URL=https://repo1.maven.org/maven2/ant-contrib/ant-contrib/${ANT_CONTRIB_TASKS_VERSION}/ant-contrib-${ANT_CONTRIB_TASKS_VERSION}.jar
+  TARGET_FILE="${HOME}/.ant/lib/ant-contrib-${ANT_CONTRIB_TASKS_VERSION}.jar"
+  HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" ${URL})
+  if [ "$HTTP_CODE" != "$HTTP_CODE_OK" ]; then 
+    echo "Error: HTTP_CODE=${HTTP_CODE}, URL=${URL}"; 
+    exit 1
+  fi
+  curl -s ${URL} -o "${TARGET_FILE}"
+  echo "ls -l ${HOME}/.ant/lib"
+  ls -l ${HOME}/.ant/lib
 }
 
 build_xynautils_exceptions() {
@@ -577,12 +614,12 @@ build() {
   build_oracle_aq_tools
 }
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+. ${SCRIPT_DIR}/build.conf
+GIT_BRANCH_XYNA_MODELLER=""
 
 check_dependencies
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 prepare_build
-
-GIT_BRANCH_XYNA_MODELLER=""
 
 case $1 in
   "xynautils")
@@ -618,6 +655,9 @@ case $1 in
     ;;
   "conpooltypes")
     build_conpooltypes
+    ;;
+  "install_libs")
+    install_libs
     ;;
   *)
     print_help
