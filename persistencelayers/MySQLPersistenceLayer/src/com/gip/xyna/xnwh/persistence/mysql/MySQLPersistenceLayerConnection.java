@@ -619,7 +619,7 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
                             String className = sqlEx.getClass().getSimpleName();
 
                             boolean uniqueConstraintViolated = className
-                                    .contains("MySQLIntegrityConstraintViolationException");
+                                    .contains("SQLIntegrityConstraintViolationException");
                             if (uniqueConstraintViolated) {
                                 cnt = sqlUtils.queryInt(sqlString, parasForCountQuery);
                                 if (cnt == 0) {
