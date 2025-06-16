@@ -34,11 +34,14 @@ import java.util.List;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.yangcentral.yangkit.base.Yang;
 import org.yangcentral.yangkit.base.YangElement;
+import org.yangcentral.yangkit.common.api.QName;
 import org.yangcentral.yangkit.model.api.schema.YangSchemaContext;
 import org.yangcentral.yangkit.model.api.stmt.Module;
 import org.yangcentral.yangkit.model.api.stmt.Uses;
 import org.yangcentral.yangkit.model.api.stmt.YangStatement;
+import org.yangcentral.yangkit.model.impl.stmt.ListImpl;
 import org.yangcentral.yangkit.parser.YangYinParser;
 
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
@@ -114,7 +117,7 @@ public class YangTest2 {
       context = YangYinParser.parse(textAsByteStream(txt), "module.yang", context);
       context.validate();
       List<Module> found = context.getModule("test_module_zb_1_a");
-      assertEquals(found.size(), 1);
+      assertEquals(1, found.size());
       Module mod = found.get(0);
       log("module: " + mod.getModuleId().getModuleName() + " | " + mod.getModuleId().getRevision());
       
@@ -122,7 +125,7 @@ public class YangTest2 {
         logElement(elem, 0);
       }
       List<YangStatement> candidates = OperationAssignmentUtils.findRootLevelStatements(found, "group_a");
-      assertEquals(candidates.size(), 1);
+      assertEquals(1, candidates.size());
       YangStatement ys = candidates.get(0);
       String nsp = YangStatementTranslation.getNamespace(ys);
       log(ys.getArgStr());
@@ -171,6 +174,51 @@ public class YangTest2 {
   }
   
   
+  @Test
+  public void test3() throws Exception {
+    try {
+      String txt = getDataFile("test_module_z_C_2.yang");
+      YangSchemaContext context = null;
+      context = YangYinParser.parse(textAsByteStream(txt), "module.yang", context);
+      context.validate();
+      List<Module> found = context.getModule("test_module_z_C_2");
+      assertEquals(1, found.size());
+      Module mod = found.get(0);
+      log("module: " + mod.getModuleId().getModuleName() + " | " + mod.getModuleId().getRevision());
+      
+      for (YangElement elem :  mod.getSubElements()) {
+        logElement(elem, 0);
+      }
+      List<YangStatement> candidates = OperationAssignmentUtils.findRootLevelStatements(found, "group_c2");
+      assertEquals(1, candidates.size());
+      YangStatement ys = candidates.get(0);
+      String nsp = YangStatementTranslation.getNamespace(ys);
+      log(ys.getArgStr());
+      log(nsp);
+      
+      candidates = ys.getSubStatement(new QName(Yang.NAMESPACE, "container"));
+      assertEquals(1, candidates.size());
+      ys = candidates.get(0);
+      log(ys.getArgStr());
+      assertEquals("c_root", ys.getArgStr());
+      
+      candidates = ys.getSubStatement(new QName(Yang.NAMESPACE, "list"));
+      assertEquals(1, candidates.size());
+      ys = candidates.get(0);
+      log(ys.getArgStr());
+      assertEquals("c_list_1", ys.getArgStr());
+      
+      ListImpl li = (ListImpl) ys;
+      String key = li.getKey().getArgStr();
+      log(key);
+      assertEquals("c1", key);
+    }
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+  
+  
   private void logElement(YangElement elem, int layer) {
     if (elem == null) { return; }
     if (elem instanceof YangStatement) {
@@ -208,7 +256,7 @@ public class YangTest2 {
   
   public static void main(String[] args) {
     try {
-      new YangTest2().test1();
+      new YangTest2().test3();
     }
     catch (Throwable e) {
       e.printStackTrace();
