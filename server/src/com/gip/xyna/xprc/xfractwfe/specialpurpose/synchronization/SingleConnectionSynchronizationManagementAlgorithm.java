@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
+import com.gip.xyna.utils.timing.SleepCounter;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xnwh.persistence.Command;
 import com.gip.xyna.xnwh.persistence.ODS;
@@ -191,10 +192,19 @@ public class SingleConnectionSynchronizationManagementAlgorithm implements Synch
   public SynchronizationEntry notifyEntryAndDeleteCronJob(String correlationId, String answer, Integer internalStepId,
                                                           XynaOrderServerExtension xo, ODSConnection defaultConnection)
       throws XPRC_DUPLICATE_CORRELATIONID, PersistenceLayerException {
+    SleepCounter errorBackoff = new SleepCounter(100, 6000, 4);
     do {
       try {
         return notifyEntryAndDeleteCronJobInternal(correlationId, answer, internalStepId, xo, defaultConnection);
       } catch( RetryException e) {
+        try {
+          errorBackoff.sleep();
+        } catch (InterruptedException e1) {
+          if(logger.isErrorEnabled()) {
+            logger.error("Notify interrupted for correlationId '" + correlationId + "' - notify order id: " + xo.getId() + "'. Notify failed " + errorBackoff.iterationCount() + " times.");
+            throw new RuntimeException("Notify interrupted for correlationId '" + correlationId + "' - notify order id: " + xo.getId());
+          }
+        }
       }
     } while(true);
   }
@@ -211,7 +221,16 @@ public class SingleConnectionSynchronizationManagementAlgorithm implements Synch
       defaultConnection.queryOneRowForUpdate(possiblyWaitingEntry);
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       possiblyWaitingEntry.setNotified();
-      boolean updated = defaultConnection.persistObject(possiblyWaitingEntry);
+      boolean updated = false;
+      try {
+        updated = defaultConnection.persistObject(possiblyWaitingEntry);
+      } catch(RuntimeException ex) {
+        if(logger.isErrorEnabled()) {
+          logger.error("Error updating notified status for synchronization with correlationId '" + correlationId + "' - orderId: " + xo.getId(), ex);
+        }
+        defaultConnection.rollback();
+        throw new RetryException();
+      }
       if( updated ) { //Konkurrierend ist nun doch bereits ein Eintrag in der DB, deswegen Abbruch und Retry
         defaultConnection.rollback();
         throw new RetryException();
