@@ -16,26 +16,16 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="build" default="deploy" basedir=".">
+<project name="build" default="build" basedir=".">
 
     <!-- this is the absolute path to the root -->
     <pathconvert property="root.dir" >
         <path location="${basedir}/../../../../.."/>
     </pathconvert>
-    <property name="xmom.dir" value="${basedir}/../../XMOM" />
 
-    <property name="project.name" value="RADIUSServiceImpl" />
-    <property name="fqclassname" value="xfmg.xopctrl.radius.RADIUSService" />
-    <property name="mdm.xml.path" value="xfmg/xopctrl/radius" />
-    <property name="mdm.xml.filename" value="RADIUSService.xml" />
-    <property name="mdm.service.path" value="xfmg.xopctrl.radius.RADIUSService" />
+    <property name="sharedLib.folder.name" value="radius" />
+    <property name="sharedLib.name" value="radius" />
 
-    <import file="${root.dir}/installation/build/buildService.xml" />
+    <import file="${root.dir}/installation/build/buildSharedLib.xml" />
 
-
-    <target name="prepareLibs" description="Prepare Libs">
-        <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/../../sharedlib/radius">
-            <property name="target.dir" value="${basedir}/lib/xyna" />
-        </ant>
-    </target>
 </project>
