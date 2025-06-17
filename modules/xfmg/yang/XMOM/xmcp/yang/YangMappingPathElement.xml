@@ -34,4 +34,9 @@
       <Type>Integer</Type>
     </Meta>
   </Data>
+  <Data Label="Is List Key" VariableName="isListKey">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
 </DataType>

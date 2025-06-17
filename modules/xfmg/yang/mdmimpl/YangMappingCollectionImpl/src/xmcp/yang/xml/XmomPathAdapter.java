@@ -35,9 +35,10 @@ public class XmomPathAdapter {
         continue;
       }
       PathElemBuilder builder = YangXmlPathElem.builder().elemName(item.getElementName())
-                                       .namespace(item.getNamespace());
+                                                         .namespace(item.getNamespace());
       if (ret.getPath().size() == inputPath.getPath().size() - 1) {
         builder.textValue(inputPath.getValue());
+        builder.setIsListKeyLeaf(item.getIsListKey());
       }
       ret.add(builder.build());
     }

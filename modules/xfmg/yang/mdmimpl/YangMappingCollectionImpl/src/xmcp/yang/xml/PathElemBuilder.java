@@ -28,10 +28,11 @@ public class PathElemBuilder {
   private String _namespace = null;
   private String _textValue = null;
   private List<ListKey> _listKeys = new ArrayList<>();
+  private boolean _isListKeyLeaf = false;
   
   
   public YangXmlPathElem build() {
-    return new YangXmlPathElem(_elemName, _namespace, _textValue, _listKeys);
+    return new YangXmlPathElem(_elemName, _namespace, _textValue, _listKeys, _isListKeyLeaf);
   }
   
   public PathElemBuilder elemName(String elemName) {
@@ -56,6 +57,16 @@ public class PathElemBuilder {
   
   public PathElemBuilder addListKey(ListKey lk) {
     _listKeys.add(lk);
+    return this;
+  }
+  
+  public PathElemBuilder addListKeyList(List<ListKey> list) {
+    _listKeys.addAll(list);
+    return this;
+  }
+  
+  public PathElemBuilder setIsListKeyLeaf(boolean input) {
+    this._isListKeyLeaf = input;
     return this;
   }
   

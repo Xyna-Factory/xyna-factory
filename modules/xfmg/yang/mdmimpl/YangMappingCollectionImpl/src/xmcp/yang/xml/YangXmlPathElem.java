@@ -31,9 +31,10 @@ public class YangXmlPathElem implements Comparable<YangXmlPathElem> {
   private final String _textValue;
   private final int _listIndex;
   private final List<ListKey> _listKeys;
+  private final boolean _isListKeyLeaf;
   
   
-  public YangXmlPathElem(String elemName, String namespace, String textValue, List<ListKey> listKeys) {
+  public YangXmlPathElem(String elemName, String namespace, String textValue, List<ListKey> listKeys, boolean isListKeyLeaf) {
     if (elemName == null) { throw new IllegalArgumentException("YangXmlPathElem: element name is missing"); }
     if (listKeys == null) { throw new IllegalArgumentException("YangXmlPathElem: Got null list for list keys"); }
     this._elemName = elemName;
@@ -48,6 +49,7 @@ public class YangXmlPathElem implements Comparable<YangXmlPathElem> {
       Collections.sort(tmp);
       this._listKeys = tmp;
     }
+    this._isListKeyLeaf = isListKeyLeaf;
   }
   
   
@@ -57,6 +59,7 @@ public class YangXmlPathElem implements Comparable<YangXmlPathElem> {
     this._namespace = "";
     this._textValue = "";
     this._listKeys = new ArrayList<ListKey>();
+    this._isListKeyLeaf = false;
   }
   
   
@@ -104,6 +107,11 @@ public class YangXmlPathElem implements Comparable<YangXmlPathElem> {
     return _listKeys;
   }
   
+  public boolean getIsListKeyLeaf() {
+    return _isListKeyLeaf;
+  }
+
+
   public String toCsv(IdOfNamespaceMap map) {
     StringBuilder str = new StringBuilder();
     writeCsv(map, str, new CharEscapeTool());
@@ -128,11 +136,15 @@ public class YangXmlPathElem implements Comparable<YangXmlPathElem> {
       str.append(_listIndex);
     }
     str.append(Constants.YangXmlCsv.SEP_PATH_ELEM_ATTR);
-    boolean isfirst = true;
-    for (ListKey lk : getListKeys()) {
-      if (isfirst) { isfirst = false; }
-      else { str.append(Constants.YangXmlCsv.SEP_LIST_KEY_LIST_ELEMS); }
-      lk.writeCsv(str, escaper);
+    if (_isListKeyLeaf) {
+      str.append(Constants.YangXmlCsv.VALUE_FOR_IS_LIST_KEY_LEAF);
+    } else {
+      boolean isfirst = true;
+      for (ListKey lk : getListKeys()) {
+        if (isfirst) { isfirst = false; }
+        else { str.append(Constants.YangXmlCsv.SEP_LIST_KEY_LIST_ELEMS); }
+        lk.writeCsv(str, escaper);
+      }
     }
   }
   
@@ -159,11 +171,21 @@ public class YangXmlPathElem implements Comparable<YangXmlPathElem> {
     }
     if (parts[2].length() > 0) {
       builder.textValue(escaper.unescapeCharacters(parts[2]));
-    }
-    if (parts[4].length() > 0) {
-      addListKeys(builder, parts[4], escaper);
-    }
+    }    
+    handleListKeyString(parts[4], builder, escaper);
     return builder.build();
+  }
+  
+  
+  private static void handleListKeyString(String listKeyValIn, PathElemBuilder builder, CharEscapeTool escaper) {
+    if (listKeyValIn == null) { return; }
+    String listKeyVal = listKeyValIn.trim();
+    if (listKeyVal.length() <= 0) { return; }
+    if (listKeyVal.contains(Constants.YangXmlCsv.SEP_LIST_KEY_VALUE)) {
+      addListKeys(builder, listKeyVal, escaper);
+    } else if (Constants.YangXmlCsv.VALUE_FOR_IS_LIST_KEY_LEAF.equals(listKeyVal)) {
+      builder.setIsListKeyLeaf(true);
+    }
   }
   
   
@@ -175,6 +197,16 @@ public class YangXmlPathElem implements Comparable<YangXmlPathElem> {
     }
   }
 
+  
+  public Optional<PathElemBuilder> copyIfHasNoListIndex() {
+    if (_listIndex > 0) {
+      return Optional.empty();
+    }
+    PathElemBuilder ret = builder().elemName(_elemName).namespace(_namespace).textValue(_textValue).addListKeyList(_listKeys);
+    return Optional.ofNullable(ret);
+  }
+  
+  
   /*
    * text value is not used for comparison
    */
@@ -216,5 +248,6 @@ public class YangXmlPathElem implements Comparable<YangXmlPathElem> {
   public int hashCode() {
     return _elemName.hashCode();
   }
+  
   
 }
