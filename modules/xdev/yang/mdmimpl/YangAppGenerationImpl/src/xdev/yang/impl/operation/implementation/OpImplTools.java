@@ -74,12 +74,24 @@ public class OpImplTools {
 
   
   public ListConfiguration isDynamicList(List<MappingPathElement> mappingElements, List<ListConfiguration> listConfigs) {
+    ListConfiguration conf = getListConfigOrNull(mappingElements, listConfigs);
+    if (isDynamicList(conf)) {
+      return conf;
+    }
+    return null;
+  }
+  
+  
+  public boolean isDynamicList(ListConfiguration listConfig) {
+    if (listConfig == null) { return false; }
+    return (listConfig.getConfig() instanceof DynamicListLengthConfig);
+  }
+  
+  
+  public ListConfiguration getListConfigOrNull(List<MappingPathElement> mappingElements, List<ListConfiguration> listConfigs) {
     String keyword = mappingElements.get(mappingElements.size()-1).getKeyword();
     if (Constants.TYPE_LEAFLIST.equals(keyword) || Constants.TYPE_LIST.equals(keyword)) {
       for (ListConfiguration listConfig : listConfigs) {
-        if (!(listConfig.getConfig() instanceof DynamicListLengthConfig)) {
-          continue;
-        }
         List<MappingPathElement> listPath = OperationMapping.createPathList(listConfig.getYang(), listConfig.getNamespaces(), listConfig.getKeywords());
         if (MappingPathElement.compareLists(mappingElements, listPath) == 0) {
           return listConfig;

@@ -65,6 +65,8 @@ public class Constants {
 
   public static final String TAG_LISTCONFIGS = "ListConfigurations";
   public static final String TAG_LISTCONFIG = "ListConfiguration";
+  public static final String TAG_LISTKEYS = "ListKeys";
+  public static final String TAG_LISTKEY = "ListKey";
 
   public static final String TAG_HELLO = "hello";
   public static final String TAG_CAPABILITIES = "capabilities";

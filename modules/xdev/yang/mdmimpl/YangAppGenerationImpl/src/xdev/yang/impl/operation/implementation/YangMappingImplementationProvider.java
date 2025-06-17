@@ -76,10 +76,11 @@ public class YangMappingImplementationProvider implements ImplementationProvider
     List<MappingPathElement> mappingList = mapping.createPathList();
     result.append("  path = new xmcp.yang.YangMappingPath();").append("\n");
     result.append("  {").append("\n");
+    boolean isListKeyMapping = false;
     for (int k = 0; k < mappingList.size(); k++) {
       MappingPathElement elem = mappingList.get(k);
-      ListConfiguration listConfig = _tools.isDynamicList(mappingList.subList(0, k + 1), listConfigs);
-      boolean isDynList = (listConfig != null);
+      ListConfiguration listConfig = _tools.getListConfigOrNull(mappingList.subList(0, k + 1), listConfigs);
+      boolean isDynList = _tools.isDynamicList(listConfig);
       ListInfo listInfo = null;
       if (isDynList) {
         localCounter.count++;
@@ -99,12 +100,33 @@ public class YangMappingImplementationProvider implements ImplementationProvider
             .append(_tools.cleanupTag(elem.getYangPath())).append("\")").append(".namespace(\"")
             .append(elem.getNamespace()).append("\")").append(".instance());").append("\n");
       }
+      if (k == mappingList.size() - 1) {
+        isListKeyMapping = isListKeyLeaf(listConfig, elem);
+      }
     }
     String val = _tools.determineMappingString(mapping.getValue());
     result.append("    path.setValue(").append(val).append(");").append("\n");
+    if (isListKeyMapping) {
+      result.append("    path.setIsListKey(").append(isListKeyMapping).append(");").append("\n");
+    }
     result.append("    pathList.add(path);").append("\n");
     closeLoops(result, localCounter);
     result.append("  }").append("\n");
+  }
+  
+  
+  private boolean isListKeyLeaf(ListConfiguration listConfig, MappingPathElement elem) {
+    if (listConfig == null) { return false; }
+    if (listConfig.getListKeyNames() == null) { return false; }
+    if (elem == null) { return false; }
+    if (elem.getYangPath() == null) { return false; }
+    for (String name : listConfig.getListKeyNames()) {
+      if (name == null) { continue; }
+      if (name.equals(elem.getYangPath())) {
+        return true;
+      }
+    }
+    return false;
   }
   
   

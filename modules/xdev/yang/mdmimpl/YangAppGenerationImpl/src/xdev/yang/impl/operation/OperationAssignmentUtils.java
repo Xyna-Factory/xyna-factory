@@ -31,8 +31,10 @@ import org.yangcentral.yangkit.base.YangElement;
 import org.yangcentral.yangkit.model.api.schema.YangSchemaContext;
 import org.yangcentral.yangkit.model.api.stmt.DataDefinition;
 import org.yangcentral.yangkit.model.api.stmt.Input;
+import org.yangcentral.yangkit.model.api.stmt.Key;
 import org.yangcentral.yangkit.model.api.stmt.Module;
 import org.yangcentral.yangkit.model.api.stmt.Rpc;
+import org.yangcentral.yangkit.model.api.stmt.YangList;
 import org.yangcentral.yangkit.model.api.stmt.YangStatement;
 import org.yangcentral.yangkit.model.impl.stmt.ContainerImpl;
 import org.yangcentral.yangkit.model.impl.stmt.LeafImpl;
@@ -60,6 +62,7 @@ import xdev.yang.impl.operation.ListConfiguration.ListLengthConfig;
 import xdev.yang.impl.operation.anyxml.AnyXmlSubstatementConfigManager;
 import xdev.yang.impl.operation.anyxml.AnyXmlSubstatementFinder;
 import xdev.yang.impl.operation.anyxml.AnyXmlSubstatementConfigManager.AnyXmlConfigTag;
+import xmcp.yang.ListKeyName;
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.OperationAssignmentTableData;
 import xmcp.yang.YangModuleCollection;
@@ -283,6 +286,7 @@ public class OperationAssignmentUtils {
         updatedData.unversionedSetDeviationInfo(null);
         updatedData.unversionedSetSubelementDeviationInfo(null);
         updatedData.unversionedSetIsNotSupportedDeviation(false);
+        handleListKeys(element, updatedData);
         helper.copyRelevantSubelementValues(element, updatedData);
         deviationTools.handleDeviationsForElement(moduleDeviations, element, data, updatedData);
         if (!updatedData.getIsNotSupportedDeviation()) {
@@ -296,6 +300,28 @@ public class OperationAssignmentUtils {
     return result;
   }
 
+  
+  private static void handleListKeys(YangStatement element, LoadYangAssignmentsData updatedData) {
+    String keyword = element.getYangKeyword().getLocalName();
+    if (!Constants.TYPE_LIST.equals(keyword)) { return; }
+    if (!(element instanceof YangList)) { return; }
+    YangList yl = (YangList) element;
+    Key key = yl.getKey();
+    if (key == null) { return; }
+    if (key.getArgStr() == null) { return; }
+    String[] parts = key.getArgStr().split(" ");
+    List<ListKeyName> keyList = new ArrayList<>();
+    for (String part : parts) {
+      if (part == null) { continue; }
+      String val = part.trim();
+      if (val.isEmpty()) { continue; }
+      ListKeyName name = new ListKeyName();
+      name.unversionedSetListKeyName(val);
+      keyList.add(name);
+    }
+    updatedData.unversionedSetListKeyNames(keyList);
+  }
+  
 
   private static boolean isSupportedElement(YangElement element, List<String> supportedFeatures) {
     Boolean supportedStatement = false;
