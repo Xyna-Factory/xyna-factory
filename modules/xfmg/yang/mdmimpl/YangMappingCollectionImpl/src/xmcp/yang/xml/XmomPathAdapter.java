@@ -38,7 +38,7 @@ public class XmomPathAdapter {
                                                          .namespace(item.getNamespace());
       if (ret.getPath().size() == inputPath.getPath().size() - 1) {
         builder.textValue(inputPath.getValue());
-        builder.setIsListKeyLeaf(item.getIsListKey());
+        builder.setIsListKeyLeaf(inputPath.getIsListKey());
       }
       ret.add(builder.build());
     }
