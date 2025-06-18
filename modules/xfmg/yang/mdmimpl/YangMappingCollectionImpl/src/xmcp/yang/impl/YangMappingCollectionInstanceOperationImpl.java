@@ -87,6 +87,7 @@ public class YangMappingCollectionInstanceOperationImpl extends YangMappingColle
       YangXmlPath adapted = new XmomPathAdapter().adapt(input.get(i));
       pathlist.add(adapted);
     }
+    pathlist.sort();
     CsvPathsAndNspsWithIds csv = new CsvPathsAndNspsWithIds(pathlist);
     _mappings = csv.getCsvPathList();
     _namespaces = csv.getNamespaceWithIdList();
