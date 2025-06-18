@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,6 @@ import com.gip.xyna.xprc.xfractwfe.generation.ForEachScopeStep;
 import com.gip.xyna.xprc.xfractwfe.generation.InputConnections;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.ScopeStep.ServiceIdentification;
-import com.gip.xyna.xprc.xfractwfe.generation.ScopeStep.VariableIdentification;
 import com.gip.xyna.xprc.xfractwfe.generation.Service;
 import com.gip.xyna.xprc.xfractwfe.generation.ServiceVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.Step;
@@ -113,9 +112,20 @@ public class IdentifiedVariablesStepFunction extends IdentifiedVariablesStepWith
         outputVars = getConcreteVars(operationOutputs, getReceiveVarCastToFqns());
         thrownExceptionVars = operation.getThrownExceptions();
       } else {
-        inputVars = stepFunction.getOrderInputSourceRef() != null && stepFunction.getOrderInputSourceRef().length() > 0 ?
-            service.getWF().getInputVars() :
-            getConcreteVars(service.getWF().getInputVars(), getInputVarCastToFqns());
+        if(!service.getWF().parsingFinished()) {
+          // happens for recursive calls in audits - if parsing is not finished, input variables are not set
+          try {
+            service.getWF().parseGeneration(false, false, false);
+          } catch (Exception e) { 
+            if(logger.isDebugEnabled()) {
+              logger.debug("exception during parseGeneration of " + service.getWF(), e );
+            }
+          }
+        }
+        inputVars = service.getWF().getInputVars();
+        if(stepFunction.getOrderInputSourceRef() != null && stepFunction.getOrderInputSourceRef().length() > 0) {
+          getConcreteVars(inputVars, getInputVarCastToFqns());
+        }
         outputVars = getConcreteVars(service.getWF().getOutputVars(), getReceiveVarCastToFqns());
         thrownExceptionVars = service.getWF().getAllThrownExceptions();
       }
