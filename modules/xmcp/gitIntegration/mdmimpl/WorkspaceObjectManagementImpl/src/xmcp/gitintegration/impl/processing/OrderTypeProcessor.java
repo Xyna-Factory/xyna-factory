@@ -931,6 +931,7 @@ public class OrderTypeProcessor implements WorkspaceContentProcessor<OrderType> 
   
   
   private DispatcherDestination getDispatcherDestination(List<? extends DispatcherDestination> candidates, String destinationName) {
+    if(candidates == null) { return null; }
     for(DispatcherDestination candidate : candidates) {
       if(candidate.getDispatcherName().equals(destinationName)) {
         return candidate;
