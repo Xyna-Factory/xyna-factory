@@ -77,9 +77,13 @@ public class YangMappingImplementationProvider implements ImplementationProvider
     result.append("  path = new xmcp.yang.YangMappingPath();").append("\n");
     result.append("  {").append("\n");
     boolean isListKeyMapping = false;
+    ListConfiguration parentListConfig = null;
     for (int k = 0; k < mappingList.size(); k++) {
       MappingPathElement elem = mappingList.get(k);
       ListConfiguration listConfig = _tools.getListConfigOrNull(mappingList.subList(0, k + 1), listConfigs);
+      if (listConfig != null) {
+        parentListConfig = listConfig;
+      }
       boolean isDynList = _tools.isDynamicList(listConfig);
       ListInfo listInfo = null;
       if (isDynList) {
@@ -101,7 +105,7 @@ public class YangMappingImplementationProvider implements ImplementationProvider
             .append(elem.getNamespace()).append("\")").append(".instance());").append("\n");
       }
       if (k == mappingList.size() - 1) {
-        isListKeyMapping = isListKeyLeaf(listConfig, elem);
+        isListKeyMapping = isListKeyLeaf(parentListConfig, elem);
       }
     }
     String val = _tools.determineMappingString(mapping.getValue());
