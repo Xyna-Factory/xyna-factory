@@ -185,5 +185,13 @@
         <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().isAbstract();</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="false" Label="Get Supertype" Name="getSupertype">
+      <Output>
+        <Data Label="Supertype" ReferenceName="Text" ReferencePath="base" VariableName="supertype" />
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getSupertype();</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

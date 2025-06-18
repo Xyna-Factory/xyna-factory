@@ -271,6 +271,14 @@ public class DatatypeInspectorInstanceOperationImpl extends DatatypeInspectorSup
   public List<? extends Text> getSubtypes() {
     return dom.getSubTypes(dom.getCacheReference(), false).stream().map(d -> new Text(d.getOriginalFqName())).collect(Collectors.toList());
   }
+  
+  @Override
+  public Text getSupertype() {
+    if (dom.getSuperClassGenerationObject() != null) {
+      return new Text(dom.getSuperClassGenerationObject().getOriginalFqName());
+    }
+    return null;
+  }
 
   @Override
   public Boolean isAbstract() {

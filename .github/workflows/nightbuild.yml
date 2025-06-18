@@ -35,10 +35,11 @@ jobs:
 
      - name: Check out xyna-factory
        uses: actions/checkout@v4
-            
+
      - name: build
        run: |
           cd installation
+          ./build.sh install_libs
           ./build.sh all -b main
 
      - name: Create Archive
