@@ -97,28 +97,37 @@ public class ListKeyAnalyzer {
         copyPath.add(copyElem.get());
       }
       if (!elem.getIsListKeyLeaf()) {
-        csv.append(elem.toCsv(nspMap)).append(Constants.YangXmlCsv.SEP_PATH_ELEM);
-        continue;
       }
-      if (i < 2) { continue; }
-      if (!elem.hasTextValue()) { continue; }
-      YangXmlPathElem parent = path.getPath().get(i - 1);
-      YangXmlPathElem grandParent = path.getPath().get(i - 2);
-      if (!grandParent.hasListIndex()) { continue; }
-      if (parent.hasListIndex()) { continue; }
-      ListKey lk = new ListKeyBuilder().listKeyElemName(elem.getElemName())
-                                       .listKeyValue(elem.getTextValue().get()).build();
-      String csvStr = csv.toString();
-      ListKeySearchInfo lksi = _listKeyMap.get(csvStr);
-      if (lksi == null) {
-        lksi = new ListKeySearchInfo();
-        _listKeyMap.put(csvStr, lksi);
+      boolean doHandleList = false;
+      if (i >= 2) {
+        YangXmlPathElem parent = path.getPath().get(i - 1);
+        YangXmlPathElem grandParent = path.getPath().get(i - 2);
+        if (grandParent.hasListIndex() && !parent.hasListIndex()) {
+          doHandleList = true;
+        }
       }
-      lksi.getListKeys().add(lk);
-      // collect parent element, i.e. the list element where later the list key info will be added to replace the list index:
-      lksi.getElements().add(copyPath.get(copyPath.size() - 2));
+      if (doHandleList) {
+        handleListInPath(elem, copyPath, csv.toString());
+      }
+      csv.append(elem.toCsv(nspMap)).append(Constants.YangXmlCsv.SEP_PATH_ELEM);
     }
     _buildPaths.add(copyPath);
+  }
+  
+  
+  private void handleListInPath(YangXmlPathElem elem, List<PathElemBuilder> copyPath, String csvStr) {
+    ListKeySearchInfo lksi = _listKeyMap.get(csvStr);
+    if (lksi == null) {
+      lksi = new ListKeySearchInfo();
+      _listKeyMap.put(csvStr, lksi);
+    }
+    if (elem.hasTextValue() && elem.getIsListKeyLeaf()) {
+      ListKey lk = new ListKeyBuilder().listKeyElemName(elem.getElemName())
+                                       .listKeyValue(elem.getTextValue().get()).build();
+      lksi.getListKeys().add(lk);
+    }
+    // collect parent element, i.e. the list element where later the list key info will be added to replace the list index:
+    lksi.getElements().add(copyPath.get(copyPath.size() - 2));
   }
   
 }

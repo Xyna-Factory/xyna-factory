@@ -199,7 +199,7 @@ public class YangXmlPathElem implements Comparable<YangXmlPathElem> {
 
   
   public Optional<PathElemBuilder> copyIfHasNoListIndex() {
-    if (_listIndex > 0) {
+    if (hasListIndex()) {
       return Optional.empty();
     }
     PathElemBuilder ret = builder().elemName(_elemName).namespace(_namespace).textValue(_textValue).addListKeyList(_listKeys);

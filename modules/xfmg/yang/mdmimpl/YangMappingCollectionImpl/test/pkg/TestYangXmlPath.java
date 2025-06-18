@@ -22,6 +22,14 @@ package pkg;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -41,6 +49,53 @@ import xmcp.yang.xml.YangXmlPathList;
 
 public class TestYangXmlPath {
 
+  public String readFile(String filename) {
+    try {
+      String line;
+      StringBuilder builder = new StringBuilder("");
+      BufferedReader f = new BufferedReader(
+           new InputStreamReader(new FileInputStream(filename), "UTF8"));
+      try {
+        while ((line = f.readLine()) != null) {
+          builder.append(line).append("\n");
+        }
+      }
+      finally {
+        f.close();
+      }
+      return builder.toString();
+    }
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+  
+  private ByteArrayInputStream textAsByteStream(String text) throws IOException {
+    java.io.ByteArrayInputStream is = new java.io.ByteArrayInputStream(text.getBytes());
+    return is;
+  }
+  
+  protected ByteArrayInputStream fileAsByteStream(File file) throws IOException {
+    String text = readFile(file.getPath());
+    java.io.ByteArrayInputStream is = new java.io.ByteArrayInputStream(text.getBytes());
+    return is;
+  }
+  
+  private String getDataFilePath(String filename) throws Exception {
+    Path path = getBasePath();  // classes dir
+    path = path.getParent().resolve("test").resolve("data").resolve(filename);
+    return path.toString();
+  }
+  
+  private String getDataFile(String filename) throws Exception {
+    String path = getDataFilePath(filename);
+    return readFile(path);
+  }
+  
+  private Path getBasePath() throws Exception {
+    return Path.of(getClass().getClassLoader().getResource("").toURI());
+  }
+  
   @Test
   public void test1() throws Exception {
     try {
@@ -215,6 +270,40 @@ public class TestYangXmlPath {
     }
   }
   
+  
+  
+  @Test
+  public void testListKeys_1() throws Exception {
+    try {
+      List<String> csvlist = new ArrayList<>();
+      csvlist.add("c_root#0###,listIndex#1##0#,c_list_1#0###,c1#0#val-c1##true,");
+      csvlist.add("c_root#0###,listIndex#1##0#,c_list_1#0###,c2#0#val-c2-new2##true,");
+      csvlist.add("c_root#0###,listIndex#1##0#,c_list_1#0###,d_c#0###,listIndex#1##0#,e_list_1#0###,e1#0#val-e1-1##true,");
+      csvlist.add("c_root#0###,listIndex#1##0#,c_list_1#0###,d_c#0###,listIndex#1##1#,e_list_1#0###,e2#0#e2-val##true,");
+      csvlist.add("c_root#0###,listIndex#1##0#,c_list_1#0###,d_c#0###,d1#0#d1-val##,");
+      csvlist.add("c_root#0###,listIndex#1##1#,c_list_1#0###,c1#0#c1-1##true");
+      
+      NamespaceOfIdMap nspmap = new NamespaceOfIdMap();
+      nspmap.add(0, "http://www.gip.com/xyna/yang/test/testrpc_z_C_3");
+      
+      YangXmlPathList yxpl = YangXmlPathList.fromCsv(nspmap, csvlist);
+      String xml = yxpl.toXml();
+      log(xml);
+      
+      yxpl = yxpl.replaceListIndicesWithKeys();xml = yxpl.toXml();
+      log(xml);
+      
+      CsvPathsAndNspsWithIds csv = new CsvPathsAndNspsWithIds(yxpl);
+      log(csv);
+      assertEquals(csv.getCsvPathList().size(), 6);
+      assertEquals("c_root#0###,c_list_1#0###c1=val-c1%c2=val-c2-new2,d_c#0###,e_list_1#0###e2=e2-val,e2#0#e2-val##", 
+                   csv.getCsvPathList().get(5));
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+  
   private YangMappingPathElement buildYangMappingPathElement(String name, String nsp) {
     YangMappingPathElement ret = new YangMappingPathElement();
     ret.setElementName(name);
@@ -242,7 +331,7 @@ public class TestYangXmlPath {
   
   public static void main(String[] args) {
     try {
-      new TestYangXmlPath().testXmomAdapter();
+      new TestYangXmlPath().testListKeys_1();
     }
     catch (Throwable e) {
       e.printStackTrace();
