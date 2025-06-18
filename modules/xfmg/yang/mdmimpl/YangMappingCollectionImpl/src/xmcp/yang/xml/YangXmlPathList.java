@@ -93,7 +93,9 @@ public class YangXmlPathList {
   
   public YangXmlPathList replaceListIndicesWithKeys() {
     ListKeyAnalyzer analyzer = new ListKeyAnalyzer(this);
-    return analyzer.getResult();
+    YangXmlPathList ret = analyzer.getResult();
+    ret.sort();
+    return ret;
   }
   
   
