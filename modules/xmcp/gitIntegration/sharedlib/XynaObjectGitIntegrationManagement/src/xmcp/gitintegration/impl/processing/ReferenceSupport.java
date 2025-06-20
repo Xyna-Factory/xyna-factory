@@ -25,7 +25,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import com.gip.xyna.CentralFactoryLogging;
+
 import java.util.Optional;
+
+import org.apache.log4j.Logger;
 
 import xmcp.gitintegration.impl.references.InternalReference;
 import xmcp.gitintegration.impl.references.ReferenceMethods;
@@ -52,6 +57,8 @@ import xmcp.gitintegration.storage.ReferenceStorage;
  * tags is factory-independent.
  */
 public class ReferenceSupport {
+  
+  private static Logger logger = CentralFactoryLogging.getLogger(ReferenceSupport.class);
 
   public File findJar(List<InternalReference> references, String jarName, Long revision) {
     for (InternalReference reference : references) {
@@ -127,7 +134,16 @@ public class ReferenceSupport {
     for (Entry<String, ObjectReferenceInformation> kvp : grouped.entrySet()) {
       List<InternalReference> refs = kvp.getValue().references;
       String objectName = kvp.getKey();
-      objectTypeImplementations.get(kvp.getValue().objectType).trigger(refs, objectName, revision);
+      if(logger.isDebugEnabled()) {
+        logger.debug("triggering reference. revision:" + revision + ", objectName: " + objectName);
+      }
+      try {
+          objectTypeImplementations.get(kvp.getValue().objectType).trigger(refs, objectName, revision);
+      } catch(Exception e) {
+        if(logger.isWarnEnabled()) {
+          logger.warn("Exception during reference trigger.", e);
+        }
+      }
     }
 
   }
