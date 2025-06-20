@@ -83,6 +83,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.DatatypeVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
+import com.gip.xyna.xprc.xfractwfe.generation.ExceptionVariable;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.StringXMLSource;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.XMLSourceAbstraction;
@@ -607,7 +608,7 @@ public class DomOrExceptionStructureAction extends RuntimeContextDependendAction
           }
         } jb.endObject();
       } else {
-        if (dv.isJavaBaseType()) {
+        if (dv.isJavaBaseType() && !(dv instanceof ExceptionVariable)) {
           jb.addObjectAttribute(XynaObjectVisitor.PRIMITIVE_TAG); {
             jb.addStringAttribute(MetaInfo.FULL_QUALIFIED_NAME, dv.getJavaTypeEnum().getClassOfType());
           } jb.endObject();
