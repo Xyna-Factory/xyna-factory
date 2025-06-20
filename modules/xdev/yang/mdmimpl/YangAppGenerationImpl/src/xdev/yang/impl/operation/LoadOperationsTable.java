@@ -80,6 +80,9 @@ public class LoadOperationsTable {
         data.operationGroup(dt.getFqn());
         data.rpcName(OperationAssignmentUtils.readRpcName(xml));
         data.rpcNamespace(OperationAssignmentUtils.readRpcNamespace(xml));
+        data.tagName(OperationAssignmentUtils.readTagName(xml));
+        data.tagNamespace(OperationAssignmentUtils.readTagNamespace(xml));
+        data.yangKeyword(OperationAssignmentUtils.readYangKeyword(xml));
         data.operation(operation.getName());
         data.mappingCount(countMappings(xml));
         data.runtimeContext(datatype.getRuntimeContext().getName());

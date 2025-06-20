@@ -16,22 +16,25 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.yang.xml;
+package xdev.yang.impl.operation.implementation;
+
+import org.w3c.dom.Document;
+
+import xdev.yang.impl.operation.OperationAssignmentUtils;
 
 
-public class Constants {
+public class OpImplProviderSelection {
 
-  public static class YangXmlCsv {
-    public static final String SEP_PATH_ELEM = ",";
-    public static final String SEP_PATH_ELEM_ATTR = "#";
-    public static final String SEP_LIST_KEY_LIST_ELEMS = "%";
-    public static final String SEP_LIST_KEY_VALUE = "=";
-    public static final String VALUE_FOR_IS_LIST_KEY_LEAF = "true";
-    
+  public ImplementationProvider selectProvider(Document meta) {
+    String rpcName = OperationAssignmentUtils.readRpcName(meta);
+    if (rpcName != null) {
+      return new RpcImplementationProvider();
+    }
+    String tagName = OperationAssignmentUtils.readTagName(meta);
+    if (tagName == null) {
+      throw new IllegalArgumentException("Missing meta data in xmom: Tag name");
+    }
+    return new YangMappingImplementationProvider();
   }
-  public static final String PREFIX_OF_PREFIX = "p";
-  public static final String SEP_PREFIX_NAMESPACE = "=";
-  public static final String DEFAULT_ROOT_TAG_NAME = "root";
-  public static final String DEFAULT_LIST_INDEX_ELEM_NAME = "listIndex";
   
 }

@@ -114,7 +114,13 @@ public class TreeElem implements Comparable<TreeElem> {
   }
   
   
-  public Element toW3cElement(Document doc) {
+  public Optional<Element> toW3cElement(Document doc) {
+    if (_element.hasListIndex()) {
+      if (_children.size() == 1) {
+        return _children.get(0).toW3cElement(doc);
+      }
+      return Optional.empty();
+    }
     Element ret = null;
     if (_element.hasNamespace()) {
       ret = doc.createElementNS(_element.getNamespace().get(), _element.getElemName());
@@ -127,10 +133,12 @@ public class TreeElem implements Comparable<TreeElem> {
       ret.appendChild(text);
     }
     for (TreeElem item : _children) {
-      Element child = item.toW3cElement(doc);
-      ret.appendChild(child);
+      Optional<Element> child = item.toW3cElement(doc);
+      if (child.isPresent()) {
+        ret.appendChild(child.get());
+      }
     }
-    return ret;
+    return Optional.ofNullable(ret);
   }
   
 }

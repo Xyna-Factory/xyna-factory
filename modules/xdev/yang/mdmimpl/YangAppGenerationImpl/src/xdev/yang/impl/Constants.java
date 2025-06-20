@@ -52,6 +52,7 @@ public class Constants {
   public static final String TAG_RPC_NS = "RpcNamespace";
   public static final String TAG_YANG_TAG = "Tag";
   public static final String TAG_YANG_TAG_NS = "TagNamespace";
+  public static final String TAG_YANG_TAG_KEYWORD = "Keyword";
   
   public static final String TAG_DEVICE_FQN = "DeviceFqn";
   public static final String TAG_MAPPINGS = "Mappings";
@@ -64,6 +65,8 @@ public class Constants {
 
   public static final String TAG_LISTCONFIGS = "ListConfigurations";
   public static final String TAG_LISTCONFIG = "ListConfiguration";
+  public static final String TAG_LISTKEYS = "ListKeys";
+  public static final String TAG_LISTKEY = "ListKey";
 
   public static final String TAG_HELLO = "hello";
   public static final String TAG_CAPABILITIES = "capabilities";
