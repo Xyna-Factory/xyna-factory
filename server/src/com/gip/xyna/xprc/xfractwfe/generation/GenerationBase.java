@@ -5437,7 +5437,7 @@ public abstract class GenerationBase {
     try {
       o = cacheReference.getFromCache(originalWFInputName, rev);
       if (o == null) {
-        o = new WF(originalWFInputName, fqClassName, cacheReference, rev, null);
+        o = new WF(originalWFInputName, fqClassName, cacheReference, rev, null, xmlInputSource);
         cacheReference.insertIntoCache(o);
       }
     } finally {

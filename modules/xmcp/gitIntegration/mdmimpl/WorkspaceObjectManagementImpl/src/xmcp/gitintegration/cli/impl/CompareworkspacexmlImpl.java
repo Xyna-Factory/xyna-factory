@@ -52,7 +52,7 @@ public class CompareworkspacexmlImpl extends XynaCommandImplementation<Comparewo
     WorkspaceContentDifferences differences = comparator.compareWorkspaceContent(factoryConfig, xmlConfig, true);
     List<? extends WorkspaceContentDifference> diffs = differences.getDifferences();
     if (!diffs.isEmpty()) {
-      writeToCommandLine(statusOutputStream, "List has been saved. Id: " + differences.getListId() + ".\n");
+      writeToCommandLine(statusOutputStream, "List has been saved. Id: " + differences.getListId() + "\n");
       writeToCommandLine(statusOutputStream, "Use resolveworkspacexml to update factory\n");
       writeToCommandLine(statusOutputStream, "Use listworkspacediffs to show open lists\n");
     }
