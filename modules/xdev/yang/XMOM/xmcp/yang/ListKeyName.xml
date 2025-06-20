@@ -1,4 +1,5 @@
-/*
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
@@ -14,24 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- */
-
-package xmcp.yang.xml;
-
-
-public class Constants {
-
-  public static class YangXmlCsv {
-    public static final String SEP_PATH_ELEM = ",";
-    public static final String SEP_PATH_ELEM_ATTR = "#";
-    public static final String SEP_LIST_KEY_LIST_ELEMS = "%";
-    public static final String SEP_LIST_KEY_VALUE = "=";
-    public static final String VALUE_FOR_IS_LIST_KEY_LEAF = "true";
-    
-  }
-  public static final String PREFIX_OF_PREFIX = "p";
-  public static final String SEP_PREFIX_NAMESPACE = "=";
-  public static final String DEFAULT_ROOT_TAG_NAME = "root";
-  public static final String DEFAULT_LIST_INDEX_ELEM_NAME = "listIndex";
-  
-}
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="List Key Name" TypeName="ListKeyName" TypePath="xmcp.yang" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="List Key Name" VariableName="listKeyName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+</DataType>

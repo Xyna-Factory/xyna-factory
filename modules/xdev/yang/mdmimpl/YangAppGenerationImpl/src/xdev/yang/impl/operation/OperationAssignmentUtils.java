@@ -31,8 +31,10 @@ import org.yangcentral.yangkit.base.YangElement;
 import org.yangcentral.yangkit.model.api.schema.YangSchemaContext;
 import org.yangcentral.yangkit.model.api.stmt.DataDefinition;
 import org.yangcentral.yangkit.model.api.stmt.Input;
+import org.yangcentral.yangkit.model.api.stmt.Key;
 import org.yangcentral.yangkit.model.api.stmt.Module;
 import org.yangcentral.yangkit.model.api.stmt.Rpc;
+import org.yangcentral.yangkit.model.api.stmt.YangList;
 import org.yangcentral.yangkit.model.api.stmt.YangStatement;
 import org.yangcentral.yangkit.model.impl.stmt.ContainerImpl;
 import org.yangcentral.yangkit.model.impl.stmt.LeafImpl;
@@ -60,6 +62,7 @@ import xdev.yang.impl.operation.ListConfiguration.ListLengthConfig;
 import xdev.yang.impl.operation.anyxml.AnyXmlSubstatementConfigManager;
 import xdev.yang.impl.operation.anyxml.AnyXmlSubstatementFinder;
 import xdev.yang.impl.operation.anyxml.AnyXmlSubstatementConfigManager.AnyXmlConfigTag;
+import xmcp.yang.ListKeyName;
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.OperationAssignmentTableData;
 import xmcp.yang.YangModuleCollection;
@@ -67,14 +70,37 @@ import xmcp.yang.YangModuleCollection;
 
 public class OperationAssignmentUtils {
 
+  public static class YangStatementInfo {
+    public String namespace;
+    public String keyword;
+  }
+  
   private static Logger _logger = Logger.getLogger(OperationAssignmentUtils.class);
   
-  public static List<OperationAssignmentTableData> loadPossibleAssignments(List<Module> modules, String rpcName, String rpcNs,
-                                                                         LoadYangAssignmentsData data, Document meta,
-                                                                         List<String> supportedFeatures, boolean fromCache) {
+  public static List<OperationAssignmentTableData> loadPossibleAssignmentsRpc(List<Module> modules, String rpcName,
+                                                                              String rpcNs, LoadYangAssignmentsData data,
+                                                                              Document meta, List<String> supportedFeatures,
+                                                                              boolean fromCache) {
     Rpc rpc = findRpc(modules, rpcName, rpcNs);
-    DeviationList deviations = DeviationList.build(modules);
     Input input = rpc.getInput();
+    return loadPossibleAssignmentsImpl(modules, input, data, meta, supportedFeatures, fromCache);
+  }
+  
+  
+  public static List<OperationAssignmentTableData> loadPossibleAssignmentsGeneric(List<Module> modules, String elemName,
+                                                                                  String nsp, LoadYangAssignmentsData data,
+                                                                                  Document meta, List<String> supportedFeatures, 
+                                                                                  boolean fromCache) {
+    YangStatement ys = findRootLevelStatement(modules, elemName, nsp);
+    return loadPossibleAssignmentsImpl(modules, ys, data, meta, supportedFeatures, fromCache);
+  }
+  
+  
+  public static List<OperationAssignmentTableData> loadPossibleAssignmentsImpl(List<Module> modules, YangStatement ys,
+                                                                               LoadYangAssignmentsData data, Document meta,
+                                                                               List<String> supportedFeatures, 
+                                                                               boolean fromCache) {
+    DeviationList deviations = DeviationList.build(modules);
     if (!fromCache) {
       new AugmentTools().handleAugment(modules);
     }
@@ -82,7 +108,7 @@ public class OperationAssignmentUtils {
     AnyXmlSubstatementFinder finder = new AnyXmlSubstatementFinder(modules);
     List<AnyXmlConfigTag> anyXmlConfig = new AnyXmlSubstatementConfigManager().loadAnyXmlConfigs(meta);
     List<YangStatement> elements = traverseYang(data.getTotalYangPath(), data.getTotalNamespaces(), data.getTotalKeywords(), 
-                                                input, listConfigs, supportedFeatures, finder, anyXmlConfig);
+                                                ys, listConfigs, supportedFeatures, finder, anyXmlConfig);
     List<OperationAssignmentTableData> result = loadAssignments(elements, data, supportedFeatures, deviations);
     return result;
   }
@@ -260,6 +286,7 @@ public class OperationAssignmentUtils {
         updatedData.unversionedSetDeviationInfo(null);
         updatedData.unversionedSetSubelementDeviationInfo(null);
         updatedData.unversionedSetIsNotSupportedDeviation(false);
+        handleListKeys(element, updatedData);
         helper.copyRelevantSubelementValues(element, updatedData);
         deviationTools.handleDeviationsForElement(moduleDeviations, element, data, updatedData);
         if (!updatedData.getIsNotSupportedDeviation()) {
@@ -273,6 +300,28 @@ public class OperationAssignmentUtils {
     return result;
   }
 
+  
+  private static void handleListKeys(YangStatement element, LoadYangAssignmentsData updatedData) {
+    String keyword = element.getYangKeyword().getLocalName();
+    if (!Constants.TYPE_LIST.equals(keyword)) { return; }
+    if (!(element instanceof YangList)) { return; }
+    YangList yl = (YangList) element;
+    Key key = yl.getKey();
+    if (key == null) { return; }
+    if (key.getArgStr() == null) { return; }
+    String[] parts = key.getArgStr().split(" ");
+    List<ListKeyName> keyList = new ArrayList<>();
+    for (String part : parts) {
+      if (part == null) { continue; }
+      String val = part.trim();
+      if (val.isEmpty()) { continue; }
+      ListKeyName name = new ListKeyName();
+      name.unversionedSetListKeyName(val);
+      keyList.add(name);
+    }
+    updatedData.unversionedSetListKeyNames(keyList);
+  }
+  
 
   private static boolean isSupportedElement(YangElement element, List<String> supportedFeatures) {
     Boolean supportedStatement = false;
@@ -318,6 +367,18 @@ public class OperationAssignmentUtils {
     throw new RuntimeException("rpc " + rpcName + " in namespace " + rpcNs + " not found.");
   }
   
+  
+  private static YangStatement findRootLevelStatement(List<Module> modules, String elemName, String nsp) {
+    List<YangStatement> list = findRootLevelStatements(modules, elemName);
+    for (YangStatement ys : list) {
+      if (Objects.equals(YangStatementTranslation.getNamespace(ys), nsp)) {
+        return ys;
+      }
+    }
+    throw new RuntimeException("Yang element " + elemName + " in namespace " + nsp + " not found.");
+  }
+  
+  
   public static List<Rpc> findRpcs(List<Module> modules, String rpcName) {
     List<Rpc> result = new ArrayList<>();
     for (Module module : modules) {
@@ -330,7 +391,7 @@ public class OperationAssignmentUtils {
   }
 
   
-  public static List<YangStatement> findRootLevelTags(List<Module> modules, String tagName) {
+  public static List<YangStatement> findRootLevelStatements(List<Module> modules, String tagName) {
     List<YangStatement> result = new ArrayList<>();
     if (tagName == null) { return result; }
     for (Module mod : modules) {
@@ -477,13 +538,36 @@ public class OperationAssignmentUtils {
     return rpcElement.getTextContent();
   }
 
+  public static String readTagName(Document meta) {
+    Element element = XMLUtils.getChildElementByName(meta.getDocumentElement(), Constants.TAG_YANG_TAG);
+    if(element == null) {
+      return null;
+    }
+    return element.getTextContent();
+  }
 
+  public static String readTagNamespace(Document meta) {
+    Element element = XMLUtils.getChildElementByName(meta.getDocumentElement(), Constants.TAG_YANG_TAG_NS);
+    if(element == null) {
+      return null;
+    }
+    return element.getTextContent();
+  }
+
+  public static String readYangKeyword(Document meta) {
+    Element element = XMLUtils.getChildElementByName(meta.getDocumentElement(), Constants.TAG_YANG_TAG_KEYWORD);
+    if(element == null) {
+      return null;
+    }
+    return element.getTextContent();
+  }
+  
   public static String readDeviceFqn(Document operationMeta) {
     Element deviceFqnEle = XMLUtils.getChildElementByName(operationMeta.getDocumentElement(), Constants.TAG_DEVICE_FQN);
     return deviceFqnEle.getTextContent();
   }
 
-  public static String loadTagNamespace(String tag, String deviceFqn, String workspaceName, boolean isRpc) {
+  public static YangStatementInfo loadTagInfo(String tag, String deviceFqn, String workspaceName, boolean isRpc) {
     List<ModuleGroup> modules = OperationAssignmentUtils.loadModules(workspaceName);
     //filter modules to supported by device
     List<YangDeviceCapability> capabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
@@ -497,14 +581,17 @@ public class OperationAssignmentUtils {
       }
       matched = candidates.get(0);
     } else {
-      List<YangStatement> candidates = OperationAssignmentUtils.findRootLevelTags(filtered, tag);
+      List<YangStatement> candidates = OperationAssignmentUtils.findRootLevelStatements(filtered, tag);
       if (candidates.size() != 1) {
         throw new RuntimeException("Could not locate yang tag " + tag + " in linked modules. " +
                                    "There are " + candidates.size() + " candidates.");
       }
       matched = candidates.get(0);
     }
-    return YangStatementTranslation.getNamespace(matched);
+    YangStatementInfo ret = new YangStatementInfo();
+    ret.namespace = YangStatementTranslation.getNamespace(matched);
+    ret.keyword = matched.getYangKeyword().getLocalName();
+    return ret;
   }
   
 }

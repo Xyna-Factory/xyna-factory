@@ -45,12 +45,13 @@ public class ConfigureList {
     String yang = data.getTotalYangPath();
     String ns = data.getTotalNamespaces();
     String keywords = data.getTotalKeywords();
-    ListConfiguration newConfig = ListConfiguration.fromDatatype(yang, ns, keywords, config);
+    ListConfiguration newConfig = ListConfiguration.fromDatatype(yang, ns, keywords, config, data.getListKeyNames());
     Element existingElement = ListConfiguration.loadListConfigurationElement(meta, yang, ns);
     if(existingElement == null) {
       newConfig.createAndAddElement(meta);
       return;
     }
-    newConfig.updateNode(existingElement);
+    newConfig.updateNode(meta, existingElement);
   }
+  
 }
