@@ -190,3 +190,7 @@ buildNumber.properties
 .mvn/timing.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
+
+# Issue 1491:Add workspace and server properties files to gitignore
+server.properties
+workspace.properties
