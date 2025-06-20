@@ -96,8 +96,6 @@ public class ListKeyAnalyzer {
       if (copyElem.isPresent()) {
         copyPath.add(copyElem.get());
       }
-      if (!elem.getIsListKeyLeaf()) {
-      }
       boolean doHandleList = false;
       if (i >= 2) {
         YangXmlPathElem parent = path.getPath().get(i - 1);
