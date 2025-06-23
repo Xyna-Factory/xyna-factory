@@ -18,14 +18,33 @@
 
 package xmcp.yang.codedservice;
 
+import org.w3c.dom.Element;
+
 import xact.templates.Document;
+import xmcp.yang.MessageId;
+import xmcp.yang.misc.Constants;
+import xmcp.yang.misc.XmlHelper;
 import xmcp.yang.netconf.NetConfSessionId;
 
 public class CSKillSession {
 
-  public Document execute(NetConfSessionId netConfSessionId14) {
-    // Implemented as code snippet!
-    return null;
+  public Document execute(MessageId messageId, NetConfSessionId sessionId) {
+    XmlHelper helper = new XmlHelper();
+    org.w3c.dom.Document doc = helper.buildDocument();
+    Element rpc = helper.createElem(doc).elementName(Constants.Rpc.TAG_NAME).namespace(Constants.NetConf.NAMESPACE)
+                        .buildAndAppendAsDocumentRoot();
+    if ((messageId != null) && (messageId.getId() != null)) {
+      rpc.setAttribute(Constants.Rpc.ATTRIBUTE_NAME_MESSAGE_ID, messageId.getId());
+    }
+    Element opElem = helper.createElem(doc).elementName(Constants.NetConf.OperationNameTag.KILL_SESSION)
+                               .namespace(Constants.NetConf.NAMESPACE).buildAndAppendAsChild(rpc);
+    if ((sessionId != null) && (sessionId.getSessionId() != null)) {
+      helper.createElem(doc).elementName(Constants.NetConf.XmlTag.SESSION_ID).namespace(Constants.NetConf.NAMESPACE)
+                            .text(sessionId.getSessionId()).buildAndAppendAsChild(opElem);
+    }
+    Document ret = new Document();
+    ret.setText(helper.getDocumentString(doc));
+    return ret;
   }
 
 }

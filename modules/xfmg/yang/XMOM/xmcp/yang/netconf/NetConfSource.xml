@@ -19,7 +19,12 @@
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Source" VariableName="source">
+  <Data Label="Datastore Name" VariableName="datastoreName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="URL" VariableName="uRL">
     <Meta>
       <Type>String</Type>
     </Meta>

@@ -23,6 +23,7 @@
   <Service Label="Protocol Operations" TypeName="ProtocolOperations">
     <Operation IsStatic="true" Label="Get Config" Name="getConfig">
       <Input>
+        <Data ID="29" Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId29"/>
         <Data ID="1" Label="NetConf Source" ReferenceName="NetConfSource" ReferencePath="xmcp.yang.netconf" VariableName="source1"/>
         <Data ID="2" Label="NetConf Filter" ReferenceName="NetConfFilter" ReferencePath="xmcp.yang.netconf" VariableName="filter2"/>
       </Input>
@@ -35,6 +36,7 @@
     </Operation>
     <Operation IsStatic="true" Label="Edit Config" Name="editConfig">
       <Input>
+        <Data ID="27" Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId27"/>
         <Data ID="3" Label="NetConf Target" ReferenceName="NetConfTarget" ReferencePath="xmcp.yang.netconf" VariableName="netConfTarget3"/>
         <Data ID="4" Label="NetConf Default Operation" ReferenceName="NetConfDefaultOperation" ReferencePath="xmcp.yang.netconf.enums" VariableName="netConfDefaultOperation4"/>
         <Data ID="5" Label="NetConf Test Option" ReferenceName="NetConfTestOption" ReferencePath="xmcp.yang.netconf.enums" VariableName="netConfTestOption5"/>
@@ -50,6 +52,7 @@
     </Operation>
     <Operation IsStatic="true" Label="Copy Config" Name="copyConfig">
       <Input>
+        <Data ID="25" Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId25"/>
         <Data ID="8" Label="NetConf Target" ReferenceName="NetConfTarget" ReferencePath="xmcp.yang.netconf" VariableName="netConfTarget8"/>
         <Data ID="9" Label="NetConf Source" ReferenceName="NetConfSource" ReferencePath="xmcp.yang.netconf" VariableName="netConfSource9"/>
       </Input>
@@ -62,6 +65,7 @@
     </Operation>
     <Operation IsStatic="true" Label="Delete Config" Name="deleteConfig">
       <Input>
+        <Data ID="26" Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId26"/>
         <Data ID="10" Label="NetConf Target" ReferenceName="NetConfTarget" ReferencePath="xmcp.yang.netconf" VariableName="netConfTarget10"/>
       </Input>
       <Output>
@@ -73,6 +77,7 @@
     </Operation>
     <Operation IsStatic="true" Label="Lock" Name="lock">
       <Input>
+        <Data ID="31" Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId31"/>
         <Data ID="11" Label="NetConf Target" ReferenceName="NetConfTarget" ReferencePath="xmcp.yang.netconf" VariableName="netConfTarget11"/>
       </Input>
       <Output>
@@ -84,6 +89,7 @@
     </Operation>
     <Operation IsStatic="true" Label="Unlock" Name="unlock">
       <Input>
+        <Data ID="32" Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId32"/>
         <Data ID="12" Label="NetConf Target" ReferenceName="NetConfTarget" ReferencePath="xmcp.yang.netconf" VariableName="netConfTarget12"/>
       </Input>
       <Output>
@@ -95,6 +101,7 @@
     </Operation>
     <Operation IsStatic="true" Label="Get" Name="get">
       <Input>
+        <Data ID="28" Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId28"/>
         <Data ID="13" Label="NetConf Filter" ReferenceName="NetConfFilter" ReferencePath="xmcp.yang.netconf" VariableName="netConfFilter13"/>
       </Input>
       <Output>
@@ -105,7 +112,9 @@
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Close Session" Name="closeSession">
-      <Input/>
+      <Input>
+        <Data ID="24" Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId24"/>
+      </Input>
       <Output>
         <Data ID="15" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document15"/>
       </Output>
@@ -115,6 +124,7 @@
     </Operation>
     <Operation IsStatic="true" Label="Kill Session" Name="killSession">
       <Input>
+        <Data ID="30" Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId30"/>
         <Data ID="14" Label="NetConf Session Id" ReferenceName="NetConfSessionId" ReferencePath="xmcp.yang.netconf" VariableName="netConfSessionId14"/>
       </Input>
       <Output>

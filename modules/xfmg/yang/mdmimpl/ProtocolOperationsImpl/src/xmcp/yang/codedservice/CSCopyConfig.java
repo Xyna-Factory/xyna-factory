@@ -18,15 +18,54 @@
 
 package xmcp.yang.codedservice;
 
+import org.w3c.dom.Element;
+
 import xact.templates.Document;
+import xmcp.yang.MessageId;
+import xmcp.yang.YangMappingCollection;
+import xmcp.yang.misc.Constants;
+import xmcp.yang.misc.XmlHelper;
 import xmcp.yang.netconf.NetConfSource;
 import xmcp.yang.netconf.NetConfTarget;
 
 public class CSCopyConfig {
 
-  public Document execute(NetConfTarget netConfTarget8, NetConfSource netConfSource9) {
-    // Implemented as code snippet!
-    return null;
+  public Document execute(MessageId messageId, NetConfTarget target, NetConfSource source) {
+    XmlHelper helper = new XmlHelper();
+    org.w3c.dom.Document doc = helper.buildDocument();
+    Element rpc = helper.createElem(doc).elementName(Constants.Rpc.TAG_NAME).namespace(Constants.NetConf.NAMESPACE)
+                        .buildAndAppendAsDocumentRoot();
+    if ((messageId != null) && (messageId.getId() != null)) {
+      rpc.setAttribute(Constants.Rpc.ATTRIBUTE_NAME_MESSAGE_ID, messageId.getId());
+    }
+    Element opElem = helper.createElem(doc).elementName(Constants.NetConf.OperationNameTag.COPY_CONFIG)
+                               .namespace(Constants.NetConf.NAMESPACE).buildAndAppendAsChild(rpc);
+    Element targetElem = helper.createElem(doc).elementName(Constants.NetConf.XmlTag.TARGET)
+                               .namespace(Constants.NetConf.NAMESPACE).buildAndAppendAsChild(opElem);
+    if (target != null) {
+      if (target.getDatastoreName() != null) {
+        helper.createElem(doc).elementName(target.getDatastoreName()).namespace(Constants.NetConf.NAMESPACE)
+                              .buildAndAppendAsChild(targetElem);
+      } else if (target.getURL() != null) {
+        helper.createElem(doc).elementName(Constants.NetConf.XmlTag.URL).namespace(Constants.NetConf.NAMESPACE)
+                              .text(target.getURL()).buildAndAppendAsChild(targetElem);
+      }
+    }
+    Element sourceElem = helper.createElem(doc).elementName(Constants.NetConf.XmlTag.SOURCE)
+                               .namespace(Constants.NetConf.NAMESPACE).buildAndAppendAsChild(opElem);
+    if (source != null) {
+      if (source.getDatastoreName() != null) {
+        helper.createElem(doc).elementName(source.getDatastoreName()).namespace(Constants.NetConf.NAMESPACE)
+                              .buildAndAppendAsChild(sourceElem);
+      } else if (source.getURL() != null) {
+        helper.createElem(doc).elementName(Constants.NetConf.XmlTag.URL).namespace(Constants.NetConf.NAMESPACE)
+                              .text(source.getURL()).buildAndAppendAsChild(sourceElem);
+      }
+    }
+    
+    Document ret = new Document();
+    ret.setText(helper.getDocumentString(doc));
+    return ret;
   }
 
 }

@@ -19,6 +19,7 @@
 package xmcp.yang.codedservice;
 
 import xact.templates.Document;
+import xmcp.yang.MessageId;
 import xmcp.yang.netconf.NetConfConfig;
 import xmcp.yang.netconf.NetConfTarget;
 import xmcp.yang.netconf.enums.NetConfDefaultOperation;
@@ -27,7 +28,11 @@ import xmcp.yang.netconf.enums.NetConfTestOption;
 
 public class CSEditConfig {
 
-  public Document execute(NetConfTarget netConfTarget3, NetConfDefaultOperation netConfDefaultOperation4, NetConfTestOption netConfTestOption5, NetConfErrorOption netConfErrorOption6, NetConfConfig netConfConfig7) {
+  public Document execute(MessageId messageId, NetConfTarget netConfTarget3,
+                          NetConfDefaultOperation netConfDefaultOperation4,
+                          NetConfTestOption netConfTestOption5,
+                          NetConfErrorOption netConfErrorOption6,
+                          NetConfConfig netConfConfig7) {
     // Implemented as code snippet!
     return null;
   }

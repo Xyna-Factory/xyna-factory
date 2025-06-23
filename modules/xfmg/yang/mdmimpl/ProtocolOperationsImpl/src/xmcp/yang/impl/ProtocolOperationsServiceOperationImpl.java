@@ -23,6 +23,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTi
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 
 import xact.templates.Document;
+import xmcp.yang.MessageId;
 import xmcp.yang.ProtocolOperationsServiceOperation;
 import xmcp.yang.codedservice.CSCloseSession;
 import xmcp.yang.codedservice.CSCopyConfig;
@@ -75,49 +76,49 @@ public class ProtocolOperationsServiceOperationImpl implements ExtendedDeploymen
   }
 
   
-  public Document closeSession() {
-    return new CSCloseSession().execute();
+  public Document closeSession(MessageId messageId) {
+    return new CSCloseSession().execute(messageId);
   }
 
   
-  public Document copyConfig(NetConfTarget netConfTarget8, NetConfSource netConfSource9) {
-    return new CSCopyConfig().execute(netConfTarget8, netConfSource9);
+  public Document copyConfig(MessageId messageId, NetConfTarget netConfTarget8, NetConfSource netConfSource9) {
+    return new CSCopyConfig().execute(messageId, netConfTarget8, netConfSource9);
   }
 
   
-  public Document deleteConfig(NetConfTarget netConfTarget10) {
-    return new CSDeleteConfig().execute(netConfTarget10);
+  public Document deleteConfig(MessageId messageId, NetConfTarget netConfTarget10) {
+    return new CSDeleteConfig().execute(messageId, netConfTarget10);
   }
 
   
-  public Document editConfig(NetConfTarget netConfTarget3,
+  public Document editConfig(MessageId messageId, NetConfTarget netConfTarget3,
                              NetConfDefaultOperation netConfDefaultOperation4,
                              NetConfTestOption netConfTestOption5,
                              NetConfErrorOption netConfErrorOption6,
                              NetConfConfig netConfConfig7) {
-    return new CSEditConfig().execute(netConfTarget3, netConfDefaultOperation4,
+    return new CSEditConfig().execute(messageId, netConfTarget3, netConfDefaultOperation4,
                                       netConfTestOption5, netConfErrorOption6,
                                       netConfConfig7);
   }
 
-  public Document get(NetConfFilter netConfFilter13) {
-    return new CSGet().execute(netConfFilter13);
+  public Document get(MessageId messageId, NetConfFilter netConfFilter13) {
+    return new CSGet().execute(messageId, netConfFilter13);
   }
 
-  public Document getConfig(NetConfSource source1, NetConfFilter filter2) {
-    return new CSGetConfig().execute(source1, filter2);
+  public Document getConfig(MessageId messageId, NetConfSource source1, NetConfFilter filter2) {
+    return new CSGetConfig().execute(messageId, source1, filter2);
   }
 
-  public Document killSession(NetConfSessionId netConfSessionId14) {
-    return new CSKillSession().execute(netConfSessionId14);
+  public Document killSession(MessageId messageId, NetConfSessionId netConfSessionId14) {
+    return new CSKillSession().execute(messageId, netConfSessionId14);
   }
 
-  public Document lock(NetConfTarget netConfTarget11) {
-    return new CSLock().execute(netConfTarget11);
+  public Document lock(MessageId messageId, NetConfTarget netConfTarget11) {
+    return new CSLock().execute(messageId, netConfTarget11);
   }
 
-  public Document unlock(NetConfTarget netConfTarget12) {
-    return new CSUnlock().execute(netConfTarget12);
+  public Document unlock(MessageId messageId, NetConfTarget netConfTarget12) {
+    return new CSUnlock().execute(messageId, netConfTarget12);
   }
 
 }
