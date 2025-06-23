@@ -58,6 +58,7 @@ public class CsvPathsAndNspsWithIds {
   public CsvPathsAndNspsWithIds merge(CsvPathsAndNspsWithIds input) {
     YangXmlPathList pathlist = YangXmlPathList.fromCsv(this);
     pathlist.addAll(input);
+    pathlist.replaceListIndicesWithKeys();
     CsvPathsAndNspsWithIds ret = new CsvPathsAndNspsWithIds(pathlist);
     return ret;
   }

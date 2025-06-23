@@ -16,22 +16,15 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.yang.xml;
+package xdev.yang.impl.operation.implementation;
+
+import java.util.List;
+
+import org.w3c.dom.Document;
 
 
-public class Constants {
+public interface ImplementationProvider {
 
-  public static class YangXmlCsv {
-    public static final String SEP_PATH_ELEM = ",";
-    public static final String SEP_PATH_ELEM_ATTR = "#";
-    public static final String SEP_LIST_KEY_LIST_ELEMS = "%";
-    public static final String SEP_LIST_KEY_VALUE = "=";
-    public static final String VALUE_FOR_IS_LIST_KEY_LEAF = "true";
-    
-  }
-  public static final String PREFIX_OF_PREFIX = "p";
-  public static final String SEP_PREFIX_NAMESPACE = "=";
-  public static final String DEFAULT_ROOT_TAG_NAME = "root";
-  public static final String DEFAULT_LIST_INDEX_ELEM_NAME = "listIndex";
+  public String createImpl(Document meta, List<String> inputVarNames);
   
 }
