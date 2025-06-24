@@ -44,9 +44,9 @@ public class Constants {
     public static class XmlTag {
       public static final String SOURCE = "source";
       public static final String FILTER = "filter";
-      public static final String TARGET = "targetdefault-operation";
-      public static final String DEFAULT_OPERATION = "test-option";
-      public static final String TEST_OPTION = "error-option";
+      public static final String TARGET = "target";
+      public static final String DEFAULT_OPERATION = "default-operation";
+      public static final String TEST_OPTION = "test-option";
       public static final String ERROR_OPTION = "error-option";
       public static final String CONFIG = "config";
       public static final String SESSION_ID = "session-id";
