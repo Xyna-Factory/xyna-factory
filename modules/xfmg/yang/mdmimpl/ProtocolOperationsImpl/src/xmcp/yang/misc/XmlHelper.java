@@ -35,6 +35,8 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
@@ -85,11 +87,19 @@ public class XmlHelper {
   }
   
   
-  public void appendXmlSubtree(Element elem, String subtree) {
+  public void appendXmlSubtree(Document doc, Element elem, String subtree) {
     if (elem == null) { return; }
     try {
       Document doc2 = XMLUtils.parseString(subtree);
-      elem.appendChild(doc2.getFirstChild());
+      if (doc2.getDocumentElement() == null) { return; }
+      // root node "<root>" must be ignored
+      NodeList list = doc2.getDocumentElement().getChildNodes();
+      if (list == null) { return; }
+      for (int i = 0; i < list.getLength(); i++) {
+        Node node = list.item(i);
+        if (!(node instanceof Element)) { continue; }
+        elem.appendChild(doc.importNode(node, true));
+      }
     } catch (Exception e) {
       throw new RuntimeException(e.getMessage(), e);
     }

@@ -62,7 +62,7 @@ public class CSGetConfig {
         YangMappingCollection ymc = filter.getFilterSubtree();
         Document tmp = ymc.createXml();
         if ((tmp != null) && (tmp.getText() != null)) {
-          helper.appendXmlSubtree(filterElem, tmp.getText());
+          helper.appendXmlSubtree(doc, filterElem, tmp.getText());
         }
       }
     }
