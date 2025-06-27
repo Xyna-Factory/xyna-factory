@@ -92,7 +92,7 @@ public class XmlHelper {
     try {
       Document doc2 = XMLUtils.parseString(subtree);
       if (doc2.getDocumentElement() == null) { return; }
-      // root node "<root>" must be ignored
+      // root node "<root>" itself must be ignored
       NodeList list = doc2.getDocumentElement().getChildNodes();
       if (list == null) { return; }
       for (int i = 0; i < list.getLength(); i++) {
