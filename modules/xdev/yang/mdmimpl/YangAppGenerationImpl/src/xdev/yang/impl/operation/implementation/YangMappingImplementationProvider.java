@@ -56,7 +56,21 @@ public class YangMappingImplementationProvider implements ImplementationProvider
       OperationMapping mapping = mappings.get(i);
       handleMapping(mapping, result, listConfigs);
     }
-    result.append("  xmcp.yang.YangMappingCollection coll2 = new xmcp.yang.YangMappingCollection();").append("\n");
+    result.append("  ").append("\n");
+    result.append("  com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean prop = ");
+    result.append("new com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean(");
+    result.append("\"xmcp.yang.TraceYangMappingCollectionContent\", false);").append("\n");
+    
+    result.append("  Boolean flag = prop.get();").append("\n");
+    result.append("  if (flag == null) { flag = false; }").append("\n");
+    result.append("  xmcp.yang.YangMappingCollection coll2 = null;").append("\n");
+    
+    result.append("  if (flag) {").append("\n");
+    result.append("    coll2 = new xmcp.yang.TraceYangMappingCollection();").append("\n");
+    result.append("  } else {").append("\n");
+    result.append("    coll2 = new xmcp.yang.YangMappingCollection();").append("\n");
+    result.append("  }").append("\n");
+    
     result.append("  coll2.overwriteContent(pathList);").append("\n");
     result.append("  xmcp.yang.YangMappingCollection ret = ").append(inputVarNames.get(0)).append(".merge(coll2);").append("\n");
     result.append("  return ret;").append("\n");
