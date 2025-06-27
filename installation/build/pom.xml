@@ -584,6 +584,11 @@
                 <artifactId>yangkit-parser</artifactId>
                 <version>1.4.5</version>
             </dependency>
+            <dependency>
+                <groupId>net.i2p.crypto</groupId>
+                <artifactId>eddsa</artifactId>
+                <version>0.3.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>
