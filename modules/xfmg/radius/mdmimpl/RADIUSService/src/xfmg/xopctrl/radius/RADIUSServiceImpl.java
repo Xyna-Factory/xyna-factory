@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,6 @@ import com.gip.xyna.XynaFactory;
 
 import com.gip.xyna.XMOM.base.IP;
 import com.gip.xyna.XMOM.base.IPv4;
-import com.gip.xyna._3._0.XMDM.xdev.tsim.qsXynaFactory.datatypes.ActualValue;
-import com.gip.xyna._3._0.XMDM.xdev.tsim.qsXynaFactory.datatypes.AutomatedXynaFactoryQAException;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.DeploymentTask;
@@ -45,6 +43,7 @@ import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -165,6 +164,8 @@ public class RADIUSServiceImpl implements DeploymentTask {
     } catch (UnknownAttributeException e) {
       throw new XFMG_UserAuthenticationFailedException(username.getName(),e);
     } catch (RadiusException e) {
+      throw new XFMG_UserAuthenticationFailedException(username.getName(),e);
+    }  catch (NoSuchAlgorithmException e) {
       throw new XFMG_UserAuthenticationFailedException(username.getName(),e);
     }
     
