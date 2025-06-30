@@ -51,5 +51,10 @@
             <groupId>com.gip.xyna</groupId>
             <artifactId>xynautils-exceptions</artifactId>
         </dependency>
+		<dependency>
+			<groupId>com.gip.xyna</groupId>
+			<artifactId>misc</artifactId>
+			<scope>test</scope>
+		</dependency>
     </dependencies>
 </project>

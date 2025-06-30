@@ -19,14 +19,17 @@ package xmcp.yang.impl;
 
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import xact.templates.Document;
 import xmcp.yang.YangMappingCollection;
 import xmcp.yang.YangMappingCollectionInstanceOperation;
 import xmcp.yang.YangMappingCollectionSuperProxy;
+import xmcp.yang.YangMappingPath;
+import xmcp.yang.xml.CsvPathsAndNspsWithIds;
+import xmcp.yang.xml.XmomPathAdapter;
+import xmcp.yang.xml.YangXmlPath;
+import xmcp.yang.xml.YangXmlPathList;
 
 
 public class YangMappingCollectionInstanceOperationImpl extends YangMappingCollectionSuperProxy implements YangMappingCollectionInstanceOperation {
@@ -34,41 +37,65 @@ public class YangMappingCollectionInstanceOperationImpl extends YangMappingColle
   private static final long serialVersionUID = 1L;
   
   protected List<String> _mappings = new ArrayList<>();
-  protected Set<String> _namespaces = new HashSet<>();
+  protected List<String> _namespaces = new ArrayList<>();
   
   
   public YangMappingCollectionInstanceOperationImpl(YangMappingCollection instanceVar) {
     super(instanceVar);
   }
 
+  @Override
   public Document createXml() {
-    return null;
+    CsvPathsAndNspsWithIds csv = CsvPathsAndNspsWithIds.builder().csvPaths(_mappings).namespaces(_namespaces).build();
+    YangXmlPathList pathlist = YangXmlPathList.fromCsv(csv);
+    String xml = pathlist.toXml();
+    Document ret = new Document();
+    ret.setText(xml);
+    return ret;
   }
 
+  @Override
   public List<String> getMappings() {
     return _mappings;
   }
 
+  @Override
   public List<String> getNamespaces() {
-    return new ArrayList<String>(_namespaces);
+    return _namespaces;
   }
 
   
-  public xmcp.yang.YangMappingCollection merge(xmcp.yang.YangMappingCollection input) {
+  @Override
+  public YangMappingCollection merge(YangMappingCollection input) {
     if (input == null) { return getInstanceVar(); }
-    List<String> mappings = input.getMappings();
-    if (mappings != null) {
-      _mappings.addAll(mappings);
-      getInstanceVar().setMappingCount(_mappings.size());
-    }
-    List<String> namespaces = input.getNamespaces();
-    if (namespaces != null) {
-      _namespaces.addAll(namespaces);
-    }
+    CsvPathsAndNspsWithIds csv1 = CsvPathsAndNspsWithIds.builder().csvPaths(_mappings).namespaces(_namespaces).build();
+    CsvPathsAndNspsWithIds csv2 = CsvPathsAndNspsWithIds.builder().csvPaths(input.getMappings()).
+                                                                   namespaces(input.getNamespaces()).build();
+    CsvPathsAndNspsWithIds csv3 = csv1.merge(csv2);
+    _mappings = csv3.getCsvPathList();
+    _namespaces = csv3.getNamespaceWithIdList();
+    getInstanceVar().setMappingCount(_mappings.size());
     return getInstanceVar();
   }
 
 
+  @Override
+  public YangMappingCollection overwriteContent(List<? extends YangMappingPath> input) {
+    if (input == null) { throw new IllegalArgumentException("Input is null"); }
+    YangXmlPathList pathlist = new YangXmlPathList();
+    for (int i = 0; i < input.size(); i++) {
+      YangXmlPath adapted = new XmomPathAdapter().adapt(input.get(i));
+      pathlist.add(adapted);
+    }
+    pathlist = pathlist.replaceListIndicesWithKeys();
+    CsvPathsAndNspsWithIds csv = new CsvPathsAndNspsWithIds(pathlist);
+    _mappings = csv.getCsvPathList();
+    _namespaces = csv.getNamespaceWithIdList();
+    getInstanceVar().setMappingCount(_mappings.size());
+    return getInstanceVar();
+  }
+  
+  
   @Override
   public Object clone() {
     // Parameter to constructor below (instance-var) is irrelevant since it will be replaced later with the cloned instance-var

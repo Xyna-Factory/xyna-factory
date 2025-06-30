@@ -126,7 +126,7 @@
             <dependency>
                 <groupId>com.gip.xyna</groupId>
                 <artifactId>xynafactory</artifactId>
-                <version>10.4.0.0</version>
+                <version>10.5.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
@@ -172,6 +172,11 @@
                 <groupId>com.gip.xyna</groupId>
                 <artifactId>xynautils-snmp</artifactId>
                 <version>4.1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gip.xyna</groupId>
+                <artifactId>xynautils-xml</artifactId>
+                <version>3.0.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
@@ -257,7 +262,7 @@
             <dependency>
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
-                <version>1.9.4</version>
+                <version>1.11.0</version>
             </dependency>
             <dependency>
                 <groupId>commons-beanutils</groupId>
@@ -293,6 +298,11 @@
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
                 <version>2.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.17.0</version>
             </dependency>
             <dependency>
                 <groupId>commons-logging</groupId>
@@ -445,6 +455,11 @@
                 <version>2.4.1</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.xmlbeans</groupId>
+                <artifactId>xmlbeans</artifactId>
+                <version>5.3.0</version>
+            </dependency>
+            <dependency>
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcpg-jdk18on</artifactId>
                 <version>1.79</version>
@@ -527,7 +542,7 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.7.26</version>
+                <version>1.7.36</version>
             </dependency>
             <dependency>
                 <groupId>org.snmp4j</groupId>

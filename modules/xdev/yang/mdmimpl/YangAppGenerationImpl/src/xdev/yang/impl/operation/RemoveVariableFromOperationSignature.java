@@ -26,9 +26,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.gip.xyna.xprc.XynaOrderServerExtension;
+
+import xdev.yang.impl.operation.implementation.ImplementationProvider;
+import xdev.yang.impl.operation.implementation.OpImplProviderSelection;
 import xmcp.yang.OperationTableData;
 import xmcp.yang.fman.OperationSignatureEntry;
-
 
 
 public class RemoveVariableFromOperationSignature {
@@ -49,7 +51,7 @@ public class RemoveVariableFromOperationSignature {
 
       uc.updateMeta();
       uc.deleteInput(signature.getIndex());
-      OperationImplementationProvider implProvider = new OperationImplementationProvider();
+      ImplementationProvider implProvider = new OpImplProviderSelection().selectProvider(meta);
       String newImpl = implProvider.createImpl(meta, uc.getInputVarNames());
       uc.updateImplementation(newImpl);
       uc.save();
