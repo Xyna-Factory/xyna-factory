@@ -57,13 +57,11 @@ public class YangMappingImplementationProvider implements ImplementationProvider
       handleMapping(mapping, result, listConfigs);
     }
     result.append("  ").append("\n");
-    result.append("  com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean prop = ");
-    result.append("new com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean(");
-    result.append("\"xmcp.yang.TraceYangMappingCollectionContent\", false);").append("\n");
-    
-    result.append("  Boolean flag = prop.get();").append("\n");
-    result.append("  if (flag == null) { flag = false; }").append("\n");
-    result.append("  xmcp.yang.YangMappingCollection coll2 = new xmcp.yang.YangMappingCollection();").append("\n");
+    result.append("  String prop = com.gip.xyna.XynaFactory.getInstance().getFactoryManagement().getXynaFactoryManagementODS()");
+    result.append(".getConfiguration().getProperty(\"xmcp.yang.TraceYangMappingCollectionContent\");").append("\n");
+    result.append("  boolean flag = Boolean.parseBoolean(prop);").append("\n");
+    result.append("  if (!flag && ").append(inputVarNames.get(0));
+    result.append(" instanceof xmcp.yang.TraceYangMappingCollection) { flag = true; }").append("\n");
     result.append("  xmcp.yang.YangMappingCollection ret = null;").append("\n");
     
     result.append("  if (flag) {").append("\n");
@@ -72,9 +70,8 @@ public class YangMappingImplementationProvider implements ImplementationProvider
     result.append("    ret = new xmcp.yang.YangMappingCollection();").append("\n");
     result.append("  }").append("\n");
     
-    result.append("  coll2.overwriteContent(pathList);").append("\n");
+    result.append("  ret.overwriteContent(pathList);").append("\n");
     result.append("  ret = ret.merge(").append(inputVarNames.get(0)).append(");").append("\n");
-    result.append("  ret = ret.merge(coll2);").append("\n");
     result.append("  return ret;").append("\n");
     
     result.append("} catch(Exception e) {").append("\n");
