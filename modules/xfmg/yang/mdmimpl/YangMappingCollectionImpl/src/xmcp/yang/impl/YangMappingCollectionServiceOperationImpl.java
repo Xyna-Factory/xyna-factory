@@ -43,9 +43,10 @@ public class YangMappingCollectionServiceOperationImpl implements ExtendedDeploy
   }
 
   public void onUndeployment() throws XynaException {
-    // TODO do something on undeployment, if required
     // This is executed again on each classloader-unload, that is each
     // time a dependent object is redeployed, for example a type of an input parameter.
+    
+    PROP_TRACE_YANG_MAPP_COLL.unregister();
   }
 
   public Long getOnUnDeploymentTimeout() {
