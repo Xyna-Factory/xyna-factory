@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
+/*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType Label="Scheduling Informationen" TypeName="SchedulerBean" TypePath="xprc" Version="1.8" xmlns="http://www.gip.com/xyna/xdev/xfractmod">
-    <Data IsList="true" Label="Capacities" ReferenceName="Capacity" ReferencePath="xprc" VariableName="capacities"/> 
-    <Data IsList="true" Label="Vetos" ReferenceName="Veto" ReferencePath="xprc" VariableName="vetos"/>
-</DataType>
+ */
+package xprc.xpce.datatype.impl;
+
+
+
+import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
+import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
+
+
+
+public class NamedVariableMemberServiceOperationImpl implements ExtendedDeploymentTask {
+
+  public void onDeployment() throws XynaException {
+  }
+
+
+  public void onUndeployment() throws XynaException {
+  }
+
+
+  public Long getOnUnDeploymentTimeout() {
+    return null;
+  }
+
+
+  public BehaviorAfterOnUnDeploymentTimeout getBehaviorAfterOnUnDeploymentTimeout() {
+    return null;
+  }
+
+}

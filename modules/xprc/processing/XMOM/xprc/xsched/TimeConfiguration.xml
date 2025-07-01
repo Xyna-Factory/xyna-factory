@@ -19,6 +19,6 @@
 <DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="true" Label="TimeConfiguration" TypeName="TimeConfiguration" TypePath="xprc.xsched" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
-  <IsXynaComponent>true</IsXynaComponent>
+    <IsXynaComponent>true</IsXynaComponent>
   </Meta>
 </DataType>

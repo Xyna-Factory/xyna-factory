@@ -27,6 +27,7 @@ import org.w3c.dom.Document;
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
+import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObjectList;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
@@ -135,7 +136,7 @@ public class DatatypeInspectorInstanceOperationImpl extends DatatypeInspectorSup
         if (var.isJavaBaseType() || inspectionParameter.getIncludeComplexMembers()) {
           list.add(nvm);
         }
-        nvm.setParentObject(rootObject);
+        XmomReflection.setParentObject(nvm, rootObject);
         if (!var.isJavaBaseType() && rt != RecursionType.NONE) {
           if (currentGXO == null) {
             /*
@@ -150,8 +151,8 @@ public class DatatypeInspectorInstanceOperationImpl extends DatatypeInspectorSup
             Object nextO = currentGXO.get(varName);
             if (nextO != null) {
               if (nextO instanceof List) {
-                for (int i = 0; i < ((List) nextO).size(); i++) {
-                  GeneralXynaObject elementGXO = (GeneralXynaObject) ((List) nextO).get(i);
+                for (int i = 0; i < ((List<?>) nextO).size(); i++) {
+                  GeneralXynaObject elementGXO = (GeneralXynaObject) ((List<?>) nextO).get(i);
                   Long revision = com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement.getRevisionByClass(elementGXO.getClass());
                   String fqName = elementGXO.getClass().getName();
                   DOM elementDOM = STATIC_INSTANCE.getGeneration(fqName, revision);
@@ -184,7 +185,7 @@ public class DatatypeInspectorInstanceOperationImpl extends DatatypeInspectorSup
         String documentation = member.getDocumentation();
         String fqXMLName = member.getOriginalPath() +"." + member.getOriginalName();
         NamedXMOMMember nxm = new NamedXMOMMember(label, varName, documentation, fqXMLName);
-        nxm.setParentObject(xynaObject);
+        XmomReflection.setParentObject(nxm, xynaObject);
         list.add( nxm );
 
         Object o = null;
@@ -196,15 +197,16 @@ public class DatatypeInspectorInstanceOperationImpl extends DatatypeInspectorSup
           }
         }
         if( o instanceof GeneralXynaObject ) {
-          nxm.setAnyType( (GeneralXynaObject)o );
-          nxm.setDOM((com.gip.xyna.xprc.xfractwfe.generation.DOM)member.getDomOrExceptionObject());
+          XmomReflection.setAnyType(nxm, (GeneralXynaObject)o);
+          XmomReflection.setDom(nxm, (DOM)member.getDomOrExceptionObject());
         } else if( o instanceof com.gip.xyna.xdev.xfractmod.xmdm.XOUtils.VersionedList ) {
-          XynaObjectList xol = new XynaObjectList( (List) o, member.getOriginalName(), member.getOriginalPath() );
-          nxm.setAnyType(xol);
-          nxm.setDOM((com.gip.xyna.xprc.xfractwfe.generation.DOM)member.getDomOrExceptionObject());
+          @SuppressWarnings("unchecked")
+          XynaObjectList<?> xol = new XynaObjectList<>( (List<XynaObject>) o, member.getOriginalName(), member.getOriginalPath() );
+          XmomReflection.setAnyType(nxm, xol);
+          XmomReflection.setDom(nxm, (DOM)member.getDomOrExceptionObject());
         } else if( o == null ) {
           //nicht setzen
-          nxm.setDOM((com.gip.xyna.xprc.xfractwfe.generation.DOM)member.getDomOrExceptionObject());
+          XmomReflection.setDom(nxm, (DOM)member.getDomOrExceptionObject());
         } else {
           throw new RuntimeException("Member "+label+" has type "+o.getClass().getName() );
         }

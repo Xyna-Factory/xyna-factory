@@ -155,10 +155,10 @@
     <Operation IsStatic="true" Label="getRootOrderType" Name="getRootOrderType" RequiresXynaOrder="true">
       <Input/>
       <Output>
-	<Data ID="1" Label="OrderType" ReferenceName="OrderType" ReferencePath="xprc.xpce" VariableName="orderType1"/>
+        <Data ID="1" Label="OrderType" ReferenceName="OrderType" ReferencePath="xprc.xpce" VariableName="orderType1"/>
       </Output>
       <SourceCode>
-	<CodeSnippet Type="Java">return xprc.xpce.OrderControlServiceImpl.getRootOrderType(correlatedXynaOrder);</CodeSnippet>
+        <CodeSnippet Type="Java">return xprc.xpce.OrderControlServiceImpl.getRootOrderType(correlatedXynaOrder);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="getCurrentRetryCounter" Name="getCurrentRetryCounter" RequiresXynaOrder="true">
