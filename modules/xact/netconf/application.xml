@@ -15,7 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="NetConf" factoryVersion="10.4.0.0" versionName="0.0.2" xmlVersion="1.1">
+--><Application applicationName="NetConf" factoryVersion="10.4.0.0" versionName="0.0.4" xmlVersion="1.1">
+  <ApplicationInfo>
+    <RuntimeContextRequirements>
+      <RuntimeContextRequirement>
+        <ApplicationName>SSH</ApplicationName>
+        <VersionName>2.0.31</VersionName>
+      </RuntimeContextRequirement>
+    </RuntimeContextRequirements>
+  </ApplicationInfo>
   <SharedLibs>
     <SharedLib implicitDependency="false">
       <SharedLib>netConfNotificationReceiverLib</SharedLib>
