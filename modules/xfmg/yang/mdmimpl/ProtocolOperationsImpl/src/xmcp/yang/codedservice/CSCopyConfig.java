@@ -33,32 +33,32 @@ public class CSCopyConfig {
   public Document execute(MessageId messageId, NetConfTarget target, NetConfSource source) {
     XmlHelper helper = new XmlHelper();
     org.w3c.dom.Document doc = helper.buildDocument();
-    Element rpc = helper.createElem(doc).elementName(Constants.Rpc.TAG_NAME).namespace(Constants.NetConf.NAMESPACE)
+    Element rpc = helper.createElem(doc).elementName(Constants.Rpc.TAG_NAME).namespace(Constants.NetConf.NETCONF_NSP)
                         .buildAndAppendAsDocumentRoot();
     if ((messageId != null) && (messageId.getId() != null)) {
       rpc.setAttribute(Constants.Rpc.ATTRIBUTE_NAME_MESSAGE_ID, messageId.getId());
     }
     Element opElem = helper.createElem(doc).elementName(Constants.NetConf.OperationNameTag.COPY_CONFIG)
-                               .namespace(Constants.NetConf.NAMESPACE).buildAndAppendAsChild(rpc);
+                               .namespace(Constants.NetConf.NETCONF_NSP).buildAndAppendAsChild(rpc);
     Element targetElem = helper.createElem(doc).elementName(Constants.NetConf.XmlTag.TARGET)
-                               .namespace(Constants.NetConf.NAMESPACE).buildAndAppendAsChild(opElem);
+                               .namespace(Constants.NetConf.NETCONF_NSP).buildAndAppendAsChild(opElem);
     if (target != null) {
       if (target.getDatastoreName() != null) {
-        helper.createElem(doc).elementName(target.getDatastoreName()).namespace(Constants.NetConf.NAMESPACE)
+        helper.createElem(doc).elementName(target.getDatastoreName()).namespace(Constants.NetConf.NETCONF_NSP)
                               .buildAndAppendAsChild(targetElem);
       } else if (target.getURL() != null) {
-        helper.createElem(doc).elementName(Constants.NetConf.XmlTag.URL).namespace(Constants.NetConf.NAMESPACE)
+        helper.createElem(doc).elementName(Constants.NetConf.XmlTag.URL).namespace(Constants.NetConf.NETCONF_NSP)
                               .text(target.getURL()).buildAndAppendAsChild(targetElem);
       }
     }
     Element sourceElem = helper.createElem(doc).elementName(Constants.NetConf.XmlTag.SOURCE)
-                               .namespace(Constants.NetConf.NAMESPACE).buildAndAppendAsChild(opElem);
+                               .namespace(Constants.NetConf.NETCONF_NSP).buildAndAppendAsChild(opElem);
     if (source != null) {
       if (source.getDatastoreName() != null) {
-        helper.createElem(doc).elementName(source.getDatastoreName()).namespace(Constants.NetConf.NAMESPACE)
+        helper.createElem(doc).elementName(source.getDatastoreName()).namespace(Constants.NetConf.NETCONF_NSP)
                               .buildAndAppendAsChild(sourceElem);
       } else if (source.getURL() != null) {
-        helper.createElem(doc).elementName(Constants.NetConf.XmlTag.URL).namespace(Constants.NetConf.NAMESPACE)
+        helper.createElem(doc).elementName(Constants.NetConf.XmlTag.URL).namespace(Constants.NetConf.NETCONF_NSP)
                               .text(source.getURL()).buildAndAppendAsChild(sourceElem);
       }
     }

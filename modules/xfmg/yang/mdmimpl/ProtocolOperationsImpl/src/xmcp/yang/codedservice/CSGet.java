@@ -33,15 +33,15 @@ public class CSGet {
   public Document execute(MessageId messageId, NetConfFilter filter) {
     XmlHelper helper = new XmlHelper();
     org.w3c.dom.Document doc = helper.buildDocument();
-    Element rpc = helper.createElem(doc).elementName(Constants.Rpc.TAG_NAME).namespace(Constants.NetConf.NAMESPACE)
+    Element rpc = helper.createElem(doc).elementName(Constants.Rpc.TAG_NAME).namespace(Constants.NetConf.NETCONF_NSP)
                         .buildAndAppendAsDocumentRoot();
     if ((messageId != null) && (messageId.getId() != null)) {
       rpc.setAttribute(Constants.Rpc.ATTRIBUTE_NAME_MESSAGE_ID, messageId.getId());
     }
     Element opElem = helper.createElem(doc).elementName(Constants.NetConf.OperationNameTag.GET)
-                               .namespace(Constants.NetConf.NAMESPACE).buildAndAppendAsChild(rpc);
+                               .namespace(Constants.NetConf.NETCONF_NSP).buildAndAppendAsChild(rpc);
     if (filter != null) {
-      Element filterElem = helper.createElem(doc).elementName(Constants.NetConf.XmlTag.FILTER).namespace(Constants.NetConf.NAMESPACE)
+      Element filterElem = helper.createElem(doc).elementName(Constants.NetConf.XmlTag.FILTER).namespace(Constants.NetConf.NETCONF_NSP)
                              .buildAndAppendAsChild(opElem);
       if (filter.getTypeAttribute() != null) {
         filterElem.setAttribute(Constants.NetConf.XmlAttribute.TYPE, filter.getTypeAttribute());

@@ -50,21 +50,21 @@ public class CSEditConfig {
                           NetConfConfig config) {
     XmlHelper helper = new XmlHelper();
     org.w3c.dom.Document doc = helper.buildDocument();
-    Element rpc = helper.createElem(doc).elementName(Constants.Rpc.TAG_NAME).namespace(Constants.NetConf.NAMESPACE)
+    Element rpc = helper.createElem(doc).elementName(Constants.Rpc.TAG_NAME).namespace(Constants.NetConf.NETCONF_NSP)
                         .buildAndAppendAsDocumentRoot();
     if ((messageId != null) && (messageId.getId() != null)) {
       rpc.setAttribute(Constants.Rpc.ATTRIBUTE_NAME_MESSAGE_ID, messageId.getId());
     }
     Element opElem = helper.createElem(doc).elementName(Constants.NetConf.OperationNameTag.EDIT_CONFIG)
-                               .namespace(Constants.NetConf.NAMESPACE).buildAndAppendAsChild(rpc);
+                               .namespace(Constants.NetConf.NETCONF_NSP).buildAndAppendAsChild(rpc);
     Element targetElem = helper.createElem(doc).elementName(Constants.NetConf.XmlTag.TARGET)
-                               .namespace(Constants.NetConf.NAMESPACE).buildAndAppendAsChild(opElem);
+                               .namespace(Constants.NetConf.NETCONF_NSP).buildAndAppendAsChild(opElem);
     if (target != null) {
       if (target.getDatastoreName() != null) {
-        helper.createElem(doc).elementName(target.getDatastoreName()).namespace(Constants.NetConf.NAMESPACE)
+        helper.createElem(doc).elementName(target.getDatastoreName()).namespace(Constants.NetConf.NETCONF_NSP)
                               .buildAndAppendAsChild(targetElem);
       } else if (target.getURL() != null) {
-        helper.createElem(doc).elementName(Constants.NetConf.XmlTag.URL).namespace(Constants.NetConf.NAMESPACE)
+        helper.createElem(doc).elementName(Constants.NetConf.XmlTag.URL).namespace(Constants.NetConf.NETCONF_NSP)
                               .text(target.getURL()).buildAndAppendAsChild(targetElem);
       }
     }
@@ -72,7 +72,7 @@ public class CSEditConfig {
     handleTestOption(testOption, opElem, helper, doc);
     handleErrorOption(errorOption, opElem, helper, doc);
     if (config != null) {
-      Element confElem = helper.createElem(doc).elementName(Constants.NetConf.XmlTag.CONFIG).namespace(Constants.NetConf.NAMESPACE)
+      Element confElem = helper.createElem(doc).elementName(Constants.NetConf.XmlTag.CONFIG).namespace(Constants.NetConf.NETCONF_NSP)
                                .buildAndAppendAsChild(opElem);
       if (config.getConfig() != null) {
         YangMappingCollection ymc = config.getConfig();
@@ -99,7 +99,7 @@ public class CSEditConfig {
     } else if (defaultOp instanceof DefaultOperationNone) {
       text = Constants.NetConf.EnumValue.NONE;
     }
-    helper.createElem(doc).elementName(Constants.NetConf.XmlTag.DEFAULT_OPERATION).namespace(Constants.NetConf.NAMESPACE)
+    helper.createElem(doc).elementName(Constants.NetConf.XmlTag.DEFAULT_OPERATION).namespace(Constants.NetConf.NETCONF_NSP)
                           .text(text).buildAndAppendAsChild(parent);
   }
   
@@ -115,7 +115,7 @@ public class CSEditConfig {
     } else if (testOption instanceof TestOptionTestThenSet) {
       text = Constants.NetConf.EnumValue.TEST_THEN_SET;
     }
-    helper.createElem(doc).elementName(Constants.NetConf.XmlTag.TEST_OPTION).namespace(Constants.NetConf.NAMESPACE)
+    helper.createElem(doc).elementName(Constants.NetConf.XmlTag.TEST_OPTION).namespace(Constants.NetConf.NETCONF_NSP)
                           .text(text).buildAndAppendAsChild(parent);
   }
   
@@ -131,7 +131,7 @@ public class CSEditConfig {
     } else if (errorOption instanceof ErrorOptionStopOnError) {
       text = Constants.NetConf.EnumValue.STOP_ON_ERROR;
     }
-    helper.createElem(doc).elementName(Constants.NetConf.XmlTag.TEST_OPTION).namespace(Constants.NetConf.NAMESPACE)
+    helper.createElem(doc).elementName(Constants.NetConf.XmlTag.TEST_OPTION).namespace(Constants.NetConf.NETCONF_NSP)
                           .text(text).buildAndAppendAsChild(parent);
   }
   

@@ -32,15 +32,15 @@ public class CSKillSession {
   public Document execute(MessageId messageId, NetConfSessionId sessionId) {
     XmlHelper helper = new XmlHelper();
     org.w3c.dom.Document doc = helper.buildDocument();
-    Element rpc = helper.createElem(doc).elementName(Constants.Rpc.TAG_NAME).namespace(Constants.NetConf.NAMESPACE)
+    Element rpc = helper.createElem(doc).elementName(Constants.Rpc.TAG_NAME).namespace(Constants.NetConf.NETCONF_NSP)
                         .buildAndAppendAsDocumentRoot();
     if ((messageId != null) && (messageId.getId() != null)) {
       rpc.setAttribute(Constants.Rpc.ATTRIBUTE_NAME_MESSAGE_ID, messageId.getId());
     }
     Element opElem = helper.createElem(doc).elementName(Constants.NetConf.OperationNameTag.KILL_SESSION)
-                               .namespace(Constants.NetConf.NAMESPACE).buildAndAppendAsChild(rpc);
+                               .namespace(Constants.NetConf.NETCONF_NSP).buildAndAppendAsChild(rpc);
     if ((sessionId != null) && (sessionId.getSessionId() != null)) {
-      helper.createElem(doc).elementName(Constants.NetConf.XmlTag.SESSION_ID).namespace(Constants.NetConf.NAMESPACE)
+      helper.createElem(doc).elementName(Constants.NetConf.XmlTag.SESSION_ID).namespace(Constants.NetConf.NETCONF_NSP)
                             .text(sessionId.getSessionId()).buildAndAppendAsChild(opElem);
     }
     Document ret = new Document();

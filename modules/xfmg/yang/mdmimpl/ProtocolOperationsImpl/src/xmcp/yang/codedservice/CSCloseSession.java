@@ -32,13 +32,13 @@ public class CSCloseSession {
   public Document execute(MessageId messageId) {
     XmlHelper helper = new XmlHelper();
     org.w3c.dom.Document doc = helper.buildDocument();
-    Element rpc = helper.createElem(doc).elementName(Constants.Rpc.TAG_NAME).namespace(Constants.NetConf.NAMESPACE)
+    Element rpc = helper.createElem(doc).elementName(Constants.Rpc.TAG_NAME).namespace(Constants.NetConf.NETCONF_NSP)
                         .buildAndAppendAsDocumentRoot();
     if ((messageId != null) && (messageId.getId() != null)) {
       rpc.setAttribute(Constants.Rpc.ATTRIBUTE_NAME_MESSAGE_ID, messageId.getId());
     }
     helper.createElem(doc).elementName(Constants.NetConf.OperationNameTag.CLOSE_SESSION)
-                          .namespace(Constants.NetConf.NAMESPACE).buildAndAppendAsChild(rpc);
+                          .namespace(Constants.NetConf.NETCONF_NSP).buildAndAppendAsChild(rpc);
     Document ret = new Document();
     ret.setText(helper.getDocumentString(doc));
     return ret;

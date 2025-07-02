@@ -28,7 +28,7 @@ public class Constants {
   
   public static class NetConf {
     
-    public static final String NAMESPACE = "urn:ietf:params:xml:ns:netconf:base:1.0";
+    public static final String NETCONF_NSP = "urn:ietf:params:xml:ns:netconf:base:1.0";
   
     public static class OperationNameTag {
       public static final String GET   = "get";
