@@ -31,7 +31,7 @@
         <Data ID="20" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document20"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return null;</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.getConfig(messageId29, source1, filter2);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Edit Config" Name="editConfig">
@@ -47,7 +47,7 @@
         <Data ID="18" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document18"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return null;</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.editConfig(messageId27, netConfTarget3, netConfDefaultOperation4, netConfTestOption5, netConfErrorOption6, netConfConfig7);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Copy Config" Name="copyConfig">
@@ -60,7 +60,7 @@
         <Data ID="16" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document16"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return null;</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.copyConfig(messageId25, netConfTarget8, netConfSource9);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Delete Config" Name="deleteConfig">
@@ -72,7 +72,7 @@
         <Data ID="17" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document17"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return null;</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.deleteConfig(messageId26, netConfTarget10);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Lock" Name="lock">
@@ -84,7 +84,7 @@
         <Data ID="22" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document22"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return null;</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.lock(messageId31, netConfTarget11);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Unlock" Name="unlock">
@@ -96,7 +96,7 @@
         <Data ID="23" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document23"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return null;</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.unlock(messageId32, netConfTarget12);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Get" Name="get">
@@ -108,7 +108,7 @@
         <Data ID="19" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document19"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return null;</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.get(messageId28, netConfFilter13);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Close Session" Name="closeSession">
@@ -119,7 +119,7 @@
         <Data ID="15" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document15"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return null;</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.closeSession(messageId24);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Kill Session" Name="killSession">
@@ -131,7 +131,7 @@
         <Data ID="21" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document21"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return null;</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.killSession(messageId30, netConfSessionId14);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
