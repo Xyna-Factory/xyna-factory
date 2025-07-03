@@ -24,7 +24,9 @@ import xact.templates.Document;
 import xmcp.yang.MessageId;
 import xmcp.yang.YangMappingCollection;
 import xmcp.yang.misc.Constants;
+import xmcp.yang.misc.DataStoreHelper;
 import xmcp.yang.misc.XmlHelper;
+import xmcp.yang.misc.DataStoreHelper.NetConfOperation;
 import xmcp.yang.netconf.NetConfFilter;
 import xmcp.yang.netconf.NetConfSource;
 
@@ -45,7 +47,8 @@ public class CSGetConfig {
                                .namespace(Constants.NetConf.NETCONF_NSP).buildAndAppendAsChild(opElem);
     if (source != null) {
       if (source.getDatastoreName() != null) {
-        helper.createElem(doc).elementName(source.getDatastoreName()).namespace(Constants.NetConf.NETCONF_NSP)
+        String datastore = new DataStoreHelper().getDataStoreTagName(source.getDatastoreName(), NetConfOperation.OTHER);
+        helper.createElem(doc).elementName(datastore).namespace(Constants.NetConf.NETCONF_NSP)
                               .buildAndAppendAsChild(sourceElem);
       } else if (source.getURL() != null) {
         helper.createElem(doc).elementName(Constants.NetConf.XmlTag.URL).namespace(Constants.NetConf.NETCONF_NSP)

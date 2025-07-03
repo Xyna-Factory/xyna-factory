@@ -15,14 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="NetConf Target" TypeName="NetConfTarget" TypePath="xmcp.yang.netconf" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="true" Label="NetConf Configuration Datastore Type" TypeName="NetConfConfigurationDatastoreType" TypePath="xmcp.yang.netconf.enums" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Datastore Name" ReferenceName="NetConfConfigurationDatastoreType" ReferencePath="xmcp.yang.netconf.enums" VariableName="datastoreName"/>
-  <Data Label="URL" VariableName="uRL">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
 </DataType>

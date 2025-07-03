@@ -37,11 +37,8 @@
     <Operation IsStatic="true" Label="Edit Config" Name="editConfig">
       <Input>
         <Data ID="27" Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId27"/>
-        <Data ID="3" Label="NetConf Target" ReferenceName="NetConfTarget" ReferencePath="xmcp.yang.netconf" VariableName="netConfTarget3"/>
-        <Data ID="4" Label="NetConf Default Operation" ReferenceName="NetConfDefaultOperation" ReferencePath="xmcp.yang.netconf.enums" VariableName="netConfDefaultOperation4"/>
-        <Data ID="5" Label="NetConf Test Option" ReferenceName="NetConfTestOption" ReferencePath="xmcp.yang.netconf.enums" VariableName="netConfTestOption5"/>
-        <Data ID="6" Label="NetConf Error Option" ReferenceName="NetConfErrorOption" ReferencePath="xmcp.yang.netconf.enums" VariableName="netConfErrorOption6"/>
-        <Data ID="7" Label="NetConf Config" ReferenceName="NetConfConfig" ReferencePath="xmcp.yang.netconf" VariableName="netConfConfig7"/>
+        <Data ID="33" Label="Edit Config Input Data" ReferenceName="EditConfigInputData" ReferencePath="xmcp.yang.netconf" VariableName="editConfigInputData33"/>
+        <Data ID="34" Label="Config" ReferenceName="YangMappingCollection" ReferencePath="xmcp.yang" VariableName="yangMappingCollection34"/>
       </Input>
       <Output>
         <Data ID="18" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document18"/>

@@ -19,11 +19,7 @@
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Datastore Name" VariableName="datastoreName">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
+  <Data Label="Datastore Name" ReferenceName="NetConfConfigurationDatastoreType" ReferencePath="xmcp.yang.netconf.enums" VariableName="datastoreName"/>
   <Data Label="URL" VariableName="uRL">
     <Meta>
       <Type>String</Type>

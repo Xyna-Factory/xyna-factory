@@ -23,7 +23,9 @@ import org.w3c.dom.Element;
 import xact.templates.Document;
 import xmcp.yang.MessageId;
 import xmcp.yang.misc.Constants;
+import xmcp.yang.misc.DataStoreHelper;
 import xmcp.yang.misc.XmlHelper;
+import xmcp.yang.misc.DataStoreHelper.NetConfOperation;
 import xmcp.yang.netconf.NetConfTarget;
 
 
@@ -43,7 +45,8 @@ public class CSDeleteConfig {
                                .namespace(Constants.NetConf.NETCONF_NSP).buildAndAppendAsChild(opElem);
     if (target != null) {
       if (target.getDatastoreName() != null) {
-        helper.createElem(doc).elementName(target.getDatastoreName()).namespace(Constants.NetConf.NETCONF_NSP)
+        String datastore = new DataStoreHelper().getDataStoreTagName(target.getDatastoreName(), NetConfOperation.DELETE_CONFIG);
+        helper.createElem(doc).elementName(datastore).namespace(Constants.NetConf.NETCONF_NSP)
                               .buildAndAppendAsChild(targetElem);
       } else if (target.getURL() != null) {
         helper.createElem(doc).elementName(Constants.NetConf.XmlTag.URL).namespace(Constants.NetConf.NETCONF_NSP)

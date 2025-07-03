@@ -24,7 +24,10 @@ import xact.templates.Document;
 import xmcp.yang.MessageId;
 import xmcp.yang.YangMappingCollection;
 import xmcp.yang.misc.Constants;
+import xmcp.yang.misc.DataStoreHelper;
+import xmcp.yang.misc.DataStoreHelper.NetConfOperation;
 import xmcp.yang.misc.XmlHelper;
+import xmcp.yang.netconf.EditConfigInputData;
 import xmcp.yang.netconf.NetConfConfig;
 import xmcp.yang.netconf.NetConfTarget;
 import xmcp.yang.netconf.enums.DefaultOperationMerge;
@@ -43,11 +46,17 @@ import xmcp.yang.netconf.enums.TestOptionTestThenSet;
 
 public class CSEditConfig {
 
-  public Document execute(MessageId messageId, NetConfTarget target,
-                          NetConfDefaultOperation defaultOp,
-                          NetConfTestOption testOption,
-                          NetConfErrorOption errorOption,
-                          NetConfConfig config) {
+  public Document execute(MessageId messageId, EditConfigInputData data, YangMappingCollection config) {
+    NetConfTarget target = null;
+    NetConfDefaultOperation defaultOp = null;
+    NetConfTestOption testOption = null;
+    NetConfErrorOption errorOption = null;
+    if (data != null) {
+      target = data.getTarget();
+      defaultOp = data.getDefaultOperation();
+      testOption = data.getTestOption();
+      errorOption = data.getErrorOption();
+    }
     XmlHelper helper = new XmlHelper();
     org.w3c.dom.Document doc = helper.buildDocument();
     Element rpc = helper.createElem(doc).elementName(Constants.Rpc.TAG_NAME).namespace(Constants.NetConf.NETCONF_NSP)
@@ -61,7 +70,8 @@ public class CSEditConfig {
                                .namespace(Constants.NetConf.NETCONF_NSP).buildAndAppendAsChild(opElem);
     if (target != null) {
       if (target.getDatastoreName() != null) {
-        helper.createElem(doc).elementName(target.getDatastoreName()).namespace(Constants.NetConf.NETCONF_NSP)
+        String datastore = new DataStoreHelper().getDataStoreTagName(target.getDatastoreName(), NetConfOperation.EDIT_CONFIG);
+        helper.createElem(doc).elementName(datastore).namespace(Constants.NetConf.NETCONF_NSP)
                               .buildAndAppendAsChild(targetElem);
       } else if (target.getURL() != null) {
         helper.createElem(doc).elementName(Constants.NetConf.XmlTag.URL).namespace(Constants.NetConf.NETCONF_NSP)
@@ -74,12 +84,9 @@ public class CSEditConfig {
     if (config != null) {
       Element confElem = helper.createElem(doc).elementName(Constants.NetConf.XmlTag.CONFIG).namespace(Constants.NetConf.NETCONF_NSP)
                                .buildAndAppendAsChild(opElem);
-      if (config.getConfig() != null) {
-        YangMappingCollection ymc = config.getConfig();
-        Document tmp = ymc.createXml();
-        if ((tmp != null) && (tmp.getText() != null)) {
-          helper.appendXmlSubtree(doc, confElem, tmp.getText());
-        }
+      Document tmp = config.createXml();
+      if ((tmp != null) && (tmp.getText() != null)) {
+        helper.appendXmlSubtree(doc, confElem, tmp.getText());
       }
     }
     Document ret = new Document();

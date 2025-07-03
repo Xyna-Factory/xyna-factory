@@ -25,6 +25,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import xact.templates.Document;
 import xmcp.yang.MessageId;
 import xmcp.yang.ProtocolOperationsServiceOperation;
+import xmcp.yang.YangMappingCollection;
 import xmcp.yang.codedservice.CSCloseSession;
 import xmcp.yang.codedservice.CSCopyConfig;
 import xmcp.yang.codedservice.CSDeleteConfig;
@@ -34,6 +35,7 @@ import xmcp.yang.codedservice.CSGetConfig;
 import xmcp.yang.codedservice.CSKillSession;
 import xmcp.yang.codedservice.CSLock;
 import xmcp.yang.codedservice.CSUnlock;
+import xmcp.yang.netconf.EditConfigInputData;
 import xmcp.yang.netconf.NetConfConfig;
 import xmcp.yang.netconf.NetConfFilter;
 import xmcp.yang.netconf.NetConfSessionId;
@@ -76,47 +78,55 @@ public class ProtocolOperationsServiceOperationImpl implements ExtendedDeploymen
   }
 
   
+  @Override
   public Document closeSession(MessageId messageId) {
     return new CSCloseSession().execute(messageId);
   }
 
   
+  @Override
   public Document copyConfig(MessageId messageId, NetConfTarget netConfTarget8, NetConfSource netConfSource9) {
     return new CSCopyConfig().execute(messageId, netConfTarget8, netConfSource9);
   }
 
   
+  @Override
   public Document deleteConfig(MessageId messageId, NetConfTarget netConfTarget10) {
     return new CSDeleteConfig().execute(messageId, netConfTarget10);
   }
 
   
-  public Document editConfig(MessageId messageId, NetConfTarget netConfTarget3,
-                             NetConfDefaultOperation netConfDefaultOperation4,
-                             NetConfTestOption netConfTestOption5,
-                             NetConfErrorOption netConfErrorOption6,
-                             NetConfConfig netConfConfig7) {
-    return new CSEditConfig().execute(messageId, netConfTarget3, netConfDefaultOperation4,
-                                      netConfTestOption5, netConfErrorOption6,
-                                      netConfConfig7);
+  @Override
+  public Document editConfig(MessageId messageId, EditConfigInputData data, YangMappingCollection config) {
+    return new CSEditConfig().execute(messageId, data, config);
   }
 
+  
+  @Override
   public Document get(MessageId messageId, NetConfFilter netConfFilter13) {
     return new CSGet().execute(messageId, netConfFilter13);
   }
 
+  
+  @Override
   public Document getConfig(MessageId messageId, NetConfSource source1, NetConfFilter filter2) {
     return new CSGetConfig().execute(messageId, source1, filter2);
   }
 
+  
+  @Override
   public Document killSession(MessageId messageId, NetConfSessionId netConfSessionId14) {
     return new CSKillSession().execute(messageId, netConfSessionId14);
   }
 
+  
+  @Override
   public Document lock(MessageId messageId, NetConfTarget netConfTarget11) {
     return new CSLock().execute(messageId, netConfTarget11);
   }
 
+  
+  @Override
   public Document unlock(MessageId messageId, NetConfTarget netConfTarget12) {
     return new CSUnlock().execute(messageId, netConfTarget12);
   }

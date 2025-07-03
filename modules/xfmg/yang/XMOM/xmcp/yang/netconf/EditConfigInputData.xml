@@ -15,14 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="NetConf Target" TypeName="NetConfTarget" TypePath="xmcp.yang.netconf" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Edit Config Input Data" TypeName="EditConfigInputData" TypePath="xmcp.yang.netconf" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Datastore Name" ReferenceName="NetConfConfigurationDatastoreType" ReferencePath="xmcp.yang.netconf.enums" VariableName="datastoreName"/>
-  <Data Label="URL" VariableName="uRL">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
+  <Data Label="Target" ReferenceName="NetConfTarget" ReferencePath="xmcp.yang.netconf" VariableName="target"/>
+  <Data Label="Default Operation" ReferenceName="NetConfDefaultOperation" ReferencePath="xmcp.yang.netconf.enums" VariableName="defaultOperation"/>
+  <Data Label="Test Option" ReferenceName="NetConfTestOption" ReferencePath="xmcp.yang.netconf.enums" VariableName="testOption"/>
+  <Data Label="Error Option" ReferenceName="NetConfErrorOption" ReferencePath="xmcp.yang.netconf.enums" VariableName="errorOption"/>
 </DataType>

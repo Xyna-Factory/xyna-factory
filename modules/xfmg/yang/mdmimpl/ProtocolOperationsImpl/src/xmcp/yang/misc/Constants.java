@@ -51,6 +51,9 @@ public class Constants {
       public static final String CONFIG = "config";
       public static final String SESSION_ID = "session-id";
       public static final String URL = "url";
+      public static final String CANDIDATE = "candidate";
+      public static final String RUNNING = "running";
+      public static final String STARTUP = "startup";
     }
     
     public static class XmlAttribute {
