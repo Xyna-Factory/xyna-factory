@@ -123,8 +123,8 @@ public class IdentifiedVariablesStepFunction extends IdentifiedVariablesStepWith
           }
         }
         inputVars = service.getWF().getInputVars();
-        if(stepFunction.getOrderInputSourceRef() != null && stepFunction.getOrderInputSourceRef().length() > 0) {
-          getConcreteVars(inputVars, getInputVarCastToFqns());
+        if(stepFunction.getOrderInputSourceRef() == null || stepFunction.getOrderInputSourceRef().isEmpty()) {
+          inputVars = getConcreteVars(inputVars, getInputVarCastToFqns());
         }
         outputVars = getConcreteVars(service.getWF().getOutputVars(), getReceiveVarCastToFqns());
         thrownExceptionVars = service.getWF().getAllThrownExceptions();
