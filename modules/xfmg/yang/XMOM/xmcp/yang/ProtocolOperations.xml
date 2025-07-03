@@ -44,7 +44,7 @@
         <Data ID="18" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document18"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.editConfig(messageId27, netConfTarget3, netConfDefaultOperation4, netConfTestOption5, netConfErrorOption6, netConfConfig7);</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.editConfig(messageId27, editConfigInputData33, yangMappingCollection34);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Copy Config" Name="copyConfig">
