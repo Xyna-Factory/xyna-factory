@@ -36,21 +36,21 @@ public class DataStoreHelper {
     }
     if (datastore instanceof ConfigurationDatastoreCandidate) {
       if (op == NetConfOperation.DELETE_CONFIG) {
-        throw new IllegalArgumentException("Datastore name " + Constants.NetConf.XmlTag.CANDIDATE + "is not supported for operation " +
+        throw new IllegalArgumentException("Datastore name " + Constants.NetConf.XmlTag.CANDIDATE + " is not supported for operation " +
                                            Constants.NetConf.OperationNameTag.DELETE_CONFIG);
       }
       return Constants.NetConf.XmlTag.CANDIDATE;
     }
     if (datastore instanceof ConfigurationDatastoreStartup) {
       if (op == NetConfOperation.EDIT_CONFIG) {
-        throw new IllegalArgumentException("Datastore name " + Constants.NetConf.XmlTag.STARTUP + "is not supported for operation " +
+        throw new IllegalArgumentException("Datastore name " + Constants.NetConf.XmlTag.STARTUP + " is not supported for operation " +
                                            Constants.NetConf.OperationNameTag.EDIT_CONFIG);
       }
       return Constants.NetConf.XmlTag.STARTUP;
     }
     if (datastore instanceof ConfigurationDatastoreRunning) {
       if (op == NetConfOperation.DELETE_CONFIG) {
-        throw new IllegalArgumentException("Datastore name " + Constants.NetConf.XmlTag.RUNNING + "is not supported for operation " +
+        throw new IllegalArgumentException("Datastore name " + Constants.NetConf.XmlTag.RUNNING + " is not supported for operation " +
                                            Constants.NetConf.OperationNameTag.DELETE_CONFIG);
       }
       return Constants.NetConf.XmlTag.RUNNING;
