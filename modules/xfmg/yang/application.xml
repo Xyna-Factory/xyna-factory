@@ -70,10 +70,6 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.yang.netconf.NetConfConfig</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yang.netconf.NetConfFilter</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>

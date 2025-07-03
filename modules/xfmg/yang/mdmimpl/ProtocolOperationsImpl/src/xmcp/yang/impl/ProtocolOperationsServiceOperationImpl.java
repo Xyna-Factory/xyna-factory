@@ -36,14 +36,10 @@ import xmcp.yang.codedservice.CSKillSession;
 import xmcp.yang.codedservice.CSLock;
 import xmcp.yang.codedservice.CSUnlock;
 import xmcp.yang.netconf.EditConfigInputData;
-import xmcp.yang.netconf.NetConfConfig;
 import xmcp.yang.netconf.NetConfFilter;
 import xmcp.yang.netconf.NetConfSessionId;
 import xmcp.yang.netconf.NetConfSource;
 import xmcp.yang.netconf.NetConfTarget;
-import xmcp.yang.netconf.enums.NetConfDefaultOperation;
-import xmcp.yang.netconf.enums.NetConfErrorOption;
-import xmcp.yang.netconf.enums.NetConfTestOption;
 
 
 public class ProtocolOperationsServiceOperationImpl implements ExtendedDeploymentTask, ProtocolOperationsServiceOperation {

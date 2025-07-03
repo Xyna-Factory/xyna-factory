@@ -22,13 +22,13 @@ import org.w3c.dom.Element;
 
 import xact.templates.Document;
 import xmcp.yang.MessageId;
-import xmcp.yang.YangMappingCollection;
 import xmcp.yang.misc.Constants;
 import xmcp.yang.misc.DataStoreHelper;
-import xmcp.yang.misc.XmlHelper;
 import xmcp.yang.misc.DataStoreHelper.NetConfOperation;
+import xmcp.yang.misc.XmlHelper;
 import xmcp.yang.netconf.NetConfSource;
 import xmcp.yang.netconf.NetConfTarget;
+
 
 public class CSCopyConfig {
 
@@ -66,7 +66,6 @@ public class CSCopyConfig {
                               .text(source.getURL()).buildAndAppendAsChild(sourceElem);
       }
     }
-    
     Document ret = new Document();
     ret.setText(helper.getDocumentString(doc));
     return ret;
