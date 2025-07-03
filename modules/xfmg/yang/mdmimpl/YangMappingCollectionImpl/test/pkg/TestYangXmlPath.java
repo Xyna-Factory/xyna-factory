@@ -290,7 +290,8 @@ public class TestYangXmlPath {
       String xml = yxpl.toXml();
       log(xml);
       
-      yxpl = yxpl.replaceListIndicesWithKeys();xml = yxpl.toXml();
+      yxpl = yxpl.replaceListIndicesWithKeys();
+      xml = yxpl.toXml();
       log(xml);
       
       CsvPathsAndNspsWithIds csv = new CsvPathsAndNspsWithIds(yxpl);
@@ -304,6 +305,54 @@ public class TestYangXmlPath {
     }
   }
   
+  
+  @Test
+  public void testListKeyNamespaces() throws Exception {
+    try {
+      YangXmlPathList pathlist = new YangXmlPathList();
+      {
+        YangMappingPath path = new YangMappingPath();
+        path.addToPath(buildYangMappingPathElement("aa1", "www.nsp-1.de/test-1"));
+        path.addToPath(buildYangMappingPathElement("bb2", "www.nsp-2.de/test-2"));
+        path.addToPath(buildYangMappingPathElement("cc3", "www.nsp-3.de/test-3", 0));
+        path.addToPath(new YangMappingPathElement.Builder().elementName("dd4").namespace("www.nsp-1.de/test-1").instance());
+        path.setValue("val-1");
+        YangXmlPath adapted = new XmomPathAdapter().adapt(path);
+        pathlist.add(adapted);
+      }
+      {
+        YangMappingPath path = new YangMappingPath();
+        path.addToPath(buildYangMappingPathElement("aa1", "www.nsp-1.de/test-1"));
+        path.addToPath(buildYangMappingPathElement("bb2", "www.nsp-2.de/test-2"));
+        path.addToPath(buildYangMappingPathElement("cc3", "www.nsp-3.de/test-3", 1));
+        path.addToPath(new YangMappingPathElement.Builder().elementName("dd4").namespace("www.nsp-1.de/test-1").instance());
+        path.setValue("val-2");
+        YangXmlPath adapted = new XmomPathAdapter().adapt(path);
+        pathlist.add(adapted);
+      }
+      CsvPathsAndNspsWithIds csvids = new CsvPathsAndNspsWithIds(pathlist);
+      log(csvids);
+      
+      YangXmlPathList yxpl = YangXmlPathList.fromCsv(csvids);
+      String xml = yxpl.toXml();
+      log(xml);
+      
+      yxpl = yxpl.replaceListIndicesWithKeys();
+      xml = yxpl.toXml();
+      log(xml);
+      
+      CsvPathsAndNspsWithIds csv = new CsvPathsAndNspsWithIds(yxpl);
+      log(csv);
+      
+      //assertEquals(csv.getCsvPathList().size(), 1);
+      //assertEquals(csv.getCsvPathList().get(0), "aa1#0###,bb2#1###,cc3#2###,dd4#0#test-value-1##");
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+  
+  
   private YangMappingPathElement buildYangMappingPathElement(String name, String nsp) {
     YangMappingPathElement ret = new YangMappingPathElement();
     ret.setElementName(name);
@@ -311,6 +360,13 @@ public class TestYangXmlPath {
     return ret;
   }
   
+  private YangMappingPathElement buildYangMappingPathElement(String name, String nsp, int index) {
+    YangMappingPathElement ret = new YangMappingPathElement();
+    ret.setElementName(name);
+    ret.setNamespace(nsp);
+    ret.setListIndex(index);
+    return ret;
+  }
   
   private void log(CsvPathsAndNspsWithIds csv) {
     log("### csv:");
@@ -331,7 +387,7 @@ public class TestYangXmlPath {
   
   public static void main(String[] args) {
     try {
-      new TestYangXmlPath().testListKeys_1();
+      new TestYangXmlPath().testListKeyNamespaces();
     }
     catch (Throwable e) {
       e.printStackTrace();

@@ -23,12 +23,19 @@ public class ListKey implements Comparable<ListKey> {
 
   private final String _elementName;
   private final String _value;
+  private final String _namespace;
+  
   
   public ListKey(String elementName, String value) {
+    this(elementName, value, null);
+  }
+  
+  public ListKey(String elementName, String value, String namespace) {
     if (elementName == null) { throw new IllegalArgumentException("ListKey: elementName is null."); } 
     if (value == null) { throw new IllegalArgumentException("ListKey: value is null."); }
     this._elementName = elementName;
     this._value = value;
+    this._namespace = namespace;
   }
   
   public String getElementName() {
@@ -39,29 +46,46 @@ public class ListKey implements Comparable<ListKey> {
     return _value;
   }
   
-  
-  public static ListKey fromCsv(String csv, CharEscapeTool escaper) {
+  public String getNamespace() {
+    return _namespace;
+  }
+
+  public static ListKey fromCsv(String csv, CharEscapeTool escaper, NamespaceOfIdMap map) {
     String[] parts = csv.split(Constants.YangXmlCsv.SEP_LIST_KEY_VALUE);
     if (parts.length != 2) { throw new IllegalArgumentException("Could not parse csv for list key: " + csv); }
     String parts0 = escaper.unescapeCharacters(parts[0]);
     String parts1 = escaper.unescapeCharacters(parts[1]);
-    return new ListKeyBuilder().listKeyElemName(parts0).listKeyValue(parts1).build();
+    String name = parts0;
+    String nsp = null;
+    if (name.contains(Constants.YangXmlCsv.SEP_LIST_KEY_NAMESPACE)) {
+      String[] split2 = name.split(Constants.YangXmlCsv.SEP_LIST_KEY_NAMESPACE);
+      if (split2.length != 2) { throw new IllegalArgumentException("Could not parse csv for list key: " + csv); }
+      name = split2[0];
+      nsp = map.getExpectedNamespace(split2[1]);
+    }
+    return new ListKeyBuilder().listKeyElemName(name).listKeyNamespace(nsp).listKeyValue(parts1).build();
   }
   
   
-  public String toCsv() {
+  public String toCsv(IdOfNamespaceMap map) {
     StringBuilder str = new StringBuilder();
-    writeCsv(str, new CharEscapeTool());
+    writeCsv(str, new CharEscapeTool(), map);
     return str.toString();
   }
   
   
-  public void writeCsv(StringBuilder str, CharEscapeTool escaper) {
-    str.append(escaper.escapeCharacters(this.getElementName()));
+  public void writeCsv(StringBuilder str, CharEscapeTool escaper, IdOfNamespaceMap map) {
+    str.append(escaper.escapeCharacters(getElementName()));
+    if (getNamespace() != null) {
+      str.append(Constants.YangXmlCsv.SEP_LIST_KEY_NAMESPACE);
+      long id = map.getId(getNamespace());
+      str.append(id);
+    }
     str.append(Constants.YangXmlCsv.SEP_LIST_KEY_VALUE);
-    str.append(escaper.escapeCharacters(this.getValue()));
+    str.append(escaper.escapeCharacters(getValue()));
   }
 
+  
   @Override
   public int compareTo(ListKey lk) {
     int val = _elementName.compareTo(lk.getElementName());

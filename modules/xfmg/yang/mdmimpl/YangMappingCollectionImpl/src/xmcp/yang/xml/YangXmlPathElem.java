@@ -143,7 +143,7 @@ public class YangXmlPathElem implements Comparable<YangXmlPathElem> {
       for (ListKey lk : getListKeys()) {
         if (isfirst) { isfirst = false; }
         else { str.append(Constants.YangXmlCsv.SEP_LIST_KEY_LIST_ELEMS); }
-        lk.writeCsv(str, escaper);
+        lk.writeCsv(str, escaper, map);
       }
     }
   }
@@ -165,34 +165,34 @@ public class YangXmlPathElem implements Comparable<YangXmlPathElem> {
     PathElemBuilder builder = new PathElemBuilder();
     builder.elemName(escaper.unescapeCharacters(parts[0]));
     if (parts[1].length() > 0) {
-      int id = Integer.parseInt(parts[1]);
-      if (!map.getNamespace(id).isPresent()) { throw new IllegalArgumentException("Could not find namespace for id: " + id); }
-      builder.namespace(map.getNamespace(id).get());
+      String nsp = map.getExpectedNamespace(parts[1]);
+      builder.namespace(nsp);
     }
     if (parts[2].length() > 0) {
       builder.textValue(escaper.unescapeCharacters(parts[2]));
     }    
-    handleListKeyString(parts[4], builder, escaper);
+    handleListKeyString(parts[4], builder, escaper, map);
     return builder.build();
   }
   
   
-  private static void handleListKeyString(String listKeyValIn, PathElemBuilder builder, CharEscapeTool escaper) {
+  private static void handleListKeyString(String listKeyValIn, PathElemBuilder builder, CharEscapeTool escaper,
+                                          NamespaceOfIdMap map) {
     if (listKeyValIn == null) { return; }
     String listKeyVal = listKeyValIn.trim();
     if (listKeyVal.length() <= 0) { return; }
     if (listKeyVal.contains(Constants.YangXmlCsv.SEP_LIST_KEY_VALUE)) {
-      addListKeys(builder, listKeyVal, escaper);
+      addListKeys(builder, listKeyVal, escaper, map);
     } else if (Constants.YangXmlCsv.VALUE_FOR_IS_LIST_KEY_LEAF.equals(listKeyVal)) {
       builder.setIsListKeyLeaf(true);
     }
   }
   
   
-  private static void addListKeys(PathElemBuilder builder, String csv, CharEscapeTool escaper) {
+  private static void addListKeys(PathElemBuilder builder, String csv, CharEscapeTool escaper, NamespaceOfIdMap map) {
     String[] parts = csv.split(Constants.YangXmlCsv.SEP_LIST_KEY_LIST_ELEMS);
     for (String item : parts) {
-      ListKey lk = ListKey.fromCsv(item, escaper);
+      ListKey lk = ListKey.fromCsv(item, escaper, map);
       builder.addListKey(lk);
     }
   }
