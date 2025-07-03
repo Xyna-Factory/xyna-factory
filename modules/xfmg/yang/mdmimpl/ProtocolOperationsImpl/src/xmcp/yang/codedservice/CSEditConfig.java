@@ -28,7 +28,6 @@ import xmcp.yang.misc.DataStoreHelper;
 import xmcp.yang.misc.DataStoreHelper.NetConfOperation;
 import xmcp.yang.misc.XmlHelper;
 import xmcp.yang.netconf.EditConfigInputData;
-import xmcp.yang.netconf.NetConfConfig;
 import xmcp.yang.netconf.NetConfTarget;
 import xmcp.yang.netconf.enums.DefaultOperationMerge;
 import xmcp.yang.netconf.enums.DefaultOperationNone;
