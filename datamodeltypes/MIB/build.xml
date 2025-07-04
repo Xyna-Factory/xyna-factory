@@ -25,7 +25,7 @@
     <property name="project.name.local" value="MIB" />
 
     <!--Next release version for the archive file-->
-    <property name="release.number" value="1.0.0"/>
+    <property name="release.number" value="1.0.1"/>
 
     <property name="target.dir" value="${basedir}/deploy" />
 
