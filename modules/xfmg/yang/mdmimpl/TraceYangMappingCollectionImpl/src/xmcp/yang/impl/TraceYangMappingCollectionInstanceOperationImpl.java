@@ -18,7 +18,6 @@
 package xmcp.yang.impl;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import xmcp.yang.TraceYangMappingCollection;
@@ -40,14 +39,8 @@ public class TraceYangMappingCollectionInstanceOperationImpl extends TraceYangMa
 
   public YangMappingCollection merge(YangMappingCollection yangMappingCollection1) {
     YangMappingCollection ret = super.merge(yangMappingCollection1);
-    /*
-    getInstanceVar().setMappingList(new ArrayList<String>(ret.getMappings()));
-    getInstanceVar().setNamespaceList(new ArrayList<String>(ret.getNamespaces()));
-    */
-    
     CsvPathsAndNspsWithIds csv = CsvPathsAndNspsWithIds.builder().csvPaths(_mappings).namespaces(_namespaces).build();
     YangXmlPathList pathlist = YangXmlPathList.fromCsv(csv);
-    //CsvPathsAndNspsWithIds ret = new CsvPathsAndNspsWithIds(pathlist);
     IdOfNamespaceMap map = new IdOfNamespaceMap();
     List<String> xPathList = pathlist.toXPathList(map);
     List<String> namespaceWithIdList = map.toPrefixNamespacePairList();
