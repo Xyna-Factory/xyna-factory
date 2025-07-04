@@ -100,6 +100,7 @@ import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.events.AbortServiceS
 import com.gip.xyna.xprc.xsched.orderabortion.AbortionCause;
 
 import net.schmizz.sshj.SSHClient;
+import net.schmizz.sshj.common.Factory.Named;
 import net.schmizz.sshj.common.KeyType;
 import net.schmizz.sshj.common.SSHException;
 import net.schmizz.sshj.connection.ConnectionException;
@@ -117,6 +118,8 @@ import net.schmizz.sshj.userauth.password.PasswordFinder;
 import net.schmizz.sshj.userauth.password.Resource;
 
 import net.schmizz.sshj.transport.mac.MAC;
+
+import com.hierynomus.sshj.key.KeyAlgorithm;
 import com.hierynomus.sshj.transport.mac.Macs;
 
 
@@ -740,20 +743,39 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
       client.addHostKeyVerifier(hostRepo);
     }
 
-    // Reduce valid KeyAlgorithms
-    client.getTransport().getConfig()
-        .setKeyAlgorithms(java.util.Arrays.<net.schmizz.sshj.common.Factory.Named<com.hierynomus.sshj.key.KeyAlgorithm>> asList(
-                          com.hierynomus.sshj.key.KeyAlgorithms.SSHDSA(),
-                          com.hierynomus.sshj.key.KeyAlgorithms.SSHRSA(),
-                          com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp521(), //This KeyAlgorithm is necessary
-                          com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp256(),
-                          com.hierynomus.sshj.key.KeyAlgorithms.RSASHA512(),
-                          com.hierynomus.sshj.key.KeyAlgorithms.RSASHA256()
-                           ));
+    List<Named<KeyAlgorithm>> keyAlgs = createKeyAlgsList(getSSHConnectionParameter().getKeyAlgorithms0());
+    client.getTransport().getConfig().setKeyAlgorithms(keyAlgs);
 
-    //Change of order due to the specific FW of an RD.
-    client.getTransport().getConfig()
-        .setMACFactories(java.util.Arrays.<net.schmizz.sshj.common.Factory.Named<MAC>> asList(
+    List<Named<MAC>> macs = createMacList(getSSHConnectionParameter().getMessageAuthenticationCodes());
+    client.getTransport().getConfig().setMACFactories(macs);
+  }
+
+
+  private List<Named<KeyAlgorithm>> createKeyAlgsList(List<String> keyAlgorithms) {
+    if(keyAlgorithms == null || keyAlgorithms.isEmpty()) {
+      return java.util.Arrays.<net.schmizz.sshj.common.Factory.Named<com.hierynomus.sshj.key.KeyAlgorithm>> asList(
+                           com.hierynomus.sshj.key.KeyAlgorithms.SSHDSA(),
+                           com.hierynomus.sshj.key.KeyAlgorithms.SSHRSA(),
+                           com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp521(), //This KeyAlgorithm is necessary
+                           com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp256(),
+                           com.hierynomus.sshj.key.KeyAlgorithms.RSASHA512(),
+                           com.hierynomus.sshj.key.KeyAlgorithms.RSASHA256()
+                            );
+    }
+    List<Named<KeyAlgorithm>> result = new ArrayList<>();
+    for(String keyAlg : keyAlgorithms) {
+      var algSupplier = Utils.KeyAlgorithms.get(keyAlg);
+      if(algSupplier == null) {
+        throw new RuntimeException("Unknown key algorithm " + keyAlg);
+      }
+      result.add(algSupplier.get());
+    }
+    return result;
+  }
+  
+  private List<Named<MAC>> createMacList(List<String> macs) {
+    if(macs == null || macs.isEmpty()) {
+      return java.util.Arrays.<net.schmizz.sshj.common.Factory.Named<MAC>> asList(
                              Macs.HMACSHA2256(),
                              Macs.HMACSHA2256Etm(),
                              Macs.HMACSHA2512(),
@@ -769,7 +791,18 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
                              Macs.HMACRIPEMD160(),
                              Macs.HMACRIPEMD160Etm(),
                              Macs.HMACRIPEMD16096(),
-                             Macs.HMACRIPEMD160OpenSsh()));
+                             Macs.HMACRIPEMD160OpenSsh()
+                             );
+    }
+    List<Named<MAC>> result = new ArrayList<>();
+    for(String mac : macs) {
+      var macSupplier = Utils.macFactories.get(mac);
+      if(macSupplier == null) {
+        throw new RuntimeException("Unknown message authentication code type " + mac);
+      }
+      result.add(macSupplier.get());
+    }
+    return result;
   }
 
 
