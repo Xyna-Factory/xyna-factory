@@ -101,7 +101,7 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
   private static final String SESSION_TIMEOUT_THREAD_NAME = "Session Timeout Thread";
 
   /*
-   * ACHTUNG: bei ‰nderungen auch in der dokumentation anpassen
+   * ACHTUNG: bei √§nderungen auch in der dokumentation anpassen
    */
   public final static Long DEFAULT_GUI_SESSION_TIMEOUT_SECONDS = new Long(15 * 60);
   public final static Long DEFAULT_SESSION_DELETION_INTERVAL = new Long(30 * 60);
@@ -127,7 +127,7 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
 
   private ODS ods;
 
-  //Zuordnung zwischen Sessions und Users, damit f¸r gesperrte Benutzer die Session
+  //Zuordnung zwischen Sessions und Users, damit f√ºr gesperrte Benutzer die Session
   //beendet werden kann
   private SessionUserMap sessionUserMap = new SessionUserMap(); 
 
@@ -279,7 +279,7 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
       if (logger.isDebugEnabled()) {
         logger.debug("could not create session ", e);
       }
-      //sollte nur vorkommen, wenn sich ein Benutzer gerade einloggt, w‰hrend er gesperrt wird
+      //sollte nur vorkommen, wenn sich ein Benutzer gerade einloggt, w√§hrend er gesperrt wird
       quitSession(randomId);
     }
     
@@ -450,9 +450,9 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
   }
 
   /**
-   * Beendet alle (bekannten) Sessions f¸r einen User. <br>
+   * Beendet alle (bekannten) Sessions f√ºr einen User. <br>
    * 
-   * TODO In folgenden F‰llen kann es vorkommen, dass nicht alle Sessions beendet werden:
+   * TODO In folgenden F√§llen kann es vorkommen, dass nicht alle Sessions beendet werden:
    * - nach einem Factory-Neustart, falls die Sessions persistiert werden
    * - im Cluster-Betrieb (wenn der User auf einem andern Knoten gesperrt wird, als er eingeloggt ist)
    * 
@@ -725,7 +725,7 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
   public void performChangeNotification(AChangeEvent event) throws PersistenceLayerException {
     notificationListenerLock.lock();
     try {
-      // FIXME deadlock-gefahr! connection auﬂerhalb des locks holen und lowlevel connectivity sicherstellen!
+      // FIXME deadlock-gefahr! connection au√üerhalb des locks holen und lowlevel connectivity sicherstellen!
       ODSConnection con = ods.openConnection();
       try {
         for (ManagedSession session : con.loadCollection(ManagedSession.class)) {
@@ -778,15 +778,10 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
   private String getRandomSessionIdString() {
     StringBuilder temp = new StringBuilder();
     StringBuilder idBuffer = new StringBuilder();
-    //10.15 | 10: random int with leading zeros; 15 SystemTime with leading zeros  
-    int randomInt = random.nextInt();
-    if (randomInt < 0) {
-      randomInt = Math.abs(randomInt);
-    }
-    temp.append(randomInt);
-    //add leading zeros
-    while (temp.length() < 10) {
-      temp.insert(0, "0");
+    //36.15 | 36: random int ; 15 SystemTime with leading zeros
+    for (int i = 0; i < 36; i++) {
+       int zufallsZahl = random.nextInt(10); // creates a Number between 0 and 9
+       temp.append(zufallsZahl);
     }
     idBuffer.append(temp.toString());
     idBuffer.append(".");
