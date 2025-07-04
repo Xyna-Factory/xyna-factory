@@ -30,7 +30,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.gip.xyna.XynaFactory;
-import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xact.filter.monitor.MonitorSession.MonitorSessionInstance;
 import com.gip.xyna.xact.filter.monitor.auditpreprocessing.MissingImportsRestorer.MissingImport;
 import com.gip.xyna.xact.filter.session.Dataflow;
@@ -43,9 +42,18 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Workspace;
 import com.gip.xyna.xfmg.xods.configuration.Configuration;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyWithDefaultValue;
+import com.gip.xyna.xmcp.XynaMultiChannelPortal;
+import com.gip.xyna.xnwh.selection.parsing.ArchiveIdentifier;
+import com.gip.xyna.xnwh.selection.parsing.SearchRequestBean;
+import com.gip.xyna.xnwh.selection.parsing.SelectionParser;
 import com.gip.xyna.xprc.xfractwfe.generation.Step;
 import com.gip.xyna.xprc.xfractwfe.generation.WF.WFStep;
-
+import com.gip.xyna.xprc.xprcods.orderarchive.OrderArchive.SearchMode;
+import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstance;
+import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstanceColumn;
+import com.gip.xyna.xprc.xprcods.orderarchive.OrderInstanceResult;
+import com.gip.xyna.xprc.xprcods.orderarchive.XynaExceptionInformation;
+import com.gip.xyna.xprc.xprcods.orderarchive.selectorder.OrderInstanceSelect;
 
 import xmcp.processmodeller.datatypes.Connection;
 import xmcp.processmodeller.datatypes.RepairEntry;
@@ -54,7 +62,9 @@ import xmcp.processmonitor.datatypes.CustomField;
 import xmcp.processmonitor.datatypes.Error;
 import xmcp.processmonitor.datatypes.NoAuditData;
 import xmcp.processmonitor.datatypes.RollbackStep;
+import xmcp.processmonitor.datatypes.RunningTime;
 import xmcp.processmonitor.datatypes.RuntimeInfo;
+import xmcp.processmonitor.datatypes.WorkflowRuntimeInfo;
 import xmcp.processmonitor.datatypes.response.GetAuditResponse;
 import xmcp.xact.modeller.Hint;
 import xprc.xpce.RuntimeContext;
@@ -73,19 +83,19 @@ public class GetAuditRequestProcessor {
   public GetAuditResponse processGetAuditRequestFromUpload(MonitorSessionInstance session, String fileId) throws NoAuditData {
     try {
       return createGetAuditResponse(MonitorAudit.fromUpload(session, fileId));
-    } catch (XynaException ex) {
-      throw new NoAuditData(ex);
+    } catch (Throwable ex) {
+      return createGetAuditResponse(-1l, ex);
     }
   }
 
   public GetAuditResponse processGetAuditRequest(Long orderId) throws NoAuditData {
     try {
       return createGetAuditResponse(MonitorAudit.fromLocalOrder(orderId));
-    } catch (XynaException ex) {
-      throw new NoAuditData(ex);
+    } catch (Throwable ex) {
+      return createGetAuditResponse(orderId, ex);
     }
   }
-  
+
   private GetAuditResponse createGetAuditResponse(MonitorAudit monitorAudit) {
     
     GetAuditResponse result = new GetAuditResponse();
@@ -143,7 +153,7 @@ public class GetAuditRequestProcessor {
     } catch (Exception e) {
       Utils.logError("Could not determine rollback for order " + monitorAudit.getOrderId(), e);
     }
-    
+
     if (monitorAudit.getMissingImports() != null && monitorAudit.getMissingImports().size() > 0) {
       Hint missingImportsHint = new Hint();
       StringBuilder builder = new StringBuilder();
@@ -160,28 +170,92 @@ public class GetAuditRequestProcessor {
 
     return result;
   }
-  
+
+  private GetAuditResponse createGetAuditResponse(Long orderId, Throwable exception) {
+    GetAuditResponse result = new GetAuditResponse();
+    result.setOrderId(Long.toString(orderId));
+
+    XynaExceptionInformation xei = new XynaExceptionInformation(exception);
+    Error e = createErrorObject(xei);
+    List<Error> errors = new ArrayList<>();
+    errors.add(e);
+    result.setErrors(errors);
+
+    List<OrderInstance> oil = null;
+    try {
+      SearchRequestBean srb = new SearchRequestBean(ArchiveIdentifier.orderarchive, 1);
+      srb.setFilterEntries(Map.of(OrderInstanceColumn.C_ID.getColumnName(), Long.toString(orderId)));
+      OrderInstanceSelect ois = (OrderInstanceSelect) SelectionParser.generateSelectObjectFromSearchRequestBean(srb);
+      XynaMultiChannelPortal xmcp = ((XynaMultiChannelPortal)XynaFactory.getInstance().getXynaMultiChannelPortal());
+      OrderInstanceResult oir = xmcp.searchOrderInstances(ois, 1, SearchMode.FLAT);
+      oil = oir.getResult();
+    } catch (Exception ex) {
+      xei = new XynaExceptionInformation(ex);
+      e = createErrorObject(xei);
+      errors.add(e);
+    }
+
+    if (oil != null && oil.size() > 0) {
+      OrderInstance oi = oil.get(0);
+      result.setParentOrderId(Long.toString(oi.getParentId()));
+
+      try {
+        result.addToCustomFields(new CustomField(getCustomFieldLabel(0), oi.getCustom0()));
+        result.addToCustomFields(new CustomField(getCustomFieldLabel(1), oi.getCustom1()));
+        result.addToCustomFields(new CustomField(getCustomFieldLabel(2), oi.getCustom2()));
+        result.addToCustomFields(new CustomField(getCustomFieldLabel(3), oi.getCustom3()));
+      } catch (Exception ex) {
+        Utils.logError("Could not determine custom fields for order " + orderId, ex);
+      }
+
+      try {
+        WorkflowRuntimeInfo wri = new WorkflowRuntimeInfo();
+        wri.setId("wf");
+        wri.setRunningTime(new RunningTime(oi.getStartTime(), oi.getStopTime()));
+        wri.setStatus(oi.getStatusAsString());
+        result.setInfo(List.of(wri));
+      } catch (Exception ex) {
+        Utils.logError("Could not determine any runtime info for order " + orderId, ex);
+      }
+
+      try {
+        if (oi.getWorkspaceName() != null && oi.getWorkspaceName().length() > 0) {
+          result.setRootRtc(new xprc.xpce.Workspace(oi.getWorkspaceName()));
+        } else if (oi.getApplicationName() != null && oi.getApplicationName().length() > 0) {
+          result.setRootRtc(new xprc.xpce.Application(oi.getApplicationName(), oi.getVersionName()));
+        }
+      } catch (Exception ex) {
+        Utils.logError("Could not determine root rtc for order " + orderId, ex);
+      }
+    }
+
+    return result;
+  }
+
   private List<Error> createErrors(MonitorAudit monitorAudit){
     if(monitorAudit.getExceptions() != null) {
-      return monitorAudit.getExceptions().stream().map(ex -> {
-        Error e = new Error();
-        e.setMessage(ex.getMessage());
-        e.setException(ex.getClass().getName());
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(ex.getClass().getName())
-          .append(": ").append(ex.getMessage()).append("\n");
-        for (StackTraceElement traceElement : ex.getStacktrace()) {
-          sb.append(traceElement).append("\n");
-        }
-        e.setStacktrace(sb.toString());
-        
-        return e;
-      }).collect(Collectors.toList());
+      return monitorAudit.getExceptions().stream().map(ex -> createErrorObject(ex)).collect(Collectors.toList());
     }
+
     return Collections.emptyList();
   }
-  
+
+  private Error createErrorObject(XynaExceptionInformation ex) {
+    Error e = new Error();
+    e.setMessage(ex.getMessage());
+    e.setException(ex.getClass().getName());
+
+    StringBuilder sb = new StringBuilder();
+    sb.append(ex.getClass().getName())
+      .append(": ").append(ex.getMessage()).append("\n");
+    for (StackTraceElement traceElement : ex.getStacktrace()) {
+      sb.append(traceElement).append("\n");
+    }
+    e.setStacktrace(sb.toString());
+
+    return e;
+  }
+
   private RuntimeContext getRuntimeContext(com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext runtimeContext) {
     RuntimeContext rtc = null;
     if (runtimeContext instanceof Workspace) {
