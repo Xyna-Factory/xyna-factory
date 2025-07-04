@@ -15,6 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Application applicationName="NetConf" comment="" factoryVersion="" versionName="0.0.4" xmlVersion="1.1">
-</Application>
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Net Conf Event" TypeName="NetConfEvent" TypePath="xact.netconf.datatypes" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="IP" VariableName="iP">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Device ID" VariableName="deviceID">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Event Time" VariableName="eventTime">
+    <Meta>
+      <Type>long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Event" VariableName="event">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+</DataType>

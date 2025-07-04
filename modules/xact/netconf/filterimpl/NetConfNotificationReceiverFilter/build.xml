@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *
+ * Xyna 6.1 (Black Edition)
+ * Xyna Development Factory
+ * ____________________________________________________
+ * 
+ * Copyright GIP AG 2015
+ * (http://www.gip.com)
+ * Hechtsheimer Str. 35-37
+ * 55131 Mainz
+ * ___________________________________________________
+ *
+ *  $Revision: 164488 $
+ *  $Date: 2015-02-24 09:03:56 +0100 (Di, 24. Feb 2015) $
+ *
+ -->
+<project name="build" default="deploy" basedir=".">
+	
+    <!-- this is the absolute path to the root -->
+    <pathconvert property="root.dir">
+        <path location="${basedir}/../../../../../" />
+    </pathconvert>
+    <property name="application.dir" value="${basedir}/../../" />
+
+	<property name="project.name" value="NetConfNotificationReceiverFilter" />
+	<property name="fqclassname" value="com.gip.xyna.xact.filter.NetConfNotificationReceiverFilter" />
+
+    <property name="common.lib.dir" value="${root.dir}/common/lib" />
+    <property name="common.xyna.lib.dir" value="${common.lib.dir}/xyna" />
+    <property name="exception.xml.dir" value="${root.dir}/server" />
+    <property name="base.lib.dir" value="${basedir}/lib" />
+    <property name="target.dir" value="${basedir}/deploy" />
+
+    <property file="${application.dir}/workspace.properties" />
+
+	<property name="server.mdm.xml.filename" value="NetConfNotificationReceiverFilter.xml" />
+
+    <property name="mdm.xml.name" value="NetConfNotificationReceiverFilter" />
+    <property name="mdm.xml.filename" value="NetConfNotificationReceiverFilter" />
+
+    <property name="trigger.name" value="NetConfNotificationReceiverTrigger" />
+    <property name="filter.name" value="NetConfNotificationReceiverFilter" />
+
+    <property name="deploy.sharedlibs" value="netConfNotificationReceiverLib" />
+
+    <import file="${root.dir}/installation/build/buildFilter.xml" />
+
+    <target name="prepareLibs" description="Prepare Libs">
+        <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/../../triggerimpl/NetConfNotificationReceiverTrigger">
+            <property name="target.dir" value="${basedir}/lib/xyna" />
+        </ant>
+    </target>
+
+</project>
