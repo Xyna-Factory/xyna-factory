@@ -780,8 +780,8 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
     StringBuilder idBuffer = new StringBuilder();
     //36.15 | 36: random int ; 15 SystemTime with leading zeros 
     for (int i = 0; i < 36; i++) {
-       int zufallsZahl = random.nextInt(10); // creates a Number between 0 and 9
-       temp.append(zufallsZahl);
+       int randomNumber = random.nextInt(10); // creates a Number between 0 and 9
+       temp.append(randomNumber);
     }
     idBuffer.append(temp.toString());
     idBuffer.append(".");
