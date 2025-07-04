@@ -86,6 +86,19 @@ public class ListKey implements Comparable<ListKey> {
   }
 
   
+  public void writeXPath(StringBuilder str, CharEscapeTool escaper, IdOfNamespaceMap map) {
+    str.append("[");
+    if (getNamespace() != null) {
+      long id = map.getId(getNamespace());
+      str.append(Constants.PREFIX_OF_PREFIX).append(id).append(":");
+    }
+    str.append(escaper.escapeCharacters(getElementName()));
+    str.append("/text()=");
+    str.append(escaper.escapeCharacters(getValue()));
+    str.append("]");
+  }
+  
+  
   @Override
   public int compareTo(ListKey lk) {
     int val = _elementName.compareTo(lk.getElementName());
