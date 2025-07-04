@@ -52,6 +52,21 @@ public class YangXmlPathList {
   }
   
   
+  public List<String> toXPathList(IdOfNamespaceMap map) {
+    return toXPathList(map, new CharEscapeTool());
+  }
+  
+  
+  public List<String> toXPathList(IdOfNamespaceMap map, CharEscapeTool escaper) {
+    List<String> ret = new ArrayList<>();
+    for (YangXmlPath path : _pathList) {
+      String str = path.toXPath(map, escaper);
+      ret.add(str);
+    }
+    return ret;
+  }
+  
+  
   public void sort() {
     Collections.sort(_pathList);
   }

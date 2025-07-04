@@ -24,13 +24,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.log4j.Logger;
+
 
 /*
  * adapt yang xml paths to replace list indices with list keys; that means list items will not be identified by
  * an integer index but the values of xml sub-elements of the list item
  */
 public class ListKeyAnalyzer {
-
+  
   private Map<String, ListKeySearchInfo> _listKeyMap = new HashMap<>();
   private List<List<PathElemBuilder>> _buildPaths = new ArrayList<>(); 
   private YangXmlPathList _result = new YangXmlPathList();
@@ -120,8 +122,11 @@ public class ListKeyAnalyzer {
       _listKeyMap.put(csvStr, lksi);
     }
     if (elem.hasTextValue() && elem.getIsListKeyLeaf()) {
-      ListKey lk = new ListKeyBuilder().listKeyElemName(elem.getElemName())
-                                       .listKeyValue(elem.getTextValue().get()).build();
+      ListKeyBuilder builder = new ListKeyBuilder().listKeyElemName(elem.getElemName()).listKeyValue(elem.getTextValue().get());
+      if (elem.hasNamespace()) {
+        builder.listKeyNamespace(elem.getNamespace().get());
+      }
+      ListKey lk = builder.build();
       lksi.getListKeys().add(lk);
     }
     // collect parent element, i.e. the list element where later the list key info will be added to replace the list index:

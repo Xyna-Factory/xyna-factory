@@ -62,6 +62,20 @@ public class YangXmlPath implements Comparable<YangXmlPath> {
   }
   
   
+  public String toXPath(IdOfNamespaceMap map, CharEscapeTool escaper) {
+    StringBuilder str = new StringBuilder();
+    writeXPath(map, str, escaper);
+    return str.toString();
+  }
+  
+  
+  public void writeXPath(IdOfNamespaceMap map, StringBuilder str, CharEscapeTool escaper) {
+    for (YangXmlPathElem elem : _path) {
+      elem.writeXPath(map, str, escaper);
+    }
+  }
+  
+  
   public static YangXmlPath fromCsv(NamespaceOfIdMap map, String csv) {
     return fromCsv(map, csv, new CharEscapeTool());
   }

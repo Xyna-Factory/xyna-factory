@@ -34,6 +34,20 @@ public class NamespaceOfIdMap {
     return Optional.ofNullable(val);
   }
   
+  
+  public String getExpectedNamespace(String idStr) {
+    int id = -1;
+    try {
+      id = Integer.parseInt(idStr);
+    } catch (Exception e) {
+      throw new RuntimeException("Error parsing namespace id number: " + idStr);
+    }
+    String val = _map.get(id);
+    if (val == null) { throw new IllegalArgumentException("Could not find namespace for id: " + id); }
+    return val;
+  }
+  
+  
   public Optional<String> getNamespace(String prefix) {
     if (!prefix.startsWith(Constants.PREFIX_OF_PREFIX)) { 
       throw new IllegalArgumentException("Unexpected format in prefix: " + prefix); 
