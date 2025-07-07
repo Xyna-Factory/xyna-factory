@@ -19,7 +19,7 @@
 <DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="TimeConstraint" BaseTypePath="xprc.xsched" Label="WindowTimeConstraint" TypeName="WindowTimeConstraint" TypePath="xprc.xsched" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
-  <IsXynaComponent>true</IsXynaComponent>
+    <IsXynaComponent>true</IsXynaComponent>
   </Meta>
   <Data Label="StartTime" ReferenceName="TimeConfiguration" ReferencePath="xprc.xsched" VariableName="startTime"/>
   <Data Label="SchedulingTimeout" ReferenceName="TimeConfiguration" ReferencePath="xprc.xsched" VariableName="schedulingTimeout"/>

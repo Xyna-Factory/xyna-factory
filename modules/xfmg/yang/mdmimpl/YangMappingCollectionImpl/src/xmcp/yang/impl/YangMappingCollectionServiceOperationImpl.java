@@ -21,20 +21,32 @@ package xmcp.yang.impl;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
+import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.UserType;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
 
 
 public class YangMappingCollectionServiceOperationImpl implements ExtendedDeploymentTask {
 
+  public static final XynaPropertyBoolean PROP_TRACE_YANG_MAPP_COLL = new XynaPropertyBoolean("xmcp.yang.TraceYangMappingCollectionContent", false)
+    .setDefaultDocumentation(DocumentationLanguage.EN,
+    "set value to true if generated yang operations shall return objects of type xmcp.yang.TraceYangMappingCollection")
+    .setDefaultDocumentation(DocumentationLanguage.DE,
+    "mit Wert true erzeugen generierte Yang Operationen Objecte vom Typ xmcp.yang.TraceYangMappingCollection");
+  
+  
   public void onDeployment() throws XynaException {
-    // TODO do something on deployment, if required
     // This is executed again on each classloader-reload, that is each
     // time a dependent object is redeployed, for example a type of an input parameter.
+    
+    PROP_TRACE_YANG_MAPP_COLL.registerDependency(UserType.Service, "YangMappingCollection");
   }
 
   public void onUndeployment() throws XynaException {
-    // TODO do something on undeployment, if required
     // This is executed again on each classloader-unload, that is each
     // time a dependent object is redeployed, for example a type of an input parameter.
+    
+    PROP_TRACE_YANG_MAPP_COLL.unregister();
   }
 
   public Long getOnUnDeploymentTimeout() {
