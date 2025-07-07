@@ -363,10 +363,15 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     if(schema == null) {
       return super.unaliasSchema(schema);
     }
-    String schemaName = ModelUtils.getSimpleRef(schema.get$ref());
+    if ("array".equalsIgnoreCase(schema.getType())) {
+      Schema item = schema.getItems();
+      if (item != null && item.getName() == null) {
+        item.setName(ModelUtils.getSimpleRef(item.get$ref()));
+      }
+    }
     Schema ret = super.unaliasSchema(schema);
-    if (ret.getName() == null) {
-      ret.setName(schemaName);
+    if (ret.getName() == null && schema.getName() != null) {
+      ret.setName(schema.getName());
     }
     return ret;
 }
