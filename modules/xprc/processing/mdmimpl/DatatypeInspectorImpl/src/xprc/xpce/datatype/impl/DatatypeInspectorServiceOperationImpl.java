@@ -17,10 +17,10 @@
  */
 package xprc.xpce.datatype.impl;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 
+import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.ProjectCreationOrChangeProvider;
 import com.gip.xyna.xdev.ProjectCreationOrChangeProvider.BasicProjectCreationOrChangeEvent;
@@ -30,6 +30,7 @@ import com.gip.xyna.xdev.ProjectCreationOrChangeProvider.ProjectCreationOrChange
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 import com.gip.xyna.xprc.exceptions.XPRC_InheritedConcurrentDeploymentException;
 import com.gip.xyna.xprc.exceptions.XPRC_InvalidPackageNameException;
@@ -38,6 +39,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.DOM;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.AssumedDeadlockException;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
+import com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation;
 
 import base.Text;
 import xprc.xpce.datatype.DatatypeInspector;
@@ -50,17 +52,12 @@ public class DatatypeInspectorServiceOperationImpl implements ExtendedDeployment
   
   private final static String LISTENER_ID = "DatatypeInspector_" + System.currentTimeMillis();
 
-  private xprc.xpce.datatype.DatatypeInspector inspectDatatypeClass(Class<?> clazz, GeneralXynaObject anyType) {
+  private DatatypeInspector inspectDatatypeClass(Class<?> clazz, GeneralXynaObject anyType) {
     try {
-      Long revision = com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement.getRevisionByClass(clazz);
-      String fqXmlName = clazz.getAnnotation(com.gip.xyna.xprc.xfractwfe.generation.XynaObjectAnnotation.class).fqXmlName();
+      Long revision = RevisionManagement.getRevisionByClass(clazz);
+      String fqXmlName = clazz.getAnnotation(XynaObjectAnnotation.class).fqXmlName();
       DatatypeInspector di = new DatatypeInspector();
-      Method interimGetter = DatatypeInspector.class.getDeclaredMethod("getImplementationOfInstanceMethods");
-      interimGetter.setAccessible(true);
-      Object interim = interimGetter.invoke(di);
-      Method implGetter = interim.getClass().getDeclaredMethod("getInstanceOperationInstance");
-      implGetter.setAccessible(true);
-      DatatypeInspectorInstanceOperationImpl instanceImpl = (DatatypeInspectorInstanceOperationImpl) implGetter.invoke(interim);
+      DatatypeInspectorInstanceOperationImpl instanceImpl = (DatatypeInspectorInstanceOperationImpl) XmomReflection.getImplementation(di);
       instanceImpl.setDOM((DOM)getGeneration(fqXmlName, revision));
       instanceImpl.setXynaObject(anyType);
       return di;
@@ -69,7 +66,7 @@ public class DatatypeInspectorServiceOperationImpl implements ExtendedDeployment
     }
   }
   
-  public xprc.xpce.datatype.DatatypeInspector inspectDatatype(GeneralXynaObject anyType) {
+  public DatatypeInspector inspectDatatype(GeneralXynaObject anyType) {
     return inspectDatatypeClass(anyType.getClass(), anyType);
   }
 
@@ -77,12 +74,12 @@ public class DatatypeInspectorServiceOperationImpl implements ExtendedDeployment
   public DatatypeInspector inspectDatatypeByName(XynaOrderServerExtension correlatedXynaOrder, Text fqXmlName) {
     try {
       ClassLoader factoryClassLoader =
-              com.gip.xyna.XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getClassLoaderDispatcher()
+              XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getClassLoaderDispatcher()
                   .getMDMClassLoader(fqXmlName.getText(), correlatedXynaOrder.getRootOrder().getRevision(), true);
       Class<?> clazz = factoryClassLoader.loadClass(fqXmlName.getText());
       GeneralXynaObject gxo = null;
       if (!Modifier.isAbstract(clazz.getModifiers())) {
-        gxo = (GeneralXynaObject)clazz.newInstance();
+        gxo = (GeneralXynaObject)clazz.getConstructor().newInstance();
       }
       return inspectDatatypeClass(clazz, gxo);
     } catch (Exception e) {
