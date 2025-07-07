@@ -778,15 +778,10 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
   private String getRandomSessionIdString() {
     StringBuilder temp = new StringBuilder();
     StringBuilder idBuffer = new StringBuilder();
-    //10.15 | 10: random int with leading zeros; 15 SystemTime with leading zeros  
-    int randomInt = random.nextInt();
-    if (randomInt < 0) {
-      randomInt = Math.abs(randomInt);
-    }
-    temp.append(randomInt);
-    //add leading zeros
-    while (temp.length() < 10) {
-      temp.insert(0, "0");
+    //36.15 | 36: random int ; 15 SystemTime with leading zeros 
+    for (int i = 0; i < 36; i++) {
+       int randomNumber = random.nextInt(10); // creates a Number between 0 and 9
+       temp.append(randomNumber);
     }
     idBuffer.append(temp.toString());
     idBuffer.append(".");
