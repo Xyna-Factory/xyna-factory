@@ -84,7 +84,7 @@ public class GetAuditRequestProcessor {
     try {
       return createGetAuditResponse(MonitorAudit.fromUpload(session, fileId));
     } catch (Throwable ex) {
-      return createGetAuditResponse(-1l, ex);
+      return createGetAuditResponse(-1l, ex, false);
     }
   }
 
@@ -92,12 +92,11 @@ public class GetAuditRequestProcessor {
     try {
       return createGetAuditResponse(MonitorAudit.fromLocalOrder(orderId));
     } catch (Throwable ex) {
-      return createGetAuditResponse(orderId, ex);
+      return createGetAuditResponse(orderId, ex, true);
     }
   }
 
   private GetAuditResponse createGetAuditResponse(MonitorAudit monitorAudit) {
-    
     GetAuditResponse result = new GetAuditResponse();
     result.setOrderId(monitorAudit.getGuiOrderId());
     result.setParentOrderId(monitorAudit.getGuiParentOrderId());
@@ -111,7 +110,7 @@ public class GetAuditRequestProcessor {
       List<RepairEntry> entries = repair.repairAuditWorkflow(monitorAudit.getWorkflow());
       result.setRepairResult(entries);
     }
-    
+
     try {
       result.setInfo(fillWorkflowRuntimeInfo(monitorAudit));
     } catch (Exception e) {
@@ -129,7 +128,7 @@ public class GetAuditRequestProcessor {
     } catch (Exception e) {
       Utils.logError("Could not determine dataflow for order " + monitorAudit.getOrderId(), e);
     }
-    
+
     try {
       result.setWorkflow(fillWorkflow(monitorAudit));
     } catch (Exception e) {
@@ -147,7 +146,7 @@ public class GetAuditRequestProcessor {
     } catch (Exception e) {
       Utils.logError("Could not determine errors for order " + monitorAudit.getOrderId(), e);
     }
-    
+
     try {
       result.setRollback(new ArrayList<RollbackStep>()); //TODO
     } catch (Exception e) {
@@ -171,7 +170,7 @@ public class GetAuditRequestProcessor {
     return result;
   }
 
-  private GetAuditResponse createGetAuditResponse(Long orderId, Throwable exception) {
+  private GetAuditResponse createGetAuditResponse(Long orderId, Throwable exception, boolean searchOrderInfo) {
     GetAuditResponse result = new GetAuditResponse();
     result.setOrderId(Long.toString(orderId));
 
@@ -180,6 +179,10 @@ public class GetAuditRequestProcessor {
     List<Error> errors = new ArrayList<>();
     errors.add(e);
     result.setErrors(errors);
+
+    if (!searchOrderInfo) {
+      return result;
+    }
 
     List<OrderInstance> oil = null;
     try {
