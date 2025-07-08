@@ -40,14 +40,15 @@
       <Type>String</Type>
     </Meta>
   </Data>
-  <Service Label="Named XMOMMember" TypeName="NamedXMOMMember">
+  <Libraries>NamedXMOMMemberImpl.jar</Libraries>
+  <Service Label="Named XMOM Member" TypeName="NamedXMOMMember">
     <Operation IsStatic="false" Label="Get Documentation as Text" Name="getDocumentationAsText">
       <Input/>
       <Output>
         <Data Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return new Text(documentation);</CodeSnippet>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getDocumentationAsText();</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="false" Label="Get Label as Text" Name="getLabelAsText">
@@ -56,27 +57,20 @@
         <Data Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return new Text(label);</CodeSnippet>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getLabelAsText();</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="false" Label="Get Member Object" Name="getMemberObject">
       <Input/>
       <Output>
-        <Data Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType"/>
+        <Data Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return anyType;
-} 
-
-private GeneralXynaObject anyType;
-private com.gip.xyna.xprc.xfractwfe.generation.DOM dom;
-
-public void setAnyType(GeneralXynaObject anyType) {
-  this.anyType = anyType;
-}
-
-public void setDOM(com.gip.xyna.xprc.xfractwfe.generation.DOM dom) {
-  this.dom = dom;</CodeSnippet>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().getMemberObject();</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="false" Label="Is Instance Of" Name="isInstanceOf">
@@ -91,25 +85,7 @@ public void setDOM(com.gip.xyna.xprc.xfractwfe.generation.DOM dom) {
         </Data>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">try {
-        System.out.println("isInstanceOf: " + text.getText());
-  if (this.dom != null) {
-    com.gip.xyna.xprc.xfractwfe.generation.DOM currentDOM = dom;
-    while (currentDOM != null) {
-      System.out.println("currentDOM: " + currentDOM.getOriginalFqName());
-System.out.println("is equal: " + currentDOM.getOriginalFqName().equals(text.getText()));
-      if (currentDOM.getOriginalFqName().equals(text.getText())) {
-        System.out.println("returning true");
-        return true;
-      }
-      currentDOM = currentDOM.getSuperClassGenerationObject();
-    }
-  }
-  return false;
-  
-} catch (Exception e) {
-  throw new RuntimeException(e);
-}</CodeSnippet>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().isInstanceOf(text);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="false" Label="is reserved object" Name="isReservedObject">
@@ -122,27 +98,20 @@ System.out.println("is equal: " + currentDOM.getOriginalFqName().equals(text.get
         </Data>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.isReservedServerObjectByFqOriginalName(this.fQXMLName);</CodeSnippet>
+        <CodeSnippet Type="Java">return getImplementationOfInstanceMethods().isReservedObject();</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="false" Label="Set Member Object" Name="setMemberObject">
       <Input>
-        <Data Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType"/>
+        <Data Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">this.anyType = anyType;
-  try {
-    parentObject.set(varName, anyType);
-  } catch( Exception e ) {
-    throw new RuntimeException(e);
-  } 
-}
-
-private GeneralXynaObject parentObject;
-
-public void setParentObject(GeneralXynaObject parentObject) {
-  this.parentObject = parentObject;</CodeSnippet>
+        <CodeSnippet Type="Java">getImplementationOfInstanceMethods().setMemberObject(anyType);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

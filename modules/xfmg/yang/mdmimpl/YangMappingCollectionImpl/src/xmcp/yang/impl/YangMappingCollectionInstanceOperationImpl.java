@@ -25,7 +25,10 @@ import xact.templates.Document;
 import xmcp.yang.YangMappingCollection;
 import xmcp.yang.YangMappingCollectionInstanceOperation;
 import xmcp.yang.YangMappingCollectionSuperProxy;
+import xmcp.yang.YangMappingPath;
 import xmcp.yang.xml.CsvPathsAndNspsWithIds;
+import xmcp.yang.xml.XmomPathAdapter;
+import xmcp.yang.xml.YangXmlPath;
 import xmcp.yang.xml.YangXmlPathList;
 
 
@@ -41,6 +44,7 @@ public class YangMappingCollectionInstanceOperationImpl extends YangMappingColle
     super(instanceVar);
   }
 
+  @Override
   public Document createXml() {
     CsvPathsAndNspsWithIds csv = CsvPathsAndNspsWithIds.builder().csvPaths(_mappings).namespaces(_namespaces).build();
     YangXmlPathList pathlist = YangXmlPathList.fromCsv(csv);
@@ -50,15 +54,18 @@ public class YangMappingCollectionInstanceOperationImpl extends YangMappingColle
     return ret;
   }
 
+  @Override
   public List<String> getMappings() {
     return _mappings;
   }
 
+  @Override
   public List<String> getNamespaces() {
     return _namespaces;
   }
 
   
+  @Override
   public YangMappingCollection merge(YangMappingCollection input) {
     if (input == null) { return getInstanceVar(); }
     CsvPathsAndNspsWithIds csv1 = CsvPathsAndNspsWithIds.builder().csvPaths(_mappings).namespaces(_namespaces).build();
@@ -72,6 +79,23 @@ public class YangMappingCollectionInstanceOperationImpl extends YangMappingColle
   }
 
 
+  @Override
+  public YangMappingCollection overwriteContent(List<? extends YangMappingPath> input) {
+    if (input == null) { throw new IllegalArgumentException("Input is null"); }
+    YangXmlPathList pathlist = new YangXmlPathList();
+    for (int i = 0; i < input.size(); i++) {
+      YangXmlPath adapted = new XmomPathAdapter().adapt(input.get(i));
+      pathlist.add(adapted);
+    }
+    pathlist = pathlist.replaceListIndicesWithKeys();
+    CsvPathsAndNspsWithIds csv = new CsvPathsAndNspsWithIds(pathlist);
+    _mappings = csv.getCsvPathList();
+    _namespaces = csv.getNamespaceWithIdList();
+    getInstanceVar().setMappingCount(_mappings.size());
+    return getInstanceVar();
+  }
+  
+  
   @Override
   public Object clone() {
     // Parameter to constructor below (instance-var) is irrelevant since it will be replaced later with the cloned instance-var

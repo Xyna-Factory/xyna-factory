@@ -86,6 +86,15 @@ public class YangXmlPathList {
       YangXmlPath path = YangXmlPath.fromCsv(map, csv, escaper);
       ret._pathList.add(path);
     }
+    ret.sort();
+    return ret;
+  }
+  
+  
+  public YangXmlPathList replaceListIndicesWithKeys() {
+    ListKeyAnalyzer analyzer = new ListKeyAnalyzer(this);
+    YangXmlPathList ret = analyzer.getResult();
+    ret.sort();
     return ret;
   }
   

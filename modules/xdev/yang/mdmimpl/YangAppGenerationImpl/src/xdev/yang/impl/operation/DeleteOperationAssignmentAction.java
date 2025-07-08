@@ -26,6 +26,8 @@ import org.w3c.dom.Element;
 
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 
+import xdev.yang.impl.operation.implementation.ImplementationProvider;
+import xdev.yang.impl.operation.implementation.OpImplProviderSelection;
 import xmcp.yang.OperationAssignmentTableData;
 
 
@@ -36,10 +38,10 @@ public class DeleteOperationAssignmentAction {
     String fqn = data.getLoadYangAssignmentsData().getFqn();
     String workspaceName = data.getLoadYangAssignmentsData().getWorkspaceName();
     String operationName = data.getLoadYangAssignmentsData().getOperation();
-    OperationImplementationProvider implProvider = new OperationImplementationProvider();
 
     try (Operation operation = Operation.open(order, fqn, workspaceName, operationName)) {
       Document meta = operation.getMeta();
+      ImplementationProvider implProvider = new OpImplProviderSelection().selectProvider(meta);
       updateMeta(meta, data);
       operation.updateMeta();
       String newImpl = implProvider.createImpl(meta, operation.getInputVarNames());

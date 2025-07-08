@@ -92,6 +92,7 @@ public class YangXmlPath implements Comparable<YangXmlPath> {
     return 0;
   }
   
+  
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof YangXmlPath) {
