@@ -1,6 +1,8 @@
 services:
    mariadb:
-    image: mariadb:11.3
+    image: mariadb:11.8
+    # see https://docs.docker.com/reference/compose-file/services/#pull_policy
+    pull_policy: missing
     restart: unless-stopped
     environment:
       - MYSQL_DATABASE=xyna
@@ -19,6 +21,8 @@ services:
    xyna:
      # platform: linux/amd64 #Has to be set for Mac users
     image: xynafactory/factory:latest
+    # see https://docs.docker.com/reference/compose-file/services/#pull_policy
+    pull_policy: missing
     environment:
       - SYNC_CONTAINER_LIFECYCLE_TO_FACTORY=true
       - USERARCHIVE_XMLFILEPATH=defaultHISTORY/userarchive.xml
@@ -75,6 +79,8 @@ services:
 
    modeller:
     image: xynafactory/modeller:latest
+    # see https://docs.docker.com/reference/compose-file/services/#pull_policy
+    pull_policy: missing
     entrypoint: ["apachectl", "-D", "FOREGROUND"]
     environment:
       - MODELLER_PORT=8000
@@ -83,6 +89,7 @@ services:
       - GUIHTTP_COOKIE_FLAGS="off"
       - RESOLVER="127.0.0.11"
     ports:
+      # see https://docs.docker.com/engine/network/#published-ports
       - 8000:8000
     depends_on:
       - xyna
