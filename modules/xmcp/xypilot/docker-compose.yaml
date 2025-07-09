@@ -96,6 +96,8 @@ services:
 
    apiserver:
      image: xypilot-api-server:1.0.0
+     # see https://docs.docker.com/reference/compose-file/services/#pull_policy
+     pull_policy: missing
      expose:
        - 5000
 
