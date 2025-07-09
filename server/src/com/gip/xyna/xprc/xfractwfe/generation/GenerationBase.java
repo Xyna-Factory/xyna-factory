@@ -210,6 +210,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.compile.Compilation;
 import com.gip.xyna.xprc.xfractwfe.generation.compile.CompilationResult;
 import com.gip.xyna.xprc.xfractwfe.generation.compile.InMemoryCompilationSet;
 import com.gip.xyna.xprc.xfractwfe.generation.compile.JavaSourceFromString;
+import com.gip.xyna.xprc.xfractwfe.specialpurpose.synchronization.TimeoutSynchronizationInput;
 import com.gip.xyna.xprc.xpce.planning.Capacity;
 import com.gip.xyna.xprc.xpce.planning.Veto;
 import com.gip.xyna.xprc.xprcods.orderarchive.orderbackuphelper.OrderStartupAndMigrationManagement;
@@ -283,6 +284,7 @@ public abstract class GenerationBase {
   public static final String PORT_VALIDATION_EXCEPTION = "base.net.exception.PortValidationException";
   public static final String MAC_ADDRESS_VALIDATION_EXCEPTION = "base.net.exception.MACAddressValidationException";
   public static final String VLAN_ID_VALIDATION_EXCEPTION = "base.net.exception.VLANIDValidationException";
+  public static final String TIMEOUT_SYNCHRONIZATION_INPUT = "xprc.xfractwfe.specialpurpose.synchronization.TimeoutSynchronizationInput";
 
   private static final String pathSeparator = Constants.PATH_SEPARATOR;
   
@@ -380,6 +382,7 @@ public abstract class GenerationBase {
     mdmObjectMappingToJavaClasses.put(PORT_VALIDATION_EXCEPTION, PortValidationException.class); // Net
     mdmObjectMappingToJavaClasses.put(MAC_ADDRESS_VALIDATION_EXCEPTION, MACAddressValidationException.class); // Net
     mdmObjectMappingToJavaClasses.put(VLAN_ID_VALIDATION_EXCEPTION, VLANIDValidationException.class); // Net
+    mdmObjectMappingToJavaClasses.put(TIMEOUT_SYNCHRONIZATION_INPUT, TimeoutSynchronizationInput.class); // Server
     
     //xfmg.xods.configuration.*
     appendMapping( mdmObjectMappingToJavaClasses, com.gip.xyna.xfmg.xods.configuration.xynaobjects.BehaviourIfPropertyNotSet.class ); // XynaProperty
