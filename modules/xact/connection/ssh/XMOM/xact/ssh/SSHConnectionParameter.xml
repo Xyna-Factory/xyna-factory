@@ -105,6 +105,46 @@ hmac-sha2-512,
 hmac-sha2-512-etm@openssh.com</Documentation>
     </Meta>
   </Data>
+  <Data IsList="true" Label="ciphers" VariableName="ciphers">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Set to null or an empty list for legacy behavior.
+
+Possible values:
+aes128-ctr,
+aes192-ctr,
+aes256-ctr,
+aes128-cbc,
+aes192-cbc,
+aes256-cbc,
+blowfish-ctr,
+blowfish-cbc,
+twofish128-ctr,
+twofish192-ctr,
+twofish256-ctr,
+twofish128-cbc,
+twofish192-cbc,
+twofish256-cbc,
+twofish-cbc,
+serpent128-ctr,
+serpent192-ctr,
+serpent256-ctr,
+serpent128-cbc,
+serpent192-cbc,
+serpent256-cbc,
+idea-ctr,
+idea-cbc,
+cast128-ctr,
+cast128-cbc,
+3des-ctr,
+3des-cbc,
+aes128-gcm@openssh.com,
+aes256-gcm@openssh.com,
+arcfour,
+arcfour128,
+arcfour256</Documentation>
+    </Meta>
+  </Data>
   <Service Label="SSH connection parameter" TypeName="SSHConnectionParameter">
     <Meta>
       <AdditionalDependencies>

@@ -29,13 +29,10 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +42,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import javax.management.RuntimeErrorException;
 import javax.net.SocketFactory;
 
 import org.apache.log4j.Logger;
@@ -57,16 +53,12 @@ import xact.connection.DeviceType;
 import xact.connection.ReadTimeout;
 import xact.connection.Response;
 import xact.connection.SendParameter;
-import xact.ssh.AliasEntry;
 import xact.ssh.AuthenticationMethod;
-import xact.ssh.AuthenticationMode;
 import xact.ssh.EncryptionType;
 import xact.ssh.HostKeyAliasMapping;
 import xact.ssh.HostKeyCheckingMode;
-import xact.ssh.HostKeyHashMap;
 import xact.ssh.HostKeyStorableRepository;
 import xact.ssh.IdentityStorableRepository;
-import xact.ssh.IllegalUserNameException;
 import xact.ssh.ProxyParameter;
 import xact.ssh.SSHConnection;
 import xact.ssh.SSHConnectionInstanceOperation;
@@ -74,7 +66,6 @@ import xact.ssh.SSHConnectionParameter;
 import xact.ssh.SSHConnectionSuperProxy;
 import xact.ssh.SSHProxyParameter;
 import xact.ssh.SSHSendParameter;
-import xact.ssh.SecureStorablePassphraseStore;
 import xact.ssh.SupportedHostNameFeature;
 import xact.ssh.Utils;
 import xact.ssh.XynaHostKeyRepository;
@@ -99,18 +90,17 @@ import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventSour
 import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.events.AbortServiceStepEvent;
 import com.gip.xyna.xprc.xsched.orderabortion.AbortionCause;
 
+import net.schmizz.sshj.Config;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.common.Factory.Named;
-import net.schmizz.sshj.common.KeyType;
 import net.schmizz.sshj.common.SSHException;
 import net.schmizz.sshj.connection.ConnectionException;
 import net.schmizz.sshj.connection.channel.Channel;
 import net.schmizz.sshj.connection.channel.direct.Session;
 import net.schmizz.sshj.transport.TransportException;
+import net.schmizz.sshj.transport.cipher.Cipher;
 import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
-import net.schmizz.sshj.userauth.AuthParams;
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
-import net.schmizz.sshj.userauth.method.AuthHostbased;
 import net.schmizz.sshj.userauth.method.AuthMethod;
 import net.schmizz.sshj.userauth.method.AuthPassword;
 import net.schmizz.sshj.userauth.method.AuthPublickey;
@@ -743,13 +733,30 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
       client.addHostKeyVerifier(hostRepo);
     }
 
+    Config config = client.getTransport().getConfig();
+
     List<Named<KeyAlgorithm>> keyAlgs = createKeyAlgsList(getSSHConnectionParameter().getKeyAlgorithms0());
-    client.getTransport().getConfig().setKeyAlgorithms(keyAlgs);
+    config.setKeyAlgorithms(keyAlgs);
 
     List<Named<MAC>> macs = createMacList(getSSHConnectionParameter().getMessageAuthenticationCodes());
-    client.getTransport().getConfig().setMACFactories(macs);
+    config.setMACFactories(macs);
+
+    boolean ciphersSet = getSSHConnectionParameter().getCiphers() != null && !getSSHConnectionParameter().getCiphers().isEmpty();
+    List<Named<Cipher>> ciphers = ciphersSet ? createCiphers(getSSHConnectionParameter().getCiphers()) : config.getCipherFactories();
+    config.setCipherFactories(ciphers);
   }
 
+  private List<Named<Cipher>> createCiphers(List<String> ciphers) {
+    List<Named<Cipher>> result = new ArrayList<>();
+    for(String cipher: ciphers) {
+      var cipherSupplier = Utils.Ciphers.get(cipher);
+      if(cipherSupplier == null) {
+        throw new RuntimeException("Unknown cipher: " + cipher);
+      }
+      result.add(cipherSupplier.get());
+    }
+    return result;
+  }
 
   private List<Named<KeyAlgorithm>> createKeyAlgsList(List<String> keyAlgorithms) {
     if(keyAlgorithms == null || keyAlgorithms.isEmpty()) {
