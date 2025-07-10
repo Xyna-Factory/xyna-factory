@@ -47,7 +47,7 @@
   <Filters>
     <Filter implicitDependency="true">
       <Name>GUIHTTP</Name>
-      <JarFiles>GUIHTTPFilter/commons-fileupload-1.5.jar:GUIHTTPFilter/commons-io-2.17.0.jar:GUIHTTPFilter/GUIHTTPFilter.jar:</JarFiles>
+      <JarFiles>GUIHTTPFilter/commons-fileupload-1.6.0.jar:GUIHTTPFilter/commons-io-2.17.0.jar:GUIHTTPFilter/GUIHTTPFilter.jar:</JarFiles>
       <FqFilterClassname>com.gip.xyna.xact.trigger.GUIHTTPFilter</FqFilterClassname>
       <TriggerName>Http</TriggerName>
       <SharedLibs/>
