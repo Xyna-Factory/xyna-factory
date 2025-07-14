@@ -80,7 +80,7 @@
         </if>
         <custom-ssh-exec host="${server.host}" username="${server.userid}" command="mkdir -p ${server.sharedLib.path}" />
         <default-scp-to-remote fromdir="${target.dir}" frominclude="**/*" todir="${server.sharedLib.path}" />
-        <custom-ssh-exec host="${server.host}" username="${server.userid}" command="cd ${server.path}; ./xynafactory.sh reloadsharedlib -sharedLibName ${sharedLib.folder.name} -workspaceName '${workspacename}'" />
+        <custom-ssh-exec host="${server.host}" username="${server.userid}" command="cd ${server.path}; ./xynafactory.sh deploysharedlib -sharedLibName ${sharedLib.folder.name} -workspaceName '${workspacename}'" />
     </target>
 
     <!-- =================================
