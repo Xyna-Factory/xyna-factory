@@ -34,6 +34,7 @@ public class ActiveMQStartParameter implements StartParameter {
   private String hostname;
   private int port;
   private String queueName;
+  private String xynaQueueMgmtQueueName;
   //milliseconds
   private int reconnectIntervalAfterError = 3000;
   private boolean autoReconnect = true;
@@ -65,6 +66,7 @@ public class ActiveMQStartParameter implements StartParameter {
     this.hostname = connData.getHostname();
     this.port = connData.getPort();
     this.queueName = queue.getExternalName();
+    this.xynaQueueMgmtQueueName = queue.getUniqueName();
   }
 
 
@@ -215,11 +217,15 @@ public class ActiveMQStartParameter implements StartParameter {
     return port;
   }
 
-
+  // return external queue name
   public String getQueueName() {
     return queueName;
   }
 
+  // return xyna unique queue name
+  public String getXynaQueueName() {
+    return xynaQueueMgmtQueueName;
+  }
 
   public int getReconnectIntervalAfterError() {
     return reconnectIntervalAfterError;

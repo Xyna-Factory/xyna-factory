@@ -34,10 +34,12 @@ public class ActiveMQTriggerConnection extends TriggerConnection {
 
   private transient Message msg;
   private transient String xynaQueueMgmtQueueName;
+  private transient String externalQueueName;
   
-  public ActiveMQTriggerConnection(Message msg, String xynaQueueMgmtQueueName) {
+  public ActiveMQTriggerConnection(Message msg, String xynaQueueMgmtQueueName, String externalQueueName) {
     this.msg = msg;
     this.xynaQueueMgmtQueueName = xynaQueueMgmtQueueName;
+    this.externalQueueName = externalQueueName;
   }
   
   public Message getMessage() {
@@ -46,6 +48,10 @@ public class ActiveMQTriggerConnection extends TriggerConnection {
   
   public String getXynaQueueMgmtQueueName() {
     return xynaQueueMgmtQueueName;
+  }
+  
+  public String getExternalQueueName() {
+    return externalQueueName;
   }
   
 }
