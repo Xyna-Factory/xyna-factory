@@ -29,7 +29,7 @@
 
     <import file="${root.dir}/installation/build/buildTrigger.xml" />
 
-    <property name="deploy.sharedlibs" value="netConfNotificationReceiverLib" />
+    <property name="deploy.sharedlibs" value="netConfNotificationReceiverLib:sshlibs" />
 
     <target name="prepareLibs" description="Build for application">
         <ant antfile="build.xml" target="copyLibs" inheritAll="false" dir="${basedir}/../../sharedlib/netConfNotificationReceiverLib">
