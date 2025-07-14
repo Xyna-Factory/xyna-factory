@@ -749,7 +749,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
   private List<Named<Cipher>> createCiphers(List<String> ciphers) {
     List<Named<Cipher>> result = new ArrayList<>();
     for(String cipher: ciphers) {
-      var cipherSupplier = Utils.Ciphers.get(cipher);
+      var cipherSupplier = Utils.CipherFactories.get(cipher);
       if(cipherSupplier == null) {
         throw new RuntimeException("Unknown cipher: " + cipher);
       }
@@ -771,7 +771,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     }
     List<Named<KeyAlgorithm>> result = new ArrayList<>();
     for(String keyAlg : keyAlgorithms) {
-      var algSupplier = Utils.KeyAlgorithms.get(keyAlg);
+      var algSupplier = Utils.KeyAlgFactories.get(keyAlg);
       if(algSupplier == null) {
         throw new RuntimeException("Unknown key algorithm " + keyAlg);
       }

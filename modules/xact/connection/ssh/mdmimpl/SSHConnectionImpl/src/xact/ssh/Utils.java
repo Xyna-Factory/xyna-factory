@@ -41,7 +41,7 @@ public final class Utils {
   private Utils() {
   }
   
-  public static final Map<String, Supplier<Named<Cipher>>> Ciphers =
+  public static final Map<String, Supplier<Named<Cipher>>> CipherFactories =
       Map.ofEntries(Map.entry("aes128-ctr", BlockCiphers::AES128CTR),
                     Map.entry("aes192-ctr", BlockCiphers::AES192CTR),
                     Map.entry("aes256-ctr", BlockCiphers::AES256CTR),
@@ -77,7 +77,7 @@ public final class Utils {
                     Map.entry("arcfour256", StreamCiphers::Arcfour256)
                     );
 
-  public static final Map<String, Supplier<Named<KeyAlgorithm>>> KeyAlgorithms =
+  public static final Map<String, Supplier<Named<KeyAlgorithm>>> KeyAlgFactories =
       Map.ofEntries(Map.entry("ssh-rsa", com.hierynomus.sshj.key.KeyAlgorithms::SSHRSA),
                     Map.entry("ssh-rsa-cert-v01@openssh.com", com.hierynomus.sshj.key.KeyAlgorithms::SSHRSACertV01),
                     Map.entry("rsa-sha2-256", com.hierynomus.sshj.key.KeyAlgorithms::RSASHA256),
