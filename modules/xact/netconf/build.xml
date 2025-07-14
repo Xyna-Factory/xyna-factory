@@ -23,6 +23,7 @@
         <path location="${basedir}/../../../" />
     </pathconvert>
     <property name="target.dir" value="${basedir}/deploy/" />
+    <property name="application.dir" value="${basedir}" />
 
     <target name="build">
 
