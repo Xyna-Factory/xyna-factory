@@ -15,6 +15,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Application applicationName="NetConf" comment="" factoryVersion="" versionName="0.0.4" xmlVersion="1.1">
+--><Application applicationName="NetConf" factoryVersion="" versionName="0.0.4" xmlVersion="1.1">
+  <ApplicationInfo>
+    <RuntimeContextRequirements>
+      <RuntimeContextRequirement>
+        <ApplicationName>SSH</ApplicationName>
+        <VersionName>2.0.31</VersionName>
+      </RuntimeContextRequirement>
+    </RuntimeContextRequirements>
+  </ApplicationInfo>
+  <Filters>
+    <Filter implicitDependency="false">
+      <Name>NetConfNotificationReceiverFilter</Name>
+      <JarFiles>NetConfNotificationReceiverFilter/NetConfNotificationReceiverFilter.jar:</JarFiles>
+      <FqFilterClassname>com.gip.xyna.xact.filter.NetConfNotificationReceiverFilter</FqFilterClassname>
+      <TriggerName>NetConfNotificationReceiverTrigger</TriggerName>
+      <SharedLibs>netConfNotificationReceiverLib:</SharedLibs>
+    </Filter>
+  </Filters>
+  <SharedLibs>
+    <SharedLib implicitDependency="true">
+      <SharedLib>netConfNotificationReceiverLib</SharedLib>
+    </SharedLib>
+    <SharedLib implicitDependency="true">
+      <SharedLib>sshlibs</SharedLib>
+    </SharedLib>
+  </SharedLibs>
+  <Triggers>
+    <Trigger implicitDependency="false">
+      <Name>NetConfNotificationReceiverTrigger</Name>
+      <JarFiles>NetConfNotificationReceiverTrigger/NetConfNotificationReceiverTrigger.jar:</JarFiles>
+      <FqTriggerClassname>com.gip.xyna.xact.trigger.NetConfNotificationReceiverTrigger</FqTriggerClassname>
+      <SharedLibs>netConfNotificationReceiverLib:sshlibs:</SharedLibs>
+    </Trigger>
+  </Triggers>
+  <XMOMEntries>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.netconf.datatypes.NetConfEvent</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+  </XMOMEntries>
 </Application>
