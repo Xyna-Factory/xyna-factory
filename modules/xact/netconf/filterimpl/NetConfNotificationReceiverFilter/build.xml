@@ -32,8 +32,6 @@
     <property name="base.lib.dir" value="${basedir}/lib" />
     <property name="target.dir" value="${basedir}/deploy" />
 
-    <property file="${application.dir}/workspace.properties" />
-
 	<property name="server.mdm.xml.filename" value="NetConfNotificationReceiverFilter.xml" />
 
     <property name="mdm.xml.name" value="NetConfNotificationReceiverFilter" />
