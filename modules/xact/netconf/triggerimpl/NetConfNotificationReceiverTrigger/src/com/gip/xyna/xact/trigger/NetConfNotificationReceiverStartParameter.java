@@ -19,18 +19,12 @@
 package com.gip.xyna.xact.trigger;
 
 
-
-import com.gip.xyna.xdev.xfractmod.xmdm.StartParameter;
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xact.exceptions.XACT_InvalidStartParameterCountException;
 import com.gip.xyna.xact.exceptions.XACT_InvalidTriggerStartParameterValueException;
-
-import org.apache.log4j.Logger;
+import com.gip.xyna.xdev.xfractmod.xmdm.StartParameter;
 
 
 public class NetConfNotificationReceiverStartParameter implements StartParameter {
-
-  private static Logger logger = CentralFactoryLogging.getLogger(NetConfNotificationReceiverStartParameter.class);
 
   // List of static parameters
   public static final long CloseConnectionList_RequestInterval = 1000; //RequestInterval (in ms) to check "All connections closed - Ready to stop trigger"

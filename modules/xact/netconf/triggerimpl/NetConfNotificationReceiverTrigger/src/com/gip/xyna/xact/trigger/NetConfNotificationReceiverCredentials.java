@@ -25,7 +25,6 @@ import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBuilds
 import com.hierynomus.sshj.transport.mac.Macs;
 
 import net.schmizz.sshj.SSHClient;
-//import net.schmizz.sshj.common.SSHException;
 import net.schmizz.sshj.transport.mac.MAC;
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
 import net.schmizz.sshj.userauth.method.AuthMethod;
@@ -48,7 +47,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 
 import org.apache.log4j.Logger;
 
@@ -75,7 +73,7 @@ public class NetConfNotificationReceiverCredentials {
                                                                }
                                                                return sb.toString();
                                                              }
-        
+
                                                             },
                                                             SupportedHostNameFeature.all())
             .setDefaultDocumentation(DocumentationLanguage.EN, "Supported features for the HostKeyRepository, turning features off can improve performance");
@@ -139,7 +137,9 @@ public class NetConfNotificationReceiverCredentials {
     Optional<String> algoTypeOpt = Optional.empty();
     int port = socket_port;
     String hostname = socket_host;
-    logger.debug("NetConfNotificationReceiver: getAlgoType: " + socket_host + " " + socket_port);
+    if (logger.isDebugEnabled()) {
+      logger.debug("NetConfNotificationReceiver: getAlgoType: " + socket_host + " " + socket_port);
+    }
     XynaHostKeyRepository hostRepo = new HostKeyStorableRepository(supportedFeatures.get());
     List<String> algoList = hostRepo.findExistingAlgorithms(hostname, port);
 
@@ -164,8 +164,9 @@ public class NetConfNotificationReceiverCredentials {
   private Collection<KeyProvider> generateKeyProvider(String socket_host, int socket_port) {
     List<KeyProvider> kpl = new ArrayList<KeyProvider>();
     kpl = idRepo.getKey(null, getAlgoType(socket_host, socket_port));
-    //kpl = idRepo.getKey(null, Optional.empty());
-    logger.debug("NetConfNotificationReceiver: generateKeyProvider - keys: " + kpl.size());
+    if (logger.isDebugEnabled()) {
+      logger.debug("NetConfNotificationReceiver: generateKeyProvider - keys: " + kpl.size());
+    }
     return kpl;
   }
 
@@ -218,27 +219,24 @@ public class NetConfNotificationReceiverCredentials {
 
     //Repair: protected XynaIdentityRepository idRepo
     idRepo = new IdentityStorableRepository(client.getTransport().getConfig());
-    //List<KeyProvider> info = idRepo.getAllKeys();
-
-    logger.debug("NetConfNotificationReceiver: initSSHClient");
-
+    if (logger.isDebugEnabled()) {
+      logger.debug("NetConfNotificationReceiver: initSSHClient");
+    }
     return client;
   }
 
 
   public Collection<AuthMethod> convertAuthMethod(String method, String socket_host, int socket_port) {
-
-    //logger.debug "NetConfNotificationReceiver - convertAuthMethod");
-
     Collection<AuthMethod> aMethodResponse = new ArrayList<AuthMethod>();
     aMethodResponse.add(new net.schmizz.sshj.userauth.method.AuthNone());
 
     switch (method) {
       case "PASSWORD" :
         if (netconf_password != null) {
-
-          logger.debug("NetConfNotificationReceiver: convertAuthMethod - PASSWORD: " + netconf_password);
-
+          
+          if (logger.isDebugEnabled()) {
+            logger.debug("NetConfNotificationReceiver: convertAuthMethod - PASSWORD: " + netconf_password);
+          }
           Collection<AuthMethod> addMethodPassword = Collections.singleton(new AuthPassword(new PasswordFinder() {
 
             public boolean shouldRetry(Resource<?> resource) {
@@ -260,11 +258,15 @@ public class NetConfNotificationReceiverCredentials {
       case "HOSTBASED" :
         throw new IllegalArgumentException("AuthenticationMethod disabled (security) '" + method.toString() + "'.");
       case "PUBLICKEY" :
-        logger.debug("NetConfNotificationReceiver: convertAuthMethod - PUBLICKEY: " + socket_host + " " + socket_port);
+        if (logger.isDebugEnabled()) {
+          logger.debug("NetConfNotificationReceiver: convertAuthMethod - PUBLICKEY: " + socket_host + " " + socket_port);
+        }
         Collection<KeyProvider> keys = generateKeyProvider(socket_host, socket_port);
         Collection<AuthMethod> addMethodKey = keys.stream().map(AuthPublickey::new).collect(Collectors.toList());
         aMethodResponse.addAll(addMethodKey);
-        //logger.debug( "NetConfNotificationReceiver: convertAuthMethod - PUBLICKEY: "+aMethodResponse.size());
+        if (logger.isDebugEnabled()) {
+          logger.debug( "NetConfNotificationReceiver: convertAuthMethod - PUBLICKEY: "+aMethodResponse.size());
+        }
         return aMethodResponse;
       default :
         throw new IllegalArgumentException("Unknown AuthenticationMethod '" + method.toString() + "'.");
@@ -276,7 +278,10 @@ public class NetConfNotificationReceiverCredentials {
     if ((hostkeyAlias != null) && (!hostkeyAlias.isEmpty())) {
       HostKeyStorableRepository tmpHostRepo = new HostKeyStorableRepository(supportedFeatures.get());
       tmpHostRepo.injectHostKey(hostkeyAlias);
-      //logger.debug("SSHConnectionInstanceOperationImpl prepAuthentification - conParams.getHostKeyAlias():"+xact.ssh.HostKeyHashMap.getNumberOfKeys(hostkeyAlias));
+      if (logger.isDebugEnabled()) {
+        logger.debug("SSHConnectionInstanceOperationImpl prepAuthentification - conParams.getHostKeyAlias():" +
+                     xact.ssh.HostKeyHashMap.getNumberOfKeys(hostkeyAlias));
+      }
     } else {
       HostKeyStorableRepository tmpHostRepo = new HostKeyStorableRepository(supportedFeatures.get());
       tmpHostRepo.injectHostKey(socket_host);

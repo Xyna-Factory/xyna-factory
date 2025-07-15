@@ -64,23 +64,29 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
         OldConnectionID = NetConfNotificationReceiverSharedLib.getSharedNetConfConnectionID(RDIP);
       }
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + "getOldConnection failed", t);
+      logger.warn("NetConfNotificationReceiver: getOldConnection failed", t);
     }
     return OldConnectionID;
   }
 
 
   private void TCPServerListener() throws Exception {
-
-    logger.info("NetConfNotificationReceiver: " + "Listening on port " + this.port + "...");
+    if (logger.isInfoEnabled()) { 
+      logger.info("NetConfNotificationReceiver: Listening on port " + this.port + "..."); 
+    }
     while ((!this.TCPconn.isClosed()) & (ConnectionList.isTriggerOn())) {
-      logger.info("NetConfNotificationReceiver: " + "Waiting to accept connection...");
+      if (logger.isInfoEnabled()) {
+        logger.info("NetConfNotificationReceiver: Waiting to accept connection...");
+      }
       String SocketID = this.TCPconn.accept();
       if (SocketID.contains("blocked")) {
-        logger.info("NetConfNotificationReceiver: " + "Socket blocked connection ID: " + SocketID);
+        if (logger.isInfoEnabled()) {
+          logger.info("NetConfNotificationReceiver: Socket blocked connection ID: " + SocketID);
+        }
       } else {
-        logger.info("NetConfNotificationReceiver: " + "Accepted connection ID: " + SocketID);
-
+        if (logger.isInfoEnabled()) {
+          logger.info("NetConfNotificationReceiver: Accepted connection ID: " + SocketID);
+        }
         String OldConnectionID = getOldConnection(SocketID); // Only one connection per RD_IP allowed (e.g. uncontrolled reboot of RD)
 
         Thread t = new Thread() {
@@ -91,15 +97,21 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
         };
         t.start();
 
-        logger.info("NetConfNotificationReceiver: " + "Again Listening ...");
+        if (logger.isInfoEnabled()) {
+          logger.info("NetConfNotificationReceiver: Again Listening ...");
+        }
       } ;
     }
-    logger.info("NetConfNotificationReceiver: " + "TCP Listener closed!");
+    if (logger.isInfoEnabled()) {
+      logger.info("NetConfNotificationReceiver: TCP Listener closed!");
+    }
   }
 
 
   private void startServerTCP() throws Exception {
-    logger.info("NetConfNotificationReceiver: " + "Start TCP Listener on port " + this.port + "...");
+    if (logger.isInfoEnabled()) {
+      logger.info("NetConfNotificationReceiver: Start TCP Listener on port " + this.port + "...");
+    }
     this.TCPconn = new TCPConnection(this.port);
 
     Thread t = new Thread() {
@@ -109,7 +121,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
           TCPServerListener();
         } catch (Exception ex) {
           if (ConnectionList.isTriggerOn()) {
-            logger.warn("NetConfNotificationReceiver: " + "TCPServerListener failed", ex);
+            logger.warn("NetConfNotificationReceiver: TCPServerListener failed", ex);
           }
         }
       }
@@ -119,7 +131,9 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
 
 
   public void closeServerTCP() throws Exception {
-    logger.info("NetConfNotificationReceiver: " + "CLOSE TCP Listener on port " + this.port + "...");
+    if (logger.isInfoEnabled()) {
+      logger.info("NetConfNotificationReceiver: CLOSE TCP Listener on port " + this.port + "...");
+    }
     this.TCPconn.close();
   }
 
@@ -145,7 +159,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
           }
         }
       } catch (Throwable t) {
-        logger.warn("NetConfNotificationReceiver: " + "OutputQueueNetConfOperationListener failed", t);
+        logger.warn("NetConfNotificationReceiver: OutputQueueNetConfOperationListener failed", t);
       }
 
     }
@@ -160,7 +174,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
           OutputQueueNetConfOperationListener();
         } catch (Exception ex) {
           if (ConnectionList.isTriggerOn()) {
-            logger.warn("NetConfNotificationReceiver: " + "OutputQueueNetConfOperationListener failed", ex);
+            logger.warn("NetConfNotificationReceiver: OutputQueueNetConfOperationListener failed", ex);
           }
         }
       }
@@ -187,7 +201,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
       this.startOutputQueueNetConfOperationListener();
 
     } catch (Exception ex) {
-      logger.warn("NetConfNotificationReceiver: " + "XACT_TriggerCouldNotBeStartedException", ex);
+      logger.warn("NetConfNotificationReceiver: XACT_TriggerCouldNotBeStartedException", ex);
       throw new XACT_TriggerCouldNotBeStartedException(ex) {
         private static final long serialVersionUID = 1L;
       };
@@ -201,9 +215,9 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
     NetConfNotificationReceiverTriggerConnection conn = null;
 
     try {
-
-      logger.debug("NetConfNotificationReceiver: " + "Receive - Wait ...");
-
+      if (logger.isDebugEnabled()) {
+        logger.debug("NetConfNotificationReceiver: Receive - Wait ...");
+      }
       if (ConnectionList.isTriggerOn()) {
         while (ConnectionQueue.size() == 0) {
           try {
@@ -212,12 +226,16 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
             logger.warn("NetConfNotificationReceiver: receive - sleep failed", ex);
           }
         }
-        logger.debug("NetConfNotificationReceiver: " + "Receive - GET ...");
+        if (logger.isDebugEnabled()) {
+          logger.debug("NetConfNotificationReceiver: Receive - GET ...");
+        }
         conn = ConnectionQueue.get();
-        logger.debug("NetConfNotificationReceiver: " + "#ConnectionQueue: " + ConnectionQueue.size());
+        if (logger.isDebugEnabled()) {
+          logger.debug("NetConfNotificationReceiver: #ConnectionQueue: " + ConnectionQueue.size());
+        }
       }
     } catch (Exception ex) {
-      logger.warn("NetConfNotificationReceiver: " + "receive failed", ex);
+      logger.warn("NetConfNotificationReceiver: receive failed", ex);
     }
 
     return conn;
@@ -238,8 +256,6 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
    */
 
   public void stop() throws XACT_TriggerCouldNotBeStoppedException {
-
-
     try {
       ConnectionList.TriggerOff();
       List<String> ItemList = ConnectionList.ListConnectionList();
@@ -254,8 +270,9 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
         };
         t.start();
       }
-
-      logger.info("NetConfNotificationReceiver: " + "Wait to CloseServerTCP ... " + ConnectionList.sizeConnectionList());
+      if (logger.isInfoEnabled()) {
+        logger.info("NetConfNotificationReceiver: Wait to CloseServerTCP ... " + ConnectionList.sizeConnectionList());
+      }
       while (ConnectionList.sizeConnectionList() > 0) {
         try {
           Thread.sleep(whilewait_CloseConnectionList);
@@ -264,11 +281,11 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
         }
       }
       this.closeServerTCP();
-
-      logger.info("NetConfNotificationReceiver: " + "Trigger stopped");
-
+      if (logger.isInfoEnabled()) {
+        logger.info("NetConfNotificationReceiver: Trigger stopped");
+      }
     } catch (Exception ex) {
-      logger.warn("NetConfNotificationReceiver: " + "Trigger stop failed", ex);
+      logger.warn("NetConfNotificationReceiver: Trigger stop failed", ex);
       throw new RuntimeException("Problems stopping NetConfNotificationReceiver: " + ex);
     }
 
@@ -282,13 +299,16 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
    */
   public void onNoFilterFound(NetConfNotificationReceiverTriggerConnection con) {
     try {
-      logger.debug("NetConfNotificationReceiver: " + "No Filter found ... #messages: " + con.message_size());
-
+      if (logger.isDebugEnabled()) {
+        logger.debug("NetConfNotificationReceiver: No Filter found ... #messages: " + con.message_size());
+      }
       String ausgabe = con.getMessage();
-      logger.debug("NetConfNotificationReceiver: " + "Message: " + ausgabe);
-      logger.debug("NetConfNotificationReceiver: " + "... #messages: " + con.message_size());
+      if (logger.isDebugEnabled()) {
+        logger.debug("NetConfNotificationReceiver: Message: " + ausgabe);
+        logger.debug("NetConfNotificationReceiver: #messages: " + con.message_size());
+      }
     } catch (Exception ex) {
-      logger.warn("NetConfNotificationReceiver: " + "onNoFilterFound failed", ex);
+      logger.warn("NetConfNotificationReceiver: onNoFilterFound failed", ex);
     }
   }
 
