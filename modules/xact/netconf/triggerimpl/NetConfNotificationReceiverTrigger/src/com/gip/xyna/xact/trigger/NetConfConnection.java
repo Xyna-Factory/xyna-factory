@@ -75,9 +75,9 @@ public class NetConfConnection {
 
       assert (this.socket.isConnected());
 
-      //logger.debug("NetConfNotificationReceiver: "+"Host: " + this.socket_host);
-      //logger.debug("NetConfNotificationReceiver: "+"Port: " + this.socket_port);
-
+      if (logger.isDebugEnabled()) {
+        logger.debug("NetConfNotificationReceiver: Host: " + this.socket_host + ", Port: " + this.socket_port);
+      }
     } catch (Throwable t) {
       logger.warn("NetConfNotificationReceiver: " + "Initialization of NetConfConnection failed", t);
     }
@@ -98,7 +98,9 @@ public class NetConfConnection {
 
       credentialsSSHJ.injectHostKeyHash(socket_host, hostkeyAlias);
 
-      logger.debug("NetConfNotificationReceiver: injectHostname " + socket_host + " " + HostKeyAliasMapping.convertHostname(socket_host));
+      if (logger.isDebugEnabled()) {
+        logger.debug("NetConfNotificationReceiver: injectHostname " + socket_host + " " + HostKeyAliasMapping.convertHostname(socket_host));
+      }
       client = credentialsSSHJ.initSSHClient();
       method = "PUBLICKEY";
     } else {

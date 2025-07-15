@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +19,16 @@
 <project name="build" default="build" basedir=".">
 
     <!-- this is the absolute path to the root -->
-    <pathconvert property="root.dir" >
-        <path location="${basedir}/../../../../.."/>
+    <pathconvert property="root.dir">
+        <path location="${basedir}/../../../" />
     </pathconvert>
+    <property name="target.dir" value="${basedir}/deploy/" />
+    <property name="application.dir" value="${basedir}" />
 
-    <property name="sharedLib.folder.name" value="netConfNotificationReceiverLib" />
-    <property name="sharedLib.name" value="netConfNotificationReceiverLib" />
+    <target name="build">
 
-    <property name="application.dir" value="${basedir}/../.." />
+        <antcall target="build-application" />
+    </target>
 
-    <import file="${root.dir}/installation/build/buildSharedLib.xml" />
-
+    <import file="${root.dir}/installation/build/buildApplication.xml" />
 </project>

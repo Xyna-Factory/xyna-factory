@@ -41,7 +41,7 @@ public class TCPConnection {
     try {
       this.serverSocket = new ServerSocket(this.port);
     } catch (Exception ex) {
-      logger.warn("NetConfNotificationReceiver: " + "Initialization of ServerSocket failed", ex);
+      logger.warn("NetConfNotificationReceiver: Initialization of ServerSocket failed", ex);
       throw ex;
     }
   }
@@ -68,7 +68,7 @@ public class TCPConnection {
 
     } catch (Exception ex) {
       if (ConnectionList.isTriggerOn()) {
-        logger.warn("NetConfNotificationReceiver: " + "Socket accept failed", ex);
+        logger.warn("NetConfNotificationReceiver: Socket accept failed", ex);
       }
     }
     return SocketID;
@@ -79,7 +79,7 @@ public class TCPConnection {
     try {
       this.serverSocket.close();
     } catch (Exception ex) {
-      logger.warn("NetConfNotificationReceiver: " + "Socket close failed", ex);
+      logger.warn("NetConfNotificationReceiver: Socket close failed", ex);
     }
   }
 

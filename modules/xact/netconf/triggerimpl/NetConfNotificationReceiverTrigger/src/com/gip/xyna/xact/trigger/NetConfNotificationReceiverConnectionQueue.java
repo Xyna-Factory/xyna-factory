@@ -18,15 +18,8 @@
 
 package com.gip.xyna.xact.trigger;
 
-
-//import com.gip.xyna.CentralFactoryLogging;
-//import com.gip.xyna.xact.exceptions.XACT_InvalidStartParameterCountException;
-//import com.gip.xyna.xact.exceptions.XACT_InvalidTriggerStartParameterValueException;
-//import org.apache.log4j.Logger;
-
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-
 
 
 class ConnectionQueue {
@@ -52,4 +45,5 @@ class ConnectionQueue {
   public static int size() {
     return requests.size();
   }
+  
 }

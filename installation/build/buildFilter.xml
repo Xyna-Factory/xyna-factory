@@ -32,6 +32,9 @@
 
     <property file="${basedir}/server.properties" />
     <property file="${root.dir}/server.properties" />
+    <property file="${application.dir}/workspace.properties" />
+
+    <property name="workspacename" value="default workspace" />
 
     <!-- depends on server make use of server variable -->
     <property name="server.mdm.xml.filename" value="${mdm.xml.filename}" />
