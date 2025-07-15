@@ -212,15 +212,19 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
         if (matcher.matches()) {
           this.Feature_CapInterleave = true;
           NetConfNotificationReceiverSharedLib.addRDHash(this.RDHash, this.RD_IP);
-          logger.debug("NetConfNotificationReceiver: " + "Feature_CapInterleave: true");
+          if (logger.isDebugEnabled()) {
+            logger.debug("NetConfNotificationReceiver: Feature_CapInterleave: true");
+          }
         } else {
           this.Feature_CapInterleave = false;
           this.ConnectionInit = false;
-          logger.debug("NetConfNotificationReceiver: " + "Feature_CapInterleave: false");
+          if (logger.isDebugEnabled()) {
+            logger.debug("NetConfNotificationReceiver: Feature_CapInterleave: false");
+          }
         }
       }
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " internalMessageProcessing_NetConfHello failed", t);
+      logger.warn("NetConfNotificationReceiver: internalMessageProcessing_NetConfHello failed", t);
     }
   }
 
@@ -246,10 +250,12 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
           NetConfNotificationReceiverSharedLib.addRDHash(this.RDHash, this.RD_IP);
         }
         this.ConnectionInit = false;
-        logger.debug("NetConfNotificationReceiver: " + "SerialString: " + message_element + " HASH: " + message_element_hash);
+        if (logger.isDebugEnabled()) {
+          logger.debug("NetConfNotificationReceiver: " + "SerialString: " + message_element + " HASH: " + message_element_hash);
+        }
       }
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " internalMessageProcessing_SerialNum failed", t);
+      logger.warn("NetConfNotificationReceiver:  internalMessageProcessing_SerialNum failed", t);
     }
   }
 
@@ -262,12 +268,14 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
         if (element.contains(MessageID)) {
           NetConfNotificationReceiverSharedLib.addInputQueueNetConfMessageElement(this.ConnectionID, this.RDHash, MessageID, element, true);
           NetConfNotificationReceiverSharedLib.removeInputQueueMessageID(MessageID);
-          logger.debug("NetConfNotificationReceiver: " + "Received MessageID: " + MessageID);
+          if (logger.isDebugEnabled()) {
+            logger.debug("NetConfNotificationReceiver: " + "Received MessageID: " + MessageID);
+          }
         }
       }
 
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " internalMessageProcessing_NetConfOperationRD failed", t);
+      logger.warn("NetConfNotificationReceiver: internalMessageProcessing_NetConfOperationRD failed", t);
     }
   }
 
@@ -280,7 +288,9 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
         Matcher matcher_SubscriptionWithStartTime_Okay = pattern_SubscriptionWithStartTime_Okay.matcher(matcher_SubscriptionWithStartTime.group(1));
         if (matcher_SubscriptionWithStartTime_Okay.find()) {
           this.ReplayInit = false;
-          logger.debug("NetConfNotificationReceiver: Replay successful");
+          if (logger.isDebugEnabled()) {
+            logger.debug("NetConfNotificationReceiver: Replay successful");
+          }
         } else {
           this.ReplayInit = false;
           logger.warn("NetConfNotificationReceiver: Replay failed for "+this.RD_IP+" - Retry without replay");
@@ -288,7 +298,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
         }
       }
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " internalMessageProcessing_SubscriptionWithStartTime failed", t);
+      logger.warn("NetConfNotificationReceiver:  internalMessageProcessing_SubscriptionWithStartTime failed", t);
     }
   }
 
@@ -307,7 +317,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
       }
       this.internal_message.clear();
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " internalMessageProcessing failed", t);
+      logger.warn("NetConfNotificationReceiver: internalMessageProcessing failed", t);
     }
   }
 
@@ -344,7 +354,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
       t.start();
 
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " push_delimiter failed", t);
+      logger.warn("NetConfNotificationReceiver: push_delimiter failed", t);
     }
   }
 
@@ -375,7 +385,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
     try {
       IP = this.RD_IP;
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " getIP failed", t);
+      logger.warn("NetConfNotificationReceiver: getIP failed", t);
     }
     return IP;
   };
@@ -386,7 +396,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
     try {
       ID = this.RDHash;
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " getID failed", t);
+      logger.warn("NetConfNotificationReceiver: getID failed", t);
     }
     return ID;
   };
@@ -397,7 +407,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
     try {
       ID = this.ConnectionID;
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " getConnectionID failed", t);
+      logger.warn("NetConfNotificationReceiver: getConnectionID failed", t);
     }
     return ID;
   };
@@ -408,7 +418,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
     try {
       poll_message = message.poll();
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " getMessage failed", t);
+      logger.warn("NetConfNotificationReceiver: getMessage failed", t);
     }
     return poll_message;
   };
@@ -419,7 +429,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
     try {
       size_message = message.size();
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " message_size failed", t);
+      logger.warn("NetConfNotificationReceiver: message_size failed", t);
     }
     return size_message;
   };
@@ -430,7 +440,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
     try {
       filter_targetWF = this.filter_targetWF;
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " getFilterTargetWF failed", t);
+      logger.warn("NetConfNotificationReceiver: getFilterTargetWF failed", t);
     }
     return filter_targetWF;
   };
@@ -455,7 +465,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
         this.buffer_updatetime = System.currentTimeMillis();
       }
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " listener failed", t);
+      logger.warn("NetConfNotificationReceiver: listener failed", t);
     }
   }
 
@@ -470,19 +480,21 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
       };
       t.start();
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " startListener failed", t);
+      logger.warn("NetConfNotificationReceiver: startListener failed", t);
     }
   };
 
 
   private void command_send(String NETCONF_Command, long delay_before, long delay_after) {
     try {
-      logger.debug("NetConfNotificationReceiver: " + "SENDING: " + NETCONF_Command);
+      if (logger.isDebugEnabled()) {
+        logger.debug("NetConfNotificationReceiver: " + "SENDING: " + NETCONF_Command);
+      }
       Thread.sleep(delay_before);
       this.NetConfConn.send(NETCONF_Command);
       Thread.sleep(delay_after);
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " command_send failed", t);
+      logger.warn("NetConfNotificationReceiver: command_send failed", t);
     }
   }
 
@@ -492,7 +504,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
       String NETCONF_Command = NETCONF_Operation + "]]>]]>";
       this.command_send(NETCONF_Command, 0, 0);
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " sendNetConfOperation failed", t);
+      logger.warn("NetConfNotificationReceiver: sendNetConfOperation failed", t);
     }
   }
 
@@ -530,12 +542,12 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
       this.command_send(client_goodbye, 0, this.command_delay_after);
       this.NetConfConn.closeNetconfConnection();
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " close_connection (NETCONF) failed", t);
+      logger.warn("NetConfNotificationReceiver: close_connection (NETCONF) failed", t);
     }
     try {
       this.NetConfConn.closeSocket();
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " close_connection (Socket) failed", t);
+      logger.warn("NetConfNotificationReceiver: close_connection (Socket) failed", t);
     }
     try {
       NetConfNotificationReceiverSharedLib.removeRDHash(this.RDHash);
@@ -543,7 +555,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
       ConnectionList.removeConnection(this.ConnectionID);
       ConnectionList.release(this.ConnectionID);
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " Remove entries in close_connection failed", t);
+      logger.warn("NetConfNotificationReceiver: Remove entries in close_connection failed", t);
     }
   };
 
@@ -555,7 +567,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
         NetConfNotificationReceiverSharedLib.removeRDHash(OldConn.RDHash);
       }
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " cleanup_oldconnection failed", t);
+      logger.warn("NetConfNotificationReceiver: cleanup_oldconnection failed", t);
     }
   };
 
@@ -567,7 +579,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
         OldConn.cleanup_connection();
       }
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " cleanup_oldconnection failed", t);
+      logger.warn("NetConfNotificationReceiver: cleanup_oldconnection failed", t);
     }
   };
 
@@ -576,18 +588,18 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
     try {
       this.NetConfConn.closeNetconfConnection();
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " cleanup_connection (NETCONF) failed", t);
+      logger.warn("NetConfNotificationReceiver: cleanup_connection (NETCONF) failed", t);
     }
     try {
       this.NetConfConn.closeSocket();
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " cleanup_connection (Socket) failed", t);
+      logger.warn("NetConfNotificationReceiver: cleanup_connection (Socket) failed", t);
     }
     try {
       ConnectionList.removeConnection(this.ConnectionID);
       ConnectionList.release(this.ConnectionID);
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + " Remove entries in cleanup_connection failed", t);
+      logger.warn("NetConfNotificationReceiver: Remove entries in cleanup_connection failed", t);
     }
   };
 

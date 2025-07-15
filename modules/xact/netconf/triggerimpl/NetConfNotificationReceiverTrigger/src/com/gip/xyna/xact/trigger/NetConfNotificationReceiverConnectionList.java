@@ -19,7 +19,6 @@
 package com.gip.xyna.xact.trigger;
 
 
-
 import java.net.Socket;
 import java.util.List;
 import java.util.LinkedList;

@@ -29,13 +29,9 @@
 
     <property file="${basedir}/server.properties" />
     <property file="${root.dir}/server.properties" />
+    <property file="${application.dir}/workspace.properties" />
 
     <property name="workspacename" value="'default workspace'" />
-    <property name="revision.dir" value="../revisions/rev_workingset" />
-
-    <!-- depends on server make use of server variable -->
-    <property name="server.sharedLib.path" value="${server.path}/${revision.dir}/saved/sharedLibs/${sharedLib.folder.name}" />
-
     <property name="third_parties.pom" value="${basedir}/third_parties.pom.xml" />
 
     <checkServerProperties />
@@ -66,16 +62,25 @@
          target: deploy             
          ================================= -->
     <!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
-    <target name="deploy" depends="build-src" description="scp sharedlib to xyna server and reload sharedlib.">
+    <target name="deploy" depends="build-src,copyLibs" description="scp sharedlib to xyna server and reload sharedlib.">
         <fail message="No server properties specified. Unable to deploy." unless="server.available" />
 
+        <determine-revision workspacename="${workspacename}" outputproperty="revision" />
+        <property name="revision.dir" value="../revisions/rev_${revision}" />
+        <property name="server.sharedLib.path" value="${server.path}/${revision.dir}/saved/sharedLibs/${sharedLib.folder.name}" />
+
+        <if>
+            <isset property="server.containername" />
+            <then>
+                <custom-ssh-exec host="${server.host}" username="root" command="rm -rf ${server.sharedLib.path}" />
+            </then>
+            <else>
+                <custom-ssh-exec host="${server.host}" username="${server.userid}" command="rm -r ${server.sharedLib.path}" />
+            </else>
+        </if>
         <custom-ssh-exec host="${server.host}" username="${server.userid}" command="mkdir -p ${server.sharedLib.path}" />
-
         <default-scp-to-remote fromdir="${target.dir}" frominclude="**/*" todir="${server.sharedLib.path}" />
-        <default-scp-to-remote fromdir="${base.lib.dir}" frominclude="**/*" todir="${server.sharedLib.path}" />
-        <default-scp-to-remote fromdir="${unfree.lib.dir}" frominclude="**/*" todir="${server.sharedLib.path}" />
-
-        <custom-ssh-exec host="${server.host}" username="${server.userid}" command="cd ${server.path}; ./xynafactory.sh reloadsharedlib -sharedLibName ${sharedLib.folder.name} -workspaceName '${workspacename}'" />
+        <custom-ssh-exec host="${server.host}" username="${server.userid}" command="cd ${server.path}; ./xynafactory.sh deploysharedlib -sharedLibName ${sharedLib.folder.name} -workspaceName '${workspacename}'" />
     </target>
 
     <!-- =================================
