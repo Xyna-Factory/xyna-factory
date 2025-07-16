@@ -27,12 +27,13 @@ ALL_TRIGGERS=("nsnhix5600" "dhcp_v4" "radius")
 ALL_SERVICES=("nsnhix5600" "templatemechanism" "sipuseragent" "jmsforwarding" "dhcp_v4")
 ALL_DEPLOY_TARGETS=("geronimo" "tomcat" "oracle")
 ALL_DATAMODELTYPES=("mib","tr069","xsd");
+GUIHTTP_APP="GuiHttp"
 #ACHTUNG: Version auch bei addRequirement zu default workspace berücksichtigen
 ALL_APPLICATIONS="Base Processing"; #Default-Applications, die immer installiert sein sollten
 APPMGMTVERSION=1.0.10
-GUIHTTPVERSION=1.3.25
+GUIHTTPVERSION=1.3.29
 SNMPSTATVERSION=1.0.3
-PROCESSINGVERSION=1.0.26
+PROCESSINGVERSION=1.0.27
 ALL_REPOSITORYACCESSES=("svn");
 INSTANCE_NUMBER="1" #1 ist default
 
@@ -1361,16 +1362,25 @@ import_applications () {
         f_set_xyna_property "xfmg.xfctrl.appmgmt.ExportApplication.Destination" "xfmg.xfctrl.appmgmt.ExportApplication@GlobalApplicationMgmt/${APPMGMTVERSION}"
         f_set_xyna_property "xfmg.xfctrl.appmgmt.ImportApplication.Destination" "xfmg.xfctrl.appmgmt.ImportApplication@GlobalApplicationMgmt/${APPMGMTVERSION}"
         f_set_xyna_property "xfmg.xfctrl.appmgmt.MigrateRuntimeContextDependencies.Destination" "xfmg.xfctrl.appmgmt.MigrateRuntimeContextDependencies@GlobalApplicationMgmt/${APPMGMTVERSION}"
-        
+
       ;;
      */GuiHttp.*)
-        echo -e "\n  - Starting application ${APP}";
-        f_xynafactory startapplication --force -applicationName "GuiHttp" -versionName "${GUIHTTPVERSION}"
+        GUIHTTP_APP_COUNT=$(f_xynafactory listapplications -h | ${VOLATILE_GREP} "${GUIHTTP_APP}" | ${VOLATILE_GREP} -cve '^\s*$')
+        # Check if more then 1 GuiHttp Applications found (Reason: Old application available because manual migration is needed)
+        if [[ ${GUIHTTP_APP_COUNT} -gt 1 ]]; then
+          ALL_RUNNING_GUIHTTP_APP_VERSIONS=$(f_xynafactory listapplications -h | ${VOLATILE_GREP} "${GUIHTTP_APP}" | ${VOLATILE_GREP} "STATUS: 'RUNNING'" | ${VOLATILE_AWK} '{print $2}' | ${VOLATILE_TR} -d \')
+          for APP_VERSION in ${ALL_RUNNING_GUIHTTP_APP_VERSIONS}
+          do
+            # Stopping all running GuiHttp applications
+            echo -e "\n  - Stopping application ${GUIHTTP_APP}:${APP_VERSION}";
+            f_xynafactory stopapplication -applicationName "${GUIHTTP_APP}" -versionName "${APP_VERSION}"
+          done
+        fi
+        echo -e "\n  - Starting application ${APP}:${GUIHTTPVERSION}";
+        f_xynafactory startapplication --force -applicationName "${GUIHTTP_APP}" -versionName "${GUIHTTPVERSION}"
       ;;
     esac;
   done;
-  
-  
 }
 
 
