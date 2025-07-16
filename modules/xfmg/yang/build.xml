@@ -27,15 +27,15 @@
 
     <target name="build" description="build">
         <antcall target="prepare-mdm-jar-if-missing" />
-
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="${basedir}/mdmimpl/YangMappingCollectionImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
-
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="${basedir}/mdmimpl/TraceYangMappingCollectionImpl">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
-
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="${basedir}/mdmimpl/ProtocolOperationsImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
         <antcall target="build-application" />
     </target>
 
@@ -43,6 +43,7 @@
         <antcall target="create-mdm-jar" />
         <supply-mdm-jar type="mdmimpl" name="YangMappingCollectionImpl" />
         <supply-mdm-jar type="mdmimpl" name="TraceYangMappingCollectionImpl" />
+        <supply-mdm-jar type="mdmimpl" name="ProtocolOperationsImpl" />
         <delete file="${basedir}/mdm.jar" />
     </target>
 

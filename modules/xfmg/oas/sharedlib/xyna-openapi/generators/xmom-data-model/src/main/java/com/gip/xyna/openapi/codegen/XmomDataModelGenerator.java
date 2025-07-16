@@ -107,12 +107,9 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     }
     
     // determine name of Filter
-    String xFilterName = "OASFilter";
-    if (!GeneratorProperty.getLegacyFilterNames(this)) {
-      xFilterName = vendorExtentions != null? (String)vendorExtentions.get("x-filter-name") : info.getTitle();
-      xFilterName = xFilterName != null && !xFilterName.trim().isEmpty()? xFilterName : info.getTitle();
-      xFilterName = Camelizer.camelize(Sanitizer.sanitize(xFilterName.replace('-', ' ').replace('_', ' ')), Case.PASCAL);
-    }
+    String xFilterName = vendorExtentions != null ? (String) vendorExtentions.get("x-filter-name") : info.getTitle();
+    xFilterName = xFilterName != null && !xFilterName.trim().isEmpty() ? xFilterName : info.getTitle();
+    xFilterName = Camelizer.camelize(Sanitizer.sanitize(xFilterName.replace('-', ' ').replace('_', ' ')), Case.PASCAL);
     GeneratorProperty.setFilterName(this, xFilterName);
     
     /**
@@ -366,10 +363,15 @@ public class XmomDataModelGenerator extends DefaultCodegen {
     if(schema == null) {
       return super.unaliasSchema(schema);
     }
-    String schemaName = ModelUtils.getSimpleRef(schema.get$ref());
+    if ("array".equalsIgnoreCase(schema.getType())) {
+      Schema item = schema.getItems();
+      if (item != null && item.getName() == null) {
+        item.setName(ModelUtils.getSimpleRef(item.get$ref()));
+      }
+    }
     Schema ret = super.unaliasSchema(schema);
-    if (ret.getName() == null) {
-      ret.setName(schemaName);
+    if (ret.getName() == null && schema.getName() != null) {
+      ret.setName(schema.getName());
     }
     return ret;
 }

@@ -63,14 +63,6 @@ public class GeneratorProperty {
     return (boolean) gen.additionalProperties().getOrDefault("x-createListWrappers", false);
   }
   
-  public static void setLegacyFilterNames(DefaultCodegen gen, boolean legacyFilterNames) {
-    gen.additionalProperties().put("x-legacyFilterNames", legacyFilterNames);
-  }
-  
-  public static boolean getLegacyFilterNames(DefaultCodegen gen) {
-    return (boolean) gen.additionalProperties().getOrDefault("x-legacyFilterNames", true);
-  }
-  
   public static void setDebugXO(DefaultCodegen gen, boolean debug) {
     gen.additionalProperties().put("debugXO", debug);
   }
