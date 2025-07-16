@@ -37,9 +37,6 @@
     <SharedLib implicitDependency="true">
       <SharedLib>netConfNotificationReceiverLib</SharedLib>
     </SharedLib>
-    <SharedLib implicitDependency="true">
-      <SharedLib>sshlibs</SharedLib>
-    </SharedLib>
   </SharedLibs>
   <Triggers>
     <Trigger implicitDependency="false">
