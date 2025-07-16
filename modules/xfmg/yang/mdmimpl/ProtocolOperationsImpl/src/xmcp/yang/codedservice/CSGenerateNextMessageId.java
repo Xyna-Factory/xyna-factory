@@ -27,7 +27,7 @@ public class CSGenerateNextMessageId {
   
   public MessageId execute() {
     MessageId ret = new MessageId();
-    ret.setId("" + getNextId());
+    ret.unversionedSetId(String.valueOf(getNextId()));
     return ret;
   }
   
