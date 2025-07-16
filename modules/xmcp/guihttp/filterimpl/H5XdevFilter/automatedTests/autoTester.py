@@ -340,7 +340,7 @@ class RequestTester:
     factoryIndexTranslated = self.factoryIndexMap[factoryIndex]
     self.urlExtension = "/upload"
     rdyUrl = self.formatUrl(factoryIndexTranslated)
-    result = ['curl', '-H', 'Expect:', '-k', "-F", "file=@" + filepath, rdyUrl]
+    result = ['curl', '-H', 'Expect:', '-k', '-F', "file=@" + filepath, rdyUrl]
 
     self.addCookiesToArguments(result, factoryIndexTranslated, False)
 
