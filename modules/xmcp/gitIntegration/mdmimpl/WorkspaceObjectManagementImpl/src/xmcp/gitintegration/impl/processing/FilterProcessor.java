@@ -388,7 +388,7 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
     ReferenceComparator comparator = new ReferenceComparator();
     ReferenceUpdater updater = new ReferenceUpdater();
     List<ItemDifference<Reference>> idrList = comparator.compare(from.getReferences(), to.getReferences());
-    updater.update(idrList,revision, ReferenceObjectType.FILTER, from.getFQFilterClassName(), to.getFQFilterClassName());
+    updater.update(idrList,revision, ReferenceObjectType.FILTER, from.getFilterName(), to.getFilterName());
   }
 
 
