@@ -22,7 +22,7 @@
   </Meta>
   <Libraries>VelocityServiceImpl.jar</Libraries>
   <Libraries>commons-collections-3.2.2.jar</Libraries>
-  <Libraries>commons-lang3-3.17.0.jar</Libraries>
+  <Libraries>commons-lang3-3.18.0.jar</Libraries>
   <Libraries>slf4j-api-1.7.36.jar</Libraries>
   <Libraries>velocity-engine-core-2.4.1.jar</Libraries>
   <Service Label="VelocityService" TypeName="VelocityService">
