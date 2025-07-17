@@ -78,10 +78,6 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
   public static final XynaPropertyBoolean createListWrappers = new XynaPropertyBoolean("xfmg.oas.create_list_wrappers", false)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Create an XmomObject for Schemas of type array")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Erzeuge Xmom Objekte für Schemas mit Typ array");
-  
-  public static final XynaPropertyBoolean legacyFilterNames = new XynaPropertyBoolean("xfmg.oas.legacyFilterNames", false)
-      .setDefaultDocumentation(DocumentationLanguage.EN, "Name the Filter always as OASFilter.")
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Bennent den Filter immer OASFilter.");
 
   private static final LocalRuntimeContextManagementSecurity localLrcms =
       new LocalRuntimeContextManagementSecurity();
@@ -104,7 +100,6 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
     }
 
     createListWrappers.registerDependency(UserType.Service, "OAS_Base");
-    legacyFilterNames.registerDependency(UserType.Service, "OAS_Base");
   }
 
 
@@ -120,7 +115,6 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
     }
     
     createListWrappers.unregister();
-    legacyFilterNames.unregister();
   }
 
 

@@ -174,7 +174,6 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
         .setInputSpec(specFile)
         .addAdditionalProperty("generateAliasAsModel", ApplicationGenerationServiceOperationImpl.createListWrappers.get())
         .addAdditionalProperty("x-createListWrappers", ApplicationGenerationServiceOperationImpl.createListWrappers.get())
-        .addAdditionalProperty("x-legacyFilterNames", ApplicationGenerationServiceOperationImpl.legacyFilterNames.get())
         .setOutputDir(target);
 
 
