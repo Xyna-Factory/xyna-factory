@@ -60,7 +60,7 @@ function api.get_panel_completion(line, col)
     -- params.doc.position.character = utf16_index
     -- params.position.character = params.doc.position.character
 
-    copilot.api.register_panel_handlers(panelId, {
+    copilot.panel.handlers.register_panel_handlers(panelId, {
         ---@param result copilot_panel_solution_data
         on_solution = function(result)
             api.result.num_solutions = api.result.num_solutions + 1
