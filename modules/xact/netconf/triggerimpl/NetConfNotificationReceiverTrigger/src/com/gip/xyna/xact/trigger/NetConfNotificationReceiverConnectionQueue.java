@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
+/*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
@@ -15,6 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Application applicationName="NetConf" comment="" factoryVersion="" versionName="0.0.3" xmlVersion="1.1">
-</Application>
+ */
+
+package com.gip.xyna.xact.trigger;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+
+class ConnectionQueue {
+
+  private static BlockingQueue<NetConfNotificationReceiverTriggerConnection> requests = new LinkedBlockingQueue<>();
+
+
+  public static void push(NetConfNotificationReceiverTriggerConnection conn) {
+    requests.add(conn);
+  };
+
+
+  public static boolean isEmpty() {
+    return requests.isEmpty();
+  };
+
+
+  public static NetConfNotificationReceiverTriggerConnection get() {
+    return requests.poll();
+  };
+
+
+  public static int size() {
+    return requests.size();
+  }
+  
+}
