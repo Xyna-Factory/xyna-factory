@@ -31,10 +31,13 @@
     <property file="${root.dir}/server.properties" />
     <property file="${application.dir}/workspace.properties" />
 
-    <property name="workspacename" value="'default workspace'" />
     <property name="third_parties.pom" value="${basedir}/third_parties.pom.xml" />
 
     <checkServerProperties />
+
+    <condition property="workspacename.available">
+        <isset property="workspacename" />
+    </condition>
 
     <condition property="src.dir.available">
         <available file="${basedir}/src" />
@@ -64,6 +67,7 @@
     <!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
     <target name="deploy" depends="build-src,copyLibs" description="scp sharedlib to xyna server and reload sharedlib.">
         <fail message="No server properties specified. Unable to deploy." unless="server.available" />
+        <fail message="No workspace specified." unless="workspacename.available" />
 
         <determine-revision workspacename="${workspacename}" outputproperty="revision" />
         <property name="revision.dir" value="../revisions/rev_${revision}" />
