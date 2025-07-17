@@ -16,34 +16,23 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.yang.xml;
+package xmcp.yang.codedservice;
+
+import xmcp.yang.MessageId;
 
 
-public class CharEscapeTool {
+public class CSGenerateNextMessageId {
 
-  public String escapeCharacters(String str) {
-    if (str == null) { return ""; }
-    String ret = str;
-    ret = ret.replace("&", "&amp;");
-    ret = ret.replace(",", "&comma;");
-    ret = ret.replace("#", "&num;");
-    ret = ret.replace("%", "&percnt;");
-    ret = ret.replace("=", "&equals;");
-    ret = ret.replace("~", "&tilde;");
+  private static long _nextId = 100L;
+  
+  public MessageId execute() {
+    MessageId ret = new MessageId();
+    ret.unversionedSetId(String.valueOf(getNextId()));
     return ret;
   }
   
-  
-  public String unescapeCharacters(String str) {
-    if (str == null) { return ""; }
-    String ret = str;
-    ret = ret.replace("&comma;", ",");
-    ret = ret.replace("&num;", "#");
-    ret = ret.replace("&percnt;", "%");
-    ret = ret.replace("&equals;", "=");
-    ret = ret.replace("&tilde;", "~");
-    ret = ret.replace("&amp;", "&");
-    return ret;
+  private synchronized long getNextId() {
+    return _nextId++;
   }
   
 }
