@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,30 +39,6 @@
             <groupId>commons-pool</groupId>
             <artifactId>commons-pool</artifactId>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.gnu</groupId>
-            <artifactId>gnu-crypto</artifactId> <!-- unfree -->
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.jradius</groupId>
-            <artifactId>jradius-core</artifactId> <!-- unfree -->
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.jradius</groupId>
-            <artifactId>jradius-dictionary</artifactId> <!-- unfree -->
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.jradius</groupId>
-            <artifactId>jradius-extended</artifactId> <!-- unfree -->
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-1.2-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.gip.xyna</groupId>
