@@ -101,7 +101,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
                   HTTP_FORBIDDEN = "403 Forbidden", HTTP_NOTFOUND = "404 Not Found",
                   HTTP_BADREQUEST = "400 Bad Request", HTTP_UNAUTHORIZED = "401 Unauthorized",
                   HTTP_CONFLICT = "409 Conflict", HTTP_INTERNALERROR = "500 Internal Server Error",
-                  HTTP_NOTIMPLEMENTED = "501 Not Implemented";
+                  HTTP_NOTIMPLEMENTED = "501 Not Implemented", HTTP_SERVICE_ANAVAILABLE = "503 Service Unavailable";
 
 
   public static final String PROP_KEY_WWW_AUTHENTICATE = "WWW-Authenticate";
@@ -658,7 +658,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
       }
     }
     logInvalidHttpRequest();
-    sendError(HTTP_BADREQUEST, "BAD REQUEST: Syntax error. Usage: GET /uri");
+    sendErrorResponse(HTTP_BADREQUEST, "BAD REQUEST: Syntax error. Usage: GET /uri");
   }
 
 
@@ -741,21 +741,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
 
 
   public void sendError(String s) throws SocketNotAvailableException {
-    StringBuffer sb = new StringBuffer();
-    sb.append("<html><body><h3>" + HTTP_INTERNALERROR + "</h3>");
-    sb.append(s);
-    sb.append("</body></html>");
-    ByteArrayInputStream bais = null;
-    long length;
-    try {
-      byte[] msgBytes = sb.toString().getBytes(getCharSet());
-      length = msgBytes.length;
-      bais = new ByteArrayInputStream(msgBytes);
-    } catch (UnsupportedEncodingException e1) {
-      handleUnsupportedEncoding();
-      length = -1; //hier kommt man nicht hin
-    }
-    sendResponse(HTTP_INTERNALERROR, MIME_HTML, null, bais, length);
+      sendErrorResponse(HTTP_INTERNALERROR, s);
   }
 
   public void sendError(XynaException[] es, boolean logError) throws SocketNotAvailableException {
@@ -778,16 +764,31 @@ public class HTTPTriggerConnection extends TriggerConnection {
     sendError(es, true);
   }
 
+
+  /**
+   * @deprecated use sendErrorResponse instead.
+   */
   @Deprecated
-  public void sendError(String status, String msg) throws InterruptedException, SocketNotAvailableException {
-    msg = "<html><body><h3>" + msg + "</h3></body></html>";
+  public void sendError(String status, String msg) throws SocketNotAvailableException, InterruptedException {
+    sendErrorResponse(status, msg);
+  }
+
+  public void sendErrorResponse(String status, String msg) throws SocketNotAvailableException {
+    StringBuffer sb = new StringBuffer();
+    sb.append("<html><body><h3>").append(status).append("</h3>");
+    sb.append(msg);
+    sb.append("</body></html>");
+    ByteArrayInputStream bais = null;
+    long length;
     try {
-      byte[] msgBytes = msg.getBytes(getCharSet());
-      sendResponse(status, MIME_HTML, null, new ByteArrayInputStream(msgBytes), new Long(msgBytes.length));
-    } catch (UnsupportedEncodingException e) {
+      byte[] msgBytes = sb.toString().getBytes(getCharSet());
+      length = msgBytes.length;
+      bais = new ByteArrayInputStream(msgBytes);
+    } catch (UnsupportedEncodingException e1) {
       handleUnsupportedEncoding();
+      length = -1; //hier kommt man nicht hin
     }
-    throw new InterruptedException();
+    sendResponse(status, MIME_HTML, null, bais, length);
   }
 
 

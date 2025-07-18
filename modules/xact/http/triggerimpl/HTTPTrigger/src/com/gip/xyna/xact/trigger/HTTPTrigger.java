@@ -426,7 +426,7 @@ public class HTTPTrigger extends EventListener<HTTPTriggerConnection, HTTPStartP
   public void onProcessingRejected(String s, HTTPTriggerConnection con) {
     try {
       rejectCounter.incrementAndGet();
-      con.sendError(s);
+      con.sendErrorResponse(HTTPTriggerConnection.HTTP_SERVICE_ANAVAILABLE, s);
     } catch (SocketNotAvailableException e) {
       logger.info("socket was unexpectedly not available when trying to send errormessage to client", e);
     }
