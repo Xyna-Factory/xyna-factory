@@ -1,0 +1,6 @@
+<Trigger>
+	<AdditionalDependencies>
+		<!-- <Datatype>fullyQualifiedMdmType</Datatype>
+		<XynaProperty>propertyName</XynaProperty> -->
+	</AdditionalDependencies>
+</Trigger>

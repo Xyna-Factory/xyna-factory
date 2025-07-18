@@ -38,8 +38,6 @@
     <property file="${root.dir}/server.properties" />
     <property file="${application.dir}/workspace.properties" />
 
-    <property name="workspacename" value="default workspace" />
-
     <!-- depends on server make use of server variable -->
     <property name="local.xml.dir" value="${xmom.dir}/${mdm.xml.path}" />
 
@@ -50,6 +48,10 @@
     <property name="third_parties.pom" value="${basedir}/third_parties.pom.xml" />
 
     <checkServerProperties />
+
+    <condition property="workspacename.available">
+        <isset property="workspacename" />
+    </condition>
 
     <condition property="cli.commands.available">
         <isset property="cli.command.java.path" />
@@ -109,6 +111,7 @@
     <!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
     <target name="deploy" depends="updateServiceDefinition, build" description="Deploy jar file to xyna server.">
         <fail message="No server properties specified. Unable to deploy." unless="server.available" />
+        <fail message="No workspace specified." unless="workspacename.available" />
         <local name ="revision" />
         <local name = "revision.dir" />
         <local name = "server.mdm.xml.path" />
@@ -221,7 +224,8 @@
          ================================= -->
     <!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
     <target name="updateMDMandXynaFactoryJar" description="Receive new mdm.jar and xynafactory.jar from Xyna Factory">
-        <fail message="No server properties specified. Unable to deploy." unless="server.available" />
+        <fail message="No server properties specified." unless="server.available" />
+        <fail message="No workspace specified." unless="workspacename.available" />
         <!-- build mdm.jar -->
         <custom-ssh-exec host="${server.host}" username="${server.userid}" command="cd ${server.path}; ./xynafactory.sh buildmdmjar -workspaceName '${workspacename}' -r " />
         <!-- copy mdm.jar from xyna server -->
@@ -238,7 +242,8 @@
          ================================= -->
     <!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
     <target name="updateServiceDefinition" description="Receive new serviceDefinitionLibs.jar from Xyna Factory">
-        <fail message="No server properties specified. Unable to deploy." unless="server.available" />
+        <fail message="No server properties specified." unless="server.available" />
+        <fail message="No workspace specified." unless="workspacename.available" />
         <!-- build mdm.jar -->
         <tstamp>
             <format property="current.millis" pattern="ssSSS" />

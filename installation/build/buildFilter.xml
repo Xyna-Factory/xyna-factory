@@ -32,6 +32,7 @@
 
     <property file="${basedir}/server.properties" />
     <property file="${root.dir}/server.properties" />
+    <property file="${application.dir}/workspace.properties" />
 
     <!-- depends on server make use of server variable -->
     <property name="server.mdm.xml.filename" value="${mdm.xml.filename}" />
@@ -52,6 +53,10 @@
     <property name="third_parties.pom" value="${basedir}/third_parties.pom.xml" />
 
     <checkServerProperties />
+
+    <condition property="workspacename.available">
+        <isset property="workspacename" />
+    </condition>
 
     <condition property="exceptions.available">
         <available file="${basedir}/Exceptions.xml" />
@@ -97,6 +102,7 @@
     <!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
     <target name="deploy" depends="build" description="Deploy jar file to xyna server.">
         <fail message="No server properties specified. Unable to deploy." unless="server.available" />
+        <fail message="No workspace specified." unless="workspacename.available" />
         <local name ="revision" />
         <local name = "revision.dir" />
         <local name = "deploy.template" />
@@ -187,7 +193,8 @@
          ================================= -->
     <!-- CAUTION: Do not attempt to launch this from here. Launch from build.xml instead. -->
     <target name="updateMDMandXynaFactoryJar" description="Receive new mdm.jar and xynafactory.jar from Xyna Factory">
-        <fail message="No server properties specified. Unable to deploy." unless="server.available" />
+        <fail message="No server properties specified." unless="server.available" />
+        <fail message="No workspace specified." unless="workspacename.available" />
         <!-- build mdm.jar -->
         <custom-ssh-exec host="${server.host}" username="${server.userid}"  command="cd ${server.path}; ./xynafactory.sh buildmdmjar -workspaceName '${workspacename}' -r" />
         

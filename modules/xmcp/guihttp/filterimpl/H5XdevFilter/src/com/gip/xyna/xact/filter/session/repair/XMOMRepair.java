@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
+import org.apache.log4j.Logger;
+
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
 import com.gip.xyna.xact.filter.session.GenerationBaseObject;
 import com.gip.xyna.xprc.exceptions.XPRC_XmlParsingException;
@@ -40,6 +43,7 @@ import xmcp.processmodeller.datatypes.RepairEntry;
 public class XMOMRepair {
 
   private Set<RepairInterface> repairInterfaces;
+  private static Logger logger = CentralFactoryLogging.getLogger(XMOMRepair.class);
 
 
   public XMOMRepair() {
@@ -71,7 +75,11 @@ public class XMOMRepair {
 
     for (RepairInterface ri : repairInterfaces) {
       if (ri.responsible(gbo)) {
-        result.addAll(ri.getRepairEntries(gbo));
+        try {
+          result.addAll(ri.getRepairEntries(gbo));
+        } catch (Exception e) {
+          logger.warn("Exception during repair entry analysis for " + gbo.getFQName(), e);
+        }
       }
     }
 
