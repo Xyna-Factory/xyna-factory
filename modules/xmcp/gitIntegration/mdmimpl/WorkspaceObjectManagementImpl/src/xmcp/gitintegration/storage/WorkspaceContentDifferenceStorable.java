@@ -219,7 +219,7 @@ public class WorkspaceContentDifferenceStorable extends Storable<WorkspaceConten
 
     @Override
     public int compare(WorkspaceContentDifferenceStorable o1, WorkspaceContentDifferenceStorable o2) {
-      return (int) (o2.getEntryid() - o1.getEntryid());
+      return (int) (o1.getEntryid() - o2.getEntryid());
     }
 
   }

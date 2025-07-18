@@ -905,8 +905,8 @@ public class RepositoryInteraction {
   private boolean pathMatch(DiffEntry e1, DiffEntry e2) {
     boolean e1_oldPath = e1.getOldPath() != null && e1.getOldPath() != DiffEntry.DEV_NULL;
     boolean e1_newPath = e1.getNewPath() != null && e1.getNewPath() != DiffEntry.DEV_NULL;
-    return (e1_oldPath && (Objects.equals(e1.getOldPath(), e2.getOldPath())) || (Objects.equals(e1.getOldPath(), e2.getNewPath())))
-        || (e1_newPath && (Objects.equals(e1.getNewPath(), e2.getOldPath())) || (Objects.equals(e1.getNewPath(), e2.getNewPath())));
+    return (e1_oldPath && (Objects.equals(e1.getOldPath(), e2.getOldPath()) || Objects.equals(e1.getOldPath(), e2.getNewPath())))
+        || (e1_newPath && (Objects.equals(e1.getNewPath(), e2.getOldPath()) || Objects.equals(e1.getNewPath(), e2.getNewPath())));
   }
 
 

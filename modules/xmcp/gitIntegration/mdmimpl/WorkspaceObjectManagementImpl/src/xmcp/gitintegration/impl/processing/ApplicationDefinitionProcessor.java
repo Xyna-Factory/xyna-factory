@@ -109,10 +109,7 @@ public class ApplicationDefinitionProcessor implements WorkspaceContentProcessor
         wcd.setExistingItem(fromEntry);
         wcd.setDifferenceType(toEntry == null ? new DELETE() : new MODIFY());
         toWorkingList.remove(toEntry); // remove entry from to-list, because it is not a new entry
-        if (toEntry == null) {
-          continue;
-        }
-        boolean hasChanged = !Objects.equals(fromEntry.getDocumentation(), toEntry.getDocumentation())
+        boolean hasChanged = toEntry == null || !Objects.equals(fromEntry.getDocumentation(), toEntry.getDocumentation())
             || (!compareRuntimeContextDependencies(fromEntry, toEntry).isEmpty())
             || (!getNewContentEntries(fromEntry, toEntry).isEmpty()) 
             || (!getNewContentEntries(toEntry, fromEntry).isEmpty());
