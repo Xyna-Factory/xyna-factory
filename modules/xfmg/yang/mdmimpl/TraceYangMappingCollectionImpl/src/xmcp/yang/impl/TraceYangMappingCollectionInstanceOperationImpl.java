@@ -18,12 +18,15 @@
 package xmcp.yang.impl;
 
 
-import java.util.ArrayList;
+import java.util.List;
 
 import xmcp.yang.TraceYangMappingCollection;
 import xmcp.yang.TraceYangMappingCollectionInstanceOperation;
 import xmcp.yang.TraceYangMappingCollectionSuperProxy;
 import xmcp.yang.YangMappingCollection;
+import xmcp.yang.xml.CsvPathsAndNspsWithIds;
+import xmcp.yang.xml.IdOfNamespaceMap;
+import xmcp.yang.xml.YangXmlPathList;
 
 
 public class TraceYangMappingCollectionInstanceOperationImpl extends TraceYangMappingCollectionSuperProxy implements TraceYangMappingCollectionInstanceOperation {
@@ -36,8 +39,13 @@ public class TraceYangMappingCollectionInstanceOperationImpl extends TraceYangMa
 
   public YangMappingCollection merge(YangMappingCollection yangMappingCollection1) {
     YangMappingCollection ret = super.merge(yangMappingCollection1);
-    getInstanceVar().setMappingList(new ArrayList<String>(ret.getMappings()));
-    getInstanceVar().setNamespaceList(new ArrayList<String>(ret.getNamespaces()));
+    CsvPathsAndNspsWithIds csv = CsvPathsAndNspsWithIds.builder().csvPaths(_mappings).namespaces(_namespaces).build();
+    YangXmlPathList pathlist = YangXmlPathList.fromCsv(csv);
+    IdOfNamespaceMap map = new IdOfNamespaceMap();
+    List<String> xPathList = pathlist.toXPathList(map);
+    List<String> namespaceWithIdList = map.toPrefixNamespacePairList();
+    getInstanceVar().setMappingList(xPathList);
+    getInstanceVar().setNamespaceList(namespaceWithIdList);
     return ret;
   }
   
