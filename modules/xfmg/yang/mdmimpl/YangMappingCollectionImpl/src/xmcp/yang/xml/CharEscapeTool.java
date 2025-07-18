@@ -29,6 +29,7 @@ public class CharEscapeTool {
     ret = ret.replace("#", "&num;");
     ret = ret.replace("%", "&percnt;");
     ret = ret.replace("=", "&equals;");
+    ret = ret.replace("~", "&tilde;");
     return ret;
   }
   
@@ -40,6 +41,7 @@ public class CharEscapeTool {
     ret = ret.replace("&num;", "#");
     ret = ret.replace("&percnt;", "%");
     ret = ret.replace("&equals;", "=");
+    ret = ret.replace("&tilde;", "~");
     ret = ret.replace("&amp;", "&");
     return ret;
   }

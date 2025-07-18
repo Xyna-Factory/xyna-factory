@@ -30,6 +30,7 @@ import xmcp.yang.codedservice.CSCloseSession;
 import xmcp.yang.codedservice.CSCopyConfig;
 import xmcp.yang.codedservice.CSDeleteConfig;
 import xmcp.yang.codedservice.CSEditConfig;
+import xmcp.yang.codedservice.CSGenerateNextMessageId;
 import xmcp.yang.codedservice.CSGet;
 import xmcp.yang.codedservice.CSGetConfig;
 import xmcp.yang.codedservice.CSKillSession;
@@ -125,6 +126,11 @@ public class ProtocolOperationsServiceOperationImpl implements ExtendedDeploymen
   @Override
   public Document unlock(MessageId messageId, NetConfTarget netConfTarget12) {
     return new CSUnlock().execute(messageId, netConfTarget12);
+  }
+
+  @Override
+  public MessageId generateNextMessageId() {
+    return new CSGenerateNextMessageId().execute();
   }
 
 }
