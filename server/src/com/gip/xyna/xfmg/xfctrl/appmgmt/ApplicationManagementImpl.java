@@ -2469,6 +2469,13 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
   private void importCapacities(List<CapacityXmlEntry> capacities, boolean verbose, PrintStream statusOutputStream)
       throws PersistenceLayerException, XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryChangeState,
       XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
+    importCapacities(capacities, verbose, false, statusOutputStream);
+  }
+  
+  private void importCapacities(List<CapacityXmlEntry> capacities, boolean verbose, boolean keepExisting,
+                                PrintStream statusOutputStream)
+      throws PersistenceLayerException, XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryChangeState,
+      XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
     for (CapacityXmlEntry capacity : capacities) {
       State state = capacity.getState() != null ? capacity.getState() : State.ACTIVE;
       try {
@@ -2477,6 +2484,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
             .addCapacity(capacity.getName(), capacity.getCardinality(), state);
       } catch (XPRC_CAPACITY_ALREADY_DEFINED e) {
         //Capacity existiert bereits
+        if (keepExisting) { continue; }
         //Kardinalität übernehmen
         XynaFactory.getInstance().getProcessing().getXynaScheduler().getCapacityManagement()
             .changeCardinality(capacity.getName(), capacity.getCardinality());
@@ -2607,7 +2615,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
     private XMOMODSNameImportSetting odsNames = XMOMODSNameImportSetting.ABORT_ON_COLLISION;
     private boolean abortOnCodegeneration;
     private Long revision = null;
-
+    private boolean keepExistingCapacities;
 
     public ImportApplicationCommandParameter() {
     }
@@ -2623,6 +2631,15 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
     
     public ImportApplicationCommandParameter force(boolean force) {
       this.force = force;
+      return this;
+    }
+    
+    public boolean isKeepExistingcapacities() {
+      return keepExistingCapacities;
+    }
+    
+    public ImportApplicationCommandParameter keepExistingCapacities(boolean value) {
+      this.keepExistingCapacities = value;
       return this;
     }
     
@@ -2825,7 +2842,8 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       if (importParameter.importCapacitiesOnly()) {
         try {
           logger.debug("Import only Capacities");
-          importCapacities(applicationXml.getCapacities(), importParameter.isVerbose(), importParameter.getStatusOutputStream());
+          importCapacities(applicationXml.getCapacities(), importParameter.isVerbose(), importParameter.isKeepExistingcapacities(),
+                           importParameter.getStatusOutputStream());
         } catch (PersistenceLayerException e) {
           logger.error("Failed to import xyna properties.", e);
         }
@@ -2991,7 +3009,8 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       
       if (!importParameter.excludeCapacities()) {
         logger.debug("Import capacities");
-        importCapacities(applicationXml.getCapacities(), importParameter.isVerbose(), importParameter.getStatusOutputStream());
+        importCapacities(applicationXml.getCapacities(), importParameter.isVerbose(), importParameter.isKeepExistingcapacities(),
+                         importParameter.getStatusOutputStream());
       }
       if (!importParameter.excludeXynaProperties()) {
         logger.debug("Import xynaproperties");
