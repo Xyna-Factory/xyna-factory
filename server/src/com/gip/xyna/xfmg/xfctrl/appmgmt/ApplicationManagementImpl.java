@@ -2484,7 +2484,12 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
             .addCapacity(capacity.getName(), capacity.getCardinality(), state);
       } catch (XPRC_CAPACITY_ALREADY_DEFINED e) {
         //Capacity existiert bereits
-        if (keepExisting) { continue; }
+        if (keepExisting) {
+          if (verbose) {
+            output(statusOutputStream, "Skipped import of capacity <" + capacity.getName() + ">, kept existing cardinality and state.");
+          }
+          continue;
+        }
         //Kardinalität übernehmen
         XynaFactory.getInstance().getProcessing().getXynaScheduler().getCapacityManagement()
             .changeCardinality(capacity.getName(), capacity.getCardinality());
