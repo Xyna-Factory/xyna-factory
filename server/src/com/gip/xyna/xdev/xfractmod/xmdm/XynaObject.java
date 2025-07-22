@@ -834,7 +834,10 @@ public abstract class XynaObject implements GeneralXynaObject {
       xml.append("<Data VariableName=\"").append(variableName);
       xml.append("\" ReferenceName=\"").append(referenceName);
       xml.append("\" ReferencePath=\"").append(referencePath);
-      xml.append("\" IsList=\"true\" >\n");
+      if( values == null ) {
+        xml.append("\" " + GenerationBase.ATT.ISNULL + "=\"").append(GenerationBase.ATT.TRUE);
+      }
+      xml.append("\" " + GenerationBase.ATT.ISLIST + "=\"" + GenerationBase.ATT.TRUE + "\" >\n");
       if (cache != null && revision != 0) {
         RuntimeContextDependencyManagement rcdMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
         if (cache.getOwnerRevision() != revision && !rcdMgmt.isDependency(cache.getOwnerRevision(), revision)) {
@@ -858,7 +861,10 @@ public abstract class XynaObject implements GeneralXynaObject {
     //valueclass ist immer class von typ, den wir als "simpletype" bezeichnen. int/string/etc
     public static <T> void appendDataList(StringBuilder xml, String variableName, List<? extends T> values, Class<T> valueClass) {
       xml.append("<Data VariableName=\"").append(variableName);
-      xml.append("\" IsList=\"true\" >\n<Meta><Type>").append(valueClass.getSimpleName()).append("</Type></Meta>");
+      if( values == null ) {
+        xml.append("\" " + GenerationBase.ATT.ISNULL + "=\"").append(GenerationBase.ATT.TRUE);
+      }
+      xml.append("\" " + GenerationBase.ATT.ISLIST + "=\"" + GenerationBase.ATT.TRUE + "\" >\n<Meta><Type>").append(valueClass.getSimpleName()).append("</Type></Meta>");
       if( values != null ) {
         for( T val : values ) {
           if (val == null) {
