@@ -7874,7 +7874,13 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
       throw new RuntimeException(e);
     }
     if (ti.getSharedLibs() != null) {
+      RuntimeContextDependencyManagement rcdm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().
+                                                            getRuntimeContextDependencyManagement();
       for (String sharedLib : ti.getSharedLibs()) {
+        Long sharedLibRev = rcdm.getRevisionDefiningSharedLib(sharedLib, revision);
+        if ((sharedLibRev == null) || (sharedLibRev.longValue() != revision)) {
+          continue;
+        }
         ApplicationEntryStorable sharedLibEntry =
             ApplicationEntryStorable.create(applicationName, version, parentRevision, sharedLib, ApplicationEntryType.SHAREDLIB);
 
