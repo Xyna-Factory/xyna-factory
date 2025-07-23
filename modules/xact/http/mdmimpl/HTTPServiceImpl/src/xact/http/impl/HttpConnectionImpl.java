@@ -266,15 +266,25 @@ public class HttpConnectionImpl {
       // Request new connection. This can be a long process
       ConnectionRequest connRequest = conManager.requestConnection(route, null);
       HttpClientConnection connection = connRequest.get(timeout.getTime(), TimeUnit.MILLISECONDS);
-
+      int usedRetries = 0;
+      IOException exception = null;
+      boolean success = false;
       if (!connection.isOpen()) {
+        do {
         try {
           // establish connection based on its route info
           conManager.connect(connection, route, (int)timeout.getTime(), context);
           // and mark it as route complete
           conManager.routeComplete(connection, route, context);
+          success = true;
         } catch( IOException e) {
-          throw new ConnectException(e);
+          usedRetries++;
+          exception = e;
+        }
+        } while(usedRetries < retries);
+        
+        if(!success) {
+          throw new ConnectException(exception);
         }
       }
 
