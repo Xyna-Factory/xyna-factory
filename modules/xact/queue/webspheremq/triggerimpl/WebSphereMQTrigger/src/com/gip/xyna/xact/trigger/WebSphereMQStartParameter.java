@@ -26,7 +26,11 @@ import com.gip.xyna.xact.exceptions.XACT_InvalidStartParameterCountException;
 import com.gip.xyna.xact.exceptions.XACT_InvalidTriggerStartParameterValueException;
 import com.gip.xyna.xact.trigger.exception.WebSphereMQTrigger_WrongQueueTypeException;
 import com.gip.xyna.xdev.xfractmod.xmdm.StartParameter;
-import com.gip.xyna.xfmg.xfctrl.queuemgmnt.*;
+import com.gip.xyna.xfmg.xfctrl.queuemgmnt.IQueue;
+import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueConnectData;
+import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueManagement;
+import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueType;
+import com.gip.xyna.xfmg.xfctrl.queuemgmnt.WebSphereMQConnectData;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 
 
@@ -63,8 +67,8 @@ public class WebSphereMQStartParameter implements StartParameter {
   private String queueName;
   private String channel;
 
-  private Queue errorQueue;
-  private Queue errorQueueRedundant;
+  private IQueue errorQueue;
+  private IQueue errorQueueRedundant;
 
   // key name with which the queue data (incl. actual, external queue name) is registered in the xyna factory
   private String xynaQueueMgmtQueueName;
@@ -90,7 +94,7 @@ public class WebSphereMQStartParameter implements StartParameter {
 
   public WebSphereMQStartParameter(String uniqueName, int reconnectIntervalAfterError, boolean autoReconnect,
          int receiveTimeout, boolean asyncReceive) throws XACT_InvalidTriggerStartParameterValueException {
-    Queue queue = getStoredQueue(uniqueName);
+    IQueue queue = getStoredQueue(uniqueName);
     initQueueData(queue);
 
     this.reconnectIntervalAfterError = reconnectIntervalAfterError;
@@ -104,7 +108,7 @@ public class WebSphereMQStartParameter implements StartParameter {
   public WebSphereMQStartParameter(String uniqueName, int reconnectIntervalAfterError, boolean autoReconnect,
          int receiveTimeout, boolean asyncReceive, String xynaPropertyPrefix)
                          throws XACT_InvalidTriggerStartParameterValueException {
-    Queue queue = getStoredQueue(uniqueName);
+    IQueue queue = getStoredQueue(uniqueName);
     initQueueData(queue);
     this.reconnectIntervalAfterError = reconnectIntervalAfterError;
     this.autoReconnect = autoReconnect;
@@ -259,11 +263,11 @@ public class WebSphereMQStartParameter implements StartParameter {
     return xynaPropertiesForSSLPrefix;
   }
 
-  public Queue getErrorQueue() {
+  public IQueue getErrorQueue() {
     return errorQueue;
   }
 
-  public Queue getErrorQueueRedundant() {
+  public IQueue getErrorQueueRedundant() {
     return errorQueueRedundant;
   }
 
@@ -320,13 +324,13 @@ public class WebSphereMQStartParameter implements StartParameter {
   }
 
 
-  private static Queue getStoredQueue(String uniqueName) throws XACT_InvalidTriggerStartParameterValueException {
+  private static IQueue getStoredQueue(String uniqueName) throws XACT_InvalidTriggerStartParameterValueException {
     if (uniqueName == null || uniqueName.trim().length() == 0) {
       return null;
     }
     try {
-      QueueManagement mgmt = new QueueManagement();
-      Queue ret = mgmt.getQueue(uniqueName);
+      QueueManagement mgmt = com.gip.xyna.XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getQueueManagement();
+      IQueue ret = mgmt.getQueue(uniqueName);
 
       _logger.debug("Got Stored Queue: " + ret.toString());
       if (ret.getQueueType() != QueueType.WEBSPHERE_MQ) {
@@ -344,7 +348,7 @@ public class WebSphereMQStartParameter implements StartParameter {
   }
 
 
-  private void initQueueData(Queue queue) throws XACT_InvalidTriggerStartParameterValueException {
+  private void initQueueData(IQueue queue) throws XACT_InvalidTriggerStartParameterValueException {
     WebSphereMQConnectData connData = null;
     try {
       connData = (WebSphereMQConnectData) queue.getConnectData();
