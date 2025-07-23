@@ -49,8 +49,8 @@ public class QueueManagement extends FunctionGroup {
   private static final Comparator<Queue> queueComparator = new Comparator<Queue>() {
 
     public int compare(Queue o1, Queue o2) {
-      if (!o1.getQueueType().toString().equals(o2.getQueueType().toString())) {
-        return o1.getQueueType().toString().compareTo(o2.getQueueType().toString());
+      if (!o1.getQueueTypeForCurrentVersion().toString().equals(o2.getQueueTypeForCurrentVersion().toString())) {
+        return o1.getQueueTypeForCurrentVersion().toString().compareTo(o2.getQueueTypeForCurrentVersion().toString());
       }
       if (o1.getUniqueName() == null) {
         return -1;
@@ -267,9 +267,9 @@ public class QueueManagement extends FunctionGroup {
    */
   public Object buildQueueInstance(long revision, String name) throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
     Queue queue = getQueue(name);
-    QueueInstanceBuilder builder = queueInstanceBuilders.get(queue.getQueueType(), revision);
+    QueueInstanceBuilder builder = queueInstanceBuilders.get(queue.getQueueTypeForCurrentVersion(), revision);
     if (builder == null) {
-      throw new IllegalArgumentException("No registered QueueInstanceBuilder for queue " + name + " (" + queue.getQueueType()
+      throw new IllegalArgumentException("No registered QueueInstanceBuilder for queue " + name + " (" + queue.getQueueTypeForCurrentVersion()
           + ") in revision " + revision);
     }
     return builder.build(queue);
@@ -280,12 +280,12 @@ public class QueueManagement extends FunctionGroup {
       throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
     Queue queue = getQueue(name);
     for (Long rev : revisions) {
-      QueueInstanceBuilder builder = queueInstanceBuilders.get(queue.getQueueType(), rev);
+      QueueInstanceBuilder builder = queueInstanceBuilders.get(queue.getQueueTypeForCurrentVersion(), rev);
       if (builder != null) {
         return builder.build(queue);
       }
     }
-    throw new IllegalArgumentException("No registered QueueInstanceBuilder for queue " + name + " (" + queue.getQueueType()
+    throw new IllegalArgumentException("No registered QueueInstanceBuilder for queue " + name + " (" + queue.getQueueTypeForCurrentVersion()
         + ") in given revisions");
   }
 
