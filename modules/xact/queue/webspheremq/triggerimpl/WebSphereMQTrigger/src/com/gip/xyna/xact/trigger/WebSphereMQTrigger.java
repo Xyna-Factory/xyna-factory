@@ -356,7 +356,7 @@ public class WebSphereMQTrigger extends EventListener<WebSphereMQTriggerConnecti
   }
 
 
-  public static void sendToQueue(com.gip.xyna.xfmg.xfctrl.queuemgmnt.Queue queue,
+  public static void sendToQueue(com.gip.xyna.xfmg.xfctrl.queuemgmnt.IQueue queue,
                                  Message message, boolean useSSL, SSLConfig sslConfig, String userName, String password) throws JMSException {
     Connection connection = null;
     try {
@@ -392,13 +392,13 @@ public class WebSphereMQTrigger extends EventListener<WebSphereMQTriggerConnecti
     }
   }
   
-  public static void sendToQueue(com.gip.xyna.xfmg.xfctrl.queuemgmnt.Queue queue,
+  public static void sendToQueue(com.gip.xyna.xfmg.xfctrl.queuemgmnt.IQueue queue,
                                  Message message, boolean useSSL, SSLConfig sslConfig) throws JMSException {
     sendToQueue(queue, message, useSSL, sslConfig, "", "");
   }
 
   public void sendMessageToErrorQueue(Message message) throws JMSException {
-    com.gip.xyna.xfmg.xfctrl.queuemgmnt.Queue errorQueue = startParameter.getErrorQueue();
+    com.gip.xyna.xfmg.xfctrl.queuemgmnt.IQueue errorQueue = startParameter.getErrorQueue();
     if (errorQueue != null) {
       try {
         sendToQueue(errorQueue, message, this.useSSL, this.sslConfig, startParameter.getUserName(), startParameter.getPassword());
@@ -412,7 +412,7 @@ public class WebSphereMQTrigger extends EventListener<WebSphereMQTriggerConnecti
 
 
   private void sendMessageToErrorQueueRedundant(Message message) throws JMSException {
-    com.gip.xyna.xfmg.xfctrl.queuemgmnt.Queue queue = startParameter.getErrorQueueRedundant();
+    com.gip.xyna.xfmg.xfctrl.queuemgmnt.IQueue queue = startParameter.getErrorQueueRedundant();
     if (queue != null) {
       sendToQueue(queue, message, this.useSSL, this.sslConfig, startParameter.getUserName(), startParameter.getPassword());
     }

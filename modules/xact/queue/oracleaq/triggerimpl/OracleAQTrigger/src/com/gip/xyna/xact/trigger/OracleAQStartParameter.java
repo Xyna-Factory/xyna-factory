@@ -39,7 +39,7 @@ import com.gip.xyna.xact.trigger.oracleaq.shared.QueueData;
 import com.gip.xyna.xdev.xfractmod.xmdm.EnhancedStartParameter;
 import com.gip.xyna.xdev.xfractmod.xmdm.StartParameter;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.OracleAQConnectData;
-import com.gip.xyna.xfmg.xfctrl.queuemgmnt.Queue;
+import com.gip.xyna.xfmg.xfctrl.queuemgmnt.IQueue;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueConnectData;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueManagement;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueType;
@@ -349,7 +349,7 @@ public class OracleAQStartParameter extends EnhancedStartParameter {
     if( uniqueName == null ) {
       return null; //Queue existiert nicht
     }
-    Queue queue = null;
+    IQueue queue = null;
     try {
       QueueManagement mgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getQueueManagement();
       queue = mgmt.getQueue(uniqueName);

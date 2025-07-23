@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.gip.xyna.FunctionGroup;
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -46,11 +47,11 @@ public class QueueManagement extends FunctionGroup {
   public static final String DEFAULT_NAME = "QueueManagement";
 
 
-  private static final Comparator<Queue> queueComparator = new Comparator<Queue>() {
+  private static final Comparator<IQueue> queueComparator = new Comparator<IQueue>() {
 
-    public int compare(Queue o1, Queue o2) {
-      if (!o1.getQueueTypeForCurrentVersion().toString().equals(o2.getQueueTypeForCurrentVersion().toString())) {
-        return o1.getQueueTypeForCurrentVersion().toString().compareTo(o2.getQueueTypeForCurrentVersion().toString());
+    public int compare(IQueue o1, IQueue o2) {
+      if (!o1.getQueueType().toString().equals(o2.getQueueType().toString())) {
+        return o1.getQueueType().toString().compareTo(o2.getQueueType().toString());
       }
       if (o1.getUniqueName() == null) {
         return -1;
@@ -149,7 +150,7 @@ public class QueueManagement extends FunctionGroup {
   }
 
 
-  public Queue getQueue(String uniqueName) throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
+  public QueueFacade getQueue(String uniqueName) throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
     // wird aus dem Service heraus aufgerufen
 
     if (logger.isTraceEnabled()) {
@@ -161,7 +162,7 @@ public class QueueManagement extends FunctionGroup {
       queue.setUniqueName(uniqueName);
       try {
         conn.queryOneRow(queue);
-        return queue;
+        return QueueFacade.fromQueue(queue);
       } catch (PersistenceLayerException e) {
         throw e;
       } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
@@ -177,7 +178,7 @@ public class QueueManagement extends FunctionGroup {
   }
 
 
-  public Collection<Queue> listQueues() throws PersistenceLayerException {
+  public Collection<QueueFacade> listQueues() throws PersistenceLayerException {
     ODSConnection conn = ods.openConnection(ODSConnectionType.HISTORY);
     try {
       Collection<Queue> queues = conn.loadCollection(Queue.class);
@@ -186,7 +187,7 @@ public class QueueManagement extends FunctionGroup {
       if (logger.isTraceEnabled()) {
         logger.trace("Number of registered queues: " + queues.size());
       }
-      return queuesSorted;
+      return queuesSorted.stream().map(QueueFacade::fromQueue).collect(Collectors.toList());
     } finally {
       try {
         conn.closeConnection();
@@ -266,10 +267,10 @@ public class QueueManagement extends FunctionGroup {
    * @throws PersistenceLayerException
    */
   public Object buildQueueInstance(long revision, String name) throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
-    Queue queue = getQueue(name);
-    QueueInstanceBuilder builder = queueInstanceBuilders.get(queue.getQueueTypeForCurrentVersion(), revision);
+    QueueFacade queue = getQueue(name);
+    QueueInstanceBuilder builder = queueInstanceBuilders.get(queue.getQueueType(), revision);
     if (builder == null) {
-      throw new IllegalArgumentException("No registered QueueInstanceBuilder for queue " + name + " (" + queue.getQueueTypeForCurrentVersion()
+      throw new IllegalArgumentException("No registered QueueInstanceBuilder for queue " + name + " (" + queue.getQueueType()
           + ") in revision " + revision);
     }
     return builder.build(queue);
@@ -278,14 +279,14 @@ public class QueueManagement extends FunctionGroup {
 
   public Object buildQueueInstance(Set<Long> revisions, String name)
       throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
-    Queue queue = getQueue(name);
+    QueueFacade queue = getQueue(name);
     for (Long rev : revisions) {
-      QueueInstanceBuilder builder = queueInstanceBuilders.get(queue.getQueueTypeForCurrentVersion(), rev);
+      QueueInstanceBuilder builder = queueInstanceBuilders.get(queue.getQueueType(), rev);
       if (builder != null) {
         return builder.build(queue);
       }
     }
-    throw new IllegalArgumentException("No registered QueueInstanceBuilder for queue " + name + " (" + queue.getQueueTypeForCurrentVersion()
+    throw new IllegalArgumentException("No registered QueueInstanceBuilder for queue " + name + " (" + queue.getQueueType()
         + ") in given revisions");
   }
 
@@ -293,7 +294,7 @@ public class QueueManagement extends FunctionGroup {
   public interface QueueInstanceBuilder {
 
     //TODO wie kann richtiger XynaObject-Typ xact.queue.Queue hier bekannt sein?
-    Object build(Queue queue);
+    Object build(IQueue queue);
 
   }
 

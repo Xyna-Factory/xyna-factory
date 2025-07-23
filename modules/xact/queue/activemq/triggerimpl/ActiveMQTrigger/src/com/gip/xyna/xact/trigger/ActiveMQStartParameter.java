@@ -23,7 +23,10 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xact.exceptions.XACT_InvalidStartParameterCountException;
 import com.gip.xyna.xact.exceptions.XACT_InvalidTriggerStartParameterValueException;
 import com.gip.xyna.xdev.xfractmod.xmdm.StartParameter;
-import com.gip.xyna.xfmg.xfctrl.queuemgmnt.*;
+import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueManagement;
+import com.gip.xyna.xfmg.xfctrl.queuemgmnt.IQueue;
+import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueType;
+import com.gip.xyna.xfmg.xfctrl.queuemgmnt.ActiveMQConnectData;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 
 
@@ -54,7 +57,7 @@ public class ActiveMQStartParameter implements StartParameter {
 
 
   public ActiveMQStartParameter(String uniqueName) throws XACT_InvalidTriggerStartParameterValueException {
-    Queue queue = getStoredQueue(uniqueName);
+    IQueue queue = getStoredQueue(uniqueName);
     ActiveMQConnectData connData = null;
     try {
       connData = (ActiveMQConnectData) queue.getConnectData();
@@ -187,10 +190,10 @@ public class ActiveMQStartParameter implements StartParameter {
   }
 
 
-  private static Queue getStoredQueue(String uniqueName) throws XACT_InvalidTriggerStartParameterValueException {
+  private static IQueue getStoredQueue(String uniqueName) throws XACT_InvalidTriggerStartParameterValueException {
     try {
-      QueueManagement mgmt = new QueueManagement();
-      Queue ret = mgmt.getQueue(uniqueName);
+      QueueManagement mgmt = com.gip.xyna.XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getQueueManagement();
+      IQueue ret = mgmt.getQueue(uniqueName);
 
       logger.debug("Got Stored Queue: " + ret.toString());
       if (ret.getQueueType() != QueueType.ACTIVE_MQ) {

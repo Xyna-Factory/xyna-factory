@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,8 +94,8 @@ import com.gip.xyna.xfmg.xfctrl.classloading.persistence.SerializableClassloaded
 import com.gip.xyna.xfmg.xfctrl.datamodelmgmt.DataModelManagement;
 import com.gip.xyna.xfmg.xfctrl.dependencies.DependencyRegister;
 import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
-import com.gip.xyna.xfmg.xfctrl.queuemgmnt.Queue;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueConnectData;
+import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueFacade;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueManagement;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueType;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
@@ -1406,7 +1406,7 @@ public class UpdateGeneratedClasses {
                   }
 
 
-                  public Collection<Queue> listQueues() throws PersistenceLayerException {
+                  public Collection<QueueFacade> listQueues() throws PersistenceLayerException {
                     return null;
                   }
 

@@ -29,7 +29,7 @@ import com.gip.xyna.xnwh.persistence.Storable;
 
 
 @Persistable(primaryKey = Queue.Constant.ColName.UNIQUE_NAME, tableName = Queue.Constant.TABLE_NAME)
-public class Queue extends Storable<Queue> {
+public class Queue extends Storable<Queue> implements IQueue {
 
   private static final long serialVersionUID = 1L;
   private static final int currentVersion = 1;
@@ -120,26 +120,29 @@ public class Queue extends Storable<Queue> {
   }
 
 
+  @Override
   public String getUniqueName() {
     return uniqueName;
   }
 
 
+  @Override
   public void setUniqueName(String uniqueName) {
     this.uniqueName = uniqueName;
   }
 
+  @Override
   public String getExternalName() {
     return externalName;
   }
 
 
+  @Override
   public void setExternalName(String externalName) {
     this.externalName = externalName;
   }
 
-  // use getConnectDataForCurrentVersion
-  @Deprecated
+ @Override
   public QueueConnectData getConnectData() {
     return connectData;
   }
@@ -153,10 +156,12 @@ public class Queue extends Storable<Queue> {
     }
   }
 
+  @Override
   public Integer getVersion() {
       return version;
   }
 
+  @Override
   public void setConnectData(QueueConnectData connectData) {
     if (isInitialVersion() || connectData == null) {
       this.connectData = connectData;
@@ -183,8 +188,6 @@ public class Queue extends Storable<Queue> {
     return queueTypeStr;
   }
 
-  // use getQueueTypeForCurrentVersion
-  @Deprecated
   public QueueType getQueueType() {
     return queueType;
   }
@@ -197,6 +200,7 @@ public class Queue extends Storable<Queue> {
     }
   }
 
+  @Override
   public void setQueueType(QueueType queueType) {
     if (isInitialVersion() || queueType == null) {
       this.queueType = queueType;
@@ -210,6 +214,7 @@ public class Queue extends Storable<Queue> {
     return serialVersionUID;
   }
 
+  @Override
   public void setVersion(Integer version) {
       this.version = version;
   }
