@@ -835,9 +835,9 @@ public abstract class XynaObject implements GeneralXynaObject {
       xml.append("\" ReferenceName=\"").append(referenceName);
       xml.append("\" ReferencePath=\"").append(referencePath);
       if( values == null ) {
-        xml.append("\" " + GenerationBase.ATT.ISNULL + "=\"").append(GenerationBase.ATT.TRUE);
+        xml.append("\" ").append(GenerationBase.ATT.ISNULL).append("=\"").append(GenerationBase.ATT.TRUE);
       }
-      xml.append("\" " + GenerationBase.ATT.ISLIST + "=\"" + GenerationBase.ATT.TRUE + "\" >\n");
+      xml.append("\" ").append(GenerationBase.ATT.ISLIST).append("=\"").append(GenerationBase.ATT.TRUE).append("\" >\n");
       if (cache != null && revision != 0) {
         RuntimeContextDependencyManagement rcdMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
         if (cache.getOwnerRevision() != revision && !rcdMgmt.isDependency(cache.getOwnerRevision(), revision)) {
@@ -862,9 +862,9 @@ public abstract class XynaObject implements GeneralXynaObject {
     public static <T> void appendDataList(StringBuilder xml, String variableName, List<? extends T> values, Class<T> valueClass) {
       xml.append("<Data VariableName=\"").append(variableName);
       if( values == null ) {
-        xml.append("\" " + GenerationBase.ATT.ISNULL + "=\"").append(GenerationBase.ATT.TRUE);
+        xml.append("\" ").append(GenerationBase.ATT.ISNULL).append("=\"").append(GenerationBase.ATT.TRUE);
       }
-      xml.append("\" " + GenerationBase.ATT.ISLIST + "=\"" + GenerationBase.ATT.TRUE + "\" >\n<Meta><Type>").append(valueClass.getSimpleName()).append("</Type></Meta>");
+      xml.append("\" ").append(GenerationBase.ATT.ISLIST).append("=\"").append(GenerationBase.ATT.TRUE).append("\" >\n<Meta><Type>").append(valueClass.getSimpleName()).append("</Type></Meta>");
       if( values != null ) {
         for( T val : values ) {
           if (val == null) {
