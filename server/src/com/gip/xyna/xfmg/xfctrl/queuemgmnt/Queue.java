@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,11 @@ import com.gip.xyna.xnwh.persistence.Storable;
 public class Queue extends Storable<Queue> {
 
   private static final long serialVersionUID = 1L;
+  private static final int currentVersion = 1;
+
+  private boolean isInitialVersion() {
+    return this.version == null || this.version == 0;
+  }
 
   public static class Constant {
     public static final String TABLE_NAME = "queue";
@@ -41,6 +46,9 @@ public class Queue extends Storable<Queue> {
       public static final String EXTERNAL_NAME = "externalName";
       public static final String CONNECT_DATA = "connectData";
       public static final String QUEUE_TYPE = "queueType";
+      public static final String CONFIG_VERSION = "version";
+      public static final String CONNECT_DATA_STR = "connectDataStr";
+      public static final String QUEUE_TYPE_STR = "queueTypeStr";
     }
   }
 
@@ -50,10 +58,19 @@ public class Queue extends Storable<Queue> {
       queue.setExternalName(rs.getString(Constant.ColName.EXTERNAL_NAME));
       queue.setUniqueName(rs.getString(Constant.ColName.UNIQUE_NAME));
 
-      Object connData = queue.readBlobbedJavaObjectFromResultSet(rs, Constant.ColName.CONNECT_DATA);
-      queue.setConnectData((QueueConnectData) connData);
-      Object qType = queue.readBlobbedJavaObjectFromResultSet(rs, Constant.ColName.QUEUE_TYPE);
-      queue.setQueueType((QueueType) qType);
+      Integer savedVersion = rs.getInt(Constant.ColName.CONFIG_VERSION);
+
+      if (savedVersion == null || savedVersion == 0) {
+        Object connData = queue.readBlobbedJavaObjectFromResultSet(rs, Constant.ColName.CONNECT_DATA);
+        queue.setConnectData((QueueConnectData) connData);
+        Object qType = queue.readBlobbedJavaObjectFromResultSet(rs, Constant.ColName.QUEUE_TYPE);
+        queue.setQueueType((QueueType) qType);
+      } /* else if (savedVersion == x) {} */ else {
+        queue.setConnectDataStr(rs.getString(Constant.ColName.CONNECT_DATA_STR));
+        queue.setQueueTypeStr(rs.getString(Constant.ColName.QUEUE_TYPE_STR));
+      }
+
+      queue.setVersion(currentVersion);
       return queue;
     }
   }
@@ -64,12 +81,22 @@ public class Queue extends Storable<Queue> {
   @Column(name = Constant.ColName.EXTERNAL_NAME)
   private String externalName;
 
+  @Deprecated
   @Column(name = Constant.ColName.CONNECT_DATA, type = ColumnType.BLOBBED_JAVAOBJECT)
   private QueueConnectData connectData;
 
+  @Deprecated
   @Column(name = Constant.ColName.QUEUE_TYPE, type = ColumnType.BLOBBED_JAVAOBJECT)
   private QueueType queueType;
 
+  @Column(name = Constant.ColName.CONFIG_VERSION)
+  private Integer version;
+
+  @Column(name = Constant.ColName.CONNECT_DATA_STR)
+  private String connectDataStr;
+
+  @Column(name = Constant.ColName.QUEUE_TYPE_STR)
+  private String queueTypeStr;
 
   @Override
   public ResultSetReader<? extends Queue> getReader() {
@@ -84,9 +111,12 @@ public class Queue extends Storable<Queue> {
   @Override
   public <U extends Queue> void setAllFieldsFromData(U data) {
     this.setConnectData(data.getConnectData());
+    this.setConnectDataStr(data.getConnectDataStr());
     this.setExternalName(data.getExternalName());
     this.setUniqueName(data.getUniqueName());
     this.setQueueType(data.getQueueType());
+    this.setQueueTypeStr(data.getQueueTypeStr());
+    this.setVersion(data.getVersion());
   }
 
 
@@ -99,7 +129,6 @@ public class Queue extends Storable<Queue> {
     this.uniqueName = uniqueName;
   }
 
-
   public String getExternalName() {
     return externalName;
   }
@@ -109,30 +138,76 @@ public class Queue extends Storable<Queue> {
     this.externalName = externalName;
   }
 
-
   public QueueConnectData getConnectData() {
     return connectData;
   }
 
-
-  public void setConnectData(QueueConnectData connectData) {
-    this.connectData = connectData;
+  public QueueConnectData getConnectDataForCurrentVersion() {
+    if (isInitialVersion()) {
+      return connectData;
+    } else {
+      var strConv = new QueueConnectStringData();
+      return strConv.fromStringParameters(connectDataStr);
+    }
   }
 
+  public Integer getVersion() {
+      return version;
+  }
 
+  public void setConnectData(QueueConnectData connectData) {
+    if (isInitialVersion() || connectData == null) {
+      this.connectData = connectData;
+    } else {
+      this.connectData = null;
+      var strConv = new QueueConnectStringData();
+      setConnectDataStr(strConv.fromConnectData(connectData));
+    }
+  }
+
+  public void setConnectDataStr(String cd) {
+    connectDataStr = cd;
+  }
+
+  public String getConnectDataStr() {
+    return connectDataStr;
+  }
+
+  public void setQueueTypeStr(String qt) {
+    queueTypeStr = qt;
+  }
+
+  public String getQueueTypeStr() {
+    return queueTypeStr;
+  }
 
   public QueueType getQueueType() {
     return queueType;
   }
 
-
-  public void setQueueType(QueueType queueType) {
-    this.queueType = queueType;
+  public QueueType getQueueTypeForCurrentVersion() {
+    if (isInitialVersion()) {
+      return queueType;
+    } else {
+      return Enum.<QueueType>valueOf(QueueType.class, queueTypeStr);
+    }
   }
 
+  public void setQueueType(QueueType queueType) {
+    if (isInitialVersion() || queueType == null) {
+      this.queueType = queueType;
+    } else {
+      this.queueType = null;
+      setQueueTypeStr(queueType.name());
+    }
+  }
 
   public static long getSerialversionuid() {
     return serialVersionUID;
+  }
+
+  public void setVersion(Integer version) {
+      this.version = version;
   }
 
 
@@ -141,8 +216,11 @@ public class Queue extends Storable<Queue> {
     StringBuilder s = new StringBuilder("Queue {  ");
     s.append("UniqueName : ").append(this.getUniqueName()).append(", ");
     s.append("ExternalName : ").append(this.getExternalName()).append(", ");
-    s.append("QueueType: ").append(this.getQueueType().toString()).append(", ");
-    s.append("ConnectData : ").append(this.getConnectData().toString());
+    s.append("QueueType: ").append(this.getQueueTypeForCurrentVersion().toString()).append(", ");
+    s.append("ConnectData : ").append(this.getConnectDataForCurrentVersion().toString());
+    if (this.getVersion() != null) {
+      s.append("ConfigVersion : ").append(this.getVersion().toString());
+    }
     s.append(" } \n");
     return s.toString();
   }
