@@ -91,8 +91,8 @@ public class QueueManagementServiceOperationImpl implements ExtendedDeploymentTa
   public List<? extends QueueName> listQueueNames() {
     try {
       List<QueueName> queueNames = new ArrayList<QueueName>();
-      Collection<com.gip.xyna.xfmg.xfctrl.queuemgmnt.Queue> queues = getQueueManagement().listQueues();
-      for( com.gip.xyna.xfmg.xfctrl.queuemgmnt.Queue q : queues ) {
+      Collection<? extends com.gip.xyna.xfmg.xfctrl.queuemgmnt.IQueue> queues = getQueueManagement().listQueues();
+      for( com.gip.xyna.xfmg.xfctrl.queuemgmnt.IQueue q : queues ) {
         queueNames.add( new QueueName(q.getUniqueName()) );
       }
       return queueNames;

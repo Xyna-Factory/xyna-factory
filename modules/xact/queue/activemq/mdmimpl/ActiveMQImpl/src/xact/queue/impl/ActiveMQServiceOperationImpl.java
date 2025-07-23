@@ -26,7 +26,7 @@ import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.ActiveMQConnectData;
-import com.gip.xyna.xfmg.xfctrl.queuemgmnt.Queue;
+import com.gip.xyna.xfmg.xfctrl.queuemgmnt.IQueue;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueConnectData;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueManagement;
 import com.gip.xyna.xfmg.xfctrl.queuemgmnt.QueueManagement.QueueInstanceBuilder;
@@ -77,7 +77,7 @@ public class ActiveMQServiceOperationImpl implements ExtendedDeploymentTask {
   public static class ActiveMQBuilder implements QueueInstanceBuilder {
 
     @Override
-    public Object build(Queue queue) {
+    public Object build(IQueue queue) {
       ActiveMQConfig cfg = new ActiveMQConfig();
       cfg.setName_externalQueue(queue.getExternalName());
       cfg.setName_unique(new QueueName(queue.getUniqueName()));
