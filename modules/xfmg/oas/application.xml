@@ -25,7 +25,7 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>Http</ApplicationName>
-        <VersionName>1.5.1</VersionName>
+        <VersionName>1.5.2</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>Json</ApplicationName>
