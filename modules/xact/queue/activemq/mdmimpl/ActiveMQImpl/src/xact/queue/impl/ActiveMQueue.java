@@ -172,7 +172,7 @@ public class ActiveMQueue {
     if( replyTo == null ) {
       return; //nichts zu tun
     }
-    com.gip.xyna.xfmg.xfctrl.queuemgmnt.Queue replyToQueueData;
+    com.gip.xyna.xfmg.xfctrl.queuemgmnt.IQueue replyToQueueData;
     try {
       replyToQueueData = getQueueManagement().getQueue(replyTo.getName());
     } catch (Exception e) {
