@@ -138,6 +138,8 @@ public class Queue extends Storable<Queue> {
     this.externalName = externalName;
   }
 
+  // use getConnectDataForCurrentVersion
+  @Deprecated
   public QueueConnectData getConnectData() {
     return connectData;
   }
@@ -181,6 +183,8 @@ public class Queue extends Storable<Queue> {
     return queueTypeStr;
   }
 
+  // use getQueueTypeForCurrentVersion
+  @Deprecated
   public QueueType getQueueType() {
     return queueType;
   }
