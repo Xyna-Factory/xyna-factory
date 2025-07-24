@@ -46,7 +46,9 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
 
   private TCPConnection TCPconn;
   private BasicCredentials basicCred = new BasicCredentials();
-
+  private ConnectionList connectionList = new ConnectionList();
+  private ConnectionQueue connectionQueue = new ConnectionQueue();
+  
   
   public NetConfNotificationReceiverTrigger() {
   }
@@ -75,7 +77,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
     if (logger.isInfoEnabled()) { 
       logger.info("NetConfNotificationReceiver: Listening on port " + this.port + "..."); 
     }
-    while ((!this.TCPconn.isClosed()) & (ConnectionList.isTriggerOn())) {
+    while ((!this.TCPconn.isClosed()) & (connectionList.isTriggerOn())) {
       if (logger.isInfoEnabled()) {
         logger.info("NetConfNotificationReceiver: Waiting to accept connection...");
       }
@@ -93,7 +95,8 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
         Thread t = new Thread() {
 
           public void run() {
-            new NetConfNotificationReceiverTriggerConnection(SocketID, filter_targetWF, OldConnectionID, basicCred);
+            new NetConfNotificationReceiverTriggerConnection(SocketID, filter_targetWF, OldConnectionID, basicCred, 
+                                                             connectionList, connectionQueue);
           }
         };
         t.start();
@@ -113,7 +116,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
     if (logger.isInfoEnabled()) {
       logger.info("NetConfNotificationReceiver: Start TCP Listener on port " + this.port + "...");
     }
-    this.TCPconn = new TCPConnection(this.port);
+    this.TCPconn = new TCPConnection(this.port, this.connectionList);
 
     Thread t = new Thread() {
 
@@ -121,7 +124,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
         try {
           TCPServerListener();
         } catch (Exception ex) {
-          if (ConnectionList.isTriggerOn()) {
+          if (connectionList.isTriggerOn()) {
             logger.warn("NetConfNotificationReceiver: TCPServerListener failed", ex);
           }
         }
@@ -140,14 +143,14 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
 
 
   private void OutputQueueNetConfOperationListener() throws Exception {
-    while ((!this.TCPconn.isClosed()) & (ConnectionList.isTriggerOn())) {
+    while ((!this.TCPconn.isClosed()) & (connectionList.isTriggerOn())) {
       try {
         Thread.sleep(whilewait_NetConfOperation);
         while (NetConfNotificationReceiverSharedLib.sizeOutputQueueNetConfOperation() > 0) {
           OutputQueueNetConfOperationElement element = NetConfNotificationReceiverSharedLib.pollOutputQueueNetConfOperation();
           if (element.isValid()) {
-            if (ConnectionList.isConnected(element.getConnectionID())) {
-              NetConfNotificationReceiverTriggerConnection conn = ConnectionList.getConnection(element.getConnectionID());
+            if (connectionList.isConnected(element.getConnectionID())) {
+              NetConfNotificationReceiverTriggerConnection conn = connectionList.getConnection(element.getConnectionID());
               conn.sendNetConfOperation(element.getNetConfOperation());
               NetConfNotificationReceiverSharedLib.addInputQueueMessageID(element.getMessageID(), element.getRDID());
             } else {
@@ -174,7 +177,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
         try {
           OutputQueueNetConfOperationListener();
         } catch (Exception ex) {
-          if (ConnectionList.isTriggerOn()) {
+          if (connectionList.isTriggerOn()) {
             logger.warn("NetConfNotificationReceiver: OutputQueueNetConfOperationListener failed", ex);
           }
         }
@@ -207,7 +210,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
       this.queuewait = NetConfNotificationReceiverStartParameter.Receive_RequestInterval;
       this.whilewait_NetConfOperation = NetConfNotificationReceiverStartParameter.Receive_NetConfOperation;
 
-      ConnectionList.TriggerOn();
+      connectionList.TriggerOn();
       this.startServerTCP();
       this.startOutputQueueNetConfOperationListener();
 
@@ -229,8 +232,8 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
       if (logger.isDebugEnabled()) {
         logger.debug("NetConfNotificationReceiver: Receive - Wait ...");
       }
-      if (ConnectionList.isTriggerOn()) {
-        while (ConnectionQueue.size() == 0) {
+      if (connectionList.isTriggerOn()) {
+        while (connectionQueue.size() == 0) {
           try {
             Thread.sleep(queuewait);
           } catch (Exception ex) {
@@ -240,9 +243,9 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
         if (logger.isDebugEnabled()) {
           logger.debug("NetConfNotificationReceiver: Receive - GET ...");
         }
-        conn = ConnectionQueue.get();
+        conn = connectionQueue.get();
         if (logger.isDebugEnabled()) {
-          logger.debug("NetConfNotificationReceiver: #ConnectionQueue: " + ConnectionQueue.size());
+          logger.debug("NetConfNotificationReceiver: #ConnectionQueue: " + connectionQueue.size());
         }
       }
     } catch (Exception ex) {
@@ -268,23 +271,23 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
 
   public void stop() throws XACT_TriggerCouldNotBeStoppedException {
     try {
-      ConnectionList.TriggerOff();
-      List<String> ItemList = ConnectionList.ListConnectionList();
+      connectionList.TriggerOff();
+      List<String> ItemList = connectionList.ListConnectionList();
       for (Iterator<String> iter = ItemList.iterator(); iter.hasNext();) {
         String element = iter.next();
         Thread t = new Thread() {
 
           public void run() {
-            NetConfNotificationReceiverTriggerConnection conn = ConnectionList.getConnection(element);
+            NetConfNotificationReceiverTriggerConnection conn = connectionList.getConnection(element);
             conn.close_connection();
           }
         };
         t.start();
       }
       if (logger.isInfoEnabled()) {
-        logger.info("NetConfNotificationReceiver: Wait to CloseServerTCP ... " + ConnectionList.sizeConnectionList());
+        logger.info("NetConfNotificationReceiver: Wait to CloseServerTCP ... " + connectionList.sizeConnectionList());
       }
-      while (ConnectionList.sizeConnectionList() > 0) {
+      while (connectionList.sizeConnectionList() > 0) {
         try {
           Thread.sleep(whilewait_CloseConnectionList);
         } catch (Exception ex) {

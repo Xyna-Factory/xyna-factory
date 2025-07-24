@@ -19,8 +19,6 @@
 package com.gip.xyna.xact.trigger;
 
 
-
-import java.time.Clock;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Iterator;
@@ -39,13 +37,9 @@ import com.gip.xyna.xdev.xfractmod.xmdm.TriggerConnection;
 
 public class NetConfNotificationReceiverTriggerConnection extends TriggerConnection {
 
-  //private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
   private static Logger logger = CentralFactoryLogging.getLogger(NetConfNotificationReceiverTriggerConnection.class);
-
-
-  public NetConfNotificationReceiverTriggerConnection() {
-  }
 
   private String client_hello = ""
       + "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -150,14 +144,16 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
   private String RDHash;
   private boolean ConnectionInit;
   private boolean ReplayInit;
-
+  private ConnectionList connectionList;
+  private ConnectionQueue connectionQueue;
+  
 
   public NetConfNotificationReceiverTriggerConnection(String newConnectionID, String filter_targetWF, String OldConnectionID,
-                                                      BasicCredentials cred) {
-
+                                                      BasicCredentials cred, ConnectionList connectionList,
+                                                      ConnectionQueue connectionQueue) {
     try {
       this.cleanupOldConnectionStep1(OldConnectionID); // Only one connection per RD_IP allowed (e.g. uncontrolled reboot of RD)
-
+      this.connectionList = connectionList;
       this.ConnectionID = newConnectionID;
 
       this.username = cred.getUsername();
@@ -183,20 +179,18 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
       this.message = new LinkedList<String>();
       this.internal_message = new LinkedList<String>();
 
-      this.NetConfConn = new NetConfConnection(this.ConnectionID, this.username, this.password, this.HostKeyAuthenticationMode);
-
+      this.NetConfConn = new NetConfConnection(this.ConnectionID, this.username, this.password, this.HostKeyAuthenticationMode,
+                                               this.connectionList);
       this.RD_IP = this.NetConfConn.getIP();
-
       this.open_connection_ssh(cred);
-
-      ConnectionList.addConnection(this.ConnectionID, this);
+      connectionList.addConnection(this.ConnectionID, this);
 
       NetConfNotificationReceiverSharedLib.addSharedNetConfConnectionID(this.RD_IP, this.ConnectionID);
 
       this.cleanupOldConnectionStep2(OldConnectionID); // Only one connection per RD_IP allowed (e.g. uncontrolled reboot of RD)
 
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + "Initialization of NetConfNotificationReceiverTriggerConnection failed", t);
+      logger.warn("NetConfNotificationReceiver: Initialization of NetConfNotificationReceiverTriggerConnection failed", t);
       this.close_connection();
     }
 
@@ -340,7 +334,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
       while (matcher.find()) {
         String message_element = matcher.group(1);
         this.message.add(message_element);
-        ConnectionQueue.push(this);
+        connectionQueue.push(this);
         this.internal_message.add(message_element);
       }
       this.buffer = "";
@@ -527,7 +521,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
 
   private String getSubscriptionNotificationWithStarttime() throws Throwable {
     
-    Clock cl = Clock.systemUTC();
+    //Clock cl = Clock.systemUTC();
     Instant lt = Instant.now();
     long minutes = replayinminutes;
     Instant tm = lt.minus(minutes, ChronoUnit.MINUTES);
@@ -553,8 +547,8 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
     try {
       NetConfNotificationReceiverSharedLib.removeRDHash(this.RDHash);
       NetConfNotificationReceiverSharedLib.removeSharedNetConfConnectionID(this.RD_IP);
-      ConnectionList.removeConnection(this.ConnectionID);
-      ConnectionList.release(this.ConnectionID);
+      connectionList.removeConnection(this.ConnectionID);
+      connectionList.release(this.ConnectionID);
     } catch (Throwable t) {
       logger.warn("NetConfNotificationReceiver: Remove entries in close_connection failed", t);
     }
@@ -564,7 +558,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
   private void cleanupOldConnectionStep1(String OldConnectionID) {
     try {
       if (!OldConnectionID.isEmpty()) {
-        NetConfNotificationReceiverTriggerConnection OldConn = ConnectionList.getConnection(OldConnectionID);
+        NetConfNotificationReceiverTriggerConnection OldConn = connectionList.getConnection(OldConnectionID);
         NetConfNotificationReceiverSharedLib.removeRDHash(OldConn.RDHash);
       }
     } catch (Throwable t) {
@@ -576,7 +570,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
   private void cleanupOldConnectionStep2(String OldConnectionID) {
     try {
       if (!OldConnectionID.isEmpty()) {
-        NetConfNotificationReceiverTriggerConnection OldConn = ConnectionList.getConnection(OldConnectionID);
+        NetConfNotificationReceiverTriggerConnection OldConn = connectionList.getConnection(OldConnectionID);
         OldConn.cleanup_connection();
       }
     } catch (Throwable t) {
@@ -597,8 +591,8 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
       logger.warn("NetConfNotificationReceiver: cleanup_connection (Socket) failed", t);
     }
     try {
-      ConnectionList.removeConnection(this.ConnectionID);
-      ConnectionList.release(this.ConnectionID);
+      connectionList.removeConnection(this.ConnectionID);
+      connectionList.release(this.ConnectionID);
     } catch (Throwable t) {
       logger.warn("NetConfNotificationReceiver: Remove entries in cleanup_connection failed", t);
     }

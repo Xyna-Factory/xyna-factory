@@ -59,13 +59,14 @@ public class NetConfConnection {
   private OutputStream outputStream;
 
 
-  public NetConfConnection(String ConnectionID, String username, String password, String HostKeyAuthenticationMode) {
+  public NetConfConnection(String ConnectionID, String username, String password, String HostKeyAuthenticationMode, 
+                           ConnectionList connlist) {
     this.ConnectionID = ConnectionID;
     this.username = username;
     this.password = password;
     this.HostKeyAuthenticationMode = HostKeyAuthenticationMode;
     try {
-      Socket newSocket = ConnectionList.getSocket(this.ConnectionID);
+      Socket newSocket = connlist.getSocket(this.ConnectionID);
       this.socket = newSocket;
       this.socket_host = socket.getInetAddress().toString().replace("/", "");
       this.socket_port = socket.getPort();
