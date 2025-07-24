@@ -45,8 +45,9 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
   private long queuewait;
 
   private TCPConnection TCPconn;
+  private BasicCredentials basicCred = new BasicCredentials();
 
-
+  
   public NetConfNotificationReceiverTrigger() {
   }
 
@@ -92,7 +93,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
         Thread t = new Thread() {
 
           public void run() {
-            new NetConfNotificationReceiverTriggerConnection(SocketID, filter_targetWF, OldConnectionID);
+            new NetConfNotificationReceiverTriggerConnection(SocketID, filter_targetWF, OldConnectionID, basicCred);
           }
         };
         t.start();
@@ -187,10 +188,20 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
     try {
       startParameter = sp;
       this.port = sp.getPort();
+      basicCred.setUserame(sp.getUsername());
+      basicCred.setPassword(sp.getPassword());
+      basicCred.setHostKeyAuthenticationMode(sp.getHostKeyAuthenticationMode());
+      basicCred.setReplayInMinutes(sp.getReplayInMinutes());
+      basicCred.setKeyAlgorithms(sp.getKeyAlgorithms());
+      basicCred.setMacFactories(sp.getMacFactories());
+      //NetConfNotificationReceiverCredentials credentials = new NetConfNotificationReceiverCredentials(basicCred);
+      
+      /*
       NetConfNotificationReceiverCredentials.setUserame(sp.getUsername());
       NetConfNotificationReceiverCredentials.setPassword(sp.getPassword());
       NetConfNotificationReceiverCredentials.setHostKeyAuthenticationMode(sp.getHostKeyAuthenticationMode());
       NetConfNotificationReceiverCredentials.setReplayInMinutes(sp.getReplayInMinutes());
+      */
       this.filter_targetWF = sp.getFilterTargetWF();
       this.whilewait_CloseConnectionList = NetConfNotificationReceiverStartParameter.CloseConnectionList_RequestInterval;
       this.queuewait = NetConfNotificationReceiverStartParameter.Receive_RequestInterval;

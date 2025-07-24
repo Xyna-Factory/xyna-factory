@@ -18,7 +18,15 @@
 
 package com.gip.xyna.xact.trigger;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import com.hierynomus.sshj.key.KeyAlgorithm;
 import com.hierynomus.sshj.key.KeyAlgorithms;
+import com.hierynomus.sshj.transport.mac.Macs;
+
+import net.schmizz.sshj.common.Factory;
 
 
 public enum SshjKeyAlgorithm {
@@ -57,6 +65,16 @@ public enum SshjKeyAlgorithm {
       ret.append(val.toString());
     }
     return ret.toString();
+  }
+  
+  public static List<SshjKeyAlgorithm> valuesAsList() {
+    return Arrays.asList(values());
+  }
+  
+  public static List<Factory.Named<KeyAlgorithm>> extractFactories(List<SshjKeyAlgorithm> input) {
+    List<Factory.Named<KeyAlgorithm>> ret = new ArrayList<>();
+    for (SshjKeyAlgorithm val : input) { ret.add(val.getFactory()); }
+    return ret;
   }
   
 }

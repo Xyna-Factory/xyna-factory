@@ -29,6 +29,7 @@ import java.util.Collection;
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.xact.trigger.NetConfNotificationReceiverCredentials.AuthMethodName;
 
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.connection.channel.direct.Session;
@@ -49,63 +50,60 @@ public class NetConfConnection {
   private Session session;
   private Session.Subsystem channel;
 
-  private String username;
-  private String password;
-  private String ConnectionID;
-  private String HostKeyAuthenticationMode;
+  private final String username;
+  private final String password;
+  private final String ConnectionID;
+  private final String HostKeyAuthenticationMode;
 
   private InputStream inputStream;
   private OutputStream outputStream;
 
-  private int session_timeout;
-
 
   public NetConfConnection(String ConnectionID, String username, String password, String HostKeyAuthenticationMode) {
+    this.ConnectionID = ConnectionID;
+    this.username = username;
+    this.password = password;
+    this.HostKeyAuthenticationMode = HostKeyAuthenticationMode;
     try {
-      this.ConnectionID = ConnectionID;
-      this.username = username;
-      this.password = password;
-      this.HostKeyAuthenticationMode = HostKeyAuthenticationMode;
-      this.session_timeout = NetConfNotificationReceiverStartParameter.SessionTimeOut;
-
       Socket newSocket = ConnectionList.getSocket(this.ConnectionID);
       this.socket = newSocket;
       this.socket_host = socket.getInetAddress().toString().replace("/", "");
       this.socket_port = socket.getPort();
 
-      assert (this.socket.isConnected());
+      if (!this.socket.isConnected()) {
+        throw new RuntimeException("NetConfConnection: Socket is not connected");
+      }
 
       if (logger.isDebugEnabled()) {
         logger.debug("NetConfNotificationReceiver: Host: " + this.socket_host + ", Port: " + this.socket_port);
       }
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + "Initialization of NetConfConnection failed", t);
+      logger.warn("NetConfNotificationReceiver: Initialization of NetConfConnection failed", t);
     }
   }
 
 
-  public void openNetConfConnection() throws Throwable {
-
+  public void openNetConfConnection(BasicCredentials cred) throws Throwable {
     Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-    NetConfNotificationReceiverCredentials credentialsSSHJ = new NetConfNotificationReceiverCredentials();
-    SSHClient client = new SSHClient();
+    NetConfNotificationReceiverCredentials credentialsSSHJ = new NetConfNotificationReceiverCredentials(cred);
+    SSHClient client = null;
 
-    String method = "DEFAULT";
+    AuthMethodName method = AuthMethodName.DEFAULT;
     String hostkeyAlias = socket_host;
 
     if (this.password.isEmpty()) {
       HostKeyAliasMapping.injectHostname(socket_host, hostkeyAlias, false);
-
       credentialsSSHJ.injectHostKeyHash(socket_host, hostkeyAlias);
-
       if (logger.isDebugEnabled()) {
         logger.debug("NetConfNotificationReceiver: injectHostname " + socket_host + " " + HostKeyAliasMapping.convertHostname(socket_host));
       }
       client = credentialsSSHJ.initSSHClient();
-      method = "PUBLICKEY";
+      method = AuthMethodName.PUBLICKEY;
     } else {
-      method = "PASSWORD";
+      client = new SSHClient();
+      method = AuthMethodName.PASSWORD;
     }
+    
     if (HostKeyAuthenticationMode.equalsIgnoreCase("none")) {
       client.addHostKeyVerifier(new PromiscuousVerifier());
     }
@@ -153,6 +151,7 @@ public class NetConfConnection {
     try {
       this.channel.close();
       this.session.close();
+      this.ssh.close();
     } catch (Throwable t) {
       logger.warn("NetConfNotificationReceiver: " + "Close NetConfConnection failed", t);
     }

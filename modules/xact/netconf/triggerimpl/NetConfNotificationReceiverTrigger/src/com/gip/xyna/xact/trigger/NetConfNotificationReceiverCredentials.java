@@ -53,84 +53,46 @@ import org.apache.log4j.Logger;
 
 public class NetConfNotificationReceiverCredentials {
 
-  private static final XynaPropertyBuilds<Set<SupportedHostNameFeature>> supportedFeatures = 
-      new XynaPropertyBuilds<Set<SupportedHostNameFeature>>("xact.ssh.hostkeys.supportedfeatures",
-                                                            new XynaPropertyBuilds.Builder<Set<SupportedHostNameFeature>>() {
-
-                                                             public Set<SupportedHostNameFeature> fromString(String arg0)
-                                                                             throws com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBuilds.Builder.ParsingException {
-                                                               return SupportedHostNameFeature.fromStringList(arg0);
-                                                             }
-
-                                                             public String toString(Set<SupportedHostNameFeature> arg0) {
-                                                               StringBuilder sb = new StringBuilder();
-                                                               Iterator<SupportedHostNameFeature> iter = arg0.iterator();
-                                                               while (iter.hasNext()) {
-                                                                 sb.append(iter.next().toString());
-                                                                 if (iter.hasNext()) {
-                                                                   sb.append(", ");  
-                                                                 }
-                                                               }
-                                                               return sb.toString();
-                                                             }
-
-                                                            },
-                                                            SupportedHostNameFeature.all())
-            .setDefaultDocumentation(DocumentationLanguage.EN, "Supported features for the HostKeyRepository, turning features off can improve performance");
+  public static enum AuthMethodName {
+    DEFAULT, PUBLICKEY, PASSWORD, HOSTBASED
+  };
 
   private static Logger logger = CentralFactoryLogging.getLogger(NetConfNotificationReceiverTriggerConnection.class);
-
-  private static String netconf_username;
-  private static String netconf_password;
-  private static String netconf_HostKeyAuthenticationMode; //Hostkey_Modus: "leasetable", "direct", "none" (default)
   
-  private static long netconf_replayinminutes;
-
+  private BasicCredentials basicCred;
   protected XynaIdentityRepository idRepo;
+    
+  private static final XynaPropertyBuilds<Set<SupportedHostNameFeature>> supportedFeatures =
+    new XynaPropertyBuilds<Set<SupportedHostNameFeature>>(
+      "xact.ssh.hostkeys.supportedfeatures",
+      new XynaPropertyBuilds.Builder<Set<SupportedHostNameFeature>>() {
 
+       public Set<SupportedHostNameFeature> fromString(String arg0)
+                       throws com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBuilds.Builder.ParsingException {
+         return SupportedHostNameFeature.fromStringList(arg0);
+       }
 
-  NetConfNotificationReceiverCredentials() {
-  }
+       public String toString(Set<SupportedHostNameFeature> arg0) {
+         StringBuilder sb = new StringBuilder();
+         Iterator<SupportedHostNameFeature> iter = arg0.iterator();
+         while (iter.hasNext()) {
+           sb.append(iter.next().toString());
+           if (iter.hasNext()) {
+             sb.append(", ");  
+           }
+         }
+         return sb.toString();
+       }
 
-
-  public static void setUserame(String username) {
-    netconf_username = username;
-  };
-
-
-  public static void setPassword(String password) {
-    netconf_password = password;
-  };
-
-
-  public static String getUserame() {
-    return netconf_username;
-  };
-
-
-  public static String getPassword() {
-    return netconf_password;
-  };
-
-
-  public static void setHostKeyAuthenticationMode(String authenticationmode) {
-    netconf_HostKeyAuthenticationMode = authenticationmode;
-  };
-
-
-  public static String getHostKeyAuthenticationMode() {
-    return netconf_HostKeyAuthenticationMode;
-  };
+      },
+      SupportedHostNameFeature.all())
+    .setDefaultDocumentation(DocumentationLanguage.EN,
+                             "Supported features for the HostKeyRepository, turning features off can improve performance");
 
   
-  public static void setReplayInMinutes(long replayinminutes) {
-    netconf_replayinminutes = replayinminutes;
-  };
-
-
-  public static long getReplayInMinutes() {
-    return netconf_replayinminutes;
-  };
+  public NetConfNotificationReceiverCredentials(BasicCredentials basicCred) {
+    this.basicCred = basicCred;
+  }
 
 
   private Optional<String> getAlgoType(String socket_host, int socket_port) {
@@ -176,6 +138,10 @@ public class NetConfNotificationReceiverCredentials {
     XynaHostKeyRepository hostRepo = new HostKeyStorableRepository(supportedFeatures.get());
     client.addHostKeyVerifier(hostRepo);
 
+    client.getTransport().getConfig().setKeyAlgorithms(SshjKeyAlgorithm.extractFactories(basicCred.getKeyAlgorithms()));
+    client.getTransport().getConfig().setMACFactories(SshjMacFactory.extractFactories(basicCred.getMacFactories()));
+    
+    /*
     // Reduce valid KeyAlgorithms
     client.getTransport().getConfig()
         .setKeyAlgorithms(java.util.Arrays.<net.schmizz.sshj.common.Factory.Named<com.hierynomus.sshj.key.KeyAlgorithm>> asList(
@@ -216,7 +182,8 @@ public class NetConfNotificationReceiverCredentials {
                              Macs.HMACRIPEMD160Etm(),
                              Macs.HMACRIPEMD16096(),
                              Macs.HMACRIPEMD160OpenSsh()));
-
+    */
+    
     //Repair: protected XynaIdentityRepository idRepo
     idRepo = new IdentityStorableRepository(client.getTransport().getConfig());
     if (logger.isDebugEnabled()) {
@@ -226,50 +193,49 @@ public class NetConfNotificationReceiverCredentials {
   }
 
 
-  public Collection<AuthMethod> convertAuthMethod(String method, String socket_host, int socket_port) {
+  public Collection<AuthMethod> convertAuthMethod(AuthMethodName method, String socket_host, int socket_port) {
+    String netconf_password = basicCred.getPassword();
     Collection<AuthMethod> aMethodResponse = new ArrayList<AuthMethod>();
     aMethodResponse.add(new net.schmizz.sshj.userauth.method.AuthNone());
 
-    switch (method) {
-      case "PASSWORD" :
-        if (netconf_password != null) {
-          
-          if (logger.isDebugEnabled()) {
-            logger.debug("NetConfNotificationReceiver: convertAuthMethod - PASSWORD: " + netconf_password);
-          }
-          Collection<AuthMethod> addMethodPassword = Collections.singleton(new AuthPassword(new PasswordFinder() {
-
+    if (method == AuthMethodName.PASSWORD) {
+      if (netconf_password != null) {
+        if (logger.isDebugEnabled()) {
+          logger.debug("NetConfNotificationReceiver: convertAuthMethod - PASSWORD: " + netconf_password);
+        }
+        Collection<AuthMethod> addMethodPassword = Collections.singleton(new AuthPassword(
+          new PasswordFinder() {
             public boolean shouldRetry(Resource<?> resource) {
               return false;
             }
 
-
             public char[] reqPassword(Resource<?> resource) {
               return netconf_password.toCharArray();
             }
-          }));
+          }
+        ));
 
-          aMethodResponse.addAll(addMethodPassword);
-          return aMethodResponse;
-
-        } else {
-          throw new IllegalArgumentException("AuthenticationMethod without necessary credentials '" + method.toString() + "'.");
-        }
-      case "HOSTBASED" :
-        throw new IllegalArgumentException("AuthenticationMethod disabled (security) '" + method.toString() + "'.");
-      case "PUBLICKEY" :
-        if (logger.isDebugEnabled()) {
-          logger.debug("NetConfNotificationReceiver: convertAuthMethod - PUBLICKEY: " + socket_host + " " + socket_port);
-        }
-        Collection<KeyProvider> keys = generateKeyProvider(socket_host, socket_port);
-        Collection<AuthMethod> addMethodKey = keys.stream().map(AuthPublickey::new).collect(Collectors.toList());
-        aMethodResponse.addAll(addMethodKey);
-        if (logger.isDebugEnabled()) {
-          logger.debug( "NetConfNotificationReceiver: convertAuthMethod - PUBLICKEY: "+aMethodResponse.size());
-        }
+        aMethodResponse.addAll(addMethodPassword);
         return aMethodResponse;
-      default :
-        throw new IllegalArgumentException("Unknown AuthenticationMethod '" + method.toString() + "'.");
+
+      } else {
+        throw new IllegalArgumentException("AuthenticationMethod without necessary credentials '" + method.toString() + "'.");
+      }
+    } else if (method == AuthMethodName.HOSTBASED) {
+      throw new IllegalArgumentException("AuthenticationMethod disabled (security) '" + method.toString() + "'.");
+    } else if (method == AuthMethodName.PUBLICKEY) {
+      if (logger.isDebugEnabled()) {
+        logger.debug("NetConfNotificationReceiver: convertAuthMethod - PUBLICKEY: " + socket_host + " " + socket_port);
+      }
+      Collection<KeyProvider> keys = generateKeyProvider(socket_host, socket_port);
+      Collection<AuthMethod> addMethodKey = keys.stream().map(AuthPublickey::new).collect(Collectors.toList());
+      aMethodResponse.addAll(addMethodKey);
+      if (logger.isDebugEnabled()) {
+        logger.debug( "NetConfNotificationReceiver: convertAuthMethod - PUBLICKEY: "+aMethodResponse.size());
+      }
+      return aMethodResponse;
+    } else {
+      throw new IllegalArgumentException("Unknown AuthenticationMethod '" + method.toString() + "'.");
     }
   }
 

@@ -19,7 +19,14 @@
 
 package com.gip.xyna.xact.trigger;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.hierynomus.sshj.transport.mac.Macs;
+
+import net.schmizz.sshj.common.Factory;
+import net.schmizz.sshj.transport.mac.MAC;
 
 
 public enum SshjMacFactory {
@@ -62,6 +69,16 @@ public enum SshjMacFactory {
       ret.append(val.toString());
     }
     return ret.toString();
+  }
+  
+  public static List<SshjMacFactory> valuesAsList() {
+    return Arrays.asList(values());
+  }
+  
+  public static List<Factory.Named<MAC>> extractFactories(List<SshjMacFactory> input) {
+    List<Factory.Named<MAC>> ret = new ArrayList<>();
+    for (SshjMacFactory val : input) { ret.add(val.getFactory()); }
+    return ret;
   }
   
 }

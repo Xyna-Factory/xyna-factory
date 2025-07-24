@@ -152,17 +152,18 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
   private boolean ReplayInit;
 
 
-  public NetConfNotificationReceiverTriggerConnection(String newConnectionID, String filter_targetWF, String OldConnectionID) {
+  public NetConfNotificationReceiverTriggerConnection(String newConnectionID, String filter_targetWF, String OldConnectionID,
+                                                      BasicCredentials cred) {
 
     try {
       this.cleanupOldConnectionStep1(OldConnectionID); // Only one connection per RD_IP allowed (e.g. uncontrolled reboot of RD)
 
       this.ConnectionID = newConnectionID;
 
-      this.username = NetConfNotificationReceiverCredentials.getUserame();
-      this.password = NetConfNotificationReceiverCredentials.getPassword();
-      this.HostKeyAuthenticationMode = NetConfNotificationReceiverCredentials.getHostKeyAuthenticationMode();
-      this.replayinminutes = NetConfNotificationReceiverCredentials.getReplayInMinutes();
+      this.username = cred.getUsername();
+      this.password = cred.getPassword();
+      this.HostKeyAuthenticationMode = cred.getHostKeyAuthenticationMode();
+      this.replayinminutes = cred.getReplayInMinutes();
       this.filter_targetWF = filter_targetWF;
 
       this.Feature_CapInterleave = true;
@@ -186,7 +187,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
 
       this.RD_IP = this.NetConfConn.getIP();
 
-      this.open_connection_ssh();
+      this.open_connection_ssh(cred);
 
       ConnectionList.addConnection(this.ConnectionID, this);
 
@@ -509,8 +510,8 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
   }
 
 
-  private void open_connection_ssh() throws Throwable {
-    this.NetConfConn.openNetConfConnection();
+  private void open_connection_ssh(BasicCredentials cred) throws Throwable {
+    this.NetConfConn.openNetConfConnection(cred);
     this.command_send(client_hello, 0, 0);
     this.startListener();
     this.command_send(get_serial_num, this.command_delay_before, this.command_delay_after);
