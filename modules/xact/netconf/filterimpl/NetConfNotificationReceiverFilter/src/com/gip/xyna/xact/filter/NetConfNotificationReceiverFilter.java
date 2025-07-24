@@ -46,8 +46,10 @@ public class NetConfNotificationReceiverFilter extends ConnectionFilter<NetConfN
 
   private static Logger logger = CentralFactoryLogging.getLogger(NetConfNotificationReceiverFilter.class);
 
-  private String regex_Valid = "(<notification[\\w\\W]*<\\/notification>)";
-  private String regex_EventTime = "<notification[\\w\\W]*<eventTime>([\\w\\W]*)<\\/eventTime>[\\w\\W]*<\\/notification>";
+  private final static String regex_Valid = "(<notification[\\w\\W]*<\\/notification>)";
+  private final static Pattern pattern_valid = Pattern.compile(regex_Valid);
+  private final static String regex_EventTime = "<notification[\\w\\W]*<eventTime>([\\w\\W]*)<\\/eventTime>[\\w\\W]*<\\/notification>";
+  private final static Pattern pattern_EventTime = Pattern.compile(regex_EventTime);
 
 
   /**
@@ -76,76 +78,67 @@ public class NetConfNotificationReceiverFilter extends ConnectionFilter<NetConfN
    */
   @Override
   public FilterResponse createXynaOrder(NetConfNotificationReceiverTriggerConnection tc, FilterConfigurationParameter baseConfig)
-      throws XynaException {
-
-    FilterResponse answer = FilterResponse.notResponsible();
-    XynaOrder xynaOrder = null;
-
+                        throws XynaException {
     String FilterTargetWF = "";
     try {
       FilterTargetWF = tc.getFilterTargetWF();
     } catch (Exception ex) {
-      logger.warn("NetConfNotificationReceiver: " + "Filter - createXynaOrder failed", ex);
+      logger.warn("NetConfNotificationReceiver: Filter - createXynaOrder failed, unable to read target order type", ex);
     }
-
     DestinationKey destKey = new DestinationKey(FilterTargetWF);
 
     String RD_IP = "";
     String RD_ID = "";
-    long longEventTime = 0;
     String message = "";
     try {
       RD_IP = tc.getIP();
       RD_ID = tc.getID();
       message = tc.getMessage();
     } catch (Exception ex) {
-      logger.warn("NetConfNotificationReceiver: " + "Filter - createXynaOrder failed", ex);
+      logger.warn("NetConfNotificationReceiver: Filter - createXynaOrder failed, unable to get trigger parameters", ex);
     }
 
-    Pattern pattern_valid = Pattern.compile(regex_Valid);
     Matcher matcher_valid = pattern_valid.matcher(message);
-    if (matcher_valid.matches()) {
-
-      try {
-        String valid_message = matcher_valid.group(1);
-
-        Pattern pattern_EventTime = Pattern.compile(regex_EventTime);
-        Matcher matcher_EventTime = pattern_EventTime.matcher(valid_message);
-
-        String eventTime = "N/A";
-        if (matcher_EventTime.matches()) {
-          
-          eventTime = matcher_EventTime.group(1);
-          
-          try {
-            Instant instant1 = Instant.parse(eventTime);
-            longEventTime = instant1.toEpochMilli();
-          } catch(Exception ex1) {
-            try {
-              DateTimeFormatter formatter0 = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-              ZonedDateTime zonedtime = ZonedDateTime.parse(eventTime, formatter0);
-              Instant instant2 = zonedtime.toInstant();
-              longEventTime = instant2.toEpochMilli();
-            } catch(Exception ex2) {
-              logger.warn("NetConfNotificationReceiver: " + "Filter - createXynaOrder - EventTime failed", ex2);
-            }
-          }
-          
-        }
-      } catch (Exception ex) {
-        logger.warn("NetConfNotificationReceiver: " + "Filter - createXynaOrder failed", ex);
-      }
-
-      NetConfEvent event = new NetConfEvent();
-      event.setIP(RD_IP);
-      event.setDeviceID(RD_ID);
-      event.setEventTime(longEventTime);
-      event.setEvent(message);
-
-      xynaOrder = new XynaOrder(destKey, event);
-      answer = FilterResponse.responsible(xynaOrder);
+    if (!matcher_valid.matches()) {
+      return FilterResponse.notResponsible();
     }
-    return answer;
+    long longEventTime = parseEventTime(matcher_valid);
+    NetConfEvent.Builder builder = new NetConfEvent.Builder();
+    builder.iP(RD_IP);
+    builder.deviceID(RD_ID);
+    builder.eventTime(longEventTime);
+    builder.event(message);
+    NetConfEvent event = builder.instance();
+    XynaOrder xynaOrder = new XynaOrder(destKey, event);
+    return FilterResponse.responsible(xynaOrder);
+  }
+  
+  
+  private long parseEventTime(Matcher matcher_valid) {
+    long ret = 0L;
+    String eventTime = "";
+    try {
+      String valid_message = matcher_valid.group(1);
+      Matcher matcher_EventTime = pattern_EventTime.matcher(valid_message);
+      if (!matcher_EventTime.matches()) {
+        return ret;
+      }
+      eventTime = matcher_EventTime.group(1);
+      try {
+        Instant instant1 = Instant.parse(eventTime);
+        return instant1.toEpochMilli();
+      } catch(Exception ex1) {
+        // do nothing
+      }
+      DateTimeFormatter formatter0 = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+      ZonedDateTime zonedtime = ZonedDateTime.parse(eventTime, formatter0);
+      Instant instant2 = zonedtime.toInstant();
+      return instant2.toEpochMilli();
+    } catch (Exception ex) {
+      logger.warn("NetConfNotificationReceiver Filter, createXynaOrder: Could not parse event time, " +
+                  "supplied value = '" + eventTime + "'", ex);
+    }
+    return ret;
   }
 
   /**
