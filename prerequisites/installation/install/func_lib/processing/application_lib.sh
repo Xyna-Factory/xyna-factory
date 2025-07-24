@@ -184,7 +184,7 @@ f_import_application () {
   if [[ ${FULL_APP_NAME} =~ ${PATTERN} ]]; then
     echo 
   else
-      f_xynafactory importapplication --force -filename ${PWD}/components/${APP_FILE} --stop ${IMPORT_APPLICATIONS_GLOBALLY}
+      f_xynafactory importapplication --force -filename ${PWD}/components/${APP_FILE} --includeCapacitiesKeepExisting --stop ${IMPORT_APPLICATIONS_GLOBALLY}
       echo -ne '\a'
       echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
       echo "!!!"
@@ -287,7 +287,7 @@ f_import_application () {
     local MANUAL_MIGRATION=0
 
     #  Neue Version importieren
-    f_xynafactory importapplication --force -filename ${PWD}/components/${APP_FILE} --stop ${IMPORT_APPLICATIONS_GLOBALLY}
+    f_xynafactory importapplication --force -filename ${PWD}/components/${APP_FILE} --includeCapacitiesKeepExisting --stop ${IMPORT_APPLICATIONS_GLOBALLY}
     local IMPORT_RESULT=$?
  
     if [ ${IMPORT_RESULT} = 0 -a ${BUGFIX_INSTALL} = 1 ]; then

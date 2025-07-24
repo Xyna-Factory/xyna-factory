@@ -20,14 +20,12 @@ package xmcp.gitintegration.impl.processing;
 
 
 import java.util.ArrayList;
-import java.util.Collection;
 import org.w3c.dom.Node;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import com.gip.xyna.XynaFactory;
@@ -54,38 +52,33 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
 
   //String is the tagName
   protected static final Map<String, WorkspaceContentProcessor<? extends WorkspaceContentItem>> parserTypes = new HashMap<>();
+  protected static final List<WorkspaceContentProcessor<? extends WorkspaceContentItem>> processorOrder = new LinkedList<>();
   protected static final Map<Class<? extends WorkspaceContentType>, WorkspaceContentProcessor<? extends WorkspaceContentItem>> registeredTypes =
       createRegisteredTypesMap();
 
 
   private static Map<Class<? extends WorkspaceContentType>, WorkspaceContentProcessor<? extends WorkspaceContentItem>> createRegisteredTypesMap() {
     Map<Class<? extends WorkspaceContentType>, WorkspaceContentProcessor<? extends WorkspaceContentItem>> result;
-    result = new TreeMap<>((x, y) -> x.getCanonicalName().compareTo(y.getCanonicalName()));
+    result = new HashMap<>();
     //register WorkspaceContentProcessors here: addToMap(result, new <WorkspaceContentType>Processor());
     addToMap(result, new RuntimeContextDependencyProcessor());
-    addToMap(result, new ApplicationDefinitionProcessor());
     addToMap(result, new OrderTypeProcessor());
-    addToMap(result, new TriggerInstanceProcessor());
     addToMap(result, new DatatypeProcessor());
     addToMap(result, new OrderInputSourceProcessor());
     addToMap(result, new TriggerProcessor());
-    addToMap(result, new FilterInstanceProcessor());
+    addToMap(result, new TriggerInstanceProcessor());
     addToMap(result, new FilterProcessor());
+    addToMap(result, new FilterInstanceProcessor());
     addToMap(result, new XMOMStorableProcessor());
+    addToMap(result, new ApplicationDefinitionProcessor());
     return result;
   }
 
 
-  public static final HashMap<String, WorkspaceContentDifferenceType> differenceTypes = setupDifferenceTypes();
-
-
-  private static HashMap<String, WorkspaceContentDifferenceType> setupDifferenceTypes() {
-    HashMap<String, WorkspaceContentDifferenceType> result = new HashMap<>();
-    result.put(CREATE.class.getSimpleName(), new CREATE());
-    result.put(MODIFY.class.getSimpleName(), new MODIFY());
-    result.put(DELETE.class.getSimpleName(), new DELETE());
-    return result;
-  }
+  public static final Map<String, WorkspaceContentDifferenceType> differenceTypes =
+      Map.ofEntries(Map.entry(CREATE.class.getSimpleName(), new CREATE()), 
+                    Map.entry(MODIFY.class.getSimpleName(), new MODIFY()),
+                    Map.entry(DELETE.class.getSimpleName(), new DELETE()));
 
 
   @SuppressWarnings("unchecked")
@@ -93,6 +86,7 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
                                  WorkspaceContentProcessor<? extends WorkspaceContentItem> toAdd) {
     map.put((Class<? extends WorkspaceContentType>) getWorkspaceContentTypeFromProcessor(toAdd), toAdd);
     parserTypes.put(toAdd.getTagName(), toAdd);
+    processorOrder.add(toAdd);
   }
 
 
@@ -116,8 +110,7 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
 
   public List<WorkspaceContentDifference> compare(WorkspaceContent c1, WorkspaceContent c2) {
     List<WorkspaceContentDifference> result = new LinkedList<>();
-    Collection<WorkspaceContentProcessor<? extends WorkspaceContentItem>> types = registeredTypes.values();
-    for (WorkspaceContentProcessor<? extends WorkspaceContentItem> type : types) {
+    for (WorkspaceContentProcessor<? extends WorkspaceContentItem> type : processorOrder) {
       List<WorkspaceContentDifference> differencesThisType = compareSingleType(c1, c2, type);
       result.addAll(differencesThisType);
     }
@@ -155,7 +148,7 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
   public List<WorkspaceContentItem> createItems(Long revision) {
     List<WorkspaceContentItem> result = new LinkedList<WorkspaceContentItem>();
 
-    for (WorkspaceContentProcessor<? extends WorkspaceContentItem> supportedType : registeredTypes.values()) {
+    for (WorkspaceContentProcessor<? extends WorkspaceContentItem> supportedType : processorOrder) {
       List<? extends WorkspaceContentItem> subList = supportedType.createItems(revision);
       result.addAll(subList);
     }

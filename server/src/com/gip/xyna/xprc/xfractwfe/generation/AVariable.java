@@ -590,6 +590,7 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
   protected String label;
   protected String documentation;
   protected boolean isList = false;
+  protected boolean isNull = false;
   // if this data element is child of another one
   private AVariable parentVariableInXml;
 
@@ -657,6 +658,7 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
     this.label = original.label;
     this.documentation = original.documentation;
     this.isList = original.isList;
+    this.isNull = original.isNull;
     this.parentVariableInXml = original.parentVariableInXml;
     this.className = original.className;
     this.fqClassName = original.fqClassName;
@@ -871,6 +873,7 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
     label = e.getAttribute(GenerationBase.ATT.LABEL);
     this.parentVariableInXml = parent;
     isList = XMLUtils.isTrue(e, GenerationBase.ATT.ISLIST);
+    isNull = XMLUtils.isTrue(e, GenerationBase.ATT.ISNULL);
     prototype = XMLUtils.isTrue(e, GenerationBase.ATT.ABSTRACT);
 
     parseUnknownMetaTags(e, Arrays.asList(EL.PERSISTENCE, EL.USEROUTPUT, GenerationBase.EL.DOCUMENTATION));
@@ -938,7 +941,11 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
   public final boolean isList() {
     return isList;
   }
-  
+
+  public final boolean isNull() {
+    return isNull;
+  }
+
   public final boolean isPrototype() {
     return prototype;
   }
@@ -1727,9 +1734,13 @@ public abstract class AVariable implements XmlAppendable, HasDocumentation, HasM
     }
     this.isList = isList;
   }
-  
+
   public void setIsList(boolean isList) {
     this.isList = isList;
+  }
+
+  public void setIsNull(boolean isNull) {
+    this.isNull = isNull;
   }
 
   public void setLabel(String label) {

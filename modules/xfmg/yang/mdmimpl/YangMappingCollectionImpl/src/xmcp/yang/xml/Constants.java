@@ -26,6 +26,7 @@ public class Constants {
     public static final String SEP_PATH_ELEM_ATTR = "#";
     public static final String SEP_LIST_KEY_LIST_ELEMS = "%";
     public static final String SEP_LIST_KEY_VALUE = "=";
+    public static final String SEP_LIST_KEY_NAMESPACE = "~";
     public static final String VALUE_FOR_IS_LIST_KEY_LEAF = "true";
     
   }

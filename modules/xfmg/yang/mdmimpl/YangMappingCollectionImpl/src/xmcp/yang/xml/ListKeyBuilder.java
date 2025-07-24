@@ -23,10 +23,11 @@ public class ListKeyBuilder {
 
   private String _elementName;
   private String _value;
+  private String _namespace;
   
   
   public ListKey build() {
-    return new ListKey(_elementName, _value);
+    return new ListKey(_elementName, _value, _namespace);
   }
   
   public ListKeyBuilder listKeyElemName(String elementName) {
@@ -34,9 +35,14 @@ public class ListKeyBuilder {
     return this;
   }
   
-  public ListKeyBuilder listKeyValue(String _value) {
-    this._value = _value;
+  public ListKeyBuilder listKeyValue(String value) {
+    this._value = value;
     return this;
   }
 
+  public ListKeyBuilder listKeyNamespace(String nsp) {
+    this._namespace = nsp;
+    return this;
+  }
+  
 }

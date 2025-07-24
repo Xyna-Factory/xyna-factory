@@ -400,18 +400,19 @@ public class XMOMPersistenceManagement extends FunctionGroup implements XMOMPers
      */
     private Map<StorableNode, Node<StorableNode>> graphData;
     private GenerationBaseCache gbc;
-    private Set<DOM> domsThatCacheSubtypes; 
-
+    private Set<DOM> domsThatCacheSubtypes;
     public void exec(GenerationBase gb, DeploymentMode mode) throws XPRC_DeploymentHandlerException {
       if (gb instanceof DOM) {
         DOM d = (DOM) gb;
         if (domsThatCacheSubtypes.add(d)) {
           d.setCacheSubTypes(true);  
+        } else {
+          return;
         }
         if (d.isInheritedFromStorable()) {
           getOrAddNode(d, true);
         }
-        for (GenerationBase root : d.getRootXMOMStorablesUsingThis(gbc, new HashSet<GenerationBase>())) {
+        for (GenerationBase root : d.getRootXMOMStorablesUsingThis(gbc, domsThatCacheSubtypes)) {
           DOM dom = (DOM) root;
           if (domsThatCacheSubtypes.add(dom)) {
             dom.setCacheSubTypes(true);  

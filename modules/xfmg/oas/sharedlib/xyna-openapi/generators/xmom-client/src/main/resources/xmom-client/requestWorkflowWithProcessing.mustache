@@ -60,6 +60,10 @@
       <Source RefID="15174"/>
       <Target RefID="15174"/>
     </ServiceReference>
+    <ServiceReference ID="17299" Label="HTTP Service" ReferenceName="HTTPService.HTTPService" ReferencePath="xact.http">
+      <Source RefID="17298"/>
+      <Target RefID="17298"/>
+    </ServiceReference>
     <ServiceReference ID="3" Label="HTTP Service" ReferenceName="HTTPService.HTTPService" ReferencePath="xact.http">
       <Source RefID="2"/>
       <Target RefID="2"/>
@@ -171,6 +175,17 @@
       <Receive ServiceID="3">
         <Target RefID="4"/>
       </Receive>
+      <Compensate>
+        <Function ID="17298" Label="Close Connection">
+          <Source RefID="17299"/>
+          <Source RefID="4"/>
+          <Target RefID="17299"/>
+          <Invoke Operation="closeConnection" ServiceID="17299">
+            <Source RefID="4"/>
+          </Invoke>
+          <Receive ServiceID="17299"/>
+        </Function>
+      </Compensate>
     </Function>
     <Function ID="21" Label="sendRequest">
       <Source RefID="22"/>
