@@ -264,12 +264,18 @@ public class HTTPTriggerConnection extends TriggerConnection {
       if (part.startsWith("charset=")) { val = part.substring(8); break; }
     }
     if (val.length() == 0) { return; }
-    val = val.toUpperCase();          
+    if (val.startsWith("'") || val.startsWith("\"")) {
+      val = val.substring(1);
+    }
+    if (val.endsWith("'") || val.endsWith("\"")) {
+      val = val.substring(0, val.length() - 1);
+    }
+    val = val.toUpperCase();
     if (!Charset.isSupported(val)) { return; }
     this.charSet = val;
     if (!suppressLogging) {
       logger.debug("Set charset to " + val);
-    }    
+    }
   }
   
   
