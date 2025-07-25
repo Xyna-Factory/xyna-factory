@@ -208,8 +208,9 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
 
     @SuppressWarnings("rawtypes")
     public <T extends Storable> boolean containsObject(T storable) throws PersistenceLayerException {
-        String select = "select count(*) from " + storable.getTableName().toLowerCase() + " where "
-                + Storable.getPersistable(storable.getClass()).primaryKey() + " = ?";
+        String escTableName = String.format("`%s`", storable.getTableName());
+        String escPrimaryKey = String.format("`%s`", Storable.getPersistable(storable.getClass()).primaryKey());
+        String select = "select count(*) from " + escTableName.toLowerCase() + " where " + escPrimaryKey + " = ?";
         com.gip.xyna.utils.db.Parameter paras = new com.gip.xyna.utils.db.ExtendedParameter();
         Column colPK = MySQLPersistenceLayer.getColumnForPrimaryKey(storable);
         this.mySQLPersistenceLayer.addToParameter(paras, colPK, storable.getPrimaryKey(), storable);
@@ -227,8 +228,9 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
 
     @SuppressWarnings("rawtypes")
     public <T extends Storable> void deleteOneRow(T storable) throws PersistenceLayerException {
-        String delete = "delete from " + storable.getTableName().toLowerCase() + " where "
-                + Storable.getPersistable(storable.getClass()).primaryKey() + " = ?";
+        String escTableName = String.format("`%s`", storable.getTableName());
+        String escPrimaryKey = String.format("`%s`", Storable.getPersistable(storable.getClass()).primaryKey());
+        String delete = "delete from " + escTableName.toLowerCase() + " where " + escPrimaryKey + " = ?";
         deleteSingleElement(storable, delete);
     }
 
@@ -237,8 +239,9 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
         if (storableCollection != null && storableCollection.size() > 0) {
             Iterator<T> it = storableCollection.iterator();
             T a = it.next();
-            String delete = "delete from " + a.getTableName().toLowerCase() + " where "
-                    + Storable.getPersistable(a.getClass()).primaryKey() + " = ?";
+            String escTableName = String.format("`%s`", a.getTableName());
+            String escPrimaryKey = String.format("`%s`", Storable.getPersistable(a.getClass()).primaryKey());
+            String delete = "delete from " + escTableName.toLowerCase() + " where " + escPrimaryKey + " = ?";
             deleteSingleElement(a, delete);
             while (it.hasNext()) {
                 a = it.next();
@@ -272,7 +275,8 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
 
         validateAccessMode(klass.getCanonicalName());
 
-        String delete = "truncate table " + Storable.getPersistable(klass).tableName().toLowerCase();
+        String escTableName = String.format("`%s`", Storable.getPersistable(klass).tableName());
+        String delete = "truncate table " + escTableName.toLowerCase();
         try {
             sqlUtils.executeDML(delete, null);
         } catch (com.gip.xyna.xnwh.exception.SQLRetryTransactionRuntimeException e) {
@@ -358,8 +362,9 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
         ensureOpen();
         final com.gip.xyna.xnwh.persistence.ResultSetReader<? extends T> reader = getReader(klass);
         try {
+            String escTableName = String.format("`%s`", Storable.getPersistable(klass).tableName());
             ArrayList<T> list = sqlUtils.query(
-                    "select * from " + Storable.getPersistable(klass).tableName().toLowerCase(), null,
+                    "select * from " + escTableName.toLowerCase(), null,
                     new ResultSetReaderWrapper<T>(reader, this.mySQLPersistenceLayer.useZippedBlobs(), klass));
             return list;
         } catch (com.gip.xyna.xnwh.exception.SQLRetryTransactionRuntimeException e) {
@@ -400,8 +405,10 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
         final Column colPK = MySQLPersistenceLayer.getColumnForPrimaryKey(firstElement);
 
         Persistable persistable = Storable.getPersistable(firstElement.getClass());
-        StringBuilder start = new StringBuilder("select ").append(persistable.primaryKey()).append(" from ")
-                .append(persistable.tableName().toLowerCase()).append(" where ");
+        String escPrimaryKey = String.format("`%s`", persistable.primaryKey());
+        String escTableName = String.format("`%s`", persistable.tableName());
+        StringBuilder start = new StringBuilder("select ").append(escPrimaryKey).append(" from ")
+                .append(escTableName.toLowerCase()).append(" where ");
         int remainingSize = size;
         Set<Object> existingPKs = new HashSet<Object>();
         while (remainingSize > 0) {
@@ -433,7 +440,7 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            selectSql.append(inList.getSQL(persistable.primaryKey()));
+            selectSql.append(inList.getSQL(escPrimaryKey));
             selectSql.append(" for update");
             try {
                 List<Object> result = sqlUtils.query(selectSql.toString(), inList.getParams(), resultSetReaderForPK);
@@ -506,13 +513,17 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
             throw new XNWH_GeneralPersistenceLayerException("no columns found to persist");
         }
         for (int i = 0; i < columns.length - 1; i++) {
-            cols.append(columns[i].name()).append(", ");
+            String escColName = String.format("`%s`", columns[i].name());
+            cols.append(escColName).append(", ");
             vals.append("?, ");
         }
-        cols.append(columns[columns.length - 1].name());
+        String escColName = String.format("`%s`", columns[columns.length - 1].name());
+        cols.append(escColName);
         vals.append("?");
 
-        return "insert into " + tableName + " (" + cols + ") values (" + vals + ")";
+
+        String escTableName = String.format("`%s`", tableName);
+        return "insert into " + escTableName + " (" + cols + ") values (" + vals + ")";
     }
 
     @SuppressWarnings("rawtypes")
@@ -524,14 +535,16 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
         StringBuilder setter = new StringBuilder();
         setter.append(" set ");
         for (int i = 0; i < columns.length - 1; i++) {
-            setter.append(columns[i].name()).append(" = ?, ");
+            String escColName = String.format("`%s`", columns[i].name());
+            setter.append(escColName).append(" = ?, ");
         }
-        setter.append(columns[columns.length - 1].name()).append(" = ? ");
+        String escColName = String.format("`%s`", columns[columns.length - 1].name());
+        setter.append(escColName).append(" = ? ");
         String tableName = storable.getTableName().toLowerCase();
-        StringBuilder whereClause = new StringBuilder().append(" where ")
-                .append(Storable.getPersistable(storable.getClass()).primaryKey())
-                .append(" = ?");
-        return new StringBuilder().append("update ").append(tableName).append(setter).append(whereClause).toString();
+        String escTableName = String.format("`%s`", tableName);
+        String escPrimaryKey = String.format("`%s`", Storable.getPersistable(storable.getClass()).primaryKey());;
+        StringBuilder whereClause = new StringBuilder().append(" where ").append(escPrimaryKey).append(" = ?");
+        return new StringBuilder().append("update ").append(escTableName).append(setter).append(whereClause).toString();
     }
 
     @SuppressWarnings("rawtypes")
@@ -544,8 +557,9 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
         // aus beiden extrahiert werden
         ensureOpen();
         // überprüfen, ob objekt bereits in db ist
-        String sqlString = "select count(*) from " + storable.getTableName().toLowerCase() + " where "
-                + Storable.getPersistable(storable.getClass()).primaryKey() + " = ?";
+        String escTableName = String.format("`%s`", storable.getTableName());
+        String escPrimaryKey = String.format("`%s`", Storable.getPersistable(storable.getClass()).primaryKey());
+        String sqlString = "select count(*) from " + escTableName.toLowerCase() + " where " + escPrimaryKey + " = ?";
         boolean existedBefore = false;
         try {
 
@@ -816,9 +830,11 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
     private <T extends Storable> void queryOneRowInternally(final T storable, boolean forUpdate)
             throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
         ensureOpen();
+        String escTableName = String.format("`%s`", storable.getTableName());
+        String escPrimaryKey = String.format("`%s`", Storable.getPersistable(storable.getClass()).primaryKey());
         StringBuilder selectString = new StringBuilder().append("select * from ")
-                .append(storable.getTableName().toLowerCase()).append(" where ")
-                .append(Storable.getPersistable(storable.getClass()).primaryKey()).append(" = ?");
+                .append(escTableName.toLowerCase()).append(" where ")
+                .append(escPrimaryKey).append(" = ?");
         if (forUpdate) {
             selectString.append(" for update");
         }

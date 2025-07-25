@@ -129,7 +129,7 @@ public class PersistenceExpressionVisitors {
     private final List<CastCondition> casts;
     private final List<CastCondition> allCasts;
     private Stack<FunctionExpression> functionStack = new Stack<FunctionExpression>();
-    private UnfinishedWhereClause whereClause = new UnfinishedWhereClause();
+    private UnfinishedWhereClause whereClause;
     private boolean expectingIndex = false;
     private static final Pattern unescapedStarPattern = Pattern.compile("\\\\*[*]");
     private static final Pattern unescapedQuotesPattern = Pattern.compile("\\\\*[\"]");
@@ -139,10 +139,11 @@ public class PersistenceExpressionVisitors {
     
     private final Parameter parameter;
     
-    QueryBuildingVisitor(XMOMStorableStructureInformation info, Parameter parameter) {
+    QueryBuildingVisitor(XMOMStorableStructureInformation info, Parameter parameter, QueryGenerator gen) {
       super(info);
-      whereClause.append(" WHERE ");
       this.parameter = parameter;
+      this.whereClause = new UnfinishedWhereClause(gen);
+      whereClause.append(" WHERE ");
       casts = new ArrayList<>();
       allCasts = new ArrayList<>();
     }
@@ -1320,7 +1321,7 @@ private static class StorableStructureType implements ModelledType {
   }
   
   
-  static FormulaParsingResult EMPTY_FORMULA_PARSING_RESULT = new FormulaParsingResult(new UnfinishedWhereClause() {
+  static FormulaParsingResult EMPTY_FORMULA_PARSING_RESULT = new FormulaParsingResult(new UnfinishedWhereClause(null) {
     String finishWhereClause(AliasDictionary dictionary) { return ""; };
   }, Collections.<CastCondition>emptyList());
   
@@ -1402,10 +1403,12 @@ private static class StorableStructureType implements ModelledType {
     private StringBuilder currentActiveBuilder = new StringBuilder();
     final List<String> strings;
     final List<QualifiedStorableColumnInformation> columns;
+    private final QueryGenerator gen;
     
-    UnfinishedWhereClause() {
+    UnfinishedWhereClause(QueryGenerator gen) {
       this.strings = new ArrayList<String>();
       this.columns = new ArrayList<QualifiedStorableColumnInformation>();
+      this.gen = gen;
     }
     
     UnfinishedWhereClause append(String string) {
@@ -1433,12 +1436,12 @@ private static class StorableStructureType implements ModelledType {
             tableName = dictionary.getTableAlias(column.getAccessPath());  
           }
           if (tableName == null) {
-            whereBuilder.append(column.getColumn().getParentStorableInfo().getTableName());
+            whereBuilder.append(gen.escape(column.getColumn().getParentStorableInfo().getTableName()));
           } else {
-            whereBuilder.append(tableName);
+            whereBuilder.append(gen.escape(tableName));
           }
           whereBuilder.append('.')
-                      .append(column.getColumn().getColumnName());
+                      .append(gen.escape(column.getColumn().getColumnName()));
         }
       }
       return whereBuilder.toString();
@@ -1447,11 +1450,11 @@ private static class StorableStructureType implements ModelledType {
   }
   
   
-  protected static FormulaParsingResult parseFormula(IFormula condition, XMOMStorableStructureInformation info, Parameter params) {
+  protected static FormulaParsingResult parseFormula(IFormula condition, XMOMStorableStructureInformation info, Parameter params, QueryGenerator gen) {
     if (condition.getFormula() == null || condition.getFormula().length() <= 0) {
       return EMPTY_FORMULA_PARSING_RESULT;
     } else {
-      PersistenceExpressionVisitors.QueryBuildingVisitor qbv = new PersistenceExpressionVisitors.QueryBuildingVisitor(info, params);
+      PersistenceExpressionVisitors.QueryBuildingVisitor qbv = new PersistenceExpressionVisitors.QueryBuildingVisitor(info, params, gen);
       visitAfterDefaultVisitorStack(qbv, condition.getFormula(), info);
       qbv.generateTypeCasts();
       return new FormulaParsingResult(qbv.getWhereClause(), qbv.getAllCasts());

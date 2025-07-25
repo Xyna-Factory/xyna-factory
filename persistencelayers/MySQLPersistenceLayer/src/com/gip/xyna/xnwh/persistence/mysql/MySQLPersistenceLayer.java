@@ -66,6 +66,7 @@ import com.gip.xyna.xnwh.persistence.PersistenceLayerConnection;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.persistence.Storable;
 import com.gip.xyna.xnwh.persistence.sql.ZippedBlob;
+import com.gip.xyna.xnwh.persistence.xmom.QueryGenerator;
 import com.gip.xyna.xnwh.pools.ConnectionPoolManagement;
 import com.gip.xyna.xnwh.pools.MySQLPoolType;
 import com.gip.xyna.xnwh.pools.PoolDefinition;
@@ -80,6 +81,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
 
   private static final Logger logger = CentralFactoryLogging.getLogger(MySQLPersistenceLayer.class);
   private static final Pattern NUMBERS_PATTERN = Pattern.compile("^\\d+$");
+  private static final QueryGenerator queryGenerator = new QueryGenerator("`");
   @SuppressWarnings("rawtypes")
   private static final Map<String, Class<? extends Storable>> tableToClassMap = new HashMap<String, Class<? extends Storable>>();
 
@@ -629,6 +631,10 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
       throw new XNWH_GeneralPersistenceLayerException("shutdown of " + MySQLPersistenceLayer.class.getName()
           + " not successful. Some connections could not be closed.", e);
     }
+  }
+  
+  public QueryGenerator getQueryGenerator() {
+    return queryGenerator;
   }
 
 

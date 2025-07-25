@@ -285,7 +285,8 @@ class MySQLPersistenceLayerAlterTableConnection
                     if (addColumnString.length() > 0) {
                         addColumnString.append(",");
                     }
-                    addColumnString.append("\n  ADD COLUMN ").append(col.name()).append(" ")
+                    String escColName = String.format("`%s`", col.name());
+                    addColumnString.append("\n  ADD COLUMN ").append(escColName).append(" ") //escape
                             .append(getDefaultColumnTypeString(col, klass)).append(" NULL");
                 }
             }
@@ -317,7 +318,8 @@ class MySQLPersistenceLayerAlterTableConnection
             Set<DatabaseIndexCollision> collisions = new HashSet<DatabaseIndexCollision>();
             if (!isView(tableNameWithSchemaPrefix)) {
                 if (addColumnString.length() > 0) {
-                    String ddl = "ALTER TABLE " + tableNameWithSchemaPrefix + "\n" + addColumnString.toString();
+                    String escTableName = String.format("`%s`", tableNameWithSchemaPrefix);
+                    String ddl = "ALTER TABLE " + escTableName + "\n" + addColumnString.toString();
                     validateAccessMode(ddl);
                     sqlUtils.executeDDL(ddl, null);
                 }
@@ -382,27 +384,30 @@ class MySQLPersistenceLayerAlterTableConnection
     public <T extends Storable> void createTable(Persistable persistable, Class<T> klass, Column[] cols) {
 
         validateAccessMode(klass.getCanonicalName());
-
         String tableName = persistable.tableName().toLowerCase();
-        StringBuilder createTableStatement = new StringBuilder("CREATE TABLE ").append(tableName).append(" (\n");
+        String escTableName = String.format("`%s`", tableName);
+        StringBuilder createTableStatement = new StringBuilder("CREATE TABLE ").append(escTableName).append(" (\n");
         for (Column col : cols) {
+            String escColName = String.format("`%s`", col.name());
             String typeAsString = getDefaultColumnTypeString(col, klass);
-            createTableStatement.append("  ").append(col.name()).append(" ").append(typeAsString);
+            createTableStatement.append("  ").append(escColName).append(" ").append(typeAsString); //escape col.name
             // default wert
             if (col.name().equals(persistable.primaryKey())) {
                 createTableStatement.append(" NOT");
             }
             createTableStatement.append(" NULL,\n");
         }
-        createTableStatement.append("  PRIMARY KEY(").append(persistable.primaryKey());
+        String escPrimaryKey = String.format("`%s`", persistable.primaryKey());
+        createTableStatement.append("  PRIMARY KEY(").append(escPrimaryKey);
         for (Column column : cols) {
+            String escColName = String.format("`%s`", column.name());
             // the following check is a bit nasty: dont add the "one" primary key twice. in
             // theory it would be
             // possible to use only this loop without the check but that would require that
             // all tables have set
             // the IndexType correctly.
             if (column.index() == IndexType.PRIMARY && !column.name().equals(persistable.primaryKey())) {
-                createTableStatement.append(", ").append(column.name());
+                createTableStatement.append(", ").append(escColName);
             }
         }
         createTableStatement.append(")\n");
@@ -410,7 +415,7 @@ class MySQLPersistenceLayerAlterTableConnection
         sqlUtils.setLogger(this.mySQLPersistenceLayer.getCreateTableLogger());
         try {
             sqlUtils.executeDDL(createTableStatement.toString(), null);
-            if (!isView(tableName)) {
+            if (!isView(escTableName)) {
 
                 for (Column column : cols) {
                     if (column.name().equals(persistable.primaryKey())) {
@@ -458,10 +463,12 @@ class MySQLPersistenceLayerAlterTableConnection
     public <T extends Storable> void modifyColumnsCompatible(Column col, Class<T> klass, String tableName) {
         validateAccessMode(klass.getCanonicalName());
         if (!isView(tableName)) {
+            String escTableName = String.format("`%s`", tableName);
+            String escColName = String.format("`%s`", col.name());
             MySqlType recommendedType = getDefaultMySQLColTypeForStorableColumn(col, klass);
-            String sql = new StringBuffer("ALTER TABLE ").append(tableName).append(" CHANGE ").append(col.name())
+            String sql = new StringBuffer("ALTER TABLE ").append(escTableName).append(" CHANGE ").append(escColName)
                     .append(" ")
-                    .append(col.name()).append(" ").append(recommendedType).append("(")
+                    .append(escColName).append(" ").append(recommendedType).append("(")
                     .append(this.mySQLPersistenceLayer.getColumnSize(col, klass))
                     .append(")").toString();
             sqlUtils.setLogger(this.mySQLPersistenceLayer.getCreateTableLogger());
@@ -477,10 +484,12 @@ class MySQLPersistenceLayerAlterTableConnection
     public <T extends Storable> void widenColumnsCompatible(Column col, Class<T> klass, String tableName) {
         validateAccessMode(klass.getCanonicalName());
         if (!isView(tableName)) {
+            String escTableName = String.format("`%s`", tableName);
+            String escColName =  String.format("`%s`", col.name());
             MySqlType recommendedType = getDefaultMySQLColTypeForStorableColumn(col, klass);
-            StringBuffer sql = new StringBuffer("ALTER TABLE ").append(tableName).append(" CHANGE ").append(col.name())
+            StringBuffer sql = new StringBuffer("ALTER TABLE ").append(escTableName).append(" CHANGE ").append(escColName)
                     .append(" ")
-                    .append(col.name()).append(" ").append(recommendedType);
+                    .append(escColName).append(" ").append(recommendedType);
             if (recommendedType.isDependentOnSizeSpecification()) {
                 sql.append("(").append(this.mySQLPersistenceLayer.getColumnSize(col, klass)).append(")");
             }
@@ -616,21 +625,23 @@ class MySQLPersistenceLayerAlterTableConnection
 
     private void createIndex(String indexName, IndexType indexType, String tableName, String columnName) {
         String createIndexStatement = null;
+        String escTableName = String.format("`%s`", tableName);
+        String escColName = String.format("`%s`", columnName);
         switch (indexType) {
             case UNIQUE:
-                createIndexStatement = "CREATE UNIQUE INDEX " + indexName + " ON " + tableName + "(" + columnName + ")";
+                createIndexStatement = "CREATE UNIQUE INDEX " + indexName + " ON " + escTableName + "(" + escColName + ")";
                 break;
             case MULTIPLE:
-                createIndexStatement = "CREATE INDEX " + indexName + " ON " + tableName + "(" + columnName + ")";
+                createIndexStatement = "CREATE INDEX " + indexName + " ON " + escTableName + "(" + escColName + ")";
                 break;
             default:
                 logger.info(
-                        "Index-Creation " + indexName + " of type " + indexType + " for " + tableName + "." + columnName
+                        "Index-Creation " + indexName + " of type " + indexType + " for " + escTableName + "." + escColName
                                 + " is unsupported!");
                 return;
         }
         logger
-                .info("Index-Creation " + indexName + " of type " + indexType + " for " + tableName + "." + columnName);
+                .info("Index-Creation " + indexName + " of type " + indexType + " for " + escTableName + "." + escColName);
         executeDDL(createIndexStatement);
     }
 

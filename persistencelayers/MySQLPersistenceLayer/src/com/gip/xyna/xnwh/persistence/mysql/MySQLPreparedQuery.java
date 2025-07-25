@@ -29,7 +29,7 @@ public class MySQLPreparedQuery<T> implements PreparedQuery<T> {
   public MySQLPreparedQuery(Query<T> query) {
     this.query = query;
     String existingTableName = query.getTable();
-    this.query.modifyTargetTable(existingTableName.toLowerCase());
+    this.query.modifyTargetTable(existingTableName.toLowerCase(), "`");
   }
   
   public ResultSetReader<? extends T> getReader() {
