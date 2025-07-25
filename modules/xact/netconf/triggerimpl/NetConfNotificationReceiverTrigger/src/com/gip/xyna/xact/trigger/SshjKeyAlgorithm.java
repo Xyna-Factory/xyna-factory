@@ -19,57 +19,100 @@
 package com.gip.xyna.xact.trigger;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.function.Supplier;
 
 import com.hierynomus.sshj.key.KeyAlgorithm;
-import com.hierynomus.sshj.key.KeyAlgorithms;
-import com.hierynomus.sshj.transport.mac.Macs;
 
 import net.schmizz.sshj.common.Factory;
+import net.schmizz.sshj.common.Factory.Named;
+import xact.ssh.FactoryUtils;
 
 
-public enum SshjKeyAlgorithm {
+public class SshjKeyAlgorithm {
   
-  SSHDSA(KeyAlgorithms.SSHDSA()),
-  EdDSA25519CertV01(KeyAlgorithms.EdDSA25519CertV01()),
-  EdDSA25519(KeyAlgorithms.EdDSA25519()),
-  ECDSASHANistp521CertV01(KeyAlgorithms.ECDSASHANistp521CertV01()),
-  ECDSASHANistp521(KeyAlgorithms.ECDSASHANistp521()),
-  ECDSASHANistp384CertV01(KeyAlgorithms.ECDSASHANistp384CertV01()),
-  ECDSASHANistp384(KeyAlgorithms.ECDSASHANistp384()),
-  ECDSASHANistp256CertV01(KeyAlgorithms.ECDSASHANistp256CertV01()),
-  ECDSASHANistp256(KeyAlgorithms.ECDSASHANistp256()),
-  RSASHA512(KeyAlgorithms.RSASHA512()),
-  RSASHA256(KeyAlgorithms.RSASHA256()),
-  SSHRSACertV01(KeyAlgorithms.SSHRSACertV01()),
-  SSHDSSCertV01(KeyAlgorithms.SSHDSSCertV01())
-  ;
+  private final String name;
+  private final Factory.Named<KeyAlgorithm> factory;
   
-  private final KeyAlgorithms.Factory factory;
   
-  private SshjKeyAlgorithm(KeyAlgorithms.Factory factory) {
-    this.factory = factory;
+  public SshjKeyAlgorithm(String name) {
+    this(name, getFromMap(name));
   }
   
-  public KeyAlgorithms.Factory getFactory() {
+  
+  public SshjKeyAlgorithm(String name, Factory.Named<KeyAlgorithm> factory) {
+    this.factory = factory;
+    this.name = name;
+  }
+  
+  
+  private static Factory.Named<KeyAlgorithm> getFromMap(String name) {
+    if (!FactoryUtils.KeyAlgFactories.containsKey(name)) {
+      throw new IllegalArgumentException("Unknown key algorithm name: " + name);
+    }
+    return FactoryUtils.KeyAlgFactories.get(name).get();
+  }
+  
+  
+  public Factory.Named<KeyAlgorithm> getFactory() {
     return factory;
   }
   
+  
+  public String getName() {
+    return name;
+  }
+
+
   public static String getDescription() {
+    return getDescription(values());
+  }
+  
+  
+  public static String getDescription(List<SshjKeyAlgorithm> list) {
     StringBuilder ret = new StringBuilder();
     boolean isFirst = true;
-    for (SshjKeyAlgorithm val : values()) {
+    for (SshjKeyAlgorithm val : list) {
       if (isFirst) { isFirst = false; }
       else { ret.append(":"); }
-      ret.append(val.toString());
+      ret.append(val.getName());
     }
     return ret.toString();
   }
   
-  public static List<SshjKeyAlgorithm> valuesAsList() {
-    return Arrays.asList(values());
+  
+  public static List<SshjKeyAlgorithm> values() {
+    List<SshjKeyAlgorithm> ret = new ArrayList<>();
+    for (Entry<String, Supplier<Named<KeyAlgorithm>>> entry :  FactoryUtils.KeyAlgFactories.entrySet()) {
+      SshjKeyAlgorithm algo = new SshjKeyAlgorithm(entry.getKey(), entry.getValue().get());
+      ret.add(algo);
+    }
+    return ret;
   }
+  
+  
+  public static List<SshjKeyAlgorithm> getDefaults() {
+    List<SshjKeyAlgorithm> ret = new ArrayList<>();
+    List<Named<KeyAlgorithm>> factories = FactoryUtils.createKeyAlgsListDefault();
+    for (Named<KeyAlgorithm> item : factories) {
+      SshjKeyAlgorithm algo = new SshjKeyAlgorithm(item.getName(), item);
+      ret.add(algo);
+    }
+    return ret;
+  }
+  
+  
+  public static List<SshjKeyAlgorithm> parseColonSeparatedNameList(String input) {
+    List<SshjKeyAlgorithm> ret = new ArrayList<>();
+    String[] parts = input.split(":");
+    for (String part : parts) {
+      SshjKeyAlgorithm algo = new SshjKeyAlgorithm(part);
+      ret.add(algo);
+    }
+    return ret;
+  }
+  
   
   public static List<Factory.Named<KeyAlgorithm>> extractFactories(List<SshjKeyAlgorithm> input) {
     List<Factory.Named<KeyAlgorithm>> ret = new ArrayList<>();
