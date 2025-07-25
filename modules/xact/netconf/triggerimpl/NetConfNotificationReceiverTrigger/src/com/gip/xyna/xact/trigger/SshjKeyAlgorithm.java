@@ -41,11 +41,15 @@ public class SshjKeyAlgorithm {
   }
   
   
+  public SshjKeyAlgorithm(Factory.Named<KeyAlgorithm> factory) {
+    this(factory.getName(), factory);
+  }
+  
+  
   public SshjKeyAlgorithm(String name, Factory.Named<KeyAlgorithm> factory) {
     this.factory = factory;
     this.name = name;
   }
-  
   
   private static Factory.Named<KeyAlgorithm> getFromMap(String name) {
     if (!FactoryUtils.KeyAlgFactories.containsKey(name)) {
@@ -96,7 +100,7 @@ public class SshjKeyAlgorithm {
     List<SshjKeyAlgorithm> ret = new ArrayList<>();
     List<Named<KeyAlgorithm>> factories = FactoryUtils.createKeyAlgsListDefault();
     for (Named<KeyAlgorithm> item : factories) {
-      SshjKeyAlgorithm algo = new SshjKeyAlgorithm(item.getName(), item);
+      SshjKeyAlgorithm algo = new SshjKeyAlgorithm(item);
       ret.add(algo);
     }
     return ret;
