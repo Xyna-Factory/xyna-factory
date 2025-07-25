@@ -112,7 +112,7 @@ public class NetConfNotificationReceiverStartParameter implements StartParameter
     if ((params.keyAlgorithms != null) && (params.keyAlgorithms.size() > 0)) {
       this.keyAlgorithms = params.keyAlgorithms;
     } else {
-      this.keyAlgorithms = SshjKeyAlgorithm.valuesAsList();
+      this.keyAlgorithms = SshjKeyAlgorithm.getDefaults();
     }
     if ((params.macFactories != null) && (params.macFactories.size() > 0)) {
       this.macFactories = params.macFactories;
@@ -157,7 +157,7 @@ public class NetConfNotificationReceiverStartParameter implements StartParameter
       for (String part : parts) {
         part = part.trim();
         if (part.isEmpty()) { continue; }
-        SshjKeyAlgorithm algo = SshjKeyAlgorithm.valueOf(part);
+        SshjKeyAlgorithm algo = new SshjKeyAlgorithm(part);
         list.add(algo);
       }
       params.keyAlgorithms = list;

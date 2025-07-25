@@ -51,6 +51,7 @@ public class SshjKeyAlgorithm {
     this.name = name;
   }
   
+  
   private static Factory.Named<KeyAlgorithm> getFromMap(String name) {
     if (!FactoryUtils.KeyAlgFactories.containsKey(name)) {
       throw new IllegalArgumentException("Unknown key algorithm name: " + name);
