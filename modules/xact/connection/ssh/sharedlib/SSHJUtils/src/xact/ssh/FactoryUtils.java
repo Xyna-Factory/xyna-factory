@@ -15,9 +15,11 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
+
 package xact.ssh;
 
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -63,6 +65,40 @@ public final class FactoryUtils {
                     Map.entry("hmac-sha2-512", Macs::HMACSHA2512),
                     Map.entry("hmac-sha2-512-etm@openssh.com", Macs::HMACSHA2512Etm)
                     );
+
+  
+  public static List<Named<KeyAlgorithm>> createKeyAlgsListDefault() {
+    return java.util.Arrays.<net.schmizz.sshj.common.Factory.Named<com.hierynomus.sshj.key.KeyAlgorithm>> asList(
+                         com.hierynomus.sshj.key.KeyAlgorithms.SSHDSA(),
+                         com.hierynomus.sshj.key.KeyAlgorithms.SSHRSA(),
+                         com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp521(), //This KeyAlgorithm is necessary
+                         com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp256(),
+                         com.hierynomus.sshj.key.KeyAlgorithms.RSASHA512(),
+                         com.hierynomus.sshj.key.KeyAlgorithms.RSASHA256()
+                          );
+  }
+  
+  
+  public static List<Named<MAC>> createMacListDefault() {
+    return java.util.Arrays.<net.schmizz.sshj.common.Factory.Named<MAC>> asList(
+                           Macs.HMACSHA2256(),
+                           Macs.HMACSHA2256Etm(),
+                           Macs.HMACSHA2512(),
+                           Macs.HMACSHA2512Etm(),
+                           Macs.HMACSHA1(),
+                           Macs.HMACSHA1Etm(),
+                           Macs.HMACSHA196(),
+                           Macs.HMACSHA196Etm(),
+                           Macs.HMACMD5(),
+                           Macs.HMACMD5Etm(),
+                           Macs.HMACMD596(),
+                           Macs.HMACMD596Etm(),
+                           Macs.HMACRIPEMD160(),
+                           Macs.HMACRIPEMD160Etm(),
+                           Macs.HMACRIPEMD16096(),
+                           Macs.HMACRIPEMD160OpenSsh()
+                           );
+  }
 
 }
 
