@@ -67,6 +67,7 @@ import xact.ssh.SSHConnectionSuperProxy;
 import xact.ssh.SSHProxyParameter;
 import xact.ssh.SSHSendParameter;
 import xact.ssh.SupportedHostNameFeature;
+import xact.ssh.FactoryUtils;
 import xact.ssh.Utils;
 import xact.ssh.XynaHostKeyRepository;
 import xact.ssh.XynaIdentityRepository;
@@ -369,7 +370,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
       if (e instanceof SSHException) {
         //MarkerImprovedErrorLogging
         logger.trace("Error (SSHException) in CreateSession",e);
-        throw xact.ssh.Utils.toSshException((SSHException) e);
+        throw Utils.toSshException((SSHException) e);
       } else {
         //MarkerImprovedErrorLogging
         logger.trace("Error in CreateSession",e);
@@ -771,7 +772,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     }
     List<Named<KeyAlgorithm>> result = new ArrayList<>();
     for(String keyAlg : keyAlgorithms) {
-      var algSupplier = Utils.KeyAlgFactories.get(keyAlg);
+      var algSupplier = FactoryUtils.KeyAlgFactories.get(keyAlg);
       if(algSupplier == null) {
         throw new RuntimeException("Unknown key algorithm " + keyAlg);
       }
@@ -803,7 +804,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     }
     List<Named<MAC>> result = new ArrayList<>();
     for(String mac : macs) {
-      var macSupplier = Utils.macFactories.get(mac);
+      var macSupplier = FactoryUtils.macFactories.get(mac);
       if(macSupplier == null) {
         throw new RuntimeException("Unknown message authentication code type " + mac);
       }
