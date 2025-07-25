@@ -81,6 +81,7 @@ public class NetConfNotificationReceiverStartParameter implements StartParameter
   *    are valid, then this method should return new String[]{{"descriptionA", "descriptionB"},
   *     {"descriptionA", "descriptionC", "descriptionD"}}
   */
+  @Override
   public String[][] getParameterDescriptions() {
     return new String[][] {
         {DESCRIPTION_PORT, DESCRIPTION_USERNAME, DESCRIPTION_PASSWORD, DESCRIPTION_FILTER_TARGET_WF,
@@ -125,6 +126,7 @@ public class NetConfNotificationReceiverStartParameter implements StartParameter
   * Is called by XynaProcessing with the parameters provided by the deployer
   * @return StartParameter Instance which is used to instantiate corresponding Trigger
   */
+  @Override
   public StartParameter build(String... args) throws XACT_InvalidStartParameterCountException,
                                                      XACT_InvalidTriggerStartParameterValueException {
     if (args.length == 5) {
