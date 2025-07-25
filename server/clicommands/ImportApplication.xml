@@ -22,6 +22,7 @@
   <BoolOption Name="xc" LongName="excludeCapacities" Description="Do not import the capacities of the application." Optional="true"/>
   <BoolOption Name="ip" LongName="includeXynaProperties" Description="Do import the properties of the application." Optional="true"/>
   <BoolOption Name="ic" LongName="includeCapacities" Description="Do import the capacities of the application." Optional="true"/>
+  <BoolOption Name="ick" LongName="includeCapacitiesKeepExisting" Description="Do import the capacities of the application, but do not overwrite existing capacities" Optional="true"/>
   <BoolOption Name="op" LongName="importOnlyXynaProperties" Description="Import only the properties of the application." Optional="true"/>
   <BoolOption Name="oc" LongName="importOnlyCapacities" Description="Import only the capacities of the application." Optional="true"/>
   <BoolOption Name="f" LongName="force" Description="Override existing application. If existing application is used by another runtime context, that runtime context will switch to the newly imported application." Optional="true" />
