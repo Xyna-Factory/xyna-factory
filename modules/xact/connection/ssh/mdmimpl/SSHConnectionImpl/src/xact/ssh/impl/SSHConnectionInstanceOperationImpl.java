@@ -30,6 +30,7 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.Security;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -45,33 +46,6 @@ import java.util.stream.Collectors;
 import javax.net.SocketFactory;
 
 import org.apache.log4j.Logger;
-
-import xact.connection.Command;
-import xact.connection.CommandResponseTuple;
-import xact.connection.ConnectionAlreadyClosed;
-import xact.connection.DeviceType;
-import xact.connection.ReadTimeout;
-import xact.connection.Response;
-import xact.connection.SendParameter;
-import xact.ssh.AuthenticationMethod;
-import xact.ssh.EncryptionType;
-import xact.ssh.HostKeyAliasMapping;
-import xact.ssh.HostKeyCheckingMode;
-import xact.ssh.HostKeyStorableRepository;
-import xact.ssh.IdentityStorableRepository;
-import xact.ssh.ProxyParameter;
-import xact.ssh.SSHConnection;
-import xact.ssh.SSHConnectionInstanceOperation;
-import xact.ssh.SSHConnectionParameter;
-import xact.ssh.SSHConnectionSuperProxy;
-import xact.ssh.SSHProxyParameter;
-import xact.ssh.SSHSendParameter;
-import xact.ssh.SupportedHostNameFeature;
-import xact.ssh.Utils;
-import xact.ssh.XynaHostKeyRepository;
-import xact.ssh.XynaIdentityRepository;
-import xact.templates.DocumentType;
-import xfmg.xfmon.protocolmsg.ProtocolMessage;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
@@ -89,6 +63,7 @@ import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventHand
 import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventSource;
 import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.events.AbortServiceStepEvent;
 import com.gip.xyna.xprc.xsched.orderabortion.AbortionCause;
+import com.hierynomus.sshj.key.KeyAlgorithm;
 
 import net.schmizz.sshj.Config;
 import net.schmizz.sshj.SSHClient;
@@ -99,6 +74,7 @@ import net.schmizz.sshj.connection.channel.Channel;
 import net.schmizz.sshj.connection.channel.direct.Session;
 import net.schmizz.sshj.transport.TransportException;
 import net.schmizz.sshj.transport.cipher.Cipher;
+import net.schmizz.sshj.transport.mac.MAC;
 import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
 import net.schmizz.sshj.userauth.method.AuthMethod;
@@ -106,14 +82,33 @@ import net.schmizz.sshj.userauth.method.AuthPassword;
 import net.schmizz.sshj.userauth.method.AuthPublickey;
 import net.schmizz.sshj.userauth.password.PasswordFinder;
 import net.schmizz.sshj.userauth.password.Resource;
-
-import net.schmizz.sshj.transport.mac.MAC;
-
-import com.hierynomus.sshj.key.KeyAlgorithm;
-import com.hierynomus.sshj.transport.mac.Macs;
-
-
-import java.security.*;
+import xact.connection.Command;
+import xact.connection.CommandResponseTuple;
+import xact.connection.ConnectionAlreadyClosed;
+import xact.connection.DeviceType;
+import xact.connection.ReadTimeout;
+import xact.connection.Response;
+import xact.connection.SendParameter;
+import xact.ssh.AuthenticationMethod;
+import xact.ssh.EncryptionType;
+import xact.ssh.FactoryUtils;
+import xact.ssh.HostKeyAliasMapping;
+import xact.ssh.HostKeyCheckingMode;
+import xact.ssh.HostKeyStorableRepository;
+import xact.ssh.IdentityStorableRepository;
+import xact.ssh.ProxyParameter;
+import xact.ssh.SSHConnection;
+import xact.ssh.SSHConnectionInstanceOperation;
+import xact.ssh.SSHConnectionParameter;
+import xact.ssh.SSHConnectionSuperProxy;
+import xact.ssh.SSHProxyParameter;
+import xact.ssh.SSHSendParameter;
+import xact.ssh.SupportedHostNameFeature;
+import xact.ssh.Utils;
+import xact.ssh.XynaHostKeyRepository;
+import xact.ssh.XynaIdentityRepository;
+import xact.templates.DocumentType;
+import xfmg.xfmon.protocolmsg.ProtocolMessage;
 
 
 
@@ -369,7 +364,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
       if (e instanceof SSHException) {
         //MarkerImprovedErrorLogging
         logger.trace("Error (SSHException) in CreateSession",e);
-        throw xact.ssh.Utils.toSshException((SSHException) e);
+        throw Utils.toSshException((SSHException) e);
       } else {
         //MarkerImprovedErrorLogging
         logger.trace("Error in CreateSession",e);
@@ -760,18 +755,11 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
 
   private List<Named<KeyAlgorithm>> createKeyAlgsList(List<String> keyAlgorithms) {
     if(keyAlgorithms == null || keyAlgorithms.isEmpty()) {
-      return java.util.Arrays.<net.schmizz.sshj.common.Factory.Named<com.hierynomus.sshj.key.KeyAlgorithm>> asList(
-                           com.hierynomus.sshj.key.KeyAlgorithms.SSHDSA(),
-                           com.hierynomus.sshj.key.KeyAlgorithms.SSHRSA(),
-                           com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp521(), //This KeyAlgorithm is necessary
-                           com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp256(),
-                           com.hierynomus.sshj.key.KeyAlgorithms.RSASHA512(),
-                           com.hierynomus.sshj.key.KeyAlgorithms.RSASHA256()
-                            );
+      return FactoryUtils.createKeyAlgsListDefault();
     }
     List<Named<KeyAlgorithm>> result = new ArrayList<>();
     for(String keyAlg : keyAlgorithms) {
-      var algSupplier = Utils.KeyAlgFactories.get(keyAlg);
+      var algSupplier = FactoryUtils.KeyAlgFactories.get(keyAlg);
       if(algSupplier == null) {
         throw new RuntimeException("Unknown key algorithm " + keyAlg);
       }
@@ -782,28 +770,11 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
   
   private List<Named<MAC>> createMacList(List<String> macs) {
     if(macs == null || macs.isEmpty()) {
-      return java.util.Arrays.<net.schmizz.sshj.common.Factory.Named<MAC>> asList(
-                             Macs.HMACSHA2256(),
-                             Macs.HMACSHA2256Etm(),
-                             Macs.HMACSHA2512(),
-                             Macs.HMACSHA2512Etm(),
-                             Macs.HMACSHA1(),
-                             Macs.HMACSHA1Etm(),
-                             Macs.HMACSHA196(),
-                             Macs.HMACSHA196Etm(),
-                             Macs.HMACMD5(),
-                             Macs.HMACMD5Etm(),
-                             Macs.HMACMD596(),
-                             Macs.HMACMD596Etm(),
-                             Macs.HMACRIPEMD160(),
-                             Macs.HMACRIPEMD160Etm(),
-                             Macs.HMACRIPEMD16096(),
-                             Macs.HMACRIPEMD160OpenSsh()
-                             );
+      return FactoryUtils.createMacListDefault();
     }
     List<Named<MAC>> result = new ArrayList<>();
     for(String mac : macs) {
-      var macSupplier = Utils.macFactories.get(mac);
+      var macSupplier = FactoryUtils.macFactories.get(mac);
       if(macSupplier == null) {
         throw new RuntimeException("Unknown message authentication code type " + mac);
       }
