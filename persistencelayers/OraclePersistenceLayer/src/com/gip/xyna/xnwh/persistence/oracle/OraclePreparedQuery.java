@@ -84,7 +84,7 @@ public class OraclePreparedQuery<T> implements PreparedQuery<T> {
   }
 
   // copy & paste from QueryGenerator (to allow it to develop independently)
-  private static String PQC /* possibly qualified column - regexp pattern */ = "[a-zA-Z0-9_]+(\\.[a-zA-Z0-9_]+)?";
+  private static String PQC /* possibly qualified column - regexp pattern */ = "\\\"?[a-zA-Z0-9_]+\\\"?(\\.\\\"?[a-zA-Z0-9_]+\\\"?)?";
   private static String PLACE_FOR_WHERE_PATTERN = "\\s+FROM\\s+"+PQC+"(((\\s+(LEFT|RIGHT))?\\s+((INNER|OUTER)\\s+)?)?\\s*JOIN\\s+"+PQC+"(\\s+[a-zA-Z0-9_]+)?\\s+ON\\s+"+PQC+"\\s*=\\s*"+PQC+")*";
 
   private static final Pattern forUpdatePattern =
@@ -123,13 +123,13 @@ public class OraclePreparedQuery<T> implements PreparedQuery<T> {
     if (forUpdate) {
       String rows = forUpdatePatternMatcher.group(1);
       String from = forUpdatePatternMatcher.group(2);
-      String pk = Storable.getPersistable(storableClass).primaryKey();
+      String escPk = String.format("\"%s\"",Storable.getPersistable(storableClass).primaryKey().toUpperCase());
       String whereclauses = forUpdatePatternMatcher.group(forUpdatePatternMatcher.groupCount() - 1);
       String orderby = forUpdatePatternMatcher.group(forUpdatePatternMatcher.groupCount());
       if (orderby != null && orderby.length() > 0) {
         StringBuilder sb = new StringBuilder();
-        sb.append("select ").append(rows).append(from).append(" where ").append(pk).append(" in (select ");
-        sb.append(pk).append(" from (select ").append(pk).append(from);
+        sb.append("select ").append(rows).append(from).append(" where ").append(escPk).append(" in (select ");
+        sb.append(escPk).append(" from (select ").append(escPk).append(from);
         if (whereclauses.length() > 0) {
           sb.append(" ").append(whereclauses);
         }

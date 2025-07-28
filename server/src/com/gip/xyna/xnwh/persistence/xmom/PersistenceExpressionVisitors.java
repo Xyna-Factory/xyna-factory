@@ -1436,12 +1436,11 @@ private static class StorableStructureType implements ModelledType {
             tableName = dictionary.getTableAlias(column.getAccessPath());  
           }
           if (tableName == null) {
-            whereBuilder.append(gen.escape(column.getColumn().getParentStorableInfo().getTableName()));
+            whereBuilder.append(gen.escape.apply(column.getColumn().getParentStorableInfo().getTableName()));
           } else {
-            whereBuilder.append(gen.escape(tableName));
+            whereBuilder.append(gen.escape.apply(tableName));
           }
-          whereBuilder.append('.')
-                      .append(gen.escape(column.getColumn().getColumnName()));
+          whereBuilder.append('.').append(gen.escape.apply(column.getColumn().getColumnName()));
         }
       }
       return whereBuilder.toString();

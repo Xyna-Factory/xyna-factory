@@ -1395,8 +1395,8 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
       if (pkMap.containsKey(structure.getTableName()) && pkMap.get(structure.getTableName()) != null) {
         Set<Object> pks = pkMap.get(structure.getTableName());
         StringBuilder deleteBuilder = new StringBuilder();
-        String escTableName = gen.escape(structure.getTableName());
-        String escPrimaryKey = gen.escape(structure.getPrimaryKeyName());
+        String escTableName = gen.escape.apply(structure.getTableName());
+        String escPrimaryKey = gen.escape.apply(structure.getPrimaryKeyName());
         deleteBuilder.append("DELETE FROM ").append(escTableName)
                      .append(" WHERE ").append(escPrimaryKey).append(" IN (");
         Parameter params = new Parameter(pks.toArray());
@@ -1455,15 +1455,15 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
       StringBuilder queryBuilder = new StringBuilder();
       StorableStructureInformation parent = columnReferencedBy.getParentStorableInfo();
       QueryGenerator gen = getQueryGenerator(con.getConnectionType(), parent.getTableName());
-      String escTableName = gen.escape(parent.getTableName());
-      String escColumnName = gen.escape(columnReferencedBy.getCorrespondingReferenceIdColumn().getColumnName());
+      String escTableName = gen.escape.apply(parent.getTableName());
+      String escColumnName = gen.escape.apply(columnReferencedBy.getCorrespondingReferenceIdColumn().getColumnName());
       queryBuilder.append("SELECT count(*) FROM ")
                   .append(escTableName)
                   .append(" WHERE ").append(escColumnName).append(" = ?");
       Collection<Object> keysFromDeletionMap = deletionMap.get(parent.getTableName());
       Object[] paramsArr;
       if (keysFromDeletionMap != null && keysFromDeletionMap.size() > 0) {
-        String escPrimaryKey = gen.escape(parent.getPrimaryKeyName());
+        String escPrimaryKey = gen.escape.apply(parent.getPrimaryKeyName());
         queryBuilder.append(" AND ").append("NOT ").append(escPrimaryKey).append(" IN (");
         queryBuilder.append(nQuestionMarks(keysFromDeletionMap.size()));
         queryBuilder.append(")");
@@ -1535,8 +1535,8 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
       StorableColumnInformation columnReferencedBy = reference;
       StringBuilder updateBuilder = new StringBuilder();
       QueryGenerator gen = getQueryGenerator(con.getConnectionType(), columnReferencedBy.getParentStorableInfo().getTableName());
-      String escTableName = gen.escape(columnReferencedBy.getParentStorableInfo().getTableName());
-      String escColumnName = gen.escape(columnReferencedBy.getCorrespondingReferenceIdColumn().getColumnName());
+      String escTableName = gen.escape.apply(columnReferencedBy.getParentStorableInfo().getTableName());
+      String escColumnName = gen.escape.apply(columnReferencedBy.getCorrespondingReferenceIdColumn().getColumnName());
       updateBuilder.append("UPDATE ").append(escTableName)
                   .append(" SET ").append(escColumnName).append(" = NULL")
                   .append(" WHERE ").append(escColumnName).append(" = ?");

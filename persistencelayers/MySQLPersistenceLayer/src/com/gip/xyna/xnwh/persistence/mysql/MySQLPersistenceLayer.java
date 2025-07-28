@@ -81,7 +81,6 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
 
   private static final Logger logger = CentralFactoryLogging.getLogger(MySQLPersistenceLayer.class);
   private static final Pattern NUMBERS_PATTERN = Pattern.compile("^\\d+$");
-  private static final QueryGenerator queryGenerator = new QueryGenerator("`");
   @SuppressWarnings("rawtypes")
   private static final Map<String, Class<? extends Storable>> tableToClassMap = new HashMap<String, Class<? extends Storable>>();
 
@@ -634,7 +633,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
   }
   
   public QueryGenerator getQueryGenerator() {
-    return queryGenerator;
+    return new QueryGenerator((s) -> String.format("`%s`", s.toLowerCase()));
   }
 
 

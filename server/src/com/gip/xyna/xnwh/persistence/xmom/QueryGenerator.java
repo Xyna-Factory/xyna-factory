@@ -32,6 +32,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,16 +74,16 @@ public class QueryGenerator {
   
   private static final String CAST_MARKER_START = "#" + Functions.CAST_FUNCTION_NAME + "(";
   private static final String CAST_MARKER_END = ")";
-  private final String colTableEscape;
+  public final Function<String, String> escape;
   
   
   public QueryGenerator() {
-    this("");
+    this(Function.identity());
   }
   
 
-  public QueryGenerator(String colTableEscape) {
-    this.colTableEscape = colTableEscape;
+  public QueryGenerator(Function<String, String> escape) {
+    this.escape = escape;
   }
 
   public QueryPiplineElement<?, ?> parse(XMOMStorableStructureInformation info, List<String> selectedUnresolvedColumns, IFormula condition,
@@ -167,7 +168,7 @@ public class QueryGenerator {
       
       DataQueryPiplineElement dataQuery = new DataQueryPiplineElement(buildDataQuery(queryRoot, selectedColumns, aliasDictionary),
                                                                       buildReaderFromQueryTree(queryRoot, selectedColumns, aliasDictionary),
-                                                                      info.getColInfoByVarType(VarType.PK), colTableEscape);
+                                                                      info.getColInfoByVarType(VarType.PK), escape);
       dataQuery.rootTableName = info.getTableName();
       dataQuery.setAliasDictionary(aliasDictionary);
       dataQuery.setSelectedColumns(selectedColumns);
@@ -180,7 +181,7 @@ public class QueryGenerator {
       StringBuilder queryBuilder = new StringBuilder();
       queryBuilder.append(buildSelection(queryRoot, selectedColumns, aliasDictionary));
       queryBuilder.append(" FROM ")
-                  .append(escape(queryRoot.localInfo.getTableName()));
+                  .append(escape.apply(queryRoot.localInfo.getTableName()));
       queryBuilder.append(buildJoinedTable(queryRoot, selectedColumns, aliasDictionary));
       
       queryBuilder.append(fpr.getSqlString(aliasDictionary));
@@ -350,12 +351,12 @@ public class QueryGenerator {
           queryBuilder.append(",");
         }
         queryBuilder.append(" ");
-        String escColumnName = escape(orderBy.getColumn().getColumnName());
+        String escColumnName = escape.apply(orderBy.getColumn().getColumnName());
         if (dictionary == null) {
-          String escTableName = escape(orderBy.getColumn().getParentStorableInfo().getTableName());
+          String escTableName = escape.apply(orderBy.getColumn().getParentStorableInfo().getTableName());
           queryBuilder.append(escTableName).append(".").append(escColumnName);
         } else {
-          String escTableName = escape(dictionary.getTableAlias(orderBy.getAccessPath()));
+          String escTableName = escape.apply(dictionary.getTableAlias(orderBy.getAccessPath()));
           queryBuilder.append(escTableName).append(".").append(escColumnName);
         }
         if (sc.isReverse()) {
@@ -496,12 +497,12 @@ public class QueryGenerator {
       if (isJoinedReachable(queryTreeNode, column)) {
         String table = dictionary.getTableAlias(column.getAccessPath());
         if (table == null) {
-          String escTableName = escape(column.getColumn().getParentStorableInfo().getTableName());
+          String escTableName = escape.apply(column.getColumn().getParentStorableInfo().getTableName());
           build.append(escTableName);
         } else {
-          build.append(escape(table));
+          build.append(escape.apply(table));
         }
-        String escColName = escape(column.getColumn().getColumnName());
+        String escColName = escape.apply(column.getColumn().getColumnName());
         build.append('.').append(escColName);
       } else {
         if (column.getColumn().getType() == VarType.LIST_IDX) {
@@ -590,38 +591,38 @@ public class QueryGenerator {
       build.append(" LEFT");
     }
     build.append(" JOIN ")
-      .append(escape(column.getStorableVariableInformation().getTableName()));
+      .append(escape.apply(column.getStorableVariableInformation().getTableName()));
     if (ownTable != null) {
       build.append(" ")
-           .append(escape(ownTable));
+           .append(escape.apply(ownTable));
     }
     build.append(" ON ");
     if (parentTable == null) {
-      build.append(escape(column.getParentStorableInfo().getTableName()));
+      build.append(escape.apply(column.getParentStorableInfo().getTableName()));
     } else {
-      build.append(escape(parentTable));
+      build.append(escape.apply(parentTable));
     }
     build.append('.');
     if (column.getStorableVariableType() == StorableVariableType.EXPANSION) {
-      build.append(escape(column.getParentStorableInfo().getPrimaryKeyName()))
+      build.append(escape.apply(column.getParentStorableInfo().getPrimaryKeyName()))
            .append(" = ");
       if (ownTable == null) {
-        build.append(escape(column.getStorableVariableInformation().getTableName()));
+        build.append(escape.apply(column.getStorableVariableInformation().getTableName()));
       } else {
-        build.append(escape(ownTable));
+        build.append(escape.apply(ownTable));
       }
       build.append('.');
       StorableColumnInformation parentFk = column.getStorableVariableInformation().getColInfoByVarType(VarType.EXPANSION_PARENT_FK);
       if (parentFk == null) {
         parentFk = column.getStorableVariableInformation().getColInfoByVarType(VarType.UTILLIST_PARENT_FK);
       }
-      build.append(escape(parentFk.getColumnName()));
+      build.append(escape.apply(parentFk.getColumnName()));
     } else {
       build.append(column.getCorrespondingReferenceIdColumn().getColumnName()).append(" = ");
       if (ownTable == null) {
-        build.append(escape(column.getStorableVariableInformation().getTableName()));
+        build.append(escape.apply(column.getStorableVariableInformation().getTableName()));
       } else {
-        build.append(escape(ownTable));
+        build.append(escape.apply(ownTable));
       }
       String refColName;
       if (column.getCorrespondingReferencedIdColumn() != null) {
@@ -630,8 +631,7 @@ public class QueryGenerator {
         refColName = column.getStorableVariableInformation().getPrimaryKeyName();
       }
       
-      build.append('.')
-           .append(escape(refColName));
+      build.append('.').append(escape.apply(refColName));
     }
     return build.toString();
   }
@@ -693,7 +693,7 @@ public class QueryGenerator {
         for (StorableColumnInformation ccc : orderbb.accessPath) {
           sb.append(ccc.getParentStorableInfo().getTableName()).append(".");
         }
-        sb.append(escape(orderbb.getColumn().getParentStorableInfo().getTableName())).append(".");
+        sb.append(escape.apply(orderbb.getColumn().getParentStorableInfo().getTableName())).append(".");
         queryBuilder.append(dictionary.getOrCreateColumnAlias(orderbb)).append(" DESC"); //damit das rootelement am ende kommt (hat als listen-index überall NULL)
         if (orderByIterator.hasNext()) {
           queryBuilder.append(", ");
@@ -757,9 +757,9 @@ public class QueryGenerator {
     queryBuilder.append(buildSelection(currentNode, columns, dictionary));
     queryBuilder.append(" FROM ");
     if (currentNode.accessPath.size() <= 0) {
-      queryBuilder.append(escape(currentNode.localInfo.getTableName()));
+      queryBuilder.append(escape.apply(currentNode.localInfo.getTableName()));
     } else {
-      queryBuilder.append(escape(currentNode.accessPath.get(0).getParentStorableInfo().getTableName()));
+      queryBuilder.append(escape.apply(currentNode.accessPath.get(0).getParentStorableInfo().getTableName()));
     }
     queryBuilder.append(buildJoinCriterion(currentNode, inner, dictionary));
     for (QueryTreeNode unionChild : currentNode.unionChildren) {
@@ -802,8 +802,8 @@ public class QueryGenerator {
         }
       }
     }
-    String escTableName = escape(rootInfo.getTableName());
-    String escPrimaryKey = escape(rootInfo.getPrimaryKeyName());
+    String escTableName = escape.apply(rootInfo.getTableName());
+    String escPrimaryKey = escape.apply(rootInfo.getPrimaryKeyName());
     queryBuilder.append(escTableName).append(".").append(escPrimaryKey);
     if (count &&
         queryParameter.getMaxObjects() <= 0) {
@@ -1293,9 +1293,9 @@ public class QueryGenerator {
         queryBuilder.append(" AND ");
       }
       String columnName = info.getColInfoByPersistenceType(PersistenceTypeInformation.CURRENTVERSION_FLAG).getColumnName();
-      queryBuilder.append(escape(info.getTableName()))
+      queryBuilder.append(escape.apply(info.getTableName()))
                   .append(".")
-                  .append(escape(columnName))
+                  .append(escape.apply(columnName))
                   .append(" = ?");
       params.add(true);
     }
@@ -1491,29 +1491,29 @@ public class QueryGenerator {
   
   static class DataQueryPiplineElement<P, T>  extends QueryPiplineElement<P, T> {
     
-    private final String escapeString;
+    private final Function<String, String> escape;
 
     private static Pattern placeForWhere = 
       Pattern.compile(PLACE_FOR_WHERE_PATTERN, Pattern.CASE_INSENSITIVE);
     
     private final StorableColumnInformation rootPk;
     
-    DataQueryPiplineElement(String sqlString, ResultSetReader<T> reader, StorableColumnInformation rootPk, String escapeString) {
-      this(sqlString, reader, new Parameter(), rootPk, escapeString);
+    DataQueryPiplineElement(String sqlString, ResultSetReader<T> reader, StorableColumnInformation rootPk, Function<String, String> escape) {
+      this(sqlString, reader, new Parameter(), rootPk, escape);
     }
     
-    DataQueryPiplineElement(String sqlString, ResultSetReader<T> reader,  Parameter params, StorableColumnInformation rootPk, String escapeString) {
+    DataQueryPiplineElement(String sqlString, ResultSetReader<T> reader,  Parameter params, StorableColumnInformation rootPk, Function<String, String> escapeString) {
       super(sqlString, reader, -1, params);
       this.rootPk = rootPk;
-      this.escapeString = escapeString;
+      this.escape = escapeString;
     }
     
 
     @Override
     protected void prepare(Collection<P> previousResult) {
       StringBuilder conditionBuilder = new StringBuilder();
-      String escTableName = String.format("%s%s%s", escapeString, rootPk.getParentStorableInfo().getTableName(), escapeString);
-      String escColName = String.format("%s%s%s", escapeString, rootPk.getColumnName(), escapeString);
+      String escTableName = escape.apply(rootPk.getParentStorableInfo().getTableName());
+      String escColName = escape.apply(rootPk.getColumnName());
       conditionBuilder.append(" WHERE ").append(escTableName).append(".").append(escColName);
       if (previousResult.size() > 1) {
         conditionBuilder.append(" IN (");
@@ -1726,10 +1726,5 @@ public class QueryGenerator {
       return getColumn().getColumnName().hashCode();
     }
     
-  }
-  
-  
-  public String escape(String s) {
-    return String.format("%s%s%s", colTableEscape, s, colTableEscape);
   }
 }
