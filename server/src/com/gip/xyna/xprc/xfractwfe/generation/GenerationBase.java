@@ -525,6 +525,7 @@ public abstract class GenerationBase {
     public static final String ABSTRACT = "IsAbstract";
     public static final String ISSTATIC = "IsStatic";
     public static final String ISLIST = "IsList";
+    public static final String ISNULL = "IsNull";
     public static final String ISCANCELABLE = "IsCancelable";
     public static final String ISCASEENABLED = "IsEnabled";
     public static final String ISDEFAULTCASE = "IsDefault";
