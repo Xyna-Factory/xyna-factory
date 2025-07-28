@@ -744,7 +744,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
   private List<Named<Cipher>> createCiphers(List<String> ciphers) {
     List<Named<Cipher>> result = new ArrayList<>();
     for(String cipher: ciphers) {
-      var cipherSupplier = Utils.CipherFactories.get(cipher);
+      var cipherSupplier = FactoryUtils.CipherFactories.get(cipher);
       if(cipherSupplier == null) {
         throw new RuntimeException("Unknown cipher: " + cipher);
       }
