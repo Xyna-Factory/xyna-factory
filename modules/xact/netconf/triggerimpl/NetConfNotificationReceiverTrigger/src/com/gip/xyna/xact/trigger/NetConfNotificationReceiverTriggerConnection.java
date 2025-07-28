@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xact.NetConfNotificationReceiverSharedLib.NetConfNotificationReceiverSharedLib;
+import com.gip.xyna.xact.trigger.NetConfConnection.HostKeyAuthMode;
 import com.gip.xyna.xdev.xfractmod.xmdm.TriggerConnection;
 
 
@@ -133,10 +134,10 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
 
   private String username;
   private String password;
-  private String filter_targetWF;
+  //private String filter_targetWF;
   private String ConnectionID;
   private String RD_IP;
-  private String HostKeyAuthenticationMode;
+  private HostKeyAuthMode HostKeyAuthenticationMode;
 
   private long replayinminutes;
 
@@ -148,7 +149,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
   private ConnectionQueue connectionQueue;
   
 
-  public NetConfNotificationReceiverTriggerConnection(String newConnectionID, String filter_targetWF, String OldConnectionID,
+  public NetConfNotificationReceiverTriggerConnection(String newConnectionID, String OldConnectionID,
                                                       BasicCredentials cred, ConnectionList connectionList,
                                                       ConnectionQueue connectionQueue) {
     try {
@@ -160,7 +161,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
       this.password = cred.getPassword();
       this.HostKeyAuthenticationMode = cred.getHostKeyAuthenticationMode();
       this.replayinminutes = cred.getReplayInMinutes();
-      this.filter_targetWF = filter_targetWF;
+      //this.filter_targetWF = filter_targetWF;
 
       this.Feature_CapInterleave = true;
       this.ConnectionInit = true;
@@ -430,6 +431,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
   };
 
 
+  /*
   public String getFilterTargetWF() {
     String filter_targetWF = "";
     try {
@@ -439,7 +441,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
     }
     return filter_targetWF;
   };
-
+  */
 
   private void listener() {
     try {

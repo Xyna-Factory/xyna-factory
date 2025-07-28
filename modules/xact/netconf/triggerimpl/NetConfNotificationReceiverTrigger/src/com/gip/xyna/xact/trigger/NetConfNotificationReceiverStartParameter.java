@@ -21,13 +21,18 @@ package com.gip.xyna.xact.trigger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import com.gip.xyna.utils.misc.Documentation;
+import com.gip.xyna.utils.misc.StringParameter;
 import com.gip.xyna.xact.exceptions.XACT_InvalidStartParameterCountException;
 import com.gip.xyna.xact.exceptions.XACT_InvalidTriggerStartParameterValueException;
+import com.gip.xyna.xact.trigger.NetConfConnection.HostKeyAuthMode;
+import com.gip.xyna.xdev.xfractmod.xmdm.EnhancedStartParameter;
 import com.gip.xyna.xdev.xfractmod.xmdm.StartParameter;
 
 
-public class NetConfNotificationReceiverStartParameter implements StartParameter {
+public class NetConfNotificationReceiverStartParameter extends EnhancedStartParameter {
 
   public static class ParamData {
     public int port = 4334; // Default Port value for NetConf call-home-feature
@@ -51,29 +56,92 @@ public class NetConfNotificationReceiverStartParameter implements StartParameter
   public static final long buffer_maxlength = 1000000; //Maximum length of buffer for a continuous notification stream
 
   public static final int SessionTimeOut = 60000; //SSH-Session Timeout
+  
+  
+  private static final String DESCRIPTION_PORT = "Port of NetConf Call-Home-Feature";
+  private static final String DESCRIPTION_USERNAME = "NetConf Credentials - Username (Example: \"netconf\")";
+  private static final String DESCRIPTION_PASSWORD = "NetConf Credentials - Password. Must be set for " +
+                                                     "Host Key Authentication Mode 'direct'";
+  /*
+  private static final String DESCRIPTION_FILTER_TARGET_WF =
+      "Target-Workflow for Notification-Filter (Example: \"test.testWF.EventReceived\")";
+      */
+  private static final String DESCRIPTION_HOSTKEY_MODUS = "Host Key Authentication Mode (Allowed Modes: " +
+                                                          "'direct', 'none'). Value 'direct' requires password to be set";
+  //private static final String DESCRIPTION_HOSTKEY_MODUS_II = "Host Key Authentication Mode (Allowed Modes: \"none\")";
+  private static final String DESCRIPTION_REPLAYINMINUTES = "Replay time of subscription in minutes (Default value: 0)";
+  private static final String DESCRIPTION_KEY_ALGORITHMS = "Optional colon-separated list of key algorithms for ssh connection, " +
+                                                           "allowed values = " + SshjKeyAlgorithm.getDescription();
+  private static final String DESCRIPTION_MAC_FACTORIES = "Optional colon-separated list of message authentication code factories " +
+                                                           "for ssh connection, allowed values = " + SshjMacFactory.getDescription();
 
-  private int Port;
-  private String Username;
-  private String Password;
-  private String Filter_Targe_WF;
-  private String HostKeyAuthenticationMode; //Hostkey_Modus: "direct", "none" (default)
-  private long ReplayInMinutes; //Replay time of subscription in minutes. Default is 0.
+  public static final StringParameter<Integer> PARAM_PORT = StringParameter.typeInteger("port").mandatory().
+    documentation(Documentation.en(DESCRIPTION_PORT).build()).build();
+  public static final StringParameter<String> PARAM_USERNAME = StringParameter.typeString("username").mandatory().
+    documentation(Documentation.en(DESCRIPTION_USERNAME).build()).build();
+  public static final StringParameter<String> PARAM_PASSWORD = StringParameter.typeString("password").optional().
+    documentation(Documentation.en(DESCRIPTION_PASSWORD).build()).build();
+  public static final StringParameter<HostKeyAuthMode> PARAM_HOST_KEY_MODE =
+    StringParameter.typeEnum(HostKeyAuthMode.class, "hostkey_mode").optional().defaultValue(HostKeyAuthMode.none).
+    documentation(Documentation.en(DESCRIPTION_HOSTKEY_MODUS).build()).build();
+  public static final StringParameter<Integer> PARAM_REPLAYINMINUTES = StringParameter.typeInteger("replay_in_minutes").
+    optional().defaultValue(0).documentation(Documentation.en(DESCRIPTION_REPLAYINMINUTES).build()).build();
+  public static final StringParameter<String> PARAM_KEY_ALGO = StringParameter.typeString("key_algorithms").optional().
+    documentation(Documentation.en(DESCRIPTION_KEY_ALGORITHMS).build()).build();
+  public static final StringParameter<String> PARAM_MAC_FACTORIES = StringParameter.typeString("mac_factories").optional().
+    documentation(Documentation.en(DESCRIPTION_MAC_FACTORIES).build()).build();
+
+  public static final List<StringParameter<?>> allParameters =
+      StringParameter.asList(PARAM_PORT, PARAM_USERNAME, PARAM_PASSWORD, PARAM_HOST_KEY_MODE, PARAM_REPLAYINMINUTES,
+                             PARAM_KEY_ALGO, PARAM_MAC_FACTORIES);
+
+  private int port;
+  private String username;
+  private String password;
+  //private String Filter_Targe_WF;
+  private HostKeyAuthMode hostKeyAuthenticationMode; //Hostkey_Modus: "direct", "none" (default)
+  private long replayInMinutes; //Replay time of subscription in minutes. Default is 0.
   private List<SshjKeyAlgorithm> keyAlgorithms;
   private List<SshjMacFactory> macFactories;
 
-  private static final String DESCRIPTION_PORT = "Port of NetConf Call-Home-Feature (Default value: 4334)";
-  private static final String DESCRIPTION_USERNAME = "NetConf Credentials - Username (Example: \"netconf\")";
-  private static final String DESCRIPTION_PASSWORD = "NetConf Credentials - Password (Example: \"netconf\")";
-  private static final String DESCRIPTION_FILTER_TARGET_WF =
-      "Target-Workflow for Notification-Filter (Example: \"test.testWF.EventReceived\")";
-  private static final String DESCRIPTION_HOSTKEY_MODUS_I =
-      "Host Key Authentication Mode (Allowed Modes: \"direct\", \"none\")";
-  private static final String DESCRIPTION_HOSTKEY_MODUS_II = "Host Key Authentication Mode (Allowed Modes: \"none\")";
-  private static final String DESCRIPTION_REPLAYINMINUTES = "Replay time of subscription in minutes (Default value: 0)";
-  private static final String DESCRIPTION_KEY_ALGORITHMS = "Colon-separated list of key algorithms for ssh connection, allowed values = " +
-      SshjKeyAlgorithm.getDescription();
-  private static final String DESCRIPTION_MAC_FACTORIES = "Colon-separated list of message authentication code factories for ssh connection, " + 
-      "allowed values = " + SshjMacFactory.getDescription();
+  
+  @Override
+  public StartParameter build(Map<String, Object> map) throws XACT_InvalidTriggerStartParameterValueException {
+    NetConfNotificationReceiverStartParameter ret = new NetConfNotificationReceiverStartParameter();
+    Integer port = PARAM_PORT.getFromMap(map);
+    ret.port = port;
+    ret.username = PARAM_USERNAME.getFromMap(map);
+    ret.password = PARAM_PASSWORD.getFromMap(map);
+    ret.hostKeyAuthenticationMode = PARAM_HOST_KEY_MODE.getFromMap(map);
+    ret.replayInMinutes = PARAM_REPLAYINMINUTES.getFromMap(map);
+    String keyAlgos = PARAM_KEY_ALGO.getFromMap(map);
+    if (keyAlgos == null) {
+      ret.keyAlgorithms = SshjKeyAlgorithm.getDefaults();
+    } else {
+      ret.keyAlgorithms = SshjKeyAlgorithm.parseColonSeparatedNameList(keyAlgos);
+    }
+    String macs = PARAM_MAC_FACTORIES.getFromMap(map);
+    if (macs == null) {
+      ret.macFactories = SshjMacFactory.getDefaults();
+    } else {
+      ret.macFactories = SshjMacFactory.parseColonSeparatedNameList(macs);
+    }
+    return ret;
+  }
+
+
+  @Override
+  public List<String> convertToNewParameters(List<String> list)
+      throws XACT_InvalidStartParameterCountException, XACT_InvalidTriggerStartParameterValueException {
+    throw new XACT_InvalidTriggerStartParameterValueException("Start parameters must be provided in the following format: " + 
+                                                              "<key1>=<value1> <key2>=<value2> ...");
+  }
+
+
+  @Override
+  public List<StringParameter<?>> getAllStringParameters() {
+    return allParameters;
+  }
   
   /**
   * 
@@ -83,7 +151,11 @@ public class NetConfNotificationReceiverStartParameter implements StartParameter
   */
   @Override
   public String[][] getParameterDescriptions() {
-    return new String[][] {
+    return new String[][] { {
+        DESCRIPTION_PORT, DESCRIPTION_USERNAME, DESCRIPTION_PASSWORD, DESCRIPTION_HOSTKEY_MODUS,
+        DESCRIPTION_REPLAYINMINUTES, DESCRIPTION_KEY_ALGORITHMS, DESCRIPTION_MAC_FACTORIES
+      } };
+      /*
         {DESCRIPTION_PORT, DESCRIPTION_USERNAME, DESCRIPTION_PASSWORD, DESCRIPTION_FILTER_TARGET_WF,
           DESCRIPTION_HOSTKEY_MODUS_II, DESCRIPTION_REPLAYINMINUTES},
         {DESCRIPTION_PORT, DESCRIPTION_USERNAME, DESCRIPTION_FILTER_TARGET_WF, DESCRIPTION_HOSTKEY_MODUS_I,
@@ -93,21 +165,22 @@ public class NetConfNotificationReceiverStartParameter implements StartParameter
         {DESCRIPTION_PORT, DESCRIPTION_USERNAME, DESCRIPTION_FILTER_TARGET_WF, DESCRIPTION_HOSTKEY_MODUS_I,
           DESCRIPTION_REPLAYINMINUTES, DESCRIPTION_KEY_ALGORITHMS, DESCRIPTION_MAC_FACTORIES}
       };
+      */
   }
   
-
+  /*
   // the empty constructor may not be removed or throw exceptions! additional ones are possible, though.
   public NetConfNotificationReceiverStartParameter() {
   }
 
   
   public NetConfNotificationReceiverStartParameter(ParamData params) {
-    this.Port = params.port;
-    this.Username = params.username;
-    this.Password = params.password;
-    this.Filter_Targe_WF = params.Filter_Targe_WF;
-    this.HostKeyAuthenticationMode = params.hostkeymodus;
-    this.ReplayInMinutes = params.replayinminutes;
+    this.port = params.port;
+    this.username = params.username;
+    this.password = params.password;
+    //this.Filter_Targe_WF = params.Filter_Targe_WF;
+    this.hostKeyAuthenticationMode = params.hostkeymodus;
+    this.replayInMinutes = params.replayinminutes;
     
     if ((params.keyAlgorithms != null) && (params.keyAlgorithms.size() > 0)) {
       this.keyAlgorithms = params.keyAlgorithms;
@@ -120,12 +193,14 @@ public class NetConfNotificationReceiverStartParameter implements StartParameter
       this.macFactories = SshjMacFactory.valuesAsList();
     }
   }
-
+*/
+  
 
   /**
   * Is called by XynaProcessing with the parameters provided by the deployer
   * @return StartParameter Instance which is used to instantiate corresponding Trigger
   */
+  /*
   @Override
   public StartParameter build(String... args) throws XACT_InvalidStartParameterCountException,
                                                      XACT_InvalidTriggerStartParameterValueException {
@@ -257,34 +332,35 @@ public class NetConfNotificationReceiverStartParameter implements StartParameter
     params.password = "";
     return params;
   }
+  */
   
   
   public int getPort() {
-    return this.Port;
+    return this.port;
   }
 
 
   public String getUsername() {
-    return this.Username;
+    return this.username;
   }
 
 
   public String getPassword() {
-    return this.Password;
+    return this.password;
   }
 
-
+/*
   public String getFilterTargetWF() {
     return this.Filter_Targe_WF;
   }
+*/
 
-
-  public String getHostKeyAuthenticationMode() {
-    return this.HostKeyAuthenticationMode;
+  public HostKeyAuthMode getHostKeyAuthenticationMode() {
+    return this.hostKeyAuthenticationMode;
   }
 
   public long getReplayInMinutes() {
-    return this.ReplayInMinutes;
+    return this.replayInMinutes;
   }
   
   public List<SshjKeyAlgorithm> getKeyAlgorithms() {

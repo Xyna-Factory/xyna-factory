@@ -22,15 +22,20 @@ package com.gip.xyna.xact.trigger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.function.Supplier;
 
+import com.hierynomus.sshj.key.KeyAlgorithm;
 import com.hierynomus.sshj.transport.mac.Macs;
 
 import net.schmizz.sshj.common.Factory;
+import net.schmizz.sshj.common.Factory.Named;
 import net.schmizz.sshj.transport.mac.MAC;
+import xact.ssh.FactoryUtils;
 
 
-public enum SshjMacFactory {
-  
+public class SshjMacFactory {
+  /*
   HMACSHA2256(Macs.HMACSHA2256()),
   HMACSHA2256Etm(Macs.HMACSHA2256Etm()),
   HMACSHA2512(Macs.HMACSHA2512()),
@@ -48,18 +53,38 @@ public enum SshjMacFactory {
   HMACRIPEMD16096(Macs.HMACRIPEMD16096()),
   HMACRIPEMD160OpenSsh(Macs.HMACRIPEMD160OpenSsh())
   ;
+  */
   
-  private final Macs.Factory factory;
+  private final String name;
+  private final Named<MAC> factory;
   
-  private SshjMacFactory(Macs.Factory factory) {
-    this.factory = factory;
+  
+  public SshjMacFactory(String name) {
+    this(name, getFromMap(name));
+  }
+  
+  public SshjMacFactory(Named<MAC> factory) {
+    this(factory.getName(), factory);
   }
 
+  public SshjMacFactory(String name, Named<MAC> factory) {
+    this.factory = factory;
+    this.name = name;
+  }
   
-  public Macs.Factory getFactory() {
+  private static Named<MAC> getFromMap(String name) {
+    if (!FactoryUtils.macFactories.containsKey(name)) {
+      throw new IllegalArgumentException("Unknown mac factory name: " + name);
+    }
+    return FactoryUtils.macFactories.get(name).get();
+  }
+  
+  
+  public Named<MAC> getFactory() {
     return factory;
   }
   
+  /*
   public static String getDescription() {
     StringBuilder ret = new StringBuilder();
     boolean isFirst = true;
@@ -71,9 +96,74 @@ public enum SshjMacFactory {
     return ret.toString();
   }
   
+  
   public static List<SshjMacFactory> valuesAsList() {
     return Arrays.asList(values());
   }
+  
+  public static List<Factory.Named<MAC>> extractFactories(List<SshjMacFactory> input) {
+    List<Factory.Named<MAC>> ret = new ArrayList<>();
+    for (SshjMacFactory val : input) { ret.add(val.getFactory()); }
+    return ret;
+  }
+  */
+  
+  
+  public String getName() {
+    return name;
+  }
+
+
+  public static String getDescription() {
+    return getDescription(values());
+  }
+  
+  
+  public static String getDescription(List<SshjMacFactory> list) {
+    StringBuilder ret = new StringBuilder();
+    boolean isFirst = true;
+    for (SshjMacFactory val : list) {
+      if (isFirst) { isFirst = false; }
+      else { ret.append(":"); }
+      ret.append(val.getName());
+    }
+    return ret.toString();
+  }
+  
+  
+  public static List<SshjMacFactory> values() {
+    List<SshjMacFactory> ret = new ArrayList<>();
+    for (Entry<String, Supplier<Named<MAC>>> entry :  FactoryUtils.macFactories.entrySet()) {
+      SshjMacFactory algo = new SshjMacFactory(entry.getKey(), entry.getValue().get());
+      ret.add(algo);
+    }
+    return ret;
+  }
+  
+  
+  public static List<SshjMacFactory> getDefaults() {
+    List<SshjMacFactory> ret = new ArrayList<>();
+    List<Named<MAC>> factories = FactoryUtils.createMacListDefault();
+    for (Named<MAC> item : factories) {
+      SshjMacFactory algo = new SshjMacFactory(item);
+      ret.add(algo);
+    }
+    return ret;
+  }
+  
+  
+  public static List<SshjMacFactory> parseColonSeparatedNameList(String input) {
+    List<SshjMacFactory> ret = new ArrayList<>();
+    String[] parts = input.split(":");
+    for (String part : parts) {
+      part = part.trim();
+      if (part.isEmpty()) { continue; }
+      SshjMacFactory algo = new SshjMacFactory(part);
+      ret.add(algo);
+    }
+    return ret;
+  }
+  
   
   public static List<Factory.Named<MAC>> extractFactories(List<SshjMacFactory> input) {
     List<Factory.Named<MAC>> ret = new ArrayList<>();

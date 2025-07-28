@@ -19,10 +19,13 @@
 package com.gip.xyna.xact.trigger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
 
+import com.gip.xyna.xact.exceptions.XACT_InvalidTriggerStartParameterValueException;
+import com.gip.xyna.xact.trigger.NetConfNotificationReceiverStartParameter.ParamData;
 import com.hierynomus.sshj.key.KeyAlgorithm;
 
 import net.schmizz.sshj.common.Factory;
@@ -112,6 +115,8 @@ public class SshjKeyAlgorithm {
     List<SshjKeyAlgorithm> ret = new ArrayList<>();
     String[] parts = input.split(":");
     for (String part : parts) {
+      part = part.trim();
+      if (part.isEmpty()) { continue; }
       SshjKeyAlgorithm algo = new SshjKeyAlgorithm(part);
       ret.add(algo);
     }

@@ -55,7 +55,7 @@ public class NetConfNotificationReceiverCredentials {
 
   public static enum AuthMethodName {
     DEFAULT, PUBLICKEY, PASSWORD, HOSTBASED
-  };
+  }
 
   private static Logger logger = CentralFactoryLogging.getLogger(NetConfNotificationReceiverTriggerConnection.class);
   

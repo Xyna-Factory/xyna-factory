@@ -36,9 +36,9 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
 
   private static Logger logger = CentralFactoryLogging.getLogger(NetConfNotificationReceiverTrigger.class);
 
-  private NetConfNotificationReceiverStartParameter startParameter;
+  //private NetConfNotificationReceiverStartParameter startParameter;
   private Integer port;
-  private String filter_targetWF;
+  //private String filter_targetWF;
 
   private long whilewait_CloseConnectionList;
   private long whilewait_NetConfOperation;
@@ -49,10 +49,10 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
   private ConnectionList connectionList = new ConnectionList();
   private ConnectionQueue connectionQueue = new ConnectionQueue();
   
-  
+  /*
   public NetConfNotificationReceiverTrigger() {
   }
-
+  */
 
   private String getRDIPfromSocketID(String SocketID) throws Throwable {
     return SocketID.substring(0, SocketID.indexOf(":"));
@@ -95,7 +95,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
         Thread t = new Thread() {
 
           public void run() {
-            new NetConfNotificationReceiverTriggerConnection(SocketID, filter_targetWF, OldConnectionID, basicCred, 
+            new NetConfNotificationReceiverTriggerConnection(SocketID, OldConnectionID, basicCred,
                                                              connectionList, connectionQueue);
           }
         };
@@ -189,7 +189,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
 
   public void start(NetConfNotificationReceiverStartParameter sp) throws XACT_TriggerCouldNotBeStartedException {
     try {
-      startParameter = sp;
+      //startParameter = sp;
       this.port = sp.getPort();
       basicCred.setUserame(sp.getUsername());
       basicCred.setPassword(sp.getPassword());
@@ -205,7 +205,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
       NetConfNotificationReceiverCredentials.setHostKeyAuthenticationMode(sp.getHostKeyAuthenticationMode());
       NetConfNotificationReceiverCredentials.setReplayInMinutes(sp.getReplayInMinutes());
       */
-      this.filter_targetWF = sp.getFilterTargetWF();
+      //this.filter_targetWF = sp.getFilterTargetWF();
       this.whilewait_CloseConnectionList = NetConfNotificationReceiverStartParameter.CloseConnectionList_RequestInterval;
       this.queuewait = NetConfNotificationReceiverStartParameter.Receive_RequestInterval;
       this.whilewait_NetConfOperation = NetConfNotificationReceiverStartParameter.Receive_NetConfOperation;
@@ -220,14 +220,11 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
         private static final long serialVersionUID = 1L;
       };
     }
-
   }
 
 
   public NetConfNotificationReceiverTriggerConnection receive() {
-
     NetConfNotificationReceiverTriggerConnection conn = null;
-
     try {
       if (logger.isDebugEnabled()) {
         logger.debug("NetConfNotificationReceiver: Receive - Wait ...");
@@ -251,7 +248,6 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
     } catch (Exception ex) {
       logger.warn("NetConfNotificationReceiver: receive failed", ex);
     }
-
     return conn;
   }
 

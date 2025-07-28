@@ -20,12 +20,14 @@ package com.gip.xyna.xact.trigger;
 
 import java.util.List;
 
+import com.gip.xyna.xact.trigger.NetConfConnection.HostKeyAuthMode;
+
 
 public class BasicCredentials {
 
   private String netconf_username;
   private String netconf_password;
-  private String netconf_HostKeyAuthenticationMode; //Hostkey_Modus: "direct", "none" (default)
+  private HostKeyAuthMode netconf_HostKeyAuthenticationMode; //Hostkey_Modus: "direct", "none" (default)
   private long netconf_replayinminutes;
   
   private List<SshjKeyAlgorithm> keyAlgorithms;
@@ -52,12 +54,12 @@ public class BasicCredentials {
   };
 
 
-  public void setHostKeyAuthenticationMode(String authenticationmode) {
+  public void setHostKeyAuthenticationMode(HostKeyAuthMode authenticationmode) {
     netconf_HostKeyAuthenticationMode = authenticationmode;
   };
 
 
-  public String getHostKeyAuthenticationMode() {
+  public HostKeyAuthMode getHostKeyAuthenticationMode() {
     return netconf_HostKeyAuthenticationMode;
   };
 

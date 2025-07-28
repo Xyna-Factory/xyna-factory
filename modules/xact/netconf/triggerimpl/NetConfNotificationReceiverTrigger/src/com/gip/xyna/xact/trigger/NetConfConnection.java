@@ -40,6 +40,10 @@ import xact.ssh.HostKeyAliasMapping;
 
 public class NetConfConnection {
 
+  public static enum HostKeyAuthMode {
+    direct, none
+  }
+  
   private static Logger logger = CentralFactoryLogging.getLogger(NetConfNotificationReceiverTriggerConnection.class);
 
   private Socket socket;
@@ -52,21 +56,21 @@ public class NetConfConnection {
 
   private final String username;
   private final String password;
-  private final String ConnectionID;
-  private final String HostKeyAuthenticationMode;
+  private final String connectionID;
+  private final HostKeyAuthMode hostKeyAuthenticationMode;
 
   private InputStream inputStream;
   private OutputStream outputStream;
 
 
-  public NetConfConnection(String ConnectionID, String username, String password, String HostKeyAuthenticationMode, 
+  public NetConfConnection(String ConnectionID, String username, String password, HostKeyAuthMode hostKeyAuthenticationMode,
                            ConnectionList connlist) {
-    this.ConnectionID = ConnectionID;
+    this.connectionID = ConnectionID;
     this.username = username;
     this.password = password;
-    this.HostKeyAuthenticationMode = HostKeyAuthenticationMode;
+    this.hostKeyAuthenticationMode = hostKeyAuthenticationMode;
     try {
-      Socket newSocket = connlist.getSocket(this.ConnectionID);
+      Socket newSocket = connlist.getSocket(this.connectionID);
       this.socket = newSocket;
       this.socket_host = socket.getInetAddress().toString().replace("/", "");
       this.socket_port = socket.getPort();
@@ -105,7 +109,8 @@ public class NetConfConnection {
       method = AuthMethodName.PASSWORD;
     }
     
-    if (HostKeyAuthenticationMode.equalsIgnoreCase("none")) {
+    //if (hostKeyAuthenticationMode.equalsIgnoreCase("none")) {
+    if (hostKeyAuthenticationMode == HostKeyAuthMode.none) {
       client.addHostKeyVerifier(new PromiscuousVerifier());
     }
 
