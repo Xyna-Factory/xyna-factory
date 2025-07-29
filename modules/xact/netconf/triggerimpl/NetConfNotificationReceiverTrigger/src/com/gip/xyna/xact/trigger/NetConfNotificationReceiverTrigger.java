@@ -194,13 +194,12 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
       if (!(val instanceof String)) {
         throw new IllegalArgumentException("Key in secure storage is not string: '" + sp.getSecureStorageKey() + "'");
       }
-      logger.warn("NETCONF: password=" + val);
-      
       basicCred.setPassword((String) val);
       basicCred.setHostKeyAuthenticationMode(sp.getHostKeyAuthenticationMode());
       basicCred.setReplayInMinutes(sp.getReplayInMinutes());
       basicCred.setKeyAlgorithms(sp.getKeyAlgorithms());
       basicCred.setMacFactories(sp.getMacFactories());
+      
       this.whilewait_CloseConnectionList = NetConfNotificationReceiverStartParameter.CloseConnectionList_RequestInterval;
       this.queuewait = NetConfNotificationReceiverStartParameter.Receive_RequestInterval;
       this.whilewait_NetConfOperation = NetConfNotificationReceiverStartParameter.Receive_NetConfOperation;
