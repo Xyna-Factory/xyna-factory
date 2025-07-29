@@ -631,9 +631,16 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
           + " not successful. Some connections could not be closed.", e);
     }
   }
-  
+
   public QueryGenerator getQueryGenerator() {
-    return new QueryGenerator((s) -> String.format("`%s`", s.toLowerCase()));
+    return new QueryGenerator(MySQLPersistenceLayer::escape);
+  }
+
+  public static String escape(String s) {
+    if(XynaProperty.QUERY_ESCAPE.get()) {
+      return String.format("`%s`", s.toLowerCase());
+    }
+    return s;
   }
 
 

@@ -123,7 +123,7 @@ public class OraclePreparedQuery<T> implements PreparedQuery<T> {
     if (forUpdate) {
       String rows = forUpdatePatternMatcher.group(1);
       String from = forUpdatePatternMatcher.group(2);
-      String escPk = String.format("\"%s\"",Storable.getPersistable(storableClass).primaryKey().toUpperCase());
+      String escPk = OraclePersistenceLayer.escape(Storable.getPersistable(storableClass).primaryKey());
       String whereclauses = forUpdatePatternMatcher.group(forUpdatePatternMatcher.groupCount() - 1);
       String orderby = forUpdatePatternMatcher.group(forUpdatePatternMatcher.groupCount());
       if (orderby != null && orderby.length() > 0) {

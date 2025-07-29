@@ -2352,11 +2352,14 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
 
   @Override
   public QueryGenerator getQueryGenerator() {
-    return new QueryGenerator(this::escape);
+    return new QueryGenerator(OraclePersistenceLayer::escape);
   }
 
 
-  private String escape(String toEscape) {
-    return String.format("\"%s\"", toEscape.toUpperCase());
+  public static String escape(String toEscape) {
+    if(XynaProperty.QUERY_ESCAPE.get()) {
+      return String.format("\"%s\"", toEscape.toUpperCase());
+    }
+    return toEscape;
   }
 }

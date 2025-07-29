@@ -315,7 +315,7 @@ public class QueryGenerator {
     }
   }
 
-  private boolean castCovers(List<String> accessPath, QualifiedStorableColumnInformation qsci) {//TODO: escape?
+  private boolean castCovers(List<String> accessPath, QualifiedStorableColumnInformation qsci) {
     String fullPath = "";
     for (StorableColumnInformation sci : qsci.accessPath) {
       fullPath += sci.getColumnName() + ".";
