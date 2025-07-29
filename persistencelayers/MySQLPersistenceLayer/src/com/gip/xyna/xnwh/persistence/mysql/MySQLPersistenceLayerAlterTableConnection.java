@@ -286,7 +286,7 @@ class MySQLPersistenceLayerAlterTableConnection
                         addColumnString.append(",");
                     }
                     String escColName = MySQLPersistenceLayer.escape(col.name());
-                    addColumnString.append("\n  ADD COLUMN ").append(escColName).append(" ") //escape
+                    addColumnString.append("\n  ADD COLUMN ").append(escColName).append(" ")
                             .append(getDefaultColumnTypeString(col, klass)).append(" NULL");
                 }
             }
@@ -388,19 +388,19 @@ class MySQLPersistenceLayerAlterTableConnection
         String escTableName = MySQLPersistenceLayer.escape(tableName);
         StringBuilder createTableStatement = new StringBuilder("CREATE TABLE ").append(escTableName).append(" (\n");
         for (Column col : cols) {
-            String escColName = String.format("`%s`", col.name());
+            String escColName = MySQLPersistenceLayer.escape(col.name());
             String typeAsString = getDefaultColumnTypeString(col, klass);
-            createTableStatement.append("  ").append(escColName).append(" ").append(typeAsString); //escape col.name
+            createTableStatement.append("  ").append(escColName).append(" ").append(typeAsString);
             // default wert
             if (col.name().equals(persistable.primaryKey())) {
                 createTableStatement.append(" NOT");
             }
             createTableStatement.append(" NULL,\n");
         }
-        String escPrimaryKey = String.format("`%s`", persistable.primaryKey());
+        String escPrimaryKey = MySQLPersistenceLayer.escape(persistable.primaryKey());
         createTableStatement.append("  PRIMARY KEY(").append(escPrimaryKey);
         for (Column column : cols) {
-            String escColName = String.format("`%s`", column.name());
+            String escColName = MySQLPersistenceLayer.escape(column.name());
             // the following check is a bit nasty: dont add the "one" primary key twice. in
             // theory it would be
             // possible to use only this loop without the check but that would require that

@@ -208,8 +208,8 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
 
     @SuppressWarnings("rawtypes")
     public <T extends Storable> boolean containsObject(T storable) throws PersistenceLayerException {
-        String escTableName = String.format("`%s`", storable.getTableName());
-        String escPrimaryKey = String.format("`%s`", Storable.getPersistable(storable.getClass()).primaryKey());
+        String escTableName = MySQLPersistenceLayer.escape(storable.getTableName());
+        String escPrimaryKey = MySQLPersistenceLayer.escape(Storable.getPersistable(storable.getClass()).primaryKey());
         String select = "select count(*) from " + escTableName.toLowerCase() + " where " + escPrimaryKey + " = ?";
         com.gip.xyna.utils.db.Parameter paras = new com.gip.xyna.utils.db.ExtendedParameter();
         Column colPK = MySQLPersistenceLayer.getColumnForPrimaryKey(storable);
@@ -228,8 +228,8 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
 
     @SuppressWarnings("rawtypes")
     public <T extends Storable> void deleteOneRow(T storable) throws PersistenceLayerException {
-        String escTableName = String.format("`%s`", storable.getTableName());
-        String escPrimaryKey = String.format("`%s`", Storable.getPersistable(storable.getClass()).primaryKey());
+        String escTableName = MySQLPersistenceLayer.escape(storable.getTableName());
+        String escPrimaryKey = MySQLPersistenceLayer.escape(Storable.getPersistable(storable.getClass()).primaryKey());
         String delete = "delete from " + escTableName.toLowerCase() + " where " + escPrimaryKey + " = ?";
         deleteSingleElement(storable, delete);
     }
@@ -239,8 +239,8 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
         if (storableCollection != null && storableCollection.size() > 0) {
             Iterator<T> it = storableCollection.iterator();
             T a = it.next();
-            String escTableName = String.format("`%s`", a.getTableName());
-            String escPrimaryKey = String.format("`%s`", Storable.getPersistable(a.getClass()).primaryKey());
+            String escTableName = MySQLPersistenceLayer.escape(a.getTableName());
+            String escPrimaryKey = MySQLPersistenceLayer.escape(Storable.getPersistable(a.getClass()).primaryKey());
             String delete = "delete from " + escTableName.toLowerCase() + " where " + escPrimaryKey + " = ?";
             deleteSingleElement(a, delete);
             while (it.hasNext()) {
@@ -275,7 +275,7 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
 
         validateAccessMode(klass.getCanonicalName());
 
-        String escTableName = String.format("`%s`", Storable.getPersistable(klass).tableName());
+        String escTableName = MySQLPersistenceLayer.escape(Storable.getPersistable(klass).tableName());
         String delete = "truncate table " + escTableName.toLowerCase();
         try {
             sqlUtils.executeDML(delete, null);
@@ -362,7 +362,7 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
         ensureOpen();
         final com.gip.xyna.xnwh.persistence.ResultSetReader<? extends T> reader = getReader(klass);
         try {
-            String escTableName = String.format("`%s`", Storable.getPersistable(klass).tableName());
+            String escTableName = MySQLPersistenceLayer.escape(Storable.getPersistable(klass).tableName());
             ArrayList<T> list = sqlUtils.query(
                     "select * from " + escTableName.toLowerCase(), null,
                     new ResultSetReaderWrapper<T>(reader, this.mySQLPersistenceLayer.useZippedBlobs(), klass));
@@ -405,8 +405,8 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
         final Column colPK = MySQLPersistenceLayer.getColumnForPrimaryKey(firstElement);
 
         Persistable persistable = Storable.getPersistable(firstElement.getClass());
-        String escPrimaryKey = String.format("`%s`", persistable.primaryKey());
-        String escTableName = String.format("`%s`", persistable.tableName());
+        String escPrimaryKey = MySQLPersistenceLayer.escape(persistable.primaryKey());
+        String escTableName = MySQLPersistenceLayer.escape(persistable.tableName());
         StringBuilder start = new StringBuilder("select ").append(escPrimaryKey).append(" from ")
                 .append(escTableName.toLowerCase()).append(" where ");
         int remainingSize = size;
@@ -513,16 +513,16 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
             throw new XNWH_GeneralPersistenceLayerException("no columns found to persist");
         }
         for (int i = 0; i < columns.length - 1; i++) {
-            String escColName = String.format("`%s`", columns[i].name());
+            String escColName = MySQLPersistenceLayer.escape(columns[i].name());
             cols.append(escColName).append(", ");
             vals.append("?, ");
         }
-        String escColName = String.format("`%s`", columns[columns.length - 1].name());
+        String escColName = MySQLPersistenceLayer.escape(columns[columns.length - 1].name());
         cols.append(escColName);
         vals.append("?");
 
 
-        String escTableName = String.format("`%s`", tableName);
+        String escTableName = MySQLPersistenceLayer.escape(tableName);
         return "insert into " + escTableName + " (" + cols + ") values (" + vals + ")";
     }
 
@@ -535,14 +535,14 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
         StringBuilder setter = new StringBuilder();
         setter.append(" set ");
         for (int i = 0; i < columns.length - 1; i++) {
-            String escColName = String.format("`%s`", columns[i].name());
+            String escColName = MySQLPersistenceLayer.escape(columns[i].name());
             setter.append(escColName).append(" = ?, ");
         }
-        String escColName = String.format("`%s`", columns[columns.length - 1].name());
+        String escColName = MySQLPersistenceLayer.escape(columns[columns.length - 1].name());
         setter.append(escColName).append(" = ? ");
         String tableName = storable.getTableName().toLowerCase();
-        String escTableName = String.format("`%s`", tableName);
-        String escPrimaryKey = String.format("`%s`", Storable.getPersistable(storable.getClass()).primaryKey());;
+        String escTableName = MySQLPersistenceLayer.escape(tableName);
+        String escPrimaryKey = MySQLPersistenceLayer.escape(Storable.getPersistable(storable.getClass()).primaryKey());;
         StringBuilder whereClause = new StringBuilder().append(" where ").append(escPrimaryKey).append(" = ?");
         return new StringBuilder().append("update ").append(escTableName).append(setter).append(whereClause).toString();
     }
@@ -557,8 +557,8 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
         // aus beiden extrahiert werden
         ensureOpen();
         // überprüfen, ob objekt bereits in db ist
-        String escTableName = String.format("`%s`", storable.getTableName());
-        String escPrimaryKey = String.format("`%s`", Storable.getPersistable(storable.getClass()).primaryKey());
+        String escTableName = MySQLPersistenceLayer.escape(storable.getTableName());
+        String escPrimaryKey = MySQLPersistenceLayer.escape(Storable.getPersistable(storable.getClass()).primaryKey());
         String sqlString = "select count(*) from " + escTableName.toLowerCase() + " where " + escPrimaryKey + " = ?";
         boolean existedBefore = false;
         try {
