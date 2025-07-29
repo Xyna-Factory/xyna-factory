@@ -155,9 +155,6 @@ public class NetConfNotificationReceiverCredentials {
 
     if (method == AuthMethodName.PASSWORD) {
       if (netconf_password != null) {
-        if (logger.isDebugEnabled()) {
-          logger.debug("NetConfNotificationReceiver: convertAuthMethod - PASSWORD: " + netconf_password);
-        }
         Collection<AuthMethod> addMethodPassword = Collections.singleton(new AuthPassword(
           new PasswordFinder() {
             public boolean shouldRetry(Resource<?> resource) {
