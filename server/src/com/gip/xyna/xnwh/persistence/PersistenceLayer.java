@@ -20,6 +20,7 @@ package com.gip.xyna.xnwh.persistence;
 
 import java.io.Reader;
 
+import com.gip.xyna.xnwh.persistence.xmom.QueryGenerator;
 
 public interface PersistenceLayer {
   
@@ -66,5 +67,7 @@ public interface PersistenceLayer {
   public void init(Long persistenceLayerInstanceID, String... connectionParameters) throws PersistenceLayerException;
 
   public void shutdown() throws PersistenceLayerException;
+
+  public default QueryGenerator getQueryGenerator() { return new QueryGenerator(); }
 
 }

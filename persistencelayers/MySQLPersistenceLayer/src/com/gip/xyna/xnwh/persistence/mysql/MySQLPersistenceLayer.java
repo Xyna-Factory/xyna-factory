@@ -66,6 +66,7 @@ import com.gip.xyna.xnwh.persistence.PersistenceLayerConnection;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.persistence.Storable;
 import com.gip.xyna.xnwh.persistence.sql.ZippedBlob;
+import com.gip.xyna.xnwh.persistence.xmom.QueryGenerator;
 import com.gip.xyna.xnwh.pools.ConnectionPoolManagement;
 import com.gip.xyna.xnwh.pools.MySQLPoolType;
 import com.gip.xyna.xnwh.pools.PoolDefinition;
@@ -629,6 +630,17 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
       throw new XNWH_GeneralPersistenceLayerException("shutdown of " + MySQLPersistenceLayer.class.getName()
           + " not successful. Some connections could not be closed.", e);
     }
+  }
+
+  public QueryGenerator getQueryGenerator() {
+    return new QueryGenerator(MySQLPersistenceLayer::escape);
+  }
+
+  public static String escape(String s) {
+    if(XynaProperty.QUERY_ESCAPE.get()) {
+      return String.format("`%s`", s.toLowerCase());
+    }
+    return s;
   }
 
 

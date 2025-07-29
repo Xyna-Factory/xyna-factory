@@ -101,6 +101,7 @@ import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabaseIndexCollision;
 import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabasePersistenceLayerConnectionWithAlterTableSupport;
 import com.gip.xyna.xnwh.persistence.xml.XMLPersistenceLayer;
 import com.gip.xyna.xnwh.persistence.xml.XMLPersistenceLayer.TransactionMode;
+import com.gip.xyna.xnwh.persistence.xmom.QueryGenerator;
 import com.gip.xyna.xprc.XynaProcessing;
 import com.gip.xyna.xprc.xsched.XynaThreadFactory;
 
@@ -1657,6 +1658,17 @@ public class ODSImpl implements ODS {
     return pli;
   }
 
+
+  public QueryGenerator getQueryGenerator(ODSConnectionType conType, String tableName) throws XNWH_NoPersistenceLayerConfiguredForTableException {
+    PersistenceLayerInstanceBean pli = persistenceLayerInstancesMap.get(conType.getIndex()).get(tableName);
+    if (pli == null) {
+      pli = defaultPersistenceLayer[conType.getIndex()];
+      if (pli == null) {
+        throw new XNWH_NoPersistenceLayerConfiguredForTableException(tableName, conType.toString());
+      }
+    }
+    return pli.getPersistenceLayerInstance().getQueryGenerator();
+  }
 
   public long instantiatePersistenceLayerInstance(long persistenceLayerID, String department,
                                                   ODSConnectionType connectionType, String[] connectionParameters) throws XNWH_PersistenceLayerIdUnknownException, PersistenceLayerException, XNWH_PersistenceLayerClassIncompatibleException {
