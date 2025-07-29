@@ -34,6 +34,9 @@ import com.gip.xyna.xdev.xfractmod.xmdm.ConnectionFilter;
 import com.gip.xyna.xdev.xfractmod.xmdm.EventListener;
 import com.gip.xyna.xdev.xfractmod.xmdm.FilterConfigurationParameter;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Workspace;
 import com.gip.xyna.xprc.XynaOrder;
 import com.gip.xyna.xprc.xpce.dispatcher.DestinationKey;
 
@@ -46,9 +49,9 @@ public class NetConfNotificationReceiverFilter extends ConnectionFilter<NetConfN
 
   private static Logger logger = CentralFactoryLogging.getLogger(NetConfNotificationReceiverFilter.class);
 
-  private final static String regex_Valid = "(<notification[\\w\\W]*<\\/notification>)";
+  private final static String regex_Valid = "(<notification.*<\\/notification>)";
   private final static Pattern pattern_valid = Pattern.compile(regex_Valid);
-  private final static String regex_EventTime = "<notification[\\w\\W]*<eventTime>([\\w\\W]*)<\\/eventTime>[\\w\\W]*<\\/notification>";
+  private final static String regex_EventTime = "<notification.*<eventTime>(.*)<\\/eventTime>.*<\\/notification>";
   private final static Pattern pattern_EventTime = Pattern.compile(regex_EventTime);
 
 
@@ -79,13 +82,20 @@ public class NetConfNotificationReceiverFilter extends ConnectionFilter<NetConfN
   @Override
   public FilterResponse createXynaOrder(NetConfNotificationReceiverTriggerConnection tc, FilterConfigurationParameter baseConfig)
                         throws XynaException {
-    String FilterTargetWF = "";
-    try {
-      FilterTargetWF = tc.getFilterTargetWF();
-    } catch (Exception ex) {
-      logger.warn("NetConfNotificationReceiver: Filter - createXynaOrder failed, unable to read target order type", ex);
+    NetConfNotificationReceiverConfigurationParameter conf = (NetConfNotificationReceiverConfigurationParameter) baseConfig;
+    String FilterTargetWF = conf.getOrderType();
+    RuntimeContext rtc = null;
+    if (conf.getWorkspace().isPresent()) {
+      rtc = new Workspace(conf.getWorkspace().get());
+    } else if (conf.getApplicationName().isPresent() && conf.getApplicationVersion().isPresent()) {
+      rtc = new Application(conf.getApplicationName().get(), conf.getApplicationVersion().get());
     }
-    DestinationKey destKey = new DestinationKey(FilterTargetWF);
+    DestinationKey destKey = null;
+    if (rtc == null) {
+      destKey = new DestinationKey(FilterTargetWF);
+    } else {
+      destKey = new DestinationKey(FilterTargetWF, rtc);
+    }
 
     String RD_IP = "";
     String RD_ID = "";
