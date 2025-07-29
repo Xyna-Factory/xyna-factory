@@ -19,13 +19,10 @@
 package com.gip.xyna.xact.trigger;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
 
-import com.gip.xyna.xact.exceptions.XACT_InvalidTriggerStartParameterValueException;
-import com.gip.xyna.xact.trigger.NetConfNotificationReceiverStartParameter.ParamData;
 import com.hierynomus.sshj.key.KeyAlgorithm;
 
 import net.schmizz.sshj.common.Factory;

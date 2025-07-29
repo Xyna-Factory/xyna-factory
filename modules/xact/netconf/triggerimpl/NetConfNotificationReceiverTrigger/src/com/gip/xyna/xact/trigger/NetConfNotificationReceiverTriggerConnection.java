@@ -134,7 +134,6 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
 
   private String username;
   private String password;
-  //private String filter_targetWF;
   private String ConnectionID;
   private String RD_IP;
   private HostKeyAuthMode HostKeyAuthenticationMode;
@@ -153,7 +152,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
                                                       BasicCredentials cred, ConnectionList connectionList,
                                                       ConnectionQueue connectionQueue) {
     try {
-      this.cleanupOldConnectionStep1(OldConnectionID); // Only one connection per RD_IP allowed (e.g. uncontrolled reboot of RD)
+      this.cleanupOldConnectionStep1(OldConnectionID);
       this.connectionList = connectionList;
       this.ConnectionID = newConnectionID;
 
@@ -161,7 +160,6 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
       this.password = cred.getPassword();
       this.HostKeyAuthenticationMode = cred.getHostKeyAuthenticationMode();
       this.replayinminutes = cred.getReplayInMinutes();
-      //this.filter_targetWF = filter_targetWF;
 
       this.Feature_CapInterleave = true;
       this.ConnectionInit = true;
@@ -188,7 +186,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
 
       NetConfNotificationReceiverSharedLib.addSharedNetConfConnectionID(this.RD_IP, this.ConnectionID);
 
-      this.cleanupOldConnectionStep2(OldConnectionID); // Only one connection per RD_IP allowed (e.g. uncontrolled reboot of RD)
+      this.cleanupOldConnectionStep2(OldConnectionID);
 
     } catch (Throwable t) {
       logger.warn("NetConfNotificationReceiver: Initialization of NetConfNotificationReceiverTriggerConnection failed", t);
@@ -355,27 +353,6 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
   }
 
 
-  /*
-  private void push_timer()
-  {
-      try {
-          while( ((this.buffer_updatetime+buffer_updatetime_offset) > System.currentTimeMillis()) & (buffer.length()<this.buffer_maxlength) ) {
-              try {
-                  Thread.sleep(this.whilewait);
-              } catch(Exception ex) {
-                  logger.warn( "NetConfNotificationReceiver: push_timer - sleep failed", ex);
-              }
-          };
-          message.add(buffer);
-          this.buffer="";
-          this.clearbuffer=true;
-          ConnectionQueue.push(this);
-      } catch(Throwable t) {
-          logger.warn( "NetConfNotificationReceiver: "+" push_timer failed", t);
-      }    
-  }
-  */
-
   public String getIP() {
     String IP = "";
     try {
@@ -431,18 +408,6 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
   };
 
 
-  /*
-  public String getFilterTargetWF() {
-    String filter_targetWF = "";
-    try {
-      filter_targetWF = this.filter_targetWF;
-    } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: getFilterTargetWF failed", t);
-    }
-    return filter_targetWF;
-  };
-  */
-
   private void listener() {
     try {
       int read;
@@ -452,7 +417,6 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
           Thread t = new Thread() {
 
             public void run() {
-              //push_timer();
               push_delimiter();
             };
           };
@@ -522,15 +486,12 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
   };
 
   private String getSubscriptionNotificationWithStarttime() throws Throwable {
-    
-    //Clock cl = Clock.systemUTC();
     Instant lt = Instant.now();
     long minutes = replayinminutes;
     Instant tm = lt.minus(minutes, ChronoUnit.MINUTES);
     Instant tf = tm.truncatedTo(ChronoUnit.SECONDS);
     String tstr = tf.toString();
     String return_subscription_notification = subscription_notification_placeholder.replace("PLACEHOLDER",tstr);
-    
     return return_subscription_notification;
   }
 

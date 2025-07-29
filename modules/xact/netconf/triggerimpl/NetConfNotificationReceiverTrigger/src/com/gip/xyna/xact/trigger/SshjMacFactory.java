@@ -20,13 +20,9 @@
 package com.gip.xyna.xact.trigger;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
-
-import com.hierynomus.sshj.key.KeyAlgorithm;
-import com.hierynomus.sshj.transport.mac.Macs;
 
 import net.schmizz.sshj.common.Factory;
 import net.schmizz.sshj.common.Factory.Named;
@@ -35,25 +31,6 @@ import xact.ssh.FactoryUtils;
 
 
 public class SshjMacFactory {
-  /*
-  HMACSHA2256(Macs.HMACSHA2256()),
-  HMACSHA2256Etm(Macs.HMACSHA2256Etm()),
-  HMACSHA2512(Macs.HMACSHA2512()),
-  HMACSHA2512Etm(Macs.HMACSHA2512Etm()),
-  HMACSHA1(Macs.HMACSHA1()),
-  HMACSHA1Etm(Macs.HMACSHA1Etm()),
-  HMACSHA196(Macs.HMACSHA196()),
-  HMACSHA196Etm(Macs.HMACSHA196Etm()),
-  HMACMD5(Macs.HMACMD5()),
-  HMACMD5Etm(Macs.HMACMD5Etm()),
-  HMACMD596(Macs.HMACMD596()),
-  HMACMD596Etm(Macs.HMACMD596Etm()),
-  HMACRIPEMD160(Macs.HMACRIPEMD160()),
-  HMACRIPEMD160Etm(Macs.HMACRIPEMD160Etm()),
-  HMACRIPEMD16096(Macs.HMACRIPEMD16096()),
-  HMACRIPEMD160OpenSsh(Macs.HMACRIPEMD160OpenSsh())
-  ;
-  */
   
   private final String name;
   private final Named<MAC> factory;
@@ -83,30 +60,6 @@ public class SshjMacFactory {
   public Named<MAC> getFactory() {
     return factory;
   }
-  
-  /*
-  public static String getDescription() {
-    StringBuilder ret = new StringBuilder();
-    boolean isFirst = true;
-    for (SshjMacFactory val : values()) {
-      if (isFirst) { isFirst = false; }
-      else { ret.append(":"); }
-      ret.append(val.toString());
-    }
-    return ret.toString();
-  }
-  
-  
-  public static List<SshjMacFactory> valuesAsList() {
-    return Arrays.asList(values());
-  }
-  
-  public static List<Factory.Named<MAC>> extractFactories(List<SshjMacFactory> input) {
-    List<Factory.Named<MAC>> ret = new ArrayList<>();
-    for (SshjMacFactory val : input) { ret.add(val.getFactory()); }
-    return ret;
-  }
-  */
   
   
   public String getName() {

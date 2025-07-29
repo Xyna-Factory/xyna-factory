@@ -19,13 +19,22 @@
 package com.gip.xyna.xact.trigger;
 
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.apache.log4j.Logger;
+
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBuilds;
-import com.hierynomus.sshj.transport.mac.Macs;
 
 import net.schmizz.sshj.SSHClient;
-import net.schmizz.sshj.transport.mac.MAC;
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
 import net.schmizz.sshj.userauth.method.AuthMethod;
 import net.schmizz.sshj.userauth.method.AuthPassword;
@@ -38,17 +47,6 @@ import xact.ssh.IdentityStorableRepository;
 import xact.ssh.SupportedHostNameFeature;
 import xact.ssh.XynaHostKeyRepository;
 import xact.ssh.XynaIdentityRepository;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.apache.log4j.Logger;
 
 
 public class NetConfNotificationReceiverCredentials {
@@ -78,7 +76,7 @@ public class NetConfNotificationReceiverCredentials {
          while (iter.hasNext()) {
            sb.append(iter.next().toString());
            if (iter.hasNext()) {
-             sb.append(", ");  
+             sb.append(", ");
            }
          }
          return sb.toString();
@@ -141,49 +139,6 @@ public class NetConfNotificationReceiverCredentials {
     client.getTransport().getConfig().setKeyAlgorithms(SshjKeyAlgorithm.extractFactories(basicCred.getKeyAlgorithms()));
     client.getTransport().getConfig().setMACFactories(SshjMacFactory.extractFactories(basicCred.getMacFactories()));
     
-    /*
-    // Reduce valid KeyAlgorithms
-    client.getTransport().getConfig()
-        .setKeyAlgorithms(java.util.Arrays.<net.schmizz.sshj.common.Factory.Named<com.hierynomus.sshj.key.KeyAlgorithm>> asList(
-                          com.hierynomus.sshj.key.KeyAlgorithms.SSHDSA(),
-                          com.hierynomus.sshj.key.KeyAlgorithms.SSHRSA(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.EdDSA25519CertV01(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.EdDSA25519(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp521CertV01(),
-                             com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp521(), //This KeyAlgorithm is necessary
-                          // com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp384CertV01(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp384(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp256CertV01(),
-                             com.hierynomus.sshj.key.KeyAlgorithms.ECDSASHANistp256(),
-                             com.hierynomus.sshj.key.KeyAlgorithms.RSASHA512(),
-                             com.hierynomus.sshj.key.KeyAlgorithms.RSASHA256()
-                          // com.hierynomus.sshj.key.KeyAlgorithms.SSHRSACertV01(),
-                          // com.hierynomus.sshj.key.KeyAlgorithms.SSHDSSCertV01(),
-                          //   com.hierynomus.sshj.key.KeyAlgorithms.SSHRSA(),
-                          //   com.hierynomus.sshj.key.KeyAlgorithms.SSHDSA()
-                             ));
-    
-    //Change of order due to the specific FW of an RD.
-    client.getTransport().getConfig()
-        .setMACFactories(java.util.Arrays.<net.schmizz.sshj.common.Factory.Named<MAC>> asList(
-                             Macs.HMACSHA2256(),
-                             Macs.HMACSHA2256Etm(),
-                             Macs.HMACSHA2512(),
-                             Macs.HMACSHA2512Etm(),
-                             Macs.HMACSHA1(),
-                             Macs.HMACSHA1Etm(),
-                             Macs.HMACSHA196(),
-                             Macs.HMACSHA196Etm(),
-                             Macs.HMACMD5(),
-                             Macs.HMACMD5Etm(),
-                             Macs.HMACMD596(),
-                             Macs.HMACMD596Etm(),
-                             Macs.HMACRIPEMD160(),
-                             Macs.HMACRIPEMD160Etm(),
-                             Macs.HMACRIPEMD16096(),
-                             Macs.HMACRIPEMD160OpenSsh()));
-    */
-    
     //Repair: protected XynaIdentityRepository idRepo
     idRepo = new IdentityStorableRepository(client.getTransport().getConfig());
     if (logger.isDebugEnabled()) {
@@ -231,7 +186,7 @@ public class NetConfNotificationReceiverCredentials {
       Collection<AuthMethod> addMethodKey = keys.stream().map(AuthPublickey::new).collect(Collectors.toList());
       aMethodResponse.addAll(addMethodKey);
       if (logger.isDebugEnabled()) {
-        logger.debug( "NetConfNotificationReceiver: convertAuthMethod - PUBLICKEY: "+aMethodResponse.size());
+        logger.debug( "NetConfNotificationReceiver: convertAuthMethod - PUBLICKEY: " + aMethodResponse.size());
       }
       return aMethodResponse;
     } else {

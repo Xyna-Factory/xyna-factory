@@ -19,12 +19,14 @@
 package com.gip.xyna.xact.trigger;
 
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xact.NetConfNotificationReceiverSharedLib.NetConfNotificationReceiverSharedLib;
 import com.gip.xyna.xact.NetConfNotificationReceiverSharedLib.OutputQueueNetConfOperationElement;
 import com.gip.xyna.xact.exceptions.XACT_TriggerCouldNotBeStartedException;
@@ -36,10 +38,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
 
   private static Logger logger = CentralFactoryLogging.getLogger(NetConfNotificationReceiverTrigger.class);
 
-  //private NetConfNotificationReceiverStartParameter startParameter;
   private Integer port;
-  //private String filter_targetWF;
-
   private long whilewait_CloseConnectionList;
   private long whilewait_NetConfOperation;
   private long queuewait;
@@ -49,11 +48,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
   private ConnectionList connectionList = new ConnectionList();
   private ConnectionQueue connectionQueue = new ConnectionQueue();
   
-  /*
-  public NetConfNotificationReceiverTrigger() {
-  }
-  */
-
+  
   private String getRDIPfromSocketID(String SocketID) throws Throwable {
     return SocketID.substring(0, SocketID.indexOf(":"));
   }
@@ -90,8 +85,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
         if (logger.isInfoEnabled()) {
           logger.info("NetConfNotificationReceiver: Accepted connection ID: " + SocketID);
         }
-        String OldConnectionID = getOldConnection(SocketID); // Only one connection per RD_IP allowed (e.g. uncontrolled reboot of RD)
-
+        String OldConnectionID = getOldConnection(SocketID);
         Thread t = new Thread() {
 
           public void run() {
@@ -189,23 +183,24 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
 
   public void start(NetConfNotificationReceiverStartParameter sp) throws XACT_TriggerCouldNotBeStartedException {
     try {
-      //startParameter = sp;
       this.port = sp.getPort();
       basicCred.setUserame(sp.getUsername());
-      basicCred.setPassword(sp.getPassword());
+      
+      Serializable val = XynaFactory.getInstance().getXynaMultiChannelPortal().getSecureStorage().retrieve(
+                         NetConfNotificationReceiverStartParameter.SECURE_STORE_DESTINATION_NETCONF, sp.getSecureStorageKey());
+      if (val == null) {
+        throw new IllegalArgumentException("Could not find key in secure storage: '" + sp.getSecureStorageKey() + "'");
+      }
+      if (!(val instanceof String)) {
+        throw new IllegalArgumentException("Key in secure storage is not string: '" + sp.getSecureStorageKey() + "'");
+      }
+      logger.warn("NETCONF: password=" + val);
+      
+      basicCred.setPassword((String) val);
       basicCred.setHostKeyAuthenticationMode(sp.getHostKeyAuthenticationMode());
       basicCred.setReplayInMinutes(sp.getReplayInMinutes());
       basicCred.setKeyAlgorithms(sp.getKeyAlgorithms());
       basicCred.setMacFactories(sp.getMacFactories());
-      //NetConfNotificationReceiverCredentials credentials = new NetConfNotificationReceiverCredentials(basicCred);
-      
-      /*
-      NetConfNotificationReceiverCredentials.setUserame(sp.getUsername());
-      NetConfNotificationReceiverCredentials.setPassword(sp.getPassword());
-      NetConfNotificationReceiverCredentials.setHostKeyAuthenticationMode(sp.getHostKeyAuthenticationMode());
-      NetConfNotificationReceiverCredentials.setReplayInMinutes(sp.getReplayInMinutes());
-      */
-      //this.filter_targetWF = sp.getFilterTargetWF();
       this.whilewait_CloseConnectionList = NetConfNotificationReceiverStartParameter.CloseConnectionList_RequestInterval;
       this.queuewait = NetConfNotificationReceiverStartParameter.Receive_RequestInterval;
       this.whilewait_NetConfOperation = NetConfNotificationReceiverStartParameter.Receive_NetConfOperation;
@@ -215,7 +210,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
       this.startOutputQueueNetConfOperationListener();
 
     } catch (Exception ex) {
-      logger.warn("NetConfNotificationReceiver: XACT_TriggerCouldNotBeStartedException", ex);
+      logger.warn("NetConfNotificationReceiver: XACT_TriggerCouldNotBeStartedException.", ex);
       throw new XACT_TriggerCouldNotBeStartedException(ex) {
         private static final long serialVersionUID = 1L;
       };

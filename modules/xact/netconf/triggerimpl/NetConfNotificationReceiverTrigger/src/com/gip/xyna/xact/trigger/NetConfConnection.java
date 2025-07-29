@@ -109,7 +109,6 @@ public class NetConfConnection {
       method = AuthMethodName.PASSWORD;
     }
     
-    //if (hostKeyAuthenticationMode.equalsIgnoreCase("none")) {
     if (hostKeyAuthenticationMode == HostKeyAuthMode.none) {
       client.addHostKeyVerifier(new PromiscuousVerifier());
     }

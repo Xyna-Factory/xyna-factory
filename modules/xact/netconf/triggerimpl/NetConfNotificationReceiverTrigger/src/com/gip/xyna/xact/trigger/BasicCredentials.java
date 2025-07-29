@@ -27,7 +27,7 @@ public class BasicCredentials {
 
   private String netconf_username;
   private String netconf_password;
-  private HostKeyAuthMode netconf_HostKeyAuthenticationMode; //Hostkey_Modus: "direct", "none" (default)
+  private HostKeyAuthMode netconf_HostKeyAuthenticationMode;
   private long netconf_replayinminutes;
   
   private List<SshjKeyAlgorithm> keyAlgorithms;
