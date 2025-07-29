@@ -830,8 +830,8 @@ class MySQLPersistenceLayerConnection implements PersistenceLayerConnection {
     private <T extends Storable> void queryOneRowInternally(final T storable, boolean forUpdate)
             throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
         ensureOpen();
-        String escTableName = String.format("`%s`", storable.getTableName());
-        String escPrimaryKey = String.format("`%s`", Storable.getPersistable(storable.getClass()).primaryKey());
+        String escTableName = MySQLPersistenceLayer.escape(storable.getTableName());
+        String escPrimaryKey = MySQLPersistenceLayer.escape(Storable.getPersistable(storable.getClass()).primaryKey());
         StringBuilder selectString = new StringBuilder().append("select * from ")
                 .append(escTableName.toLowerCase()).append(" where ")
                 .append(escPrimaryKey).append(" = ?");
