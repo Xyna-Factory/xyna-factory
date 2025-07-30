@@ -96,17 +96,9 @@ public class NetConfNotificationReceiverFilter extends ConnectionFilter<NetConfN
     } else {
       destKey = new DestinationKey(FilterTargetWF, rtc);
     }
-
-    String RD_IP = "";
-    String RD_ID = "";
-    String message = "";
-    try {
-      RD_IP = tc.getIP();
-      RD_ID = tc.getID();
-      message = tc.getMessage();
-    } catch (Exception ex) {
-      logger.warn("NetConfNotificationReceiver: Filter - createXynaOrder failed, unable to get trigger parameters", ex);
-    }
+    String RD_IP = tc.getIP();
+    String RD_ID = tc.getID();
+    String message = tc.getMessage();
 
     Matcher matcher_valid = pattern_valid.matcher(message);
     if (!matcher_valid.matches()) {
@@ -158,8 +150,7 @@ public class NetConfNotificationReceiverFilter extends ConnectionFilter<NetConfN
    */
   @Override
   public void onResponse(GeneralXynaObject response, NetConfNotificationReceiverTriggerConnection tc) {
-    //TODO implementation
-    //TODO update dependency xml file
+    // not implemented
   }
 
 
@@ -169,8 +160,7 @@ public class NetConfNotificationReceiverFilter extends ConnectionFilter<NetConfN
    * @param tc corresponding triggerconnection
    */
   public void onError(XynaException[] e, NetConfNotificationReceiverTriggerConnection tc) {
-    //TODO implementation
-    //TODO update dependency xml file
+    // not implemented
   }
 
 
@@ -178,8 +168,6 @@ public class NetConfNotificationReceiverFilter extends ConnectionFilter<NetConfN
    * @return description of this filter
    */
   public String getClassDescription() {
-    //TODO implementation
-    //TODO update dependency xml file
     return "Filter configured via NetConfNotificationReceiver";
   }
 
@@ -188,6 +176,7 @@ public class NetConfNotificationReceiverFilter extends ConnectionFilter<NetConfN
    * Called once for each filter instance when it is deployed and again on each classloader change (e.g. when changing corresponding implementation jars).
    * @param triggerInstance trigger instance this filter instance is registered to
    */
+  @SuppressWarnings("rawtypes")
   @Override
   public void onDeployment(EventListener triggerInstance) {
     super.onDeployment(triggerInstance);
@@ -198,6 +187,7 @@ public class NetConfNotificationReceiverFilter extends ConnectionFilter<NetConfN
    * Called once for each filter instance when it is undeployed and again on each classloader change (e.g. when changing corresponding implementation jars).
    * @param triggerInstance trigger instance this filter instance is registered to
    */
+  @SuppressWarnings("rawtypes")
   @Override
   public void onUndeployment(EventListener triggerInstance) {
     super.onUndeployment(triggerInstance);
