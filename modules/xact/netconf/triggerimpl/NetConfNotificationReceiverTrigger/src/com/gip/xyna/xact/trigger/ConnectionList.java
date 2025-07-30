@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionList {
 
-  private ConcurrentHashMap<String, Socket> TCPblocked = new ConcurrentHashMap<String, Socket>();
+  private ConcurrentHashMap<String, Socket> tcpBlocked = new ConcurrentHashMap<String, Socket>();
   private ConcurrentHashMap<String, NetConfNotificationReceiverTriggerConnection> connectionList =
       new ConcurrentHashMap<String, NetConfNotificationReceiverTriggerConnection>();
   private boolean openTCPServer;
@@ -42,16 +42,16 @@ public class ConnectionList {
   }
 
 
-  public List<String> ListConnectionList() {
+  public List<String> listConnectionList() {
     List<String> list = new LinkedList<String>();
     connectionList.forEach((id, object) -> list.add(id));
     return list;
   }
 
 
-  public List<String> ListTCPblocked() {
+  public List<String> listTCPblocked() {
     List<String> list = new LinkedList<String>();
-    TCPblocked.forEach((id, object) -> list.add(id));
+    tcpBlocked.forEach((id, object) -> list.add(id));
     return list;
   }
 
@@ -62,17 +62,17 @@ public class ConnectionList {
 
 
   public void clearTCPblocked() {
-    TCPblocked.clear();
+    tcpBlocked.clear();
     updateSizeBlocked();
   }
 
 
-  public void TriggerOn() {
+  public void triggerOn() {
     openTCPServer = true;
   }
 
 
-  public void TriggerOff() {
+  public void triggerOff() {
     openTCPServer = false;
   }
 
@@ -83,18 +83,18 @@ public class ConnectionList {
 
 
   public void block(String id, Socket socket) {
-    TCPblocked.put(id, socket);
+    tcpBlocked.put(id, socket);
     updateSizeBlocked();
   }
 
 
   public boolean isBlocked(String id) {
-    return TCPblocked.containsKey(id);
+    return tcpBlocked.containsKey(id);
   }
 
 
   public void release(String id) {
-    TCPblocked.remove(id);
+    tcpBlocked.remove(id);
     updateSizeBlocked();
   }
 
@@ -120,7 +120,7 @@ public class ConnectionList {
 
 
   public Socket getSocket(String id) {
-    return TCPblocked.get(id);
+    return tcpBlocked.get(id);
   }
 
 
@@ -130,7 +130,7 @@ public class ConnectionList {
 
 
   public long sizeBlocked() {
-    return TCPblocked.size();
+    return tcpBlocked.size();
   }
 
 }

@@ -204,7 +204,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
       this.queuewait = NetConfNotificationReceiverStartParameter.Receive_RequestInterval;
       this.whilewait_NetConfOperation = NetConfNotificationReceiverStartParameter.Receive_NetConfOperation;
 
-      connectionList.TriggerOn();
+      connectionList.triggerOn();
       this.startServerTCP();
       this.startOutputQueueNetConfOperationListener();
 
@@ -263,8 +263,8 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
   @Override
   public void stop() throws XACT_TriggerCouldNotBeStoppedException {
     try {
-      connectionList.TriggerOff();
-      List<String> ItemList = connectionList.ListConnectionList();
+      connectionList.triggerOff();
+      List<String> ItemList = connectionList.listConnectionList();
       for (Iterator<String> iter = ItemList.iterator(); iter.hasNext();) {
         String element = iter.next();
         Thread t = new Thread() {
