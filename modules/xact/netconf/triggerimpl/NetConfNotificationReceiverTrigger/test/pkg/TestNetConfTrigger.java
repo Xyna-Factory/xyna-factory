@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import com.gip.xyna.xact.trigger.MessageEndCursor;
 import com.gip.xyna.xact.trigger.SshjKeyAlgorithm;
 import com.gip.xyna.xact.trigger.SshjMacFactory;
 import com.hierynomus.sshj.key.KeyAlgorithm;
@@ -56,9 +57,27 @@ public class TestNetConfTrigger {
   }
   
   
+  @Test
+  public void testMessageEnd() throws Exception {
+    String msg = "blabla ]]>]] bla ]]> ]]> bla]]>]]>blabla";
+    MessageEndCursor pos = new MessageEndCursor();
+    int matchpos = -1;
+    for (int i = 0; i < msg.length(); i++) {
+      char c = msg.charAt(i);
+      pos.registerChar(c);
+      boolean matched = pos.isMessageEndTokenFullyMatched();
+      if (matched) {
+        matchpos = i;
+      }
+      log("" + i + " -> " + String.valueOf(c) + " : " + matched);
+    }
+    assertEquals(33, matchpos);
+  }
+  
+  
   public static void main(String[] args) {
     try {
-      new TestNetConfTrigger().test1();
+      new TestNetConfTrigger().testMessageEnd();
     }
     catch (Throwable e) {
       e.printStackTrace();

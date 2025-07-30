@@ -111,22 +111,30 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
        + "]]>]]>";
 
   private String delimiter_regex="([\\w\\W].*?)]]>]]>";
+  private Pattern delimiter_pattern = Pattern.compile(delimiter_regex);
+      
   private String delimiter_serialnum_1="(<nc:rpc-reply[\\w\\W].*?message-id=\"201\"[\\w\\W].*?<\\/nc:rpc-reply>)";
+  private Pattern pattern_serialnum_1 = Pattern.compile(delimiter_serialnum_1);
+  
   private String delimiter_serialnum_2="[\\w\\W].*?<serial-num>([\\w\\W].*?)<\\/serial-num>[\\w\\W].*?";
+  private Pattern pattern_serialnum_2 = Pattern.compile(delimiter_serialnum_2);
+  
   private String delimiter_capinterleave="<hello[\\w\\W].*?(urn:ietf:params:netconf:capability:interleave:1.0)[\\w\\W].*?<\\/hello>";
+  private Pattern pattern_capinterleave = Pattern.compile(delimiter_capinterleave);
+  
   private String delimiter_neconfhello="<hello[\\w\\W].*?<\\/hello>";
+  private Pattern pattern_netconfhello = Pattern.compile(delimiter_neconfhello);
 
   private String delimiter_SubscriptionWithStartTime="(<rpc-reply[\\w\\W].*?message-id=\"110\"[\\w\\W].*?<\\/rpc-reply>)";
+  private Pattern pattern_SubscriptionWithStartTime = Pattern.compile(delimiter_SubscriptionWithStartTime);
+      
   private String delimiter_SubscriptionWithStartTime_Okay="(<rpc-reply[\\w\\W].*?<ok\\/>[\\w\\W].*?rpc-reply>)";
+  private Pattern pattern_SubscriptionWithStartTime_Okay = Pattern.compile(delimiter_SubscriptionWithStartTime_Okay);
 
   private String buffer;
-  private boolean clearbuffer;
-  private long buffer_updatetime;
   private long command_delay_before;
   private long command_delay_after;
   private long buffer_maxlength;
-  private long buffer_updatetime_offset;
-  private long whilewait;
   private LinkedList<String> message;
   private LinkedList<String> internal_message;
 
@@ -167,9 +175,6 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
       String UUID_Hash = UUID.randomUUID().toString().replace("-", "");
       this.rdHash = UUID_Hash;
 
-      this.clearbuffer = true;
-      this.buffer_updatetime_offset = NetConfNotificationReceiverStartParameter.buffer_updatetime_offset;
-      this.whilewait = NetConfNotificationReceiverStartParameter.PushDelimiter_RequestInterval;
       this.buffer_maxlength = NetConfNotificationReceiverStartParameter.buffer_maxlength;
 
       this.command_delay_before = NetConfNotificationReceiverStartParameter.command_delay_before;
@@ -198,11 +203,9 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
 
   private void internalMessageProcessing_NetConfHello(String element) {
     try {
-      Pattern pattern_netconfhello = Pattern.compile(delimiter_neconfhello);
       Matcher matcher_netconfhello = pattern_netconfhello.matcher(element);
       if (matcher_netconfhello.matches()) {
-        Pattern pattern = Pattern.compile(delimiter_capinterleave);
-        Matcher matcher = pattern.matcher(element);
+        Matcher matcher = pattern_capinterleave.matcher(element);
         if (matcher.matches()) {
           this.feature_CapInterleave = true;
           NetConfNotificationReceiverSharedLib.addRDHash(this.rdHash, this.RD_IP);
@@ -226,10 +229,8 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
   private void internalMessageProcessing_SerialNum(String element) {
     try {
       String message_element_hash = this.rdHash;
-      Pattern pattern_serialnum_1 = Pattern.compile(delimiter_serialnum_1);
       Matcher matcher_serialnum_1 = pattern_serialnum_1.matcher(element);
       if (matcher_serialnum_1.find()) {
-        Pattern pattern_serialnum_2 = Pattern.compile(delimiter_serialnum_2);
         Matcher matcher_serialnum_2 = pattern_serialnum_2.matcher(matcher_serialnum_1.group(1));
         String message_element = "";
         while (matcher_serialnum_2.find()) {
@@ -275,10 +276,8 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
 
   private void internalMessageProcessing_SubscriptionWithStartTime(String element) {
     try {
-      Pattern pattern_SubscriptionWithStartTime = Pattern.compile(delimiter_SubscriptionWithStartTime);
       Matcher matcher_SubscriptionWithStartTime = pattern_SubscriptionWithStartTime.matcher(element);
       if (matcher_SubscriptionWithStartTime.find()) {
-        Pattern pattern_SubscriptionWithStartTime_Okay = Pattern.compile(delimiter_SubscriptionWithStartTime_Okay);
         Matcher matcher_SubscriptionWithStartTime_Okay = pattern_SubscriptionWithStartTime_Okay.matcher(matcher_SubscriptionWithStartTime.group(1));
         if (matcher_SubscriptionWithStartTime_Okay.find()) {
           this.replayInit = false;
@@ -318,18 +317,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
 
   private void push_delimiter() {
     try {
-      while (((this.buffer_updatetime + buffer_updatetime_offset) > System.currentTimeMillis())
-          && (buffer.length() < this.buffer_maxlength)) {
-        try {
-          Thread.sleep(this.whilewait);
-        } catch (Exception ex) {
-          logger.warn("NetConfNotificationReceiver: push_delimiter - sleep failed", ex);
-        }
-      } ;
-
-      Pattern pattern = Pattern.compile(delimiter_regex);
-      Matcher matcher = pattern.matcher(this.buffer);
-
+      Matcher matcher = delimiter_pattern.matcher(this.buffer);
       while (matcher.find()) {
         String message_element = matcher.group(1);
         this.message.add(message_element);
@@ -337,11 +325,8 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
         this.internal_message.add(message_element);
       }
       this.buffer = "";
-      this.clearbuffer = true;
-
       Thread t = new Thread(this::internalMessageProcessing);
       t.start();
-
     } catch (Throwable t) {
       logger.warn("NetConfNotificationReceiver: push_delimiter failed", t);
     }
@@ -406,14 +391,17 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
   private void listener() {
     try {
       int read;
+      MessageEndCursor cursor = new MessageEndCursor();
       while ((read = this.netConfConn.read()) > -1) {
-        if (this.clearbuffer) {
-          this.clearbuffer = false;
-          Thread t = new Thread(this::push_delimiter);
-          t.start();
+        char readChar = (char) read;
+        this.buffer = this.buffer + readChar;
+        cursor.registerChar(readChar);
+        if (cursor.isMessageEndTokenFullyMatched()) {
+          push_delimiter();
         }
-        this.buffer = this.buffer + (char) read;
-        this.buffer_updatetime = System.currentTimeMillis();
+        if (buffer.length() > this.buffer_maxlength) {
+          this.buffer = "";
+        }
       }
     } catch (Throwable t) {
       logger.warn("NetConfNotificationReceiver: listener failed", t);
