@@ -43,7 +43,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
   private long whilewait_NetConfOperation;
   private long queuewait;
 
-  private TCPConnection TCPconn;
+  private TCPConnection tcpConn;
   private BasicCredentials basicCred = new BasicCredentials();
   private ConnectionList connectionList = new ConnectionList();
   private ConnectionQueue connectionQueue = new ConnectionQueue();
@@ -68,15 +68,15 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
   }
 
 
-  private void TCPServerListener() throws Exception {
-    if (logger.isInfoEnabled()) { 
-      logger.info("NetConfNotificationReceiver: Listening on port " + this.port + "..."); 
+  private void tcpServerListener() throws Exception {
+    if (logger.isInfoEnabled()) {
+      logger.info("NetConfNotificationReceiver: Listening on port " + this.port + "...");
     }
-    while ((!this.TCPconn.isClosed()) & (connectionList.isTriggerOn())) {
+    while ((!this.tcpConn.isClosed()) && (connectionList.isTriggerOn())) {
       if (logger.isInfoEnabled()) {
         logger.info("NetConfNotificationReceiver: Waiting to accept connection...");
       }
-      String SocketID = this.TCPconn.accept();
+      String SocketID = this.tcpConn.accept();
       if (SocketID.contains("blocked")) {
         if (logger.isInfoEnabled()) {
           logger.info("NetConfNotificationReceiver: Socket blocked connection ID: " + SocketID);
@@ -98,7 +98,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
         if (logger.isInfoEnabled()) {
           logger.info("NetConfNotificationReceiver: Again Listening ...");
         }
-      } ;
+      }
     }
     if (logger.isInfoEnabled()) {
       logger.info("NetConfNotificationReceiver: TCP Listener closed!");
@@ -110,13 +110,13 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
     if (logger.isInfoEnabled()) {
       logger.info("NetConfNotificationReceiver: Start TCP Listener on port " + this.port + "...");
     }
-    this.TCPconn = new TCPConnection(this.port, this.connectionList);
+    this.tcpConn = new TCPConnection(this.port, this.connectionList);
 
     Thread t = new Thread() {
 
       public void run() {
         try {
-          TCPServerListener();
+          tcpServerListener();
         } catch (Exception ex) {
           if (connectionList.isTriggerOn()) {
             logger.warn("NetConfNotificationReceiver: TCPServerListener failed", ex);
@@ -132,12 +132,12 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
     if (logger.isInfoEnabled()) {
       logger.info("NetConfNotificationReceiver: CLOSE TCP Listener on port " + this.port + "...");
     }
-    this.TCPconn.close();
+    this.tcpConn.close();
   }
 
 
-  private void OutputQueueNetConfOperationListener() throws Exception {
-    while ((!this.TCPconn.isClosed()) & (connectionList.isTriggerOn())) {
+  private void outputQueueNetConfOperationListener() throws Exception {
+    while ((!this.tcpConn.isClosed()) && (connectionList.isTriggerOn())) {
       try {
         Thread.sleep(whilewait_NetConfOperation);
         while (NetConfNotificationReceiverSharedLib.sizeOutputQueueNetConfOperation() > 0) {
@@ -169,7 +169,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
 
       public void run() {
         try {
-          OutputQueueNetConfOperationListener();
+          outputQueueNetConfOperationListener();
         } catch (Exception ex) {
           if (connectionList.isTriggerOn()) {
             logger.warn("NetConfNotificationReceiver: OutputQueueNetConfOperationListener failed", ex);
@@ -180,7 +180,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
     t.start();
   }
 
-
+  @Override
   public void start(NetConfNotificationReceiverStartParameter sp) throws XACT_TriggerCouldNotBeStartedException {
     try {
       this.port = sp.getPort();
@@ -217,6 +217,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
   }
 
 
+  @Override
   public NetConfNotificationReceiverTriggerConnection receive() {
     NetConfNotificationReceiverTriggerConnection conn = null;
     try {
@@ -249,6 +250,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
   /**
    * Called by Xyna Processing if there are not enough system capacities to process the request.
    */
+  @Override
   protected void onProcessingRejected(String cause, NetConfNotificationReceiverTriggerConnection con) {
   }
 
@@ -258,7 +260,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
    * should make sure, that start() may be called again directly afterwards. connection instances
    * returned by the method receive() should not be expected to work after stop() has been called.
    */
-
+  @Override
   public void stop() throws XACT_TriggerCouldNotBeStoppedException {
     try {
       connectionList.TriggerOff();
@@ -301,6 +303,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
    * registered to this trigger
    * @param con corresponding triggerconnection
    */
+  @Override
   public void onNoFilterFound(NetConfNotificationReceiverTriggerConnection con) {
     try {
       if (logger.isDebugEnabled()) {
@@ -320,6 +323,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
   /**
    * @return description of this trigger
    */
+  @Override
   public String getClassDescription() {
     return "NetConf Notification Receiver";
   }

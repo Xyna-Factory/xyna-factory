@@ -61,7 +61,7 @@ public class TCPConnection {
 
       SocketID = socket.getInetAddress().toString().replace("/", "") + ":" + socket.getPort() + "_" + socket.getLocalPort();
 
-      if ((connlist.isBlocked(SocketID)) | (!connlist.isTriggerOn())) {
+      if ((connlist.isBlocked(SocketID)) || (!connlist.isTriggerOn())) {
         socket.close();
         SocketID = SocketID+"_blocked";
       } else {

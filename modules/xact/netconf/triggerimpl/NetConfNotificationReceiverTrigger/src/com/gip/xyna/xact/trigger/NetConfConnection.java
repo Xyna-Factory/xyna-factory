@@ -36,6 +36,8 @@ import net.schmizz.sshj.connection.channel.direct.Session;
 import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
 import net.schmizz.sshj.userauth.method.AuthMethod;
 import xact.ssh.HostKeyAliasMapping;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import xact.ssh.SSHJReflection;
 
 
 public class NetConfConnection {
@@ -89,7 +91,7 @@ public class NetConfConnection {
 
 
   public void openNetConfConnection(BasicCredentials cred) throws Throwable {
-    Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+    Security.addProvider(new BouncyCastleProvider());
     NetConfNotificationReceiverCredentials credentialsSSHJ = new NetConfNotificationReceiverCredentials(cred);
     SSHClient client = null;
 
@@ -113,7 +115,7 @@ public class NetConfConnection {
       client.addHostKeyVerifier(new PromiscuousVerifier());
     }
 
-    xact.ssh.SSHJReflection.recall(client, socket);
+    SSHJReflection.recall(client, socket);
     Collection<AuthMethod> aMethod = credentialsSSHJ.convertAuthMethod(method, socket_host, socket_port);
     client.auth(username, aMethod);
 

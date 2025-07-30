@@ -47,6 +47,7 @@ import xact.ssh.IdentityStorableRepository;
 import xact.ssh.SupportedHostNameFeature;
 import xact.ssh.XynaHostKeyRepository;
 import xact.ssh.XynaIdentityRepository;
+import xact.ssh.HostKeyHashMap;
 
 
 public class NetConfNotificationReceiverCredentials {
@@ -59,7 +60,7 @@ public class NetConfNotificationReceiverCredentials {
   
   private BasicCredentials basicCred;
   protected XynaIdentityRepository idRepo;
-    
+
   private static final XynaPropertyBuilds<Set<SupportedHostNameFeature>> supportedFeatures =
     new XynaPropertyBuilds<Set<SupportedHostNameFeature>>(
       "xact.ssh.hostkeys.supportedfeatures",
@@ -139,7 +140,6 @@ public class NetConfNotificationReceiverCredentials {
     client.getTransport().getConfig().setKeyAlgorithms(SshjKeyAlgorithm.extractFactories(basicCred.getKeyAlgorithms()));
     client.getTransport().getConfig().setMACFactories(SshjMacFactory.extractFactories(basicCred.getMacFactories()));
     
-    //Repair: protected XynaIdentityRepository idRepo
     idRepo = new IdentityStorableRepository(client.getTransport().getConfig());
     if (logger.isDebugEnabled()) {
       logger.debug("NetConfNotificationReceiver: initSSHClient");
@@ -198,7 +198,7 @@ public class NetConfNotificationReceiverCredentials {
       tmpHostRepo.injectHostKey(hostkeyAlias);
       if (logger.isDebugEnabled()) {
         logger.debug("SSHConnectionInstanceOperationImpl prepAuthentification - conParams.getHostKeyAlias():" +
-                     xact.ssh.HostKeyHashMap.getNumberOfKeys(hostkeyAlias));
+                     HostKeyHashMap.getNumberOfKeys(hostkeyAlias));
       }
     } else {
       HostKeyStorableRepository tmpHostRepo = new HostKeyStorableRepository(supportedFeatures.get());

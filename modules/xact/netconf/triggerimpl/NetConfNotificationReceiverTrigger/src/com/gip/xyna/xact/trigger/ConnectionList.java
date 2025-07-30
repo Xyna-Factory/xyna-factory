@@ -23,13 +23,14 @@ import java.net.Socket;
 import java.util.List;
 import java.util.LinkedList;
 import com.gip.xyna.xact.NetConfNotificationReceiverSharedLib.NetConfNotificationReceiverSharedLib;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 public class ConnectionList {
 
-  private java.util.concurrent.ConcurrentHashMap<String, Socket> TCPblocked = new java.util.concurrent.ConcurrentHashMap<String, Socket>();
-  private java.util.concurrent.ConcurrentHashMap<String, NetConfNotificationReceiverTriggerConnection> connectionList =
-      new java.util.concurrent.ConcurrentHashMap<String, NetConfNotificationReceiverTriggerConnection>();
+  private ConcurrentHashMap<String, Socket> TCPblocked = new ConcurrentHashMap<String, Socket>();
+  private ConcurrentHashMap<String, NetConfNotificationReceiverTriggerConnection> connectionList =
+      new ConcurrentHashMap<String, NetConfNotificationReceiverTriggerConnection>();
   private boolean openTCPServer;
 
   
