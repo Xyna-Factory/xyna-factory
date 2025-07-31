@@ -131,7 +131,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
   private String delimiter_SubscriptionWithStartTime_Okay="(<rpc-reply[\\w\\W].*?<ok\\/>[\\w\\W].*?rpc-reply>)";
   private Pattern pattern_SubscriptionWithStartTime_Okay = Pattern.compile(delimiter_SubscriptionWithStartTime_Okay);
 
-  private String buffer;
+  private StringBuilder buffer;
   private long command_delay_before;
   private long command_delay_after;
   private long buffer_maxlength;
@@ -179,7 +179,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
 
       this.command_delay_before = NetConfNotificationReceiverStartParameter.command_delay_before;
       this.command_delay_after = NetConfNotificationReceiverStartParameter.command_delay_after;
-      this.buffer = "";
+      this.buffer = new StringBuilder("");
       this.message = new LinkedList<String>();
       this.internal_message = new LinkedList<String>();
 
@@ -324,7 +324,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
         connectionQueue.push(this);
         this.internal_message.add(message_element);
       }
-      this.buffer = "";
+      this.buffer.setLength(0);
       Thread t = new Thread(this::internalMessageProcessing);
       t.start();
     } catch (Throwable t) {
@@ -394,13 +394,13 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
       MessageEndCursor cursor = new MessageEndCursor();
       while ((read = this.netConfConn.read()) > -1) {
         char readChar = (char) read;
-        this.buffer = this.buffer + readChar;
+        this.buffer.append(readChar);
         cursor.registerChar(readChar);
         if (cursor.isMessageEndTokenFullyMatched()) {
           push_delimiter();
         }
         if (buffer.length() > this.buffer_maxlength) {
-          this.buffer = "";
+          this.buffer.setLength(0);
         }
       }
     } catch (Throwable t) {

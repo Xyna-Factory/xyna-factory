@@ -199,6 +199,7 @@ public class NetConfNotificationReceiverTrigger extends EventListener<NetConfNot
       basicCred.setReplayInMinutes(sp.getReplayInMinutes());
       basicCred.setKeyAlgorithms(sp.getKeyAlgorithms());
       basicCred.setMacFactories(sp.getMacFactories());
+      basicCred.setCipherFactories(sp.getCipherFactories());
       
       this.whilewait_CloseConnectionList = NetConfNotificationReceiverStartParameter.CloseConnectionList_RequestInterval;
       this.queuewait = NetConfNotificationReceiverStartParameter.Receive_RequestInterval;

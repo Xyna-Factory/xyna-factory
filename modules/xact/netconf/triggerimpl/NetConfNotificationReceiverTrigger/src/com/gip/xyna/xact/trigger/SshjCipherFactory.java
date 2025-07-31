@@ -26,38 +26,38 @@ import java.util.function.Supplier;
 
 import net.schmizz.sshj.common.Factory;
 import net.schmizz.sshj.common.Factory.Named;
-import net.schmizz.sshj.transport.mac.MAC;
+import net.schmizz.sshj.transport.cipher.Cipher;
 import xact.ssh.FactoryUtils;
 
 
-public class SshjMacFactory {
-  
+public class SshjCipherFactory {
+
   private final String name;
-  private final Named<MAC> factory;
+  private final Named<Cipher> factory;
   
   
-  public SshjMacFactory(String name) {
+  public SshjCipherFactory(String name) {
     this(name, getFromMap(name));
   }
   
-  public SshjMacFactory(Named<MAC> factory) {
+  public SshjCipherFactory(Named<Cipher> factory) {
     this(factory.getName(), factory);
   }
 
-  public SshjMacFactory(String name, Named<MAC> factory) {
+  public SshjCipherFactory(String name, Named<Cipher> factory) {
     this.factory = factory;
     this.name = name;
   }
   
-  private static Named<MAC> getFromMap(String name) {
-    if (!FactoryUtils.macFactories.containsKey(name)) {
-      throw new IllegalArgumentException("Unknown Message Authentication Code (MAC) name: " + name);
+  private static Named<Cipher> getFromMap(String name) {
+    if (!FactoryUtils.CipherFactories.containsKey(name)) {
+      throw new IllegalArgumentException("Unknown cipher name: " + name);
     }
-    return FactoryUtils.macFactories.get(name).get();
+    return FactoryUtils.CipherFactories.get(name).get();
   }
   
   
-  public Named<MAC> getFactory() {
+  public Named<Cipher> getFactory() {
     return factory;
   }
   
@@ -72,10 +72,10 @@ public class SshjMacFactory {
   }
   
   
-  public static String getDescription(List<SshjMacFactory> list) {
+  public static String getDescription(List<SshjCipherFactory> list) {
     StringBuilder ret = new StringBuilder();
     boolean isFirst = true;
-    for (SshjMacFactory val : list) {
+    for (SshjCipherFactory val : list) {
       if (isFirst) { isFirst = false; }
       else { ret.append(":"); }
       ret.append(val.getName());
@@ -84,43 +84,32 @@ public class SshjMacFactory {
   }
   
   
-  public static List<SshjMacFactory> values() {
-    List<SshjMacFactory> ret = new ArrayList<>();
-    for (Entry<String, Supplier<Named<MAC>>> entry :  FactoryUtils.macFactories.entrySet()) {
-      SshjMacFactory algo = new SshjMacFactory(entry.getKey(), entry.getValue().get());
+  public static List<SshjCipherFactory> values() {
+    List<SshjCipherFactory> ret = new ArrayList<>();
+    for (Entry<String, Supplier<Named<Cipher>>> entry :  FactoryUtils.CipherFactories.entrySet()) {
+      SshjCipherFactory algo = new SshjCipherFactory(entry.getKey(), entry.getValue().get());
       ret.add(algo);
     }
     return ret;
   }
   
   
-  public static List<SshjMacFactory> getDefaults() {
-    List<SshjMacFactory> ret = new ArrayList<>();
-    List<Named<MAC>> factories = FactoryUtils.createMacListDefault();
-    for (Named<MAC> item : factories) {
-      SshjMacFactory algo = new SshjMacFactory(item);
-      ret.add(algo);
-    }
-    return ret;
-  }
-  
-  
-  public static List<SshjMacFactory> parseColonSeparatedNameList(String input) {
-    List<SshjMacFactory> ret = new ArrayList<>();
+  public static List<SshjCipherFactory> parseColonSeparatedNameList(String input) {
+    List<SshjCipherFactory> ret = new ArrayList<>();
     String[] parts = input.split(":");
     for (String part : parts) {
       part = part.trim();
       if (part.isEmpty()) { continue; }
-      SshjMacFactory algo = new SshjMacFactory(part);
+      SshjCipherFactory algo = new SshjCipherFactory(part);
       ret.add(algo);
     }
     return ret;
   }
   
   
-  public static List<Factory.Named<MAC>> extractFactories(List<SshjMacFactory> input) {
-    List<Factory.Named<MAC>> ret = new ArrayList<>();
-    for (SshjMacFactory val : input) { ret.add(val.getFactory()); }
+  public static List<Factory.Named<Cipher>> extractFactories(List<SshjCipherFactory> input) {
+    List<Factory.Named<Cipher>> ret = new ArrayList<>();
+    for (SshjCipherFactory val : input) { ret.add(val.getFactory()); }
     return ret;
   }
   

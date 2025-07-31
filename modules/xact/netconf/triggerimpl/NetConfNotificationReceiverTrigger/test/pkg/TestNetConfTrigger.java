@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.gip.xyna.xact.trigger.MessageEndCursor;
+import com.gip.xyna.xact.trigger.SshjCipherFactory;
 import com.gip.xyna.xact.trigger.SshjKeyAlgorithm;
 import com.gip.xyna.xact.trigger.SshjMacFactory;
 import com.hierynomus.sshj.key.KeyAlgorithm;
@@ -50,6 +51,7 @@ public class TestNetConfTrigger {
      log(SshjKeyAlgorithm.getDescription());
      log(SshjKeyAlgorithm.getDescription(SshjKeyAlgorithm.getDefaults()));
      log(SshjMacFactory.getDescription());
+     log(SshjCipherFactory.getDescription());
     } catch (Exception e) {
       e.printStackTrace();
       throw new RuntimeException(e);
@@ -77,7 +79,7 @@ public class TestNetConfTrigger {
   
   public static void main(String[] args) {
     try {
-      new TestNetConfTrigger().testMessageEnd();
+      new TestNetConfTrigger().test1();
     }
     catch (Throwable e) {
       e.printStackTrace();

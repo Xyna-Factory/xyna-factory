@@ -2,5 +2,6 @@
 	<AdditionalDependencies>
 		<!-- <Datatype>fullyQualifiedMdmType</Datatype>
 		<XynaProperty>propertyName</XynaProperty> -->
+		<XynaProperty>xact.ssh.hostkeys.supportedfeatures</XynaProperty>
 	</AdditionalDependencies>
 </Trigger>

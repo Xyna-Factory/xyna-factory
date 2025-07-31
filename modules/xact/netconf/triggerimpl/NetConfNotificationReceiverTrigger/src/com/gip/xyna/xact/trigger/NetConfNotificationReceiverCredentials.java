@@ -31,8 +31,7 @@ import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
-import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
-import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBuilds;
+import com.gip.xyna.XynaFactory;
 
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider;
@@ -42,12 +41,12 @@ import net.schmizz.sshj.userauth.method.AuthPublickey;
 import net.schmizz.sshj.userauth.password.PasswordFinder;
 import net.schmizz.sshj.userauth.password.Resource;
 import xact.ssh.EncryptionType;
+import xact.ssh.HostKeyHashMap;
 import xact.ssh.HostKeyStorableRepository;
 import xact.ssh.IdentityStorableRepository;
 import xact.ssh.SupportedHostNameFeature;
 import xact.ssh.XynaHostKeyRepository;
 import xact.ssh.XynaIdentityRepository;
-import xact.ssh.HostKeyHashMap;
 
 
 public class NetConfNotificationReceiverCredentials {
@@ -58,41 +57,22 @@ public class NetConfNotificationReceiverCredentials {
 
   private static Logger logger = CentralFactoryLogging.getLogger(NetConfNotificationReceiverTriggerConnection.class);
   
+  private static final String PROPERTY_NAME_SUPPORTED_FEATURES = "xact.ssh.hostkeys.supportedfeatures";
+  
   private BasicCredentials basicCred;
   protected XynaIdentityRepository idRepo;
-
-  private static final XynaPropertyBuilds<Set<SupportedHostNameFeature>> supportedFeatures =
-    new XynaPropertyBuilds<Set<SupportedHostNameFeature>>(
-      "xact.ssh.hostkeys.supportedfeatures",
-      new XynaPropertyBuilds.Builder<Set<SupportedHostNameFeature>>() {
-
-       public Set<SupportedHostNameFeature> fromString(String arg0)
-                       throws com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBuilds.Builder.ParsingException {
-         return SupportedHostNameFeature.fromStringList(arg0);
-       }
-
-       public String toString(Set<SupportedHostNameFeature> arg0) {
-         StringBuilder sb = new StringBuilder();
-         Iterator<SupportedHostNameFeature> iter = arg0.iterator();
-         while (iter.hasNext()) {
-           sb.append(iter.next().toString());
-           if (iter.hasNext()) {
-             sb.append(", ");
-           }
-         }
-         return sb.toString();
-       }
-
-      },
-      SupportedHostNameFeature.all())
-    .setDefaultDocumentation(DocumentationLanguage.EN,
-                             "Supported features for the HostKeyRepository, turning features off can improve performance");
 
   
   public NetConfNotificationReceiverCredentials(BasicCredentials basicCred) {
     this.basicCred = basicCred;
   }
 
+  
+  private Set<SupportedHostNameFeature> getSupportedFeatures() {
+    String val = XynaFactory.getInstance().getFactoryManagement().getProperty(PROPERTY_NAME_SUPPORTED_FEATURES);
+    return SupportedHostNameFeature.fromStringList(val);
+  }
+  
 
   private Optional<String> getAlgoType(String socket_host, int socket_port) {
     Optional<String> algoTypeOpt = Optional.empty();
@@ -101,7 +81,7 @@ public class NetConfNotificationReceiverCredentials {
     if (logger.isDebugEnabled()) {
       logger.debug("NetConfNotificationReceiver: getAlgoType: " + socket_host + " " + socket_port);
     }
-    XynaHostKeyRepository hostRepo = new HostKeyStorableRepository(supportedFeatures.get());
+    XynaHostKeyRepository hostRepo = new HostKeyStorableRepository(getSupportedFeatures());
     List<String> algoList = hostRepo.findExistingAlgorithms(hostname, port);
 
     if (algoList.size() > 0) {
@@ -134,12 +114,14 @@ public class NetConfNotificationReceiverCredentials {
 
   protected SSHClient initSSHClient() {
     SSHClient client = new SSHClient();
-    XynaHostKeyRepository hostRepo = new HostKeyStorableRepository(supportedFeatures.get());
+    XynaHostKeyRepository hostRepo = new HostKeyStorableRepository(getSupportedFeatures());
     client.addHostKeyVerifier(hostRepo);
 
     client.getTransport().getConfig().setKeyAlgorithms(SshjKeyAlgorithm.extractFactories(basicCred.getKeyAlgorithms()));
     client.getTransport().getConfig().setMACFactories(SshjMacFactory.extractFactories(basicCred.getMacFactories()));
-    
+    if ((basicCred.getCipherFactories() != null) && (basicCred.getCipherFactories().size() > 0)) {
+      client.getTransport().getConfig().setCipherFactories(SshjCipherFactory.extractFactories(basicCred.getCipherFactories()));
+    }
     idRepo = new IdentityStorableRepository(client.getTransport().getConfig());
     if (logger.isDebugEnabled()) {
       logger.debug("NetConfNotificationReceiver: initSSHClient");
@@ -194,14 +176,14 @@ public class NetConfNotificationReceiverCredentials {
 
   public void injectHostKeyHash(String socket_host, String hostkeyAlias) {
     if ((hostkeyAlias != null) && (!hostkeyAlias.isEmpty())) {
-      HostKeyStorableRepository tmpHostRepo = new HostKeyStorableRepository(supportedFeatures.get());
+      HostKeyStorableRepository tmpHostRepo = new HostKeyStorableRepository(getSupportedFeatures());
       tmpHostRepo.injectHostKey(hostkeyAlias);
       if (logger.isDebugEnabled()) {
         logger.debug("SSHConnectionInstanceOperationImpl prepAuthentification - conParams.getHostKeyAlias():" +
                      HostKeyHashMap.getNumberOfKeys(hostkeyAlias));
       }
     } else {
-      HostKeyStorableRepository tmpHostRepo = new HostKeyStorableRepository(supportedFeatures.get());
+      HostKeyStorableRepository tmpHostRepo = new HostKeyStorableRepository(getSupportedFeatures());
       tmpHostRepo.injectHostKey(socket_host);
     }
   }

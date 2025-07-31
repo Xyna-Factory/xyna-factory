@@ -19,6 +19,7 @@
 package com.gip.xyna.xact.trigger;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -59,6 +60,8 @@ public class NetConfNotificationReceiverStartParameter extends EnhancedStartPara
                                                            "allowed values = " + SshjKeyAlgorithm.getDescription();
   private static final String DESCRIPTION_MAC_FACTORIES = "Optional colon-separated list of message authentication code factories " +
                                                            "for ssh connection, allowed values = " + SshjMacFactory.getDescription();
+  private static final String DESCRIPTION_CIPHERS = "Optional colon-separated list of cipher factories for ssh connection, " +
+                                                    "allowed values = " + SshjCipherFactory.getDescription();
 
   public static final StringParameter<Integer> PARAM_PORT = StringParameter.typeInteger("port").mandatory().
     documentation(Documentation.en(DESCRIPTION_PORT).build()).build();
@@ -75,10 +78,12 @@ public class NetConfNotificationReceiverStartParameter extends EnhancedStartPara
     documentation(Documentation.en(DESCRIPTION_KEY_ALGORITHMS).build()).build();
   public static final StringParameter<String> PARAM_MAC_FACTORIES = StringParameter.typeString("mac_factories").optional().
     documentation(Documentation.en(DESCRIPTION_MAC_FACTORIES).build()).build();
+  public static final StringParameter<String> PARAM_CIPHERS = StringParameter.typeString("ciphers").optional().
+    documentation(Documentation.en(DESCRIPTION_CIPHERS).build()).build();
 
   public static final List<StringParameter<?>> allParameters =
       StringParameter.asList(PARAM_PORT, PARAM_USERNAME, PARAM_PASSWORD_KEY, PARAM_HOST_KEY_MODE, PARAM_REPLAYINMINUTES,
-                             PARAM_KEY_ALGO, PARAM_MAC_FACTORIES);
+                             PARAM_KEY_ALGO, PARAM_MAC_FACTORIES, PARAM_CIPHERS);
 
   private int port;
   private String username;
@@ -87,6 +92,7 @@ public class NetConfNotificationReceiverStartParameter extends EnhancedStartPara
   private long replayInMinutes; //Replay time of subscription in minutes. Default is 0.
   private List<SshjKeyAlgorithm> keyAlgorithms;
   private List<SshjMacFactory> macFactories;
+  private List<SshjCipherFactory> cipherFactories;
 
   
   @Override
@@ -111,6 +117,12 @@ public class NetConfNotificationReceiverStartParameter extends EnhancedStartPara
       ret.macFactories = SshjMacFactory.getDefaults();
     } else {
       ret.macFactories = SshjMacFactory.parseColonSeparatedNameList(macs);
+    }
+    String ciphers = PARAM_CIPHERS.getFromMap(map);
+    if (ciphers == null) {
+      ret.cipherFactories = new ArrayList<SshjCipherFactory>();
+    } else {
+      ret.cipherFactories = SshjCipherFactory.parseColonSeparatedNameList(ciphers);
     }
     return ret;
   }
@@ -139,7 +151,7 @@ public class NetConfNotificationReceiverStartParameter extends EnhancedStartPara
   public String[][] getParameterDescriptions() {
     return new String[][] { {
         DESCRIPTION_PORT, DESCRIPTION_USERNAME, DESCRIPTION_PASSWORD_KEY, DESCRIPTION_HOSTKEY_MODUS,
-        DESCRIPTION_REPLAYINMINUTES, DESCRIPTION_KEY_ALGORITHMS, DESCRIPTION_MAC_FACTORIES
+        DESCRIPTION_REPLAYINMINUTES, DESCRIPTION_KEY_ALGORITHMS, DESCRIPTION_MAC_FACTORIES, DESCRIPTION_CIPHERS
       } };
   }
   
@@ -175,4 +187,8 @@ public class NetConfNotificationReceiverStartParameter extends EnhancedStartPara
     return macFactories;
   }
 
+  public List<SshjCipherFactory> getCipherFactories() {
+    return cipherFactories;
+  }
+  
 }

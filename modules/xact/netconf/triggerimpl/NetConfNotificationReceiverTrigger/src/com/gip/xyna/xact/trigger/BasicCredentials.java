@@ -32,6 +32,7 @@ public class BasicCredentials {
   
   private List<SshjKeyAlgorithm> keyAlgorithms;
   private List<SshjMacFactory> macFactories;
+  private List<SshjCipherFactory> cipherFactories;
   
   
   public void setUserame(String username) {
@@ -91,6 +92,16 @@ public class BasicCredentials {
   
   public void setMacFactories(List<SshjMacFactory> macFactories) {
     this.macFactories = macFactories;
+  }
+
+
+  public List<SshjCipherFactory> getCipherFactories() {
+    return cipherFactories;
+  }
+
+
+  public void setCipherFactories(List<SshjCipherFactory> cipherFactories) {
+    this.cipherFactories = cipherFactories;
   };
 
 }
