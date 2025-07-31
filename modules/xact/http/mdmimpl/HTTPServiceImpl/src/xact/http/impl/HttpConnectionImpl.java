@@ -271,17 +271,17 @@ public class HttpConnectionImpl {
       boolean success = false;
       if (!connection.isOpen()) {
         do {
-        try {
-          // establish connection based on its route info
-          conManager.connect(connection, route, (int)timeout.getTime(), context);
-          // and mark it as route complete
-          conManager.routeComplete(connection, route, context);
-          success = true;
-        } catch( IOException e) {
-          usedRetries++;
-          exception = e;
-        }
-        } while(usedRetries < retries);
+          try {
+            // establish connection based on its route info
+            conManager.connect(connection, route, (int) timeout.getTime(), context);
+            // and mark it as route complete
+            conManager.routeComplete(connection, route, context);
+            success = true;
+          } catch (IOException e) {
+            usedRetries++;
+            exception = e;
+          }
+        } while (!success && usedRetries < retries);
         
         if(!success) {
           throw new ConnectException(exception);
