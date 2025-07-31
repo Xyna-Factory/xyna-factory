@@ -625,6 +625,22 @@ public class RepositoryInteraction {
   }
 
 
+
+  private boolean isWorkspaceConfig(String pathInRepo, String repository) {
+    RepositoryConnectionStorable storable = getRepoConnectionStorable(pathInRepo, repository);
+    if (storable == null) {
+      if (logger.isDebugEnabled()) {
+        logger.debug("Could not find entry for repository " + repository + " matching RepoPath: " + pathInRepo);
+      }
+      return false;
+    }   
+
+    String subPath = storable.getSubpath();
+    boolean isWorkspaceXml = pathInRepo.equals(subPath + "/" + RepositoryManagementImpl.WORKSPACE_XML);
+    boolean isInConfigFolder = pathInRepo.startsWith(subPath + "/" + RepositoryManagementImpl.CONFIG + "/");
+    return  isWorkspaceXml || isInConfigFolder; 
+  }
+
   /**
    * returns null if repoPath does not belong to an XMOM object
    */
@@ -787,6 +803,12 @@ public class RepositoryInteraction {
       if (logger.isDebugEnabled()) {
         logger.debug("Match localEntry: " + entry + " with remote entry: " + remoteEntry);
         logger.debug("  " + entry.getNewPath() + " -- old: " + entry.getOldPath());
+      }
+
+      if(isWorkspaceConfig(repoPath, container.repository)) {
+        container.revert.add(repoPath);
+        container.pull.add(repoPath);
+        continue;
       }
 
       boolean saved_equals_deployed = false;
