@@ -2077,7 +2077,6 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
           link.setPathInSVN(String.valueOf(params.get(REPOSITORY_ACCES_KEY_PATH))); 
           link.setSVNServerNameIP(String.valueOf(params.get(REPOSITORY_ACCES_KEY_SERVER_NAME)));
           link.setUsername(String.valueOf(params.get(REPOSITORY_ACCES_KEY_USER)));
-          link.setPassword(String.valueOf(params.get(REPOSITORY_ACCES_KEY_PASSWORD)));
         }
         
         details.setRepositoryLink(link);
