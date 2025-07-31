@@ -22,15 +22,8 @@ package com.gip.xyna.xact.NetConfNotificationReceiverSharedLib;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
-import com.gip.xyna.CentralFactoryLogging;
-
-
 
 public class NetConfNotificationReceiverSharedLib {
-
-  private static Logger logger = CentralFactoryLogging.getLogger(NetConfNotificationReceiverSharedLib.class);
 
   private static long TotalNetConfConnections;
 

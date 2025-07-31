@@ -19,8 +19,6 @@
 package com.gip.xyna.xact.trigger;
 
 
-
-import java.time.Clock;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Iterator;
@@ -34,18 +32,15 @@ import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xact.NetConfNotificationReceiverSharedLib.NetConfNotificationReceiverSharedLib;
+import com.gip.xyna.xact.trigger.NetConfConnection.HostKeyAuthMode;
 import com.gip.xyna.xdev.xfractmod.xmdm.TriggerConnection;
 
 
 public class NetConfNotificationReceiverTriggerConnection extends TriggerConnection {
 
-  //private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
   private static Logger logger = CentralFactoryLogging.getLogger(NetConfNotificationReceiverTriggerConnection.class);
-
-
-  public NetConfNotificationReceiverTriggerConnection() {
-  }
 
   private String client_hello = ""
       + "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -116,86 +111,90 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
        + "]]>]]>";
 
   private String delimiter_regex="([\\w\\W].*?)]]>]]>";
+  private Pattern delimiter_pattern = Pattern.compile(delimiter_regex);
+      
   private String delimiter_serialnum_1="(<nc:rpc-reply[\\w\\W].*?message-id=\"201\"[\\w\\W].*?<\\/nc:rpc-reply>)";
+  private Pattern pattern_serialnum_1 = Pattern.compile(delimiter_serialnum_1);
+  
   private String delimiter_serialnum_2="[\\w\\W].*?<serial-num>([\\w\\W].*?)<\\/serial-num>[\\w\\W].*?";
+  private Pattern pattern_serialnum_2 = Pattern.compile(delimiter_serialnum_2);
+  
   private String delimiter_capinterleave="<hello[\\w\\W].*?(urn:ietf:params:netconf:capability:interleave:1.0)[\\w\\W].*?<\\/hello>";
+  private Pattern pattern_capinterleave = Pattern.compile(delimiter_capinterleave);
+  
   private String delimiter_neconfhello="<hello[\\w\\W].*?<\\/hello>";
+  private Pattern pattern_netconfhello = Pattern.compile(delimiter_neconfhello);
 
   private String delimiter_SubscriptionWithStartTime="(<rpc-reply[\\w\\W].*?message-id=\"110\"[\\w\\W].*?<\\/rpc-reply>)";
+  private Pattern pattern_SubscriptionWithStartTime = Pattern.compile(delimiter_SubscriptionWithStartTime);
+      
   private String delimiter_SubscriptionWithStartTime_Okay="(<rpc-reply[\\w\\W].*?<ok\\/>[\\w\\W].*?rpc-reply>)";
+  private Pattern pattern_SubscriptionWithStartTime_Okay = Pattern.compile(delimiter_SubscriptionWithStartTime_Okay);
 
-  private String buffer;
-  private boolean clearbuffer;
-  private long buffer_updatetime;
+  private StringBuilder buffer;
   private long command_delay_before;
   private long command_delay_after;
   private long buffer_maxlength;
-  private long buffer_updatetime_offset;
-  private long whilewait;
   private LinkedList<String> message;
   private LinkedList<String> internal_message;
 
-  private NetConfConnection NetConfConn;
+  private NetConfConnection netConfConn;
 
   private String username;
   private String password;
-  private String filter_targetWF;
-  private String ConnectionID;
+  private String connectionID;
   private String RD_IP;
-  private String HostKeyAuthenticationMode;
+  private HostKeyAuthMode hostKeyAuthenticationMode;
 
   private long replayinminutes;
 
-  private boolean Feature_CapInterleave;
-  private String RDHash;
-  private boolean ConnectionInit;
-  private boolean ReplayInit;
+  private boolean feature_CapInterleave;
+  private String rdHash;
+  private boolean connectionInit;
+  private boolean replayInit;
+  private ConnectionList connectionList;
+  private ConnectionQueue connectionQueue;
+  
 
-
-  public NetConfNotificationReceiverTriggerConnection(String newConnectionID, String filter_targetWF, String OldConnectionID) {
-
+  public NetConfNotificationReceiverTriggerConnection(String newConnectionID, String OldConnectionID,
+                                                      BasicCredentials cred, ConnectionList connectionList,
+                                                      ConnectionQueue connectionQueue) {
     try {
-      this.cleanupOldConnectionStep1(OldConnectionID); // Only one connection per RD_IP allowed (e.g. uncontrolled reboot of RD)
+      this.cleanupOldConnectionStep1(OldConnectionID);
+      this.connectionList = connectionList;
+      this.connectionID = newConnectionID;
 
-      this.ConnectionID = newConnectionID;
+      this.username = cred.getUsername();
+      this.password = cred.getPassword();
+      this.hostKeyAuthenticationMode = cred.getHostKeyAuthenticationMode();
+      this.replayinminutes = cred.getReplayInMinutes();
 
-      this.username = NetConfNotificationReceiverCredentials.getUserame();
-      this.password = NetConfNotificationReceiverCredentials.getPassword();
-      this.HostKeyAuthenticationMode = NetConfNotificationReceiverCredentials.getHostKeyAuthenticationMode();
-      this.replayinminutes = NetConfNotificationReceiverCredentials.getReplayInMinutes();
-      this.filter_targetWF = filter_targetWF;
-
-      this.Feature_CapInterleave = true;
-      this.ConnectionInit = true;
-      this.ReplayInit = false; //Default-Value before subscription
+      this.feature_CapInterleave = true;
+      this.connectionInit = true;
+      this.replayInit = false; //Default-Value before subscription
       String UUID_Hash = UUID.randomUUID().toString().replace("-", "");
-      this.RDHash = UUID_Hash;
+      this.rdHash = UUID_Hash;
 
-      this.clearbuffer = true;
-      this.buffer_updatetime_offset = NetConfNotificationReceiverStartParameter.buffer_updatetime_offset;
-      this.whilewait = NetConfNotificationReceiverStartParameter.PushDelimiter_RequestInterval;
       this.buffer_maxlength = NetConfNotificationReceiverStartParameter.buffer_maxlength;
 
       this.command_delay_before = NetConfNotificationReceiverStartParameter.command_delay_before;
       this.command_delay_after = NetConfNotificationReceiverStartParameter.command_delay_after;
-      this.buffer = "";
+      this.buffer = new StringBuilder("");
       this.message = new LinkedList<String>();
       this.internal_message = new LinkedList<String>();
 
-      this.NetConfConn = new NetConfConnection(this.ConnectionID, this.username, this.password, this.HostKeyAuthenticationMode);
+      this.netConfConn = new NetConfConnection(this.connectionID, this.username, this.password, this.hostKeyAuthenticationMode,
+                                               this.connectionList);
+      this.RD_IP = this.netConfConn.getIP();
+      this.open_connection_ssh(cred);
+      connectionList.addConnection(this.connectionID, this);
 
-      this.RD_IP = this.NetConfConn.getIP();
+      NetConfNotificationReceiverSharedLib.addSharedNetConfConnectionID(this.RD_IP, this.connectionID);
 
-      this.open_connection_ssh();
-
-      ConnectionList.addConnection(this.ConnectionID, this);
-
-      NetConfNotificationReceiverSharedLib.addSharedNetConfConnectionID(this.RD_IP, this.ConnectionID);
-
-      this.cleanupOldConnectionStep2(OldConnectionID); // Only one connection per RD_IP allowed (e.g. uncontrolled reboot of RD)
+      this.cleanupOldConnectionStep2(OldConnectionID);
 
     } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: " + "Initialization of NetConfNotificationReceiverTriggerConnection failed", t);
+      logger.warn("NetConfNotificationReceiver: Initialization of NetConfNotificationReceiverTriggerConnection failed", t);
       this.close_connection();
     }
 
@@ -204,20 +203,18 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
 
   private void internalMessageProcessing_NetConfHello(String element) {
     try {
-      Pattern pattern_netconfhello = Pattern.compile(delimiter_neconfhello);
       Matcher matcher_netconfhello = pattern_netconfhello.matcher(element);
       if (matcher_netconfhello.matches()) {
-        Pattern pattern = Pattern.compile(delimiter_capinterleave);
-        Matcher matcher = pattern.matcher(element);
+        Matcher matcher = pattern_capinterleave.matcher(element);
         if (matcher.matches()) {
-          this.Feature_CapInterleave = true;
-          NetConfNotificationReceiverSharedLib.addRDHash(this.RDHash, this.RD_IP);
+          this.feature_CapInterleave = true;
+          NetConfNotificationReceiverSharedLib.addRDHash(this.rdHash, this.RD_IP);
           if (logger.isDebugEnabled()) {
             logger.debug("NetConfNotificationReceiver: Feature_CapInterleave: true");
           }
         } else {
-          this.Feature_CapInterleave = false;
-          this.ConnectionInit = false;
+          this.feature_CapInterleave = false;
+          this.connectionInit = false;
           if (logger.isDebugEnabled()) {
             logger.debug("NetConfNotificationReceiver: Feature_CapInterleave: false");
           }
@@ -231,25 +228,23 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
 
   private void internalMessageProcessing_SerialNum(String element) {
     try {
-      String message_element_hash = this.RDHash;
-      Pattern pattern_serialnum_1 = Pattern.compile(delimiter_serialnum_1);
+      String message_element_hash = this.rdHash;
       Matcher matcher_serialnum_1 = pattern_serialnum_1.matcher(element);
       if (matcher_serialnum_1.find()) {
-        Pattern pattern_serialnum_2 = Pattern.compile(delimiter_serialnum_2);
         Matcher matcher_serialnum_2 = pattern_serialnum_2.matcher(matcher_serialnum_1.group(1));
         String message_element = "";
         while (matcher_serialnum_2.find()) {
           message_element = message_element + matcher_serialnum_2.group(1);
         }
-        if (NetConfNotificationReceiverSharedLib.containsRDHashfromRDID(this.RDHash)) {
-          NetConfNotificationReceiverSharedLib.removeRDHash(this.RDHash);
+        if (NetConfNotificationReceiverSharedLib.containsRDHashfromRDID(this.rdHash)) {
+          NetConfNotificationReceiverSharedLib.removeRDHash(this.rdHash);
         }
         message_element_hash = Long.toHexString(message_element.hashCode());
-        this.RDHash = message_element_hash;
-        if (this.Feature_CapInterleave) {
-          NetConfNotificationReceiverSharedLib.addRDHash(this.RDHash, this.RD_IP);
+        this.rdHash = message_element_hash;
+        if (this.feature_CapInterleave) {
+          NetConfNotificationReceiverSharedLib.addRDHash(this.rdHash, this.RD_IP);
         }
-        this.ConnectionInit = false;
+        this.connectionInit = false;
         if (logger.isDebugEnabled()) {
           logger.debug("NetConfNotificationReceiver: " + "SerialString: " + message_element + " HASH: " + message_element_hash);
         }
@@ -266,7 +261,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
       for (Iterator<String> iter = ListMessageID.iterator(); iter.hasNext();) {
         String MessageID = iter.next();
         if (element.contains(MessageID)) {
-          NetConfNotificationReceiverSharedLib.addInputQueueNetConfMessageElement(this.ConnectionID, this.RDHash, MessageID, element, true);
+          NetConfNotificationReceiverSharedLib.addInputQueueNetConfMessageElement(this.connectionID, this.rdHash, MessageID, element, true);
           NetConfNotificationReceiverSharedLib.removeInputQueueMessageID(MessageID);
           if (logger.isDebugEnabled()) {
             logger.debug("NetConfNotificationReceiver: " + "Received MessageID: " + MessageID);
@@ -281,18 +276,16 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
 
   private void internalMessageProcessing_SubscriptionWithStartTime(String element) {
     try {
-      Pattern pattern_SubscriptionWithStartTime = Pattern.compile(delimiter_SubscriptionWithStartTime);
       Matcher matcher_SubscriptionWithStartTime = pattern_SubscriptionWithStartTime.matcher(element);
       if (matcher_SubscriptionWithStartTime.find()) {
-        Pattern pattern_SubscriptionWithStartTime_Okay = Pattern.compile(delimiter_SubscriptionWithStartTime_Okay);
         Matcher matcher_SubscriptionWithStartTime_Okay = pattern_SubscriptionWithStartTime_Okay.matcher(matcher_SubscriptionWithStartTime.group(1));
         if (matcher_SubscriptionWithStartTime_Okay.find()) {
-          this.ReplayInit = false;
+          this.replayInit = false;
           if (logger.isDebugEnabled()) {
             logger.debug("NetConfNotificationReceiver: Replay successful");
           }
         } else {
-          this.ReplayInit = false;
+          this.replayInit = false;
           logger.warn("NetConfNotificationReceiver: Replay failed for "+this.RD_IP+" - Retry without replay");
           this.command_send(subscription_notification, 0, 0);
         }
@@ -306,11 +299,11 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
     try {
       for (Iterator<String> iter = this.internal_message.iterator(); iter.hasNext();) {
         String element = iter.next();
-        if (this.ConnectionInit) {
+        if (this.connectionInit) {
           internalMessageProcessing_NetConfHello(element);
           internalMessageProcessing_SerialNum(element);
         }
-        if (this.ReplayInit) {
+        if (this.replayInit) {
           internalMessageProcessing_SubscriptionWithStartTime(element);
         }
         internalMessageProcessing_NetConfOperationRD(element);
@@ -324,61 +317,21 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
 
   private void push_delimiter() {
     try {
-      while (((this.buffer_updatetime + buffer_updatetime_offset) > System.currentTimeMillis())
-          & (buffer.length() < this.buffer_maxlength)) {
-        try {
-          Thread.sleep(this.whilewait);
-        } catch (Exception ex) {
-          logger.warn("NetConfNotificationReceiver: push_delimiter - sleep failed", ex);
-        }
-      } ;
-
-      Pattern pattern = Pattern.compile(delimiter_regex);
-      Matcher matcher = pattern.matcher(this.buffer);
-
+      Matcher matcher = delimiter_pattern.matcher(this.buffer);
       while (matcher.find()) {
         String message_element = matcher.group(1);
         this.message.add(message_element);
-        ConnectionQueue.push(this);
+        connectionQueue.push(this);
         this.internal_message.add(message_element);
       }
-      this.buffer = "";
-      this.clearbuffer = true;
-
-      Thread t = new Thread() {
-
-        public void run() {
-          internalMessageProcessing();
-        }
-      };
+      this.buffer.setLength(0);
+      Thread t = new Thread(this::internalMessageProcessing);
       t.start();
-
     } catch (Throwable t) {
       logger.warn("NetConfNotificationReceiver: push_delimiter failed", t);
     }
   }
 
-
-  /*
-  private void push_timer()
-  {
-      try {
-          while( ((this.buffer_updatetime+buffer_updatetime_offset) > System.currentTimeMillis()) & (buffer.length()<this.buffer_maxlength) ) {
-              try {
-                  Thread.sleep(this.whilewait);
-              } catch(Exception ex) {
-                  logger.warn( "NetConfNotificationReceiver: push_timer - sleep failed", ex);
-              }
-          };
-          message.add(buffer);
-          this.buffer="";
-          this.clearbuffer=true;
-          ConnectionQueue.push(this);
-      } catch(Throwable t) {
-          logger.warn( "NetConfNotificationReceiver: "+" push_timer failed", t);
-      }    
-  }
-  */
 
   public String getIP() {
     String IP = "";
@@ -394,7 +347,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
   public String getID() {
     String ID = "";
     try {
-      ID = this.RDHash;
+      ID = this.rdHash;
     } catch (Throwable t) {
       logger.warn("NetConfNotificationReceiver: getID failed", t);
     }
@@ -405,7 +358,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
   public String getConnectionID() {
     String ID = "";
     try {
-      ID = this.ConnectionID;
+      ID = this.connectionID;
     } catch (Throwable t) {
       logger.warn("NetConfNotificationReceiver: getConnectionID failed", t);
     }
@@ -435,34 +388,20 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
   };
 
 
-  public String getFilterTargetWF() {
-    String filter_targetWF = "";
-    try {
-      filter_targetWF = this.filter_targetWF;
-    } catch (Throwable t) {
-      logger.warn("NetConfNotificationReceiver: getFilterTargetWF failed", t);
-    }
-    return filter_targetWF;
-  };
-
-
   private void listener() {
     try {
       int read;
-      while ((read = this.NetConfConn.read()) > -1) {
-        if (this.clearbuffer) {
-          this.clearbuffer = false;
-          Thread t = new Thread() {
-
-            public void run() {
-              //push_timer();
-              push_delimiter();
-            };
-          };
-          t.start();
-        } ;
-        this.buffer = this.buffer + (char) read;
-        this.buffer_updatetime = System.currentTimeMillis();
+      MessageEndCursor cursor = new MessageEndCursor();
+      while ((read = this.netConfConn.read()) > -1) {
+        char readChar = (char) read;
+        this.buffer.append(readChar);
+        cursor.registerChar(readChar);
+        if (cursor.isMessageEndTokenFullyMatched()) {
+          push_delimiter();
+        }
+        if (buffer.length() > this.buffer_maxlength) {
+          this.buffer.setLength(0);
+        }
       }
     } catch (Throwable t) {
       logger.warn("NetConfNotificationReceiver: listener failed", t);
@@ -472,12 +411,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
 
   private void startListener() {
     try {
-      Thread t = new Thread() {
-
-        public void run() {
-          listener();
-        };
-      };
+      Thread t = new Thread(this::listener);
       t.start();
     } catch (Throwable t) {
       logger.warn("NetConfNotificationReceiver: startListener failed", t);
@@ -491,7 +425,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
         logger.debug("NetConfNotificationReceiver: " + "SENDING: " + NETCONF_Command);
       }
       Thread.sleep(delay_before);
-      this.NetConfConn.send(NETCONF_Command);
+      this.netConfConn.send(NETCONF_Command);
       Thread.sleep(delay_after);
     } catch (Throwable t) {
       logger.warn("NetConfNotificationReceiver: command_send failed", t);
@@ -509,51 +443,48 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
   }
 
 
-  private void open_connection_ssh() throws Throwable {
-    this.NetConfConn.openNetConfConnection();
+  private void open_connection_ssh(BasicCredentials cred) throws Throwable {
+    this.netConfConn.openNetConfConnection(cred);
     this.command_send(client_hello, 0, 0);
     this.startListener();
     this.command_send(get_serial_num, this.command_delay_before, this.command_delay_after);
     if (replayinminutes==0) {
-      this.ReplayInit = false;
+      this.replayInit = false;
       this.command_send(subscription_notification, 0, 0);
     } else {
-      this.ReplayInit = true;
+      this.replayInit = true;
       String subscription_notification_with_starttime = getSubscriptionNotificationWithStarttime();
       this.command_send(subscription_notification_with_starttime, 0, 0);
     }
   };
 
   private String getSubscriptionNotificationWithStarttime() throws Throwable {
-    
-    Clock cl = Clock.systemUTC();
     Instant lt = Instant.now();
     long minutes = replayinminutes;
     Instant tm = lt.minus(minutes, ChronoUnit.MINUTES);
     Instant tf = tm.truncatedTo(ChronoUnit.SECONDS);
     String tstr = tf.toString();
     String return_subscription_notification = subscription_notification_placeholder.replace("PLACEHOLDER",tstr);
-    
     return return_subscription_notification;
   }
 
   public void close_connection() {
     try {
       this.command_send(client_goodbye, 0, this.command_delay_after);
-      this.NetConfConn.closeNetconfConnection();
+      this.netConfConn.closeNetconfConnection();
     } catch (Throwable t) {
       logger.warn("NetConfNotificationReceiver: close_connection (NETCONF) failed", t);
     }
     try {
-      this.NetConfConn.closeSocket();
+      this.netConfConn.closeSocket();
     } catch (Throwable t) {
       logger.warn("NetConfNotificationReceiver: close_connection (Socket) failed", t);
     }
     try {
-      NetConfNotificationReceiverSharedLib.removeRDHash(this.RDHash);
+      NetConfNotificationReceiverSharedLib.removeRDHash(this.rdHash);
       NetConfNotificationReceiverSharedLib.removeSharedNetConfConnectionID(this.RD_IP);
-      ConnectionList.removeConnection(this.ConnectionID);
-      ConnectionList.release(this.ConnectionID);
+      connectionList.removeConnection(this.connectionID);
+      connectionList.release(this.connectionID);
     } catch (Throwable t) {
       logger.warn("NetConfNotificationReceiver: Remove entries in close_connection failed", t);
     }
@@ -563,8 +494,8 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
   private void cleanupOldConnectionStep1(String OldConnectionID) {
     try {
       if (!OldConnectionID.isEmpty()) {
-        NetConfNotificationReceiverTriggerConnection OldConn = ConnectionList.getConnection(OldConnectionID);
-        NetConfNotificationReceiverSharedLib.removeRDHash(OldConn.RDHash);
+        NetConfNotificationReceiverTriggerConnection OldConn = connectionList.getConnection(OldConnectionID);
+        NetConfNotificationReceiverSharedLib.removeRDHash(OldConn.rdHash);
       }
     } catch (Throwable t) {
       logger.warn("NetConfNotificationReceiver: cleanup_oldconnection failed", t);
@@ -575,7 +506,7 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
   private void cleanupOldConnectionStep2(String OldConnectionID) {
     try {
       if (!OldConnectionID.isEmpty()) {
-        NetConfNotificationReceiverTriggerConnection OldConn = ConnectionList.getConnection(OldConnectionID);
+        NetConfNotificationReceiverTriggerConnection OldConn = connectionList.getConnection(OldConnectionID);
         OldConn.cleanup_connection();
       }
     } catch (Throwable t) {
@@ -586,18 +517,18 @@ public class NetConfNotificationReceiverTriggerConnection extends TriggerConnect
 
   public void cleanup_connection() {
     try {
-      this.NetConfConn.closeNetconfConnection();
+      this.netConfConn.closeNetconfConnection();
     } catch (Throwable t) {
       logger.warn("NetConfNotificationReceiver: cleanup_connection (NETCONF) failed", t);
     }
     try {
-      this.NetConfConn.closeSocket();
+      this.netConfConn.closeSocket();
     } catch (Throwable t) {
       logger.warn("NetConfNotificationReceiver: cleanup_connection (Socket) failed", t);
     }
     try {
-      ConnectionList.removeConnection(this.ConnectionID);
-      ConnectionList.release(this.ConnectionID);
+      connectionList.removeConnection(this.connectionID);
+      connectionList.release(this.connectionID);
     } catch (Throwable t) {
       logger.warn("NetConfNotificationReceiver: Remove entries in cleanup_connection failed", t);
     }
