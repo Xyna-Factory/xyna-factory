@@ -8,6 +8,7 @@
     <Operation IsStatic="true" Label="AES Encrypt" Name="aESEncrypt">
       <Input>
         <Data ID="5" Label="Original String" ReferenceName="Text" ReferencePath="base" VariableName="originalStringIn"/>
+        <Data ID="9" Label="Secure Storage Key for Secret" ReferenceName="Text" ReferencePath="base" VariableName="secureStorageKey"/>
       </Input>
       <Output>
         <Data ID="6" Label="Encrypted String" ReferenceName="Text" ReferencePath="base" VariableName="encryptedStringOut"/>
@@ -15,13 +16,18 @@
       <Throws>
         <Exception ID="4" Label="AES Crypto Exception" ReferenceName="AESCryptoException" ReferencePath="xint.crypto.exceptions" VariableName="aESCryptoException4"/>
       </Throws>
+      <Meta>
+        <Documentation>Utility to AES encrypts a string using a secret stored in the secure storage.
+The secure storage destination is "crypto.aes" and the provided key points to the encryption secret.</Documentation>
+      </Meta>
       <SourceCode>
-        <CodeSnippet Type="Java">return AESCryptoImpl.aESEncrypt(originalStringIn);</CodeSnippet>
+        <CodeSnippet Type="Java">return AESCryptoImpl.aESEncrypt(originalStringIn, secureStorageKey);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="AES Decrypt" Name="aESDecrypt">
       <Input>
         <Data ID="1" Label="Encrypted String" ReferenceName="Text" ReferencePath="base" VariableName="encryptedStringIn"/>
+        <Data ID="10" Label="Secure Storage Key for Secret" ReferenceName="Text" ReferencePath="base" VariableName="secureStorageKey2"/>
       </Input>
       <Output>
         <Data ID="2" Label="Original String" ReferenceName="Text" ReferencePath="base" VariableName="originalStringOut"/>
@@ -29,8 +35,12 @@
       <Throws>
         <Exception ID="3" Label="AES Crypto Exception" ReferenceName="AESCryptoException" ReferencePath="xint.crypto.exceptions" VariableName="aESCryptoException3"/>
       </Throws>
+      <Meta>
+        <Documentation>Utility to AES decrypts a string using a secret stored in the secure storage.
+The secure storage destination is "crypto.aes" and the provided key points to the decryption secret.</Documentation>
+      </Meta>
       <SourceCode>
-        <CodeSnippet Type="Java">return AESCryptoImpl.aESDecrypt(encryptedStringIn);</CodeSnippet>
+        <CodeSnippet Type="Java">return AESCryptoImpl.aESDecrypt(encryptedStringIn, secureStorageKey2);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

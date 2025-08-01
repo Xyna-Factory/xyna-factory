@@ -69,6 +69,7 @@ import java.util.concurrent.ConcurrentMap;
 import org.apache.log4j.Logger;
 import xint.crypto.exceptions.AESCryptoException;
 import xint.crypto.AESCryptoServiceOperation;
+import com.gip.xyna.XynaFactory;
 
 import java.security.MessageDigest;
 import javax.crypto.spec.SecretKeySpec;
@@ -84,118 +85,126 @@ import javax.crypto.BadPaddingException;
 
 
 public class AESCryptoServiceOperationImpl implements ExtendedDeploymentTask, AESCryptoServiceOperation {
-  public void onDeployment() throws XynaException {
-    // TODO do something on deployment, if required
-    // This is executed again on each classloader-reload, that is each
-    // time a dependent object is redeployed, for example a type of an input parameter.
-  }
+    private byte[] key;
+    private MessageDigest sha = null;
+    private SecretKeySpec secretKey;
+    private String secret = "";
+    private static Logger logger = Logger.getLogger(AESCryptoServiceOperationImpl.class);
 
-  public void onUndeployment() throws XynaException {
-    // TODO do something on undeployment, if required
-    // This is executed again on each classloader-unload, that is each
-    // time a dependent object is redeployed, for example a type of an input parameter.
-  }
-
-  public Long getOnUnDeploymentTimeout() {
-    // The (un)deployment runs in its own thread. The service may define a timeout
-    // in milliseconds, after which Thread.interrupt is called on this thread.
-    // If null is returned, the default timeout (defined by XynaProperty xyna.xdev.xfractmod.xmdm.deploymenthandler.timeout) will be used.
-    return null;
-  }
-
-  public BehaviorAfterOnUnDeploymentTimeout getBehaviorAfterOnUnDeploymentTimeout() {
-    // Defines the behavior of the (un)deployment after reaching the timeout and if this service ignores a Thread.interrupt.
-    // - BehaviorAfterOnUnDeploymentTimeout.EXCEPTION: Deployment will be aborted, while undeployment will log the exception and NOT abort.
-    // - BehaviorAfterOnUnDeploymentTimeout.IGNORE: (Un)Deployment will be continued in another thread asynchronously.
-    // - BehaviorAfterOnUnDeploymentTimeout.KILLTHREAD: (Un)Deployment will be continued after calling Thread.stop on the thread.
-    //   executing the (Un)Deployment.
-    // If null is returned, the factory default <IGNORE> will be used.
-    return null;
-  }
-
-  public Text aESDecrypt(Text encryptedStringIn) throws AESCryptoException {
-    byte[] key;
-    MessageDigest sha = null;
-    SecretKeySpec secretKey;
-    String strToDecrypt = encryptedStringIn.getText();
-    Text original_string = new Text();
-
-    String property = "xprv.geko.crypto.aes_crypto_key";
-    String myKey = com.gip.xyna.XynaFactory.getPortalInstance().getFactoryManagementPortal().getProperty(property);
-
-    try {
-        key = myKey.getBytes("UTF-8");
-        sha = MessageDigest.getInstance("SHA-1");
-        key = sha.digest(key);
-        key = Arrays.copyOf(key, 16); 
-        secretKey = new SecretKeySpec(key, "AES");
-        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, secretKey);
-        String decryptedstr = new String(cipher.doFinal(java.util.Base64.getDecoder().decode(strToDecrypt)));
-        original_string.setText(decryptedstr);
-    } 
-    catch (NoSuchAlgorithmException e) {
-        throw new AESCryptoException("AES Decrypt: No such algorithm");
-    } 
-    catch (UnsupportedEncodingException e) {
-        throw new AESCryptoException("AES Decrypt: Unsupported encoding");
-    }
-    catch (NoSuchPaddingException e) {
-        throw new AESCryptoException("AES Decrypt: No such padding");
-    }
-    catch (InvalidKeyException e) {
-        throw new AESCryptoException("AES Decrypt: Invalid Key");
-    }
-    catch (IllegalBlockSizeException e) {
-        throw new AESCryptoException("AES Decrypt: Illegal block size");
-    }
-    catch (BadPaddingException e) {
-        throw new AESCryptoException("AES Decrypt: Bad padding");
+    public void onDeployment() throws XynaException {
+	// TODO do something on deployment, if required
+	// This is executed again on each classloader-reload, that is each
+	// time a dependent object is redeployed, for example a type of an input parameter.
     }
 
-    return original_string;
-  }
-
-  public Text aESEncrypt(Text originalStringIn) throws AESCryptoException {
-    byte[] key;
-    MessageDigest sha = null;
-    SecretKeySpec secretKey;
-    String strToEncrypt = originalStringIn.getText();
-    Text encrypted_string = new Text();
-
-    String property = "xprv.geko.crypto.aes_crypto_key";
-    String myKey = com.gip.xyna.XynaFactory.getPortalInstance().getFactoryManagementPortal().getProperty(property);
-
-    try {
-        key = myKey.getBytes("UTF-8");
-        sha = java.security.MessageDigest.getInstance("SHA-1");
-        key = sha.digest(key);
-        key = Arrays.copyOf(key, 16); 
-        secretKey = new SecretKeySpec(key, "AES");
-        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-        encrypted_string.setText(Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes("UTF-8"))));
-    } 
-    catch (NoSuchAlgorithmException e) {
-        throw new AESCryptoException("AES Encrypt: No such algorithm");
-    } 
-    catch (UnsupportedEncodingException e) {
-        throw new AESCryptoException("AES Encrypt: Unsupported encoding");
-    }
-    catch (NoSuchPaddingException e) {
-        throw new AESCryptoException("AES Encrypt: No such padding");
-    }
-    catch (InvalidKeyException e) {
-        throw new AESCryptoException("AES Encrypt: Invalid Key");
-    }
-    catch (IllegalBlockSizeException e) {
-        throw new AESCryptoException("AES Encrypt: Illegal block size");
-    }
-    catch (BadPaddingException e) {
-        throw new AESCryptoException("AES Encrypt: Bad padding");
+    public void onUndeployment() throws XynaException {
+	// TODO do something on undeployment, if required
+	// This is executed again on each classloader-unload, that is each
+	// time a dependent object is redeployed, for example a type of an input parameter.
     }
 
-    return encrypted_string;
-  }
+    public Long getOnUnDeploymentTimeout() {
+	// The (un)deployment runs in its own thread. The service may define a timeout
+	// in milliseconds, after which Thread.interrupt is called on this thread.
+	// If null is returned, the default timeout (defined by XynaProperty xyna.xdev.xfractmod.xmdm.deploymenthandler.timeout) will be used.
+	return null;
+    }
 
+    public BehaviorAfterOnUnDeploymentTimeout getBehaviorAfterOnUnDeploymentTimeout() {
+	// Defines the behavior of the (un)deployment after reaching the timeout and if this service ignores a Thread.interrupt.
+	// - BehaviorAfterOnUnDeploymentTimeout.EXCEPTION: Deployment will be aborted, while undeployment will log the exception and NOT abort.
+	// - BehaviorAfterOnUnDeploymentTimeout.IGNORE: (Un)Deployment will be continued in another thread asynchronously.
+	// - BehaviorAfterOnUnDeploymentTimeout.KILLTHREAD: (Un)Deployment will be continued after calling Thread.stop on the thread.
+	//   executing the (Un)Deployment.
+	// If null is returned, the factory default <IGNORE> will be used.
+	return null;
+    }
+
+    public Text aESDecrypt(Text encryptedStringIn, Text secureStorageKey) throws AESCryptoException {
+
+	String strToDecrypt = encryptedStringIn.getText();
+	Text original_string = new Text();
+	retrieveAESSecret(secureStorageKey.getText());
+
+	try {
+	    key = secret.getBytes("UTF-8");
+	    sha = MessageDigest.getInstance("SHA-1");
+	    key = sha.digest(key);
+	    key = Arrays.copyOf(key, 16); 
+	    secretKey = new SecretKeySpec(key, "AES");
+	    Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+	    cipher.init(Cipher.DECRYPT_MODE, secretKey);
+	    String decryptedstr = new String(cipher.doFinal(java.util.Base64.getDecoder().decode(strToDecrypt)));
+	    original_string.setText(decryptedstr);
+	} 
+	catch (NoSuchAlgorithmException e) {
+	    throw new AESCryptoException("AES Decrypt: No such algorithm");
+	} 
+	catch (UnsupportedEncodingException e) {
+	    throw new AESCryptoException("AES Decrypt: Unsupported encoding");
+	}
+	catch (NoSuchPaddingException e) {
+	    throw new AESCryptoException("AES Decrypt: No such padding");
+	}
+	catch (InvalidKeyException e) {
+	    throw new AESCryptoException("AES Decrypt: Invalid Key");
+	}
+	catch (IllegalBlockSizeException e) {
+	    throw new AESCryptoException("AES Decrypt: Illegal block size");
+	}
+	catch (BadPaddingException e) {
+	    throw new AESCryptoException("AES Decrypt: Bad padding");
+	}
+
+	return original_string;
+    }
+
+    public Text aESEncrypt(Text originalStringIn, Text secureStorageKey2) throws AESCryptoException {
+	String strToEncrypt = originalStringIn.getText();
+	Text encrypted_string = new Text();
+	retrieveAESSecret(secureStorageKey2.getText());
+
+	try {
+	    key = secret.getBytes("UTF-8");
+	    sha = java.security.MessageDigest.getInstance("SHA-1");
+	    key = sha.digest(key);
+	    key = Arrays.copyOf(key, 16); 
+	    secretKey = new SecretKeySpec(key, "AES");
+	    Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+	    cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+	    encrypted_string.setText(Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes("UTF-8"))));
+	} 
+	catch (NoSuchAlgorithmException e) {
+	    throw new AESCryptoException("AES Encrypt: No such algorithm");
+	} 
+	catch (UnsupportedEncodingException e) {
+	    throw new AESCryptoException("AES Encrypt: Unsupported encoding");
+	}
+	catch (NoSuchPaddingException e) {
+	    throw new AESCryptoException("AES Encrypt: No such padding");
+	}
+	catch (InvalidKeyException e) {
+	    throw new AESCryptoException("AES Encrypt: Invalid Key");
+	}
+	catch (IllegalBlockSizeException e) {
+	    throw new AESCryptoException("AES Encrypt: Illegal block size");
+	}
+	catch (BadPaddingException e) {
+	    throw new AESCryptoException("AES Encrypt: Bad padding");
+	}
+
+	return encrypted_string;
+    }
+
+    private void retrieveAESSecret(String location) throws AESCryptoException {
+	if(location == null || location.trim().isEmpty()){
+	    throw new AESCryptoException("AES Secret: No identifier for decryption/encryption secret provided (secure storage location \"crypto.aes\").");
+	}
+        secret = (String) XynaFactory.getInstance().getXynaMultiChannelPortal().getSecureStorage().retrieve("crypto.aes", location);
+	if(secret == null || location.trim().isEmpty()){
+	    String msg = "AES Secret: Retrieving decryption/encryption secret identified by \"" + location + "\" failed! Secret is null or empty.";
+            logger.error(msg);
+	    throw new AESCryptoException(msg);
+	}
+    }
 }
