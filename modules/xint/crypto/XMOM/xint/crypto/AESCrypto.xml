@@ -18,7 +18,9 @@
       </Throws>
       <Meta>
         <Documentation>Utility to AES encrypts a string using a secret stored in the secure storage.
-The secure storage destination is "crypto.aes" and the provided key points to the encryption secret.</Documentation>
+The secure storage destination is "crypto.aes" and the provided key points to the encryption secret.
+
+Store your secret with "./xynafactory.sh securestore -key &lt;your secure storage identifier&gt; -keytype crypto.aes -value &lt;your encryption/decryption secret&gt;"</Documentation>
       </Meta>
       <SourceCode>
         <CodeSnippet Type="Java">return AESCryptoImpl.aESEncrypt(originalStringIn, secureStorageKey);</CodeSnippet>
@@ -37,7 +39,9 @@ The secure storage destination is "crypto.aes" and the provided key points to th
       </Throws>
       <Meta>
         <Documentation>Utility to AES decrypts a string using a secret stored in the secure storage.
-The secure storage destination is "crypto.aes" and the provided key points to the decryption secret.</Documentation>
+The secure storage destination is "crypto.aes" and the provided key points to the decryption secret.
+
+Store your secret with "./xynafactory.sh securestore -key &lt;your secure storage identifier&gt; -keytype crypto.aes -value &lt;your encryption/decryption secret&gt;"</Documentation>
       </Meta>
       <SourceCode>
         <CodeSnippet Type="Java">return AESCryptoImpl.aESDecrypt(encryptedStringIn, secureStorageKey2);</CodeSnippet>
