@@ -33,10 +33,12 @@ public class TCPConnection {
 
   private Integer port;
   private ServerSocket serverSocket;
+  private ConnectionList connlist;
 
-
-  public TCPConnection(Integer port) throws Exception {
+  
+  public TCPConnection(Integer port, ConnectionList connlist) throws Exception {
     this.port = port;
+    this.connlist = connlist;
     this.serverSocket = null;
     try {
       this.serverSocket = new ServerSocket(this.port);
@@ -59,15 +61,15 @@ public class TCPConnection {
 
       SocketID = socket.getInetAddress().toString().replace("/", "") + ":" + socket.getPort() + "_" + socket.getLocalPort();
 
-      if ((ConnectionList.isBlocked(SocketID)) | (!ConnectionList.isTriggerOn())) {
+      if ((connlist.isBlocked(SocketID)) || (!connlist.isTriggerOn())) {
         socket.close();
         SocketID = SocketID+"_blocked";
       } else {
-        ConnectionList.block(SocketID, socket);
+        connlist.block(SocketID, socket);
       }
 
     } catch (Exception ex) {
-      if (ConnectionList.isTriggerOn()) {
+      if (connlist.isTriggerOn()) {
         logger.warn("NetConfNotificationReceiver: Socket accept failed", ex);
       }
     }
