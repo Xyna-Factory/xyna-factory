@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="DEVEL-00000" IsAbstract="false" Label="AES Crypto Exception" TypeName="AESCryptoException" TypePath="xint.crypto.exceptions">
+    <Data Label="Message" VariableName="_message">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <MessageText Language="DE">%0%</MessageText>
+    <MessageText Language="EN">%0%</MessageText>
+  </ExceptionType>
+</ExceptionStore>

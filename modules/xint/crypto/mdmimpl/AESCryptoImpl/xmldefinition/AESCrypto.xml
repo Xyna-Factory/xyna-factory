@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="AES Crypto" TypeName="AESCrypto" TypePath="xint.crypto" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>AESCryptoImpl.jar</Libraries>
+  <Service Label="AES Crypto" TypeName="AESCrypto">
+    <Operation IsStatic="true" Label="AES Encrypt" Name="aESEncrypt">
+      <Input>
+        <Data ID="5" Label="Original String" ReferenceName="Text" ReferencePath="base" VariableName="originalStringIn"/>
+      </Input>
+      <Output>
+        <Data ID="6" Label="Encrypted String" ReferenceName="Text" ReferencePath="base" VariableName="encryptedStringOut"/>
+      </Output>
+      <Throws>
+        <Exception ID="4" Label="AES Crypto Exception" ReferenceName="AESCryptoException" ReferencePath="xint.crypto.exceptions" VariableName="aESCryptoException4"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return AESCryptoImpl.aESEncrypt(originalStringIn);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="AES Decrypt" Name="aESDecrypt">
+      <Input>
+        <Data ID="1" Label="Encrypted String" ReferenceName="Text" ReferencePath="base" VariableName="encryptedStringIn"/>
+      </Input>
+      <Output>
+        <Data ID="2" Label="Original String" ReferenceName="Text" ReferencePath="base" VariableName="originalStringOut"/>
+      </Output>
+      <Throws>
+        <Exception ID="3" Label="AES Crypto Exception" ReferenceName="AESCryptoException" ReferencePath="xint.crypto.exceptions" VariableName="aESCryptoException3"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">return AESCryptoImpl.aESDecrypt(encryptedStringIn);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
