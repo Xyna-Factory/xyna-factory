@@ -162,10 +162,6 @@ localbuild
 ${third_parties.dir}/
 
 
-!**/lib/**/mdm.jar
-!**/lib/**/serviceDefinition.jar
-!**/lib/**/serviceDefinition-javadoc.jar
-
 !installation/build/lib/*.jar
 !xynautils/install/build/lib/*.jar
 
