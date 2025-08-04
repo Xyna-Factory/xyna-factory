@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="TMF Resource Spec Annotations" TypeName="TMFResourceSpecAnnotations" TypePath="xfmg.tmf.inspect" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Resource Ref Id" VariableName="resourceRefId">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Referred Type" VariableName="referredType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>PhysicalResource, LogicalResource</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Property" VariableName="property">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Which ResourceRef property (default: "value") is mapped to the corresponding member variable? If set, the member variable name has to be "&lt;resourcename&gt;&lt;propertyname (starting upper case)&gt;", e.g. "networkElementId" is the member variable mapped to the resource "networkElement"'s property "id".</Documentation>
+    </Meta>
+  </Data>
+</DataType>

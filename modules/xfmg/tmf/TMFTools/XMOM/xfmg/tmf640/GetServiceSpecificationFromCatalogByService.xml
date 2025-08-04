@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Service Specification from Catalog by Service" TypeName="GetServiceSpecificationFromCatalogByService" TypePath="xfmg.tmf640" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Get Service Specification from Catalog by Service" Name="GetServiceSpecificationFromCatalogByService">
+    <Input>
+      <Data ID="2816" Label="Service" ReferenceName="Service" ReferencePath="tmf640.datamodel" VariableName="service2816"/>
+    </Input>
+    <Output>
+      <Data ID="2647" Label="ServiceSpecification" ReferenceName="ServiceSpecification" ReferencePath="tmf633.datamodel" VariableName="serviceSpecification2647"/>
+    </Output>
+    <Throws>
+      <Exception Label="Connect Exception" ReferenceName="ConnectException" ReferencePath="xact.http.exceptions" VariableName="connectException28042"/>
+      <Exception Label="Connection Already Closed Exception" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions" VariableName="connectionAlreadyClosedException28043"/>
+      <Exception Label="Http Exception" ReferenceName="HttpException" ReferencePath="xact.http.exceptions" VariableName="httpException28044"/>
+      <Exception Label="Timeout Exception" ReferenceName="TimeoutException" ReferencePath="xact.http.exceptions" VariableName="timeoutException28045"/>
+      <Exception Label="Unexpected HTTP Response Exception" ReferenceName="UnexpectedHTTPResponseException" ReferencePath="xact.http.exceptions" VariableName="unexpectedHTTPResponseException28046"/>
+      <Exception Label="TMF Client Request Failed" ReferenceName="TMFClientRequestFailed" ReferencePath="xfmg.tmf.util" VariableName="tMFClientRequestFailed28047"/>
+      <Exception Label="UnexpectedServiceSpecificationName" ReferenceName="UnexpectedServiceSpecificationName" ReferencePath="xfmg.tmf640.validation" VariableName="unexpectedServiceSpecificationName28048"/>
+      <Exception Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception" VariableName="validationException28049"/>
+    </Throws>
+    <ServiceReference ID="144" Label="Get Connect Parameter Servicecatalog API" ReferenceName="GetConnectParameterServicecatalogAPI" ReferencePath="xfmg.tmf633">
+      <Source RefID="143"/>
+      <Target RefID="143"/>
+    </ServiceReference>
+    <ServiceReference ID="15593" Label="Request GET /serviceSpecification/{id}" ReferenceName="RequestGETServiceSpecificationId" ReferencePath="tmf633.client.serviceSpecification.wf">
+      <Source RefID="15592"/>
+      <Target RefID="15592"/>
+    </ServiceReference>
+    <Function ID="143" Label="Get Connect Parameter Servicecatalog API">
+      <Source RefID="144"/>
+      <Target RefID="144"/>
+      <Target RefID="279"/>
+      <Invoke Operation="GetConnectParameterServicecatalogAPI" ServiceID="144"/>
+      <Receive ServiceID="144">
+        <Target RefID="279"/>
+      </Receive>
+    </Function>
+    <Mappings ID="412" Label="Mapping">
+      <Input>
+        <Data ID="2985" Label="Service" ReferenceName="Service" ReferencePath="tmf640.datamodel" VariableName="service2985">
+          <Source RefID="412"/>
+        </Data>
+        <Source RefID="2816"/>
+      </Input>
+      <Output>
+        <Data ID="16156" Label="GET /serviceSpecification/{id} Send Parameter" ReferenceName="GETServiceSpecificationIdSendParameter" ReferencePath="tmf633.client.serviceSpecification.send" VariableName="gETServiceSpecificationIdSendParameter16156">
+          <Source RefID="412"/>
+        </Data>
+        <Target RefID="16157"/>
+      </Output>
+      <Mapping>%1%.id=%0%.serviceSpecification.id</Mapping>
+    </Mappings>
+    <Function ID="15592" Label="Request GET /serviceSpecification/{id}">
+      <Source RefID="15593"/>
+      <Source RefID="279"/>
+      <Source RefID="16157"/>
+      <Target RefID="15593"/>
+      <Target RefID="15595"/>
+      <Invoke Operation="RequestGETServiceSpecificationId" ServiceID="15593">
+        <Source RefID="279"/>
+        <Source RefID="16157"/>
+      </Invoke>
+      <Receive ServiceID="15593">
+        <Target RefID="15595"/>
+      </Receive>
+    </Function>
+    <Choice ID="16283" TypeName="BaseChoiceTypeSubclasses" TypePath="server">
+      <Source RefID="15595"/>
+      <Target RefID="25492"/>
+      <Input>
+        <Data ID="16431" Label="GET /serviceSpecification/{id} Response" ReferenceName="GETServiceSpecificationIdResponse" ReferencePath="tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse16431">
+          <Source RefID="16283"/>
+        </Data>
+        <Source RefID="15595"/>
+      </Input>
+      <Case ID="16432" Label="GET /serviceSpecification/{id} Response" Premise="tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse">
+        <Assign ID="16442"/>
+        <Mappings ID="5312" Label="Mapping">
+          <Output>
+            <Data ID="5457" Label="ServiceSpecification" ReferenceName="ServiceSpecification" ReferencePath="tmf633.datamodel" VariableName="serviceSpecification5457">
+              <Source RefID="5312"/>
+            </Data>
+            <Target RefID="16628"/>
+          </Output>
+        </Mappings>
+        <Assign ID="16443">
+          <Source RefID="16628"/>
+          <Target RefID="25492"/>
+          <Copy>
+            <Source RefID="16628"/>
+            <Target RefID="25492"/>
+          </Copy>
+        </Assign>
+        <Data ID="16628" Label="ServiceSpecification" ReferenceName="ServiceSpecification" ReferencePath="tmf633.datamodel" VariableName="serviceSpecification16628">
+          <Source RefID="5312"/>
+        </Data>
+      </Case>
+      <Case ID="16433" Label="GET /serviceSpecification/{id} Response 400 Bad Request" Premise="tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse400BadRequest">
+        <Assign ID="16445">
+          <Source RefID="15595"/>
+          <Target RefID="17478"/>
+          <Copy>
+            <Source RefID="15595"/>
+            <Target RefID="17478"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="5164" Label="Mapping">
+          <Input>
+            <Data ID="17450" Label="GET /serviceSpecification/{id} Response 400 Bad Request" ReferenceName="GETServiceSpecificationIdResponse400BadRequest" ReferencePath="tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse400BadRequest17450">
+              <Source RefID="5164"/>
+            </Data>
+            <Source RefID="17478"/>
+          </Input>
+          <Output>
+            <Data ID="14048" Label="Error" ReferenceName="Error" ReferencePath="tmf633.datamodel" VariableName="error14048">
+              <Source RefID="5164"/>
+            </Data>
+            <Target RefID="16789"/>
+          </Output>
+          <Mapping>%1%=%0%.response</Mapping>
+        </Mappings>
+        <Mappings ID="11092" Label="Mapping">
+          <Input>
+            <Data ID="14192" Label="Error" ReferenceName="Error" ReferencePath="tmf633.datamodel" VariableName="error14192">
+              <Source RefID="11092"/>
+            </Data>
+            <Source RefID="16789"/>
+          </Input>
+          <Input>
+            <Data ID="11094" Label="Connect Parameter Host Port" ReferenceName="ConnectParameterHostPort" ReferencePath="xact.http" VariableName="connectParameterHostPort11094"/>
+            <Source RefID="279"/>
+          </Input>
+          <Output>
+            <Exception ID="11095" Label="TMF Client Request Failed" ReferenceName="TMFClientRequestFailed" ReferencePath="xfmg.tmf.util" VariableName="tMFClientRequestFailed11095"/>
+            <Target RefID="16951"/>
+          </Output>
+          <Mapping>%2%.error=%0%</Mapping>
+          <Mapping>%2%.connectParameterHostPort=%1%</Mapping>
+        </Mappings>
+        <Throw ExceptionID="16951" ID="11386" Label="Throw Throw TMF Client Request Failed">
+          <Meta>
+            <PreferedExceptionType>xfmg.tmf.util.TMFClientRequestFailed</PreferedExceptionType>
+          </Meta>
+          <Source RefID="16951"/>
+        </Throw>
+        <Assign ID="16446"/>
+        <Data ID="16789" Label="Error" ReferenceName="Error" ReferencePath="tmf633.datamodel" VariableName="error16789">
+          <Source RefID="5164"/>
+        </Data>
+        <Exception ID="16951" Label="TMF Client Request Failed" ReferenceName="TMFClientRequestFailed" ReferencePath="xfmg.tmf.util" VariableName="tMFClientRequestFailed16951">
+          <Target RefID="11386"/>
+        </Exception>
+      </Case>
+      <Case ID="16434" Label="GET /serviceSpecification/{id} Response 415 Unsupported Media Type" Premise="tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse415UnsupportedMediaType">
+        <Assign ID="16448">
+          <Source RefID="15595"/>
+          <Target RefID="22222"/>
+          <Copy>
+            <Source RefID="15595"/>
+            <Target RefID="22222"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="19070" Label="Mapping">
+          <Input>
+            <Data ID="22194" Label="GET /serviceSpecification/{id} Response 415 Unsupported Media Type" ReferenceName="GETServiceSpecificationIdResponse415UnsupportedMediaType" ReferencePath="tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse415UnsupportedMediaType22194">
+              <Source RefID="19070"/>
+            </Data>
+            <Source RefID="22222"/>
+          </Input>
+          <Output>
+            <Data ID="19072" Label="Error" ReferenceName="Error" ReferencePath="tmf633.datamodel" VariableName="error19072"/>
+            <Target RefID="19073"/>
+          </Output>
+          <Mapping>%1%=%0%.response</Mapping>
+        </Mappings>
+        <Mappings ID="19228" Label="Mapping">
+          <Input>
+            <Data ID="19229" Label="Error" ReferenceName="Error" ReferencePath="tmf633.datamodel" VariableName="error19229"/>
+            <Source RefID="19073"/>
+          </Input>
+          <Input>
+            <Data ID="19230" Label="Connect Parameter Host Port" ReferenceName="ConnectParameterHostPort" ReferencePath="xact.http" VariableName="connectParameterHostPort19230"/>
+            <Source RefID="279"/>
+          </Input>
+          <Output>
+            <Exception ID="19231" Label="TMF Client Request Failed" ReferenceName="TMFClientRequestFailed" ReferencePath="xfmg.tmf.util" VariableName="tMFClientRequestFailed19231"/>
+            <Target RefID="19232"/>
+          </Output>
+          <Mapping>%2%.error=%0%</Mapping>
+          <Mapping>%2%.connectParameterHostPort=%1%</Mapping>
+        </Mappings>
+        <Throw ExceptionID="19232" ID="19387" Label="Throw TMF Client Request Failed">
+          <Meta>
+            <PreferedExceptionType>xfmg.tmf.util.TMFClientRequestFailed</PreferedExceptionType>
+          </Meta>
+          <Source RefID="19232"/>
+        </Throw>
+        <Assign ID="16449"/>
+      </Case>
+      <Case ID="16435" Label="GET /serviceSpecification/{id} Response 404 Not Found" Premise="tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse404NotFound">
+        <Assign ID="16451">
+          <Source RefID="15595"/>
+          <Target RefID="22687"/>
+          <Copy>
+            <Source RefID="15595"/>
+            <Target RefID="22687"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="19542" Label="Mapping">
+          <Input>
+            <Data ID="22659" Label="GET /serviceSpecification/{id} Response 404 Not Found" ReferenceName="GETServiceSpecificationIdResponse404NotFound" ReferencePath="tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse404NotFound22659">
+              <Source RefID="19542"/>
+            </Data>
+            <Source RefID="22687"/>
+          </Input>
+          <Output>
+            <Data ID="19544" Label="Error" ReferenceName="Error" ReferencePath="tmf633.datamodel" VariableName="error19544"/>
+            <Target RefID="19545"/>
+          </Output>
+          <Mapping>%1%.code="404"</Mapping>
+        </Mappings>
+        <Mappings ID="19700" Label="Mapping">
+          <Input>
+            <Data ID="19701" Label="Error" ReferenceName="Error" ReferencePath="tmf633.datamodel" VariableName="error19701"/>
+            <Source RefID="19545"/>
+          </Input>
+          <Input>
+            <Data ID="19702" Label="Connect Parameter Host Port" ReferenceName="ConnectParameterHostPort" ReferencePath="xact.http" VariableName="connectParameterHostPort19702"/>
+            <Source RefID="279"/>
+          </Input>
+          <Output>
+            <Exception ID="19703" Label="TMF Client Request Failed" ReferenceName="TMFClientRequestFailed" ReferencePath="xfmg.tmf.util" VariableName="tMFClientRequestFailed19703"/>
+            <Target RefID="19704"/>
+          </Output>
+          <Mapping>%2%.error=%0%</Mapping>
+          <Mapping>%2%.connectParameterHostPort=%1%</Mapping>
+        </Mappings>
+        <Throw ExceptionID="19704" ID="19859" Label="Throw TMF Client Request Failed">
+          <Meta>
+            <PreferedExceptionType>xfmg.tmf.util.TMFClientRequestFailed</PreferedExceptionType>
+          </Meta>
+          <Source RefID="19704"/>
+        </Throw>
+        <Assign ID="16452"/>
+      </Case>
+      <Case ID="16436" Label="GET /serviceSpecification/{id} Response 401 Unauthorized" Premise="tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse401Unauthorized">
+        <Assign ID="16454">
+          <Source RefID="15595"/>
+          <Target RefID="23145"/>
+          <Copy>
+            <Source RefID="15595"/>
+            <Target RefID="23145"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="20014" Label="Mapping">
+          <Input>
+            <Data ID="23117" Label="GET /serviceSpecification/{id} Response 401 Unauthorized" ReferenceName="GETServiceSpecificationIdResponse401Unauthorized" ReferencePath="tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse401Unauthorized23117">
+              <Source RefID="20014"/>
+            </Data>
+            <Source RefID="23145"/>
+          </Input>
+          <Output>
+            <Data ID="20016" Label="Error" ReferenceName="Error" ReferencePath="tmf633.datamodel" VariableName="error20016"/>
+            <Target RefID="20017"/>
+          </Output>
+          <Mapping>%1%=%0%.response</Mapping>
+        </Mappings>
+        <Mappings ID="20172" Label="Mapping">
+          <Input>
+            <Data ID="20173" Label="Error" ReferenceName="Error" ReferencePath="tmf633.datamodel" VariableName="error20173"/>
+            <Source RefID="20017"/>
+          </Input>
+          <Input>
+            <Data ID="20174" Label="Connect Parameter Host Port" ReferenceName="ConnectParameterHostPort" ReferencePath="xact.http" VariableName="connectParameterHostPort20174"/>
+            <Source RefID="279"/>
+          </Input>
+          <Output>
+            <Exception ID="20175" Label="TMF Client Request Failed" ReferenceName="TMFClientRequestFailed" ReferencePath="xfmg.tmf.util" VariableName="tMFClientRequestFailed20175"/>
+            <Target RefID="20176"/>
+          </Output>
+          <Mapping>%2%.error=%0%</Mapping>
+          <Mapping>%2%.connectParameterHostPort=%1%</Mapping>
+        </Mappings>
+        <Throw ExceptionID="20176" ID="20331" Label="Throw TMF Client Request Failed">
+          <Meta>
+            <PreferedExceptionType>xfmg.tmf.util.TMFClientRequestFailed</PreferedExceptionType>
+          </Meta>
+          <Source RefID="20176"/>
+        </Throw>
+        <Assign ID="16455"/>
+      </Case>
+      <Case ID="16437" Label="GET /serviceSpecification/{id} Response 409 Conflict" Premise="tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse409Conflict">
+        <Assign ID="16457">
+          <Source RefID="15595"/>
+          <Target RefID="23596"/>
+          <Copy>
+            <Source RefID="15595"/>
+            <Target RefID="23596"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="20486" Label="Mapping">
+          <Input>
+            <Data ID="23568" Label="GET /serviceSpecification/{id} Response 409 Conflict" ReferenceName="GETServiceSpecificationIdResponse409Conflict" ReferencePath="tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse409Conflict23568">
+              <Source RefID="20486"/>
+            </Data>
+            <Source RefID="23596"/>
+          </Input>
+          <Output>
+            <Data ID="20488" Label="Error" ReferenceName="Error" ReferencePath="tmf633.datamodel" VariableName="error20488"/>
+            <Target RefID="20489"/>
+          </Output>
+          <Mapping>%1%=%0%.response</Mapping>
+        </Mappings>
+        <Mappings ID="20644" Label="Mapping">
+          <Input>
+            <Data ID="20645" Label="Error" ReferenceName="Error" ReferencePath="tmf633.datamodel" VariableName="error20645"/>
+            <Source RefID="20489"/>
+          </Input>
+          <Input>
+            <Data ID="20646" Label="Connect Parameter Host Port" ReferenceName="ConnectParameterHostPort" ReferencePath="xact.http" VariableName="connectParameterHostPort20646"/>
+            <Source RefID="279"/>
+          </Input>
+          <Output>
+            <Exception ID="20647" Label="TMF Client Request Failed" ReferenceName="TMFClientRequestFailed" ReferencePath="xfmg.tmf.util" VariableName="tMFClientRequestFailed20647"/>
+            <Target RefID="20648"/>
+          </Output>
+          <Mapping>%2%.error=%0%</Mapping>
+          <Mapping>%2%.connectParameterHostPort=%1%</Mapping>
+        </Mappings>
+        <Throw ExceptionID="20648" ID="20803" Label="Throw TMF Client Request Failed">
+          <Meta>
+            <PreferedExceptionType>xfmg.tmf.util.TMFClientRequestFailed</PreferedExceptionType>
+          </Meta>
+          <Source RefID="20648"/>
+        </Throw>
+        <Assign ID="16458"/>
+      </Case>
+      <Case ID="16438" Label="GET /serviceSpecification/{id} Response 403 Forbidden" Premise="tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse403Forbidden">
+        <Assign ID="16460">
+          <Source RefID="15595"/>
+          <Target RefID="24040"/>
+          <Copy>
+            <Source RefID="15595"/>
+            <Target RefID="24040"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="20958" Label="Mapping">
+          <Input>
+            <Data ID="24012" Label="GET /serviceSpecification/{id} Response 403 Forbidden" ReferenceName="GETServiceSpecificationIdResponse403Forbidden" ReferencePath="tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse403Forbidden24012">
+              <Source RefID="20958"/>
+            </Data>
+            <Source RefID="24040"/>
+          </Input>
+          <Output>
+            <Data ID="20960" Label="Error" ReferenceName="Error" ReferencePath="tmf633.datamodel" VariableName="error20960"/>
+            <Target RefID="20961"/>
+          </Output>
+          <Mapping>%1%=%0%.response</Mapping>
+        </Mappings>
+        <Mappings ID="21116" Label="Mapping">
+          <Input>
+            <Data ID="21117" Label="Error" ReferenceName="Error" ReferencePath="tmf633.datamodel" VariableName="error21117"/>
+            <Source RefID="20961"/>
+          </Input>
+          <Input>
+            <Data ID="21118" Label="Connect Parameter Host Port" ReferenceName="ConnectParameterHostPort" ReferencePath="xact.http" VariableName="connectParameterHostPort21118"/>
+            <Source RefID="279"/>
+          </Input>
+          <Output>
+            <Exception ID="21119" Label="TMF Client Request Failed" ReferenceName="TMFClientRequestFailed" ReferencePath="xfmg.tmf.util" VariableName="tMFClientRequestFailed21119"/>
+            <Target RefID="21120"/>
+          </Output>
+          <Mapping>%2%.error=%0%</Mapping>
+          <Mapping>%2%.connectParameterHostPort=%1%</Mapping>
+        </Mappings>
+        <Throw ExceptionID="21120" ID="21275" Label="Throw TMF Client Request Failed">
+          <Meta>
+            <PreferedExceptionType>xfmg.tmf.util.TMFClientRequestFailed</PreferedExceptionType>
+          </Meta>
+          <Source RefID="21120"/>
+        </Throw>
+        <Assign ID="16461"/>
+      </Case>
+      <Case ID="16439" Label="GET /serviceSpecification/{id} Response 500 Internal Server Error" Premise="tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse500InternalServerError">
+        <Assign ID="16463">
+          <Source RefID="15595"/>
+          <Target RefID="24477"/>
+          <Copy>
+            <Source RefID="15595"/>
+            <Target RefID="24477"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="21430" Label="Mapping">
+          <Input>
+            <Data ID="24449" Label="GET /serviceSpecification/{id} Response 500 Internal Server Error" ReferenceName="GETServiceSpecificationIdResponse500InternalServerError" ReferencePath="tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse500InternalServerError24449">
+              <Source RefID="21430"/>
+            </Data>
+            <Source RefID="24477"/>
+          </Input>
+          <Output>
+            <Data ID="21432" Label="Error" ReferenceName="Error" ReferencePath="tmf633.datamodel" VariableName="error21432"/>
+            <Target RefID="21433"/>
+          </Output>
+          <Mapping>%1%=%0%.response</Mapping>
+        </Mappings>
+        <Mappings ID="21589" Label="Mapping">
+          <Input>
+            <Data ID="21590" Label="Error" ReferenceName="Error" ReferencePath="tmf633.datamodel" VariableName="error21590"/>
+            <Source RefID="21433"/>
+          </Input>
+          <Input>
+            <Data ID="21591" Label="Connect Parameter Host Port" ReferenceName="ConnectParameterHostPort" ReferencePath="xact.http" VariableName="connectParameterHostPort21591"/>
+            <Source RefID="279"/>
+          </Input>
+          <Output>
+            <Exception ID="21592" Label="TMF Client Request Failed" ReferenceName="TMFClientRequestFailed" ReferencePath="xfmg.tmf.util" VariableName="tMFClientRequestFailed21592"/>
+            <Target RefID="21593"/>
+          </Output>
+          <Mapping>%2%.error=%0%</Mapping>
+          <Mapping>%2%.connectParameterHostPort=%1%</Mapping>
+        </Mappings>
+        <Throw ExceptionID="21593" ID="21748" Label="Throw TMF Client Request Failed">
+          <Meta>
+            <PreferedExceptionType>xfmg.tmf.util.TMFClientRequestFailed</PreferedExceptionType>
+          </Meta>
+          <Source RefID="21593"/>
+        </Throw>
+        <Assign ID="16464"/>
+      </Case>
+      <Case ID="16440" Label="GET /serviceSpecification/{id} Response 200 OK" Premise="tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse200OK">
+        <Assign ID="16466">
+          <Source RefID="15595"/>
+          <Target RefID="18468"/>
+          <Copy>
+            <Source RefID="15595"/>
+            <Target RefID="18468"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="2176" Label="Mapping">
+          <Input>
+            <Data ID="18434" Label="GET /serviceSpecification/{id} Response 200 OK" ReferenceName="GETServiceSpecificationIdResponse200OK" ReferencePath="tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse200OK18434">
+              <Source RefID="2176"/>
+            </Data>
+            <Source RefID="18468"/>
+          </Input>
+          <Output>
+            <Data ID="2516" Label="ServiceSpecification" ReferenceName="ServiceSpecification" ReferencePath="tmf633.datamodel" VariableName="serviceSpecification2516">
+              <Source RefID="2176"/>
+            </Data>
+            <Target RefID="18097"/>
+          </Output>
+          <Mapping>%1%=%0%.response</Mapping>
+        </Mappings>
+        <Choice ID="24604" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="2816"/>
+          <Source RefID="18097"/>
+          <Input>
+            <Data ID="24895" Label="Service" ReferenceName="Service" ReferencePath="tmf640.datamodel" VariableName="service24895">
+              <Source RefID="24604"/>
+            </Data>
+            <Source RefID="2816"/>
+          </Input>
+          <Input>
+            <Data ID="25322" Label="ServiceSpecification" ReferenceName="ServiceSpecification" ReferencePath="tmf633.datamodel" VariableName="serviceSpecification25322">
+              <Source RefID="24604"/>
+            </Data>
+            <Source RefID="18097"/>
+          </Input>
+          <Case ID="24605" Label="true" Premise="%0%.serviceSpecification.name!=%1%.name">
+            <Mappings ID="25945" Label="Mapping">
+              <Input>
+                <Data ID="26848" Label="Service" ReferenceName="Service" ReferencePath="tmf640.datamodel" VariableName="service26848">
+                  <Source RefID="25945"/>
+                </Data>
+                <Source RefID="2816"/>
+              </Input>
+              <Input>
+                <Data ID="26999" Label="ServiceSpecification" ReferenceName="ServiceSpecification" ReferencePath="tmf633.datamodel" VariableName="serviceSpecification26999">
+                  <Source RefID="25945"/>
+                </Data>
+                <Source RefID="18097"/>
+              </Input>
+              <Output>
+                <Exception ID="26096" Label="UnexpectedServiceSpecificationName" ReferenceName="UnexpectedServiceSpecificationName" ReferencePath="xfmg.tmf640.validation" VariableName="unexpectedServiceSpecificationName26096">
+                  <Source RefID="25945"/>
+                </Exception>
+                <Target RefID="26097"/>
+              </Output>
+              <Mapping>%2%.expectedServiceSpecName=%1%.name</Mapping>
+              <Mapping>%2%.serviceSpecNameInCatalog=%0%.serviceSpecification.name</Mapping>
+            </Mappings>
+            <Throw ExceptionID="26097" ID="25794" Label="Throw Unexpected Service Specification Name">
+              <Meta>
+                <PreferedExceptionType>xfmg.tmf640.validation.UnexpectedServiceSpecificationName</PreferedExceptionType>
+              </Meta>
+              <Source RefID="26097"/>
+            </Throw>
+            <Assign ID="24608"/>
+          </Case>
+          <Case ID="24606" Label="false">
+            <Assign ID="24610"/>
+          </Case>
+        </Choice>
+        <Assign ID="16467">
+          <Source RefID="18097"/>
+          <Target RefID="25492"/>
+          <Copy>
+            <Source RefID="18097"/>
+            <Target RefID="25492"/>
+          </Copy>
+        </Assign>
+        <Data ID="18097" Label="ServiceSpecification" ReferenceName="ServiceSpecification" ReferencePath="tmf633.datamodel" VariableName="serviceSpecification18097">
+          <Source RefID="2176"/>
+        </Data>
+      </Case>
+    </Choice>
+    <Data ID="279" Label="Connect Parameter Host Port" ReferenceName="ConnectParameterHostPort" ReferencePath="xact.http" VariableName="connectParameterHostPort279">
+      <Source RefID="143"/>
+    </Data>
+    <Data ID="15595" Label="GET /serviceSpecification/{id} Response" ReferenceName="GETServiceSpecificationIdResponse" ReferencePath="tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse15595">
+      <Source RefID="15592"/>
+    </Data>
+    <Data ID="16157" Label="GET /serviceSpecification/{id} Send Parameter" ReferenceName="GETServiceSpecificationIdSendParameter" ReferencePath="tmf633.client.serviceSpecification.send" VariableName="gETServiceSpecificationIdSendParameter16157">
+      <Source RefID="412"/>
+    </Data>
+    <Data ID="17478" Label="GET /serviceSpecification/{id} Response 400 Bad Request" ReferenceName="GETServiceSpecificationIdResponse400BadRequest" ReferencePath="tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse400BadRequest17478">
+      <Source RefID="16445"/>
+    </Data>
+    <Data ID="18468" Label="GET /serviceSpecification/{id} Response 200 OK" ReferenceName="GETServiceSpecificationIdResponse200OK" ReferencePath="tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse200OK18468">
+      <Source RefID="16466"/>
+    </Data>
+    <Data ID="19073" Label="Error" ReferenceName="Error" ReferencePath="tmf633.datamodel" VariableName="error19073"/>
+    <Data ID="19545" Label="Error" ReferenceName="Error" ReferencePath="tmf633.datamodel" VariableName="error19545"/>
+    <Data ID="20017" Label="Error" ReferenceName="Error" ReferencePath="tmf633.datamodel" VariableName="error20017"/>
+    <Data ID="20489" Label="Error" ReferenceName="Error" ReferencePath="tmf633.datamodel" VariableName="error20489"/>
+    <Data ID="20961" Label="Error" ReferenceName="Error" ReferencePath="tmf633.datamodel" VariableName="error20961"/>
+    <Data ID="21433" Label="Error" ReferenceName="Error" ReferencePath="tmf633.datamodel" VariableName="error21433"/>
+    <Data ID="22222" Label="GET /serviceSpecification/{id} Response 415 Unsupported Media Type" ReferenceName="GETServiceSpecificationIdResponse415UnsupportedMediaType" ReferencePath="tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse415UnsupportedMediaType22222">
+      <Source RefID="16448"/>
+    </Data>
+    <Data ID="22687" Label="GET /serviceSpecification/{id} Response 404 Not Found" ReferenceName="GETServiceSpecificationIdResponse404NotFound" ReferencePath="tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse404NotFound22687">
+      <Source RefID="16451"/>
+    </Data>
+    <Data ID="23145" Label="GET /serviceSpecification/{id} Response 401 Unauthorized" ReferenceName="GETServiceSpecificationIdResponse401Unauthorized" ReferencePath="tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse401Unauthorized23145">
+      <Source RefID="16454"/>
+    </Data>
+    <Data ID="23596" Label="GET /serviceSpecification/{id} Response 409 Conflict" ReferenceName="GETServiceSpecificationIdResponse409Conflict" ReferencePath="tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse409Conflict23596">
+      <Source RefID="16457"/>
+    </Data>
+    <Data ID="24040" Label="GET /serviceSpecification/{id} Response 403 Forbidden" ReferenceName="GETServiceSpecificationIdResponse403Forbidden" ReferencePath="tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse403Forbidden24040">
+      <Source RefID="16460"/>
+    </Data>
+    <Data ID="24477" Label="GET /serviceSpecification/{id} Response 500 Internal Server Error" ReferenceName="GETServiceSpecificationIdResponse500InternalServerError" ReferencePath="tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse500InternalServerError24477">
+      <Source RefID="16463"/>
+    </Data>
+    <Data ID="25492" Label="ServiceSpecification" ReferenceName="ServiceSpecification" ReferencePath="tmf633.datamodel" VariableName="serviceSpecification25492">
+      <Source RefID="16283"/>
+    </Data>
+    <Exception ID="19232" Label="TMF Client Request Failed" ReferenceName="TMFClientRequestFailed" ReferencePath="xfmg.tmf.util" VariableName="tMFClientRequestFailed19232">
+      <Target RefID="19387"/>
+    </Exception>
+    <Exception ID="19704" Label="TMF Client Request Failed" ReferenceName="TMFClientRequestFailed" ReferencePath="xfmg.tmf.util" VariableName="tMFClientRequestFailed19704">
+      <Target RefID="19859"/>
+    </Exception>
+    <Exception ID="20176" Label="TMF Client Request Failed" ReferenceName="TMFClientRequestFailed" ReferencePath="xfmg.tmf.util" VariableName="tMFClientRequestFailed20176">
+      <Target RefID="20331"/>
+    </Exception>
+    <Exception ID="20648" Label="TMF Client Request Failed" ReferenceName="TMFClientRequestFailed" ReferencePath="xfmg.tmf.util" VariableName="tMFClientRequestFailed20648">
+      <Target RefID="20803"/>
+    </Exception>
+    <Exception ID="21120" Label="TMF Client Request Failed" ReferenceName="TMFClientRequestFailed" ReferencePath="xfmg.tmf.util" VariableName="tMFClientRequestFailed21120">
+      <Target RefID="21275"/>
+    </Exception>
+    <Exception ID="21593" Label="TMF Client Request Failed" ReferenceName="TMFClientRequestFailed" ReferencePath="xfmg.tmf.util" VariableName="tMFClientRequestFailed21593">
+      <Target RefID="21748"/>
+    </Exception>
+    <Exception ID="26097" Label="UnexpectedServiceSpecificationName" ReferenceName="UnexpectedServiceSpecificationName" ReferencePath="xfmg.tmf640.validation" VariableName="unexpectedServiceSpecificationName26097">
+      <Target RefID="25794"/>
+    </Exception>
+    <Assign ID="1">
+      <Source RefID="25492"/>
+      <Target RefID="2647"/>
+      <Copy>
+        <Source RefID="25492"/>
+        <Target RefID="2647"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

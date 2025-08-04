@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -182,6 +182,11 @@
                 <groupId>com.gip.xyna</groupId>
                 <artifactId>XynaXMLShellPersistenceLayer</artifactId>
                 <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.gip.xyna</groupId>
+                <artifactId>ApplicationGenerationImpl</artifactId>
+                <version>0.6.0</version>
             </dependency>
             <dependency>
                 <groupId>com.healthmarketscience.rmiio</groupId>
@@ -588,6 +593,11 @@
                 <groupId>io.github.yang-central.yangkit</groupId>
                 <artifactId>yangkit-parser</artifactId>
                 <version>1.4.5</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jayway.jsonpath</groupId>
+                <artifactId>json-path</artifactId>
+                <version>2.9.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

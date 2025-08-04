@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="TMF Service Reference Spec Annotations" TypeName="TMFServiceReferenceSpecAnnotations" TypePath="xfmg.tmf.inspect" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Role" VariableName="role">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Referenced Service Name" VariableName="referencedServiceName">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Id" VariableName="id">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Id of referenced Service</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Use Parent Service Id" VariableName="useParentServiceId">
+    <Meta>
+      <Type>boolean</Type>
+      <Documentation>default: false</Documentation>
+    </Meta>
+  </Data>
+</DataType>

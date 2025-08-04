@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="TMF633-00000" IsAbstract="false" Label="TMF Client Request Failed" TypeName="TMFClientRequestFailed" TypePath="xfmg.tmf.util">
+    <Data Label="Error" ReferenceName="Error" ReferencePath="tmf633.datamodel" VariableName="error"/>
+    <Data Label="Connect Parameter Host Port" ReferenceName="ConnectParameterHostPort" ReferencePath="xact.http" VariableName="connectParameterHostPort"/>
+  </ExceptionType>
+</ExceptionStore>

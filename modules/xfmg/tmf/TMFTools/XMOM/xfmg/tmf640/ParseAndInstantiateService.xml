@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Parse And Instantiate Service" TypeName="ParseAndInstantiateService" TypePath="xfmg.tmf640" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Parse And Instantiate Service" Name="ParseAndInstantiateService">
+    <Input>
+      <Data ID="54" Label="Service JSON" ReferenceName="Text" ReferencePath="base" VariableName="text54"/>
+      <Data ID="12109" Label="Service Identification Config" ReferenceName="ServiceIdentificationConfig" ReferencePath="xfmg.tmf640" VariableName="instantiationConfig12109"/>
+    </Input>
+    <Output>
+      <Data ID="256" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType256">
+        <Meta>
+          <Type>GeneralXynaObject</Type>
+        </Meta>
+      </Data>
+    </Output>
+    <Throws>
+      <Exception Label="MemberVariableNotFound" ReferenceName="MemberVariableNotFound" ReferencePath="xfmg.tmf.inspect" VariableName="memberVariableNotFound30532"/>
+      <Exception Label="" ReferenceName="UnsupportedTMFType" ReferencePath="xfmg.tmf.inspect" VariableName="unsupportedTMFType30533"/>
+      <Exception Label="PartyRefNotFound" ReferenceName="PartyRefNotFound" ReferencePath="xfmg.tmf633" VariableName="partyRefNotFound30534"/>
+      <Exception Label="ServiceUnknown" ReferenceName="ServiceUnknown" ReferencePath="xfmg.tmf633" VariableName="serviceUnknown30535"/>
+      <Exception Label="JSON Parsing Problem" ReferenceName="JSONParsingProblem" ReferencePath="xfmg.tmf640" VariableName="jSONParsingProblem30536"/>
+      <Exception Label="Service Characteristic not found" ReferenceName="ServiceCharacteristicNotFound" ReferencePath="xfmg.tmf640" VariableName="serviceCharacteristicNotFound30537"/>
+      <Exception Label="Service Relationship not found" ReferenceName="ServiceRelationshipNotFound" ReferencePath="xfmg.tmf640" VariableName="serviceRelationshipNotFound30538"/>
+      <Exception Label="Unsupported Conversion Type" ReferenceName="UnsupportedConversionType" ReferencePath="xfmg.tmf640" VariableName="unsupportedConversionType30539"/>
+    </Throws>
+    <ServiceReference ID="13206" Label="Parse Service JSON" ReferenceName="ParseServiceJSON" ReferencePath="xfmg.tmf640">
+      <Source RefID="13205"/>
+      <Target RefID="13205"/>
+    </ServiceReference>
+    <ServiceReference ID="28161" Label="Instantiate Service" ReferenceName="InstantiateService" ReferencePath="xfmg.tmf640">
+      <Source RefID="28160"/>
+      <Target RefID="28160"/>
+    </ServiceReference>
+    <Function ID="13205" Label="Parse Service JSON">
+      <Source RefID="13206"/>
+      <Source RefID="54"/>
+      <Target RefID="13206"/>
+      <Target RefID="13208"/>
+      <Invoke Operation="ParseServiceJSON" ServiceID="13206">
+        <Source RefID="54"/>
+      </Invoke>
+      <Receive ServiceID="13206">
+        <Target RefID="13208"/>
+      </Receive>
+    </Function>
+    <Function ID="28160" Label="Instantiate Service">
+      <Source RefID="28161"/>
+      <Source RefID="13208"/>
+      <Source RefID="12109"/>
+      <Target RefID="28161"/>
+      <Target RefID="28163"/>
+      <Invoke Operation="InstantiateService" ServiceID="28161">
+        <Source RefID="13208"/>
+        <Source RefID="12109"/>
+      </Invoke>
+      <Receive ServiceID="28161">
+        <Target RefID="28163"/>
+      </Receive>
+    </Function>
+    <Data ID="13208" Label="Service" ReferenceName="Service" ReferencePath="tmf640.datamodel" VariableName="service13208">
+      <Source RefID="13205"/>
+    </Data>
+    <Data ID="28163" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType28163">
+      <Meta/>
+      <Source RefID="28160"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="28163"/>
+      <Target RefID="256"/>
+      <Copy>
+        <Source RefID="28163">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="256"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

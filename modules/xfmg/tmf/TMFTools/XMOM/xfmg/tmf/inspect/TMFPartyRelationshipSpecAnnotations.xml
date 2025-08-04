@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="TMF Party Relationship Spec Annotations" TypeName="TMFPartyRelationshipSpecAnnotations" TypePath="xfmg.tmf.inspect" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Party Type" VariableName="partyType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Individual, Organization, etc</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Id" VariableName="id">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Id of party</Documentation>
+    </Meta>
+  </Data>
+</DataType>

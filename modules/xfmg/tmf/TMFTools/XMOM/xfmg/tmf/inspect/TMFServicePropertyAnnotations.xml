@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="TMF Service Property Annotations" TypeName="TMFServicePropertyAnnotations" TypePath="xfmg.tmf.inspect" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Property Name" VariableName="propertyName">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Name of Service property that is linked to this Xyna Member Variable.</Documentation>
+    </Meta>
+  </Data>
+</DataType>

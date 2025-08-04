@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="TMFUTIL-00000" IsAbstract="false" Label="Member Variable Not Found" TypeName="MemberVariableNotFound" TypePath="xfmg.tmf.inspect">
+    <Data Label="Name" VariableName="name">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <Data Label="FQName of Datatype" VariableName="fQNameOfDatatype">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <MessageText Language="DE">Member Variable &lt;%0%&gt; ist in Datatype &lt;%1%&gt; nicht vorhanden.</MessageText>
+    <MessageText Language="EN">Member Variable &lt;%0%&gt; does not exist in Datatype &lt;%1%&gt;.</MessageText>
+  </ExceptionType>
+</ExceptionStore>

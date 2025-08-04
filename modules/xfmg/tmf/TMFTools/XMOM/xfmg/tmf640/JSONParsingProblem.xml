@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
+  <ExceptionType BaseTypeName="ServiceValidationException" BaseTypePath="xfmg.tmf640" Code="TMF640-00008" IsAbstract="false" Label="JSON Parsing Problem" TypeName="JSONParsingProblem" TypePath="xfmg.tmf640">
+    <MessageText Language="EN">Could not parse JSON</MessageText>
+  </ExceptionType>
+</ExceptionStore>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="DecideMerge" BaseTypePath="xprc.base.list" IsAbstract="false" Label="Decide Merge Resource Type" TypeName="DecideMergeResourceType" TypePath="xfmg.tmf640.transform" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="Decide Merge Resource Type" TypeName="DecideMergeResourceType">
+    <Operation IsStatic="false" Label="decidemerge" Name="decidemerge">
+      <Input>
+        <Data ID="17" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype17">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data ID="18" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype18">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="19" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype19">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <Meta>
+        <Documentation>return merged object or null if not supposed to be merged.</Documentation>
+      </Meta>
+      <Call ReferenceName="DecideMergeResourceAnytype" ReferencePath="xfmg.tmf640.transform"/>
+    </Operation>
+  </Service>
+</DataType>

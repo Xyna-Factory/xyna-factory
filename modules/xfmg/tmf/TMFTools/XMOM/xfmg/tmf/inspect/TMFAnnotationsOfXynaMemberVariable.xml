@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="TMF Annotations Of Xyna Member Variable" TypeName="TMFAnnotationsOfXynaMemberVariable" TypePath="xfmg.tmf.inspect" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="TMFType" VariableName="tMFType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>possible Values: Characteristic, ServiceRelationship</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="TMF Characteristic Spec Annotations" ReferenceName="TMFCharacteristicSpecAnnotations" ReferencePath="xfmg.tmf.inspect" VariableName="tMFCharacteristicSpecAnnotations"/>
+  <Data Label="TMF Service Reference Spec Annotations" ReferenceName="TMFServiceReferenceSpecAnnotations" ReferencePath="xfmg.tmf.inspect" VariableName="tMFServiceReferenceSpecAnnotations"/>
+  <Data Label="TMF Party Relationship Spec Annotations" ReferenceName="TMFPartyRelationshipSpecAnnotations" ReferencePath="xfmg.tmf.inspect" VariableName="tMFPartyRelationshipSpecAnnotations"/>
+  <Data Label="TMF Resource Spec Annotations" ReferenceName="TMFResourceSpecAnnotations" ReferencePath="xfmg.tmf.inspect" VariableName="tMFResourceSpecAnnotations"/>
+  <Data Label="TMF Service Property Annotations" ReferenceName="TMFServicePropertyAnnotations" ReferencePath="xfmg.tmf.inspect" VariableName="tMFServicePropertyAnnotations"/>
+  <Data Label="TMF External Identifier Spec Annotations" ReferenceName="TMFExternalIdentifierSpecAnnotations" ReferencePath="xfmg.tmf.inspect" VariableName="tMFExternalIdentifierSpecAnnotations"/>
+</DataType>

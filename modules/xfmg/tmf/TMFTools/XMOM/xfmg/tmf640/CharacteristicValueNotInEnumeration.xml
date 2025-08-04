@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="TMF640-00003" IsAbstract="false" Label="Characteristic value not in enumeration" TypeName="CharacteristicValueNotInEnumeration" TypePath="xfmg.tmf640">
+    <Data Label="characteristic name" VariableName="characteristicName">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <Data Label="characteristic value" VariableName="characteristicValue">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <MessageText Language="EN">Characteristic &lt;%0%&gt; has value &lt;%1%&gt; which is not allowed by the specification enumeration</MessageText>
+  </ExceptionType>
+</ExceptionStore>

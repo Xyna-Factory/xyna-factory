@@ -1,0 +1,1585 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Validate Single Characteristic" TypeName="ValidateSingleCharacteristic" TypePath="xfmg.tmf640.validation" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Validate Single Characteristic" Name="ValidateSingleCharacteristic">
+    <Input>
+      <Data ID="12" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic12"/>
+      <Data ID="5407" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification5407"/>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="CharacteristicValueDoesNotMatchRegularExpression" ReferenceName="CharacteristicValueDoesNotMatchRegularExpression" ReferencePath="xfmg.tmf633" VariableName="characteristicValueDoesNotMatchRegularExpression59396"/>
+      <Exception Label="CharacteristicValueNotInEnumeration" ReferenceName="CharacteristicValueNotInEnumeration" ReferencePath="xfmg.tmf640" VariableName="characteristicValueNotInEnumeration59397"/>
+      <Exception Label="ExceededAllowedValueRange" ReferenceName="ExceededAllowedValueRange" ReferencePath="xfmg.tmf640" VariableName="exceededAllowedValueRange59398"/>
+      <Exception Label="InvalidCharacteristicsCardinality" ReferenceName="InvalidCharacteristicsCardinality" ReferencePath="xfmg.tmf640" VariableName="invalidCharacteristicsCardinality59399"/>
+      <Exception Label="UnexpectedCharacteristicsType" ReferenceName="UnexpectedCharacteristicsType" ReferencePath="xfmg.tmf640" VariableName="unexpectedCharacteristicsType59400"/>
+    </Throws>
+    <ServiceReference ID="9956" Label="Array Wrapper" ReferenceName="ArrayWrapper.ArrayWrapper" ReferencePath="xfmg.tmf.util">
+      <Source RefID="9955"/>
+      <Target RefID="9955"/>
+    </ServiceReference>
+    <ServiceReference ID="6228" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="6227"/>
+      <Target RefID="6227"/>
+    </ServiceReference>
+    <ServiceReference ID="11303" Label="Array Wrapper" ReferenceName="ArrayWrapper.ArrayWrapper" ReferencePath="xfmg.tmf.util">
+      <Source RefID="11302"/>
+      <Target RefID="11302"/>
+    </ServiceReference>
+    <ServiceReference ID="12230" Label="Array Wrapper" ReferenceName="ArrayWrapper.ArrayWrapper" ReferencePath="xfmg.tmf.util">
+      <Source RefID="12229"/>
+      <Target RefID="12229"/>
+    </ServiceReference>
+    <ServiceReference ID="13771" Label="Array Wrapper" ReferenceName="ArrayWrapper.ArrayWrapper" ReferencePath="xfmg.tmf.util">
+      <Source RefID="13770"/>
+      <Target RefID="13770"/>
+    </ServiceReference>
+    <ServiceReference ID="36694" Label="Get Enum Values" ReferenceName="GetEnumValues" ReferencePath="xfmg.tmf633">
+      <Source RefID="36693"/>
+      <Target RefID="36693"/>
+    </ServiceReference>
+    <ServiceReference ID="6382" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="6381"/>
+      <Target RefID="6381"/>
+    </ServiceReference>
+    <ServiceReference ID="41462" Label="Get Enum Values" ReferenceName="GetEnumValues" ReferencePath="xfmg.tmf633">
+      <Source RefID="41461"/>
+      <Target RefID="41461"/>
+    </ServiceReference>
+    <Parallel>
+      <Serial>
+        <Function ID="6227" Label="Inspect Datatype">
+          <Source RefID="6228"/>
+          <Source RefID="12"/>
+          <Target RefID="6228"/>
+          <Target RefID="6230"/>
+          <Invoke Operation="inspectDatatype" ServiceID="6228">
+            <Source RefID="12">
+              <Meta>
+                <ExpectedType>tmf640.datamodel.Characteristic</ExpectedType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="6228">
+            <Target RefID="6230"/>
+          </Receive>
+        </Function>
+      </Serial>
+      <Serial>
+        <Mappings ID="6474" Label="Mapping">
+          <Input>
+            <Data ID="6519" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification6519">
+              <Source RefID="6474"/>
+            </Data>
+            <Source RefID="5407"/>
+          </Input>
+          <Output>
+            <Data ID="6564" Label="CharacteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicValueSpecification6564">
+              <Source RefID="6474"/>
+            </Data>
+            <Target RefID="6925"/>
+          </Output>
+          <Mapping>%1%=%0%.characteristicValueSpecification["0"]</Mapping>
+        </Mappings>
+        <Function ID="6381" Label="Inspect Datatype">
+          <Source RefID="6382"/>
+          <Source RefID="6925"/>
+          <Target RefID="6382"/>
+          <Target RefID="6970"/>
+          <Invoke Operation="inspectDatatype" ServiceID="6382">
+            <Source RefID="6925">
+              <Meta>
+                <ExpectedType>tmf633.datamodel.CharacteristicValueSpecification</ExpectedType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="6382">
+            <Target RefID="6970"/>
+          </Receive>
+        </Function>
+        <Data ID="6925" Label="CharacteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicValueSpecification6925">
+          <Source RefID="6474"/>
+        </Data>
+        <Data ID="6970" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector6970">
+          <Source RefID="6381"/>
+        </Data>
+      </Serial>
+    </Parallel>
+    <Choice ID="7015" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="6230"/>
+      <Source RefID="6970"/>
+      <Input>
+        <Data ID="7080" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector7080">
+          <Source RefID="7015"/>
+        </Data>
+        <Source RefID="6230">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="7300" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector7300">
+          <Source RefID="7015"/>
+        </Data>
+        <Source RefID="6970">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="7016" Label="true" Premise="replaceall(concat(%0%.getTypeName().text,&quot;ValueSpecification&quot;),&quot;640&quot;,&quot;633&quot;)==%1%.getTypeName().text">
+        <Assign ID="7019"/>
+      </Case>
+      <Case ID="7017" Label="false">
+        <Mappings ID="518" Label="Mapping">
+          <Input>
+            <Data ID="5970" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification5970">
+              <Source RefID="518"/>
+            </Data>
+            <Source RefID="5407"/>
+          </Input>
+          <Input>
+            <Data ID="6141" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic6141">
+              <Source RefID="518"/>
+            </Data>
+            <Source RefID="12"/>
+          </Input>
+          <Input>
+            <Data ID="6289" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector6289">
+              <Source RefID="518"/>
+            </Data>
+            <Source RefID="6230">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Input>
+            <Data ID="7714" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector7714">
+              <Source RefID="518"/>
+            </Data>
+            <Source RefID="6970">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Exception ID="557" Label="UnexpectedCharacteristicsType" ReferenceName="UnexpectedCharacteristicsType" ReferencePath="xfmg.tmf640" VariableName="unexpectedCharacteristicsType557">
+              <Source RefID="518"/>
+            </Exception>
+            <Target RefID="7625"/>
+          </Output>
+          <Mapping>%4%.characteristicType=%2%.getTypeName().text</Mapping>
+          <Mapping>%4%.expectedType=replaceall(substring(%3%.getTypeName().text, "0", (length(%3%.getTypeName().text)-length("ValueSpecification"))), "633", "640")</Mapping>
+          <Mapping>%4%.characteristicName=%1%.name</Mapping>
+        </Mappings>
+        <Throw ExceptionID="7625" ID="43725" Label="Throw UnexpectedCharacteristicsType">
+          <Meta>
+            <PreferedExceptionType>xfmg.tmf640.UnexpectedCharacteristicsType</PreferedExceptionType>
+          </Meta>
+          <Source RefID="7625"/>
+        </Throw>
+        <Assign ID="7021"/>
+        <Exception ID="7625" Label="UnexpectedCharacteristicsType" ReferenceName="UnexpectedCharacteristicsType" ReferencePath="xfmg.tmf640" VariableName="unexpectedCharacteristicsType7625">
+          <Target RefID="43725"/>
+        </Exception>
+      </Case>
+    </Choice>
+    <Choice ID="8767" TypeName="BaseChoiceTypeSubclasses" TypePath="server">
+      <Source RefID="12"/>
+      <Target RefID="50564"/>
+      <Target RefID="50565"/>
+      <Input>
+        <Data ID="8825" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic8825">
+          <Source RefID="8767"/>
+        </Data>
+        <Source RefID="12"/>
+      </Input>
+      <Case ID="8826" Label="Characteristic" Premise="tmf640.datamodel.Characteristic">
+        <Assign ID="8838"/>
+        <Mappings ID="15134" Label="Mapping">
+          <Output>
+            <Data ID="15135" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text15135"/>
+            <Target RefID="15136"/>
+          </Output>
+          <Output>
+            <Data ID="15137" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text15137"/>
+            <Target RefID="15138"/>
+          </Output>
+        </Mappings>
+        <Assign ID="8839">
+          <Source RefID="15138"/>
+          <Source RefID="15136"/>
+          <Target RefID="50564"/>
+          <Target RefID="50565"/>
+          <Copy>
+            <Source RefID="15138"/>
+            <Target RefID="50564"/>
+          </Copy>
+          <Copy>
+            <Source RefID="15136"/>
+            <Target RefID="50565"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="8827" Label="ObjectArrayCharacteristic" Premise="tmf640.datamodel.ObjectArrayCharacteristic">
+        <Assign ID="8841"/>
+        <Mappings ID="14859" Label="Mapping">
+          <Output>
+            <Data ID="14950" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text14950">
+              <Source RefID="14859"/>
+            </Data>
+            <Target RefID="14951"/>
+          </Output>
+          <Output>
+            <Data ID="15042" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text15042">
+              <Source RefID="14859"/>
+            </Data>
+            <Target RefID="15043"/>
+          </Output>
+        </Mappings>
+        <Assign ID="8842">
+          <Source RefID="15043"/>
+          <Source RefID="14951"/>
+          <Target RefID="50564"/>
+          <Target RefID="50565"/>
+          <Copy>
+            <Source RefID="15043"/>
+            <Target RefID="50564"/>
+          </Copy>
+          <Copy>
+            <Source RefID="14951"/>
+            <Target RefID="50565"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="8828" Label="StringCharacteristic" Premise="tmf640.datamodel.StringCharacteristic">
+        <Assign ID="8844">
+          <Source RefID="12"/>
+          <Target RefID="9031"/>
+          <Copy>
+            <Source RefID="12"/>
+            <Target RefID="9031"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="8944" Label="Mapping">
+          <Input>
+            <Data ID="9020" Label="StringCharacteristic" ReferenceName="StringCharacteristic" ReferencePath="tmf640.datamodel" VariableName="stringCharacteristic9020">
+              <Source RefID="8944"/>
+            </Data>
+            <Source RefID="9031"/>
+          </Input>
+          <Output>
+            <Data ID="9094" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text9094">
+              <Source RefID="8944"/>
+            </Data>
+            <Target RefID="9095"/>
+          </Output>
+          <Output>
+            <Data ID="10509" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text10509">
+              <Source RefID="8944"/>
+            </Data>
+            <Target RefID="10510"/>
+          </Output>
+          <Mapping>%1%.text=%0%.value</Mapping>
+        </Mappings>
+        <Assign ID="8845">
+          <Source RefID="10510"/>
+          <Source RefID="9095"/>
+          <Target RefID="50564"/>
+          <Target RefID="50565"/>
+          <Copy>
+            <Source RefID="10510"/>
+            <Target RefID="50564"/>
+          </Copy>
+          <Copy>
+            <Source RefID="9095"/>
+            <Target RefID="50565"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="8829" Label="NumberArrayCharacteristic" Premise="tmf640.datamodel.NumberArrayCharacteristic">
+        <Assign ID="8847">
+          <Source RefID="12"/>
+          <Target RefID="9541"/>
+          <Copy>
+            <Source RefID="12"/>
+            <Target RefID="9541"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="9456" Label="Mapping">
+          <Input>
+            <Data ID="9530" Label="NumberArrayCharacteristic" ReferenceName="NumberArrayCharacteristic" ReferencePath="tmf640.datamodel" VariableName="numberArrayCharacteristic9530">
+              <Source RefID="9456"/>
+            </Data>
+            <Source RefID="9541"/>
+          </Input>
+          <Output>
+            <Data ID="10037" Label="Array Wrapper" ReferenceName="ArrayWrapper" ReferencePath="xfmg.tmf.util" VariableName="arrayWrapper10037">
+              <Source RefID="9456"/>
+            </Data>
+            <Target RefID="10038"/>
+          </Output>
+          <Output>
+            <Data ID="10429" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text10429">
+              <Source RefID="9456"/>
+            </Data>
+            <Target RefID="10430"/>
+          </Output>
+          <Mapping>%1%.doubleArray0=%0%.value</Mapping>
+        </Mappings>
+        <Function ID="9955" Label="as wrapped list">
+          <Source RefID="9956"/>
+          <Source RefID="10038"/>
+          <Target RefID="9956"/>
+          <Target RefID="9958"/>
+          <Invoke Operation="asWrappedList" ServiceID="9956">
+            <Source RefID="10038"/>
+          </Invoke>
+          <Receive ServiceID="9956">
+            <Target RefID="9958"/>
+          </Receive>
+        </Function>
+        <Assign ID="8848">
+          <Source RefID="9958"/>
+          <Source RefID="10430"/>
+          <Target RefID="50564"/>
+          <Target RefID="50565"/>
+          <Copy>
+            <Source RefID="9958"/>
+            <Target RefID="50564"/>
+          </Copy>
+          <Copy>
+            <Source RefID="10430"/>
+            <Target RefID="50565"/>
+          </Copy>
+        </Assign>
+        <Data ID="9958" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text9958">
+          <Source RefID="9955"/>
+        </Data>
+      </Case>
+      <Case ID="8830" Label="ObjectCharacteristic" Premise="tmf640.datamodel.ObjectCharacteristic">
+        <Assign ID="8850"/>
+        <Mappings ID="14584" Label="Mapping">
+          <Output>
+            <Data ID="14675" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text14675">
+              <Source RefID="14584"/>
+            </Data>
+            <Target RefID="14676"/>
+          </Output>
+          <Output>
+            <Data ID="14767" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text14767">
+              <Source RefID="14584"/>
+            </Data>
+            <Target RefID="14768"/>
+          </Output>
+        </Mappings>
+        <Assign ID="8851">
+          <Source RefID="14768"/>
+          <Source RefID="14676"/>
+          <Target RefID="50564"/>
+          <Target RefID="50565"/>
+          <Copy>
+            <Source RefID="14768"/>
+            <Target RefID="50564"/>
+          </Copy>
+          <Copy>
+            <Source RefID="14676"/>
+            <Target RefID="50565"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="8831" Label="BooleanArrayCharacteristic" Premise="tmf640.datamodel.BooleanArrayCharacteristic">
+        <Assign ID="8853">
+          <Source RefID="12"/>
+          <Target RefID="10857"/>
+          <Copy>
+            <Source RefID="12"/>
+            <Target RefID="10857"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="10667" Label="Mapping">
+          <Input>
+            <Data ID="10845" Label="BooleanArrayCharacteristic" ReferenceName="BooleanArrayCharacteristic" ReferencePath="tmf640.datamodel" VariableName="booleanArrayCharacteristic10845">
+              <Source RefID="10667"/>
+            </Data>
+            <Source RefID="10857"/>
+          </Input>
+          <Output>
+            <Data ID="10669" Label="Array Wrapper" ReferenceName="ArrayWrapper" ReferencePath="xfmg.tmf.util" VariableName="arrayWrapper10669"/>
+            <Target RefID="10670"/>
+          </Output>
+          <Output>
+            <Data ID="10671" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text10671"/>
+            <Target RefID="10672"/>
+          </Output>
+          <Mapping>%1%.booleanArray0=%0%.value</Mapping>
+        </Mappings>
+        <Function ID="11302" Label="as wrapped list">
+          <Source RefID="11303"/>
+          <Source RefID="10670"/>
+          <Target RefID="11303"/>
+          <Target RefID="11305"/>
+          <Invoke Operation="asWrappedList" ServiceID="11303">
+            <Source RefID="10670"/>
+          </Invoke>
+          <Receive ServiceID="11303">
+            <Target RefID="11305"/>
+          </Receive>
+        </Function>
+        <Assign ID="8854">
+          <Source RefID="11305"/>
+          <Source RefID="10672"/>
+          <Target RefID="50564"/>
+          <Target RefID="50565"/>
+          <Copy>
+            <Source RefID="11305"/>
+            <Target RefID="50564"/>
+          </Copy>
+          <Copy>
+            <Source RefID="10672"/>
+            <Target RefID="50565"/>
+          </Copy>
+        </Assign>
+        <Data ID="11305" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text11305">
+          <Source RefID="11302"/>
+        </Data>
+      </Case>
+      <Case ID="8832" Label="NumberCharacteristic" Premise="tmf640.datamodel.NumberCharacteristic">
+        <Assign ID="8856">
+          <Source RefID="12"/>
+          <Target RefID="11574"/>
+          <Copy>
+            <Source RefID="12"/>
+            <Target RefID="11574"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="11390" Label="Mapping">
+          <Input>
+            <Data ID="11562" Label="NumberCharacteristic" ReferenceName="NumberCharacteristic" ReferencePath="tmf640.datamodel" VariableName="numberCharacteristic11562">
+              <Source RefID="11390"/>
+            </Data>
+            <Source RefID="11574"/>
+          </Input>
+          <Output>
+            <Data ID="11475" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text11475">
+              <Source RefID="11390"/>
+            </Data>
+            <Target RefID="11476"/>
+          </Output>
+          <Output>
+            <Data ID="12056" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text12056">
+              <Source RefID="11390"/>
+            </Data>
+            <Target RefID="12057"/>
+          </Output>
+          <Mapping>%1%.text=%0%.value</Mapping>
+        </Mappings>
+        <Assign ID="8857">
+          <Source RefID="12057"/>
+          <Source RefID="11476"/>
+          <Target RefID="50564"/>
+          <Target RefID="50565"/>
+          <Copy>
+            <Source RefID="12057"/>
+            <Target RefID="50564"/>
+          </Copy>
+          <Copy>
+            <Source RefID="11476"/>
+            <Target RefID="50565"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="8833" Label="StringArrayCharacteristic" Premise="tmf640.datamodel.StringArrayCharacteristic">
+        <Assign ID="8859">
+          <Source RefID="12"/>
+          <Target RefID="12439"/>
+          <Copy>
+            <Source RefID="12"/>
+            <Target RefID="12439"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="12140" Label="Mapping">
+          <Input>
+            <Data ID="12427" Label="StringArrayCharacteristic" ReferenceName="StringArrayCharacteristic" ReferencePath="tmf640.datamodel" VariableName="stringArrayCharacteristic12427">
+              <Source RefID="12140"/>
+            </Data>
+            <Source RefID="12439"/>
+          </Input>
+          <Output>
+            <Data ID="12142" Label="Array Wrapper" ReferenceName="ArrayWrapper" ReferencePath="xfmg.tmf.util" VariableName="arrayWrapper12142"/>
+            <Target RefID="12143"/>
+          </Output>
+          <Output>
+            <Data ID="12144" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text12144"/>
+            <Target RefID="12145"/>
+          </Output>
+          <Mapping>%1%.stringArray=%0%.value</Mapping>
+        </Mappings>
+        <Function ID="12229" Label="as wrapped list">
+          <Source RefID="12230"/>
+          <Source RefID="12143"/>
+          <Target RefID="12230"/>
+          <Target RefID="13684"/>
+          <Invoke Operation="asWrappedList" ServiceID="12230">
+            <Source RefID="12143"/>
+          </Invoke>
+          <Receive ServiceID="12230">
+            <Target RefID="13684"/>
+          </Receive>
+        </Function>
+        <Assign ID="8860">
+          <Source RefID="13684"/>
+          <Source RefID="12145"/>
+          <Target RefID="50564"/>
+          <Target RefID="50565"/>
+          <Copy>
+            <Source RefID="13684"/>
+            <Target RefID="50564"/>
+          </Copy>
+          <Copy>
+            <Source RefID="12145"/>
+            <Target RefID="50565"/>
+          </Copy>
+        </Assign>
+        <Data ID="13684" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text13684">
+          <Source RefID="12229"/>
+        </Data>
+      </Case>
+      <Case ID="8834" Label="IntegerCharacteristic" Premise="tmf640.datamodel.IntegerCharacteristic">
+        <Assign ID="8862">
+          <Source RefID="12"/>
+          <Target RefID="13072"/>
+          <Copy>
+            <Source RefID="12"/>
+            <Target RefID="13072"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="12779" Label="Mapping">
+          <Input>
+            <Data ID="13060" Label="IntegerCharacteristic" ReferenceName="IntegerCharacteristic" ReferencePath="tmf640.datamodel" VariableName="integerCharacteristic13060">
+              <Source RefID="12779"/>
+            </Data>
+            <Source RefID="13072"/>
+          </Input>
+          <Output>
+            <Data ID="12781" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text12781"/>
+            <Target RefID="12782"/>
+          </Output>
+          <Output>
+            <Data ID="12783" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text12783"/>
+            <Target RefID="12784"/>
+          </Output>
+          <Mapping>%1%.text=%0%.value</Mapping>
+        </Mappings>
+        <Assign ID="8863">
+          <Source RefID="12784"/>
+          <Source RefID="12782"/>
+          <Target RefID="50564"/>
+          <Target RefID="50565"/>
+          <Copy>
+            <Source RefID="12784"/>
+            <Target RefID="50564"/>
+          </Copy>
+          <Copy>
+            <Source RefID="12782"/>
+            <Target RefID="50565"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="8835" Label="BooleanCharacteristic" Premise="tmf640.datamodel.BooleanCharacteristic">
+        <Assign ID="8865">
+          <Source RefID="12"/>
+          <Target RefID="13436"/>
+          <Copy>
+            <Source RefID="12"/>
+            <Target RefID="13436"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="13234" Label="Mapping">
+          <Input>
+            <Data ID="13424" Label="BooleanCharacteristic" ReferenceName="BooleanCharacteristic" ReferencePath="tmf640.datamodel" VariableName="booleanCharacteristic13424">
+              <Source RefID="13234"/>
+            </Data>
+            <Source RefID="13436"/>
+          </Input>
+          <Output>
+            <Data ID="13236" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text13236"/>
+            <Target RefID="13237"/>
+          </Output>
+          <Output>
+            <Data ID="13238" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text13238"/>
+            <Target RefID="13239"/>
+          </Output>
+          <Mapping>%1%.text=%0%.value</Mapping>
+        </Mappings>
+        <Assign ID="8866">
+          <Source RefID="13239"/>
+          <Source RefID="13237"/>
+          <Target RefID="50564"/>
+          <Target RefID="50565"/>
+          <Copy>
+            <Source RefID="13239"/>
+            <Target RefID="50564"/>
+          </Copy>
+          <Copy>
+            <Source RefID="13237"/>
+            <Target RefID="50565"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="8836" Label="IntegerArrayCharacteristic" Premise="tmf640.datamodel.IntegerArrayCharacteristic">
+        <Assign ID="8868">
+          <Source RefID="12"/>
+          <Target RefID="14168"/>
+          <Copy>
+            <Source RefID="12"/>
+            <Target RefID="14168"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="13594" Label="Mapping">
+          <Input>
+            <Data ID="14156" Label="IntegerArrayCharacteristic" ReferenceName="IntegerArrayCharacteristic" ReferencePath="tmf640.datamodel" VariableName="integerArrayCharacteristic14156">
+              <Source RefID="13594"/>
+            </Data>
+            <Source RefID="14168"/>
+          </Input>
+          <Output>
+            <Data ID="13596" Label="Array Wrapper" ReferenceName="ArrayWrapper" ReferencePath="xfmg.tmf.util" VariableName="arrayWrapper13596"/>
+            <Target RefID="13959"/>
+          </Output>
+          <Output>
+            <Data ID="13598" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text13598"/>
+            <Target RefID="13960"/>
+          </Output>
+          <Mapping>%1%.longObjectArray=%0%.value</Mapping>
+        </Mappings>
+        <Function ID="13770" Label="as wrapped list">
+          <Source RefID="13771"/>
+          <Source RefID="13959"/>
+          <Target RefID="13771"/>
+          <Target RefID="13866"/>
+          <Invoke Operation="asWrappedList" ServiceID="13771">
+            <Source RefID="13959"/>
+          </Invoke>
+          <Receive ServiceID="13771">
+            <Target RefID="13866"/>
+          </Receive>
+        </Function>
+        <Assign ID="8869">
+          <Source RefID="13866"/>
+          <Source RefID="13960"/>
+          <Target RefID="50564"/>
+          <Target RefID="50565"/>
+          <Copy>
+            <Source RefID="13866"/>
+            <Target RefID="50564"/>
+          </Copy>
+          <Copy>
+            <Source RefID="13960"/>
+            <Target RefID="50565"/>
+          </Copy>
+        </Assign>
+        <Data ID="13866" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text13866">
+          <Source RefID="13770"/>
+        </Data>
+        <Data ID="13959" Label="Array Wrapper" ReferenceName="ArrayWrapper" ReferencePath="xfmg.tmf.util" VariableName="arrayWrapper13959"/>
+        <Data ID="13960" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text13960"/>
+      </Case>
+    </Choice>
+    <Choice ID="15319" TypeName="BaseChoiceTypeSubclasses" TypePath="server">
+      <Source RefID="12"/>
+      <Input>
+        <Data ID="15415" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic15415">
+          <Source RefID="15319"/>
+        </Data>
+        <Source RefID="12"/>
+      </Input>
+      <Case ID="15416" Label="Characteristic" Premise="tmf640.datamodel.Characteristic">
+        <Assign ID="15428"/>
+        <Assign ID="15429"/>
+      </Case>
+      <Case ID="15417" Label="ObjectArrayCharacteristic" Premise="tmf640.datamodel.ObjectArrayCharacteristic">
+        <Assign ID="15431">
+          <Source RefID="12"/>
+          <Target RefID="25187"/>
+          <Copy>
+            <Source RefID="12"/>
+            <Target RefID="25187"/>
+          </Copy>
+        </Assign>
+        <Choice ID="27241" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="5407"/>
+          <Source RefID="25187"/>
+          <Meta>
+            <OuterConditionPart>?</OuterConditionPart>
+          </Meta>
+          <Input>
+            <Data ID="27554" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification27554">
+              <Source RefID="27241"/>
+            </Data>
+            <Source RefID="5407"/>
+          </Input>
+          <Input>
+            <Data ID="28065" Label="ObjectArrayCharacteristic" ReferenceName="ObjectArrayCharacteristic" ReferencePath="tmf640.datamodel" VariableName="objectArrayCharacteristic28065">
+              <Source RefID="27241"/>
+            </Data>
+            <Source RefID="25187"/>
+          </Input>
+          <Case ID="27449" Label="" Premise="%0%.minCardinality!=null&amp;&amp;%0%.minCardinality&gt;length(%1%.value)">
+            <Mappings ID="26931" Label="Mapping">
+              <Input>
+                <Data ID="30524" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification30524">
+                  <Source RefID="26931"/>
+                </Data>
+                <Source RefID="5407"/>
+              </Input>
+              <Input>
+                <Data ID="31239" Label="ObjectArrayCharacteristic" ReferenceName="ObjectArrayCharacteristic" ReferencePath="tmf640.datamodel" VariableName="objectArrayCharacteristic31239">
+                  <Source RefID="26931"/>
+                </Data>
+                <Source RefID="25187"/>
+              </Input>
+              <Output>
+                <Exception ID="27137" Label="InvalidCharacteristicsCardinality" ReferenceName="InvalidCharacteristicsCardinality" ReferencePath="xfmg.tmf640" VariableName="invalidCharacteristicsCardinality27137">
+                  <Source RefID="26931"/>
+                </Exception>
+                <Target RefID="29401"/>
+              </Output>
+              <Mapping>%2%.characteristicName=%0%.name</Mapping>
+              <Mapping>%2%.cardinality=length(%1%.value)</Mapping>
+              <Mapping>%2%.minCardinality=%0%.minCardinality</Mapping>
+              <Mapping>%2%.maxCardinality=%0%.maxCardinality</Mapping>
+            </Mappings>
+            <Throw ExceptionID="29401" ID="43362" Label="Throw InvalidCharacteristicsCardinality">
+              <Meta>
+                <PreferedExceptionType>xfmg.tmf640.InvalidCharacteristicsCardinality</PreferedExceptionType>
+              </Meta>
+              <Source RefID="29401"/>
+            </Throw>
+            <Assign ID="27451"/>
+            <Exception ID="29401" Label="InvalidCharacteristicsCardinality" ReferenceName="InvalidCharacteristicsCardinality" ReferencePath="xfmg.tmf640" VariableName="invalidCharacteristicsCardinality29401">
+              <Target RefID="43362"/>
+            </Exception>
+          </Case>
+          <Case Alias="27449" ID="29195" Label="" Premise="%0%.maxCardinality!=null&amp;&amp;%0%.maxCardinality&lt;length(%1%.value)"/>
+          <Case ID="27242" IsDefault="true" Label="default">
+            <Assign ID="27244"/>
+          </Case>
+        </Choice>
+        <Assign ID="15432"/>
+      </Case>
+      <Case ID="15419" Label="NumberArrayCharacteristic" Premise="tmf640.datamodel.NumberArrayCharacteristic">
+        <Choice ID="46005" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="5407"/>
+          <Input>
+            <Data ID="46012" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification46012"/>
+            <Source RefID="5407"/>
+          </Input>
+          <Case ID="46006" Label="true" Premise="%0%.regex!=null">
+            <Foreach ID="52226">
+              <Source RefID="50564"/>
+              <InputList RefID="50564">
+                <Data ID="52227" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text52227"/>
+              </InputList>
+              <Choice ID="16700" TypeName="BaseChoiceTypeFormula" TypePath="server">
+                <Source RefID="52227"/>
+                <Source RefID="5407"/>
+                <Input>
+                  <Data ID="16803" Label="Input" ReferenceName="Text" ReferencePath="base" VariableName="text16803">
+                    <Source RefID="16700"/>
+                  </Data>
+                  <Source RefID="52227">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                </Input>
+                <Input>
+                  <Data ID="17190" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification17190">
+                    <Source RefID="16700"/>
+                  </Data>
+                  <Source RefID="5407"/>
+                </Input>
+                <Case ID="16701" Label="true" Premise="matches(%0%.text,%1%.regex)">
+                  <Assign ID="16704"/>
+                </Case>
+                <Case ID="16702" Label="false">
+                  <Mappings ID="19962" Label="Mapping">
+                    <Input>
+                      <Data ID="20925" Label="Input" ReferenceName="Text" ReferencePath="base" VariableName="text20925">
+                        <Source RefID="19962"/>
+                      </Data>
+                      <Source RefID="52227">
+                        <Meta>
+                          <LinkType>UserConnected</LinkType>
+                        </Meta>
+                      </Source>
+                    </Input>
+                    <Input>
+                      <Data ID="21326" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification21326">
+                        <Source RefID="19962"/>
+                      </Data>
+                      <Source RefID="5407"/>
+                    </Input>
+                    <Output>
+                      <Exception ID="20059" Label="CharacteristicValueDoesNotMatchRegularExpression" ReferenceName="CharacteristicValueDoesNotMatchRegularExpression" ReferencePath="xfmg.tmf633" VariableName="characteristicValueDoesNotMatchRegularExpression20059">
+                        <Source RefID="19962"/>
+                      </Exception>
+                      <Target RefID="20060"/>
+                    </Output>
+                    <Mapping>%2%.characteristicName=%1%.name</Mapping>
+                    <Mapping>%2%.value=%0%.text</Mapping>
+                    <Mapping>%2%.regex=%1%.regex</Mapping>
+                  </Mappings>
+                  <Throw ExceptionID="20060" ID="45277" Label="Throw CharacteristicValueDoesNotMatchRegularExpression">
+                    <Meta>
+                      <PreferedExceptionType>xfmg.tmf633.CharacteristicValueDoesNotMatchRegularExpression</PreferedExceptionType>
+                    </Meta>
+                    <Source RefID="20060"/>
+                  </Throw>
+                  <Assign ID="16706"/>
+                </Case>
+              </Choice>
+              <Exception ID="20060" Label="CharacteristicValueDoesNotMatchRegularExpression" ReferenceName="CharacteristicValueDoesNotMatchRegularExpression" ReferencePath="xfmg.tmf633" VariableName="characteristicValueDoesNotMatchRegularExpression20060">
+                <Target RefID="45277"/>
+              </Exception>
+            </Foreach>
+            <Assign/>
+          </Case>
+          <Case ID="46007" Label="false">
+            <Assign/>
+          </Case>
+        </Choice>
+        <Choice ID="31866" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="5407"/>
+          <Source RefID="50564"/>
+          <Meta>
+            <OuterConditionPart>?</OuterConditionPart>
+          </Meta>
+          <Input>
+            <Data ID="31870" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification31870"/>
+            <Source RefID="5407"/>
+          </Input>
+          <Input>
+            <Data ID="32406" IsList="true" Label="Input" ReferenceName="Text" ReferencePath="base" VariableName="text32406">
+              <Source RefID="31866"/>
+            </Data>
+            <Source RefID="50564"/>
+          </Input>
+          <Input>
+            <Data ID="32611" IsList="true" Label="Input" ReferenceName="Text" ReferencePath="base" VariableName="text32611">
+              <Source RefID="31866"/>
+            </Data>
+            <Source RefID="50564"/>
+          </Input>
+          <Case ID="31874" Label="" Premise="%0%.minCardinality!=null&amp;&amp;%0%.minCardinality&gt;length(%1%)">
+            <Mappings ID="31880" Label="Mapping">
+              <Input>
+                <Data ID="31881" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification31881"/>
+                <Source RefID="5407"/>
+              </Input>
+              <Input>
+                <Data ID="32818" IsList="true" Label="Input" ReferenceName="Text" ReferencePath="base" VariableName="text32818">
+                  <Source RefID="31880"/>
+                </Data>
+                <Source RefID="50564"/>
+              </Input>
+              <Output>
+                <Exception ID="31883" Label="InvalidCharacteristicsCardinality" ReferenceName="InvalidCharacteristicsCardinality" ReferencePath="xfmg.tmf640" VariableName="invalidCharacteristicsCardinality31883"/>
+                <Target RefID="31879"/>
+              </Output>
+              <Mapping>%2%.characteristicName=%0%.name</Mapping>
+              <Mapping>%2%.cardinality=length(%1%)</Mapping>
+              <Mapping>%2%.minCardinality=%0%.minCardinality</Mapping>
+              <Mapping>%2%.maxCardinality=%0%.maxCardinality</Mapping>
+            </Mappings>
+            <Throw ExceptionID="31879" ID="42856" Label="Throw InvalidCharacteristicsCardinality">
+              <Meta>
+                <PreferedExceptionType>xfmg.tmf640.InvalidCharacteristicsCardinality</PreferedExceptionType>
+              </Meta>
+              <Source RefID="31879"/>
+            </Throw>
+            <Assign/>
+            <Exception ID="31879" Label="InvalidCharacteristicsCardinality" ReferenceName="InvalidCharacteristicsCardinality" ReferencePath="xfmg.tmf640" VariableName="invalidCharacteristicsCardinality31879">
+              <Target RefID="42856"/>
+            </Exception>
+          </Case>
+          <Case Alias="31874" ID="31877" Label="" Premise="%0%.maxCardinality!=null&amp;&amp;%0%.maxCardinality&lt;length(%2%)"/>
+          <Case ID="31867" IsDefault="true" Label="default">
+            <Assign/>
+          </Case>
+        </Choice>
+        <Choice ID="33560" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="5407"/>
+          <Input>
+            <Data ID="33669" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification33669">
+              <Source RefID="33560"/>
+            </Data>
+            <Source RefID="5407"/>
+          </Input>
+          <Case ID="33561" Label="true" Premise="length(%0%.characteristicValueSpecification)&gt;&quot;1&quot;">
+            <Function ID="36693" Label="Get Enum Values">
+              <Source RefID="36694"/>
+              <Source RefID="5407"/>
+              <Target RefID="36694"/>
+              <Target RefID="36696"/>
+              <Invoke Operation="GetEnumValues" ServiceID="36694">
+                <Source RefID="5407"/>
+              </Invoke>
+              <Receive ServiceID="36694">
+                <Target RefID="36696"/>
+              </Receive>
+            </Function>
+            <Foreach ID="52492">
+              <Source RefID="50564"/>
+              <InputList RefID="50564">
+                <Data ID="52493" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text52493"/>
+              </InputList>
+              <Choice ID="35688" TypeName="BaseChoiceTypeFormula" TypePath="server">
+                <Source RefID="36696"/>
+                <Source RefID="52493"/>
+                <Input>
+                  <Data ID="37292" Label="HashMap" ReferenceName="HashMap" ReferencePath="xprc.base.list" VariableName="hashMap37292">
+                    <Source RefID="35688"/>
+                  </Data>
+                  <Source RefID="36696"/>
+                </Input>
+                <Input>
+                  <Data ID="37623" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text37623">
+                    <Source RefID="35688"/>
+                  </Data>
+                  <Source RefID="52493">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                </Input>
+                <Case ID="35689" Label="true" Premise="%0%.getr(%1%.text)==null">
+                  <Mappings ID="38433" Label="Mapping">
+                    <Input>
+                      <Data ID="38672" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification38672">
+                        <Source RefID="38433"/>
+                      </Data>
+                      <Source RefID="5407"/>
+                    </Input>
+                    <Input>
+                      <Data ID="39263" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text39263">
+                        <Source RefID="38433"/>
+                      </Data>
+                      <Source RefID="52493">
+                        <Meta>
+                          <LinkType>UserConnected</LinkType>
+                        </Meta>
+                      </Source>
+                    </Input>
+                    <Output>
+                      <Exception ID="38552" Label="CharacteristicValueNotInEnumeration" ReferenceName="CharacteristicValueNotInEnumeration" ReferencePath="xfmg.tmf640" VariableName="characteristicValueNotInEnumeration38552">
+                        <Source RefID="38433"/>
+                      </Exception>
+                      <Target RefID="44164"/>
+                    </Output>
+                    <Mapping>%2%.characteristicName=%0%.name</Mapping>
+                    <Mapping>%2%.characteristicValue=%1%.text</Mapping>
+                  </Mappings>
+                  <Throw ExceptionID="44164" ID="45158" Label="Throw CharacteristicValueNotInEnumeration">
+                    <Meta>
+                      <PreferedExceptionType>xfmg.tmf640.CharacteristicValueNotInEnumeration</PreferedExceptionType>
+                    </Meta>
+                    <Source RefID="44164"/>
+                  </Throw>
+                  <Assign ID="35692"/>
+                  <Exception ID="44164" Label="CharacteristicValueNotInEnumeration" ReferenceName="CharacteristicValueNotInEnumeration" ReferencePath="xfmg.tmf640" VariableName="characteristicValueNotInEnumeration44164">
+                    <Target RefID="45158"/>
+                  </Exception>
+                </Case>
+                <Case ID="35690" Label="false">
+                  <Assign ID="35694"/>
+                </Case>
+              </Choice>
+            </Foreach>
+            <Assign ID="33564"/>
+            <Data ID="36696" Label="Text" ReferenceName="HashMap" ReferencePath="xprc.base.list" VariableName="hashMap36696">
+              <Source RefID="36693"/>
+            </Data>
+          </Case>
+          <Case ID="33562" Label="false">
+            <Assign ID="33566"/>
+          </Case>
+        </Choice>
+        <Assign ID="15438"/>
+      </Case>
+      <Case Alias="tmf640.datamodel.NumberArrayCharacteristic" ID="15682" Label="BooleanArrayCharacteristic" Premise="tmf640.datamodel.BooleanArrayCharacteristic"/>
+      <Case Alias="tmf640.datamodel.NumberArrayCharacteristic" ID="15788" Label="StringArrayCharacteristic" Premise="tmf640.datamodel.StringArrayCharacteristic"/>
+      <Case Alias="tmf640.datamodel.NumberArrayCharacteristic" ID="16194" Label="IntegerArrayCharacteristic" Premise="tmf640.datamodel.IntegerArrayCharacteristic"/>
+      <Case ID="15420" Label="ObjectCharacteristic" Premise="tmf640.datamodel.ObjectCharacteristic">
+        <Assign ID="15440"/>
+        <Assign ID="15441"/>
+      </Case>
+      <Case ID="15422" Label="NumberCharacteristic" Premise="tmf640.datamodel.NumberCharacteristic">
+        <Choice ID="46266" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="5407"/>
+          <Input>
+            <Data ID="46399" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification46399">
+              <Source RefID="46266"/>
+            </Data>
+            <Source RefID="5407"/>
+          </Input>
+          <Case ID="46267" Label="true" Premise="%0%.regex!=null">
+            <Choice ID="18493" TypeName="BaseChoiceTypeFormula" TypePath="server">
+              <Source RefID="5407"/>
+              <Source RefID="50565"/>
+              <Input>
+                <Data ID="18676" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification18676">
+                  <Source RefID="18493"/>
+                </Data>
+                <Source RefID="5407"/>
+              </Input>
+              <Input>
+                <Data ID="18943" Label="Input" ReferenceName="Text" ReferencePath="base" VariableName="text18943">
+                  <Source RefID="18493"/>
+                </Data>
+                <Source RefID="50565">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Case ID="18494" Label="true" Premise="matches(%1%.text,%0%.regex)">
+                <Assign ID="18497"/>
+              </Case>
+              <Case ID="18495" Label="false">
+                <Mappings ID="21810" Label="Mapping">
+                  <Input>
+                    <Data ID="21811" Label="Input" ReferenceName="Text" ReferencePath="base" VariableName="text21811"/>
+                    <Source RefID="50565">
+                      <Meta>
+                        <LinkType>UserConnected</LinkType>
+                      </Meta>
+                    </Source>
+                  </Input>
+                  <Input>
+                    <Data ID="21812" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification21812"/>
+                    <Source RefID="5407"/>
+                  </Input>
+                  <Output>
+                    <Exception ID="21813" Label="CharacteristicValueDoesNotMatchRegularExpression" ReferenceName="CharacteristicValueDoesNotMatchRegularExpression" ReferencePath="xfmg.tmf633" VariableName="characteristicValueDoesNotMatchRegularExpression21813"/>
+                    <Target RefID="21911"/>
+                  </Output>
+                  <Mapping>%2%.characteristicName=%1%.name</Mapping>
+                  <Mapping>%2%.value=%0%.text</Mapping>
+                  <Mapping>%2%.regex=%1%.regex</Mapping>
+                </Mappings>
+                <Throw ExceptionID="21911" ID="45404" Label="Throw CharacteristicValueDoesNotMatchRegularExpression">
+                  <Meta>
+                    <PreferedExceptionType>xfmg.tmf633.CharacteristicValueDoesNotMatchRegularExpression</PreferedExceptionType>
+                  </Meta>
+                  <Source RefID="21911"/>
+                </Throw>
+                <Assign ID="18499"/>
+                <Exception ID="21911" Label="CharacteristicValueDoesNotMatchRegularExpression" ReferenceName="CharacteristicValueDoesNotMatchRegularExpression" ReferencePath="xfmg.tmf633" VariableName="characteristicValueDoesNotMatchRegularExpression21911">
+                  <Target RefID="45404"/>
+                </Exception>
+              </Case>
+            </Choice>
+            <Assign ID="46270"/>
+          </Case>
+          <Case ID="46268" Label="false">
+            <Assign ID="46272"/>
+          </Case>
+        </Choice>
+        <Choice ID="41451" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="5407"/>
+          <Input>
+            <Data ID="41458" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification41458"/>
+            <Source RefID="5407"/>
+          </Input>
+          <Case ID="41452" Label="true" Premise="length(%0%.characteristicValueSpecification)&gt;&quot;1&quot;">
+            <Function ID="41461" Label="Get Enum Values">
+              <Source RefID="41462"/>
+              <Source RefID="5407"/>
+              <Target RefID="41462"/>
+              <Target RefID="41460"/>
+              <Invoke Operation="GetEnumValues" ServiceID="41462">
+                <Source RefID="5407"/>
+              </Invoke>
+              <Receive ServiceID="41462">
+                <Target RefID="41460"/>
+              </Receive>
+            </Function>
+            <Choice ID="41464" TypeName="BaseChoiceTypeFormula" TypePath="server">
+              <Source RefID="41460"/>
+              <Source RefID="50565"/>
+              <Input>
+                <Data ID="41471" Label="HashMap" ReferenceName="HashMap" ReferencePath="xprc.base.list" VariableName="hashMap41471"/>
+                <Source RefID="41460"/>
+              </Input>
+              <Input>
+                <Data ID="41472" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text41472"/>
+                <Source RefID="50565">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Case ID="41465" Label="true" Premise="%0%.getr(%1%.text)==null">
+                <Mappings ID="41474" Label="Mapping">
+                  <Input>
+                    <Data ID="41475" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification41475"/>
+                    <Source RefID="5407"/>
+                  </Input>
+                  <Input>
+                    <Data ID="41476" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text41476"/>
+                    <Source RefID="50565">
+                      <Meta>
+                        <LinkType>UserConnected</LinkType>
+                      </Meta>
+                    </Source>
+                  </Input>
+                  <Output>
+                    <Exception ID="41477" Label="CharacteristicValueNotInEnumeration" ReferenceName="CharacteristicValueNotInEnumeration" ReferencePath="xfmg.tmf640" VariableName="characteristicValueNotInEnumeration41477"/>
+                    <Target RefID="44492"/>
+                  </Output>
+                  <Mapping>%2%.characteristicName=%0%.name</Mapping>
+                  <Mapping>%2%.characteristicValue=%1%.text</Mapping>
+                </Mappings>
+                <Throw ExceptionID="44492" ID="44815" Label="Throw CharacteristicValueNotInEnumeration">
+                  <Meta>
+                    <PreferedExceptionType>xfmg.tmf640.CharacteristicValueNotInEnumeration</PreferedExceptionType>
+                  </Meta>
+                  <Source RefID="44492"/>
+                </Throw>
+                <Assign/>
+                <Exception ID="44492" Label="CharacteristicValueNotInEnumeration" ReferenceName="CharacteristicValueNotInEnumeration" ReferencePath="xfmg.tmf640" VariableName="characteristicValueNotInEnumeration44492">
+                  <Target RefID="44815"/>
+                </Exception>
+              </Case>
+              <Case ID="41466" Label="false">
+                <Assign/>
+              </Case>
+            </Choice>
+            <Assign/>
+            <Data ID="41460" Label="Text" ReferenceName="HashMap" ReferencePath="xprc.base.list" VariableName="hashMap41460"/>
+          </Case>
+          <Case ID="41453" Label="false">
+            <Assign/>
+          </Case>
+        </Choice>
+        <Assign ID="15447"/>
+      </Case>
+      <Case Alias="tmf640.datamodel.NumberCharacteristic" ID="15572" Label="StringCharacteristic" Premise="tmf640.datamodel.StringCharacteristic"/>
+      <Case Alias="tmf640.datamodel.NumberCharacteristic" ID="15992" Label="IntegerCharacteristic" Premise="tmf640.datamodel.IntegerCharacteristic"/>
+      <Case Alias="tmf640.datamodel.NumberCharacteristic" ID="16094" Label="BooleanCharacteristic" Premise="tmf640.datamodel.BooleanCharacteristic"/>
+    </Choice>
+    <Choice ID="47272" TypeName="BaseChoiceTypeSubclasses" TypePath="server">
+      <Source RefID="12"/>
+      <Input>
+        <Data ID="47404" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic47404">
+          <Source RefID="47272"/>
+        </Data>
+        <Source RefID="12"/>
+      </Input>
+      <Case ID="47405" Label="Characteristic" Premise="tmf640.datamodel.Characteristic">
+        <Assign ID="47418"/>
+      </Case>
+      <Case Alias="tmf640.datamodel.Characteristic" ID="47597" Label="BooleanCharacteristic" Premise="tmf640.datamodel.BooleanCharacteristic"/>
+      <Case Alias="tmf640.datamodel.Characteristic" ID="47743" Label="ObjectArrayCharacteristic" Premise="tmf640.datamodel.ObjectArrayCharacteristic"/>
+      <Case Alias="tmf640.datamodel.Characteristic" ID="47887" Label="StringArrayCharacteristic" Premise="tmf640.datamodel.StringArrayCharacteristic"/>
+      <Case Alias="tmf640.datamodel.Characteristic" ID="48029" Label="ObjectCharacteristic" Premise="tmf640.datamodel.ObjectCharacteristic"/>
+      <Case Alias="tmf640.datamodel.Characteristic" ID="48169" Label="BooleanArrayCharacteristic" Premise="tmf640.datamodel.BooleanArrayCharacteristic"/>
+      <Case Alias="tmf640.datamodel.Characteristic" ID="48307" Label="StringCharacteristic" Premise="tmf640.datamodel.StringCharacteristic"/>
+      <Case ID="47409" Label="NumberCharacteristic" Premise="tmf640.datamodel.NumberCharacteristic">
+        <Choice ID="50801" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="6925"/>
+          <Input>
+            <Data ID="50808" Label="CharacteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicValueSpecification50808"/>
+            <Source RefID="6925"/>
+          </Input>
+          <Case ID="50802" Label="true" Premise="%0%.valueFrom!=null">
+            <Choice ID="50809" TypeName="BaseChoiceTypeFormula" TypePath="server">
+              <Source RefID="50565"/>
+              <Source RefID="6925"/>
+              <Input>
+                <Data ID="50816" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text50816"/>
+                <Source RefID="50565">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Input>
+                <Data ID="50817" Label="CharacteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicValueSpecification50817"/>
+                <Source RefID="6925"/>
+              </Input>
+              <Case ID="50810" Label="true" Premise="%0%.text&lt;%1%.valueFrom">
+                <Mappings ID="53688" Label="Mapping">
+                  <Input>
+                    <Data ID="54094" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification54094">
+                      <Source RefID="53688"/>
+                    </Data>
+                    <Source RefID="5407"/>
+                  </Input>
+                  <Input>
+                    <Data ID="53959" Label="CharacteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicValueSpecification53959">
+                      <Source RefID="53688"/>
+                    </Data>
+                    <Source RefID="6925"/>
+                  </Input>
+                  <Input>
+                    <Data ID="55167" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text55167">
+                      <Source RefID="53688"/>
+                    </Data>
+                    <Source RefID="50565">
+                      <Meta>
+                        <LinkType>UserConnected</LinkType>
+                      </Meta>
+                    </Source>
+                  </Input>
+                  <Output>
+                    <Exception ID="53823" Label="ExceededAllowedValueRange" ReferenceName="ExceededAllowedValueRange" ReferencePath="xfmg.tmf640" VariableName="exceededAllowedValueRange53823">
+                      <Source RefID="53688"/>
+                    </Exception>
+                    <Target RefID="53824"/>
+                  </Output>
+                  <Mapping>%3%.characteristicName=%0%.name</Mapping>
+                  <Mapping>%3%.characteristicValue=%2%.text</Mapping>
+                  <Mapping>%3%.minValue=%1%.valueFrom</Mapping>
+                  <Mapping>%3%.maxValue=%1%.valueTo</Mapping>
+                </Mappings>
+                <Throw ExceptionID="53824" ID="53553" Label="Throw Exceeded Allowed Value Range">
+                  <Meta>
+                    <PreferedExceptionType>xfmg.tmf640.ExceededAllowedValueRange</PreferedExceptionType>
+                  </Meta>
+                  <Source RefID="53824"/>
+                </Throw>
+                <Assign ID="50813"/>
+              </Case>
+              <Case ID="50811" Label="false">
+                <Assign ID="50815"/>
+              </Case>
+            </Choice>
+            <Assign ID="50805"/>
+          </Case>
+          <Case ID="50803" Label="false">
+            <Assign ID="50807"/>
+          </Case>
+        </Choice>
+        <Choice ID="48443" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="6925"/>
+          <Input>
+            <Data ID="48718" Label="CharacteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicValueSpecification48718">
+              <Source RefID="48443"/>
+            </Data>
+            <Source RefID="6925"/>
+          </Input>
+          <Case ID="48444" Label="true" Premise="%0%.valueTo!=null">
+            <Choice ID="49908" TypeName="BaseChoiceTypeFormula" TypePath="server">
+              <Source RefID="50565"/>
+              <Source RefID="6925"/>
+              <Input>
+                <Data ID="50041" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text50041">
+                  <Source RefID="49908"/>
+                </Data>
+                <Source RefID="50565">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Input>
+                <Data ID="50420" Label="CharacteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicValueSpecification50420">
+                  <Source RefID="49908"/>
+                </Data>
+                <Source RefID="6925"/>
+              </Input>
+              <Case ID="49909" Label="true" Premise="%0%.text&gt;%1%.valueTo">
+                <Mappings ID="57162" Label="Mapping">
+                  <Input>
+                    <Data ID="57164" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification57164"/>
+                    <Source RefID="5407"/>
+                  </Input>
+                  <Input>
+                    <Data ID="57166" Label="CharacteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicValueSpecification57166"/>
+                    <Source RefID="6925"/>
+                  </Input>
+                  <Input>
+                    <Data ID="57168" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text57168"/>
+                    <Source RefID="50565">
+                      <Meta>
+                        <LinkType>UserConnected</LinkType>
+                      </Meta>
+                    </Source>
+                  </Input>
+                  <Output>
+                    <Exception ID="57169" Label="ExceededAllowedValueRange" ReferenceName="ExceededAllowedValueRange" ReferencePath="xfmg.tmf640" VariableName="exceededAllowedValueRange57169"/>
+                    <Target RefID="57304"/>
+                  </Output>
+                  <Mapping>%3%.characteristicName=%0%.name</Mapping>
+                  <Mapping>%3%.characteristicValue=%2%.text</Mapping>
+                  <Mapping>%3%.minValue=%1%.valueFrom</Mapping>
+                  <Mapping>%3%.maxValue=%1%.valueTo</Mapping>
+                </Mappings>
+                <Throw ExceptionID="57304" ID="57026" Label="Throw Exceeded Allowed Value Range">
+                  <Meta>
+                    <PreferedExceptionType>xfmg.tmf640.ExceededAllowedValueRange</PreferedExceptionType>
+                  </Meta>
+                  <Source RefID="57304"/>
+                </Throw>
+                <Assign ID="49912"/>
+                <Exception ID="57304" Label="ExceededAllowedValueRange" ReferenceName="ExceededAllowedValueRange" ReferencePath="xfmg.tmf640" VariableName="exceededAllowedValueRange57304">
+                  <Target RefID="57026"/>
+                </Exception>
+              </Case>
+              <Case ID="49910" Label="false">
+                <Assign ID="49914"/>
+              </Case>
+            </Choice>
+            <Assign ID="48447"/>
+          </Case>
+          <Case ID="48445" Label="false">
+            <Assign ID="48449"/>
+          </Case>
+        </Choice>
+        <Assign ID="47430"/>
+      </Case>
+      <Case Alias="tmf640.datamodel.NumberCharacteristic" ID="49528" Label="IntegerCharacteristic" Premise="tmf640.datamodel.IntegerCharacteristic"/>
+      <Case ID="47412" Label="NumberArrayCharacteristic" Premise="tmf640.datamodel.NumberArrayCharacteristic">
+        <Choice ID="51196" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="6925"/>
+          <Input>
+            <Data ID="51203" Label="CharacteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicValueSpecification51203"/>
+            <Source RefID="6925"/>
+          </Input>
+          <Case ID="51197" Label="true" Premise="%0%.valueFrom!=null">
+            <Foreach ID="51771">
+              <Source RefID="50564"/>
+              <InputList RefID="50564">
+                <Data ID="51772" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text51772"/>
+              </InputList>
+              <Choice ID="51204" TypeName="BaseChoiceTypeFormula" TypePath="server">
+                <Source RefID="51772"/>
+                <Source RefID="6925"/>
+                <Input>
+                  <Data ID="51211" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text51211"/>
+                  <Source RefID="51772">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                </Input>
+                <Input>
+                  <Data ID="51212" Label="CharacteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicValueSpecification51212"/>
+                  <Source RefID="6925"/>
+                </Input>
+                <Case ID="51205" Label="true" Premise="%0%.text&lt;%1%.valueFrom">
+                  <Mappings ID="57711" Label="Mapping">
+                    <Input>
+                      <Data ID="57713" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification57713"/>
+                      <Source RefID="5407"/>
+                    </Input>
+                    <Input>
+                      <Data ID="57715" Label="CharacteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicValueSpecification57715"/>
+                      <Source RefID="6925"/>
+                    </Input>
+                    <Input>
+                      <Data ID="57717" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text57717"/>
+                      <Source RefID="51772">
+                        <Meta>
+                          <LinkType>UserConnected</LinkType>
+                        </Meta>
+                      </Source>
+                    </Input>
+                    <Output>
+                      <Exception ID="57718" Label="ExceededAllowedValueRange" ReferenceName="ExceededAllowedValueRange" ReferencePath="xfmg.tmf640" VariableName="exceededAllowedValueRange57718"/>
+                      <Target RefID="57853"/>
+                    </Output>
+                    <Mapping>%3%.characteristicName=%0%.name</Mapping>
+                    <Mapping>%3%.characteristicValue=%2%.text</Mapping>
+                    <Mapping>%3%.minValue=%1%.valueFrom</Mapping>
+                    <Mapping>%3%.maxValue=%1%.valueTo</Mapping>
+                  </Mappings>
+                  <Throw ExceptionID="57853" ID="57575" Label="Throw Exceeded Allowed Value Range">
+                    <Meta>
+                      <PreferedExceptionType>xfmg.tmf640.ExceededAllowedValueRange</PreferedExceptionType>
+                    </Meta>
+                    <Source RefID="57853"/>
+                  </Throw>
+                  <Assign ID="51208"/>
+                  <Exception ID="57853" Label="ExceededAllowedValueRange" ReferenceName="ExceededAllowedValueRange" ReferencePath="xfmg.tmf640" VariableName="exceededAllowedValueRange57853">
+                    <Target RefID="57575"/>
+                  </Exception>
+                </Case>
+                <Case ID="51206" Label="false">
+                  <Assign ID="51210"/>
+                </Case>
+              </Choice>
+            </Foreach>
+            <Assign ID="51200"/>
+          </Case>
+          <Case ID="51198" Label="false">
+            <Assign ID="51202"/>
+          </Case>
+        </Choice>
+        <Choice ID="51339" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="6925"/>
+          <Input>
+            <Data ID="51346" Label="CharacteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicValueSpecification51346"/>
+            <Source RefID="6925"/>
+          </Input>
+          <Case ID="51340" Label="true" Premise="%0%.valueTo!=null">
+            <Foreach ID="51905">
+              <Source RefID="50564"/>
+              <InputList RefID="50564">
+                <Data ID="51906" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text51906"/>
+              </InputList>
+              <Choice ID="51347" TypeName="BaseChoiceTypeFormula" TypePath="server">
+                <Source RefID="51906"/>
+                <Source RefID="6925"/>
+                <Input>
+                  <Data ID="51354" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text51354"/>
+                  <Source RefID="51906">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                </Input>
+                <Input>
+                  <Data ID="51355" Label="CharacteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicValueSpecification51355"/>
+                  <Source RefID="6925"/>
+                </Input>
+                <Case ID="51348" Label="true" Premise="%0%.text&gt;%1%.valueTo">
+                  <Mappings ID="58124" Label="Mapping">
+                    <Input>
+                      <Data ID="58126" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification58126"/>
+                      <Source RefID="5407"/>
+                    </Input>
+                    <Input>
+                      <Data ID="58128" Label="CharacteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicValueSpecification58128"/>
+                      <Source RefID="6925"/>
+                    </Input>
+                    <Input>
+                      <Data ID="58130" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text58130"/>
+                      <Source RefID="51906">
+                        <Meta>
+                          <LinkType>UserConnected</LinkType>
+                        </Meta>
+                      </Source>
+                    </Input>
+                    <Output>
+                      <Exception ID="58131" Label="ExceededAllowedValueRange" ReferenceName="ExceededAllowedValueRange" ReferencePath="xfmg.tmf640" VariableName="exceededAllowedValueRange58131"/>
+                      <Target RefID="58266"/>
+                    </Output>
+                    <Mapping>%3%.characteristicName=%0%.name</Mapping>
+                    <Mapping>%3%.characteristicValue=%2%.text</Mapping>
+                    <Mapping>%3%.minValue=%1%.valueFrom</Mapping>
+                    <Mapping>%3%.maxValue=%1%.valueTo</Mapping>
+                  </Mappings>
+                  <Throw ExceptionID="58266" ID="57988" Label="Throw Exceeded Allowed Value Range">
+                    <Meta>
+                      <PreferedExceptionType>xfmg.tmf640.ExceededAllowedValueRange</PreferedExceptionType>
+                    </Meta>
+                    <Source RefID="58266"/>
+                  </Throw>
+                  <Assign ID="51351"/>
+                  <Exception ID="58266" Label="ExceededAllowedValueRange" ReferenceName="ExceededAllowedValueRange" ReferencePath="xfmg.tmf640" VariableName="exceededAllowedValueRange58266">
+                    <Target RefID="57988"/>
+                  </Exception>
+                </Case>
+                <Case ID="51349" Label="false">
+                  <Assign ID="51353"/>
+                </Case>
+              </Choice>
+            </Foreach>
+            <Assign ID="51343"/>
+          </Case>
+          <Case ID="51341" Label="false">
+            <Assign ID="51345"/>
+          </Case>
+        </Choice>
+        <Assign ID="47439"/>
+      </Case>
+      <Case Alias="tmf640.datamodel.NumberArrayCharacteristic" ID="49396" Label="IntegerArrayCharacteristic" Premise="tmf640.datamodel.IntegerArrayCharacteristic"/>
+    </Choice>
+    <Data ID="6230" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector6230">
+      <Source RefID="6227"/>
+    </Data>
+    <Data ID="9031" Label="StringCharacteristic" ReferenceName="StringCharacteristic" ReferencePath="tmf640.datamodel" VariableName="stringCharacteristic9031">
+      <Source RefID="8844"/>
+    </Data>
+    <Data ID="9095" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text9095">
+      <Source RefID="8944"/>
+    </Data>
+    <Data ID="9541" Label="NumberArrayCharacteristic" ReferenceName="NumberArrayCharacteristic" ReferencePath="tmf640.datamodel" VariableName="numberArrayCharacteristic9541">
+      <Source RefID="8847"/>
+    </Data>
+    <Data ID="10038" Label="Array Wrapper" ReferenceName="ArrayWrapper" ReferencePath="xfmg.tmf.util" VariableName="arrayWrapper10038">
+      <Source RefID="9456"/>
+    </Data>
+    <Data ID="10430" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text10430">
+      <Source RefID="9456"/>
+    </Data>
+    <Data ID="10510" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text10510">
+      <Source RefID="8944"/>
+    </Data>
+    <Data ID="10670" Label="Array Wrapper" ReferenceName="ArrayWrapper" ReferencePath="xfmg.tmf.util" VariableName="arrayWrapper10670"/>
+    <Data ID="10672" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text10672"/>
+    <Data ID="10857" Label="BooleanArrayCharacteristic" ReferenceName="BooleanArrayCharacteristic" ReferencePath="tmf640.datamodel" VariableName="booleanArrayCharacteristic10857">
+      <Source RefID="8853"/>
+    </Data>
+    <Data ID="11476" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text11476">
+      <Source RefID="11390"/>
+    </Data>
+    <Data ID="11574" Label="NumberCharacteristic" ReferenceName="NumberCharacteristic" ReferencePath="tmf640.datamodel" VariableName="numberCharacteristic11574">
+      <Source RefID="8856"/>
+    </Data>
+    <Data ID="12057" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text12057">
+      <Source RefID="11390"/>
+    </Data>
+    <Data ID="12143" Label="Array Wrapper" ReferenceName="ArrayWrapper" ReferencePath="xfmg.tmf.util" VariableName="arrayWrapper12143"/>
+    <Data ID="12145" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text12145"/>
+    <Data ID="12439" Label="StringArrayCharacteristic" ReferenceName="StringArrayCharacteristic" ReferencePath="tmf640.datamodel" VariableName="stringArrayCharacteristic12439">
+      <Source RefID="8859"/>
+    </Data>
+    <Data ID="12782" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text12782"/>
+    <Data ID="12784" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text12784"/>
+    <Data ID="13072" Label="IntegerCharacteristic" ReferenceName="IntegerCharacteristic" ReferencePath="tmf640.datamodel" VariableName="integerCharacteristic13072">
+      <Source RefID="8862"/>
+    </Data>
+    <Data ID="13237" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text13237"/>
+    <Data ID="13239" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text13239"/>
+    <Data ID="13436" Label="BooleanCharacteristic" ReferenceName="BooleanCharacteristic" ReferencePath="tmf640.datamodel" VariableName="booleanCharacteristic13436">
+      <Source RefID="8865"/>
+    </Data>
+    <Data ID="14168" Label="IntegerArrayCharacteristic" ReferenceName="IntegerArrayCharacteristic" ReferencePath="tmf640.datamodel" VariableName="integerArrayCharacteristic14168">
+      <Source RefID="8868"/>
+    </Data>
+    <Data ID="14676" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text14676">
+      <Source RefID="14584"/>
+    </Data>
+    <Data ID="14768" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text14768">
+      <Source RefID="14584"/>
+    </Data>
+    <Data ID="14951" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text14951">
+      <Source RefID="14859"/>
+    </Data>
+    <Data ID="15043" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text15043">
+      <Source RefID="14859"/>
+    </Data>
+    <Data ID="15136" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text15136"/>
+    <Data ID="15138" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text15138"/>
+    <Data ID="25187" Label="ObjectArrayCharacteristic" ReferenceName="ObjectArrayCharacteristic" ReferencePath="tmf640.datamodel" VariableName="objectArrayCharacteristic25187">
+      <Source RefID="15431"/>
+    </Data>
+    <Data ID="50564" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text50564">
+      <Source RefID="8767"/>
+    </Data>
+    <Data ID="50565" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text50565">
+      <Source RefID="8767"/>
+    </Data>
+    <Exception ID="53824" Label="ExceededAllowedValueRange" ReferenceName="ExceededAllowedValueRange" ReferencePath="xfmg.tmf640" VariableName="exceededAllowedValueRange53824">
+      <Target RefID="53553"/>
+    </Exception>
+    <Assign ID="1"/>
+  </Operation>
+</Service>
