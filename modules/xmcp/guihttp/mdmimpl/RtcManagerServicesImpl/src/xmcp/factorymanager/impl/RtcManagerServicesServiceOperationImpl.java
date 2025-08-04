@@ -114,6 +114,7 @@ import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSelect;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
 import com.gip.xyna.xfmg.xods.orderinputsourcemgmt.storables.OrderInputSourceStorable;
+import com.gip.xyna.xfmg.xopctrl.managedsessions.ManagedSession;
 import com.gip.xyna.xfmg.xopctrl.managedsessions.SessionManagement;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.ScopedRightCache;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement;
@@ -127,6 +128,8 @@ import com.gip.xyna.xmcp.SynchronousSuccesfullOrderExecutionResponse;
 import com.gip.xyna.xmcp.WrappingType;
 import com.gip.xyna.xmcp.XynaMultiChannelPortal;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
+import com.gip.xyna.xnwh.persistence.ODS;
+import com.gip.xyna.xnwh.persistence.ODSConnection;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.securestorage.SecureStorage;
 import com.gip.xyna.xnwh.selection.parsing.ArchiveIdentifier;
@@ -167,6 +170,7 @@ import xfmg.xfctrl.appmgmt.Workingcopy;
 import xfmg.xfctrl.filemgmt.ManagedFileId;
 import xfmg.xfctrl.nodemgmt.ConnectException;
 import xfmg.xopctrl.UserAuthenticationRight;
+import xmcp.DeEncoder;
 import xmcp.factorymanager.RtcManagerServicesServiceOperation;
 import xmcp.factorymanager.rtcmanager.AbortOrders;
 import xmcp.factorymanager.rtcmanager.ApplicationDefinition;
@@ -1308,7 +1312,9 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
       CreateWorkspaceResult result = workspaceManagement.createWorkspace(workspace, sessionManagement.resolveSessionToUser(correlatedXynaOrder.getSessionId()));
       if(result.getResult() != Result.Failed && request.getRepositoryLink() instanceof SVNRepositoryLink) {
         SVNRepositoryLink svnRepositoryLink = (SVNRepositoryLink)request.getRepositoryLink();
-        
+        String decodedPw = DeEncoder.decode(svnRepositoryLink.getPassword(), correlatedXynaOrder.getSessionId(), getToken(correlatedXynaOrder.getSessionId()));
+        svnRepositoryLink.setPassword(decodedPw);
+
         Map<String, String> paramMap = new HashMap<>();
         paramMap.put(REPOSITORY_ACCES_KEY_BRANCH_BASE_DIR, svnRepositoryLink.getBaseDirectoryForBranches());
         paramMap.put(REPOSITORY_ACCES_KEY_HOOK_PORT, svnRepositoryLink.getHookManagerPort());
@@ -1343,7 +1349,22 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
       throw new CreateWorkspaceException(ex.getMessage(), ex);
     }
   }
-  
+
+  private String getToken(String sessionId) throws PersistenceLayerException {
+    ManagedSession session = new ManagedSession(sessionId, null, null);
+    ODS ods = XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getODS();
+    ODSConnection con = ods.openConnection();
+    try {
+      con.queryOneRow(session);
+    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+      throw new RuntimeException("Session not found!");
+    } finally {
+      con.closeConnection();
+    }
+
+    return session.getToken();
+  }
+
   @Override
   public void deleteApplicationDefinition(XynaOrderServerExtension correlatedXynaOrder, ApplicationDefinition applicationDefinition) throws DeleteApplicationDefinitionException, InsufficientRights {
     try {
@@ -2056,7 +2077,6 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
           link.setPathInSVN(String.valueOf(params.get(REPOSITORY_ACCES_KEY_PATH))); 
           link.setSVNServerNameIP(String.valueOf(params.get(REPOSITORY_ACCES_KEY_SERVER_NAME)));
           link.setUsername(String.valueOf(params.get(REPOSITORY_ACCES_KEY_USER)));
-          link.setPassword(String.valueOf(params.get(REPOSITORY_ACCES_KEY_PASSWORD)));
         }
         
         details.setRepositoryLink(link);

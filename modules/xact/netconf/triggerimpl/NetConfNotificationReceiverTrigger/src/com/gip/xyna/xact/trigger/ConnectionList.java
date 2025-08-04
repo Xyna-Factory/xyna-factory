@@ -23,16 +23,18 @@ import java.net.Socket;
 import java.util.List;
 import java.util.LinkedList;
 import com.gip.xyna.xact.NetConfNotificationReceiverSharedLib.NetConfNotificationReceiverSharedLib;
+import java.util.concurrent.ConcurrentHashMap;
 
 
-class ConnectionList {
+public class ConnectionList {
 
-  private static java.util.concurrent.ConcurrentHashMap<String, Socket> TCPblocked = new java.util.concurrent.ConcurrentHashMap<String, Socket>();
-  private static java.util.concurrent.ConcurrentHashMap<String, NetConfNotificationReceiverTriggerConnection> connectionList =
-      new java.util.concurrent.ConcurrentHashMap<String, NetConfNotificationReceiverTriggerConnection>();
-  private static boolean openTCPServer;
+  private ConcurrentHashMap<String, Socket> tcpBlocked = new ConcurrentHashMap<String, Socket>();
+  private ConcurrentHashMap<String, NetConfNotificationReceiverTriggerConnection> connectionList =
+      new ConcurrentHashMap<String, NetConfNotificationReceiverTriggerConnection>();
+  private boolean openTCPServer;
 
-  private static void updateSizeBlocked() {
+  
+  private void updateSizeBlocked() {
     try {
       NetConfNotificationReceiverSharedLib.setTotalNetConfConnections(sizeBlocked());
     } catch (Throwable t) {
@@ -40,95 +42,95 @@ class ConnectionList {
   }
 
 
-  public static List<String> ListConnectionList() {
+  public List<String> listConnectionList() {
     List<String> list = new LinkedList<String>();
     connectionList.forEach((id, object) -> list.add(id));
     return list;
   }
 
 
-  public static List<String> ListTCPblocked() {
+  public List<String> listTCPblocked() {
     List<String> list = new LinkedList<String>();
-    TCPblocked.forEach((id, object) -> list.add(id));
+    tcpBlocked.forEach((id, object) -> list.add(id));
     return list;
   }
 
 
-  public static void clearConnectionList() {
+  public void clearConnectionList() {
     connectionList.clear();
   }
 
 
-  public static void clearTCPblocked() {
-    TCPblocked.clear();
+  public void clearTCPblocked() {
+    tcpBlocked.clear();
     updateSizeBlocked();
   }
 
 
-  public static void TriggerOn() {
+  public void triggerOn() {
     openTCPServer = true;
   }
 
 
-  public static void TriggerOff() {
+  public void triggerOff() {
     openTCPServer = false;
   }
 
 
-  public static boolean isTriggerOn() {
+  public boolean isTriggerOn() {
     return openTCPServer;
   }
 
 
-  public static void block(String id, Socket socket) {
-    TCPblocked.put(id, socket);
+  public void block(String id, Socket socket) {
+    tcpBlocked.put(id, socket);
     updateSizeBlocked();
   }
 
 
-  public static boolean isBlocked(String id) {
-    return TCPblocked.containsKey(id);
+  public boolean isBlocked(String id) {
+    return tcpBlocked.containsKey(id);
   }
 
 
-  public static void release(String id) {
-    TCPblocked.remove(id);
+  public void release(String id) {
+    tcpBlocked.remove(id);
     updateSizeBlocked();
   }
 
 
-  public static void addConnection(String id, NetConfNotificationReceiverTriggerConnection conn) {
+  public void addConnection(String id, NetConfNotificationReceiverTriggerConnection conn) {
     connectionList.put(id, conn);
   }
 
 
-  public static void removeConnection(String id) {
+  public void removeConnection(String id) {
     connectionList.remove(id);
   }
 
 
-  public static boolean isConnected(String id) {
+  public boolean isConnected(String id) {
     return connectionList.containsKey(id);
   }
 
 
-  public static NetConfNotificationReceiverTriggerConnection getConnection(String id) {
+  public NetConfNotificationReceiverTriggerConnection getConnection(String id) {
     return connectionList.get(id);
   }
 
 
-  public static Socket getSocket(String id) {
-    return TCPblocked.get(id);
+  public Socket getSocket(String id) {
+    return tcpBlocked.get(id);
   }
 
 
-  public static long sizeConnectionList() {
-    return ConnectionList.connectionList.size();
+  public long sizeConnectionList() {
+    return connectionList.size();
   }
 
 
-  public static long sizeBlocked() {
-    return ConnectionList.TCPblocked.size();
+  public long sizeBlocked() {
+    return tcpBlocked.size();
   }
 
 }

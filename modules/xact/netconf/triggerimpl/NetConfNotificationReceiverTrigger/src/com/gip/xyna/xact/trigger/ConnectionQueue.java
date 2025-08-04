@@ -22,27 +22,27 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 
-class ConnectionQueue {
+public class ConnectionQueue {
 
-  private static BlockingQueue<NetConfNotificationReceiverTriggerConnection> requests = new LinkedBlockingQueue<>();
+  private BlockingQueue<NetConfNotificationReceiverTriggerConnection> requests = new LinkedBlockingQueue<>();
 
 
-  public static void push(NetConfNotificationReceiverTriggerConnection conn) {
+  public void push(NetConfNotificationReceiverTriggerConnection conn) {
     requests.add(conn);
   };
 
 
-  public static boolean isEmpty() {
+  public boolean isEmpty() {
     return requests.isEmpty();
   };
 
 
-  public static NetConfNotificationReceiverTriggerConnection get() {
+  public NetConfNotificationReceiverTriggerConnection get() {
     return requests.poll();
   };
 
 
-  public static int size() {
+  public int size() {
     return requests.size();
   }
   
