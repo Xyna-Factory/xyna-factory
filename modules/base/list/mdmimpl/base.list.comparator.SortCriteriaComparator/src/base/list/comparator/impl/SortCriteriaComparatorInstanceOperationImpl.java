@@ -17,105 +17,130 @@
  */
 package base.list.comparator.impl;
 
+
+
+import java.util.Comparator;
+import java.util.List;
+
+import com.gip.xyna.utils.misc.ComparatorUtils;
+import com.gip.xyna.utils.misc.ComparatorUtils.ComparatorList;
+import com.gip.xyna.utils.misc.ComparatorUtils.ObjectComparator;
+import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
+import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
+
 import base.list.SortCriterion;
 import base.list.comparator.SortCriteriaComparator;
 import base.list.comparator.SortCriteriaComparatorInstanceOperation;
 import base.list.comparator.SortCriteriaComparatorSuperProxy;
-import com.gip.xyna.utils.misc.ComparatorUtils;
-import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
-import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.Comparator;
-import java.util.List;
 
-public class SortCriteriaComparatorInstanceOperationImpl extends SortCriteriaComparatorSuperProxy implements SortCriteriaComparatorInstanceOperation {
-   private static final long serialVersionUID = 1L;
-   private transient Comparator comparator;
 
-   public SortCriteriaComparatorInstanceOperationImpl(SortCriteriaComparator instanceVar) {
-      super(instanceVar);
-   }
 
-   public int compare(GeneralXynaObject anyType1, GeneralXynaObject anyType2) {
-      if (this.comparator == null) {
-         this.comparator = createComparator(this.getInstanceVar().getSortCriterion());
+public class SortCriteriaComparatorInstanceOperationImpl extends SortCriteriaComparatorSuperProxy
+    implements
+      SortCriteriaComparatorInstanceOperation {
+
+  private static final long serialVersionUID = 1L;
+  private transient Comparator<? super GeneralXynaObject> comparator;
+
+
+  public SortCriteriaComparatorInstanceOperationImpl(SortCriteriaComparator instanceVar) {
+    super(instanceVar);
+  }
+
+
+  public int compare(GeneralXynaObject anyType1, GeneralXynaObject anyType2) {
+    if (comparator == null) {
+      comparator = createComparator(getInstanceVar().getSortCriterion());
+    }
+    return comparator.compare(anyType1, anyType2);
+  }
+
+
+  private void writeObject(java.io.ObjectOutputStream s) throws java.io.IOException {
+    //change if needed to store instance context
+    s.defaultWriteObject();
+  }
+
+
+  private void readObject(java.io.ObjectInputStream s) throws java.io.IOException, ClassNotFoundException {
+    //change if needed to restore instance-context during deserialization of order
+    s.defaultReadObject();
+  }
+
+
+  public static Comparator<? super GeneralXynaObject> createComparator(List<? extends SortCriterion> sortCriteria) {
+    ComparatorList<GeneralXynaObject> comparator = new ComparatorList<>(sortCriteria.size());
+    for (SortCriterion sc : sortCriteria) {
+      comparator.add(new PartComparator(sc));
+    }
+    return ComparatorUtils.nullAware(comparator, false);
+  }
+
+
+  private static class PartComparator implements Comparator<GeneralXynaObject>, ObjectComparator.NotComparableHandler {
+
+    private String path;
+    private Comparator<? super Object> comp;
+
+
+    public PartComparator(SortCriterion sc) {
+      String path = sc.getFieldName(); //FIXME besser GetterSetter verwenden? leider in anderem Service. Instancemethoden in XMomField?
+      if (path.startsWith("%")) {
+        int idx = path.indexOf('.');
+        this.path = path.substring(idx + 1);
+      } else {
+        this.path = path;
       }
-
-      return this.comparator.compare(anyType1, anyType2);
-   }
-
-
-   private void writeObject(ObjectOutputStream s) throws IOException {
-      s.defaultWriteObject();
-   }
-
-   private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
-      s.defaultReadObject();
-   }
-
-   public static Comparator createComparator(List<? extends SortCriterion> sortCriteria) {
-      ComparatorUtils.ComparatorList<GeneralXynaObject> comparator = new ComparatorUtils.ComparatorList(sortCriteria.size());
-
-      for(SortCriterion sc : sortCriteria) {
-         comparator.add(new PartComparator(sc));
+      Comparator<? super Object> c = new ObjectComparator(this);
+      if (sc.getDescending()) {
+        c = ComparatorUtils.reverse(c);
       }
+      this.comp = ComparatorUtils.nullAware(c, sc.getNullFirst());
+    }
 
-      return ComparatorUtils.nullAware(comparator, false);
-   }
 
-   private static class PartComparator implements Comparator<GeneralXynaObject>, ComparatorUtils.ObjectComparator.NotComparableHandler {
-      private String path;
-      private Comparator comp;
-
-      public PartComparator(SortCriterion sc) {
-         String path = sc.getFieldName();
-         if (path.startsWith("%")) {
-            int idx = path.indexOf(46);
-            this.path = path.substring(idx + 1);
-         } else {
-            this.path = path;
-         }
-
-         Comparator<? super Object> c = new ComparatorUtils.ObjectComparator(this);
-         if (sc.getDescending()) {
-            c = ComparatorUtils.reverse(c);
-         }
-
-         this.comp = ComparatorUtils.nullAware(c, sc.getNullFirst());
+    @Override
+    public int compare(GeneralXynaObject o1, GeneralXynaObject o2) {
+      try {
+        return comp.compare(getPath(o1), getPath(o2));
+      } catch (InvalidObjectPathException e) {
+        throw new SortException("Could not access " + path, e);
       }
+    }
 
-      public int compare(GeneralXynaObject o1, GeneralXynaObject o2) {
-         try {
-            return this.comp.compare(this.getPath(o1), this.getPath(o2));
-         } catch (InvalidObjectPathException e) {
-            throw new SortException("Could not access " + this.path, e);
-         }
+
+    private Object getPath(GeneralXynaObject o) throws InvalidObjectPathException {
+      try {
+        return o.get(path);
+      } catch (NullPointerException e) {
+        return null;
       }
+    }
 
-      private Object getPath(GeneralXynaObject o) throws InvalidObjectPathException {
-         try {
-            return o.get(this.path);
-         } catch (NullPointerException var3) {
-            return null;
-         }
-      }
 
-      public int compareNotComparable(Object o1, Object o2) {
-         throw new SortException(o1.getClass() + " is not instanceof Comparable");
-      }
-   }
+    @Override
+    public int compareNotComparable(Object o1, Object o2) {
+      throw new SortException(o1.getClass() + " is not instanceof Comparable");
+    }
 
-   public static class SortException extends RuntimeException {
-      private static final long serialVersionUID = 1L;
+  }
 
-      public SortException(String message, Throwable cause) {
-         super(message, cause);
-      }
 
-      public SortException(String message) {
-         super(message);
-      }
-   }
+  public static class SortException extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
+
+
+    public SortException(String message, Throwable cause) {
+      super(message, cause);
+    }
+
+
+    public SortException(String message) {
+      super(message);
+    }
+
+  }
+
+
 }

@@ -17,33 +17,42 @@
  */
 package base.list.impl;
 
+
+
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 
+
+
 public class GetterSetter {
-   private String path;
 
-   public GetterSetter(String path) {
-      if (path.startsWith("%")) {
-         int idx = path.indexOf(46);
-         this.path = path.substring(idx + 1);
-      } else {
-         this.path = path;
-      }
+  private String path;
 
-   }
 
-   public Object getFrom(GeneralXynaObject gxo) throws InvalidObjectPathException {
-      return gxo.get(this.path);
-   }
+  public GetterSetter(String path) { //FIXME Instancemethoden in XMomField?
+    if (path.startsWith("%")) {
+      int idx = path.indexOf('.');
+      this.path = path.substring(idx + 1);
+    } else {
+      this.path = path;
+    }
+  }
 
-   public String getPath() {
-      return this.path;
-   }
 
-   public GeneralXynaObject setTo(GeneralXynaObject gxo, Object o) throws XDEV_PARAMETER_NAME_NOT_FOUND {
-      gxo.set(this.path, o);
-      return gxo;
-   }
+  public Object getFrom(GeneralXynaObject gxo) throws InvalidObjectPathException {
+    return gxo.get(path);
+  }
+
+
+  public String getPath() {
+    return path;
+  }
+
+
+  public GeneralXynaObject setTo(GeneralXynaObject gxo, Object o) throws XDEV_PARAMETER_NAME_NOT_FOUND {
+    gxo.set(path, o);
+    return gxo;
+  }
+
 }

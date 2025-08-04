@@ -17,121 +17,171 @@
  */
 package base.list.impl;
 
-import base.list.SortCriterion;
-import com.gip.xyna.utils.misc.ComparatorUtils;
-import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
-import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
+
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import com.gip.xyna.utils.misc.ComparatorUtils;
+import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
+import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
+
+import base.list.SortCriterion;
+
+
+
 public class GeneralComparator {
-   private GeneralComparator() {
-   }
 
-   public static Comparator<GeneralXynaObject> createComparator(List<? extends SortCriterion> sortCriteria) {
-      ComparatorList comparator = new ComparatorList(sortCriteria.size());
+  private GeneralComparator() {
+  }
 
-      for(SortCriterion sc : sortCriteria) {
-         comparator.add(new PartComparator(sc));
+
+  public static Comparator<? super GeneralXynaObject> createComparator(List<? extends SortCriterion> sortCriteria) {
+    ComparatorList<GeneralXynaObject> comparator = new ComparatorList<>(sortCriteria.size());
+    for (SortCriterion sc : sortCriteria) {
+      comparator.add(new PartComparator(sc));
+    }
+    return ComparatorUtils.nullAware(comparator, false);
+  }
+
+
+  private static class PartComparator implements Comparator<GeneralXynaObject>, ObjectComparator.NotComparableHandler {
+
+    private GetterSetter getterSetter;
+    private Comparator<? super Object> comp;
+
+
+    public PartComparator(SortCriterion sc) {
+      getterSetter = new GetterSetter(sc.getFieldName());
+      Comparator<? super Object> c = new ObjectComparator(this);
+      if (sc.getDescending()) {
+        c = ComparatorUtils.reverse(c);
       }
+      this.comp = ComparatorUtils.nullAware(c, sc.getNullFirst());
+    }
 
-      return (Comparator<GeneralXynaObject>) ComparatorUtils.nullAware(comparator, false);
-   }
 
-   public static Comparator<GeneralXynaObject> createComparator(base.list.comparator.Comparator comparator) {
-      return new GeneralXynaObjectComparator(comparator);
-   }
+    @Override
+    public int compare(GeneralXynaObject o1, GeneralXynaObject o2) {
 
-   private static class PartComparator implements Comparator<GeneralXynaObject>, ObjectComparator.NotComparableHandler {
-      private GetterSetter getterSetter;
-      private Comparator<Object> comp;
-
-      public PartComparator(SortCriterion sc) {
-         this.getterSetter = new GetterSetter(sc.getFieldName());
-         Comparator<Object> c = new ObjectComparator(this);
-         if (sc.getDescending()) {
-            c =  (Comparator<Object>) ComparatorUtils.reverse(c);
-         }
-
-         this.comp = (Comparator<Object>) ComparatorUtils.nullAware(c, sc.getNullFirst());
+      try {
+        return comp.compare(getterSetter.getFrom(o1), getterSetter.getFrom(o2));
+      } catch (InvalidObjectPathException e) {
+        throw new SortException("Could not access " + getterSetter.getPath(), e);
       }
+    }
 
-      public int compare(GeneralXynaObject o1, GeneralXynaObject o2) {
-         try {
-            return this.comp.compare(this.getterSetter.getFrom(o1), this.getterSetter.getFrom(o2));
-         } catch (InvalidObjectPathException e) {
-            throw new SortException("Could not access " + this.getterSetter.getPath(), e);
-         }
+
+    @Override
+    public int compareNotComparable(Object o1, Object o2) {
+      throw new SortException(o1.getClass() + " is not instanceof Comparable");
+    }
+
+  }
+
+  public static class SortException extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
+
+
+    public SortException(String message, Throwable cause) {
+      super(message, cause);
+    }
+
+
+    public SortException(String message) {
+      super(message);
+    }
+
+  }
+
+
+  /**
+   * FIXME in ComparatorUtils auslagern
+   */
+  private static class ComparatorList<T> implements Comparator<T> {
+
+    private List<Comparator<T>> subComparators;
+
+
+    public ComparatorList(int size) {
+      subComparators = new ArrayList<>(size);
+    }
+
+
+    public void add(Comparator<T> comparator) {
+      this.subComparators.add(comparator);
+    }
+
+
+    @Override
+    public int compare(T o1, T o2) {
+      int comp = 0;
+      for (Comparator<T> sub : subComparators) {
+        comp = sub.compare(o1, o2);
+        if (comp != 0) {
+          return comp;
+        }
       }
+      return 0;
+    }
 
-      public int compareNotComparable(Object o1, Object o2) {
-         throw new SortException(o1.getClass() + " is not instanceof Comparable");
+  }
+
+  /**
+   * FIXME in ComparatorUtils auslagern
+   */
+  private static class ObjectComparator implements Comparator<Object> {
+
+    public static interface NotComparableHandler {
+
+      public int compareNotComparable(Object o1, Object o2);
+    }
+
+
+    private NotComparableHandler notComparableHandler;
+
+
+    public ObjectComparator(NotComparableHandler notComparableHandler) {
+      this.notComparableHandler = notComparableHandler;
+    }
+
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @Override
+    public int compare(Object o1, Object o2) {
+      if (o1 instanceof Comparable) {
+        return ((Comparable) o1).compareTo(o2);
+      } else {
+        return notComparableHandler.compareNotComparable(o1, o2);
       }
-   }
+    }
 
-   public static class SortException extends RuntimeException {
-      private static final long serialVersionUID = 1L;
+  }
 
-      public SortException(String message, Throwable cause) {
-         super(message, cause);
-      }
 
-      public SortException(String message) {
-         super(message);
-      }
-   }
+  public static Comparator<? super GeneralXynaObject> createComparator(base.list.comparator.Comparator comparator) {
+    return new GeneralXynaObjectComparator(comparator);
+  }
 
-   private static class ComparatorList implements Comparator<GeneralXynaObject> {
-      private List<Comparator<GeneralXynaObject>> subComparators;
 
-      public ComparatorList(int size) {
-         this.subComparators = new ArrayList<Comparator<GeneralXynaObject>>(size);
-      }
+  public static class GeneralXynaObjectComparator implements Comparator<GeneralXynaObject> {
 
-      public void add(Comparator<GeneralXynaObject> comparator) {
-         this.subComparators.add(comparator);
-      }
+    private base.list.comparator.Comparator comparator;
 
-      public int compare(GeneralXynaObject o1, GeneralXynaObject o2) {
-         int comp = 0;
 
-         for(Comparator<GeneralXynaObject> sub : this.subComparators) {
-            comp = sub.compare(o1, o2);
-            if (comp != 0) {
-               return comp;
-            }
-         }
+    public GeneralXynaObjectComparator(base.list.comparator.Comparator comparator) {
+      this.comparator = comparator;
+    }
 
-         return 0;
-      }
-   }
 
-   private static class ObjectComparator implements Comparator<Object> {
-      private NotComparableHandler notComparableHandler;
+    @Override
+    public int compare(GeneralXynaObject gxo1, GeneralXynaObject gxo2) {
+      return comparator.compare(gxo1, gxo2);
+    }
 
-      public ObjectComparator(NotComparableHandler notComparableHandler) {
-         this.notComparableHandler = notComparableHandler;
-      }
+  }
 
-      public int compare(Object o1, Object o2) {
-         return o1 instanceof Comparable ? ((Comparable)o1).compareTo(o2) : this.notComparableHandler.compareNotComparable(o1, o2);
-      }
 
-      public interface NotComparableHandler {
-         int compareNotComparable(Object var1, Object var2);
-      }
-   }
-
-   public static class GeneralXynaObjectComparator implements Comparator<GeneralXynaObject> {
-      private base.list.comparator.Comparator comparator;
-
-      public GeneralXynaObjectComparator(base.list.comparator.Comparator comparator) {
-         this.comparator = comparator;
-      }
-
-      public int compare(GeneralXynaObject gxo1, GeneralXynaObject gxo2) {
-         return this.comparator.compare(gxo1, gxo2);
-      }
-   }
 }

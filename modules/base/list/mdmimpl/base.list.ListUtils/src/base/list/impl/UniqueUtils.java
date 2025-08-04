@@ -17,8 +17,8 @@
  */
 package base.list.impl;
 
-import base.list.pair.Pair;
-import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
+
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -26,128 +26,132 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
+
+import base.list.pair.Pair;
+
+
+
 public class UniqueUtils {
-   private UniqueUtils() {
-   }
 
-   public static List<GeneralXynaObject> unique(List<GeneralXynaObject> list, Comparator<GeneralXynaObject> comparator) {
-      List<GeneralXynaObject> unique = new ArrayList<>();
+  private UniqueUtils() {
+  }
 
-      for(GeneralXynaObject candidate : list) {
-         boolean add = true;
 
-         for(GeneralXynaObject gxo : unique) {
-            if (comparator.compare(candidate, gxo) == 0) {
-               add = false;
-               break;
-            }
-         }
+  public static List<GeneralXynaObject> unique(List<GeneralXynaObject> list, Comparator<? super GeneralXynaObject> comparator) {
+    //leider O(N^2)! 
+    //TODO bessere Implementierung möglich, wenn Comparator nur ein Feld anschaut
 
-         if (add) {
-            unique.add(candidate);
-         }
+
+    List<GeneralXynaObject> unique = new ArrayList<>();
+    for (GeneralXynaObject candidate : list) {
+      boolean add = true;
+      for (GeneralXynaObject gxo : unique) {
+        if (comparator.compare(candidate, gxo) == 0) {
+          add = false;
+          break;
+        }
       }
-
-      return unique;
-   }
-
-   public static List<GeneralXynaObject> notUnique(List<GeneralXynaObject> list, Comparator<GeneralXynaObject> comparator) {
-      List<GeneralXynaObject> unknown = new ArrayList<>();
-      List<GeneralXynaObject> notUnique = new ArrayList<>();
-
-      for(GeneralXynaObject candidate : list) {
-         boolean add = false;
-
-         for(GeneralXynaObject gxo : unknown) {
-            if (comparator.compare(candidate, gxo) == 0) {
-               add = true;
-               break;
-            }
-         }
-
-         if (add) {
-            notUnique.add(candidate);
-         } else {
-            unknown.add(candidate);
-         }
+      if (add) {
+        unique.add(candidate);
       }
+    }
+    return unique;
+  }
 
-      for(GeneralXynaObject candidate : unknown) {
-         boolean add = false;
 
-         for(GeneralXynaObject gxo : notUnique) {
-            if (comparator.compare(candidate, gxo) == 0) {
-               add = true;
-               break;
-            }
-         }
+  public static List<GeneralXynaObject> notUnique(List<GeneralXynaObject> list, Comparator<? super GeneralXynaObject> comparator) {
+    //leider O(N^2)! 
+    //TODO bessere Implementierung möglich, wenn Comparator nur ein Feld anschaut
 
-         if (add) {
-            notUnique.add(candidate);
-         }
+    List<GeneralXynaObject> unknown = new ArrayList<>();
+    List<GeneralXynaObject> notUnique = new ArrayList<>();
+    for (GeneralXynaObject candidate : list) {
+      boolean add = false;
+      for (GeneralXynaObject gxo : unknown) {
+        if (comparator.compare(candidate, gxo) == 0) {
+          add = true;
+          break;
+        }
       }
-
-      return notUnique;
-   }
-
-   public static List<Pair> merge(List<GeneralXynaObject> listA, List<GeneralXynaObject> listB, Comparator<GeneralXynaObject> comparator) {
-      int sizeA = listA.size();
-      int sizeB = listB.size();
-      Set<GeneralXynaObject> lookup;
-      List<GeneralXynaObject> driving;
-      boolean drivingFirst;
-      if (sizeA < sizeB) {
-         lookup = new LinkedHashSet<>(listA);
-         driving = listB;
-         drivingFirst = false;
+      if (add) {
+        notUnique.add(candidate);
       } else {
-         lookup = new LinkedHashSet<>(listB);
-         driving = listA;
-         drivingFirst = true;
+        unknown.add(candidate);
       }
-
-      return merge(driving, lookup, drivingFirst, comparator);
-   }
-
-   private static List<Pair> merge(List<GeneralXynaObject> driving, Set<GeneralXynaObject> lookup, boolean drivingFirst, Comparator<GeneralXynaObject> comparator) {
-      List<Pair> result = new ArrayList<>();
-
-      for(GeneralXynaObject gxoD : driving) {
-         Iterator<GeneralXynaObject> lIter = lookup.iterator();
-         boolean found = false;
-
-         while(lIter.hasNext()) {
-            GeneralXynaObject gxoL = (GeneralXynaObject)lIter.next();
-            if (comparator.compare(gxoD, gxoL) == 0) {
-               result.add(createPair(drivingFirst, gxoD, gxoL));
-               found = true;
-               lIter.remove();
-               break;
-            }
-         }
-
-         if (!found) {
-            result.add(createPair(drivingFirst, gxoD, (GeneralXynaObject)null));
-         }
+    }
+    for (GeneralXynaObject candidate : unknown) {
+      boolean add = false;
+      for (GeneralXynaObject gxo : notUnique) {
+        if (comparator.compare(candidate, gxo) == 0) {
+          add = true;
+          break;
+        }
       }
-
-      for(GeneralXynaObject gxoL : lookup) {
-         result.add(createPair(drivingFirst, (GeneralXynaObject)null, gxoL));
+      if (add) {
+        notUnique.add(candidate);
       }
+    }
+    return notUnique;
+  }
 
-      return result;
-   }
 
-   private static Pair createPair(boolean drivingFirst, GeneralXynaObject gxoD, GeneralXynaObject gxoL) {
-      Pair pair = new Pair();
-      if (drivingFirst) {
-         pair.setFirst(gxoD);
-         pair.setSecond(gxoL);
-      } else {
-         pair.setFirst(gxoL);
-         pair.setSecond(gxoD);
+  public static List<Pair> merge(List<GeneralXynaObject> listA, List<GeneralXynaObject> listB,
+                                 Comparator<? super GeneralXynaObject> comparator) {
+    int sizeA = listA.size();
+    int sizeB = listB.size();
+    Set<GeneralXynaObject> lookup;
+    List<GeneralXynaObject> driving;
+    boolean drivingFirst;
+    if (sizeA < sizeB) {
+      lookup = new LinkedHashSet<>(listA);
+      driving = listB;
+      drivingFirst = false;
+    } else {
+      lookup = new LinkedHashSet<>(listB);
+      driving = listA;
+      drivingFirst = true;
+    }
+    return merge(driving, lookup, drivingFirst, comparator);
+  }
+
+
+  private static List<Pair> merge(List<GeneralXynaObject> driving, Set<GeneralXynaObject> lookup, boolean drivingFirst,
+                                  Comparator<? super GeneralXynaObject> comparator) {
+    List<Pair> result = new ArrayList<>();
+    for (GeneralXynaObject gxoD : driving) {
+      Iterator<GeneralXynaObject> lIter = lookup.iterator();
+      boolean found = false;
+      while (lIter.hasNext()) {
+        GeneralXynaObject gxoL = lIter.next();
+        if (comparator.compare(gxoD, gxoL) == 0) {
+          result.add(createPair(drivingFirst, gxoD, gxoL));
+          found = true;
+          lIter.remove();
+          break;
+        }
       }
+      if (!found) {
+        result.add(createPair(drivingFirst, gxoD, null));
+      }
+    }
+    for (GeneralXynaObject gxoL : lookup) {
+      result.add(createPair(drivingFirst, null, gxoL));
+    }
+    return result;
+  }
 
-      return pair;
-   }
+
+  private static Pair createPair(boolean drivingFirst, GeneralXynaObject gxoD, GeneralXynaObject gxoL) {
+    Pair pair = new Pair();
+    if (drivingFirst) {
+      pair.setFirst(gxoD);
+      pair.setSecond(gxoL);
+    } else {
+      pair.setFirst(gxoL);
+      pair.setSecond(gxoD);
+    }
+    return pair;
+  }
+
 }

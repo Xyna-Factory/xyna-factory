@@ -17,20 +17,26 @@
  */
 package base.list.impl;
 
-import com.gip.xyna.utils.collections.CollectionUtils;
-import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
+
+
 import java.util.List;
 
+import com.gip.xyna.utils.collections.CollectionUtils.Filter;
+import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
+
+
+
 public class CountUtils {
-   public static int count(List<GeneralXynaObject> list, CollectionUtils.Filter<GeneralXynaObject> filter) {
-      int count = 0;
 
-      for(GeneralXynaObject gxo : list) {
-         if (filter.accept(gxo)) {
-            ++count;
-         }
+  public static int count(List<GeneralXynaObject> list, Filter<GeneralXynaObject> filter) {
+
+    int count = 0;
+    for (GeneralXynaObject gxo : list) {
+      if (filter.accept(gxo)) {
+        ++count;
       }
+    }
+    return count;
+  }
 
-      return count;
-   }
 }
