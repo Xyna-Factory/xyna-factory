@@ -120,10 +120,9 @@ public class AESCryptoServiceOperationImpl implements ExtendedDeploymentTask, AE
 	byte[] key;
 	MessageDigest sha = null;
 	SecretKeySpec secretKey;
-	String secret = "";
+	String secret = retrieveAESSecret(secureStorageKey.getText());
 	String strToDecrypt = encryptedStringIn.getText();
 	Text originalString = new Text();
-	retrieveAESSecret(secureStorageKey.getText());
 
 	try {
 	    key = secret.getBytes("UTF-8");
@@ -162,10 +161,9 @@ public class AESCryptoServiceOperationImpl implements ExtendedDeploymentTask, AE
 	byte[] key;
         MessageDigest sha = null;
         SecretKeySpec secretKey;
-        String secret = "";
+        String secret = retrieveAESSecret(secureStorageKey2.getText());
 	String strToEncrypt = originalStringIn.getText();
 	Text encryptedString = new Text();
-	retrieveAESSecret(secureStorageKey2.getText());
 
 	try {
 	    key = secret.getBytes("UTF-8");
@@ -199,15 +197,16 @@ public class AESCryptoServiceOperationImpl implements ExtendedDeploymentTask, AE
 	return encryptedString;
     }
 
-    private void retrieveAESSecret(String location) throws AESCryptoException {
+    private String retrieveAESSecret(String location) throws AESCryptoException {
 	if(location == null || location.trim().isEmpty()){
 	    throw new AESCryptoException("AES Secret: No identifier for decryption/encryption secret provided (secure storage location \"crypto.aes\").");
 	}
-        secret = (String) XynaFactory.getInstance().getXynaMultiChannelPortal().getSecureStorage().retrieve("crypto.aes", location);
-	if(secret == null || location.trim().isEmpty()){
+        String secret = (String) XynaFactory.getInstance().getXynaMultiChannelPortal().getSecureStorage().retrieve("crypto.aes", location);
+	if(secret == null || secret.isEmpty()){
 	    String msg = "AES Secret: Retrieving decryption/encryption secret identified by \"" + location + "\" failed! Secret is null or empty.";
             logger.error(msg);
 	    throw new AESCryptoException(msg);
 	}
+	return secret;
     }
 }
