@@ -85,10 +85,6 @@ import javax.crypto.BadPaddingException;
 
 
 public class AESCryptoServiceOperationImpl implements ExtendedDeploymentTask, AESCryptoServiceOperation {
-    private byte[] key;
-    private MessageDigest sha = null;
-    private SecretKeySpec secretKey;
-    private String secret = "";
     private static Logger logger = Logger.getLogger(AESCryptoServiceOperationImpl.class);
 
     public void onDeployment() throws XynaException {
@@ -121,9 +117,12 @@ public class AESCryptoServiceOperationImpl implements ExtendedDeploymentTask, AE
     }
 
     public Text aESDecrypt(Text encryptedStringIn, Text secureStorageKey) throws AESCryptoException {
-
+	byte[] key;
+	MessageDigest sha = null;
+	SecretKeySpec secretKey;
+	String secret = "";
 	String strToDecrypt = encryptedStringIn.getText();
-	Text original_string = new Text();
+	Text originalString = new Text();
 	retrieveAESSecret(secureStorageKey.getText());
 
 	try {
@@ -134,8 +133,8 @@ public class AESCryptoServiceOperationImpl implements ExtendedDeploymentTask, AE
 	    secretKey = new SecretKeySpec(key, "AES");
 	    Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 	    cipher.init(Cipher.DECRYPT_MODE, secretKey);
-	    String decryptedstr = new String(cipher.doFinal(java.util.Base64.getDecoder().decode(strToDecrypt)));
-	    original_string.setText(decryptedstr);
+	    String decryptedStr = new String(cipher.doFinal(Base64.getDecoder().decode(strToDecrypt)));
+	    originalString.setText(decryptedStr);
 	} 
 	catch (NoSuchAlgorithmException e) {
 	    throw new AESCryptoException("AES Decrypt: No such algorithm");
@@ -156,23 +155,27 @@ public class AESCryptoServiceOperationImpl implements ExtendedDeploymentTask, AE
 	    throw new AESCryptoException("AES Decrypt: Bad padding");
 	}
 
-	return original_string;
+	return originalString;
     }
 
     public Text aESEncrypt(Text originalStringIn, Text secureStorageKey2) throws AESCryptoException {
+	byte[] key;
+        MessageDigest sha = null;
+        SecretKeySpec secretKey;
+        String secret = "";
 	String strToEncrypt = originalStringIn.getText();
-	Text encrypted_string = new Text();
+	Text encryptedString = new Text();
 	retrieveAESSecret(secureStorageKey2.getText());
 
 	try {
 	    key = secret.getBytes("UTF-8");
-	    sha = java.security.MessageDigest.getInstance("SHA-1");
+	    sha = MessageDigest.getInstance("SHA-1");
 	    key = sha.digest(key);
 	    key = Arrays.copyOf(key, 16); 
 	    secretKey = new SecretKeySpec(key, "AES");
 	    Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 	    cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-	    encrypted_string.setText(Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes("UTF-8"))));
+	    encryptedString.setText(Base64.getEncoder().encodeToString(cipher.doFinal(strToEncrypt.getBytes("UTF-8"))));
 	} 
 	catch (NoSuchAlgorithmException e) {
 	    throw new AESCryptoException("AES Encrypt: No such algorithm");
@@ -193,7 +196,7 @@ public class AESCryptoServiceOperationImpl implements ExtendedDeploymentTask, AE
 	    throw new AESCryptoException("AES Encrypt: Bad padding");
 	}
 
-	return encrypted_string;
+	return encryptedString;
     }
 
     private void retrieveAESSecret(String location) throws AESCryptoException {
