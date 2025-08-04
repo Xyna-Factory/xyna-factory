@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.utils.misc.DataRangeCollection;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
+import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 
 
@@ -158,7 +159,11 @@ public class Container extends XynaObject {
 
   public String toXml(String varName, boolean onlyContent, long version, XMLReferenceCache cache) {
     StringBuilder xml = new StringBuilder();
-    // TODO we should provide a valid XML by enclosing the sum of the substrings by an XML tag
+    boolean createEnclosingTag = XynaProperty.CONTAINER_XML_WRAP.get();
+    if(createEnclosingTag) {
+      xml.append("<container>");
+    }
+
     for (GeneralXynaObject xo : params) {
       if (xo != null) {
         // TODO this has to be passed because when parsing the XML again we can't not expect the variable name to be
@@ -172,6 +177,11 @@ public class Container extends XynaObject {
         xml.append("<Data/>\n"); //das ist in vielen fällen richtig
       }
     }
+
+    if(createEnclosingTag) {
+      xml.append("</container>");
+    }
+
     return xml.toString();
   }
 
