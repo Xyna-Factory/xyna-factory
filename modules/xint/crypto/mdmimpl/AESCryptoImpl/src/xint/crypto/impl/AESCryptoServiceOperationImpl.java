@@ -70,6 +70,7 @@ import org.apache.log4j.Logger;
 import xint.crypto.exceptions.AESCryptoException;
 import xint.crypto.AESCryptoServiceOperation;
 import com.gip.xyna.XynaFactory;
+import xint.crypto.parameter.AESCryptoParameter;
 
 import java.security.MessageDigest;
 import javax.crypto.spec.SecretKeySpec;
@@ -116,19 +117,25 @@ public class AESCryptoServiceOperationImpl implements ExtendedDeploymentTask, AE
 	return null;
     }
 
-    public Text aESDecrypt(Text encryptedStringIn, Text secureStorageKey) throws AESCryptoException {
+    public Text aESDecrypt(Text encryptedStringIn, AESCryptoParameter aESCryptoParameter2) throws AESCryptoException {
 	byte[] key;
 	MessageDigest sha = null;
 	SecretKeySpec secretKey;
-	String secret = retrieveAESSecret(secureStorageKey.getText());
+	int keySize = aESCryptoParameter2.getKeySize(); // in bytes: AES128 = 16B, AES192 = 24B, AES256 = 32B
+        if( keySize != 128 && keySize != 192 && keySize != 256){
+            logger.warn("AES Decrypt: Provided key size with AESCryptoParameter invalid (" + keySize + " vs. 128|192|256)! Defaulting to 256bit.");
+            keySize = 256; // fallback to AES256 in case the parameter contains invalid values
+
+        }
+	String secret = retrieveAESSecret(aESCryptoParameter2.getSecureStorageIdentifier());
 	String strToDecrypt = encryptedStringIn.getText();
 	Text originalString = new Text();
 
 	try {
 	    key = secret.getBytes("UTF-8");
-	    sha = MessageDigest.getInstance("SHA-1");
+	    sha = MessageDigest.getInstance("SHA-256");
 	    key = sha.digest(key);
-	    key = Arrays.copyOf(key, 16); 
+	    key = Arrays.copyOf(key, keySize/8); 
 	    secretKey = new SecretKeySpec(key, "AES");
 	    Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 	    cipher.init(Cipher.DECRYPT_MODE, secretKey);
@@ -157,19 +164,25 @@ public class AESCryptoServiceOperationImpl implements ExtendedDeploymentTask, AE
 	return originalString;
     }
 
-    public Text aESEncrypt(Text originalStringIn, Text secureStorageKey2) throws AESCryptoException {
+    public Text aESEncrypt(Text originalStringIn, AESCryptoParameter aESCryptoParameter) throws AESCryptoException {
 	byte[] key;
         MessageDigest sha = null;
         SecretKeySpec secretKey;
-        String secret = retrieveAESSecret(secureStorageKey2.getText());
+	int keySize = aESCryptoParameter.getKeySize(); // in bytes: AES128 = 16B, AES192 = 24B, AES256 = 32B
+	if( keySize != 128 && keySize != 192 && keySize != 256){
+	    logger.warn("AES Encrypt: Provided key size with AESCryptoParameter invalid (" + keySize + " vs. 128|192|256)! Defaulting to 256bit.");
+	    keySize = 256; // fallback to AES256 in case the parameter contains invalid values
+
+	}
+        String secret = retrieveAESSecret(aESCryptoParameter.getSecureStorageIdentifier());
 	String strToEncrypt = originalStringIn.getText();
 	Text encryptedString = new Text();
 
 	try {
 	    key = secret.getBytes("UTF-8");
-	    sha = MessageDigest.getInstance("SHA-1");
+	    sha = MessageDigest.getInstance("SHA-256");
 	    key = sha.digest(key);
-	    key = Arrays.copyOf(key, 16); 
+	    key = Arrays.copyOf(key, keySize/8); 
 	    secretKey = new SecretKeySpec(key, "AES");
 	    Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 	    cipher.init(Cipher.ENCRYPT_MODE, secretKey);

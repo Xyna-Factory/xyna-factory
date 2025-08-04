@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="AES Crypto Parameter" TypeName="AESCryptoParameter" TypePath="xint.crypto.parameter" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Secure Storage Identifier" VariableName="secureStorageIdentifier">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>The secure storage destination is "crypto.aes" and the provided identifier points to the decryption secret.
+
+Store your secret with "./xynafactory.sh securestore -key &lt;your secure storage identifier&gt; -keytype crypto.aes -value &lt;your encryption/decryption secret&gt;"</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Key Size" VariableName="keySize">
+    <Meta>
+      <Type>int</Type>
+      <Documentation>Key size for AES (bits). Possible values are:
+128
+192
+256 (default)</Documentation>
+    </Meta>
+  </Data>
+</DataType>
