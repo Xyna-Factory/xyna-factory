@@ -133,7 +133,7 @@ public class AESCryptoServiceOperationImpl implements ExtendedDeploymentTask, AE
 
 	try {
 	    key = secret.getBytes("UTF-8");
-	    sha = MessageDigest.getInstance("SHA-256");
+	    sha = MessageDigest.getInstance("SHA-1");
 	    key = sha.digest(key);
 	    key = Arrays.copyOf(key, keySize/8); 
 	    secretKey = new SecretKeySpec(key, "AES");
@@ -180,7 +180,7 @@ public class AESCryptoServiceOperationImpl implements ExtendedDeploymentTask, AE
 
 	try {
 	    key = secret.getBytes("UTF-8");
-	    sha = MessageDigest.getInstance("SHA-256");
+	    sha = MessageDigest.getInstance("SHA-1");
 	    key = sha.digest(key);
 	    key = Arrays.copyOf(key, keySize/8); 
 	    secretKey = new SecretKeySpec(key, "AES");
