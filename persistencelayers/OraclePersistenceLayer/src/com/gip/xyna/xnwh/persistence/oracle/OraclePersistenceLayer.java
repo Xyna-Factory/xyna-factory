@@ -99,6 +99,7 @@ import com.gip.xyna.xnwh.persistence.TransactionProperty;
 import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabaseColumnInfo;
 import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabaseIndexCollision;
 import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabaseIndexCollision.IndexModification;
+import com.gip.xyna.xnwh.persistence.xmom.QueryGenerator;
 import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabasePersistenceLayerConnectionWithAlterTableSupport;
 import com.gip.xyna.xnwh.persistence.dbmodifytable.DatabasePersistenceLayerWithAlterTableSupportHelper;
 import com.gip.xyna.xnwh.pools.ConnectionPoolManagement;
@@ -882,7 +883,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
   }
 
 
-  private static String createInsertStatement(Column[] columns, String tableName) throws PersistenceLayerException {
+  private String createInsertStatement(Column[] columns, String tableName) throws PersistenceLayerException {
 
     StringBuilder cols = new StringBuilder();
     StringBuilder vals = new StringBuilder();
@@ -890,13 +891,13 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
       throw new XNWH_GeneralPersistenceLayerException("no columns found to persist");
     }
     for (int i = 0; i < columns.length - 1; i++) {
-      cols.append(columns[i].name()).append(", ");
+      cols.append(escape(columns[i].name())).append(", ");
       vals.append("?, ");
     }
-    cols.append(columns[columns.length - 1].name());
+    cols.append(escape(columns[columns.length - 1].name()));
     vals.append("?");
 
-    return new StringBuilder().append("insert into ").append(tableName).append(" (").append(cols.toString())
+    return new StringBuilder().append("insert into ").append(escape(tableName)).append(" (").append(cols.toString())
                     .append(") values (").append(vals.toString()).append(")").toString();
 
   }
@@ -1190,7 +1191,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
           if (addColumnString.length() > 0) {
             addColumnString.append(",");
           }
-          addColumnString.append("").append(col.name()).append(" ").append(getDefaultColumnTypeString(col, klass));
+          addColumnString.append("").append(escape(col.name())).append(" ").append(getDefaultColumnTypeString(col, klass));
           if (col.index() == IndexType.NONE || col.index() == IndexType.MULTIPLE) {
             addColumnString.append(" NULL");
           } else {
@@ -1218,7 +1219,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
       }
       
       if (addColumnString.length() > 0) {
-        sqlUtils.executeDDL("ALTER TABLE " + tableName + " \n ADD (" + addColumnString.toString() + ")", null);
+        sqlUtils.executeDDL("ALTER TABLE " + escape(tableName) + " \n ADD (" + addColumnString.toString() + ")", null);
       }
 
       Set<DatabaseIndexCollision> collisions = new HashSet<DatabaseIndexCollision>();
@@ -1335,22 +1336,24 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
 
     private void createIndex(String indexName, IndexType indexType, String tableName, String columnName) {
       String createIndexStatement = null;
+      String escTableName = escape(tableName);
+      String escColName = escape(columnName);
       switch( indexType ) {
         case UNIQUE:
-          createIndexStatement = "CREATE UNIQUE INDEX "+indexName+" ON "+tableName+"("+columnName+")";
+          createIndexStatement = "CREATE UNIQUE INDEX "+indexName+" ON "+escTableName+"("+escColName+")";
           break;
         case MULTIPLE:
-          createIndexStatement = "CREATE INDEX "+indexName+" ON "+tableName+"("+columnName+")";
+          createIndexStatement = "CREATE INDEX "+indexName+" ON "+escTableName+"("+escColName+")";
           break;
         default:
-          logger.info( "Index-Creation "+indexName+" of type "+ indexType+" for "+tableName+ "."+columnName+" is unsupported!" );
+          logger.info( "Index-Creation "+indexName+" of type "+ indexType+" for "+escTableName+ "."+escColName+" is unsupported!" );
           return;
       }
-      logger.info( "Index-Creation "+indexName+" of type "+ indexType+" for "+tableName+ "."+columnName );
+      logger.info( "Index-Creation "+indexName+" of type "+ indexType+" for "+escTableName+ "."+escColName );
       try {
         executeDDL(createIndexStatement);
       } catch (com.gip.xyna.xnwh.exception.SQLRuntimeException e) {
-        logger.warn("Could not create index '" + indexName + "' on table '" + tableName + "' for column '" + columnName + "'", e);
+        logger.warn("Could not create index '" + indexName + "' on table '" + escTableName + "' for column '" + escColName + "'", e);
       }
     }
     
@@ -1374,10 +1377,10 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
     public <T extends Storable> void createTable(Persistable persistable, Class<T> klass, Column[] cols) {
       String tableName = persistable.tableName();
       StringBuilder createTableStatement =
-          new StringBuilder("CREATE TABLE ").append(tableName).append(" (\n");
+          new StringBuilder("CREATE TABLE ").append( escape(tableName)).append(" (\n");
       for (Column col : cols) {
         String typeAsString = getDefaultColumnTypeString(col, klass);
-        createTableStatement.append("  ").append(col.name()).append(" ").append(typeAsString);
+        createTableStatement.append("  ").append( escape(col.name())).append(" ").append(typeAsString);
         //default wert
         if (col.name().equals(persistable.primaryKey())) {
           createTableStatement.append(" NOT");
@@ -1390,7 +1393,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
           .append(persistable.primaryKey());
       for (Column column : cols) {
         if (column.index() == IndexType.PRIMARY && !column.name().equals(persistable.primaryKey())) {
-          createTableStatement.append(", ").append(column.name());
+          createTableStatement.append(", ").append(escape(column.name()));
         }
       }
       createTableStatement.append(")\n");
@@ -1490,8 +1493,8 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
     public <T extends Storable> boolean containsObject(T storable) throws PersistenceLayerException {
       OraclePersistenceLayer.this.throwIfDBNotReachable();
       String select =
-          "select count(*) from " + storable.getTableName() + " where "
-              + Storable.getPersistable(storable.getClass()).primaryKey() + " = ?";
+          "select count(*) from " +  escape(storable.getTableName()) + " where "
+              +  escape(Storable.getPersistable(storable.getClass()).primaryKey()) + " = ?";
       com.gip.xyna.utils.db.Parameter paras = new com.gip.xyna.utils.db.Parameter(storable.getPrimaryKey());
       try {
         int cnt = sqlUtils.queryInt(select, paras);
@@ -1507,8 +1510,8 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
     public <T extends Storable> void deleteOneRow(T storable) throws PersistenceLayerException {
       OraclePersistenceLayer.this.throwIfDBNotReachable();
       String delete =
-          new StringBuilder().append("delete from ").append(storable.getTableName()).append(" where ")
-              .append(Storable.getPersistable(storable.getClass()).primaryKey()).append(" = ?").toString();
+          new StringBuilder().append("delete from ").append(escape(storable.getTableName())).append(" where ")
+              .append( escape(Storable.getPersistable(storable.getClass()).primaryKey())).append(" = ?").toString();
       try {
         deleteSingleElement(storable, delete);
       } catch (com.gip.xyna.xnwh.exception.SQLRetryTransactionRuntimeException e) {
@@ -1526,8 +1529,8 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
           Iterator<T> it = storableCollection.iterator();
           T a = it.next();
           String delete =
-              new StringBuilder().append("delete from ").append(a.getTableName()).append(" where ")
-                  .append(Storable.getPersistable(a.getClass()).primaryKey()).append(" = ?").toString();
+              new StringBuilder().append("delete from ").append(escape(a.getTableName())).append(" where ")
+                  .append(escape(Storable.getPersistable(a.getClass()).primaryKey())).append(" = ?").toString();
           deleteSingleElement(a, delete);
           while (it.hasNext()) {
             a = it.next();
@@ -1550,7 +1553,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
 
     public <T extends Storable> void deleteAll(Class<T> klass) throws PersistenceLayerException {
       OraclePersistenceLayer.this.throwIfDBNotReachable();
-      String delete = "truncate table " + Storable.getPersistable(klass).tableName();
+      String delete = "truncate table " + escape(Storable.getPersistable(klass).tableName());
       try {
         sqlUtils.executeDML(delete, null);
       } catch (com.gip.xyna.xnwh.exception.SQLRetryTransactionRuntimeException e) {
@@ -1603,7 +1606,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
       ensureOpen();
       final com.gip.xyna.xnwh.persistence.ResultSetReader<? extends T> reader = getReader(klass);
       try {
-        ArrayList<T> list = sqlUtils.queryNoRetryOperation("select * from " + Storable.getPersistable(klass).tableName(), null,
+        ArrayList<T> list = sqlUtils.queryNoRetryOperation("select * from " + escape(Storable.getPersistable(klass).tableName()), null,
                                                            new ResultSetReaderWrapper<T>(reader, zippedBlobs, klass));
         return list;
       } catch (com.gip.xyna.xnwh.exception.SQLRetryTransactionRuntimeException e) {
@@ -1723,13 +1726,13 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
       }
       setter.append(" set ");
       for (int i = 0; i < columns.length - 1; i++) {
-        setter.append(columns[i].name()).append(" = ?, ");
+        setter.append(escape(columns[i].name())).append(" = ?, ");
       }
-      setter.append(columns[columns.length - 1].name()).append(" = ? ");
+      setter.append(escape(columns[columns.length - 1].name())).append(" = ? ");
       String tableName = storable.getTableName();
       StringBuilder stmt = new StringBuilder();
-      stmt.append("update ").append(tableName).append(setter).append(" where ")
-          .append(Storable.getPersistable(storable.getClass()).primaryKey()).append(" = ?");
+      stmt.append("update ").append(escape(tableName)).append(setter).append(" where ")
+          .append(escape(Storable.getPersistable(storable.getClass()).primaryKey())).append(" = ?");
       return stmt.toString();
     }
 
@@ -1739,8 +1742,8 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
       ensureOpen();
       //überprüfen, ob objekt bereits in db ist
       String sqlString =
-          new StringBuilder().append("select count(*) from ").append(storable.getTableName()).append(" where ")
-              .append(Storable.getPersistable(storable.getClass()).primaryKey()).append(" = ?").toString();
+          new StringBuilder().append("select count(*) from ").append(escape(storable.getTableName())).append(" where ")
+              .append(escape(Storable.getPersistable(storable.getClass()).primaryKey())).append(" = ?").toString();
       boolean existedBefore = false;
       try {
 
@@ -1928,8 +1931,8 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
                     throws PersistenceLayerException, XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY {
       OraclePersistenceLayer.this.throwIfDBNotReachable();
       ensureOpen();
-      StringBuilder selectString = new StringBuilder().append("select * from ").append(storable.getTableName())
-                      .append(" where ").append(Storable.getPersistable(storable.getClass()).primaryKey())
+      StringBuilder selectString = new StringBuilder().append("select * from ").append(escape(storable.getTableName()))
+                      .append(" where ").append(escape(Storable.getPersistable(storable.getClass()).primaryKey()))
                       .append(" = ?");
       if (forUpdate) {
         selectString.append(" for update");
@@ -2019,7 +2022,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
     public <T extends Storable> void modifyColumnsCompatible(Column col, Class<T> klass, String tableName) {
       OracleSqlType recommendedType = getDefaultOracleSQLColTypeForStorableColumn(col, klass);
       String sql =
-          new StringBuilder("ALTER TABLE ").append(tableName).append(" MODIFY ").append(col.name()).append(" ")
+          new StringBuilder("ALTER TABLE ").append(escape(tableName)).append(" MODIFY ").append(escape(col.name())).append(" ")
               .append(recommendedType).append("(").append(getColumnSize(col)).append(")").toString();
       sqlUtils.executeDDL(sql, null);
     }
@@ -2028,7 +2031,7 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
     public <T extends Storable> void widenColumnsCompatible(Column col, Class<T> klass, String tableName) {
       OracleSqlType recommendedType = getDefaultOracleSQLColTypeForStorableColumn(col, klass);
       StringBuilder sql =
-          new StringBuilder("ALTER TABLE ").append(tableName).append(" MODIFY ").append(col.name()).append(" ").append(recommendedType);
+          new StringBuilder("ALTER TABLE ").append(escape(tableName)).append(" MODIFY ").append(escape(col.name())).append(" ").append(recommendedType);
       if (recommendedType.isDependentOnSizeSpecification()) {
         sql.append("(").append(getColumnSize(col)).append(")");
       }
@@ -2345,5 +2348,18 @@ public class OraclePersistenceLayer implements PersistenceLayer, Clustered {
     } else {
       return false;
     }
+  }
+
+  @Override
+  public QueryGenerator getQueryGenerator() {
+    return new QueryGenerator(OraclePersistenceLayer::escape);
+  }
+
+
+  public static String escape(String toEscape) {
+    if(XynaProperty.QUERY_ESCAPE.get()) {
+      return String.format("\"%s\"", toEscape.toUpperCase());
+    }
+    return toEscape;
   }
 }

@@ -774,4 +774,8 @@ public interface XynaProperty {
   
   public static final XynaPropertyString XML_HEADER_COMMENT = new XynaPropertyString("xyna.generation.xml.headercomment", "")
       .setDefaultDocumentation(DocumentationLanguage.EN, "This is put into application.xmls and XMOM files as header comment. Changes take effect immediately. Old files are not updated. Should not include <!-- and -->.");
+
+  public static final XynaPropertyBoolean QUERY_ESCAPE = new XynaPropertyBoolean("xnwh.queries.escape", true)
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Escape table and column names in queries")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Escapen von Tabellen- und Spaltennamen in Querys");
 }
