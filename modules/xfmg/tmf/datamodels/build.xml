@@ -36,7 +36,9 @@
 
 	<target name="build">
 		<!-- create apps from open api schemas and also unzip them for tmf tools to be able to find the xmom files -->
-		<ant antfile="build.xml" dir="${root.dir}/modules/xfmg/oas/mdmimpl/ApplicationGenerationImpl/" target="build"/>
+		<ant antfile="build.xml" dir="${root.dir}/modules/xfmg/oas/mdmimpl/ApplicationGenerationImpl/" target="build">
+			<property name="target.dir" value="${root.dir}/modules/xfmg/oas/mdmimpl/ApplicationGenerationImpl/deploy" />
+		</ant>
 		<java classname="xfmg.oas.offline.OASApplicationGeneration" fork="true" failonerror="true">
 			<arg value="tmf633-service-catalog-openapi-1.1.14a.yaml" />
 			<arg value="client" />
@@ -64,6 +66,10 @@
 			</classpath>
 		</java>
 		<antcall target="unzipApps" />
+		<move todir="${target.dir}">
+			<fileset dir="${basedir}" includes="*.zip" />
+			<mapper type="glob" from="*.zip" to="*.app" />
+		</move>
 	</target>
 
 	<target name="unzipApps">
