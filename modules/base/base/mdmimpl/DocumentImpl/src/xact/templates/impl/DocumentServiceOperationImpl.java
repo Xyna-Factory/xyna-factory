@@ -15,7 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package xact.templates;
+package xact.templates.impl;
 
 
 import com.gip.xyna.utils.exceptions.XynaException;

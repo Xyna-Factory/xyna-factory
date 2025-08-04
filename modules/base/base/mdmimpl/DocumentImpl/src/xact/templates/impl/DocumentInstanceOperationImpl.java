@@ -15,7 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package xact.templates;
+package xact.templates.impl;
 
 
 import com.gip.xyna.CentralFactoryLogging;
@@ -34,6 +34,10 @@ import com.gip.xyna.xprc.exceptions.XPRC_MDMDeploymentException;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventHandling;
 import com.gip.xyna.xprc.xfractwfe.servicestepeventhandling.ServiceStepEventSource;
+
+import xact.templates.Document;
+import xact.templates.DocumentInstanceOperation;
+import xact.templates.DocumentSuperProxy;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
