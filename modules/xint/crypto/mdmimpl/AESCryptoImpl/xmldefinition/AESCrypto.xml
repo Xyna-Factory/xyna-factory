@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+ <!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2022 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="AES Crypto" TypeName="AESCrypto" TypePath="xint.crypto" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>AESCryptoImpl.jar</Libraries>
+  <Service Label="AES Crypto" TypeName="AESCrypto">
+    <Operation IsStatic="true" Label="AES Encrypt" Name="aESEncrypt">
+      <Input>
+        <Data ID="5" Label="Original String" ReferenceName="Text" ReferencePath="base" VariableName="originalStringIn"/>
+        <Data ID="9" Label="AES Crypto Parameter" ReferenceName="AESCryptoParameter" ReferencePath="xint.crypto.parameter" VariableName="aESCryptoParameter"/>
+      </Input>
+      <Output>
+        <Data ID="6" Label="Encrypted String" ReferenceName="Text" ReferencePath="base" VariableName="encryptedStringOut"/>
+      </Output>
+      <Throws>
+        <Exception ID="4" Label="AES Crypto Exception" ReferenceName="AESCryptoException" ReferencePath="xint.crypto.exceptions" VariableName="aESCryptoException4"/>
+      </Throws>
+      <Meta>
+        <Documentation>Utility to AES encrypts a string using a secret stored in the secure storage.
+The secure storage destination is "crypto.aes" and the provided key points to the encryption secret.
+
+Store your secret with "./xynafactory.sh securestore -key &lt;your secure storage identifier&gt; -keytype crypto.aes -value &lt;your encryption/decryption secret&gt;"</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xint.crypto.AESCryptoImpl.aESEncrypt(originalStringIn, aESCryptoParameter);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="AES Decrypt" Name="aESDecrypt">
+      <Input>
+        <Data ID="1" Label="Encrypted String" ReferenceName="Text" ReferencePath="base" VariableName="encryptedStringIn"/>
+        <Data ID="10" Label="AES Crypto Parameter" ReferenceName="AESCryptoParameter" ReferencePath="xint.crypto.parameter" VariableName="aESCryptoParameter2"/>
+      </Input>
+      <Output>
+        <Data ID="2" Label="Original String" ReferenceName="Text" ReferencePath="base" VariableName="originalStringOut"/>
+      </Output>
+      <Throws>
+        <Exception ID="3" Label="AES Crypto Exception" ReferenceName="AESCryptoException" ReferencePath="xint.crypto.exceptions" VariableName="aESCryptoException3"/>
+      </Throws>
+      <Meta>
+        <Documentation>Utility to AES decrypts a string using a secret stored in the secure storage.
+The secure storage destination is "crypto.aes" and the provided key points to the decryption secret.
+
+Store your secret with "./xynafactory.sh securestore -key &lt;your secure storage identifier&gt; -keytype crypto.aes -value &lt;your encryption/decryption secret&gt;"</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xint.crypto.AESCryptoImpl.aESDecrypt(encryptedStringIn, aESCryptoParameter2);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
