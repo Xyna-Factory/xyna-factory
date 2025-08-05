@@ -50,9 +50,12 @@ public class DependencyGraphExecutor {
     }
     //validate
     for (ConstraintV2 c : constraints) {
-      for (String dep : c.getDependencies()) {
-        if (!allConstraints.contains(dep)) {
-          throw new RuntimeException("Constraint <" + c.getName() + "> has a dependency on an unknown Constraint with name <" + dep + ">.");
+      if (c.getDependencies() != null) {
+        for (String dep : c.getDependencies()) {
+          if (!allConstraints.contains(dep)) {
+            throw new RuntimeException("Constraint <" + c.getName() + "> has a dependency on an unknown Constraint with name <" + dep
+                + ">.");
+          }
         }
       }
     }
@@ -65,6 +68,9 @@ public class DependencyGraphExecutor {
       while (it.hasNext()) {
         ConstraintV2 c = it.next();
         List<String> deps = c.getDependencies();
+        if (deps == null) {
+          deps = new ArrayList<>();
+        }
         if (success.containsAll(deps)) {
           try {
             if (condition.test(c)) {
