@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,8 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="Crypto" comment="" factoryVersion="" versionName="1.0.8" xmlVersion="1.1">
+<Application applicationName="Crypto" factoryVersion="" versionName="1.0.9" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">Cryptography</Description>
-    <Description Lang="EN">Cryptography</Description>
-    <BuildDate>2015.06.25 10:13:00</BuildDate>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>
@@ -35,15 +32,15 @@
   </SharedLibs>
   <XMOMEntries>
     <XMOMEntry implicitDependency="false">
-      <FqName>xint.crypto.exceptions.PGPException</FqName>
-      <Type>EXCEPTION</Type>
+      <FqName>xint.crypto.AESCrypto</FqName>
+      <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xint.crypto.exceptions.KeyStoreAccessException</FqName>
-      <Type>EXCEPTION</Type>
+      <FqName>xint.crypto.PGPService</FqName>
+      <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xint.crypto.exceptions.IOException</FqName>
+      <FqName>xint.crypto.exceptions.AESCryptoException</FqName>
       <Type>EXCEPTION</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -51,8 +48,24 @@
       <Type>EXCEPTION</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
+      <FqName>xint.crypto.exceptions.IOException</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.crypto.exceptions.KeyStoreAccessException</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
       <FqName>xint.crypto.exceptions.NoSuchKeyException</FqName>
       <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.crypto.exceptions.PGPException</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xint.crypto.parameter.AESCryptoParameter</FqName>
+      <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xint.crypto.parameter.DecryptionParameter</FqName>
@@ -87,10 +100,6 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xint.crypto.PGPService</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
       <FqName>xint.crypto.parameter.enums.AES_256</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
@@ -115,11 +124,11 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xint.crypto.parameter.enums.HashAlgorithm</FqName>
+      <FqName>xint.crypto.parameter.enums.HAVAL_5_160</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
-      <FqName>xint.crypto.parameter.enums.HAVAL_5_160</FqName>
+      <FqName>xint.crypto.parameter.enums.HashAlgorithm</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
