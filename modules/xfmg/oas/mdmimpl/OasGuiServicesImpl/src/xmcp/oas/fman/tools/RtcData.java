@@ -155,4 +155,9 @@ public class RtcData {
     return Optional.empty();
   }
   
+  @Override
+  public String toString() {
+    return _rtc.getGUIRepresentation();
+  }
+  
 }

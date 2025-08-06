@@ -20,34 +20,19 @@
 package xmcp.oas.fman.tools;
 
 
-public class GeneratedOasApiType {
+public class GeneratedOasApiType extends OasApiType {
 
-  private final XmomType xmom;
-  private final RtcData rtc;
-  
+  public GeneratedOasApiType(String fqn, RtcData rtc) {
+    super(fqn, rtc);
+  }
 
   public GeneratedOasApiType(XmomType xmom, RtcData rtc) {
-    if (xmom == null) {
-      throw new IllegalArgumentException("Xmom type is null.");
-    }
-    this.xmom = xmom;
-    this.rtc = rtc;
-  }
-  
-  public GeneratedOasApiType(String fqn, RtcData rtc) {
-    this(new XmomType(fqn), rtc);
-  }
-  
-  public XmomType getXmomType() {
-    return xmom;
-  }
-  
-  public String getFqName() {
-    return xmom.getFqName();
+    super(xmom, rtc);
   }
 
-  public RtcData getRtc() {
-    return rtc;
+  @Override
+  public OasApiTypeCategory getCategory() {
+    return OasApiTypeCategory.GENERATED;
   }
-  
+
 }

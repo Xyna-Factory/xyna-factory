@@ -18,28 +18,19 @@
 
 package xmcp.oas.fman.tools;
 
+public class ImplementedOasApiType extends OasApiType {
 
-public class ImplementedOasApiType {
+  public ImplementedOasApiType(String fqn, RtcData rtc) {
+    super(fqn, rtc);
+  }
 
-  private final XmomType xmom;
+  public ImplementedOasApiType(XmomType xmom, RtcData rtc) {
+    super(xmom, rtc);
+  }
 
-  public ImplementedOasApiType(XmomType xmom) {
-    if (xmom == null) {
-      throw new IllegalArgumentException("Xmom type is null.");
-    }
-    this.xmom = xmom;
-  }
-  
-  public ImplementedOasApiType(String fqn) {
-    this(new XmomType(fqn));
-  }
-  
-  public XmomType getXmomType() {
-    return xmom;
-  }
-  
-  public String getFqName() {
-    return xmom.getFqName();
+  @Override
+  public OasApiTypeCategory getCategory() {
+    return OasApiTypeCategory.IMPLEMENTED;
   }
   
 }

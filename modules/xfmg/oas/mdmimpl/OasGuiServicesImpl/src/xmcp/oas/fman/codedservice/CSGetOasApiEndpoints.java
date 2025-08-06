@@ -26,6 +26,7 @@ import xmcp.oas.fman.tools.GenTypeOpGroup;
 import xmcp.oas.fman.tools.GeneratedOasApiType;
 import xmcp.oas.fman.tools.ImplementedOasApiType;
 import xmcp.oas.fman.tools.OasGuiTools;
+import xmcp.oas.fman.tools.OperationGroup;
 import xmcp.oas.fman.tools.RtcData;
 import xmcp.tables.datatypes.TableInfo;
 
@@ -37,8 +38,6 @@ public class CSGetOasApiEndpoints {
   
   public List<? extends OasApiDatatypeInfo> execute(TableInfo info) {
     List<OasApiDatatypeInfo> ret = new ArrayList<>();
-    
-    
     List<RtcData> rtclist = _tools.getAllAppsAndWorkspaces();
     for (RtcData rtc : rtclist) {
       handleRtc(ret, rtc);
@@ -50,18 +49,55 @@ public class CSGetOasApiEndpoints {
   private void handleRtc(List<OasApiDatatypeInfo> ret, RtcData rtc) {
     List<GeneratedOasApiType> list = _tools.getAllGeneratedOasApiTypesInRtc(rtc);
     if (list.size() < 1) { return; }
-    
-    
+    for (GeneratedOasApiType goat : list) {
+      OperationGroup opgroup = new OperationGroup(goat);
+      GenTypeOpGroup gtog = new GenTypeOpGroup(goat, opgroup);
+      handleGeneratedType(ret, gtog);
+    }
   }
   
   
-  private void handleGeneratedType(List<OasApiDatatypeInfo> ret, RtcData rtc, GenTypeOpGroup gtog) {
-    List<RtcData> rtclist = _tools.getAllRtcsWhichReferenceRtcRecursive(rtc);
+  private void handleGeneratedType(List<OasApiDatatypeInfo> ret, GenTypeOpGroup gtog) {
+    RtcData rtc = gtog.getGeneratedOasApiType().getRtc();
+    String status = "";
+    List<ImplementedOasApiType> list = _tools.getAllImplementedOasApiTypesInRefRtcs(gtog.getGeneratedOasApiType(), rtc);
+    if (list.size() > 1) {
+      handleMultipleImplementations(ret, rtc, gtog, list);
+      return;
+    }
+    OasApiDatatypeInfo.Builder builder = new OasApiDatatypeInfo.Builder();
+    builder.generatedRtc(gtog.getGeneratedOasApiType().getRtc().toString());
+    builder.apiDatatype(gtog.getGeneratedOasApiType().getFqName());
+    if (list.size() == 0) {
+      status = "Missing";
+    } else if (list.size() == 1) {
+      ImplementedOasApiType implType = list.get(0);
+      OperationGroup opgroup = new OperationGroup(implType);
+      if (opgroup.matches(gtog.getOperationGroup())) {
+        status = "Complete";
+      } else {
+        status = "Incomplete";
+      }
+      builder.implementationDatatype(implType.getFqName());
+      builder.implementationRtc(implType.getRtc().toString());
+    }
+    builder.status(status);
+    ret.add(builder.instance());
   }
   
   
-  private void handleImplementedTypes(List<OasApiDatatypeInfo> ret, RtcData rtc, GenTypeOpGroup gtog) {
-    List<ImplementedOasApiType> list = _tools.getAllImplementedOasApiTypesInRtc(gtog.getGeneratedOasApiType(), rtc);
+  private void handleMultipleImplementations(List<OasApiDatatypeInfo> ret, RtcData rtc, GenTypeOpGroup gtog, 
+                                             List<ImplementedOasApiType> implList) {
+    String status = "Error";
+    for (ImplementedOasApiType item : implList) {
+      OasApiDatatypeInfo.Builder builder = new OasApiDatatypeInfo.Builder();
+      builder.generatedRtc(gtog.getGeneratedOasApiType().getRtc().toString());
+      builder.apiDatatype(gtog.getGeneratedOasApiType().getFqName());
+      builder.implementationRtc(item.getRtc().toString());
+      builder.implementationDatatype(item.getFqName());
+      builder.status(status);
+      ret.add(builder.instance());
+    }
   }
   
 }

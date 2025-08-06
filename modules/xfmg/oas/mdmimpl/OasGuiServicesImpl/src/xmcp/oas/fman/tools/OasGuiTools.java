@@ -119,7 +119,7 @@ public class OasGuiTools {
     List<ImplementedOasApiType> ret = new ArrayList<>();
     List<XmomType> list = this.getAllChildTypesInRtc(goat.getXmomType(), rtc);
     for (XmomType item : list) {
-      ret.add(new ImplementedOasApiType(item));
+      ret.add(new ImplementedOasApiType(item, rtc));
     }
     return ret;
   }
@@ -152,7 +152,7 @@ public class OasGuiTools {
     return ret;
   }
   
-  /*
+  
   public List<ImplementedOasApiType> getAllImplementedOasApiTypesInRefRtcs(GeneratedOasApiType goat, RtcData rtc) {
     List<ImplementedOasApiType> ret = new ArrayList<>();
     List<RtcData> rtclist = getAllRtcsWhichReferenceRtcRecursive(rtc);
@@ -162,7 +162,7 @@ public class OasGuiTools {
     }
     return ret;
   }
-  */
+  
   
   public Set<String> getOperationsOfXmomType(XmomType xmom, RtcData rtc) {
     Set<String> ret = new TreeSet<>();
