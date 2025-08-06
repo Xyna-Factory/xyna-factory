@@ -15,6 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
+
 package xmcp.oas.fman.impl;
 
 import java.util.ArrayList;
@@ -42,6 +43,9 @@ import com.gip.xyna.xnwh.selection.parsing.SelectionParser;
 import base.KeyValue;
 import base.Text;
 import xmcp.oas.fman.OasGuiServicesServiceOperation;
+import xmcp.oas.fman.codedservice.CSGetOasApiEndpoints;
+import xmcp.oas.fman.datatypes.OasApiDatatypeInfo;
+import xmcp.tables.datatypes.TableInfo;
 
 
 public class OasGuiServicesServiceOperationImpl implements ExtendedDeploymentTask, OasGuiServicesServiceOperation {
@@ -89,6 +93,8 @@ public class OasGuiServicesServiceOperationImpl implements ExtendedDeploymentTas
 
   @Override
   public Text testListTypes() {
+    return new CSGetOasApiEndpoints().testListTypes();
+    /*
     Text ret = new Text();
     
     String fqname = "xact.http.enums.httpmethods.HTTPMethod";
@@ -114,10 +120,7 @@ public class OasGuiServicesServiceOperationImpl implements ExtendedDeploymentTas
       for (ApplicationInformation app : appsinfo) {
         
         if (app instanceof ApplicationDefinitionInformation ) { continue; }
-        /*
-        long revision = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().
-                     getRevision(((ApplicationDefinitionInformation) app).getParentWorkspace());
-                     */
+       
         long revision = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().
                         getRevision(app.asRuntimeContext());
         //long revision = 315;
@@ -142,6 +145,13 @@ public class OasGuiServicesServiceOperationImpl implements ExtendedDeploymentTas
     } catch (Exception e) {
       throw new RuntimeException(e.getMessage(), e);
     }
+    */
+  }
+
+  
+  @Override
+  public List<? extends OasApiDatatypeInfo> getOasApiEndpoints(TableInfo info) {
+    return new CSGetOasApiEndpoints().execute(info);
   }
 
 }
