@@ -18,28 +18,52 @@
 
 package xmcp.oas.fman.tools;
 
+import java.util.Set;
+
 
 public class OperationGroup {
 
   private final XmomType xmom;
+  private final Set<String> operations;
 
-  public OperationGroup(XmomType xmom) {
+  
+  public OperationGroup(XmomType xmom, RtcData rtc) {
     if (xmom == null) {
       throw new IllegalArgumentException("Xmom type is null.");
     }
     this.xmom = xmom;
+    this.operations = new OasGuiTools().getOperationsOfXmomType(xmom, rtc);
   }
   
-  public OperationGroup(String fqn) {
-    this(new XmomType(fqn));
+  
+  public OperationGroup(String fqn, RtcData rtc) {
+    this(new XmomType(fqn), rtc);
   }
   
-  public XmomType getXmom() {
+  
+  public XmomType getXmomType() {
     return xmom;
   }
   
-  public String getFqn() {
-    return xmom.getFqn();
+  
+  public String getFqName() {
+    return xmom.getFqName();
+  }
+  
+  
+  public int getNumOperations() {
+    return operations.size();
+  }
+  
+  
+  public boolean matches(OperationGroup input) {
+    if (input.getNumOperations() != getNumOperations()) { return false; }
+    for (String val : operations) {
+      if (!input.operations.contains(val)) {
+        return false;
+      }
+    }
+    return true;
   }
   
 }

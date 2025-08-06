@@ -51,6 +51,7 @@ import com.gip.xyna.xnwh.selection.parsing.SelectionParser;
 
 import base.Text;
 import xmcp.oas.fman.datatypes.OasApiDatatypeInfo;
+import xmcp.oas.fman.tools.OasGuiTools;
 import xmcp.tables.datatypes.TableInfo;
 
 
@@ -59,11 +60,16 @@ public class CSGetOasApiEndpoints {
   public List<? extends OasApiDatatypeInfo> execute(TableInfo info) {
     List<OasApiDatatypeInfo> ret = new ArrayList<>();
     
-    fillForTest(ret);
+    //fillForTest(ret);
+    OasGuiTools tools = new OasGuiTools();
+    
     
     return ret;
   }
  
+  
+  
+  
   private void fillForTest(List<OasApiDatatypeInfo> list) {
     OasApiDatatypeInfo info = new OasApiDatatypeInfo();
     info.setApiDatatype("test type 1");

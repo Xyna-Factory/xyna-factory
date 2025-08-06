@@ -30,7 +30,7 @@ public class XmomType {
     this.fqn = fqn;
   }
   
-  public String getFqn() {
+  public String getFqName() {
     return fqn;
   }
   

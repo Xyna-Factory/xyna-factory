@@ -34,12 +34,12 @@ public class ImplementedOasApiType {
     this(new XmomType(fqn));
   }
   
-  public XmomType getXmom() {
+  public XmomType getXmomType() {
     return xmom;
   }
   
-  public String getFqn() {
-    return xmom.getFqn();
+  public String getFqName() {
+    return xmom.getFqName();
   }
   
 }
