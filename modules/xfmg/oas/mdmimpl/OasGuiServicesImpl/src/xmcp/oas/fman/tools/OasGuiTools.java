@@ -109,7 +109,7 @@ public class OasGuiTools {
     XmomType xmom = new XmomType(OasGuiConstants.FQN_OAS_BASE_API);
     List<XmomType> list = this.getAllChildTypesInRtc(xmom, rtc);
     for (XmomType item : list) {
-      ret.add(new GeneratedOasApiType(item));
+      ret.add(new GeneratedOasApiType(item, rtc));
     }
     return ret;
   }
@@ -152,7 +152,7 @@ public class OasGuiTools {
     return ret;
   }
   
-  
+  /*
   public List<ImplementedOasApiType> getAllImplementedOasApiTypesInRefRtcs(GeneratedOasApiType goat, RtcData rtc) {
     List<ImplementedOasApiType> ret = new ArrayList<>();
     List<RtcData> rtclist = getAllRtcsWhichReferenceRtcRecursive(rtc);
@@ -162,7 +162,7 @@ public class OasGuiTools {
     }
     return ret;
   }
-  
+  */
   
   public Set<String> getOperationsOfXmomType(XmomType xmom, RtcData rtc) {
     Set<String> ret = new TreeSet<>();

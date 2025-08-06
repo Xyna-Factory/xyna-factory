@@ -16,38 +16,27 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-
 package xmcp.oas.fman.tools;
 
 
-public class GeneratedOasApiType {
+public class GenTypeOpGroup {
 
-  private final XmomType xmom;
-  private final RtcData rtc;
+  private final GeneratedOasApiType generatedOasApiType;
+  private final OperationGroup operationGroup;
   
-
-  public GeneratedOasApiType(XmomType xmom, RtcData rtc) {
-    if (xmom == null) {
-      throw new IllegalArgumentException("Xmom type is null.");
-    }
-    this.xmom = xmom;
-    this.rtc = rtc;
-  }
-  
-  public GeneratedOasApiType(String fqn, RtcData rtc) {
-    this(new XmomType(fqn), rtc);
-  }
-  
-  public XmomType getXmomType() {
-    return xmom;
-  }
-  
-  public String getFqName() {
-    return xmom.getFqName();
+  public GenTypeOpGroup(GeneratedOasApiType generatedOasApiType, OperationGroup operationGroup) {
+    this.generatedOasApiType = generatedOasApiType;
+    this.operationGroup = operationGroup;
   }
 
-  public RtcData getRtc() {
-    return rtc;
+  
+  public GeneratedOasApiType getGeneratedOasApiType() {
+    return generatedOasApiType;
+  }
+
+  
+  public OperationGroup getOperationGroup() {
+    return operationGroup;
   }
   
 }

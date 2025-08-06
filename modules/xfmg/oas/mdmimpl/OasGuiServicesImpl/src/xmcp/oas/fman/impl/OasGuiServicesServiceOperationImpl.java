@@ -44,6 +44,7 @@ import base.KeyValue;
 import base.Text;
 import xmcp.oas.fman.OasGuiServicesServiceOperation;
 import xmcp.oas.fman.codedservice.CSGetOasApiEndpoints;
+import xmcp.oas.fman.codedservice.TmpTools;
 import xmcp.oas.fman.datatypes.OasApiDatatypeInfo;
 import xmcp.tables.datatypes.TableInfo;
 
@@ -93,7 +94,7 @@ public class OasGuiServicesServiceOperationImpl implements ExtendedDeploymentTas
 
   @Override
   public Text testListTypes() {
-    return new CSGetOasApiEndpoints().testListTypes();
+    return new TmpTools().testListTypes();
     /*
     Text ret = new Text();
     

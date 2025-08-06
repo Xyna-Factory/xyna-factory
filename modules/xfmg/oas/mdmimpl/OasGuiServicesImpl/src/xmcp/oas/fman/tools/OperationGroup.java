@@ -41,6 +41,16 @@ public class OperationGroup {
   }
   
   
+  public OperationGroup(GeneratedOasApiType goat, RtcData rtc) {
+    this(goat.getXmomType(), rtc);
+  }
+  
+  
+  public OperationGroup(ImplementedOasApiType ioat, RtcData rtc) {
+    this(ioat.getXmomType(), rtc);
+  }
+  
+  
   public XmomType getXmomType() {
     return xmom;
   }
