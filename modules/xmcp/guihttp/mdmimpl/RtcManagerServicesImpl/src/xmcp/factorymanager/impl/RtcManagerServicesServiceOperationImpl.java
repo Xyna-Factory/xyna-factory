@@ -2304,18 +2304,6 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
       return tableEntry;
     }).collect(Collectors.toList()));
 
-    // add application definitions
-    List<ApplicationDefinitionInformation> adInformations = applicationManagement.listApplicationDefinitions(true);
-    result.addAll(adInformations.stream().map(adi -> {
-      RuntimeContextTableEntry tableEntry = new RuntimeContextTableEntry();
-      ApplicationDefinition ad = new ApplicationDefinition();
-      ad.setName(adi.getName());
-      ad.setState(adi.getState().name());
-      tableEntry.setRuntimeContext(ad);
-      tableEntry.setRtcType(getRuntimeDependencyContextTypeGuiName(RuntimeDependencyContextType.ApplicationDefinition));
-      return tableEntry;
-    }).collect(Collectors.toList()));
-
     // add applications
     try {
       result.addAll(getRuntimeApplicationList(correlatedXynaOrder).stream().map(rta -> {
