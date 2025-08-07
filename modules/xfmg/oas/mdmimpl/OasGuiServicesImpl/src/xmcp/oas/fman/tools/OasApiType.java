@@ -16,36 +16,44 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
+
 package xmcp.oas.fman.tools;
 
 
-public class XmomType {
+public abstract class OasApiType {
 
-  private final FqName fqName;
-  private final RtcData rtc;
-
-  
-  public XmomType(String fqn, RtcData rtc) {
-    this(new FqName(fqn), rtc);
+  public static enum OasApiTypeCategory {
+    GENERATED, IMPLEMENTED
   }
   
-  public XmomType(FqName fqn, RtcData rtc) {
-    if (fqn == null) { throw new IllegalArgumentException("Fqname is null."); }
-    if (rtc == null) { throw new IllegalArgumentException("RTC is null."); }
-    this.fqName = fqn;
-    this.rtc = rtc;
+  
+  private final XmomType xmom;
+  
+
+  public OasApiType(XmomType xmom) {
+    if (xmom == null) {
+      throw new IllegalArgumentException("Xmom type is null.");
+    }
+    this.xmom = xmom;
+  }
+  
+  public OasApiType(String fqn, RtcData rtc) {
+    this(new XmomType(fqn, rtc));
+  }
+  
+  public abstract OasApiTypeCategory getCategory();
+  
+  
+  public XmomType getXmomType() {
+    return xmom;
   }
   
   public String getFqName() {
-    return fqName.getFqName();
+    return xmom.getFqName();
   }
-  
-  public FqName getFqNameInstance() {
-    return fqName;
-  }
-  
+
   public RtcData getRtc() {
-    return rtc;
+    return xmom.getRtc();
   }
   
 }

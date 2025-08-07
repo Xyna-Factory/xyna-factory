@@ -50,7 +50,7 @@ import com.gip.xyna.xnwh.selection.parsing.SelectionParser;
 
 public class OasGuiTools {
 
-  public List<RtcData> getAllAppsAndWorkspaces() {
+  public List<RtcData> getAllApps() {
     List<RtcData> ret = new ArrayList<>();
     try {
       ApplicationManagement appMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().
@@ -62,6 +62,16 @@ public class OasGuiTools {
           ret.add(rtc);
         }
       }
+    } catch (Exception e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
+    return ret;
+  }
+  
+  
+  public List<RtcData> getAllWorkspaces() {
+    List<RtcData> ret = new ArrayList<>();
+    try {
       List<WorkspaceInformation> wsplist = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().
                                                        getWorkspaceManagement().listWorkspaces(true);
       for (WorkspaceInformation wsp : wsplist) {
@@ -75,12 +85,40 @@ public class OasGuiTools {
   }
   
   
+  public List<RtcData> getAllAppsAndWorkspaces() {
+    List<RtcData> ret = new ArrayList<>();
+    ret.addAll(getAllApps());
+    ret.addAll(getAllWorkspaces());
+    return ret;
+  }
   
-  public List<XmomType> getAllChildTypesInRtc(XmomType xmom, RtcData rtc) {
+  
+  public List<RtcData> getAllOasBaseApps() {
+    List<RtcData> ret = new ArrayList<>();
+    try {
+      ApplicationManagement appMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().
+                                                  getApplicationManagement();
+      if (appMgmt instanceof ApplicationManagementImpl) {
+        List<ApplicationInformation> applist = ((ApplicationManagementImpl) appMgmt).listApplications(true, false);
+        for (ApplicationInformation app : applist) {
+          if (OasGuiConstants.OAS_BASE_APP_NAME.equals(app.getName())) {
+            RtcData rtc = new RtcData(app.asRuntimeContext());
+            ret.add(rtc);
+          }
+        }
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
+    return ret;
+  }
+  
+  
+  public List<XmomType> getAllChildTypesInReferencedRtcs(FqName fqname, RtcData rtc) {
     List<XmomType> ret = new ArrayList<>();
     try {
       HashMap<String, String> filters = new HashMap<>();
-      filters.put(XMOMDatabaseEntryColumn.FQNAME.getColumnName(), xmom.getFqName());
+      filters.put(XMOMDatabaseEntryColumn.FQNAME.getColumnName(), fqname.getFqName());
       SearchRequestBean srb = new SearchRequestBean();
       srb.setArchiveIdentifier(ArchiveIdentifier.xmomcache);
       srb.setMaxRows(-1);
@@ -94,7 +132,8 @@ public class OasGuiTools {
       XMOMDatabaseSearchResult searchResult = multiChannelPortal.searchXMOMDatabase(Arrays.asList(select), -1,
                                                                                     rtc.getRevision());
       for (XMOMDatabaseSearchResultEntry entry : searchResult.getResult()) {
-        XmomType xt = new XmomType(entry.getFqName());
+        RtcData foundRtc = new RtcData(entry.getRuntimeContext());
+        XmomType xt = new XmomType(entry.getFqName(), foundRtc);
         ret.add(xt);
       }
     } catch (Exception e) {
@@ -104,29 +143,29 @@ public class OasGuiTools {
   }
   
   
-  public List<GeneratedOasApiType> getAllGeneratedOasApiTypesInRtc(RtcData rtc) {
+  public List<GeneratedOasApiType> getAllGeneratedOasApiTypesInRefRtcs(RtcData rtc) {
     List<GeneratedOasApiType> ret = new ArrayList<>();
-    XmomType xmom = new XmomType(OasGuiConstants.FQN_OAS_BASE_API);
-    List<XmomType> list = this.getAllChildTypesInRtc(xmom, rtc);
+    FqName fqname = new FqName(OasGuiConstants.FQN_OAS_BASE_API);
+    List<XmomType> list = getAllChildTypesInReferencedRtcs(fqname, rtc);
     for (XmomType item : list) {
-      ret.add(new GeneratedOasApiType(item, rtc));
+      ret.add(new GeneratedOasApiType(item));
     }
     return ret;
   }
   
   
-  public List<ImplementedOasApiType> getAllImplementedOasApiTypesInRtc(GeneratedOasApiType goat, RtcData rtc) {
+  public List<ImplementedOasApiType> getAllImplementedOasApiTypesInRefRtcs(GeneratedOasApiType goat) {
     List<ImplementedOasApiType> ret = new ArrayList<>();
-    List<XmomType> list = this.getAllChildTypesInRtc(goat.getXmomType(), rtc);
+    List<XmomType> list = getAllChildTypesInReferencedRtcs(goat.getXmomType().getFqNameInstance(), goat.getRtc());
     for (XmomType item : list) {
-      ret.add(new ImplementedOasApiType(item, rtc));
+      ret.add(new ImplementedOasApiType(item));
     }
     return ret;
   }
   
   
-  public List<RtcData> getAllRtcsWhichReferenceRtcRecursive(RtcData rtc) {
-    List<RtcData> ret = new ArrayList<>();
+  public void getAllRtcsWhichReferenceRtcRecursive(RtcData rtc, Set<RtcData> ret) {
+    if (ret.contains(rtc)) { return; }
     ret.add(rtc);
     try {
       RuntimeContextDependencyManagement rtcDependencyManagement =
@@ -141,35 +180,37 @@ public class OasGuiTools {
           RuntimeContext tmpRtc = dep.asCorrespondingRuntimeContext();
           if (tmpRtc.equals(runtimeContext)) {
             RtcData refRtc = new RtcData(tmpRtc);
-            ret.add(refRtc);
-            ret.addAll(getAllRtcsWhichReferenceRtcRecursive(refRtc));
+            getAllRtcsWhichReferenceRtcRecursive(refRtc, ret);
           }
         }
       }
+    } catch (RuntimeException e) {
+      throw e;
     } catch (Exception e) {
       throw new RuntimeException(e.getMessage(), e);
     }
-    return ret;
   }
   
-  
-  public List<ImplementedOasApiType> getAllImplementedOasApiTypesInRefRtcs(GeneratedOasApiType goat, RtcData rtc) {
+  /*
+  public List<ImplementedOasApiType> getAllImplementedOasApiTypesInRefRtcs(GeneratedOasApiType goat) {
     List<ImplementedOasApiType> ret = new ArrayList<>();
-    List<RtcData> rtclist = getAllRtcsWhichReferenceRtcRecursive(rtc);
-    for (RtcData refRtc : rtclist) {
-      List<ImplementedOasApiType> list = getAllImplementedOasApiTypesInRtc(goat, refRtc);
+    Set<RtcData> set = new TreeSet<>();
+    //getAllRtcsWhichReferenceRtcRecursive(rtc, set);
+    for (RtcData refRtc : set) {
+      List<ImplementedOasApiType> list = getAllImplementedOasApiTypesInRtc(goat);
       ret.addAll(list);
     }
     return ret;
   }
+  */
   
-  
-  public Set<String> getOperationsOfXmomType(XmomType xmom, RtcData rtc) {
+  public Set<String> getOperationsOfXmomType(XmomType xmom) {
     Set<String> ret = new TreeSet<>();
     try {
       String fqname = xmom.getFqName();
       String path = fqname.substring(0, fqname.lastIndexOf("."));
       String typename = fqname.substring(fqname.lastIndexOf(".") + 1, fqname.length());
+      long revision = xmom.getRtc().getRevision();
       
       SearchRequestBean srb = new SearchRequestBean();
       srb.setArchiveIdentifier(ArchiveIdentifier.xmomcache);
@@ -186,15 +227,15 @@ public class OasGuiTools {
       //select.addDesiredResultTypes(XMOMDatabaseType.DATATYPE);
       
       XMOMDatabase xmomDB = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getXMOMDatabase();
-      XMOMDatabaseSearchResult searchResult = xmomDB.searchXMOMDatabase(List.of(select), -1, rtc.getRevision());
+      XMOMDatabaseSearchResult searchResult = xmomDB.searchXMOMDatabase(List.of(select), -1, revision);
       List<XMOMDatabaseSearchResultEntry> results = searchResult.getResult();
     
       for (XMOMDatabaseSearchResultEntry entry : results) {
         String op = entry.getSimplename();
-        if (!op.contains(".")) { continue; }        
-        String prefix = op.substring(0, fqname.indexOf("."));
+        if (!op.contains(".")) { continue; }
+        String prefix = op.substring(0, op.indexOf("."));
         if (!prefix.equals(typename)) { continue; }
-        op = op.substring(fqname.lastIndexOf(".") + 1, op.length());
+        op = op.substring(op.lastIndexOf(".") + 1, op.length());
         ret.add(op);
       }
     } catch (Exception e) {

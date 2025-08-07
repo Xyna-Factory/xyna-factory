@@ -19,33 +19,19 @@
 package xmcp.oas.fman.tools;
 
 
-public class XmomType {
+public class FqName {
 
-  private final FqName fqName;
-  private final RtcData rtc;
+  private final String fqn;
 
-  
-  public XmomType(String fqn, RtcData rtc) {
-    this(new FqName(fqn), rtc);
-  }
-  
-  public XmomType(FqName fqn, RtcData rtc) {
-    if (fqn == null) { throw new IllegalArgumentException("Fqname is null."); }
-    if (rtc == null) { throw new IllegalArgumentException("RTC is null."); }
-    this.fqName = fqn;
-    this.rtc = rtc;
+  public FqName(String fqn) {
+    if (fqn == null) {
+      throw new IllegalArgumentException("Fq-name is null.");
+    }
+    this.fqn = fqn;
   }
   
   public String getFqName() {
-    return fqName.getFqName();
-  }
-  
-  public FqName getFqNameInstance() {
-    return fqName;
-  }
-  
-  public RtcData getRtc() {
-    return rtc;
+    return fqn;
   }
   
 }

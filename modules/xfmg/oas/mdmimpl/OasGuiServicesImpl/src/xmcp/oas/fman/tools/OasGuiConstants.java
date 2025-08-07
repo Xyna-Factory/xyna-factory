@@ -23,5 +23,6 @@ package xmcp.oas.fman.tools;
 public class OasGuiConstants {
 
   public static final String FQN_OAS_BASE_API = "xmcp.oas.datatype.OASBaseApi";
+  public static final String OAS_BASE_APP_NAME = "OAS_Base";
   
 }

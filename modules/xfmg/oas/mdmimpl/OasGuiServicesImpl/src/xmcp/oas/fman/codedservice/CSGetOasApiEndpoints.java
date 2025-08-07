@@ -21,6 +21,8 @@ package xmcp.oas.fman.codedservice;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import xmcp.oas.fman.datatypes.OasApiDatatypeInfo;
 import xmcp.oas.fman.tools.GenTypeOpGroup;
 import xmcp.oas.fman.tools.GeneratedOasApiType;
@@ -33,21 +35,37 @@ import xmcp.tables.datatypes.TableInfo;
 
 public class CSGetOasApiEndpoints {
 
+  private static Logger _logger = Logger.getLogger(CSGetOasApiEndpoints.class);
+  
   private OasGuiTools _tools = new OasGuiTools();
   
   
   public List<? extends OasApiDatatypeInfo> execute(TableInfo info) {
-    List<OasApiDatatypeInfo> ret = new ArrayList<>();
-    List<RtcData> rtclist = _tools.getAllAppsAndWorkspaces();
-    for (RtcData rtc : rtclist) {
+    try {
+      List<OasApiDatatypeInfo> ret = new ArrayList<>();
+      
+      RtcData rtc = new RtcData(322);
       handleRtc(ret, rtc);
+      
+      /*
+      List<RtcData> rtclist = _tools.getAllAppsAndWorkspaces();
+      for (RtcData rtc : rtclist) {
+        handleRtc(ret, rtc);
+      }
+      */
+      return ret;
+    } catch (RuntimeException e) {
+      _logger.error(e.getMessage(), e);
+      throw e;
+    } catch (Exception e) {
+      _logger.error(e.getMessage(), e);
+      throw new RuntimeException(e.getMessage(), e);
     }
-    return ret;
   }
  
   
   private void handleRtc(List<OasApiDatatypeInfo> ret, RtcData rtc) {
-    List<GeneratedOasApiType> list = _tools.getAllGeneratedOasApiTypesInRtc(rtc);
+    List<GeneratedOasApiType> list = _tools.getAllGeneratedOasApiTypesInRefRtcs(rtc);
     if (list.size() < 1) { return; }
     for (GeneratedOasApiType goat : list) {
       OperationGroup opgroup = new OperationGroup(goat);
@@ -60,7 +78,7 @@ public class CSGetOasApiEndpoints {
   private void handleGeneratedType(List<OasApiDatatypeInfo> ret, GenTypeOpGroup gtog) {
     RtcData rtc = gtog.getGeneratedOasApiType().getRtc();
     String status = "";
-    List<ImplementedOasApiType> list = _tools.getAllImplementedOasApiTypesInRefRtcs(gtog.getGeneratedOasApiType(), rtc);
+    List<ImplementedOasApiType> list = _tools.getAllImplementedOasApiTypesInRefRtcs(gtog.getGeneratedOasApiType());
     if (list.size() > 1) {
       handleMultipleImplementations(ret, rtc, gtog, list);
       return;

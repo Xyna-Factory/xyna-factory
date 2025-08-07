@@ -24,8 +24,8 @@ public class ImplementedOasApiType extends OasApiType {
     super(fqn, rtc);
   }
 
-  public ImplementedOasApiType(XmomType xmom, RtcData rtc) {
-    super(xmom, rtc);
+  public ImplementedOasApiType(XmomType xmom) {
+    super(xmom);
   }
 
   @Override

@@ -26,7 +26,7 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Workspace;
 
 
-public class RtcData {
+public class RtcData implements Comparable<RtcData> {
 
   private final long _revision;
   private final String _name;
@@ -78,7 +78,6 @@ public class RtcData {
     this._revision = revision;
     this._rtc = rtc;
     if (rtc instanceof Workspace) {
-      Workspace wsp = (Workspace) rtc;
       this._name = rtc.getName();
       this._version = null;
     } else if (rtc instanceof Application) {
@@ -94,7 +93,7 @@ public class RtcData {
   private static RuntimeContext getRtcOfRevision(long revision) {
     try {
       return XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement()
-                      .getRuntimeContext(revision);
+                        .getRuntimeContext(revision);
     } catch (Exception e) {
       throw new IllegalArgumentException("Unable to determine run time context of revision " + revision, e);
     }
@@ -158,6 +157,25 @@ public class RtcData {
   @Override
   public String toString() {
     return _rtc.getGUIRepresentation();
+  }
+  
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof RtcData)) { return false; }
+    RtcData input = (RtcData) obj;
+    return _revision == input._revision;
+  }
+  
+  @Override
+  public int hashCode() {
+    return _name.hashCode();
+  }
+
+
+  @Override
+  public int compareTo(RtcData rtc) {
+    if (rtc == null) { return 1; }
+    return Long.valueOf(_revision).compareTo(Long.valueOf(rtc._revision));
   }
   
 }

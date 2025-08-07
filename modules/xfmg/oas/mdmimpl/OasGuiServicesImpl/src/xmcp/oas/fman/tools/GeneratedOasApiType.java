@@ -26,8 +26,8 @@ public class GeneratedOasApiType extends OasApiType {
     super(fqn, rtc);
   }
 
-  public GeneratedOasApiType(XmomType xmom, RtcData rtc) {
-    super(xmom, rtc);
+  public GeneratedOasApiType(XmomType xmom) {
+    super(xmom);
   }
 
   @Override

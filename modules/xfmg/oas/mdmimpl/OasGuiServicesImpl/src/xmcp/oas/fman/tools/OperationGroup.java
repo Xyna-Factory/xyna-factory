@@ -27,22 +27,22 @@ public class OperationGroup {
   private final Set<String> operations;
 
   
-  public OperationGroup(XmomType xmom, RtcData rtc) {
+  public OperationGroup(XmomType xmom) {
     if (xmom == null) {
       throw new IllegalArgumentException("Xmom type is null.");
     }
     this.xmom = xmom;
-    this.operations = new OasGuiTools().getOperationsOfXmomType(xmom, rtc);
+    this.operations = new OasGuiTools().getOperationsOfXmomType(xmom);
   }
   
   
   public OperationGroup(String fqn, RtcData rtc) {
-    this(new XmomType(fqn), rtc);
+    this(new XmomType(fqn, rtc));
   }
   
   
   public OperationGroup(OasApiType oat) {
-    this(oat.getXmomType(), oat.getRtc());
+    this(oat.getXmomType());
   }
   
   
