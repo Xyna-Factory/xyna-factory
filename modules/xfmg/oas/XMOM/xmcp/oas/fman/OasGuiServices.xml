@@ -30,15 +30,6 @@
         <CodeSnippet Type="Java">return xmcp.oas.fman.OasGuiServicesImpl.createWorkspaceInputDownloadData();</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Test List Types" Name="testListTypes">
-      <Input/>
-      <Output>
-        <Data ID="6398" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text6398"/>
-      </Output>
-      <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.oas.fman.OasGuiServicesImpl.testListTypes();</CodeSnippet>
-      </SourceCode>
-    </Operation>
     <Operation IsStatic="true" Label="Get Oas Api Endpoints" Name="getOasApiEndpoints">
       <Input>
         <Data ID="6399" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo6399"/>

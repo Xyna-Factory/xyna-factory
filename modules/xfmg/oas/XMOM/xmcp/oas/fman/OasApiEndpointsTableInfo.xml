@@ -24,17 +24,17 @@
       <Data ID="27" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo27"/>
       <Data ID="44" IsList="true" Label="Oas Api Datatype Info" ReferenceName="OasApiDatatypeInfo" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasApiDatatypeInfo44"/>
     </Output>
-    <ServiceReference ID="312" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
-      <Source RefID="311"/>
-      <Target RefID="311"/>
-    </ServiceReference>
     <ServiceReference ID="480" Label="Oas Gui Services" ReferenceName="OasGuiServices.OasGuiServices" ReferencePath="xmcp.oas.fman">
       <Source RefID="479"/>
       <Target RefID="479"/>
     </ServiceReference>
+    <ServiceReference ID="312" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="311"/>
+      <Target RefID="311"/>
+    </ServiceReference>
     <Choice ID="120" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="14"/>
-      <Target RefID="486"/>
+      <Target RefID="2903"/>
       <Input>
         <Data ID="135" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo135">
           <Source RefID="120"/>
@@ -98,74 +98,83 @@
             <Target RefID="210"/>
           </Receive>
         </Function>
-        <Mappings ID="160" Label="Mapping">
-          <Output>
-            <Data ID="432" IsList="true" Label="Oas Api Datatype Info" ReferenceName="OasApiDatatypeInfo" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasApiDatatypeInfo432">
-              <Source RefID="160"/>
-            </Data>
-            <Target RefID="433"/>
-          </Output>
-        </Mappings>
         <Assign ID="124">
-          <Source RefID="433"/>
-          <Target RefID="486"/>
+          <Source RefID="210"/>
+          <Target RefID="2903"/>
           <Copy>
-            <Source RefID="433"/>
-            <Target RefID="486"/>
+            <Source RefID="210"/>
+            <Target RefID="2903"/>
           </Copy>
         </Assign>
         <Data ID="210" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo210"/>
       </Case>
       <Case ID="122" Label="false">
-        <Function ID="479" Label="Get Oas Api Endpoints">
-          <Source RefID="480"/>
-          <Source RefID="14"/>
-          <Target RefID="480"/>
-          <Target RefID="482"/>
-          <Invoke Operation="getOasApiEndpoints" ServiceID="480">
+        <Mappings ID="2896" Label="Mapping">
+          <Input>
+            <Data ID="2898" Label="Table Info IN" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo2898"/>
             <Source RefID="14"/>
-          </Invoke>
-          <Receive ServiceID="480">
-            <Target RefID="482"/>
-          </Receive>
-        </Function>
+          </Input>
+          <Output>
+            <Data ID="2899" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo2899"/>
+            <Target RefID="2895"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
         <Assign ID="126">
-          <Source RefID="482"/>
-          <Target RefID="486"/>
+          <Source RefID="2895"/>
+          <Target RefID="2903"/>
           <Copy>
-            <Source RefID="482"/>
-            <Target RefID="486"/>
+            <Source RefID="2895"/>
+            <Target RefID="2903"/>
           </Copy>
         </Assign>
-        <Data ID="482" IsList="true" Label="Oas Api Datatype Info" ReferenceName="OasApiDatatypeInfo" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasApiDatatypeInfo482">
-          <Source RefID="479"/>
-        </Data>
+        <Data ID="2895" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo2895"/>
       </Case>
     </Choice>
+    <Function ID="479" Label="Get Oas Api Endpoints">
+      <Source RefID="480"/>
+      <Source RefID="2903"/>
+      <Target RefID="480"/>
+      <Target RefID="3057"/>
+      <Invoke Operation="getOasApiEndpoints" ServiceID="480">
+        <Source RefID="2903">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="480">
+        <Target RefID="3057"/>
+      </Receive>
+    </Function>
     <Data ID="408" Label="Oas Api Datatype Info" ReferenceName="OasApiDatatypeInfo" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasApiDatatypeInfo408">
       <Source RefID="339"/>
-    </Data>
-    <Data ID="433" IsList="true" Label="Oas Api Datatype Info" ReferenceName="OasApiDatatypeInfo" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasApiDatatypeInfo433">
-      <Source RefID="160"/>
-    </Data>
-    <Data ID="486" IsList="true" Label="Oas Api Datatype Info" ReferenceName="OasApiDatatypeInfo" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasApiDatatypeInfo486">
-      <Source RefID="120"/>
     </Data>
     <Data ID="579" IsList="true" Label="Selected Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn579">
       <Source RefID="362"/>
     </Data>
     <Data ID="2836" Label="Oas Api Datatype Info" ReferenceName="OasApiDatatypeInfo" ReferencePath="xmcp.oas.fman.datatypes" VariableName="const_OasApiDatatypeInfo2836"/>
+    <Data ID="2903" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo2903">
+      <Source RefID="120"/>
+    </Data>
+    <Data ID="3057" IsList="true" Label="Oas Api Datatype Info" ReferenceName="OasApiDatatypeInfo" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasApiDatatypeInfo3057">
+      <Source RefID="479"/>
+    </Data>
     <Assign ID="1">
-      <Source RefID="14"/>
-      <Source RefID="486"/>
+      <Source RefID="2903"/>
+      <Source RefID="3057"/>
       <Target RefID="27"/>
       <Target RefID="44"/>
       <Copy>
-        <Source RefID="14"/>
+        <Source RefID="2903">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
         <Target RefID="27"/>
       </Copy>
       <Copy>
-        <Source RefID="486"/>
+        <Source RefID="3057"/>
         <Target RefID="44"/>
       </Copy>
     </Assign>
