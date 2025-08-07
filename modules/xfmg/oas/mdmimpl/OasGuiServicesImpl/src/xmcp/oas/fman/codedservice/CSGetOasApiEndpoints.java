@@ -43,16 +43,10 @@ public class CSGetOasApiEndpoints {
   public List<? extends OasApiDatatypeInfo> execute(TableInfo info) {
     try {
       List<OasApiDatatypeInfo> ret = new ArrayList<>();
-      
-      RtcData rtc = new RtcData(322);
-      handleRtc(ret, rtc);
-      
-      /*
-      List<RtcData> rtclist = _tools.getAllAppsAndWorkspaces();
+      List<RtcData> rtclist = _tools.getAllOasBaseApps();
       for (RtcData rtc : rtclist) {
         handleRtc(ret, rtc);
       }
-      */
       return ret;
     } catch (RuntimeException e) {
       _logger.error(e.getMessage(), e);

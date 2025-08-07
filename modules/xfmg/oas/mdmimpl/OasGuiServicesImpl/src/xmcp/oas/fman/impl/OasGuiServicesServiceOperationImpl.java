@@ -18,33 +18,16 @@
 
 package xmcp.oas.fman.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
-import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
-import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationDefinitionInformation;
-import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationInformation;
-import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl;
-import com.gip.xyna.xfmg.xfctrl.workspacemgmt.WorkspaceManagement;
-import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabaseType;
-import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResult;
-import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResultEntry;
-import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSelect;
-import com.gip.xyna.xmcp.XynaMultiChannelPortal;
-import com.gip.xyna.xnwh.selection.parsing.ArchiveIdentifier;
-import com.gip.xyna.xnwh.selection.parsing.SearchRequestBean;
-import com.gip.xyna.xnwh.selection.parsing.SelectionParser;
 
 import base.KeyValue;
-import base.Text;
 import xmcp.oas.fman.OasGuiServicesServiceOperation;
+import xmcp.oas.fman.codedservice.CSCreateWorkspaceInputDownloadData;
 import xmcp.oas.fman.codedservice.CSGetOasApiEndpoints;
-import xmcp.oas.fman.codedservice.TmpTools;
 import xmcp.oas.fman.datatypes.OasApiDatatypeInfo;
 import xmcp.tables.datatypes.TableInfo;
 
@@ -83,70 +66,7 @@ public class OasGuiServicesServiceOperationImpl implements ExtendedDeploymentTas
 
   @Override
   public List<? extends KeyValue> createWorkspaceInputDownloadData() {
-    List<KeyValue> result = new ArrayList<KeyValue>();
-    result.add(new KeyValue.Builder().key("<Application>").value(" ").instance());
-    WorkspaceManagement wsMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getWorkspaceManagement();
-    wsMgmt.listWorkspaces(false).forEach(
-      ws -> result.add(new KeyValue.Builder().key(ws.getWorkspace().getName()).value(ws.getWorkspace().getName()).instance())
-    );
-    return result;
-  }
-
-  @Override
-  public Text testListTypes() {
-    return new TmpTools().testListTypes();
-    /*
-    Text ret = new Text();
-    
-    String fqname = "xact.http.enums.httpmethods.HTTPMethod";
-    
-    HashMap<String, String> filters = new HashMap<>();
-    filters.put("fqname", fqname);
-    SearchRequestBean srb = new SearchRequestBean();
-    srb.setArchiveIdentifier(ArchiveIdentifier.xmomcache);
-    srb.setMaxRows(-1);
-    srb.setSelection("extendedBy");
-    srb.setFilterEntries(filters);
-    
-    
-    ApplicationManagementImpl applicationManagement = (ApplicationManagementImpl) XynaFactory.getInstance()
-                    .getFactoryManagement().getXynaFactoryControl().getApplicationManagement();
-    
-    List<ApplicationInformation> appsinfo = applicationManagement.listApplications(true, false);
-    
-    try {
-        
-      String str = "";
-      
-      for (ApplicationInformation app : appsinfo) {
-        
-        if (app instanceof ApplicationDefinitionInformation ) { continue; }
-       
-        long revision = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement().
-                        getRevision(app.asRuntimeContext());
-        //long revision = 315;
-        XynaMultiChannelPortal multiChannelPortal = (XynaMultiChannelPortal) XynaFactory.getInstance().getXynaMultiChannelPortal();
-        
-        XMOMDatabaseSelect select = (XMOMDatabaseSelect) SelectionParser.generateSelectObjectFromSearchRequestBean(srb);
-        select.addAllDesiredResultTypes(List.of(XMOMDatabaseType.DATATYPE));
-        
-        XMOMDatabaseSearchResult searchResult = multiChannelPortal.searchXMOMDatabase(Arrays.asList(select), -1, revision);
-        List<XMOMDatabaseSearchResultEntry> results = searchResult.getResult();
-      
-        str += "### " + revision + "\n\n";
-        for (XMOMDatabaseSearchResultEntry entry : results) {
-          str += entry.getFqName() + "\n";
-        }
-        str += "\n\n";
-      }
-      ret.setText(str);
-        
-      return ret;
-        
-    } catch (Exception e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
-    */
+    return new CSCreateWorkspaceInputDownloadData().execute();
   }
 
   

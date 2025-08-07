@@ -50,7 +50,7 @@ import com.gip.xyna.xnwh.selection.parsing.SelectionParser;
 
 public class OasGuiTools {
 
-  public List<RtcData> getAllApps() {
+  private List<RtcData> getAllApps() {
     List<RtcData> ret = new ArrayList<>();
     try {
       ApplicationManagement appMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().
@@ -69,7 +69,7 @@ public class OasGuiTools {
   }
   
   
-  public List<RtcData> getAllWorkspaces() {
+  private List<RtcData> getAllWorkspaces() {
     List<RtcData> ret = new ArrayList<>();
     try {
       List<WorkspaceInformation> wsplist = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().
@@ -85,7 +85,8 @@ public class OasGuiTools {
   }
   
   
-  public List<RtcData> getAllAppsAndWorkspaces() {
+  @SuppressWarnings("unused")
+  private List<RtcData> getAllAppsAndWorkspaces() {
     List<RtcData> ret = new ArrayList<>();
     ret.addAll(getAllApps());
     ret.addAll(getAllWorkspaces());
@@ -164,7 +165,8 @@ public class OasGuiTools {
   }
   
   
-  public void getAllRtcsWhichReferenceRtcRecursive(RtcData rtc, Set<RtcData> ret) {
+  @SuppressWarnings("unused")
+  private void getAllRtcsWhichReferenceRtcRecursive(RtcData rtc, Set<RtcData> ret) {
     if (ret.contains(rtc)) { return; }
     ret.add(rtc);
     try {
