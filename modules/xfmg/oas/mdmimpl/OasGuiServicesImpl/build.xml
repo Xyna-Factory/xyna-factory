@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,19 +31,6 @@
     <property name="mdm.xml.path" value="xmcp/oas/fman" />
     <property name="mdm.xml.filename" value="OasGuiServices.xml" />
     <property name="mdm.service.path" value="xmcp.oas.fman.OasGuiServices" />
-
-    <!--
-    <property name="cli.command.java.path" value="xfmg.oas.generation.cli" />
-    <property name="cli.command.path" value="xfmg/oas/generation.cli" />
-    -->
-
-    <!--
-    <target name="prepareLibs" description="Prepare Libs">
-        <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/../../sharedlib/xyna-openapi">
-            <property name="target.dir" value="${basedir}/lib/xyna" />
-        </ant>
-    </target>
-    -->
 
     <import file="${root.dir}/installation/build/buildService.xml" />
 
