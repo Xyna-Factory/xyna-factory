@@ -35,13 +35,11 @@ import xmcp.tables.datatypes.TableInfo;
 public class OasGuiServicesServiceOperationImpl implements ExtendedDeploymentTask, OasGuiServicesServiceOperation {
 
   public void onDeployment() throws XynaException {
-    // TODO do something on deployment, if required
     // This is executed again on each classloader-reload, that is each
     // time a dependent object is redeployed, for example a type of an input parameter.
   }
 
   public void onUndeployment() throws XynaException {
-    // TODO do something on undeployment, if required
     // This is executed again on each classloader-unload, that is each
     // time a dependent object is redeployed, for example a type of an input parameter.
   }

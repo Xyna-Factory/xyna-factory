@@ -111,11 +111,11 @@ public class RtcData implements Comparable<RtcData> {
   
   
   public boolean isApplication() {
-    return _version == null;
+    return _rtc instanceof Application;
   }
   
   public boolean isWorkspace() {
-    return _version != null;
+    return _rtc instanceof Workspace;
   }
 
   
@@ -156,7 +156,10 @@ public class RtcData implements Comparable<RtcData> {
   
   @Override
   public String toString() {
-    return _rtc.getGUIRepresentation();
+    if (isApplication()) {
+      return _name + " (" + _version + ")";
+    }
+    return _name;
   }
   
   @Override
