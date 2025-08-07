@@ -140,7 +140,8 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
     Plugin.Builder plugin = new Plugin.Builder();
     plugin.navigationEntryLabel(entryName);
     plugin.navigationEntryName(entryName);
-    plugin.definitionWorkflowFQN("xmcp.oas.fman.GetOASImportHistoryDefinition");
+    //plugin.definitionWorkflowFQN("xmcp.oas.fman.GetOASImportHistoryDefinition");
+    plugin.definitionWorkflowFQN("xmcp.oas.fman.GetOasApiEndpointsDefinition");
     plugin.pluginRTC(rtc);
     plugin.path("manager");
     return plugin.instance();

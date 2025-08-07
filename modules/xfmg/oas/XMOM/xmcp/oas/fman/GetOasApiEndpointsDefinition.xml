@@ -34,6 +34,61 @@
         <Target RefID="74"/>
       </Receive>
     </Function>
+    <Mappings ID="480" Label="Details Workflow">
+      <Input>
+        <Data ID="481" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext481"/>
+        <Source RefID="74"/>
+      </Input>
+      <Output>
+        <Data ID="482" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow482"/>
+        <Target RefID="483"/>
+      </Output>
+      <Mapping>%1%.fQN="xmcp.oas.fman.DefineGenerationDialog"</Mapping>
+      <Mapping>%1%.rTC=%0%</Mapping>
+    </Mappings>
+    <Mappings ID="411" Label="Mapping">
+      <Input>
+        <Data ID="516" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow516">
+          <Source RefID="411"/>
+        </Data>
+        <Source RefID="483"/>
+      </Input>
+      <Output>
+        <Data ID="414" Label="Open Dialog Button Definition" ReferenceName="OpenDialogButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDialogButtonDefinition414"/>
+        <Target RefID="410"/>
+      </Output>
+      <Mapping>%1%.dialogDefinitionReference=%0%</Mapping>
+      <Mapping>%1%.label="Generate and import OAS Applications"</Mapping>
+      <Mapping>%1%.dataPath="%%"</Mapping>
+    </Mappings>
+    <Mappings ID="144" Label="Details Workflow">
+      <Input>
+        <Data ID="146" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext146"/>
+        <Source RefID="74"/>
+      </Input>
+      <Output>
+        <Data ID="147" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow147"/>
+        <Target RefID="143"/>
+      </Output>
+      <Mapping>%1%.fQN="xmcp.oas.fman.GetOASImportHistoryDefinition"</Mapping>
+      <Mapping>%1%.rTC=%0%</Mapping>
+    </Mappings>
+    <Mappings ID="165" Label="Mapping">
+      <Input>
+        <Data ID="167" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow167"/>
+        <Source RefID="143">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="168" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition168"/>
+        <Target RefID="164"/>
+      </Output>
+      <Mapping>%1%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%0%</Mapping>
+      <Mapping>%1%.label="Show Import History"</Mapping>
+    </Mappings>
     <Mappings ID="14" Label="Mapping">
       <Input>
         <Data ID="110" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext110">
@@ -41,21 +96,39 @@
         </Data>
         <Source RefID="74"/>
       </Input>
+      <Input>
+        <Data ID="257" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition257">
+          <Source RefID="14"/>
+        </Data>
+        <Source RefID="164"/>
+      </Input>
+      <Input>
+        <Data ID="662" Label="Open Dialog Button Definition" ReferenceName="OpenDialogButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDialogButtonDefinition662">
+          <Source RefID="14"/>
+        </Data>
+        <Source RefID="410"/>
+      </Input>
       <Output>
         <Data ID="27" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition27">
           <Source RefID="14"/>
         </Data>
         <Target RefID="28"/>
       </Output>
-      <Mapping>%1%.tableWorkflowRTC=%0%</Mapping>
-      <Mapping>%1%.tableWorkflowFQN="xmcp.oas.fman.OasApiEndpointsTableInfo"</Mapping>
-      <Mapping>%1%.dataPath="%%"</Mapping>
-      <Mapping>%1%.label="OAS Api Endpoints"</Mapping>
+      <Mapping>%3%.tableWorkflowRTC=%0%</Mapping>
+      <Mapping>%3%.tableWorkflowFQN="xmcp.oas.fman.OasApiEndpointsTableInfo"</Mapping>
+      <Mapping>%3%.dataPath="%%"</Mapping>
+      <Mapping>%3%.label="OAS Api Endpoints"</Mapping>
+      <Mapping>%3%.header.rightArea.children["0"]=%2%</Mapping>
+      <Mapping>%3%.header.rightArea.children["1"]=%1%</Mapping>
     </Mappings>
     <Data ID="28" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition28">
       <Source RefID="14"/>
     </Data>
     <Data ID="74" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext74"/>
+    <Data ID="143" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow143"/>
+    <Data ID="164" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition164"/>
+    <Data ID="410" Label="Open Dialog Button Definition" ReferenceName="OpenDialogButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDialogButtonDefinition410"/>
+    <Data ID="483" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow483"/>
     <Assign ID="1">
       <Source RefID="28"/>
       <Target RefID="37"/>

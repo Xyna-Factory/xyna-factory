@@ -191,18 +191,6 @@ public class OasGuiTools {
     }
   }
   
-  /*
-  public List<ImplementedOasApiType> getAllImplementedOasApiTypesInRefRtcs(GeneratedOasApiType goat) {
-    List<ImplementedOasApiType> ret = new ArrayList<>();
-    Set<RtcData> set = new TreeSet<>();
-    //getAllRtcsWhichReferenceRtcRecursive(rtc, set);
-    for (RtcData refRtc : set) {
-      List<ImplementedOasApiType> list = getAllImplementedOasApiTypesInRtc(goat);
-      ret.addAll(list);
-    }
-    return ret;
-  }
-  */
   
   public Set<String> getOperationsOfXmomType(XmomType xmom) {
     Set<String> ret = new TreeSet<>();
@@ -223,9 +211,6 @@ public class OasGuiTools {
     
       XMOMDatabaseSelect select = (XMOMDatabaseSelect) SelectionParser.generateSelectObjectFromSearchRequestBean(srb);
       select.addDesiredResultTypes(XMOMDatabaseType.OPERATION);
-      //select.addDesiredResultTypes(XMOMDatabaseType.SERVICEGROUP);
-      //select.addDesiredResultTypes(XMOMDatabaseType.DATATYPE);
-      
       XMOMDatabase xmomDB = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getXMOMDatabase();
       XMOMDatabaseSearchResult searchResult = xmomDB.searchXMOMDatabase(List.of(select), -1, revision);
       List<XMOMDatabaseSearchResultEntry> results = searchResult.getResult();
