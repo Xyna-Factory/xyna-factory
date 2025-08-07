@@ -45,6 +45,7 @@ public class CSGetOasApiEndpoints {
       List<OasApiDatatypeInfo> ret = new ArrayList<>();
       List<RtcData> rtclist = _tools.getAllOasBaseApps();
       for (RtcData rtc : rtclist) {
+        // check gen rtc
         handleRtc(ret, rtc);
       }
       return ret;
@@ -62,6 +63,7 @@ public class CSGetOasApiEndpoints {
     List<GeneratedOasApiType> list = _tools.getAllGeneratedOasApiTypesInRefRtcs(rtc);
     if (list.size() < 1) { return; }
     for (GeneratedOasApiType goat : list) {
+      // check gen type
       OperationGroup opgroup = new OperationGroup(goat);
       GenTypeOpGroup gtog = new GenTypeOpGroup(goat, opgroup);
       handleGeneratedType(ret, gtog);
@@ -74,6 +76,7 @@ public class CSGetOasApiEndpoints {
     String status = "";
     List<ImplementedOasApiType> list = _tools.getAllImplementedOasApiTypesInRefRtcs(gtog.getGeneratedOasApiType());
     if (list.size() > 1) {
+      // check status
       handleMultipleImplementations(ret, rtc, gtog, list);
       return;
     }
@@ -81,9 +84,11 @@ public class CSGetOasApiEndpoints {
     builder.generatedRtc(gtog.getGeneratedOasApiType().getRtc().toString());
     builder.apiDatatype(gtog.getGeneratedOasApiType().getFqName());
     if (list.size() == 0) {
+      // check impl type not empty?
       status = "Missing";
     } else if (list.size() == 1) {
       ImplementedOasApiType implType = list.get(0);
+      // check impl type
       OperationGroup opgroup = new OperationGroup(implType);
       if (opgroup.operationsMatch(gtog.getOperationGroup())) {
         status = "Complete";
