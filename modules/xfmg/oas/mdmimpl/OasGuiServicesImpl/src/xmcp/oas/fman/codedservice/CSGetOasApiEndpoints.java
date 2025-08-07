@@ -85,7 +85,7 @@ public class CSGetOasApiEndpoints {
     } else if (list.size() == 1) {
       ImplementedOasApiType implType = list.get(0);
       OperationGroup opgroup = new OperationGroup(implType);
-      if (opgroup.matches(gtog.getOperationGroup())) {
+      if (opgroup.operationsMatch(gtog.getOperationGroup())) {
         status = "Complete";
       } else {
         status = "Incomplete";

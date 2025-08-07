@@ -61,7 +61,7 @@ public class OperationGroup {
   }
   
   
-  public boolean matches(OperationGroup input) {
+  public boolean operationsMatch(OperationGroup input) {
     if (input.getNumOperations() != getNumOperations()) { return false; }
     for (String val : operations) {
       if (!input.operations.contains(val)) {
