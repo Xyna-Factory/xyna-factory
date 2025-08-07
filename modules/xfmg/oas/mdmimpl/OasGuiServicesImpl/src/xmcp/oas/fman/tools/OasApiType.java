@@ -23,7 +23,7 @@ package xmcp.oas.fman.tools;
 public abstract class OasApiType {
 
   public static enum OasApiTypeCategory {
-    GENERATED, IMPLEMENTED
+    GENERATED, IMPLEMENTED, NONE
   }
   
   

@@ -24,9 +24,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import xmcp.oas.fman.datatypes.OasApiDatatypeInfo;
-import xmcp.oas.fman.tools.GenTypeOpGroup;
 import xmcp.oas.fman.tools.GeneratedOasApiType;
 import xmcp.oas.fman.tools.ImplementedOasApiType;
+import xmcp.oas.fman.tools.OasApiType.OasApiTypeCategory;
 import xmcp.oas.fman.tools.OasGuiTools;
 import xmcp.oas.fman.tools.OperationGroup;
 import xmcp.oas.fman.tools.RtcData;
@@ -63,29 +63,30 @@ public class CSGetOasApiEndpoints {
     if (list.size() < 1) { return; }
     for (GeneratedOasApiType goat : list) {
       OperationGroup opgroup = new OperationGroup(goat);
-      GenTypeOpGroup gtog = new GenTypeOpGroup(goat, opgroup);
-      handleGeneratedType(ret, gtog);
+      handleGeneratedType(ret, opgroup);
     }
   }
   
   
-  private void handleGeneratedType(List<OasApiDatatypeInfo> ret, GenTypeOpGroup gtog) {
-    RtcData rtc = gtog.getGeneratedOasApiType().getRtc();
+  private void handleGeneratedType(List<OasApiDatatypeInfo> ret, OperationGroup genTypeOpGroup) {
+    if (genTypeOpGroup.getOasApiTypecategory() != OasApiTypeCategory.GENERATED) { return; }
+    RtcData rtc = genTypeOpGroup.getXmomType().getRtc();
     String status = "";
-    List<ImplementedOasApiType> list = _tools.getAllImplementedOasApiTypesInRefRtcs(gtog.getGeneratedOasApiType());
+    GeneratedOasApiType goat = new GeneratedOasApiType(genTypeOpGroup.getXmomType());
+    List<ImplementedOasApiType> list = _tools.getAllImplementedOasApiTypesInRefRtcs(goat);
     if (list.size() > 1) {
-      handleMultipleImplementations(ret, rtc, gtog, list);
+      handleMultipleImplementations(ret, rtc, genTypeOpGroup, list);
       return;
     }
     OasApiDatatypeInfo.Builder builder = new OasApiDatatypeInfo.Builder();
-    builder.generatedRtc(gtog.getGeneratedOasApiType().getRtc().toString());
-    builder.apiDatatype(gtog.getGeneratedOasApiType().getFqName());
+    builder.generatedRtc(genTypeOpGroup.getXmomType().getRtc().toString());
+    builder.apiDatatype(genTypeOpGroup.getXmomType().getFqName());
     if (list.size() == 0) {
       status = "Missing";
     } else if (list.size() == 1) {
       ImplementedOasApiType implType = list.get(0);
       OperationGroup opgroup = new OperationGroup(implType);
-      if (opgroup.operationsMatch(gtog.getOperationGroup())) {
+      if (opgroup.operationsMatch(genTypeOpGroup)) {
         status = "Complete";
       } else {
         status = "Incomplete";
@@ -98,13 +99,13 @@ public class CSGetOasApiEndpoints {
   }
   
   
-  private void handleMultipleImplementations(List<OasApiDatatypeInfo> ret, RtcData rtc, GenTypeOpGroup gtog, 
+  private void handleMultipleImplementations(List<OasApiDatatypeInfo> ret, RtcData rtc, OperationGroup genTypeOpGroup,
                                              List<ImplementedOasApiType> implList) {
     String status = "Error";
     for (ImplementedOasApiType item : implList) {
       OasApiDatatypeInfo.Builder builder = new OasApiDatatypeInfo.Builder();
-      builder.generatedRtc(gtog.getGeneratedOasApiType().getRtc().toString());
-      builder.apiDatatype(gtog.getGeneratedOasApiType().getFqName());
+      builder.generatedRtc(genTypeOpGroup.getXmomType().getRtc().toString());
+      builder.apiDatatype(genTypeOpGroup.getXmomType().getFqName());
       builder.implementationRtc(item.getRtc().toString());
       builder.implementationDatatype(item.getFqName());
       builder.status(status);

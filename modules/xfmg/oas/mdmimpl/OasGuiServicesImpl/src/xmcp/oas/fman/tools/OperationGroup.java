@@ -20,19 +20,28 @@ package xmcp.oas.fman.tools;
 
 import java.util.Set;
 
+import xmcp.oas.fman.tools.OasApiType.OasApiTypeCategory;
+
 
 public class OperationGroup {
 
   private final XmomType xmom;
   private final Set<String> operations;
+  private final OasApiTypeCategory oasApiTypecategory;
 
   
   public OperationGroup(XmomType xmom) {
+    this(xmom, OasApiTypeCategory.NONE);
+  }
+  
+  
+  public OperationGroup(XmomType xmom, OasApiTypeCategory oasApiTypecategory) {
     if (xmom == null) {
       throw new IllegalArgumentException("Xmom type is null.");
     }
     this.xmom = xmom;
     this.operations = new OasGuiTools().getOperationsOfXmomType(xmom);
+    this.oasApiTypecategory = oasApiTypecategory;
   }
   
   
@@ -42,7 +51,7 @@ public class OperationGroup {
   
   
   public OperationGroup(OasApiType oat) {
-    this(oat.getXmomType());
+    this(oat.getXmomType(), oat.getCategory());
   }
   
   
@@ -51,11 +60,11 @@ public class OperationGroup {
   }
   
   
-  public String getFqName() {
-    return xmom.getFqName();
+  public OasApiTypeCategory getOasApiTypecategory() {
+    return oasApiTypecategory;
   }
-  
-  
+
+
   public int getNumOperations() {
     return operations.size();
   }
