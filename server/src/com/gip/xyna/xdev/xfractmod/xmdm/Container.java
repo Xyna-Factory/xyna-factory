@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -164,6 +164,17 @@ public class Container extends XynaObject {
       xml.append("<container>");
     }
 
+    xml.append(writeMemberXml(version, cache));
+
+    if(createEnclosingTag) {
+      xml.append("</container>");
+    }
+
+    return xml.toString();
+  }
+
+  public String writeMemberXml(long version, XMLReferenceCache cache) {
+    StringBuilder xml = new StringBuilder();
     for (GeneralXynaObject xo : params) {
       if (xo != null) {
         // TODO this has to be passed because when parsing the XML again we can't not expect the variable name to be
@@ -177,14 +188,8 @@ public class Container extends XynaObject {
         xml.append("<Data/>\n"); //das ist in vielen fällen richtig
       }
     }
-
-    if(createEnclosingTag) {
-      xml.append("</container>");
-    }
-
     return xml.toString();
   }
-
 
   public boolean supportsObjectVersioning() {
     for (GeneralXynaObject xo : params) {
