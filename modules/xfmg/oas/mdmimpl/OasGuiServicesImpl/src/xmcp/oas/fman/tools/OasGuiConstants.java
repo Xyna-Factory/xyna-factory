@@ -19,10 +19,16 @@
 
 package xmcp.oas.fman.tools;
 
+import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabaseEntryColumn;
+
 
 public class OasGuiConstants {
 
   public static final String FQN_OAS_BASE_API = "xmcp.oas.datatype.OASBaseApi";
   public static final String OAS_BASE_APP_NAME = "OAS_Base";
+  public static final String OP_SEARCH_SELECT = XMOMDatabaseEntryColumn.CASE_SENSITIVE_LABEL.getColumnName() + "," +
+                                                XMOMDatabaseEntryColumn.NAME.getColumnName() + "," +
+                                                XMOMDatabaseEntryColumn.PATH.getColumnName() + "," +
+                                                XMOMDatabaseEntryColumn.REVISION.getColumnName();
   
 }

@@ -50,48 +50,6 @@ import com.gip.xyna.xnwh.selection.parsing.SelectionParser;
 
 public class OasGuiTools {
 
-  private List<RtcData> getAllApps() {
-    List<RtcData> ret = new ArrayList<>();
-    try {
-      ApplicationManagement appMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().
-                                                  getApplicationManagement();
-      if (appMgmt instanceof ApplicationManagementImpl) {
-        List<ApplicationInformation> applist = ((ApplicationManagementImpl) appMgmt).listApplications(true, false);
-        for (ApplicationInformation app : applist) {
-          RtcData rtc = new RtcData(app.asRuntimeContext());
-          ret.add(rtc);
-        }
-      }
-    } catch (Exception e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
-    return ret;
-  }
-  
-  
-  private List<RtcData> getAllWorkspaces() {
-    List<RtcData> ret = new ArrayList<>();
-    try {
-      List<WorkspaceInformation> wsplist = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().
-                                                       getWorkspaceManagement().listWorkspaces(true);
-      for (WorkspaceInformation wsp : wsplist) {
-        RtcData rtc = new RtcData(wsp.asRuntimeContext());
-        ret.add(rtc);
-      }
-    } catch (Exception e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
-    return ret;
-  }
-  
-  
-  @SuppressWarnings("unused")
-  private List<RtcData> getAllAppsAndWorkspaces() {
-    List<RtcData> ret = new ArrayList<>();
-    ret.addAll(getAllApps());
-    ret.addAll(getAllWorkspaces());
-    return ret;
-  }
   
   
   public List<RtcData> getAllOasBaseApps() {
@@ -165,35 +123,6 @@ public class OasGuiTools {
   }
   
   
-  @SuppressWarnings("unused")
-  private void getAllRtcsWhichReferenceRtcRecursive(RtcData rtc, Set<RtcData> ret) {
-    if (ret.contains(rtc)) { return; }
-    ret.add(rtc);
-    try {
-      RuntimeContextDependencyManagement rtcDependencyManagement =
-        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
-      RevisionManagement revisionManagement =
-        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
-      
-      RuntimeContext runtimeContext = revisionManagement.getRuntimeContext(rtc.getRevision());
-      Map<RuntimeDependencyContext, Collection<RuntimeDependencyContext>> map = rtcDependencyManagement.getAllDependencies();
-      for (Map.Entry<RuntimeDependencyContext, Collection<RuntimeDependencyContext>> entry : map.entrySet()) {
-        for (RuntimeDependencyContext dep : entry.getValue()) {
-          RuntimeContext tmpRtc = dep.asCorrespondingRuntimeContext();
-          if (tmpRtc.equals(runtimeContext)) {
-            RtcData refRtc = new RtcData(tmpRtc);
-            getAllRtcsWhichReferenceRtcRecursive(refRtc, ret);
-          }
-        }
-      }
-    } catch (RuntimeException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
-  }
-  
-  
   public Set<String> getOperationsOfXmomType(XmomType xmom) {
     Set<String> ret = new TreeSet<>();
     try {
@@ -206,11 +135,7 @@ public class OasGuiTools {
       srb.setArchiveIdentifier(ArchiveIdentifier.xmomcache);
       srb.setMaxRows(-1);
       srb.addFilterEntry(XMOMDatabaseEntryColumn.PATH.getColumnName(), path);
-      srb.setSelection(XMOMDatabaseEntryColumn.CASE_SENSITIVE_LABEL.getColumnName() + "," +
-                       XMOMDatabaseEntryColumn.NAME.getColumnName() + "," +
-                       XMOMDatabaseEntryColumn.PATH.getColumnName() + "," +
-                       XMOMDatabaseEntryColumn.REVISION.getColumnName());
-    
+      srb.setSelection(OasGuiConstants.OP_SEARCH_SELECT);
       XMOMDatabaseSelect select = (XMOMDatabaseSelect) SelectionParser.generateSelectObjectFromSearchRequestBean(srb);
       select.addDesiredResultTypes(XMOMDatabaseType.OPERATION);
       XMOMDatabase xmomDB = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getXMOMDatabase();
