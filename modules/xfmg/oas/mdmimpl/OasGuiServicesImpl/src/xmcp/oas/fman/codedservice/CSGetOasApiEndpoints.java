@@ -19,7 +19,11 @@
 package xmcp.oas.fman.codedservice;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -75,7 +79,7 @@ public class CSGetOasApiEndpoints {
     GeneratedOasApiType goat = new GeneratedOasApiType(genTypeOpGroup.getXmomType());
     List<ImplementedOasApiType> list = _tools.getAllImplementedOasApiTypesInRefRtcs(goat);
     if (list.size() > 1) {
-      handleMultipleImplementations(ret, rtc, genTypeOpGroup, list);
+      handleMultipleImplementations(ret, genTypeOpGroup, list);
       return;
     }
     OasApiDatatypeInfo.Builder builder = new OasApiDatatypeInfo.Builder();
@@ -85,12 +89,7 @@ public class CSGetOasApiEndpoints {
       status = "Missing";
     } else if (list.size() == 1) {
       ImplementedOasApiType implType = list.get(0);
-      OperationGroup opgroup = new OperationGroup(implType);
-      if (opgroup.operationsMatch(genTypeOpGroup)) {
-        status = "Complete";
-      } else {
-        status = "Incomplete";
-      }
+      status = getCompletionStatus(genTypeOpGroup, implType);
       builder.implementationDatatype(implType.getFqName());
       builder.implementationRtc(implType.getRtc().toString());
     }
@@ -99,10 +98,43 @@ public class CSGetOasApiEndpoints {
   }
   
   
-  private void handleMultipleImplementations(List<OasApiDatatypeInfo> ret, RtcData rtc, OperationGroup genTypeOpGroup,
+  private String getCompletionStatus(OperationGroup genTypeOpGroup, ImplementedOasApiType implType) {
+    OperationGroup opgroup = new OperationGroup(implType);
+    if (opgroup.operationsMatch(genTypeOpGroup)) {
+      return "Complete";
+    } 
+    return "Incomplete";
+  }
+  
+  
+  private void handleMultipleImplementations(List<OasApiDatatypeInfo> ret, OperationGroup genTypeOpGroup,
                                              List<ImplementedOasApiType> implList) {
-    String status = "Error";
+    String errorStatus = "Error";
+    // condition: Status "Error" is avoided for an implemented type in the list,
+    // if it is in a workspace, and all others are in different workspaces, and none in an application
+    int appCount = 0;
+    Map<RtcData, Integer> workspaceMap = new HashMap<>();
     for (ImplementedOasApiType item : implList) {
+      RtcData rtc = item.getRtc();
+      if (!rtc.isWorkspace()) {
+        appCount++;
+        continue;
+      }
+      Integer count = workspaceMap.get(rtc);
+      if (count == null) {
+        workspaceMap.put(rtc, 1);
+        continue;
+      }
+      workspaceMap.put(rtc, count + 1);
+    }
+    for (ImplementedOasApiType item : implList) {
+      String status = errorStatus;
+      if (appCount == 0) {
+        Integer wspCount = workspaceMap.get(item.getRtc());
+        if (wspCount.equals((Integer.valueOf(1)))) {
+          status = getCompletionStatus(genTypeOpGroup, item);
+        }
+      }
       OasApiDatatypeInfo.Builder builder = new OasApiDatatypeInfo.Builder();
       builder.generatedRtc(genTypeOpGroup.getXmomType().getRtc().toString());
       builder.apiDatatype(genTypeOpGroup.getXmomType().getFqName());

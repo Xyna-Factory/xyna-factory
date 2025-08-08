@@ -20,10 +20,8 @@ package xmcp.oas.fman.tools;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -31,11 +29,6 @@ import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationInformation;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagement;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl;
-import com.gip.xyna.xfmg.xfctrl.appmgmt.WorkspaceInformation;
-import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
-import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
-import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
-import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeDependencyContext;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabaseEntryColumn;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabaseType;
@@ -50,7 +43,6 @@ import com.gip.xyna.xnwh.selection.parsing.SelectionParser;
 
 public class OasGuiTools {
 
-  
   
   public List<RtcData> getAllOasBaseApps() {
     List<RtcData> ret = new ArrayList<>();
