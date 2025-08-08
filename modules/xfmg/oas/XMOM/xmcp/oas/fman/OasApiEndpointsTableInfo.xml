@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Oas Api Endpoints TableInfo" TypeName="OasApiEndpointsTableInfo" TypePath="xmcp.oas.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Oas Api Endpoints TableInfo" Name="OasApiEndpointsTableInfo">
+    <Input>
+      <Data ID="14" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo14"/>
+    </Input>
+    <Output>
+      <Data ID="27" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo27"/>
+      <Data ID="44" IsList="true" Label="Oas Api Datatype Info" ReferenceName="OasApiDatatypeInfo" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasApiDatatypeInfo44"/>
+    </Output>
+    <ServiceReference ID="480" Label="Oas Gui Services" ReferenceName="OasGuiServices.OasGuiServices" ReferencePath="xmcp.oas.fman">
+      <Source RefID="479"/>
+      <Target RefID="479"/>
+    </ServiceReference>
+    <ServiceReference ID="312" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="311"/>
+      <Target RefID="311"/>
+    </ServiceReference>
+    <Choice ID="120" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="14"/>
+      <Target RefID="2903"/>
+      <Input>
+        <Data ID="135" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo135">
+          <Source RefID="120"/>
+        </Data>
+        <Source RefID="14"/>
+      </Input>
+      <Case ID="121" Label="true" Premise="%0%.bootstrap==&quot;true&quot;">
+        <Mappings ID="362" Label="Mapping">
+          <Input>
+            <Data ID="2805" Label="Oas Api Datatype Info" ReferenceName="OasApiDatatypeInfo" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasApiDatatypeInfo2805">
+              <Source RefID="362"/>
+            </Data>
+            <Source RefID="2836">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="578" IsList="true" Label="Selected Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn578">
+              <Source RefID="362"/>
+            </Data>
+            <Target RefID="579"/>
+          </Output>
+          <Mapping>%1%["0"].name="Generated RTC"</Mapping>
+          <Mapping>%1%["1"].name="Implementation RTC"</Mapping>
+          <Mapping>%1%["2"].name="API-Datatype"</Mapping>
+          <Mapping>%1%["3"].name="Implementation-Datatype"</Mapping>
+          <Mapping>%1%["4"].name="Status"</Mapping>
+          <Mapping>%1%["0"].path="generatedRtc"</Mapping>
+          <Mapping>%1%["1"].path="implementationRtc"</Mapping>
+          <Mapping>%1%["2"].path="apiDatatype"</Mapping>
+          <Mapping>%1%["3"].path="implementationDatatype"</Mapping>
+          <Mapping>%1%["4"].path="status"</Mapping>
+        </Mappings>
+        <Mappings ID="339" Label="Mapping">
+          <Output>
+            <Data ID="407" Label="Oas Api Datatype Info" ReferenceName="OasApiDatatypeInfo" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasApiDatatypeInfo407">
+              <Source RefID="339"/>
+            </Data>
+            <Target RefID="408"/>
+          </Output>
+        </Mappings>
+        <Function ID="311" Label="Build TableInfo and Select Columns">
+          <Source RefID="312"/>
+          <Source RefID="14"/>
+          <Source RefID="408"/>
+          <Source RefID="579"/>
+          <Target RefID="312"/>
+          <Target RefID="210"/>
+          <Invoke Operation="buildTableInfoAndSelectColumns" ServiceID="312">
+            <Source RefID="14"/>
+            <Source RefID="408">
+              <Meta>
+                <ExpectedType>xmcp.oas.fman.datatypes.OasApiDatatypeInfo</ExpectedType>
+              </Meta>
+            </Source>
+            <Source RefID="579"/>
+          </Invoke>
+          <Receive ServiceID="312">
+            <Target RefID="210"/>
+          </Receive>
+        </Function>
+        <Assign ID="124">
+          <Source RefID="210"/>
+          <Target RefID="2903"/>
+          <Copy>
+            <Source RefID="210"/>
+            <Target RefID="2903"/>
+          </Copy>
+        </Assign>
+        <Data ID="210" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo210"/>
+      </Case>
+      <Case ID="122" Label="false">
+        <Mappings ID="2896" Label="Mapping">
+          <Input>
+            <Data ID="2898" Label="Table Info IN" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo2898"/>
+            <Source RefID="14"/>
+          </Input>
+          <Output>
+            <Data ID="2899" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo2899"/>
+            <Target RefID="2895"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign ID="126">
+          <Source RefID="2895"/>
+          <Target RefID="2903"/>
+          <Copy>
+            <Source RefID="2895"/>
+            <Target RefID="2903"/>
+          </Copy>
+        </Assign>
+        <Data ID="2895" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo2895"/>
+      </Case>
+    </Choice>
+    <Function ID="479" Label="Get Oas Api Endpoints">
+      <Source RefID="480"/>
+      <Source RefID="2903"/>
+      <Target RefID="480"/>
+      <Target RefID="3057"/>
+      <Invoke Operation="getOasApiEndpoints" ServiceID="480">
+        <Source RefID="2903">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="480">
+        <Target RefID="3057"/>
+      </Receive>
+    </Function>
+    <Data ID="408" Label="Oas Api Datatype Info" ReferenceName="OasApiDatatypeInfo" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasApiDatatypeInfo408">
+      <Source RefID="339"/>
+    </Data>
+    <Data ID="579" IsList="true" Label="Selected Columns" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn579">
+      <Source RefID="362"/>
+    </Data>
+    <Data ID="2836" Label="Oas Api Datatype Info" ReferenceName="OasApiDatatypeInfo" ReferencePath="xmcp.oas.fman.datatypes" VariableName="const_OasApiDatatypeInfo2836"/>
+    <Data ID="2903" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo2903">
+      <Source RefID="120"/>
+    </Data>
+    <Data ID="3057" IsList="true" Label="Oas Api Datatype Info" ReferenceName="OasApiDatatypeInfo" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasApiDatatypeInfo3057">
+      <Source RefID="479"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="2903"/>
+      <Source RefID="3057"/>
+      <Target RefID="27"/>
+      <Target RefID="44"/>
+      <Copy>
+        <Source RefID="2903">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="27"/>
+      </Copy>
+      <Copy>
+        <Source RefID="3057"/>
+        <Target RefID="44"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
