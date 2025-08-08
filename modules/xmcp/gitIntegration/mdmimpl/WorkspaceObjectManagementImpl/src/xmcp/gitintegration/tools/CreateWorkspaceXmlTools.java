@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -38,6 +39,7 @@ import xmcp.gitintegration.RepositoryManagement;
 import xmcp.gitintegration.WorkspaceContent;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceXmlCreationConfig;
+import xmcp.gitintegration.impl.WorkspaceConfigSplit;
 import xmcp.gitintegration.impl.WorkspaceContentCreator;
 import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
 import xmcp.gitintegration.impl.xml.WorkspaceContentXmlConverter;
@@ -49,7 +51,7 @@ import xprc.xpce.Workspace;
 public class CreateWorkspaceXmlTools {
 
   
-  public static enum SplitModeChange {
+  private static enum SplitModeChange {
     NOT_CHANGED, CHANGED
   }
   
@@ -74,8 +76,14 @@ public class CreateWorkspaceXmlTools {
     RepositoryConnection repositoryConnection = RepositoryManagement.getRepositoryConnection(new Workspace(workspaceName));
     Optional<RepositoryConnection> optRepoConn = Optional.ofNullable(repositoryConnection);
     SplitModeChange splitModeChange = SplitModeChange.NOT_CHANGED;
-    if(optRepoConn.isPresent()) {
-      splitModeChange = repositoryConnection.getSplitted() != conf.getSplitResult() ? SplitModeChange.CHANGED : SplitModeChange.NOT_CHANGED;
+    Optional<WorkspaceConfigSplit> newSplitConfig = WorkspaceConfigSplit.fromId(conf.getSplitResult());
+
+    if(optRepoConn.isEmpty() && !conf.getForce()) {
+      throw new RuntimeException("No repository connection found for '" + conf.getWorkspaceName() + "'. Use force to create workspace xml anyway.");
+    }
+
+    if(optRepoConn.isPresent() && newSplitConfig.isPresent()) {
+      splitModeChange = Objects.equals(repositoryConnection.getSplitted(), conf.getSplitResult()) ? SplitModeChange.CHANGED : SplitModeChange.NOT_CHANGED;
       repositoryConnection.setSplitted(conf.getSplitResult());
       if (splitModeChange == SplitModeChange.CHANGED) {
         if (!conf.getForce()) {
@@ -83,8 +91,6 @@ public class CreateWorkspaceXmlTools {
         }
         RepositoryManagement.updateRepositoryConnection(repositoryConnection);
       }
-    } else if(!conf.getForce()) {
-      throw new RuntimeException("No repository connection found for '" + conf.getWorkspaceName() + "'. Use force to create workspace xml anyway.");
     }
     executeImpl(conf, optRepoConn, splitModeChange);
   }
@@ -93,9 +99,15 @@ public class CreateWorkspaceXmlTools {
   private void executeImpl(WorkspaceXmlCreationConfig conf, Optional<RepositoryConnection> optRepConn, SplitModeChange splitModeChange)
                              throws XynaException {
     String workspaceName = conf.getWorkspaceName();
+    Optional<WorkspaceConfigSplit> optionalWorkspaceConfigSplit = WorkspaceConfigSplit.fromId(conf.getSplitResult());
+    if(optionalWorkspaceConfigSplit.isEmpty()) {
+      throw new RuntimeException("Invalid WorkspaceConfigSplit: '" + conf.getSplitResult() + "'");
+    }
+    boolean isSplintTypeNone = optionalWorkspaceConfigSplit.get() == WorkspaceConfigSplit.NONE;
     WorkspaceContentCreator contentCreator = new WorkspaceContentCreator();
     WorkspaceContent content = contentCreator.createWorkspaceContentForWorkspace(workspaceName);
-    String xml = conf.getSplitResult() ? null : new WorkspaceContentXmlConverter().convertToXml(content);
+    content.unversionedSetSplit(conf.getSplitResult());
+    String xml = isSplintTypeNone ? null : new WorkspaceContentXmlConverter().convertToXml(content);
     RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     Long revision = rm.getRevision(null, null, workspaceName);
     String path = RevisionManagement.getPathForRevision(PathType.ROOT, revision);
@@ -104,21 +116,16 @@ public class CreateWorkspaceXmlTools {
       if(optRepConn.isPresent()) {
         RepositoryConnection repositoryConnection = optRepConn.get();
         closeOpenDifferenceLists(repositoryConnection);
-        if(splitModeChange == SplitModeChange.CHANGED) {
-          if(conf.getSplitResult()) {
-            deleteWsXmlComplete(path, repositoryConnection);
-          } else {
-            deleteConfigDirComplete(path, repositoryConnection);
-          }
-        }
+        deleteWsXmlComplete(path, repositoryConnection);
+        deleteConfigDirComplete(path, repositoryConnection);
         
-        if(conf.getSplitResult()) {
+        if(!isSplintTypeNone) {
           writeSplit(content, path, repositoryConnection);
         } else {
           writeWsXml(path, repositoryConnection, xml);
         }
       } else {
-        if(conf.getSplitResult()) {
+        if(!isSplintTypeNone) {
           writeSplitFiles(content, new File(path, WorkspaceContentCreator.WORKSPACE_XML_SPLITNAME));
         } else {
           FileUtils.writeStringToFile(xml, new File(path, WorkspaceContentCreator.WORKSPACE_XML_FILENAME));
@@ -175,7 +182,7 @@ public class CreateWorkspaceXmlTools {
   
   private void writeSplitFiles(WorkspaceContent content, File configFolder) throws Exception {
     WorkspaceContentXmlConverter converter = new WorkspaceContentXmlConverter();
-    List<Pair<String, String>> data = converter.split(content);
+    List<Pair<String, String>> data = converter.splitContent(content);
     for (Pair<String, String> entry : data) {
       File fi = new File(configFolder, entry.getFirst());
       FileUtils.writeStringToFile(entry.getSecond(), fi);

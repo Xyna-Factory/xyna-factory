@@ -32,6 +32,7 @@ import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 
 import xmcp.gitintegration.WorkspaceContent;
 import xmcp.gitintegration.WorkspaceContentItem;
+import xmcp.gitintegration.WorkspaceContent.Builder;
 import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
 import xmcp.gitintegration.impl.xml.WorkspaceContentXmlConverter;
 
@@ -58,15 +59,15 @@ public class WorkspaceContentCreator {
 
 
   public WorkspaceContent createWorkspaceContentForWorkspace(String workspaceName) {
-    WorkspaceContent result = new WorkspaceContent();
+    WorkspaceContent.Builder result = new WorkspaceContent.Builder();
     WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
     Long revision = getRevision(workspaceName);
     List<WorkspaceContentItem> items = portal.createItems(revision);
 
-    result.setWorkspaceName(workspaceName);
-    result.setWorkspaceContentItems(items);
+    result.workspaceName(workspaceName);
+    result.workspaceContentItems(items);
 
-    return result;
+    return result.instance();
   }
 
 
@@ -97,17 +98,18 @@ public class WorkspaceContentCreator {
 
   private WorkspaceContent createWorkspaceContentFromDirectory(File file) throws IOException {
     WorkspaceContentXmlConverter converter = new WorkspaceContentXmlConverter();
-    WorkspaceContent result = new WorkspaceContent();
+    WorkspaceContent.Builder result = new WorkspaceContent.Builder();
     for (File f : file.listFiles()) {
       String input = Files.readString(f.toPath());
       if(f.getName().equals(WORKSPACE_XML_FILENAME)) {
         WorkspaceContent c = converter.convertFromXml(input);
-        result.setWorkspaceName(c.getWorkspaceName());
+        result.workspaceName(c.getWorkspaceName());
+        result.split(c.getSplit());
         continue;
       }
-      converter.addToWorkspaceContent(input, result);
+      converter.addToWorkspaceContent(input, result.instance());
     }
-    return result;
+    return result.instance();
   }
 
 
@@ -122,17 +124,22 @@ public class WorkspaceContentCreator {
     WorkspaceContentXmlConverter converter = new WorkspaceContentXmlConverter();
     List<WorkspaceContentItem> items = new ArrayList<>();
     String name = null;
+    String split = null;
     for (String input : list) {
       WorkspaceContent tmp = converter.convertFromXml(input);
       if (tmp.getWorkspaceName() != null) {
         name = tmp.getWorkspaceName();
       }
+      if(tmp.getSplit() != null) {
+        split = tmp.getSplit();
+      }
       items.addAll(tmp.getWorkspaceContentItems());
     }
-    WorkspaceContent result = new WorkspaceContent();
-    result.setWorkspaceName(name);
-    result.setWorkspaceContentItems(items);
-    return result;
+    WorkspaceContent.Builder result = new WorkspaceContent.Builder();
+    result.workspaceName(name);
+    result.workspaceContentItems(items);
+    result.split(split);
+    return result.instance();
   }
   
 }

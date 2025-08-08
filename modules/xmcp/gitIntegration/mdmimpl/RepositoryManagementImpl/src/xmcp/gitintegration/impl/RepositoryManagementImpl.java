@@ -34,7 +34,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -242,31 +241,14 @@ public class RepositoryManagementImpl {
       return "Error: Path '" + path + "' is not a directory!";
     }
     Path basePath = Paths.get(path);
-    // collect a list of all paths to workspace.xml files
-    List<Path> wsXmls = new ArrayList<>();
+    // map workspace name to workspace xml paths
+    Map<String, Path> workspaceXmlPathMap;
     try {
-      wsXmls.addAll(Files.find(basePath, Integer.MAX_VALUE, RepositoryManagementImpl::matchWsFile).collect(Collectors.toList()));
+      workspaceXmlPathMap = createWorkspaceXmlPathMap(basePath, full, workspace);
     } catch (IOException e) {
       _logger.error(e.getMessage(), e);
       return "Error: Exception occured while searching for workspace.xml files!";
     }
-    // map workspace name to workspace xml paths
-    Map<String, Path> workspaceXmlPathMap = new HashMap<>();
-    wsXmls.stream().forEach(workspaceXmlPath -> {
-      String fileContent;
-      try {
-        fileContent = Files.readString(workspaceXmlPath, StandardCharsets.UTF_8);
-        Matcher matcher = pattern.matcher(fileContent);
-        if (matcher.find()) {
-          String workspaceName = matcher.group(1);
-          if (workspaceName != null && (full || workspaceName.equals(workspace))) {
-            workspaceXmlPathMap.put(workspaceName, workspaceXmlPath);
-          }
-        }
-      } catch (IOException e) {
-        _logger.error(e.getMessage(), e);
-      }
-    });
     if (full && workspaceXmlPathMap.isEmpty()) {
       return "Error: Could not find any workspaces in path!";
     }
@@ -278,7 +260,7 @@ public class RepositoryManagementImpl {
       if (getRevision(workspaceName) != null) {
         return "Error: Workspace '" + workspaceName + "' already exists within the factory!";
       }
-    } ;
+    }
     // set workspace name is within a config directory
     Set<String> workspaceXmlConfig = new HashSet<>();
     // map workspace name to workspace xml sub paths
@@ -362,15 +344,38 @@ public class RepositoryManagementImpl {
         }
       }
       // persist storable
-      String subPathString = subPath.toString().substring(basePath.toString().length() + 1); //+1 for "/"
-      persistRepositoryConnectionStorable(new RepositoryConnectionStorable(workspaceName, basePath.toString(), subPathString, savedInRepo,
-                                                                           isSplitted));
+      String basePathStr = basePath.toString();
+      String subPathString = subPath.toString().substring(basePathStr.length() + 1); //+1 for "/"
+      RepositoryConnectionStorable storable;
+      //TODO: read split type from existing workspace.xml
+      String splitStr = isSplitted ? WorkspaceConfigSplit.BYTYPE.getId() : WorkspaceConfigSplit.NONE.getId();
+      storable = new RepositoryConnectionStorable(workspaceName, basePathStr, subPathString, savedInRepo, splitStr);
+      persistRepositoryConnectionStorable(storable);
       count++;
     }
 
     return "Successfully linked " + count + " workspace(s) to the repository.";
   }
 
+  
+  private static Map<String, Path> createWorkspaceXmlPathMap(Path basePath, boolean full, String workspace) throws IOException {
+    Map<String, Path> workspaceXmlPathMap = new HashMap<>();
+    Files.find(basePath, Integer.MAX_VALUE, RepositoryManagementImpl::matchWsFile).forEach(workspaceXmlPath -> {
+      try {
+        String fileContent = Files.readString(workspaceXmlPath, StandardCharsets.UTF_8);
+        Matcher matcher = pattern.matcher(fileContent);
+        if (matcher.find()) {
+          String workspaceName = matcher.group(1);
+          if (workspaceName != null && (full || workspaceName.equals(workspace))) {
+            workspaceXmlPathMap.put(workspaceName, workspaceXmlPath);
+          }
+        }
+      } catch (IOException e) {
+        _logger.error(e.getMessage(), e);
+      }
+    });
+    return workspaceXmlPathMap;
+  }
 
   public static List<RepositoryConnection> listRepositoryConnections() {
     List<RepositoryConnection> result = new ArrayList<>();
@@ -385,7 +390,7 @@ public class RepositoryManagementImpl {
     RepositoryConnection.Builder result = new RepositoryConnection.Builder();
     result.path(storable.getPath())
         .savedinrepo(storable.getSavedinrepo())
-        .splitted(storable.getSplitted())
+        .splittype(storable.getSplittype())
         .subpath(storable.getSubpath())
         .workspaceName(storable.getWorkspacename());
     return result.instance();
@@ -423,7 +428,9 @@ public class RepositoryManagementImpl {
     String error = null;
     List<Path> toReplace = new ArrayList<>();
     toReplace.add(storable.getSavedinrepo() ? revisionPath : revisionPath.resolve(SAVED).resolve(XMOM));
-    if (storable.getSplitted() && Files.isSymbolicLink(revisionPath.resolve(CONFIG))) {
+    Optional<WorkspaceConfigSplit> configSplit = WorkspaceConfigSplit.fromId(storable.getSplittype());
+    boolean oldConfigMightBeSplit = configSplit.isEmpty() || configSplit.get() != WorkspaceConfigSplit.NONE;
+    if (oldConfigMightBeSplit && Files.isSymbolicLink(revisionPath.resolve(CONFIG))) {
       toReplace.add(revisionPath.resolve(CONFIG));
     }
     for (Path pathToReplace : toReplace) {
@@ -612,7 +619,7 @@ public class RepositoryManagementImpl {
     repositoryConnection.setPath(opt.get().getPath());
     repositoryConnection.setSubpath(opt.get().getSubpath());
     repositoryConnection.setSavedinrepo(opt.get().getSavedinrepo());
-    repositoryConnection.setSplitted(opt.get().getSplitted());
+    repositoryConnection.setSplittype(opt.get().getSplittype());
     return repositoryConnection;
   }
   
@@ -625,7 +632,7 @@ public class RepositoryManagementImpl {
     opt.get().setPath(repositoryConnection.getPath());
     opt.get().setSubpath(repositoryConnection.getSubpath());
     opt.get().setSavedinrepo(repositoryConnection.getSavedinrepo());
-    opt.get().setSplitted(repositoryConnection.getSplitted());
+    opt.get().setSplittype(repositoryConnection.getSplittype());
     persistRepositoryConnectionStorable(opt.get());
   }
 
