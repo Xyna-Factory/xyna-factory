@@ -121,7 +121,7 @@ public class WorkspaceStatusTools {
   public WorkspaceXmlPath getPathToWorkspaceXml(RepositoryConnection repconn) {
     if (repconn == null) { throw new IllegalArgumentException("Parameter repositoryConnection is empty"); }
     if (repconn.getWorkspaceName() == null) { throw new IllegalArgumentException("Parameter repositoryConnection is incomplete"); }
-    Optional<WorkspaceConfigSplit> configSplit = WorkspaceConfigSplit.fromId(repconn.getSplitted());
+    Optional<WorkspaceConfigSplit> configSplit = WorkspaceConfigSplit.fromId(repconn.getSplittype());
     if(!configSplit.isPresent()) { throw new IllegalArgumentException("Invalid WorkspaceConfigSplit in repositoryConnection"); }
     WorkspaceConfigSplit configSplitType = configSplit.get();
     try {

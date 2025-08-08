@@ -61,7 +61,7 @@ public class CreateWorkspaceXmlTools {
       WorkspaceXmlCreationConfig conf = new WorkspaceXmlCreationConfig();
       conf.unversionedSetWorkspaceName(workspaceName);
       conf.unversionedSetForce(false);
-      conf.unversionedSetSplitResult(repositoryConnection.getSplitted());
+      conf.unversionedSetSplitResult(repositoryConnection.getSplittype());
       executeImpl(conf, Optional.ofNullable(repositoryConnection), SplitModeChange.NOT_CHANGED);
     } catch (RuntimeException e) {
       throw e;
@@ -83,8 +83,8 @@ public class CreateWorkspaceXmlTools {
     }
 
     if(optRepoConn.isPresent() && newSplitConfig.isPresent()) {
-      splitModeChange = Objects.equals(repositoryConnection.getSplitted(), conf.getSplitResult()) ? SplitModeChange.CHANGED : SplitModeChange.NOT_CHANGED;
-      repositoryConnection.setSplitted(conf.getSplitResult());
+      splitModeChange = Objects.equals(repositoryConnection.getSplittype(), conf.getSplitResult()) ? SplitModeChange.CHANGED : SplitModeChange.NOT_CHANGED;
+      repositoryConnection.setSplittype(conf.getSplitResult());
       if (splitModeChange == SplitModeChange.CHANGED) {
         if (!conf.getForce()) {
           throw new RuntimeException("Use force to change the configuration between single file and splitted");
