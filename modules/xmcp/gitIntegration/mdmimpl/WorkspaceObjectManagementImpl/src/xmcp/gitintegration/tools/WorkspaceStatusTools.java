@@ -24,6 +24,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,7 @@ import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceContentItem;
 import xmcp.gitintegration.WorkspaceXmlPath;
 import xmcp.gitintegration.impl.OutputCreator;
+import xmcp.gitintegration.impl.WorkspaceConfigSplit;
 import xmcp.gitintegration.impl.WorkspaceContentCreator;
 import xmcp.gitintegration.impl.WorkspaceContentItemDifferenceSelector;
 import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
@@ -119,13 +121,16 @@ public class WorkspaceStatusTools {
   public WorkspaceXmlPath getPathToWorkspaceXml(RepositoryConnection repconn) {
     if (repconn == null) { throw new IllegalArgumentException("Parameter repositoryConnection is empty"); }
     if (repconn.getWorkspaceName() == null) { throw new IllegalArgumentException("Parameter repositoryConnection is incomplete"); }
+    Optional<WorkspaceConfigSplit> configSplit = WorkspaceConfigSplit.fromId(repconn.getSplittype());
+    if(!configSplit.isPresent()) { throw new IllegalArgumentException("Invalid WorkspaceConfigSplit in repositoryConnection"); }
+    WorkspaceConfigSplit configSplitType = configSplit.get();
     try {
       WorkspaceContentCreator creator = new WorkspaceContentCreator();
       File file = creator.determineWorkspaceXMLFile(repconn.getWorkspaceName());
       WorkspaceXmlPath ret = new WorkspaceXmlPath();
       ret.setPathInRevisionDir(file.getPath());
       ret.setRepositoryPath(repconn.getPath());
-      if (repconn.getSplitted()) {
+      if (configSplitType != WorkspaceConfigSplit.NONE) {
         Path path = Paths.get(repconn.getSubpath(), WorkspaceContentCreator.WORKSPACE_XML_SPLITNAME);
         ret.setRepositorySubpath(path.toString());
       } else {

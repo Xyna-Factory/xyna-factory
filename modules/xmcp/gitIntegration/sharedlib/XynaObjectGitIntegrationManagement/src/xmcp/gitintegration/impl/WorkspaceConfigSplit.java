@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
+/*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
@@ -15,23 +14,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Workspace Xml Creation Config" TypeName="WorkspaceXmlCreationConfig" TypePath="xmcp.gitintegration" Version="1.8">
-  <Meta>
-    <IsServiceGroupOnly>false</IsServiceGroupOnly>
-  </Meta>
-  <Data Label="Workspace Name" VariableName="workspaceName">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Split Result" VariableName="splitResult">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Force" VariableName="force">
-    <Meta>
-      <Type>boolean</Type>
-    </Meta>
-  </Data>
-</DataType>
+ */
+package xmcp.gitintegration.impl;
+
+
+
+import java.util.Optional;
+
+
+
+public enum WorkspaceConfigSplit {
+
+  NONE("none"), BYTYPE("bytype"), FINE("fine");
+
+
+  private String id;
+
+
+  WorkspaceConfigSplit(String id) {
+    this.id = id;
+  }
+
+
+  public static Optional<WorkspaceConfigSplit> fromId(String id) {
+    for (var candidate : WorkspaceConfigSplit.values()) {
+      if (candidate.id.equals(id)) {
+        return Optional.of(candidate);
+      }
+    }
+    return Optional.empty();
+  }
+
+
+  public String getId() {
+    return id;
+  }
+}

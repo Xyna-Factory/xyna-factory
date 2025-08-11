@@ -40,7 +40,9 @@ public class RepositoryConnectionStorable extends Storable<RepositoryConnectionS
   public static final String COL_PATH = "path";
   public static final String COL_SUBPATH = "subpath";
   public static final String COL_SAVEDINREPO = "savedinrepo";
+  @Deprecated
   public static final String COL_SPLITTED = "splitted";
+  public static final String COL_SPLITTYPE = "splittype";
 
   @Column(name = COL_WORKSPACENAME)
   private String workspacename;
@@ -54,8 +56,12 @@ public class RepositoryConnectionStorable extends Storable<RepositoryConnectionS
   @Column(name = COL_SAVEDINREPO)
   private boolean savedinrepo;
 
+  @Deprecated
   @Column(name = COL_SPLITTED)
-  private boolean splitted;
+  private boolean split;
+  
+  @Column(name = COL_SPLITTYPE)
+  private String splittype;
 
 
   public RepositoryConnectionStorable() {
@@ -69,12 +75,12 @@ public class RepositoryConnectionStorable extends Storable<RepositoryConnectionS
   }
 
 
-  public RepositoryConnectionStorable(String workspacename, String path, String subpath, boolean savedinrepo, boolean splitted) {
+  public RepositoryConnectionStorable(String workspacename, String path, String subpath, boolean savedinrepo, String splitted) {
     this(workspacename);
     this.path = path;
     this.subpath = subpath;
     this.savedinrepo = savedinrepo;
-    this.splitted = splitted;
+    this.splittype = splitted;
   }
 
 
@@ -102,7 +108,11 @@ public class RepositoryConnectionStorable extends Storable<RepositoryConnectionS
       result.path = rs.getString(COL_PATH);
       result.subpath = rs.getString(COL_SUBPATH);
       result.savedinrepo = rs.getBoolean(COL_SAVEDINREPO);
-      result.splitted = rs.getBoolean(COL_SPLITTED);
+      result.splittype = rs.getString(COL_SPLITTYPE);
+      if(result.splittype == null || result.splittype.isEmpty()) {
+        boolean old = rs.getBoolean(COL_SPLITTED);
+        result.splittype = old ? WorkspaceConfigSplit.BYTYPE.getId() : WorkspaceConfigSplit.NONE.getId();
+      }
       return result;
     }
   }
@@ -115,7 +125,7 @@ public class RepositoryConnectionStorable extends Storable<RepositoryConnectionS
     path = cast.path;
     subpath = cast.subpath;
     savedinrepo = cast.savedinrepo;
-    splitted = cast.splitted;
+    splittype = cast.splittype;
   }
 
 
@@ -159,12 +169,23 @@ public class RepositoryConnectionStorable extends Storable<RepositoryConnectionS
   }
 
 
+  @Deprecated
   public void setSplitted(boolean splitted) {
-    this.splitted = splitted;
+    this.split = splitted;
   }
 
 
+  @Deprecated
   public boolean getSplitted() {
-    return splitted;
+    return split;
+  }
+
+  public void setSplittype(String splitted) {
+    this.splittype = splitted;
+  }
+
+
+  public String getSplittype() {
+    return splittype;
   }
 }

@@ -19,6 +19,6 @@
   <CommandDefinition Groups="Git Workspace Management" Name="createworkspacexml" Description="create workspace.xml for a given workspace" />
   <Argument Name="workspaceName" Description="Workspace to create workspace.xml for" />
   <BoolOption Name="p" LongName="printResult" Description="Instead of writing to file, only display content" Optional="true"/>
-  <BoolOption Name="s" LongName="splitResult" Description="Instead of writing to a file, create a folder containing a file for each type of workspace content" Optional="true"/>
-  <BoolOption Name="f" LongName="force" Description="Force switch from/to splitResult" Optional="true"/>
+  <Argument Name="split" Description="Decides how workspace config is stored. Possible values:\nnone: write everything into workspace.xml\nbytype: create a config folder and one file per config type\nfine: create a config folder, a folder for ervery config type and a file for every configuration entry\nIf not specified the existing config is reused. If there is no existing config, none is used." Optional="true"/>
+  <BoolOption Name="f" LongName="force" Description="Force switch from/to split" Optional="true"/>
 </XynaCommandLineCommand>
