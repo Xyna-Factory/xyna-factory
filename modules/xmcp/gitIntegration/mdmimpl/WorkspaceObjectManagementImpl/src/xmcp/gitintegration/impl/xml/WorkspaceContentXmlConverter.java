@@ -166,15 +166,23 @@ public class WorkspaceContentXmlConverter {
     WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
     List<Pair<String, String>> result = new ArrayList<Pair<String, String>>();
     List<? extends WorkspaceContentItem> items = content.getWorkspaceContentItems();
-    for (WorkspaceContentItem item : items) {
+    Map<String, List<WorkspaceContentItem>> grouped = new HashMap<>();
+    for(WorkspaceContentItem item : items) {
       Class<? extends WorkspaceContentItem> clazz = item.getClass();
       String configType = portal.getTagName(clazz);
       String fileName = sanitize(portal.createItemKeyString(item));
       String path = String.format("%s/%s.xml", configType, fileName);
-      WorkspaceContent singleItem = createSingleTypeWorkspaceContent(content, List.of(item));
-      String xml = convertToXml(singleItem);
-      result.add(new Pair<>(path, xml));
+      grouped.putIfAbsent(path, new ArrayList<>());
+      grouped.get(path).add(item);
     }
+    
+    for(Entry<String, List<WorkspaceContentItem>> group : grouped.entrySet()) {
+      String fileName = group.getKey();
+      WorkspaceContent groupContent = createGroupWorkspaceContent(content, group.getValue());
+      String singleGroupString = convertToXml(groupContent);
+      result.add(new Pair<>(fileName, singleGroupString));
+    }
+
     //add workspace.xml for workspace meta data
     WorkspaceContent.Builder c = new WorkspaceContent.Builder();
     c.workspaceName(content.getWorkspaceName());
@@ -198,7 +206,7 @@ public class WorkspaceContentXmlConverter {
 
     for (Entry<Class<? extends WorkspaceContentItem>, List<WorkspaceContentItem>> group : grouped.entrySet()) {
       String fileName = portal.getTagName(group.getKey()) + ".xml";
-      WorkspaceContent singleTypeContent = createSingleTypeWorkspaceContent(content, group.getValue());
+      WorkspaceContent singleTypeContent = createGroupWorkspaceContent(content, group.getValue());
       String singleTypeContentString = convertToXml(singleTypeContent);
       result.add(new Pair<>(fileName, singleTypeContentString));
     }
@@ -213,7 +221,7 @@ public class WorkspaceContentXmlConverter {
     return result;
   }
 
-  private WorkspaceContent createSingleTypeWorkspaceContent(WorkspaceContent full, List<WorkspaceContentItem> items) {
+  private WorkspaceContent createGroupWorkspaceContent(WorkspaceContent full, List<WorkspaceContentItem> items) {
     WorkspaceContent.Builder result = new WorkspaceContent.Builder();
     result.workspaceName(full.getWorkspaceName());
     result.split(full.getSplit());
