@@ -2270,14 +2270,11 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
       throw new GetRTCsException(ex.getMessage(), ex);
     }
 
-    Function<TableInfo, List<Filter>> nodeFilter = ti ->  Arrays.asList(new TableHelper.Filter(TABLE_KEY_FACTORY_NODE, factoryNode.getName(), true));
-
     List<RuntimeContextTableEntry> result = new ArrayList<>();
     TableHelper<RuntimeContextTableEntry, TableInfo> tableHelper = TableHelper.<RuntimeContextTableEntry, TableInfo>init(tableInfo)
         .limitConfig(TableInfo::getLimit)
         .sortConfig(this::defaultSort)
         .filterConfig(this::defaultFilter)
-        .secondaryFilterConfig(Arrays.asList(nodeFilter), LogicalOperand.AND)
         .addSelectFunction(TABLE_KEY_REQUIRED_RTC_NAME, d -> {
           if(d.getRuntimeContext() instanceof RuntimeApplication) {
             RuntimeApplication application = (RuntimeApplication) d.getRuntimeContext();
@@ -2307,18 +2304,6 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
       return tableEntry;
     }).collect(Collectors.toList()));
 
-    // add application definitions
-    List<ApplicationDefinitionInformation> adInformations = applicationManagement.listApplicationDefinitions(true);
-    result.addAll(adInformations.stream().map(adi -> {
-      RuntimeContextTableEntry tableEntry = new RuntimeContextTableEntry();
-      ApplicationDefinition ad = new ApplicationDefinition();
-      ad.setName(adi.getName());
-      ad.setState(adi.getState().name());
-      tableEntry.setRuntimeContext(ad);
-      tableEntry.setRtcType(getRuntimeDependencyContextTypeGuiName(RuntimeDependencyContextType.ApplicationDefinition));
-      return tableEntry;
-    }).collect(Collectors.toList()));
-
     // add applications
     try {
       result.addAll(getRuntimeApplicationList(correlatedXynaOrder).stream().map(rta -> {
@@ -2335,6 +2320,9 @@ public class RtcManagerServicesServiceOperationImpl implements ExtendedDeploymen
     tableHelper.sort(result);
     result = result.stream()
       .filter(tableHelper.filter())
+      // filtering for isLocal isn't be done via TableHelper's secondaryFilterConfig, because variable is only present in sub class RuntimeApplication
+      .filter(entry -> !(entry.getRuntimeContext() instanceof xmcp.factorymanager.rtcmanager.RuntimeApplication) ||
+                       ((xmcp.factorymanager.rtcmanager.RuntimeApplication) entry.getRuntimeContext()).getIsLocal())
       .collect(Collectors.toList());
     result = tableHelper.limit(result);
 
