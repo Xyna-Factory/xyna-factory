@@ -83,7 +83,7 @@ public class CreateWorkspaceXmlTools {
     }
 
     if(optRepoConn.isPresent() && newSplitConfig.isPresent()) {
-      splitModeChange = Objects.equals(repositoryConnection.getSplittype(), conf.getSplitResult()) ? SplitModeChange.CHANGED : SplitModeChange.NOT_CHANGED;
+      splitModeChange = Objects.equals(repositoryConnection.getSplittype(), conf.getSplitResult()) ? SplitModeChange.NOT_CHANGED : SplitModeChange.CHANGED;
       repositoryConnection.setSplittype(conf.getSplitResult());
       if (splitModeChange == SplitModeChange.CHANGED) {
         if (!conf.getForce()) {
@@ -107,7 +107,7 @@ public class CreateWorkspaceXmlTools {
     WorkspaceContentCreator contentCreator = new WorkspaceContentCreator();
     WorkspaceContent content = contentCreator.createWorkspaceContentForWorkspace(workspaceName);
     content.unversionedSetSplit(conf.getSplitResult());
-    String xml = isSplintTypeNone ? null : new WorkspaceContentXmlConverter().convertToXml(content);
+    String xml = isSplintTypeNone ? new WorkspaceContentXmlConverter().convertToXml(content) : null;
     RevisionManagement rm = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     Long revision = rm.getRevision(null, null, workspaceName);
     String path = RevisionManagement.getPathForRevision(PathType.ROOT, revision);

@@ -95,6 +95,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.WorkflowProtectionM
 
 import base.Text;
 import xmcp.gitintegration.Flag;
+import xmcp.gitintegration.WorkspaceContent;
 import xmcp.gitintegration.WorkspaceContentDifferences;
 import xmcp.gitintegration.WorkspaceObjectManagement;
 import xmcp.gitintegration.impl.RepositoryCredentialsManagement.XynaRepoCredentials;
@@ -387,6 +388,7 @@ public class RepositoryInteraction {
       processPulls(git, repo, container);
       processExecs(container);
       processReferences(container);
+      updateSplit(repository, container);
     }
     container.creds = null;
     return container;
@@ -463,6 +465,27 @@ public class RepositoryInteraction {
     }
   }
 
+
+  private void updateSplit(String repository, GitDataContainer container) {
+    List<String> workspaceXmlFiles = container.pull.stream().filter(x -> x.endsWith("/workspace.xml")).collect(Collectors.toList());
+    for(String workspaceXml : workspaceXmlFiles) {
+      if(isWorkspaceConfig(workspaceXml, repository)) {
+        RepositoryConnectionStorable storable = getRepoConnectionStorable(workspaceXml, repository);
+        if(storable == null) {
+          continue;
+        }
+        base.File completePath = new base.File(String.format("%s/%s", repository, workspaceXml));
+        WorkspaceContent content = WorkspaceObjectManagement.createWorkspaceContentFromFile(completePath);
+        if(content.getSplit() != null && content.getSplit().equals(storable.getSplittype())) {
+          if(logger.isInfoEnabled()) {
+            logger.info("Update split type of " + repository + " to " + content.getSplit());
+          }
+          storable.setSplittype(content.getSplit());
+          RepositoryManagementImpl.persistRepositoryConnectionStorable(storable);
+        }
+      }
+    }
+  }
 
   private Workspace getWorkspace(Long revision) {
     try {

@@ -72,6 +72,9 @@ public class WorkspaceContentXmlConverter {
   private void openTag(XmlBuilder builder, WorkspaceContent content) {
     builder.startElementWithAttributes(TAG_WORKSPACECONFIG);
     builder.addAttribute(ATT_WORKSPACENAME, content.getWorkspaceName());
+    if(content.getSplit() != null && !content.getSplit().isEmpty()) {
+      builder.addAttribute(ATT_SPLIT, content.getSplit());
+    }
     builder.endAttributes();
   }
 

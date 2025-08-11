@@ -30,11 +30,13 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 
+import xmcp.gitintegration.RepositoryManagement;
 import xmcp.gitintegration.WorkspaceContent;
 import xmcp.gitintegration.WorkspaceContentItem;
-import xmcp.gitintegration.WorkspaceContent.Builder;
 import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
 import xmcp.gitintegration.impl.xml.WorkspaceContentXmlConverter;
+import xmcp.gitintegration.repository.RepositoryConnection;
+import xprc.xpce.Workspace;
 
 
 
@@ -66,6 +68,11 @@ public class WorkspaceContentCreator {
 
     result.workspaceName(workspaceName);
     result.workspaceContentItems(items);
+
+    RepositoryConnection repoCon = RepositoryManagement.getRepositoryConnection(new Workspace(workspaceName));
+    if(repoCon != null) {
+      result.split(repoCon.getSplittype());
+    }
 
     return result.instance();
   }

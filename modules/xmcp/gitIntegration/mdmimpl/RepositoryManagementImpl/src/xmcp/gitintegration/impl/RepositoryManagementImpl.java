@@ -21,7 +21,6 @@ package xmcp.gitintegration.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,8 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -59,6 +57,8 @@ import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoException
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoResult;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutor;
 
+import xmcp.gitintegration.WorkspaceContent;
+import xmcp.gitintegration.WorkspaceObjectManagement;
 import xmcp.gitintegration.repository.Repository;
 import xmcp.gitintegration.repository.RepositoryConnection;
 import xmcp.gitintegration.repository.RepositoryConnectionGroup;
@@ -72,7 +72,6 @@ import java.util.HashSet;
 public class RepositoryManagementImpl {
 
   private static Logger _logger = Logger.getLogger(RepositoryManagementImpl.class); 
-  private static Pattern pattern = Pattern.compile("<workspaceConfig workspaceName=\"(.*?)\">");
 
   private static PreparedQueryCache queryCache = new PreparedQueryCache();
 
@@ -265,14 +264,14 @@ public class RepositoryManagementImpl {
     Set<String> workspaceXmlConfig = new HashSet<>();
     // map workspace name to workspace xml sub paths
     Map<String, Path> workspaceXmlSubPathMap = new HashMap<>();
-    boolean isSplitted = false;
+    boolean isSplit = false;
     for (String workspaceName : workspaceXmlPathMap.keySet()) {
       Path workspaceXmlPath = workspaceXmlPathMap.get(workspaceName);
       Path subPath = workspaceXmlPath.getParent();
       if (subPath.endsWith(CONFIG)) {
         subPath = subPath.getParent();
         workspaceXmlConfig.add(workspaceName);
-        isSplitted = true;
+        isSplit = true;
       }
       workspaceXmlSubPathMap.put(workspaceName, subPath);
     }
@@ -347,8 +346,9 @@ public class RepositoryManagementImpl {
       String basePathStr = basePath.toString();
       String subPathString = subPath.toString().substring(basePathStr.length() + 1); //+1 for "/"
       RepositoryConnectionStorable storable;
-      //TODO: read split type from existing workspace.xml
-      String splitStr = isSplitted ? WorkspaceConfigSplit.BYTYPE.getId() : WorkspaceConfigSplit.NONE.getId();
+      String workspaceXmlBasePath = workspaceXmlSubPathMap.get(workspaceName).toString();
+      String splitStr = determineSplitType(isSplit, workspaceXmlBasePath);
+      
       storable = new RepositoryConnectionStorable(workspaceName, basePathStr, subPathString, savedInRepo, splitStr);
       persistRepositoryConnectionStorable(storable);
       count++;
@@ -356,24 +356,37 @@ public class RepositoryManagementImpl {
 
     return "Successfully linked " + count + " workspace(s) to the repository.";
   }
+  
+  private static String determineSplitType(boolean isSplit, String basePath) {
+    String filePath = String.format("%s/%s", basePath, isSplit ? CONFIG : WORKSPACE_XML);
+    String splitStr = isSplit ? WorkspaceConfigSplit.BYTYPE.getId() : WorkspaceConfigSplit.NONE.getId();
+    WorkspaceContent content = WorkspaceObjectManagement.createWorkspaceContentFromFile(new base.File(filePath));
+    if(content.getSplit() != null) {
+      Optional<WorkspaceConfigSplit> optional = WorkspaceConfigSplit.fromId(content.getSplit());
+      if(optional.isPresent()) {
+        splitStr = content.getSplit();
+      } else {
+        if(_logger.isWarnEnabled()) {
+          _logger.warn("invalid split type '" + content.getSplit() + " in " + filePath + " assuming " + splitStr);
+        }
+      }
+    }
+    return splitStr;
+  }
 
   
   private static Map<String, Path> createWorkspaceXmlPathMap(Path basePath, boolean full, String workspace) throws IOException {
     Map<String, Path> workspaceXmlPathMap = new HashMap<>();
-    Files.find(basePath, Integer.MAX_VALUE, RepositoryManagementImpl::matchWsFile).forEach(workspaceXmlPath -> {
-      try {
-        String fileContent = Files.readString(workspaceXmlPath, StandardCharsets.UTF_8);
-        Matcher matcher = pattern.matcher(fileContent);
-        if (matcher.find()) {
-          String workspaceName = matcher.group(1);
-          if (workspaceName != null && (full || workspaceName.equals(workspace))) {
-            workspaceXmlPathMap.put(workspaceName, workspaceXmlPath);
-          }
-        }
-      } catch (IOException e) {
-        _logger.error(e.getMessage(), e);
+    List<Path> paths = Files.find(basePath, Integer.MAX_VALUE, RepositoryManagementImpl::matchWsFile).collect(Collectors.toList());
+
+    for (Path workspaceXmlPath : paths) {
+      WorkspaceContent content = WorkspaceObjectManagement.createWorkspaceContentFromFile(new base.File(workspaceXmlPath.toString()));
+      String workspaceName = content.getWorkspaceName();
+      if (workspaceName != null && (full || workspaceName.equals(workspace))) {
+        workspaceXmlPathMap.put(workspaceName, workspaceXmlPath);
       }
-    });
+    }
+
     return workspaceXmlPathMap;
   }
 
