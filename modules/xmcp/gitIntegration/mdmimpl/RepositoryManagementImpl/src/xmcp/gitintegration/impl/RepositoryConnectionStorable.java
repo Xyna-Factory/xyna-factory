@@ -109,7 +109,7 @@ public class RepositoryConnectionStorable extends Storable<RepositoryConnectionS
       result.subpath = rs.getString(COL_SUBPATH);
       result.savedinrepo = rs.getBoolean(COL_SAVEDINREPO);
       result.splittype = rs.getString(COL_SPLITTYPE);
-      if(result.splittype == null) {
+      if(result.splittype == null || result.splittype.isEmpty()) {
         boolean old = rs.getBoolean(COL_SPLITTED);
         result.splittype = old ? WorkspaceConfigSplit.BYTYPE.getId() : WorkspaceConfigSplit.NONE.getId();
       }
