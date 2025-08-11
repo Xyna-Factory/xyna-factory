@@ -31,4 +31,11 @@ public class OasGuiConstants {
                                                 XMOMDatabaseEntryColumn.PATH.getColumnName() + "," +
                                                 XMOMDatabaseEntryColumn.REVISION.getColumnName();
   
+  public static class EndpointStatus {
+    public static final String MISSING = "Missing";
+    public static final String COMPLETE = "Complete";
+    public static final String INCOMPLETE = "Incomplete";
+    public static final String ERROR = "Error";
+  }
+  
 }

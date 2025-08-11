@@ -80,7 +80,7 @@ public class OasEndpointsFilterData {
     }
     Optional<String> optvalue = tools.getTrimmedOrEmpty(value);
     if (optvalue.isEmpty()) {
-      return pattern.isEmpty();
+      return false;
     }
     return pattern.get().matcher(optvalue.get()).matches();
   }

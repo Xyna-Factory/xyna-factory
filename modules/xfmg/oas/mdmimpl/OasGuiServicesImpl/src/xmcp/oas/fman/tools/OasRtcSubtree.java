@@ -18,31 +18,31 @@
 
 package xmcp.oas.fman.tools;
 
-public class ImplementedOasApiType extends OasApiType {
+import java.util.HashSet;
+import java.util.Set;
 
-  public ImplementedOasApiType(String fqn, RtcData rtc) {
-    super(fqn, rtc);
+
+public class OasRtcSubtree {
+
+  private Set<RtcData> rtcSet = new HashSet<>();
+  private Set<ImplementedOasApiType> implementedTypes = new HashSet<>();
+  private static RtcTools tools = new RtcTools();
+  
+  
+  public OasRtcSubtree(RtcData depthOneRtc) {
+    tools.getAllRtcsWhichReferenceRtcRecursive(depthOneRtc, rtcSet);
   }
 
-  public ImplementedOasApiType(XmomType xmom) {
-    super(xmom);
-  }
-
-  @Override
-  public OasApiTypeCategory getCategory() {
-    return OasApiTypeCategory.IMPLEMENTED;
+  public boolean contains(ImplementedOasApiType ioat) {
+    return rtcSet.contains(ioat.getRtc());
   }
   
-  @Override
-  public boolean equals(Object obj) {
-    if (!(obj instanceof ImplementedOasApiType)) { return false; }
-    ImplementedOasApiType input = (ImplementedOasApiType) obj;
-    return getXmomType().equals(input.getXmomType());
+  public void register(ImplementedOasApiType ioat) {
+    implementedTypes.add(ioat);
   }
   
-  @Override
-  public int hashCode() {
-    return getXmomType().hashCode();
+  public int getImplementedTypeCount() {
+    return implementedTypes.size();
   }
   
 }

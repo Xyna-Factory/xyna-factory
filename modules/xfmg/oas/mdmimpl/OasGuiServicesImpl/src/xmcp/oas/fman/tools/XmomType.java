@@ -48,4 +48,29 @@ public class XmomType {
     return rtc;
   }
   
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof XmomType)) { return false; }
+    XmomType input = (XmomType) obj;
+    if (input.rtc.getRevision() != rtc.getRevision()) {
+      return false;
+    }
+    return getFqName().equals(input.getFqName());
+  }
+  
+  @Override
+  public int hashCode() {
+    return getFqName().hashCode();
+  }
+
+  /*
+  @Override
+  public int compareTo(XmomType xmom) {
+    if (xmom == null) { return 1; }
+    int val = Long.compare(rtc.getRevision(), xmom.rtc.getRevision());
+    if (val != 0) { return val; }
+    return getFqName().compareTo(xmom.getFqName());
+  }
+  */
+  
 }

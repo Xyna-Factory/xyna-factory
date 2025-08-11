@@ -20,6 +20,7 @@ package xmcp.oas.fman.tools;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,7 +36,7 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeDependencyContext;
 
 
-public class AdditionalTools {
+public class RtcTools {
 
   public List<RtcData> getAllApps() {
     List<RtcData> ret = new ArrayList<>();
@@ -80,8 +81,28 @@ public class AdditionalTools {
   }
   
   
-  public void getAllRtcsWhichReferenceRtcRecursive(RtcData rtc, Set<RtcData> ret) {
+  public void getAllRtcsWhichReferenceRtcRecursive(RtcData rtc, Set<RtcData> set) {
+    getAllRtcsWhichReferenceRtcRecursiveImpl(rtc, set, -1, 0);
+  }
+  
+  
+  public Set<RtcData> getAllRtcsWhichReferenceRtcRecursive(RtcData rtc) {
+    Set<RtcData> ret = new HashSet<>();
+    getAllRtcsWhichReferenceRtcRecursiveImpl(rtc, ret, -1, 0);
+    return ret;
+  }
+    
+    
+  public Set<RtcData> getAllRtcsWhichReferenceRtcRecursive(RtcData rtc, int maxDepth) {
+    Set<RtcData> ret = new HashSet<>();
+    getAllRtcsWhichReferenceRtcRecursiveImpl(rtc, ret, maxDepth, 0);
+    return ret;
+  }
+  
+  
+  private void getAllRtcsWhichReferenceRtcRecursiveImpl(RtcData rtc, Set<RtcData> ret, int maxDepth, int depth) {
     if (ret.contains(rtc)) { return; }
+    if ((maxDepth >= 0) && (depth > maxDepth)) { return; }
     ret.add(rtc);
     try {
       RuntimeContextDependencyManagement rtcDependencyManagement =
@@ -96,7 +117,7 @@ public class AdditionalTools {
           RuntimeContext tmpRtc = dep.asCorrespondingRuntimeContext();
           if (tmpRtc.equals(runtimeContext)) {
             RtcData refRtc = new RtcData(tmpRtc);
-            getAllRtcsWhichReferenceRtcRecursive(refRtc, ret);
+            getAllRtcsWhichReferenceRtcRecursiveImpl(refRtc, ret, maxDepth, depth + 1);
           }
         }
       }
