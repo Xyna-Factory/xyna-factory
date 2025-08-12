@@ -29,6 +29,8 @@ import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationInformation;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagement;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabaseEntryColumn;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabaseType;
@@ -51,10 +53,12 @@ public class OasGuiTools {
                                                   getApplicationManagement();
       if (appMgmt instanceof ApplicationManagementImpl) {
         List<ApplicationInformation> applist = ((ApplicationManagementImpl) appMgmt).listApplications(true, false);
-        for (ApplicationInformation app : applist) {
-          if (OasGuiConstants.OAS_BASE_APP_NAME.equals(app.getName())) {
-            RtcData rtc = new RtcData(app.asRuntimeContext());
-            ret.add(rtc);
+        for (ApplicationInformation info : applist) {
+          RuntimeContext rtc = info.asRuntimeContext();
+          if (!(rtc instanceof Application)) { continue; }
+          if (OasGuiConstants.OAS_BASE_APP_NAME.equals(info.getName())) {
+            RtcData rtcdata = new RtcData(rtc);
+            ret.add(rtcdata);
           }
         }
       }

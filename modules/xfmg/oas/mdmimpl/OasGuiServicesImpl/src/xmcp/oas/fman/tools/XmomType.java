@@ -63,14 +63,4 @@ public class XmomType {
     return getFqName().hashCode();
   }
 
-  /*
-  @Override
-  public int compareTo(XmomType xmom) {
-    if (xmom == null) { return 1; }
-    int val = Long.compare(rtc.getRevision(), xmom.rtc.getRevision());
-    if (val != 0) { return val; }
-    return getFqName().compareTo(xmom.getFqName());
-  }
-  */
-  
 }

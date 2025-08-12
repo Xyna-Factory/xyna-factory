@@ -20,11 +20,7 @@ package xmcp.oas.fman.codedservice;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -55,7 +51,6 @@ public class CSGetOasApiEndpoints {
       OasEndpointsFilterData filter = new OasEndpointsFilterData(info);
       List<RtcData> rtclist = _tools.getAllOasBaseApps();
       for (RtcData rtc : rtclist) {
-        if (!filter.matchesGeneratedRtcFilter(rtc.toString())) { continue; }
         handleRtc(ret, rtc, filter);
       }
       Collections.sort(ret, new OasApiDatatypeInfoComparator(info));
@@ -74,6 +69,7 @@ public class CSGetOasApiEndpoints {
     List<GeneratedOasApiType> list = _tools.getAllGeneratedOasApiTypesInRefRtcs(rtc);
     if (list.size() < 1) { return; }
     for (GeneratedOasApiType goat : list) {
+      if (!filter.matchesGeneratedRtcFilter(goat.getRtc().toString())) { continue; }
       if (!filter.matchesApiDatatypeFilter(goat.getFqName())) { continue; }
       OperationGroup opgroup = new OperationGroup(goat);
       handleGeneratedType(ret, opgroup, filter);
@@ -115,7 +111,7 @@ public class CSGetOasApiEndpoints {
     OperationGroup opgroup = new OperationGroup(implType);
     if (opgroup.operationsMatch(genTypeOpGroup)) {
       return OasGuiConstants.EndpointStatus.COMPLETE;
-    } 
+    }
     return OasGuiConstants.EndpointStatus.INCOMPLETE;
   }
   

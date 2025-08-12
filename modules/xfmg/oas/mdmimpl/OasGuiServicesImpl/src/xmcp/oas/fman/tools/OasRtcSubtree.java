@@ -31,6 +31,7 @@ public class OasRtcSubtree {
   
   public OasRtcSubtree(RtcData depthOneRtc) {
     tools.getAllRtcsWhichReferenceRtcRecursive(depthOneRtc, rtcSet);
+    rtcSet.add(depthOneRtc);
   }
 
   public boolean contains(ImplementedOasApiType ioat) {
