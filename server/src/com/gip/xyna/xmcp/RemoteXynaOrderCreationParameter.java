@@ -28,6 +28,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
+import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xprc.XynaOrderCreationParameter;
 import com.gip.xyna.xprc.exceptions.XPRC_InvalidXMLForObjectCreationException;
@@ -129,7 +130,7 @@ public final class RemoteXynaOrderCreationParameter extends XynaOrderCreationPar
         revision = RevisionManagement.REVISION_DEFAULT_WORKSPACE;
       }
       String xmlString = inputPayloadAsXmlString;
-      if (isContainer) {
+      if (isContainer && !XynaProperty.CONTAINER_XML_WRAP.get()) {
         xmlString = "<Container>" + xmlString + "</Container>";
       }
       super.setInputPayload(XynaObject.generalFromXml(xmlString, revision));

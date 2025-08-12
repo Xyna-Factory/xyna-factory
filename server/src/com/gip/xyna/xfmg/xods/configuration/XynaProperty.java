@@ -91,7 +91,7 @@ public interface XynaProperty {
       new XynaPropertyBoolean("xyna.create.diag.cont", false);
 
   /**
-   * true =&gt; aufträge die auf scheduling warten (weil ihre capacities belegt sind oder sowas) werden gebackupped. false
+   * true =&gt; auftrÃ¤ge die auf scheduling warten (weil ihre capacities belegt sind oder sowas) werden gebackupped. false
    * =&gt; werden nicht gebackupped.
    */
   public static final XynaPropertyBoolean XYNA_BACKUP_ORDERS_WAITING_FOR_SCHEDULING =
@@ -134,7 +134,7 @@ public interface XynaProperty {
   public static final XynaPropertyDuration XYNA_SCHEDULER_STOP_TIMEOUT_OFFSET =
       new XynaPropertyDuration("xyna.scheduler.stop.timeout.offset", "0 ms", TimeUnit.MILLISECONDS).
       setDefaultDocumentation(DocumentationLanguage.DE, 
-                              "Diese Property bewirkt, dass Aufträge vor dem Herunterfahren des Servers bereits "+
+                              "Diese Property bewirkt, dass AuftrÃ¤ge vor dem Herunterfahren des Servers bereits "+
                               "ins Timeout laufen, falls die verbleibende Zeit bis zum Timeout kleiner ist "+
                               "als der angegebene Wert.");
 
@@ -150,12 +150,12 @@ public interface XynaProperty {
   public static final XynaPropertyDuration TIMEOUT_SHUTDOWN_ORDERS_IN_CLEANUP = 
       new XynaPropertyDuration("shutdown.timeout.cleanup", "5 s", TimeUnit.MILLISECONDS).
       setDefaultDocumentation(DocumentationLanguage.DE, 
-                              "So lange maximal auf Aufträge im Cleanup warten, nachdem der Scheduler "+
+                              "So lange maximal auf AuftrÃ¤ge im Cleanup warten, nachdem der Scheduler "+
                               "angehalten wurde.");
   public static final XynaPropertyDuration TIMEOUT_SHUTDOWN_ORDERS_IN_PLANNING = 
       new XynaPropertyDuration("shutdown.timeout.planning", "5 s", TimeUnit.MILLISECONDS).
       setDefaultDocumentation(DocumentationLanguage.DE, 
-                              "So lange maximal auf Aufträge im Planning warten, nachdem der Scheduler "+
+                              "So lange maximal auf AuftrÃ¤ge im Planning warten, nachdem der Scheduler "+
                               "angehalten wurde.");
 
   public static final XynaPropertyDuration TIMEOUT_SHUTDOWN_ACTIVE_OPERATIONS = 
@@ -175,7 +175,7 @@ public interface XynaProperty {
   // use in MonitoringDispatcher
   public static final String MONITORING_DIRECTPERSISTENCE = "xyna.monitoring.persistence";
 
-  //FIXME die gehören in Constants-Klasse
+  //FIXME die gehÃ¶ren in Constants-Klasse
   /**
    * Persistence Constants (used in JavaSerializationPersistenceLayer) PERSISTENCE_DIR: Directory to persist to
    * INDEX_SUFFIX: Suffix of the index file
@@ -184,7 +184,7 @@ public interface XynaProperty {
   public static final String INDEX_SUFFIX = ".index";
   
   /*
-   * Properties für BlackExceptionCodeManagement
+   * Properties fÃ¼r BlackExceptionCodeManagement
    */
   public static final XynaPropertyBoolean RELOAD_FROM_STORAGE_EACH_ACTION = 
       new XynaPropertyBoolean("xyna.exceptions.codegroup.storage.reload", true ).
@@ -224,16 +224,16 @@ public interface XynaProperty {
    */
   public static final XynaPropertyDurationCompatible<Long> GUI_SESSION_TIMEOUT_SECONDS = 
       new XynaPropertyDurationCompatible<Long>("xyna.xfmg.xopctrl.managedsessions.timeout", SessionManagement.DEFAULT_GUI_SESSION_TIMEOUT_SECONDS)
-        .setDefaultDocumentation(DocumentationLanguage.DE, "Gültigkeitsdauer einer Sitzung in Sekunden.")
+        .setDefaultDocumentation(DocumentationLanguage.DE, "GÃ¼ltigkeitsdauer einer Sitzung in Sekunden.")
         .setDefaultDocumentation(DocumentationLanguage.EN, "Lifetime of a session in seconds.");
   
   public static final XynaPropertyDurationCompatible<Long> GUI_SESSION_DELETION_INTERVAL =
       new XynaPropertyDurationCompatible<Long>("xyna.xfmg.xopctrl.managedsessions.sessiondeletioninterval", SessionManagement.DEFAULT_SESSION_DELETION_INTERVAL)
-        .setDefaultDocumentation(DocumentationLanguage.DE, "Häufigkeit des Aufräumens verwaister Sessions zur Freigabe von von der Session belegten Ressourcen. Eine Session gilt als verwaist, wenn sie abgelaufen ist, aber nicht beendet ist.")
+        .setDefaultDocumentation(DocumentationLanguage.DE, "HÃ¤ufigkeit des AufrÃ¤umens verwaister Sessions zur Freigabe von von der Session belegten Ressourcen. Eine Session gilt als verwaist, wenn sie abgelaufen ist, aber nicht beendet ist.")
         .setDefaultDocumentation(DocumentationLanguage.EN, "Time interval in which abandonded sessions are cleared and associated resources released. Sessions count as abandoned if they are timed out but not yet cleared.");
   
   public static final XynaPropertyBoolean CREATE_MULTIPLE_SESSIONS_IF_ALLOWED = new XynaPropertyBoolean("xfmg.xopctrl.managedsessions.createMultipleSessionsIfAllowed", false)
-      .setDefaultDocumentation(DocumentationLanguage.DE, "Falls gesetzt dürfen Benutzer mit einer Rolle mit dem Recht MULTIPLE_SESSION_CREATION mehrere Sitzungen gleichzeitig geöffnet haben.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Falls gesetzt dÃ¼rfen Benutzer mit einer Rolle mit dem Recht MULTIPLE_SESSION_CREATION mehrere Sitzungen gleichzeitig geÃ¶ffnet haben.")
       .setDefaultDocumentation(DocumentationLanguage.EN, "When true, users having a role with the right MULTIPLE_SESSION_CREATION can have multiple concurrent sessions.");
 
 
@@ -242,9 +242,9 @@ public interface XynaProperty {
   public static final XynaPropertyString THREADPOOL_PLANNING_POOL_SIZE_STRATEGY = 
       new XynaPropertyString("xyna.threadpool.planning.pool_size_strategy", "eager").
       setDefaultDocumentation(DocumentationLanguage.DE, "Konfiguration des Verhaltens bei ausgelastetem ThreadPool, der "+
-          "seine maximale Größe jedoch noch nicht erreicht hat: "+
-          "'eager': Jeder neue Task erhält sofort einen Thread. "+
-          "'lazy_<n>': (Beispiel 'lazy_2') Für jeweils <n> in der Queue wartende Tasks wird ein neuer Thread gestartet. "+
+          "seine maximale GrÃ¶ÃŸe jedoch noch nicht erreicht hat: "+
+          "'eager': Jeder neue Task erhÃ¤lt sofort einen Thread. "+
+          "'lazy_<n>': (Beispiel 'lazy_2') FÃ¼r jeweils <n> in der Queue wartende Tasks wird ein neuer Thread gestartet. "+
           "'default': Neue Tasks kommen in die Queue").
       setDefaultDocumentation(DocumentationLanguage.EN, null );
   
@@ -408,7 +408,7 @@ public interface XynaProperty {
       new XynaPropertyDurationCompatible<Integer>("xyna.xprc.synchronization.activewait.timeout", 0, TimeUnit.MILLISECONDS);
   
   /**
-   * wie lange werden antworten im synchronizationmanagement vorgehalten, für die noch keine anfragen gekommen sind, bevor sie
+   * wie lange werden antworten im synchronizationmanagement vorgehalten, fÃ¼r die noch keine anfragen gekommen sind, bevor sie
    * verworfen werden.
    */
   public static final XynaPropertyDurationCompatible<Integer> XPRC_SYNC_ANSWER_TIMEOUT_SECONDS =
@@ -416,7 +416,7 @@ public interface XynaProperty {
 
 
   /**
-   * maximale anzahl von aufträgen in memory
+   * maximale anzahl von auftrÃ¤gen in memory
    */
   public static final XynaPropertyInt MAX_ORDERS_IN_SCHEDULER_MEMORY =
       new XynaPropertyInt("xyna.xprc.xsched.orders.memory.max", 10000);
@@ -478,7 +478,7 @@ public interface XynaProperty {
                                   +"This property defines a time offset how long a waiting order will "
                                   +"remain in the scheduling procedure before being swapped" ).
       setDefaultDocumentation(DocumentationLanguage.DE,
-                              "Aufträge, die auf ihren Startzeitpunkt warten müssen, werden temporär aus dem Scheduling "
+                              "AuftrÃ¤ge, die auf ihren Startzeitpunkt warten mÃ¼ssen, werden temporÃ¤r aus dem Scheduling "
                                   +"entfernt und bei Erreichen des Startzeitpunkts wieder eingetragen. "
                                   +"Diese Property definiert die Zeitdauer, die ein auf seine Startzeit wartender Auftrag "
                                   +"im Scheduler verbleiben darf, ohne ausgelagert zu werden."); 
@@ -492,7 +492,7 @@ public interface XynaProperty {
       setDefaultDocumentation(DocumentationLanguage.DE, 
                               "Maximale Anzahl Retries, die ein Auftrag in einem Scheduling-Durchlauf versuchen darf - "
                                   +"nach dem Erreichen der maximalen Retry-Anzahl wird der Scheduling-Durchlauf mit "
-                                  +"dem nächsten Auftrag fortgesetzt."); 
+                                  +"dem nÃ¤chsten Auftrag fortgesetzt."); 
 
   public static final XynaPropertyBoolean SCHEDULER_WAIT_FOR_STABLE_TIME_WINDOWS = new
       XynaPropertyBoolean("xyna.xprc.xsched.wait_for_stable_time_windows", true ).
@@ -506,13 +506,13 @@ public interface XynaProperty {
                               "by the local node \u2013 value false. " +
                               "Default value is true." ).
       setDefaultDocumentation(DocumentationLanguage.DE, 
-                              "Diese Property gibt im Cluster-Betrieb vor, ob Aufträge im Scheduler, " +
-                              "die ein Zeitfenster benötigen, warten, bis die Zeitfenster stabil vorliegen " +
-                              "(d.h. es kann nicht passieren, dass der andere Knoten Änderungen an den " +
+                              "Diese Property gibt im Cluster-Betrieb vor, ob AuftrÃ¤ge im Scheduler, " +
+                              "die ein Zeitfenster benÃ¶tigen, warten, bis die Zeitfenster stabil vorliegen " +
+                              "(d.h. es kann nicht passieren, dass der andere Knoten Ã„nderungen an den " +
                               "Zeitfenstern vornimmt, die der lokale Knoten nicht sieht) \u2013 Wert true \u2013 " +
-                              "oder ob die Zeitfenster vorläufig wiederhergestellt " +
-                              "werden sollen mit der Gefahr, dass der andere Knoten Änderungen daran vornimmt, " +
-                              "die noch nicht bemerkt werden können \u2013 Wert false. " +
+                              "oder ob die Zeitfenster vorlÃ¤ufig wiederhergestellt " +
+                              "werden sollen mit der Gefahr, dass der andere Knoten Ã„nderungen daran vornimmt, " +
+                              "die noch nicht bemerkt werden kÃ¶nnen \u2013 Wert false. " +
                               "Default-Wert ist true."); 
 
   
@@ -525,7 +525,7 @@ public interface XynaProperty {
       new XynaPropertyInt( "xyna.xprc.xsched.capacity.demand.max.percent", 10 );
 
   /**
-   * Default-Priority für XynaOrder<br>
+   * Default-Priority fÃ¼r XynaOrder<br>
    * Default -1: {@link PriorityManagement#HARDCODED_DEFAULT_PRIORITY} (derzeit 7) wird verwendet
    */
   public static final XynaPropertyInt CONFIGURABLE_DEFAULT_XYNAORDER_PRIORITY = new XynaPropertyInt("xyna.default.priority", -1)
@@ -533,7 +533,7 @@ public interface XynaProperty {
           + " (highest). Every other value is mapped to " + PriorityManagement.HARDCODED_DEFAULT_PRIORITY + ".");
 
   /**
-   * Properties für OrderSeriesManagement
+   * Properties fÃ¼r OrderSeriesManagement
    */
   public static final XynaPropertyInt ORDER_SERIES_MAX_SI_STORABLES_IN_CACHE =
       new XynaPropertyInt("xyna.xprc.xsched.series.max.si.storables.in.cache", 1000 );
@@ -547,7 +547,7 @@ public interface XynaProperty {
       new XynaPropertyBoolean("xyna.xprc.xsched.series.clean.database", false );
   
   /**
-   * Properties für SuspendResumeManagement
+   * Properties fÃ¼r SuspendResumeManagement
    */
   public static final XynaPropertyDuration RESUME_RETRY_DELAY = 
       new XynaPropertyDuration("xyna.xprc.xpce.resume_retry_delay", "10 s");
@@ -555,7 +555,7 @@ public interface XynaProperty {
       new XynaPropertyBoolean("xyna.xprc.xpce.ordersuspension.show_srinformation_lock_info", false );
   
   /**
-   * Property bestimmt, ob ein nach einem erfolgreichen Killprozess noch die Kompensation durchgeführt werden soll.
+   * Property bestimmt, ob ein nach einem erfolgreichen Killprozess noch die Kompensation durchgefÃ¼hrt werden soll.
    */
   public static final XynaPropertyBoolean ORDERABORTION_COMPENSATE = 
       new XynaPropertyBoolean("xyna.xprc.xsched.orderabortion.compensate", true );
@@ -577,7 +577,7 @@ public interface XynaProperty {
       new XynaPropertyDuration("xyna.xfmg.xfmon.frunstats.async_persistence_interval", "30 s", TimeUnit.MILLISECONDS);
   
   /*
-   * Properties für BatchProcesse
+   * Properties fÃ¼r BatchProcesse
    */
   public static XynaPropertyInt BATCH_MAX_PARALLELISM = new XynaPropertyInt("xyna.xprc.xbatchmgmt.max_parallelism", 10).
       setDefaultDocumentation(DocumentationLanguage.DE, 
@@ -590,7 +590,7 @@ public interface XynaProperty {
   public static XynaPropertyDuration BATCH_CANCEL_WAIT_TIMEOUT = new XynaPropertyDuration("xyna.xprc.xbatchmgmt.cancel_wait_timeout", "5 s").
       setDefaultDocumentation(DocumentationLanguage.DE,
                               "Beim Cancel eines Batch Processes wird eine zeitlang gewartet, dass die Slaves fertig laufen "+
-                              "können; danach werden weiterhin laufende Slaves abgebrochen. Falls kein ExecutionTimeOut für "+
+                              "kÃ¶nnen; danach werden weiterhin laufende Slaves abgebrochen. Falls kein ExecutionTimeOut fÃ¼r "+
                               "die Slaves gesetzt ist, wird dieser Timeout hier verwendet.");
   //
   public static XynaPropertyString BATCH_DEFAULT_MASTER = new XynaPropertyString("xyna.xprc.xbatchmgmt.default_master",
@@ -605,11 +605,11 @@ public interface XynaProperty {
                               "Reaction on missing limitation (no SlaveExecutionPeriod, no Capacities for Slaves): "
                                   +BatchProcessManagement.MissingLimitationReaction.documentation(DocumentationLanguage.EN)).
       setDefaultDocumentation(DocumentationLanguage.DE,
-                              "Reaktion auf fehlende Limitierung (weder SlaveExecutionPeriod noch Kapazitäten für die Slaves konfiguriert): "
+                              "Reaktion auf fehlende Limitierung (weder SlaveExecutionPeriod noch KapazitÃ¤ten fÃ¼r die Slaves konfiguriert): "
                                   +BatchProcessManagement.MissingLimitationReaction.documentation(DocumentationLanguage.DE)); 
 
   /*
-   * Properties für Node Management
+   * Properties fÃ¼r Node Management
    */
   public static final XynaPropertyString NODE_SSH_SCRIPT = new XynaPropertyString("xyna.xfmg.xfctrl.nodemgmt.ssh_script", "deploy_remote_workflow.sh").
       setDefaultDocumentation(DocumentationLanguage.DE,
@@ -620,13 +620,13 @@ public interface XynaProperty {
                               "Verzeichnis, in dem das Skript zum Verwalten von Applications auf Remote-Knoten per SSH liegt. Der Pfad muss relativ zum server-Verzeichnis der Xyna Factory angegeben werden. ");
 
   /*
-   * Properties für MasterWorkflowPostScheduler
+   * Properties fÃ¼r MasterWorkflowPostScheduler
    */
   public static final XynaPropertyBoolean CLEANUP_WORKFLOW_BEFORE_FREEING_CAP_VETO = new XynaPropertyBoolean("xyna.xprc.xpce.cleanup_workflow_before_freeing_cap_and_veto", false).
       setDefaultDocumentation(DocumentationLanguage.EN,
                               "Cleanup workflow will be called before freeing capacities and vetos.").
       setDefaultDocumentation(DocumentationLanguage.DE,
-                              "Cleanup-Workflow wird vor der Freigabe von Caapcitys und Vetos ausgeführt.");
+                              "Cleanup-Workflow wird vor der Freigabe von Caapcitys und Vetos ausgefÃ¼hrt.");
  
   
   public static final XynaPropertyDouble CAPACITY_DEMAND_IGNORING_PERCENTAGE = new XynaPropertyDouble("xyna.xprc.xsched.capacitydemand_ignore_percentage", 0.05 ).
@@ -636,31 +636,31 @@ public interface XynaProperty {
           "CapacityDemand wird mit dieser Wahrscheinlichkeit ignoriert und nicht an den anderen Knoten geschickt.");
   
   /*
-   * Properties für FileManagement
+   * Properties fÃ¼r FileManagement
    */
   public static final XynaPropertyString FILE_MANAGEMENT_TEMP_DIR = new XynaPropertyString("xyna.xfmg.xfctrl.filemgmt.temp_dir", "/tmp/filemgmt").
       setDefaultDocumentation(DocumentationLanguage.EN, 
                               "Directory for temporary files from file management.").
       setDefaultDocumentation(DocumentationLanguage.DE,
-                              "Verzeichnis, in dem das Filemanagement temporäre Dateien und Verzeichnisse ablegt.");
+                              "Verzeichnis, in dem das Filemanagement temporÃ¤re Dateien und Verzeichnisse ablegt.");
   public static final XynaPropertyDuration FILE_MANAGEMENT_DEFAULT_TIMEOUT = new XynaPropertyDuration("xyna.xfmg.xfctrl.filemgmt.default_timeout", "30 min").
       setDefaultDocumentation(DocumentationLanguage.EN, 
                               "Default timeout for uploaded files.").
       setDefaultDocumentation(DocumentationLanguage.DE,
-                              "Standard Zeitlimit bis zur Löschung einer hochgeladenen Datei.");
+                              "Standard Zeitlimit bis zur LÃ¶schung einer hochgeladenen Datei.");
   public static final XynaPropertyInt FILE_MANAGEMENT_STATE_TRANSITION_RETRIES = new XynaPropertyInt("xyna.xfmg.xfctrl.filemgmt.transition_retries", 100).
                   setDefaultDocumentation(DocumentationLanguage.EN, 
                                           "Amount of retries for a state transition. Should be adjusted according to the expected concurrent access. (< 0 for unlimited retries)").
                   setDefaultDocumentation(DocumentationLanguage.DE,
-                                          "Anzahl der Wiederholungsversuchen eines Statusübergangs."
-                                       + " Sollte passend zur erwarteten Menge an konkurrierenden Zugriffen angepasst werden. (< 0 für unbeschränkte Wiederholungen)");
+                                          "Anzahl der Wiederholungsversuchen eines StatusÃ¼bergangs."
+                                       + " Sollte passend zur erwarteten Menge an konkurrierenden Zugriffen angepasst werden. (< 0 fÃ¼r unbeschrÃ¤nkte Wiederholungen)");
 
   public static final XynaPropertyString S4E_TMP_DIR = new XynaPropertyString("com.gip.xyna.xdev.xlibdev.supp4eclipse.temp_dir", "./").
       setDefaultDocumentation(DocumentationLanguage.EN, "Directory for temparary files from SupportForEcplipse").
-      setDefaultDocumentation(DocumentationLanguage.DE, "Verzeichnis, in dem SupportForEclipse temporäre Dateien und Verzeichnisse ablegt.");
+      setDefaultDocumentation(DocumentationLanguage.DE, "Verzeichnis, in dem SupportForEclipse temporÃ¤re Dateien und Verzeichnisse ablegt.");
  
   /*
-   * Properties für ListFurtherInformationFromStartup
+   * Properties fÃ¼r ListFurtherInformationFromStartup
    */
   public static final XynaPropertyInt STARTUP_FURTHER_INFO_MAX = new XynaPropertyInt("xyna.xfmg.max_further_information", 1000).
       setDefaultDocumentation(DocumentationLanguage.EN,
@@ -680,7 +680,7 @@ public interface XynaProperty {
   public static final XynaPropertyDuration SERVICE_IMPL_INCONSISTENCY_TIME_LAG = new XynaPropertyDuration("xyna.xfmg.xfctrl.deploystate.service_impl_inconsistency_time_lag", "10 s").
                   setDefaultDocumentation(DocumentationLanguage.DE,
                                           "Maximal erlaubte Zeitdifferenz zwischen dem Speichern des ImplJars und dem Speichern bzw. Deployen einer ServiceGroup oder verwendeter Objekte." +
-                                          "Ist das ImplJar älter, geht die ServiceGroup den Zustand INVALID");
+                                          "Ist das ImplJar Ã¤lter, geht die ServiceGroup den Zustand INVALID");
   
   public static final XynaPropertyBoolean SUPPRESS_USED_OBJECT_IMPL_INCONSISTENCIES =
                   new XynaPropertyBoolean("xyna.xfmg.xfctrl.deploymentstate.used_object_impl_check", false);
@@ -692,10 +692,10 @@ public interface XynaProperty {
    * xmomdiscovery beim Startup
    */
   public static final XynaPropertyBoolean XMOMDISCOVERY_ON_STARTUP = new XynaPropertyBoolean("xyna.xfmg.xfctrl.xmomdatabase.discovery_on_startup", false).
-                  setDefaultDocumentation(DocumentationLanguage.DE, "Beim Startup wird ein XMOM-Discovery ausgeführt.");
+                  setDefaultDocumentation(DocumentationLanguage.DE, "Beim Startup wird ein XMOM-Discovery ausgefÃ¼hrt.");
 
   /**
-   * erlaubte Werte für Deployment-Tags
+   * erlaubte Werte fÃ¼r Deployment-Tags
    */
   public static final XynaPropertyString DEPLOYMENT_TAGS = new XynaPropertyString("xyna.xfmg.xfctrl.deploymentmarker.tags", "root workflow, used for tests, has errors, untested, verified").
                   setDefaultDocumentation(DocumentationLanguage.EN, "Set of allowed deployment tags").
@@ -706,15 +706,15 @@ public interface XynaProperty {
   public static final XynaPropertyBoolean AUTHENTICATION_LOCKED_EXCEPTION_DIFFERENT =
       new XynaPropertyBoolean("xyna.xmcp.xopctrl.authentication.exceptionhandling.userlocked.differs", false).setDefaultDocumentation(DocumentationLanguage.EN, "If this property is set to true a different exception is thrown when authentication fails because the user is locked.");
   /*
-   * versionierung kostet bei monitoringlevel <= 15 performance, und hat das risiko für bugs. bei monitoringlevel > 15 spart es wiederum performance
+   * versionierung kostet bei monitoringlevel <= 15 performance, und hat das risiko fÃ¼r bugs. bei monitoringlevel > 15 spart es wiederum performance
    * intern verwendete objekte haben immer versionierung an.
    * 
-   * änderung von 0/5 auf anderen wert benötigt erneutes deployment
+   * Ã¤nderung von 0/5 auf anderen wert benÃ¶tigt erneutes deployment
    * 
    * 5 = immer true generiert
-   * 3,4 = abhängig von xynaproperty-value (3 = false, 4 = true)
-   * 1,2 = reserviert für konfiguration pro ordertype/order (derzeit = 0)
-   *    ACHTUNG: konfiguration pro ordertype/order: es muss immer die gesamte objektinstanz-hierarchie versionierung unterstützen, ansonsten gehen änderungen verloren.
+   * 3,4 = abhÃ¤ngig von xynaproperty-value (3 = false, 4 = true)
+   * 1,2 = reserviert fÃ¼r konfiguration pro ordertype/order (derzeit = 0)
+   *    ACHTUNG: konfiguration pro ordertype/order: es muss immer die gesamte objektinstanz-hierarchie versionierung unterstÃ¼tzen, ansonsten gehen Ã¤nderungen verloren.
    * 
    * 0 = immer false generiert
    */
@@ -722,17 +722,17 @@ public interface XynaProperty {
   
   public static final XynaPropertyInt DEFAULT_SIZE_COLUMN_TYPE = new XynaPropertyInt("xyna.xnwh.persistence.dbmodifytable.defaultSize", DatabasePersistenceLayerWithAlterTableSupportHelper.DEFAULT_SIZE_COLUMN_TYPE).
                   setDefaultDocumentation(DocumentationLanguage.EN, "Default size for size dependent database columns generated from storables").
-                  setDefaultDocumentation(DocumentationLanguage.DE, "Standard-Grösse für grössenabhängige Datenbankspalten welche für Storables erzeugt werden");
+                  setDefaultDocumentation(DocumentationLanguage.DE, "Standard-GrÃ¶sse fÃ¼r grÃ¶ssenabhÃ¤ngige Datenbankspalten welche fÃ¼r Storables erzeugt werden");
   
   public static final XynaPropertyBoolean THROW_EXCEPTION_ON_DUPLICATE_DESTINATION_RESOLUTION =
                   new XynaPropertyBoolean("xyna.xprc.xpce.planning.throwOnDuplicateOrdertype", true)
                         .setDefaultDocumentation(DocumentationLanguage.EN, "Terminate orders if an OrderType collision in the RuntimeContext-Dependency tree is detected.")
-                        .setDefaultDocumentation(DocumentationLanguage.DE, "Aufträge welche eine OrderType-Kollision feststellen terminieren mit einer Fehlermledung.");
+                        .setDefaultDocumentation(DocumentationLanguage.DE, "AuftrÃ¤ge welche eine OrderType-Kollision feststellen terminieren mit einer Fehlermledung.");
 
   public static final XynaPropertyBuilds<PrettyPrintConfig> TABLE_FORMATTER_PRETTY_PRINT = 
       new XynaPropertyBuilds<>("xyna.utils.misc.table_formatter_pretty_print", new PrettyPrintConfig(), new PrettyPrintConfig() ).
-      setDefaultDocumentation(DocumentationLanguage.EN, "Separator für TableFormatter (e.g. CLI output), format: 3 chars as string VHC").
-      setDefaultDocumentation(DocumentationLanguage.DE, "Trennzeichen für TableFormatter (z.B CLI-Ausgaben), Format: 3 Zeichen als String VHC");
+      setDefaultDocumentation(DocumentationLanguage.EN, "Separator fÃ¼r TableFormatter (e.g. CLI output), format: 3 chars as string VHC").
+      setDefaultDocumentation(DocumentationLanguage.DE, "Trennzeichen fÃ¼r TableFormatter (z.B CLI-Ausgaben), Format: 3 Zeichen als String VHC");
   
   public static class PrettyPrintConfig implements Builder<PrettyPrintConfig> {
     
@@ -759,11 +759,11 @@ public interface XynaProperty {
                   new XynaPropertyBoolean("xyna.xprc.xprcods.workflowdb.singlebatchdeploy", true);
 
   public static final XynaPropertyInt ZETA_TABLE_LIMIT = new XynaPropertyInt("zeta.table.limit", 100).
-      setDefaultDocumentation(DocumentationLanguage.DE, "Die maximale Anzahl an Tabellen-Einträgen, die zurück gegeben werden.").
+      setDefaultDocumentation(DocumentationLanguage.DE, "Die maximale Anzahl an Tabellen-EintrÃ¤gen, die zurÃ¼ck gegeben werden.").
       setDefaultDocumentation(DocumentationLanguage.EN, "The maximum number of table entries to be returned.");
   
   public static final XynaPropertyInt WAREHOUSE_JOB_BATCH_SIZE = new XynaPropertyInt("xyna.xnwh.xwarehousejobs.defaultBatchSize", 1000).
-                  setDefaultDocumentation(DocumentationLanguage.DE, "Die Grösse der Batches die von einem Warehousejob bearbeitet werden.").
+                  setDefaultDocumentation(DocumentationLanguage.DE, "Die GrÃ¶sse der Batches die von einem Warehousejob bearbeitet werden.").
                   setDefaultDocumentation(DocumentationLanguage.EN, "The batch size processed from warehousejobs.");
 
   public static final XynaPropertyBoolean EXCEPTION_ON_DEPLOY_NO_CLASSFILE_UPDATE = 
@@ -778,4 +778,8 @@ public interface XynaProperty {
   public static final XynaPropertyBoolean QUERY_ESCAPE = new XynaPropertyBoolean("xnwh.queries.escape", true)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Escape table and column names in queries")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Escapen von Tabellen- und Spaltennamen in Querys");
+
+  public static final XynaPropertyBoolean CONTAINER_XML_WRAP = new XynaPropertyBoolean("xyna.container.xml_wrap", true)
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Erzeuge umschliessendes <container>-Tag fÃ¼r xdev.fractmod.xmdm.Container beim Erstellen von Xml")
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Create <container> tag around toXml for xdev.fractmod.xmdm.Container");
 }

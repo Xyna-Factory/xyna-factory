@@ -77,7 +77,8 @@ public class RepositoryManagementImpl {
 
   private static PreparedQueryCache queryCache = new PreparedQueryCache();
 
-  private static final String CONFIG = "config";
+  public static final String CONFIG = "config";
+  public static final String WORKSPACE_XML = "workspace.xml";
   private static final String SAVED = "saved";
   private static final String XMOM = "XMOM";
 
@@ -231,7 +232,7 @@ public class RepositoryManagementImpl {
     }
   }
   private static boolean matchWsFile(Path filePath, BasicFileAttributes fileAttr) {
-    return fileAttr.isRegularFile() && filePath.endsWith("workspace.xml");
+    return fileAttr.isRegularFile() && filePath.endsWith(WORKSPACE_XML);
   }
 
 
