@@ -76,7 +76,7 @@ public class OasApiDatatypeInfoComparator implements Comparator<OasApiDatatypeIn
   public int compare(OasApiDatatypeInfo info1, OasApiDatatypeInfo info2) {
     Optional<String> val1 = extract(info1);
     if (val1.isEmpty()) { return -1 * directionFactor; }
-    Optional<String> val2 = extract(info1);
+    Optional<String> val2 = extract(info2);
     if (val2.isEmpty()) { return 1 * directionFactor; }
     
     int res = val1.get().compareTo(val2.get());
