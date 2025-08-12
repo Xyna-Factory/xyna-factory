@@ -20,6 +20,7 @@ package xfmg.tmf.validation.impl;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
@@ -27,6 +28,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
+
+import xfmg.tmf.validation.impl.builtinfunctions.WorkflowFunction;
+import xfmg.tmf.validation.impl.builtinfunctions.WorkflowFunction.WorkflowInfo;
+import xfmg.tmf.validation.impl.builtinfunctions.WorkflowFunction.WorkflowInfo.InputType;
 
 
 
@@ -293,15 +298,17 @@ public class TestParser {
   }
 
 
-  private void testParsingError(String expr) {
+  private String testParsingError(String expr) {
     TMFExpressionParser p = ParserCache.getParser(-1L);
+    p.functions.add(new WorkflowFunction(new WorkflowInfo("", "GET_SERVICE", InputType.SINGLE_TEXT)));
     try {
       p.parse(expr, 0, true);
     } catch (RuntimeException e) {
       System.out.println("could not parse <" + expr + ">: " + e.getMessage());
-      return;
+      return e.getMessage();
     }
     fail();
+    return null;
   }
 
   private void testValidationError(String expr) {
@@ -334,6 +341,17 @@ public class TestParser {
     testParsingError("LEN(\"3\")  +  ");
     testParsingError("LEN (\"3\")  +  1");
     testParsingError("LEN\"3\")  +  1");
+  }
+  
+  @Test
+  public void testSpecialErrors() {
+    String errMsg = testParsingError("EVAL(GET_SERVICE_BY_ID(EVAL($0)),$1)==EVAL($2)");
+    System.out.println(errMsg);
+    assertTrue(errMsg.contains("Workflow") && errMsg.contains("Xyna Property") && errMsg.contains("function"));
+    errMsg = testParsingError("EVAL(GET_SERVER(EVAL($0)),$1)==EVAL($2)");
+    System.out.println(errMsg);
+    errMsg = testParsingError("EVAL((GET(");
+    System.out.println(errMsg);
   }
   
   @Test
@@ -477,7 +495,7 @@ public class TestParser {
     assertResultOfExpression("1.0e834==1.0000000000000000e834", true);
     assertResultOfExpression("1.00e834==1.0000000000000000e834", true);
     assertResultOfExpression("1.000e834==1.0000000000000000e834", true);
-    assertResultOfExpression("1.0000e834==1.0000000000000000e834", true);
+    assertResultOfExpression("100*1.0000e832==1.0000000000000000e834", true);
   }
   
 }

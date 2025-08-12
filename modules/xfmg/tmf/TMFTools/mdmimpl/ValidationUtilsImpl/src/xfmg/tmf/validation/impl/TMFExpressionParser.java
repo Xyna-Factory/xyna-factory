@@ -135,7 +135,10 @@ public class TMFExpressionParser {
           idx += len;
           c = expr.charAt(idx);
           if (c != '(') {
-            throw new RuntimeException("Expected opening parenthesis at index " + idx + ": " + expr);
+            throw new RuntimeException("Expected opening parenthesis at index " + idx + ": <<" + expr + 
+                                       ">>. A function called \"" + f.getName()+ "\" is known, but no other "
+                                           + "function with the same prefix. Possible Causes: Typo, Workflow "
+                                           + "function missing (wrong signature, wrong Xyna Property/Path)");
           }
           c = expr.charAt(++idx);
           List<SyntaxTreeNode> args = new ArrayList<>();
@@ -178,7 +181,8 @@ public class TMFExpressionParser {
       }
     }
     if (n == null) {
-      throw new RuntimeException("Unexpected character " + c + " at index " + idx + ": " + expr);
+      throw new RuntimeException("Unexpected character " + c + " at index " + idx + ": <<" + expr + ">>. No function "
+          + "is known that starts with <<" + expr.substring(idx).substring(0, Math.min(5, expr.length() - idx)) + ">>.");
     }
 
     if (!parseInfix) {
