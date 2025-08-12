@@ -32,6 +32,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,20 +74,26 @@ public class QueryGenerator {
   
   private static final String CAST_MARKER_START = "#" + Functions.CAST_FUNCTION_NAME + "(";
   private static final String CAST_MARKER_END = ")";
+  public final Function<String, String> escape;
+  
+  
+  public QueryGenerator() {
+    this(Function.identity());
+  }
+  
 
-  
-  
-  
-  
+  public QueryGenerator(Function<String, String> escape) {
+    this.escape = escape;
+  }
 
   public QueryPiplineElement<?, ?> parse(XMOMStorableStructureInformation info, List<String> selectedUnresolvedColumns, IFormula condition,
                                          QueryParameter queryParameter, boolean forUpdate, Parameter paras, PersistenceAccessContext context) {
-    FormulaParsingResult fpr = PersistenceExpressionVisitors.parseFormula(condition, info, paras);
+    FormulaParsingResult fpr = PersistenceExpressionVisitors.parseFormula(condition, info, paras, this);
     return build(info, selectedUnresolvedColumns, fpr, queryParameter, forUpdate, paras, context);
   }
   
   public QueryPiplineElement<?, ?> count(XMOMStorableStructureInformation info, IFormula condition, QueryParameter queryParameter, Parameter paras , PersistenceAccessContext context) {
-    FormulaParsingResult fpr = PersistenceExpressionVisitors.parseFormula(condition, info, paras);
+    FormulaParsingResult fpr = PersistenceExpressionVisitors.parseFormula(condition, info, paras, this);
     
     List<QualifiedStorableColumnInformation> conditionQueryColumns = new ArrayList<QualifiedStorableColumnInformation>();
     conditionQueryColumns.addAll(fpr.getColumnsFromConditions());
@@ -161,7 +168,7 @@ public class QueryGenerator {
       
       DataQueryPiplineElement dataQuery = new DataQueryPiplineElement(buildDataQuery(queryRoot, selectedColumns, aliasDictionary),
                                                                       buildReaderFromQueryTree(queryRoot, selectedColumns, aliasDictionary),
-                                                                      info.getColInfoByVarType(VarType.PK));
+                                                                      info.getColInfoByVarType(VarType.PK), escape);
       dataQuery.rootTableName = info.getTableName();
       dataQuery.setAliasDictionary(aliasDictionary);
       dataQuery.setSelectedColumns(selectedColumns);
@@ -174,7 +181,7 @@ public class QueryGenerator {
       StringBuilder queryBuilder = new StringBuilder();
       queryBuilder.append(buildSelection(queryRoot, selectedColumns, aliasDictionary));
       queryBuilder.append(" FROM ")
-                  .append(queryRoot.localInfo.getTableName());
+                  .append(escape.apply(queryRoot.localInfo.getTableName()));
       queryBuilder.append(buildJoinedTable(queryRoot, selectedColumns, aliasDictionary));
       
       queryBuilder.append(fpr.getSqlString(aliasDictionary));
@@ -344,10 +351,13 @@ public class QueryGenerator {
           queryBuilder.append(",");
         }
         queryBuilder.append(" ");
+        String escColumnName = escape.apply(orderBy.getColumn().getColumnName());
         if (dictionary == null) {
-          queryBuilder.append(orderBy.getColumn().getParentStorableInfo().getTableName()).append(".").append(orderBy.getColumn().getColumnName());
+          String escTableName = escape.apply(orderBy.getColumn().getParentStorableInfo().getTableName());
+          queryBuilder.append(escTableName).append(".").append(escColumnName);
         } else {
-          queryBuilder.append(dictionary.getTableAlias(orderBy.getAccessPath())).append(".").append(orderBy.getColumn().getColumnName());
+          String escTableName = escape.apply(dictionary.getTableAlias(orderBy.getAccessPath()));
+          queryBuilder.append(escTableName).append(".").append(escColumnName);
         }
         if (sc.isReverse()) {
           queryBuilder.append(" DESC");
@@ -487,12 +497,13 @@ public class QueryGenerator {
       if (isJoinedReachable(queryTreeNode, column)) {
         String table = dictionary.getTableAlias(column.getAccessPath());
         if (table == null) {
-          build.append(column.getColumn().getParentStorableInfo().getTableName());
+          String escTableName = escape.apply(column.getColumn().getParentStorableInfo().getTableName());
+          build.append(escTableName);
         } else {
-          build.append(table);
+          build.append(escape.apply(table));
         }
-        build.append('.')
-             .append(column.getColumn().getColumnName());
+        String escColName = escape.apply(column.getColumn().getColumnName());
+        build.append('.').append(escColName);
       } else {
         if (column.getColumn().getType() == VarType.LIST_IDX) {
           build.append("-1");
@@ -533,7 +544,7 @@ public class QueryGenerator {
   }
   
   
-  private static String buildJoinCriterion(QueryTreeNode node, boolean useInnerJoinForCurrentNode, AliasDictionary dictionary) {
+  private String buildJoinCriterion(QueryTreeNode node, boolean useInnerJoinForCurrentNode, AliasDictionary dictionary) {
     StringBuilder build = new StringBuilder();
     for (int i = 0; i < node.accessPath.size() - 1; i++) {
       QualifiedStorableColumnInformation joinColumn = 
@@ -544,7 +555,7 @@ public class QueryGenerator {
     return build.toString();
   }
   
-  private static String buildJoinCriterionRecursivly(QueryTreeNode node, boolean useInnerJoinForCurrentNode, AliasDictionary dictionary) {
+  private String buildJoinCriterionRecursivly(QueryTreeNode node, boolean useInnerJoinForCurrentNode, AliasDictionary dictionary) {
     StringBuilder build = new StringBuilder();
     if (node.accessPath.size() > 0) {
       build.append(buildJoinCriterion(node.accessPath.get(node.accessPath.size() - 1), node.accessPath.subList(0, node.accessPath.size() - 1) , useInnerJoinForCurrentNode, dictionary));
@@ -558,12 +569,12 @@ public class QueryGenerator {
   }
 
   
-  private static String buildJoinCriterion(QualifiedStorableColumnInformation datatypeColumnToJoin, boolean useInnerJoin, AliasDictionary dictionary) {
+  private String buildJoinCriterion(QualifiedStorableColumnInformation datatypeColumnToJoin, boolean useInnerJoin, AliasDictionary dictionary) {
     return buildJoinCriterion(datatypeColumnToJoin.getColumn(), datatypeColumnToJoin.getAccessPath(), useInnerJoin, dictionary);
   }
   
   
-  private static String buildJoinCriterion(StorableColumnInformation column, List<StorableColumnInformation> accessPath, boolean useInnerJoin, AliasDictionary dictionary) {
+  private String buildJoinCriterion(StorableColumnInformation column, List<StorableColumnInformation> accessPath, boolean useInnerJoin, AliasDictionary dictionary) {
     String ownTable = null;
     String parentTable = null;
     if (dictionary != null) {
@@ -580,38 +591,38 @@ public class QueryGenerator {
       build.append(" LEFT");
     }
     build.append(" JOIN ")
-      .append(column.getStorableVariableInformation().getTableName());
+      .append(escape.apply(column.getStorableVariableInformation().getTableName()));
     if (ownTable != null) {
       build.append(" ")
-           .append(ownTable);
+           .append(escape.apply(ownTable));
     }
     build.append(" ON ");
     if (parentTable == null) {
-      build.append(column.getParentStorableInfo().getTableName());
+      build.append(escape.apply(column.getParentStorableInfo().getTableName()));
     } else {
-      build.append(parentTable);
+      build.append(escape.apply(parentTable));
     }
     build.append('.');
     if (column.getStorableVariableType() == StorableVariableType.EXPANSION) {
-      build.append(column.getParentStorableInfo().getPrimaryKeyName())
+      build.append(escape.apply(column.getParentStorableInfo().getPrimaryKeyName()))
            .append(" = ");
       if (ownTable == null) {
-        build.append(column.getStorableVariableInformation().getTableName());
+        build.append(escape.apply(column.getStorableVariableInformation().getTableName()));
       } else {
-        build.append(ownTable);
+        build.append(escape.apply(ownTable));
       }
       build.append('.');
       StorableColumnInformation parentFk = column.getStorableVariableInformation().getColInfoByVarType(VarType.EXPANSION_PARENT_FK);
       if (parentFk == null) {
         parentFk = column.getStorableVariableInformation().getColInfoByVarType(VarType.UTILLIST_PARENT_FK);
       }
-      build.append(parentFk.getColumnName());
+      build.append(escape.apply(parentFk.getColumnName()));
     } else {
       build.append(column.getCorrespondingReferenceIdColumn().getColumnName()).append(" = ");
       if (ownTable == null) {
-        build.append(column.getStorableVariableInformation().getTableName());
+        build.append(escape.apply(column.getStorableVariableInformation().getTableName()));
       } else {
-        build.append(ownTable);
+        build.append(escape.apply(ownTable));
       }
       String refColName;
       if (column.getCorrespondingReferencedIdColumn() != null) {
@@ -620,8 +631,7 @@ public class QueryGenerator {
         refColName = column.getStorableVariableInformation().getPrimaryKeyName();
       }
       
-      build.append('.')
-           .append(refColName);
+      build.append('.').append(escape.apply(refColName));
     }
     return build.toString();
   }
@@ -683,7 +693,7 @@ public class QueryGenerator {
         for (StorableColumnInformation ccc : orderbb.accessPath) {
           sb.append(ccc.getParentStorableInfo().getTableName()).append(".");
         }
-        sb.append(orderbb.getColumn().getParentStorableInfo().getTableName()).append(".");
+        sb.append(escape.apply(orderbb.getColumn().getParentStorableInfo().getTableName())).append(".");
         queryBuilder.append(dictionary.getOrCreateColumnAlias(orderbb)).append(" DESC"); //damit das rootelement am ende kommt (hat als listen-index überall NULL)
         if (orderByIterator.hasNext()) {
           queryBuilder.append(", ");
@@ -747,9 +757,9 @@ public class QueryGenerator {
     queryBuilder.append(buildSelection(currentNode, columns, dictionary));
     queryBuilder.append(" FROM ");
     if (currentNode.accessPath.size() <= 0) {
-      queryBuilder.append(currentNode.localInfo.getTableName());
+      queryBuilder.append(escape.apply(currentNode.localInfo.getTableName()));
     } else {
-      queryBuilder.append(currentNode.accessPath.get(0).getParentStorableInfo().getTableName());
+      queryBuilder.append(escape.apply(currentNode.accessPath.get(0).getParentStorableInfo().getTableName()));
     }
     queryBuilder.append(buildJoinCriterion(currentNode, inner, dictionary));
     for (QueryTreeNode unionChild : currentNode.unionChildren) {
@@ -792,12 +802,14 @@ public class QueryGenerator {
         }
       }
     }
-    queryBuilder.append(rootInfo.getTableName()).append(".").append(rootInfo.getPrimaryKeyName());
+    String escTableName = escape.apply(rootInfo.getTableName());
+    String escPrimaryKey = escape.apply(rootInfo.getPrimaryKeyName());
+    queryBuilder.append(escTableName).append(".").append(escPrimaryKey);
     if (count &&
         queryParameter.getMaxObjects() <= 0) {
       queryBuilder.append(")");   
     }
-    queryBuilder.append(" FROM ").append(rootInfo.getTableName());
+    queryBuilder.append(" FROM ").append(escTableName);
     List<QualifiedStorableColumnInformation> completeJoinPaths = new ArrayList<QualifiedStorableColumnInformation>(); // no Set to preserve traversal order
     for (QualifiedStorableColumnInformation column : columnsWithConditions) {
       for (StorableColumnInformation pathPart : column.getAccessPath()) {
@@ -1281,9 +1293,9 @@ public class QueryGenerator {
         queryBuilder.append(" AND ");
       }
       String columnName = info.getColInfoByPersistenceType(PersistenceTypeInformation.CURRENTVERSION_FLAG).getColumnName();
-      queryBuilder.append(info.getTableName())
+      queryBuilder.append(escape.apply(info.getTableName()))
                   .append(".")
-                  .append(columnName)
+                  .append(escape.apply(columnName))
                   .append(" = ?");
       params.add(true);
     }
@@ -1473,31 +1485,36 @@ public class QueryGenerator {
     
   }
   
+
   private static String PQC /* possibly qualified column - regexp pattern */ = "[a-zA-Z0-9_]+(\\.[a-zA-Z0-9_]+)?";
   public static String PLACE_FOR_WHERE_PATTERN = "\\s+FROM\\s+"+PQC+"(((\\s+(LEFT|RIGHT))?\\s+((INNER|OUTER)\\s+)?)?\\s*JOIN\\s+"+PQC+"(\\s+[a-zA-Z0-9_]+)?\\s+ON\\s+"+PQC+"\\s*=\\s*"+PQC+")*";
   
   static class DataQueryPiplineElement<P, T>  extends QueryPiplineElement<P, T> {
+    
+    private final Function<String, String> escape;
 
     private static Pattern placeForWhere = 
       Pattern.compile(PLACE_FOR_WHERE_PATTERN, Pattern.CASE_INSENSITIVE);
     
     private final StorableColumnInformation rootPk;
     
-    DataQueryPiplineElement(String sqlString, ResultSetReader<T> reader, StorableColumnInformation rootPk) {
-      this(sqlString, reader, new Parameter(), rootPk);
+    DataQueryPiplineElement(String sqlString, ResultSetReader<T> reader, StorableColumnInformation rootPk, Function<String, String> escape) {
+      this(sqlString, reader, new Parameter(), rootPk, escape);
     }
     
-    DataQueryPiplineElement(String sqlString, ResultSetReader<T> reader,  Parameter params, StorableColumnInformation rootPk) {
+    DataQueryPiplineElement(String sqlString, ResultSetReader<T> reader,  Parameter params, StorableColumnInformation rootPk, Function<String, String> escapeString) {
       super(sqlString, reader, -1, params);
       this.rootPk = rootPk;
+      this.escape = escapeString;
     }
     
 
     @Override
     protected void prepare(Collection<P> previousResult) {
       StringBuilder conditionBuilder = new StringBuilder();
-      conditionBuilder.append(" WHERE ").append(rootPk.getParentStorableInfo().getTableName()).append(".")
-                      .append(rootPk.getColumnName());
+      String escTableName = escape.apply(rootPk.getParentStorableInfo().getTableName());
+      String escColName = escape.apply(rootPk.getColumnName());
+      conditionBuilder.append(" WHERE ").append(escTableName).append(".").append(escColName);
       if (previousResult.size() > 1) {
         conditionBuilder.append(" IN (");
         Iterator<P> previousResultIterator = previousResult.iterator();
@@ -1710,6 +1727,4 @@ public class QueryGenerator {
     }
     
   }
-  
-  
 }
