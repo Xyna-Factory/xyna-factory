@@ -51,5 +51,13 @@
       <FqName>xact.netconf.datatypes.NetConfEvent</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.netconf.datatypes.Status</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.netconf.services.NotificationReceiverServiceGroup</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
   </XMOMEntries>
 </Application>
