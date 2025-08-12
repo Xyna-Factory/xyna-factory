@@ -17,6 +17,7 @@
  */
 package com.gip.xyna.xnwh.persistence.mysql;
 
+import com.gip.xyna.xfmg.xods.configuration.XynaProperty;
 import com.gip.xyna.xnwh.persistence.PreparedQuery;
 import com.gip.xyna.xnwh.persistence.Query;
 import com.gip.xyna.xnwh.persistence.ResultSetReader;
@@ -29,7 +30,11 @@ public class MySQLPreparedQuery<T> implements PreparedQuery<T> {
   public MySQLPreparedQuery(Query<T> query) {
     this.query = query;
     String existingTableName = query.getTable();
-    this.query.modifyTargetTable(existingTableName.toLowerCase());
+    if(XynaProperty.QUERY_ESCAPE.get()) {
+      this.query.modifyTargetTable(existingTableName, "`");
+    } else {
+      this.query.modifyTargetTable(existingTableName.toLowerCase());
+    }
   }
   
   public ResultSetReader<? extends T> getReader() {

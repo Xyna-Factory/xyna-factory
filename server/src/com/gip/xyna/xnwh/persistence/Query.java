@@ -73,14 +73,18 @@ public class Query<E> {
 
 
   public void modifyTargetTable(String newTableName) {
+    modifyTargetTable(newTableName, "");
+  }
+
+  public void modifyTargetTable(String newTableName, String escape) {
     newTableName = newTableName.toLowerCase();
-    this.sqlString = changeTableNameInSqlString(sqlString, newTableName, table);
+    this.sqlString = changeTableNameInSqlString(sqlString, newTableName, table, escape);
     this.table = newTableName;
   }
 
-
-  private static String changeTableNameInSqlString(String sqlString, String newTableName, String oldTableName) {
-    Pattern replacementPattern = Pattern.compile("^.*\\s+from\\s+(" + oldTableName + ")(\\s+.*)?$", Pattern.CASE_INSENSITIVE);
+  private static String changeTableNameInSqlString(String sqlString, String newTableName, String oldTableName, String escape) {
+    String table = escape.isEmpty() ? "(" + oldTableName + ")" : escape + "?(" + oldTableName + ")" + escape + "?";
+    Pattern replacementPattern = Pattern.compile("^.*\\s+from\\s+" + table + "(\\s+.*)?$", Pattern.CASE_INSENSITIVE);
     Matcher m = replacementPattern.matcher(sqlString);
     final int groupToReplace = 1;
     if (!m.find()) {
