@@ -23,7 +23,6 @@ import xact.netconf.services.NotificationReceiverServiceGroup;
 import xact.netconf.services.NotificationReceiverServiceGroupSuperProxy;
 
 
-
 public class NotificationReceiverServiceGroupInstanceOperationImpl extends NotificationReceiverServiceGroupSuperProxy {
 
   private static final long serialVersionUID = 1L;

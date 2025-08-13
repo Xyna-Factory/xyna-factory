@@ -32,12 +32,10 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 
 import base.Text;
 import base.math.IntegerNumber;
-//import xact.connection.Response;
 import xact.connection.Response;
 import xact.netconf.datatypes.Status;
 import xact.netconf.services.NotificationReceiverServiceGroupServiceOperation;
 import xact.templates.Document;
-
 
 
 public class NotificationReceiverServiceGroupServiceOperationImpl implements ExtendedDeploymentTask, NotificationReceiverServiceGroupServiceOperation {
@@ -47,14 +45,12 @@ public class NotificationReceiverServiceGroupServiceOperationImpl implements Ext
 
 
   public void onDeployment() throws XynaException {
-    // TODO do something on deployment, if required
     // This is executed again on each classloader-reload, that is each
     // time a dependent object is redeployed, for example a type of an input parameter.
   }
 
 
   public void onUndeployment() throws XynaException {
-    // TODO do something on undeployment, if required
     // This is executed again on each classloader-unload, that is each
     // time a dependent object is redeployed, for example a type of an input parameter.
   }
