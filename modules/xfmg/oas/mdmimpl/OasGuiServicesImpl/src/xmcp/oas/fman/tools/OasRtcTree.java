@@ -33,7 +33,7 @@ public class OasRtcTree {
   
   
   public OasRtcTree(GeneratedOasApiType goat, List<ImplementedOasApiType> implList) {
-    Set<RtcData> set = tools.getAllRtcsWhichReferenceRtcRecursiveLimited(goat.getRtc(), 1);
+    Set<RtcData> set = tools.getAllRtcsWhichReferenceRtcDirectly(goat.getRtc());
     for (RtcData rtc : set) {
       subtrees.add(new OasRtcSubtree(rtc));
     }

@@ -20,6 +20,7 @@
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
   <Libraries>OasGuiServicesImpl.jar</Libraries>
+  <SharedLibraries>ZetaTools</SharedLibraries>
   <Service Label="Oas Gui Services" TypeName="OasGuiServices">
     <Operation IsStatic="true" Label="Create Workspace Input Download Data" Name="createWorkspaceInputDownloadData">
       <Input/>

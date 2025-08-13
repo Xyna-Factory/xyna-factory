@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.gip.xyna.XynaFactory;
@@ -37,11 +36,6 @@ import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeDependencyContext;
 
 
 public class RtcTools {
-
-  public static enum RecursiveDepthMode {
-    LIMITED, UNLIMITED
-  }
-  
   
   public List<RtcData> getAllApps() {
     List<RtcData> ret = new ArrayList<>();
@@ -88,67 +82,34 @@ public class RtcTools {
   }
   
   
-  public void getAllRtcsWhichReferenceRtcRecursive(RtcData rtc, Set<RtcData> set) {
-    getAllRtcsWhichReferenceRtcRecursiveImpl(rtc, set, -1, 0, RecursiveDepthMode.UNLIMITED);
-  }
-  
-  
-  public Set<RtcData> getAllRtcsWhichReferenceRtcRecursive(RtcData rtc) {
+  public Set<RtcData> getAllRtcsWhichReferenceRtcDirectly(RtcData rtc) {
     Set<RtcData> ret = new HashSet<>();
-    getAllRtcsWhichReferenceRtcRecursiveImpl(rtc, ret, -1, 0, RecursiveDepthMode.UNLIMITED);
-    return ret;
-  }
-    
-    
-  public Set<RtcData> getAllRtcsWhichReferenceRtcRecursiveLimited(RtcData rtc, int maxDepth) {
-    Set<RtcData> ret = new HashSet<>();
-    getAllRtcsWhichReferenceRtcRecursiveImpl(rtc, ret, maxDepth, 0, RecursiveDepthMode.LIMITED);
-    return ret;
-  }
-  
-  
-  private void getAllRtcsWhichReferenceRtcRecursiveImpl(RtcData rtc, Set<RtcData> ret, int maxDepth,
-                                                        int depth, RecursiveDepthMode mode) {
-    RuntimeContextDependencyManagement rtcDependencyManagement =
-        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
-    Map<RuntimeDependencyContext, Collection<RuntimeDependencyContext>> map = rtcDependencyManagement.getAllDependencies();
-    getAllRtcsWhichReferenceRtcRecursiveStep(rtc, ret, maxDepth, depth, mode, map);
-  }
-  
-  
-  private void getAllRtcsWhichReferenceRtcRecursiveStep(RtcData rtc, Set<RtcData> ret, int maxDepth,
-                                                        int depth, RecursiveDepthMode mode,
-                                                        Map<RuntimeDependencyContext,
-                                                            Collection<RuntimeDependencyContext>> dependencies) {
-    if (ret.contains(rtc)) { return; }
-    if (mode == RecursiveDepthMode.UNLIMITED) {
-      if (depth > 0) {
-        ret.add(rtc);
-      }
-    } else {
-      if (depth > maxDepth) {
-        return;
-      } else if (depth == maxDepth) {
-        ret.add(rtc);
-      }
-    }
     try {
-      RuntimeContext runtimeContext = rtc.getRuntimeContext();
-      List<RtcData> matched = new ArrayList<>();
-      for (Map.Entry<RuntimeDependencyContext, Collection<RuntimeDependencyContext>> entry : dependencies.entrySet()) {
-        for (RuntimeDependencyContext dep : entry.getValue()) {
-          RuntimeContext tmpRtc = dep.asCorrespondingRuntimeContext();
-          if (tmpRtc.equals(runtimeContext)) {
-            RtcData refRtc = new RtcData(entry.getKey().asCorrespondingRuntimeContext());
-            matched.add(refRtc);
-          }
-        }
+      RuntimeContextDependencyManagement rtcDependencyManagement =
+        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
+      
+      RuntimeDependencyContext rdc = RuntimeContextDependencyManagement.asRuntimeDependencyContext(rtc.getRuntimeContext());
+      Collection<RuntimeDependencyContext> deps = rtcDependencyManagement.getParentRuntimeContexts(rdc);
+      for (RuntimeDependencyContext dep : deps) {
+        RtcData refRtc = new RtcData(dep.asCorrespondingRuntimeContext());
+        ret.add(refRtc);
       }
-      for (RtcData refRtc : matched) {
-        getAllRtcsWhichReferenceRtcRecursiveImpl(refRtc, ret, maxDepth, depth + 1, mode);
+    } catch (Exception e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
+    return ret;
+  }
+  
+  
+  public void getAllRtcsWhichReferenceRtcRecursive(RtcData rtc, Set<RtcData> ret) {
+    try {
+      RuntimeContextDependencyManagement rtcDependencyManagement =
+        XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
+      Set<Long> parentRevs = new HashSet<>();
+      rtcDependencyManagement.getParentRevisionsRecursivly(rtc.getRevision(), parentRevs);
+      for (Long rev : parentRevs) {
+        ret.add(new RtcData(rev));
       }
-    } catch (RuntimeException e) {
-      throw e;
     } catch (Exception e) {
       throw new RuntimeException(e.getMessage(), e);
     }

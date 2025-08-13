@@ -19,14 +19,13 @@
 package xmcp.oas.fman.codedservice;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import xmcp.oas.fman.datatypes.OasApiDatatypeInfo;
-import xmcp.oas.fman.tablehandling.OasApiDatatypeInfoComparator;
 import xmcp.oas.fman.tablehandling.OasEndpointsFilterData;
+import xmcp.oas.fman.tablehandling.SortTool;
 import xmcp.oas.fman.tools.GeneratedOasApiType;
 import xmcp.oas.fman.tools.ImplementedOasApiType;
 import xmcp.oas.fman.tools.OasApiType.OasApiTypeCategory;
@@ -53,7 +52,7 @@ public class CSGetOasApiEndpoints {
       for (RtcData rtc : rtclist) {
         handleRtc(ret, rtc, filter);
       }
-      Collections.sort(ret, new OasApiDatatypeInfoComparator(info));
+      new SortTool().sort(ret, info);
       return ret;
     } catch (RuntimeException e) {
       _logger.error(e.getMessage(), e);
