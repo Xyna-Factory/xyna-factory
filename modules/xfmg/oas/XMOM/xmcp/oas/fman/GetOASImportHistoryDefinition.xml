@@ -21,10 +21,6 @@
     <Output>
       <Data ID="14" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition14"/>
     </Output>
-    <ServiceReference ID="8135" Label="Set Runtime Context" ReferenceName="SetRuntimeContext" ReferencePath="xmcp.oas.fman">
-      <Source RefID="8134"/>
-      <Target RefID="8134"/>
-    </ServiceReference>
     <ServiceReference ID="8471" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="8470"/>
       <Target RefID="8470"/>
@@ -38,69 +34,21 @@
         <Target RefID="8473"/>
       </Receive>
     </Function>
-    <Function ID="8134" Label="Set Runtime Context">
-      <Source RefID="8135"/>
-      <Source RefID="8473"/>
-      <Target RefID="8135"/>
-      <Target RefID="8137"/>
-      <Target RefID="8138"/>
-      <Target RefID="8139"/>
-      <Invoke Operation="SetRuntimeContext" ServiceID="8135">
-        <Source RefID="8473">
-          <Meta>
-            <LinkType>UserConnected</LinkType>
-          </Meta>
-        </Source>
-      </Invoke>
-      <Receive ServiceID="8135">
-        <Target RefID="8137"/>
-        <Target RefID="8138"/>
-        <Target RefID="8139"/>
-      </Receive>
-    </Function>
     <Mappings ID="7907" Label="Details Workflow">
       <Input>
-        <Data ID="7924" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow7924">
+        <Data ID="15878" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext15878">
           <Source RefID="7907"/>
         </Data>
-        <Source RefID="8138"/>
+        <Source RefID="8473"/>
       </Input>
       <Output>
         <Data ID="7909" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow7909"/>
         <Target RefID="7910"/>
       </Output>
-      <Mapping>%1%=%0%</Mapping>
       <Mapping>%1%.fQN="xmcp.oas.fman.GetOASImportDetailsDefinition"</Mapping>
-    </Mappings>
-    <Mappings ID="14122" Label="Mapping">
-      <Input>
-        <Data ID="14342" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow14342">
-          <Source RefID="14122"/>
-        </Data>
-        <Source RefID="8138">
-          <Meta>
-            <LinkType>UserConnected</LinkType>
-          </Meta>
-        </Source>
-      </Input>
-      <Output>
-        <Data ID="13901" Label="Open Dialog Button Definition" ReferenceName="OpenDialogButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDialogButtonDefinition13901">
-          <Source RefID="2265"/>
-        </Data>
-        <Target RefID="14196"/>
-      </Output>
-      <Mapping>%1%.dialogDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%0%</Mapping>
-      <Mapping>%1%.dialogDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.oas.fman.DefineGenerationDialog"</Mapping>
-      <Mapping>%1%.label="Generate and import OAS Applications"</Mapping>
-      <Mapping>%1%.dataPath="%%"</Mapping>
+      <Mapping>%1%.rTC=%0%</Mapping>
     </Mappings>
     <Mappings ID="2265" Label="Table Panel">
-      <Input>
-        <Data ID="7089" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition7089">
-          <Source RefID="2265"/>
-        </Data>
-        <Source RefID="8139"/>
-      </Input>
       <Input>
         <Data ID="2490" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow2490">
           <Source RefID="2265"/>
@@ -112,10 +60,10 @@
         </Source>
       </Input>
       <Input>
-        <Data ID="14703" Label="Open Dialog Button Definition" ReferenceName="OpenDialogButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDialogButtonDefinition14703">
+        <Data ID="16108" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext16108">
           <Source RefID="2265"/>
         </Data>
-        <Source RefID="14196"/>
+        <Source RefID="8473"/>
       </Input>
       <Output>
         <Data ID="2274" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition2274">
@@ -123,42 +71,26 @@
         </Data>
         <Target RefID="2275"/>
       </Output>
-      <Mapping>%3%=%0%</Mapping>
-      <Mapping>%3%.dataPath="%%"</Mapping>
-      <Mapping>%3%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%1%</Mapping>
-      <Mapping>%3%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDialogButtonDefinition")=%2%</Mapping>
-      <Mapping>%3%.label="OAS Import History"</Mapping>
-      <Mapping>%3%.tableWorkflowFQN="xmcp.oas.fman.OASImportTableInfo"</Mapping>
-      <Mapping>%3%.triggerRefresh.eventId="oas_imp_hist_refresh"</Mapping>
+      <Mapping>%2%.dataPath="%%"</Mapping>
+      <Mapping>%2%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%0%</Mapping>
+      <Mapping>%2%.label="OAS Import History"</Mapping>
+      <Mapping>%2%.tableWorkflowFQN="xmcp.oas.fman.OASImportTableInfo"</Mapping>
+      <Mapping>%2%.triggerRefresh.eventId="oas_imp_hist_refresh"</Mapping>
+      <Mapping>%2%.tableWorkflowRTC=%1%</Mapping>
+      <Mapping>%2%.closable="true"</Mapping>
     </Mappings>
     <Data ID="2275" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition2275">
       <Source RefID="2265"/>
     </Data>
     <Data ID="7910" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow7910"/>
-    <Data ID="8137" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition8137">
-      <Source RefID="8134"/>
-    </Data>
-    <Data ID="8138" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow8138">
-      <Source RefID="8134"/>
-    </Data>
-    <Data ID="8139" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition8139">
-      <Source RefID="8134"/>
-    </Data>
     <Data ID="8473" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext8473">
       <Source RefID="8470"/>
-    </Data>
-    <Data ID="14196" Label="Open Dialog Button Definition" ReferenceName="OpenDialogButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDialogButtonDefinition14196">
-      <Source RefID="2265"/>
     </Data>
     <Assign ID="1">
       <Source RefID="2275"/>
       <Target RefID="14"/>
       <Copy>
-        <Source RefID="2275">
-          <Meta>
-            <LinkType>UserConnected</LinkType>
-          </Meta>
-        </Source>
+        <Source RefID="2275"/>
         <Target RefID="14"/>
       </Copy>
     </Assign>

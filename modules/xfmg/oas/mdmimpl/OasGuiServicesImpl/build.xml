@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,19 +23,17 @@
         <path location="${basedir}/../../../../.."/>
     </pathconvert>
     <property name="xmom.dir" value="${basedir}/../../XMOM" />
+
     <property name="application.dir" value="${basedir}/../../" />
 
-    <property name="project.name" value="ApplicationGenerationImpl" />
-    <property name="fqclassname" value="xfmg.oas.generation.ApplicationGeneration" />
-    <property name="mdm.xml.path" value="xfmg/oas/generation" />
-    <property name="mdm.xml.filename" value="ApplicationGeneration.xml" />
-    <property name="mdm.service.path" value="xfmg.oas.generation.ApplicationGeneration" />
-
-    <property name="cli.command.java.path" value="xfmg.oas.generation.cli" />
-    <property name="cli.command.path" value="xfmg/oas/generation.cli" />
+    <property name="project.name" value="OasGuiServicesImpl" />
+    <property name="fqclassname" value="xmcp.oas.fman.OasGuiServices" />
+    <property name="mdm.xml.path" value="xmcp/oas/fman" />
+    <property name="mdm.xml.filename" value="OasGuiServices.xml" />
+    <property name="mdm.service.path" value="xmcp.oas.fman.OasGuiServices" />
 
     <target name="prepareLibs" description="Prepare Libs">
-        <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/../../sharedlib/xyna-openapi">
+        <ant antfile="build.xml" target="build" inheritAll="false" dir="${root.dir}/modules/xmcp/zetaFramework/sharedlib/ZetaTools">
             <property name="target.dir" value="${basedir}/lib/xyna" />
         </ant>
     </target>
