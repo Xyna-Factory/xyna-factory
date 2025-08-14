@@ -52,6 +52,9 @@ public class Workflow extends XMOMGuiJson implements HasXoRepresentation {
   private Dataflow dataflow;
   private boolean saveState;
   private boolean readonly = false;
+
+  public static ThreadLocal<Boolean> isAudit = ThreadLocal.withInitial(() -> Boolean.FALSE);
+
   
   public Workflow(GenerationBaseObject gbo) {
     this(gbo, ObjectPart.all );
