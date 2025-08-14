@@ -22,7 +22,7 @@
   </Meta>
   <SharedLibraries>sshlibs</SharedLibraries>
   <SharedLibraries>promptextraction</SharedLibraries>
-  <SharedLibraries>NotificationReceiverSharedLib</SharedLibraries>
+  <SharedLibraries>netConfNotificationReceiverLib</SharedLibraries>
   <Libraries>NotificationReceiverServiceGroupImpl.jar</Libraries>
   <Service Label="NotificationReceiverServiceGroup" TypeName="NotificationReceiverServiceGroup">
     <Operation IsStatic="true" Label="containsSharedNetConfConnection" Name="containsSharedNetConfConnection">
