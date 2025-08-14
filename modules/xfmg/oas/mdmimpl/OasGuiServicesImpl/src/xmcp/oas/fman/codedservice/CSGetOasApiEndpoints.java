@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import xmcp.oas.fman.datatypes.OasApiDatatypeInfo;
 import xmcp.oas.fman.tablehandling.OasEndpointsFilterData;
 import xmcp.oas.fman.tablehandling.SortTool;
+import xmcp.oas.fman.tools.OasGuiContext;
 import xmcp.oas.fman.tools.GeneratedOasApiType;
 import xmcp.oas.fman.tools.ImplementedOasApiType;
 import xmcp.oas.fman.tools.OasApiType.OasApiTypeCategory;
@@ -46,11 +47,13 @@ public class CSGetOasApiEndpoints {
   
   public List<? extends OasApiDatatypeInfo> execute(TableInfo info) {
     try {
+      _logger.warn("###### starting get endpoints");
       List<OasApiDatatypeInfo> ret = new ArrayList<>();
       OasEndpointsFilterData filter = new OasEndpointsFilterData(info);
+      OasGuiContext context = new OasGuiContext();
       List<RtcData> rtclist = _tools.getAllOasBaseApps();
       for (RtcData rtc : rtclist) {
-        handleRtc(ret, rtc, filter);
+        handleRtc(context, ret, rtc, filter);
       }
       new SortTool().sort(ret, info);
       return ret;
@@ -64,25 +67,26 @@ public class CSGetOasApiEndpoints {
   }
  
   
-  private void handleRtc(List<OasApiDatatypeInfo> ret, RtcData rtc, OasEndpointsFilterData filter) {
+  private void handleRtc(OasGuiContext context, List<OasApiDatatypeInfo> ret, RtcData rtc, OasEndpointsFilterData filter) {
     List<GeneratedOasApiType> list = _tools.getAllGeneratedOasApiTypesInRefRtcs(rtc);
     if (list.size() < 1) { return; }
     for (GeneratedOasApiType goat : list) {
       if (!filter.matchesGeneratedRtcFilter(goat.getRtc().toString())) { continue; }
       if (!filter.matchesApiDatatypeFilter(goat.getFqName())) { continue; }
-      OperationGroup opgroup = new OperationGroup(goat);
-      handleGeneratedType(ret, opgroup, filter);
+      OperationGroup opgroup = new OperationGroup(goat, context);
+      handleGeneratedType(context, ret, opgroup, filter);
     }
   }
   
   
-  private void handleGeneratedType(List<OasApiDatatypeInfo> ret, OperationGroup genTypeOpGroup, OasEndpointsFilterData filter) {
+  private void handleGeneratedType(OasGuiContext context, List<OasApiDatatypeInfo> ret, OperationGroup genTypeOpGroup, 
+                                   OasEndpointsFilterData filter) {
     if (genTypeOpGroup.getOasApiTypecategory() != OasApiTypeCategory.GENERATED) { return; }
     String status = "";
     GeneratedOasApiType goat = new GeneratedOasApiType(genTypeOpGroup.getXmomType());
     List<ImplementedOasApiType> list = _tools.getAllImplementedOasApiTypesInRefRtcs(goat);
     if (list.size() > 1) {
-      handleMultipleImplementations(ret, genTypeOpGroup, goat, list, filter);
+      handleMultipleImplementations(context, ret, genTypeOpGroup, goat, list, filter);
       return;
     }
     OasApiDatatypeInfo.Builder builder = new OasApiDatatypeInfo.Builder();
@@ -92,7 +96,7 @@ public class CSGetOasApiEndpoints {
       status = OasGuiConstants.EndpointStatus.MISSING;
     } else if (list.size() == 1) {
       ImplementedOasApiType implType = list.get(0);
-      status = getCompletionStatus(genTypeOpGroup, implType);
+      status = getCompletionStatus(context, genTypeOpGroup, implType);
       builder.implementationDatatype(implType.getFqName());
       builder.implementationRtc(implType.getRtc().toString());
     }
@@ -106,8 +110,8 @@ public class CSGetOasApiEndpoints {
   }
   
   
-  private String getCompletionStatus(OperationGroup genTypeOpGroup, ImplementedOasApiType implType) {
-    OperationGroup opgroup = new OperationGroup(implType);
+  private String getCompletionStatus(OasGuiContext context, OperationGroup genTypeOpGroup, ImplementedOasApiType implType) {
+    OperationGroup opgroup = new OperationGroup(implType, context);
     if (opgroup.operationsMatch(genTypeOpGroup)) {
       return OasGuiConstants.EndpointStatus.COMPLETE;
     }
@@ -115,7 +119,7 @@ public class CSGetOasApiEndpoints {
   }
   
   
-  private void handleMultipleImplementations(List<OasApiDatatypeInfo> ret, OperationGroup genTypeOpGroup,
+  private void handleMultipleImplementations(OasGuiContext context, List<OasApiDatatypeInfo> ret, OperationGroup genTypeOpGroup,
                                              GeneratedOasApiType goat, List<ImplementedOasApiType> implList, 
                                              OasEndpointsFilterData filter) {
     String errorStatus = OasGuiConstants.EndpointStatus.ERROR;
@@ -127,7 +131,7 @@ public class CSGetOasApiEndpoints {
         throw new RuntimeException("Inconsistent data: Implemented oas type not found in rtc subtrees: " + item.getFqName());
       } else if (count == 1) {
         // implemented types are in distinct workspaces (including referenced run time contexts), no error
-        status = getCompletionStatus(genTypeOpGroup, item);
+        status = getCompletionStatus(context, genTypeOpGroup, item);
       }
       OasApiDatatypeInfo.Builder builder = new OasApiDatatypeInfo.Builder();
       builder.generatedRtc(genTypeOpGroup.getXmomType().getRtc().toString());

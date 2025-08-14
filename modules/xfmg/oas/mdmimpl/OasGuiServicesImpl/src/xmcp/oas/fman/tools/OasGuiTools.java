@@ -44,7 +44,6 @@ import com.gip.xyna.xnwh.selection.parsing.SelectionParser;
 
 
 public class OasGuiTools {
-
   
   public List<RtcData> getAllOasBaseApps() {
     List<RtcData> ret = new ArrayList<>();
@@ -79,7 +78,6 @@ public class OasGuiTools {
       srb.setMaxRows(-1);
       srb.setSelection(XMOMDatabaseEntryColumn.EXTENDEDBY.toString());
       srb.setFilterEntries(filters);
-  
       XynaMultiChannelPortal multiChannelPortal = (XynaMultiChannelPortal) XynaFactory.getInstance().
                                                                                        getXynaMultiChannelPortal();
       XMOMDatabaseSelect select = (XMOMDatabaseSelect) SelectionParser.generateSelectObjectFromSearchRequestBean(srb);
@@ -126,7 +124,6 @@ public class OasGuiTools {
       String path = fqname.substring(0, fqname.lastIndexOf("."));
       String typename = fqname.substring(fqname.lastIndexOf(".") + 1, fqname.length());
       long revision = xmom.getRtc().getRevision();
-      
       SearchRequestBean srb = new SearchRequestBean();
       srb.setArchiveIdentifier(ArchiveIdentifier.xmomcache);
       srb.setMaxRows(-1);
@@ -137,7 +134,6 @@ public class OasGuiTools {
       XMOMDatabase xmomDB = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getXMOMDatabase();
       XMOMDatabaseSearchResult searchResult = xmomDB.searchXMOMDatabase(List.of(select), -1, revision);
       List<XMOMDatabaseSearchResultEntry> results = searchResult.getResult();
-    
       for (XMOMDatabaseSearchResultEntry entry : results) {
         String op = entry.getSimplename();
         if (!op.contains(".")) { continue; }
@@ -150,6 +146,24 @@ public class OasGuiTools {
       throw new RuntimeException(e.getMessage(), e);
     }
     return ret;
+  }
+  
+  
+  public List<XMOMDatabaseSearchResultEntry> getOperationsOfRtc(RtcData rtc) {
+    try {
+      long revision = rtc.getRevision();
+      SearchRequestBean srb = new SearchRequestBean();
+      srb.setArchiveIdentifier(ArchiveIdentifier.xmomcache);
+      srb.setMaxRows(-1);
+      srb.setSelection(OasGuiConstants.OP_SEARCH_SELECT);
+      XMOMDatabaseSelect select = (XMOMDatabaseSelect) SelectionParser.generateSelectObjectFromSearchRequestBean(srb);
+      select.addDesiredResultTypes(XMOMDatabaseType.OPERATION);
+      XMOMDatabase xmomDB = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getXMOMDatabase();
+      XMOMDatabaseSearchResult searchResult = xmomDB.searchXMOMDatabase(List.of(select), -1, revision);
+      return searchResult.getResult();
+    } catch (Exception e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
   }
   
 }

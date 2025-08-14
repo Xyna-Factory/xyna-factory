@@ -22,16 +22,31 @@ package xmcp.oas.fman.tools;
 public class FqName {
 
   private final String fqn;
+  private final String path;
+  private final String typename;
+  
 
-  public FqName(String fqn) {
-    if (fqn == null) {
+  public FqName(String fqname) {
+    if (fqname == null) {
       throw new IllegalArgumentException("Fq-name is null.");
     }
-    this.fqn = fqn;
+    this.fqn = fqname.trim();
+    this.path = this.fqn.substring(0, this.fqn.lastIndexOf("."));
+    this.typename = this.fqn.substring(this.fqn.lastIndexOf(".") + 1, this.fqn.length());
   }
   
   public String getFqName() {
     return fqn;
+  }
+
+  
+  public String getPath() {
+    return path;
+  }
+
+  
+  public String getTypename() {
+    return typename;
   }
   
 }

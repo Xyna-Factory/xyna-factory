@@ -18,7 +18,12 @@
 
 package xmcp.oas.fman.tools;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+
+import com.gip.xyna.xfmg.xfctrl.xmomdatabase.search.XMOMDatabaseSearchResultEntry;
 
 import xmcp.oas.fman.tools.OasApiType.OasApiTypeCategory;
 
@@ -26,22 +31,26 @@ import xmcp.oas.fman.tools.OasApiType.OasApiTypeCategory;
 public class OperationGroup {
 
   private final XmomType xmom;
-  private final Set<String> operations;
+  private Set<String> operations = new HashSet<>();
+  private boolean operationsInitialized = false;
   private final OasApiTypeCategory oasApiTypecategory;
+  private Optional<OperationSearchCache> operationSearchCache = Optional.empty();
 
   
   public OperationGroup(XmomType xmom) {
-    this(xmom, OasApiTypeCategory.NONE);
+    this(xmom, OasApiTypeCategory.NONE, null);
   }
   
   
-  public OperationGroup(XmomType xmom, OasApiTypeCategory oasApiTypecategory) {
+  public OperationGroup(XmomType xmom, OasApiTypeCategory oasApiTypecategory, OasGuiContext context) {
     if (xmom == null) {
       throw new IllegalArgumentException("Xmom type is null.");
     }
     this.xmom = xmom;
-    this.operations = new OasGuiTools().getOperationsOfXmomType(xmom);
     this.oasApiTypecategory = oasApiTypecategory;
+    if (context != null) {
+      this.operationSearchCache = Optional.ofNullable(context.getOperationSearchCache());
+    }
   }
   
   
@@ -50,8 +59,8 @@ public class OperationGroup {
   }
   
   
-  public OperationGroup(OasApiType oat) {
-    this(oat.getXmomType(), oat.getCategory());
+  public OperationGroup(OasApiType oat, OasGuiContext context) {
+    this(oat.getXmomType(), oat.getCategory(), context);
   }
   
   
@@ -65,12 +74,43 @@ public class OperationGroup {
   }
 
 
-  public int getNumOperations() {
+  private int getNumOperations() {
     return operations.size();
   }
   
   
+  private void initOperations() {
+    if (operationSearchCache.isPresent()) {
+      initOperationsFromCache(operationSearchCache.get());
+    } else {
+      operations.addAll(new OasGuiTools().getOperationsOfXmomType(xmom));
+    }
+    operationsInitialized = true;
+  }
+  
+  
+  private void initOperationsFromCache(OperationSearchCache cache) {
+    cache.initForRtcIfEmpty(xmom.getRtc());
+    List<XMOMDatabaseSearchResultEntry> results = cache.getForRtcAndPath(xmom.getRtc(), xmom.getFqNameInstance().getPath());
+    String typename = xmom.getFqNameInstance().getTypename();
+    for (XMOMDatabaseSearchResultEntry entry : results) {
+      String op = entry.getSimplename();
+      if (!op.contains(".")) { continue; }
+      String prefix = op.substring(0, op.indexOf("."));
+      if (!prefix.equals(typename)) { continue; }
+      op = op.substring(op.lastIndexOf(".") + 1, op.length());
+      operations.add(op);
+    }
+  }
+  
+  
   public boolean operationsMatch(OperationGroup input) {
+    if (!input.operationsInitialized) {
+      input.initOperations();
+    }
+    if (!operationsInitialized) {
+      initOperations();
+    }
     if (input.getNumOperations() != getNumOperations()) { return false; }
     for (String val : operations) {
       if (!input.operations.contains(val)) {

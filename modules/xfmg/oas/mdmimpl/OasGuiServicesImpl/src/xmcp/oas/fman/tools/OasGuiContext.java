@@ -16,17 +16,16 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.oas.fman.tablehandling;
+package xmcp.oas.fman.tools;
 
 
-public class TableHandlingConstants {
+public class OasGuiContext {
 
-  public static class Paths {
-    public static final String GENERATED_RTC = "generatedRtc";
-    public static final String IMPLEMENTATION_RTC = "implementationRtc";
-    public static final String API_DATATYPE = "apiDatatype";
-    public static final String IMPLEMENTATION_DATATYPE = "implementationDatatype";
-    public static final String STATUS = "status";
+  private OperationSearchCache operationSearchCache = new OperationSearchCache();
+
+  
+  public OperationSearchCache getOperationSearchCache() {
+    return operationSearchCache;
   }
   
 }
