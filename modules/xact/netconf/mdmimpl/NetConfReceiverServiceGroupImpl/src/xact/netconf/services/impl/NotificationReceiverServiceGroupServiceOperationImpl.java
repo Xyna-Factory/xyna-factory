@@ -76,108 +76,109 @@ public class NotificationReceiverServiceGroupServiceOperationImpl implements Ext
 
 
   public Status containsRDHashfromDeviceID(Text Text_DeviceID) {
-    Status ReturnStatus = new Status.Builder().instance();
+    Status returnStatus = new Status.Builder().instance();
     try {
       boolean IsContained = NetConfNotificationReceiverSharedLib.containsRDHashfromRDID(Text_DeviceID.getText());
-      ReturnStatus.setValid(IsContained);
-      ReturnStatus.setStatus("ok");
+      returnStatus.setValid(IsContained);
+      returnStatus.setStatus("ok");
     } catch (Throwable t) {
-      ReturnStatus.setValid(false);
-      ReturnStatus.setStatus("containsRDHashfromDeviceID failed");
+      returnStatus.setValid(false);
+      returnStatus.setStatus("containsRDHashfromDeviceID failed");
     }
-    return ReturnStatus;
+    return returnStatus;
   }
 
 
   public Status containsRDHashfromDeviceIP(Text Text_DeviceIP) {
-    Status ReturnStatus = new Status.Builder().instance();
+    Status returnStatus = new Status.Builder().instance();
     try {
       boolean IsContained = NetConfNotificationReceiverSharedLib.containsRDHashfromRDIP(Text_DeviceIP.getText());
-      ReturnStatus.setValid(IsContained);
-      ReturnStatus.setStatus("ok");
+      returnStatus.setValid(IsContained);
+      returnStatus.setStatus("ok");
     } catch (Throwable t) {
-      ReturnStatus.setValid(false);
-      ReturnStatus.setStatus("containsRDHashfromDeviceID failed");
+      returnStatus.setValid(false);
+      returnStatus.setStatus("containsRDHashfromDeviceID failed");
     }
-    return ReturnStatus;
+    return returnStatus;
   }
 
 
   public Status containsSharedNetConfConnection(Text Text_RDIP) {
-    Status ReturnStatus = new Status.Builder().instance();
+    Status returnStatus = new Status.Builder().instance();
     try {
       boolean IsContained = NetConfNotificationReceiverSharedLib.containsSharedNetConfConnectionID(Text_RDIP.getText());
-      ReturnStatus.setValid(IsContained);
-      ReturnStatus.setStatus("ok");
+      returnStatus.setValid(IsContained);
+      returnStatus.setStatus("ok");
     } catch (Throwable t) {
-      ReturnStatus.setValid(false);
-      ReturnStatus.setStatus("containsSharedNetConfConnection failed");
+      returnStatus.setValid(false);
+      returnStatus.setStatus("containsSharedNetConfConnection failed");
     }
-    return ReturnStatus;
+    return returnStatus;
   }
 
 
   public Text getDeviceIDfromDeviceIP(Text Text_DeviceIP) {
-    Text ReturnDeviceID = new Text.Builder().instance();
+    Text returnDeviceID = new Text.Builder().instance();
     try {
-      ReturnDeviceID.setText(NetConfNotificationReceiverSharedLib.getDeviceIDfromDeviceIP(Text_DeviceIP.getText()));
+      returnDeviceID.setText(NetConfNotificationReceiverSharedLib.getDeviceIDfromDeviceIP(Text_DeviceIP.getText()));
     } catch (Throwable t) {
     }
-    return ReturnDeviceID;
+    return returnDeviceID;
   }
 
 
   public Text getDeviceIPfromDeviceID(Text Text_DeviceID) {
-    Text ReturnDeviceIP = new Text.Builder().instance();
+    Text returnDeviceIP = new Text.Builder().instance();
     try {
-      ReturnDeviceIP.setText(NetConfNotificationReceiverSharedLib.getDeviceIPfromDeviceID(Text_DeviceID.getText()));
+      returnDeviceIP.setText(NetConfNotificationReceiverSharedLib.getDeviceIPfromDeviceID(Text_DeviceID.getText()));
     } catch (Throwable t) {
     }
-    return ReturnDeviceIP;
+    return returnDeviceIP;
   }
 
 
   public Text getSharedNetConfConnectionID(Text Text_RDIP) {
-    Text ReturnConnectionID = new Text.Builder().instance();
+    Text returnConnectionID = new Text.Builder().instance();
     try {
-      ReturnConnectionID.setText(NetConfNotificationReceiverSharedLib.getSharedNetConfConnectionID(Text_RDIP.getText()));
+      returnConnectionID.setText(NetConfNotificationReceiverSharedLib.getSharedNetConfConnectionID(Text_RDIP.getText()));
     } catch (Throwable t) {
     }
-    return ReturnConnectionID;
+    return returnConnectionID;
   }
 
 
   public IntegerNumber getTotalNetConfConnections() {
-    IntegerNumber ReturnTotalNetConfConnections = new IntegerNumber.Builder().instance();
+    IntegerNumber returnTotalNetConfConnections = new IntegerNumber.Builder().instance();
     try {
-      ReturnTotalNetConfConnections.setValue(NetConfNotificationReceiverSharedLib.getTotalNetConfConnections());
+      returnTotalNetConfConnections.setValue(NetConfNotificationReceiverSharedLib.getTotalNetConfConnections());
     } catch (Throwable t) {
-      ReturnTotalNetConfConnections.setValue(0);
+      returnTotalNetConfConnections.setValue(0);
     }
-    return ReturnTotalNetConfConnections;
+    return returnTotalNetConfConnections;
   }
 
 
   public List<? extends Text> listSharedNetConfConnections() {
-    ArrayList<Text> ReturnConnectionList = new ArrayList<Text>();
+    ArrayList<Text> returnConnectionList = new ArrayList<Text>();
     try {
       List<String> ListConnections = NetConfNotificationReceiverSharedLib.listSharedNetConfConnection();
       for (Iterator<String> iter = ListConnections.iterator(); iter.hasNext();) {
         String element = iter.next();
         Text ConnectionTextElement = new Text.Builder().instance();
         ConnectionTextElement.setText(element);
-        ReturnConnectionList.add(ConnectionTextElement);
+        returnConnectionList.add(ConnectionTextElement);
       } ;
     } catch (Throwable t) {
     }
-    return ReturnConnectionList;
+    return returnConnectionList;
   }
 
 
-  public Container netConfOperation(Text Text_DeviceID, Document Document_NetConfOperation, Text Text_UniqueMessageUUID, IntegerNumber IntegerNumber_TimeOutInMillis) {
-    Response ReturnResponse = new Response();
-    Status ReturnStatus = new Status();
-    Container ReturnContainer = new Container();
+  public Container netConfOperation(Text Text_DeviceID, Document Document_NetConfOperation, Text Text_UniqueMessageUUID, 
+                                    IntegerNumber IntegerNumber_TimeOutInMillis) {
+    Response returnResponse = new Response();
+    Status returnStatus = new Status();
+    Container returnContainer = new Container();
     try {
       String DeviceID = Text_DeviceID.getText();
       String UniqueMessageUUID = Text_UniqueMessageUUID.getText();
@@ -195,42 +196,42 @@ public class NotificationReceiverServiceGroupServiceOperationImpl implements Ext
           ResponseReceived = true;
           InputQueueNetConfMessageElement Element = NetConfNotificationReceiverSharedLib.pollInputQueueNetConfMessageElement(UniqueMessageUUID);
           if (Element.isValid() & (Element.getRDID().contains(DeviceID))) {
-            ReturnStatus.setValid(true);
-            ReturnStatus.setStatus("ok");
-            ReturnResponse.setContent(Element.getNetConfMessage());
+            returnStatus.setValid(true);
+            returnStatus.setStatus("ok");
+            returnResponse.setContent(Element.getNetConfMessage());
           } else {
-            ReturnStatus.setValid(false);
-            ReturnStatus.setStatus("Response from DeviceID " + Element.getRDID() + " failed: " + Element.getMessageID());
-            ReturnResponse.setContent(Element.getNetConfMessage());
+            returnStatus.setValid(false);
+            returnStatus.setStatus("Response from DeviceID " + Element.getRDID() + " failed: " + Element.getMessageID());
+            returnResponse.setContent(Element.getNetConfMessage());
           }
         }
         MilliSecondsNow = System.currentTimeMillis();
       }
       if (!ResponseReceived) {
         NetConfNotificationReceiverSharedLib.TimeoutNetConfOperation(UniqueMessageUUID);
-        ReturnResponse.setContent("");
-        ReturnStatus.setValid(false);
-        ReturnStatus.setStatus("time out");
+        returnResponse.setContent("");
+        returnStatus.setValid(false);
+        returnStatus.setStatus("time out");
       }
     } catch (Throwable t) {
-      ReturnResponse.setContent("");
-      ReturnStatus.setValid(false);
-      ReturnStatus.setStatus("netConfOperation failed");
+      returnResponse.setContent("");
+      returnStatus.setValid(false);
+      returnStatus.setStatus("netConfOperation failed");
     }
-    ReturnContainer.add(ReturnResponse);
-    ReturnContainer.add(ReturnStatus);
-    return ReturnContainer;
+    returnContainer.add(returnResponse);
+    returnContainer.add(returnStatus);
+    return returnContainer;
   }
 
 
   public IntegerNumber sizeSharedNetConfConnections() {
-    IntegerNumber ReturnSizeSharedNetConfConnections = new IntegerNumber.Builder().instance();
+    IntegerNumber returnSizeSharedNetConfConnections = new IntegerNumber.Builder().instance();
     try {
-      ReturnSizeSharedNetConfConnections.setValue(NetConfNotificationReceiverSharedLib.sizeSharedNetConfConnectionID());
+      returnSizeSharedNetConfConnections.setValue(NetConfNotificationReceiverSharedLib.sizeSharedNetConfConnectionID());
     } catch (Throwable t) {
-      ReturnSizeSharedNetConfConnections.setValue(0);
+      returnSizeSharedNetConfConnections.setValue(0);
     }
-    return ReturnSizeSharedNetConfConnections;
+    return returnSizeSharedNetConfConnections;
   }
 
 }

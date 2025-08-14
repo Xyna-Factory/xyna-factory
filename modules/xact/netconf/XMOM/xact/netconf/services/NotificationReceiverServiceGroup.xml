@@ -33,7 +33,7 @@
         <Data ID="7" Label="Status" ReferenceName="Status" ReferencePath="xact.netconf.datatypes" VariableName="status7"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return NotificationReceiverServiceGroupImpl.containsSharedNetConfConnection(text6);</CodeSnippet>
+        <CodeSnippet Type="Java">return xact.netconf.services.NotificationReceiverServiceGroupImpl.containsSharedNetConfConnection(text6);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="getSharedNetConfConnectionID" Name="getSharedNetConfConnectionID">
@@ -44,7 +44,7 @@
         <Data ID="4" Label="ConnectionID" ReferenceName="Text" ReferencePath="base" VariableName="text4"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return NotificationReceiverServiceGroupImpl.getSharedNetConfConnectionID(text5);</CodeSnippet>
+        <CodeSnippet Type="Java">return xact.netconf.services.NotificationReceiverServiceGroupImpl.getSharedNetConfConnectionID(text5);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="getTotalNetConfConnections" Name="getTotalNetConfConnections">
@@ -53,7 +53,7 @@
         <Data ID="3" Label="TotalNetConfConnections" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber3"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return NotificationReceiverServiceGroupImpl.getTotalNetConfConnections();</CodeSnippet>
+        <CodeSnippet Type="Java">return xact.netconf.services.NotificationReceiverServiceGroupImpl.getTotalNetConfConnections();</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="listSharedNetConfConnections" Name="listSharedNetConfConnections">
@@ -62,7 +62,7 @@
         <Data ID="2" IsList="true" Label="Device_IP" ReferenceName="Text" ReferencePath="base" VariableName="text2"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return NotificationReceiverServiceGroupImpl.listSharedNetConfConnections();</CodeSnippet>
+        <CodeSnippet Type="Java">return xact.netconf.services.NotificationReceiverServiceGroupImpl.listSharedNetConfConnections();</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="sizeSharedNetConfConnections" Name="sizeSharedNetConfConnections">
@@ -71,7 +71,7 @@
         <Data ID="1" Label="SizeSharedNetConfConnections" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber1"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return NotificationReceiverServiceGroupImpl.sizeSharedNetConfConnections();</CodeSnippet>
+        <CodeSnippet Type="Java">return xact.netconf.services.NotificationReceiverServiceGroupImpl.sizeSharedNetConfConnections();</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="getDeviceIPfromDeviceID" Name="getDeviceIPfromDeviceID">
@@ -82,7 +82,7 @@
         <Data ID="16" Label="Device_IP" ReferenceName="Text" ReferencePath="base" VariableName="text16"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return NotificationReceiverServiceGroupImpl.getDeviceIPfromDeviceID(text15);</CodeSnippet>
+        <CodeSnippet Type="Java">return xact.netconf.services.NotificationReceiverServiceGroupImpl.getDeviceIPfromDeviceID(text15);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="getDeviceIDfromDeviceIP" Name="getDeviceIDfromDeviceIP">
@@ -93,7 +93,7 @@
         <Data ID="14" Label="Device_ID" ReferenceName="Text" ReferencePath="base" VariableName="text14"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return NotificationReceiverServiceGroupImpl.getDeviceIDfromDeviceIP(text13);</CodeSnippet>
+        <CodeSnippet Type="Java">return xact.netconf.services.NotificationReceiverServiceGroupImpl.getDeviceIDfromDeviceIP(text13);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="containsRDHashfromDeviceIP" Name="containsRDHashfromDeviceIP">
@@ -104,7 +104,7 @@
         <Data ID="11" Label="Status" ReferenceName="Status" ReferencePath="xact.netconf.datatypes" VariableName="status11"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return NotificationReceiverServiceGroupImpl.containsRDHashfromDeviceIP(text12);</CodeSnippet>
+        <CodeSnippet Type="Java">return xact.netconf.services.NotificationReceiverServiceGroupImpl.containsRDHashfromDeviceIP(text12);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="containsRDHashfromDeviceID" Name="containsRDHashfromDeviceID">
@@ -115,7 +115,7 @@
         <Data ID="9" Label="Status" ReferenceName="Status" ReferencePath="xact.netconf.datatypes" VariableName="status9"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return NotificationReceiverServiceGroupImpl.containsRDHashfromDeviceID(text8);</CodeSnippet>
+        <CodeSnippet Type="Java">return xact.netconf.services.NotificationReceiverServiceGroupImpl.containsRDHashfromDeviceID(text8);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="NetConfOperation" Name="netConfOperation">
@@ -130,7 +130,7 @@
         <Data ID="23" Label="Status" ReferenceName="Status" ReferencePath="xact.netconf.datatypes" VariableName="status23"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return NotificationReceiverServiceGroupImpl.netConfOperation(text20, document17, text21, integerNumber22);</CodeSnippet>
+        <CodeSnippet Type="Java">return xact.netconf.services.NotificationReceiverServiceGroupImpl.netConfOperation(text20, document17, text21, integerNumber22);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
