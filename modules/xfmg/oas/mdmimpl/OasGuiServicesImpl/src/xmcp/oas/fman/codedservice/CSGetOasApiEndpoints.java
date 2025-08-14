@@ -47,7 +47,6 @@ public class CSGetOasApiEndpoints {
   
   public List<? extends OasApiDatatypeInfo> execute(TableInfo info) {
     try {
-      _logger.warn("###### starting get endpoints");
       List<OasApiDatatypeInfo> ret = new ArrayList<>();
       OasEndpointsFilterData filter = new OasEndpointsFilterData(info);
       OasGuiContext context = new OasGuiContext();
