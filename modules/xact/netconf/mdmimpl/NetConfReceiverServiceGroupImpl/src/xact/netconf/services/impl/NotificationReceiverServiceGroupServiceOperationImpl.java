@@ -75,11 +75,11 @@ public class NotificationReceiverServiceGroupServiceOperationImpl implements Ext
   }
 
 
-  public Status containsRDHashfromDeviceID(Text Text_DeviceID) {
+  public Status containsRDHashfromDeviceID(Text textDeviceID) {
     Status returnStatus = new Status.Builder().instance();
     try {
-      boolean IsContained = NetConfNotificationReceiverSharedLib.containsRDHashfromRDID(Text_DeviceID.getText());
-      returnStatus.setValid(IsContained);
+      boolean isContained = NetConfNotificationReceiverSharedLib.containsRDHashfromRDID(textDeviceID.getText());
+      returnStatus.setValid(isContained);
       returnStatus.setStatus("ok");
     } catch (Throwable t) {
       returnStatus.setValid(false);
@@ -89,11 +89,11 @@ public class NotificationReceiverServiceGroupServiceOperationImpl implements Ext
   }
 
 
-  public Status containsRDHashfromDeviceIP(Text Text_DeviceIP) {
+  public Status containsRDHashfromDeviceIP(Text textDeviceIP) {
     Status returnStatus = new Status.Builder().instance();
     try {
-      boolean IsContained = NetConfNotificationReceiverSharedLib.containsRDHashfromRDIP(Text_DeviceIP.getText());
-      returnStatus.setValid(IsContained);
+      boolean isContained = NetConfNotificationReceiverSharedLib.containsRDHashfromRDIP(textDeviceIP.getText());
+      returnStatus.setValid(isContained);
       returnStatus.setStatus("ok");
     } catch (Throwable t) {
       returnStatus.setValid(false);
@@ -103,11 +103,11 @@ public class NotificationReceiverServiceGroupServiceOperationImpl implements Ext
   }
 
 
-  public Status containsSharedNetConfConnection(Text Text_RDIP) {
+  public Status containsSharedNetConfConnection(Text textRDIP) {
     Status returnStatus = new Status.Builder().instance();
     try {
-      boolean IsContained = NetConfNotificationReceiverSharedLib.containsSharedNetConfConnectionID(Text_RDIP.getText());
-      returnStatus.setValid(IsContained);
+      boolean isContained = NetConfNotificationReceiverSharedLib.containsSharedNetConfConnectionID(textRDIP.getText());
+      returnStatus.setValid(isContained);
       returnStatus.setStatus("ok");
     } catch (Throwable t) {
       returnStatus.setValid(false);
@@ -117,30 +117,30 @@ public class NotificationReceiverServiceGroupServiceOperationImpl implements Ext
   }
 
 
-  public Text getDeviceIDfromDeviceIP(Text Text_DeviceIP) {
+  public Text getDeviceIDfromDeviceIP(Text textDeviceIP) {
     Text returnDeviceID = new Text.Builder().instance();
     try {
-      returnDeviceID.setText(NetConfNotificationReceiverSharedLib.getDeviceIDfromDeviceIP(Text_DeviceIP.getText()));
+      returnDeviceID.setText(NetConfNotificationReceiverSharedLib.getDeviceIDfromDeviceIP(textDeviceIP.getText()));
     } catch (Throwable t) {
     }
     return returnDeviceID;
   }
 
 
-  public Text getDeviceIPfromDeviceID(Text Text_DeviceID) {
+  public Text getDeviceIPfromDeviceID(Text textDeviceID) {
     Text returnDeviceIP = new Text.Builder().instance();
     try {
-      returnDeviceIP.setText(NetConfNotificationReceiverSharedLib.getDeviceIPfromDeviceID(Text_DeviceID.getText()));
+      returnDeviceIP.setText(NetConfNotificationReceiverSharedLib.getDeviceIPfromDeviceID(textDeviceID.getText()));
     } catch (Throwable t) {
     }
     return returnDeviceIP;
   }
 
 
-  public Text getSharedNetConfConnectionID(Text Text_RDIP) {
+  public Text getSharedNetConfConnectionID(Text textRDIP) {
     Text returnConnectionID = new Text.Builder().instance();
     try {
-      returnConnectionID.setText(NetConfNotificationReceiverSharedLib.getSharedNetConfConnectionID(Text_RDIP.getText()));
+      returnConnectionID.setText(NetConfNotificationReceiverSharedLib.getSharedNetConfConnectionID(textRDIP.getText()));
     } catch (Throwable t) {
     }
     return returnConnectionID;
@@ -167,25 +167,25 @@ public class NotificationReceiverServiceGroupServiceOperationImpl implements Ext
         Text ConnectionTextElement = new Text.Builder().instance();
         ConnectionTextElement.setText(element);
         returnConnectionList.add(ConnectionTextElement);
-      } ;
+      }
     } catch (Throwable t) {
     }
     return returnConnectionList;
   }
 
 
-  public Container netConfOperation(Text Text_DeviceID, Document Document_NetConfOperation, Text Text_UniqueMessageUUID, 
+  public Container netConfOperation(Text textDeviceID, Document Document_NetConfOperation, Text textUniqueMessageUUID, 
                                     IntegerNumber IntegerNumber_TimeOutInMillis) {
     Response returnResponse = new Response();
     Status returnStatus = new Status();
     Container returnContainer = new Container();
     try {
-      String DeviceID = Text_DeviceID.getText();
-      String UniqueMessageUUID = Text_UniqueMessageUUID.getText();
+      String deviceID = textDeviceID.getText();
+      String UniqueMessageUUID = textUniqueMessageUUID.getText();
       String NetConfOperation = Document_NetConfOperation.getText() + NetConfOperationSuffix;
       long TimeOutInMillis = IntegerNumber_TimeOutInMillis.getValue();
 
-      NetConfNotificationReceiverSharedLib.addOutputQueueNetConfOperation(DeviceID, UniqueMessageUUID, NetConfOperation);
+      NetConfNotificationReceiverSharedLib.addOutputQueueNetConfOperation(deviceID, UniqueMessageUUID, NetConfOperation);
 
       long MilliSecondsNow = System.currentTimeMillis();
       long MilliSecondsTimeOut = MilliSecondsNow + TimeOutInMillis;
@@ -195,7 +195,7 @@ public class NotificationReceiverServiceGroupServiceOperationImpl implements Ext
         if (NetConfNotificationReceiverSharedLib.containsInputQueueNetConfMessageElement(UniqueMessageUUID)) {
           ResponseReceived = true;
           InputQueueNetConfMessageElement Element = NetConfNotificationReceiverSharedLib.pollInputQueueNetConfMessageElement(UniqueMessageUUID);
-          if (Element.isValid() & (Element.getRDID().contains(DeviceID))) {
+          if (Element.isValid() & (Element.getRDID().contains(deviceID))) {
             returnStatus.setValid(true);
             returnStatus.setStatus("ok");
             returnResponse.setContent(Element.getNetConfMessage());
