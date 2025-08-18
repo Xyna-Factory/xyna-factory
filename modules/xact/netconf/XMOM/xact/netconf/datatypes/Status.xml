@@ -1,4 +1,3 @@
-<Trigger>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -16,9 +15,18 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-	<AdditionalDependencies>
-		<!-- <Datatype>fullyQualifiedMdmType</Datatype>
-		<XynaProperty>propertyName</XynaProperty> -->
-		<XynaProperty>xact.ssh.hostkeys.supportedfeatures</XynaProperty>
-	</AdditionalDependencies>
-</Trigger>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Version="1.8" TypeName="Status" TypePath="xact.netconf.datatypes" Label="Status" IsAbstract="false">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Valid" VariableName="valid">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+  <Data Label="Status" VariableName="status">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+</DataType>
