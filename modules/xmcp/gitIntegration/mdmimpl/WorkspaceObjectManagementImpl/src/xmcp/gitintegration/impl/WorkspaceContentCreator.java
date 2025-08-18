@@ -24,7 +24,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.log4j.Logger;
 
+import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.FileUtils;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
@@ -45,6 +48,7 @@ public class WorkspaceContentCreator {
   public static final String WORKSPACE_XML_FILENAME = "workspace.xml";
   public static final String WORKSPACE_XML_SPLITNAME = "config";
 
+  private static final Logger logger = CentralFactoryLogging.getLogger(WorkspaceContentCreator.class);
 
   public File determineWorkspaceXMLFile(String workspaceName) {
     Long revision = getRevision(workspaceName);
@@ -106,17 +110,33 @@ public class WorkspaceContentCreator {
   private WorkspaceContent createWorkspaceContentFromDirectory(File file) throws IOException {
     WorkspaceContentXmlConverter converter = new WorkspaceContentXmlConverter();
     WorkspaceContent.Builder result = new WorkspaceContent.Builder();
-    for (File f : file.listFiles()) {
+    List<File> files = new ArrayList<>();
+    FileUtils.findFilesRecursively(file, files, this::xmlFileFilter);
+    for(File f : files) {
+      processFile(f, result, converter);
+    }
+    return result.instance();
+  }
+  
+  private boolean xmlFileFilter(File path, String name) {
+    return new File(path, name).isDirectory() || name.endsWith(".xml");
+  }
+  
+  private void processFile(File f, WorkspaceContent.Builder result, WorkspaceContentXmlConverter converter) {
+    try {
       String input = Files.readString(f.toPath());
       if(f.getName().equals(WORKSPACE_XML_FILENAME)) {
         WorkspaceContent c = converter.convertFromXml(input);
         result.workspaceName(c.getWorkspaceName());
         result.split(c.getSplit());
-        continue;
+      } else {
+        converter.addToWorkspaceContent(input, result.instance());
       }
-      converter.addToWorkspaceContent(input, result.instance());
+    } catch(Exception e) {
+      if (logger.isWarnEnabled()) {
+        logger.warn("could not parse workspace content file: " + f, e);
+      }
     }
-    return result.instance();
   }
 
 
