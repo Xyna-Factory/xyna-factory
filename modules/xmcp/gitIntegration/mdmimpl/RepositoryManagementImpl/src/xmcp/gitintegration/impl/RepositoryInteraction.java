@@ -74,6 +74,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.FileUtils;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.collections.Triple;
@@ -397,12 +398,7 @@ public class RepositoryInteraction {
 
   private void print(GitDataContainer container) {
     if (logger.isDebugEnabled()) {
-      List<String> execs = container.exec.stream().map(x -> x.execType + " - " + x.repoPath).collect(Collectors.toList());
-      logger.debug("  Pull: " + container.pull.size() + ": " + String.join(", ", container.pull));
-      logger.debug("  Push: " + container.push.size() + ": " + String.join(", ", container.push));
-      logger.debug("  Exec: " + container.exec.size() + ": " + String.join(", ", execs));
-      logger.debug("  Conf: " + container.conflicts.size() + ": " + String.join(", ", container.conflicts));
-      logger.debug("  revt: " + container.revert.size() + ": " + String.join(", ", container.revert));
+      logger.debug(container.toString());
     }
   }
 
@@ -528,6 +524,8 @@ public class RepositoryInteraction {
       try {
         if (exec.execType == PullExecType.delete) {
           removeXmom.removeXmomObject(workspace, fqn);
+        } else if(exec.execType == PullExecType.save) {
+          saveXmom.saveXmomObject(workspace, fqn, false);
         } else {
           saveXmom.saveXmomObject(workspace, fqn, false);
           Long revision = getRevisionMgmt().getRevision(null, null, workspace);
@@ -550,7 +548,7 @@ public class RepositoryInteraction {
 
     if (!exceptions.isEmpty()) {
       List<String> e = exceptions.stream().map(this::formatXmomRegistrationException).collect(Collectors.toList());
-      container.warnings = e;
+      container.warnings.addAll(e);
     }
   }
 
@@ -755,16 +753,31 @@ public class RepositoryInteraction {
 
 
   private void processPulls(Git git, Repository repository, GitDataContainer container) throws Exception {
-    if (!container.push.isEmpty()) {
+    boolean stashRequired = !container.lAddrAddReverts.isEmpty() || container.localDiffs.size() > container.revert.size();
+    if(stashRequired) {
       git.stashCreate().setIncludeUntracked(true).call();
     }
     PullCommand cmd = git.pull();
     getCredentialsMgmt().addCredentialsToCommand(cmd, repository, container.creds);
     cmd.call();
 
-    if (!container.push.isEmpty()) {
+    if(stashRequired) {
+      if (!container.lAddrAddReverts.isEmpty()) {
+        git.checkout().addPaths(container.lAddrAddReverts).call();
+        for (String toDelete : container.lAddrAddReverts) {
+          File toDeleteFile = new File(toDelete);
+          FileUtils.deleteFileWithRetries(toDeleteFile);
+        }
+      }
+
       git.stashApply().call();
+      git.stashDrop().call();
+  
+      if (!container.lAddrAddReverts.isEmpty()) {
+        git.checkout().addPaths(container.lAddrAddReverts).call();
+      }
     }
+
   }
 
 
@@ -906,6 +919,7 @@ public class RepositoryInteraction {
     switch (remoteEntry.getChangeType()) {
       case MODIFY :
         if (saved_eq_deployed) {
+          container.exec.add(new PullExec(PullExecType.save, localEntry.getNewPath()));
           container.revert.add(localEntry.getNewPath());
           container.pull.add(localEntry.getNewPath());
         } else {
@@ -941,7 +955,9 @@ public class RepositoryInteraction {
       container.conflicts.add(localEntry.getNewPath());
       return;
     } else {
+      container.exec.add(new PullExec(PullExecType.save, localEntry.getNewPath()));
       container.revert.add(localEntry.getNewPath());
+      container.lAddrAddReverts.add(localEntry.getNewPath());
     }
 
   }
@@ -1084,9 +1100,10 @@ public class RepositoryInteraction {
     private List<DiffEntry> remoteDiffs = new ArrayList<>();
     private List<String> conflicts = new ArrayList<>();
     private List<String> revert = new ArrayList<>();
+    private List<String> lAddrAddReverts = new ArrayList<>(); //files that were added both locally and remotely
     private List<String> pull = new ArrayList<>();
     private List<String> push = new ArrayList<>();
-    private List<PullExec> exec = new ArrayList<>(); //command => true=add, false=remove, path
+    private List<PullExec> exec = new ArrayList<>();
     private List<String> warnings = new ArrayList<>();
     private XynaRepoCredentials creds; //only used within this class
     private String user;
@@ -1100,21 +1117,26 @@ public class RepositoryInteraction {
       List<String> localDiffString = localDiffs.stream().map(x -> x.toString()).collect(Collectors.toList());
       List<String> remoteDiffString = remoteDiffs.stream().map(x -> x.toString()).collect(Collectors.toList());
       sb.append("Data for repository: ").append(repository).append("\n");
-      sb.append("  Ldif: ").append(localDiffs.size()).append(": ").append(String.join(", ", localDiffString)).append("\n");
-      sb.append("  Rdif: ").append(remoteDiffs.size()).append(": ").append(String.join(", ", remoteDiffString)).append("\n");
-      sb.append("  Pull: ").append(pull.size()).append(": ").append(String.join(", ", pull)).append("\n");
-      sb.append("  Push: ").append(push.size()).append(": ").append(String.join(", ", push)).append("\n");
-      sb.append("  Exec: ").append(exec.size()).append(": ").append(String.join(", ", execString)).append("\n");
-      sb.append("  Conf: ").append(conflicts.size()).append(": ").append(String.join(", ", conflicts)).append("\n");
-      sb.append("  revt: ").append(revert.size()).append(": ").append(String.join(", ", revert)).append("\n");
+      appendField(sb, "Ldif", localDiffString);
+      appendField(sb, "Rdif", remoteDiffString);
+      appendField(sb, "Pull", pull);
+      appendField(sb, "Push", push);
+      appendField(sb, "Exec", execString);
+      appendField(sb, "Conf", conflicts);
+      appendField(sb, "Revt", revert);
+      appendField(sb, "Lrar", lAddrAddReverts);
       if (!warnings.isEmpty()) {
-        sb.append("  warn: ").append(warnings.size()).append(": ").append(String.join(", ", warnings)).append("\n");
+        appendField(sb, "Warn", warnings);
       }
       return sb.toString();
     }
 
     public boolean containsWarnings() {
       return !warnings.isEmpty();
+    }
+
+    private void appendField(StringBuilder sb, String name, List<String> data) {
+      sb.append("  ").append(name).append(": ").append(data.size()).append(": ").append(String.join(", ", data)).append("\n");
     }
   }
 
@@ -1133,7 +1155,7 @@ public class RepositoryInteraction {
 
   private enum PullExecType {
 
-    delete, deploy;
+    delete, deploy, save;
 
 
     public static PullExecType convert(ChangeType type) {

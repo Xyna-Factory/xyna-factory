@@ -102,6 +102,9 @@ public class GetAuditRequestProcessor {
     result.setParentOrderId(monitorAudit.getGuiParentOrderId());
     result.setRevision(0);
 
+    // set workflow parsing to audit mode, which creates fake variables when they can't be created due to a workflow being missing in the XMOM repository
+    com.gip.xyna.xact.filter.xmom.workflows.json.Workflow.isAudit.set(true);
+
     int lazyLoadingLimit = (AuditPreprocessing.LAZY_LOADING_LIMIT.get() != 0) ? AuditPreprocessing.LAZY_LOADING_LIMIT.get() : 1;
     result.setLazyLoadingLimit(lazyLoadingLimit);
 
