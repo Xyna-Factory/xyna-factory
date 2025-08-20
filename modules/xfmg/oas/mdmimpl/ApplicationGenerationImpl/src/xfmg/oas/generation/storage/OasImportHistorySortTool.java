@@ -32,7 +32,7 @@ public class OasImportHistorySortTool {
     TableHelper<OAS_ImportHistory, TableInfo> tableHelper =
       TableHelper.<OAS_ImportHistory, TableInfo>init(info).sortConfig(OasImportHistorySortTool::buildSort).
          addSelectFunction(OasImportHistoryConstants.PATH_FILENAME, OAS_ImportHistory::getFileName).
-         addSelectFunction(OasImportHistoryConstants.PATH_TYPE, OAS_ImportHistory::getFileName).
+         addSelectFunction(OasImportHistoryConstants.PATH_TYPE, OAS_ImportHistory::getType).
          addSelectFunction(OasImportHistoryConstants.PATH_DATE, OAS_ImportHistory::getDate0).
          addSelectFunction(OasImportHistoryConstants.PATH_IMPORTSTATUS, OAS_ImportHistory::getImportStatus);
     tableHelper.sort(ret);
