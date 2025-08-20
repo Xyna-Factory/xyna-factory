@@ -25,4 +25,5 @@ public class OasImportHistoryConstants {
   public static final String PATH_TYPE = "type";
   public static final String PATH_DATE = "date0";
   public static final String PATH_IMPORTSTATUS = "importStatus";
+  
 }

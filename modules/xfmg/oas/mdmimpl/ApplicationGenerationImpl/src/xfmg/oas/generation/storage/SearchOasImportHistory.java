@@ -35,18 +35,15 @@ import xmcp.tables.datatypes.TableInfo;
 
 public class SearchOasImportHistory implements WarehouseRetryExecutableNoException<List<OAS_ImportHistory>> {
 
-  private static final String SELECT_BASE = "SELECT * FROM " + OasImportHistoryStorable.TABLE_NAME;
-  /*
-  private static final String CONDITION_BASE = " WHERE ";
-  private static final String CONDITION_AND = " AND ";
+  private static final String SELECT_BASE = "SELECT " +
+    OasImportHistoryStorable.COL_UNIQUE_ID + ", " +
+    OasImportHistoryStorable.COL_FILE_NAME + ", " +
+    OasImportHistoryStorable.COL_TYPE + ", " +
+    OasImportHistoryStorable.COL_DATE + ", " +
+    OasImportHistoryStorable.COL_IMPORT_STATUS +
+    " FROM " + OasImportHistoryStorable.TABLE_NAME;
+  private static final OasImportHistoryAdapter _adapter = new OasImportHistoryAdapter();
   
-  private static final String QUERY_OAS_IMPORT_HISTORY =
-      "SELECT * FROM " + OasImportHistoryStorable.TABLE_NAME + " WHERE " +
-      OasImportHistoryStorable.COL_FILE_NAME + " LIKE ? AND " +
-      OasImportHistoryStorable.COL_TYPE + " LIKE ? AND " +
-      OasImportHistoryStorable.COL_DATE + " LIKE ? AND " +
-      OasImportHistoryStorable.COL_IMPORT_STATUS + " LIKE ?";
-  */
   
   private final static TableFilterBuilder _filterBuilder = new TableFilterBuilder(List.of(
      FilterColumnConfig.builder().xmomPath(OasImportHistoryConstants.PATH_FILENAME).
@@ -71,27 +68,14 @@ public class SearchOasImportHistory implements WarehouseRetryExecutableNoExcepti
   public List<OAS_ImportHistory> executeAndCommit(ODSConnection con) throws PersistenceLayerException {
     String sql = getQuerySql();
     PreparedQuery<OasImportHistoryStorable> query = OasImportHistoryStorage.getQueryCache().getQueryFromCache(sql, con,
-                                                      OasImportHistoryStorable.getOasImportHistoryStorableReader());
+                                                      OasImportHistoryStorable.getOasImportHistoryMultiLineReader());
     List<OasImportHistoryStorable> result = con.query(query, filter.buildParameter(), -1);
-    return result.stream().map(x -> adapt(x)).collect(Collectors.toList());
+    return result.stream().map(x -> _adapter.adapt(x)).collect(Collectors.toList());
   }
   
   
   private String getQuerySql() {
     return SELECT_BASE + filter.buildWhereClause();
-  }
-  
-  
-  private OAS_ImportHistory adapt(OasImportHistoryStorable input) {
-    OAS_ImportHistory ret = new OAS_ImportHistory();
-    ret.setUniqueIdentifier(input.getUniqueIdentifier());
-    ret.setType(input.getType());
-    ret.setDate0(input.getDate());
-    ret.setFileName(input.getFileName());
-    ret.setSpecificationFile(input.getSpecificationFile());
-    ret.setImportStatus(input.getImportStatus());
-    ret.setErrorMessage(input.getErrorMessage());
-    return ret;
   }
   
 }

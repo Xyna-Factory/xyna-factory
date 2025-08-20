@@ -31,7 +31,38 @@ import com.gip.xyna.xnwh.persistence.Storable;
 @Persistable(primaryKey = OasImportHistoryStorable.COL_UNIQUE_ID, tableName = OasImportHistoryStorable.TABLE_NAME)
 public class OasImportHistoryStorable extends Storable<OasImportHistoryStorable> {
 
-  private static OasImportHistoryStorableReader reader = new OasImportHistoryStorableReader();
+  
+  public static class OasImportHistoryMultiLineReader implements ResultSetReader<OasImportHistoryStorable> {
+
+    public OasImportHistoryStorable read(ResultSet rs) throws SQLException {
+      OasImportHistoryStorable result = new OasImportHistoryStorable();
+      result.uniqueIdentifier = rs.getLong(COL_UNIQUE_ID);
+      result.type = rs.getString(COL_TYPE);
+      result.date = rs.getString(COL_DATE);
+      result.fileName = rs.getString(COL_FILE_NAME);
+      result.importStatus = rs.getString(COL_IMPORT_STATUS);
+      return result;
+    }
+  }
+  
+  
+  public static class OasImportHistoryDetailsReader implements ResultSetReader<OasImportHistoryStorable> {
+
+    public OasImportHistoryStorable read(ResultSet rs) throws SQLException {
+      OasImportHistoryStorable result = new OasImportHistoryStorable();
+      result.uniqueIdentifier = rs.getLong(COL_UNIQUE_ID);
+      result.type = rs.getString(COL_TYPE);
+      result.date = rs.getString(COL_DATE);
+      result.fileName = rs.getString(COL_FILE_NAME);
+      result.specificationFile = (String) result.readBlobbedJavaObjectFromResultSet(rs, COL_SPECIFICATION_FILE);
+      result.importStatus = rs.getString(COL_IMPORT_STATUS);
+      result.errorMessage = (String) result.readBlobbedJavaObjectFromResultSet(rs, COL_ERROR_MESSAGE);
+      return result;
+    }
+  }
+  
+  private static OasImportHistoryMultiLineReader multiLineReader = new OasImportHistoryMultiLineReader();
+  private static OasImportHistoryDetailsReader detailsReader = new OasImportHistoryDetailsReader();
   private static final long serialVersionUID = 1L;
 
   public static final String TABLE_NAME = "oasimporthistory";
@@ -69,31 +100,19 @@ public class OasImportHistoryStorable extends Storable<OasImportHistoryStorable>
   
   @Override
   public ResultSetReader<? extends OasImportHistoryStorable> getReader() {
-    return reader;
+    return detailsReader;
   }
 
   
-  public static OasImportHistoryStorableReader getOasImportHistoryStorableReader() {
-    return reader;
+  public static OasImportHistoryMultiLineReader getOasImportHistoryMultiLineReader() {
+    return multiLineReader;
+  }
+
+  public static OasImportHistoryDetailsReader getOasImportHistoryDetailsReader() {
+    return detailsReader;
   }
 
   
-  private static class OasImportHistoryStorableReader implements ResultSetReader<OasImportHistoryStorable> {
-
-    public OasImportHistoryStorable read(ResultSet rs) throws SQLException {
-      OasImportHistoryStorable result = new OasImportHistoryStorable();
-      result.uniqueIdentifier = rs.getLong(COL_UNIQUE_ID);
-      result.type = rs.getString(COL_TYPE);
-      result.date = rs.getString(COL_DATE);
-      result.fileName = rs.getString(COL_FILE_NAME);
-      result.specificationFile = (String) result.readBlobbedJavaObjectFromResultSet(rs, COL_SPECIFICATION_FILE);
-      result.importStatus = rs.getString(COL_IMPORT_STATUS);
-      result.errorMessage = (String) result.readBlobbedJavaObjectFromResultSet(rs, COL_ERROR_MESSAGE);
-      return result;
-    }
-  }
-
-
   @Override
   public Object getPrimaryKey() {
     return uniqueIdentifier;

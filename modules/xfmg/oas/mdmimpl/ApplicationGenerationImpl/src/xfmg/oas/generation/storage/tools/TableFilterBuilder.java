@@ -52,14 +52,14 @@ public class TableFilterBuilder {
       if (filter.isEmpty()) { continue; }
       
       FilterColumnConfig conf = _map.get(path.get());
-      if (conf == null) { return build(ret); }
+      if (conf == null) { continue; }
       ret.add(new FilterColumn(conf, filter.get()));
     }
     return build(ret);
   }
   
   
-  private static TableFilter build(List<FilterColumn> list) {
+  private TableFilter build(List<FilterColumn> list) {
     return new TableFilter(list);
   }
   

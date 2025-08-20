@@ -60,6 +60,7 @@ import xfmg.oas.generation.cli.generated.OverallInformationProvider;
 import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl;
 import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl.OASApplicationData;
 import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl.ValidationResult;
+import xfmg.oas.generation.storage.OasImportHistorySortTool;
 import xfmg.oas.generation.storage.OasImportHistoryStorage;
 import xfmg.xfctrl.appmgmt.RuntimeContextService;
 import xfmg.xfctrl.filemgmt.ManagedFileId;
@@ -283,11 +284,13 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
     generateApplication(correlatedXynaOrder, applicationGenerationParameter2, file);
   }
 
-
+  
   @Override
   public List<? extends OAS_ImportHistory> queryOasImportHistory(TableInfo info) {
     try {
-      return new OasImportHistoryStorage().searchOasImportHistory(info);
+      List<OAS_ImportHistory> ret = new OasImportHistoryStorage().searchOasImportHistory(info);
+      new OasImportHistorySortTool().sort(ret, info);
+      return ret;
     } catch (RuntimeException e) {
       logger.error(e.getMessage(), e);
       throw e;
@@ -298,6 +301,20 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
   }
 
 
+  @Override
+  public OAS_ImportHistory queryOasImportHistoryDetails(OAS_ImportHistory input) {
+    try {
+      return new OasImportHistoryStorage().searchOasImportHistoryDetails(input);
+    } catch (RuntimeException e) {
+      logger.error(e.getMessage(), e);
+      throw e;
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
+  
+  
   @Override
   public void storeOasImportHistory(OAS_ImportHistory input) {
     try {
@@ -310,5 +327,5 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
       throw new RuntimeException(e.getMessage(), e);
     }
   }
-  
+
 }

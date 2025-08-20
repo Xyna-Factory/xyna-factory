@@ -18,7 +18,6 @@
 
 package xfmg.oas.generation.storage.tools;
 
-import java.util.Optional;
 
 public class FilterColumnConfig {
 

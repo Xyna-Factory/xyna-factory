@@ -18,10 +18,12 @@
 
 package xfmg.oas.generation.storage.tools;
 
+
 public class FilterColumn {
 
   private final FilterColumnConfig config;
   private final String value;
+  
   
   public FilterColumn(FilterColumnConfig config, String value) {
     if (config == null) { throw new IllegalArgumentException("FilterColumnConfig is null"); }

@@ -27,6 +27,7 @@ import xmcp.oas.fman.storables.OAS_ImportHistory;
 
 public class StoreOasImportHistory implements WarehouseRetryExecutableNoResult {
 
+  private static final OasImportHistoryAdapter _adapter = new OasImportHistoryAdapter();
   private OAS_ImportHistory input;
   
   
@@ -38,21 +39,8 @@ public class StoreOasImportHistory implements WarehouseRetryExecutableNoResult {
 
   @Override
   public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-    OasImportHistoryStorable storable = adapt(input);
+    OasImportHistoryStorable storable = _adapter.adapt(input);
     con.persistObject(storable);
-  }
-  
-  
-  private OasImportHistoryStorable adapt(OAS_ImportHistory input) {
-    OasImportHistoryStorable ret = new OasImportHistoryStorable();
-    ret.setUniqueIdentifier(input.getUniqueIdentifier());
-    ret.setType(input.getType());
-    ret.setDate(input.getDate0());
-    ret.setFileName(input.getFileName());
-    ret.setSpecificationFile(input.getSpecificationFile());
-    ret.setImportStatus(input.getImportStatus());
-    ret.setErrorMessage(input.getErrorMessage());
-    return ret;
   }
   
 }

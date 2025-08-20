@@ -27,7 +27,7 @@ public class TableFilter {
 
   private static final String SQL_WHERE = " WHERE ";
   private static final String SQL_AND = " AND ";
-  private static final String SQL_WILDCARD_CONDITION = " LIKE ? ";
+  private static final String SQL_WILDCARD_CONDITION = " LIKE ?";
   
   private final List<FilterColumn> _filterColumns;
 
