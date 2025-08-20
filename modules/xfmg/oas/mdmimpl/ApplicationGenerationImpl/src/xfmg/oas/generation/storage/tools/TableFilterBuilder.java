@@ -16,50 +16,52 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xfmg.oas.generation.storage;
+package xfmg.oas.generation.storage.tools;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import xmcp.tables.datatypes.TableColumn;
 import xmcp.tables.datatypes.TableInfo;
 
 
-public class OasImportHistoryFilterData {
+public class TableFilterBuilder {
 
+  private final Map<String, FilterColumnConfig> _map = new HashMap<>();
   
-  // filename, type, date, importstatus
   
-  private String filename = "%";
-  private String type = "%";
-  private String date = "%";
-  private String importStatus = "%";
-  
-  // to parameter (xyna db utils)
-  // constr(tableinfo)
-  
-  public OasImportHistoryFilterData(TableInfo info) {
-    init(info);
+  public TableFilterBuilder(List<FilterColumnConfig> list) {
+    if (list == null) { return; }
+    for (FilterColumnConfig conf : list) {
+      _map.put(conf.getXmomPath(), conf);
+    }
   }
   
   
-  private void init(TableInfo info) {
-    if (info == null) { return; }
-    if (info.getColumns() == null) { return; }
+  public TableFilter build(TableInfo info) {
+    List<FilterColumn> ret = new ArrayList<>();
+    if (info == null) { return build(ret); }
+    if (info.getColumns() == null) { return build(ret); }
     for (TableColumn col : info.getColumns()) {
       Optional<String> path = getTrimmedOrEmpty(col.getPath());
       if (path.isEmpty()) { continue; }
       Optional<String> filter = getTrimmedOrEmpty(col.getFilter());
       if (filter.isEmpty()) { continue; }
       
-      if (OasImportHistoryConstants.PATH_FILENAME.equals(path.get())) { filename = filter.get(); }
-      if (OasImportHistoryConstants.PATH_TYPE.equals(path.get())) { type = filter.get(); }
-      if (OasImportHistoryConstants.PATH_DATE.equals(path.get())) { date = filter.get(); }
-      if (OasImportHistoryConstants.PATH_IMPORTSTATUS.equals(path.get())) { importStatus = filter.get(); }
+      FilterColumnConfig conf = _map.get(path.get());
+      if (conf == null) { return build(ret); }
+      ret.add(new FilterColumn(conf, filter.get()));
     }
+    return build(ret);
   }
   
   
-  // buildfilter (replace * %)
+  private static TableFilter build(List<FilterColumn> list) {
+    return new TableFilter(list);
+  }
   
   
   private Optional<String> getTrimmedOrEmpty(String val) {
@@ -69,24 +71,4 @@ public class OasImportHistoryFilterData {
     return Optional.of(val);
   }
 
-  
-  public String getFilename() {
-    return filename;
-  }
-
-  
-  public String getType() {
-    return type;
-  }
-
-  
-  public String getDate() {
-    return date;
-  }
-
-  
-  public String getImportStatus() {
-    return importStatus;
-  }
-  
 }

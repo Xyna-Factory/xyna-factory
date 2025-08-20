@@ -58,8 +58,7 @@ public class OasImportHistoryStorage {
 
   
   public List<OAS_ImportHistory> searchOasImportHistory(TableInfo info) throws PersistenceLayerException {
-    OasImportHistoryFilterData filter = new OasImportHistoryFilterData(info);
-    List<OAS_ImportHistory> ret = buildExecutor().execute(new SearchOasImportHistory(filter));
+    List<OAS_ImportHistory> ret = buildExecutor().execute(new SearchOasImportHistory(info));
     return ret;
   }
   
