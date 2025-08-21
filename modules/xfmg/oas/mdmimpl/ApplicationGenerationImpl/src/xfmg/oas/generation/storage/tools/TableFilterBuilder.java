@@ -26,6 +26,7 @@ import java.util.Optional;
 
 import xmcp.tables.datatypes.TableColumn;
 import xmcp.tables.datatypes.TableInfo;
+import xmcp.zeta.TableHelper;
 
 
 public class TableFilterBuilder {
@@ -58,6 +59,25 @@ public class TableFilterBuilder {
     return build(ret);
   }
   
+  /*
+  private String getTestSql(TableInfo info) {
+    Map<String, String> map = new HashMap<>();
+    for (TableColumn col : info.getColumns()) {
+      Optional<String> path = getTrimmedOrEmpty(col.getPath());
+      if (path.isEmpty()) { continue; }
+      Optional<String> filter = getTrimmedOrEmpty(col.getFilter());
+      if (filter.isEmpty()) { continue; }
+      
+      FilterColumnConfig conf = _map.get(path.get());
+      if (conf == null) { continue; }
+      List<String> list = TableHelper.prepareQueryFilter(filter.get());
+      for (String str : list) {
+        map.put(conf.getSqlColumnName(), str);
+      }
+    }
+    
+  }
+  */
   
   private TableFilter build(List<FilterColumn> list) {
     return new TableFilter(list);

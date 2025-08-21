@@ -30,7 +30,7 @@ import xmcp.oas.fman.storables.OAS_ImportHistory;
 public class SearchOasImportHistoryDetails implements WarehouseRetryExecutableNoException<OAS_ImportHistory> {
 
   private static final String QUERY = "SELECT * FROM " + OasImportHistoryStorable.TABLE_NAME + " WHERE " +
-                                              OasImportHistoryStorable.COL_UNIQUE_ID + " = ?"  ;
+                                      OasImportHistoryStorable.COL_UNIQUE_ID + " = ?"  ;
   private static final OasImportHistoryAdapter _adapter = new OasImportHistoryAdapter();
 
   private final long uniqueId;
@@ -44,15 +44,18 @@ public class SearchOasImportHistoryDetails implements WarehouseRetryExecutableNo
 
   @Override
   public OAS_ImportHistory executeAndCommit(ODSConnection con) throws PersistenceLayerException {
+    /*
     PreparedQuery<OasImportHistoryStorable> query = OasImportHistoryStorage.getQueryCache().getQueryFromCache(QUERY, con,
                                                       OasImportHistoryStorable.getOasImportHistoryDetailsReader());
-    Parameter param = new Parameter();
-    param.add(uniqueId);
-    OasImportHistoryStorable result = con.queryOneRow(query, param);
-    if (result == null) { 
-      throw new IllegalArgumentException("Did not find OasImportHistory entry with id " + uniqueId);
+                                                      */
+    OasImportHistoryStorable storable = new OasImportHistoryStorable();
+    storable.setUniqueIdentifier(uniqueId);
+    try {
+      con.queryOneRow(storable);
+    } catch (Exception e) {
+      throw new RuntimeException("Error querying OasImportHistory entry with id " + uniqueId + ": " + e.getMessage(), e);
     }
-    return _adapter.adapt(result);
+    return _adapter.adapt(storable);
   }
 
 }

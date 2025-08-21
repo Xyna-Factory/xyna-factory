@@ -37,8 +37,8 @@ public class OasImportHistoryStorable extends Storable<OasImportHistoryStorable>
     public OasImportHistoryStorable read(ResultSet rs) throws SQLException {
       OasImportHistoryStorable result = new OasImportHistoryStorable();
       result.uniqueIdentifier = rs.getLong(COL_UNIQUE_ID);
-      result.type = rs.getString(COL_TYPE);
-      result.date = rs.getString(COL_DATE);
+      result.importType = rs.getString(COL_IMPORT_TYPE);
+      result.importDate = rs.getString(COL_IMPORT_DATE);
       result.fileName = rs.getString(COL_FILE_NAME);
       result.importStatus = rs.getString(COL_IMPORT_STATUS);
       return result;
@@ -51,8 +51,8 @@ public class OasImportHistoryStorable extends Storable<OasImportHistoryStorable>
     public OasImportHistoryStorable read(ResultSet rs) throws SQLException {
       OasImportHistoryStorable result = new OasImportHistoryStorable();
       result.uniqueIdentifier = rs.getLong(COL_UNIQUE_ID);
-      result.type = rs.getString(COL_TYPE);
-      result.date = rs.getString(COL_DATE);
+      result.importType = rs.getString(COL_IMPORT_TYPE);
+      result.importDate = rs.getString(COL_IMPORT_DATE);
       result.fileName = rs.getString(COL_FILE_NAME);
       result.specificationFile = (String) result.readBlobbedJavaObjectFromResultSet(rs, COL_SPECIFICATION_FILE);
       result.importStatus = rs.getString(COL_IMPORT_STATUS);
@@ -68,8 +68,8 @@ public class OasImportHistoryStorable extends Storable<OasImportHistoryStorable>
   public static final String TABLE_NAME = "oasimporthistory";
   
   public static final String COL_UNIQUE_ID = "uniqueIdentifier";
-  public static final String COL_TYPE = "type";
-  public static final String COL_DATE = "date";
+  public static final String COL_IMPORT_TYPE = "importType";
+  public static final String COL_IMPORT_DATE = "importDate";
   public static final String COL_FILE_NAME = "fileName";
   public static final String COL_SPECIFICATION_FILE = "specificationFile";
   public static final String COL_IMPORT_STATUS = "importStatus";
@@ -79,11 +79,11 @@ public class OasImportHistoryStorable extends Storable<OasImportHistoryStorable>
   @Column(name = COL_UNIQUE_ID)
   private long uniqueIdentifier;
   
-  @Column(name = COL_TYPE)
-  private String type;
+  @Column(name = COL_IMPORT_TYPE)
+  private String importType;
   
-  @Column(name = COL_DATE)
-  private String date;
+  @Column(name = COL_IMPORT_DATE)
+  private String importDate;
   
   @Column(name = COL_FILE_NAME)
   private String fileName;
@@ -123,8 +123,8 @@ public class OasImportHistoryStorable extends Storable<OasImportHistoryStorable>
   public <U extends OasImportHistoryStorable> void setAllFieldsFromData(U data) {
     OasImportHistoryStorable cast = data;
     this.uniqueIdentifier = cast.uniqueIdentifier;
-    this.type = cast.type;
-    this.date = cast.date;
+    this.importType = cast.importType;
+    this.importDate = cast.importDate;
     this.fileName = cast.fileName;
     this.specificationFile = cast.specificationFile;
     this.importStatus = cast.importStatus;
@@ -141,27 +141,27 @@ public class OasImportHistoryStorable extends Storable<OasImportHistoryStorable>
     this.uniqueIdentifier = uniqueIdentifier;
   }
 
-
-  public String getType() {
-    return type;
+  
+  public String getImportType() {
+    return importType;
   }
 
   
-  public void setType(String type) {
-    this.type = type;
+  public void setImportType(String importType) {
+    this.importType = importType;
   }
 
   
-  public String getDate() {
-    return date;
+  public String getImportDate() {
+    return importDate;
   }
 
   
-  public void setDate(String date) {
-    this.date = date;
+  public void setImportDate(String importDate) {
+    this.importDate = importDate;
   }
 
-  
+
   public String getFileName() {
     return fileName;
   }

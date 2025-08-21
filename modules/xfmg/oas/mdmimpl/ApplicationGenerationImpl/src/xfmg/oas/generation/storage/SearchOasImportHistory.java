@@ -21,6 +21,8 @@ package xfmg.oas.generation.storage;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
+
 import com.gip.xyna.xnwh.persistence.ODSConnection;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.persistence.PreparedQuery;
@@ -35,11 +37,13 @@ import xmcp.tables.datatypes.TableInfo;
 
 public class SearchOasImportHistory implements WarehouseRetryExecutableNoException<List<OAS_ImportHistory>> {
 
+  //private static Logger _logger = Logger.getLogger(SearchOasImportHistory.class);
+  
   private static final String SELECT_BASE = "SELECT " +
     OasImportHistoryStorable.COL_UNIQUE_ID + ", " +
     OasImportHistoryStorable.COL_FILE_NAME + ", " +
-    OasImportHistoryStorable.COL_TYPE + ", " +
-    OasImportHistoryStorable.COL_DATE + ", " +
+    OasImportHistoryStorable.COL_IMPORT_TYPE + ", " +
+    OasImportHistoryStorable.COL_IMPORT_DATE + ", " +
     OasImportHistoryStorable.COL_IMPORT_STATUS +
     " FROM " + OasImportHistoryStorable.TABLE_NAME;
   private static final OasImportHistoryAdapter _adapter = new OasImportHistoryAdapter();
@@ -49,9 +53,9 @@ public class SearchOasImportHistory implements WarehouseRetryExecutableNoExcepti
      FilterColumnConfig.builder().xmomPath(OasImportHistoryConstants.PATH_FILENAME).
                                   sqlColumnName(OasImportHistoryStorable.COL_FILE_NAME).build(),
      FilterColumnConfig.builder().xmomPath(OasImportHistoryConstants.PATH_TYPE).
-                                  sqlColumnName(OasImportHistoryStorable.COL_TYPE).build(),
+                                  sqlColumnName(OasImportHistoryStorable.COL_IMPORT_TYPE).build(),
      FilterColumnConfig.builder().xmomPath(OasImportHistoryConstants.PATH_DATE).
-                                  sqlColumnName(OasImportHistoryStorable.COL_DATE).build(),
+                                  sqlColumnName(OasImportHistoryStorable.COL_IMPORT_DATE).build(),
      FilterColumnConfig.builder().xmomPath(OasImportHistoryConstants.PATH_IMPORTSTATUS).
                                   sqlColumnName(OasImportHistoryStorable.COL_IMPORT_STATUS).build()));
   
