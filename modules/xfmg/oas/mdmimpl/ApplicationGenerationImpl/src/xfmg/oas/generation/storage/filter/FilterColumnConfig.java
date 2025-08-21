@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xfmg.oas.generation.storage.tools;
+package xfmg.oas.generation.storage.filter;
 
 
 public class FilterColumnConfig {

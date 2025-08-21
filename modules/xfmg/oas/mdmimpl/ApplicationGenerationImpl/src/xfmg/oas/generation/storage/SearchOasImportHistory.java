@@ -28,9 +28,9 @@ import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.persistence.PreparedQuery;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoException;
 
-import xfmg.oas.generation.storage.tools.FilterColumnConfig;
-import xfmg.oas.generation.storage.tools.TableFilter;
-import xfmg.oas.generation.storage.tools.TableFilterBuilder;
+import xfmg.oas.generation.storage.filter.FilterColumnConfig;
+import xfmg.oas.generation.storage.filter.TableFilter;
+import xfmg.oas.generation.storage.filter.TableFilterBuilder;
 import xmcp.oas.fman.storables.OAS_ImportHistory;
 import xmcp.tables.datatypes.TableInfo;
 
