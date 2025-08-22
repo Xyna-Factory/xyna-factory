@@ -25,6 +25,7 @@
     <import file="./ant-xyna.xml" />
 
     <property name="exception.xml.dir" value="${root.dir}/server" />
+    <property name="application.dir" value="${basedir}/../.." />
     <property name="base.lib.dir" value="${basedir}/lib" />
     <!--<property name="additional.lib.dir" /> (nur zum Kompilieren nötig) kann gesetzt werden, muss aber nicht -->
     <!--<property name="unfree.lib.dir" /> (unfreie Libs, die zum Kompilieren und Ausführen nötig sind) kann gesetzt werden, muss aber nicht -->
@@ -228,6 +229,14 @@
     <target name="cleanup">
         <delete dir="${target.dir}" failonerror="false" />
         <delete dir="${basedir}/classes" />
+    </target>
+
+    <!-- ================================= 
+         target: cleanup-lib
+         ================================= -->
+    <target name="cleanup-lib">
+        <delete dir="${base.lib.dir}" />
+        <ant antfile="${application.dir}/build.xml" target="prepare-mdm-jar" inheritAll="false" dir="${application.dir}" />
     </target>
 
 </project>

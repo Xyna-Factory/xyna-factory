@@ -176,4 +176,11 @@
         <copyJar from="${unfree.lib.dir}" to="${target.dir}" />
     </target>
 
+    <!-- ================================= 
+         target: cleanup-lib
+         ================================= -->
+    <target name="cleanup-lib">
+        <delete dir="${base.lib.dir}" />
+    </target>
+
 </project>
