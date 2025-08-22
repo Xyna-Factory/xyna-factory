@@ -37,8 +37,6 @@ import xmcp.tables.datatypes.TableInfo;
 
 public class SearchOasImportHistory implements WarehouseRetryExecutableNoException<List<OAS_ImportHistory>> {
 
-  //private static Logger _logger = Logger.getLogger(SearchOasImportHistory.class);
-  
   private static final String SELECT_BASE = "SELECT " +
     OasImportHistoryStorable.COL_UNIQUE_ID + ", " +
     OasImportHistoryStorable.COL_FILE_NAME + ", " +

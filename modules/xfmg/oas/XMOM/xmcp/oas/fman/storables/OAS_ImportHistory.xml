@@ -31,9 +31,6 @@
   </Data>
   <Data Label="Unique Identifier" VariableName="uniqueIdentifier">
     <Meta>
-      <Persistence>
-        <Type>UniqueIdentifier</Type>
-      </Persistence>
       <Type>long</Type>
     </Meta>
   </Data>
@@ -46,9 +43,6 @@
     <Meta>
       <Type>String</Type>
     </Meta>
-    <Restriction>
-      <MaxLength>1000000</MaxLength>
-    </Restriction>
   </Data>
   <Data Label="Import Status" VariableName="importStatus">
     <Meta>
@@ -59,8 +53,5 @@
     <Meta>
       <Type>String</Type>
     </Meta>
-    <Restriction>
-      <MaxLength>100000</MaxLength>
-    </Restriction>
   </Data>
 </DataType>
