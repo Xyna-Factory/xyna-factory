@@ -16,24 +16,32 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.shared;
+package xmcp.zeta.storage.generic.filter.lexer;
 
-import java.util.ArrayList;
-import java.util.List;
+import xmcp.zeta.storage.generic.filter.shared.Enums;
 
 
-public class Replacer<T> {
+public class MergedOperator extends LexedToken {
 
-  public List<T> replaceInList(List<T> list, int fromIndexInclusive, int toIndexExclusive, T replaceWith) {
-    if (fromIndexInclusive >= list.size()) { return new ArrayList<T>(list); }
-    if (toIndexExclusive >= list.size()) { return new ArrayList<T>(list); }
-    List<T> ret = new ArrayList<T>();
-    List<T> before = list.subList(0, fromIndexInclusive);
-    List<T> after = list.subList(toIndexExclusive, list.size());
-    ret.addAll(before);
-    ret.add(replaceWith);
-    ret.addAll(after);
-    return ret;
+  private final Enums.LexedOperatorCategory category;
+  
+  
+  public MergedOperator(LexedToken op1, LexedToken op2) {
+    super(getAsOp(op1).getOriginalInput() + getAsOp(op2).getOriginalInput());
+    this.category = getAsOp(op1).getCategory();
+  }
+
+  
+  private static OperatorToken getAsOp(LexedToken token) {
+    if (token instanceof OperatorToken) {
+      return (OperatorToken) token;
+    }
+    throw new IllegalArgumentException("MergedOperator: Expected LexedToken of type OperatorToken"); 
+  }
+  
+  
+  public Enums.LexedOperatorCategory getCategory() {
+    return category;
   }
   
 }

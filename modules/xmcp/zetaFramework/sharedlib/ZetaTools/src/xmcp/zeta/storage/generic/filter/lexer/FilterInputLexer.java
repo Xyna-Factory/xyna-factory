@@ -23,9 +23,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.StringTokenizer;
 
+import xmcp.zeta.storage.generic.filter.shared.Enums;
+import xmcp.zeta.storage.generic.filter.shared.Replacer;
+
 
 public class FilterInputLexer {
 
+  
+  
   // attribut: liste lexed-token
   //private List<LexedToken> _tokens = new ArrayList<>();
   
@@ -37,13 +42,6 @@ public class FilterInputLexer {
   // pro string: get (optional) op-type (enum ), sonst literal (oder whitespace?)
   // output (erbt von lexedtoken): literal, whitespace, op-token
   public List<LexedToken> execute(String input) {
-    List<LexedToken> tokens = tokenize(input);
-    
-    return tokens;
-  }
-  
-  
-  private List<LexedToken> tokenize(String input) {
     List<LexedToken> ret = new ArrayList<>();
     StringTokenizer st = new StringTokenizer(input, " &!|<>()'\"\t\n", true);
     while (st.hasMoreTokens()) {
@@ -64,5 +62,5 @@ public class FilterInputLexer {
     if (opt.isPresent()) { return opt; }
     return Optional.of(new LexedLiteral(input));
   }
-  
+
 }

@@ -16,24 +16,13 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.shared;
-
-import java.util.ArrayList;
-import java.util.List;
+package xmcp.zeta.storage.generic.filter.lexer;
 
 
-public class Replacer<T> {
+public class MergedLiteral extends LexedToken {
 
-  public List<T> replaceInList(List<T> list, int fromIndexInclusive, int toIndexExclusive, T replaceWith) {
-    if (fromIndexInclusive >= list.size()) { return new ArrayList<T>(list); }
-    if (toIndexExclusive >= list.size()) { return new ArrayList<T>(list); }
-    List<T> ret = new ArrayList<T>();
-    List<T> before = list.subList(0, fromIndexInclusive);
-    List<T> after = list.subList(toIndexExclusive, list.size());
-    ret.addAll(before);
-    ret.add(replaceWith);
-    ret.addAll(after);
-    return ret;
+  public MergedLiteral(String originalInput) {
+    super(originalInput);
   }
-  
+
 }
