@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,131 +24,74 @@
       <Data ID="26" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition26"/>
       <Data ID="390" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory390"/>
     </Output>
-    <Data ID="1258" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="const_FormPanelDefinition1258">
-      <Data VariableName="hideIfEmpty">
-        <Meta>
-          <Type>boolean</Type>
-        </Meta>
-        <Value>false</Value>
-      </Data>
-      <Data VariableName="compact">
-        <Meta>
-          <Type>boolean</Type>
-        </Meta>
-        <Value>false</Value>
-      </Data>
-      <Data VariableName="hidden">
-        <Meta>
-          <Type>boolean</Type>
-        </Meta>
-        <Value>false</Value>
-      </Data>
-      <Data VariableName="collapsed">
-        <Meta>
-          <Type>boolean</Type>
-        </Meta>
-        <Value>false</Value>
-      </Data>
-      <Data VariableName="closable">
-        <Meta>
-          <Type>boolean</Type>
-        </Meta>
-        <Value>true</Value>
-      </Data>
-      <Data VariableName="collapsable">
-        <Meta>
-          <Type>boolean</Type>
-        </Meta>
-        <Value>false</Value>
-      </Data>
-      <Data VariableName="disabled">
-        <Meta>
-          <Type>boolean</Type>
-        </Meta>
-        <Value>false</Value>
-      </Data>
-      <Data VariableName="hideIfUndefined">
-        <Meta>
-          <Type>boolean</Type>
-        </Meta>
-        <Value>false</Value>
-      </Data>
-      <Data VariableName="label">
-        <Meta>
-          <Type>String</Type>
-        </Meta>
-        <Value>Specification File:</Value>
-      </Data>
-      <Data VariableName="dataPath">
-        <Meta>
-          <Type>String</Type>
-        </Meta>
-        <Value>%0%</Value>
-      </Data>
-      <Data IsList="true" Label="Base Definition" ReferenceName="BaseDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="children">
-        <Value>
-          <Data ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition">
-            <Data VariableName="hideIfEmpty">
-              <Meta>
-                <Type>boolean</Type>
-              </Meta>
-              <Value>false</Value>
-            </Data>
-            <Data VariableName="hidden">
-              <Meta>
-                <Type>boolean</Type>
-              </Meta>
-              <Value>false</Value>
-            </Data>
-            <Data VariableName="disabled">
-              <Meta>
-                <Type>boolean</Type>
-              </Meta>
-              <Value>false</Value>
-            </Data>
-            <Data VariableName="hideIfUndefined">
-              <Meta>
-                <Type>boolean</Type>
-              </Meta>
-              <Value>false</Value>
-            </Data>
-            <Data VariableName="style">
-              <Meta>
-                <Type>String</Type>
-              </Meta>
-              <Value>pre</Value>
-            </Data>
-            <Data VariableName="label">
-              <Meta>
-                <Type>String</Type>
-              </Meta>
-              <Value/>
-            </Data>
-            <Data VariableName="dataPath">
-              <Meta>
-                <Type>String</Type>
-              </Meta>
-              <Value>specificationFile</Value>
-            </Data>
-          </Data>
-        </Value>
-      </Data>
+    <ServiceReference ID="1404" Label="Application Generation" ReferenceName="ApplicationGeneration.ApplicationGeneration" ReferencePath="xfmg.oas.generation">
+      <Source RefID="1403"/>
+      <Target RefID="1403"/>
+    </ServiceReference>
+    <Mappings ID="1326" Label="Mapping">
+      <Output>
+        <Data ID="1335" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition1335">
+          <Source RefID="1326"/>
+        </Data>
+        <Target RefID="1336"/>
+      </Output>
+      <Mapping>%0%.dataPath="specificationFile"</Mapping>
+      <Mapping>%0%.style="pre"</Mapping>
+    </Mappings>
+    <Mappings ID="1267" Label="Mapping">
+      <Input>
+        <Data ID="1369" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition1369">
+          <Source RefID="1267"/>
+        </Data>
+        <Source RefID="1336"/>
+      </Input>
+      <Output>
+        <Data ID="1276" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1276">
+          <Source RefID="1267"/>
+        </Data>
+        <Target RefID="1277"/>
+      </Output>
+      <Mapping>%1%.label="Specification File:"</Mapping>
+      <Mapping>%1%.dataPath="%0%"</Mapping>
+      <Mapping>%1%.children["0"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%0%</Mapping>
+      <Mapping>%1%.closable="true"</Mapping>
+    </Mappings>
+    <Function ID="1403" Label="Query Oas Import History Details">
+      <Source RefID="1404"/>
+      <Source RefID="377"/>
+      <Target RefID="1404"/>
+      <Target RefID="1406"/>
+      <Invoke Operation="queryOasImportHistoryDetails" ServiceID="1404">
+        <Source RefID="377"/>
+      </Invoke>
+      <Receive ServiceID="1404">
+        <Target RefID="1406"/>
+      </Receive>
+    </Function>
+    <Data ID="1277" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1277">
+      <Source RefID="1267"/>
+    </Data>
+    <Data ID="1336" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition1336">
+      <Source RefID="1326"/>
+    </Data>
+    <Data ID="1406" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory1406">
+      <Source RefID="1403"/>
     </Data>
     <Assign ID="1">
-      <Source RefID="1258"/>
-      <Source RefID="377"/>
+      <Source RefID="1277"/>
+      <Source RefID="1406"/>
       <Target RefID="26"/>
       <Target RefID="390"/>
       <Copy>
-        <Source RefID="1258">
-          <Meta>
-            <LinkType>Constant</LinkType>
-          </Meta>
-        </Source>
+        <Source RefID="1277"/>
         <Target RefID="26"/>
       </Copy>
       <Copy>
-        <Source RefID="377"/>
+        <Source RefID="1406">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
         <Target RefID="390"/>
       </Copy>
     </Assign>
