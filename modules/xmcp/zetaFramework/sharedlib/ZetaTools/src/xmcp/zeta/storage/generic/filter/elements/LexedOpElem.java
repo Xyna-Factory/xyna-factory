@@ -16,23 +16,9 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.lexer;
+package xmcp.zeta.storage.generic.filter.elements;
 
-import java.util.Optional;
 
-// impl lexed-token
-public class Whitespace extends Token {
-
-  private Whitespace(String originalInput) {
-    super(originalInput);
-  }
-
-  
-  public static Optional<Token> buildIfMatches(String input) {
-    if (input.matches("\\s+")) {
-      return Optional.of(new Whitespace(input));
-    }
-    return Optional.empty();
-  }
+public class LexedOpElem {
 
 }

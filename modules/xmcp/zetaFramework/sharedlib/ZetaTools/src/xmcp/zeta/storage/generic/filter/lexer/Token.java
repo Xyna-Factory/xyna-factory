@@ -18,16 +18,14 @@
 
 package xmcp.zeta.storage.generic.filter.lexer;
 
-import java.util.Optional;
-
 // erbt von filter elem?
-public abstract class LexedToken {
+public abstract class Token {
   
   // attr. orig input string (für quote-blöcke)
   private final String originalInput;
 
   
-  public LexedToken(String originalInput) {
+  public Token(String originalInput) {
     this.originalInput = originalInput;
   }
 

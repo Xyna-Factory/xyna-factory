@@ -21,9 +21,9 @@ package xmcp.zeta.storage.generic.filter.parser;
 import java.util.List;
 import java.util.Optional;
 
-import xmcp.zeta.storage.generic.filter.lexer.LexedToken;
+import xmcp.zeta.storage.generic.filter.lexer.Token;
 import xmcp.zeta.storage.generic.filter.lexer.MergedLiteral;
-import xmcp.zeta.storage.generic.filter.lexer.OperatorToken;
+import xmcp.zeta.storage.generic.filter.lexer.LexedOperator;
 import xmcp.zeta.storage.generic.filter.shared.Enums;
 import xmcp.zeta.storage.generic.filter.shared.OperatorMatch;
 import xmcp.zeta.storage.generic.filter.shared.Replacer;
@@ -31,9 +31,9 @@ import xmcp.zeta.storage.generic.filter.shared.Replacer;
 
 public class QuoteHandler {
 
-  public List<LexedToken> execute(List<LexedToken> list) {
-    List<LexedToken> tokens = list;
-    Replacer<LexedToken> replacer = new Replacer<LexedToken>();
+  public List<Token> execute(List<Token> list) {
+    List<Token> tokens = list;
+    Replacer<Token> replacer = new Replacer<Token>();
     int pos = 0;
     while (true) {
       Optional<OperatorMatch> match = getFirstQuote(tokens, pos);
@@ -47,21 +47,21 @@ public class QuoteHandler {
   }
   
   
-  private MergedLiteral mergeQuotedTokens(int fromInclusive, int toExclusive, List<LexedToken> list) {
-    List<LexedToken> toMerge = list.subList(fromInclusive, toExclusive);
+  private MergedLiteral mergeQuotedTokens(int fromInclusive, int toExclusive, List<Token> list) {
+    List<Token> toMerge = list.subList(fromInclusive, toExclusive);
     StringBuilder str = new StringBuilder();
-    for (LexedToken token : toMerge) {
+    for (Token token : toMerge) {
       str.append(token.getOriginalInput());
     }
     return new MergedLiteral(str.toString());
   }
   
   
-  private Optional<OperatorMatch> getFirstQuote(List<LexedToken> list, int from) {
+  private Optional<OperatorMatch> getFirstQuote(List<Token> list, int from) {
     for (int i = from; i < list.size(); i++) {
-      LexedToken token = list.get(i);
-      if (!(token instanceof OperatorToken)) { continue; }
-      OperatorToken op = (OperatorToken) token;
+      Token token = list.get(i);
+      if (!(token instanceof LexedOperator)) { continue; }
+      LexedOperator op = (LexedOperator) token;
       if ((op.getCategory() == Enums.LexedOperatorCategory.SINGLE_QUOTE) ||
           (op.getCategory() == Enums.LexedOperatorCategory.DOUBLE_QUOTE)) {
         OperatorMatch ret = new OperatorMatch();
@@ -74,11 +74,11 @@ public class QuoteHandler {
   }
   
   
-  private int getIndexClosingQuote(List<LexedToken> list, OperatorMatch firstMatch) {    
+  private int getIndexClosingQuote(List<Token> list, OperatorMatch firstMatch) {    
     for (int i = firstMatch.index + 1; i < list.size(); i++) {
-      LexedToken token = list.get(i);
-      if (!(token instanceof OperatorToken)) { continue; }
-      OperatorToken op = (OperatorToken) token;
+      Token token = list.get(i);
+      if (!(token instanceof LexedOperator)) { continue; }
+      LexedOperator op = (LexedOperator) token;
       if (op.getCategory() == firstMatch.category) {
         return i;
       }

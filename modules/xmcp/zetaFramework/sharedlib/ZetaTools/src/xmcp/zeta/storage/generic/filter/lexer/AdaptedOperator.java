@@ -21,7 +21,7 @@ package xmcp.zeta.storage.generic.filter.lexer;
 import xmcp.zeta.storage.generic.filter.shared.Enums;
 
 
-public class AdaptedOperator extends LexedToken {
+public class AdaptedOperator extends Token {
 
   private final Enums.LexedOperatorCategory category;
   
@@ -32,15 +32,15 @@ public class AdaptedOperator extends LexedToken {
   }
   
   
-  public AdaptedOperator(LexedToken op1, LexedToken op2) {
+  public AdaptedOperator(Token op1, Token op2) {
     super(getAsOp(op1).getOriginalInput() + getAsOp(op2).getOriginalInput());
     this.category = getAsOp(op1).getCategory();
   }
 
   
-  private static OperatorToken getAsOp(LexedToken token) {
-    if (token instanceof OperatorToken) {
-      return (OperatorToken) token;
+  private static LexedOperator getAsOp(Token token) {
+    if (token instanceof LexedOperator) {
+      return (LexedOperator) token;
     }
     throw new IllegalArgumentException("MergedOperator: Expected LexedToken of type OperatorToken"); 
   }

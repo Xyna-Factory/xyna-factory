@@ -19,6 +19,6 @@
 package xmcp.zeta.storage.generic.filter.elements;
 
 
-public class LexerElem {
+public class OperatorTargetElem {
 
 }

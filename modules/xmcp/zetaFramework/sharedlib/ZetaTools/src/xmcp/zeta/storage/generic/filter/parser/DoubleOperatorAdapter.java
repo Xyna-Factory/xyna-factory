@@ -20,18 +20,18 @@ package xmcp.zeta.storage.generic.filter.parser;
 
 import java.util.List;
 
-import xmcp.zeta.storage.generic.filter.lexer.LexedToken;
+import xmcp.zeta.storage.generic.filter.lexer.Token;
 import xmcp.zeta.storage.generic.filter.lexer.AdaptedOperator;
-import xmcp.zeta.storage.generic.filter.lexer.OperatorToken;
+import xmcp.zeta.storage.generic.filter.lexer.LexedOperator;
 import xmcp.zeta.storage.generic.filter.shared.Enums;
 import xmcp.zeta.storage.generic.filter.shared.Replacer;
 
 
 public class DoubleOperatorAdapter {
 
-  public List<LexedToken> execute(List<LexedToken> list) {
-    List<LexedToken> tokens = list;
-    Replacer<LexedToken> replacer = new Replacer<LexedToken>();
+  public List<Token> execute(List<Token> list) {
+    List<Token> tokens = list;
+    Replacer<Token> replacer = new Replacer<Token>();
     int pos = 0;
     while (true) {
       pos = getIndexFirstMatch(tokens, pos);
@@ -44,18 +44,18 @@ public class DoubleOperatorAdapter {
   }
   
   
-  private int getIndexFirstMatch(List<LexedToken> list, int from) {
+  private int getIndexFirstMatch(List<Token> list, int from) {
     for (int i = from; i < list.size() - 1; i++) {
-      LexedToken token = list.get(i);
-      if (!(token instanceof OperatorToken)) { continue; }
-      OperatorToken op = (OperatorToken) token;
+      Token token = list.get(i);
+      if (!(token instanceof LexedOperator)) { continue; }
+      LexedOperator op = (LexedOperator) token;
       if ((op.getCategory() != Enums.LexedOperatorCategory.AND) &&
           (op.getCategory() != Enums.LexedOperatorCategory.OR)) {
         continue;
       }
-      LexedToken next = list.get(i + 1);
-      if (!(next instanceof OperatorToken)) { continue; }
-      OperatorToken nextop = (OperatorToken) next;
+      Token next = list.get(i + 1);
+      if (!(next instanceof LexedOperator)) { continue; }
+      LexedOperator nextop = (LexedOperator) next;
       if (nextop.getCategory() != op.getCategory()) { continue; }
       return i;
     }

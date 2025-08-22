@@ -16,23 +16,24 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.lexer;
+package xmcp.zeta.storage.generic.filter.parser;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
-// impl lexed-token
-public class Whitespace extends Token {
+import xmcp.zeta.storage.generic.filter.lexer.Token;
+import xmcp.zeta.storage.generic.filter.lexer.Whitespace;
 
-  private Whitespace(String originalInput) {
-    super(originalInput);
-  }
 
-  
-  public static Optional<Token> buildIfMatches(String input) {
-    if (input.matches("\\s+")) {
-      return Optional.of(new Whitespace(input));
+public class WhitespaceRemover {
+
+  public List<Token> execute(List<Token> list) {
+    List<Token> ret = new ArrayList<>();
+    for (Token token : list) {
+      if (token instanceof Whitespace) { continue; }
+      ret.add(token);
     }
-    return Optional.empty();
+    return ret;
   }
-
+  
 }

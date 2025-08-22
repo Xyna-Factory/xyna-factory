@@ -25,14 +25,14 @@ import xmcp.zeta.storage.generic.filter.shared.Enums;
 
 
 // impl lexed-token
-public class OperatorToken extends LexedToken {
+public class LexedOperator extends Token {
 
   private static Pattern OPERATOR_PATTERN = Pattern.compile("[&|!<>()'\"]{1}");
   
   private final Enums.LexedOperatorCategory category;
   
   
-  private OperatorToken(String input) {
+  private LexedOperator(String input) {
     super(input);
     this.category = determineCategory(input);
   }
@@ -47,11 +47,11 @@ public class OperatorToken extends LexedToken {
   }
   
   
-  public static Optional<LexedToken> buildIfMatches(String input) {
+  public static Optional<Token> buildIfMatches(String input) {
     if (input == null) { return Optional.empty(); }
     if (input.length() != 1) { return Optional.empty(); }
     if (OPERATOR_PATTERN.matcher(input).matches()) {
-      return Optional.of(new OperatorToken(input));
+      return Optional.of(new LexedOperator(input));
     }
     return Optional.empty();
   }

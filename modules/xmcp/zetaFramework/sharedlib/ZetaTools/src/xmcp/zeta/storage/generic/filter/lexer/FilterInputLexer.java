@@ -41,11 +41,11 @@ public class FilterInputLexer {
   // -> call java tokenizer : liste strings
   // pro string: get (optional) op-type (enum ), sonst literal (oder whitespace?)
   // output (erbt von lexedtoken): literal, whitespace, op-token
-  public List<LexedToken> execute(String input) {
-    List<LexedToken> ret = new ArrayList<>();
+  public List<Token> execute(String input) {
+    List<Token> ret = new ArrayList<>();
     StringTokenizer st = new StringTokenizer(input, " &!|<>()'\"\t\n", true);
     while (st.hasMoreTokens()) {
-      Optional<LexedToken> opt = buildToken(st.nextToken());
+      Optional<Token> opt = buildToken(st.nextToken());
       if (opt.isPresent()) {
         ret.add(opt.get());
       }
@@ -54,11 +54,11 @@ public class FilterInputLexer {
   }
   
   
-  private Optional<LexedToken> buildToken(String input) {
+  private Optional<Token> buildToken(String input) {
     if (input == null) { return Optional.empty(); }
-    Optional<LexedToken> opt = Whitespace.buildIfMatches(input);
+    Optional<Token> opt = Whitespace.buildIfMatches(input);
     if (opt.isPresent()) { return opt; }
-    opt = OperatorToken.buildIfMatches(input);
+    opt = LexedOperator.buildIfMatches(input);
     if (opt.isPresent()) { return opt; }
     return Optional.of(new LexedLiteral(input));
   }

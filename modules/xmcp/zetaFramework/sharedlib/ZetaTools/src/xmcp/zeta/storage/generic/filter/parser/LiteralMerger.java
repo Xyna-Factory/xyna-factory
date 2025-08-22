@@ -21,16 +21,16 @@ package xmcp.zeta.storage.generic.filter.parser;
 import java.util.List;
 
 import xmcp.zeta.storage.generic.filter.lexer.LexedLiteral;
-import xmcp.zeta.storage.generic.filter.lexer.LexedToken;
+import xmcp.zeta.storage.generic.filter.lexer.Token;
 import xmcp.zeta.storage.generic.filter.lexer.MergedLiteral;
 import xmcp.zeta.storage.generic.filter.shared.Replacer;
 
 
 public class LiteralMerger {
 
-  public List<LexedToken> execute(List<LexedToken> list) {
-    List<LexedToken> tokens = list;
-    Replacer<LexedToken> replacer = new Replacer<LexedToken>();
+  public List<Token> execute(List<Token> list) {
+    List<Token> tokens = list;
+    Replacer<Token> replacer = new Replacer<Token>();
     int pos = 0;
     while (true) {
       int from = getIndexFirstMatchStart(tokens, pos);
@@ -44,19 +44,19 @@ public class LiteralMerger {
   }
   
   
-  private MergedLiteral mergeLiteralTokens(int fromInclusive, int toExclusive, List<LexedToken> list) {
-    List<LexedToken> toMerge = list.subList(fromInclusive, toExclusive);
+  private MergedLiteral mergeLiteralTokens(int fromInclusive, int toExclusive, List<Token> list) {
+    List<Token> toMerge = list.subList(fromInclusive, toExclusive);
     StringBuilder str = new StringBuilder();
-    for (LexedToken token : toMerge) {
+    for (Token token : toMerge) {
       str.append(token.getOriginalInput());
     }
     return new MergedLiteral(str.toString());
   }
   
   
-  private int getIndexFirstMatchStart(List<LexedToken> list, int from) {
+  private int getIndexFirstMatchStart(List<Token> list, int from) {
     for (int i = from; i < list.size() - 1; i++) {
-      LexedToken token = list.get(i);
+      Token token = list.get(i);
       boolean matched = false;
       if (token instanceof LexedLiteral) {
         matched = true;
@@ -78,10 +78,10 @@ public class LiteralMerger {
   }
   
   
-  private int getIndexFirstMatchEnd(List<LexedToken> list, int from) {
+  private int getIndexFirstMatchEnd(List<Token> list, int from) {
     int matchEnd = from;
     for (int i = from + 1; i < list.size() - 1; i++) {
-      LexedToken token = list.get(i);
+      Token token = list.get(i);
       boolean matched = false;
       if (token instanceof LexedLiteral) {
         matched = true;

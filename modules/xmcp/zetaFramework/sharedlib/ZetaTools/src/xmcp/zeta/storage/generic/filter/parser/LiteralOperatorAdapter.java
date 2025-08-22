@@ -23,7 +23,7 @@ import java.util.Optional;
 
 import xmcp.zeta.storage.generic.filter.lexer.AdaptedOperator;
 import xmcp.zeta.storage.generic.filter.lexer.LexedLiteral;
-import xmcp.zeta.storage.generic.filter.lexer.LexedToken;
+import xmcp.zeta.storage.generic.filter.lexer.Token;
 import xmcp.zeta.storage.generic.filter.shared.Enums;
 import xmcp.zeta.storage.generic.filter.shared.OperatorMatch;
 import xmcp.zeta.storage.generic.filter.shared.Replacer;
@@ -31,9 +31,9 @@ import xmcp.zeta.storage.generic.filter.shared.Replacer;
 
 public class LiteralOperatorAdapter {
 
-  public List<LexedToken> execute(List<LexedToken> list) {
-    List<LexedToken> tokens = list;
-    Replacer<LexedToken> replacer = new Replacer<LexedToken>();
+  public List<Token> execute(List<Token> list) {
+    List<Token> tokens = list;
+    Replacer<Token> replacer = new Replacer<Token>();
     int pos = 0;
     while (true) {
       Optional<OperatorMatch> match = getFirstMatch(tokens, pos);
@@ -47,9 +47,9 @@ public class LiteralOperatorAdapter {
   }
   
   
-  private Optional<OperatorMatch> getFirstMatch(List<LexedToken> list, int from) {
+  private Optional<OperatorMatch> getFirstMatch(List<Token> list, int from) {
     for (int i = from; i < list.size() - 1; i++) {
-      LexedToken token = list.get(i);
+      Token token = list.get(i);
       if (!(token instanceof LexedLiteral)) { continue; }
       LexedLiteral lit = (LexedLiteral) token;
       String val = lit.getOriginalInput().trim();

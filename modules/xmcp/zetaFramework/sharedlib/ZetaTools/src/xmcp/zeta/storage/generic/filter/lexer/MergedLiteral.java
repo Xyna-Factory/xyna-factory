@@ -19,7 +19,7 @@
 package xmcp.zeta.storage.generic.filter.lexer;
 
 
-public class MergedLiteral extends LexedToken {
+public class MergedLiteral extends Token {
 
   public MergedLiteral(String originalInput) {
     super(originalInput);
