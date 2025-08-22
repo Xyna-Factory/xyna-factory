@@ -16,10 +16,13 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elements;
+package xmcp.zeta.storage.generic.filter.lexer;
 
 import java.util.Optional;
 import java.util.regex.Pattern;
+
+import xmcp.zeta.storage.generic.filter.shared.Enums;
+import xmcp.zeta.storage.generic.filter.shared.Enums.LexedOperatorCategory;
 
 // impl lexed-token
 public class OperatorToken extends LexedToken {

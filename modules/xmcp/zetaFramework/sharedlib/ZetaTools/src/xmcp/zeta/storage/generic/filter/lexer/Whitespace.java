@@ -16,25 +16,23 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elements;
+package xmcp.zeta.storage.generic.filter.lexer;
 
+import java.util.Optional;
 
 // impl lexed-token
-public class Literal extends LexedToken {
+public class Whitespace extends LexedToken {
 
-  public Literal(String input) {
-    super(input);
-    if (input == null) {
-      throw new IllegalArgumentException("Literal: Input is null.");
-    }
-    if (input.isBlank()) {
-      throw new IllegalArgumentException("Literal: Input is only whitespace.");
-    }
+  private Whitespace(String originalInput) {
+    super(originalInput);
   }
 
   
-  
-  // adapt wildcard
-  
-  // contains wildcard
+  public static Optional<LexedToken> buildIfMatches(String input) {
+    if (input.matches("\\s+")) {
+      return Optional.of(new Whitespace(input));
+    }
+    return Optional.empty();
+  }
+
 }

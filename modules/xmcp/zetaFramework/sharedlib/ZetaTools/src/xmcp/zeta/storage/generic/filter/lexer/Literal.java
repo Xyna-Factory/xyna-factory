@@ -16,31 +16,24 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elements;
+package xmcp.zeta.storage.generic.filter.lexer;
 
-import java.util.Optional;
+// impl lexed-token
+public class Literal extends LexedToken {
 
-// erbt von filter elem?
-public abstract class LexedToken {
-  
-  // attr. orig input string (für quote-blöcke)
-  private final String originalInput;
-
-  
-  public LexedToken(String originalInput) {
-    this.originalInput = originalInput;
+  public Literal(String input) {
+    super(input);
+    if (input == null) {
+      throw new IllegalArgumentException("Literal: Input is null.");
+    }
+    if (input.isBlank()) {
+      throw new IllegalArgumentException("Literal: Input is only whitespace.");
+    }
   }
 
-
-  // get orig input string
-  public String getOriginalInput() {
-    return originalInput;
-  }
-
-
-  // is finished: return false
-  public boolean isFinished() {
-    return false;
-  }
   
+  
+  // adapt wildcard
+  
+  // contains wildcard
 }

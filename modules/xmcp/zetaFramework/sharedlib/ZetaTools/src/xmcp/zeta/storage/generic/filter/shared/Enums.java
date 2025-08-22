@@ -16,23 +16,23 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elements;
+package xmcp.zeta.storage.generic.filter.shared;
 
-import java.util.Optional;
 
-// impl lexed-token
-public class Whitespace extends LexedToken {
+public class Enums {
 
-  private Whitespace(String originalInput) {
-    super(originalInput);
+  // lexed operator-type
+  // and or not lesser greater equal open close single-quote double-quote
+  public static enum LexedOperatorCategory {
+    AND, OR, NOT, LESS_THAN, GREATER_THAN, EQUALS, OPEN, CLOSE, SINGLE_QUOTE, DOUBLE_QUOTE
   }
-
   
-  public static Optional<LexedToken> buildIfMatches(String input) {
-    if (input.matches("\\s+")) {
-      return Optional.of(new Whitespace(input));
-    }
-    return Optional.empty();
-  }
-
+  // unary op type
+  // not lesser greater equal
+  
+  // binary op type
+  // and or
+  
+  // parsed elem type
+  // container, relational-op, logical-op
 }
