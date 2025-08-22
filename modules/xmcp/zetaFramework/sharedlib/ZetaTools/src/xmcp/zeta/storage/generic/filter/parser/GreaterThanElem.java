@@ -16,9 +16,9 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xfmg.oas.generation.storage.filter.parser;
+package xmcp.zeta.storage.generic.filter.parser;
 
 
-public class UnaryRelationalOpElem {
+public class GreaterThanElem {
 
 }

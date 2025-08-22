@@ -16,29 +16,9 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xfmg.oas.generation.storage.filter;
+package xmcp.zeta.storage.generic.filter.parser;
 
 
-public class FilterColumnInput {
+public class EqualsElem {
 
-  private String path;
-  private String filter;
-  
-  public String getPath() {
-    return path;
-  }
-  
-  public void setPath(String path) {
-    this.path = path;
-  }
-  
-  public String getFilter() {
-    return filter;
-  }
-  
-  public void setFilter(String filter) {
-    this.filter = filter;
-  }
-  
-  
 }

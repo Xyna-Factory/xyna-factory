@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xfmg.oas.generation.storage.filter;
+package xmcp.zeta.storage.generic.filter;
 
 import java.util.List;
 

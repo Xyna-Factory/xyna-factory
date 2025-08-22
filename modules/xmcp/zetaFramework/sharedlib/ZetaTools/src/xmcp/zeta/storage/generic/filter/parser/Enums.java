@@ -16,31 +16,23 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xfmg.oas.generation.storage.filter.parser;
-
-import java.util.Optional;
-
-// erbt von filter elem?
-public abstract class LexedToken {
-  
-  // attr. orig input string (für quote-blöcke)
-  private final String originalInput;
-
-  
-  public LexedToken(String originalInput) {
-    this.originalInput = originalInput;
-  }
+package xmcp.zeta.storage.generic.filter.parser;
 
 
-  // get orig input string
-  public String getOriginalInput() {
-    return originalInput;
-  }
+public class Enums {
 
-
-  // is finished: return false
-  public boolean isFinished() {
-    return false;
+  // lexed operator-type
+  // and or not lesser greater equal open close single-quote double-quote
+  public static enum LexedOperatorCategory {
+    AND, OR, NOT, LESS_THAN, GREATER_THAN, EQUALS, OPEN, CLOSE, SINGLE_QUOTE, DOUBLE_QUOTE
   }
   
+  // unary op type
+  // not lesser greater equal
+  
+  // binary op type
+  // and or
+  
+  // parsed elem type
+  // container, relational-op, logical-op
 }

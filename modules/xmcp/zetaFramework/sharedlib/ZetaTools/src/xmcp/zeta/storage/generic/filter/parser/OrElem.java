@@ -16,10 +16,9 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xfmg.oas.generation.storage.filter.parser;
+package xmcp.zeta.storage.generic.filter.parser;
 
 
-public class UnaryOpElem {
+public class OrElem {
 
-  // check auf unerlaubte kombination logical /relational
 }

@@ -16,25 +16,22 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xfmg.oas.generation.storage.filter.parser;
+package xmcp.zeta.storage.generic.filter.parser;
 
 
-// impl lexed-token
-public class Literal extends LexedToken {
+public class ContainerElem {
 
-  public Literal(String input) {
-    super(input);
-    if (input == null) {
-      throw new IllegalArgumentException("Literal: Input is null.");
-    }
-    if (input.isBlank()) {
-      throw new IllegalArgumentException("Literal: Input is only whitespace.");
-    }
-  }
-
+  // contains, set of enum elem-type?
   
+  // containedtokens, nur lexed tokens
   
-  // adapt wildcard
+  // contains lexed-token
   
-  // contains wildcard
+  // replace (first pos replaced, last pos replaced, new elem)  
+  // -> rebuild()
+  
+  // rebuild (input neue child-liste)
+  // -> neu init contains
+  
+  // is finished: nur prüfen ob contained-tokens leer? N, alle childs isfinised
 }

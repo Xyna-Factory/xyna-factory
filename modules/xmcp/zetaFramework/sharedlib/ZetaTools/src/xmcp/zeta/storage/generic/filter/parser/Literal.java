@@ -16,9 +16,25 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xfmg.oas.generation.storage.filter.parser;
+package xmcp.zeta.storage.generic.filter.parser;
 
 
-public class LessThanElem {
-//
+// impl lexed-token
+public class Literal extends LexedToken {
+
+  public Literal(String input) {
+    super(input);
+    if (input == null) {
+      throw new IllegalArgumentException("Literal: Input is null.");
+    }
+    if (input.isBlank()) {
+      throw new IllegalArgumentException("Literal: Input is only whitespace.");
+    }
+  }
+
+  
+  
+  // adapt wildcard
+  
+  // contains wildcard
 }

@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xfmg.oas.generation.storage.filter.parser;
+package xmcp.zeta.storage.generic.filter.parser;
 
 import java.util.Optional;
 import java.util.regex.Pattern;
