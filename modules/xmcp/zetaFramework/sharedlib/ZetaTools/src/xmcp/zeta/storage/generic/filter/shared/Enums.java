@@ -18,14 +18,10 @@
 
 package xmcp.zeta.storage.generic.filter.shared;
 
+import java.util.Optional;
 
 public class Enums {
 
-  // lexed operator-type
-  // and or not lesser greater equal open close single-quote double-quote
-  public static enum LexedOperatorCategory {
-    AND, OR, NOT, LESS_THAN, GREATER_THAN, EQUALS, OPEN, CLOSE, SINGLE_QUOTE, DOUBLE_QUOTE
-  }
   
   // unary op type
   // not lesser greater equal
@@ -35,4 +31,41 @@ public class Enums {
   
   // parsed elem type
   // container, relational-op, logical-op
+  
+  
+  // lexed operator-type
+  // and or not lesser greater equal open close single-quote double-quote
+  public static enum LexedOperatorCategory {
+    AND("&"),
+    OR("|"),
+    NOT("!"),
+    LESS_THAN("<"),
+    GREATER_THAN(">"),
+    EQUALS("="),
+    OPEN("("),
+    CLOSE(")"),
+    SINGLE_QUOTE("'"),
+    DOUBLE_QUOTE("\"");
+    
+    private final String _token;
+    
+    private LexedOperatorCategory(String token) {
+      this._token = token;
+    }
+
+    public String getToken() {
+      return _token;
+    }
+    
+    public static Optional<LexedOperatorCategory> build(String input) {
+      for (LexedOperatorCategory item : values()) {
+        if (item.getToken().equals(input)) {
+          return Optional.of(item);
+        }
+      }
+      return Optional.empty();
+    }
+    
+  }
+  
 }

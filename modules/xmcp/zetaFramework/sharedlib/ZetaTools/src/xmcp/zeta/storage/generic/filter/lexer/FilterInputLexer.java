@@ -38,7 +38,7 @@ public class FilterInputLexer {
   // output (erbt von lexedtoken): literal, whitespace, op-token
   public List<LexedToken> execute(String input) {
     List<LexedToken> ret = new ArrayList<>();
-    StringTokenizer st = new StringTokenizer(input, " &!|()'\"\t\n", true);
+    StringTokenizer st = new StringTokenizer(input, " &!|<>()'\"\t\n", true);
     while (st.hasMoreTokens()) {
       Optional<LexedToken> opt = buildToken(st.nextToken());
       if (opt.isPresent()) {
@@ -55,7 +55,7 @@ public class FilterInputLexer {
     if (opt.isPresent()) { return opt; }
     opt = OperatorToken.buildIfMatches(input);
     if (opt.isPresent()) { return opt; }
-    return Optional.of(new Literal(input));
+    return Optional.of(new LexedLiteral(input));
   }
   
 }

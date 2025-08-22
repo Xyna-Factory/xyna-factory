@@ -22,12 +22,12 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 import xmcp.zeta.storage.generic.filter.shared.Enums;
-import xmcp.zeta.storage.generic.filter.shared.Enums.LexedOperatorCategory;
+
 
 // impl lexed-token
 public class OperatorToken extends LexedToken {
 
-  private static Pattern OPERATOR_PATTERN = Pattern.compile("[&|!()'\"]{1}");
+  private static Pattern OPERATOR_PATTERN = Pattern.compile("[&|!<>()'\"]{1}");
   
   private final Enums.LexedOperatorCategory category;
   
@@ -37,14 +37,12 @@ public class OperatorToken extends LexedToken {
     this.category = determineCategory(input);
   }
 
-  private Enums.LexedOperatorCategory determineCategory(String input) {
-    if ("&".equals(input) ) { return Enums.LexedOperatorCategory.AND; }
-    if ("|".equals(input) ) { return Enums.LexedOperatorCategory.OR; }
-    if ("!".equals(input) ) { return Enums.LexedOperatorCategory.NOT; }
-    if ("(".equals(input) ) { return Enums.LexedOperatorCategory.OPEN; }
-    if (")".equals(input) ) { return Enums.LexedOperatorCategory.CLOSE; }
-    if ("'".equals(input) ) { return Enums.LexedOperatorCategory.SINGLE_QUOTE; }
-    if ("\"".equals(input) ) { return Enums.LexedOperatorCategory.DOUBLE_QUOTE; }
+  
+  private static Enums.LexedOperatorCategory determineCategory(String input) {
+    Optional<Enums.LexedOperatorCategory> opt = Enums.LexedOperatorCategory.build(input);
+    if (opt.isPresent()) {
+      return opt.get();
+    }
     throw new IllegalArgumentException("Error in lexer. Unexpected character for operator: " + input);
   }
   

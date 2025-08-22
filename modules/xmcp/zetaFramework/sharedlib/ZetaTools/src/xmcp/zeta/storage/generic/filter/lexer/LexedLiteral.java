@@ -19,21 +19,16 @@
 package xmcp.zeta.storage.generic.filter.lexer;
 
 // impl lexed-token
-public class Literal extends LexedToken {
+public class LexedLiteral extends LexedToken {
 
-  public Literal(String input) {
+  public LexedLiteral(String input) {
     super(input);
     if (input == null) {
-      throw new IllegalArgumentException("Literal: Input is null.");
+      throw new IllegalArgumentException("LexedLiteral: Input is null.");
     }
     if (input.isBlank()) {
-      throw new IllegalArgumentException("Literal: Input is only whitespace.");
+      throw new IllegalArgumentException("LexedLiteral: Input is only whitespace.");
     }
   }
 
-  
-  
-  // adapt wildcard
-  
-  // contains wildcard
 }
