@@ -19,47 +19,57 @@
 package xmcp.zeta.storage.generic.filter.parser;
 
 import java.util.List;
+import java.util.Optional;
 
-import xmcp.zeta.storage.generic.filter.lexer.LexedToken;
 import xmcp.zeta.storage.generic.filter.lexer.AdaptedOperator;
-import xmcp.zeta.storage.generic.filter.lexer.OperatorToken;
+import xmcp.zeta.storage.generic.filter.lexer.LexedLiteral;
+import xmcp.zeta.storage.generic.filter.lexer.LexedToken;
 import xmcp.zeta.storage.generic.filter.shared.Enums;
+import xmcp.zeta.storage.generic.filter.shared.OperatorMatch;
 import xmcp.zeta.storage.generic.filter.shared.Replacer;
 
 
-public class DoubleOperatorAdapter {
+public class LiteralOperatorAdapter {
 
   public List<LexedToken> execute(List<LexedToken> list) {
     List<LexedToken> tokens = list;
     Replacer<LexedToken> replacer = new Replacer<LexedToken>();
     int pos = 0;
     while (true) {
-      pos = getIndexFirstMatch(tokens, pos);
-      if (pos < 0) { break; }
-      AdaptedOperator merged = new AdaptedOperator(tokens.get(pos), tokens.get(pos + 1));
-      tokens = replacer.replaceInList(tokens, pos, pos + 2, merged);
-      pos++;
+      Optional<OperatorMatch> match = getFirstMatch(tokens, pos);
+      if (match.isEmpty()) { break; }
+      LexedLiteral lit = (LexedLiteral) tokens.get(pos);
+      AdaptedOperator op = new AdaptedOperator(lit.getOriginalInput(), match.get().category);
+      tokens = replacer.replaceInList(tokens, pos, pos + 1, op);
+      pos = match.get().index + 1;
     }
     return tokens;
   }
   
   
-  private int getIndexFirstMatch(List<LexedToken> list, int from) {
+  private Optional<OperatorMatch> getFirstMatch(List<LexedToken> list, int from) {
     for (int i = from; i < list.size() - 1; i++) {
       LexedToken token = list.get(i);
-      if (!(token instanceof OperatorToken)) { continue; }
-      OperatorToken op = (OperatorToken) token;
-      if ((op.getCategory() != Enums.LexedOperatorCategory.AND) &&
-          (op.getCategory() != Enums.LexedOperatorCategory.OR)) {
-        continue;
+      if (!(token instanceof LexedLiteral)) { continue; }
+      LexedLiteral lit = (LexedLiteral) token;
+      String val = lit.getOriginalInput().trim();
+      
+      OperatorMatch match = new OperatorMatch();
+      match.index = i;
+      if (val.length() == 3) {
+        if (val.toUpperCase().matches("AND")) {
+          match.category = Enums.LexedOperatorCategory.AND;
+          return Optional.of(match);
+        }
       }
-      LexedToken next = list.get(i + 1);
-      if (!(next instanceof OperatorToken)) { continue; }
-      OperatorToken nextop = (OperatorToken) next;
-      if (nextop.getCategory() != op.getCategory()) { continue; }
-      return i;
+      if (val.length() == 2) {
+        if (val.toUpperCase().matches("OR")) {
+          match.category = Enums.LexedOperatorCategory.OR;
+          return Optional.of(match);
+        }
+      }
     }
-    return -1;
+    return Optional.empty();
   }
-
+  
 }

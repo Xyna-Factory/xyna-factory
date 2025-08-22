@@ -16,32 +16,12 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.lexer;
-
-import xmcp.zeta.storage.generic.filter.shared.Enums;
+package xmcp.zeta.storage.generic.filter.shared;
 
 
-public class MergedOperator extends LexedToken {
-
-  private final Enums.LexedOperatorCategory category;
+public class OperatorMatch {
   
-  
-  public MergedOperator(LexedToken op1, LexedToken op2) {
-    super(getAsOp(op1).getOriginalInput() + getAsOp(op2).getOriginalInput());
-    this.category = getAsOp(op1).getCategory();
-  }
-
-  
-  private static OperatorToken getAsOp(LexedToken token) {
-    if (token instanceof OperatorToken) {
-      return (OperatorToken) token;
-    }
-    throw new IllegalArgumentException("MergedOperator: Expected LexedToken of type OperatorToken"); 
-  }
-  
-  
-  public Enums.LexedOperatorCategory getCategory() {
-    return category;
-  }
+  public Enums.LexedOperatorCategory category;
+  public int index;
   
 }

@@ -19,35 +19,37 @@
 package xmcp.zeta.storage.generic.filter.parser;
 
 import java.util.List;
-import java.util.Optional;
 
+import xmcp.zeta.storage.generic.filter.lexer.AdaptedOperator;
+import xmcp.zeta.storage.generic.filter.lexer.LexedLiteral;
 import xmcp.zeta.storage.generic.filter.lexer.LexedToken;
 import xmcp.zeta.storage.generic.filter.lexer.MergedLiteral;
 import xmcp.zeta.storage.generic.filter.lexer.OperatorToken;
 import xmcp.zeta.storage.generic.filter.shared.Enums;
-import xmcp.zeta.storage.generic.filter.shared.OperatorMatch;
 import xmcp.zeta.storage.generic.filter.shared.Replacer;
 
 
-public class QuoteHandler {
+public class LiteralMerger {
 
+  
+  
   public List<LexedToken> execute(List<LexedToken> list) {
     List<LexedToken> tokens = list;
     Replacer<LexedToken> replacer = new Replacer<LexedToken>();
     int pos = 0;
     while (true) {
-      Optional<OperatorMatch> match = getFirstQuote(tokens, pos);
-      if (match.isEmpty()) { break; }
-      int endPos = getIndexClosingQuote(list, match.get());
-      MergedLiteral literal = mergeQuotedTokens(match.get().index + 1, endPos, tokens);
-      tokens = replacer.replaceInList(tokens, match.get().index, endPos + 1, literal);
-      pos = match.get().index + 1;
+      int from = getIndexFirstMatchStart(tokens, pos);
+      if (from < 0) { break; }
+      int to = getIndexFirstMatchEnd(tokens, from + 1);
+      MergedLiteral merged = mergeLiteralTokens(from, to + 1, tokens);
+      tokens = replacer.replaceInList(tokens, from, to + 1, merged);
+      pos = from + 1;
     }
     return tokens;
   }
   
   
-  private MergedLiteral mergeQuotedTokens(int fromInclusive, int toExclusive, List<LexedToken> list) {
+  private MergedLiteral mergeLiteralTokens(int fromInclusive, int toExclusive, List<LexedToken> list) {
     List<LexedToken> toMerge = list.subList(fromInclusive, toExclusive);
     StringBuilder str = new StringBuilder();
     for (LexedToken token : toMerge) {
@@ -57,33 +59,44 @@ public class QuoteHandler {
   }
   
   
-  private Optional<OperatorMatch> getFirstQuote(List<LexedToken> list, int from) {
-    for (int i = from; i < list.size(); i++) {
+  private int getIndexFirstMatchStart(List<LexedToken> list, int from) {
+    for (int i = from; i < list.size() - 1; i++) {
       LexedToken token = list.get(i);
-      if (!(token instanceof OperatorToken)) { continue; }
-      OperatorToken op = (OperatorToken) token;
-      if ((op.getCategory() == Enums.LexedOperatorCategory.SINGLE_QUOTE) ||
-          (op.getCategory() == Enums.LexedOperatorCategory.DOUBLE_QUOTE)) {
-        OperatorMatch ret = new OperatorMatch();
-        ret.category = op.getCategory();
-        ret.index = i;
-        return Optional.of(ret);
+      boolean matched = false;
+      if (token instanceof LexedLiteral) {
+        matched = true;
+      } else if (token instanceof MergedLiteral) {
+        matched = true;
       }
-    }
-    return Optional.empty();
-  }
-  
-  
-  private int getIndexClosingQuote(List<LexedToken> list, OperatorMatch firstMatch) {    
-    for (int i = firstMatch.index + 1; i < list.size(); i++) {
-      LexedToken token = list.get(i);
-      if (!(token instanceof OperatorToken)) { continue; }
-      OperatorToken op = (OperatorToken) token;
-      if (op.getCategory() == firstMatch.category) {
+      if (!matched) { continue; }
+      token = list.get(i + 1);
+      if (token instanceof LexedLiteral) {
+        matched = true;
+      } else if (token instanceof MergedLiteral) {
+        matched = true;
+      }
+      if (matched) { 
         return i;
       }
     }
-    throw new IllegalArgumentException("Error parsing filter expression: Quotes are not closed");
+    return -1;
+  }
+  
+  
+  private int getIndexFirstMatchEnd(List<LexedToken> list, int from) {
+    int matchEnd = from;
+    for (int i = from + 1; i < list.size() - 1; i++) {
+      LexedToken token = list.get(i);
+      boolean matched = false;
+      if (token instanceof LexedLiteral) {
+        matched = true;
+      } else if (token instanceof MergedLiteral) {
+        matched = true;
+      }
+      if (!matched) { return matchEnd; }
+      matchEnd = i;
+    }
+    return matchEnd;
   }
   
 }
