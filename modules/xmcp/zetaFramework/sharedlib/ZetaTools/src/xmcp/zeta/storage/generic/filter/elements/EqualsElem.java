@@ -16,25 +16,9 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.parser;
+package xmcp.zeta.storage.generic.filter.elements;
 
 
-// impl lexed-token
-public class Literal extends LexedToken {
+public class EqualsElem {
 
-  public Literal(String input) {
-    super(input);
-    if (input == null) {
-      throw new IllegalArgumentException("Literal: Input is null.");
-    }
-    if (input.isBlank()) {
-      throw new IllegalArgumentException("Literal: Input is only whitespace.");
-    }
-  }
-
-  
-  
-  // adapt wildcard
-  
-  // contains wildcard
 }

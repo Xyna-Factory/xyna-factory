@@ -16,23 +16,31 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.parser;
+package xmcp.zeta.storage.generic.filter.elements;
 
 import java.util.Optional;
 
-// impl lexed-token
-public class Whitespace extends LexedToken {
-
-  private Whitespace(String originalInput) {
-    super(originalInput);
-  }
+// erbt von filter elem?
+public abstract class LexedToken {
+  
+  // attr. orig input string (für quote-blöcke)
+  private final String originalInput;
 
   
-  public static Optional<LexedToken> buildIfMatches(String input) {
-    if (input.matches("\\s+")) {
-      return Optional.of(new Whitespace(input));
-    }
-    return Optional.empty();
+  public LexedToken(String originalInput) {
+    this.originalInput = originalInput;
   }
 
+
+  // get orig input string
+  public String getOriginalInput() {
+    return originalInput;
+  }
+
+
+  // is finished: return false
+  public boolean isFinished() {
+    return false;
+  }
+  
 }

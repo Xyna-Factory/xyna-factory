@@ -16,10 +16,9 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.parser;
+package xmcp.zeta.storage.generic.filter.elements;
 
 
-public class BinaryLogicalOpElem {
+public class AndElem {
 
-  // check auf unerlaubte kombination logical /relational
 }

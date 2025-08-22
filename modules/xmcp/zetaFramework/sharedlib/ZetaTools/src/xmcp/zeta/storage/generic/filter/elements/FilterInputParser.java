@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.parser;
+package xmcp.zeta.storage.generic.filter.elements;
 
 
 public class FilterInputParser {

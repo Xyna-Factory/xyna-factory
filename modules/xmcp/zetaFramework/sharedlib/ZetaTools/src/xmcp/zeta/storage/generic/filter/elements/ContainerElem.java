@@ -16,23 +16,22 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.parser;
+package xmcp.zeta.storage.generic.filter.elements;
 
 
-public class Enums {
+public class ContainerElem {
 
-  // lexed operator-type
-  // and or not lesser greater equal open close single-quote double-quote
-  public static enum LexedOperatorCategory {
-    AND, OR, NOT, LESS_THAN, GREATER_THAN, EQUALS, OPEN, CLOSE, SINGLE_QUOTE, DOUBLE_QUOTE
-  }
+  // contains, set of enum elem-type?
   
-  // unary op type
-  // not lesser greater equal
+  // containedtokens, nur lexed tokens
   
-  // binary op type
-  // and or
+  // contains lexed-token
   
-  // parsed elem type
-  // container, relational-op, logical-op
+  // replace (first pos replaced, last pos replaced, new elem)  
+  // -> rebuild()
+  
+  // rebuild (input neue child-liste)
+  // -> neu init contains
+  
+  // is finished: nur prüfen ob contained-tokens leer? N, alle childs isfinised
 }
