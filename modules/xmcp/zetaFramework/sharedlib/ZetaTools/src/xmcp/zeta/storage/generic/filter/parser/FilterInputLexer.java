@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.StringTokenizer;
 
 
-public class Lexer {
+public class FilterInputLexer {
 
   // attribut: liste lexed-token
   //private List<LexedToken> _tokens = new ArrayList<>();

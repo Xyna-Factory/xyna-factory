@@ -19,7 +19,7 @@
 package xmcp.zeta.storage.generic.filter.parser;
 
 
-public class Parser {
+public class FilterInputParser {
 
   // keine attribute, nur tool-klasse, wird von expression-parse-methoden durchgereicht?
   
