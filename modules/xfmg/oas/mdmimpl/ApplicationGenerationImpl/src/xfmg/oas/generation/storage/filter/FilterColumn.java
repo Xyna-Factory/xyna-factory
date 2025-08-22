@@ -35,12 +35,10 @@ public class FilterColumn {
   
   private String adaptWildcards(String val) {
     String ret = val.trim();
-    ret = ret.replace("*", "%");
-    if (!ret.startsWith("%")) {
-      ret = "%" + ret;
-    }
-    if (!ret.endsWith("%")) {
-      ret = ret + "%";
+    if (ret.contains("*")) {
+      ret = ret.replace("*", "%");
+    } else {
+      ret = "%" + ret + "%";
     }
     return ret;
   }

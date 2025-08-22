@@ -19,9 +19,7 @@
 package xfmg.oas.generation.storage;
 
 import com.gip.xyna.xnwh.persistence.ODSConnection;
-import com.gip.xyna.xnwh.persistence.Parameter;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
-import com.gip.xyna.xnwh.persistence.PreparedQuery;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoException;
 
 import xmcp.oas.fman.storables.OAS_ImportHistory;
@@ -29,8 +27,6 @@ import xmcp.oas.fman.storables.OAS_ImportHistory;
 
 public class SearchOasImportHistoryDetails implements WarehouseRetryExecutableNoException<OAS_ImportHistory> {
 
-  private static final String QUERY = "SELECT * FROM " + OasImportHistoryStorable.TABLE_NAME + " WHERE " +
-                                      OasImportHistoryStorable.COL_UNIQUE_ID + " = ?"  ;
   private static final OasImportHistoryAdapter _adapter = new OasImportHistoryAdapter();
 
   private final long uniqueId;
@@ -44,10 +40,6 @@ public class SearchOasImportHistoryDetails implements WarehouseRetryExecutableNo
 
   @Override
   public OAS_ImportHistory executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-    /*
-    PreparedQuery<OasImportHistoryStorable> query = OasImportHistoryStorage.getQueryCache().getQueryFromCache(QUERY, con,
-                                                      OasImportHistoryStorable.getOasImportHistoryDetailsReader());
-                                                      */
     OasImportHistoryStorable storable = new OasImportHistoryStorable();
     storable.setUniqueIdentifier(uniqueId);
     try {

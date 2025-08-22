@@ -21,8 +21,6 @@ package xfmg.oas.generation.storage;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
-
 import com.gip.xyna.xnwh.persistence.ODSConnection;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.persistence.PreparedQuery;
