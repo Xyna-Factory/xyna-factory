@@ -37,6 +37,13 @@ public class FilterInputLexer {
   // pro string: get (optional) op-type (enum ), sonst literal (oder whitespace?)
   // output (erbt von lexedtoken): literal, whitespace, op-token
   public List<LexedToken> execute(String input) {
+    List<LexedToken> tokens = tokenize(input);
+    
+    return tokens;
+  }
+  
+  
+  private List<LexedToken> tokenize(String input) {
     List<LexedToken> ret = new ArrayList<>();
     StringTokenizer st = new StringTokenizer(input, " &!|<>()'\"\t\n", true);
     while (st.hasMoreTokens()) {
