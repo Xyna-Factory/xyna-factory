@@ -22,6 +22,7 @@ import java.util.List;
 
 import xmcp.zeta.storage.generic.filter.lexer.LexedLiteral;
 import xmcp.zeta.storage.generic.filter.lexer.Token;
+import xmcp.zeta.storage.generic.filter.lexer.Whitespace;
 import xmcp.zeta.storage.generic.filter.lexer.MergedLiteral;
 import xmcp.zeta.storage.generic.filter.shared.Replacer;
 
@@ -36,6 +37,7 @@ public class LiteralMerger {
       int from = getIndexFirstMatchStart(tokens, pos);
       if (from < 0) { break; }
       int to = getIndexFirstMatchEnd(tokens, from + 1);
+      if (to <= from) { continue; }
       MergedLiteral merged = mergeLiteralTokens(from, to + 1, tokens);
       tokens = replacer.replaceInList(tokens, from, to + 1, merged);
       pos = from + 1;
@@ -57,20 +59,9 @@ public class LiteralMerger {
   private int getIndexFirstMatchStart(List<Token> list, int from) {
     for (int i = from; i < list.size() - 1; i++) {
       Token token = list.get(i);
-      boolean matched = false;
       if (token instanceof LexedLiteral) {
-        matched = true;
+        return i;
       } else if (token instanceof MergedLiteral) {
-        matched = true;
-      }
-      if (!matched) { continue; }
-      token = list.get(i + 1);
-      if (token instanceof LexedLiteral) {
-        matched = true;
-      } else if (token instanceof MergedLiteral) {
-        matched = true;
-      }
-      if (matched) { 
         return i;
       }
     }
@@ -78,18 +69,20 @@ public class LiteralMerger {
   }
   
   
+  /*
+   * whitespace is included in merged string only if positioned directly between literals
+   */
   private int getIndexFirstMatchEnd(List<Token> list, int from) {
     int matchEnd = from;
     for (int i = from + 1; i < list.size() - 1; i++) {
       Token token = list.get(i);
-      boolean matched = false;
       if (token instanceof LexedLiteral) {
-        matched = true;
+        matchEnd = i;
       } else if (token instanceof MergedLiteral) {
-        matched = true;
+        matchEnd = i;
+      } else if (!(token instanceof Whitespace)) {
+        return matchEnd;
       }
-      if (!matched) { return matchEnd; }
-      matchEnd = i;
     }
     return matchEnd;
   }

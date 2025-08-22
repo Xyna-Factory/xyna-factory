@@ -40,4 +40,10 @@ public class FilterInputParser {
   // replace-quotes (liste lex-token, int startpos, int endpos)
   // output: neue liste lex-token (sublisten vorher u. nachher, quote-bereich durch neues literal ersetzt)
   // mit generisch replace() von container?
+  
+  
+  
+  //prepare:
+  // quotehandler,  doubleop., literalop.,  lit.merger, whitespacerem.
+  
 }
