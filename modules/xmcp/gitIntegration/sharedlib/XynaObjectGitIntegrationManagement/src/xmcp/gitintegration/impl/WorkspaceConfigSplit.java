@@ -1,5 +1,4 @@
-<Trigger>
-<!--
+/*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
  *
@@ -15,10 +14,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-	<AdditionalDependencies>
-		<!-- <Datatype>fullyQualifiedMdmType</Datatype>
-		<XynaProperty>propertyName</XynaProperty> -->
-		<XynaProperty>xact.ssh.hostkeys.supportedfeatures</XynaProperty>
-	</AdditionalDependencies>
-</Trigger>
+ */
+package xmcp.gitintegration.impl;
+
+
+
+import java.util.Optional;
+
+
+
+public enum WorkspaceConfigSplit {
+
+  NONE("none"), BYTYPE("bytype"), FINE("fine");
+
+
+  private String id;
+
+
+  WorkspaceConfigSplit(String id) {
+    this.id = id;
+  }
+
+
+  public static Optional<WorkspaceConfigSplit> fromId(String id) {
+    for (var candidate : WorkspaceConfigSplit.values()) {
+      if (candidate.id.equals(id)) {
+        return Optional.of(candidate);
+      }
+    }
+    return Optional.empty();
+  }
+
+
+  public String getId() {
+    return id;
+  }
+}
