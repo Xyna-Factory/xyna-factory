@@ -20,19 +20,14 @@ package xmcp.zeta.storage.generic.filter.parser;
 
 import java.util.List;
 
-import xmcp.zeta.storage.generic.filter.lexer.AdaptedOperator;
 import xmcp.zeta.storage.generic.filter.lexer.LexedLiteral;
 import xmcp.zeta.storage.generic.filter.lexer.LexedToken;
 import xmcp.zeta.storage.generic.filter.lexer.MergedLiteral;
-import xmcp.zeta.storage.generic.filter.lexer.OperatorToken;
-import xmcp.zeta.storage.generic.filter.shared.Enums;
 import xmcp.zeta.storage.generic.filter.shared.Replacer;
 
 
 public class LiteralMerger {
 
-  
-  
   public List<LexedToken> execute(List<LexedToken> list) {
     List<LexedToken> tokens = list;
     Replacer<LexedToken> replacer = new Replacer<LexedToken>();
