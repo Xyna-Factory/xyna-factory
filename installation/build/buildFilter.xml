@@ -235,7 +235,9 @@
          target: cleanup-lib
          ================================= -->
     <target name="cleanup-lib">
-        <delete dir="${base.lib.dir}" />
+        <delete>
+            <fileset dir="${base.lib.dir}" includes="**/*.jar"/>
+        </delete>
         <ant antfile="${application.dir}/build.xml" target="prepare-mdm-jar" inheritAll="false" dir="${application.dir}" />
     </target>
 

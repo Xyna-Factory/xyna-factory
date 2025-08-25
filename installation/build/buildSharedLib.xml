@@ -180,7 +180,9 @@
          target: cleanup-lib
          ================================= -->
     <target name="cleanup-lib">
-        <delete dir="${base.lib.dir}" />
+        <delete>
+            <fileset dir="${base.lib.dir}" includes="**/*.jar"/>
+        </delete>
     </target>
 
 </project>
