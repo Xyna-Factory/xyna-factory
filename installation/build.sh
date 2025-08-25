@@ -591,6 +591,12 @@ fill_lib() {
   ant resolve
 }
 
+cleanup_lib() {
+  echo "cleanup lib..."
+  cd $SCRIPT_DIR/build/lib
+  rm -rf factory
+}
+
 build_all() {
   build
   build_modules
@@ -658,6 +664,9 @@ case $1 in
     ;;
   "install_libs")
     install_libs
+    ;;
+  "cleanup_lib")
+    cleanup_lib
     ;;
   *)
     print_help
