@@ -105,6 +105,30 @@ public class TestFilterInputParser {
   
   
   @Test
+  public void testOps3() {
+    try {
+      String input = "30 | <20 & !10";
+      List<Token> tokens = new FilterInputLexer().execute(input);
+      
+      for (int i = 0; i < tokens.size(); i++) {
+        log("" + i + ": " + tokens.get(i).getOriginalInput() + "  " + tokens.get(i).getClass().getName());
+      }
+      
+      List<FilterElement> elems = new TokenAdapter().execute(tokens);
+      
+      ContainerElem root = new ContainerElem(elems);
+      root.parse(new FilterInputParser());
+      JsonWriter json = new JsonWriter();
+      root.writeJson(json);
+      log(json.toString());
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+  
+  
+  @Test
   public void testTokenize() {
     try {
       String input = "(>1) & (<20) & (!= 10)";
@@ -182,7 +206,7 @@ public class TestFilterInputParser {
   
   public static void main(String[] args) {
     try {
-      new TestFilterInputParser().testOps2();
+      new TestFilterInputParser().testOps3();
     }
     catch (Throwable e) {
       e.printStackTrace();

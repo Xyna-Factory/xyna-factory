@@ -21,6 +21,7 @@ package xmcp.zeta.storage.generic.filter.parser.phase2;
 import java.util.List;
 
 import xmcp.zeta.storage.generic.filter.elems.FilterElement;
+import xmcp.zeta.storage.generic.filter.elems.LiteralElem;
 import xmcp.zeta.storage.generic.filter.elems.LogicalOperand;
 import xmcp.zeta.storage.generic.filter.elems.RelationalOperand;
 import xmcp.zeta.storage.generic.filter.elems.TokenOpElem;
@@ -114,15 +115,23 @@ public class OperatorHandler {
                                                     TokenOpElem elem) {
     Enums.LexedOperatorCategory category = elem.getCategory();
     FilterElement nextElem = list.get(index + 1);
-    if (!(nextElem instanceof LogicalOperand)) {
-      throw new IllegalArgumentException("Syntax error in filter expression: Cannot find correct argument for unary operator");
-    }
-    LogicalOperand nextCast = (LogicalOperand) nextElem;
+    LogicalOperand nextCast = castOrWrap(nextElem);
     if (category == Enums.LexedOperatorCategory.NOT) {
       NotElem newElem = new NotElem(nextCast);
       return replacer.replaceInList(list, index, index + 2, newElem);
     }
     throw new IllegalArgumentException("Unexpected unary operator category: " + category.toString());
+  }
+  
+  
+  private LogicalOperand castOrWrap(FilterElement elem) {
+    if (elem instanceof LogicalOperand) {
+      return (LogicalOperand) elem;
+    }
+    if (elem instanceof LiteralElem) {
+      return new EqualsElem((LiteralElem) elem);
+    }
+    throw new IllegalArgumentException("Syntax error in filter expression: Cannot find correct argument for logical operator");
   }
   
   
@@ -135,18 +144,10 @@ public class OperatorHandler {
       throw new IllegalArgumentException("Syntax error in filter expression: Cannot find correct arguments for binary operator");
     }
     Enums.LexedOperatorCategory category = elem.getCategory();
-    
     FilterElement prevElem = list.get(index - 1);
-    if (!(prevElem instanceof LogicalOperand)) {
-      throw new IllegalArgumentException("Syntax error in filter expression: Cannot find correct arguments for binary operator");
-    }
-    LogicalOperand prevCast = (LogicalOperand) prevElem;
-    
+    LogicalOperand prevCast = castOrWrap(prevElem);
     FilterElement nextElem = list.get(index + 1);
-    if (!(nextElem instanceof LogicalOperand)) {
-      throw new IllegalArgumentException("Syntax error in filter expression: Cannot find correct arguments for binary operator");
-    }
-    LogicalOperand nextCast = (LogicalOperand) nextElem;
+    LogicalOperand nextCast = castOrWrap(nextElem);
     
     if (category == Enums.LexedOperatorCategory.AND) {
       AndElem newElem = new AndElem(prevCast, nextCast);
