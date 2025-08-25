@@ -29,4 +29,9 @@ public class OrElem extends BinaryLogicalOpElem implements LogicalOperator {
     super(elem1, elem2);
   }
 
+  @Override
+  public String getOperatorName() {
+    return "OR";
+  }
+  
 }

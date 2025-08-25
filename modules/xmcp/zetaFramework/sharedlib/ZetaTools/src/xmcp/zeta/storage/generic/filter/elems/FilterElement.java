@@ -19,15 +19,18 @@
 package xmcp.zeta.storage.generic.filter.elems;
 
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
+import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
+
 
 public interface FilterElement {
 
-  // check if finished
   public boolean isFinished();
-  
-  
-  // parse
+
   public void parse(FilterInputParser parser);
   
+  public void writeJson(JsonWriter json);
+  
   // to sql
+  
+  
 }

@@ -39,9 +39,22 @@ public class OperatorHandler {
   public List<FilterElement> execute(List<FilterElement> input) {
     List<FilterElement> list = input;
     Replacer<FilterElement> replacer = new Replacer<FilterElement>();
+    list = replaceOpCategories(list, replacer, List.of(Enums.LexedOperatorCategory.EQUALS,
+                                                       Enums.LexedOperatorCategory.GREATER_THAN,
+                                                       Enums.LexedOperatorCategory.LESS_THAN));
+    list = replaceOpCategories(list, replacer, List.of(Enums.LexedOperatorCategory.NOT));
+    list = replaceOpCategories(list, replacer, List.of(Enums.LexedOperatorCategory.AND));
+    list = replaceOpCategories(list, replacer, List.of(Enums.LexedOperatorCategory.OR));
+    return list;
+  }
+  
+  
+  private List<FilterElement> replaceOpCategories(List<FilterElement> input, Replacer<FilterElement> replacer,
+                                                  List<Enums.LexedOperatorCategory> categories) {
+    List<FilterElement> list = input;
     int pos = 0;
     while (true) {
-      int index = getIndexFirstMatch(list, pos);
+      int index = getIndexFirstMatch(list, pos, categories);
       if (index < 0) { break; }
       list = replaceOp(list, index, replacer);
       pos = index;
@@ -159,11 +172,17 @@ public class OperatorHandler {
   }
   
   
-  private int getIndexFirstMatch(List<FilterElement> list, int from) {
+  private int getIndexFirstMatch(List<FilterElement> list, int from,
+                                 List<Enums.LexedOperatorCategory> categories) {
     for (int i = from; i < list.size(); i++) {
       FilterElement elem = list.get(i);
       if (elem instanceof TokenOpElem) {
-        return i;
+        TokenOpElem toe = (TokenOpElem) elem;
+        for (Enums.LexedOperatorCategory category : categories) {
+          if (category == toe.getCategory()) {
+            return i;
+          }
+        }
       }
     }
     return -1;

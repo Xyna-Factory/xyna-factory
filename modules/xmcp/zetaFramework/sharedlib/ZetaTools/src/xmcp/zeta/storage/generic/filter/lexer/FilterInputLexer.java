@@ -40,7 +40,7 @@ public class FilterInputLexer {
   // output (erbt von lexedtoken): literal, whitespace, op-token
   public List<Token> execute(String input) {
     List<Token> ret = new ArrayList<>();
-    StringTokenizer st = new StringTokenizer(input, " &!|<>()'\"\t\n", true);
+    StringTokenizer st = new StringTokenizer(input, " &!|=<>()'\"\t\n", true);
     while (st.hasMoreTokens()) {
       Optional<Token> opt = buildToken(st.nextToken());
       if (opt.isPresent()) {

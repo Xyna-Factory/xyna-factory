@@ -21,6 +21,7 @@ package xmcp.zeta.storage.generic.filter.elems;
 import java.util.List;
 
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
+import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 
 public abstract class BinaryLogicalOpElem implements LogicalOperator {
 
@@ -32,6 +33,9 @@ public abstract class BinaryLogicalOpElem implements LogicalOperator {
     this.operand1 = elem1;
     this.operand2 = elem2;
   }
+  
+  
+  public abstract String getOperatorName();
   
   
   public boolean isFinished() {
@@ -46,6 +50,21 @@ public abstract class BinaryLogicalOpElem implements LogicalOperator {
     if (!operand2.isFinished()) {
       operand1.parse(parser);
     }
+  }
+  
+  
+  public void writeJson(JsonWriter json) {
+    json.openObjectAttribute("UnaryOp");
+    json.addAttribute("operator", getOperatorName());
+    json.continueObject();
+    json.openObjectAttribute("operand-1");
+    operand1.writeJson(json);
+    json.closeObject();
+    json.continueObject();
+    json.openObjectAttribute("operand-2");
+    operand2.writeJson(json);
+    json.closeObject();
+    json.closeObject();
   }
   
 }

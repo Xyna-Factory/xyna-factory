@@ -21,6 +21,7 @@ package xmcp.zeta.storage.generic.filter.elems;
 import xmcp.zeta.storage.generic.filter.lexer.OperatorToken;
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 import xmcp.zeta.storage.generic.filter.shared.Enums;
+import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 
 
 public class TokenOpElem implements FilterElement {
@@ -43,6 +44,11 @@ public class TokenOpElem implements FilterElement {
   public void parse(FilterInputParser parser) {
     throw new IllegalArgumentException("Error executing filter expression parse algorithm: " +
                                        "Did not expect TokenOpElem in container parsing phase.");
+  }
+  
+  
+  public void writeJson(JsonWriter json) {
+    json.addAttribute("TokenOp", token.getCategory().toString());
   }
   
 }

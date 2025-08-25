@@ -18,16 +18,19 @@
 
 package xmcp.zeta.storage.generic.filter.elems.relational;
 
-import xmcp.zeta.storage.generic.filter.elems.FilterElement;
-import xmcp.zeta.storage.generic.filter.elems.LiteralElem;
 import xmcp.zeta.storage.generic.filter.elems.RelationalOperand;
 import xmcp.zeta.storage.generic.filter.elems.UnaryRelationalOpElem;
+
 
 public class EqualsElem extends UnaryRelationalOpElem {
 
   public EqualsElem(RelationalOperand elem) {
     super(elem);
-    // TODO Auto-generated constructor stub
   }
 
+  @Override
+  public String getOperatorName() {
+    return "Equals";
+  }
+  
 }

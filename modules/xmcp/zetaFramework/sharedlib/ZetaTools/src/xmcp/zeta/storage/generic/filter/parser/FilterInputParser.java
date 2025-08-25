@@ -38,6 +38,7 @@ import xmcp.zeta.storage.generic.filter.parser.phase1.QuoteHandler;
 import xmcp.zeta.storage.generic.filter.parser.phase1.WhitespaceRemover;
 import xmcp.zeta.storage.generic.filter.parser.phase2.OperatorHandler;
 import xmcp.zeta.storage.generic.filter.parser.phase2.ParenthesesHandler;
+import xmcp.zeta.storage.generic.filter.parser.phase2.TokenAdapter;
 
 
 public class FilterInputParser {
@@ -79,13 +80,13 @@ public class FilterInputParser {
     tokens = new DoubleOperatorAdapter().execute(tokens);
     tokens = new LiteralOperatorAdapter().execute(tokens);
     tokens = new LiteralMerger().execute(tokens);
-    tokens = new WhitespaceRemover().execute(tokens);
+    //tokens = new WhitespaceRemover().execute(tokens);
     return tokens;
   }
   
   
   private ContainerElem executePhase2(List<Token> tokens) {
-    List<FilterElement> elems = adaptTokens(tokens);
+    List<FilterElement> elems = new TokenAdapter().execute(tokens);
     elems = new ParenthesesHandler().execute(elems);
     ContainerElem root;
     if ((elems.size() == 1) && (elems.get(0) instanceof ContainerElem)) {
@@ -97,23 +98,6 @@ public class FilterInputParser {
     return root;
   }
   
-  
-  private List<FilterElement> adaptTokens(List<Token> input) {
-    List<FilterElement> ret = new ArrayList<>();
-    for (Token token : input) {
-      if (token instanceof Whitespace) { continue; }
-      else if (token instanceof LexedLiteral) {
-        ret.add(new LiteralElem(token.getOriginalInput()));
-      } else if (token instanceof MergedLiteral) {
-        ret.add(new LiteralElem(token.getOriginalInput()));
-      } else if (token instanceof OperatorToken) {
-        ret.add(new TokenOpElem((OperatorToken) token));
-      } else {
-        throw new IllegalArgumentException("Unexpected token class: " + token.getClass().getName());
-      }
-    }
-    return ret;
-  }
   
   /*
   public void parseContainer(ContainerElem container) {

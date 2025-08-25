@@ -26,13 +26,99 @@ import java.util.List;
 
 import org.junit.Test;
 
+import xmcp.zeta.storage.generic.filter.elems.ContainerElem;
+import xmcp.zeta.storage.generic.filter.elems.FilterElement;
+import xmcp.zeta.storage.generic.filter.lexer.FilterInputLexer;
+import xmcp.zeta.storage.generic.filter.lexer.Token;
+import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
+import xmcp.zeta.storage.generic.filter.parser.phase2.TokenAdapter;
+import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 import xmcp.zeta.storage.generic.filter.shared.Replacer;
+
 
 public class TestFilterInputParser {
 
   // test replacer (mit strings); pos anfang, ende, mitte
   
   // test replace quotes; verschachtelte, kombin. '", leere quotes, pos anfang ende
+  
+  
+  @Test
+  public void testOps1() {
+    try {
+      String input = "!>1 & <20 | =10";
+      List<Token> tokens = new FilterInputLexer().execute(input);
+      
+      for (int i = 0; i < tokens.size(); i++) {
+        log("" + i + ": " + tokens.get(i).getOriginalInput() + "  " + tokens.get(i).getClass().getName());
+      }
+      
+      List<FilterElement> elems = new TokenAdapter().execute(tokens);
+      
+      JsonWriter json = new JsonWriter();
+      ContainerElem root = new ContainerElem(elems);
+      root.writeJson(json);
+      /*
+      for (int i = 0; i < elems.size(); i++) {
+        elems.get(i).writeJson(json);
+      }
+      */
+      log(json.toString());
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+  
+  
+  @Test
+  public void testOps2() {
+    try {
+      String input = "!>1 & <20 | =10";
+      List<Token> tokens = new FilterInputLexer().execute(input);
+      
+      for (int i = 0; i < tokens.size(); i++) {
+        log("" + i + ": " + tokens.get(i).getOriginalInput() + "  " + tokens.get(i).getClass().getName());
+      }
+      
+      List<FilterElement> elems = new TokenAdapter().execute(tokens);
+      
+      JsonWriter json = new JsonWriter();
+      ContainerElem root = new ContainerElem(elems);
+      root.writeJson(json);
+      /*
+      for (int i = 0; i < elems.size(); i++) {
+        elems.get(i).writeJson(json);
+      }
+      */
+      log(json.toString());
+      log("##########");
+      root.parse(new FilterInputParser());
+      json = new JsonWriter();
+      root.writeJson(json);
+      log(json.toString());
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+  
+  
+  @Test
+  public void testTokenize() {
+    try {
+      String input = "(>1) & (<20) & (!= 10)";
+      List<Token> tokens = new FilterInputLexer().execute(input);
+      
+      for (int i = 0; i < tokens.size(); i++) {
+        log("" + i + ": " + tokens.get(i).getOriginalInput() + "  " + tokens.get(i).getClass().getName());
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+  
   
   @Test
   public void testReplacer1() throws Exception {
@@ -96,7 +182,7 @@ public class TestFilterInputParser {
   
   public static void main(String[] args) {
     try {
-      new TestFilterInputParser().testReplacer3();
+      new TestFilterInputParser().testOps2();
     }
     catch (Throwable e) {
       e.printStackTrace();

@@ -30,4 +30,9 @@ public class NotElem extends UnaryOpElem implements LogicalOperator {
     super(operand);
   }
 
+  @Override
+  public String getOperatorName() {
+    return "NOT";
+  }
+
 }

@@ -27,7 +27,7 @@ import xmcp.zeta.storage.generic.filter.shared.Enums;
 // impl lexed-token
 public class LexedOperator extends Token implements OperatorToken {
 
-  private static Pattern OPERATOR_PATTERN = Pattern.compile("[&|!<>()'\"]{1}");
+  private static Pattern OPERATOR_PATTERN = Pattern.compile("[&|!=<>()'\"]{1}");
   
   private final Enums.LexedOperatorCategory category;
   

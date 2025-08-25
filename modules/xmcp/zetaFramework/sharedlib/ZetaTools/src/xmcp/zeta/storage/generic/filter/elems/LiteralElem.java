@@ -19,20 +19,31 @@
 package xmcp.zeta.storage.generic.filter.elems;
 
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
+import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
+
 
 public class LiteralElem implements RelationalOperand {
 
   private final String content;
   
+  
   public LiteralElem(String input) {
     this.content = input;
   }
+  
   
   public boolean isFinished() {
     return true;
   }
   
+  
   public void parse(FilterInputParser parser) {}
+  
+  
+  public void writeJson(JsonWriter json) {
+    json.addAttribute("Literal", content.replace("\n", "\\n"));
+  }
+  
   
   // adapt wildcard
   

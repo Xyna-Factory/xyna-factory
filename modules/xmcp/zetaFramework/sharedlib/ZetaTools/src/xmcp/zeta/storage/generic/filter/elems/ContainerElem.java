@@ -22,20 +22,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
+import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 
 
 public class ContainerElem implements LogicalOperand {
 
-  private List<FilterElement> children = new ArrayList<>();
+  private List<FilterElement> _children = new ArrayList<>();
   
   
   public ContainerElem(List<FilterElement> children) {
-    this.children.addAll(children);
+    this._children.addAll(children);
   }
   
   
   public boolean isFinished() {
-    for (FilterElement child : children) {
+    for (FilterElement child : _children) {
       if (!child.isFinished()) { return false; }
     }
     return true;
@@ -43,14 +44,14 @@ public class ContainerElem implements LogicalOperand {
   
   
   private void rebuild(List<FilterElement> newChildren) {
-    this.children = newChildren;
+    this._children = newChildren;
   }
   
   
   public void parse(FilterInputParser parser) {
-    List<FilterElement> adapted = parser.parseOperators(this.children);
+    List<FilterElement> adapted = parser.parseOperators(this._children);
     rebuild(adapted);
-    for (FilterElement child : children) {
+    for (FilterElement child : _children) {
       if (!child.isFinished()) {
         child.parse(parser);
       }
@@ -61,7 +62,20 @@ public class ContainerElem implements LogicalOperand {
     }
   }
   
-   
+  
+  public void writeJson(JsonWriter json) {
+    json.openObjectAttribute("Container");
+    json.openListAttribute("children");
+    boolean isfirst = true;
+    for (FilterElement child : _children) {
+      if (isfirst) { isfirst = false; }
+      else { json.continueList(); }
+      child.writeJson(json);
+    }
+    json.closeList();
+    json.closeObject();
+  }
+  
   
   // contains, set of enum elem-type?
   

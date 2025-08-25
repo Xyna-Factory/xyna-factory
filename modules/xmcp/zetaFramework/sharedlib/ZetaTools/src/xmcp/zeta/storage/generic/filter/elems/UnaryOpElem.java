@@ -19,6 +19,7 @@
 package xmcp.zeta.storage.generic.filter.elems;
 
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
+import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 
 public abstract class UnaryOpElem implements FilterElement, LogicalOperand {
 
@@ -29,14 +30,30 @@ public abstract class UnaryOpElem implements FilterElement, LogicalOperand {
     this.operand = operand;
   }
   
+  
+  public abstract String getOperatorName();
+  
+  
   public boolean isFinished() {
     return operand.isFinished();
   }
+  
   
   public void parse(FilterInputParser parser) {
     if (!operand.isFinished()) {
       operand.parse(parser);
     }
+  }
+  
+  
+  public void writeJson(JsonWriter json) {
+    json.openObjectAttribute("UnaryOp");
+    json.addAttribute("operator", getOperatorName());
+    json.continueObject();
+    json.openObjectAttribute("operand");
+    operand.writeJson(json);
+    json.closeObject();
+    json.closeObject();
   }
   
 }
