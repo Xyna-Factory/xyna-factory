@@ -17,7 +17,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
-  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="DEVEL-00004" IsAbstract="false" Label="AES Crypto Exception" TypeName="AESCryptoException" TypePath="xint.crypto.exceptions">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="XACT-CRYPTO-00004" IsAbstract="false" Label="AES Crypto Exception" TypeName="AESCryptoException" TypePath="xint.crypto.exceptions">
     <Data Label="Message" VariableName="_message">
       <Meta>
         <Type>String</Type>

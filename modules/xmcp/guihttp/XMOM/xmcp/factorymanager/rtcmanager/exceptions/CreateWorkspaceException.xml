@@ -17,7 +17,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
-  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="HTML5GUI-00361" Label="Create Workspace Exception" TypeName="CreateWorkspaceException" TypePath="xmcp.factorymanager.rtcmanager.exceptions">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="HTML5GUI-00389" Label="Create Workspace Exception" TypeName="CreateWorkspaceException" TypePath="xmcp.factorymanager.rtcmanager.exceptions">
     <Data Label="Reason" VariableName="reason">
       <Meta>
         <Type>String</Type>

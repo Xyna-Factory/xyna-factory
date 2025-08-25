@@ -24,7 +24,7 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Connection</ApplicationName>
-        <VersionName>1.0.13</VersionName>
+        <VersionName>1.0.14</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>>
   </ApplicationInfo>

@@ -17,7 +17,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
-  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="DEVEL-00000" Label="Mail Account Not Registered Exception" TypeName="MailAccountNotRegisteredException" TypePath="xact.mail.account">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="XACT-MAIL-00005" Label="Mail Account Not Registered Exception" TypeName="MailAccountNotRegisteredException" TypePath="xact.mail.account">
     <Data Label="Name" VariableName="name">
       <Meta>
         <Type>String</Type>

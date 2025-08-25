@@ -15,7 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  --><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
-  <ExceptionType BaseTypeName="ConnectionException" BaseTypePath="xact.ssh" Code="DEVEL-00502" IsAbstract="false" Label="Connection Lost Exception" TypeName="ConnectionLostException" TypePath="xact.ssh">
+  <ExceptionType BaseTypeName="ConnectionException" BaseTypePath="xact.ssh" Code="XACT-SSH-00002" IsAbstract="false" Label="Connection Lost Exception" TypeName="ConnectionLostException" TypePath="xact.ssh">
     <MessageText Language="DE">Verbindung abgebrochen: %0%</MessageText>
     <MessageText Language="EN">Connection lost: %0%</MessageText>
   </ExceptionType>
