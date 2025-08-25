@@ -16,9 +16,20 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elems;
+package xmcp.zeta.storage.generic.filter.elems.relational;
+
+import xmcp.zeta.storage.generic.filter.elems.FilterElement;
+import xmcp.zeta.storage.generic.filter.elems.LiteralElem;
+import xmcp.zeta.storage.generic.filter.elems.UnaryOpElem;
 
 
-public class EqualsElem implements FilterElement {
+public class UnaryRelationalOpElem extends UnaryOpElem {
 
+  private final FilterElement operand;
+  
+  public UnaryRelationalOpElem(LiteralElem elem) {
+    this.operand = elem;
+  }
+  
+  
 }

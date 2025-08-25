@@ -16,8 +16,9 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elems;
+package xmcp.zeta.storage.generic.filter.elems.relational;
 
+import xmcp.zeta.storage.generic.filter.elems.FilterElement;
 
 public class LessThanElem implements FilterElement {
 //

@@ -16,16 +16,10 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elems;
+package xmcp.zeta.storage.generic.filter.elems.relational;
 
+import xmcp.zeta.storage.generic.filter.elems.FilterElement;
 
-public class UnaryRelationalOpElem extends UnaryOpElem {
+public class GreaterThanElem implements FilterElement {
 
-  private final FilterElement operand;
-  
-  public UnaryRelationalOpElem(LiteralElem elem) {
-    this.operand = elem;
-  }
-  
-  
 }

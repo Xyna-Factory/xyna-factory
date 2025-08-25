@@ -16,10 +16,10 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elems;
+package xmcp.zeta.storage.generic.filter.elems.logical;
 
+import xmcp.zeta.storage.generic.filter.elems.UnaryOpElem;
 
-public class BinaryLogicalOpElem implements FilterElement {
+public class NotElem extends UnaryOpElem implements LogicalOp {
 
-  // check auf unerlaubte kombination logical /relational
 }

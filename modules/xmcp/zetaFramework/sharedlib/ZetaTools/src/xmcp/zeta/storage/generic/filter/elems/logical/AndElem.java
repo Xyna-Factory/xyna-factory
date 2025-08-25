@@ -16,9 +16,8 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elems;
+package xmcp.zeta.storage.generic.filter.elems.logical;
 
-
-public interface LogicalOp {
+public class AndElem extends BinaryLogicalOpElem implements LogicalOp {
 
 }
