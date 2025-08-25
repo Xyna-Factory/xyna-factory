@@ -16,9 +16,9 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elements;
+package xmcp.zeta.storage.generic.filter.elems;
 
 
-public class EqualsElem implements FilterElement {
+public class GreaterThanElem implements FilterElement {
 
 }

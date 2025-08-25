@@ -16,14 +16,9 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elements;
+package xmcp.zeta.storage.generic.filter.elems;
 
 
-public interface FilterElement {
-
-  // check if finished
-  
-  // parse
-  
-  // to sql
+public class LessThanElem implements FilterElement {
+//
 }

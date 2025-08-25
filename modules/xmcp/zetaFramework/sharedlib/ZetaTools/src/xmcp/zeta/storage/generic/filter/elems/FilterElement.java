@@ -16,10 +16,14 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elements;
+package xmcp.zeta.storage.generic.filter.elems;
 
 
-public class UnaryOpElem implements FilterElement {
+public interface FilterElement {
 
-  // check auf unerlaubte kombination logical /relational
+  // check if finished
+  
+  // parse
+  
+  // to sql
 }

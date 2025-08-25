@@ -16,22 +16,20 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elements;
-
-import xmcp.zeta.storage.generic.filter.lexer.OperatorToken;
-import xmcp.zeta.storage.generic.filter.shared.Enums;
+package xmcp.zeta.storage.generic.filter.elems;
 
 
-public class TokenOpElem implements FilterElement {
+public class LiteralElem implements FilterElement {
 
-  private final OperatorToken token;
-
-  public TokenOpElem(OperatorToken token) {
-    this.token = token;
+  private final String content;
+  
+  public LiteralElem(String input) {
+    this.content = input;
   }
   
-  public Enums.LexedOperatorCategory getCategory() {
-    return token.getCategory();
-  }
+  
+  // adapt wildcard
+  
+  // contains wildcard
   
 }

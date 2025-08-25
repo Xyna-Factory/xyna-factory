@@ -16,16 +16,9 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elements;
+package xmcp.zeta.storage.generic.filter.elems;
 
 
-public class UnaryRelationalOpElem extends UnaryOpElem {
+public class OrElem extends BinaryLogicalOpElem implements LogicalOp {
 
-  private final FilterElement operand;
-  
-  public UnaryRelationalOpElem(LiteralElem elem) {
-    this.operand = elem;
-  }
-  
-  
 }

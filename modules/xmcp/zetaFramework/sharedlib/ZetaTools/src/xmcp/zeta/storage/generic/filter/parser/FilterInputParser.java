@@ -21,9 +21,9 @@ package xmcp.zeta.storage.generic.filter.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-import xmcp.zeta.storage.generic.filter.elements.FilterElement;
-import xmcp.zeta.storage.generic.filter.elements.LiteralElem;
-import xmcp.zeta.storage.generic.filter.elements.TokenOpElem;
+import xmcp.zeta.storage.generic.filter.elems.FilterElement;
+import xmcp.zeta.storage.generic.filter.elems.LiteralElem;
+import xmcp.zeta.storage.generic.filter.elems.TokenOpElem;
 import xmcp.zeta.storage.generic.filter.lexer.LexedLiteral;
 import xmcp.zeta.storage.generic.filter.lexer.MergedLiteral;
 import xmcp.zeta.storage.generic.filter.lexer.OperatorToken;

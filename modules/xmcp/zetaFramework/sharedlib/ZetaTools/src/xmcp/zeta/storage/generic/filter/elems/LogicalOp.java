@@ -16,22 +16,9 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elements;
+package xmcp.zeta.storage.generic.filter.elems;
 
 
-public class ContainerElem implements FilterElement {
+public interface LogicalOp {
 
-  // contains, set of enum elem-type?
-  
-  // containedtokens, nur lexed tokens
-  
-  // contains lexed-token
-  
-  // replace (first pos replaced, last pos replaced, new elem)  
-  // -> rebuild()
-  
-  // rebuild (input neue child-liste)
-  // -> neu init contains
-  
-  // is finished: nur prüfen ob contained-tokens leer? N, alle childs isfinised
 }

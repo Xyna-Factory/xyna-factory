@@ -16,9 +16,22 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elements;
+package xmcp.zeta.storage.generic.filter.elems;
+
+import xmcp.zeta.storage.generic.filter.lexer.OperatorToken;
+import xmcp.zeta.storage.generic.filter.shared.Enums;
 
 
-public class GreaterThanElem implements FilterElement {
+public class TokenOpElem implements FilterElement {
 
+  private final OperatorToken token;
+
+  public TokenOpElem(OperatorToken token) {
+    this.token = token;
+  }
+  
+  public Enums.LexedOperatorCategory getCategory() {
+    return token.getCategory();
+  }
+  
 }

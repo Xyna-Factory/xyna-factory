@@ -16,20 +16,9 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elements;
+package xmcp.zeta.storage.generic.filter.elems;
 
 
-public class LiteralElem implements FilterElement {
+public class OperatorTargetElem implements FilterElement {
 
-  private final String content;
-  
-  public LiteralElem(String input) {
-    this.content = input;
-  }
-  
-  
-  // adapt wildcard
-  
-  // contains wildcard
-  
 }
