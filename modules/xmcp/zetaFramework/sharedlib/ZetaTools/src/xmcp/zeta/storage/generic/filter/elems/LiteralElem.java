@@ -18,8 +18,10 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
+import xmcp.zeta.storage.generic.filter.elems.relational.RelationalOperand;
 
-public class LiteralElem implements FilterElement {
+
+public class LiteralElem implements RelationalOperand {
 
   private final String content;
   

@@ -19,7 +19,13 @@
 package xmcp.zeta.storage.generic.filter.elems.relational;
 
 import xmcp.zeta.storage.generic.filter.elems.FilterElement;
+import xmcp.zeta.storage.generic.filter.elems.LiteralElem;
 
-public class EqualsElem implements FilterElement {
+public class EqualsElem extends UnaryRelationalOpElem {
+
+  public EqualsElem(LiteralElem elem) {
+    super(elem);
+    // TODO Auto-generated constructor stub
+  }
 
 }

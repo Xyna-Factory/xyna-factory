@@ -16,10 +16,9 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elems.logical;
+package xmcp.zeta.storage.generic.filter.elems;
 
-import xmcp.zeta.storage.generic.filter.elems.UnaryOpElem;
 
-public class NotElem extends UnaryOpElem implements LogicalOperator {
+public class AbstractFilterElement implements FilterElement {
 
 }

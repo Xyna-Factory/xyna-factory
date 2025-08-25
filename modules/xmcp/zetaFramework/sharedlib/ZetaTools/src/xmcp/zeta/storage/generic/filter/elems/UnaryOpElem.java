@@ -18,8 +18,17 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
+import xmcp.zeta.storage.generic.filter.elems.logical.LogicalOperand;
 
-public class UnaryOpElem implements FilterElement {
 
+public abstract class UnaryOpElem implements FilterElement, LogicalOperand {
+
+  private final FilterElement operand;
+  
+  
+  public UnaryOpElem(FilterElement operand) {
+    this.operand = operand;
+  }
+  
   // check auf unerlaubte kombination logical /relational
 }

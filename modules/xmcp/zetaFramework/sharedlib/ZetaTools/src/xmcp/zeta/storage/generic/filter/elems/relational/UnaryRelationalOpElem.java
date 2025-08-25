@@ -23,12 +23,11 @@ import xmcp.zeta.storage.generic.filter.elems.LiteralElem;
 import xmcp.zeta.storage.generic.filter.elems.UnaryOpElem;
 
 
-public class UnaryRelationalOpElem extends UnaryOpElem {
+public abstract class UnaryRelationalOpElem extends UnaryOpElem {
 
-  private final FilterElement operand;
   
   public UnaryRelationalOpElem(LiteralElem elem) {
-    this.operand = elem;
+    super(elem);
   }
   
   

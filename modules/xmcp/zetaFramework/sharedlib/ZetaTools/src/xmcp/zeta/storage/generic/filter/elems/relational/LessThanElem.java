@@ -19,7 +19,14 @@
 package xmcp.zeta.storage.generic.filter.elems.relational;
 
 import xmcp.zeta.storage.generic.filter.elems.FilterElement;
+import xmcp.zeta.storage.generic.filter.elems.LiteralElem;
 
-public class LessThanElem implements FilterElement {
-//
+
+public class LessThanElem extends UnaryRelationalOpElem {
+
+  public LessThanElem(LiteralElem elem) {
+    super(elem);
+    // TODO Auto-generated constructor stub
+  }
+  
 }
