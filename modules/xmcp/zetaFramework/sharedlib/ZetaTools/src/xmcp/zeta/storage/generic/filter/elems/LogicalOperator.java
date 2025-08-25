@@ -16,8 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elems.logical;
-
+package xmcp.zeta.storage.generic.filter.elems;
 
 public interface LogicalOperator extends LogicalOperand {
 

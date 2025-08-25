@@ -18,6 +18,9 @@
 
 package xmcp.zeta.storage.generic.filter.elems.logical;
 
+import xmcp.zeta.storage.generic.filter.elems.BinaryLogicalOpElem;
+import xmcp.zeta.storage.generic.filter.elems.LogicalOperator;
+
 public class AndElem extends BinaryLogicalOpElem implements LogicalOperator {
 
 }

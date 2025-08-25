@@ -16,19 +16,8 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elems.relational;
+package xmcp.zeta.storage.generic.filter.elems;
 
-import xmcp.zeta.storage.generic.filter.elems.FilterElement;
-import xmcp.zeta.storage.generic.filter.elems.LiteralElem;
-import xmcp.zeta.storage.generic.filter.elems.UnaryOpElem;
+public interface RelationalOperand extends FilterElement {
 
-
-public abstract class UnaryRelationalOpElem extends UnaryOpElem {
-
-  
-  public UnaryRelationalOpElem(LiteralElem elem) {
-    super(elem);
-  }
-  
-  
 }

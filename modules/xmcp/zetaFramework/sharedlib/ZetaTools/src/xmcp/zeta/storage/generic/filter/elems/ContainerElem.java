@@ -18,9 +18,6 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
-import xmcp.zeta.storage.generic.filter.elems.logical.LogicalOperand;
-
-
 public class ContainerElem implements FilterElement, LogicalOperand {
 
   // contains, set of enum elem-type?

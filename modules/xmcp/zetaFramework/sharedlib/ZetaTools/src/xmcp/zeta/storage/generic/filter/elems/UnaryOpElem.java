@@ -18,9 +18,6 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
-import xmcp.zeta.storage.generic.filter.elems.logical.LogicalOperand;
-
-
 public abstract class UnaryOpElem implements FilterElement, LogicalOperand {
 
   private final FilterElement operand;
