@@ -19,6 +19,6 @@
 package xmcp.zeta.storage.generic.filter.elements;
 
 
-public class FinishedElem {
+public class FinishedElem implements FilterElement {
 
 }

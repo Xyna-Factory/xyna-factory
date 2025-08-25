@@ -16,10 +16,13 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elements;
+package xmcp.zeta.storage.generic.filter.lexer;
+
+import xmcp.zeta.storage.generic.filter.shared.Enums;
 
 
-public class UnaryOpElem implements FilterElement {
+public interface OperatorToken {
 
-  // check auf unerlaubte kombination logical /relational
+  public Enums.LexedOperatorCategory getCategory();
+  
 }

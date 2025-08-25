@@ -19,6 +19,6 @@
 package xmcp.zeta.storage.generic.filter.elements;
 
 
-public class EqualsElem {
+public class EqualsElem implements FilterElement {
 
 }

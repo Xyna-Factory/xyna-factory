@@ -19,6 +19,13 @@
 package xmcp.zeta.storage.generic.filter.elements;
 
 
-public class UnaryRelationalOpElem {
+public class UnaryRelationalOpElem extends UnaryOpElem {
 
+  private final FilterElement operand;
+  
+  public UnaryRelationalOpElem(LiteralElem elem) {
+    this.operand = elem;
+  }
+  
+  
 }

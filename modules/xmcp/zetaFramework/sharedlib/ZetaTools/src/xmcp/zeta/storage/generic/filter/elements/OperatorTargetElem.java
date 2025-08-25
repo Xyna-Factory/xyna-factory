@@ -19,6 +19,6 @@
 package xmcp.zeta.storage.generic.filter.elements;
 
 
-public class OperatorTargetElem {
+public class OperatorTargetElem implements FilterElement {
 
 }

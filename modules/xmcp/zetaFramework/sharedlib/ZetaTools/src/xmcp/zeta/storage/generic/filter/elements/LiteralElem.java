@@ -19,8 +19,15 @@
 package xmcp.zeta.storage.generic.filter.elements;
 
 
-public class LiteralElem {
+public class LiteralElem implements FilterElement {
 
+  private final String content;
+  
+  public LiteralElem(String input) {
+    this.content = input;
+  }
+  
+  
   // adapt wildcard
   
   // contains wildcard

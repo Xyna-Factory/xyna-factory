@@ -19,6 +19,6 @@
 package xmcp.zeta.storage.generic.filter.elements;
 
 
-public class GreaterThanElem {
+public class GreaterThanElem implements FilterElement {
 
 }

@@ -19,7 +19,7 @@
 package xmcp.zeta.storage.generic.filter.elements;
 
 
-public class BinaryLogicalOpElem {
+public class BinaryLogicalOpElem implements FilterElement {
 
   // check auf unerlaubte kombination logical /relational
 }

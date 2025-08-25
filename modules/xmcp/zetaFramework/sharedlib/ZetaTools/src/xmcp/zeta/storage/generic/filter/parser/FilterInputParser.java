@@ -18,6 +18,23 @@
 
 package xmcp.zeta.storage.generic.filter.parser;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import xmcp.zeta.storage.generic.filter.elements.FilterElement;
+import xmcp.zeta.storage.generic.filter.elements.LiteralElem;
+import xmcp.zeta.storage.generic.filter.elements.TokenOpElem;
+import xmcp.zeta.storage.generic.filter.lexer.LexedLiteral;
+import xmcp.zeta.storage.generic.filter.lexer.MergedLiteral;
+import xmcp.zeta.storage.generic.filter.lexer.OperatorToken;
+import xmcp.zeta.storage.generic.filter.lexer.Token;
+import xmcp.zeta.storage.generic.filter.lexer.Whitespace;
+import xmcp.zeta.storage.generic.filter.parser.phase1.DoubleOperatorAdapter;
+import xmcp.zeta.storage.generic.filter.parser.phase1.LiteralMerger;
+import xmcp.zeta.storage.generic.filter.parser.phase1.LiteralOperatorAdapter;
+import xmcp.zeta.storage.generic.filter.parser.phase1.QuoteHandler;
+import xmcp.zeta.storage.generic.filter.parser.phase1.WhitespaceRemover;
+
 
 public class FilterInputParser {
 
@@ -43,7 +60,32 @@ public class FilterInputParser {
   
   
   
-  //prepare:
-  // quotehandler,  doubleop., literalop.,  lit.merger, whitespacerem.
+  private List<Token> executePhase1(List<Token> list) {
+    List<Token> tokens = list;
+    tokens = new QuoteHandler().execute(tokens);
+    tokens = new DoubleOperatorAdapter().execute(tokens);
+    tokens = new LiteralOperatorAdapter().execute(tokens);
+    tokens = new LiteralMerger().execute(tokens);
+    tokens = new WhitespaceRemover().execute(tokens);
+    return tokens;
+  }
+  
+  
+  private List<FilterElement> adaptTokens(List<Token> input) {
+    List<FilterElement> ret = new ArrayList<>();
+    for (Token token : input) {
+      if (token instanceof Whitespace) { continue; }
+      else if (token instanceof LexedLiteral) {
+        ret.add(new LiteralElem(token.getOriginalInput()));
+      } else if (token instanceof MergedLiteral) {
+        ret.add(new LiteralElem(token.getOriginalInput()));
+      } else if (token instanceof OperatorToken) {
+        ret.add(new TokenOpElem((OperatorToken) token));
+      } else {
+        throw new IllegalArgumentException("Unexpected token class: " + token.getClass().getName());
+      }
+    }
+    return ret;
+  }
   
 }

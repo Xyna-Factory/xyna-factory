@@ -16,10 +16,13 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elements;
+package xmcp.zeta.storage.generic.filter.parser.phase2;
 
 
-public class UnaryOpElem implements FilterElement {
+public class OperatorHandler {
 
-  // check auf unerlaubte kombination logical /relational
+  
+  // rel-op: ein target, das muss literal sein
+  
+  // logical-op: 1/2 target, entweder container oder logical op
 }

@@ -19,6 +19,6 @@
 package xmcp.zeta.storage.generic.filter.elements;
 
 
-public class OrElem {
+public class OrElem extends BinaryLogicalOpElem implements LogicalOp {
 
 }

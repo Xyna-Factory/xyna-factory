@@ -19,7 +19,7 @@
 package xmcp.zeta.storage.generic.filter.elements;
 
 
-public class ContainerElem {
+public class ContainerElem implements FilterElement {
 
   // contains, set of enum elem-type?
   

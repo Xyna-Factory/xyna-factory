@@ -16,10 +16,9 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elements;
+package xmcp.zeta.storage.generic.filter.parser.phase2;
 
 
-public class UnaryOpElem implements FilterElement {
+public class ParenthesesHandler {
 
-  // check auf unerlaubte kombination logical /relational
 }

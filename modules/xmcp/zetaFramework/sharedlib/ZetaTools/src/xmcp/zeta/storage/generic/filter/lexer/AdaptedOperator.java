@@ -21,7 +21,7 @@ package xmcp.zeta.storage.generic.filter.lexer;
 import xmcp.zeta.storage.generic.filter.shared.Enums;
 
 
-public class AdaptedOperator extends Token {
+public class AdaptedOperator extends Token implements OperatorToken {
 
   private final Enums.LexedOperatorCategory category;
   

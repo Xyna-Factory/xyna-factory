@@ -19,7 +19,7 @@
 package xmcp.zeta.storage.generic.filter.elements;
 
 
-public class FilterElement {
+public interface FilterElement {
 
   // check if finished
   

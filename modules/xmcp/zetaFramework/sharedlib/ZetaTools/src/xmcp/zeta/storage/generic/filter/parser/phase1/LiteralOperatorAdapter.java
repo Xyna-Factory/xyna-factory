@@ -60,6 +60,9 @@ public class LiteralOperatorAdapter {
         if (val.toUpperCase().matches("AND")) {
           match.category = Enums.LexedOperatorCategory.AND;
           return Optional.of(match);
+        } else if (val.toUpperCase().matches("NOT")) {
+          match.category = Enums.LexedOperatorCategory.AND;
+          return Optional.of(match);
         }
       }
       if (val.length() == 2) {

@@ -19,6 +19,6 @@
 package xmcp.zeta.storage.generic.filter.elements;
 
 
-public class LessThanElem {
+public class LessThanElem implements FilterElement {
 //
 }
