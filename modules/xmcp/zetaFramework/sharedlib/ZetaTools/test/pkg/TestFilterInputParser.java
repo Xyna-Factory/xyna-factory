@@ -46,7 +46,7 @@ public class TestFilterInputParser {
   @Test
   public void testOps1() {
     try {
-      String input = "!>1 & <20 | =10";
+      String input = "!>1 | <20 & =10";
       List<Token> tokens = new FilterInputLexer().execute(input);
       
       for (int i = 0; i < tokens.size(); i++) {
@@ -74,7 +74,7 @@ public class TestFilterInputParser {
   @Test
   public void testOps2() {
     try {
-      String input = "!>1 & <20 | =10";
+      String input = "!>1 | <20 & =10";
       List<Token> tokens = new FilterInputLexer().execute(input);
       
       for (int i = 0; i < tokens.size(); i++) {
