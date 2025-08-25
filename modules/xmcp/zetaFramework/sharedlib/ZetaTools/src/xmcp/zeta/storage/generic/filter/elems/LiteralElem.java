@@ -18,6 +18,8 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
+import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
+
 public class LiteralElem implements RelationalOperand {
 
   private final String content;
@@ -26,6 +28,11 @@ public class LiteralElem implements RelationalOperand {
     this.content = input;
   }
   
+  public boolean isFinished() {
+    return true;
+  }
+  
+  public void parse(FilterInputParser parser) {}
   
   // adapt wildcard
   

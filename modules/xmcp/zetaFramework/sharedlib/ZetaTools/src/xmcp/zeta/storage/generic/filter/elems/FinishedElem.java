@@ -18,7 +18,24 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
+import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 
 public class FinishedElem implements FilterElement {
 
+  private final FilterElement child;
+  
+  
+  public FinishedElem(FilterElement elem) {
+    if (!elem.isFinished()) {
+      throw new IllegalArgumentException("Cannot construct FinishedElem with unfinished child.");
+    }
+    this.child = elem;
+  }
+  
+  public boolean isFinished() {
+    return true;
+  }
+  
+  public void parse(FilterInputParser parser) {}
+  
 }

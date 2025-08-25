@@ -18,7 +18,34 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
-public abstract class BinaryLogicalOpElem implements FilterElement {
+import java.util.List;
 
-  // check auf unerlaubte kombination logical /relational
+import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
+
+public abstract class BinaryLogicalOpElem implements LogicalOperator {
+
+  private final LogicalOperand operand1;
+  private final LogicalOperand operand2;
+  
+  
+  public BinaryLogicalOpElem(LogicalOperand elem1, LogicalOperand elem2) {
+    this.operand1 = elem1;
+    this.operand2 = elem2;
+  }
+  
+  
+  public boolean isFinished() {
+    return operand1.isFinished() && operand2.isFinished();
+  }
+  
+  
+  public void parse(FilterInputParser parser) {
+    if (!operand1.isFinished()) {
+      operand1.parse(parser);
+    }
+    if (!operand2.isFinished()) {
+      operand1.parse(parser);
+    }
+  }
+  
 }

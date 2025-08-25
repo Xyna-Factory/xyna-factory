@@ -50,7 +50,8 @@ public class DoubleOperatorAdapter {
       if (!(token instanceof LexedOperator)) { continue; }
       LexedOperator op = (LexedOperator) token;
       if ((op.getCategory() != Enums.LexedOperatorCategory.AND) &&
-          (op.getCategory() != Enums.LexedOperatorCategory.OR)) {
+          (op.getCategory() != Enums.LexedOperatorCategory.OR) &&
+          (op.getCategory() != Enums.LexedOperatorCategory.EQUALS)) {
         continue;
       }
       Token next = list.get(i + 1);

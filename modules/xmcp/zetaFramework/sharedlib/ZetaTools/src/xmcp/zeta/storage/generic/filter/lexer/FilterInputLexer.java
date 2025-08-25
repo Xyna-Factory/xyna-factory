@@ -23,9 +23,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.StringTokenizer;
 
-import xmcp.zeta.storage.generic.filter.shared.Enums;
-import xmcp.zeta.storage.generic.filter.shared.Replacer;
-
 
 public class FilterInputLexer {
 

@@ -20,11 +20,12 @@ package xmcp.zeta.storage.generic.filter.elems.relational;
 
 import xmcp.zeta.storage.generic.filter.elems.FilterElement;
 import xmcp.zeta.storage.generic.filter.elems.LiteralElem;
+import xmcp.zeta.storage.generic.filter.elems.RelationalOperand;
 import xmcp.zeta.storage.generic.filter.elems.UnaryRelationalOpElem;
 
 public class GreaterThanElem extends UnaryRelationalOpElem {
 
-  public GreaterThanElem(LiteralElem elem) {
+  public GreaterThanElem(RelationalOperand elem) {
     super(elem);
     // TODO Auto-generated constructor stub
   }

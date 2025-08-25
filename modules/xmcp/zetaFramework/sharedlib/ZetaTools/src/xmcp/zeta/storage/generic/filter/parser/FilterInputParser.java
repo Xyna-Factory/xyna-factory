@@ -21,9 +21,11 @@ package xmcp.zeta.storage.generic.filter.parser;
 import java.util.ArrayList;
 import java.util.List;
 
+import xmcp.zeta.storage.generic.filter.elems.ContainerElem;
 import xmcp.zeta.storage.generic.filter.elems.FilterElement;
 import xmcp.zeta.storage.generic.filter.elems.LiteralElem;
 import xmcp.zeta.storage.generic.filter.elems.TokenOpElem;
+import xmcp.zeta.storage.generic.filter.lexer.FilterInputLexer;
 import xmcp.zeta.storage.generic.filter.lexer.LexedLiteral;
 import xmcp.zeta.storage.generic.filter.lexer.MergedLiteral;
 import xmcp.zeta.storage.generic.filter.lexer.OperatorToken;
@@ -34,10 +36,15 @@ import xmcp.zeta.storage.generic.filter.parser.phase1.LiteralMerger;
 import xmcp.zeta.storage.generic.filter.parser.phase1.LiteralOperatorAdapter;
 import xmcp.zeta.storage.generic.filter.parser.phase1.QuoteHandler;
 import xmcp.zeta.storage.generic.filter.parser.phase1.WhitespaceRemover;
+import xmcp.zeta.storage.generic.filter.parser.phase2.OperatorHandler;
+import xmcp.zeta.storage.generic.filter.parser.phase2.ParenthesesHandler;
 
 
 public class FilterInputParser {
 
+  private OperatorHandler _operatorHandler = new OperatorHandler();
+  
+  
   // keine attribute, nur tool-klasse, wird von expression-parse-methoden durchgereicht?
   
   // parse
@@ -59,6 +66,12 @@ public class FilterInputParser {
   // mit generisch replace() von container?
   
   
+  public ContainerElem parse(String input) {
+    List<Token> tokens = new FilterInputLexer().execute(input);
+    tokens = executePhase1(tokens);
+    return executePhase2(tokens);
+  }
+  
   
   private List<Token> executePhase1(List<Token> list) {
     List<Token> tokens = list;
@@ -68,6 +81,20 @@ public class FilterInputParser {
     tokens = new LiteralMerger().execute(tokens);
     tokens = new WhitespaceRemover().execute(tokens);
     return tokens;
+  }
+  
+  
+  private ContainerElem executePhase2(List<Token> tokens) {
+    List<FilterElement> elems = adaptTokens(tokens);
+    elems = new ParenthesesHandler().execute(elems);
+    ContainerElem root;
+    if ((elems.size() == 1) && (elems.get(0) instanceof ContainerElem)) {
+      root = (ContainerElem) elems.get(0);
+    } else {
+      root = new ContainerElem(elems);
+    }
+    root.parse(this);
+    return root;
   }
   
   
@@ -86,6 +113,16 @@ public class FilterInputParser {
       }
     }
     return ret;
+  }
+  
+  /*
+  public void parseContainer(ContainerElem container) {
+    //TODO
+  }
+  */
+  
+  public List<FilterElement> parseOperators(List<FilterElement> input) {
+    return _operatorHandler.execute(input);
   }
   
 }

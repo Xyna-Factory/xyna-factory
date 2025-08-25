@@ -18,6 +18,8 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
+import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
+
 public abstract class UnaryOpElem implements FilterElement, LogicalOperand {
 
   private final FilterElement operand;
@@ -27,5 +29,14 @@ public abstract class UnaryOpElem implements FilterElement, LogicalOperand {
     this.operand = operand;
   }
   
-  // check auf unerlaubte kombination logical /relational
+  public boolean isFinished() {
+    return operand.isFinished();
+  }
+  
+  public void parse(FilterInputParser parser) {
+    if (!operand.isFinished()) {
+      operand.parse(parser);
+    }
+  }
+  
 }

@@ -21,7 +21,7 @@ package xmcp.zeta.storage.generic.filter.elems;
 public abstract class UnaryRelationalOpElem extends UnaryOpElem {
 
   
-  public UnaryRelationalOpElem(LiteralElem elem) {
+  public UnaryRelationalOpElem(RelationalOperand elem) {
     super(elem);
   }
   

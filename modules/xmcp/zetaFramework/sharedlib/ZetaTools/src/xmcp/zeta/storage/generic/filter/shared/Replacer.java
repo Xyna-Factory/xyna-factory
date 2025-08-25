@@ -26,7 +26,7 @@ public class Replacer<T> {
 
   public List<T> replaceInList(List<T> list, int fromIndexInclusive, int toIndexExclusive, T replaceWith) {
     if (fromIndexInclusive >= list.size()) { return new ArrayList<T>(list); }
-    if (toIndexExclusive >= list.size()) { return new ArrayList<T>(list); }
+    if (toIndexExclusive > list.size()) { return new ArrayList<T>(list); }
     List<T> ret = new ArrayList<T>();
     List<T> before = list.subList(0, fromIndexInclusive);
     List<T> after = list.subList(toIndexExclusive, list.size());

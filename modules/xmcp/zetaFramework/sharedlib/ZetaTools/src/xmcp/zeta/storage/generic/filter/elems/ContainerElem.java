@@ -18,8 +18,51 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
-public class ContainerElem implements FilterElement, LogicalOperand {
+import java.util.ArrayList;
+import java.util.List;
 
+import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
+
+
+public class ContainerElem implements LogicalOperand {
+
+  private List<FilterElement> children = new ArrayList<>();
+  
+  
+  public ContainerElem(List<FilterElement> children) {
+    this.children.addAll(children);
+  }
+  
+  
+  public boolean isFinished() {
+    for (FilterElement child : children) {
+      if (!child.isFinished()) { return false; }
+    }
+    return true;
+  }
+  
+  
+  private void rebuild(List<FilterElement> newChildren) {
+    this.children = newChildren;
+  }
+  
+  
+  public void parse(FilterInputParser parser) {
+    List<FilterElement> adapted = parser.parseOperators(this.children);
+    rebuild(adapted);
+    for (FilterElement child : children) {
+      if (!child.isFinished()) {
+        child.parse(parser);
+      }
+      if (!child.isFinished()) {
+        throw new IllegalArgumentException("Error parsing of child element of filter input expression failed, " +
+                                           "state still unfinished.");
+      }
+    }
+  }
+  
+   
+  
   // contains, set of enum elem-type?
   
   // containedtokens, nur lexed tokens

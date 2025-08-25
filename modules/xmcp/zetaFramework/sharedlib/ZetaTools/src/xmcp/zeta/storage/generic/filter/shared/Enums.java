@@ -22,6 +22,9 @@ import java.util.Optional;
 
 public class Enums {
 
+  public static enum OpMultiplicity {
+    UNARY, BINARY, UNKNOWN
+  }
   
   // unary op type
   // not lesser greater equal

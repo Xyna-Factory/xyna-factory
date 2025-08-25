@@ -19,6 +19,7 @@
 package xmcp.zeta.storage.generic.filter.elems;
 
 import xmcp.zeta.storage.generic.filter.lexer.OperatorToken;
+import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 import xmcp.zeta.storage.generic.filter.shared.Enums;
 
 
@@ -32,6 +33,16 @@ public class TokenOpElem implements FilterElement {
   
   public Enums.LexedOperatorCategory getCategory() {
     return token.getCategory();
+  }
+  
+  public boolean isFinished() {
+    return false;
+  }
+  
+  
+  public void parse(FilterInputParser parser) {
+    throw new IllegalArgumentException("Error executing filter expression parse algorithm: " +
+                                       "Did not expect TokenOpElem in container parsing phase.");
   }
   
 }

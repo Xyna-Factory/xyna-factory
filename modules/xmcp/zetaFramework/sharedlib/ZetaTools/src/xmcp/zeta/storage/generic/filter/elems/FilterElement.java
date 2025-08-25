@@ -18,12 +18,16 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
+import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 
 public interface FilterElement {
 
   // check if finished
+  public boolean isFinished();
+  
   
   // parse
+  public void parse(FilterInputParser parser);
   
   // to sql
 }

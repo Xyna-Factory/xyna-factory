@@ -18,9 +18,16 @@
 
 package xmcp.zeta.storage.generic.filter.elems.logical;
 
+import xmcp.zeta.storage.generic.filter.elems.FilterElement;
+import xmcp.zeta.storage.generic.filter.elems.LogicalOperand;
 import xmcp.zeta.storage.generic.filter.elems.LogicalOperator;
 import xmcp.zeta.storage.generic.filter.elems.UnaryOpElem;
 
+
 public class NotElem extends UnaryOpElem implements LogicalOperator {
+
+  public NotElem(LogicalOperand operand) {
+    super(operand);
+  }
 
 }
