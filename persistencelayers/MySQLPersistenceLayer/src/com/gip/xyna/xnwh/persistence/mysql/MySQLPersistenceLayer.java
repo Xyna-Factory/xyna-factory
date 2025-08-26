@@ -637,7 +637,7 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
   }
 
   public static String escape(String s) {
-    if(XynaProperty.QUERY_ESCAPE.get()) {
+    if(XynaProperty.QUERY_ESCAPE.get() && !s.contains(".")) {
       return String.format("`%s`", s.toLowerCase());
     }
     return s;
