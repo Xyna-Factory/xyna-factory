@@ -138,6 +138,27 @@ public class TestFilterInputParser {
   }
   
   
+  @Test
+  public void testSql1() {
+    try {
+      String input = "!(>1 | <20) & (=30 | !(<5 & >3))";
+      //String input = "!(>1 | <20)";
+      FilterElement root = new FilterInputParser().parse(input);
+      StringBuilder str = new StringBuilder();
+      JsonWriter json = new JsonWriter();
+      root.writeJson(json);
+      log(json.toString());
+      
+      root.writeSql("col-1", str);
+      String sql = str.toString();
+      log(sql);
+      assertEquals("(NOT ((col-1 > 1) OR (col-1 < 20))) AND ((col-1 LIKE '%30%') OR (NOT ((col-1 < 5) AND (col-1 > 3))))", sql);
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+  
   
   @Test
   public void testOps1() {
@@ -384,7 +405,7 @@ public class TestFilterInputParser {
   
   public static void main(String[] args) {
     try {
-      new TestFilterInputParser().testQuotes2();
+      new TestFilterInputParser().testSql1();
     }
     catch (Throwable e) {
       e.printStackTrace();

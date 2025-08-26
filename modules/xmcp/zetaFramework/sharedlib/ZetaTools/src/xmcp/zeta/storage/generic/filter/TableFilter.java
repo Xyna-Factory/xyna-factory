@@ -20,6 +20,9 @@ package xmcp.zeta.storage.generic.filter;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
+import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xnwh.persistence.Parameter;
 
 import xmcp.zeta.storage.generic.filter.elems.FilterElement;
@@ -28,6 +31,8 @@ import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 
 public class TableFilter {
 
+  private static Logger _logger = Logger.getLogger(TableFilter.class);
+  
   private static final String SQL_WHERE = " WHERE ";
   private static final String SQL_AND = " AND ";
   
@@ -46,10 +51,16 @@ public class TableFilter {
     str.append(SQL_WHERE);
     boolean isfirst = true;
     for (FilterColumn col : _filterColumns) {
-      if (isfirst) { isfirst = false; }
-      else { str.append(SQL_AND); }
-      FilterElement elem = parser.parse(col.getValue());
-      elem.writeSql(col.getSqlColumnName(), str);
+      try {
+        FilterElement elem = parser.parse(col.getValue());
+        StringBuilder tmp = new StringBuilder();
+        elem.writeSql(col.getSqlColumnName(), tmp);
+        if (isfirst) { isfirst = false; }
+        else { str.append(SQL_AND); }
+        str.append(tmp);
+      } catch (Exception e) {
+        _logger.error("Error parsing filter input: " + e.getMessage(), e);
+      }
     }
     return str.toString();
   }

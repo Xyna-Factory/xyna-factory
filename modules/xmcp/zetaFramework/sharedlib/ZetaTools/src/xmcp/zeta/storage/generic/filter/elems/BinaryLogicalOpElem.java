@@ -48,6 +48,8 @@ public abstract class BinaryLogicalOpElem implements LogicalOperator {
   
   
   public boolean isFinished() {
+    if (_operand1 instanceof ContainerElem) { return false; }
+    if (_operand2 instanceof ContainerElem) { return false; }
     return _operand1.isFinished() && _operand2.isFinished();
   }
   
@@ -57,7 +59,7 @@ public abstract class BinaryLogicalOpElem implements LogicalOperator {
       _operand1.parse(parser);
     }
     if (!_operand2.isFinished()) {
-      _operand1.parse(parser);
+      _operand2.parse(parser);
     }
     if (_operand1 instanceof ContainerElem) {
       _operand1 = handleContainerOperand((ContainerElem) _operand1);

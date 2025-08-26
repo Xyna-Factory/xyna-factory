@@ -38,7 +38,7 @@ public class OrElem extends BinaryLogicalOpElem implements LogicalOperator {
   public void writeSql(String colname, StringBuilder str) {
     str.append("(");
     getOperand1().writeSql(colname, str);
-    str.append(" OR ");
+    str.append(") OR (");
     getOperand2().writeSql(colname, str);
     str.append(")");
   }

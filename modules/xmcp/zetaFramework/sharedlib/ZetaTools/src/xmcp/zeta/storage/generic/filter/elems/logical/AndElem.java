@@ -38,7 +38,7 @@ public class AndElem extends BinaryLogicalOpElem implements LogicalOperator {
   public void writeSql(String colname, StringBuilder str) {
     str.append("(");
     getOperand1().writeSql(colname, str);
-    str.append(" AND ");
+    str.append(") AND (");
     getOperand2().writeSql(colname, str);
     str.append(")");
   }

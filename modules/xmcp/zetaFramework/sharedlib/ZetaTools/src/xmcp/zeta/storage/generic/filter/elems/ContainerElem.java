@@ -37,15 +37,18 @@ public class ContainerElem implements LogicalOperand {
   
   @Override
   public boolean isFinished() {
+    /*
     for (FilterElement child : _children) {
       if (!child.isFinished()) { return false; }
     }
     return true;
+    */
+    return (_children.size() == 1) && (_children.get(0).isFinished());
   }
   
   
   private void rebuild(List<FilterElement> newChildren) {
-    this._children = newChildren;
+    _children = newChildren;
   }
   
   
@@ -58,6 +61,11 @@ public class ContainerElem implements LogicalOperand {
     }
     List<FilterElement> adapted = parser.parseOperators(this._children);
     rebuild(adapted);
+    for (FilterElement child : _children) {
+      if (!child.isFinished()) {
+        child.parse(parser);
+      }
+    }
     if (!isFinished()) {
       throw new IllegalArgumentException("Error parsing of child element of filter input expression failed, " +
                                          "state still unfinished.");

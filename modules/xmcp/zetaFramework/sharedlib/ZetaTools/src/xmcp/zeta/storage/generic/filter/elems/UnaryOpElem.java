@@ -42,6 +42,7 @@ public abstract class UnaryOpElem<T extends FilterElement> implements FilterElem
   
   
   public boolean isFinished() {
+    if (_operand instanceof ContainerElem) { return false; }
     return _operand.isFinished();
   }
   
