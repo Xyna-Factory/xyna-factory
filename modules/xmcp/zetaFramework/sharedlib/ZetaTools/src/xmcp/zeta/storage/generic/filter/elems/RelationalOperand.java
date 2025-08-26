@@ -27,8 +27,13 @@ public abstract class RelationalOperand implements FilterElement {
   public abstract boolean isNumerical();
   public abstract String getContentString();
   
-  
+  @Override
   public void parse(FilterInputParser parser) {
+    // do nothing
+  }
+  
+  @Override
+  public void toSql(String colname, StringBuilder str) {
     // do nothing
   }
   

@@ -22,22 +22,26 @@ import xmcp.zeta.storage.generic.filter.elems.ContainerElem;
 import xmcp.zeta.storage.generic.filter.elems.FilterElement;
 import xmcp.zeta.storage.generic.filter.elems.LogicalOperand;
 import xmcp.zeta.storage.generic.filter.elems.LogicalOperator;
+import xmcp.zeta.storage.generic.filter.elems.RelationalOperand;
 import xmcp.zeta.storage.generic.filter.elems.UnaryOpElem;
 
 
-public class NotElem extends UnaryOpElem implements LogicalOperator {
+public class NotElem extends UnaryOpElem<LogicalOperand> implements LogicalOperator {
 
+  
   public NotElem(LogicalOperand operand) {
     super(operand);
   }
 
+  
   @Override
   public String getOperatorName() {
     return "NOT";
   }
 
+  
   @Override
-  protected FilterElement buildReplacementOperand(ContainerElem container) {
+  protected LogicalOperand buildReplacementOperand(ContainerElem container) {
     FilterElement elem = container.verifyAndExtractSingleChild();
     if (elem instanceof LogicalOperand) {
       return (LogicalOperand) elem;
@@ -45,4 +49,13 @@ public class NotElem extends UnaryOpElem implements LogicalOperator {
     throw new RuntimeException("Error parsing filter expression: Unexpected operand for logical operator");
   }
 
+  
+  @Override
+  public void toSql(String colname, StringBuilder str) {
+    LogicalOperand operand = getOperand();
+    str.append("NOT (");
+    operand.toSql(colname, str);
+    str.append(")");
+  }
+  
 }

@@ -18,6 +18,7 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
+import xmcp.zeta.storage.generic.filter.shared.FilterInputConstants;
 import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 
 
@@ -30,7 +31,7 @@ public class WildcardElem extends RelationalOperand {
   
   @Override
   public void writeJson(JsonWriter json) {
-    json.addAttribute("Wildcard", "%");
+    json.addAttribute("Wildcard", FilterInputConstants.SQL_WILDCARD);
   }
 
   @Override
@@ -45,7 +46,7 @@ public class WildcardElem extends RelationalOperand {
 
   @Override
   public String getContentString() {
-    return "%";
+    return FilterInputConstants.SQL_WILDCARD;
   }
   
 }

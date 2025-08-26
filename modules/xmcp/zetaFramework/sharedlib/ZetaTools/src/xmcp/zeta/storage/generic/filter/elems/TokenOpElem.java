@@ -36,21 +36,24 @@ public class TokenOpElem implements FilterElement {
     return token.getCategory();
   }
   
+  @Override
   public boolean isFinished() {
     return false;
   }
   
-  
+  @Override
   public void parse(FilterInputParser parser) {
-    /*
-    throw new IllegalArgumentException("Error executing filter expression parse algorithm: " +
-                                       "Did not expect TokenOpElem in container parsing phase.");
-                                       */
+    // do nothing
   }
   
-  
+  @Override
   public void writeJson(JsonWriter json) {
     json.addAttribute("TokenOp", token.getCategory().toString());
+  }
+  
+  @Override
+  public void toSql(String colname, StringBuilder str) {
+    throw new RuntimeException("SQL output not supported for class " + this.getClass().getName());
   }
   
 }

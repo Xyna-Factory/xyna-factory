@@ -33,5 +33,14 @@ public class AndElem extends BinaryLogicalOpElem implements LogicalOperator {
   public String getOperatorName() {
     return "AND";
   }
+
+  @Override
+  public void toSql(String colname, StringBuilder str) {
+    str.append("(");
+    getOperand1().toSql(colname, str);
+    str.append(" AND ");
+    getOperand2().toSql(colname, str);
+    str.append(")");
+  }
   
 }

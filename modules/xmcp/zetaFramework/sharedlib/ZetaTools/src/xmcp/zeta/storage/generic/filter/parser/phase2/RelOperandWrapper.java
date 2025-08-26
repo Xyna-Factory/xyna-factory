@@ -40,7 +40,7 @@ public class RelOperandWrapper {
       int from = getIndexNextMatchStart(elems, pos);
       if (from < 0) { break; }
       pos = from + 1;
-      int to = getIndexMatchEnd(elems, from + 1);
+      int to = getIndexMatchEnd(elems, from);
       if (to <= from) { continue; }
       RelOperandContainer wrapped = wrapElements(from, to + 1, elems);
       elems = replacer.replaceInList(elems, from, to + 1, wrapped);
@@ -72,13 +72,11 @@ public class RelOperandWrapper {
   
   private int getIndexMatchEnd(List<FilterElement> list, int from) {
     int matchEnd = from;
-    for (int i = from; i < list.size() - 1; i++) {
+    for (int i = from + 1; i < list.size(); i++) {
       FilterElement elem = list.get(i);
-      if (elem instanceof LexedLiteral) {
+      if (elem instanceof RelationalOperand) {
         matchEnd = i;
-      } else if (elem instanceof MergedLiteral) {
-        matchEnd = i;
-      } else if (!(elem instanceof Whitespace)) {
+      } else {
         return matchEnd;
       }
     }

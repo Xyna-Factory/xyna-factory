@@ -20,6 +20,7 @@ package xmcp.zeta.storage.generic.filter.elems.relational;
 
 import xmcp.zeta.storage.generic.filter.elems.RelationalOperand;
 import xmcp.zeta.storage.generic.filter.elems.UnaryRelationalOpElem;
+import xmcp.zeta.storage.generic.filter.shared.FilterInputConstants;
 
 
 public class GreaterThanElem extends UnaryRelationalOpElem {
@@ -31,6 +32,19 @@ public class GreaterThanElem extends UnaryRelationalOpElem {
   @Override
   public String getOperatorName() {
     return "GreaterThan";
+  }
+  
+  @Override
+  public void toSql(String colname, StringBuilder str) {
+    RelationalOperand operand = getOperand();
+    String content = operand.getContentString();
+    if (operand.containsWildcards()) {
+      throw new IllegalArgumentException("Syntax error in filter expression: > operator cannot be combined with wildcards");
+    }
+    if (!operand.isNumerical()) {
+      throw new IllegalArgumentException("Syntax error in filter expression: > operator can only combined with numerical values");
+    }
+    str.append(colname).append(" > ").append(content);
   }
   
 }

@@ -38,10 +38,11 @@ public class LiteralOperatorAdapter {
     while (true) {
       Optional<OperatorMatch> match = getFirstMatch(tokens, pos);
       if (match.isEmpty()) { break; }
-      LexedLiteral lit = (LexedLiteral) tokens.get(pos);
+      int index = match.get().index;
+      LexedLiteral lit = (LexedLiteral) tokens.get(index);
       AdaptedOperator op = new AdaptedOperator(lit.getOriginalInput(), match.get().category);
-      tokens = replacer.replaceInList(tokens, pos, pos + 1, op);
-      pos = match.get().index + 1;
+      tokens = replacer.replaceInList(tokens, index, index + 1, op);
+      pos = index + 1;
     }
     return tokens;
   }
@@ -61,7 +62,7 @@ public class LiteralOperatorAdapter {
           match.category = Enums.LexedOperatorCategory.AND;
           return Optional.of(match);
         } else if (val.toUpperCase().matches("NOT")) {
-          match.category = Enums.LexedOperatorCategory.AND;
+          match.category = Enums.LexedOperatorCategory.NOT;
           return Optional.of(match);
         }
       }

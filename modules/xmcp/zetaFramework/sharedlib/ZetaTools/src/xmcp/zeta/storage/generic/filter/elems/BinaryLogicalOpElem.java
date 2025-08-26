@@ -18,44 +18,52 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
-import java.util.List;
-
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 
 
 public abstract class BinaryLogicalOpElem implements LogicalOperator {
 
-  private LogicalOperand operand1;
-  private LogicalOperand operand2;
+  private LogicalOperand _operand1;
+  private LogicalOperand _operand2;
   
   
   public BinaryLogicalOpElem(LogicalOperand elem1, LogicalOperand elem2) {
-    this.operand1 = elem1;
-    this.operand2 = elem2;
+    this._operand1 = elem1;
+    this._operand2 = elem2;
   }
   
   
   public abstract String getOperatorName();
   
   
+  public LogicalOperand getOperand1() {
+    return _operand1;
+  }
+  
+  
+  public LogicalOperand getOperand2() {
+    return _operand2;
+  }
+  
+  
   public boolean isFinished() {
-    return operand1.isFinished() && operand2.isFinished();
+    return _operand1.isFinished() && _operand2.isFinished();
   }
   
   
   public void parse(FilterInputParser parser) {
-    if (!operand1.isFinished()) {
-      operand1.parse(parser);
+    if (!_operand1.isFinished()) {
+      _operand1.parse(parser);
     }
-    if (!operand2.isFinished()) {
-      operand1.parse(parser);
+    if (!_operand2.isFinished()) {
+      _operand1.parse(parser);
     }
-    if (operand1 instanceof ContainerElem) {
-      operand1 = handleContainerOperand((ContainerElem) operand1);
+    if (_operand1 instanceof ContainerElem) {
+      _operand1 = handleContainerOperand((ContainerElem) _operand1);
     }
-    if (operand2 instanceof ContainerElem) {
-      operand2 = handleContainerOperand((ContainerElem) operand2);
+    if (_operand2 instanceof ContainerElem) {
+      _operand2 = handleContainerOperand((ContainerElem) _operand2);
     }
   }
   
@@ -74,11 +82,11 @@ public abstract class BinaryLogicalOpElem implements LogicalOperator {
     json.addAttribute("operator", getOperatorName());
     json.continueObject();
     json.openObjectAttribute("operand-1");
-    operand1.writeJson(json);
+    _operand1.writeJson(json);
     json.closeObject();
     json.continueObject();
     json.openObjectAttribute("operand-2");
-    operand2.writeJson(json);
+    _operand2.writeJson(json);
     json.closeObject();
     json.closeObject();
   }

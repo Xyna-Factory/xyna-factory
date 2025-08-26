@@ -22,32 +22,36 @@ import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 
 
-public abstract class UnaryOpElem implements FilterElement, LogicalOperand {
+public abstract class UnaryOpElem<T extends FilterElement> implements FilterElement, LogicalOperand {
 
-  private FilterElement operand;
+  private T _operand;
   
   
-  public UnaryOpElem(FilterElement operand) {
-    this.operand = operand;
+  public UnaryOpElem(T operand) {
+    _operand = operand;
   }
-  
   
   public abstract String getOperatorName();
   
-  protected abstract FilterElement buildReplacementOperand(ContainerElem container);
+  protected abstract T buildReplacementOperand(ContainerElem container);
+  
+  
+  public T getOperand() {
+    return _operand;
+  }
   
   
   public boolean isFinished() {
-    return operand.isFinished();
+    return _operand.isFinished();
   }
   
   
   public void parse(FilterInputParser parser) {
-    if (!operand.isFinished()) {
-      operand.parse(parser);
+    if (!_operand.isFinished()) {
+      _operand.parse(parser);
     }
-    if (operand instanceof ContainerElem) {
-      operand = buildReplacementOperand((ContainerElem) operand);
+    if (_operand instanceof ContainerElem) {
+      _operand = buildReplacementOperand((ContainerElem) _operand);
     }
   }
   
@@ -57,7 +61,7 @@ public abstract class UnaryOpElem implements FilterElement, LogicalOperand {
     json.addAttribute("operator", getOperatorName());
     json.continueObject();
     json.openObjectAttribute("operand");
-    operand.writeJson(json);
+    _operand.writeJson(json);
     json.closeObject();
     json.closeObject();
   }

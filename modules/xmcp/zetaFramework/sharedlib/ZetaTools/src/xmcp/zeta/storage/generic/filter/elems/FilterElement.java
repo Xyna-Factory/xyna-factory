@@ -30,7 +30,6 @@ public interface FilterElement {
   
   public void writeJson(JsonWriter json);
   
-  // to sql
-  
+  public void toSql(String colname, StringBuilder str);
   
 }

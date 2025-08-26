@@ -31,6 +31,9 @@ import xmcp.zeta.storage.generic.filter.elems.FilterElement;
 import xmcp.zeta.storage.generic.filter.lexer.FilterInputLexer;
 import xmcp.zeta.storage.generic.filter.lexer.Token;
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
+import xmcp.zeta.storage.generic.filter.parser.phase1.DoubleOperatorAdapter;
+import xmcp.zeta.storage.generic.filter.parser.phase1.LiteralMerger;
+import xmcp.zeta.storage.generic.filter.parser.phase1.LiteralOperatorAdapter;
 import xmcp.zeta.storage.generic.filter.parser.phase1.QuoteHandler;
 import xmcp.zeta.storage.generic.filter.parser.phase2.ParenthesesHandler;
 import xmcp.zeta.storage.generic.filter.parser.phase2.TokenAdapter;
@@ -68,6 +71,24 @@ public class TestFilterInputParser {
     }
   }
   
+  
+  @Test
+  public void testQuotes2() {
+    try {
+      String input = "=abc 'opq' \"123\"xyz 'fgh'";
+      List<Token> tokens = new FilterInputLexer().execute(input);
+      tokens = new QuoteHandler().execute(tokens);
+      tokens = new LiteralMerger().execute(tokens);
+      
+      for (int i = 0; i < tokens.size(); i++) {
+        log("" + i + ": " + tokens.get(i).getOriginalInput() + "  " + tokens.get(i).getClass().getName());
+      }
+      assertEquals("abc opq 123xyz fgh", tokens.get(1).getOriginalInput());
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
   
   
   @Test
@@ -127,18 +148,67 @@ public class TestFilterInputParser {
       for (int i = 0; i < tokens.size(); i++) {
         log("" + i + ": " + tokens.get(i).getOriginalInput() + "  " + tokens.get(i).getClass().getName());
       }
-      
       List<FilterElement> elems = new TokenAdapter().execute(tokens);
-      
       JsonWriter json = new JsonWriter();
       ContainerElem root = new ContainerElem(elems);
       root.writeJson(json);
-      /*
-      for (int i = 0; i < elems.size(); i++) {
-        elems.get(i).writeJson(json);
-      }
-      */
       log(json.toString());
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+  
+  
+  @Test
+  public void testSpelledOps() {
+    try {
+      String input = "not>1 AND <20 or 10";
+      List<Token> tokens = new FilterInputLexer().execute(input);
+      tokens = new LiteralOperatorAdapter().execute(tokens);
+      
+      for (int i = 0; i < tokens.size(); i++) {
+        log("" + i + ": " + tokens.get(i).getOriginalInput() + "  " + tokens.get(i).getClass().getName());
+      }
+      List<FilterElement> elems = new TokenAdapter().execute(tokens);
+      JsonWriter json = new JsonWriter();
+      ContainerElem root = new ContainerElem(elems);
+      root.writeJson(json);
+      log(json.toString());
+      log("####");
+      json.clear();
+      FilterElement root2 = new FilterInputParser().parse(input);
+      root2.writeJson(json);
+      log(json.toString());
+      
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+
+  
+  @Test
+  public void testDoubleOps() {
+    try {
+      String input = "!>1 && <20 || 10";
+      List<Token> tokens = new FilterInputLexer().execute(input);
+      tokens = new DoubleOperatorAdapter().execute(tokens);
+      
+      for (int i = 0; i < tokens.size(); i++) {
+        log("" + i + ": " + tokens.get(i).getOriginalInput() + "  " + tokens.get(i).getClass().getName());
+      }
+      List<FilterElement> elems = new TokenAdapter().execute(tokens);
+      JsonWriter json = new JsonWriter();
+      ContainerElem root = new ContainerElem(elems);
+      root.writeJson(json);
+      log(json.toString());
+      log("####");
+      json.clear();
+      FilterElement root2 = new FilterInputParser().parse(input);
+      root2.writeJson(json);
+      log(json.toString());
+      
     } catch (Exception e) {
       e.printStackTrace();
       throw new RuntimeException(e);
@@ -314,7 +384,7 @@ public class TestFilterInputParser {
   
   public static void main(String[] args) {
     try {
-      new TestFilterInputParser().testParseContainers1();
+      new TestFilterInputParser().testQuotes2();
     }
     catch (Throwable e) {
       e.printStackTrace();

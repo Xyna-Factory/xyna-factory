@@ -19,16 +19,16 @@
 package xmcp.zeta.storage.generic.filter.elems;
 
 
-public abstract class UnaryRelationalOpElem extends UnaryOpElem {
-
+public abstract class UnaryRelationalOpElem extends UnaryOpElem<RelationalOperand> {
   
-  public UnaryRelationalOpElem(RelationalOperand elem) {
-    super(elem);
+  
+  public UnaryRelationalOpElem(RelationalOperand operand) {
+    super(operand);
   }
   
   
   @Override
-  protected FilterElement buildReplacementOperand(ContainerElem container) {
+  protected RelationalOperand buildReplacementOperand(ContainerElem container) {
     FilterElement elem = container.verifyAndExtractSingleChild();
     if (elem instanceof RelationalOperand) {
       return (RelationalOperand) elem;
