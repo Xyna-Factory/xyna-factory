@@ -41,7 +41,6 @@ public class OperatorHandler {
 
   public List<FilterElement> execute(List<FilterElement> input) {
     List<FilterElement> list = input;
-    list = replaceWildcards(list);
     Replacer<FilterElement> replacer = new Replacer<FilterElement>();
     list = replaceOpCategories(list, replacer, List.of(Enums.LexedOperatorCategory.EQUALS,
                                                        Enums.LexedOperatorCategory.GREATER_THAN,
@@ -50,26 +49,6 @@ public class OperatorHandler {
     list = replaceOpCategories(list, replacer, List.of(Enums.LexedOperatorCategory.AND));
     list = replaceOpCategories(list, replacer, List.of(Enums.LexedOperatorCategory.OR));
     return list;
-  }
-  
-  
-  private List<FilterElement> replaceWildcards(List<FilterElement> input) {
-    List<FilterElement> ret = new ArrayList<>();
-    for (FilterElement elem : input) {
-      boolean replace = false;
-      if (elem instanceof TokenOpElem) {
-        TokenOpElem toe = (TokenOpElem) elem;
-        if (toe.getCategory() == Enums.LexedOperatorCategory.WILDCARD) {
-          replace = true;
-        }
-      }
-      if (replace) {
-        ret.add(new WildcardElem());
-      } else {
-        ret.add(elem);
-      }
-    }
-    return ret;
   }
   
   
