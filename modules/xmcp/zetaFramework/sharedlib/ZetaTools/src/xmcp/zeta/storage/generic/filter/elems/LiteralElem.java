@@ -18,53 +18,46 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
-import java.util.regex.Pattern;
-
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 import xmcp.zeta.storage.generic.filter.shared.FilterInputConstants;
 import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 
 
-public class LiteralElem implements RelationalOperand {
+public class LiteralElem extends RelationalOperand {
 
-  private String content;
-  private boolean _containsWildcards = false;
-  private boolean _isNumerical = false;
+  private final String _content;
+  private final boolean _isNumerical;
   
   
   public LiteralElem(String input) {
-    this.content = input;
+    this._content = input;
+    _isNumerical = FilterInputConstants.NUMERICAL_PATTERN.matcher(_content).matches();
   }
   
   
+  @Override
   public boolean isFinished() {
     return true;
   }
   
-  
-  public void parse(FilterInputParser parser) {
-    handleWildcards();
-    _isNumerical = FilterInputConstants.NUMERICAL_PATTERN.matcher(content).matches();
-  }
-  
-  
+  @Override
   public void writeJson(JsonWriter json) {
-    json.addAttribute("Literal", content.replace("\n", "\\n"));
+    json.addAttribute("Literal", _content.replace("\n", "\\n"));
   }
   
+  @Override
   public boolean containsWildcards() {
-    return _containsWildcards;
+    return false;
   }
   
+  @Override
   public boolean isNumerical() {
     return _isNumerical;
   }
 
-
-  private void handleWildcards() {
-    if (!content.contains("*")) { return; }
-    _containsWildcards = true;
-    content = content.replace("*", "%");
+  @Override
+  public String getContentString() {
+    return _content;
   }
-  
+
 }

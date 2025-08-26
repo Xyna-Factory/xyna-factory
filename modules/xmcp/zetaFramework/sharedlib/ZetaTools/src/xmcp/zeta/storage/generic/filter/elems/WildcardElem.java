@@ -18,7 +18,34 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
+import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 
-public class WildcardElem {
 
+public class WildcardElem extends RelationalOperand {
+
+  @Override
+  public boolean isFinished() {
+    return true;
+  }
+  
+  @Override
+  public void writeJson(JsonWriter json) {
+    json.addAttribute("Wildcard", "%");
+  }
+
+  @Override
+  public boolean containsWildcards() {
+    return false;
+  }
+
+  @Override
+  public boolean isNumerical() {
+    return false;
+  }
+
+  @Override
+  public String getContentString() {
+    return "%";
+  }
+  
 }

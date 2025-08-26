@@ -18,6 +18,7 @@
 
 package xmcp.zeta.storage.generic.filter.parser.phase2;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import xmcp.zeta.storage.generic.filter.elems.FilterElement;
@@ -25,6 +26,7 @@ import xmcp.zeta.storage.generic.filter.elems.LiteralElem;
 import xmcp.zeta.storage.generic.filter.elems.LogicalOperand;
 import xmcp.zeta.storage.generic.filter.elems.RelationalOperand;
 import xmcp.zeta.storage.generic.filter.elems.TokenOpElem;
+import xmcp.zeta.storage.generic.filter.elems.WildcardElem;
 import xmcp.zeta.storage.generic.filter.elems.logical.AndElem;
 import xmcp.zeta.storage.generic.filter.elems.logical.NotElem;
 import xmcp.zeta.storage.generic.filter.elems.logical.OrElem;
@@ -39,6 +41,7 @@ public class OperatorHandler {
 
   public List<FilterElement> execute(List<FilterElement> input) {
     List<FilterElement> list = input;
+    list = replaceWildcards(list);
     Replacer<FilterElement> replacer = new Replacer<FilterElement>();
     list = replaceOpCategories(list, replacer, List.of(Enums.LexedOperatorCategory.EQUALS,
                                                        Enums.LexedOperatorCategory.GREATER_THAN,
@@ -47,6 +50,26 @@ public class OperatorHandler {
     list = replaceOpCategories(list, replacer, List.of(Enums.LexedOperatorCategory.AND));
     list = replaceOpCategories(list, replacer, List.of(Enums.LexedOperatorCategory.OR));
     return list;
+  }
+  
+  
+  private List<FilterElement> replaceWildcards(List<FilterElement> input) {
+    List<FilterElement> ret = new ArrayList<>();
+    for (FilterElement elem : input) {
+      boolean replace = false;
+      if (elem instanceof TokenOpElem) {
+        TokenOpElem toe = (TokenOpElem) elem;
+        if (toe.getCategory() == Enums.LexedOperatorCategory.WILDCARD) {
+          replace = true;
+        }
+      }
+      if (replace) {
+        ret.add(new WildcardElem());
+      } else {
+        ret.add(elem);
+      }
+    }
+    return ret;
   }
   
   

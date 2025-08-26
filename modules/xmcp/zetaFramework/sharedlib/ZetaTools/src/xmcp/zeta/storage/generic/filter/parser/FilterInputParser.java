@@ -30,6 +30,7 @@ import xmcp.zeta.storage.generic.filter.parser.phase1.LiteralOperatorAdapter;
 import xmcp.zeta.storage.generic.filter.parser.phase1.QuoteHandler;
 import xmcp.zeta.storage.generic.filter.parser.phase2.OperatorHandler;
 import xmcp.zeta.storage.generic.filter.parser.phase2.ParenthesesHandler;
+import xmcp.zeta.storage.generic.filter.parser.phase2.RelOperandWrapper;
 import xmcp.zeta.storage.generic.filter.parser.phase2.TokenAdapter;
 
 
@@ -79,6 +80,7 @@ public class FilterInputParser {
   private FilterElement executePhase2(List<Token> tokens) {
     List<FilterElement> elems = new TokenAdapter().execute(tokens);
     elems = new ParenthesesHandler().execute(elems);
+    elems = new RelOperandWrapper().execute(elems);
     FilterElement root;
     if (elems.size() == 1) {
       root = elems.get(0);

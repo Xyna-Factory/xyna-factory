@@ -18,9 +18,18 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
+import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 
-public interface RelationalOperand extends FilterElement {
 
-  public boolean containsWildcards();
+public abstract class RelationalOperand implements FilterElement {
+
+  public abstract boolean containsWildcards();
+  public abstract boolean isNumerical();
+  public abstract String getContentString();
+  
+  
+  public void parse(FilterInputParser parser) {
+    // do nothing
+  }
   
 }

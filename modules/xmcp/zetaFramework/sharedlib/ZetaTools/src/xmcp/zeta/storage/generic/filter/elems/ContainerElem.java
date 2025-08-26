@@ -35,6 +35,7 @@ public class ContainerElem implements LogicalOperand {
   }
   
   
+  @Override
   public boolean isFinished() {
     for (FilterElement child : _children) {
       if (!child.isFinished()) { return false; }
@@ -48,6 +49,7 @@ public class ContainerElem implements LogicalOperand {
   }
   
   
+  @Override
   public void parse(FilterInputParser parser) {
     List<FilterElement> adapted = parser.parseOperators(this._children);
     rebuild(adapted);
@@ -63,6 +65,7 @@ public class ContainerElem implements LogicalOperand {
   }
   
   
+  @Override
   public void writeJson(JsonWriter json) {
     json.openObjectAttribute("Container");
     json.openListAttribute("children");
