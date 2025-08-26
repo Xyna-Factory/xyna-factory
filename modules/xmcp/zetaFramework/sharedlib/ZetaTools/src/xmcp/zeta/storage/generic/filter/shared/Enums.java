@@ -40,6 +40,7 @@ public class Enums {
   // lexed operator-type
   // and or not lesser greater equal open close single-quote double-quote
   public static enum LexedOperatorCategory {
+    WILDCARD("*"),
     AND("&"),
     OR("|"),
     NOT("!"),

@@ -16,11 +16,17 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.elems;
+package xmcp.zeta.storage.generic.filter.shared;
+
+import java.util.regex.Pattern;
 
 
-public interface RelationalOperand extends FilterElement {
+public class FilterInputConstants {
 
-  public boolean containsWildcards();
+  public static Pattern OPERATOR_PATTERN = Pattern.compile("[&|!=<>()'\"]{1}");
+  
+  public static Pattern NUMERICAL_PATTERN = Pattern.compile("[0-9.,]+");
+  
+  public static final String TOKENIZER_DELIM = " *&!|=<>()'\"\t\n";
   
 }

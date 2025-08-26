@@ -19,15 +19,12 @@
 package xmcp.zeta.storage.generic.filter.lexer;
 
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 import xmcp.zeta.storage.generic.filter.shared.Enums;
+import xmcp.zeta.storage.generic.filter.shared.FilterInputConstants;
 
 
-// impl lexed-token
 public class LexedOperator extends Token implements OperatorToken {
-
-  private static Pattern OPERATOR_PATTERN = Pattern.compile("[&|!=<>()'\"]{1}");
   
   private final Enums.LexedOperatorCategory category;
   
@@ -50,7 +47,7 @@ public class LexedOperator extends Token implements OperatorToken {
   public static Optional<Token> buildIfMatches(String input) {
     if (input == null) { return Optional.empty(); }
     if (input.length() != 1) { return Optional.empty(); }
-    if (OPERATOR_PATTERN.matcher(input).matches()) {
+    if (FilterInputConstants.OPERATOR_PATTERN.matcher(input).matches()) {
       return Optional.of(new LexedOperator(input));
     }
     return Optional.empty();

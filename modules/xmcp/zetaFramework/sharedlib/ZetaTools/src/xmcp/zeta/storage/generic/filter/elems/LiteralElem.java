@@ -18,13 +18,18 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
+import java.util.regex.Pattern;
+
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
+import xmcp.zeta.storage.generic.filter.shared.FilterInputConstants;
 import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 
 
 public class LiteralElem implements RelationalOperand {
 
-  private final String content;
+  private String content;
+  private boolean _containsWildcards = false;
+  private boolean _isNumerical = false;
   
   
   public LiteralElem(String input) {
@@ -37,16 +42,29 @@ public class LiteralElem implements RelationalOperand {
   }
   
   
-  public void parse(FilterInputParser parser) {}
+  public void parse(FilterInputParser parser) {
+    handleWildcards();
+    _isNumerical = FilterInputConstants.NUMERICAL_PATTERN.matcher(content).matches();
+  }
   
   
   public void writeJson(JsonWriter json) {
     json.addAttribute("Literal", content.replace("\n", "\\n"));
   }
   
+  public boolean containsWildcards() {
+    return _containsWildcards;
+  }
   
-  // adapt wildcard
-  
-  // contains wildcard
+  public boolean isNumerical() {
+    return _isNumerical;
+  }
+
+
+  private void handleWildcards() {
+    if (!content.contains("*")) { return; }
+    _containsWildcards = true;
+    content = content.replace("*", "%");
+  }
   
 }

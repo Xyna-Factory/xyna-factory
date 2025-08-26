@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.StringTokenizer;
 
+import xmcp.zeta.storage.generic.filter.shared.FilterInputConstants;
+
 
 public class FilterInputLexer {
 
@@ -40,7 +42,7 @@ public class FilterInputLexer {
   // output (erbt von lexedtoken): literal, whitespace, op-token
   public List<Token> execute(String input) {
     List<Token> ret = new ArrayList<>();
-    StringTokenizer st = new StringTokenizer(input, " &!|=<>()'\"\t\n", true);
+    StringTokenizer st = new StringTokenizer(input, FilterInputConstants.TOKENIZER_DELIM, true);
     while (st.hasMoreTokens()) {
       Optional<Token> opt = buildToken(st.nextToken());
       if (opt.isPresent()) {

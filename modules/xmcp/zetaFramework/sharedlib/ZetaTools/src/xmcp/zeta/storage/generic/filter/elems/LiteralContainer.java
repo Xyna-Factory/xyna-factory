@@ -19,8 +19,6 @@
 package xmcp.zeta.storage.generic.filter.elems;
 
 
-public interface RelationalOperand extends FilterElement {
+public class LiteralContainer {
 
-  public boolean containsWildcards();
-  
 }

@@ -36,11 +36,11 @@ public class LiteralMerger {
     while (true) {
       int from = getIndexFirstMatchStart(tokens, pos);
       if (from < 0) { break; }
+      pos = from + 1;
       int to = getIndexFirstMatchEnd(tokens, from + 1);
       if (to <= from) { continue; }
       MergedLiteral merged = mergeLiteralTokens(from, to + 1, tokens);
       tokens = replacer.replaceInList(tokens, from, to + 1, merged);
-      pos = from + 1;
     }
     return tokens;
   }
