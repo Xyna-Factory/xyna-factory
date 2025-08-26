@@ -1169,12 +1169,6 @@ public class ModelledExpression {
     
     
     private void generateAdjustmentSuffix(Expression exp, TypeInfo typeInfo) {
-      if(!adjustments.contains(exp)) {
-        if(logger.isDebugEnabled()) {
-          logger.debug("Not generating adjustment suffix to " + exp);
-        }
-        return;
-      }
       if (!typeInfo.isBaseType() &&
           typeInfo.isAnyNumber()) {
         typeInfo = new TypeInfo(PrimitiveType.DOUBLE_OBJ);
@@ -1182,7 +1176,7 @@ public class ModelledExpression {
       if (typeInfo.isBaseType() || 
           typeInfo.isAnyNumber() ||
           typeInfo.isUnknown()) {
-        if (qualifiesForDynamicAdjustment(exp)) {
+        if (qualifiesForDynamicAdjustment(exp) && adjustments.contains(exp)) {
           getSB().append(")");
         } else {
           try {
