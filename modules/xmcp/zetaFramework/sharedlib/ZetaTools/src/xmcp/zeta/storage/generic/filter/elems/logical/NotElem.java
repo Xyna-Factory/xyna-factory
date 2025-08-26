@@ -18,6 +18,7 @@
 
 package xmcp.zeta.storage.generic.filter.elems.logical;
 
+import xmcp.zeta.storage.generic.filter.elems.ContainerElem;
 import xmcp.zeta.storage.generic.filter.elems.FilterElement;
 import xmcp.zeta.storage.generic.filter.elems.LogicalOperand;
 import xmcp.zeta.storage.generic.filter.elems.LogicalOperator;
@@ -33,6 +34,15 @@ public class NotElem extends UnaryOpElem implements LogicalOperator {
   @Override
   public String getOperatorName() {
     return "NOT";
+  }
+
+  @Override
+  protected FilterElement buildReplacementOperand(ContainerElem container) {
+    FilterElement elem = container.verifyAndExtractSingleChild();
+    if (elem instanceof LogicalOperand) {
+      return (LogicalOperand) elem;
+    }
+    throw new RuntimeException("Error parsing filter expression: Unexpected operand for logical operator");
   }
 
 }

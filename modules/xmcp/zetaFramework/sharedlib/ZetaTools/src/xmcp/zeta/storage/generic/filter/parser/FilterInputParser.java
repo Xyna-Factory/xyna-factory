@@ -18,24 +18,16 @@
 
 package xmcp.zeta.storage.generic.filter.parser;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import xmcp.zeta.storage.generic.filter.elems.ContainerElem;
 import xmcp.zeta.storage.generic.filter.elems.FilterElement;
-import xmcp.zeta.storage.generic.filter.elems.LiteralElem;
-import xmcp.zeta.storage.generic.filter.elems.TokenOpElem;
 import xmcp.zeta.storage.generic.filter.lexer.FilterInputLexer;
-import xmcp.zeta.storage.generic.filter.lexer.LexedLiteral;
-import xmcp.zeta.storage.generic.filter.lexer.MergedLiteral;
-import xmcp.zeta.storage.generic.filter.lexer.OperatorToken;
 import xmcp.zeta.storage.generic.filter.lexer.Token;
-import xmcp.zeta.storage.generic.filter.lexer.Whitespace;
 import xmcp.zeta.storage.generic.filter.parser.phase1.DoubleOperatorAdapter;
 import xmcp.zeta.storage.generic.filter.parser.phase1.LiteralMerger;
 import xmcp.zeta.storage.generic.filter.parser.phase1.LiteralOperatorAdapter;
 import xmcp.zeta.storage.generic.filter.parser.phase1.QuoteHandler;
-import xmcp.zeta.storage.generic.filter.parser.phase1.WhitespaceRemover;
 import xmcp.zeta.storage.generic.filter.parser.phase2.OperatorHandler;
 import xmcp.zeta.storage.generic.filter.parser.phase2.ParenthesesHandler;
 import xmcp.zeta.storage.generic.filter.parser.phase2.TokenAdapter;
@@ -67,7 +59,7 @@ public class FilterInputParser {
   // mit generisch replace() von container?
   
   
-  public ContainerElem parse(String input) {
+  public FilterElement parse(String input) {
     List<Token> tokens = new FilterInputLexer().execute(input);
     tokens = executePhase1(tokens);
     return executePhase2(tokens);
@@ -80,30 +72,26 @@ public class FilterInputParser {
     tokens = new DoubleOperatorAdapter().execute(tokens);
     tokens = new LiteralOperatorAdapter().execute(tokens);
     tokens = new LiteralMerger().execute(tokens);
-    //tokens = new WhitespaceRemover().execute(tokens);
     return tokens;
   }
   
   
-  private ContainerElem executePhase2(List<Token> tokens) {
+  private FilterElement executePhase2(List<Token> tokens) {
     List<FilterElement> elems = new TokenAdapter().execute(tokens);
     elems = new ParenthesesHandler().execute(elems);
-    ContainerElem root;
-    if ((elems.size() == 1) && (elems.get(0) instanceof ContainerElem)) {
-      root = (ContainerElem) elems.get(0);
+    FilterElement root;
+    if (elems.size() == 1) {
+      root = elems.get(0);
     } else {
       root = new ContainerElem(elems);
     }
     root.parse(this);
+    if (root instanceof ContainerElem) {
+      root = ((ContainerElem) root).verifyAndExtractSingleChild();
+    }
     return root;
   }
   
-  
-  /*
-  public void parseContainer(ContainerElem container) {
-    //TODO
-  }
-  */
   
   public List<FilterElement> parseOperators(List<FilterElement> input) {
     return _operatorHandler.execute(input);

@@ -77,6 +77,18 @@ public class ContainerElem implements LogicalOperand {
   }
   
   
+  public FilterElement verifyAndExtractSingleChild() {
+    if (_children.size() != 1) {
+      throw new RuntimeException("Error parsing filter input expression: Container left with unexpected number of child elements.");
+    }
+    FilterElement child = _children.get(0);
+    if (child instanceof ContainerElem) {
+      return ((ContainerElem) child).verifyAndExtractSingleChild();
+    }
+    return child;
+  }
+  
+  
   // contains, set of enum elem-type?
   
   // containedtokens, nur lexed tokens

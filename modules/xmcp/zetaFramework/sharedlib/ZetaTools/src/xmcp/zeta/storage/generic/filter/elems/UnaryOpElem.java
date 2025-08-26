@@ -21,9 +21,10 @@ package xmcp.zeta.storage.generic.filter.elems;
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 
+
 public abstract class UnaryOpElem implements FilterElement, LogicalOperand {
 
-  private final FilterElement operand;
+  private FilterElement operand;
   
   
   public UnaryOpElem(FilterElement operand) {
@@ -32,6 +33,8 @@ public abstract class UnaryOpElem implements FilterElement, LogicalOperand {
   
   
   public abstract String getOperatorName();
+  
+  protected abstract FilterElement buildReplacementOperand(ContainerElem container);
   
   
   public boolean isFinished() {
@@ -42,6 +45,9 @@ public abstract class UnaryOpElem implements FilterElement, LogicalOperand {
   public void parse(FilterInputParser parser) {
     if (!operand.isFinished()) {
       operand.parse(parser);
+    }
+    if (operand instanceof ContainerElem) {
+      operand = buildReplacementOperand((ContainerElem) operand);
     }
   }
   
