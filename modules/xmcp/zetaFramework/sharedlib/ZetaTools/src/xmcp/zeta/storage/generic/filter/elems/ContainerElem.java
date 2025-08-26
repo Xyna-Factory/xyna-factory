@@ -93,7 +93,7 @@ public class ContainerElem implements LogicalOperand {
   
   
   @Override
-  public void toSql(String colname, StringBuilder str) {
+  public void writeSql(String colname, StringBuilder str) {
     throw new RuntimeException("SQL output not supported for class " + this.getClass().getName());
   }
   

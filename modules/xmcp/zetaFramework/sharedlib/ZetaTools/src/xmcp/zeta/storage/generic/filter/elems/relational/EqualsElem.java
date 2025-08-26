@@ -35,7 +35,7 @@ public class EqualsElem extends UnaryRelationalOpElem {
   }
   
   @Override
-  public void toSql(String colname, StringBuilder str) {
+  public void writeSql(String colname, StringBuilder str) {
     RelationalOperand operand = getOperand();
     String content = operand.getContentString();
     boolean hasWildcards = operand.containsWildcards();

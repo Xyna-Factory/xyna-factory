@@ -33,7 +33,7 @@ public abstract class RelationalOperand implements FilterElement {
   }
   
   @Override
-  public void toSql(String colname, StringBuilder str) {
+  public void writeSql(String colname, StringBuilder str) {
     // do nothing
   }
   

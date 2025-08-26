@@ -51,10 +51,10 @@ public class NotElem extends UnaryOpElem<LogicalOperand> implements LogicalOpera
 
   
   @Override
-  public void toSql(String colname, StringBuilder str) {
+  public void writeSql(String colname, StringBuilder str) {
     LogicalOperand operand = getOperand();
     str.append("NOT (");
-    operand.toSql(colname, str);
+    operand.writeSql(colname, str);
     str.append(")");
   }
   

@@ -34,7 +34,7 @@ public class LessThanElem extends UnaryRelationalOpElem {
   }
   
   @Override
-  public void toSql(String colname, StringBuilder str) {
+  public void writeSql(String colname, StringBuilder str) {
     RelationalOperand operand = getOperand();
     String content = operand.getContentString();
     if (operand.containsWildcards()) {
