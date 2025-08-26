@@ -51,16 +51,16 @@ public class ContainerElem implements LogicalOperand {
   
   @Override
   public void parse(FilterInputParser parser) {
-    List<FilterElement> adapted = parser.parseOperators(this._children);
-    rebuild(adapted);
     for (FilterElement child : _children) {
       if (!child.isFinished()) {
         child.parse(parser);
       }
-      if (!child.isFinished()) {
-        throw new IllegalArgumentException("Error parsing of child element of filter input expression failed, " +
-                                           "state still unfinished.");
-      }
+    }
+    List<FilterElement> adapted = parser.parseOperators(this._children);
+    rebuild(adapted);
+    if (!isFinished()) {
+      throw new IllegalArgumentException("Error parsing of child element of filter input expression failed, " +
+                                         "state still unfinished.");
     }
   }
   

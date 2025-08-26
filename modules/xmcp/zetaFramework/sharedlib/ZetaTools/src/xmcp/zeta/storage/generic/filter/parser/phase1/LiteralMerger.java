@@ -37,7 +37,7 @@ public class LiteralMerger {
       int from = getIndexNextMatchStart(tokens, pos);
       if (from < 0) { break; }
       pos = from + 1;
-      int to = getIndexMatchEnd(tokens, from + 1);
+      int to = getIndexMatchEnd(tokens, from);
       if (to <= from) { continue; }
       MergedLiteral merged = mergeLiteralTokens(from, to + 1, tokens);
       tokens = replacer.replaceInList(tokens, from, to + 1, merged);
@@ -74,7 +74,7 @@ public class LiteralMerger {
    */
   private int getIndexMatchEnd(List<Token> list, int from) {
     int matchEnd = from;
-    for (int i = from; i < list.size(); i++) {
+    for (int i = from + 1; i < list.size(); i++) {
       Token token = list.get(i);
       if (token instanceof LexedLiteral) {
         matchEnd = i;

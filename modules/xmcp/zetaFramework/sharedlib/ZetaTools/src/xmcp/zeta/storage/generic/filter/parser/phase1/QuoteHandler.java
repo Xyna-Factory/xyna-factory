@@ -38,7 +38,7 @@ public class QuoteHandler {
     while (true) {
       Optional<OperatorMatch> match = getFirstQuote(tokens, pos);
       if (match.isEmpty()) { break; }
-      int endPos = getIndexClosingQuote(list, match.get());
+      int endPos = getIndexClosingQuote(tokens, match.get());
       MergedLiteral literal = mergeQuotedTokens(match.get().index + 1, endPos, tokens);
       tokens = replacer.replaceInList(tokens, match.get().index, endPos + 1, literal);
       pos = match.get().index + 1;
@@ -58,7 +58,7 @@ public class QuoteHandler {
   
   
   private Optional<OperatorMatch> getFirstQuote(List<Token> list, int from) {
-    for (int i = from; i < list.size(); i++) {
+    for (int i = from; i < list.size() - 1; i++) {
       Token token = list.get(i);
       if (!(token instanceof LexedOperator)) { continue; }
       LexedOperator op = (LexedOperator) token;
@@ -74,7 +74,7 @@ public class QuoteHandler {
   }
   
   
-  private int getIndexClosingQuote(List<Token> list, OperatorMatch firstMatch) {    
+  private int getIndexClosingQuote(List<Token> list, OperatorMatch firstMatch) {
     for (int i = firstMatch.index + 1; i < list.size(); i++) {
       Token token = list.get(i);
       if (!(token instanceof LexedOperator)) { continue; }

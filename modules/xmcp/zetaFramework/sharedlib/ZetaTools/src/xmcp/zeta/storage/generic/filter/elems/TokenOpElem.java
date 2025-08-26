@@ -42,8 +42,10 @@ public class TokenOpElem implements FilterElement {
   
   
   public void parse(FilterInputParser parser) {
+    /*
     throw new IllegalArgumentException("Error executing filter expression parse algorithm: " +
                                        "Did not expect TokenOpElem in container parsing phase.");
+                                       */
   }
   
   

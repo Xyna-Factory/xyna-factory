@@ -97,6 +97,10 @@ public class JsonWriter {
     return this;
   }
   
+  public void clear() {
+    _str.setLength(0);
+  }
+  
   @Override
   public String toString() {
     return _str.toString();
