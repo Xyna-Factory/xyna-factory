@@ -18,7 +18,7 @@
 
 package xmcp.zeta.storage.generic.filter.lexer;
 
-// impl lexed-token
+
 public class LexedLiteral extends Token {
 
   public LexedLiteral(String input) {

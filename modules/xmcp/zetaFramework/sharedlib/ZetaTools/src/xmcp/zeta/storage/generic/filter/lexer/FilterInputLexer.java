@@ -29,17 +29,6 @@ import xmcp.zeta.storage.generic.filter.shared.FilterInputConstants;
 public class FilterInputLexer {
 
   
-  
-  // attribut: liste lexed-token
-  //private List<LexedToken> _tokens = new ArrayList<>();
-  
-  // constr. (string)
-  // -> call tokenize
-  
-  // tokenize
-  // -> call java tokenizer : liste strings
-  // pro string: get (optional) op-type (enum ), sonst literal (oder whitespace?)
-  // output (erbt von lexedtoken): literal, whitespace, op-token
   public List<Token> execute(String input) {
     List<Token> ret = new ArrayList<>();
     StringTokenizer st = new StringTokenizer(input, FilterInputConstants.TOKENIZER_DELIM, true);

@@ -18,15 +18,12 @@
 
 package xmcp.zeta.storage.generic.filter.parser.phase2;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import xmcp.zeta.storage.generic.filter.elems.FilterElement;
-import xmcp.zeta.storage.generic.filter.elems.LiteralElem;
 import xmcp.zeta.storage.generic.filter.elems.LogicalOperand;
 import xmcp.zeta.storage.generic.filter.elems.RelationalOperand;
 import xmcp.zeta.storage.generic.filter.elems.TokenOpElem;
-import xmcp.zeta.storage.generic.filter.elems.WildcardElem;
 import xmcp.zeta.storage.generic.filter.elems.logical.AndElem;
 import xmcp.zeta.storage.generic.filter.elems.logical.NotElem;
 import xmcp.zeta.storage.generic.filter.elems.logical.OrElem;

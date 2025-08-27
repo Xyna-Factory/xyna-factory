@@ -20,7 +20,7 @@ package xmcp.zeta.storage.generic.filter.lexer;
 
 import java.util.Optional;
 
-// impl lexed-token
+
 public class Whitespace extends Token {
 
   private Whitespace(String originalInput) {

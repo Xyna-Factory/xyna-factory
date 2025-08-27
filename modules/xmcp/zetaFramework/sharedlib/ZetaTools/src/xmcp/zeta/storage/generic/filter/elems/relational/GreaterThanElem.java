@@ -20,7 +20,6 @@ package xmcp.zeta.storage.generic.filter.elems.relational;
 
 import xmcp.zeta.storage.generic.filter.elems.RelationalOperand;
 import xmcp.zeta.storage.generic.filter.elems.UnaryRelationalOpElem;
-import xmcp.zeta.storage.generic.filter.shared.FilterInputConstants;
 
 
 public class GreaterThanElem extends UnaryRelationalOpElem {

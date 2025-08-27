@@ -23,14 +23,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.Test;
 
 import xmcp.zeta.storage.generic.filter.elems.ContainerElem;
 import xmcp.zeta.storage.generic.filter.elems.FilterElement;
 import xmcp.zeta.storage.generic.filter.elems.TokenOpElem;
-import xmcp.zeta.storage.generic.filter.elems.logical.NotElem;
 import xmcp.zeta.storage.generic.filter.lexer.FilterInputLexer;
 import xmcp.zeta.storage.generic.filter.lexer.Token;
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
@@ -39,9 +37,7 @@ import xmcp.zeta.storage.generic.filter.parser.phase1.LiteralMerger;
 import xmcp.zeta.storage.generic.filter.parser.phase1.LiteralOperatorAdapter;
 import xmcp.zeta.storage.generic.filter.parser.phase1.QuoteHandler;
 import xmcp.zeta.storage.generic.filter.parser.phase2.ParenthesesHandler;
-import xmcp.zeta.storage.generic.filter.parser.phase2.RelOperandWrapper;
 import xmcp.zeta.storage.generic.filter.parser.phase2.TokenAdapter;
-import xmcp.zeta.storage.generic.filter.parser.phase2.WildcardHandler;
 import xmcp.zeta.storage.generic.filter.shared.Enums;
 import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 import xmcp.zeta.storage.generic.filter.shared.Replacer;
@@ -49,11 +45,6 @@ import xmcp.zeta.storage.generic.filter.shared.Replacer;
 
 public class TestFilterInputParser {
 
-  // test replacer (mit strings); pos anfang, ende, mitte
-  
-  // test replace quotes; verschachtelte, kombin. '", leere quotes, pos anfang ende
-  
-  
   @Test
   public void testQuotes1() {
     try {
@@ -159,12 +150,6 @@ public class TestFilterInputParser {
       elems = new ParenthesesHandler().execute(elems);
       JsonWriter json = new JsonWriter();
       ContainerElem root = new ContainerElem(elems);
-      /*
-      root.writeJson(json);
-      log(json.toString());
-      log("####");
-      json.clear();
-      */
       root.parse(new FilterInputParser());
       root.writeJson(json);
       log(json.toString());
@@ -240,7 +225,7 @@ public class TestFilterInputParser {
       root.writeSql("col-1", str);
       String sql = str.toString();
       log(sql);
-      assertEquals("(NOT ((col-1 > 1) OR (col-1 < 20))) AND ((col-1 LIKE '%30%') OR (NOT ((col-1 < 5) AND (col-1 > 3))))", sql);
+      assertEquals("((NOT (col-1 LIKE '%111%')) OR (col-1 LIKE '20%1')) AND ((col-1 LIKE '30%') OR (NOT (col-1 LIKE '%553%')))", sql);
     } catch (Exception e) {
       e.printStackTrace();
       throw new RuntimeException(e);

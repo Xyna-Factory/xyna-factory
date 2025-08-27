@@ -26,19 +26,7 @@ public class Enums {
     UNARY, BINARY, UNKNOWN
   }
   
-  // unary op type
-  // not lesser greater equal
   
-  
-  // binary op type
-  // and or
-  
-  // parsed elem type
-  // container, relational-op, logical-op
-  
-  
-  // lexed operator-type
-  // and or not lesser greater equal open close single-quote double-quote
   public static enum LexedOperatorCategory {
     WILDCARD("*"),
     AND("&"),

@@ -18,10 +18,9 @@
 
 package xmcp.zeta.storage.generic.filter.lexer;
 
-// erbt von filter elem?
+
 public abstract class Token {
   
-  // attr. orig input string (für quote-blöcke)
   private final String originalInput;
 
   
@@ -30,13 +29,10 @@ public abstract class Token {
   }
 
 
-  // get orig input string
   public String getOriginalInput() {
     return originalInput;
   }
 
-
-  // is finished: return false
   public boolean isFinished() {
     return false;
   }

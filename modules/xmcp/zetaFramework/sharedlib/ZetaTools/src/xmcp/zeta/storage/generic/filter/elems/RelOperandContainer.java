@@ -20,9 +20,7 @@ package xmcp.zeta.storage.generic.filter.elems;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 
 
