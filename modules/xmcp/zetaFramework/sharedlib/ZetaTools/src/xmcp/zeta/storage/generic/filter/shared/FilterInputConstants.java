@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 public class FilterInputConstants {
 
-  public static Pattern OPERATOR_PATTERN = Pattern.compile("[&|!=<>()'\"]{1}");
+  public static Pattern OPERATOR_PATTERN = Pattern.compile("[*&|!=<>()'\"]{1}");
   public static Pattern NUMERICAL_PATTERN = Pattern.compile("[0-9.,]+");
   
   public static final String TOKENIZER_DELIM = " *&!|=<>()'\"\t\n";

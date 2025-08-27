@@ -18,6 +18,8 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
+import java.util.Optional;
+
 import xmcp.zeta.storage.generic.filter.lexer.OperatorToken;
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 import xmcp.zeta.storage.generic.filter.shared.Enums;
@@ -54,6 +56,16 @@ public class TokenOpElem implements FilterElement {
   @Override
   public void writeSql(String colname, StringBuilder str) {
     throw new RuntimeException("SQL output not supported for class " + this.getClass().getName());
+  }
+  
+  @Override
+  public Optional<FilterElement> getChild(int index) {
+    return Optional.empty();
+  }
+  
+  @Override
+  public String getInfoString() {
+    return "TOKEN-" + getCategory().toString();
   }
   
 }

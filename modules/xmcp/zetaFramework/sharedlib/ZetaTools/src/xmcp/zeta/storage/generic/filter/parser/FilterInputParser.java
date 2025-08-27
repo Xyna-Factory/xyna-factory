@@ -80,9 +80,9 @@ public class FilterInputParser {
   
   private FilterElement executePhase2(List<Token> tokens) {
     List<FilterElement> elems = new TokenAdapter().execute(tokens);
-    elems = new ParenthesesHandler().execute(elems);
     elems = new WildcardHandler().execute(elems);
     elems = new RelOperandWrapper().execute(elems);
+    elems = new ParenthesesHandler().execute(elems);
     FilterElement root;
     if (elems.size() == 1) {
       root = elems.get(0);

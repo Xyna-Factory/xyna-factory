@@ -24,9 +24,6 @@ import java.util.List;
 import xmcp.zeta.storage.generic.filter.elems.FilterElement;
 import xmcp.zeta.storage.generic.filter.elems.RelOperandContainer;
 import xmcp.zeta.storage.generic.filter.elems.RelationalOperand;
-import xmcp.zeta.storage.generic.filter.lexer.LexedLiteral;
-import xmcp.zeta.storage.generic.filter.lexer.MergedLiteral;
-import xmcp.zeta.storage.generic.filter.lexer.Whitespace;
 import xmcp.zeta.storage.generic.filter.shared.Replacer;
 
 

@@ -18,6 +18,8 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
+import java.util.Optional;
+
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 
@@ -65,6 +67,20 @@ public abstract class UnaryOpElem<T extends FilterElement> implements FilterElem
     _operand.writeJson(json);
     json.closeObject();
     json.closeObject();
+  }
+  
+  
+  @Override
+  public Optional<FilterElement> getChild(int index) {
+    if (index == 0) {
+      return Optional.ofNullable(_operand);
+    }
+    return Optional.empty();
+  }
+  
+  @Override
+  public String getInfoString() {
+    return getOperatorName();
   }
   
 }

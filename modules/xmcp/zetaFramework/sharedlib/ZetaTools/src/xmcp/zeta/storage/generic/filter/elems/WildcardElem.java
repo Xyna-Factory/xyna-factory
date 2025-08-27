@@ -36,7 +36,7 @@ public class WildcardElem extends RelationalOperand {
 
   @Override
   public boolean containsWildcards() {
-    return false;
+    return true;
   }
 
   @Override

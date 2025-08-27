@@ -130,8 +130,8 @@ public class OperatorHandler {
     if (elem instanceof LogicalOperand) {
       return (LogicalOperand) elem;
     }
-    if (elem instanceof LiteralElem) {
-      return new EqualsElem((LiteralElem) elem);
+    if (elem instanceof RelationalOperand) {
+      return new EqualsElem((RelationalOperand) elem);
     }
     throw new IllegalArgumentException("Syntax error in filter expression: Cannot find correct argument for logical operator");
   }

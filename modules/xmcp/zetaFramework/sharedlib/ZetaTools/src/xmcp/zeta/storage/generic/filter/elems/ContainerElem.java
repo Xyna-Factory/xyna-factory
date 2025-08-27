@@ -20,6 +20,7 @@ package xmcp.zeta.storage.generic.filter.elems;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
@@ -105,6 +106,20 @@ public class ContainerElem implements LogicalOperand {
     throw new RuntimeException("SQL output not supported for class " + this.getClass().getName());
   }
   
+  
+  @Override
+  public Optional<FilterElement> getChild(int index) {
+    if (index < _children.size()) {
+      return Optional.ofNullable(_children.get(index));
+    }
+    return Optional.empty();
+  }
+  
+  
+  @Override
+  public String getInfoString() {
+    return "CONTAINER";
+  }
   
   // contains, set of enum elem-type?
   

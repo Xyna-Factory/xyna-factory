@@ -18,6 +18,8 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
+import java.util.Optional;
+
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 
 
@@ -35,6 +37,16 @@ public abstract class RelationalOperand implements FilterElement {
   @Override
   public void writeSql(String colname, StringBuilder str) {
     // do nothing
+  }
+  
+  @Override
+  public Optional<FilterElement> getChild(int index) {
+    return Optional.empty();
+  }
+  
+  @Override
+  public String getInfoString() {
+    return getContentString();
   }
   
 }

@@ -18,6 +18,8 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
+import java.util.Optional;
+
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 
@@ -31,5 +33,28 @@ public interface FilterElement {
   public void writeJson(JsonWriter json);
   
   public void writeSql(String colname, StringBuilder str);
+  
+  public Optional<FilterElement> getChild(int index);
+  
+  public String getInfoString();
+  
+  
+  public default String writeTreeInfo() {
+    StringBuilder str = new StringBuilder();
+    writeTreeInfoElem("/", str);
+    return str.toString();
+  }
+  
+  
+  public default void writeTreeInfoElem(String branch, StringBuilder str) {
+    str.append(branch + " : " + this.getInfoString()).append("\n");
+    int i = 0;
+    while (true) {
+      Optional<FilterElement> child = this.getChild(i);
+      if (child.isEmpty()) { break; }
+      child.get().writeTreeInfoElem(branch + i + "/", str);
+      i++;
+    }
+  }
   
 }

@@ -18,6 +18,8 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
+import java.util.Optional;
+
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 
@@ -91,6 +93,23 @@ public abstract class BinaryLogicalOpElem implements LogicalOperator {
     _operand2.writeJson(json);
     json.closeObject();
     json.closeObject();
+  }
+  
+  
+  @Override
+  public Optional<FilterElement> getChild(int index) {
+    if (index == 0) {
+      return Optional.ofNullable(_operand1);
+    } else if (index == 1) {
+      return Optional.ofNullable(_operand2);
+    }
+    return Optional.empty();
+  }
+  
+  
+  @Override
+  public String getInfoString() {
+    return getOperatorName();
   }
   
 }
