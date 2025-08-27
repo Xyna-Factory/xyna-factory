@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import xmcp.zeta.storage.generic.filter.lexer.Token;
-import xmcp.zeta.storage.generic.filter.lexer.MergedLiteral;
+import xmcp.zeta.storage.generic.filter.lexer.QuotedLiteral;
 import xmcp.zeta.storage.generic.filter.lexer.LexedOperator;
 import xmcp.zeta.storage.generic.filter.shared.Enums;
 import xmcp.zeta.storage.generic.filter.shared.OperatorMatch;
@@ -39,7 +39,7 @@ public class QuoteHandler {
       Optional<OperatorMatch> match = getFirstQuote(tokens, pos);
       if (match.isEmpty()) { break; }
       int endPos = getIndexClosingQuote(tokens, match.get());
-      MergedLiteral literal = mergeQuotedTokens(match.get().index + 1, endPos, tokens);
+      QuotedLiteral literal = mergeQuotedTokens(match.get().index + 1, endPos, tokens);
       tokens = replacer.replaceInList(tokens, match.get().index, endPos + 1, literal);
       pos = match.get().index + 1;
     }
@@ -47,13 +47,13 @@ public class QuoteHandler {
   }
   
   
-  private MergedLiteral mergeQuotedTokens(int fromInclusive, int toExclusive, List<Token> list) {
+  private QuotedLiteral mergeQuotedTokens(int fromInclusive, int toExclusive, List<Token> list) {
     List<Token> toMerge = list.subList(fromInclusive, toExclusive);
     StringBuilder str = new StringBuilder();
     for (Token token : toMerge) {
       str.append(token.getOriginalInput());
     }
-    return new MergedLiteral(str.toString());
+    return new QuotedLiteral(str.toString());
   }
   
   

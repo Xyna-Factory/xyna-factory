@@ -33,7 +33,6 @@ import xmcp.zeta.storage.generic.filter.lexer.FilterInputLexer;
 import xmcp.zeta.storage.generic.filter.lexer.Token;
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 import xmcp.zeta.storage.generic.filter.parser.phase1.DoubleOperatorAdapter;
-import xmcp.zeta.storage.generic.filter.parser.phase1.LiteralMerger;
 import xmcp.zeta.storage.generic.filter.parser.phase1.LiteralOperatorAdapter;
 import xmcp.zeta.storage.generic.filter.parser.phase1.QuoteHandler;
 import xmcp.zeta.storage.generic.filter.parser.phase2.ParenthesesHandler;
@@ -64,25 +63,6 @@ public class TestFilterInputParser {
       ContainerElem root = new ContainerElem(elems);
       root.writeJson(json);
       log(json.toString());
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new RuntimeException(e);
-    }
-  }
-  
-  
-  @Test
-  public void testLiteralMerger() {
-    try {
-      String input = "=abc 'opq' \"123\"xyz 'fgh'";
-      List<Token> tokens = new FilterInputLexer().execute(input);
-      tokens = new QuoteHandler().execute(tokens);
-      tokens = new LiteralMerger().execute(tokens);
-      
-      for (int i = 0; i < tokens.size(); i++) {
-        log("" + i + ": " + tokens.get(i).getOriginalInput() + "  " + tokens.get(i).getClass().getName());
-      }
-      assertEquals("abc opq 123xyz fgh", tokens.get(1).getOriginalInput());
     } catch (Exception e) {
       e.printStackTrace();
       throw new RuntimeException(e);

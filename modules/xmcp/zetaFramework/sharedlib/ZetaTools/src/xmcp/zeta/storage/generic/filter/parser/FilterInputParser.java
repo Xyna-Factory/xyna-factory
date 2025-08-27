@@ -25,7 +25,6 @@ import xmcp.zeta.storage.generic.filter.elems.FilterElement;
 import xmcp.zeta.storage.generic.filter.lexer.FilterInputLexer;
 import xmcp.zeta.storage.generic.filter.lexer.Token;
 import xmcp.zeta.storage.generic.filter.parser.phase1.DoubleOperatorAdapter;
-import xmcp.zeta.storage.generic.filter.parser.phase1.LiteralMerger;
 import xmcp.zeta.storage.generic.filter.parser.phase1.LiteralOperatorAdapter;
 import xmcp.zeta.storage.generic.filter.parser.phase1.QuoteHandler;
 import xmcp.zeta.storage.generic.filter.parser.phase2.OperatorHandler;
@@ -52,7 +51,6 @@ public class FilterInputParser {
     tokens = new QuoteHandler().execute(tokens);
     tokens = new DoubleOperatorAdapter().execute(tokens);
     tokens = new LiteralOperatorAdapter().execute(tokens);
-    tokens = new LiteralMerger().execute(tokens);
     return tokens;
   }
   

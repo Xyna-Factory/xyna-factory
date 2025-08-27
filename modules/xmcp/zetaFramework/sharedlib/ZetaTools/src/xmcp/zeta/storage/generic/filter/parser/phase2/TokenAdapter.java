@@ -23,9 +23,10 @@ import java.util.List;
 
 import xmcp.zeta.storage.generic.filter.elems.FilterElement;
 import xmcp.zeta.storage.generic.filter.elems.LiteralElem;
+import xmcp.zeta.storage.generic.filter.elems.QuotedLiteralElem;
 import xmcp.zeta.storage.generic.filter.elems.TokenOpElem;
 import xmcp.zeta.storage.generic.filter.lexer.LexedLiteral;
-import xmcp.zeta.storage.generic.filter.lexer.MergedLiteral;
+import xmcp.zeta.storage.generic.filter.lexer.QuotedLiteral;
 import xmcp.zeta.storage.generic.filter.lexer.OperatorToken;
 import xmcp.zeta.storage.generic.filter.lexer.Token;
 import xmcp.zeta.storage.generic.filter.lexer.Whitespace;
@@ -39,8 +40,8 @@ public class TokenAdapter {
       if (token instanceof Whitespace) { continue; }
       else if (token instanceof LexedLiteral) {
         ret.add(new LiteralElem(token.getOriginalInput()));
-      } else if (token instanceof MergedLiteral) {
-        ret.add(new LiteralElem(token.getOriginalInput()));
+      } else if (token instanceof QuotedLiteral) {
+        ret.add(new QuotedLiteralElem(token.getOriginalInput()));
       } else if (token instanceof OperatorToken) {
         ret.add(new TokenOpElem((OperatorToken) token));
       } else {

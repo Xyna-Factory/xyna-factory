@@ -16,13 +16,44 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xmcp.zeta.storage.generic.filter.lexer;
+package xmcp.zeta.storage.generic.filter.elems;
+
+import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 
 
-public class MergedLiteral extends Token {
+public class QuotedLiteralElem extends RelationalOperand {
 
-  public MergedLiteral(String originalInput) {
-    super(originalInput);
+  private final String _content;
+  
+  
+  public QuotedLiteralElem(String input) {
+    this._content = input;
+  }
+  
+  
+  @Override
+  public boolean isFinished() {
+    return true;
+  }
+  
+  @Override
+  public void writeJson(JsonWriter json) {
+    json.addAttribute("QuotedLiteral", _content.replace("\n", "\\n"));
+  }
+  
+  @Override
+  public boolean containsWildcards() {
+    return false;
+  }
+  
+  @Override
+  public boolean isNumerical() {
+    return false;
+  }
+
+  @Override
+  public String getContentString() {
+    return _content;
   }
 
 }
