@@ -20,6 +20,7 @@ package xmcp.zeta.storage.generic.filter.elems;
 
 import xmcp.zeta.storage.generic.filter.shared.FilterInputConstants;
 import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
+import xmcp.zeta.storage.generic.filter.shared.LiteralTools;
 
 
 public class LiteralElem extends RelationalOperand {
@@ -29,7 +30,7 @@ public class LiteralElem extends RelationalOperand {
   
   
   public LiteralElem(String input) {
-    this._content = input;
+    this._content = new LiteralTools().adaptLiteralString(input);
     _isNumerical = FilterInputConstants.NUMERICAL_PATTERN.matcher(_content).matches();
   }
   
@@ -41,7 +42,7 @@ public class LiteralElem extends RelationalOperand {
   
   @Override
   public void writeJson(JsonWriter json) {
-    json.addAttribute("Literal", _content.replace("\n", "\\n"));
+    json.addAttribute("Literal", _content);
   }
   
   @Override
@@ -59,4 +60,15 @@ public class LiteralElem extends RelationalOperand {
     return _content;
   }
 
+  @Override
+  public boolean indicateAddWildcardAddEnd() {
+    return true;
+  }
+
+
+  @Override
+  public boolean indicateAddWildcardAddStart() {
+    return true;
+  }
+  
 }

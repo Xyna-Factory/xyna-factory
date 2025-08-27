@@ -28,6 +28,8 @@ public abstract class RelationalOperand implements FilterElement {
   public abstract boolean containsWildcards();
   public abstract boolean isNumerical();
   public abstract String getContentString();
+  public abstract boolean indicateAddWildcardAddEnd();
+  public abstract boolean indicateAddWildcardAddStart();
   
   @Override
   public void parse(FilterInputParser parser) {

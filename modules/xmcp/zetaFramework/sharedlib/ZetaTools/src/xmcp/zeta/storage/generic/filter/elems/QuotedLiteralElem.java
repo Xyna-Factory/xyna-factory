@@ -19,6 +19,7 @@
 package xmcp.zeta.storage.generic.filter.elems;
 
 import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
+import xmcp.zeta.storage.generic.filter.shared.LiteralTools;
 
 
 public class QuotedLiteralElem extends RelationalOperand {
@@ -27,7 +28,7 @@ public class QuotedLiteralElem extends RelationalOperand {
   
   
   public QuotedLiteralElem(String input) {
-    this._content = input;
+    this._content = new LiteralTools().adaptLiteralString(input);
   }
   
   
@@ -38,7 +39,7 @@ public class QuotedLiteralElem extends RelationalOperand {
   
   @Override
   public void writeJson(JsonWriter json) {
-    json.addAttribute("QuotedLiteral", _content.replace("\n", "\\n"));
+    json.addAttribute("QuotedLiteral", _content);
   }
   
   @Override
@@ -54,6 +55,18 @@ public class QuotedLiteralElem extends RelationalOperand {
   @Override
   public String getContentString() {
     return _content;
+  }
+
+
+  @Override
+  public boolean indicateAddWildcardAddEnd() {
+    return false;
+  }
+
+
+  @Override
+  public boolean indicateAddWildcardAddStart() {
+    return false;
   }
 
 }

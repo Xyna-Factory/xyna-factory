@@ -49,4 +49,15 @@ public class WildcardElem extends RelationalOperand {
     return FilterInputConstants.SQL_WILDCARD;
   }
   
+  @Override
+  public boolean indicateAddWildcardAddEnd() {
+    return false;
+  }
+
+
+  @Override
+  public boolean indicateAddWildcardAddStart() {
+    return false;
+  }
+  
 }

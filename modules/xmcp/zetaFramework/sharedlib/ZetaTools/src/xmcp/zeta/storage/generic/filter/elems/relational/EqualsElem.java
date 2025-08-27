@@ -38,13 +38,21 @@ public class EqualsElem extends UnaryRelationalOpElem {
   public void writeSql(String colname, StringBuilder str) {
     RelationalOperand operand = getOperand();
     String content = operand.getContentString();
-    boolean hasWildcards = operand.containsWildcards();
-    str.append(colname).append(" LIKE '");
-    if (!hasWildcards) {
+    str.append(colname);
+    boolean useLike = operand.containsWildcards();
+    useLike = useLike || operand.indicateAddWildcardAddStart();
+    useLike = useLike || operand.indicateAddWildcardAddEnd();
+    if (useLike) {
+      str.append(" LIKE ");
+    } else {
+      str.append(" = ");
+    }
+    str.append("'");
+    if (operand.indicateAddWildcardAddStart()) {
       str.append(FilterInputConstants.SQL_WILDCARD);
     }
     str.append(content);
-    if (!hasWildcards) {
+    if (operand.indicateAddWildcardAddEnd()) {
       str.append(FilterInputConstants.SQL_WILDCARD);
     }
     str.append("'");

@@ -80,4 +80,22 @@ public class RelOperandContainer extends RelationalOperand {
     return s.toString();
   }
   
+  
+  @Override
+  public boolean indicateAddWildcardAddEnd() {
+    if (_children.size() < 1) {
+      throw new RuntimeException("Syntax error in filter input expression: Empty RelOperandContainer.");
+    }
+    return _children.get(_children.size() - 1).indicateAddWildcardAddEnd();
+  }
+
+
+  @Override
+  public boolean indicateAddWildcardAddStart() {
+    if (_children.size() < 1) {
+      throw new RuntimeException("Syntax error in filter input expression: Empty RelOperandContainer.");
+    }
+    return _children.get(0).indicateAddWildcardAddStart();
+  }
+  
 }
