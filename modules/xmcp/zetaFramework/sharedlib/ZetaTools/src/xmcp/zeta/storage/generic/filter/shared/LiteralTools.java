@@ -21,14 +21,17 @@ package xmcp.zeta.storage.generic.filter.shared;
 
 public class LiteralTools {
 
-  public String adaptLiteralString(String input) {
+  public String adaptLiteralStringForEquals(String input) {
     String adapted = input;
     adapted = adapted.replace("\\", "\\\\");
-    adapted = adapted.replace("\n", "\\n");
-    adapted = adapted.replace("\t", "\\t");
+    return adapted;
+  }
+  
+  public String adaptLiteralStringForLike(String input) {
+    String adapted = input;
+    adapted = adapted.replace("\\", "\\\\\\\\");
     adapted = adapted.replace("%", "\\%");
     adapted = adapted.replace("_", "\\_");
     return adapted;
   }
-  
 }

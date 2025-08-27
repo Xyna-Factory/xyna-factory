@@ -21,6 +21,7 @@ package xmcp.zeta.storage.generic.filter.elems.relational;
 import xmcp.zeta.storage.generic.filter.elems.RelationalOperand;
 import xmcp.zeta.storage.generic.filter.elems.UnaryRelationalOpElem;
 import xmcp.zeta.storage.generic.filter.shared.FilterInputConstants;
+import xmcp.zeta.storage.generic.filter.shared.LiteralTools;
 
 
 public class EqualsElem extends UnaryRelationalOpElem {
@@ -37,15 +38,17 @@ public class EqualsElem extends UnaryRelationalOpElem {
   @Override
   public void writeSql(String colname, StringBuilder str) {
     RelationalOperand operand = getOperand();
-    String content = operand.getContentString();
+    String content = "";
     str.append(colname);
     boolean useLike = operand.containsWildcards();
     useLike = useLike || operand.indicateAddWildcardAddStart();
     useLike = useLike || operand.indicateAddWildcardAddEnd();
     if (useLike) {
       str.append(" LIKE ");
+      content = operand.getContentAdaptedForSqlLike();
     } else {
       str.append(" = ");
+      content = operand.getContentAdaptedForSqlEquals();
     }
     str.append("'");
     if (operand.indicateAddWildcardAddStart()) {

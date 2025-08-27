@@ -243,7 +243,7 @@ public class TestFilterInputParser {
   @Test
   public void testWildcardSql() {
     try {
-      String input = "'20*1' | 210* | '2111' | '12_4%5\' | 34555 ";
+      String input = "'20*1' | 210* | '2111' | '12_4%5\\' | 12_4%5\\6 | 34555 ";
       FilterElement root = new FilterInputParser().parse(input);
       
       JsonWriter json = new JsonWriter();
@@ -255,7 +255,9 @@ public class TestFilterInputParser {
       root.writeSql("col-1", str);
       String sql = str.toString();
       log(sql);
-      assertEquals("((((col-1 = '20*1') OR (col-1 LIKE '%210%')) OR (col-1 = '2111')) OR (col-1 = '12\\_4\\%5')) OR (col-1 LIKE '%34555%')", sql);
+      
+      assertEquals("(((((col-1 = '20*1') OR (col-1 LIKE '210%')) OR (col-1 = '2111')) OR (col-1 = '12_4%5\\\\'))" +
+                   " OR (col-1 LIKE '%12\\_4\\%5\\\\\\\\6%')) OR (col-1 LIKE '%34555%')", sql);
     } catch (Exception e) {
       e.printStackTrace();
       throw new RuntimeException(e);

@@ -28,7 +28,7 @@ public class QuotedLiteralElem extends RelationalOperand {
   
   
   public QuotedLiteralElem(String input) {
-    this._content = new LiteralTools().adaptLiteralString(input);
+    this._content = input;
   }
   
   
@@ -67,6 +67,18 @@ public class QuotedLiteralElem extends RelationalOperand {
   @Override
   public boolean indicateAddWildcardAddStart() {
     return false;
+  }
+
+
+  @Override
+  public String getContentAdaptedForSqlEquals() {
+    return new LiteralTools().adaptLiteralStringForEquals(_content);
+  }
+
+
+  @Override
+  public String getContentAdaptedForSqlLike() {
+    return new LiteralTools().adaptLiteralStringForLike(_content);
   }
 
 }

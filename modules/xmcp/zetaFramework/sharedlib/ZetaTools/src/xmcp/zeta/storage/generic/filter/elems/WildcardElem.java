@@ -20,6 +20,7 @@ package xmcp.zeta.storage.generic.filter.elems;
 
 import xmcp.zeta.storage.generic.filter.shared.FilterInputConstants;
 import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
+import xmcp.zeta.storage.generic.filter.shared.LiteralTools;
 
 
 public class WildcardElem extends RelationalOperand {
@@ -58,6 +59,17 @@ public class WildcardElem extends RelationalOperand {
   @Override
   public boolean indicateAddWildcardAddStart() {
     return false;
+  }
+  
+  @Override
+  public String getContentAdaptedForSqlEquals() {
+    throw new RuntimeException("Error in filter input parser algorithm: Wildcard should not get combined with sql equals.");
+  }
+
+
+  @Override
+  public String getContentAdaptedForSqlLike() {
+    return FilterInputConstants.SQL_WILDCARD;
   }
   
 }

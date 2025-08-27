@@ -30,6 +30,8 @@ public abstract class RelationalOperand implements FilterElement {
   public abstract String getContentString();
   public abstract boolean indicateAddWildcardAddEnd();
   public abstract boolean indicateAddWildcardAddStart();
+  public abstract String getContentAdaptedForSqlEquals();
+  public abstract String getContentAdaptedForSqlLike();
   
   @Override
   public void parse(FilterInputParser parser) {

@@ -30,7 +30,7 @@ public class LiteralElem extends RelationalOperand {
   
   
   public LiteralElem(String input) {
-    this._content = new LiteralTools().adaptLiteralString(input);
+    this._content = input;
     _isNumerical = FilterInputConstants.NUMERICAL_PATTERN.matcher(_content).matches();
   }
   
@@ -69,6 +69,17 @@ public class LiteralElem extends RelationalOperand {
   @Override
   public boolean indicateAddWildcardAddStart() {
     return true;
+  }
+  
+  @Override
+  public String getContentAdaptedForSqlEquals() {
+    return new LiteralTools().adaptLiteralStringForEquals(_content);
+  }
+
+
+  @Override
+  public String getContentAdaptedForSqlLike() {
+    return new LiteralTools().adaptLiteralStringForLike(_content);
   }
   
 }

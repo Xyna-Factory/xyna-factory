@@ -21,6 +21,7 @@ package xmcp.zeta.storage.generic.filter.elems;
 import java.util.ArrayList;
 import java.util.List;
 
+import xmcp.zeta.storage.generic.filter.shared.FilterInputConstants;
 import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 
 
@@ -86,6 +87,7 @@ public class RelOperandContainer extends RelationalOperand {
     if (_children.size() < 1) {
       throw new RuntimeException("Syntax error in filter input expression: Empty RelOperandContainer.");
     }
+    if (containsWildcards()) { return false; }
     return _children.get(_children.size() - 1).indicateAddWildcardAddEnd();
   }
 
@@ -95,7 +97,28 @@ public class RelOperandContainer extends RelationalOperand {
     if (_children.size() < 1) {
       throw new RuntimeException("Syntax error in filter input expression: Empty RelOperandContainer.");
     }
+    if (containsWildcards()) { return false; }
     return _children.get(0).indicateAddWildcardAddStart();
+  }
+  
+  
+  @Override
+  public String getContentAdaptedForSqlEquals() {
+    StringBuilder s = new StringBuilder();
+    for (RelationalOperand child : _children) {
+      s.append(child.getContentAdaptedForSqlEquals());
+    }
+    return s.toString();
+  }
+
+
+  @Override
+  public String getContentAdaptedForSqlLike() {
+    StringBuilder s = new StringBuilder();
+    for (RelationalOperand child : _children) {
+      s.append(child.getContentAdaptedForSqlLike());
+    }
+    return s.toString();
   }
   
 }
