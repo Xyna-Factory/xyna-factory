@@ -73,6 +73,9 @@ import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 
 import xfmg.oas.generation.cli.generated.Buildoasapplication;
 import xfmg.oas.generation.impl.ApplicationGenerationServiceOperationImpl;
+import xfmg.oas.generation.tools.OASApplicationData;
+import xfmg.oas.generation.tools.OasAppBuilder;
+import xfmg.oas.generation.tools.ValidationResult;
 
 import org.apache.log4j.Logger;
 
@@ -80,16 +83,17 @@ import org.apache.log4j.Logger;
 public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasapplication> {
 
   private static Logger logger = CentralFactoryLogging.getLogger(BuildoasapplicationImpl.class);
+  private OasAppBuilder _builder = new OasAppBuilder();
   
   public void execute(OutputStream statusOutputStream, Buildoasapplication payload) throws XynaException {
     String specFile = payload.getPath();
     String target = "/tmp/" + payload.getApplicationName();
     
     if(specFile.endsWith(".zip")) {
-      specFile = decompressArchive(specFile);
+      specFile = _builder.decompressArchive(specFile);
     }
     
-    ValidationResult result = validate(specFile);
+    ValidationResult result = _builder.validate(specFile);
     StringBuilder errors = new StringBuilder("Validation found errors:");
     if (!result.getErrors().isEmpty()) {
       logger.error("Spec: " + specFile + " contains errors.");
@@ -118,8 +122,9 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
     writeToCommandLine(statusOutputStream, "Done.");
   }
   
+  
   private void createAppAndPrintId(OutputStream statusOutputStream, String generator, String target, String specFile, String type) {
-    try (OASApplicationData appData = createOasApp(generator, target, specFile)) {
+    try (OASApplicationData appData = _builder.createOasApp(generator, target, specFile)) {
       writeToCommandLine(statusOutputStream, type + " ManagedFileId: " + appData.getId() + " ");
     } catch (IOException e) {
       writeToCommandLine(statusOutputStream, "Could not clean up temporary files for " + type);
@@ -129,7 +134,7 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
     }
   }
 
-  
+  /*
   public OASApplicationData createOasApp(String generator, String target, String specFile) {
     List<File> files = new ArrayList<>();
     callGenerator(generator, target, specFile);
@@ -393,4 +398,6 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
       }
     }
   }
+  */
+  
 }

@@ -57,11 +57,11 @@ import base.math.IntegerNumber;
 import xfmg.oas.generation.ApplicationGenerationParameter;
 import xfmg.oas.generation.ApplicationGenerationServiceOperation;
 import xfmg.oas.generation.cli.generated.OverallInformationProvider;
-import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl;
-import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl.OASApplicationData;
-import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl.ValidationResult;
 import xfmg.oas.generation.storage.OasImportHistorySortTool;
 import xfmg.oas.generation.storage.OasImportHistoryStorage;
+import xfmg.oas.generation.tools.OASApplicationData;
+import xfmg.oas.generation.tools.OasAppBuilder;
+import xfmg.oas.generation.tools.ValidationResult;
 import xfmg.xfctrl.appmgmt.RuntimeContextService;
 import xfmg.xfctrl.filemgmt.ManagedFileId;
 import xmcp.forms.plugin.Plugin;
@@ -162,7 +162,7 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
   @Override
   public void generateApplication(XynaOrderServerExtension correlatedXynaOrder, ApplicationGenerationParameter applicationGenerationParameter1, File file4) {
 
-    BuildoasapplicationImpl oasAppBuilder = new BuildoasapplicationImpl();
+    OasAppBuilder oasAppBuilder = new OasAppBuilder();
 
     String specFile = file4.getPath();
     String target = "/tmp/Order_" + correlatedXynaOrder.getId();
@@ -196,8 +196,8 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
   }
 
   private void createAndImportApplication(XynaOrderServerExtension correlatedXynaOrder, String generator, String target, String specFile, String workspace) {
-    BuildoasapplicationImpl oasAppBuilder = new BuildoasapplicationImpl();
-    try(OASApplicationData data = oasAppBuilder.createOasApp(generator, target, specFile)) {
+    OasAppBuilder oasAppBuilder = new OasAppBuilder();
+    try (OASApplicationData data = oasAppBuilder.createOasApp(generator, target, specFile)) {
       importApplication(correlatedXynaOrder, data.getId(), workspace);
     } catch (IOException e) {
       if(logger.isWarnEnabled()) {
@@ -276,7 +276,7 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
   public void generateApplicationByManagedFileID(XynaOrderServerExtension correlatedXynaOrder, ApplicationGenerationParameter applicationGenerationParameter2, ManagedFileId managedFileId3) {
     String path = fileManagement.getAbsolutePath(managedFileId3.getId());
     if(fileManagement.getFileInfo(managedFileId3.getId()).getOriginalFilename().endsWith(".zip")) {
-      path = BuildoasapplicationImpl.decompressArchive(path);
+      path = OasAppBuilder.decompressArchive(path);
     }
     File file = new File.Builder()
         .path(path)

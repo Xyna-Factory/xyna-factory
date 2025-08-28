@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,24 +18,22 @@
 package xfmg.oas.generation.tools;
 
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.log4j.Logger;
 import org.openapitools.codegen.ClientOptInput;
 import org.openapitools.codegen.DefaultGenerator;
 import org.openapitools.codegen.config.CodegenConfigurator;
@@ -49,8 +47,13 @@ import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.FileUtils;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
-import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xlibdev.supp4eclipse.Support4Eclipse;
+import com.gip.xyna.xfmg.xfctrl.XynaFactoryControl;
+import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
+import com.gip.xyna.xfmg.xfctrl.filemgmt.FileManagement;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
+import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
+import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xprc.exceptions.XPRC_XmlParsingException;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
@@ -61,19 +64,7 @@ import io.swagger.parser.OpenAPIParser;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.parser.core.models.ParseOptions;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
-
-import com.gip.xyna.xfmg.xfctrl.XynaFactoryControl;
-import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
-import com.gip.xyna.xfmg.xfctrl.filemgmt.FileManagement;
-import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
-import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
-import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
-import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
-
-import xfmg.oas.generation.cli.generated.Buildoasapplication;
 import xfmg.oas.generation.impl.ApplicationGenerationServiceOperationImpl;
-
-import org.apache.log4j.Logger;
 
 
 public class OasAppBuilder {
@@ -133,27 +124,6 @@ public class OasAppBuilder {
       generator.opts(clientOptInput).generate();
   }
   
-  
-  public class ValidationResult {
-    private List<String> errors = new LinkedList<String>();
-    private List<String> warnings = new LinkedList<String>();
-    
-     public List<String> getErrors() {
-       return errors;
-     }
-     
-     public List<String> getWarnings() {
-       return warnings;
-     }
-     
-     public void addError(String error) {
-       errors.add(error);
-     }
-     
-     public void addWarning(String warning) {
-       warnings.add(warning);
-     }
-  }
   
   public ValidationResult validate(String specFile) {
     ValidationResult result = new ValidationResult();
@@ -314,35 +284,6 @@ public class OasAppBuilder {
       throw new RuntimeException("Could not find specification file in zip.");
     }
     return files[0].getAbsolutePath();
-  }
-  
-  public static class OASApplicationData implements Closeable {
-    private final String id;
-    private final List<File> files;
-    
-    public OASApplicationData(String id, List<File> files) {
-      this.id = id;
-      this.files = files;
-    }
-    
-    public String getId() {
-      return id;
-    }
-    
-    public List<File> getFiles() {
-      return files;
-    }
-
-    @Override
-    public void close() throws IOException {
-      for(File f : files) {
-        if(f.isFile()) {
-          f.delete();
-        } else if(f.isDirectory()) {
-          FileUtils.deleteDirectory(f);
-        }
-      }
-    }
   }
   
 }
