@@ -602,6 +602,9 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
   
   public void update(final XynaOrderServerExtension correlatedOrder, final XynaObject storable, List<String> untransformedUpdatePaths, final UpdateParameter updateParameter, ExtendedParameter extendedParameter) 
                   throws PersistenceLayerException {
+
+    validate(storable);
+
     PersistenceAccessContext context = PersistenceAccessControl.getAccessContext(correlatedOrder);
     final XMOMStorableStructureInformation info = getStorableStructureInformation(storable);
     long revision;
