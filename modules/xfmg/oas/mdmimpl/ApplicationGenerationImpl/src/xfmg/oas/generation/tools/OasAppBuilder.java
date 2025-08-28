@@ -15,8 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package xfmg.oas.generation.cli.impl;
-
+package xfmg.oas.generation.tools;
 
 
 import java.io.Closeable;
@@ -77,58 +76,10 @@ import xfmg.oas.generation.impl.ApplicationGenerationServiceOperationImpl;
 import org.apache.log4j.Logger;
 
 
-public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasapplication> {
+public class OasAppBuilder {
 
-  private static Logger logger = CentralFactoryLogging.getLogger(BuildoasapplicationImpl.class);
+  private static Logger logger = CentralFactoryLogging.getLogger(OasAppBuilder.class);
   
-  public void execute(OutputStream statusOutputStream, Buildoasapplication payload) throws XynaException {
-    String specFile = payload.getPath();
-    String target = "/tmp/" + payload.getApplicationName();
-    
-    if(specFile.endsWith(".zip")) {
-      specFile = decompressArchive(specFile);
-    }
-    
-    ValidationResult result = validate(specFile);
-    StringBuilder errors = new StringBuilder("Validation found errors:");
-    if (!result.getErrors().isEmpty()) {
-      logger.error("Spec: " + specFile + " contains errors.");
-      result.getErrors().forEach(error -> {
-        logger.error(error);
-        errors.append(" ");
-        errors.append(error);
-      });
-    }
-    if (!result.getWarnings().isEmpty()) {
-      logger.warn("Spec: " + specFile + " contains warnings.");
-      result.getWarnings().forEach(warning -> logger.warn(warning));
-    }
-    if (!result.getErrors().isEmpty()) {
-      throw new RuntimeException(errors.toString());
-    }
-
-    createAppAndPrintId(statusOutputStream, "xmom-data-model", target + "_datatypes", specFile, "datamodel");
-    if (payload.getBuildProvider()) {
-      createAppAndPrintId(statusOutputStream, "xmom-server", target + "_provider", specFile, "provider");
-    }
-    if (payload.getBuildClient()) {
-      createAppAndPrintId(statusOutputStream, "xmom-client", target + "_client", specFile, "client");
-    }
-
-    writeToCommandLine(statusOutputStream, "Done.");
-  }
-  
-  private void createAppAndPrintId(OutputStream statusOutputStream, String generator, String target, String specFile, String type) {
-    try (OASApplicationData appData = createOasApp(generator, target, specFile)) {
-      writeToCommandLine(statusOutputStream, type + " ManagedFileId: " + appData.getId() + " ");
-    } catch (IOException e) {
-      writeToCommandLine(statusOutputStream, "Could not clean up temporary files for " + type);
-      if (logger.isWarnEnabled()) {
-        logger.warn("Could not clean up temporary files for " + type, e);
-      }
-    }
-  }
-
   
   public OASApplicationData createOasApp(String generator, String target, String specFile) {
     List<File> files = new ArrayList<>();
@@ -393,4 +344,5 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
       }
     }
   }
+  
 }
