@@ -15,8 +15,8 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package xfmg.oas.generation.tools;
 
+package xfmg.oas.generation.tools;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,10 +30,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.zip.ZipOutputStream;
 
-import org.apache.log4j.Logger;
 import org.openapitools.codegen.ClientOptInput;
 import org.openapitools.codegen.DefaultGenerator;
 import org.openapitools.codegen.config.CodegenConfigurator;
@@ -43,7 +43,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.FileUtils;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
@@ -69,13 +68,23 @@ import xfmg.oas.generation.impl.ApplicationGenerationServiceOperationImpl;
 
 public class OasAppBuilder {
 
-  private static Logger logger = CentralFactoryLogging.getLogger(OasAppBuilder.class);
-  
   
   public OASApplicationData createOasApp(String generator, String target, String specFile) {
-    List<File> files = new ArrayList<>();
-    callGenerator(generator, target, specFile);
+    return createOasApp(generator, target, specFile, Optional.empty());
+  }
 
+  
+  public OASApplicationData createOasApp(String generator, String target, String specFile,
+                                         Optional<OasImportStatusHandler> statusHandler) {
+    List<File> files = new ArrayList<>();
+    if (statusHandler.isPresent()) {
+      statusHandler.get().storeStatusParsing();
+    }
+    callGenerator(generator, target, specFile);
+    
+    if (statusHandler.isPresent()) {
+      statusHandler.get().storeStatusAppBinaryGen();
+    }
     separateFiles(target);
     compileFilter(target);
     String appName = readApplicationXML(target);
@@ -221,12 +230,10 @@ public class OasAppBuilder {
 
 
   private void compileFilter(String target) {
-    
     List<File> filterJava = new ArrayList<>();
     FileUtils.findFilesRecursively(Path.of(target, "filter").toFile(), filterJava, findOASFilterJava);
     
     for (File javaFile: filterJava) {
-     
      String filterName = javaFile.getName().substring(0, javaFile.getName().lastIndexOf("_"));
 
       //build mdm.jar

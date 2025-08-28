@@ -19,38 +19,20 @@ package xfmg.oas.generation.impl;
 
 
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
-import com.gip.xyna.FileUtils;
-import com.gip.xyna.XynaFactory;
-import com.gip.xyna.utils.collections.CollectionUtils;
-import com.gip.xyna.utils.collections.CollectionUtils.Transformation;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
-import com.gip.xyna.xfmg.Constants;
-import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl.ApplicationPartImportMode;
-import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl.ImportApplicationParameter;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderBase;
-import com.gip.xyna.xfmg.xfctrl.filemgmt.FileManagement;
-import com.gip.xyna.xfmg.xfctrl.nodemgmt.rtctxmgmt.LocalRuntimeContextManagementSecurity;
-import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
-import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
 import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.UserType;
 import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
-import com.gip.xyna.xfmg.xopctrl.managedsessions.SessionManagement;
-import com.gip.xyna.xmcp.xfcli.impl.SavexmomobjectImpl;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
-import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 
 import base.File;
 import base.math.IntegerNumber;
@@ -59,9 +41,7 @@ import xfmg.oas.generation.ApplicationGenerationServiceOperation;
 import xfmg.oas.generation.cli.generated.OverallInformationProvider;
 import xfmg.oas.generation.storage.OasImportHistorySortTool;
 import xfmg.oas.generation.storage.OasImportHistoryStorage;
-import xfmg.oas.generation.tools.OASApplicationData;
-import xfmg.oas.generation.tools.OasAppBuilder;
-import xfmg.oas.generation.tools.ValidationResult;
+import xfmg.oas.generation.tools.GenerateApplicationTool;
 import xfmg.xfctrl.appmgmt.RuntimeContextService;
 import xfmg.xfctrl.filemgmt.ManagedFileId;
 import xmcp.forms.plugin.Plugin;
@@ -83,15 +63,9 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
       .setDefaultDocumentation(DocumentationLanguage.EN, "Create an XmomObject for Schemas of type array")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Erzeuge Xmom Objekte für Schemas mit Typ array");
 
-  private static final LocalRuntimeContextManagementSecurity localLrcms =
-      new LocalRuntimeContextManagementSecurity();
-  private static final SessionManagement sessionManagement =
-      XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getSessionManagement();
-  private static final FileManagement fileManagement =
-      XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getFileManagement();
-
   private static Logger logger = CentralFactoryLogging.getLogger(ApplicationGenerationServiceOperationImpl.class);
 
+  
   public void onDeployment() throws XynaException {
     OverallInformationProvider.onDeployment();
     try {
@@ -102,7 +76,6 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
     } catch (Exception e) {
       logger.error("Could not register oas plugin.", e);
     }
-
     createListWrappers.registerDependency(UserType.Service, "OAS_Base");
     OasImportHistoryStorage.init();
   }
@@ -118,7 +91,6 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
     } catch(Exception e) {
       logger.error("Could not unregister oas plugin.", e);
     }
-    
     createListWrappers.unregister();
     OasImportHistoryStorage.shutdown();
   }
@@ -160,8 +132,13 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
   }
 
   @Override
-  public void generateApplication(XynaOrderServerExtension correlatedXynaOrder, ApplicationGenerationParameter applicationGenerationParameter1, File file4) {
+  public void generateApplication(XynaOrderServerExtension correlatedXynaOrder,
+                                  ApplicationGenerationParameter applicationGenerationParameter1,
+                                  File file4) {
+    new GenerateApplicationTool().generateApplication(correlatedXynaOrder, applicationGenerationParameter1, file4, Optional.empty());
+  }
 
+  /*
     OasAppBuilder oasAppBuilder = new OasAppBuilder();
 
     String specFile = file4.getPath();
@@ -194,86 +171,18 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
       createAndImportApplication(correlatedXynaOrder, "xmom-client", target + "_client", specFile, workspace);
     }
   }
+*/
 
-  private void createAndImportApplication(XynaOrderServerExtension correlatedXynaOrder, String generator, String target, String specFile, String workspace) {
-    OasAppBuilder oasAppBuilder = new OasAppBuilder();
-    try (OASApplicationData data = oasAppBuilder.createOasApp(generator, target, specFile)) {
-      importApplication(correlatedXynaOrder, data.getId(), workspace);
-    } catch (IOException e) {
-      if(logger.isWarnEnabled()) {
-        logger.warn("Could not clean up temporary files for " + generator, e);
-      }
-    }
-  }
-
-  private void importApplicationAsApplication(XynaOrderServerExtension correlatedXynaOrder, String id) {
-    try {
-      String user = sessionManagement.resolveSessionToUser(correlatedXynaOrder.getSessionId());
-      ImportApplicationParameter iap = ImportApplicationParameter.with(ApplicationPartImportMode.EXCLUDE,
-                                                                       ApplicationPartImportMode.EXCLUDE,
-                                                                       true,
-                                                                       true,
-                                                                       user);
-      localLrcms.importApplication(correlatedXynaOrder.getCreationRole(), iap, id);
-
-    } catch (Exception ex) {
-      throw new RuntimeException(ex.getMessage(), ex);
-    }
-  }
-
-
-  private void importApplicationAsWorkspace(XynaOrderServerExtension correlatedXynaOrder, String id, String workspace) {
-    Path tmpPath = Path.of("/tmp", id + "workspace_import");
-    try {
-      Long revision;
-      RevisionManagement revMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
-      revision = revMgmt.getRevision(null, null, workspace);
-      String pathStr = RevisionManagement.getPathForRevision(PathType.ROOT, revision, false);
-      Path path = Path.of(pathStr, "XMOM");
-      if (!Files.exists(path)) {
-        Files.createDirectories(path);
-      }
-
-      //copy XMOM folder from application to workspace
-      FileUtils.unzip(fileManagement.getAbsolutePath(id), tmpPath.toString(), (f) -> true);
-      String appXmomDir = Path.of(tmpPath.toString(), "XMOM").toString();
-      if(!Files.exists(Path.of(appXmomDir))) {
-        logger.debug("Xmom folder does not exist: " + appXmomDir);
-        return;
-      }
-      FileUtils.copyRecursivelyWithFolderStructure(new java.io.File(appXmomDir), path.toFile());
-
-      //refresh new workspace objects
-      SavexmomobjectImpl saveImpl = new SavexmomobjectImpl();
-      List<java.io.File> files = Files.find(path, 100, (p, bfa) -> bfa.isRegularFile()).map(x -> x.toFile()).collect(Collectors.toList());
-      int xmomPathStartIndex = path.toString().length() + 1;
-      Collection<String> allObjectNames = CollectionUtils.transformAndSkipNull(files, new Transformation<java.io.File, String>() {
-        public String transform(java.io.File from) {
-          String xmlName = from.getPath().substring(xmomPathStartIndex).replaceAll(Constants.FILE_SEPARATOR, ".");
-          xmlName = xmlName.substring(0, xmlName.length() - ".xml".length());
-          return GenerationBase.isReservedServerObjectByFqOriginalName(xmlName) ? null : xmlName;
-        }
-      });
-      for(String f: allObjectNames) {
-        saveImpl.saveXmomObject(workspace, f, false);
-      }
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    } finally {
-        FileUtils.deleteDirectory(tmpPath.toFile());
-    }
-  }
-
-  private void importApplication(XynaOrderServerExtension correlatedXynaOrder, String id, String workspace) {
-    if(workspace == null || workspace.isBlank()) {
-      importApplicationAsApplication(correlatedXynaOrder, id);
-    } else {
-      importApplicationAsWorkspace(correlatedXynaOrder, id, workspace);
-    }
-  }
-
+  
   @Override
-  public void generateApplicationByManagedFileID(XynaOrderServerExtension correlatedXynaOrder, ApplicationGenerationParameter applicationGenerationParameter2, ManagedFileId managedFileId3) {
+  public void generateApplicationByManagedFileID(XynaOrderServerExtension correlatedXynaOrder,
+                                                 ApplicationGenerationParameter applicationGenerationParameter2,
+                                                 ManagedFileId managedFileId3) {
+    new GenerateApplicationTool().generateApplicationByManagedFileID(correlatedXynaOrder, applicationGenerationParameter2,
+                                                                     managedFileId3, null);
+  }
+  
+  /*
     String path = fileManagement.getAbsolutePath(managedFileId3.getId());
     if(fileManagement.getFileInfo(managedFileId3.getId()).getOriginalFilename().endsWith(".zip")) {
       path = OasAppBuilder.decompressArchive(path);
@@ -283,7 +192,8 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
         .instance();
     generateApplication(correlatedXynaOrder, applicationGenerationParameter2, file);
   }
-
+*/
+  
   
   @Override
   public List<? extends OAS_ImportHistory> queryOasImportHistory(TableInfo info) {
