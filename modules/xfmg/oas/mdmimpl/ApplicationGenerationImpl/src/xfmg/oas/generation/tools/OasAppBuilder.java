@@ -70,21 +70,18 @@ public class OasAppBuilder {
 
   
   public OASApplicationData createOasApp(String generator, String target, String specFile) {
-    return createOasApp(generator, target, specFile, Optional.empty());
+    return createOasApp(generator, target, specFile, new OasImportStatusHandler());
   }
 
   
   public OASApplicationData createOasApp(String generator, String target, String specFile,
-                                         Optional<OasImportStatusHandler> statusHandler) {
+                                         OasImportStatusHandler statusHandler) {
     List<File> files = new ArrayList<>();
-    if (statusHandler.isPresent()) {
-      statusHandler.get().storeStatusParsing();
-    }
+    statusHandler.storeStatusParsing();
+    
     callGenerator(generator, target, specFile);
     
-    if (statusHandler.isPresent()) {
-      statusHandler.get().storeStatusAppBinaryGen();
-    }
+    statusHandler.storeStatusAppBinaryGen();
     separateFiles(target);
     compileFilter(target);
     String appName = readApplicationXML(target);
@@ -92,7 +89,6 @@ public class OasAppBuilder {
     File targetAsFile = new File(target);
     File unzipedApp = new File("/tmp/" + appName);
     files.add(unzipedApp);
-    
     File tmpFile;
     try {
       FileUtils.copyRecursivelyWithFolderStructure(targetAsFile, unzipedApp);
@@ -114,7 +110,6 @@ public class OasAppBuilder {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-    
     return new OASApplicationData(id, files);
   }
   
@@ -126,8 +121,7 @@ public class OasAppBuilder {
         .addAdditionalProperty("generateAliasAsModel", ApplicationGenerationServiceOperationImpl.createListWrappers.get())
         .addAdditionalProperty("x-createListWrappers", ApplicationGenerationServiceOperationImpl.createListWrappers.get())
         .setOutputDir(target);
-
-
+    
       final ClientOptInput clientOptInput = configurator.toClientOptInput();
       DefaultGenerator generator = new DefaultGenerator();
       generator.opts(clientOptInput).generate();

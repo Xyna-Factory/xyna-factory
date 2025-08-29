@@ -138,61 +138,14 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
     new GenerateApplicationTool().generateApplication(correlatedXynaOrder, applicationGenerationParameter1, file4, Optional.empty());
   }
 
-  /*
-    OasAppBuilder oasAppBuilder = new OasAppBuilder();
-
-    String specFile = file4.getPath();
-    String target = "/tmp/Order_" + correlatedXynaOrder.getId();
-
-    ValidationResult result = oasAppBuilder.validate(specFile);
-    StringBuilder errors = new StringBuilder("Validation found errors:");
-    if (!result.getErrors().isEmpty()) {
-      logger.error("Spec: " + specFile + " contains errors.");
-      result.getErrors().forEach(error -> {
-        logger.error(error);
-        errors.append(" ");
-        errors.append(error);
-      });
-    }
-    if (!result.getWarnings().isEmpty()) {
-      logger.warn("Spec: " + specFile + " contains warnings.");
-      result.getWarnings().forEach(warning -> logger.warn(warning));
-    }
-    if (!result.getErrors().isEmpty()) {
-      throw new RuntimeException(errors.toString());
-    }
-
-    String workspace = applicationGenerationParameter1.getWorkspaceName();
-    createAndImportApplication(correlatedXynaOrder, "xmom-data-model", target + "_datatypes", specFile, workspace);
-    if (applicationGenerationParameter1.getGenerateProvider()) {
-      createAndImportApplication(correlatedXynaOrder, "xmom-server", target + "_provider", specFile, workspace);
-    }
-    if (applicationGenerationParameter1.getGenerateClient()) {
-      createAndImportApplication(correlatedXynaOrder, "xmom-client", target + "_client", specFile, workspace);
-    }
-  }
-*/
-
   
   @Override
   public void generateApplicationByManagedFileID(XynaOrderServerExtension correlatedXynaOrder,
                                                  ApplicationGenerationParameter applicationGenerationParameter2,
-                                                 ManagedFileId managedFileId3) {
+                                                 ManagedFileId managedFileId3, OAS_ImportHistory history) {
     new GenerateApplicationTool().generateApplicationByManagedFileID(correlatedXynaOrder, applicationGenerationParameter2,
-                                                                     managedFileId3, null);
+                                                                     managedFileId3, history);
   }
-  
-  /*
-    String path = fileManagement.getAbsolutePath(managedFileId3.getId());
-    if(fileManagement.getFileInfo(managedFileId3.getId()).getOriginalFilename().endsWith(".zip")) {
-      path = OasAppBuilder.decompressArchive(path);
-    }
-    File file = new File.Builder()
-        .path(path)
-        .instance();
-    generateApplication(correlatedXynaOrder, applicationGenerationParameter2, file);
-  }
-*/
   
   
   @Override
@@ -226,9 +179,9 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
   
   
   @Override
-  public void storeOasImportHistory(OAS_ImportHistory input) {
+  public OAS_ImportHistory storeOasImportHistory(OAS_ImportHistory input) {
     try {
-      new OasImportHistoryStorage().storeOasImportHistory(input);
+      return new OasImportHistoryStorage().storeOasImportHistory(input);
     } catch (RuntimeException e) {
       logger.error(e.getMessage(), e);
       throw e;

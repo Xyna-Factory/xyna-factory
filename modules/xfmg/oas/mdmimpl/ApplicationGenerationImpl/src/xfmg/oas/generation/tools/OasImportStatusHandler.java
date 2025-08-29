@@ -18,6 +18,8 @@
 
 package xfmg.oas.generation.tools;
 
+import java.util.Optional;
+
 import org.apache.log4j.Logger;
 
 import com.gip.xyna.CentralFactoryLogging;
@@ -35,50 +37,66 @@ public class OasImportStatusHandler {
   }
   
   public static class Constants {
-    public static final String STATUS_VALIDATION = "VALIDATION";
-    public static final String STATUS_PARSING = "PARSING";
-    public static final String STATUS_APP_BINARY_GENERATION = "APP_BINARY_GENERATION";
-    public static final String STATUS_APP_IMPORT = "APP_IMPORT";
-    
+    public static final String STATUS_VALIDATION = "validation";
+    public static final String STATUS_PARSING = "parsing";
+    public static final String STATUS_APP_BINARY_GENERATION = "app_binary_generation";
+    public static final String STATUS_APP_IMPORT = "app_import";
+    public static final String STATUS_SUCCESS = "success";
+    public static final String STATUS_ERROR = "error";
   }
   
-  private OAS_ImportHistory _input;
-  
-  // optional
-  private AppType _appType;
+  private Optional<OAS_ImportHistory> _storable = Optional.empty();
+  private Optional<AppType> _appType = Optional.empty();
   
   
-  public OasImportStatusHandler(OAS_ImportHistory input, AppType appType) {
-    this._input = input;
-    this._appType = appType;
+  public void setStorable(OAS_ImportHistory storable) {
+    this._storable = Optional.ofNullable(storable);
   }
   
-  // set app type
   
+  public void setAppType(AppType appType) {
+    this._appType = Optional.ofNullable(appType);
+  }
+  
+  
+  private String addAppTypeIfSet(String input) {
+    if (_appType.isEmpty()) {
+      return input;
+    }
+    return input +  " (" + _appType.toString() + ")";
+  }
+  
+  
+  public void storeStatusSuccess() {
+    if (_storable.isEmpty()) { return; }
+    store(Constants.STATUS_SUCCESS);
+  }
   
   public void storeStatusValidation() {
+    if (_storable.isEmpty()) { return; }
     store(Constants.STATUS_VALIDATION);
   }
   
   public void storeStatusParsing() {
-    // method build status, check optional
-    store(Constants.STATUS_PARSING + " (" + _appType.toString() + ")");
+    if (_storable.isEmpty()) { return; }
+    store(addAppTypeIfSet(Constants.STATUS_PARSING));
   }
   
   public void storeStatusAppBinaryGen() {
-    store(Constants.STATUS_APP_BINARY_GENERATION + " (" + _appType.toString() + ")");
+    if (_storable.isEmpty()) { return; }
+    store(addAppTypeIfSet(Constants.STATUS_APP_BINARY_GENERATION));
   }
   
   public void storeStatusAppImport() {
-    store(Constants.STATUS_APP_IMPORT + " (" + _appType.toString() + ")");
+    if (_storable.isEmpty()) { return; }
+    store(addAppTypeIfSet(Constants.STATUS_APP_IMPORT));
   }
   
   
   private void store(String status) {
-    String fullStatus = status;
-    _input.setImportStatus(fullStatus);
+    _storable.get().setImportStatus(status);
     try {
-      new OasImportHistoryStorage().storeOasImportHistory(_input);
+      new OasImportHistoryStorage().storeOasImportHistory(_storable.get());
     } catch (Exception e) {
       if (_logger.isErrorEnabled()) {
         _logger.error("Error changing oas import history status. " + e.getMessage(), e);

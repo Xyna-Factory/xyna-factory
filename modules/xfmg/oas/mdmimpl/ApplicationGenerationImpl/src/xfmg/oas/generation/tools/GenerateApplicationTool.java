@@ -68,7 +68,7 @@ public class GenerateApplicationTool {
                                                  ApplicationGenerationParameter applicationGenerationParameter2,
                                                  ManagedFileId managedFileId3, OAS_ImportHistory history) {
     String path = fileManagement.getAbsolutePath(managedFileId3.getId());
-    if(fileManagement.getFileInfo(managedFileId3.getId()).getOriginalFilename().endsWith(".zip")) {
+    if (fileManagement.getFileInfo(managedFileId3.getId()).getOriginalFilename().endsWith(".zip")) {
       path = OasAppBuilder.decompressArchive(path);
     }
     File file = new File.Builder()
@@ -85,12 +85,11 @@ public class GenerateApplicationTool {
     String specFile = file4.getPath();
     String target = "/tmp/Order_" + correlatedXynaOrder.getId();
 
-    // status validate
-    Optional<OasImportStatusHandler> statusHandler = Optional.empty();
+    OasImportStatusHandler statusHandler = new OasImportStatusHandler();
     if (history.isPresent()) {
-      //statusHandler = new StatusHandler(history.get(), AppType.
+      statusHandler.setStorable(history.get());
+      statusHandler.storeStatusValidation();
     }
-    
     ValidationResult result = oasAppBuilder.validate(specFile);
     StringBuilder errors = new StringBuilder("Validation found errors:");
     if (!result.getErrors().isEmpty()) {
@@ -108,23 +107,30 @@ public class GenerateApplicationTool {
     if (!result.getErrors().isEmpty()) {
       throw new RuntimeException(errors.toString());
     }
-
     String workspace = applicationGenerationParameter1.getWorkspaceName();
-    createAndImportApplication(correlatedXynaOrder, "xmom-data-model", target + "_datatypes", specFile, workspace);
+    statusHandler.setAppType(AppType.DATA_MODEL);
+    createAndImportApplication(correlatedXynaOrder, "xmom-data-model", target + "_datatypes", specFile,
+                               workspace, statusHandler);
     if (applicationGenerationParameter1.getGenerateProvider()) {
-      createAndImportApplication(correlatedXynaOrder, "xmom-server", target + "_provider", specFile, workspace);
+      statusHandler.setAppType(AppType.PROVIDER);
+      createAndImportApplication(correlatedXynaOrder, "xmom-server", target + "_provider", specFile, workspace,
+                                 statusHandler);
     }
     if (applicationGenerationParameter1.getGenerateClient()) {
-      createAndImportApplication(correlatedXynaOrder, "xmom-client", target + "_client", specFile, workspace);
+      statusHandler.setAppType(AppType.CLIENT);
+      createAndImportApplication(correlatedXynaOrder, "xmom-client", target + "_client", specFile, workspace,
+                                 statusHandler);
     }
+    statusHandler.storeStatusSuccess();
   }
 
   
   private void createAndImportApplication(XynaOrderServerExtension correlatedXynaOrder, String generator,
-                                          String target, String specFile, String workspace) {
+                                          String target, String specFile, String workspace,
+                                          OasImportStatusHandler statusHandler) {
     OasAppBuilder oasAppBuilder = new OasAppBuilder();
     try (OASApplicationData data = oasAppBuilder.createOasApp(generator, target, specFile)) {
-      // status import
+      statusHandler.storeStatusAppImport();
       importApplication(correlatedXynaOrder, data.getId(), workspace);
     } catch (IOException e) {
       if(logger.isWarnEnabled()) {
