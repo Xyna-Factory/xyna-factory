@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="ZetaFramework" comment="" factoryVersion="" versionName="0.6.59" xmlVersion="1.1">
+<Application applicationName="ZetaFramework" comment="" factoryVersion="" versionName="0.6.60" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
