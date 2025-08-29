@@ -21,6 +21,7 @@ package xmcp.zeta.storage.generic.filter.elems;
 import java.util.Optional;
 
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
+import xmcp.zeta.storage.generic.filter.shared.SqlWhereClauseData;
 
 
 public abstract class RelationalOperand implements FilterElement {
@@ -39,7 +40,7 @@ public abstract class RelationalOperand implements FilterElement {
   }
   
   @Override
-  public void writeSql(String colname, StringBuilder str) {
+  public void writeSql(String colname, SqlWhereClauseData sql) {
     // do nothing
   }
   

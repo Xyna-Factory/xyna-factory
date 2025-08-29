@@ -18,9 +18,11 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
-import xmcp.zeta.storage.generic.filter.shared.FilterInputConstants;
+import java.util.List;
+
+import com.gip.xyna.xnwh.selection.parsing.SelectionParser;
+
 import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
-import xmcp.zeta.storage.generic.filter.shared.LiteralTools;
 
 
 public class WildcardElem extends RelationalOperand {
@@ -32,7 +34,7 @@ public class WildcardElem extends RelationalOperand {
   
   @Override
   public void writeJson(JsonWriter json) {
-    json.addAttribute("Wildcard", FilterInputConstants.SQL_WILDCARD);
+    json.addAttribute("Wildcard", SelectionParser.CHARACTER_WILDCARD);
   }
 
   @Override
@@ -47,7 +49,7 @@ public class WildcardElem extends RelationalOperand {
 
   @Override
   public String getContentString() {
-    return FilterInputConstants.SQL_WILDCARD;
+    return SelectionParser.CHARACTER_WILDCARD;
   }
   
   @Override
@@ -69,7 +71,7 @@ public class WildcardElem extends RelationalOperand {
 
   @Override
   public String getContentAdaptedForSqlLike() {
-    return FilterInputConstants.SQL_WILDCARD;
+    return SelectionParser.CHARACTER_WILDCARD;
   }
   
 }

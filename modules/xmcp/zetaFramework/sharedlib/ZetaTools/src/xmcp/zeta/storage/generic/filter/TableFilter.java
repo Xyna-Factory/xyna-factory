@@ -18,15 +18,17 @@
 
 package xmcp.zeta.storage.generic.filter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.xnwh.persistence.Parameter;
+import com.gip.xyna.xnwh.persistence.xmom.QueryGenerator;
 
 import xmcp.zeta.storage.generic.filter.elems.FilterElement;
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
+import xmcp.zeta.storage.generic.filter.shared.SqlWhereClauseData;
 
 
 public class TableFilter {
@@ -37,15 +39,20 @@ public class TableFilter {
   private static final String SQL_AND = " AND ";
   
   private final List<FilterColumn> _filterColumns;
+  private final QueryGenerator queryGenerator;
+  private String _whereClause = "";
+  private List<String> _parameters = new ArrayList<>();
 
   
-  public TableFilter(List<FilterColumn> filterColumns) {
+  public TableFilter(List<FilterColumn> filterColumns, QueryGenerator queryGenerator) {
     this._filterColumns = filterColumns;
+    this.queryGenerator = queryGenerator;
+    init();
   }
   
   
-  public String buildWhereClause() {
-    if (_filterColumns.size() < 1) { return ""; }
+  private void init() {
+    if (_filterColumns.size() < 1) { return; }
     FilterInputParser parser = new FilterInputParser();
     StringBuilder str = new StringBuilder();
     str.append(SQL_WHERE);
@@ -53,25 +60,31 @@ public class TableFilter {
     for (FilterColumn col : _filterColumns) {
       try {
         FilterElement elem = parser.parse(col.getValue());
-        StringBuilder tmp = new StringBuilder();
-        elem.writeSql(col.getSqlColumnName(), tmp);
+        SqlWhereClauseData sql = new SqlWhereClauseData(queryGenerator);
+        elem.writeSql(col.getSqlColumnName(), sql);
         if (isfirst) { isfirst = false; }
         else { str.append(SQL_AND); }
-        str.append(tmp);
+        str.append(sql.getSql());
+        _parameters.addAll(sql.getParameters());
       } catch (Exception e) {
         _logger.error("Error parsing filter input: " + e.getMessage(), e);
       }
     }
-    return str.toString();
+    _whereClause = str.toString();
   }
   
   
   public Parameter buildParameter() {
     Parameter ret = new Parameter();
-    for (FilterColumn col : _filterColumns) {
-      ret.add(col.getValue());
+    for (String val : _parameters) {
+      ret.add(val);
     }
     return ret;
+  }
+
+
+  public String getWhereClause() {
+    return _whereClause;
   }
   
 }

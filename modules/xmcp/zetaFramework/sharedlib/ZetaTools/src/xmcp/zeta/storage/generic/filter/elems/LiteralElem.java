@@ -18,6 +18,8 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
+import java.util.List;
+
 import xmcp.zeta.storage.generic.filter.shared.FilterInputConstants;
 import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 import xmcp.zeta.storage.generic.filter.shared.LiteralTools;
@@ -81,5 +83,5 @@ public class LiteralElem extends RelationalOperand {
   public String getContentAdaptedForSqlLike() {
     return new LiteralTools().adaptLiteralStringForLike(_content);
   }
-  
+
 }

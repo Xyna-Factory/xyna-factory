@@ -21,6 +21,7 @@ package xmcp.zeta.storage.generic.filter.elems.logical;
 import xmcp.zeta.storage.generic.filter.elems.BinaryLogicalOpElem;
 import xmcp.zeta.storage.generic.filter.elems.LogicalOperand;
 import xmcp.zeta.storage.generic.filter.elems.LogicalOperator;
+import xmcp.zeta.storage.generic.filter.shared.SqlWhereClauseData;
 
 
 public class AndElem extends BinaryLogicalOpElem implements LogicalOperator {
@@ -35,12 +36,12 @@ public class AndElem extends BinaryLogicalOpElem implements LogicalOperator {
   }
 
   @Override
-  public void writeSql(String colname, StringBuilder str) {
-    str.append("(");
-    getOperand1().writeSql(colname, str);
-    str.append(") AND (");
-    getOperand2().writeSql(colname, str);
-    str.append(")");
+  public void writeSql(String colname, SqlWhereClauseData sql) {
+    sql.appendToSql("(");
+    getOperand1().writeSql(colname, sql);
+    sql.appendToSql(") AND (");
+    getOperand2().writeSql(colname, sql);
+    sql.appendToSql(")");
   }
   
 }

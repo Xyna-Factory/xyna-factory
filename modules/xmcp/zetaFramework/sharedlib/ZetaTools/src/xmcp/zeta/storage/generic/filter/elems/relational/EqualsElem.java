@@ -18,10 +18,11 @@
 
 package xmcp.zeta.storage.generic.filter.elems.relational;
 
+import com.gip.xyna.xnwh.selection.parsing.SelectionParser;
+
 import xmcp.zeta.storage.generic.filter.elems.RelationalOperand;
 import xmcp.zeta.storage.generic.filter.elems.UnaryRelationalOpElem;
-import xmcp.zeta.storage.generic.filter.shared.FilterInputConstants;
-import xmcp.zeta.storage.generic.filter.shared.LiteralTools;
+import xmcp.zeta.storage.generic.filter.shared.SqlWhereClauseData;
 
 
 public class EqualsElem extends UnaryRelationalOpElem {
@@ -36,29 +37,27 @@ public class EqualsElem extends UnaryRelationalOpElem {
   }
   
   @Override
-  public void writeSql(String colname, StringBuilder str) {
+  public void writeSql(String colname, SqlWhereClauseData sql) {
     RelationalOperand operand = getOperand();
     String content = "";
-    str.append(colname);
+    sql.appendToSqlEscaped(colname);
     boolean useLike = operand.containsWildcards();
     useLike = useLike || operand.indicateAddWildcardAddStart();
     useLike = useLike || operand.indicateAddWildcardAddEnd();
     if (useLike) {
-      str.append(" LIKE ");
+      sql.appendToSql(" LIKE ?");
       content = operand.getContentAdaptedForSqlLike();
     } else {
-      str.append(" = ");
+      sql.appendToSql(" = ?");
       content = operand.getContentAdaptedForSqlEquals();
     }
-    str.append("'");
     if (operand.indicateAddWildcardAddStart()) {
-      str.append(FilterInputConstants.SQL_WILDCARD);
+       content = SelectionParser.CHARACTER_WILDCARD + content;
     }
-    str.append(content);
     if (operand.indicateAddWildcardAddEnd()) {
-      str.append(FilterInputConstants.SQL_WILDCARD);
+      content = content + SelectionParser.CHARACTER_WILDCARD;
     }
-    str.append("'");
+    sql.addQueryParameter(content);
   }
   
 }

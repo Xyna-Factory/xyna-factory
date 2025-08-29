@@ -20,6 +20,7 @@ package xmcp.zeta.storage.generic.filter.elems.relational;
 
 import xmcp.zeta.storage.generic.filter.elems.RelationalOperand;
 import xmcp.zeta.storage.generic.filter.elems.UnaryRelationalOpElem;
+import xmcp.zeta.storage.generic.filter.shared.SqlWhereClauseData;
 
 
 public class LessThanElem extends UnaryRelationalOpElem {
@@ -34,7 +35,7 @@ public class LessThanElem extends UnaryRelationalOpElem {
   }
   
   @Override
-  public void writeSql(String colname, StringBuilder str) {
+  public void writeSql(String colname, SqlWhereClauseData sql) {
     RelationalOperand operand = getOperand();
     String content = operand.getContentString();
     if (operand.containsWildcards()) {
@@ -43,7 +44,9 @@ public class LessThanElem extends UnaryRelationalOpElem {
     if (!operand.isNumerical()) {
       throw new IllegalArgumentException("Syntax error in filter expression: < operator can only combined with numerical values");
     }
-    str.append(colname).append(" < ").append(content);
+    sql.addQueryParameter(content);
+    sql.appendToSqlEscaped(colname);
+    sql.appendToSql(" < ?");
   }
   
 }

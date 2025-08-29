@@ -23,6 +23,7 @@ import xmcp.zeta.storage.generic.filter.elems.FilterElement;
 import xmcp.zeta.storage.generic.filter.elems.LogicalOperand;
 import xmcp.zeta.storage.generic.filter.elems.LogicalOperator;
 import xmcp.zeta.storage.generic.filter.elems.UnaryOpElem;
+import xmcp.zeta.storage.generic.filter.shared.SqlWhereClauseData;
 
 
 public class NotElem extends UnaryOpElem<LogicalOperand> implements LogicalOperator {
@@ -50,11 +51,11 @@ public class NotElem extends UnaryOpElem<LogicalOperand> implements LogicalOpera
 
   
   @Override
-  public void writeSql(String colname, StringBuilder str) {
+  public void writeSql(String colname, SqlWhereClauseData sql) {
     LogicalOperand operand = getOperand();
-    str.append("NOT (");
-    operand.writeSql(colname, str);
-    str.append(")");
+    sql.appendToSql("NOT (");
+    operand.writeSql(colname, sql);
+    sql.appendToSql(")");
   }
   
 }

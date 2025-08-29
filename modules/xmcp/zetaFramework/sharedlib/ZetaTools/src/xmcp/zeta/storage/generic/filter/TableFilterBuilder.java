@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.gip.xyna.xnwh.persistence.xmom.QueryGenerator;
 
 
 public class TableFilterBuilder {
@@ -39,9 +40,9 @@ public class TableFilterBuilder {
   }
   
   
-  public TableFilter build(List<FilterColumnInput> input) {
+  public TableFilter build(List<FilterColumnInput> input, QueryGenerator queryGenerator) {
     List<FilterColumn> ret = new ArrayList<>();
-    if (input == null) { return buildImpl(ret); }
+    if (input == null) { return buildImpl(ret, queryGenerator); }
     for (FilterColumnInput col : input) {
       Optional<String> path = getTrimmedOrEmpty(col.getPath());
       if (path.isEmpty()) { continue; }
@@ -51,12 +52,12 @@ public class TableFilterBuilder {
       if (conf == null) { continue; }
       ret.add(new FilterColumn(conf, filter.get()));
     }
-    return buildImpl(ret);
+    return buildImpl(ret, queryGenerator);
   }
   
   
-  private TableFilter buildImpl(List<FilterColumn> list) {
-    return new TableFilter(list);
+  private TableFilter buildImpl(List<FilterColumn> list, QueryGenerator queryGenerator) {
+    return new TableFilter(list, queryGenerator);
   }
   
   

@@ -18,10 +18,12 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
+import java.util.List;
 import java.util.Optional;
 
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
+import xmcp.zeta.storage.generic.filter.shared.SqlWhereClauseData;
 
 
 public interface FilterElement {
@@ -32,7 +34,7 @@ public interface FilterElement {
   
   public void writeJson(JsonWriter json);
   
-  public void writeSql(String colname, StringBuilder str);
+  public void writeSql(String colname, SqlWhereClauseData sql);
   
   public Optional<FilterElement> getChild(int index);
   

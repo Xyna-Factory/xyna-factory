@@ -24,6 +24,7 @@ import xmcp.zeta.storage.generic.filter.lexer.OperatorToken;
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 import xmcp.zeta.storage.generic.filter.shared.Enums;
 import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
+import xmcp.zeta.storage.generic.filter.shared.SqlWhereClauseData;
 
 
 public class TokenOpElem implements FilterElement {
@@ -54,7 +55,7 @@ public class TokenOpElem implements FilterElement {
   }
   
   @Override
-  public void writeSql(String colname, StringBuilder str) {
+  public void writeSql(String colname, SqlWhereClauseData sql) {
     throw new RuntimeException("SQL output not supported for class " + this.getClass().getName());
   }
   

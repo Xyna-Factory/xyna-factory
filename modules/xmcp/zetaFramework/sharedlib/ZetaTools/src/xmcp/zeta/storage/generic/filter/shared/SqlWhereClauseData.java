@@ -18,15 +18,42 @@
 
 package xmcp.zeta.storage.generic.filter.shared;
 
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.gip.xyna.xnwh.persistence.xmom.QueryGenerator;
 
 
-public class FilterInputConstants {
+public class SqlWhereClauseData {
 
-  public static Pattern OPERATOR_PATTERN = Pattern.compile("[*&|!=<>()'\"]{1}");
-  public static Pattern NUMERICAL_PATTERN = Pattern.compile("[0-9.,]+");
+  private final QueryGenerator queryGenerator;
+  private StringBuilder sql = new StringBuilder();
+  private List<String> parameters = new ArrayList<>();
   
-  public static final String TOKENIZER_DELIM = " *&!|=<>()'\"\t\n";
-  //public static final String SQL_WILDCARD = "%";
+  
+  public SqlWhereClauseData(QueryGenerator queryGenerator) {
+    this.queryGenerator = queryGenerator;
+  }
+  
+
+  public void appendToSql(String str) {
+    sql.append(str);
+  }
+  
+  public void appendToSqlEscaped(String str) {
+    sql.append(queryGenerator.escape.apply(str));
+  }
+  
+  public void addQueryParameter(String param) {
+    parameters.add(param);
+  }
+  
+  public String getSql() {
+    return sql.toString();
+  }
+  
+  public List<String> getParameters() {
+    return parameters;
+  }
   
 }
