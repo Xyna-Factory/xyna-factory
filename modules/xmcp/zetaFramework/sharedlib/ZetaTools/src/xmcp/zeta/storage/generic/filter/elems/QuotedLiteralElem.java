@@ -18,7 +18,6 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
-import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 import xmcp.zeta.storage.generic.filter.shared.LiteralTools;
 
 
@@ -35,11 +34,6 @@ public class QuotedLiteralElem extends RelationalOperand {
   @Override
   public boolean isFinished() {
     return true;
-  }
-  
-  @Override
-  public void writeJson(JsonWriter json) {
-    json.addAttribute("QuotedLiteral", _content);
   }
   
   @Override

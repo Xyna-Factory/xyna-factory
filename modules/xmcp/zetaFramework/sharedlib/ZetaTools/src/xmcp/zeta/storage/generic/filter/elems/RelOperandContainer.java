@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xmcp.zeta.storage.generic.filter.shared.FilterInputConstants;
-import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 
 
 public class RelOperandContainer extends RelationalOperand {
@@ -48,21 +47,6 @@ public class RelOperandContainer extends RelationalOperand {
     return false;
   }
   
-
-  @Override
-  public void writeJson(JsonWriter json) {
-    json.openObjectAttribute("RelOperandContainer");
-    json.openListAttribute("children");
-    boolean isfirst = true;
-    for (FilterElement child : _children) {
-      if (isfirst) { isfirst = false; }
-      else { json.continueList(); }
-      child.writeJson(json);
-    }
-    json.closeList();
-    json.closeObject();
-  }
-
 
   @Override
   public boolean containsWildcards() {

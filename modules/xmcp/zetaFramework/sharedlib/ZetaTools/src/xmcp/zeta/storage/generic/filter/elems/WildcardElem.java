@@ -18,11 +18,7 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
-import java.util.List;
-
 import com.gip.xyna.xnwh.selection.parsing.SelectionParser;
-
-import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 
 
 public class WildcardElem extends RelationalOperand {
@@ -32,11 +28,6 @@ public class WildcardElem extends RelationalOperand {
     return true;
   }
   
-  @Override
-  public void writeJson(JsonWriter json) {
-    json.addAttribute("Wildcard", SelectionParser.CHARACTER_WILDCARD);
-  }
-
   @Override
   public boolean containsWildcards() {
     return true;

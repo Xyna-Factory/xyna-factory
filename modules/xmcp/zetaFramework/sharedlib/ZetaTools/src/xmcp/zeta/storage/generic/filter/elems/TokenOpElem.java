@@ -23,7 +23,6 @@ import java.util.Optional;
 import xmcp.zeta.storage.generic.filter.lexer.OperatorToken;
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 import xmcp.zeta.storage.generic.filter.shared.Enums;
-import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 import xmcp.zeta.storage.generic.filter.shared.SqlWhereClauseData;
 
 
@@ -49,10 +48,6 @@ public class TokenOpElem implements FilterElement {
     // do nothing
   }
   
-  @Override
-  public void writeJson(JsonWriter json) {
-    json.addAttribute("TokenOp", token.getCategory().toString());
-  }
   
   @Override
   public void writeSql(String colname, SqlWhereClauseData sql) {

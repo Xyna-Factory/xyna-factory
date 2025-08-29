@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Optional;
 
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
-import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 import xmcp.zeta.storage.generic.filter.shared.SqlWhereClauseData;
 
 
@@ -39,12 +38,6 @@ public class ContainerElem implements LogicalOperand {
   
   @Override
   public boolean isFinished() {
-    /*
-    for (FilterElement child : _children) {
-      if (!child.isFinished()) { return false; }
-    }
-    return true;
-    */
     return (_children.size() == 1) && (_children.get(0).isFinished());
   }
   
@@ -72,21 +65,6 @@ public class ContainerElem implements LogicalOperand {
       throw new IllegalArgumentException("Error parsing of child element of filter input expression failed, " +
                                          "state still unfinished.");
     }
-  }
-  
-  
-  @Override
-  public void writeJson(JsonWriter json) {
-    json.openObjectAttribute("Container");
-    json.openListAttribute("children");
-    boolean isfirst = true;
-    for (FilterElement child : _children) {
-      if (isfirst) { isfirst = false; }
-      else { json.continueList(); }
-      child.writeJson(json);
-    }
-    json.closeList();
-    json.closeObject();
   }
   
   

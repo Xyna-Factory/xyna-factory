@@ -26,6 +26,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.gip.xyna.xnwh.persistence.xmom.QueryGenerator;
+
 import xmcp.zeta.storage.generic.filter.elems.ContainerElem;
 import xmcp.zeta.storage.generic.filter.elems.FilterElement;
 import xmcp.zeta.storage.generic.filter.elems.TokenOpElem;
@@ -38,8 +40,8 @@ import xmcp.zeta.storage.generic.filter.parser.phase1.QuoteHandler;
 import xmcp.zeta.storage.generic.filter.parser.phase2.ParenthesesHandler;
 import xmcp.zeta.storage.generic.filter.parser.phase2.TokenAdapter;
 import xmcp.zeta.storage.generic.filter.shared.Enums;
-import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 import xmcp.zeta.storage.generic.filter.shared.Replacer;
+import xmcp.zeta.storage.generic.filter.shared.SqlWhereClauseData;
 
 
 public class TestFilterInputParser {
@@ -59,10 +61,8 @@ public class TestFilterInputParser {
       
       List<FilterElement> elems = new TokenAdapter().execute(tokens);
       
-      JsonWriter json = new JsonWriter();
       ContainerElem root = new ContainerElem(elems);
-      root.writeJson(json);
-      log(json.toString());
+      log(root.writeTreeInfo());
     } catch (Exception e) {
       e.printStackTrace();
       throw new RuntimeException(e);
@@ -80,7 +80,6 @@ public class TestFilterInputParser {
       }
       List<FilterElement> elems = new TokenAdapter().execute(tokens);
       elems = new ParenthesesHandler().execute(elems);
-      JsonWriter json = new JsonWriter();
       ContainerElem root = new ContainerElem(elems);
       
       FilterElement elem = root.getChild(0).get();
@@ -90,8 +89,6 @@ public class TestFilterInputParser {
       assertTrue(elem instanceof TokenOpElem);
       assertEquals(Enums.LexedOperatorCategory.GREATER_THAN, ((TokenOpElem) elem).getCategory());
       
-      root.writeJson(json);
-      log(json.toString());
       log(root.writeTreeInfo());
       
       elem = root.getChild(1).get().getChild(1).get();
@@ -128,11 +125,8 @@ public class TestFilterInputParser {
       }
       List<FilterElement> elems = new TokenAdapter().execute(tokens);
       elems = new ParenthesesHandler().execute(elems);
-      JsonWriter json = new JsonWriter();
       ContainerElem root = new ContainerElem(elems);
       root.parse(new FilterInputParser());
-      root.writeJson(json);
-      log(json.toString());
       log(root.writeTreeInfo());
       
       FilterElement elem = root.getChild(0).get();
@@ -170,14 +164,12 @@ public class TestFilterInputParser {
     try {
       String input = "!(>1 | <20) & (=30 | !(<5 & >3))";
       FilterElement root = new FilterInputParser().parse(input);
-      StringBuilder str = new StringBuilder();
-      JsonWriter json = new JsonWriter();
-      root.writeJson(json);
-      log(json.toString());
       
+      SqlWhereClauseData str = new SqlWhereClauseData(new QueryGenerator());
       root.writeSql("col-1", str);
       String sql = str.toString();
       log(sql);
+      logParameters(str);
       assertEquals("(NOT ((col-1 > 1) OR (col-1 < 20))) AND ((col-1 LIKE '%30%') OR (NOT ((col-1 < 5) AND (col-1 > 3))))", sql);
     } catch (Exception e) {
       e.printStackTrace();
@@ -197,14 +189,12 @@ public class TestFilterInputParser {
       }
       
       FilterElement root = new FilterInputParser().parse(input);
-      StringBuilder str = new StringBuilder();
-      JsonWriter json = new JsonWriter();
-      root.writeJson(json);
-      log(json.toString());
       
+      SqlWhereClauseData str = new SqlWhereClauseData(new QueryGenerator());
       root.writeSql("col-1", str);
       String sql = str.toString();
       log(sql);
+      logParameters(str);
       assertEquals("((NOT (col-1 LIKE '%111%')) OR (col-1 LIKE '20%1')) AND ((col-1 LIKE '30%') OR (NOT (col-1 LIKE '%553%')))", sql);
     } catch (Exception e) {
       e.printStackTrace();
@@ -219,9 +209,6 @@ public class TestFilterInputParser {
       String input = "(!20*1 & 210*) |(*55*3 & ! 6*6*799)";
       FilterElement root = new FilterInputParser().parse(input);
       
-      JsonWriter json = new JsonWriter();
-      root.writeJson(json);
-      log(json.toString());
       log(root.writeTreeInfo());
       
       FilterElement elem = root.getChild(0).get().getChild(0).get().getChild(0).get().getChild(0).get();
@@ -246,15 +233,13 @@ public class TestFilterInputParser {
       String input = "'20*1' | 210* | '2111' | '12_4%5\\' | 12_4%5\\6 | 34555 ";
       FilterElement root = new FilterInputParser().parse(input);
       
-      JsonWriter json = new JsonWriter();
-      root.writeJson(json);
-      log(json.toString());
       log(root.writeTreeInfo());
       
-      StringBuilder str = new StringBuilder();
+      SqlWhereClauseData str = new SqlWhereClauseData(new QueryGenerator());
       root.writeSql("col-1", str);
       String sql = str.toString();
       log(sql);
+      logParameters(str);
       
       assertEquals("(((((col-1 = '20*1') OR (col-1 LIKE '210%')) OR (col-1 = '2111')) OR (col-1 = '12_4%5\\\\'))" +
                    " OR (col-1 LIKE '%12\\_4\\%5\\\\\\\\6%')) OR (col-1 LIKE '%34555%')", sql);
@@ -275,10 +260,7 @@ public class TestFilterInputParser {
         log("" + i + ": " + tokens.get(i).getOriginalInput() + "  " + tokens.get(i).getClass().getName());
       }
       List<FilterElement> elems = new TokenAdapter().execute(tokens);
-      JsonWriter json = new JsonWriter();
       ContainerElem root = new ContainerElem(elems);
-      root.writeJson(json);
-      log(json.toString());
       log(root.writeTreeInfo());
       
       FilterElement elem;
@@ -311,10 +293,7 @@ public class TestFilterInputParser {
       for (int i = 0; i < tokens.size(); i++) {
         log("" + i + ": " + tokens.get(i).getOriginalInput() + "  " + tokens.get(i).getClass().getName());
       }
-      JsonWriter json = new JsonWriter();
       FilterElement root = new FilterInputParser().parse(input);
-      root.writeJson(json);
-      log(json.toString());
       log(root.writeTreeInfo());
       
       FilterElement elem = root;
@@ -341,15 +320,7 @@ public class TestFilterInputParser {
         log("" + i + ": " + tokens.get(i).getOriginalInput() + "  " + tokens.get(i).getClass().getName());
       }
       List<FilterElement> elems = new TokenAdapter().execute(tokens);
-      JsonWriter json = new JsonWriter();
       ContainerElem root = new ContainerElem(elems);
-      root.writeJson(json);
-      log(json.toString());
-      log("####");
-      json.clear();
-      FilterElement root2 = new FilterInputParser().parse(input);
-      root2.writeJson(json);
-      log(json.toString());
       log(root.writeTreeInfo());
       
       FilterElement elem = root;
@@ -385,12 +356,8 @@ public class TestFilterInputParser {
       
       List<FilterElement> elems = new TokenAdapter().execute(tokens);
       
-      JsonWriter json = new JsonWriter();
       ContainerElem root = new ContainerElem(elems);
       root.parse(new FilterInputParser());
-      json = new JsonWriter();
-      root.writeJson(json);
-      log(json.toString());
       log(root.writeTreeInfo());
       
       FilterElement elem = root;
@@ -419,11 +386,8 @@ public class TestFilterInputParser {
       
       List<FilterElement> elems = new TokenAdapter().execute(tokens);
       
-      JsonWriter json = new JsonWriter();
       ContainerElem root = new ContainerElem(elems);
       root.parse(new FilterInputParser());
-      root.writeJson(json);
-      log(json.toString());
       log(root.writeTreeInfo());
       
       FilterElement elem = root;
@@ -454,9 +418,6 @@ public class TestFilterInputParser {
       
       ContainerElem root = new ContainerElem(elems);
       root.parse(new FilterInputParser());
-      JsonWriter json = new JsonWriter();
-      root.writeJson(json);
-      log(json.toString());
       log(root.writeTreeInfo());
       
       FilterElement elem = root;
@@ -551,6 +512,13 @@ public class TestFilterInputParser {
   }
   
   
+  private void logParameters(SqlWhereClauseData sql) {
+    for (String str : sql.getParameters()) {
+      log("SQL Parameter: " + str);
+    }
+  }
+  
+  
   private void log(String txt) {
     System.out.println(txt);
   }
@@ -564,6 +532,5 @@ public class TestFilterInputParser {
       e.printStackTrace();
     }
   }
-  
   
 }

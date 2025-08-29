@@ -21,7 +21,6 @@ package xmcp.zeta.storage.generic.filter.elems;
 import java.util.Optional;
 
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
-import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 
 
 public abstract class BinaryLogicalOpElem implements LogicalOperator {
@@ -78,21 +77,6 @@ public abstract class BinaryLogicalOpElem implements LogicalOperator {
       return (LogicalOperand) elem;
     }
     throw new RuntimeException("Error parsing filter expression: Unexpected operand for logical operator");
-  }
-  
-  
-  public void writeJson(JsonWriter json) {
-    json.openObjectAttribute("UnaryOp");
-    json.addAttribute("operator", getOperatorName());
-    json.continueObject();
-    json.openObjectAttribute("operand-1");
-    _operand1.writeJson(json);
-    json.closeObject();
-    json.continueObject();
-    json.openObjectAttribute("operand-2");
-    _operand2.writeJson(json);
-    json.closeObject();
-    json.closeObject();
   }
   
   

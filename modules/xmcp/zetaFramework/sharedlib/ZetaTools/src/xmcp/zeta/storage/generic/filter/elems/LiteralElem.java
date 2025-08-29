@@ -21,7 +21,6 @@ package xmcp.zeta.storage.generic.filter.elems;
 import java.util.List;
 
 import xmcp.zeta.storage.generic.filter.shared.FilterInputConstants;
-import xmcp.zeta.storage.generic.filter.shared.JsonWriter;
 import xmcp.zeta.storage.generic.filter.shared.LiteralTools;
 
 
@@ -42,10 +41,6 @@ public class LiteralElem extends RelationalOperand {
     return true;
   }
   
-  @Override
-  public void writeJson(JsonWriter json) {
-    json.addAttribute("Literal", _content);
-  }
   
   @Override
   public boolean containsWildcards() {
