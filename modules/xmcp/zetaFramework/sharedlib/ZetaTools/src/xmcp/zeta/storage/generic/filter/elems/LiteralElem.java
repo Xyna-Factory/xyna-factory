@@ -18,8 +18,6 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
-import java.util.List;
-
 import xmcp.zeta.storage.generic.filter.shared.FilterInputConstants;
 import xmcp.zeta.storage.generic.filter.shared.LiteralTools;
 

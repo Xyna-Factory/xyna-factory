@@ -27,6 +27,5 @@ public class FilterInputConstants {
   public static Pattern NUMERICAL_PATTERN = Pattern.compile("[0-9.,]+");
   
   public static final String TOKENIZER_DELIM = " *&!|=<>()'\"\t\n";
-  //public static final String SQL_WILDCARD = "%";
   
 }

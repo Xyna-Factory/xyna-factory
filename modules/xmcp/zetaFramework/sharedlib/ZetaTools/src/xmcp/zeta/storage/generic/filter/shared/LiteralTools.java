@@ -34,4 +34,5 @@ public class LiteralTools {
     adapted = adapted.replace("_", "\\_");
     return adapted;
   }
+  
 }

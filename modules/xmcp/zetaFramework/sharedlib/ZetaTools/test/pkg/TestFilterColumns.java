@@ -26,15 +26,10 @@ import java.util.function.Function;
 import org.junit.Test;
 
 import com.gip.xyna.xnwh.persistence.Parameter;
-import com.gip.xyna.xnwh.persistence.xmom.QueryGenerator;
 
-import xmcp.zeta.storage.generic.filter.FilterColumn;
 import xmcp.zeta.storage.generic.filter.FilterColumnConfig;
 import xmcp.zeta.storage.generic.filter.FilterColumnInput;
 import xmcp.zeta.storage.generic.filter.TableFilter;
-import xmcp.zeta.storage.generic.filter.elems.FilterElement;
-import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
-import xmcp.zeta.storage.generic.filter.shared.SqlWhereClauseData;
 
 
 public class TestFilterColumns {
@@ -84,28 +79,6 @@ public class TestFilterColumns {
       assertEquals("Success", param.get(2));
       assertEquals("2800300", param.get(3));
       
-      /*
-      String input = "'20*1' | 210* | '2111' | '12_4%5\\' | 12_4%5\\6 | 34555 ";
-      FilterElement root = new FilterInputParser().parse(input);
-      
-      log(root.writeTreeInfo());
-      
-      SqlWhereClauseData str = new SqlWhereClauseData(new QueryGenerator());
-      root.writeSql("col-1", str);
-      String sql = str.toString();
-      log(sql);
-      logParameters(str);
-      
-      assertEquals("(((((col-1 = ?) OR (col-1 LIKE ?)) OR (col-1 = ?)) OR (col-1 = ?))" +
-                   " OR (col-1 LIKE ?)) OR (col-1 LIKE ?)", sql);
-      assertEquals(6, str.getParameters().size());
-      assertEquals("20*1", str.getParameters().get(0));
-      assertEquals("210%", str.getParameters().get(1));
-      assertEquals("2111", str.getParameters().get(2));
-      assertEquals("12_4%5\\\\", str.getParameters().get(3));
-      assertEquals("%12\\_4\\%5\\\\\\\\6%", str.getParameters().get(4));
-      assertEquals("%34555%", str.getParameters().get(5));
-      */
     } catch (Exception e) {
       e.printStackTrace();
       throw new RuntimeException(e);
@@ -134,4 +107,5 @@ public class TestFilterColumns {
       e.printStackTrace();
     }
   }
+  
 }
