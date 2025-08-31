@@ -20,28 +20,32 @@ package xmcp.zeta.storage.generic.filter.shared;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import com.gip.xyna.xnwh.persistence.xmom.QueryGenerator;
 
 
 public class SqlWhereClauseData {
 
-  private final QueryGenerator queryGenerator;
+  private final Function<String, String> _escape;
   private StringBuilder sql = new StringBuilder();
   private List<String> parameters = new ArrayList<>();
   
   
   public SqlWhereClauseData(QueryGenerator queryGenerator) {
-    this.queryGenerator = queryGenerator;
+    this._escape = queryGenerator.escape;
   }
   
+  public SqlWhereClauseData(Function<String, String> escape) {
+    this._escape = escape;
+  }
 
   public void appendToSql(String str) {
     sql.append(str);
   }
   
   public void appendToSqlEscaped(String str) {
-    sql.append(queryGenerator.escape.apply(str));
+    sql.append(_escape.apply(str));
   }
   
   public void addQueryParameter(String param) {
@@ -54,6 +58,11 @@ public class SqlWhereClauseData {
   
   public List<String> getParameters() {
     return parameters;
+  }
+ 
+  @Override
+  public String toString() {
+    return getSql();
   }
   
 }

@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 import com.gip.xyna.xnwh.persistence.xmom.QueryGenerator;
 
@@ -41,8 +42,13 @@ public class TableFilterBuilder {
   
   
   public TableFilter build(List<FilterColumnInput> input, QueryGenerator queryGenerator) {
+    return build(input, queryGenerator.escape);
+  }
+  
+  
+  public TableFilter build(List<FilterColumnInput> input, Function<String, String> escape) {
     List<FilterColumn> ret = new ArrayList<>();
-    if (input == null) { return buildImpl(ret, queryGenerator); }
+    if (input == null) { return buildImpl(ret, escape); }
     for (FilterColumnInput col : input) {
       Optional<String> path = getTrimmedOrEmpty(col.getPath());
       if (path.isEmpty()) { continue; }
@@ -52,12 +58,12 @@ public class TableFilterBuilder {
       if (conf == null) { continue; }
       ret.add(new FilterColumn(conf, filter.get()));
     }
-    return buildImpl(ret, queryGenerator);
+    return buildImpl(ret, escape);
   }
   
   
-  private TableFilter buildImpl(List<FilterColumn> list, QueryGenerator queryGenerator) {
-    return new TableFilter(list, queryGenerator);
+  private TableFilter buildImpl(List<FilterColumn> list, Function<String, String> escape) {
+    return new TableFilter(list, escape);
   }
   
   

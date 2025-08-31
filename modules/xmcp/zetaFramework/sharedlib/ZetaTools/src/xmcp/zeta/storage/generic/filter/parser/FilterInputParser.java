@@ -22,6 +22,10 @@ import java.util.List;
 
 import xmcp.zeta.storage.generic.filter.elems.ContainerElem;
 import xmcp.zeta.storage.generic.filter.elems.FilterElement;
+import xmcp.zeta.storage.generic.filter.elems.LogicalOperator;
+import xmcp.zeta.storage.generic.filter.elems.RelationalOperand;
+import xmcp.zeta.storage.generic.filter.elems.UnaryRelationalOpElem;
+import xmcp.zeta.storage.generic.filter.elems.relational.EqualsElem;
 import xmcp.zeta.storage.generic.filter.lexer.FilterInputLexer;
 import xmcp.zeta.storage.generic.filter.lexer.Token;
 import xmcp.zeta.storage.generic.filter.parser.phase1.DoubleOperatorAdapter;
@@ -42,7 +46,17 @@ public class FilterInputParser {
   public FilterElement parse(String input) {
     List<Token> tokens = new FilterInputLexer().execute(input);
     tokens = executePhase1(tokens);
-    return executePhase2(tokens);
+    FilterElement ret = executePhase2(tokens);
+    boolean success = false;
+    if (ret instanceof LogicalOperator) {
+      success = true;
+    } else if (ret instanceof UnaryRelationalOpElem) {
+      success = true;
+    }
+    if (!success) {
+      throw new RuntimeException("Could not parse filter expression: " + input);
+    }
+    return ret;
   }
   
   
@@ -63,6 +77,9 @@ public class FilterInputParser {
     FilterElement root;
     if (elems.size() == 1) {
       root = elems.get(0);
+      if (root instanceof RelationalOperand) {
+        root = new EqualsElem((RelationalOperand) root);
+      }
     } else {
       root = new ContainerElem(elems);
     }

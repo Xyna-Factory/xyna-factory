@@ -71,6 +71,26 @@ public class TestFilterInputParser {
   
   
   @Test
+  public void testQuotes2() {
+    try {
+      String input = "'12342'";
+      
+      FilterElement root = new FilterInputParser().parse(input);
+      
+      log(root.writeTreeInfo());
+      assertEquals("Equals", root.getInfoString());
+      FilterElement elem = root.getChild(0).get();
+      assertEquals("12342", elem.getInfoString());
+      
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new RuntimeException(e);
+    }
+  }
+  
+  
+  
+  @Test
   public void testParentheses1() {
     try {
       String input = "!(>1 | <20) & (=10 | !(<5 & >3))";
@@ -170,7 +190,13 @@ public class TestFilterInputParser {
       String sql = str.toString();
       log(sql);
       logParameters(str);
-      assertEquals("(NOT ((col-1 > 1) OR (col-1 < 20))) AND ((col-1 LIKE '%30%') OR (NOT ((col-1 < 5) AND (col-1 > 3))))", sql);
+      assertEquals("(NOT ((col-1 > ?) OR (col-1 < ?))) AND ((col-1 LIKE ?) OR (NOT ((col-1 < ?) AND (col-1 > ?))))", sql);
+      assertEquals(5, str.getParameters().size());
+      assertEquals("1", str.getParameters().get(0));
+      assertEquals("20", str.getParameters().get(1));
+      assertEquals("%30%", str.getParameters().get(2));
+      assertEquals("5", str.getParameters().get(3));
+      assertEquals("3", str.getParameters().get(4));
     } catch (Exception e) {
       e.printStackTrace();
       throw new RuntimeException(e);
@@ -195,7 +221,12 @@ public class TestFilterInputParser {
       String sql = str.toString();
       log(sql);
       logParameters(str);
-      assertEquals("((NOT (col-1 LIKE '%111%')) OR (col-1 LIKE '20%1')) AND ((col-1 LIKE '30%') OR (NOT (col-1 LIKE '%553%')))", sql);
+      assertEquals("((NOT (col-1 LIKE ?)) OR (col-1 LIKE ?)) AND ((col-1 LIKE ?) OR (NOT (col-1 LIKE ?)))", sql);
+      assertEquals(4, str.getParameters().size());
+      assertEquals("%111%", str.getParameters().get(0));
+      assertEquals("20%1", str.getParameters().get(1));
+      assertEquals("30%", str.getParameters().get(2));
+      assertEquals("%553%", str.getParameters().get(3));
     } catch (Exception e) {
       e.printStackTrace();
       throw new RuntimeException(e);
@@ -241,8 +272,15 @@ public class TestFilterInputParser {
       log(sql);
       logParameters(str);
       
-      assertEquals("(((((col-1 = '20*1') OR (col-1 LIKE '210%')) OR (col-1 = '2111')) OR (col-1 = '12_4%5\\\\'))" +
-                   " OR (col-1 LIKE '%12\\_4\\%5\\\\\\\\6%')) OR (col-1 LIKE '%34555%')", sql);
+      assertEquals("(((((col-1 = ?) OR (col-1 LIKE ?)) OR (col-1 = ?)) OR (col-1 = ?))" +
+                   " OR (col-1 LIKE ?)) OR (col-1 LIKE ?)", sql);
+      assertEquals(6, str.getParameters().size());
+      assertEquals("20*1", str.getParameters().get(0));
+      assertEquals("210%", str.getParameters().get(1));
+      assertEquals("2111", str.getParameters().get(2));
+      assertEquals("12_4%5\\\\", str.getParameters().get(3));
+      assertEquals("%12\\_4\\%5\\\\\\\\6%", str.getParameters().get(4));
+      assertEquals("%34555%", str.getParameters().get(5));
     } catch (Exception e) {
       e.printStackTrace();
       throw new RuntimeException(e);
@@ -526,7 +564,7 @@ public class TestFilterInputParser {
   
   public static void main(String[] args) {
     try {
-      new TestFilterInputParser().testWildcardSql();
+      new TestFilterInputParser().testQuotes2();
     }
     catch (Throwable e) {
       e.printStackTrace();

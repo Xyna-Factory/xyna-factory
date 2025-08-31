@@ -20,6 +20,7 @@ package xmcp.zeta.storage.generic.filter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import org.apache.log4j.Logger;
 
@@ -39,14 +40,18 @@ public class TableFilter {
   private static final String SQL_AND = " AND ";
   
   private final List<FilterColumn> _filterColumns;
-  private final QueryGenerator queryGenerator;
+  private final Function<String, String> _escape;
   private String _whereClause = "";
   private List<String> _parameters = new ArrayList<>();
 
   
   public TableFilter(List<FilterColumn> filterColumns, QueryGenerator queryGenerator) {
+    this(filterColumns, queryGenerator.escape);
+  }
+  
+  public TableFilter(List<FilterColumn> filterColumns, Function<String, String> escape) {
     this._filterColumns = filterColumns;
-    this.queryGenerator = queryGenerator;
+    this._escape = escape;
     init();
   }
   
@@ -60,7 +65,7 @@ public class TableFilter {
     for (FilterColumn col : _filterColumns) {
       try {
         FilterElement elem = parser.parse(col.getValue());
-        SqlWhereClauseData sql = new SqlWhereClauseData(queryGenerator);
+        SqlWhereClauseData sql = new SqlWhereClauseData(_escape);
         elem.writeSql(col.getSqlColumnName(), sql);
         if (isfirst) { isfirst = false; }
         else { str.append(SQL_AND); }
@@ -85,6 +90,11 @@ public class TableFilter {
 
   public String getWhereClause() {
     return _whereClause;
+  }
+  
+  
+  public static TableFilterBuilder builder(List<FilterColumnConfig> list) {
+    return new TableFilterBuilder(list);
   }
   
 }
