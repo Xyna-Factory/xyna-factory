@@ -71,7 +71,7 @@ public class TestFilterColumns {
       log(tf.getWhereClause());
       logParameter(param);
       
-      assertEquals(" WHERE (`fileName` LIKE ?) OR (`fileName` LIKE ?) AND `importStatus` = ? AND `uniqueIdentifier` > ?",
+      assertEquals(" WHERE ((`fileName` LIKE ?) OR (`fileName` LIKE ?)) AND (`importStatus` = ?) AND (`uniqueIdentifier` > ?)",
                    tf.getWhereClause());
       assertEquals(4, param.size());
       assertEquals("%16%", param.get(0));

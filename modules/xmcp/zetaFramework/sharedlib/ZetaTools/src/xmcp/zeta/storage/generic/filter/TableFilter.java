@@ -69,7 +69,7 @@ public class TableFilter {
         elem.writeSql(col.getSqlColumnName(), sql);
         if (isfirst) { isfirst = false; }
         else { str.append(SQL_AND); }
-        str.append(sql.getSql());
+        str.append("(").append(sql.getSql()).append(")");
         _parameters.addAll(sql.getParameters());
       } catch (Exception e) {
         _logger.error("Error parsing filter input: " + e.getMessage(), e);
