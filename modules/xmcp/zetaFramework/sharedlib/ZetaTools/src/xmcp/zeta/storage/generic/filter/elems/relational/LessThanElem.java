@@ -18,14 +18,14 @@
 
 package xmcp.zeta.storage.generic.filter.elems.relational;
 
-import xmcp.zeta.storage.generic.filter.elems.RelationalOperand;
+import xmcp.zeta.storage.generic.filter.elems.RelationalOperandElem;
 import xmcp.zeta.storage.generic.filter.elems.UnaryRelationalOpElem;
 import xmcp.zeta.storage.generic.filter.shared.SqlWhereClauseData;
 
 
 public class LessThanElem extends UnaryRelationalOpElem {
 
-  public LessThanElem(RelationalOperand elem) {
+  public LessThanElem(RelationalOperandElem elem) {
     super(elem);
   }
   
@@ -36,7 +36,7 @@ public class LessThanElem extends UnaryRelationalOpElem {
   
   @Override
   public void writeSql(String colname, SqlWhereClauseData sql) {
-    RelationalOperand operand = getOperand();
+    RelationalOperandElem operand = getOperand();
     String content = operand.getContentString();
     if (operand.containsWildcards()) {
       throw new IllegalArgumentException("Syntax error in filter expression: < operator cannot be combined with wildcards");

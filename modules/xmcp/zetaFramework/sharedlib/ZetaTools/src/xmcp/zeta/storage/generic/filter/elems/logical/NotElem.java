@@ -20,16 +20,16 @@ package xmcp.zeta.storage.generic.filter.elems.logical;
 
 import xmcp.zeta.storage.generic.filter.elems.ContainerElem;
 import xmcp.zeta.storage.generic.filter.elems.FilterElement;
-import xmcp.zeta.storage.generic.filter.elems.LogicalOperand;
-import xmcp.zeta.storage.generic.filter.elems.LogicalOperator;
+import xmcp.zeta.storage.generic.filter.elems.LogicalOperandElem;
+import xmcp.zeta.storage.generic.filter.elems.LogicalOperatorElem;
 import xmcp.zeta.storage.generic.filter.elems.UnaryOpElem;
 import xmcp.zeta.storage.generic.filter.shared.SqlWhereClauseData;
 
 
-public class NotElem extends UnaryOpElem<LogicalOperand> implements LogicalOperator {
+public class NotElem extends UnaryOpElem<LogicalOperandElem> implements LogicalOperatorElem {
 
   
-  public NotElem(LogicalOperand operand) {
+  public NotElem(LogicalOperandElem operand) {
     super(operand);
   }
 
@@ -41,10 +41,10 @@ public class NotElem extends UnaryOpElem<LogicalOperand> implements LogicalOpera
 
   
   @Override
-  protected LogicalOperand buildReplacementOperand(ContainerElem container) {
+  protected LogicalOperandElem buildReplacementOperand(ContainerElem container) {
     FilterElement elem = container.verifyAndExtractSingleChild();
-    if (elem instanceof LogicalOperand) {
-      return (LogicalOperand) elem;
+    if (elem instanceof LogicalOperandElem) {
+      return (LogicalOperandElem) elem;
     }
     throw new RuntimeException("Error parsing filter expression: Unexpected operand for logical operator");
   }
@@ -52,7 +52,7 @@ public class NotElem extends UnaryOpElem<LogicalOperand> implements LogicalOpera
   
   @Override
   public void writeSql(String colname, SqlWhereClauseData sql) {
-    LogicalOperand operand = getOperand();
+    LogicalOperandElem operand = getOperand();
     sql.appendToSql("NOT (");
     operand.writeSql(colname, sql);
     sql.appendToSql(")");

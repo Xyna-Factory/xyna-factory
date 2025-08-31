@@ -18,6 +18,6 @@
 
 package xmcp.zeta.storage.generic.filter.elems;
 
-public interface LogicalOperand extends FilterElement {
+public interface LogicalOperandElem extends FilterElement {
 
 }

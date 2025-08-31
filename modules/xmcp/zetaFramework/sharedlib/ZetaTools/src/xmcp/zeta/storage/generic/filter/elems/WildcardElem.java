@@ -21,7 +21,7 @@ package xmcp.zeta.storage.generic.filter.elems;
 import com.gip.xyna.xnwh.selection.parsing.SelectionParser;
 
 
-public class WildcardElem extends RelationalOperand {
+public class WildcardElem extends RelationalOperandElem {
 
   @Override
   public boolean isFinished() {

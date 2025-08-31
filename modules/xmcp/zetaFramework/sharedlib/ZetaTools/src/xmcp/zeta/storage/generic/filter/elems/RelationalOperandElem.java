@@ -24,7 +24,7 @@ import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 import xmcp.zeta.storage.generic.filter.shared.SqlWhereClauseData;
 
 
-public abstract class RelationalOperand implements FilterElement {
+public abstract class RelationalOperandElem implements FilterElement {
 
   public abstract boolean containsWildcards();
   public abstract boolean isNumerical();

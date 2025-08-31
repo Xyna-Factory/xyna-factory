@@ -26,7 +26,7 @@ import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 import xmcp.zeta.storage.generic.filter.shared.SqlWhereClauseData;
 
 
-public class ContainerElem implements LogicalOperand {
+public class ContainerElem implements LogicalOperandElem {
 
   private List<FilterElement> _children = new ArrayList<>();
   

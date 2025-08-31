@@ -19,19 +19,19 @@
 package xmcp.zeta.storage.generic.filter.elems;
 
 
-public abstract class UnaryRelationalOpElem extends UnaryOpElem<RelationalOperand> {
+public abstract class UnaryRelationalOpElem extends UnaryOpElem<RelationalOperandElem> {
   
   
-  public UnaryRelationalOpElem(RelationalOperand operand) {
+  public UnaryRelationalOpElem(RelationalOperandElem operand) {
     super(operand);
   }
   
   
   @Override
-  protected RelationalOperand buildReplacementOperand(ContainerElem container) {
+  protected RelationalOperandElem buildReplacementOperand(ContainerElem container) {
     FilterElement elem = container.verifyAndExtractSingleChild();
-    if (elem instanceof RelationalOperand) {
-      return (RelationalOperand) elem;
+    if (elem instanceof RelationalOperandElem) {
+      return (RelationalOperandElem) elem;
     }
     throw new RuntimeException("Error parsing filter expression: Unexpected operand for relational operator");
   }

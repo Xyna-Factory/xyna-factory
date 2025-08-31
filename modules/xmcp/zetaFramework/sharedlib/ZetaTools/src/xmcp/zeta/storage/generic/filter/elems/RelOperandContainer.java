@@ -24,18 +24,18 @@ import java.util.List;
 import xmcp.zeta.storage.generic.filter.shared.FilterInputConstants;
 
 
-public class RelOperandContainer extends RelationalOperand {
+public class RelOperandContainer extends RelationalOperandElem {
 
-  private List<RelationalOperand> _children = new ArrayList<>();
+  private List<RelationalOperandElem> _children = new ArrayList<>();
   
   
-  public RelOperandContainer(List<RelationalOperand> children) {
+  public RelOperandContainer(List<RelationalOperandElem> children) {
     this._children.addAll(children);
   }
   
   @Override
   public boolean isFinished() {
-    for (RelationalOperand child : _children) {
+    for (RelationalOperandElem child : _children) {
       if (!child.isFinished()) { return false; }
     }
     return true;
@@ -50,7 +50,7 @@ public class RelOperandContainer extends RelationalOperand {
 
   @Override
   public boolean containsWildcards() {
-    for (RelationalOperand child : _children) {
+    for (RelationalOperandElem child : _children) {
       if (child.containsWildcards()) { return true; }
     }
     return false;
@@ -59,7 +59,7 @@ public class RelOperandContainer extends RelationalOperand {
   @Override
   public String getContentString() {
     StringBuilder s = new StringBuilder();
-    for (RelationalOperand child : _children) {
+    for (RelationalOperandElem child : _children) {
       s.append(child.getContentString());
     }
     return s.toString();
@@ -89,7 +89,7 @@ public class RelOperandContainer extends RelationalOperand {
   @Override
   public String getContentAdaptedForSqlEquals() {
     StringBuilder s = new StringBuilder();
-    for (RelationalOperand child : _children) {
+    for (RelationalOperandElem child : _children) {
       s.append(child.getContentAdaptedForSqlEquals());
     }
     return s.toString();
@@ -99,7 +99,7 @@ public class RelOperandContainer extends RelationalOperand {
   @Override
   public String getContentAdaptedForSqlLike() {
     StringBuilder s = new StringBuilder();
-    for (RelationalOperand child : _children) {
+    for (RelationalOperandElem child : _children) {
       s.append(child.getContentAdaptedForSqlLike());
     }
     return s.toString();

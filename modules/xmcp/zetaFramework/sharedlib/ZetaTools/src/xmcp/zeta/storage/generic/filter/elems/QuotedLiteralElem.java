@@ -21,7 +21,7 @@ package xmcp.zeta.storage.generic.filter.elems;
 import xmcp.zeta.storage.generic.filter.shared.LiteralTools;
 
 
-public class QuotedLiteralElem extends RelationalOperand {
+public class QuotedLiteralElem extends RelationalOperandElem {
 
   private final String _content;
   

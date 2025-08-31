@@ -19,14 +19,14 @@
 package xmcp.zeta.storage.generic.filter.elems.logical;
 
 import xmcp.zeta.storage.generic.filter.elems.BinaryLogicalOpElem;
-import xmcp.zeta.storage.generic.filter.elems.LogicalOperand;
-import xmcp.zeta.storage.generic.filter.elems.LogicalOperator;
+import xmcp.zeta.storage.generic.filter.elems.LogicalOperandElem;
+import xmcp.zeta.storage.generic.filter.elems.LogicalOperatorElem;
 import xmcp.zeta.storage.generic.filter.shared.SqlWhereClauseData;
 
 
-public class AndElem extends BinaryLogicalOpElem implements LogicalOperator {
+public class AndElem extends BinaryLogicalOpElem implements LogicalOperatorElem {
 
-  public AndElem(LogicalOperand elem1, LogicalOperand elem2) {
+  public AndElem(LogicalOperandElem elem1, LogicalOperandElem elem2) {
     super(elem1, elem2);
   }
 

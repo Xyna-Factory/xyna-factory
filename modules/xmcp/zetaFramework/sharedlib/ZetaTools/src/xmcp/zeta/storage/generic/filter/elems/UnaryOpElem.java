@@ -23,7 +23,7 @@ import java.util.Optional;
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 
 
-public abstract class UnaryOpElem<T extends FilterElement> implements FilterElement, LogicalOperand {
+public abstract class UnaryOpElem<T extends FilterElement> implements FilterElement, LogicalOperandElem {
 
   private T _operand;
   

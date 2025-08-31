@@ -23,7 +23,7 @@ import java.util.List;
 
 import xmcp.zeta.storage.generic.filter.elems.FilterElement;
 import xmcp.zeta.storage.generic.filter.elems.RelOperandContainer;
-import xmcp.zeta.storage.generic.filter.elems.RelationalOperand;
+import xmcp.zeta.storage.generic.filter.elems.RelationalOperandElem;
 import xmcp.zeta.storage.generic.filter.shared.Replacer;
 
 
@@ -47,10 +47,10 @@ public class RelOperandWrapper {
   
   
   private RelOperandContainer wrapElements(int fromInclusive, int toExclusive, List<FilterElement> list) {
-    List<RelationalOperand> ret = new ArrayList<>();
+    List<RelationalOperandElem> ret = new ArrayList<>();
     List<FilterElement> toWrap = list.subList(fromInclusive, toExclusive);
     for (FilterElement elem : toWrap) {
-      ret.add((RelationalOperand) elem);
+      ret.add((RelationalOperandElem) elem);
     }
     return new RelOperandContainer(ret);
   }
@@ -59,7 +59,7 @@ public class RelOperandWrapper {
   private int getIndexNextMatchStart(List<FilterElement> list, int from) {
     for (int i = from; i < list.size() - 1; i++) {
       FilterElement elem = list.get(i);
-      if (elem instanceof RelationalOperand) {
+      if (elem instanceof RelationalOperandElem) {
         return i;
       }
     }
@@ -71,7 +71,7 @@ public class RelOperandWrapper {
     int matchEnd = from;
     for (int i = from + 1; i < list.size(); i++) {
       FilterElement elem = list.get(i);
-      if (elem instanceof RelationalOperand) {
+      if (elem instanceof RelationalOperandElem) {
         matchEnd = i;
       } else {
         return matchEnd;

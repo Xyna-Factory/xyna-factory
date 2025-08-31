@@ -23,13 +23,13 @@ import java.util.Optional;
 import xmcp.zeta.storage.generic.filter.parser.FilterInputParser;
 
 
-public abstract class BinaryLogicalOpElem implements LogicalOperator {
+public abstract class BinaryLogicalOpElem implements LogicalOperatorElem {
 
-  private LogicalOperand _operand1;
-  private LogicalOperand _operand2;
+  private LogicalOperandElem _operand1;
+  private LogicalOperandElem _operand2;
   
   
-  public BinaryLogicalOpElem(LogicalOperand elem1, LogicalOperand elem2) {
+  public BinaryLogicalOpElem(LogicalOperandElem elem1, LogicalOperandElem elem2) {
     this._operand1 = elem1;
     this._operand2 = elem2;
   }
@@ -38,12 +38,12 @@ public abstract class BinaryLogicalOpElem implements LogicalOperator {
   public abstract String getOperatorName();
   
   
-  public LogicalOperand getOperand1() {
+  public LogicalOperandElem getOperand1() {
     return _operand1;
   }
   
   
-  public LogicalOperand getOperand2() {
+  public LogicalOperandElem getOperand2() {
     return _operand2;
   }
   
@@ -71,10 +71,10 @@ public abstract class BinaryLogicalOpElem implements LogicalOperator {
   }
   
   
-  private LogicalOperand handleContainerOperand(ContainerElem container) {
+  private LogicalOperandElem handleContainerOperand(ContainerElem container) {
     FilterElement elem = container.verifyAndExtractSingleChild();
-    if (elem instanceof LogicalOperand) {
-      return (LogicalOperand) elem;
+    if (elem instanceof LogicalOperandElem) {
+      return (LogicalOperandElem) elem;
     }
     throw new RuntimeException("Error parsing filter expression: Unexpected operand for logical operator");
   }

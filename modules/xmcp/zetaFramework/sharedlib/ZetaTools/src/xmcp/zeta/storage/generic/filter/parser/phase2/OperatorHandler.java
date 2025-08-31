@@ -21,8 +21,8 @@ package xmcp.zeta.storage.generic.filter.parser.phase2;
 import java.util.List;
 
 import xmcp.zeta.storage.generic.filter.elems.FilterElement;
-import xmcp.zeta.storage.generic.filter.elems.LogicalOperand;
-import xmcp.zeta.storage.generic.filter.elems.RelationalOperand;
+import xmcp.zeta.storage.generic.filter.elems.LogicalOperandElem;
+import xmcp.zeta.storage.generic.filter.elems.RelationalOperandElem;
 import xmcp.zeta.storage.generic.filter.elems.TokenOpElem;
 import xmcp.zeta.storage.generic.filter.elems.logical.AndElem;
 import xmcp.zeta.storage.generic.filter.elems.logical.NotElem;
@@ -92,10 +92,10 @@ public class OperatorHandler {
                                                     TokenOpElem elem) {
     Enums.LexedOperatorCategory category = elem.getCategory();
     FilterElement nextElem = list.get(index + 1);
-    if (!(nextElem instanceof RelationalOperand)) {
+    if (!(nextElem instanceof RelationalOperandElem)) {
       throw new IllegalArgumentException("Syntax error in filter expression: Cannot find correct argument for unary operator");
     }
-    RelationalOperand nextCast = (RelationalOperand) nextElem;
+    RelationalOperandElem nextCast = (RelationalOperandElem) nextElem;
     if (category == Enums.LexedOperatorCategory.EQUALS) {
       EqualsElem newElem = new EqualsElem(nextCast);
       return replacer.replaceInList(list, index, index + 2, newElem);
@@ -114,7 +114,7 @@ public class OperatorHandler {
                                                     TokenOpElem elem) {
     Enums.LexedOperatorCategory category = elem.getCategory();
     FilterElement nextElem = list.get(index + 1);
-    LogicalOperand nextCast = castOrWrap(nextElem);
+    LogicalOperandElem nextCast = castOrWrap(nextElem);
     if (category == Enums.LexedOperatorCategory.NOT) {
       NotElem newElem = new NotElem(nextCast);
       return replacer.replaceInList(list, index, index + 2, newElem);
@@ -123,12 +123,12 @@ public class OperatorHandler {
   }
   
   
-  private LogicalOperand castOrWrap(FilterElement elem) {
-    if (elem instanceof LogicalOperand) {
-      return (LogicalOperand) elem;
+  private LogicalOperandElem castOrWrap(FilterElement elem) {
+    if (elem instanceof LogicalOperandElem) {
+      return (LogicalOperandElem) elem;
     }
-    if (elem instanceof RelationalOperand) {
-      return new EqualsElem((RelationalOperand) elem);
+    if (elem instanceof RelationalOperandElem) {
+      return new EqualsElem((RelationalOperandElem) elem);
     }
     throw new IllegalArgumentException("Syntax error in filter expression: Cannot find correct argument for logical operator");
   }
@@ -144,9 +144,9 @@ public class OperatorHandler {
     }
     Enums.LexedOperatorCategory category = elem.getCategory();
     FilterElement prevElem = list.get(index - 1);
-    LogicalOperand prevCast = castOrWrap(prevElem);
+    LogicalOperandElem prevCast = castOrWrap(prevElem);
     FilterElement nextElem = list.get(index + 1);
-    LogicalOperand nextCast = castOrWrap(nextElem);
+    LogicalOperandElem nextCast = castOrWrap(nextElem);
     
     if (category == Enums.LexedOperatorCategory.AND) {
       AndElem newElem = new AndElem(prevCast, nextCast);

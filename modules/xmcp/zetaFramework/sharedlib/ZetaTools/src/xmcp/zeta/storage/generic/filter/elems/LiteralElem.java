@@ -24,7 +24,7 @@ import xmcp.zeta.storage.generic.filter.shared.FilterInputConstants;
 import xmcp.zeta.storage.generic.filter.shared.LiteralTools;
 
 
-public class LiteralElem extends RelationalOperand {
+public class LiteralElem extends RelationalOperandElem {
 
   private final String _content;
   private final boolean _isNumerical;
