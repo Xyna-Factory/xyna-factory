@@ -28,6 +28,7 @@
 
     <import file="./macros.xml" />
 
+    <property name="application.dir" value="${basedir}/../.." />
     <property name="base.lib.dir" value="${basedir}/lib" />
     <property name="local.xml.dir" value="${basedir}/xmldefinition" />
     <property name="target.dir" value="${basedir}/deploy" />
@@ -197,5 +198,16 @@
             <arg value="y" />
         </java>
     </target>
+
+    <!-- ================================= 
+         target: cleanup-lib
+         ================================= -->
+    <target name="cleanup-lib">
+        <delete>
+            <fileset dir="${base.lib.dir}" includes="**/*.jar"/>
+        </delete>
+        <ant antfile="${application.dir}/build.xml" target="prepare-mdm-jar" inheritAll="false" dir="${application.dir}" />
+    </target>
+
 </project>
 
