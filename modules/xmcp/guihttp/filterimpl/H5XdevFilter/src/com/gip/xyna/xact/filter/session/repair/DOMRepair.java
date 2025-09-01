@@ -198,7 +198,7 @@ public class DOMRepair extends DOMandExceptionRepair<DOM> {
   }
 
 
-  //true if ev2 can be used where ev1 is
+  //true if ev1 is more generic than ev2
   private boolean compatibleExceptionVariables(ExceptionVariable ev1, ExceptionVariable ev2) {
     DomOrExceptionGenerationBase doe1 = ev1.getDomOrExceptionObject();
     DomOrExceptionGenerationBase doe2 = ev2.getDomOrExceptionObject();
@@ -207,7 +207,7 @@ public class DOMRepair extends DOMandExceptionRepair<DOM> {
       return false;
     }
 
-    return DomOrExceptionGenerationBase.isSuperClass(doe1, doe2) && DomOrExceptionGenerationBase.isSuperClass(doe2, doe2);
+    return DomOrExceptionGenerationBase.isSuperClass(doe2, doe1);
   }
 
 
