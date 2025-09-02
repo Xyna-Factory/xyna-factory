@@ -144,10 +144,5 @@
             <artifactId>cligenerator</artifactId>
             <scope>compile</scope>
          </dependency>
-         <dependency>
-            <groupId>com.gip.xyna</groupId>
-            <artifactId>ApplicationGenerationImpl</artifactId>
-            <scope>compile</scope>
-         </dependency>
     </dependencies>
 </project>
