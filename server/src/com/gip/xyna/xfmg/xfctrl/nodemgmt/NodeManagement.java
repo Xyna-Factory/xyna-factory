@@ -143,7 +143,6 @@ public class NodeManagement extends FunctionGroup {
       
       String identifier = ownNodeNameProperty.get();
       if( identifier.length() == 0 ) {
-        //identifier = "FactoryNode-" +System.currentTimeMillis();
         identifier = "FactoryNode-" + UUID.randomUUID().toString();
         ownNodeNameProperty.set(identifier);
       }
