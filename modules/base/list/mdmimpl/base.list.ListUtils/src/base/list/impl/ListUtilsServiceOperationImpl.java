@@ -243,7 +243,7 @@ public class ListUtilsServiceOperationImpl implements ExtendedDeploymentTask, Li
 
   /**
    * FIXME in CollectionUtils 
-   * Filtert alle Elemente aus from und tr√§gt diese in to ein
+   * Filtert alle Elemente aus from und tr‰gt diese in to ein
    * @param from
    * @param filter
    * @return
@@ -378,3 +378,4 @@ public class ListUtilsServiceOperationImpl implements ExtendedDeploymentTask, Li
   }
 
 }
+

@@ -38,7 +38,7 @@ public class SetUtils {
                                                    Comparator<? super GeneralXynaObject> comparator) {
 
     //leider O(N*M)! 
-    //TODO bessere Implementierung mÃ¶glich, wenn Comparator nur ein Feld anschaut
+    //TODO bessere Implementierung möglich, wenn Comparator nur ein Feld anschaut
     List<GeneralXynaObject> difference = new ArrayList<>();
 
     for (GeneralXynaObject candidate : minuend) {
@@ -61,7 +61,7 @@ public class SetUtils {
                                                      Comparator<? super GeneralXynaObject> comparator) {
 
     //leider O(N*M)! 
-    //TODO bessere Implementierung mÃ¶glich, wenn Comparator nur ein Feld anschaut
+    //TODO bessere Implementierung möglich, wenn Comparator nur ein Feld anschaut
     List<GeneralXynaObject> intersection = new ArrayList<>();
 
     for (GeneralXynaObject candidate : listA) {
@@ -163,4 +163,5 @@ public class SetUtils {
     return false;
   }
 
+}
 }

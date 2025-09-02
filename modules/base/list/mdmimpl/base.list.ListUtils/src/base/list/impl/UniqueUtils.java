@@ -40,7 +40,7 @@ public class UniqueUtils {
 
   public static List<GeneralXynaObject> unique(List<GeneralXynaObject> list, Comparator<? super GeneralXynaObject> comparator) {
     //leider O(N^2)! 
-    //TODO bessere Implementierung mÃ¶glich, wenn Comparator nur ein Feld anschaut
+    //TODO bessere Implementierung möglich, wenn Comparator nur ein Feld anschaut
 
 
     List<GeneralXynaObject> unique = new ArrayList<>();
@@ -62,7 +62,7 @@ public class UniqueUtils {
 
   public static List<GeneralXynaObject> notUnique(List<GeneralXynaObject> list, Comparator<? super GeneralXynaObject> comparator) {
     //leider O(N^2)! 
-    //TODO bessere Implementierung mÃ¶glich, wenn Comparator nur ein Feld anschaut
+    //TODO bessere Implementierung möglich, wenn Comparator nur ein Feld anschaut
 
     List<GeneralXynaObject> unknown = new ArrayList<>();
     List<GeneralXynaObject> notUnique = new ArrayList<>();
@@ -154,4 +154,5 @@ public class UniqueUtils {
     return pair;
   }
 
+}
 }

@@ -105,9 +105,9 @@ public class TMFExpressionContext {
         char c2 = path.charAt(1);
         /*
          * https://github.com/json-path/JsonPath
-         * JsonPath expressions can use the dot�notation
+         * JsonPath expressions can use the dot notation
          * $.store.book[0].title
-         * or the bracket�notation
+         * or the bracket notation
          * $['store']['book'][0]['title']
          */
         switch (c2) {
