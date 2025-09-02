@@ -16,12 +16,12 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="VelocityTemplateEngine" comment="" factoryVersion="" versionName="1.2.4" xmlVersion="1.1">
+<Application applicationName="VelocityTemplateEngine" comment="" factoryVersion="" versionName="1.2.5" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>
-        <VersionName>1.1.1</VersionName>
+        <VersionName>1.1.2</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

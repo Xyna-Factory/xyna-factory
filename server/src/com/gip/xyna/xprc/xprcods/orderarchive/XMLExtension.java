@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,7 @@ import org.w3c.dom.Element;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.utils.streams.MemoryEfficientStringWriter;
+import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaExceptionBase;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaExceptionContainer;
@@ -501,6 +502,9 @@ public class XMLExtension {
                                                                 // bugs ist so aber glücklich
               }
               createExceptionElement(xei);
+            } else if(xo instanceof Container) {
+              Container container = (Container) xo;
+              writeRaw(container.writeMemberXml(version, cache));
             } else {
               writeRaw(xo.toXml(null, false, version, cache));
             }

@@ -92,7 +92,7 @@ class ExceptionXmlUtils:
       elif exception_info.code in all_exception_info_by_code and len(all_exception_info_by_code[exception_info.code]) > 1:
         processed_exception_info = ProcessedExceptionInfo(exception_info.path, ProcessedExceptionInfoStatusConstants.NOK.value, 'Not unique ' + exception_info.code)
       else:
-        processed_exception_info = ProcessedExceptionInfo(exception_info.path, ProcessedExceptionInfoStatusConstants.OK.value, '')
+        processed_exception_info = ProcessedExceptionInfo(exception_info.path, ProcessedExceptionInfoStatusConstants.OK.value, exception_info.code if not exception_info.is_abstract else '<abstract>')
       if processed_exception_info:
         processed_exception_info_list.append(processed_exception_info)
     return processed_exception_info_list

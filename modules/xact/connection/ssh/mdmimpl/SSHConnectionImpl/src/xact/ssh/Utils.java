@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,18 @@ package xact.ssh;
 
 
 
+import java.util.Map;
+import java.util.function.Supplier;
+
+import com.hierynomus.sshj.key.KeyAlgorithm;
+import com.hierynomus.sshj.transport.cipher.BlockCiphers;
+import com.hierynomus.sshj.transport.cipher.GcmCiphers;
+import com.hierynomus.sshj.transport.cipher.StreamCiphers;
+import com.hierynomus.sshj.transport.mac.Macs;
+
+import net.schmizz.sshj.common.Factory.Named;
+import net.schmizz.sshj.transport.cipher.Cipher;
+import net.schmizz.sshj.transport.mac.MAC;
 import xact.connection.SSHException;
 
 
@@ -28,8 +40,8 @@ public final class Utils {
 
   private Utils() {
   }
-
-
+  
+  
   public static SSHException toSshException(net.schmizz.sshj.common.SSHException sshjException) {
     switch (sshjException.getDisconnectReason()) {
       case CONNECTION_LOST :

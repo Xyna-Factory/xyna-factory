@@ -24,16 +24,22 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.log4j.Logger;
 
+import com.gip.xyna.CentralFactoryLogging;
+import com.gip.xyna.FileUtils;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 
+import xmcp.gitintegration.RepositoryManagement;
 import xmcp.gitintegration.WorkspaceContent;
 import xmcp.gitintegration.WorkspaceContentItem;
 import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
 import xmcp.gitintegration.impl.xml.WorkspaceContentXmlConverter;
+import xmcp.gitintegration.repository.RepositoryConnection;
+import xprc.xpce.Workspace;
 
 
 
@@ -42,6 +48,7 @@ public class WorkspaceContentCreator {
   public static final String WORKSPACE_XML_FILENAME = "workspace.xml";
   public static final String WORKSPACE_XML_SPLITNAME = "config";
 
+  private static final Logger logger = CentralFactoryLogging.getLogger(WorkspaceContentCreator.class);
 
   public File determineWorkspaceXMLFile(String workspaceName) {
     Long revision = getRevision(workspaceName);
@@ -58,15 +65,20 @@ public class WorkspaceContentCreator {
 
 
   public WorkspaceContent createWorkspaceContentForWorkspace(String workspaceName) {
-    WorkspaceContent result = new WorkspaceContent();
+    WorkspaceContent.Builder result = new WorkspaceContent.Builder();
     WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
     Long revision = getRevision(workspaceName);
     List<WorkspaceContentItem> items = portal.createItems(revision);
 
-    result.setWorkspaceName(workspaceName);
-    result.setWorkspaceContentItems(items);
+    result.workspaceName(workspaceName);
+    result.workspaceContentItems(items);
 
-    return result;
+    RepositoryConnection repoCon = RepositoryManagement.getRepositoryConnection(new Workspace(workspaceName));
+    if(repoCon != null) {
+      result.split(repoCon.getSplittype());
+    }
+
+    return result.instance();
   }
 
 
@@ -97,17 +109,34 @@ public class WorkspaceContentCreator {
 
   private WorkspaceContent createWorkspaceContentFromDirectory(File file) throws IOException {
     WorkspaceContentXmlConverter converter = new WorkspaceContentXmlConverter();
-    WorkspaceContent result = new WorkspaceContent();
-    for (File f : file.listFiles()) {
+    WorkspaceContent.Builder result = new WorkspaceContent.Builder();
+    List<File> files = new ArrayList<>();
+    FileUtils.findFilesRecursively(file, files, this::xmlFileFilter);
+    for(File f : files) {
+      processFile(f, result, converter);
+    }
+    return result.instance();
+  }
+  
+  private boolean xmlFileFilter(File path, String name) {
+    return new File(path, name).isDirectory() || name.endsWith(".xml");
+  }
+  
+  private void processFile(File f, WorkspaceContent.Builder result, WorkspaceContentXmlConverter converter) {
+    try {
       String input = Files.readString(f.toPath());
       if(f.getName().equals(WORKSPACE_XML_FILENAME)) {
         WorkspaceContent c = converter.convertFromXml(input);
-        result.setWorkspaceName(c.getWorkspaceName());
-        continue;
+        result.workspaceName(c.getWorkspaceName());
+        result.split(c.getSplit());
+      } else {
+        converter.addToWorkspaceContent(input, result.instance());
       }
-      converter.addToWorkspaceContent(input, result);
+    } catch(Exception e) {
+      if (logger.isWarnEnabled()) {
+        logger.warn("could not parse workspace content file: " + f, e);
+      }
     }
-    return result;
   }
 
 
@@ -122,17 +151,22 @@ public class WorkspaceContentCreator {
     WorkspaceContentXmlConverter converter = new WorkspaceContentXmlConverter();
     List<WorkspaceContentItem> items = new ArrayList<>();
     String name = null;
+    String split = null;
     for (String input : list) {
       WorkspaceContent tmp = converter.convertFromXml(input);
       if (tmp.getWorkspaceName() != null) {
         name = tmp.getWorkspaceName();
       }
+      if(tmp.getSplit() != null) {
+        split = tmp.getSplit();
+      }
       items.addAll(tmp.getWorkspaceContentItems());
     }
-    WorkspaceContent result = new WorkspaceContent();
-    result.setWorkspaceName(name);
-    result.setWorkspaceContentItems(items);
-    return result;
+    WorkspaceContent.Builder result = new WorkspaceContent.Builder();
+    result.workspaceName(name);
+    result.workspaceContentItems(items);
+    result.split(split);
+    return result.instance();
   }
   
 }

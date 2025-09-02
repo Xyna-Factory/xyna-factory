@@ -86,11 +86,10 @@ public class WorkspaceObjectManagementServiceOperationImpl implements ExtendedDe
 
 
   @Override
-  public WorkspaceContentDifferences compareWorkspaceContent(WorkspaceContent workspaceContent3, WorkspaceContent workspaceContent4) {
+  public WorkspaceContentDifferences compareWorkspaceContent(WorkspaceContent from, WorkspaceContent to) {
+    //  from => XML;  to => current configuration
     WorkspaceContentComparator comparator = new WorkspaceContentComparator();
-    // first parameter: from => XML
-    // second parameter: to => current configuration
-    WorkspaceContentDifferences result = comparator.compareWorkspaceContent(workspaceContent3, workspaceContent4, true);
+    WorkspaceContentDifferences result = comparator.compareWorkspaceContent(from, to, true);
     return result;
   }
 

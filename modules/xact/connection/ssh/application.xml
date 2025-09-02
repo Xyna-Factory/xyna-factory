@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="SSH" comment="" factoryVersion="" versionName="2.0.31" xmlVersion="1.1">
+<Application applicationName="SSH" comment="" factoryVersion="" versionName="2.0.34" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">SSH Connections (NETCONF, Shell), Management, SFTP, SharedLibs, SFTPTrigger</Description>
     <Description Lang="EN">SSH connections (NETCONF, Shell), management, SFTP, sharedLibs, SFTPTrigger</Description>
@@ -24,7 +24,7 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Connection</ApplicationName>
-        <VersionName>1.0.13</VersionName>
+        <VersionName>1.0.14</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

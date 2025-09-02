@@ -26,13 +26,13 @@
       <Data ID="6114" IsList="true" Label="Key Value - workspace import" ReferenceName="KeyValue" ReferencePath="base" VariableName="keyValue6114"/>
       <Data ID="6203" Label="Workspace Name" ReferenceName="Text" ReferencePath="base" VariableName="text6203"/>
     </Output>
-    <ServiceReference ID="6366" Label="Oas Gui Services" ReferenceName="OasGuiServices.OasGuiServices" ReferencePath="xmcp.oas.fman">
-      <Source RefID="6365"/>
-      <Target RefID="6365"/>
-    </ServiceReference>
     <ServiceReference ID="1412" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="1411"/>
       <Target RefID="1411"/>
+    </ServiceReference>
+    <ServiceReference ID="6395" Label="Oas Gui Services" ReferenceName="OasGuiServices.OasGuiServices" ReferencePath="xmcp.oas.fman">
+      <Source RefID="6394"/>
+      <Target RefID="6394"/>
     </ServiceReference>
     <Mappings ID="964" Label="Mapping">
       <Output>
@@ -114,13 +114,13 @@
       <Mapping>%0%.dataPath="%1%.id"</Mapping>
       <Mapping>%0%.label="Upload Spec"</Mapping>
     </Mappings>
-    <Function ID="6365" Label="Create Workspace Imput Download Data">
-      <Source RefID="6366"/>
-      <Target RefID="6366"/>
-      <Target RefID="6368"/>
-      <Invoke Operation="createWorkspaceImputDownloadData" ServiceID="6366"/>
-      <Receive ServiceID="6366">
-        <Target RefID="6368"/>
+    <Function ID="6394" Label="Create Workspace Input Download Data">
+      <Source RefID="6395"/>
+      <Target RefID="6395"/>
+      <Target RefID="6397"/>
+      <Invoke Operation="createWorkspaceInputDownloadData" ServiceID="6395"/>
+      <Receive ServiceID="6395">
+        <Target RefID="6397"/>
       </Receive>
     </Function>
     <Mappings ID="6282" Label="Mapping">
@@ -224,15 +224,15 @@
       <Source RefID="5758"/>
     </Data>
     <Data ID="6299" Label="Workspace Name" ReferenceName="Text" ReferencePath="base" VariableName="text6299"/>
-    <Data ID="6368" IsList="true" Label="Key Value" ReferenceName="KeyValue" ReferencePath="base" VariableName="keyValue6368">
-      <Source RefID="6365"/>
+    <Data ID="6397" IsList="true" Label="Key Value" ReferenceName="KeyValue" ReferencePath="base" VariableName="keyValue6397">
+      <Source RefID="6394"/>
     </Data>
     <Assign ID="1">
       <Source RefID="662"/>
       <Source RefID="1119"/>
       <Source RefID="1389"/>
       <Source RefID="1302"/>
-      <Source RefID="6368"/>
+      <Source RefID="6397"/>
       <Source RefID="6299"/>
       <Target RefID="68"/>
       <Target RefID="903"/>
@@ -269,7 +269,7 @@
         <Target RefID="1264"/>
       </Copy>
       <Copy>
-        <Source RefID="6368">
+        <Source RefID="6397">
           <Meta>
             <LinkType>UserConnected</LinkType>
           </Meta>
