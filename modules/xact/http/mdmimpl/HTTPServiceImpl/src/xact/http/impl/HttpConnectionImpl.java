@@ -23,10 +23,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
@@ -39,6 +37,7 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.HttpClientContext;
@@ -94,6 +93,7 @@ public class HttpConnectionImpl {
   private HttpHost host;
   private Authentication authentication;
   private AbsRelTime timeout;
+  private int retries;
 
   private HttpClientContext context;
   private CloseableHttpClient httpClient;
@@ -119,6 +119,7 @@ public class HttpConnectionImpl {
       userAgent = HTTPServiceServiceOperationImpl.DEFAULT_USER_AGENT.get();
     }
     host = host(connectParameter);
+    retries = connectParameter.getRetries();
   }
 
   private HttpHost host(ConnectParameter connectParameter) {
@@ -160,6 +161,7 @@ public class HttpConnectionImpl {
         .setUserAgent(userAgent)
         .setRoutePlanner( createHttpRoutePlanner(new HttpRoute(host,null,https)) )
         .setDefaultCredentialsProvider( createCredentialsProvider() )
+        .setRetryHandler(new CountBasedRetryHandler(retries))
         .build();
 
   }
@@ -264,15 +266,25 @@ public class HttpConnectionImpl {
       // Request new connection. This can be a long process
       ConnectionRequest connRequest = conManager.requestConnection(route, null);
       HttpClientConnection connection = connRequest.get(timeout.getTime(), TimeUnit.MILLISECONDS);
-
+      int usedRetries = 0;
+      IOException exception = null;
+      boolean success = false;
       if (!connection.isOpen()) {
-        try {
-          // establish connection based on its route info
-          conManager.connect(connection, route, (int)timeout.getTime(), context);
-          // and mark it as route complete
-          conManager.routeComplete(connection, route, context);
-        } catch( IOException e) {
-          throw new ConnectException(e);
+        do {
+          try {
+            // establish connection based on its route info
+            conManager.connect(connection, route, (int) timeout.getTime(), context);
+            // and mark it as route complete
+            conManager.routeComplete(connection, route, context);
+            success = true;
+          } catch (IOException e) {
+            usedRetries++;
+            exception = e;
+          }
+        } while (!success && usedRetries < retries);
+        
+        if(!success) {
+          throw new ConnectException(exception);
         }
       }
 
@@ -326,4 +338,19 @@ public class HttpConnectionImpl {
     return null;
   }
 
+  
+  private static class CountBasedRetryHandler implements HttpRequestRetryHandler {
+
+    private final int retries;
+    
+    public CountBasedRetryHandler(int retries) {
+      this.retries = retries;
+    }
+
+    @Override
+    public boolean retryRequest(IOException arg0, int executionCount, HttpContext arg2) {
+      return executionCount < retries;
+    }
+
+  }
 }

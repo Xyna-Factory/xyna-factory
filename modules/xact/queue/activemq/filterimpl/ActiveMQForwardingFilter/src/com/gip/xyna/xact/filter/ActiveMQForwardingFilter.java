@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,12 +43,20 @@ import javax.jms.TextMessage;
 
 import org.apache.log4j.Logger;
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xfmg.xods.configuration.DocumentationLanguage;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyBoolean;
 import com.gip.xyna.xdev.xfractmod.xmdm.EventListener;
 
 public class ActiveMQForwardingFilter extends ConnectionFilter<ActiveMQTriggerConnection> {
 
+  private static final XynaPropertyBoolean useLegacyOrdertype 
+    = new XynaPropertyBoolean("xact.activemq.filter.forwarding.useLegacyOrdertype", true)
+      .setDefaultDocumentation(DocumentationLanguage.EN,
+                               "User ordertypename with external queue name and prefix xact.activemq.filter.forwarding.");
+
   private static Logger logger = CentralFactoryLogging.getLogger(ActiveMQForwardingFilter.class);
-  private static String ORDERTYPE_PREFIX = "xact.activemq.filter.forwarding.";
+  private static String LEGACY_ORDERTYPE_PREFIX = "xact.activemq.filter.forwarding.";
+  private static String ORDERTYPE_PREFIX = "xact.activemq.filter.forwarding.ProcessActiveMQMessage.queue=";
 
   /**
    * Analyzes TriggerConnection and creates XynaOrder if it accepts the connection.
@@ -65,7 +73,12 @@ public class ActiveMQForwardingFilter extends ConnectionFilter<ActiveMQTriggerCo
    *         Results in onError() being called by Xyna Processing.
    */
   public FilterResponse createXynaOrder(ActiveMQTriggerConnection tc) throws XynaException {
-    logger.info("Received Active MQ message on queue " + tc.getMessage());
+    if (logger.isDebugEnabled()) {
+      logger.debug("Received Active MQ message on queue " + tc.getXynaQueueMgmtQueueName() + ", " + tc.getExternalQueueName());
+    }
+    if (logger.isTraceEnabled()) {
+      logger.trace("Message: " + tc.getMessage());
+    }
 
     XynaOrder xynaOrder = null;
     try {
@@ -98,12 +111,19 @@ public class ActiveMQForwardingFilter extends ConnectionFilter<ActiveMQTriggerCo
       messageProperties.setProperties( getProperties(tc.getMessage()) );
       queueMessage.setMessageProperties(messageProperties);
       
+      String orderTypeToBeStarted = "";
+      if (useLegacyOrdertype.get()) {
+        String queueNameStr = tc.getExternalQueueName();
+        String adjustedQueueName = queueNameStr.substring(0, 1).toUpperCase() + queueNameStr.substring(1);
+        orderTypeToBeStarted = LEGACY_ORDERTYPE_PREFIX + adjustedQueueName;
+      } else {
+        String queueNameStr = tc.getXynaQueueMgmtQueueName();
+        orderTypeToBeStarted = ORDERTYPE_PREFIX + queueNameStr;
+      }
 
-      String queueNameStr = tc.getXynaQueueMgmtQueueName();
-      String adjustedQueueName = queueNameStr.substring(0, 1).toUpperCase() + queueNameStr.substring(1);
-      String orderTypeToBeStarted = ORDERTYPE_PREFIX + adjustedQueueName;
-
-      logger.info("Going to start Order Type " + orderTypeToBeStarted);
+      if (logger.isDebugEnabled()) {
+        logger.debug("Going to start Order Type " + orderTypeToBeStarted);
+      }
       DestinationKey destKey = new DestinationKey(orderTypeToBeStarted);
       xynaOrder = new XynaOrder(destKey, queueMessage);
       return FilterResponse.responsible(xynaOrder);

@@ -39,9 +39,9 @@
       <Type>boolean</Type>
     </Meta>
   </Data>
-  <Data Label="Splitted" VariableName="splitted">
+  <Data Label="Splittype" VariableName="splittype">
     <Meta>
-      <Type>boolean</Type>
+      <Type>String</Type>
     </Meta>
   </Data>
 </DataType>

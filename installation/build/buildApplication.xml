@@ -439,5 +439,10 @@
 
     </target>
 
+    <target name="cleanup-lib">
+        <delete>
+             <fileset dir="${basedir}" includes="**/*.jar"/>
+        </delete>
+    </target>
 
 </project>

@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="Connection" factoryVersion="" versionName="1.0.13" xmlVersion="1.1">
+<Application applicationName="Connection" factoryVersion="" versionName="1.0.14" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Basis für die Connection-Typen SSH und Telnet</Description>
     <Description Lang="EN">Base for connections types SSH and Telnet</Description>
@@ -24,7 +24,7 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>
-        <VersionName>1.1.1</VersionName>
+        <VersionName>1.1.2</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

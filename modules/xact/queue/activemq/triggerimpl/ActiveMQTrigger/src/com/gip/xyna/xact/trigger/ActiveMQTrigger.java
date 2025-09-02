@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,7 +87,7 @@ public class ActiveMQTrigger extends EventListener<ActiveMQTriggerConnection, Ac
       Destination destination = session.createQueue(startParameter.getQueueName());
       consumer = session.createConsumer(destination);
       if (logger.isInfoEnabled()) {
-        logger.info("connected to queue " + startParameter.getQueueName() + " on " + url);
+        logger.info("connected to queue " + startParameter.getXynaQueueName() + ", " + startParameter.getQueueName() + " on " + url);
       }
       running = true;
     } catch (JMSException e) {
@@ -104,7 +104,7 @@ public class ActiveMQTrigger extends EventListener<ActiveMQTriggerConnection, Ac
           if (logger.isTraceEnabled()) {
             traceMessage(msg);
           }
-          return new ActiveMQTriggerConnection(msg, startParameter.getQueueName());
+          return new ActiveMQTriggerConnection(msg, startParameter.getXynaQueueName(), startParameter.getQueueName());
         }
       } catch (JMSException e) {
         if (running) {
@@ -113,14 +113,15 @@ public class ActiveMQTrigger extends EventListener<ActiveMQTriggerConnection, Ac
       }
     }
     if (logger.isInfoEnabled()) {
-      logger.info("closing down connection to " + startParameter.getQueueName());
+      logger.info("closing down connection to " + startParameter.getXynaQueueName() + ", " + startParameter.getQueueName());
     }
     try {
       session.close();
       con.close();
     } catch (JMSException e) {
-      logger.error("error closing connection to " + startParameter.getHostname() + ":" + startParameter.getPort() + "/"
-                      + startParameter.getQueueName(), e);
+      logger.error("error closing connection to " + startParameter.getXynaQueueName() + ", "
+          + startParameter.getHostname() + ":" + startParameter.getPort() + "/"
+          + startParameter.getQueueName(), e);
     }
     return null;
   }

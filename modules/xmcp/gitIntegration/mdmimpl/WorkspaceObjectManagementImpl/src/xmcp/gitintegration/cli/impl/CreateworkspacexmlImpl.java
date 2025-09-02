@@ -39,7 +39,7 @@ public class CreateworkspacexmlImpl extends XynaCommandImplementation<Creatework
     } else {
       WorkspaceXmlCreationConfig conf = new WorkspaceXmlCreationConfig();
       conf.unversionedSetWorkspaceName(payload.getWorkspaceName());
-      conf.unversionedSetSplitResult(payload.getSplitResult());
+      conf.unversionedSetSplitResult(payload.getSplit());
       conf.unversionedSetForce(payload.getForce());
       tools.execute(conf);
     }
