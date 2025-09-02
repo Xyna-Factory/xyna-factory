@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Add Constraint Definition" TypeName="AddConstraintDefinition" TypePath="xfmg.tmf.constraint.uidefinition" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Add Constraint Definition" Name="AddConstraintDefinition">
+    <Input>
+      <Data ID="10" Label="Context" ReferenceName="Context" ReferencePath="xmcp.yggdrasil.plugin" VariableName="context10"/>
+    </Input>
+    <Output>
+      <Data ID="43" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition43"/>
+      <Data ID="1607" Label="TMF Constraint" ReferenceName="TMFConstraint" ReferencePath="xfmg.tmf.constraint.data_model" VariableName="tMFConstraint1607"/>
+      <Data ID="1424" Label="Context" ReferenceName="Context" ReferencePath="xmcp.yggdrasil.plugin" VariableName="context1424"/>
+    </Output>
+    <ServiceReference ID="95" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="94"/>
+      <Target RefID="94"/>
+    </ServiceReference>
+    <Function ID="94" Label="get Own RuntimeContext">
+      <Source RefID="95"/>
+      <Target RefID="95"/>
+      <Target RefID="93"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="95"/>
+      <Receive ServiceID="95">
+        <Target RefID="93"/>
+      </Receive>
+    </Function>
+    <Mappings ID="114" Label="Button to Add new Constraint">
+      <Input>
+        <Data ID="116" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext116"/>
+        <Source RefID="93"/>
+      </Input>
+      <Output>
+        <Data ID="117" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition117"/>
+        <Target RefID="113"/>
+      </Output>
+      <Mapping>%1%.label="Add"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.serviceFQN="xfmg.tmf.constraint.AddConstraint"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="tmf_new_constraint_area_clean"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["1"].eventId="tmf_constraints_table_update"</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
+    </Mappings>
+    <Mappings ID="135" Label="Details Footer">
+      <Input>
+        <Data ID="137" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition137"/>
+        <Source RefID="113"/>
+      </Input>
+      <Output>
+        <Data ID="138" Label="Panel Box Definition" ReferenceName="PanelBoxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="panelBoxDefinition138"/>
+        <Target RefID="134"/>
+      </Output>
+      <Mapping>%1%.leftArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%0%</Mapping>
+    </Mappings>
+    <Mappings ID="156" Label="Build Tree Panel">
+      <Output>
+        <Data ID="157" Label="Tree Panel Definition" ReferenceName="TreePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="treePanelDefinition157"/>
+        <Target RefID="155"/>
+      </Output>
+      <Mapping>%0%.dataPath="%0%"</Mapping>
+      <Mapping>%0%.label="Constraint"</Mapping>
+    </Mappings>
+    <Mappings ID="175" Label="Build Detail Area">
+      <Input>
+        <Data ID="178" Label="Tree Panel Definition" ReferenceName="TreePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="treePanelDefinition178"/>
+        <Source RefID="155"/>
+      </Input>
+      <Input>
+        <Data ID="180" Label="Panel Box Definition" ReferenceName="PanelBoxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="panelBoxDefinition180"/>
+        <Source RefID="134"/>
+      </Input>
+      <Output>
+        <Data ID="181" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition181"/>
+        <Target RefID="174"/>
+      </Output>
+      <Mapping>%2%.dataPath="%0%"</Mapping>
+      <Mapping>%2%.label="Add New Constraint"</Mapping>
+      <Mapping>%2%.closable="true"</Mapping>
+      <Mapping>%2%.children["0"]#cast("xmcp.forms.datatypes.TreePanelDefinition")=%0%</Mapping>
+      <Mapping>%2%.footer=%1%</Mapping>
+      <Mapping>%2%.triggerClearDataChangeState.eventId="tmf_new_constraint_area_clean"</Mapping>
+    </Mappings>
+    <Mappings ID="760" Label="New Empty TMF Constraint">
+      <Input>
+        <Data ID="904" Label="TMF Constraint" ReferenceName="TMFConstraint" ReferencePath="xfmg.tmf.constraint.data_model" VariableName="tMFConstraint904">
+          <Source RefID="760"/>
+        </Data>
+        <Source RefID="921">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="1509" Label="TMF Constraint" ReferenceName="TMFConstraint" ReferencePath="xfmg.tmf.constraint.data_model" VariableName="tMFConstraint1509">
+          <Source RefID="760"/>
+        </Data>
+        <Target RefID="1510"/>
+      </Output>
+      <Mapping>%1%=%0%</Mapping>
+    </Mappings>
+    <Data ID="93" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext93"/>
+    <Data ID="113" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition113"/>
+    <Data ID="134" Label="Panel Box Definition" ReferenceName="PanelBoxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="panelBoxDefinition134"/>
+    <Data ID="155" Label="Tree Panel Definition" ReferenceName="TreePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="treePanelDefinition155"/>
+    <Data ID="174" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition174"/>
+    <Data ID="921" Label="TMF Constraint" ReferenceName="TMFConstraint" ReferencePath="xfmg.tmf.constraint.data_model" VariableName="const_TMFConstraint921">
+      <Data ReferenceName="Condition" ReferencePath="xfmg.tmf.constraint.data_model" VariableName="condition"/>
+      <Data IsList="true" ReferenceName="Context" ReferencePath="xfmg.tmf.constraint.data_model" VariableName="context"/>
+      <Data ReferenceName="Rule" ReferencePath="xfmg.tmf.constraint.data_model" VariableName="rule"/>
+      <Data IsList="true" VariableName="dependencies">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="1510" Label="TMF Constraint" ReferenceName="TMFConstraint" ReferencePath="xfmg.tmf.constraint.data_model" VariableName="tMFConstraint1510">
+      <Source RefID="760"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="174"/>
+      <Source RefID="1510"/>
+      <Source RefID="10"/>
+      <Target RefID="43"/>
+      <Target RefID="1607"/>
+      <Target RefID="1424"/>
+      <Copy>
+        <Source RefID="174">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="43"/>
+      </Copy>
+      <Copy>
+        <Source RefID="1510"/>
+        <Target RefID="1607"/>
+      </Copy>
+      <Copy>
+        <Source RefID="10"/>
+        <Target RefID="1424"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

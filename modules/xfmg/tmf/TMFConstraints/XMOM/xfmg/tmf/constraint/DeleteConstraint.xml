@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="DeleteConstraint" TypeName="DeleteConstraint" TypePath="xfmg.tmf.constraint" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="DeleteConstraint" Name="DeleteConstraint">
+    <Input>
+      <Data ID="14" Label="TMF Constraint Table Data" ReferenceName="TMFConstraintTableData" ReferencePath="xfmg.tmf.constraint" VariableName="tMFConstraintTableData14"/>
+    </Input>
+    <Output/>
+    <ServiceReference ID="28" Label="ConstraintMgmt" ReferenceName="ConstraintMgmt.ConstraintMgmt" ReferencePath="xfmg.tmf.constraint">
+      <Source RefID="27"/>
+      <Target RefID="27"/>
+    </ServiceReference>
+    <Function ID="27" Label="Delete Constraint">
+      <Source RefID="28"/>
+      <Source RefID="14"/>
+      <Target RefID="28"/>
+      <Invoke Operation="deleteConstraint" ServiceID="28">
+        <Source RefID="14"/>
+      </Invoke>
+      <Receive ServiceID="28"/>
+    </Function>
+    <Assign ID="1"/>
+  </Operation>
+</Service>

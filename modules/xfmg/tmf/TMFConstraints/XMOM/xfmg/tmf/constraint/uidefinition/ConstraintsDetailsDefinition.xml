@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Constraints Details Definition" TypeName="ConstraintsDetailsDefinition" TypePath="xfmg.tmf.constraint.uidefinition" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Constraints Details Definition" Name="ConstraintsDetailsDefinition">
+    <Input>
+      <Data ID="6559" Label="TMF Constraint Table Data" ReferenceName="TMFConstraintTableData" ReferencePath="xfmg.tmf.constraint" VariableName="tMFConstraintTableData6559"/>
+    </Input>
+    <Output>
+      <Data ID="97" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition97"/>
+      <Data ID="6580" Label="TMF Constraint Table Data" ReferenceName="TMFConstraintTableData" ReferencePath="xfmg.tmf.constraint" VariableName="tMFConstraintTableData6580"/>
+    </Output>
+    <ServiceReference ID="684" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="683"/>
+      <Target RefID="683"/>
+    </ServiceReference>
+    <Function ID="683" Label="get Own RuntimeContext">
+      <Source RefID="684"/>
+      <Target RefID="684"/>
+      <Target RefID="686"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="684"/>
+      <Receive ServiceID="684">
+        <Target RefID="686"/>
+      </Receive>
+    </Function>
+    <Mappings ID="441" Label="Button to apply changes">
+      <Input>
+        <Data ID="703" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext703">
+          <Source RefID="441"/>
+        </Data>
+        <Source RefID="686"/>
+      </Input>
+      <Output>
+        <Data ID="624" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition624">
+          <Source RefID="441"/>
+        </Data>
+        <Target RefID="625"/>
+      </Output>
+      <Mapping>%1%.dataPath="%0%"</Mapping>
+      <Mapping>%1%.label="Apply Changes"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.serviceFQN="xfmg.tmf.constraint.SaveConstraint"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="tmf_constraints_details_area_clean"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["1"].eventId="tmf_constraints_table_update"</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
+    </Mappings>
+    <Mappings ID="6773" Label="Button to delete Constraint">
+      <Input>
+        <Data ID="6774" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext6774"/>
+        <Source RefID="686"/>
+      </Input>
+      <Output>
+        <Data ID="6775" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition6775"/>
+        <Target RefID="6776"/>
+      </Output>
+      <Mapping>%1%.dataPath="%0%"</Mapping>
+      <Mapping>%1%.label="Delete Constraint"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.serviceFQN="xfmg.tmf.constraint.DeleteConstraint"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="tmf_constraints_details_area_close"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["1"].eventId="tmf_constraints_table_update"</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
+    </Mappings>
+    <Mappings ID="5065" Label="Details Footer">
+      <Input>
+        <Data ID="5132" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition5132">
+          <Source RefID="5065"/>
+        </Data>
+        <Source RefID="625">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="6857" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition6857">
+          <Source RefID="5065"/>
+        </Data>
+        <Source RefID="6776">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="5098" Label="Panel Box Definition" ReferenceName="PanelBoxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="panelBoxDefinition5098">
+          <Source RefID="5065"/>
+        </Data>
+        <Target RefID="5099"/>
+      </Output>
+      <Mapping>%2%.leftArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%0%</Mapping>
+      <Mapping>%2%.rightArea.children["0"]=%1%</Mapping>
+    </Mappings>
+    <Mappings ID="5522" Label="Build Tree Panel">
+      <Output>
+        <Data ID="5555" Label="Tree Panel Definition" ReferenceName="TreePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="treePanelDefinition5555">
+          <Source RefID="5522"/>
+        </Data>
+        <Target RefID="5556"/>
+      </Output>
+      <Mapping>%0%.dataPath="%0%.constraint"</Mapping>
+      <Mapping>%0%.label="Constraint"</Mapping>
+    </Mappings>
+    <Mappings ID="5422" Label="Build Detail Area">
+      <Input>
+        <Data ID="5845" Label="Tree Panel Definition" ReferenceName="TreePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="treePanelDefinition5845">
+          <Source RefID="5422"/>
+        </Data>
+        <Source RefID="5556"/>
+      </Input>
+      <Input>
+        <Data ID="6182" Label="Panel Box Definition" ReferenceName="PanelBoxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="panelBoxDefinition6182">
+          <Source RefID="5422"/>
+        </Data>
+        <Source RefID="5099"/>
+      </Input>
+      <Output>
+        <Data ID="5455" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5455">
+          <Source RefID="5422"/>
+        </Data>
+        <Target RefID="5456"/>
+      </Output>
+      <Mapping>%2%.dataPath="%0%"</Mapping>
+      <Mapping>%2%.label="Details"</Mapping>
+      <Mapping>%2%.closable="true"</Mapping>
+      <Mapping>%2%.children["0"]#cast("xmcp.forms.datatypes.TreePanelDefinition")=%0%</Mapping>
+      <Mapping>%2%.footer=%1%</Mapping>
+      <Mapping>%2%.triggerClearDataChangeState.eventId="tmf_constraints_details_area_clean"</Mapping>
+      <Mapping>%2%.triggerClose.eventId="tmf_constraints_details_area_close"</Mapping>
+    </Mappings>
+    <Data ID="625" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition625">
+      <Source RefID="441"/>
+    </Data>
+    <Data ID="686" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext686">
+      <Source RefID="683"/>
+    </Data>
+    <Data ID="5099" Label="Panel Box Definition" ReferenceName="PanelBoxDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="panelBoxDefinition5099">
+      <Source RefID="5065"/>
+    </Data>
+    <Data ID="5456" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5456">
+      <Source RefID="5422"/>
+    </Data>
+    <Data ID="5556" Label="Tree Panel Definition" ReferenceName="TreePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="treePanelDefinition5556">
+      <Source RefID="5522"/>
+    </Data>
+    <Data ID="6776" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition6776"/>
+    <Assign ID="1">
+      <Source RefID="5456"/>
+      <Source RefID="6559"/>
+      <Target RefID="97"/>
+      <Target RefID="6580"/>
+      <Copy>
+        <Source RefID="5456">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="97"/>
+      </Copy>
+      <Copy>
+        <Source RefID="6559"/>
+        <Target RefID="6580"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="README" TypeName="README" TypePath="xfmg.tmf.constraint.documentation" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>
+      <![CDATA[This data type is for documentation purposes only.
+
+# How to use this app
+
+## Plugin tab
+
+When the service group *xfmg.tmf.constraint.ConstraintMgmt* is deployed, the plugin for the constraints table is automatically registered at the Zeta Plugin Management.
+For the plugin tab to appear, the GuiHttp application has to be restarted. This can be done from the command line
+```bash
+$ ./xynafactory.sh stopapplication GuiHttp &amp;lt;application version&amp;gt;
+$ ./xynafactory.sh startapplication GuiHttp &amp;lt;application version&amp;gt;
+```
+After that, open a data type and check if the tab "TMF Constraints" appears.
+
+The same applies for deactivation. Undeploy the service group and restart the GuiHttp to disable the plugin.
+
+## Content description
+
+* *xfmg.tmf.constraint* contains the main service group, the table workflows and the data types for the table data
+* *xfmg.tmf.constraint.uidefinition* contains the workflows to create the form definitions of all the UI elements to be displayed (Workflow-defined UI).
+* the data types in *xfmg.tmf.constraint.data_model* are used for a one-to-one mapping of the constraints in JSON to xyna data types
+
+## Status and additional comments
+
+* the modeller caches the form definition workflows, a refresh of the browser window may be required for the the changes to take effect
+
+#### Modifying entries:
+
+* after editing table entries the button "Apply Changes" only changes the current unsaved state of the constraints meta data
+* to make changes persistent, the data type has to be deployed as usual
+* the same applies to adding and deleting entries
+]]>
+    </Documentation>
+  </Meta>
+</DataType>

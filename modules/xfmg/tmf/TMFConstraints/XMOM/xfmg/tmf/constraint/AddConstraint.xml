@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Add Constraint" TypeName="AddConstraint" TypePath="xfmg.tmf.constraint" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Add Constraint" Name="AddConstraint">
+    <Input>
+      <Data ID="209" Label="TMF Constraint" ReferenceName="TMFConstraint" ReferencePath="xfmg.tmf.constraint.data_model" VariableName="tMFConstraint209"/>
+      <Data ID="180" Label="Context" ReferenceName="Context" ReferencePath="xmcp.yggdrasil.plugin" VariableName="context180"/>
+    </Input>
+    <Output/>
+    <ServiceReference ID="98" Label="ConstraintMgmt" ReferenceName="ConstraintMgmt.ConstraintMgmt" ReferencePath="xfmg.tmf.constraint">
+      <Source RefID="97"/>
+      <Target RefID="97"/>
+    </ServiceReference>
+    <Mappings ID="230" Label="Build Table Data">
+      <Input>
+        <Data ID="265" Label="TMF Constraint" ReferenceName="TMFConstraint" ReferencePath="xfmg.tmf.constraint.data_model" VariableName="tMFConstraint265">
+          <Source RefID="230"/>
+        </Data>
+        <Source RefID="209"/>
+      </Input>
+      <Input>
+        <Data ID="282" Label="Context" ReferenceName="Context" ReferencePath="xmcp.yggdrasil.plugin" VariableName="context282">
+          <Source RefID="230"/>
+        </Data>
+        <Source RefID="180"/>
+      </Input>
+      <Output>
+        <Data ID="247" Label="TMF Constraint Table Data" ReferenceName="TMFConstraintTableData" ReferencePath="xfmg.tmf.constraint" VariableName="tMFConstraintTableData247">
+          <Source RefID="230"/>
+        </Data>
+        <Target RefID="248"/>
+      </Output>
+      <Mapping>%2%.constraint=%0%</Mapping>
+      <Mapping>%2%.contextData.fqn=%1%.fQN</Mapping>
+      <Mapping>%2%.contextData.runtimeContext=%1%.runtimeContext</Mapping>
+    </Mappings>
+    <Function ID="97" Label="Add Constraint">
+      <Source RefID="98"/>
+      <Source RefID="248"/>
+      <Target RefID="98"/>
+      <Invoke Operation="addConstraint" ServiceID="98">
+        <Source RefID="248"/>
+      </Invoke>
+      <Receive ServiceID="98"/>
+    </Function>
+    <Data ID="248" Label="TMF Constraint Table Data" ReferenceName="TMFConstraintTableData" ReferencePath="xfmg.tmf.constraint" VariableName="tMFConstraintTableData248">
+      <Source RefID="230"/>
+    </Data>
+    <Assign ID="1"/>
+  </Operation>
+</Service>

@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="TMF Constraints Table Info" TypeName="TMFConstraintsTableInfo" TypePath="xfmg.tmf.constraint" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="TMF Constraints Table Info" Name="TMFConstraintsTableInfo">
+    <Input>
+      <Data ID="10" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo10"/>
+      <Data ID="36" Label="Context" ReferenceName="Context" ReferencePath="xmcp.yggdrasil.plugin" VariableName="context36"/>
+    </Input>
+    <Output>
+      <Data ID="23" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo23"/>
+      <Data ID="2507" IsList="true" Label="TMF Constraint Table Data" ReferenceName="TMFConstraintTableData" ReferencePath="xfmg.tmf.constraint" VariableName="tMFConstraintTableData22507"/>
+    </Output>
+    <ServiceReference ID="964" Label="ConstraintMgmt" ReferenceName="ConstraintMgmt.ConstraintMgmt" ReferencePath="xfmg.tmf.constraint">
+      <Source RefID="963"/>
+      <Target RefID="963"/>
+    </ServiceReference>
+    <ServiceReference ID="2694" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
+      <Source RefID="2693"/>
+      <Target RefID="2693"/>
+    </ServiceReference>
+    <Choice ID="57" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="10"/>
+      <Target RefID="135"/>
+      <Input>
+        <Data ID="80" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo80">
+          <Source RefID="57"/>
+        </Data>
+        <Source RefID="10"/>
+      </Input>
+      <Case ID="58" Label="true" Premise="%0%.bootstrap">
+        <Mappings ID="214" Label="Build Table Columns">
+          <Output>
+            <Data ID="223" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn223">
+              <Source RefID="214"/>
+            </Data>
+            <Target RefID="224"/>
+          </Output>
+          <Mapping>%0%["0"].name="Name"</Mapping>
+          <Mapping>%0%["0"].path="constraint.name"</Mapping>
+          <Mapping>%0%["1"].name="Description"</Mapping>
+          <Mapping>%0%["1"].path="constraint.description"</Mapping>
+        </Mappings>
+        <Mappings ID="105" Label="Set Columns">
+          <Input>
+            <Data ID="761" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn761">
+              <Source RefID="105"/>
+            </Data>
+            <Source RefID="224"/>
+          </Input>
+          <Output>
+            <Data ID="114" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo114">
+              <Source RefID="105"/>
+            </Data>
+            <Target RefID="818"/>
+          </Output>
+          <Mapping>%1%.columns=%0%</Mapping>
+        </Mappings>
+        <Assign ID="61">
+          <Source RefID="818"/>
+          <Target RefID="135"/>
+          <Copy>
+            <Source RefID="818"/>
+            <Target RefID="135"/>
+          </Copy>
+        </Assign>
+        <Data ID="818" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo818">
+          <Source RefID="105"/>
+        </Data>
+      </Case>
+      <Case ID="59" Label="false">
+        <Mappings ID="132" Label="1:1">
+          <Input>
+            <Data ID="144" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo144">
+              <Source RefID="132"/>
+            </Data>
+            <Source RefID="10"/>
+          </Input>
+          <Output>
+            <Data ID="133" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo133"/>
+            <Target RefID="134"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign ID="63">
+          <Source RefID="134"/>
+          <Target RefID="135"/>
+          <Copy>
+            <Source RefID="134"/>
+            <Target RefID="135"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Mappings ID="1402" Label="Data Index">
+      <Output>
+        <Data ID="1419" Label="Count" ReferenceName="Count" ReferencePath="base" VariableName="count1419">
+          <Source RefID="1402"/>
+        </Data>
+        <Target RefID="1420"/>
+      </Output>
+      <Mapping>%0%.count="0"</Mapping>
+    </Mappings>
+    <Function ID="963" Label="Get Constraints">
+      <Source RefID="964"/>
+      <Source RefID="36"/>
+      <Target RefID="964"/>
+      <Target RefID="966"/>
+      <Invoke Operation="getConstraints" ServiceID="964">
+        <Source RefID="36"/>
+      </Invoke>
+      <Receive ServiceID="964">
+        <Target RefID="966"/>
+      </Receive>
+    </Function>
+    <Foreach ID="3405">
+      <Source RefID="966"/>
+      <Target RefID="3407"/>
+      <InputList RefID="966">
+        <Data ID="3406" Label="TMF Constraint" ReferenceName="TMFConstraint" ReferencePath="xfmg.tmf.constraint.data_model" VariableName="tMFConstraint3406"/>
+      </InputList>
+      <OutputList RefID="3407">
+        <Data ID="3384" Label="TMF Constraint Table Data" ReferenceName="TMFConstraintTableData" ReferencePath="xfmg.tmf.constraint" VariableName="tMFConstraintTableData3384"/>
+      </OutputList>
+      <Choice ID="3385" TypeName="BaseChoiceTypeFormula" TypePath="server">
+        <Source RefID="3406"/>
+        <Target RefID="3384"/>
+        <Input>
+          <Data ID="3392" Label="TMF Constraint" ReferenceName="TMFConstraint" ReferencePath="xfmg.tmf.constraint.data_model" VariableName="tMFConstraint3392"/>
+          <Source RefID="3406"/>
+        </Input>
+        <Case Alias="" ID="3386" Label="true" Premise="%0%!=null">
+          <Mappings ID="3394" Label="Map Constraint to Table Row">
+            <Input>
+              <Data ID="3395" Label="TMF Constraint" ReferenceName="TMFConstraint" ReferencePath="xfmg.tmf.constraint.data_model" VariableName="tMFConstraint3395"/>
+              <Source RefID="3406">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Input>
+              <Data ID="3397" Label="Context" ReferenceName="Context" ReferencePath="xmcp.yggdrasil.plugin" VariableName="context3397"/>
+              <Source RefID="36"/>
+            </Input>
+            <Input>
+              <Data ID="3399" Label="Count" ReferenceName="Count" ReferencePath="base" VariableName="count3399"/>
+              <Source RefID="1420"/>
+            </Input>
+            <Output>
+              <Data ID="3400" Label="TMF Constraint Table Data" ReferenceName="TMFConstraintTableData" ReferencePath="xfmg.tmf.constraint" VariableName="tMFConstraintTableData3400"/>
+              <Target RefID="3383"/>
+            </Output>
+            <Mapping>%3%.constraint=%0%</Mapping>
+            <Mapping>%3%.contextData.fqn=%1%.fQN</Mapping>
+            <Mapping>%3%.contextData.runtimeContext=%1%.runtimeContext</Mapping>
+            <Mapping>%3%.contextData.dataIndex=%2%.count</Mapping>
+          </Mappings>
+          <Mappings ID="3401" Label="Increment Data Index">
+            <Input>
+              <Data ID="3402" Label="Count" ReferenceName="Count" ReferencePath="base" VariableName="count3402"/>
+              <Source RefID="1420"/>
+            </Input>
+            <Mapping>%0%.count=%0%.count+"1"</Mapping>
+          </Mappings>
+          <Assign>
+            <Source RefID="3383"/>
+            <Target RefID="3384"/>
+            <Copy>
+              <Source RefID="3383"/>
+              <Target RefID="3384"/>
+            </Copy>
+          </Assign>
+        </Case>
+        <Case Alias="" ID="3387" Label="false">
+          <Mappings ID="3403" Label="Empty Data">
+            <Output>
+              <Data ID="3404" Label="TMF Constraint Table Data" ReferenceName="TMFConstraintTableData" ReferencePath="xfmg.tmf.constraint" VariableName="tMFConstraintTableData3404"/>
+              <Target RefID="3382"/>
+            </Output>
+          </Mappings>
+          <Assign>
+            <Source RefID="3382"/>
+            <Target RefID="3384"/>
+            <Copy>
+              <Source RefID="3382"/>
+              <Target RefID="3384"/>
+            </Copy>
+          </Assign>
+        </Case>
+      </Choice>
+      <Data ID="3383" Label="TMF Constraint Table Data" ReferenceName="TMFConstraintTableData" ReferencePath="xfmg.tmf.constraint" VariableName="tMFConstraintTableData3383"/>
+      <Data ID="3382" Label="TMF Constraint Table Data" ReferenceName="TMFConstraintTableData" ReferencePath="xfmg.tmf.constraint" VariableName="tMFConstraintTableData3382"/>
+    </Foreach>
+    <Function ID="2693" Label="Sort and Filter Table">
+      <Source RefID="2694"/>
+      <Source RefID="135"/>
+      <Source RefID="3407"/>
+      <Target RefID="2694"/>
+      <Target RefID="2696"/>
+      <Invoke Operation="sortAndFilterTable" ServiceID="2694">
+        <Source RefID="135">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="3407">
+          <Meta>
+            <ExpectedType>xfmg.tmf.constraint.TMFConstraintTableData</ExpectedType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="2694">
+        <Target RefID="2696">
+          <Meta>
+            <ExpectedType>xfmg.tmf.constraint.TMFConstraintTableData</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
+    <Data ID="134" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo134"/>
+    <Data ID="135" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo135">
+      <Source RefID="57"/>
+    </Data>
+    <Data ID="224" IsList="true" Label="Table Column" ReferenceName="TableColumn" ReferencePath="xmcp.tables.datatypes" VariableName="tableColumn224">
+      <Source RefID="214"/>
+    </Data>
+    <Data ID="966" IsList="true" Label="TMF Constraint" ReferenceName="TMFConstraint" ReferencePath="xfmg.tmf.constraint.data_model" VariableName="tMFConstraint966">
+      <Source RefID="963"/>
+    </Data>
+    <Data ID="1420" Label="Count" ReferenceName="Count" ReferencePath="base" VariableName="count1420">
+      <Source RefID="1402"/>
+    </Data>
+    <Data ID="2696" IsList="true" Label="TMF Constraint Table Data" ReferenceName="TMFConstraintTableData" ReferencePath="xfmg.tmf.constraint" VariableName="tMFConstraintTableData2696"/>
+    <Data ID="3407" IsList="true" Label="TMF Constraint Table Data" ReferenceName="TMFConstraintTableData" ReferencePath="xfmg.tmf.constraint" VariableName="tMFConstraintTableData3407">
+      <Source RefID="3405"/>
+      <Target RefID="3407"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="135"/>
+      <Source RefID="2696"/>
+      <Target RefID="23"/>
+      <Target RefID="2507"/>
+      <Copy>
+        <Source RefID="135">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="23"/>
+      </Copy>
+      <Copy>
+        <Source RefID="2696">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="2507"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
