@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
- <!--
+/*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
-  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="XACT-CRYPTO-00004" IsAbstract="false" Label="AES Crypto Exception" TypeName="AESCryptoException" TypePath="xint.crypto.exceptions">
-    <Data Label="Message" VariableName="_message">
-      <Meta>
-        <Type>String</Type>
-      </Meta>
-    </Data>
-    <MessageText Language="DE">%0%</MessageText>
-    <MessageText Language="EN">%0%</MessageText>
-  </ExceptionType>
-</ExceptionStore>
+ */
+
+package xfmg.oas.generation.storage;
+
+
+public class OasImportHistoryConstants {
+
+  public static final String PATH_FILENAME = "fileName";
+  public static final String PATH_TYPE = "type";
+  public static final String PATH_DATE = "date0";
+  public static final String PATH_IMPORTSTATUS = "importStatus";
+  
+}
