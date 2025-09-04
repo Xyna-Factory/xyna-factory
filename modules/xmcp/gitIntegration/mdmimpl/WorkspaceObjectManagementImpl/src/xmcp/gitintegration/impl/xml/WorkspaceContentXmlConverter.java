@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -36,6 +37,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
 
 import xmcp.gitintegration.WorkspaceContent;
 import xmcp.gitintegration.WorkspaceContentItem;
+import xmcp.gitintegration.impl.WorkspaceConfigSplit;
 import xmcp.gitintegration.impl.WorkspaceContentCreator;
 import xmcp.gitintegration.impl.processing.WorkspaceContentProcessingPortal;
 
@@ -46,6 +48,7 @@ public class WorkspaceContentXmlConverter {
 
   private static final String TAG_WORKSPACECONFIG = "workspaceConfig";
   private static final String ATT_WORKSPACENAME = "workspaceName";
+  private static final String ATT_SPLIT = "split";
 
 
   public String convertToXml(WorkspaceContent content) {
@@ -69,6 +72,9 @@ public class WorkspaceContentXmlConverter {
   private void openTag(XmlBuilder builder, WorkspaceContent content) {
     builder.startElementWithAttributes(TAG_WORKSPACECONFIG);
     builder.addAttribute(ATT_WORKSPACENAME, content.getWorkspaceName());
+    if(content.getSplit() != null && !content.getSplit().isEmpty()) {
+      builder.addAttribute(ATT_SPLIT, content.getSplit());
+    }
     builder.endAttributes();
   }
 
@@ -83,6 +89,7 @@ public class WorkspaceContentXmlConverter {
     Document doc = StringToDocument(content);
 
     convertWorkspaceName(doc, result);
+    convertSplit(doc, result);
     convertWorkspaceContentItems(doc, result);
 
 
@@ -113,6 +120,15 @@ public class WorkspaceContentXmlConverter {
       throw new RuntimeException("Could not read workspace name from xml.");
     }
   }
+  
+  private void convertSplit(Document doc, WorkspaceContent content) {
+    try {
+      String split = doc.getDocumentElement().getAttributes().getNamedItem(ATT_SPLIT).getTextContent();
+      content.unversionedSetSplit(split);
+    } catch (NullPointerException e) {
+      // document  may not include split information
+    }
+  }
 
 
   private void convertWorkspaceContentItems(Document doc, WorkspaceContent content) {
@@ -126,11 +142,58 @@ public class WorkspaceContentXmlConverter {
       wsItems.add(item);
     }
     wsItems.removeIf(x -> x == null);
-    content.setWorkspaceContentItems(wsItems);
+    content.unversionedSetWorkspaceContentItems(wsItems);
   }
 
+  
+  public List<Pair<String, String>> splitContent(WorkspaceContent content) {
+    Optional<WorkspaceConfigSplit> type = WorkspaceConfigSplit.fromId(content.getSplit());
+    if(type.isEmpty()) {
+      throw new RuntimeException("Invalid WorkspaceConfigSplit type: '" + content.getSplit() + "'");
+    }
+    switch (type.get()) {
+      case NONE :
+        return List.of(new Pair<>(WorkspaceContentCreator.WORKSPACE_XML_FILENAME, convertToXml(content)));
+      case BYTYPE:
+        return splitContentByType(content);
+      case FINE:
+        return splitContentFine(content);
+    }
+    throw new RuntimeException("Unexpected WorkspaceConfigSplit type: '" + content.getSplit() + "'"); 
+  }
+  
+  public List<Pair<String, String>> splitContentFine(WorkspaceContent content) {
+    WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
+    List<Pair<String, String>> result = new ArrayList<Pair<String, String>>();
+    List<? extends WorkspaceContentItem> items = content.getWorkspaceContentItems();
+    Map<String, List<WorkspaceContentItem>> grouped = new HashMap<>();
+    for(WorkspaceContentItem item : items) {
+      Class<? extends WorkspaceContentItem> clazz = item.getClass();
+      String configType = portal.getTagName(clazz);
+      String fileName = sanitize(portal.createItemKeyString(item));
+      String path = String.format("%s/%s.xml", configType, fileName);
+      grouped.putIfAbsent(path, new ArrayList<>());
+      grouped.get(path).add(item);
+    }
+    
+    for(Entry<String, List<WorkspaceContentItem>> group : grouped.entrySet()) {
+      String fileName = group.getKey();
+      WorkspaceContent groupContent = createGroupWorkspaceContent(content, group.getValue());
+      String singleGroupString = convertToXml(groupContent);
+      result.add(new Pair<>(fileName, singleGroupString));
+    }
 
-  public List<Pair<String, String>> split(WorkspaceContent content) {
+    //add workspace.xml for workspace meta data
+    WorkspaceContent.Builder c = new WorkspaceContent.Builder();
+    c.workspaceName(content.getWorkspaceName());
+    c.split(WorkspaceConfigSplit.FINE.getId());
+    String meta = convertToXml(c.instance());
+    result.add(new Pair<>(WorkspaceContentCreator.WORKSPACE_XML_FILENAME, meta));
+    
+    return result;
+  }
+
+  public List<Pair<String, String>> splitContentByType(WorkspaceContent content) {
     WorkspaceContentProcessingPortal portal = new WorkspaceContentProcessingPortal();
     List<Pair<String, String>> result = new ArrayList<Pair<String, String>>();
     List<? extends WorkspaceContentItem> items = content.getWorkspaceContentItems();
@@ -143,26 +206,31 @@ public class WorkspaceContentXmlConverter {
 
     for (Entry<Class<? extends WorkspaceContentItem>, List<WorkspaceContentItem>> group : grouped.entrySet()) {
       String fileName = portal.getTagName(group.getKey()) + ".xml";
-      WorkspaceContent singleTypeContent = createSingleTypeWorkspaceContent(content, group.getValue());
+      WorkspaceContent singleTypeContent = createGroupWorkspaceContent(content, group.getValue());
       String singleTypeContentString = convertToXml(singleTypeContent);
       result.add(new Pair<>(fileName, singleTypeContentString));
     }
 
     //add workspace.xml for workspace meta data
-    WorkspaceContent c = new WorkspaceContent();
-    c.setWorkspaceName(content.getWorkspaceName());
-    String meta = convertToXml(c);
+    WorkspaceContent.Builder c = new WorkspaceContent.Builder();
+    c.workspaceName(content.getWorkspaceName());
+    c.split(WorkspaceConfigSplit.BYTYPE.getId());
+    String meta = convertToXml(c.instance());
     result.add(new Pair<>(WorkspaceContentCreator.WORKSPACE_XML_FILENAME, meta));
 
     return result;
   }
 
-
-  private WorkspaceContent createSingleTypeWorkspaceContent(WorkspaceContent full, List<WorkspaceContentItem> items) {
-    WorkspaceContent result = new WorkspaceContent();
-    result.setWorkspaceName(full.getWorkspaceName());
-    result.setWorkspaceContentItems(items);
-    return result;
+  private WorkspaceContent createGroupWorkspaceContent(WorkspaceContent full, List<WorkspaceContentItem> items) {
+    WorkspaceContent.Builder result = new WorkspaceContent.Builder();
+    result.workspaceName(full.getWorkspaceName());
+    result.split(full.getSplit());
+    result.workspaceContentItems(items);
+    return result.instance();
   }
 
+  private String sanitize(String s) {
+    return s.replaceAll("[^a-zA-Z0-9_\\-\\.]", "-");
+  }
+  
 }

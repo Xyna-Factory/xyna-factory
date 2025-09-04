@@ -26,13 +26,13 @@
     <import file="${root.dir}/installation/build/ant-xyna.xml" />
 
     <property name="exception.xml.dir" value="${root.dir}/server" />
+    <property name="application.dir" value="${basedir}/../.." />
     <property name="base.lib.dir" value="${basedir}/lib" />
     <property name="mdm.lib.dir" value="${base.lib.dir}" />
     <!--<property name="additional.lib.dir" /> (nur zum Kompilieren nötig) kann gesetzt werden, muss aber nicht -->
     <!--<property name="unfree.lib.dir" /> (unfreie Libs, die zum Kompilieren und Ausführen nötig sind) kann gesetzt werden, muss aber nicht -->
     <property name="target.dir" value="${basedir}/deploy" />
     <property name="module.dir" value="${root.dir}/modules/${mdm.xml.path}" />
-
 
     <property file="${basedir}/server.properties" />
     <property file="${root.dir}/server.properties" />
@@ -304,9 +304,8 @@
         <!--delete dir="${target.dir}" failonerror="false" /-->
         <delete dir="${basedir}/classes" />
     </target>
-	
-	
-   <!-- ================================= 
+
+    <!-- ================================= 
          target: create-servicedefinition-jar         
          ================================= -->
     <target name="create-servicedefinition-jar" description="Create servicedefinition.jar locally">
@@ -369,6 +368,17 @@
                 <echo message="servicedefinition jar exists already." />
             </else>
         </if>
+    </target>
+
+    <!-- ================================= 
+         target: cleanup-lib
+         ================================= -->
+    <target name="cleanup-lib">
+        <delete>
+            <fileset dir="${base.lib.dir}" includes="**/*.jar"/>
+        </delete>
+        <ant antfile="${application.dir}/build.xml" target="prepare-mdm-jar" inheritAll="false" dir="${application.dir}" />
+        <antcall target="create-servicedefinition-jar" />
     </target>
 
 </project>

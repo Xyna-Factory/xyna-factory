@@ -36,12 +36,16 @@
         <ant antfile="build.xml" target="build-app" inheritAll="false" dir="filterimpl/NetConfNotificationReceiverFilter">
             <property name="target.dir" value="${target.dir}/app" />
         </ant>
+        <ant antfile="build.xml" target="build-app" inheritAll="false" dir="mdmimpl/NetConfReceiverServiceGroupImpl">
+            <property name="target.dir" value="${target.dir}/app" />
+        </ant>
         <antcall target="build-application" />
     </target>
 
     <target name="prepare-mdm-jar">
         <antcall target="create-mdm-jar" />
         <supply-mdm-jar type="filterimpl" name="NetConfNotificationReceiverFilter" />
+        <supply-mdm-jar type="mdmimpl" name="NetConfReceiverServiceGroupImpl" />
         <delete file="${basedir}/mdm.jar" />
     </target>
 

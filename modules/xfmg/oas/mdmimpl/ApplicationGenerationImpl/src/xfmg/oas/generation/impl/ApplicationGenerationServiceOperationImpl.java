@@ -60,9 +60,13 @@ import xfmg.oas.generation.cli.generated.OverallInformationProvider;
 import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl;
 import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl.OASApplicationData;
 import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl.ValidationResult;
+import xfmg.oas.generation.storage.OasImportHistorySortTool;
+import xfmg.oas.generation.storage.OasImportHistoryStorage;
 import xfmg.xfctrl.appmgmt.RuntimeContextService;
 import xfmg.xfctrl.filemgmt.ManagedFileId;
 import xmcp.forms.plugin.Plugin;
+import xmcp.oas.fman.storables.OAS_ImportHistory;
+import xmcp.tables.datatypes.TableInfo;
 import xprc.xpce.Application;
 import xprc.xpce.RuntimeContext;
 
@@ -100,6 +104,7 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
     }
 
     createListWrappers.registerDependency(UserType.Service, "OAS_Base");
+    OasImportHistoryStorage.init();
   }
 
 
@@ -115,6 +120,7 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
     }
     
     createListWrappers.unregister();
+    OasImportHistoryStorage.shutdown();
   }
 
 
@@ -277,4 +283,49 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
         .instance();
     generateApplication(correlatedXynaOrder, applicationGenerationParameter2, file);
   }
+
+  
+  @Override
+  public List<? extends OAS_ImportHistory> queryOasImportHistory(TableInfo info) {
+    try {
+      List<OAS_ImportHistory> ret = new OasImportHistoryStorage().searchOasImportHistory(info);
+      new OasImportHistorySortTool().sort(ret, info);
+      return ret;
+    } catch (RuntimeException e) {
+      logger.error(e.getMessage(), e);
+      throw e;
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
+
+
+  @Override
+  public OAS_ImportHistory queryOasImportHistoryDetails(OAS_ImportHistory input) {
+    try {
+      return new OasImportHistoryStorage().searchOasImportHistoryDetails(input);
+    } catch (RuntimeException e) {
+      logger.error(e.getMessage(), e);
+      throw e;
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
+  
+  
+  @Override
+  public void storeOasImportHistory(OAS_ImportHistory input) {
+    try {
+      new OasImportHistoryStorage().storeOasImportHistory(input);
+    } catch (RuntimeException e) {
+      logger.error(e.getMessage(), e);
+      throw e;
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
+
 }
