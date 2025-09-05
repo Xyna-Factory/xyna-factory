@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Oas Endpoint Details - Missing - No Datatype Definition" TypeName="OasEndpointDetailsMissingNoDatatypeDefinition" TypePath="xmcp.oas.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Oas Endpoint Details - Missing - No Datatype Definition" Name="OasEndpointDetailsMissingNoDatatypeDefinition">
+    <Input>
+      <Data ID="27" Label="Oas Api Datatype Info" ReferenceName="OasApiDatatypeInfo" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasApiDatatypeInfo27"/>
+    </Input>
+    <Output>
+      <Data ID="10" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10"/>
+      <Data ID="758" Label="Endpoint Implementation Creation Data" ReferenceName="EndpointImplementationCreationData" ReferencePath="xmcp.oas.fman.datatypes" VariableName="endpointImplementationCreationData758"/>
+    </Output>
+    <ServiceReference ID="1264" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="1263"/>
+      <Target RefID="1263"/>
+    </ServiceReference>
+    <Function ID="1263" Label="get Own RuntimeContext">
+      <Source RefID="1264"/>
+      <Target RefID="1264"/>
+      <Target RefID="1262"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="1264"/>
+      <Receive ServiceID="1264">
+        <Target RefID="1262"/>
+      </Receive>
+    </Function>
+    <Mappings ID="1234" Label="Mapping">
+      <Input>
+        <Data ID="1236" Label="Oas Api Datatype Info" ReferenceName="OasApiDatatypeInfo" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasApiDatatypeInfo1236"/>
+        <Source RefID="27"/>
+      </Input>
+      <Output>
+        <Data ID="1237" Label="Endpoint Implementation Creation Data" ReferenceName="EndpointImplementationCreationData" ReferencePath="xmcp.oas.fman.datatypes" VariableName="endpointImplementationCreationData1237"/>
+        <Target RefID="1233"/>
+      </Output>
+      <Mapping>%1%.action="CreateEndpointDatatype"</Mapping>
+      <Mapping>%1%.generatedRtcRevision=%0%.generatedRtcRevision</Mapping>
+      <Mapping>%1%.implementationRtcRevision=%0%.implementationRtcRevision</Mapping>
+      <Mapping>%1%.aPIDatatype=%0%.apiDatatype</Mapping>
+    </Mappings>
+    <Mappings ID="526" Label="Mapping">
+      <Output>
+        <Data ID="551" Label="Label - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition551">
+          <Source RefID="526"/>
+        </Data>
+        <Target RefID="552"/>
+      </Output>
+      <Mapping>%0%.label="Label"</Mapping>
+      <Mapping>%0%.dataPath="%0%.implementationDatatypeLabel"</Mapping>
+      <Mapping>%0%.triggerClearDataChangeState.eventId="oas_endpoint_details_no_datatype_clear"</Mapping>
+    </Mappings>
+    <Mappings ID="569" Label="Mapping">
+      <Output>
+        <Data ID="570" Label="Path - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition570"/>
+        <Target RefID="571"/>
+      </Output>
+      <Mapping>%0%.label="Path"</Mapping>
+      <Mapping>%0%.dataPath="%0%.implementationDatatypePath"</Mapping>
+      <Mapping>%0%.triggerClearDataChangeState.eventId="oas_endpoint_details_no_datatype_clear"</Mapping>
+    </Mappings>
+    <Mappings ID="1161" Label="Mapping">
+      <Input>
+        <Data ID="1426" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1426">
+          <Source RefID="1161"/>
+        </Data>
+        <Source RefID="1262"/>
+      </Input>
+      <Output>
+        <Data ID="1170" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1170">
+          <Source RefID="1161"/>
+        </Data>
+        <Target RefID="1171"/>
+      </Output>
+      <Mapping>%1%.label="Create Implementation Datatype"</Mapping>
+      <Mapping>%1%.dataPath="%0%"</Mapping>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.serviceFQN="xmcp.oas.fman.EndpointImplementation"</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="oas_endpoint_details_no_datatype_clear"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["1"].eventId="oas_endpoint_details_no_datatype_close"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["2"].eventId="oas_api_endpoints_refresh"</Mapping>
+    </Mappings>
+    <Mappings ID="462" Label="Mapping">
+      <Input>
+        <Data ID="464" Label="Oas Api Datatype Info" ReferenceName="OasApiDatatypeInfo" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasApiDatatypeInfo464"/>
+        <Source RefID="27"/>
+      </Input>
+      <Input>
+        <Data ID="660" Label="Label - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition660">
+          <Source RefID="462"/>
+        </Data>
+        <Source RefID="552">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="669" Label="Path - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition669">
+          <Source RefID="462"/>
+        </Data>
+        <Source RefID="571">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="1180" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1180">
+          <Source RefID="462"/>
+        </Data>
+        <Source RefID="1171"/>
+      </Input>
+      <Output>
+        <Data ID="465" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition465"/>
+        <Target RefID="461"/>
+      </Output>
+      <Mapping>%4%.label=%0%.apiDatatype</Mapping>
+      <Mapping>%4%.closable="true"</Mapping>
+      <Mapping>%4%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%1%</Mapping>
+      <Mapping>%4%.children["1"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%2%</Mapping>
+      <Mapping>%4%.children["2"]=%3%</Mapping>
+      <Mapping>%4%.triggerClose.eventId="oas_endpoint_details_no_datatype_close"</Mapping>
+    </Mappings>
+    <Data ID="461" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition461"/>
+    <Data ID="552" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition552">
+      <Source RefID="526"/>
+    </Data>
+    <Data ID="571" Label="Label - Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition571"/>
+    <Data ID="1171" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1171">
+      <Source RefID="1161"/>
+    </Data>
+    <Data ID="1233" Label="Endpoint Implementation Creation Data" ReferenceName="EndpointImplementationCreationData" ReferencePath="xmcp.oas.fman.datatypes" VariableName="endpointImplementationCreationData1233"/>
+    <Data ID="1262" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1262"/>
+    <Assign ID="1">
+      <Source RefID="461"/>
+      <Source RefID="1233"/>
+      <Target RefID="10"/>
+      <Target RefID="758"/>
+      <Copy>
+        <Source RefID="461"/>
+        <Target RefID="10"/>
+      </Copy>
+      <Copy>
+        <Source RefID="1233"/>
+        <Target RefID="758"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
