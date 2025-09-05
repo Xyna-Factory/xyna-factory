@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,17 +24,13 @@
       <Data ID="4366" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo4366"/>
       <Data ID="5644" IsList="true" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory5644"/>
     </Output>
-    <ServiceReference ID="12592" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
-      <Source RefID="12591"/>
-      <Target RefID="12591"/>
-    </ServiceReference>
-    <ServiceReference ID="13812" Label="Query" ReferenceName="Query" ReferencePath="xnwh.persistence">
-      <Source RefID="13811"/>
-      <Target RefID="13811"/>
-    </ServiceReference>
     <ServiceReference ID="14178" Label="Table Service Group" ReferenceName="TableServiceGroup.TableServiceGroup" ReferencePath="xmcp.tables">
       <Source RefID="14177"/>
       <Target RefID="14177"/>
+    </ServiceReference>
+    <ServiceReference ID="25766" Label="Application Generation" ReferenceName="ApplicationGeneration.ApplicationGeneration" ReferencePath="xfmg.oas.generation">
+      <Source RefID="25765"/>
+      <Target RefID="25765"/>
     </ServiceReference>
     <Choice ID="5918" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="5540"/>
@@ -107,65 +103,24 @@
         </Assign>
       </Case>
     </Choice>
-    <Function ID="12591" Label="Build Query Parameters from TableInfo">
-      <Source RefID="12592"/>
+    <Function ID="25765" Label="Query Oas Import History">
+      <Source RefID="25766"/>
       <Source RefID="25549"/>
-      <Source RefID="19637"/>
-      <Target RefID="12592"/>
-      <Target RefID="12594"/>
-      <Target RefID="12595"/>
-      <Target RefID="12596"/>
-      <Invoke Operation="buildQueryParametersFromTableInfo" ServiceID="12592">
+      <Target RefID="25766"/>
+      <Target RefID="25768"/>
+      <Invoke Operation="queryOasImportHistory" ServiceID="25766">
         <Source RefID="25549">
           <Meta>
             <LinkType>UserConnected</LinkType>
           </Meta>
         </Source>
-        <Source RefID="19637">
-          <Meta>
-            <LinkType>Constant</LinkType>
-          </Meta>
-        </Source>
       </Invoke>
-      <Receive ServiceID="12592">
-        <Target RefID="12594"/>
-        <Target RefID="12595"/>
-        <Target RefID="12596"/>
-      </Receive>
-    </Function>
-    <Function ID="13811" Label="Query">
-      <Source RefID="13812"/>
-      <Source RefID="12594"/>
-      <Source RefID="12595"/>
-      <Source RefID="12596"/>
-      <Target RefID="13812"/>
-      <Target RefID="13814"/>
-      <Invoke Operation="Query" ServiceID="13812">
-        <Source RefID="12594"/>
-        <Source RefID="12595"/>
-        <Source RefID="12596"/>
-      </Invoke>
-      <Receive ServiceID="13812">
-        <Target RefID="13814">
-          <Meta>
-            <ExpectedType>xmcp.oas.fman.storables.OAS_ImportHistory</ExpectedType>
-          </Meta>
-        </Target>
+      <Receive ServiceID="25766">
+        <Target RefID="25768"/>
       </Receive>
     </Function>
     <Data ID="6291" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo6291"/>
-    <Data ID="12594" Label="Selection mask" ReferenceName="SelectionMask" ReferencePath="xnwh.persistence" VariableName="selectionMask12594">
-      <Source RefID="12591"/>
-    </Data>
-    <Data ID="12595" Label="Filter condition" ReferenceName="FilterCondition" ReferencePath="xnwh.persistence" VariableName="filterCondition12595">
-      <Source RefID="12591"/>
-    </Data>
-    <Data ID="12596" Label="Query parameter" ReferenceName="QueryParameter" ReferencePath="xnwh.persistence" VariableName="queryParameter12596">
-      <Source RefID="12591"/>
-    </Data>
-    <Data ID="13814" IsList="true" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory13814"/>
     <Data ID="14314" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="const_OAS_ImportHistory14314"/>
-    <Data ID="19637" Label="Query All Columns" ReferenceName="QueryAllColumns" ReferencePath="xmcp.tables.datatypes.query" VariableName="const_QueryAllColumns19637"/>
     <Data ID="25549" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo25549">
       <Source RefID="5918"/>
     </Data>
@@ -361,9 +316,12 @@
         </Data>
       </Value>
     </Data>
+    <Data ID="25768" IsList="true" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory25768">
+      <Source RefID="25765"/>
+    </Data>
     <Assign ID="1">
       <Source RefID="25549"/>
-      <Source RefID="13814"/>
+      <Source RefID="25768"/>
       <Target RefID="4366"/>
       <Target RefID="5644"/>
       <Copy>
@@ -375,7 +333,7 @@
         <Target RefID="4366"/>
       </Copy>
       <Copy>
-        <Source RefID="13814"/>
+        <Source RefID="25768"/>
         <Target RefID="5644"/>
       </Copy>
     </Assign>
