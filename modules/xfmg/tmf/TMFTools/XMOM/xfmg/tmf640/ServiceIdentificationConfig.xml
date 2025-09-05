@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Service Identification Config" TypeName="ServiceIdentificationConfig" TypePath="xfmg.tmf640" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Base Type of Services" VariableName="baseTypeOfServices">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Xyna Datatype of target service will be assumed to be a type extended of this base type. Fully qualified name of Xyna Datatype.</Documentation>
+    </Meta>
+  </Data>
+</DataType>

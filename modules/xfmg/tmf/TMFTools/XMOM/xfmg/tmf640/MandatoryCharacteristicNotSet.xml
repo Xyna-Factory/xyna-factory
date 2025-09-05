@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="TMF640-00013" IsAbstract="false" Label="Mandatory Characteristic Not Set" TypeName="MandatoryCharacteristicNotSet" TypePath="xfmg.tmf640">
+    <Data Label="characteristic name" VariableName="characteristicName">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <MessageText Language="DE">Characteristic &lt;%0%&gt; hat im Xyna Service Wert null, aber in der Service Specification ist die Characteristic als verpflichtend gekennzeichnet.</MessageText>
+    <MessageText Language="EN">Characteristic &lt;%0%&gt; is set to null in Xyna Service, but marked as mandatory in corresponding service specification.</MessageText>
+  </ExceptionType>
+</ExceptionStore>

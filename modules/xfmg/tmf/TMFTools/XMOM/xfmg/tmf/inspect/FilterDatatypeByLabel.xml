@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Filter" BaseTypePath="base.list.filter" IsAbstract="false" Label="Filter Datatype by Label" TypeName="FilterDatatypeByLabel" TypePath="xfmg.tmf.inspect" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Label" VariableName="label0">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Service Label="Filter Datatype by Label" TypeName="FilterDatatypeByLabel">
+    <Operation IsStatic="false" Label="Accept" Name="accept">
+      <Input>
+        <Data ID="5" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype5">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="6" Label="Result" VariableName="boolean6">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">xprc.xpce.datatype.DatatypeInspector input = (xprc.xpce.datatype.DatatypeInspector) anytype5;
+return input.getLabel().getText().equals(getLabel0());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

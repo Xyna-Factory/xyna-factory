@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Set Value for Service Property" TypeName="SetValueForServiceProperty" TypePath="xfmg.tmf640" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Set Value for Service Property" Name="SetValueForServiceProperty">
+    <Input>
+      <Data ID="2" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember2"/>
+      <Data ID="7" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable7"/>
+      <Data ID="12" Label="Service" ReferenceName="Service" ReferencePath="tmf640.datamodel" VariableName="service12"/>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="MemberVariableNotFound" ReferenceName="MemberVariableNotFound" ReferencePath="xfmg.tmf.inspect" VariableName="memberVariableNotFound3718"/>
+    </Throws>
+    <ServiceReference ID="3247" Label="Set Value for Membervar with provided Name" ReferenceName="SetValueForMembervarWithProvidedName" ReferencePath="xfmg.tmf640">
+      <Source RefID="3246"/>
+      <Target RefID="3246"/>
+    </ServiceReference>
+    <ServiceReference ID="31" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="30"/>
+      <Target RefID="30"/>
+    </ServiceReference>
+    <Function ID="30" Label="Inspect Datatype">
+      <Source RefID="31"/>
+      <Source RefID="12"/>
+      <Target RefID="31"/>
+      <Target RefID="33"/>
+      <Invoke Operation="inspectDatatype" ServiceID="31">
+        <Source RefID="12">
+          <Meta>
+            <ExpectedType>tmf640.datamodel.Service</ExpectedType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="31">
+        <Target RefID="33"/>
+      </Receive>
+    </Function>
+    <Function ID="3246" Label="Set Value for Membervar with provided Name">
+      <Source RefID="3247"/>
+      <Source RefID="2"/>
+      <Source RefID="7"/>
+      <Source RefID="33"/>
+      <Target RefID="3247"/>
+      <Invoke Operation="SetValueForMembervarWithProvidedName" ServiceID="3247">
+        <Source RefID="2"/>
+        <Source RefID="7"/>
+        <Source RefID="33"/>
+      </Invoke>
+      <Receive ServiceID="3247"/>
+    </Function>
+    <Data ID="33" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector33">
+      <Source RefID="30"/>
+    </Data>
+    <Assign ID="1"/>
+  </Operation>
+</Service>

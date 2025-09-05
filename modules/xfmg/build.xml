@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@
         <buildModule target="build" dir="filemgmt"      target.dir="${target.dir}/xfmg" />
         <buildModule target="build" dir="oas"           target.dir="${target.dir}/xfmg" />
         <buildModule target="build" dir="yang"          target.dir="${target.dir}/xfmg" />
+        <buildModule target="build-all" dir="tmf"       target.dir="${target.dir}/xfmg" />
     </target>
     
 </project>

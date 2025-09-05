@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Transform Structure Proxy" TypeName="TransformStructureProxy" TypePath="xfmg.tmf640" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Transform Structure Proxy" Name="TransformStructureProxy">
+    <Input>
+      <Data ID="75" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember75"/>
+      <Data ID="96" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable96"/>
+      <Data ID="117" Label="Service" ReferenceName="Service" ReferencePath="tmf640.datamodel" VariableName="service117"/>
+    </Input>
+    <Output>
+      <Data ID="33" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic33"/>
+      <Data ID="54" IsList="true" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="tmf640.datamodel" VariableName="serviceRelationship54"/>
+    </Output>
+    <ServiceReference ID="13" Label="Transform Structure" ReferenceName="TransformStructure" ReferencePath="xfmg.tmf640">
+      <Source RefID="12"/>
+      <Target RefID="12"/>
+    </ServiceReference>
+    <Function ID="12" Label="Transform Structure">
+      <Source RefID="13"/>
+      <Source RefID="75"/>
+      <Source RefID="96"/>
+      <Source RefID="117"/>
+      <Target RefID="13"/>
+      <Target RefID="15"/>
+      <Target RefID="16"/>
+      <Invoke Operation="TransformStructure" ServiceID="13">
+        <Source RefID="75"/>
+        <Source RefID="96"/>
+        <Source RefID="117"/>
+      </Invoke>
+      <Receive ServiceID="13">
+        <Target RefID="15"/>
+        <Target RefID="16"/>
+      </Receive>
+    </Function>
+    <Data ID="15" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic15">
+      <Source RefID="12"/>
+    </Data>
+    <Data ID="16" IsList="true" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="tmf640.datamodel" VariableName="serviceRelationship16">
+      <Source RefID="12"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="15"/>
+      <Source RefID="16"/>
+      <Target RefID="33"/>
+      <Target RefID="54"/>
+      <Copy>
+        <Source RefID="15"/>
+        <Target RefID="33"/>
+      </Copy>
+      <Copy>
+        <Source RefID="16"/>
+        <Target RefID="54"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

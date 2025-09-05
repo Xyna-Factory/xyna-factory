@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="TMF640-00010" IsAbstract="false" Label="Service Characteristic not found" TypeName="ServiceCharacteristicNotFound" TypePath="xfmg.tmf640">
+    <Data Label="Characteristic Name" VariableName="characteristicName">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <MessageText Language="DE">Characteristic '%0%' fehlt in Service.</MessageText>
+    <MessageText Language="EN">Characteristic '%0%' not found</MessageText>
+  </ExceptionType>
+</ExceptionStore>

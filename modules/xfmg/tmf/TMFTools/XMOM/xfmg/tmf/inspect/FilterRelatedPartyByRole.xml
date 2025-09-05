@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Filter" BaseTypePath="base.list.filter" IsAbstract="false" Label="Filter Related Party by Role" TypeName="FilterRelatedPartyByRole" TypePath="xfmg.tmf.inspect" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Role" VariableName="role">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Service Label="Filter Related Party by Role" TypeName="FilterRelatedPartyByRole">
+    <Operation IsStatic="false" Label="Accept" Name="accept">
+      <Input>
+        <Data ID="5" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype5">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="6" Label="Result" VariableName="boolean6">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">tmf640.datamodel.RelatedParty input = (tmf640.datamodel.RelatedParty) anytype5;
+return input.getRole().equals(getRole());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

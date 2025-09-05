@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="TMFUTIL-00001" IsAbstract="false" Label="Unsupported TMF Type" TypeName="UnsupportedTMFType" TypePath="xfmg.tmf.inspect">
+    <Data Label="tmf type name" VariableName="tmfTypeName">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <MessageText Language="DE">Type %0% nicht unterstützt</MessageText>
+  </ExceptionType>
+</ExceptionStore>

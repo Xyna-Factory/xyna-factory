@@ -1,0 +1,2206 @@
+openapi: 3.0.1
+info:
+  title: Service Activation and Configuration
+  description: |
+    ## Description
+    TMF640 based service activation API
+    ### Change History
+     + 03.07.2025 (1.1.8): Patterns for name, id and description added
+     + 23.04.2025 (1.1.7a): Change of version because of usage of new OAS Base Application 1.6.1
+     + 24.03.2025 (1.1.7): ExternalIdentifier added.
+     + 21.01.2025 (1.1.6a): Change of version because of usage of new OAS Base Application 1.4.2
+     + 02.09.2024 (1.1.6): serviceRelationshipCharacteristic - first letter to lower case
+     + 16.08.2024 (1.1.5): add /service/{id} put; add 202 as response (put, delete)
+     + 06.08.2024 (1.1.4): added id to Service_Create, extended sub-states
+     + 18.06.2024 (1.1.2): Subclasses for ServiceCharacteristics from v5 added
+     + 20.12.2023 (0.0.3): Added value property to ResourceRef. Various updates.
+  version: 1.1.8
+  x-model-path: tmf640.datamodel
+  x-provider-path: tmf640.provider
+  x-client-path: tmf640.client
+  x-api-category: G-API
+  x-segment:
+    - B2B
+    - WS
+  x-standard-reference:
+    id: TMF640
+    version: 4.0.1
+tags:
+  - name: service
+paths:
+  /service:
+    get:
+      tags:
+        - service
+      summary: List or find Service objects
+      description: This operation list or find Service entities
+      operationId: listService
+      parameters:
+        - name: fields
+          in: query
+          description: Comma-separated properties to be provided in response
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: Requested index for start of resources to be provided in response
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Requested number of resources to be provided in response
+          schema:
+            type: integer
+        - name: sort
+          in: query
+          description: Comma-separated properties to be used for sorting
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          headers:
+            X-Total-Count:
+              description: Total number of items matching criteria
+              schema:
+                type: integer
+            X-Result-Count:
+              description: Actual number of items returned in the response body
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Service"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "415":
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      tags:
+        - service
+      summary: Creates a Service
+      description: This operation creates a Service entity.
+      operationId: createService
+      requestBody:
+        description: The Service to be created
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Service_Create"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Service"
+        "202":
+          description: Accepted
+          content: {}
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "415":
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-codegen-request-body-name: service
+  /service/{id}:
+    get:
+      tags:
+        - service
+      summary: Retrieves a Service by ID
+      description:
+        This operation retrieves a Service entity. Attribute selection
+        is enabled for all first level attributes.
+      operationId: retrieveService
+      parameters:
+        - name: id
+          in: path
+          description: Identifier of the Service
+          required: true
+          schema:
+            type: string
+        - name: fields
+          in: query
+          description: Comma-separated properties to provide in response
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Service"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not Found
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "415":
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags:
+        - service
+      summary: Deletes a Service
+      description: This operation deletes a Service entity.
+      operationId: deleteService
+      parameters:
+        - name: id
+          in: path
+          description: Identifier of the Service
+          required: true
+          schema:
+            type: string
+      responses:
+        "202":
+          description: Accepted
+        "204":
+          description: Deleted
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not Found
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "415":
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    patch:
+      tags:
+        - service
+      summary: Updates partially a Service
+      description: This operation updates partially a Service entity.
+      operationId: patchService
+      parameters:
+        - name: id
+          in: path
+          description: Identifier of the Service
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The Service to be updated
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/Service_Update"
+        required: true
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Service"
+        "202":
+          description: Accepted
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not Found
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "415":
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      tags:
+        - service
+      summary: Updates complete Service
+      description: This operation updates a Service entity completely - target state must be provided.
+      operationId: putService
+      parameters:
+        - name: id
+          in: path
+          description: Identifier of the Service
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The Service to be updated
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: "#/components/schemas/Service_Update"
+        required: true
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Service"
+        "202":
+          description: Accepted
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not Found
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "415":
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    Addressable:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/IdType"
+          description: unique identifier
+        href:
+          type: string
+          description: Hyperlink reference
+          format: uri
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+      description: Base schema for adressable entities
+    #    Any:
+    #      type: object
+    Characteristic:
+      required:
+        - name
+      #      - value
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/Extensible"
+        - type: object
+          description: Describes a given characteristic of an object or entity through a name/value pair.
+          properties:
+            id:
+              $ref: "#/components/schemas/IdType"
+              description: Unique identifier of the characteristic
+            name:
+              $ref: "#/components/schemas/NameType"
+              description: Name of the characteristic
+            valueType:
+              type: string
+              description: Data type of the value of the characteristic
+            characteristicRelationship:
+              type: array
+              items:
+                $ref: "#/components/schemas/CharacteristicRelationship"
+      #        value:
+      #          $ref: '#/components/schemas/Any'
+      #        '@baseType':
+      #          type: string
+      #          description: When sub-classing, this defines the super-class
+      #        '@schemaLocation':
+      #          type: string
+      #          description: A URI to a JSON-Schema file that defines additional attributes
+      #            and relationships
+      #          format: uri
+      #        '@type':
+      #          type: string
+      discriminator:
+        propertyName: "@type"
+        mapping:
+          Characteristic: "#/components/schemas/Characteristic"
+          StringCharacteristic: "#/components/schemas/StringCharacteristic"
+          StringArrayCharacteristic: "#/components/schemas/StringArrayCharacteristic"
+          ObjectCharacteristic: "#/components/schemas/ObjectCharacteristic"
+          ObjectArrayCharacteristic: "#/components/schemas/ObjectArrayCharacteristic"
+          NumberCharacteristic: "#/components/schemas/NumberCharacteristic"
+          NumberArrayCharacteristic: "#/components/schemas/NumberArrayCharacteristic"
+          IntegerCharacteristic: "#/components/schemas/IntegerCharacteristic"
+          IntegerArrayCharacteristic: "#/components/schemas/IntegerArrayCharacteristic"
+          BooleanCharacteristic: "#/components/schemas/BooleanCharacteristic"
+          BooleanArrayCharacteristic: "#/components/schemas/BooleanArrayCharacteristic"
+    BooleanArrayCharacteristic:
+      required:
+        - value
+      allOf:
+        - $ref: "#/components/schemas/Characteristic"
+        - type: object
+          description: A characteristic which value is an array of Boolean(s).
+          properties:
+            value:
+              type: array
+              items:
+                type: boolean
+    BooleanCharacteristic:
+      required:
+        - value
+      allOf:
+        - $ref: "#/components/schemas/Characteristic"
+        - type: object
+          description: A characteristic which value is a Boolean.
+          properties:
+            value:
+              type: boolean
+              description: Value of the characteristic
+    IntegerArrayCharacteristic:
+      required:
+        - value
+      allOf:
+        - $ref: "#/components/schemas/Characteristic"
+        - type: object
+          description: A characteristic which value is an array of Integer(s).
+          properties:
+            value:
+              type: array
+              items:
+                type: integer
+    IntegerCharacteristic:
+      required:
+        - value
+      allOf:
+        - $ref: "#/components/schemas/Characteristic"
+        - type: object
+          description: A characteristic which value is a Integer.
+          properties:
+            value:
+              type: integer
+              description: Value of the characteristic
+    NumberArrayCharacteristic:
+      required:
+        - value
+      allOf:
+        - $ref: "#/components/schemas/Characteristic"
+        - type: object
+          description: A characteristic which value is an array of Number(s).
+          properties:
+            value:
+              type: array
+              items:
+                type: number
+    NumberCharacteristic:
+      required:
+        - value
+      allOf:
+        - $ref: "#/components/schemas/Characteristic"
+        - type: object
+          description: A characteristic which value is a Number.
+          properties:
+            value:
+              type: number
+              description: Value of the characteristic
+    StringArrayCharacteristic:
+      required:
+        - value
+      allOf:
+        - $ref: "#/components/schemas/Characteristic"
+        - type: object
+          description: A characteristic which value is an array of String(s).
+          properties:
+            value:
+              type: array
+              items:
+                type: string
+    StringCharacteristic:
+      required:
+        - value
+      allOf:
+        - $ref: "#/components/schemas/Characteristic"
+        - type: object
+          description: A characteristic which value is a String.
+          properties:
+            value:
+              type: string
+              description: Value of the characteristic
+    ObjectArrayCharacteristic:
+      required:
+        - value
+      allOf:
+        - $ref: "#/components/schemas/Characteristic"
+        - type: object
+          description: A characteristic which value is an array of Object(s).
+          properties:
+            value:
+              type: array
+              items:
+                type: object
+    ObjectCharacteristic:
+      required:
+        - value
+      allOf:
+        - $ref: "#/components/schemas/Characteristic"
+        - type: object
+          description: A characteristic which value is a Object.
+          properties:
+            value:
+              type: object
+              description: Value of the characteristic
+    CharacteristicRelationship:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/IdType"
+          description: Unique identifier of the characteristic
+        relationshipType:
+          type: string
+          description: The type of relationship
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+      description: Another Characteristic that is related to the current Characteristic;
+    ConstraintRef:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/IdType"
+          description: reference id to the target constraint
+        href:
+          type: string
+          description: Hyperlink reference to the target constraint
+        name:
+          $ref: "#/components/schemas/NameType"
+          description: Name given to the constraint
+        version:
+          type: string
+          description: constraint version
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+        "@referredType":
+          type: string
+          description: The (class) type of the referred constraint
+      description:
+        Constraint reference. The Constraint resource represents a policy/rule
+        applied to an entity or entity spec.
+    EntityRef:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/IdType"
+          description: unique identifier
+        href:
+          type: string
+          description: Hyperlink reference
+          format: uri
+        name:
+          $ref: "#/components/schemas/NameType"
+          description: Name of the related entity.
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+        "@referredType":
+          type: string
+          description: The actual type of the target instance when needed for disambiguation.
+      description: Entity reference schema to be use for all entityRef class.
+    EntityValue:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/IdType"
+          description: Unique identifier of a related entity.
+        href:
+          type: string
+          description: Reference of the related entity.
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+      description: Base entity value  schema for use in TMForum Open-APIs
+    Extensible:
+      type: object
+      properties:
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+      description: Base Extensible schema for use in TMForum Open-APIs
+    Feature:
+      required:
+        - featureCharacteristic
+        - name
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/IdType"
+          description: Unique identifier of the feature.
+        isBundle:
+          type: boolean
+          description: True if this is a feature group. Default is false.
+        isEnabled:
+          type: boolean
+          description: True if this feature is enabled. Default is true.
+        name:
+          $ref: "#/components/schemas/NameType"
+          description: This is the name for the feature.
+        constraint:
+          type: array
+          description: This is a list of feature constraints.
+          items:
+            $ref: "#/components/schemas/ConstraintRef"
+        featureCharacteristic:
+          minItems: 1
+          type: array
+          description: This is a list of Characteristics for a particular feature.
+          items:
+            $ref: "#/components/schemas/Characteristic"
+        featureRelationship:
+          type: array
+          items:
+            $ref: "#/components/schemas/FeatureRelationship"
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+      description: Configuration feature.
+    FeatureRelationship:
+      required:
+        - name
+        - relationshipType
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/IdType"
+          description: Unique identifier of the target feature.
+        name:
+          $ref: "#/components/schemas/NameType"
+          description: This is the name of the target feature.
+        relationshipType:
+          type: string
+          description: This is the type of the feature relationship.
+        validFor:
+          $ref: "#/components/schemas/TimePeriod"
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+      description: Configuration feature
+    HeaderItem:
+      required:
+        - name
+        - value
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the header item, e.g. locale
+        value:
+          type: string
+          description: The value of the header item, e.g. en-us
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+      description: An item typically included in a request or response
+    Note:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/IdType"
+          description:
+            Identifier of the note within its containing entity (may or
+            may not be globally unique, depending on provider implementation)
+        author:
+          type: string
+          description: Author of the note
+        date:
+          type: string
+          description: Date of the note
+          format: date-time
+        text:
+          type: string
+          description: Text of the note
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+      description: Extra information about a given entity
+    OrderItemActionType:
+      type: string
+      description: action to be performed on the product
+      enum:
+        - add
+        - modify
+        - delete
+        - noChange
+    Place:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/IdType"
+          description: Unique identifier of the place
+        href:
+          type: string
+          description: Unique reference of the place
+        name:
+          $ref: "#/components/schemas/NameType"
+          description:
+            A user-friendly name for the place, such as [Paris Store],
+            [London Store], [Main Home]
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+      description:
+        Place reference. Place defines the places where the products are
+        sold or delivered.
+    PlaceRef:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/IdType"
+          description: unique identifier
+        href:
+          type: string
+          description: Hyperlink reference
+          format: uri
+        name:
+          $ref: "#/components/schemas/NameType"
+          description: Name of the related entity.
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+        "@referredType":
+          type: string
+          description: The actual type of the target instance when needed for disambiguation.
+      description:
+        Place reference. PlaceRef defines the placeRefs where the products
+        are sold or delivered.
+    RelatedEntityRefOrValue:
+      required:
+        - role
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/IdType"
+          description: Unique identifier of a related entity.
+        href:
+          type: string
+          description: Reference of the related entity.
+        name:
+          $ref: "#/components/schemas/NameType"
+          description: Name of the related entity.
+        role:
+          type: string
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+        "@referredType":
+          type: string
+          description: The actual type of the target instance when needed for disambiguation.
+      description:
+        A reference to an entity, where the type of the entity is not known
+        in advance. A related entity defines a entity described by reference or by
+        value linked to a specific entity. The polymorphic attributes @type, @schemaLocation
+        & @referredType are related to the Entity and not the RelatedEntityRefOrValue
+        class itself
+    RelatedParty:
+      required:
+        - "@referredType"
+        - id
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/IdType"
+          description: unique identifier
+        href:
+          type: string
+          description: Hyperlink reference
+          format: uri
+        name:
+          $ref: "#/components/schemas/NameType"
+          description: Name of the related entity.
+        role:
+          type: string
+          description: Role played by the related party
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+          example: ResourceSpecification
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+          example: https://mycsp.com:8080/tmf-api/schema/Resource/LogicalResourceSpecification.schema.json
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+          example: LogicalResourceSpecification
+        "@referredType":
+          type: string
+          description: The actual type of the target instance when needed for disambiguation.
+      description:
+        Related Entity reference. A related party defines party or party
+        role linked to a specific entity.
+    RelatedPlaceRefOrValue:
+      required:
+        - role
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/IdType"
+          description: Unique identifier of the place
+        href:
+          type: string
+          description: Unique reference of the place
+        name:
+          type: string
+          # intentionally no NameType but string, because of not conformant name examples
+          description:
+            A user-friendly name for the place, such as [Paris Store],
+            [London Store], [Main Home]
+        role:
+          type: string
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+          example: ResourceSpecification
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+          example: https://mycsp.com:8080/tmf-api/schema/Resource/LogicalResourceSpecification.schema.json
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+          example: LogicalResourceSpecification
+        "@referredType":
+          type: string
+          description: The actual type of the target instance when needed for disambiguation.
+      description:
+        Related Entity reference. A related place defines a place described
+        by reference or by value linked to a specific entity. The polymorphic attributes
+        @type, @schemaLocation & @referredType are related to the place entity and
+        not the RelatedPlaceRefOrValue class itself
+    RelatedServiceOrderItem:
+      required:
+        - itemId
+        - serviceOrderId
+      type: object
+      properties:
+        itemId:
+          $ref: "#/components/schemas/IdType"
+          description: Identifier of the order item where the service was managed
+        role:
+          type: string
+          description: role of the service order item for this service
+        serviceOrderHref:
+          type: string
+          description: Reference of the related entity.
+        serviceOrderId:
+          $ref: "#/components/schemas/IdType"
+          description: Unique identifier of a related entity.
+        itemAction:
+          $ref: "#/components/schemas/OrderItemActionType"
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+        "@referredType":
+          type: string
+          description: The actual type of the target instance when needed for disambiguation.
+      description:
+        RelatedServiceOrderItem (a ServiceOrder item) .The service order
+        item which triggered service creation/change/termination.
+    Request:
+      required:
+        - body
+        - header
+      type: object
+      properties:
+        body:
+          type: string
+          description:
+            The body of the request. For example for an HTTP request might
+            contain content of a form .
+        method:
+          type: string
+          description: The protocol of the request, e.g. http
+        to:
+          type: string
+          description: The target of the request, e.g. a URL for an HTTP request
+        header:
+          minItems: 1
+          type: array
+          description:
+            Items included in the header of the request. For example for
+            an HTTP request might contain requested locale, basic authentication.
+          items:
+            $ref: "#/components/schemas/HeaderItem"
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+      description: A response to a request
+    ResourceRefOrValue:
+      type: object
+      description: >-
+        A Resource to be created defined by value or existing defined by reference. The polymorphic
+        attributes @type, @schemaLocation & @referredType are related to the Service entity and not
+        the RelatedServiceRefOrValue class itself
+      oneOf:
+        - $ref: "#/components/schemas/Resource"
+        - $ref: "#/components/schemas/ResourceRef"
+      discriminator:
+        propertyName: "@type"
+        mapping:
+          Resource: "#/components/schemas/Resource"
+          ResourceRef: "#/components/schemas/ResourceRef"
+    ResourceRef:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/IdType"
+          description: unique identifier
+        href:
+          type: string
+          description: Hyperlink reference
+          format: uri
+        name:
+          $ref: "#/components/schemas/NameType"
+          description: Name of the related entity.
+        value:
+          type: string
+          description:
+            The resource value that can be used to identify a resource with a public identifier.
+            This property is not part of TMF638 was added to support use cases without the need to provide
+            resource inventory API.
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+          example: ResourceSpecification
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+          example: https://mycsp.com:8080/tmf-api/schema/Resource/LogicalResourceSpecification.schema.json
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+          example: LogicalResourceSpecification
+        "@referredType":
+          type: string
+          description: The actual type of the target instance when needed for disambiguation.
+    Resource:
+      required:
+        - href
+        - id
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/IdType"
+          description:
+            Identifier of an instance of the resource. Required to be unique
+            within the resource type.  Used in URIs as the identifier for specific
+            instances of a type.
+        href:
+          type: string
+          description: The URI for the object itself.
+        category:
+          type: string
+          description:
+            Category of the concrete resource. e.g Gold, Silver for MSISDN
+            concrete resource
+        description:
+          $ref: "#/components/schemas/DescriptionType"
+          description: free-text description of the resource
+        endOperatingDate:
+          type: string
+          description: A date time( DateTime). The date till the resource is operating
+          format: date-time
+        name:
+          $ref: "#/components/schemas/NameType"
+          description: A string used to give a name to the resource
+        resourceVersion:
+          type: string
+          description:
+            A field that identifies the specific version of an instance
+            of a resource.
+        startOperatingDate:
+          type: string
+          description:
+            A date time( DateTime). The date from which the resource is
+            operating
+          format: date-time
+        activationFeature:
+          type: array
+          description: Configuration features
+          items:
+            $ref: "#/components/schemas/Feature"
+        administrativeState:
+          $ref: "#/components/schemas/ResourceAdministrativeStateType"
+        #        attachment:
+        #          type: array
+        #          items:
+        #            $ref: '#/components/schemas/AttachmentRefOrValue'
+        note:
+          type: array
+          items:
+            $ref: "#/components/schemas/Note"
+        operationalState:
+          $ref: "#/components/schemas/ResourceOperationalStateType"
+        place:
+          $ref: "#/components/schemas/RelatedPlaceRefOrValue"
+        relatedParty:
+          type: array
+          items:
+            $ref: "#/components/schemas/RelatedParty"
+        resourceCharacteristic:
+          type: array
+          items:
+            $ref: "#/components/schemas/Characteristic"
+        #        resourceRelationship:
+        #          type: array
+        #          items:
+        #            $ref: '#/components/schemas/ResourceRelationship'
+        resourceSpecification:
+          $ref: "#/components/schemas/ResourceSpecificationRef"
+        resourceStatus:
+          $ref: "#/components/schemas/ResourceStatusType"
+        usageState:
+          $ref: "#/components/schemas/ResourceUsageStateType"
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+      description:
+        Resource is an abstract entity that describes the common set of
+        attributes shared by all concrete resources (e.g. TPE, EQUIPMENT) in the inventory.
+    ResourceStatusType:
+      type: string
+      description: ResourceStatusType enumerations
+      enum:
+        - standby
+        - alarm
+        - available
+        - reserved
+        - unknown
+        - suspended
+    ResourceUsageStateType:
+      type: string
+      description: ResourceUsageStateType enumerations
+      enum:
+        - idle
+        - active
+        - busy
+    ResourceAdministrativeStateType:
+      type: string
+      description: ResourceAdministrativeStateType enumerations
+      enum:
+        - locked
+        - unlocked
+        - shutdown
+    ResourceOperationalStateType:
+      type: string
+      description: ResourceOperationalStateType enumerations
+      enum:
+        - enable
+        - disable
+    ResourceSpecificationRef:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/IdType"
+          description: unique identifier
+        href:
+          type: string
+          description: Hyperlink reference
+          format: uri
+        name:
+          type: string
+          description: Name of the related entity.
+        version:
+          type: string
+          description: Resource Specification version
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+        "@referredType":
+          type: string
+          description: The actual type of the target instance when needed for disambiguation.
+      description: |-
+        Resources are physical or non-physical components (or some combination of these) within an enterprise's infrastructure or inventory. They are typically consumed or used by services (for example a physical port assigned to a service) or contribute to the realization of a Product (for example, a SIM card). They can be drawn from the Application, Computing and Network domains, and include, for example, Network Elements, software, IT systems, content and information, and technology components.
+        A ResourceSpecification is an abstract base class for representing a generic means for implementing a particular type of Resource. In essence, a ResourceSpecification defines the common attributes and relationships of a set of related Resources, while Resource defines a specific instance that is based on a particular ResourceSpecification.
+
+    Response:
+      required:
+        - body
+        - header
+      type: object
+      properties:
+        body:
+          type: string
+          description:
+            The body of the response. For example for an HTTP response
+            might contain HTML for rendering.
+        statusCode:
+          type: string
+          description:
+            The status of the response. For example for an HTTP response
+            would be codes such as 200, 400, etc.
+        header:
+          minItems: 1
+          type: array
+          description:
+            Items included in the header of the response. For example for
+            an HTTP response might contain negotiated locale.
+          items:
+            $ref: "#/components/schemas/HeaderItem"
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+      description: A response to a request
+    Service:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/IdType"
+          description: Unique identifier of the service
+        href:
+          type: string
+          description: Reference of the service
+        category:
+          type: string
+          description: Is it a customer facing or resource facing service
+        description:
+          $ref: "#/components/schemas/DescriptionType"
+          description: Free-text description of the service
+        endDate:
+          type: string
+          description: Date when the service ends
+          format: date-time
+        hasStarted:
+          type: boolean
+          description: If TRUE, this Service has already been started
+        isBundle:
+          type: boolean
+          description:
+            If true, the service is a ServiceBundle which regroup a service
+            hierachy. If false, the service is a 'atomic' service (hierachy leaf).
+        isServiceEnabled:
+          type: boolean
+          description:
+            "If FALSE and hasStarted is FALSE, this particular Service
+            has NOT been enabled for use - if FALSE and hasStarted is TRUE then the
+            service has failed "
+        isStateful:
+          type: boolean
+          description:
+            If TRUE, this Service can be changed without affecting any
+            other services
+        name:
+          $ref: "#/components/schemas/NameType"
+          description: Name of the service
+        serviceDate:
+          type: string
+          description: Date when the service was created (whatever its status).
+        serviceType:
+          type: string
+          description: Business type of the service
+        startDate:
+          type: string
+          description: Date when the service starts
+          format: date-time
+        startMode:
+          type: string
+          description:
+            "This attribute is an enumerated integer that indicates how
+            the Service is started, such as: 0: Unknown; 1: Automatically by the managed
+            environment; 2: Automatically by the owning device; 3: Manually by the
+            Provider of the Service; 4: Manually by a Customer of the Provider; 5:
+            Any of the above"
+        externalIdentifier:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalIdentifier'
+          description: A list of external identifiers associated with this service
+        feature:
+          type: array
+          description: "A list of feature associated with this service "
+          items:
+            $ref: "#/components/schemas/Feature"
+        note:
+          type: array
+          description: A list of notes made on this service
+          items:
+            $ref: "#/components/schemas/Note"
+        place:
+          type: array
+          description:
+            A list of places (Place [*]). Used to define a place useful
+            for the service (for example a geographical place whre the service is
+            installed)
+          items:
+            $ref: "#/components/schemas/RelatedPlaceRefOrValue"
+        relatedEntity:
+          type: array
+          description: "A list of related  entity in relationship with this service "
+          items:
+            $ref: "#/components/schemas/RelatedEntityRefOrValue"
+        relatedParty:
+          type: array
+          description:
+            A list of related party references (RelatedParty [*]). A related
+            party defines party or party role linked to a specific entity
+          items:
+            $ref: "#/components/schemas/RelatedParty"
+        serviceCharacteristic:
+          type: array
+          description:
+            "A list of characteristics that characterize this service (ServiceCharacteristic
+            [*]) "
+          items:
+            $ref: "#/components/schemas/Characteristic"
+        serviceOrderItem:
+          type: array
+          description: A list of service order items related to this service
+          items:
+            $ref: "#/components/schemas/RelatedServiceOrderItem"
+        serviceRelationship:
+          type: array
+          description:
+            A list of service relationships (ServiceRelationship [*]).
+            Describes links with other service(s) in the inventory (useful for describing
+            relies-on, relies-from between CFS for example).
+          items:
+            $ref: "#/components/schemas/ServiceRelationship"
+        serviceSpecification:
+          $ref: "#/components/schemas/ServiceSpecificationRef"
+        state:
+          $ref: "#/components/schemas/ServiceStateType"
+        supportingResource:
+          type: array
+          description:
+            "A list of supporting resources (SupportingResource [*]).Note:
+            only Service of type RFS can be associated with Resources"
+          items:
+            $ref: "#/components/schemas/ResourceRef"
+        supportingService:
+          type: array
+          description:
+            A list of supporting services (SupportingService [*]). A collection
+            of services that support this service (bundling, link CFS to RFS)
+          items:
+            $ref: "#/components/schemas/ServiceRefOrValue"
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+      description:
+        "Service is a base class for defining the Service hierarchy. All
+        Services are characterized as either being possibly visible and usable by
+        a Customer or not. This gives rise to the two subclasses of Service: CustomerFacingService
+        and ResourceFacingService."
+    Service_Create:
+      required:
+        - serviceSpecification
+        - state
+        - id
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/IdType"
+          description: Unique identifier of the service
+        category:
+          type: string
+          description: Is it a customer facing or resource facing service
+        description:
+          $ref: "#/components/schemas/DescriptionType"
+          description: Free-text description of the service
+        endDate:
+          type: string
+          description: Date when the service ends
+          format: date-time
+        hasStarted:
+          type: boolean
+          description: If TRUE, this Service has already been started
+        isBundle:
+          type: boolean
+          description:
+            If true, the service is a ServiceBundle which regroup a service
+            hierachy. If false, the service is a 'atomic' service (hierachy leaf).
+        isServiceEnabled:
+          type: boolean
+          description:
+            "If FALSE and hasStarted is FALSE, this particular Service
+            has NOT been enabled for use - if FALSE and hasStarted is TRUE then the
+            service has failed "
+        isStateful:
+          type: boolean
+          description:
+            If TRUE, this Service can be changed without affecting any
+            other services
+        name:
+          $ref: "#/components/schemas/NameType"
+          description: Name of the service
+        serviceDate:
+          type: string
+          description: Date when the service was created (whatever its status).
+        serviceType:
+          type: string
+          description: Business type of the service
+        startDate:
+          type: string
+          description: Date when the service starts
+          format: date-time
+        startMode:
+          type: string
+          description:
+            "This attribute is an enumerated integer that indicates how
+            the Service is started, such as: 0: Unknown; 1: Automatically by the managed
+            environment; 2: Automatically by the owning device; 3: Manually by the
+            Provider of the Service; 4: Manually by a Customer of the Provider; 5:
+            Any of the above"
+        externalIdentifier:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalIdentifier'
+          description: A list of external identifiers associated with this service
+        feature:
+          type: array
+          description: "A list of feature associated with this service "
+          items:
+            $ref: "#/components/schemas/Feature"
+        note:
+          type: array
+          description: A list of notes made on this service
+          items:
+            $ref: "#/components/schemas/Note"
+        place:
+          type: array
+          description:
+            A list of places (Place [*]). Used to define a place useful
+            for the service (for example a geographical place whre the service is
+            installed)
+          items:
+            $ref: "#/components/schemas/RelatedPlaceRefOrValue"
+        relatedEntity:
+          type: array
+          description: "A list of related  entity in relationship with this service "
+          items:
+            $ref: "#/components/schemas/RelatedEntityRefOrValue"
+        relatedParty:
+          type: array
+          description:
+            A list of related party references (RelatedParty [*]). A related
+            party defines party or party role linked to a specific entity
+          items:
+            $ref: "#/components/schemas/RelatedParty"
+        serviceCharacteristic:
+          type: array
+          description:
+            "A list of characteristics that characterize this service (ServiceCharacteristic
+            [*]) "
+          items:
+            $ref: "#/components/schemas/Characteristic"
+        serviceOrderItem:
+          type: array
+          description: A list of service order items related to this service
+          items:
+            $ref: "#/components/schemas/RelatedServiceOrderItem"
+        serviceRelationship:
+          type: array
+          description:
+            A list of service relationships (ServiceRelationship [*]).
+            Describes links with other service(s) in the inventory (useful for describing
+            relies-on, relies-from between CFS for example).
+          items:
+            $ref: "#/components/schemas/ServiceRelationship"
+        serviceSpecification:
+          $ref: "#/components/schemas/ServiceSpecificationRef"
+        state:
+          $ref: "#/components/schemas/ServiceStateType"
+        supportingResource:
+          type: array
+          description:
+            "A list of supporting resources (SupportingResource [*]).Note:
+            only Service of type RFS can be associated with Resources"
+          items:
+            $ref: "#/components/schemas/ResourceRef"
+        supportingService:
+          type: array
+          description:
+            A list of supporting services (SupportingService [*]). A collection
+            of services that support this service (bundling, link CFS to RFS)
+          items:
+            $ref: "#/components/schemas/ServiceRefOrValue"
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+      description: |-
+        Service is a base class for defining the Service hierarchy. All Services are characterized as either being possibly visible and usable by a Customer or not. This gives rise to the two subclasses of Service: CustomerFacingService and ResourceFacingService.
+        Skipped properties: id,href
+    Service_Update:
+      type: object
+      properties:
+        category:
+          type: string
+          description: Is it a customer facing or resource facing service
+        description:
+          $ref: "#/components/schemas/DescriptionType"
+          description: Free-text description of the service
+        endDate:
+          type: string
+          description: Date when the service ends
+          format: date-time
+        hasStarted:
+          type: boolean
+          description: If TRUE, this Service has already been started
+        isBundle:
+          type: boolean
+          description:
+            If true, the service is a ServiceBundle which regroup a service
+            hierachy. If false, the service is a 'atomic' service (hierachy leaf).
+        isServiceEnabled:
+          type: boolean
+          description:
+            "If FALSE and hasStarted is FALSE, this particular Service
+            has NOT been enabled for use - if FALSE and hasStarted is TRUE then the
+            service has failed "
+        isStateful:
+          type: boolean
+          description:
+            If TRUE, this Service can be changed without affecting any
+            other services
+        name:
+          $ref: "#/components/schemas/NameType"
+          description: Name of the service
+        serviceType:
+          type: string
+          description: Business type of the service
+        startDate:
+          type: string
+          description: Date when the service starts
+          format: date-time
+        startMode:
+          type: string
+          description:
+            "This attribute is an enumerated integer that indicates how
+            the Service is started, such as: 0: Unknown; 1: Automatically by the managed
+            environment; 2: Automatically by the owning device; 3: Manually by the
+            Provider of the Service; 4: Manually by a Customer of the Provider; 5:
+            Any of the above"
+        externalIdentifier:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalIdentifier'
+          description: A list of external identifiers associated with this service
+        feature:
+          type: array
+          description: "A list of feature associated with this service "
+          items:
+            $ref: "#/components/schemas/Feature"
+        note:
+          type: array
+          description: A list of notes made on this service
+          items:
+            $ref: "#/components/schemas/Note"
+        place:
+          type: array
+          description:
+            A list of places (Place [*]). Used to define a place useful
+            for the service (for example a geographical place whre the service is
+            installed)
+          items:
+            $ref: "#/components/schemas/RelatedPlaceRefOrValue"
+        relatedEntity:
+          type: array
+          description: "A list of related  entity in relationship with this service "
+          items:
+            $ref: "#/components/schemas/RelatedEntityRefOrValue"
+        relatedParty:
+          type: array
+          description:
+            A list of related party references (RelatedParty [*]). A related
+            party defines party or party role linked to a specific entity
+          items:
+            $ref: "#/components/schemas/RelatedParty"
+        serviceCharacteristic:
+          type: array
+          description:
+            "A list of characteristics that characterize this service (ServiceCharacteristic
+            [*]) "
+          items:
+            $ref: "#/components/schemas/Characteristic"
+        serviceOrderItem:
+          type: array
+          description: A list of service order items related to this service
+          items:
+            $ref: "#/components/schemas/RelatedServiceOrderItem"
+        serviceRelationship:
+          type: array
+          description:
+            A list of service relationships (ServiceRelationship [*]).
+            Describes links with other service(s) in the inventory (useful for describing
+            relies-on, relies-from between CFS for example).
+          items:
+            $ref: "#/components/schemas/ServiceRelationship"
+        serviceSpecification:
+          $ref: "#/components/schemas/ServiceSpecificationRef"
+        state:
+          $ref: "#/components/schemas/ServiceStateType"
+        supportingResource:
+          type: array
+          description:
+            "A list of supporting resources (SupportingResource [*]).Note:
+            only Service of type RFS can be associated with Resources"
+          items:
+            $ref: "#/components/schemas/ResourceRef"
+        supportingService:
+          type: array
+          description:
+            A list of supporting services (SupportingService [*]). A collection
+            of services that support this service (bundling, link CFS to RFS)
+          items:
+            $ref: "#/components/schemas/ServiceRefOrValue"
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+      description: |-
+        Service is a base class for defining the Service hierarchy. All Services are characterized as either being possibly visible and usable by a Customer or not. This gives rise to the two subclasses of Service: CustomerFacingService and ResourceFacingService.
+        Skipped properties: id,href
+    ServiceRef:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/IdType"
+          description: unique identifier
+        href:
+          type: string
+          description: Hyperlink reference
+          format: uri
+        name:
+          $ref: "#/components/schemas/NameType"
+          description: Name of the related entity.
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+          example: ResourceSpecification
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+          example: https://mycsp.com:8080/tmf-api/schema/Resource/LogicalResourceSpecification.schema.json
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+          example: LogicalResourceSpecification
+        "@referredType":
+          type: string
+          description: The actual type of the target instance when needed for disambiguation.
+      description: Service reference, for when Service is used by other entities
+    ServiceRefOrValue:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/IdType"
+          description: Unique identifier of the service
+        href:
+          type: string
+          description: Reference of the service
+        category:
+          type: string
+          description: Is it a customer facing or resource facing service
+        description:
+          $ref: "#/components/schemas/DescriptionType"
+          description: Free-text description of the service
+        endDate:
+          type: string
+          description: Date when the service ends
+          format: date-time
+        hasStarted:
+          type: boolean
+          description: If TRUE, this Service has already been started
+        isBundle:
+          type: boolean
+          description:
+            If true, the service is a ServiceBundle which regroup a service
+            hierachy. If false, the service is a 'atomic' service (hierachy leaf).
+        isServiceEnabled:
+          type: boolean
+          description:
+            "If FALSE and hasStarted is FALSE, this particular Service
+            has NOT been enabled for use - if FALSE and hasStarted is TRUE then the
+            service has failed "
+        isStateful:
+          type: boolean
+          description:
+            If TRUE, this Service can be changed without affecting any
+            other services
+        name:
+          $ref: "#/components/schemas/NameType"
+          description: Name of the service
+        serviceDate:
+          type: string
+          description: Date when the service was created (whatever its status).
+        serviceType:
+          type: string
+          description: Business type of the service
+        startDate:
+          type: string
+          description: Date when the service starts
+          format: date-time
+        startMode:
+          type: string
+          description:
+            "This attribute is an enumerated integer that indicates how
+            the Service is started, such as: 0: Unknown; 1: Automatically by the managed
+            environment; 2: Automatically by the owning device; 3: Manually by the
+            Provider of the Service; 4: Manually by a Customer of the Provider; 5:
+            Any of the above"
+        feature:
+          type: array
+          description: "A list of feature associated with this service "
+          items:
+            $ref: "#/components/schemas/Feature"
+        note:
+          type: array
+          description: A list of notes made on this service
+          items:
+            $ref: "#/components/schemas/Note"
+        place:
+          type: array
+          description:
+            A list of places (Place [*]). Used to define a place useful
+            for the service (for example a geographical place whre the service is
+            installed)
+          items:
+            $ref: "#/components/schemas/RelatedPlaceRefOrValue"
+        relatedEntity:
+          type: array
+          description: "A list of related  entity in relationship with this service "
+          items:
+            $ref: "#/components/schemas/RelatedEntityRefOrValue"
+        relatedParty:
+          type: array
+          description:
+            A list of related party references (RelatedParty [*]). A related
+            party defines party or party role linked to a specific entity
+          items:
+            $ref: "#/components/schemas/RelatedParty"
+        serviceCharacteristic:
+          type: array
+          description:
+            "A list of characteristics that characterize this service (ServiceCharacteristic
+            [*]) "
+          items:
+            $ref: "#/components/schemas/Characteristic"
+        serviceOrderItem:
+          type: array
+          description: A list of service order items related to this service
+          items:
+            $ref: "#/components/schemas/RelatedServiceOrderItem"
+        serviceRelationship:
+          type: array
+          description:
+            A list of service relationships (ServiceRelationship [*]).
+            Describes links with other service(s) in the inventory (useful for describing
+            relies-on, relies-from between CFS for example).
+          items:
+            $ref: "#/components/schemas/ServiceRelationship"
+        serviceSpecification:
+          $ref: "#/components/schemas/ServiceSpecificationRef"
+        state:
+          $ref: "#/components/schemas/ServiceStateType"
+        supportingResource:
+          type: array
+          description:
+            "A list of supporting resources (SupportingResource [*]).Note:
+            only Service of type RFS can be associated with Resources"
+          items:
+            $ref: "#/components/schemas/ResourceRef"
+        supportingService:
+          type: array
+          description:
+            A list of supporting services (SupportingService [*]). A collection
+            of services that support this service (bundling, link CFS to RFS)
+          items:
+            $ref: "#/components/schemas/ServiceRefOrValue"
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+          example: ResourceSpecification
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+          example: https://mycsp.com:8080/tmf-api/schema/Resource/LogicalResourceSpecification.schema.json
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+          example: LogicalResourceSpecification
+        "@referredType":
+          type: string
+          description: The actual type of the target instance when needed for disambiguation.
+      description:
+        A Service to be created defined by value or existing defined by
+        reference. The polymorphic attributes @type, @schemaLocation & @referredType
+        are related to the Service entity and not the RelatedServiceRefOrValue class
+        itself
+    ServiceRelationship:
+      required:
+        - relationshipType
+      type: object
+      properties:
+        relationshipType:
+          type: string
+        serviceRelationshipCharacteristic:
+          type: array
+          items:
+            $ref: "#/components/schemas/Characteristic"
+        service:
+          $ref: "#/components/schemas/ServiceRefOrValue"
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+    ServiceSpecificationRef:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/IdType"
+          description: unique identifier
+        href:
+          type: string
+          description: Hyperlink reference
+          format: uri
+        name:
+          $ref: "#/components/schemas/NameType"
+          description: Name of the related entity.
+        version:
+          type: string
+          description: Service specification version
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+          example: ResourceSpecification
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+          example: https://mycsp.com:8080/tmf-api/schema/Resource/LogicalResourceSpecification.schema.json
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class Extensible name
+          example: LogicalResourceSpecification
+        "@referredType":
+          type: string
+          description: The actual type of the target instance when needed for disambiguation.
+      description:
+        "Service specification reference: ServiceSpecification(s) required
+        to realize a ProductSpecification."
+    ServiceStateType:
+      type: string
+      description: Valid values for the lifecycle state of the service
+      enum:
+        - initial
+        - feasibilityChecked
+        - designed
+        - reserved
+        - inactive
+        - inactive.inTesting
+        - inactive.adminDown
+        - active
+        - active.degraded
+        - terminated
+        - failure
+    TimePeriod:
+      type: object
+      properties:
+        endDateTime:
+          type: string
+          description: End of the time period, using IETC-RFC-3339 format
+          format: date-time
+          example: 1985-04-12T23:20:50.52Z
+        startDateTime:
+          type: string
+          description:
+            Start of the time period, using IETC-RFC-3339 format. If you
+            define a start, you must also define an end
+          format: date-time
+          example: 1985-04-12T23:20:50.52Z
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class entity name
+      description:
+        A period of time, either as a deadline (endDateTime only) a startDateTime
+        only, or both
+    Error:
+      required:
+        - code
+        - reason
+      type: object
+      properties:
+        code:
+          type: string
+          description:
+            Application relevant detail, defined in the API or a common
+            list.
+        reason:
+          type: string
+          description:
+            Explanation of the reason for the error which can be shown
+            to a client user.
+        message:
+          type: string
+          description:
+            More details and corrective actions related to the error which
+            can be shown to a client user.
+        status:
+          type: string
+          description: HTTP Error code extension
+        referenceError:
+          type: string
+          description: URI of documentation describing the error.
+          format: uri
+        "@baseType":
+          type: string
+          description: When sub-classing, this defines the super-class.
+        "@schemaLocation":
+          type: string
+          description:
+            A URI to a JSON-Schema file that defines additional attributes
+            and relationships
+          format: uri
+        "@type":
+          type: string
+          description: When sub-classing, this defines the sub-class entity name.
+      description:
+        Used when an API throws an Error, typically with a HTTP error response-code
+        (3xx, 4xx, 5xx)
+    ExternalIdentifier:
+      allOf:
+        - $ref: '#/components/schemas/Extensible'
+        - type: object
+          description: >-
+            An identification of an entity that is owned by or originates in a software system
+            different from the current system, for example a ProductOrder handed off from a commerce
+            platform into an order handling system. The structure identifies the system itself, the
+            nature of the entity within the system (e.g. class name) and the unique ID of the entity
+            within the system. It is anticipated that multiple external IDs can be held for a single
+            entity, e.g. if the entity passed through multiple systems on the way to the current
+            system. In this case the consumer is expected to sequence the IDs in the array in
+            reverse order of provenance, i.e. most recent system first in the list.
+          properties:
+            name:
+              $ref: "#/components/schemas/NameType"
+              description: Name of the external system that owns the entity.
+              example: MagentoCommerce
+            externalIdentifierType:
+              type: string
+              description: >-
+                Type of the identification, typically would be the type of the entity within the
+                external system
+              example: ProductOrder
+            id:
+              $ref: "#/components/schemas/IdType"
+              description: identification of the entity within the external system.
+      discriminator:
+        propertyName: '@type'
+        mapping:
+          ExternalIdentifier: '#/components/schemas/ExternalIdentifier'
+    IdType:
+      type: string
+      pattern: '^[\w\-\.]*$'
+      description: "Type for Id Attributes with pattern"
+    NameType:
+      type: string
+      pattern: '^[\w\-\.]*$'
+      description: "Type for Name Attributes with pattern"
+    DescriptionType:
+      type: string
+      pattern: '^[\w\-\. ]*$'
+      description: "Type for Description Attributes with pattern"

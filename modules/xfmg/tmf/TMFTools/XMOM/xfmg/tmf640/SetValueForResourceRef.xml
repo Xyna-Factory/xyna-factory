@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Set Value for ResourceRef" TypeName="SetValueForResourceRef" TypePath="xfmg.tmf640" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Set Value for ResourceRef" Name="SetValueForResourceRef">
+    <Input>
+      <Data ID="22" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember22"/>
+      <Data ID="39" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable39"/>
+      <Data ID="161" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef161"/>
+    </Input>
+    <Output/>
+    <ServiceReference ID="1652" Label="Named Variable Member" ReferenceName="NamedVariableMember.NamedVariableMember" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="1651"/>
+      <Target RefID="1651"/>
+    </ServiceReference>
+    <ServiceReference ID="189" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+      <Source RefID="188"/>
+      <Target RefID="188"/>
+    </ServiceReference>
+    <ServiceReference ID="471" Label="Named Variable Member" ReferenceName="NamedVariableMember.NamedVariableMember" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="470"/>
+      <Target RefID="470"/>
+    </ServiceReference>
+    <Choice ID="1842" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="39"/>
+      <Target RefID="2334"/>
+      <Input>
+        <Data ID="1899" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable1899">
+          <Source RefID="1842"/>
+        </Data>
+        <Source RefID="39"/>
+      </Input>
+      <Case ID="1843" Label="true" Premise="%0%.tMFResourceSpecAnnotations.property!=null">
+        <Mappings ID="2231" Label="Mapping">
+          <Input>
+            <Data ID="2535" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember2535">
+              <Source RefID="2231"/>
+            </Data>
+            <Source RefID="22"/>
+          </Input>
+          <Input>
+            <Data ID="2836" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable2836">
+              <Source RefID="2231"/>
+            </Data>
+            <Source RefID="39"/>
+          </Input>
+          <Output>
+            <Data ID="2332" Label="Filter ResourceRef by Name" ReferenceName="FilterResourceRefByName" ReferencePath="xfmg.tmf.inspect" VariableName="filterResourceRefByName2332">
+              <Source RefID="2231"/>
+            </Data>
+            <Target RefID="2333"/>
+          </Output>
+          <Mapping>%2%.name=substring(%0%.label, "0", (length(%0%.label)-length(%1%.tMFResourceSpecAnnotations.property)))</Mapping>
+        </Mappings>
+        <Assign ID="1846">
+          <Source RefID="2333"/>
+          <Target RefID="2334"/>
+          <Copy>
+            <Source RefID="2333"/>
+            <Target RefID="2334"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="1844" Label="false">
+        <Mappings ID="178" Label="Mapping">
+          <Input>
+            <Data ID="1125" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember1125">
+              <Source RefID="178"/>
+            </Data>
+            <Source RefID="22"/>
+          </Input>
+          <Output>
+            <Data ID="997" Label="Filter ResourceRef by Name" ReferenceName="FilterResourceRefByName" ReferencePath="xfmg.tmf.inspect" VariableName="filterResourceRefByName997">
+              <Source RefID="178"/>
+            </Data>
+            <Target RefID="2050"/>
+          </Output>
+          <Mapping>%1%.name=%0%.label</Mapping>
+        </Mappings>
+        <Assign ID="1848">
+          <Source RefID="2050"/>
+          <Target RefID="2334"/>
+          <Copy>
+            <Source RefID="2050"/>
+            <Target RefID="2334"/>
+          </Copy>
+        </Assign>
+        <Data ID="2050" Label="Filter ResourceRef by Name" ReferenceName="FilterResourceRefByName" ReferencePath="xfmg.tmf.inspect" VariableName="filterResourceRefByName2050">
+          <Source RefID="178"/>
+        </Data>
+      </Case>
+    </Choice>
+    <Function ID="188" Label="Filter">
+      <Source RefID="189"/>
+      <Source RefID="161"/>
+      <Source RefID="2334"/>
+      <Target RefID="189"/>
+      <Target RefID="191"/>
+      <Invoke Operation="filter" ServiceID="189">
+        <Source RefID="161">
+          <Meta>
+            <ExpectedType>tmf640.datamodel.ResourceRef</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="2334">
+          <Meta>
+            <ExpectedType>xfmg.tmf.inspect.FilterResourceRefByName</ExpectedType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="189">
+        <Target RefID="191">
+          <Meta>
+            <ExpectedType>tmf640.datamodel.ResourceRef</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
+    <Choice ID="208" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="191"/>
+      <Input>
+        <Data ID="319" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef319">
+          <Source RefID="208"/>
+        </Data>
+        <Source RefID="191">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="209" Label="true" Premise="length(%0%)==&quot;0&quot;">
+        <Assign ID="212"/>
+      </Case>
+      <Case ID="210" Label="false">
+        <Choice ID="1390" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="22"/>
+          <Input>
+            <Data ID="1439" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember1439">
+              <Source RefID="1390"/>
+            </Data>
+            <Source RefID="22"/>
+          </Input>
+          <Case ID="1391" Label="true" Premise="%0%.isList">
+            <Choice ID="3294" TypeName="BaseChoiceTypeFormula" TypePath="server">
+              <Source RefID="39"/>
+              <Target RefID="4433"/>
+              <Meta>
+                <OuterConditionPart>%0%.tMFResourceSpecAnnotations.property==?</OuterConditionPart>
+              </Meta>
+              <Input>
+                <Data ID="3348" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable3348">
+                  <Source RefID="3294"/>
+                </Data>
+                <Source RefID="39"/>
+              </Input>
+              <Case ID="3499" Label="" Premise="%0%.tMFResourceSpecAnnotations.property==&quot;id&quot;">
+                <Foreach ID="4430">
+                  <Source RefID="191"/>
+                  <Target RefID="4432"/>
+                  <InputList RefID="191">
+                    <Data ID="4431" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef4431"/>
+                  </InputList>
+                  <OutputList RefID="4432">
+                    <Data ID="3656" Label="Wrapper" ReferenceName="Text" ReferencePath="base" VariableName="text3656"/>
+                  </OutputList>
+                  <Mappings ID="3653" Label="Mapping">
+                    <Input>
+                      <Data ID="3654" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef3654"/>
+                      <Source RefID="4431">
+                        <Meta>
+                          <LinkType>UserConnected</LinkType>
+                        </Meta>
+                      </Source>
+                    </Input>
+                    <Output>
+                      <Data ID="3655" Label="Wrapper" ReferenceName="Text" ReferencePath="base" VariableName="text3655"/>
+                      <Target RefID="3656"/>
+                    </Output>
+                    <Mapping>%1%.text=%0%.id</Mapping>
+                  </Mappings>
+                </Foreach>
+                <Assign ID="3501">
+                  <Source RefID="4432"/>
+                  <Target RefID="4433"/>
+                  <Copy>
+                    <Source RefID="4432"/>
+                    <Target RefID="4433"/>
+                  </Copy>
+                </Assign>
+              </Case>
+              <Case ID="3295" IsDefault="true" Label="default">
+                <Foreach ID="1777">
+                  <Source RefID="191"/>
+                  <Target RefID="3602"/>
+                  <InputList RefID="191">
+                    <Data ID="1778" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef1778"/>
+                  </InputList>
+                  <OutputList RefID="3602">
+                    <Data ID="1707" Label="Wrapper" ReferenceName="Text" ReferencePath="base" VariableName="text1707"/>
+                  </OutputList>
+                  <Mappings ID="1704" Label="Mapping">
+                    <Input>
+                      <Data ID="1705" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef1705"/>
+                      <Source RefID="1778">
+                        <Meta>
+                          <LinkType>UserConnected</LinkType>
+                        </Meta>
+                      </Source>
+                    </Input>
+                    <Output>
+                      <Data ID="1706" Label="Wrapper" ReferenceName="Text" ReferencePath="base" VariableName="text1706"/>
+                      <Target RefID="1707"/>
+                    </Output>
+                    <Mapping>%1%.text=%0%.value</Mapping>
+                  </Mappings>
+                </Foreach>
+                <Assign ID="3297">
+                  <Source RefID="3602"/>
+                  <Target RefID="4433"/>
+                  <Copy>
+                    <Source RefID="3602"/>
+                    <Target RefID="4433"/>
+                  </Copy>
+                </Assign>
+                <Data ID="3602" IsList="true" Label="Wrapper" ReferenceName="Text" ReferencePath="base" VariableName="text3602">
+                  <Source RefID="1777"/>
+                  <Target RefID="1779"/>
+                </Data>
+              </Case>
+            </Choice>
+            <Function ID="1651" Label="Set Member Value List Wrapped">
+              <Source RefID="1652"/>
+              <Source RefID="22"/>
+              <Source RefID="4433"/>
+              <Target RefID="1652"/>
+              <Invoke Operation="setMemberValueListWrapped" ServiceID="1652">
+                <Source RefID="22"/>
+                <Source RefID="4433"/>
+              </Invoke>
+              <Receive ServiceID="1652"/>
+            </Function>
+            <Assign ID="1394"/>
+          </Case>
+          <Case ID="1392" Label="false">
+            <Choice ID="3823" TypeName="BaseChoiceTypeFormula" TypePath="server">
+              <Source RefID="39"/>
+              <Target RefID="4349"/>
+              <Meta>
+                <OuterConditionPart>%0%.tMFResourceSpecAnnotations.property==?</OuterConditionPart>
+              </Meta>
+              <Input>
+                <Data ID="4028" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable4028">
+                  <Source RefID="3823"/>
+                </Data>
+                <Source RefID="39"/>
+              </Input>
+              <Case ID="4179" Label="" Premise="%0%.tMFResourceSpecAnnotations.property==&quot;id&quot;">
+                <Mappings ID="4336" Label="Mapping">
+                  <Input>
+                    <Data ID="4337" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef4337"/>
+                    <Source RefID="191">
+                      <Meta>
+                        <LinkType>UserConnected</LinkType>
+                      </Meta>
+                    </Source>
+                  </Input>
+                  <Output>
+                    <Data ID="4338" Label="Wrapper" ReferenceName="Text" ReferencePath="base" VariableName="text4338"/>
+                    <Target RefID="4339"/>
+                  </Output>
+                  <Mapping>%1%.text=%0%["0"].id</Mapping>
+                </Mappings>
+                <Assign ID="4181">
+                  <Source RefID="4339"/>
+                  <Target RefID="4349"/>
+                  <Copy>
+                    <Source RefID="4339"/>
+                    <Target RefID="4349"/>
+                  </Copy>
+                </Assign>
+              </Case>
+              <Case ID="3824" IsDefault="true" Label="default">
+                <Mappings ID="4282" Label="Mapping">
+                  <Input>
+                    <Data ID="4283" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef4283"/>
+                    <Source RefID="191">
+                      <Meta>
+                        <LinkType>UserConnected</LinkType>
+                      </Meta>
+                    </Source>
+                  </Input>
+                  <Output>
+                    <Data ID="4284" Label="Wrapper" ReferenceName="Text" ReferencePath="base" VariableName="text4284"/>
+                    <Target RefID="4285"/>
+                  </Output>
+                  <Mapping>%1%.text=%0%["0"].value</Mapping>
+                </Mappings>
+                <Assign ID="3826">
+                  <Source RefID="4285"/>
+                  <Target RefID="4349"/>
+                  <Copy>
+                    <Source RefID="4285"/>
+                    <Target RefID="4349"/>
+                  </Copy>
+                </Assign>
+              </Case>
+            </Choice>
+            <Function ID="470" Label="Set Member Value Wrapped">
+              <Source RefID="471"/>
+              <Source RefID="22"/>
+              <Source RefID="4349"/>
+              <Target RefID="471"/>
+              <Invoke Operation="setMemberValueWrapped" ServiceID="471">
+                <Source RefID="22"/>
+                <Source RefID="4349"/>
+              </Invoke>
+              <Receive ServiceID="471"/>
+            </Function>
+            <Assign ID="1396"/>
+          </Case>
+        </Choice>
+        <Assign ID="214"/>
+      </Case>
+    </Choice>
+    <Data ID="191" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef191"/>
+    <Data ID="2333" Label="Filter ResourceRef by Name" ReferenceName="FilterResourceRefByName" ReferencePath="xfmg.tmf.inspect" VariableName="filterResourceRefByName2333">
+      <Source RefID="2231"/>
+    </Data>
+    <Data ID="2334" Label="Filter ResourceRef by Name" ReferenceName="FilterResourceRefByName" ReferencePath="xfmg.tmf.inspect" VariableName="filterResourceRefByName2334">
+      <Source RefID="1842"/>
+    </Data>
+    <Data ID="4285" Label="Wrapper" ReferenceName="Text" ReferencePath="base" VariableName="text4285"/>
+    <Data ID="4339" Label="Wrapper" ReferenceName="Text" ReferencePath="base" VariableName="text4339"/>
+    <Data ID="4349" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text4349">
+      <Source RefID="3823"/>
+    </Data>
+    <Data ID="4432" IsList="true" Label="Wrapper" ReferenceName="Text" ReferencePath="base" VariableName="text4432">
+      <Source RefID="4430"/>
+      <Target RefID="4432"/>
+    </Data>
+    <Data ID="4433" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text4433">
+      <Source RefID="3294"/>
+    </Data>
+    <Assign ID="1"/>
+  </Operation>
+</Service>

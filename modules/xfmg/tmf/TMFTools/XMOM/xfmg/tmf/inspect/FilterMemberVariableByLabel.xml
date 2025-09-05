@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Filter" BaseTypePath="base.list.filter" IsAbstract="false" Label="Filter Member Variable by Label" TypeName="FilterMemberVariableByLabel" TypePath="xfmg.tmf.inspect" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Label" VariableName="label">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Service Label="Filter Member Variable by Label" TypeName="FilterMemberVariableByLabel">
+    <Operation IsStatic="false" Label="Accept" Name="accept">
+      <Input>
+        <Data ID="4" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype4">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="5" Label="Result" VariableName="boolean5">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">xprc.xpce.datatype.NamedVariableMember input = (xprc.xpce.datatype.NamedVariableMember) anytype4;
+return input.getLabel().equals(getLabel()) &amp;&amp; !input.getVarName().contains("[");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

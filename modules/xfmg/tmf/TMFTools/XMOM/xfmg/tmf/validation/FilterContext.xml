@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Filter" BaseTypePath="base.list.filter" IsAbstract="false" Label="Filter Context" TypeName="FilterContext" TypePath="xfmg.tmf.validation" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data IsList="true" Label="Constraint Context" ReferenceName="ConstraintContext" ReferencePath="xfmg.tmf.validation" VariableName="constraintContext"/>
+  <Service Label="Filter Context" TypeName="FilterContext">
+    <Operation IsStatic="false" Label="Accept" Name="accept">
+      <Input>
+        <Data ID="6" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype6">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="7" Label="Result" VariableName="boolean7">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">tmf633.datamodel.Constraint input = (tmf633.datamodel.Constraint) anytype6;
+if (input.getContext() == null || input.getContext().size() == 0) {
+  //no restrictions in constraint
+  return true;
+}
+List&lt;tmf633.datamodel.ConstraintContext&gt; contexts = new ArrayList&lt;&gt;(input.getContext());
+outer: for (xfmg.tmf.validation.ConstraintContext currentctx : getConstraintContext()) {
+  String currentVal = currentctx.getValue();
+  if (currentVal == null || currentVal.isEmpty()) {
+    //ignore context that is not set
+    continue;
+  }
+  //does the constraint define a restriction for this context?
+  for (tmf633.datamodel.ConstraintContext ctx : contexts) {
+    if (ctx.getType().equals(currentctx.getType())) {
+      if (ctx.getValue() == null || ctx.getValue().isEmpty()) {
+        //ok, no restriction set
+        continue outer;
+      }
+      if (!ctx.getValue().contains(currentVal)) {
+        return false;
+      }
+      continue outer; //check next current context
+    }
+    //else other context type
+  }
+  //context not mentioned in constraint -&gt; not restricted -&gt; ignore
+}
+return true;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

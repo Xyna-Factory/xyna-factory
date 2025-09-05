@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="HashMap" TypeName="HashMap" TypePath="xprc.base.list" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="HashMap" TypeName="HashMap">
+    <Operation IsStatic="false" Label="get" Name="get">
+      <Input>
+        <Data ID="6" Label="Key" ReferenceName="Text" ReferencePath="base" VariableName="text6"/>
+      </Input>
+      <Output>
+        <Data ID="10" Label="Value" ReferenceName="Text" ReferencePath="base" VariableName="text10"/>
+      </Output>
+      <Meta>
+        <Documentation>get value for key or if absent return an value with content = null.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">String value = map.get(text6.getText());
+  if (value == null) {
+    return new Text(null);
+  } else {
+    return new Text(value);
+  }
+}
+
+
+private java.util.HashMap&lt;String, String&gt; map = new java.util.HashMap&lt;&gt;();
+
+static {</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="put" Name="put">
+      <Input>
+        <Data ID="20" Label="Key" ReferenceName="Text" ReferencePath="base" VariableName="text20"/>
+        <Data ID="24" Label="Value" ReferenceName="Text" ReferencePath="base" VariableName="text24"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">map.put(text20.getText(), text24.getText());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="getr" Name="getr">
+      <Input>
+        <Data ID="36" Label="Text" VariableName="text36">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="41" Label="Text" VariableName="text41">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return map.get(text36);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="entries" Name="entries">
+      <Input/>
+      <Output>
+        <Data ID="71" IsList="true" Label="MapEntry" ReferenceName="MapEntry" ReferencePath="xprc.base.list" VariableName="mapEntry71"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">List&lt;MapEntry&gt; l = new ArrayList&lt;&gt;();
+for (java.util.Map.Entry&lt;String, String&gt; e : map.entrySet()) {
+  l.add(new MapEntry.Builder().key(e.getKey()).value(e.getValue()).instance());
+}
+return l;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

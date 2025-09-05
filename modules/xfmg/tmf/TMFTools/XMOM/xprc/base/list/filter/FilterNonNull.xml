@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!----><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Filter" BaseTypePath="base.list.filter" IsAbstract="false" Label="Filter Non Null" TypeName="FilterNonNull" TypePath="xprc.base.list.filter" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="Filter Non Null" TypeName="FilterNonNull">
+    <Operation IsStatic="false" Label="Accept" Name="accept">
+      <Input>
+        <Data ID="2" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype2">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="3" Label="Result" VariableName="boolean3">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return anytype2 != null</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

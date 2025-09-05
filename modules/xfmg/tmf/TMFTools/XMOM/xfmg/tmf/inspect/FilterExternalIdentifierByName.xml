@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Filter" BaseTypePath="base.list.filter" IsAbstract="false" Label="Filter External Identifier by Name" TypeName="FilterExternalIdentifierByName" TypePath="xfmg.tmf.inspect" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Service Label="Filter External Identifier by Name" TypeName="FilterExternalIdentifierByName">
+    <Operation IsStatic="false" Label="Accept" Name="accept">
+      <Input>
+        <Data ID="2" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype2">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="3" Label="Result" VariableName="boolean3">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">tmf640.datamodel.ExternalIdentifier input = (tmf640.datamodel.ExternalIdentifier) anytype2;
+return input.getName().equals(getName());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

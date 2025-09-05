@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="TMFUtils" TypeName="TMFUtils" TypePath="xfmg.tmf633.idgen" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="TMFUtils" TypeName="TMFUtils">
+    <Operation IsStatic="true" Label="md5" Name="md5">
+      <Input>
+        <Data ID="1" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1"/>
+      </Input>
+      <Output>
+        <Data ID="2" Label="md5" ReferenceName="Text" ReferencePath="base" VariableName="text2"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new Text(com.gip.xyna.xfmg.xopctrl.usermanagement.passwordcreation.PasswordCreationUtils.generateLegacyHash(text1.getText()));</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="ID Generator Context" TypeName="IDGeneratorContext" TypePath="xfmg.tmf633.idgen" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Prefix" VariableName="prefix">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Version" VariableName="version">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+</DataType>

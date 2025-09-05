@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="List Utils Ext" TypeName="ListUtilsExt" TypePath="xprc.base.list" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="List Utils Ext" TypeName="ListUtilsExt">
+    <Operation IsStatic="true" Label="Extract First Element" Name="extractFirstElement">
+      <Input>
+        <Data ID="2" IsList="true" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType2">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="1" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType1">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return anyType2.get(0);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Merge" Name="merge">
+      <Input>
+        <Data ID="3" IsList="true" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType3">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data ID="6" Label="DecideMerge" ReferenceName="DecideMerge" ReferencePath="xprc.base.list" VariableName="decideMerge6"/>
+      </Input>
+      <Output>
+        <Data ID="5" IsList="true" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType5">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <Meta>
+        <Documentation>Tries to merge pair wise list elements that are next to each other repeatedly. Each merge is implemented by "DecideMerge". Merges are optional (DecideMerge can return null). Typically you would sort your list before merging.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">List&lt;GeneralXynaObject&gt; l = anyType3;
+List&lt;GeneralXynaObject&gt; l2 = new ArrayList&lt;&gt;();
+DecideMerge dm = decideMerge6;
+if (l.size() &lt; 2) {
+    return l;
+}
+int idx = 0;
+GeneralXynaObject last = l.get(0);
+while (true) {
+  if (++idx &gt;= l.size()) {
+    l2.add(last);
+    break;
+  }
+  GeneralXynaObject current = l.get(idx);
+  GeneralXynaObject merged = dm.decidemerge(last, current);
+  if (merged == null) {
+    l2.add(last);
+    last = current;
+  } else {
+    last = merged;
+  }
+}
+return l2;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

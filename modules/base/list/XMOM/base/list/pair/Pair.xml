@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Pair" TypeName="Pair" TypePath="base.list.pair" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="First is Set" VariableName="firstIsSet">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+  <Data Label="Second is Set" VariableName="secondIsSet">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
+  <Service Label="Pair" TypeName="Pair">
+    <Operation IsStatic="false" Label="Get First" Name="getFirst">
+      <Input/>
+      <Output>
+        <Data Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return first;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Get Second" Name="getSecond">
+      <Input/>
+      <Output>
+        <Data Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return second;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Get the Only One" Name="getTheOnlyOne">
+      <Input/>
+      <Output>
+        <Data Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">if( firstIsSet &amp;&amp; ! secondIsSet ) {
+  return first;
+} else if( ! firstIsSet &amp;&amp; secondIsSet ) {
+  return second;
+} else {
+   throw new RuntimeException("Both or None are set!");
+}</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="is only One Set" Name="isOnlyOneSet">
+      <Input/>
+      <Output>
+        <Data Label="Result" VariableName="result">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return firstIsSet != secondIsSet;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Set First" Name="setFirst">
+      <Input>
+        <Data Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">this.first = anyType;
+setFirstIsSet(this.first != null); 
+}
+
+private GeneralXynaObject first;
+{</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Set Second" Name="setSecond">
+      <Input>
+        <Data Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">this.second = anyType;
+setSecondIsSet(this.second != null); 
+}
+
+private GeneralXynaObject second;
+{</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

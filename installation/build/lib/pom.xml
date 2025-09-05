@@ -143,6 +143,6 @@
             <groupId>com.gip.xyna</groupId>
             <artifactId>cligenerator</artifactId>
             <scope>compile</scope>
-        </dependency>
+         </dependency>
     </dependencies>
 </project>

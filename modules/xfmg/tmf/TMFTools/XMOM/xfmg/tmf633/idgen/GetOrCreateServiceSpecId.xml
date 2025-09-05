@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Or Create Service Spec Id" TypeName="GetOrCreateServiceSpecId" TypePath="xfmg.tmf633.idgen" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Get Or Create Service Spec Id" Name="GetOrCreateServiceSpecId">
+    <Input>
+      <Data ID="31" Label="Spec Generator Context" ReferenceName="SpecGeneratorContext" ReferencePath="xfmg.tmf633" VariableName="specGeneratorContext31"/>
+      <Data ID="52" Label="HashMap" ReferenceName="HashMap" ReferencePath="xprc.base.list" VariableName="hashMap52"/>
+      <Data ID="73" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember73"/>
+    </Input>
+    <Output>
+      <Data ID="223" Label="id" ReferenceName="Text" ReferencePath="base" VariableName="text223"/>
+    </Output>
+    <ServiceReference ID="12" Label="Create Service Spec Id" ReferenceName="CreateServiceSpecId" ReferencePath="xfmg.tmf633.idgen">
+      <Source RefID="11"/>
+      <Target RefID="11"/>
+    </ServiceReference>
+    <Choice ID="94" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="52"/>
+      <Target RefID="263"/>
+      <Input>
+        <Data ID="134" Label="HashMap" ReferenceName="HashMap" ReferencePath="xprc.base.list" VariableName="hashMap134">
+          <Source RefID="94"/>
+        </Data>
+        <Source RefID="52"/>
+      </Input>
+      <Case ID="95" Label="true" Premise="%0%.getr(&quot;TMFServiceId&quot;)!=null">
+        <Mappings ID="244" Label="Mapping">
+          <Input>
+            <Data ID="280" Label="HashMap" ReferenceName="HashMap" ReferencePath="xprc.base.list" VariableName="hashMap280">
+              <Source RefID="244"/>
+            </Data>
+            <Source RefID="52"/>
+          </Input>
+          <Output>
+            <Data ID="261" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text261">
+              <Source RefID="244"/>
+            </Data>
+            <Target RefID="262"/>
+          </Output>
+          <Mapping>%1%.text=%0%.getr("TMFServiceId")</Mapping>
+        </Mappings>
+        <Assign ID="98">
+          <Source RefID="262"/>
+          <Target RefID="263"/>
+          <Copy>
+            <Source RefID="262"/>
+            <Target RefID="263"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="96" Label="false">
+        <Function ID="11" Label="Create Service Spec Id">
+          <Source RefID="12"/>
+          <Source RefID="31"/>
+          <Source RefID="52"/>
+          <Source RefID="73"/>
+          <Target RefID="12"/>
+          <Target RefID="117"/>
+          <Invoke Operation="CreateServiceSpecId" ServiceID="12">
+            <Source RefID="31"/>
+            <Source RefID="52"/>
+            <Source RefID="73"/>
+          </Invoke>
+          <Receive ServiceID="12">
+            <Target RefID="117"/>
+          </Receive>
+        </Function>
+        <Assign ID="100">
+          <Source RefID="117"/>
+          <Target RefID="263"/>
+          <Copy>
+            <Source RefID="117"/>
+            <Target RefID="263"/>
+          </Copy>
+        </Assign>
+        <Data ID="117" Label="id" ReferenceName="Text" ReferencePath="base" VariableName="text117">
+          <Source RefID="11"/>
+        </Data>
+      </Case>
+    </Choice>
+    <Data ID="262" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text262">
+      <Source RefID="244"/>
+    </Data>
+    <Data ID="263" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text263">
+      <Source RefID="94"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="263"/>
+      <Target RefID="223"/>
+      <Copy>
+        <Source RefID="263"/>
+        <Target RefID="223"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

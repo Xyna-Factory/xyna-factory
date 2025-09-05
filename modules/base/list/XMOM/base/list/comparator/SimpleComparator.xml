@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Comparator" BaseTypePath="base.list.comparator" IsAbstract="false" Label="Simple Comparator" TypeName="SimpleComparator" TypePath="base.list.comparator" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Field" ReferenceName="XmomField" ReferencePath="base.list" VariableName="field"/>
+  <Service Label="Simple Comparator" TypeName="SimpleComparator">
+    <Operation IsStatic="false" Label="Compare" Name="compare">
+      <Input>
+        <Data ID="7" Label="Any Type 1" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype7">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data ID="8" Label="Any Type 2" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype8">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="9" Label="Result" VariableName="int9">
+          <Meta>
+            <Type>int</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">if( comparator == null ) {
+      comparator = new SimplePathComparator(field);
+    }
+    return comparator.compare(anytype7, anytype8);
+}
+
+private transient java.util.Comparator&lt;? super GeneralXynaObject&gt; comparator;
+
+public static class SimplePathComparator implements java.util.Comparator&lt;GeneralXynaObject&gt;, com.gip.xyna.utils.misc.ComparatorUtils.ObjectComparator.NotComparableHandler {
+
+    private java.util.Comparator&lt;? super Object&gt; comp;
+    private XmomField field;
+
+    public SimplePathComparator(XmomField field) {
+      this.field = new XmomField(field.getField());
+      java.util.Comparator&lt;? super Object&gt; c = new com.gip.xyna.utils.misc.ComparatorUtils.ObjectComparator(this);
+      this.comp = com.gip.xyna.utils.misc.ComparatorUtils.nullAware(c, false);
+    }
+
+    @Override
+    public int compare(GeneralXynaObject o1, GeneralXynaObject o2) {
+      return comp.compare(field.extractAsObject(o1), field.extractAsObject(o2));
+    }
+
+    @Override
+    public int compareNotComparable(Object o1, Object o2) {
+      throw new RuntimeException(o1.getClass() +" is not instanceof Comparable");
+    }</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

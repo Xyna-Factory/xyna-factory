@@ -129,6 +129,30 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
     }
   }
 
+
+  public void createOasAppOffline(String generator, String targetDir, String specFile) {
+    try {
+      Path tmpDir = Files.createTempDirectory("oasmain");
+      File tmpDirFile = tmpDir.toFile();
+      try {
+        String tmpDirAsString = tmpDir.toString();
+
+        callGenerator(generator, tmpDirAsString, specFile);
+        separateFiles(tmpDirAsString);
+        String appName = readApplicationXML(tmpDirAsString);
+
+        File targetAppFile = new File(targetDir, appName + ".zip");
+        try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(targetAppFile))) {
+          FileUtils.zipDir(tmpDirFile, zos, tmpDirFile);
+        }
+
+      } finally {
+        FileUtils.deleteDirectoryRecursively(tmpDirFile);
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } 
+  }
   
   public OASApplicationData createOasApp(String generator, String target, String specFile) {
     List<File> files = new ArrayList<>();
@@ -172,8 +196,8 @@ public class BuildoasapplicationImpl extends XynaCommandImplementation<Buildoasa
     final CodegenConfigurator configurator = new CodegenConfigurator()
         .setGeneratorName(generatorName)
         .setInputSpec(specFile)
-        .addAdditionalProperty("generateAliasAsModel", ApplicationGenerationServiceOperationImpl.createListWrappers.get())
-        .addAdditionalProperty("x-createListWrappers", ApplicationGenerationServiceOperationImpl.createListWrappers.get())
+        .addAdditionalProperty("generateAliasAsModel", XynaFactory.isFactoryServer() ? ApplicationGenerationServiceOperationImpl.createListWrappers.get() : true)
+        .addAdditionalProperty("x-createListWrappers", XynaFactory.isFactoryServer() ? ApplicationGenerationServiceOperationImpl.createListWrappers.get() : true)
         .setOutputDir(target);
 
 

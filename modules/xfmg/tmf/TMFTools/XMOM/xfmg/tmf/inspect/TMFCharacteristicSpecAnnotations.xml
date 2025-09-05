@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="TMF Characteristic Spec Annotations" TypeName="TMFCharacteristicSpecAnnotations" TypePath="xfmg.tmf.inspect" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Min Cardinality" VariableName="minCardinality">
+    <Meta>
+      <Type>Integer</Type>
+    </Meta>
+  </Data>
+  <Data Label="Max Cardinality" VariableName="maxCardinality">
+    <Meta>
+      <Type>Integer</Type>
+    </Meta>
+  </Data>
+  <Data Label="Value Enumeration" VariableName="valueEnumeration">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Comma separated list of values. Can be used in conjunction with "default value" to use one of the enum values as default.</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Default Value" VariableName="defaultValue">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="Value From" VariableName="valueFrom">
+    <Meta>
+      <Type>Long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Value To" VariableName="valueTo0">
+    <Meta>
+      <Type>Long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Regex" VariableName="regex">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+</DataType>

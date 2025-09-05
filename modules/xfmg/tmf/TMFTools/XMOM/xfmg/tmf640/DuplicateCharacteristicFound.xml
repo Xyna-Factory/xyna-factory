@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="TMF640-00005" IsAbstract="false" Label="Duplicate Characteristic found" TypeName="DuplicateCharacteristicFound" TypePath="xfmg.tmf640">
+    <Meta>
+      <Documentation>Characteristics should not be duplicated. Instead a ArrayCharacteristicValue should've been used.</Documentation>
+    </Meta>
+    <Data Label="characteristic name" VariableName="characteristicName">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <MessageText Language="EN">Characteristic &lt;%0%&gt; was found more than once.</MessageText>
+  </ExceptionType>
+</ExceptionStore>
