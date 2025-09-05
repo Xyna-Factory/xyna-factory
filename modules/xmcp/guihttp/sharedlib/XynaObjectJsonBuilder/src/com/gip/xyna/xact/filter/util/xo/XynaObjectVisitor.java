@@ -98,9 +98,9 @@ public class XynaObjectVisitor extends EmptyJsonVisitor<GeneralXynaObject> {
 
   //subobject oder komplexes listenelement (und dann ist das label das label der liste)
   public JsonVisitor<?> objectStarts(String label) throws UnexpectedJSONContentException {
-    if (label.equals(META_TAG)) {
+    if (META_TAG.equals(label)) {
       return MetaInfo.getJsonVisitor();
-    } else if (label.equals(WRAPPED_LIST_TAG)) {
+    } else if (WRAPPED_LIST_TAG.equals(label)) {
       this.isComplexListWrapper = true; //wir befinden uns in dem complexlist-fall in dem objekt mit $meta und $list
       return new XynaObjectVisitor(); //ein komplexes listenelement
     } else {
@@ -197,7 +197,7 @@ public class XynaObjectVisitor extends EmptyJsonVisitor<GeneralXynaObject> {
 
 
   public void object(String label, Object value) throws UnexpectedJSONContentException {
-    if (label.equals(META_TAG)) {
+    if (META_TAG.equals(label)) {
       info = (MetaInfo) value;
     } else {
       try {
