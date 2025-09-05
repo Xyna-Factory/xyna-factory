@@ -176,4 +176,13 @@
         <copyJar from="${unfree.lib.dir}" to="${target.dir}" />
     </target>
 
+    <!-- ================================= 
+         target: cleanup-lib
+         ================================= -->
+    <target name="cleanup-lib">
+        <delete>
+            <fileset dir="${base.lib.dir}" includes="**/*.jar"/>
+        </delete>
+    </target>
+
 </project>
