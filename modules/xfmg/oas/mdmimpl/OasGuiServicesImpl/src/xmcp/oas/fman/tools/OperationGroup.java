@@ -119,5 +119,13 @@ public class OperationGroup {
     }
     return true;
   }
+
+
+  public Set<String> getOperations() {
+    if (!operationsInitialized) {
+      initOperations();
+    }
+    return operations;
+  }
   
 }
