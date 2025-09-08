@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Transform Related Party" TypeName="TransformRelatedParty" TypePath="xfmg.tmf640" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Transform Related Party" Name="TransformRelatedParty">
+    <Input>
+      <Data ID="2" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember2"/>
+      <Data ID="7" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable7"/>
+    </Input>
+    <Output>
+      <Data ID="12" IsList="true" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf640.datamodel" VariableName="relatedParty12"/>
+    </Output>
+    <ServiceReference ID="416" Label="Array Wrapper" ReferenceName="ArrayWrapper.ArrayWrapper" ReferencePath="xfmg.tmf.util">
+      <Source RefID="415"/>
+      <Target RefID="415"/>
+    </ServiceReference>
+    <Choice ID="53" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="2"/>
+      <Target RefID="730"/>
+      <Input>
+        <Data ID="68" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember68">
+          <Source RefID="53"/>
+        </Data>
+        <Source RefID="2"/>
+      </Input>
+      <Case ID="54" Label="true" Premise="%0%.isList">
+        <Mappings ID="97" Label="Mapping">
+          <Input>
+            <Data ID="116" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember116">
+              <Source RefID="97"/>
+            </Data>
+            <Source RefID="2"/>
+          </Input>
+          <Output>
+            <Data ID="106" Label="Array Wrapper" ReferenceName="ArrayWrapper" ReferencePath="xfmg.tmf.util" VariableName="arrayWrapper106">
+              <Source RefID="97"/>
+            </Data>
+            <Target RefID="107"/>
+          </Output>
+          <Mapping>%1%.stringArray=%0%.getMemberListValue()</Mapping>
+        </Mappings>
+        <Choice ID="621" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="107"/>
+          <Target RefID="729"/>
+          <Input>
+            <Data ID="661" Label="Array Wrapper" ReferenceName="ArrayWrapper" ReferencePath="xfmg.tmf.util" VariableName="arrayWrapper661">
+              <Source RefID="621"/>
+            </Data>
+            <Source RefID="107"/>
+          </Input>
+          <Case ID="622" Label="true" Premise="%0%.stringArray!=null">
+            <Function ID="415" Label="as wrapped list">
+              <Source RefID="416"/>
+              <Source RefID="107"/>
+              <Target RefID="416"/>
+              <Target RefID="644"/>
+              <Invoke Operation="asWrappedList" ServiceID="416">
+                <Source RefID="107"/>
+              </Invoke>
+              <Receive ServiceID="416">
+                <Target RefID="644"/>
+              </Receive>
+            </Function>
+            <Assign ID="625">
+              <Source RefID="644"/>
+              <Target RefID="729"/>
+              <Copy>
+                <Source RefID="644"/>
+                <Target RefID="729"/>
+              </Copy>
+            </Assign>
+            <Data ID="644" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text644">
+              <Source RefID="415"/>
+            </Data>
+          </Case>
+          <Case ID="623" Label="false">
+            <Mappings ID="710" Label="Mapping">
+              <Output>
+                <Data ID="727" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text727">
+                  <Source RefID="710"/>
+                </Data>
+                <Target RefID="728"/>
+              </Output>
+            </Mappings>
+            <Assign ID="627">
+              <Source RefID="728"/>
+              <Target RefID="729"/>
+              <Copy>
+                <Source RefID="728"/>
+                <Target RefID="729"/>
+              </Copy>
+            </Assign>
+          </Case>
+        </Choice>
+        <Assign ID="57">
+          <Source RefID="729"/>
+          <Target RefID="730"/>
+          <Copy>
+            <Source RefID="729"/>
+            <Target RefID="730"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="55" Label="false">
+        <Mappings ID="517" Label="Mapping">
+          <Input>
+            <Data ID="604" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember604">
+              <Source RefID="517"/>
+            </Data>
+            <Source RefID="2"/>
+          </Input>
+          <Output>
+            <Data ID="534" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text534">
+              <Source RefID="517"/>
+            </Data>
+            <Target RefID="535"/>
+          </Output>
+          <Mapping>%1%["0"].text=%0%.getMemberValue()</Mapping>
+        </Mappings>
+        <Assign ID="59">
+          <Source RefID="535"/>
+          <Target RefID="730"/>
+          <Copy>
+            <Source RefID="535"/>
+            <Target RefID="730"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Foreach ID="731">
+      <Source RefID="730"/>
+      <Target RefID="733"/>
+      <InputList RefID="730">
+        <Data ID="732" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text732"/>
+      </InputList>
+      <OutputList RefID="733">
+        <Data ID="435" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf640.datamodel" VariableName="relatedParty435">
+          <Source RefID="161"/>
+        </Data>
+      </OutputList>
+      <Mappings ID="161" Label="Mapping">
+        <Input>
+          <Data ID="204" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember204">
+            <Source RefID="161"/>
+          </Data>
+          <Source RefID="2"/>
+        </Input>
+        <Input>
+          <Data ID="265" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable265">
+            <Source RefID="161"/>
+          </Data>
+          <Source RefID="7"/>
+        </Input>
+        <Input>
+          <Data ID="452" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text452">
+            <Source RefID="161"/>
+          </Data>
+          <Source RefID="732"/>
+        </Input>
+        <Output>
+          <Data ID="170" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf640.datamodel" VariableName="relatedParty170">
+            <Source RefID="161"/>
+          </Data>
+          <Target RefID="435"/>
+        </Output>
+        <Mapping>%3%.atreferredType=%1%.tMFPartyRelationshipSpecAnnotations.partyType</Mapping>
+        <Mapping>%3%.attype="RelatedParty"</Mapping>
+        <Mapping>%3%.id=%2%.text</Mapping>
+        <Mapping>%3%.role=%0%.label</Mapping>
+      </Mappings>
+    </Foreach>
+    <Data ID="107" Label="Array Wrapper" ReferenceName="ArrayWrapper" ReferencePath="xfmg.tmf.util" VariableName="arrayWrapper107">
+      <Source RefID="97"/>
+    </Data>
+    <Data ID="535" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text535">
+      <Source RefID="517"/>
+    </Data>
+    <Data ID="728" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text728">
+      <Source RefID="710"/>
+    </Data>
+    <Data ID="729" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text729">
+      <Source RefID="621"/>
+    </Data>
+    <Data ID="730" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text730">
+      <Source RefID="53"/>
+    </Data>
+    <Data ID="733" IsList="true" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf640.datamodel" VariableName="relatedParty733">
+      <Source RefID="731"/>
+      <Target RefID="733"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="733"/>
+      <Target RefID="12"/>
+      <Copy>
+        <Source RefID="733"/>
+        <Target RefID="12"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

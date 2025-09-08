@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Validate Allowed Changes" TypeName="ValidateAllowedChanges" TypePath="xfmg.tmf640.validation" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Validate Allowed Changes" Name="ValidateAllowedChanges">
+    <Input>
+      <Data ID="2" Label="JSON old Service" ReferenceName="Text" ReferencePath="base" VariableName="text2"/>
+      <Data ID="148" Label="JSON new Service" ReferenceName="Text" ReferencePath="base" VariableName="text148"/>
+      <Data ID="7" Label="ServiceSpecification" ReferenceName="ServiceSpecification" ReferencePath="tmf633.datamodel" VariableName="serviceSpecification7"/>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Not An Allowed Change" ReferenceName="NotAnAllowedChange" ReferencePath="xfmg.tmf640.validation" VariableName="notAnAllowedChange471"/>
+    </Throws>
+    <ServiceReference ID="114" Label="Validation Utils" ReferenceName="ValidationUtils.ValidationUtils" ReferencePath="xfmg.tmf.validation">
+      <Source RefID="113"/>
+      <Target RefID="113"/>
+    </ServiceReference>
+    <Mappings ID="20" Label="Mapping">
+      <Input>
+        <Data ID="104" Label="ServiceSpecification" ReferenceName="ServiceSpecification" ReferencePath="tmf633.datamodel" VariableName="serviceSpecification104">
+          <Source RefID="20"/>
+        </Data>
+        <Source RefID="7"/>
+      </Input>
+      <Output>
+        <Data ID="29" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges29">
+          <Source RefID="20"/>
+        </Data>
+        <Target RefID="30"/>
+      </Output>
+      <Mapping>%1%=%0%.allowedChanges</Mapping>
+    </Mappings>
+    <Function ID="113" Label="validate Allowed Changes">
+      <Source RefID="114"/>
+      <Source RefID="30"/>
+      <Source RefID="2"/>
+      <Source RefID="148"/>
+      <Target RefID="114"/>
+      <Invoke Operation="validateAllowedChanges" ServiceID="114">
+        <Source RefID="30"/>
+        <Source RefID="2">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="148">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="114"/>
+    </Function>
+    <Data ID="30" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges30">
+      <Source RefID="20"/>
+    </Data>
+    <Assign ID="1"/>
+  </Operation>
+</Service>
