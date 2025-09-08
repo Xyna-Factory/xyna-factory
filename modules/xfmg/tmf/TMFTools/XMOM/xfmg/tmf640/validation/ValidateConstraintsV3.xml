@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Validate Constraints V3" TypeName="ValidateConstraintsV3" TypePath="xfmg.tmf640.validation" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Validate Constraints V3" Name="ValidateConstraintsV3">
+    <Input>
+      <Data ID="8993" Label="JSON" ReferenceName="Text" ReferencePath="base" VariableName="text8993"/>
+      <Data ID="7" Label="ServiceSpecification" ReferenceName="ServiceSpecification" ReferencePath="tmf633.datamodel" VariableName="serviceSpecification7"/>
+      <Data ID="9256" IsList="true" Label="Constraint Context" ReferenceName="ConstraintContext" ReferencePath="xfmg.tmf.validation" VariableName="constraintContext9256"/>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="ConstraintValidationError" ReferenceName="ConstraintValidationError" ReferencePath="xfmg.tmf640.validation" VariableName="constraintValidationError17908"/>
+      <Exception Label="ConstraintValidationFailed3" ReferenceName="ConstraintValidationFailed3" ReferencePath="xfmg.tmf640.validation" VariableName="constraintValidationFailed317909"/>
+    </Throws>
+    <ServiceReference ID="6464" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+      <Source RefID="6463"/>
+      <Target RefID="6463"/>
+    </ServiceReference>
+    <ServiceReference ID="4397" Label="Validation Utils" ReferenceName="ValidationUtils.ValidationUtils" ReferencePath="xfmg.tmf.validation">
+      <Source RefID="4396"/>
+      <Target RefID="4396"/>
+    </ServiceReference>
+    <Mappings ID="446" Label="Mapping">
+      <Input>
+        <Data ID="500" Label="ServiceSpecification" ReferenceName="ServiceSpecification" ReferencePath="tmf633.datamodel" VariableName="serviceSpecification500">
+          <Source RefID="446"/>
+        </Data>
+        <Source RefID="7"/>
+      </Input>
+      <Output>
+        <Data ID="10040" IsList="true" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="constraint10040">
+          <Source RefID="446"/>
+        </Data>
+        <Target RefID="10041"/>
+      </Output>
+      <Mapping>%1%=%0%.constraint</Mapping>
+    </Mappings>
+    <Choice ID="7078" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="9256"/>
+      <Target RefID="15898"/>
+      <Input>
+        <Data ID="9515" IsList="true" Label="Constraint Context" ReferenceName="ConstraintContext" ReferencePath="xfmg.tmf.validation" VariableName="constraintContext9515">
+          <Source RefID="7078"/>
+        </Data>
+        <Source RefID="9256"/>
+      </Input>
+      <Input>
+        <Data ID="9617" IsList="true" Label="Constraint Context" ReferenceName="ConstraintContext" ReferencePath="xfmg.tmf.validation" VariableName="constraintContext9617">
+          <Source RefID="7078"/>
+        </Data>
+        <Source RefID="9256"/>
+      </Input>
+      <Case ID="7079" Label="true" Premise="%0%!=null&amp;&amp;length(%1%)&gt;&quot;0&quot;">
+        <Mappings ID="8221" Label="Mapping">
+          <Input>
+            <Data ID="10598" IsList="true" Label="Constraint Context" ReferenceName="ConstraintContext" ReferencePath="xfmg.tmf.validation" VariableName="constraintContext10598">
+              <Source RefID="8221"/>
+            </Data>
+            <Source RefID="9256"/>
+          </Input>
+          <Output>
+            <Data ID="8286" Label="Filter Context" ReferenceName="FilterContext" ReferencePath="xfmg.tmf.validation" VariableName="filterContext8286">
+              <Source RefID="8221"/>
+            </Data>
+            <Target RefID="8287"/>
+          </Output>
+          <Mapping>%1%.constraintContext=%0%</Mapping>
+        </Mappings>
+        <Function ID="6463" Label="Filter Context">
+          <Source RefID="6464"/>
+          <Source RefID="10041"/>
+          <Source RefID="8287"/>
+          <Target RefID="6464"/>
+          <Target RefID="7149"/>
+          <Invoke Operation="filter" ServiceID="6464">
+            <Source RefID="10041">
+              <Meta>
+                <ExpectedType>tmf633.datamodel.Constraint</ExpectedType>
+              </Meta>
+            </Source>
+            <Source RefID="8287">
+              <Meta>
+                <ExpectedType>xfmg.tmf.validation.FilterContext</ExpectedType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="6464">
+            <Target RefID="7149">
+              <Meta>
+                <ExpectedType>tmf633.datamodel.Constraint</ExpectedType>
+              </Meta>
+            </Target>
+          </Receive>
+        </Function>
+        <Assign ID="7082">
+          <Source RefID="7149"/>
+          <Target RefID="15898"/>
+          <Copy>
+            <Source RefID="7149"/>
+            <Target RefID="15898"/>
+          </Copy>
+        </Assign>
+        <Data ID="7149" IsList="true" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="constraint7149"/>
+      </Case>
+      <Case ID="7080" Label="false">
+        <Mappings ID="7664" Label="Mapping">
+          <Input>
+            <Data ID="10413" IsList="true" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="constraint10413">
+              <Source RefID="7664"/>
+            </Data>
+            <Source RefID="10041"/>
+          </Input>
+          <Output>
+            <Data ID="9828" IsList="true" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="constraint9828">
+              <Source RefID="7664"/>
+            </Data>
+            <Target RefID="9829"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign ID="7084">
+          <Source RefID="9829"/>
+          <Target RefID="15898"/>
+          <Copy>
+            <Source RefID="9829"/>
+            <Target RefID="15898"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Foreach ID="15954">
+      <Source RefID="15898"/>
+      <Target RefID="15956"/>
+      <InputList RefID="15898">
+        <Data ID="15955" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="constraint15955"/>
+      </InputList>
+      <OutputList RefID="15956">
+        <Data ID="4493" Label="ConstraintV2" ReferenceName="ConstraintV2" ReferencePath="xfmg.tmf.validation" VariableName="constraintV24493">
+          <Source RefID="28"/>
+        </Data>
+      </OutputList>
+      <Mappings ID="28" Label="Mapping">
+        <Input>
+          <Data ID="157" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="constraint157">
+            <Source RefID="28"/>
+          </Data>
+          <Source RefID="15955">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Input>
+        <Output>
+          <Data ID="4492" Label="ConstraintV2" ReferenceName="ConstraintV2" ReferencePath="xfmg.tmf.validation" VariableName="constraintV24492">
+            <Source RefID="28"/>
+          </Data>
+          <Target RefID="4493"/>
+        </Output>
+        <Mapping>%1%.condition.expression=%0%.condition.expression</Mapping>
+        <Mapping>%1%.condition.jsonPaths=%0%.condition.path</Mapping>
+        <Mapping>%1%.dependencies=%0%.dependencies</Mapping>
+        <Mapping>%1%.description=%0%.description</Mapping>
+        <Mapping>%1%.name=%0%.name</Mapping>
+        <Mapping>%1%.rule.expression=%0%.rule.expression</Mapping>
+        <Mapping>%1%.rule.jsonPaths=%0%.rule.path</Mapping>
+      </Mappings>
+    </Foreach>
+    <Choice ID="1344" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="15956"/>
+      <Input>
+        <Data ID="4587" IsList="true" Label="ConstraintV2" ReferenceName="ConstraintV2" ReferencePath="xfmg.tmf.validation" VariableName="constraintV24587">
+          <Source RefID="1344"/>
+        </Data>
+        <Source RefID="15956"/>
+      </Input>
+      <Case ID="1345" Label="true" Premise="length(%0%)&gt;&quot;0&quot;">
+        <Function ID="4396" Label="validate Constraints V2">
+          <Source RefID="4397"/>
+          <Source RefID="8993"/>
+          <Source RefID="15956"/>
+          <Target RefID="4397"/>
+          <Target RefID="4399"/>
+          <Invoke Operation="validateConstraintsV2" ServiceID="4397">
+            <Source RefID="8993">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+            <Source RefID="15956"/>
+          </Invoke>
+          <Receive ServiceID="4397">
+            <Target RefID="4399"/>
+          </Receive>
+        </Function>
+        <Foreach ID="5623">
+          <Source RefID="4399"/>
+          <InputList RefID="4399">
+            <Data ID="5624" Label="Constraint Validation Result V2" ReferenceName="ConstraintValidationResultV2" ReferencePath="xfmg.tmf.validation" VariableName="constraintValidationResultV25624"/>
+          </InputList>
+          <Choice ID="3343" TypeName="BaseChoiceTypeFormula" TypePath="server">
+            <Source RefID="5624"/>
+            <Input>
+              <Data ID="5538" Label="Constraint Validation Result V2" ReferenceName="ConstraintValidationResultV2" ReferencePath="xfmg.tmf.validation" VariableName="constraintValidationResultV25538">
+                <Source RefID="3343"/>
+              </Data>
+              <Source RefID="5624"/>
+            </Input>
+            <Case ID="3344" Label="true" Premise="%0%!=null">
+              <Choice ID="16045" TypeName="BaseChoiceTypeFormula" TypePath="server">
+                <Source RefID="5624"/>
+                <Meta>
+                  <OuterConditionPart>%0%.failureType==?</OuterConditionPart>
+                </Meta>
+                <Input>
+                  <Data ID="16099" Label="Constraint Validation Result V2" ReferenceName="ConstraintValidationResultV2" ReferencePath="xfmg.tmf.validation" VariableName="constraintValidationResultV216099">
+                    <Source RefID="16045"/>
+                  </Data>
+                  <Source RefID="5624">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                </Input>
+                <Case ID="16250" Premise="%0%.failureType==&quot;RULE&quot;">
+                  <Mappings ID="4083" Label="Mapping">
+                    <Input>
+                      <Data ID="5658" Label="Constraint Validation Result V2" ReferenceName="ConstraintValidationResultV2" ReferencePath="xfmg.tmf.validation" VariableName="constraintValidationResultV25658">
+                        <Source RefID="4083"/>
+                      </Data>
+                      <Source RefID="5624">
+                        <Meta>
+                          <LinkType>UserConnected</LinkType>
+                        </Meta>
+                      </Source>
+                    </Input>
+                    <Output>
+                      <Exception ID="5925" Label="ConstraintValidationFailed3" ReferenceName="ConstraintValidationFailed3" ReferencePath="xfmg.tmf640.validation" VariableName="constraintValidationFailed35925">
+                        <Source RefID="4083"/>
+                      </Exception>
+                      <Target RefID="16506"/>
+                    </Output>
+                    <Mapping>%1%.constraintName=concat(%0%.name, " - ", %0%.description)</Mapping>
+                  </Mappings>
+                  <Throw ExceptionID="16506" ID="5802" Label="Throw Constraint Validation Failed 3">
+                    <Meta>
+                      <PreferedExceptionType>xfmg.tmf640.validation.ConstraintValidationFailed3</PreferedExceptionType>
+                    </Meta>
+                    <Source RefID="16506"/>
+                  </Throw>
+                  <Assign ID="16252"/>
+                  <Exception ID="16506" Label="ConstraintValidationFailed3" ReferenceName="ConstraintValidationFailed3" ReferencePath="xfmg.tmf640.validation" VariableName="constraintValidationFailed316506">
+                    <Target RefID="5802"/>
+                  </Exception>
+                </Case>
+                <Case ID="16353" Premise="%0%.failureType==&quot;ERROR&quot;">
+                  <Mappings ID="16784" Label="Mapping">
+                    <Input>
+                      <Data ID="17135" Label="Constraint Validation Result V2" ReferenceName="ConstraintValidationResultV2" ReferencePath="xfmg.tmf.validation" VariableName="constraintValidationResultV217135">
+                        <Source RefID="16784"/>
+                      </Data>
+                      <Source RefID="5624">
+                        <Meta>
+                          <LinkType>UserConnected</LinkType>
+                        </Meta>
+                      </Source>
+                    </Input>
+                    <Output>
+                      <Exception ID="16901" Label="ConstraintValidationError" ReferenceName="ConstraintValidationError" ReferencePath="xfmg.tmf640.validation" VariableName="constraintValidationError16901">
+                        <Source RefID="16784"/>
+                      </Exception>
+                      <Target RefID="16902"/>
+                    </Output>
+                    <Mapping>%1%.constraintName=concat(%0%.name, " - ", %0%.description)</Mapping>
+                    <Mapping>%1%.caused=%0%.exceptionDetails.message</Mapping>
+                  </Mappings>
+                  <Throw ExceptionID="16902" ID="16725" Label="Throw Constraint Validation Error">
+                    <Meta>
+                      <PreferedExceptionType>xfmg.tmf640.validation.ConstraintValidationError</PreferedExceptionType>
+                    </Meta>
+                    <Source RefID="16902"/>
+                  </Throw>
+                  <Assign ID="16355"/>
+                </Case>
+                <Case ID="16046" IsDefault="true" Label="default">
+                  <Assign ID="16048"/>
+                </Case>
+              </Choice>
+              <Assign ID="3347"/>
+            </Case>
+            <Case ID="3345" Label="false">
+              <Assign ID="3349"/>
+            </Case>
+          </Choice>
+          <Exception ID="16902" Label="ConstraintValidationError" ReferenceName="ConstraintValidationError" ReferencePath="xfmg.tmf640.validation" VariableName="constraintValidationError16902">
+            <Target RefID="16725"/>
+          </Exception>
+        </Foreach>
+        <Assign ID="1348"/>
+        <Data ID="4399" IsList="true" Label="Constraint Validation Result V2" ReferenceName="ConstraintValidationResultV2" ReferencePath="xfmg.tmf.validation" VariableName="constraintValidationResultV24399">
+          <Source RefID="4396"/>
+        </Data>
+      </Case>
+      <Case ID="1346" Label="false">
+        <Assign ID="1350"/>
+      </Case>
+    </Choice>
+    <Data ID="8287" Label="Filter Context" ReferenceName="FilterContext" ReferencePath="xfmg.tmf.validation" VariableName="filterContext8287">
+      <Source RefID="8221"/>
+    </Data>
+    <Data ID="9829" IsList="true" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="constraint9829">
+      <Source RefID="7664"/>
+    </Data>
+    <Data ID="10041" IsList="true" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="constraint10041">
+      <Source RefID="446"/>
+    </Data>
+    <Data ID="15898" IsList="true" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="constraint15898">
+      <Source RefID="7078"/>
+    </Data>
+    <Data ID="15956" IsList="true" Label="ConstraintV2" ReferenceName="ConstraintV2" ReferencePath="xfmg.tmf.validation" VariableName="constraintV215956">
+      <Source RefID="15954"/>
+      <Target RefID="15956"/>
+    </Data>
+    <Assign ID="1"/>
+  </Operation>
+</Service>

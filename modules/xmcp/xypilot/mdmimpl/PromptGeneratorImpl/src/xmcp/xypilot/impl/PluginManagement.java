@@ -30,6 +30,7 @@ import com.gip.xyna.xprc.XynaOrderServerExtension;
 import xmcp.forms.plugin.Plugin;
 import xmcp.xypilot.impl.Generation.GenerationInterface;
 import xmcp.yggdrasil.plugin.Context;
+import xprc.xpce.Application;
 import xprc.xpce.RuntimeContext;
 
 
@@ -95,7 +96,12 @@ public class PluginManagement {
 
     builder.definitionWorkflowFQN("xmcp.xypilot.GetManageXyPilotConfigDefinition");
     builder.navigationEntryName("XyPilot Config");
-    builder.navigationEntryLabel("XyPilot Config");
+    String entryLabel = "XyPilot Config";
+    if (rtc instanceof Application) {
+      entryLabel = entryLabel + " " + ((Application) rtc).getVersion();
+    }
+
+    builder.navigationEntryLabel(entryLabel);
     builder.path("manager");
     consumer.accept(builder.instance().clone());
 
