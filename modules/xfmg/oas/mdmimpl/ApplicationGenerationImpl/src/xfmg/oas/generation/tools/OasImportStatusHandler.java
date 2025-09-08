@@ -63,7 +63,7 @@ public class OasImportStatusHandler {
     if (_appType.isEmpty()) {
       return input;
     }
-    return input +  " (" + _appType.toString() + ")";
+    return input +  " (" + _appType.get().toString() + ")";
   }
   
   
