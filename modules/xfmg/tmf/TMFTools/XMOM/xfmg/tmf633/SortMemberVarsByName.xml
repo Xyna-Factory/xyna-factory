@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Comparator" BaseTypePath="base.list.comparator" IsAbstract="false" Label="Sort Member Vars by Name" TypeName="SortMemberVarsByName" TypePath="xfmg.tmf633" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="Sort Member Vars by Name" TypeName="SortMemberVarsByName">
+    <Operation IsStatic="false" Label="Compare" Name="compare">
+      <Input>
+        <Data ID="3" Label="Any Type 1" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype3">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data ID="4" Label="Any Type 2" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype4">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="5" Label="Result" VariableName="int5">
+          <Meta>
+            <Type>int</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">xprc.xpce.datatype.NamedVariableMember m1 = (xprc.xpce.datatype.NamedVariableMember) anytype3;
+xprc.xpce.datatype.NamedVariableMember m2 = (xprc.xpce.datatype.NamedVariableMember) anytype4;
+return m1.getVarName().compareTo(m2.getVarName());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
