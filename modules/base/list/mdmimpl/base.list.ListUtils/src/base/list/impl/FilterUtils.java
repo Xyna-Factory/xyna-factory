@@ -74,10 +74,6 @@ public class FilterUtils {
       this.comparator = comparator;
       this.compareTo = compareTo;
       this.operationAcceptor = OperationAcceptor.forOperation(operation);
-      if ("=".equals(operation)) {
-
-      }
-
     }
 
 
