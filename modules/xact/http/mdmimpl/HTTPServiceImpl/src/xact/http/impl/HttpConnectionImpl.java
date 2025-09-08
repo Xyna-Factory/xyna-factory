@@ -277,6 +277,9 @@ public class HttpConnectionImpl {
             // and mark it as route complete
             conManager.routeComplete(connection, route, context);
             success = true;
+            if (logger.isDebugEnabled()) {
+              logger.debug("Http connection established after " + usedRetries + " of " + retries + " retries");
+            }
           } catch (IOException e) {
             usedRetries++;
             exception = e;
