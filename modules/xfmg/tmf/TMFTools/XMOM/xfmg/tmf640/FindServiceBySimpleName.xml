@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Find Service By Simple Name" TypeName="FindServiceBySimpleName" TypePath="xfmg.tmf640" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Find Service By Simple Name" Name="FindServiceBySimpleName">
+    <Input>
+      <Data ID="2696" Label="Simple Service Name" ReferenceName="Text" ReferencePath="base" VariableName="text2696"/>
+      <Data ID="2313" Label="Service Identification Config" ReferenceName="ServiceIdentificationConfig" ReferencePath="xfmg.tmf640" VariableName="instantiationConfig2313"/>
+    </Input>
+    <Output>
+      <Data ID="3621" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector3621"/>
+    </Output>
+    <Throws>
+      <Exception Label="ServiceUnknown" ReferenceName="ServiceUnknown" ReferencePath="xfmg.tmf633" VariableName="serviceUnknown7758"/>
+    </Throws>
+    <ServiceReference ID="4015" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="4014"/>
+      <Target RefID="4014"/>
+    </ServiceReference>
+    <ServiceReference ID="7679" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="7678"/>
+      <Target RefID="7678"/>
+    </ServiceReference>
+    <ServiceReference ID="582" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+      <Source RefID="581"/>
+      <Target RefID="581"/>
+    </ServiceReference>
+    <ServiceReference ID="7089" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="7088"/>
+      <Target RefID="7088"/>
+    </ServiceReference>
+    <ServiceReference ID="891" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="890"/>
+      <Target RefID="890"/>
+    </ServiceReference>
+    <ServiceReference ID="603" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="602"/>
+      <Target RefID="602"/>
+    </ServiceReference>
+    <Mappings ID="2380" Label="Mapping">
+      <Input>
+        <Data ID="2569" Label="Service Identification Config" ReferenceName="ServiceIdentificationConfig" ReferencePath="xfmg.tmf640" VariableName="instantiationConfig2569">
+          <Source RefID="2380"/>
+        </Data>
+        <Source RefID="2313"/>
+      </Input>
+      <Output>
+        <Data ID="2507" Label="FqXmlName" ReferenceName="Text" ReferencePath="base" VariableName="text2507">
+          <Source RefID="2380"/>
+        </Data>
+        <Target RefID="2508"/>
+      </Output>
+      <Mapping>%1%.text=%0%.baseTypeOfServices</Mapping>
+    </Mappings>
+    <Choice ID="4996" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="2508"/>
+      <Source RefID="2696"/>
+      <Target RefID="7690"/>
+      <Input>
+        <Data ID="5412" Label="FqXmlName" ReferenceName="Text" ReferencePath="base" VariableName="text5412">
+          <Source RefID="4996"/>
+        </Data>
+        <Source RefID="2508">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="5617" Label="Simple Service Name" ReferenceName="Text" ReferencePath="base" VariableName="text5617">
+          <Source RefID="4996"/>
+        </Data>
+        <Source RefID="2696">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="4997" Label="true" Premise="endswith(%0%.text,%1%.text)">
+        <Function ID="7678" Label="Inspect Datatype by Name">
+          <Source RefID="7679"/>
+          <Source RefID="2508"/>
+          <Target RefID="7679"/>
+          <Target RefID="7681"/>
+          <Invoke Operation="inspectDatatypeByName" ServiceID="7679">
+            <Source RefID="2508">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="7679">
+            <Target RefID="7681"/>
+          </Receive>
+        </Function>
+        <Assign ID="5000">
+          <Source RefID="7681"/>
+          <Target RefID="7690"/>
+          <Copy>
+            <Source RefID="7681"/>
+            <Target RefID="7690"/>
+          </Copy>
+        </Assign>
+        <Data ID="7681" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector7681">
+          <Source RefID="7678"/>
+        </Data>
+      </Case>
+      <Case ID="4998" Label="false">
+        <Function ID="7088" Label="Inspect Datatype by Name">
+          <Source RefID="7089"/>
+          <Source RefID="2508"/>
+          <Target RefID="7089"/>
+          <Target RefID="7608"/>
+          <Invoke Operation="inspectDatatypeByName" ServiceID="7089">
+            <Source RefID="2508">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="7089">
+            <Target RefID="7608"/>
+          </Receive>
+        </Function>
+        <Function ID="890" Label="Get Subtypes">
+          <Source RefID="891"/>
+          <Source RefID="7608"/>
+          <Target RefID="891"/>
+          <Target RefID="6140"/>
+          <Invoke Operation="getSubtypes" ServiceID="891">
+            <Source RefID="7608"/>
+          </Invoke>
+          <Receive ServiceID="891">
+            <Target RefID="6140"/>
+          </Receive>
+        </Function>
+        <Foreach ID="6784">
+          <Source RefID="6140"/>
+          <Target RefID="6786"/>
+          <InputList RefID="6140">
+            <Data ID="6785" Label="Subtype" ReferenceName="Text" ReferencePath="base" VariableName="text6785"/>
+          </InputList>
+          <OutputList RefID="6786">
+            <Data ID="6209" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector6209">
+              <Source RefID="602"/>
+            </Data>
+          </OutputList>
+          <Function ID="602" Label="Inspect Datatype by Name">
+            <Source RefID="603"/>
+            <Source RefID="6785"/>
+            <Target RefID="603"/>
+            <Target RefID="6209"/>
+            <Invoke Operation="inspectDatatypeByName" ServiceID="603">
+              <Source RefID="6785">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Invoke>
+            <Receive ServiceID="603">
+              <Target RefID="6209"/>
+            </Receive>
+          </Function>
+        </Foreach>
+        <Mappings ID="1284" Label="Mapping">
+          <Input>
+            <Data ID="2957" Label="Simple Service Name" ReferenceName="Text" ReferencePath="base" VariableName="text2957">
+              <Source RefID="1284"/>
+            </Data>
+            <Source RefID="2696">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="1337" Label="Filter Datatype by Label" ReferenceName="FilterDatatypeByLabel" ReferencePath="xfmg.tmf.inspect" VariableName="filterDatatypeByLabel1337">
+              <Source RefID="1284"/>
+            </Data>
+            <Target RefID="6278"/>
+          </Output>
+          <Mapping>%1%.label0=%0%.text</Mapping>
+        </Mappings>
+        <Function ID="581" Label="Filter">
+          <Source RefID="582"/>
+          <Source RefID="6786"/>
+          <Source RefID="6278"/>
+          <Target RefID="582"/>
+          <Target RefID="6347"/>
+          <Invoke Operation="filter" ServiceID="582">
+            <Source RefID="6786">
+              <Meta>
+                <ExpectedType>xprc.xpce.datatype.DatatypeInspector</ExpectedType>
+              </Meta>
+            </Source>
+            <Source RefID="6278"/>
+          </Invoke>
+          <Receive ServiceID="582">
+            <Target RefID="6347">
+              <Meta>
+                <ExpectedType>xprc.xpce.datatype.DatatypeInspector</ExpectedType>
+              </Meta>
+            </Target>
+          </Receive>
+        </Function>
+        <Choice ID="1688" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="6347"/>
+          <Input>
+            <Data ID="1799" IsList="true" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector1799">
+              <Source RefID="1688"/>
+            </Data>
+            <Source RefID="6347">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Case ID="1689" Label="true" Premise="length(%0%)==&quot;0&quot;">
+            <Mappings ID="2101" Label="Mapping">
+              <Input>
+                <Data ID="3332" Label="Simple Service Name" ReferenceName="Text" ReferencePath="base" VariableName="text3332">
+                  <Source RefID="2101"/>
+                </Data>
+                <Source RefID="2696">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Output>
+                <Exception ID="2162" Label="ServiceUnknown" ReferenceName="ServiceUnknown" ReferencePath="xfmg.tmf633" VariableName="serviceUnknown2162">
+                  <Source RefID="2101"/>
+                </Exception>
+                <Target RefID="2163"/>
+              </Output>
+              <Mapping>%1%.serviceName0=%0%.text</Mapping>
+            </Mappings>
+            <Throw ExceptionID="2163" ID="2040" Label="Throw Service unknown">
+              <Meta>
+                <PreferedExceptionType>cl.test.ServiceUnknown</PreferedExceptionType>
+              </Meta>
+              <Source RefID="2163"/>
+            </Throw>
+            <Assign ID="1692"/>
+          </Case>
+          <Case ID="1690" Label="false">
+            <Assign ID="1694"/>
+          </Case>
+        </Choice>
+        <Mappings ID="3750" Label="Mapping">
+          <Input>
+            <Data ID="3873" IsList="true" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector3873">
+              <Source RefID="3750"/>
+            </Data>
+            <Source RefID="6347">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="4162" Label="FqXmlName" ReferenceName="Text" ReferencePath="base" VariableName="text4162">
+              <Source RefID="3750"/>
+            </Data>
+            <Target RefID="6484"/>
+          </Output>
+          <Mapping>%1%=%0%["0"].getTypeName()</Mapping>
+        </Mappings>
+        <Function ID="4014" Label="Inspect Datatype by Name">
+          <Source RefID="4015"/>
+          <Source RefID="6484"/>
+          <Target RefID="4015"/>
+          <Target RefID="6553"/>
+          <Invoke Operation="inspectDatatypeByName" ServiceID="4015">
+            <Source RefID="6484">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="4015">
+            <Target RefID="6553"/>
+          </Receive>
+        </Function>
+        <Assign ID="5002">
+          <Source RefID="6553"/>
+          <Target RefID="7690"/>
+          <Copy>
+            <Source RefID="6553"/>
+            <Target RefID="7690"/>
+          </Copy>
+        </Assign>
+        <Data ID="6140" IsList="true" Label="Subtype" ReferenceName="Text" ReferencePath="base" VariableName="text6140">
+          <Source RefID="890"/>
+        </Data>
+        <Data ID="6278" Label="Filter Datatype by Label" ReferenceName="FilterDatatypeByLabel" ReferencePath="xfmg.tmf.inspect" VariableName="filterDatatypeByLabel6278">
+          <Source RefID="1284"/>
+        </Data>
+        <Data ID="6347" IsList="true" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector6347">
+          <Source RefID="581"/>
+        </Data>
+        <Data ID="6484" Label="FqXmlName" ReferenceName="Text" ReferencePath="base" VariableName="text6484">
+          <Source RefID="3750"/>
+        </Data>
+        <Data ID="6553" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector6553">
+          <Source RefID="4014"/>
+        </Data>
+        <Data ID="7608" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector7608">
+          <Source RefID="7088"/>
+        </Data>
+      </Case>
+    </Choice>
+    <Data ID="2508" Label="FqXmlName" ReferenceName="Text" ReferencePath="base" VariableName="text2508">
+      <Source RefID="2380"/>
+    </Data>
+    <Data ID="6786" IsList="true" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector6786">
+      <Source RefID="6784"/>
+      <Target RefID="6786"/>
+    </Data>
+    <Data ID="7690" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector7690">
+      <Source RefID="4996"/>
+    </Data>
+    <Exception ID="2163" Label="ServiceUnknown" ReferenceName="ServiceUnknown" ReferencePath="xfmg.tmf633" VariableName="serviceUnknown2163">
+      <Target RefID="2040"/>
+    </Exception>
+    <Assign ID="1">
+      <Source RefID="7690"/>
+      <Target RefID="3621"/>
+      <Copy>
+        <Source RefID="7690"/>
+        <Target RefID="3621"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

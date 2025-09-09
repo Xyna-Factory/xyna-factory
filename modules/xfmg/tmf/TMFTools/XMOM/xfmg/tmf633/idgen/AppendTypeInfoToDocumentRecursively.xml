@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Append Type Info to Document recursively" TypeName="AppendTypeInfoToDocumentRecursively" TypePath="xfmg.tmf633.idgen" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Append Type Info to Document recursively" Name="AppendTypeInfoToDocumentRecursively">
+    <Input>
+      <Data ID="2" Label="fqType" ReferenceName="Text" ReferencePath="base" VariableName="text2"/>
+      <Data ID="1713" Label="IsList" ReferenceName="IsList" ReferencePath="xfmg.tmf633" VariableName="isList1713"/>
+      <Data ID="4130" Label="HashMap" ReferenceName="HashMap" ReferencePath="xprc.base.list" VariableName="hashMap4130"/>
+    </Input>
+    <Output/>
+    <ServiceReference ID="418" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+      <Source RefID="417"/>
+      <Target RefID="417"/>
+    </ServiceReference>
+    <ServiceReference ID="4194" Label="Append Type Info to Document recursively" ReferenceName="AppendTypeInfoToDocumentRecursively" ReferencePath="xfmg.tmf633.idgen">
+      <Source RefID="4193"/>
+      <Target RefID="4193"/>
+    </ServiceReference>
+    <ServiceReference ID="143" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="142"/>
+      <Target RefID="142"/>
+    </ServiceReference>
+    <ServiceReference ID="4635" Label="HashMap" ReferenceName="HashMap.HashMap" ReferencePath="xprc.base.list">
+      <Source RefID="4634"/>
+      <Target RefID="4634"/>
+    </ServiceReference>
+    <ServiceReference ID="43" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="42"/>
+      <Target RefID="42"/>
+    </ServiceReference>
+    <ServiceReference ID="3268" Label="Extract Annotations Of Member" ReferenceName="ExtractAnnotationsOfMember" ReferencePath="xfmg.tmf.inspect">
+      <Source RefID="3267"/>
+      <Target RefID="3267"/>
+    </ServiceReference>
+    <Choice ID="4786" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="4130"/>
+      <Source RefID="2"/>
+      <Input>
+        <Data ID="4941" Label="HashMap" ReferenceName="HashMap" ReferencePath="xprc.base.list" VariableName="hashMap4941">
+          <Source RefID="4786"/>
+        </Data>
+        <Source RefID="4130"/>
+      </Input>
+      <Input>
+        <Data ID="5164" Label="fqType" ReferenceName="Text" ReferencePath="base" VariableName="text5164">
+          <Source RefID="4786"/>
+        </Data>
+        <Source RefID="2"/>
+      </Input>
+      <Case ID="4787" Label="true" Premise="%0%.getr(%1%.text)==null">
+        <Function ID="4634" Label="put">
+          <Source RefID="4635"/>
+          <Source RefID="4130"/>
+          <Source RefID="2"/>
+          <Source RefID="5251"/>
+          <Target RefID="4635"/>
+          <Invoke Operation="put" ServiceID="4635">
+            <Source RefID="4130"/>
+            <Source RefID="2"/>
+            <Source RefID="5251">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="4635"/>
+        </Function>
+        <Choice ID="1921" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="1713"/>
+          <Input>
+            <Data ID="1980" Label="IsList" ReferenceName="IsList" ReferencePath="xfmg.tmf633" VariableName="isList1980">
+              <Source RefID="1921"/>
+            </Data>
+            <Source RefID="1713"/>
+          </Input>
+          <Case ID="1922" Label="true" Premise="%0%.islist">
+            <Mappings ID="1866" Label="">
+              <Meta>
+                <IsTemplate>true</IsTemplate>
+              </Meta>
+              <Output>
+                <Data ID="1867" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart1867"/>
+                <Target RefID="2137"/>
+              </Output>
+              <Mapping>%0%.text=concat("L")</Mapping>
+            </Mappings>
+            <Assign ID="1925"/>
+            <Data ID="2137" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart2137"/>
+          </Case>
+          <Case ID="1923" Label="false">
+            <Assign ID="1927"/>
+          </Case>
+        </Choice>
+        <Choice ID="12" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="2"/>
+          <Meta>
+            <OuterConditionPart>%0%.text==?</OuterConditionPart>
+          </Meta>
+          <Input>
+            <Data ID="16" Label="fqType" ReferenceName="Text" ReferencePath="base" VariableName="text16"/>
+            <Source RefID="2"/>
+          </Input>
+          <Case ID="17" Label="" Premise="%0%.text==&quot;java.lang.String&quot;">
+            <Mappings ID="37" Label="">
+              <Meta>
+                <IsTemplate>true</IsTemplate>
+              </Meta>
+              <Input>
+                <Data ID="39" Label="fqType" ReferenceName="Text" ReferencePath="base" VariableName="text39"/>
+                <Source RefID="2"/>
+              </Input>
+              <Output>
+                <Data ID="40" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart40"/>
+                <Target RefID="36"/>
+              </Output>
+              <Mapping>%1%.text=concat("\"", %0%.text, "\"")</Mapping>
+            </Mappings>
+            <Assign/>
+            <Data ID="36" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart36"/>
+          </Case>
+          <Case Alias="17" ID="20" Label="" Premise="%0%.text==&quot;int&quot;"/>
+          <Case Alias="17" ID="22" Label="" Premise="%0%.text==&quot;java.lang.Integer&quot;"/>
+          <Case Alias="17" ID="24" Label="" Premise="%0%.text==&quot;long&quot;"/>
+          <Case Alias="17" ID="26" Label="" Premise="%0%.text==&quot;java.lang.Long&quot;"/>
+          <Case Alias="17" ID="28" Label="" Premise="%0%.text==&quot;boolean&quot;"/>
+          <Case Alias="17" ID="30" Label="" Premise="%0%.text==&quot;java.lang.Boolean&quot;"/>
+          <Case Alias="17" ID="32" Label="" Premise="%0%.text==&quot;double&quot;"/>
+          <Case Alias="17" ID="34" Label="" Premise="%0%.text==&quot;java.lang.Double&quot;"/>
+          <Case ID="13" IsDefault="true" Label="default">
+            <Function ID="42" Label="Inspect Datatype by Name">
+              <Source RefID="43"/>
+              <Source RefID="2"/>
+              <Target RefID="43"/>
+              <Target RefID="41"/>
+              <Invoke Operation="inspectDatatypeByName" ServiceID="43">
+                <Source RefID="2"/>
+              </Invoke>
+              <Receive ServiceID="43">
+                <Target RefID="41"/>
+              </Receive>
+            </Function>
+            <Function ID="142" Label="List All Variable Members With Params">
+              <Source RefID="143"/>
+              <Source RefID="41"/>
+              <Source RefID="178"/>
+              <Target RefID="143"/>
+              <Target RefID="145"/>
+              <Invoke Operation="listAllVariableMembersWithParams" ServiceID="143">
+                <Source RefID="41"/>
+                <Source RefID="178">
+                  <Meta>
+                    <LinkType>Constant</LinkType>
+                  </Meta>
+                </Source>
+              </Invoke>
+              <Receive ServiceID="143">
+                <Target RefID="145"/>
+              </Receive>
+            </Function>
+            <Function ID="417" Label="Sort">
+              <Source RefID="418"/>
+              <Source RefID="145"/>
+              <Source RefID="2782"/>
+              <Target RefID="418"/>
+              <Target RefID="420"/>
+              <Invoke Operation="sort" ServiceID="418">
+                <Source RefID="145">
+                  <Meta>
+                    <ExpectedType>xprc.xpce.datatype.NamedVariableMember</ExpectedType>
+                  </Meta>
+                </Source>
+                <Source RefID="2782">
+                  <Meta>
+                    <LinkType>Constant</LinkType>
+                    <ExpectedType>xfmg.tmf633.SortMemberVarsByName</ExpectedType>
+                  </Meta>
+                </Source>
+              </Invoke>
+              <Receive ServiceID="418">
+                <Target RefID="420">
+                  <Meta>
+                    <ExpectedType>xprc.xpce.datatype.NamedVariableMember</ExpectedType>
+                  </Meta>
+                </Target>
+              </Receive>
+            </Function>
+            <Mappings ID="77" Label="">
+              <Meta>
+                <IsTemplate>true</IsTemplate>
+              </Meta>
+              <Output>
+                <Data ID="78" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart78"/>
+                <Target RefID="79"/>
+              </Output>
+              <Mapping>%0%.text=concat("{")</Mapping>
+            </Mappings>
+            <Foreach ID="843">
+              <Source RefID="420"/>
+              <InputList RefID="420">
+                <Data ID="844" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember844"/>
+              </InputList>
+              <Choice ID="602" TypeName="BaseChoiceTypeFormula" TypePath="server">
+                <Source RefID="844"/>
+                <Input>
+                  <Data ID="698" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember698">
+                    <Source RefID="602"/>
+                  </Data>
+                  <Source RefID="844">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                </Input>
+                <Case ID="603" Label="true" Premise="%0%!=null">
+                  <Function ID="3267" Label="Extract Annotations Of Member">
+                    <Source RefID="3268"/>
+                    <Source RefID="844"/>
+                    <Target RefID="3268"/>
+                    <Target RefID="3337"/>
+                    <Invoke Operation="ExtractAnnotationsOfMember" ServiceID="3268">
+                      <Source RefID="844">
+                        <Meta>
+                          <LinkType>UserConnected</LinkType>
+                        </Meta>
+                      </Source>
+                    </Invoke>
+                    <Receive ServiceID="3268">
+                      <Target RefID="3337"/>
+                    </Receive>
+                  </Function>
+                  <Choice ID="3620" TypeName="BaseChoiceTypeFormula" TypePath="server">
+                    <Source RefID="3337"/>
+                    <Input>
+                      <Data ID="3693" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable3693">
+                        <Source RefID="3620"/>
+                      </Data>
+                      <Source RefID="3337"/>
+                    </Input>
+                    <Case ID="3621" Label="true" Premise="%0%.tMFType!=null">
+                      <Mappings ID="8900" Label="">
+                        <Meta>
+                          <IsTemplate>true</IsTemplate>
+                        </Meta>
+                        <Input>
+                          <Data ID="9051" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable9051">
+                            <Source RefID="8900"/>
+                          </Data>
+                          <Source RefID="3337"/>
+                        </Input>
+                        <Output>
+                          <Data ID="8901" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart8901"/>
+                          <Target RefID="8902"/>
+                        </Output>
+                        <Mapping>%1%.text=concat("\"type\":", %0%.tMFType, "\n", "")</Mapping>
+                      </Mappings>
+                      <Choice ID="8060" TypeName="BaseChoiceTypeFormula" TypePath="server">
+                        <Source RefID="3337"/>
+                        <Meta>
+                          <OuterConditionPart>%0%.tMFType==?</OuterConditionPart>
+                        </Meta>
+                        <Input>
+                          <Data ID="8138" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable8138">
+                            <Source RefID="8060"/>
+                          </Data>
+                          <Source RefID="3337"/>
+                        </Input>
+                        <Case ID="8361" Label="" Premise="%0%.tMFType==&quot;Characteristic&quot;">
+                          <Mappings ID="8663" Label="">
+                            <Meta>
+                              <IsTemplate>true</IsTemplate>
+                            </Meta>
+                            <Input>
+                              <Data ID="8666" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable8666"/>
+                              <Source RefID="3337"/>
+                            </Input>
+                            <Input>
+                              <Data ID="8667" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable8667"/>
+                              <Source RefID="3337"/>
+                            </Input>
+                            <Input>
+                              <Data ID="8668" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable8668"/>
+                              <Source RefID="3337"/>
+                            </Input>
+                            <Input>
+                              <Data ID="8669" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable8669"/>
+                              <Source RefID="3337"/>
+                            </Input>
+                            <Input>
+                              <Data ID="8670" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable8670"/>
+                              <Source RefID="3337"/>
+                            </Input>
+                            <Output>
+                              <Data ID="8664" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart8664"/>
+                              <Target RefID="8665"/>
+                            </Output>
+                            <Output>
+                              <Data ID="8676" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart8676"/>
+                              <Target RefID="8677"/>
+                            </Output>
+                            <Mapping>%6%.text=concat("\"mincard\":", %1%.tMFCharacteristicSpecAnnotations.minCardinality, "\n", "\"maxcard\":", %0%.tMFCharacteristicSpecAnnotations.maxCardinality, "\n", "\"enums\":", %0%.tMFCharacteristicSpecAnnotations.valueEnumeration, "\n", "\"default\":", %0%.tMFCharacteristicSpecAnnotations.defaultValue, "\n", "\"valueFrom\":", %2%.tMFCharacteristicSpecAnnotations.valueFrom, "\n", "\"valueTo\":", %3%.tMFCharacteristicSpecAnnotations.valueTo0, "\n", "\"regex\":", %4%.tMFCharacteristicSpecAnnotations.regex, "\n", "")</Mapping>
+                          </Mappings>
+                          <Assign ID="8363"/>
+                          <Data ID="8665" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart8665"/>
+                        </Case>
+                        <Case ID="9422" Label="" Premise="%0%.tMFType==&quot;ServiceRelationship&quot;">
+                          <Mappings ID="9573" Label="">
+                            <Meta>
+                              <IsTemplate>true</IsTemplate>
+                            </Meta>
+                            <Input>
+                              <Data ID="9581" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable9581"/>
+                              <Source RefID="3337"/>
+                            </Input>
+                            <Input>
+                              <Data ID="9582" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable9582"/>
+                              <Source RefID="3337"/>
+                            </Input>
+                            <Input>
+                              <Data ID="9583" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable9583"/>
+                              <Source RefID="3337"/>
+                            </Input>
+                            <Output>
+                              <Data ID="9574" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart9574"/>
+                              <Target RefID="9575"/>
+                            </Output>
+                            <Output>
+                              <Data ID="9586" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart9586"/>
+                              <Target RefID="9587"/>
+                            </Output>
+                            <Mapping>%4%.text=concat("\"role\":", %0%.tMFServiceReferenceSpecAnnotations.role, "\n", "\"serviceName\":", %1%.tMFServiceReferenceSpecAnnotations.referencedServiceName, "\n", "\"serviceId\":", %2%.tMFServiceReferenceSpecAnnotations.id, "\n", "\"useParentId\":", %0%.tMFServiceReferenceSpecAnnotations.useParentServiceId, "\n", "")</Mapping>
+                          </Mappings>
+                          <Assign ID="9424"/>
+                          <Data ID="9575" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart9575"/>
+                        </Case>
+                        <Case ID="10254" Label="" Premise="%0%.tMFType==&quot;RelatedParty&quot;">
+                          <Mappings ID="10405" Label="">
+                            <Meta>
+                              <IsTemplate>true</IsTemplate>
+                            </Meta>
+                            <Input>
+                              <Data ID="10482" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable10482">
+                                <Source RefID="10405"/>
+                              </Data>
+                              <Source RefID="3337"/>
+                            </Input>
+                            <Output>
+                              <Data ID="10406" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart10406"/>
+                              <Target RefID="10407"/>
+                            </Output>
+                            <Mapping>%1%.text=concat("\"type\":", %0%.tMFPartyRelationshipSpecAnnotations.partyType, "\n", "")</Mapping>
+                          </Mappings>
+                          <Assign ID="10256"/>
+                          <Data ID="10407" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart10407"/>
+                        </Case>
+                        <Case ID="10927" Label="" Premise="%0%.tMFType==&quot;Resource&quot;">
+                          <Mappings ID="11078" Label="">
+                            <Meta>
+                              <IsTemplate>true</IsTemplate>
+                            </Meta>
+                            <Input>
+                              <Data ID="11081" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable11081"/>
+                              <Source RefID="3337"/>
+                            </Input>
+                            <Input>
+                              <Data ID="11244" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable11244">
+                                <Source RefID="11078"/>
+                              </Data>
+                              <Source RefID="3337"/>
+                            </Input>
+                            <Output>
+                              <Data ID="11079" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart11079"/>
+                              <Target RefID="11080"/>
+                            </Output>
+                            <Output>
+                              <Data ID="11082" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart11082"/>
+                              <Target RefID="11083"/>
+                            </Output>
+                            <Mapping>%3%.text=concat("\"resourceId\":", %0%.tMFResourceSpecAnnotations.resourceRefId, "\n", "\"referredType:\"", %1%.tMFResourceSpecAnnotations.referredType, "\n", "")</Mapping>
+                          </Mappings>
+                          <Assign ID="10929"/>
+                          <Data ID="11080" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart11080"/>
+                        </Case>
+                        <Case ID="11628" Premise="%0%.tMFType==&quot;ServiceProperty&quot;">
+                          <Mappings ID="11779">
+                            <Meta>
+                              <IsTemplate>true</IsTemplate>
+                            </Meta>
+                            <Input>
+                              <Data ID="12004" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable12004">
+                                <Source RefID="11779"/>
+                              </Data>
+                              <Source RefID="3337"/>
+                            </Input>
+                            <Output>
+                              <Data ID="11780" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart11780"/>
+                              <Target RefID="11781"/>
+                            </Output>
+                            <Mapping>%1%.text=concat("\"propname\":", %0%.tMFServicePropertyAnnotations.propertyName)</Mapping>
+                          </Mappings>
+                          <Assign ID="11630"/>
+                          <Data ID="11781" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart11781"/>
+                        </Case>
+                        <Case ID="8061" IsDefault="true" Label="default">
+                          <Assign ID="8063"/>
+                        </Case>
+                      </Choice>
+                      <Assign ID="3624"/>
+                      <Data ID="8902" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart8902"/>
+                    </Case>
+                    <Case ID="3622" Label="false">
+                      <Assign ID="3626"/>
+                    </Case>
+                  </Choice>
+                  <Mappings ID="3134" Label="">
+                    <Meta>
+                      <IsTemplate>true</IsTemplate>
+                    </Meta>
+                    <Input>
+                      <Data ID="3195" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember3195">
+                        <Source RefID="3134"/>
+                      </Data>
+                      <Source RefID="844">
+                        <Meta>
+                          <LinkType>UserConnected</LinkType>
+                        </Meta>
+                      </Source>
+                    </Input>
+                    <Output>
+                      <Data ID="3135" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart3135"/>
+                      <Target RefID="3136"/>
+                    </Output>
+                    <Mapping>%1%.text=concat("\"", %0%.varName, "\":")</Mapping>
+                  </Mappings>
+                  <Mappings ID="1150" Label="Mapping">
+                    <Input>
+                      <Data ID="1257" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember1257">
+                        <Source RefID="1150"/>
+                      </Data>
+                      <Source RefID="844">
+                        <Meta>
+                          <LinkType>UserConnected</LinkType>
+                        </Meta>
+                      </Source>
+                    </Input>
+                    <Output>
+                      <Data ID="1203" Label="fqType" ReferenceName="Text" ReferencePath="base" VariableName="text1203">
+                        <Source RefID="1150"/>
+                      </Data>
+                      <Target RefID="1204"/>
+                    </Output>
+                    <Output>
+                      <Data ID="2294" Label="IsList" ReferenceName="IsList" ReferencePath="xfmg.tmf633" VariableName="isList2294">
+                        <Source RefID="1150"/>
+                      </Data>
+                      <Target RefID="2295"/>
+                    </Output>
+                    <Mapping>%1%.text=%0%.type</Mapping>
+                    <Mapping>%2%.islist=%0%.isList</Mapping>
+                  </Mappings>
+                  <Function ID="4193" Label="Append Type Info to Document recursively">
+                    <Source RefID="4194"/>
+                    <Source RefID="1204"/>
+                    <Source RefID="2295"/>
+                    <Source RefID="4130"/>
+                    <Target RefID="4194"/>
+                    <Invoke Operation="AppendTypeInfoToDocumentRecursively" ServiceID="4194">
+                      <Source RefID="1204">
+                        <Meta>
+                          <LinkType>UserConnected</LinkType>
+                        </Meta>
+                      </Source>
+                      <Source RefID="2295">
+                        <Meta>
+                          <LinkType>UserConnected</LinkType>
+                        </Meta>
+                      </Source>
+                      <Source RefID="4130"/>
+                    </Invoke>
+                    <Receive ServiceID="4194"/>
+                  </Function>
+                  <Mappings ID="1646" Label="">
+                    <Meta>
+                      <IsTemplate>true</IsTemplate>
+                    </Meta>
+                    <Output>
+                      <Data ID="1647" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart1647"/>
+                      <Target RefID="1648"/>
+                    </Output>
+                    <Output>
+                      <Data ID="1649" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart1649"/>
+                      <Target RefID="1650"/>
+                    </Output>
+                    <Output>
+                      <Data ID="1651" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart1651"/>
+                      <Target RefID="1652"/>
+                    </Output>
+                    <Mapping>%2%.text=concat(",")</Mapping>
+                  </Mappings>
+                  <Assign ID="606"/>
+                  <Data ID="1648" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart1648"/>
+                  <Data ID="3136" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart3136"/>
+                  <Data ID="3337" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable3337">
+                    <Source RefID="3267"/>
+                  </Data>
+                </Case>
+                <Case ID="604" Label="false">
+                  <Assign ID="608"/>
+                </Case>
+              </Choice>
+              <Data ID="1204" Label="fqType" ReferenceName="Text" ReferencePath="base" VariableName="text1204">
+                <Source RefID="1150"/>
+              </Data>
+              <Data ID="1650" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart1650"/>
+              <Data ID="1652" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart1652"/>
+              <Data ID="2295" Label="IsList" ReferenceName="IsList" ReferencePath="xfmg.tmf633" VariableName="isList2295">
+                <Source RefID="1150"/>
+              </Data>
+              <Data ID="8677" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart8677"/>
+              <Data ID="9587" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart9587"/>
+              <Data ID="11083" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart11083"/>
+            </Foreach>
+            <Mappings ID="2957" Label="">
+              <Meta>
+                <IsTemplate>true</IsTemplate>
+              </Meta>
+              <Output>
+                <Data ID="2958" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart2958"/>
+                <Target RefID="2959"/>
+              </Output>
+              <Mapping>%0%.text=concat("}")</Mapping>
+            </Mappings>
+            <Assign/>
+            <Data ID="41" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector41"/>
+            <Data ID="79" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart79"/>
+            <Data ID="145" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember145">
+              <Source RefID="142"/>
+            </Data>
+            <Data ID="420" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember420"/>
+            <Data ID="2959" Label="Document part" ReferenceName="DocumentPart" ReferencePath="xact.templates" VariableName="documentPart2959"/>
+          </Case>
+        </Choice>
+        <Assign ID="4790"/>
+      </Case>
+      <Case ID="4788" Label="false">
+        <Assign ID="4792"/>
+      </Case>
+    </Choice>
+    <Data ID="178" Label="Inspection Parameter" ReferenceName="InspectionParameter" ReferencePath="xprc.xpce.datatype" VariableName="const_InspectionParameter178">
+      <Data VariableName="includeComplexMembers">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>true</Value>
+      </Data>
+    </Data>
+    <Data ID="2782" Label="Sort Member Vars by Name" ReferenceName="SortMemberVarsByName" ReferencePath="xfmg.tmf633" VariableName="const_SortMemberVarsByName2782"/>
+    <Data ID="5251" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="const_Text5251">
+      <Data VariableName="text">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>true</Value>
+      </Data>
+    </Data>
+    <Assign ID="1"/>
+  </Operation>
+</Service>

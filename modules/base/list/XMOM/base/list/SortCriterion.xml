@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Sort Criterion" TypeName="SortCriterion" TypePath="base.list" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Field Name" VariableName="fieldName">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>XFL expression
+example: %0%.varname</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Null First" VariableName="nullFirst">
+    <Meta>
+      <Type>boolean</Type>
+      <Documentation>Sort order of null values.
+Default false: null values at end.</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="Descending" VariableName="descending">
+    <Meta>
+      <Type>boolean</Type>
+      <Documentation>Sort order.
+Does not affect "Null First".</Documentation>
+    </Meta>
+  </Data>
+</DataType>
