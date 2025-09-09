@@ -23,12 +23,18 @@ import java.util.List;
 import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
+import com.gip.xyna.xprc.XynaOrderServerExtension;
 
 import base.KeyValue;
 import xmcp.oas.fman.OasGuiServicesServiceOperation;
 import xmcp.oas.fman.codedservice.CSCreateWorkspaceInputDownloadData;
+import xmcp.oas.fman.codedservice.CSEndpointImplementation;
+import xmcp.oas.fman.codedservice.CSGetImplServices;
 import xmcp.oas.fman.codedservice.CSGetOasApiEndpoints;
+import xmcp.oas.fman.codedservice.CSGetReferenceCandidates;
+import xmcp.oas.fman.datatypes.EndpointImplementationCreationData;
 import xmcp.oas.fman.datatypes.OasApiDatatypeInfo;
+import xmcp.oas.fman.datatypes.OasEndpointService;
 import xmcp.tables.datatypes.TableInfo;
 
 
@@ -66,11 +72,28 @@ public class OasGuiServicesServiceOperationImpl implements ExtendedDeploymentTas
   public List<? extends KeyValue> createWorkspaceInputDownloadData() {
     return new CSCreateWorkspaceInputDownloadData().execute();
   }
-
   
   @Override
   public List<? extends OasApiDatatypeInfo> getOasApiEndpoints(TableInfo info) {
     return new CSGetOasApiEndpoints().execute(info);
   }
+
+  @Override
+  public void endpointImplementation(XynaOrderServerExtension order, EndpointImplementationCreationData data) {
+    new CSEndpointImplementation().execute(order, data);
+  }
+
+  @Override
+  public List<? extends OasEndpointService> getOasImplServices(EndpointImplementationCreationData data) {
+    return new CSGetImplServices().execute(data);
+  }
+
+  @Override
+  public List<? extends KeyValue> getReferenceCandidates(XynaOrderServerExtension order, EndpointImplementationCreationData data, OasEndpointService service) {
+    //TODO: remove service input
+    return new CSGetReferenceCandidates().execute(order, data);
+  }
+
+
 
 }
