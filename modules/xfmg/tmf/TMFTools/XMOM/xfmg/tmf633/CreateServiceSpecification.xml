@@ -1,0 +1,1373 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Create Service Specification" TypeName="CreateServiceSpecification" TypePath="xfmg.tmf633" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Create Service Specification" Name="CreateServiceSpecification">
+    <Input>
+      <Data ID="37186" Label="Spec Generator Context" ReferenceName="SpecGeneratorContext" ReferencePath="xfmg.tmf633" VariableName="specGeneratorContext37186"/>
+    </Input>
+    <Output>
+      <Data ID="417" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document417"/>
+    </Output>
+    <Throws>
+      <Exception Label="Unsupported TMF Type" ReferenceName="UnsupportedTMFType" ReferencePath="xfmg.tmf.inspect" VariableName="unsupportedTMFType92980"/>
+      <Exception Label="MandatoryCharacteristicContainsDefaultValueException" ReferenceName="MandatoryCharacteristicContainsDefaultValueException" ReferencePath="xfmg.tmf633" VariableName="mandatoryCharacteristicContainsDefaultValueException92981"/>
+      <Exception Label="ServiceUnknown" ReferenceName="ServiceUnknown" ReferencePath="xfmg.tmf633" VariableName="serviceUnknown92982"/>
+    </Throws>
+    <ServiceReference ID="30468" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="30467"/>
+      <Target RefID="30467"/>
+    </ServiceReference>
+    <ServiceReference ID="63966" Label="Collect Members recursively" ReferenceName="CollectMembersRecursively" ReferencePath="xfmg.tmf633">
+      <Source RefID="63965"/>
+      <Target RefID="63965"/>
+    </ServiceReference>
+    <ServiceReference ID="7932" Label="Extract Annotations Of Member" ReferenceName="ExtractAnnotationsOfMember" ReferencePath="xfmg.tmf.inspect">
+      <Source RefID="7931"/>
+      <Target RefID="7931"/>
+    </ServiceReference>
+    <ServiceReference ID="51310" Label="Create Resource Spec For Member" ReferenceName="CreateResourceSpecForMember" ReferencePath="xfmg.tmf633">
+      <Source RefID="51309"/>
+      <Target RefID="51309"/>
+    </ServiceReference>
+    <ServiceReference ID="45359" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+      <Source RefID="45358"/>
+      <Target RefID="45358"/>
+    </ServiceReference>
+    <ServiceReference ID="6604" Label="Create Characteristic Spec For Member" ReferenceName="CreateCharacteristicSpecForMember" ReferencePath="xfmg.tmf633">
+      <Source RefID="6603"/>
+      <Target RefID="6603"/>
+    </ServiceReference>
+    <ServiceReference ID="54170" Label="Get Meta Tags Of Datatype As Map" ReferenceName="GetMetaTagsOfDatatypeAsMap" ReferencePath="xfmg.tmf.inspect">
+      <Source RefID="54169"/>
+      <Target RefID="54169"/>
+    </ServiceReference>
+    <ServiceReference ID="92289" Label="Create Allowed Changes" ReferenceName="CreateAllowedChanges" ReferencePath="xfmg.tmf633">
+      <Source RefID="92288"/>
+      <Target RefID="92288"/>
+    </ServiceReference>
+    <ServiceReference ID="10539" Label="JSON Datamodel Services" ReferenceName="JSONDatamodelServices.JSONDatamodelServices" ReferencePath="xfmg.xfctrl.datamodel.json">
+      <Source RefID="10538"/>
+      <Target RefID="10538"/>
+    </ServiceReference>
+    <ServiceReference ID="16354" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+      <Source RefID="16353"/>
+      <Target RefID="16353"/>
+    </ServiceReference>
+    <ServiceReference ID="63023" Label="Get Or Create Service Spec Id" ReferenceName="GetOrCreateServiceSpecId" ReferencePath="xfmg.tmf633.idgen">
+      <Source RefID="63022"/>
+      <Target RefID="63022"/>
+    </ServiceReference>
+    <ServiceReference ID="38238" Label="Create Party Relationship Spec For Member" ReferenceName="CreatePartyRelationshipSpecForMember" ReferencePath="xfmg.tmf633">
+      <Source RefID="38237"/>
+      <Target RefID="38237"/>
+    </ServiceReference>
+    <ServiceReference ID="60043" Label="Create Service Reference Spec For Member" ReferenceName="CreateServiceReferenceSpecForMember" ReferencePath="xfmg.tmf633">
+      <Source RefID="60042"/>
+      <Target RefID="60042"/>
+    </ServiceReference>
+    <ServiceReference ID="58293" Label="Create Constraints" ReferenceName="CreateConstraints" ReferencePath="xfmg.tmf633">
+      <Source RefID="58292"/>
+      <Target RefID="58292"/>
+    </ServiceReference>
+    <ServiceReference ID="14494" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+      <Source RefID="14493"/>
+      <Target RefID="14493"/>
+    </ServiceReference>
+    <ServiceReference ID="91829" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+      <Source RefID="91828"/>
+      <Target RefID="91828"/>
+    </ServiceReference>
+    <ServiceReference ID="13840" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+      <Source RefID="13839"/>
+      <Target RefID="13839"/>
+    </ServiceReference>
+    <ServiceReference ID="1590" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+      <Source RefID="1589"/>
+      <Target RefID="1589"/>
+    </ServiceReference>
+    <Mappings ID="30265" Label="Mapping">
+      <Input>
+        <Data ID="31081" Label="Spec Generator Context" ReferenceName="SpecGeneratorContext" ReferencePath="xfmg.tmf633" VariableName="specGeneratorContext31081">
+          <Source RefID="30265"/>
+        </Data>
+        <Source RefID="37186"/>
+      </Input>
+      <Output>
+        <Data ID="30879" Label="FqXmlName" ReferenceName="Text" ReferencePath="base" VariableName="text30879">
+          <Source RefID="30265"/>
+        </Data>
+        <Target RefID="30880"/>
+      </Output>
+      <Mapping>%1%.text=%0%.fqNameOfService</Mapping>
+    </Mappings>
+    <Function ID="30467" Label="Inspect Datatype by Name">
+      <Source RefID="30468"/>
+      <Source RefID="30880"/>
+      <Target RefID="30468"/>
+      <Target RefID="30470"/>
+      <Invoke Operation="inspectDatatypeByName" ServiceID="30468">
+        <Source RefID="30880"/>
+      </Invoke>
+      <Receive ServiceID="30468">
+        <Target RefID="30470"/>
+      </Receive>
+    </Function>
+    <Function ID="63965" Label="Collect Members recursively">
+      <Source RefID="63966"/>
+      <Source RefID="30470"/>
+      <Target RefID="63966"/>
+      <Target RefID="63968"/>
+      <Invoke Operation="CollectMembersRecursively" ServiceID="63966">
+        <Source RefID="30470"/>
+      </Invoke>
+      <Receive ServiceID="63966">
+        <Target RefID="63968"/>
+      </Receive>
+    </Function>
+    <Function ID="54169" Label="Get Meta Tags Of Datatype As Map">
+      <Source RefID="54170"/>
+      <Source RefID="30470"/>
+      <Target RefID="54170"/>
+      <Target RefID="55114"/>
+      <Invoke Operation="GetMetaTagsOfDatatypeAsMap" ServiceID="54170">
+        <Source RefID="30470"/>
+      </Invoke>
+      <Receive ServiceID="54170">
+        <Target RefID="55114"/>
+      </Receive>
+    </Function>
+    <Function ID="63022" Label="Get Or Create Service Spec Id">
+      <Source RefID="63023"/>
+      <Source RefID="37186"/>
+      <Source RefID="55114"/>
+      <Source RefID="63968"/>
+      <Target RefID="63023"/>
+      <Target RefID="63025"/>
+      <Invoke Operation="GetOrCreateServiceSpecId" ServiceID="63023">
+        <Source RefID="37186"/>
+        <Source RefID="55114"/>
+        <Source RefID="63968"/>
+      </Invoke>
+      <Receive ServiceID="63023">
+        <Target RefID="63025"/>
+      </Receive>
+    </Function>
+    <Function ID="58292" Label="Create Constraints">
+      <Source RefID="58293"/>
+      <Source RefID="37186"/>
+      <Source RefID="55114"/>
+      <Source RefID="30470"/>
+      <Target RefID="58293"/>
+      <Target RefID="58294"/>
+      <Invoke Operation="CreateConstraints" ServiceID="58293">
+        <Source RefID="37186"/>
+        <Source RefID="55114"/>
+        <Source RefID="30470"/>
+      </Invoke>
+      <Receive ServiceID="58293">
+        <Target RefID="58294"/>
+      </Receive>
+    </Function>
+    <Function ID="92288" Label="Create Allowed Changes">
+      <Source RefID="92289"/>
+      <Source RefID="55114"/>
+      <Source RefID="30470"/>
+      <Target RefID="92289"/>
+      <Target RefID="92291"/>
+      <Invoke Operation="CreateAllowedChanges" ServiceID="92289">
+        <Source RefID="55114"/>
+        <Source RefID="30470"/>
+      </Invoke>
+      <Receive ServiceID="92289">
+        <Target RefID="92291"/>
+      </Receive>
+    </Function>
+    <Function ID="1589" Label="Filter Members With TMF Tag">
+      <Source RefID="1590"/>
+      <Source RefID="63968"/>
+      <Source RefID="2291"/>
+      <Target RefID="1590"/>
+      <Target RefID="1919"/>
+      <Invoke Operation="filter" ServiceID="1590">
+        <Source RefID="63968">
+          <Meta>
+            <ExpectedType>xprc.xpce.datatype.NamedVariableMember</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="2291">
+          <Meta>
+            <LinkType>Constant</LinkType>
+            <ExpectedType>xfmg.tmf.inspect.FilterMembersWithTMFMetaTag</ExpectedType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="1590">
+        <Target RefID="1919">
+          <Meta>
+            <ExpectedType>xprc.xpce.datatype.NamedVariableMember</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
+    <Foreach ID="4810">
+      <Source RefID="1919"/>
+      <Target RefID="67058"/>
+      <Target RefID="67059"/>
+      <Target RefID="67356"/>
+      <Target RefID="67941"/>
+      <Target RefID="91558"/>
+      <InputList RefID="1919">
+        <Data ID="4811" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember4811"/>
+      </InputList>
+      <OutputList RefID="67058">
+        <Data ID="67054" IsList="true" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="tmf633.datamodel" VariableName="serviceSpecRelationship67054">
+          <Source RefID="2649"/>
+        </Data>
+      </OutputList>
+      <OutputList RefID="67059">
+        <Data ID="67055" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification67055">
+          <Source RefID="2649"/>
+        </Data>
+      </OutputList>
+      <OutputList RefID="67356">
+        <Data ID="67355" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf633.datamodel" VariableName="relatedParty67355">
+          <Source RefID="2649"/>
+        </Data>
+      </OutputList>
+      <OutputList RefID="67941">
+        <Data ID="67940" Label="ResourceSpecificationRef" ReferenceName="ResourceSpecificationRef" ReferencePath="tmf633.datamodel" VariableName="resourceSpecificationRef67940">
+          <Source RefID="2649"/>
+        </Data>
+      </OutputList>
+      <OutputList RefID="91558">
+        <Data ID="91557" Label="ExternalIdentifierSpecification" ReferenceName="ExternalIdentifierSpecification" ReferencePath="tmf633.datamodel" VariableName="externalIdentifierSpecification91557">
+          <Source RefID="2649"/>
+        </Data>
+      </OutputList>
+      <Choice ID="2649" TypeName="BaseChoiceTypeFormula" TypePath="server">
+        <Source RefID="4811"/>
+        <Target RefID="67054"/>
+        <Target RefID="67055"/>
+        <Target RefID="67355"/>
+        <Target RefID="67940"/>
+        <Target RefID="91557"/>
+        <Input>
+          <Data ID="2720" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember2720">
+            <Source RefID="2649"/>
+          </Data>
+          <Source RefID="4811">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Input>
+        <Case ID="2650" Label="true" Premise="%0%!=null">
+          <Function ID="7931" Label="Extract Annotations Of Member">
+            <Source RefID="7932"/>
+            <Source RefID="4811"/>
+            <Target RefID="7932"/>
+            <Target RefID="7934"/>
+            <Invoke Operation="ExtractAnnotationsOfMember" ServiceID="7932">
+              <Source RefID="4811">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Invoke>
+            <Receive ServiceID="7932">
+              <Target RefID="7934"/>
+            </Receive>
+          </Function>
+          <Choice ID="3692" TypeName="BaseChoiceTypeFormula" TypePath="server">
+            <Source RefID="7934"/>
+            <Target RefID="67050"/>
+            <Target RefID="67051"/>
+            <Target RefID="67354"/>
+            <Target RefID="67939"/>
+            <Target RefID="90104"/>
+            <Meta>
+              <OuterConditionPart>%0%.tMFType==?</OuterConditionPart>
+            </Meta>
+            <Input>
+              <Data ID="8455" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable8455">
+                <Source RefID="3692"/>
+              </Data>
+              <Source RefID="7934"/>
+            </Input>
+            <Case ID="4147" Label="" Premise="%0%.tMFType==&quot;Characteristic&quot;">
+              <Function ID="6603" Label="Create Characteristic Spec For Member">
+                <Source RefID="6604"/>
+                <Source RefID="4811"/>
+                <Source RefID="7934"/>
+                <Source RefID="37186"/>
+                <Target RefID="6604"/>
+                <Target RefID="6606"/>
+                <Invoke Operation="CreateCharacteristicSpecForMember" ServiceID="6604">
+                  <Source RefID="4811">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                  <Source RefID="7934"/>
+                  <Source RefID="37186"/>
+                </Invoke>
+                <Receive ServiceID="6604">
+                  <Target RefID="6606"/>
+                </Receive>
+              </Function>
+              <Mappings ID="11677" Label="empty">
+                <Output>
+                  <Data ID="42995" IsList="true" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="tmf633.datamodel" VariableName="serviceSpecRelationship42995">
+                    <Source RefID="11677"/>
+                  </Data>
+                  <Target RefID="70238"/>
+                </Output>
+                <Output>
+                  <Data ID="67329" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf633.datamodel" VariableName="relatedParty67329">
+                    <Source RefID="11677"/>
+                  </Data>
+                  <Target RefID="70239"/>
+                </Output>
+                <Output>
+                  <Data ID="67914" Label="ResourceSpecificationRef" ReferenceName="ResourceSpecificationRef" ReferencePath="tmf633.datamodel" VariableName="resourceSpecificationRef67914">
+                    <Source RefID="11677"/>
+                  </Data>
+                  <Target RefID="70240"/>
+                </Output>
+                <Output>
+                  <Data ID="90079" Label="ExternalIdentifierSpecification" ReferenceName="ExternalIdentifierSpecification" ReferencePath="tmf633.datamodel" VariableName="externalIdentifierSpecification90079">
+                    <Source RefID="11677"/>
+                  </Data>
+                  <Target RefID="90080"/>
+                </Output>
+                <Mapping>%1%=null</Mapping>
+                <Mapping>%2%=null</Mapping>
+                <Mapping>%3%=null</Mapping>
+              </Mappings>
+              <Assign ID="4149">
+                <Source RefID="70238"/>
+                <Source RefID="6606"/>
+                <Source RefID="70239"/>
+                <Source RefID="70240"/>
+                <Source RefID="90080"/>
+                <Target RefID="67050"/>
+                <Target RefID="67051"/>
+                <Target RefID="67354"/>
+                <Target RefID="67939"/>
+                <Target RefID="90104"/>
+                <Copy>
+                  <Source RefID="70238"/>
+                  <Target RefID="67050"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="6606"/>
+                  <Target RefID="67051"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="70239"/>
+                  <Target RefID="67354"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="70240"/>
+                  <Target RefID="67939"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="90080"/>
+                  <Target RefID="90104"/>
+                </Copy>
+              </Assign>
+              <Data ID="6606" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification6606">
+                <Source RefID="6603"/>
+              </Data>
+              <Data ID="70238" IsList="true" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="tmf633.datamodel" VariableName="serviceSpecRelationship70238">
+                <Source RefID="11677"/>
+              </Data>
+              <Data ID="70239" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf633.datamodel" VariableName="relatedParty70239">
+                <Source RefID="11677"/>
+              </Data>
+              <Data ID="70240" Label="ResourceSpecificationRef" ReferenceName="ResourceSpecificationRef" ReferencePath="tmf633.datamodel" VariableName="resourceSpecificationRef70240">
+                <Source RefID="11677"/>
+              </Data>
+            </Case>
+            <Case ID="11495" Label="" Premise="%0%.tMFType==&quot;ServiceRelationship&quot;">
+              <Function ID="60042" Label="Create Service Reference Spec For Member">
+                <Source RefID="60043"/>
+                <Source RefID="4811"/>
+                <Source RefID="7934"/>
+                <Source RefID="63025"/>
+                <Source RefID="37186"/>
+                <Target RefID="60043"/>
+                <Target RefID="60045"/>
+                <Invoke Operation="CreateServiceReferenceSpecForMember" ServiceID="60043">
+                  <Source RefID="4811">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                  <Source RefID="7934"/>
+                  <Source RefID="63025">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                  <Source RefID="37186"/>
+                </Invoke>
+                <Receive ServiceID="60043">
+                  <Target RefID="60045"/>
+                </Receive>
+              </Function>
+              <Mappings ID="18208" Label="empty">
+                <Output>
+                  <Data ID="38908" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf633.datamodel" VariableName="relatedParty38908">
+                    <Source RefID="18208"/>
+                  </Data>
+                  <Target RefID="71693"/>
+                </Output>
+                <Output>
+                  <Data ID="70531" Label="ResourceSpecificationRef" ReferenceName="ResourceSpecificationRef" ReferencePath="tmf633.datamodel" VariableName="resourceSpecificationRef70531">
+                    <Source RefID="18208"/>
+                  </Data>
+                  <Target RefID="71694"/>
+                </Output>
+                <Output>
+                  <Data ID="71985" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification71985">
+                    <Source RefID="18208"/>
+                  </Data>
+                  <Target RefID="71986"/>
+                </Output>
+                <Output>
+                  <Data ID="89207" Label="ExternalIdentifierSpecification" ReferenceName="ExternalIdentifierSpecification" ReferencePath="tmf633.datamodel" VariableName="externalIdentifierSpecification89207">
+                    <Source RefID="18208"/>
+                  </Data>
+                  <Target RefID="89208"/>
+                </Output>
+                <Mapping>%0%=null</Mapping>
+                <Mapping>%1%=null</Mapping>
+                <Mapping>%2%=null</Mapping>
+                <Mapping>%3%=null</Mapping>
+              </Mappings>
+              <Assign ID="11497">
+                <Source RefID="60045"/>
+                <Source RefID="71986"/>
+                <Source RefID="71693"/>
+                <Source RefID="71694"/>
+                <Source RefID="89208"/>
+                <Target RefID="67050"/>
+                <Target RefID="67051"/>
+                <Target RefID="67354"/>
+                <Target RefID="67939"/>
+                <Target RefID="90104"/>
+                <Copy>
+                  <Source RefID="60045"/>
+                  <Target RefID="67050"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="71986"/>
+                  <Target RefID="67051"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="71693"/>
+                  <Target RefID="67354"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="71694"/>
+                  <Target RefID="67939"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="89208"/>
+                  <Target RefID="90104"/>
+                </Copy>
+              </Assign>
+              <Data ID="60045" IsList="true" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="tmf633.datamodel" VariableName="serviceSpecRelationship60045">
+                <Source RefID="60042"/>
+              </Data>
+              <Data ID="71693" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf633.datamodel" VariableName="relatedParty71693">
+                <Source RefID="18208"/>
+              </Data>
+              <Data ID="71694" Label="ResourceSpecificationRef" ReferenceName="ResourceSpecificationRef" ReferencePath="tmf633.datamodel" VariableName="resourceSpecificationRef71694">
+                <Source RefID="18208"/>
+              </Data>
+            </Case>
+            <Case ID="15297" Label="" Premise="%0%.tMFType==&quot;RelatedParty&quot;">
+              <Function ID="38237" Label="Create Party Relationship Spec For Member">
+                <Source RefID="38238"/>
+                <Source RefID="4811"/>
+                <Source RefID="7934"/>
+                <Target RefID="38238"/>
+                <Target RefID="38240"/>
+                <Invoke Operation="CreatePartyRelationshipSpecForMember" ServiceID="38238">
+                  <Source RefID="4811">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                  <Source RefID="7934"/>
+                </Invoke>
+                <Receive ServiceID="38238">
+                  <Target RefID="38240"/>
+                </Receive>
+              </Function>
+              <Mappings ID="18377" Label="empty">
+                <Output>
+                  <Data ID="18378" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification18378"/>
+                  <Target RefID="75471"/>
+                </Output>
+                <Output>
+                  <Data ID="73147" IsList="true" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="tmf633.datamodel" VariableName="serviceSpecRelationship73147">
+                    <Source RefID="18377"/>
+                  </Data>
+                  <Target RefID="75472"/>
+                </Output>
+                <Output>
+                  <Data ID="73729" Label="ResourceSpecificationRef" ReferenceName="ResourceSpecificationRef" ReferencePath="tmf633.datamodel" VariableName="resourceSpecificationRef73729">
+                    <Source RefID="18377"/>
+                  </Data>
+                  <Target RefID="75473"/>
+                </Output>
+                <Output>
+                  <Data ID="87755" Label="ExternalIdentifierSpecification" ReferenceName="ExternalIdentifierSpecification" ReferencePath="tmf633.datamodel" VariableName="externalIdentifierSpecification87755">
+                    <Source RefID="18377"/>
+                  </Data>
+                  <Target RefID="87756"/>
+                </Output>
+                <Mapping>%0%=null</Mapping>
+                <Mapping>%2%=null</Mapping>
+                <Mapping>%3%=null</Mapping>
+              </Mappings>
+              <Assign ID="15299">
+                <Source RefID="75472"/>
+                <Source RefID="75471"/>
+                <Source RefID="38240"/>
+                <Source RefID="75473"/>
+                <Source RefID="87756"/>
+                <Target RefID="67050"/>
+                <Target RefID="67051"/>
+                <Target RefID="67354"/>
+                <Target RefID="67939"/>
+                <Target RefID="90104"/>
+                <Copy>
+                  <Source RefID="75472"/>
+                  <Target RefID="67050"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="75471"/>
+                  <Target RefID="67051"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="38240"/>
+                  <Target RefID="67354"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="75473"/>
+                  <Target RefID="67939"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="87756"/>
+                  <Target RefID="90104"/>
+                </Copy>
+              </Assign>
+              <Data ID="38240" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf633.datamodel" VariableName="relatedParty38240">
+                <Source RefID="38237"/>
+              </Data>
+              <Data ID="75471" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification75471"/>
+              <Data ID="75472" IsList="true" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="tmf633.datamodel" VariableName="serviceSpecRelationship75472">
+                <Source RefID="18377"/>
+              </Data>
+              <Data ID="75473" Label="ResourceSpecificationRef" ReferenceName="ResourceSpecificationRef" ReferencePath="tmf633.datamodel" VariableName="resourceSpecificationRef75473">
+                <Source RefID="18377"/>
+              </Data>
+            </Case>
+            <Case ID="47693" Label="" Premise="%0%.tMFType==&quot;Resource&quot;">
+              <Function ID="51309" Label="Create Resource Spec For Member">
+                <Source RefID="51310"/>
+                <Source RefID="4811"/>
+                <Source RefID="7934"/>
+                <Target RefID="51310"/>
+                <Target RefID="51312"/>
+                <Invoke Operation="CreateResourceSpecForMember" ServiceID="51310">
+                  <Source RefID="4811">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                  <Source RefID="7934"/>
+                </Invoke>
+                <Receive ServiceID="51310">
+                  <Target RefID="51312"/>
+                </Receive>
+              </Function>
+              <Mappings ID="48608" Label="empty">
+                <Output>
+                  <Data ID="48609" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification48609"/>
+                  <Target RefID="76928"/>
+                </Output>
+                <Output>
+                  <Data ID="75764" IsList="true" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="tmf633.datamodel" VariableName="serviceSpecRelationship75764">
+                    <Source RefID="48608"/>
+                  </Data>
+                  <Target RefID="76929"/>
+                </Output>
+                <Output>
+                  <Data ID="76056" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf633.datamodel" VariableName="relatedParty76056">
+                    <Source RefID="48608"/>
+                  </Data>
+                  <Target RefID="76930"/>
+                </Output>
+                <Output>
+                  <Data ID="86303" Label="ExternalIdentifierSpecification" ReferenceName="ExternalIdentifierSpecification" ReferencePath="tmf633.datamodel" VariableName="externalIdentifierSpecification86303">
+                    <Source RefID="48608"/>
+                  </Data>
+                  <Target RefID="86304"/>
+                </Output>
+                <Mapping>%0%=null</Mapping>
+                <Mapping>%2%=null</Mapping>
+                <Mapping>%3%=null</Mapping>
+              </Mappings>
+              <Assign ID="47695">
+                <Source RefID="76929"/>
+                <Source RefID="76928"/>
+                <Source RefID="76930"/>
+                <Source RefID="51312"/>
+                <Source RefID="86304"/>
+                <Target RefID="67050"/>
+                <Target RefID="67051"/>
+                <Target RefID="67354"/>
+                <Target RefID="67939"/>
+                <Target RefID="90104"/>
+                <Copy>
+                  <Source RefID="76929"/>
+                  <Target RefID="67050"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="76928"/>
+                  <Target RefID="67051"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="76930"/>
+                  <Target RefID="67354"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="51312"/>
+                  <Target RefID="67939"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="86304"/>
+                  <Target RefID="90104"/>
+                </Copy>
+              </Assign>
+              <Data ID="51312" Label="ResourceSpecificationRef" ReferenceName="ResourceSpecificationRef" ReferencePath="tmf633.datamodel" VariableName="resourceSpecificationRef51312">
+                <Source RefID="51309"/>
+              </Data>
+              <Data ID="76928" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification76928"/>
+              <Data ID="76929" IsList="true" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="tmf633.datamodel" VariableName="serviceSpecRelationship76929">
+                <Source RefID="48608"/>
+              </Data>
+              <Data ID="76930" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf633.datamodel" VariableName="relatedParty76930">
+                <Source RefID="48608"/>
+              </Data>
+            </Case>
+            <Case ID="51605" Label="" Premise="%0%.tMFType==&quot;ServiceProperty&quot;">
+              <Mappings ID="52312" Label="empty">
+                <Output>
+                  <Data ID="52313" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf633.datamodel" VariableName="relatedParty52313"/>
+                  <Target RefID="52314"/>
+                </Output>
+                <Output>
+                  <Data ID="52795" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification52795">
+                    <Source RefID="52312"/>
+                  </Data>
+                  <Target RefID="52796"/>
+                </Output>
+                <Output>
+                  <Data ID="52554" IsList="true" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="tmf633.datamodel" VariableName="serviceSpecRelationship52554">
+                    <Source RefID="52312"/>
+                  </Data>
+                  <Target RefID="52555"/>
+                </Output>
+                <Output>
+                  <Data ID="53036" Label="ResourceSpecificationRef" ReferenceName="ResourceSpecificationRef" ReferencePath="tmf633.datamodel" VariableName="resourceSpecificationRef53036">
+                    <Source RefID="52312"/>
+                  </Data>
+                  <Target RefID="53037"/>
+                </Output>
+                <Output>
+                  <Data ID="84851" Label="ExternalIdentifierSpecification" ReferenceName="ExternalIdentifierSpecification" ReferencePath="tmf633.datamodel" VariableName="externalIdentifierSpecification84851">
+                    <Source RefID="52312"/>
+                  </Data>
+                  <Target RefID="84852"/>
+                </Output>
+                <Mapping>%0%=null</Mapping>
+                <Mapping>%1%=null</Mapping>
+                <Mapping>%3%=null</Mapping>
+                <Mapping>%4%=null</Mapping>
+              </Mappings>
+              <Assign ID="51607">
+                <Source RefID="52555"/>
+                <Source RefID="52796"/>
+                <Source RefID="52314"/>
+                <Source RefID="53037"/>
+                <Source RefID="84852"/>
+                <Target RefID="67050"/>
+                <Target RefID="67051"/>
+                <Target RefID="67354"/>
+                <Target RefID="67939"/>
+                <Target RefID="90104"/>
+                <Copy>
+                  <Source RefID="52555"/>
+                  <Target RefID="67050"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="52796"/>
+                  <Target RefID="67051"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="52314"/>
+                  <Target RefID="67354"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="53037"/>
+                  <Target RefID="67939"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="84852"/>
+                  <Target RefID="90104"/>
+                </Copy>
+              </Assign>
+            </Case>
+            <Case ID="66435" Label="" Premise="%0%.tMFType==&quot;ExternalIdentifier&quot;">
+              <Mappings ID="81282" Label="Create External Identifier Spec">
+                <Input>
+                  <Data ID="83690" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable83690">
+                    <Source RefID="81282"/>
+                  </Data>
+                  <Source RefID="7934"/>
+                </Input>
+                <Output>
+                  <Data ID="78380" Label="ExternalIdentifierSpecification" ReferenceName="ExternalIdentifierSpecification" ReferencePath="tmf633.datamodel" VariableName="externalIdentifierSpecification78380">
+                    <Source RefID="67018"/>
+                  </Data>
+                  <Target RefID="81573"/>
+                </Output>
+                <Mapping>%1%.name=%0%.tMFExternalIdentifierSpecAnnotations.name</Mapping>
+                <Mapping>%1%.attype="ExternalIdentifierSpecification"</Mapping>
+              </Mappings>
+              <Mappings ID="67018" Label="empty">
+                <Output>
+                  <Data ID="67019" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf633.datamodel" VariableName="relatedParty67019"/>
+                  <Target RefID="67020"/>
+                </Output>
+                <Output>
+                  <Data ID="67021" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification67021"/>
+                  <Target RefID="67022"/>
+                </Output>
+                <Output>
+                  <Data ID="67023" IsList="true" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="tmf633.datamodel" VariableName="serviceSpecRelationship67023"/>
+                  <Target RefID="67024"/>
+                </Output>
+                <Output>
+                  <Data ID="67025" Label="ResourceSpecificationRef" ReferenceName="ResourceSpecificationRef" ReferencePath="tmf633.datamodel" VariableName="resourceSpecificationRef67025"/>
+                  <Target RefID="67026"/>
+                </Output>
+                <Mapping>%0%=null</Mapping>
+                <Mapping>%1%=null</Mapping>
+                <Mapping>%3%=null</Mapping>
+              </Mappings>
+              <Assign ID="66437">
+                <Source RefID="67024"/>
+                <Source RefID="67022"/>
+                <Source RefID="67020"/>
+                <Source RefID="67026"/>
+                <Source RefID="81573"/>
+                <Target RefID="67050"/>
+                <Target RefID="67051"/>
+                <Target RefID="67354"/>
+                <Target RefID="67939"/>
+                <Target RefID="90104"/>
+                <Copy>
+                  <Source RefID="67024"/>
+                  <Target RefID="67050"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="67022"/>
+                  <Target RefID="67051"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="67020"/>
+                  <Target RefID="67354"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="67026"/>
+                  <Target RefID="67939"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="81573"/>
+                  <Target RefID="90104"/>
+                </Copy>
+              </Assign>
+            </Case>
+            <Case ID="3693" IsDefault="true" Label="default">
+              <Mappings ID="9030" Label="Mapping">
+                <Input>
+                  <Data ID="9209" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable9209">
+                    <Source RefID="9030"/>
+                  </Data>
+                  <Source RefID="7934"/>
+                </Input>
+                <Output>
+                  <Exception ID="9119" Label="UnsupportedTMFType" ReferenceName="UnsupportedTMFType" ReferencePath="xfmg.tmf.inspect" VariableName="unsupportedTMFType9119">
+                    <Source RefID="9030"/>
+                  </Exception>
+                  <Target RefID="9120"/>
+                </Output>
+                <Mapping>%1%.tmfTypeName=%0%.tMFType</Mapping>
+              </Mappings>
+              <Throw ExceptionID="9120" ID="8940" Label="Throw Unsupported TMF Type">
+                <Meta>
+                  <PreferedExceptionType>xfmg.tmf.inspect.UnsupportedTMFType</PreferedExceptionType>
+                </Meta>
+                <Source RefID="9120"/>
+              </Throw>
+              <Assign ID="3695"/>
+            </Case>
+          </Choice>
+          <Assign ID="2653">
+            <Source RefID="67050"/>
+            <Source RefID="67051"/>
+            <Source RefID="67354"/>
+            <Source RefID="67939"/>
+            <Source RefID="90104"/>
+            <Target RefID="67054"/>
+            <Target RefID="67055"/>
+            <Target RefID="67355"/>
+            <Target RefID="67940"/>
+            <Target RefID="91557"/>
+            <Copy>
+              <Source RefID="67050"/>
+              <Target RefID="67054"/>
+            </Copy>
+            <Copy>
+              <Source RefID="67051"/>
+              <Target RefID="67055"/>
+            </Copy>
+            <Copy>
+              <Source RefID="67354"/>
+              <Target RefID="67355"/>
+            </Copy>
+            <Copy>
+              <Source RefID="67939"/>
+              <Target RefID="67940"/>
+            </Copy>
+            <Copy>
+              <Source RefID="90104"/>
+              <Target RefID="91557"/>
+            </Copy>
+          </Assign>
+          <Data ID="7934" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable7934">
+            <Source RefID="7931"/>
+          </Data>
+        </Case>
+        <Case ID="2651" Label="false">
+          <Mappings ID="9996" Label="ntbd">
+            <Output>
+              <Data ID="10085" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification10085">
+                <Source RefID="9996"/>
+              </Data>
+              <Target RefID="10086"/>
+            </Output>
+            <Output>
+              <Data ID="43734" IsList="true" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="tmf633.datamodel" VariableName="serviceSpecRelationship43734">
+                <Source RefID="9996"/>
+              </Data>
+              <Target RefID="43735"/>
+            </Output>
+            <Output>
+              <Data ID="40576" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf633.datamodel" VariableName="relatedParty40576">
+                <Source RefID="9996"/>
+              </Data>
+              <Target RefID="40577"/>
+            </Output>
+            <Output>
+              <Data ID="47461" Label="ResourceSpecificationRef" ReferenceName="ResourceSpecificationRef" ReferencePath="tmf633.datamodel" VariableName="resourceSpecificationRef47461">
+                <Source RefID="9996"/>
+              </Data>
+              <Target RefID="47462"/>
+            </Output>
+            <Output>
+              <Data ID="91532" Label="ExternalIdentifierSpecification" ReferenceName="ExternalIdentifierSpecification" ReferencePath="tmf633.datamodel" VariableName="externalIdentifierSpecification91532">
+                <Source RefID="9996"/>
+              </Data>
+              <Target RefID="91533"/>
+            </Output>
+          </Mappings>
+          <Assign ID="2655">
+            <Source RefID="43735"/>
+            <Source RefID="10086"/>
+            <Source RefID="40577"/>
+            <Source RefID="47462"/>
+            <Source RefID="91533"/>
+            <Target RefID="67054"/>
+            <Target RefID="67055"/>
+            <Target RefID="67355"/>
+            <Target RefID="67940"/>
+            <Target RefID="91557"/>
+            <Copy>
+              <Source RefID="43735"/>
+              <Target RefID="67054"/>
+            </Copy>
+            <Copy>
+              <Source RefID="10086"/>
+              <Target RefID="67055"/>
+            </Copy>
+            <Copy>
+              <Source RefID="40577"/>
+              <Target RefID="67355"/>
+            </Copy>
+            <Copy>
+              <Source RefID="47462"/>
+              <Target RefID="67940"/>
+            </Copy>
+            <Copy>
+              <Source RefID="91533"/>
+              <Target RefID="91557"/>
+            </Copy>
+          </Assign>
+        </Case>
+      </Choice>
+      <Data ID="10086" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification10086">
+        <Source RefID="9996"/>
+      </Data>
+      <Data ID="40577" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf633.datamodel" VariableName="relatedParty40577">
+        <Source RefID="9996"/>
+      </Data>
+      <Data ID="43735" IsList="true" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="tmf633.datamodel" VariableName="serviceSpecRelationship43735">
+        <Source RefID="9996"/>
+      </Data>
+      <Data ID="47462" Label="ResourceSpecificationRef" ReferenceName="ResourceSpecificationRef" ReferencePath="tmf633.datamodel" VariableName="resourceSpecificationRef47462">
+        <Source RefID="9996"/>
+      </Data>
+      <Data ID="52314" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf633.datamodel" VariableName="relatedParty52314"/>
+      <Data ID="52555" IsList="true" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="tmf633.datamodel" VariableName="serviceSpecRelationship52555">
+        <Source RefID="52312"/>
+      </Data>
+      <Data ID="52796" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification52796">
+        <Source RefID="52312"/>
+      </Data>
+      <Data ID="53037" Label="ResourceSpecificationRef" ReferenceName="ResourceSpecificationRef" ReferencePath="tmf633.datamodel" VariableName="resourceSpecificationRef53037">
+        <Source RefID="52312"/>
+      </Data>
+      <Data ID="67020" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf633.datamodel" VariableName="relatedParty67020"/>
+      <Data ID="67022" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification67022"/>
+      <Data ID="67024" IsList="true" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="tmf633.datamodel" VariableName="serviceSpecRelationship67024"/>
+      <Data ID="67026" Label="ResourceSpecificationRef" ReferenceName="ResourceSpecificationRef" ReferencePath="tmf633.datamodel" VariableName="resourceSpecificationRef67026"/>
+      <Data ID="67050" IsList="true" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="tmf633.datamodel" VariableName="serviceSpecRelationship67050">
+        <Source RefID="3692"/>
+      </Data>
+      <Data ID="67051" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification67051">
+        <Source RefID="3692"/>
+      </Data>
+      <Data ID="67354" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf633.datamodel" VariableName="relatedParty67354">
+        <Source RefID="3692"/>
+      </Data>
+      <Data ID="67939" Label="ResourceSpecificationRef" ReferenceName="ResourceSpecificationRef" ReferencePath="tmf633.datamodel" VariableName="resourceSpecificationRef67939">
+        <Source RefID="3692"/>
+      </Data>
+      <Data ID="71986" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification71986">
+        <Source RefID="18208"/>
+      </Data>
+      <Data ID="81573" Label="ExternalIdentifierSpecification" ReferenceName="ExternalIdentifierSpecification" ReferencePath="tmf633.datamodel" VariableName="externalIdentifierSpecification81573">
+        <Source RefID="67018"/>
+      </Data>
+      <Data ID="84852" Label="ExternalIdentifierSpecification" ReferenceName="ExternalIdentifierSpecification" ReferencePath="tmf633.datamodel" VariableName="externalIdentifierSpecification84852">
+        <Source RefID="52312"/>
+      </Data>
+      <Data ID="86304" Label="ExternalIdentifierSpecification" ReferenceName="ExternalIdentifierSpecification" ReferencePath="tmf633.datamodel" VariableName="externalIdentifierSpecification86304">
+        <Source RefID="48608"/>
+      </Data>
+      <Data ID="87756" Label="ExternalIdentifierSpecification" ReferenceName="ExternalIdentifierSpecification" ReferencePath="tmf633.datamodel" VariableName="externalIdentifierSpecification87756">
+        <Source RefID="18377"/>
+      </Data>
+      <Data ID="89208" Label="ExternalIdentifierSpecification" ReferenceName="ExternalIdentifierSpecification" ReferencePath="tmf633.datamodel" VariableName="externalIdentifierSpecification89208">
+        <Source RefID="18208"/>
+      </Data>
+      <Data ID="90080" Label="ExternalIdentifierSpecification" ReferenceName="ExternalIdentifierSpecification" ReferencePath="tmf633.datamodel" VariableName="externalIdentifierSpecification90080">
+        <Source RefID="11677"/>
+      </Data>
+      <Data ID="90104" Label="ExternalIdentifierSpecification" ReferenceName="ExternalIdentifierSpecification" ReferencePath="tmf633.datamodel" VariableName="externalIdentifierSpecification90104">
+        <Source RefID="3692"/>
+      </Data>
+      <Data ID="91533" Label="ExternalIdentifierSpecification" ReferenceName="ExternalIdentifierSpecification" ReferencePath="tmf633.datamodel" VariableName="externalIdentifierSpecification91533">
+        <Source RefID="9996"/>
+      </Data>
+      <Exception ID="9120" Label="UnsupportedTMFType" ReferenceName="UnsupportedTMFType" ReferencePath="xfmg.tmf.inspect" VariableName="unsupportedTMFType9120">
+        <Target RefID="8940"/>
+      </Exception>
+    </Foreach>
+    <Parallel>
+      <Serial>
+        <Function ID="13839" Label="Filter">
+          <Source RefID="13840"/>
+          <Source RefID="67059"/>
+          <Source RefID="14374"/>
+          <Target RefID="13840"/>
+          <Target RefID="13842"/>
+          <Invoke Operation="filter" ServiceID="13840">
+            <Source RefID="67059">
+              <Meta>
+                <ExpectedType>tmf633.datamodel.CharacteristicSpecification</ExpectedType>
+              </Meta>
+            </Source>
+            <Source RefID="14374">
+              <Meta>
+                <LinkType>Constant</LinkType>
+                <ExpectedType>xprc.base.list.filter.FilterNonNull</ExpectedType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="13840">
+            <Target RefID="13842">
+              <Meta>
+                <ExpectedType>tmf633.datamodel.CharacteristicSpecification</ExpectedType>
+              </Meta>
+            </Target>
+          </Receive>
+        </Function>
+      </Serial>
+      <Serial>
+        <Function ID="14493" Label="Filter">
+          <Source RefID="14494"/>
+          <Source RefID="67058"/>
+          <Source RefID="15080"/>
+          <Target RefID="14494"/>
+          <Target RefID="14496"/>
+          <Invoke Operation="filter" ServiceID="14494">
+            <Source RefID="67058">
+              <Meta>
+                <ExpectedType>tmf633.datamodel.ServiceSpecRelationship</ExpectedType>
+              </Meta>
+            </Source>
+            <Source RefID="15080">
+              <Meta>
+                <LinkType>Constant</LinkType>
+                <ExpectedType>xprc.base.list.filter.FilterNonNull</ExpectedType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="14494">
+            <Target RefID="14496">
+              <Meta>
+                <ExpectedType>tmf633.datamodel.ServiceSpecRelationship</ExpectedType>
+              </Meta>
+            </Target>
+          </Receive>
+        </Function>
+        <Data ID="14496" IsList="true" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="tmf633.datamodel" VariableName="serviceSpecRelationship14496"/>
+      </Serial>
+      <Serial>
+        <Function ID="16353" Label="Filter">
+          <Source RefID="16354"/>
+          <Source RefID="67356"/>
+          <Source RefID="17370"/>
+          <Target RefID="16354"/>
+          <Target RefID="16659"/>
+          <Invoke Operation="filter" ServiceID="16354">
+            <Source RefID="67356">
+              <Meta>
+                <ExpectedType>tmf633.datamodel.RelatedParty</ExpectedType>
+              </Meta>
+            </Source>
+            <Source RefID="17370">
+              <Meta>
+                <LinkType>Constant</LinkType>
+                <ExpectedType>xprc.base.list.filter.FilterNonNull</ExpectedType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="16354">
+            <Target RefID="16659">
+              <Meta>
+                <ExpectedType>tmf633.datamodel.RelatedParty</ExpectedType>
+              </Meta>
+            </Target>
+          </Receive>
+        </Function>
+        <Data ID="16659" IsList="true" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf633.datamodel" VariableName="relatedParty16659"/>
+      </Serial>
+      <Serial>
+        <Function ID="45358" Label="Filter">
+          <Source RefID="45359"/>
+          <Source RefID="67941"/>
+          <Source RefID="45362"/>
+          <Target RefID="45359"/>
+          <Target RefID="45361"/>
+          <Invoke Operation="filter" ServiceID="45359">
+            <Source RefID="67941">
+              <Meta>
+                <ExpectedType>tmf633.datamodel.ResourceSpecificationRef</ExpectedType>
+              </Meta>
+            </Source>
+            <Source RefID="45362">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="45359">
+            <Target RefID="45361">
+              <Meta>
+                <ExpectedType>tmf633.datamodel.ResourceSpecificationRef</ExpectedType>
+              </Meta>
+            </Target>
+          </Receive>
+        </Function>
+        <Data ID="45361" IsList="true" Label="ResourceSpecificationRef" ReferenceName="ResourceSpecificationRef" ReferencePath="tmf633.datamodel" VariableName="resourceSpecificationRef45361"/>
+      </Serial>
+      <Serial>
+        <Function ID="91828" Label="Filter">
+          <Source RefID="91829"/>
+          <Source RefID="91558"/>
+          <Source RefID="91832"/>
+          <Target RefID="91829"/>
+          <Target RefID="91831"/>
+          <Invoke Operation="filter" ServiceID="91829">
+            <Source RefID="91558">
+              <Meta>
+                <ExpectedType>tmf633.datamodel.ExternalIdentifierSpecification</ExpectedType>
+              </Meta>
+            </Source>
+            <Source RefID="91832">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="91829">
+            <Target RefID="91831">
+              <Meta>
+                <ExpectedType>tmf633.datamodel.ExternalIdentifierSpecification</ExpectedType>
+              </Meta>
+            </Target>
+          </Receive>
+        </Function>
+        <Data ID="91831" IsList="true" Label="ExternalIdentifierSpecification" ReferenceName="ExternalIdentifierSpecification" ReferencePath="tmf633.datamodel" VariableName="externalIdentifierSpecification91831"/>
+      </Serial>
+    </Parallel>
+    <Mappings ID="38" Label="Mapping">
+      <Input>
+        <Data ID="328" IsList="true" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification328">
+          <Source RefID="38"/>
+        </Data>
+        <Source RefID="13842">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="41189" IsList="true" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="tmf633.datamodel" VariableName="serviceSpecRelationship41189">
+          <Source RefID="38"/>
+        </Data>
+        <Source RefID="14496">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="37656" IsList="true" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf633.datamodel" VariableName="relatedParty37656">
+          <Source RefID="38"/>
+        </Data>
+        <Source RefID="16659">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="44068" IsList="true" Label="ResourceSpecificationRef" ReferenceName="ResourceSpecificationRef" ReferencePath="tmf633.datamodel" VariableName="resourceSpecificationRef44068">
+          <Source RefID="38"/>
+        </Data>
+        <Source RefID="45361">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="55407" IsList="true" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="constraint55407">
+          <Source RefID="38"/>
+        </Data>
+        <Source RefID="58294"/>
+      </Input>
+      <Input>
+        <Data ID="92610" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges92610">
+          <Source RefID="38"/>
+        </Data>
+        <Source RefID="92291"/>
+      </Input>
+      <Input>
+        <Data ID="65143" IsList="true" Label="ExternalIdentifierSpecification" ReferenceName="ExternalIdentifierSpecification" ReferencePath="tmf633.datamodel" VariableName="externalIdentifierSpecification65143">
+          <Source RefID="38"/>
+        </Data>
+        <Source RefID="91831">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="25602" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector25602">
+          <Source RefID="38"/>
+        </Data>
+        <Source RefID="30470"/>
+      </Input>
+      <Input>
+        <Data ID="27615" Label="Meta Tags Map" ReferenceName="HashMap" ReferencePath="xprc.base.list" VariableName="hashMap27615">
+          <Source RefID="38"/>
+        </Data>
+        <Source RefID="55114"/>
+      </Input>
+      <Input>
+        <Data ID="34566" Label="id" ReferenceName="Text" ReferencePath="base" VariableName="text34566">
+          <Source RefID="38"/>
+        </Data>
+        <Source RefID="63025">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="29857" Label="Spec Generator Context" ReferenceName="SpecGeneratorContext" ReferencePath="xfmg.tmf633" VariableName="specGeneratorContext29857"/>
+        <Source RefID="37186"/>
+      </Input>
+      <Output>
+        <Data ID="61" Label="ServiceSpecification" ReferenceName="ServiceSpecification" ReferencePath="tmf633.datamodel" VariableName="serviceSpecification61">
+          <Source RefID="38"/>
+        </Data>
+        <Target RefID="62"/>
+      </Output>
+      <Mapping>%11%.allowedChanges=%5%</Mapping>
+      <Mapping>%11%.atbaseType=""</Mapping>
+      <Mapping>%11%.attype="ServiceSpecification"</Mapping>
+      <Mapping>%11%.constraint=%4%</Mapping>
+      <Mapping>%11%.description=%7%.getDocumentation().text</Mapping>
+      <Mapping>%11%.externalIdentifierSpecification=%6%</Mapping>
+      <Mapping>%11%.href="href"</Mapping>
+      <Mapping>%11%.id=%9%.text</Mapping>
+      <Mapping>%11%.lifecycleStatus=%8%.getr("TMFLifecycleStatus")</Mapping>
+      <Mapping>%11%.name=%7%.getLabel().text</Mapping>
+      <Mapping>%11%.relatedParty=%2%</Mapping>
+      <Mapping>%11%.resourceSpecification=%3%</Mapping>
+      <Mapping>%11%.serviceSpecRelationship=%1%</Mapping>
+      <Mapping>%11%.specCharacteristic=%0%</Mapping>
+      <Mapping>%11%.version=%10%.iDGeneratorContext.version</Mapping>
+    </Mappings>
+    <Function ID="10538" Label="Write JSON with Options">
+      <Source RefID="10539"/>
+      <Source RefID="62"/>
+      <Source RefID="10851"/>
+      <Target RefID="10539"/>
+      <Target RefID="10542"/>
+      <Invoke Operation="writeJSONWithOptions" ServiceID="10539">
+        <Source RefID="62">
+          <Meta>
+            <ExpectedType>tmf633.datamodel.ServiceSpecification</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="10851">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="10539">
+        <Target RefID="10542"/>
+      </Receive>
+    </Function>
+    <Data ID="62" Label="ServiceSpecification" ReferenceName="ServiceSpecification" ReferencePath="tmf633.datamodel" VariableName="serviceSpecification62">
+      <Source RefID="38"/>
+    </Data>
+    <Data ID="1919" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember1919"/>
+    <Data ID="2291" Label="FilterMembersWithTMFMetaTag" ReferenceName="FilterMembersWithTMFMetaTag" ReferencePath="xfmg.tmf.inspect" VariableName="const_FilterMembersWithTMFMetaTag2291"/>
+    <Data ID="10542" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document10542">
+      <Source RefID="10538"/>
+    </Data>
+    <Data ID="10851" Label="JSON Writing Options" ReferenceName="JSONWritingOptions" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="const_JSONWritingOptions10851">
+      <Data VariableName="useLabels">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>true</Value>
+      </Data>
+    </Data>
+    <Data ID="13842" IsList="true" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification13842"/>
+    <Data ID="14374" Label="Filter Non Null" ReferenceName="FilterNonNull" ReferencePath="xprc.base.list.filter" VariableName="const_FilterNonNull14374"/>
+    <Data ID="15080" Label="Filter Non Null" ReferenceName="FilterNonNull" ReferencePath="xprc.base.list.filter" VariableName="const_FilterNonNull15080"/>
+    <Data ID="17370" Label="Filter Non Null" ReferenceName="FilterNonNull" ReferencePath="xprc.base.list.filter" VariableName="const_FilterNonNull17370"/>
+    <Data ID="30470" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector30470">
+      <Source RefID="30467"/>
+    </Data>
+    <Data ID="30880" Label="FqXmlName" ReferenceName="Text" ReferencePath="base" VariableName="text30880">
+      <Source RefID="30265"/>
+    </Data>
+    <Data ID="45362" ReferenceName="FilterNonNull" ReferencePath="xprc.base.list.filter" VariableName="filterNonNull45362"/>
+    <Data ID="55114" Label="HashMap" ReferenceName="HashMap" ReferencePath="xprc.base.list" VariableName="hashMap55114">
+      <Source RefID="54169"/>
+    </Data>
+    <Data ID="58294" IsList="true" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="constraint58294"/>
+    <Data ID="63025" Label="id" ReferenceName="Text" ReferencePath="base" VariableName="text63025">
+      <Source RefID="63022"/>
+    </Data>
+    <Data ID="63968" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember63968">
+      <Source RefID="63965"/>
+    </Data>
+    <Data ID="67058" IsList="true" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="tmf633.datamodel" VariableName="serviceSpecRelationship67058">
+      <Source RefID="4810"/>
+      <Target RefID="67058"/>
+    </Data>
+    <Data ID="67059" IsList="true" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification67059">
+      <Source RefID="4810"/>
+      <Target RefID="67059"/>
+    </Data>
+    <Data ID="67356" IsList="true" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf633.datamodel" VariableName="relatedParty67356">
+      <Source RefID="4810"/>
+      <Target RefID="67356"/>
+    </Data>
+    <Data ID="67941" IsList="true" Label="ResourceSpecificationRef" ReferenceName="ResourceSpecificationRef" ReferencePath="tmf633.datamodel" VariableName="resourceSpecificationRef67941">
+      <Source RefID="4810"/>
+      <Target RefID="67941"/>
+    </Data>
+    <Data ID="91558" IsList="true" Label="ExternalIdentifierSpecification" ReferenceName="ExternalIdentifierSpecification" ReferencePath="tmf633.datamodel" VariableName="externalIdentifierSpecification91558">
+      <Source RefID="4810"/>
+      <Target RefID="91558"/>
+    </Data>
+    <Data ID="91832" ReferenceName="FilterNonNull" ReferencePath="xprc.base.list.filter" VariableName="filterNonNull91832"/>
+    <Data ID="92291" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges92291">
+      <Source RefID="92288"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="10542"/>
+      <Target RefID="417"/>
+      <Copy>
+        <Source RefID="10542"/>
+        <Target RefID="417"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

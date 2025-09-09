@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="OAS_Base" factoryVersion="" versionName="1.7.2" xmlVersion="1.1">
+<Application applicationName="OAS_Base" factoryVersion="" versionName="1.7.4" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -25,7 +25,7 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>Http</ApplicationName>
-        <VersionName>1.5.4</VersionName>
+        <VersionName>1.5.5</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>Json</ApplicationName>
@@ -62,12 +62,16 @@
       <DestinationKey>xmcp.oas.fman.GetOASImportHistoryDefinition</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.oas.fman.GetOasApiEndpointsDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
     <Ordertype implicitDependency="true">
       <DestinationKey>xmcp.oas.fman.OASImportTableInfo</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
-    <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.oas.fman.SetRuntimeContext</DestinationKey>
+    <Ordertype implicitDependency="false">
+      <DestinationKey>xmcp.oas.fman.OasApiEndpointsTableInfo</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -193,17 +197,25 @@
       <FqName>xmcp.oas.fman.GetOASImportHistoryDefinition</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.oas.fman.GetOasApiEndpointsDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.fman.OASImportTableInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.oas.fman.OasApiEndpointsTableInfo</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.fman.OasGuiServices</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xmcp.oas.fman.SetRuntimeContext</FqName>
-      <Type>WORKFLOW</Type>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.oas.fman.datatypes.OasApiDatatypeInfo</FqName>
+      <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
       <FqName>xmcp.oas.fman.storables.OAS_ImportHistory</FqName>
@@ -222,68 +234,13 @@
       <Type>WORKFLOW</Type>
     </XMOMEntry>
   </XMOMEntries>
-  <XmomStorables>
-    <XmomStorable>
-      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
-      <Path/>
-      <OdsName>oas_importhistory</OdsName>
-      <FqPath/>
-    </XmomStorable>
-    <XmomStorable>
-      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
-      <Path>date0</Path>
-      <OdsName>oas_importhistory</OdsName>
-      <FqPath>date0</FqPath>
-      <ColumnName>date0</ColumnName>
-    </XmomStorable>
-    <XmomStorable>
-      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
-      <Path>errorMessage</Path>
-      <OdsName>oas_importhistory</OdsName>
-      <FqPath>errorMessage</FqPath>
-      <ColumnName>errormessage</ColumnName>
-    </XmomStorable>
-    <XmomStorable>
-      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
-      <Path>fileName</Path>
-      <OdsName>oas_importhistory</OdsName>
-      <FqPath>fileName</FqPath>
-      <ColumnName>filename</ColumnName>
-    </XmomStorable>
-    <XmomStorable>
-      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
-      <Path>importStatus</Path>
-      <OdsName>oas_importhistory</OdsName>
-      <FqPath>importStatus</FqPath>
-      <ColumnName>importstatus</ColumnName>
-    </XmomStorable>
-    <XmomStorable>
-      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
-      <Path>specificationFile</Path>
-      <OdsName>oas_importhistory</OdsName>
-      <FqPath>specificationFile</FqPath>
-      <ColumnName>specificationfile</ColumnName>
-    </XmomStorable>
-    <XmomStorable>
-      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
-      <Path>type</Path>
-      <OdsName>oas_importhistory</OdsName>
-      <FqPath>type</FqPath>
-      <ColumnName>type</ColumnName>
-    </XmomStorable>
-    <XmomStorable>
-      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
-      <Path>typename</Path>
-      <OdsName>oas_importhistory</OdsName>
-      <FqPath>typename</FqPath>
-      <ColumnName>typename</ColumnName>
-    </XmomStorable>
-    <XmomStorable>
-      <XmlName>xmcp.oas.fman.storables.OAS_ImportHistory</XmlName>
-      <Path>uniqueIdentifier</Path>
-      <OdsName>oas_importhistory</OdsName>
-      <FqPath>uniqueIdentifier</FqPath>
-      <ColumnName>uniqueidentifier</ColumnName>
-    </XmomStorable>
-  </XmomStorables>
+  <InheritanceRules>
+    <InheritanceRule>
+      <ParameterType>MonitoringLevel</ParameterType>
+      <OrdertypeName>xmcp.oas.fman.OASImportTableInfo</OrdertypeName>
+      <ChildFilter/>
+      <Value>xyna.default.monitoringlevel</Value>
+      <Precedence>0</Precedence>
+    </InheritanceRule>
+  </InheritanceRules>
 </Application>

@@ -23,6 +23,7 @@
         <path location="${basedir}/../../../../.."/>
     </pathconvert>
     <property name="xmom.dir" value="${basedir}/../../XMOM" />
+    <property name="application.dir" value="${basedir}/../../" />
 
     <property name="project.name" value="ApplicationGenerationImpl" />
     <property name="fqclassname" value="xfmg.oas.generation.ApplicationGeneration" />
@@ -35,6 +36,9 @@
 
     <target name="prepareLibs" description="Prepare Libs">
         <ant antfile="build.xml" target="build" inheritAll="false" dir="${basedir}/../../sharedlib/xyna-openapi">
+            <property name="target.dir" value="${basedir}/lib/xyna" />
+        </ant>
+        <ant antfile="build.xml" target="build" inheritAll="false" dir="${root.dir}/modules/xmcp/zetaFramework/sharedlib/ZetaTools">
             <property name="target.dir" value="${basedir}/lib/xyna" />
         </ant>
     </target>

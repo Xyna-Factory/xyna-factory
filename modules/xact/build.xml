@@ -28,6 +28,7 @@
         <buildModule target="build"     dir="http"        target.dir="${target.dir}/xact" />
         <buildModule target="build"     dir="ldap"        target.dir="${target.dir}/xact" />
         <buildModule target="build"     dir="mail"        target.dir="${target.dir}/xact" />
+        <buildModule target="build"     dir="netconf"     target.dir="${target.dir}/xact" />
         <buildModule target="build-all" dir="queue"       target.dir="${target.dir}/xact" />
         <buildModule target="build"     dir="script"      target.dir="${target.dir}/xact" />
         <buildModule target="build"     dir="soap"        target.dir="${target.dir}/xact" />

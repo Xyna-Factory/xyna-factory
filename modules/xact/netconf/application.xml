@@ -15,12 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="NetConf" factoryVersion="" versionName="0.0.6" xmlVersion="1.1">
+--><Application applicationName="NetConf" factoryVersion="" versionName="1.0.0" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>SSH</ApplicationName>
-        <VersionName>2.0.33</VersionName>
+        <VersionName>2.0.34</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
@@ -49,6 +49,14 @@
   <XMOMEntries>
     <XMOMEntry implicitDependency="false">
       <FqName>xact.netconf.datatypes.NetConfEvent</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.netconf.datatypes.Status</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xact.netconf.services.NotificationReceiverServiceGroup</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
   </XMOMEntries>
