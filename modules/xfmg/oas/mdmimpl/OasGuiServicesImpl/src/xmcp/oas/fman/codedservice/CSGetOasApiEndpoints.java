@@ -112,13 +112,13 @@ public class CSGetOasApiEndpoints {
           candidatesToAdd.add(builder.instance());
         }
       }
-    }
-    
-    for(OasApiDatatypeInfo built : candidatesToAdd) {
-      if (filter.matchesImplementationRtcFilter(built.getImplementationRtc()) &&
-          filter.matchesImplementationDatatypeFilter(built.getImplementationDatatype()) &&
-          filter.matchesStatusFilter(built.getStatus())) {
-        ret.add(built);
+      
+      for(OasApiDatatypeInfo built : candidatesToAdd) {
+        if (filter.matchesImplementationRtcFilter(built.getImplementationRtc()) &&
+            filter.matchesImplementationDatatypeFilter(built.getImplementationDatatype()) &&
+            filter.matchesStatusFilter(built.getStatus())) {
+          ret.add(built);
+        }
       }
     }
   }

@@ -33,6 +33,7 @@ import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagement;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl;
 import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.ApplicationDefinition;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeDependencyContext;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase;
@@ -176,6 +177,9 @@ public class OasGuiTools {
     RuntimeContextDependencyManagement rtcdMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
     Collection<RuntimeDependencyContext> deps = rtcdMgmt.getParentRuntimeContexts(RuntimeContextDependencyManagement.asRuntimeDependencyContext(rtc.getRuntimeContext()));
     for(RuntimeDependencyContext dep : deps) {
+      if(dep instanceof ApplicationDefinition) {
+        continue;
+      }
       result.add(new RtcData(dep.asCorrespondingRuntimeContext()));
     }
     return result;
