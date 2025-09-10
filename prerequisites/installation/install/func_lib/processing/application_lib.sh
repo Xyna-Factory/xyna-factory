@@ -356,7 +356,7 @@ f_application_exists_in_components () {
 
 # Rückgabe des DateiNamens, mit der Application unter components liegt
 #
-# Aufruf-Parameter 1=Name
+# Aufruf-Parameter 1=Name, oder Name.Version oder Name.Version.app
 # Ausgabe: 
 #   Dateiname (Beispiel "xprc/Processing.1.0.app")
 # Rückgabe:
