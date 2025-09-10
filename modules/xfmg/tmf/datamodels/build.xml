@@ -40,7 +40,7 @@
 			<property name="target.dir" value="${root.dir}/modules/xfmg/oas/mdmimpl/ApplicationGenerationImpl/deploy" />
 		</ant>
 		<java classname="xfmg.oas.offline.OASApplicationGeneration" fork="true" failonerror="true">
-			<arg value="tmf633-service-catalog-openapi-1.1.14a.yaml" />
+			<arg value="tmf633-service-catalog-openapi-1.1.15.yaml" />
 			<arg value="client" />
 			<arg value="." />
 			<classpath>
@@ -68,7 +68,7 @@
 		<antcall target="unzipApps" />
 		<move todir="${target.dir}">
 			<fileset dir="${basedir}" includes="*.zip" />
-			<mapper type="glob" from="*.zip" to="*.app" />
+			<regexpmapper from="^(.*)_((?:\d+\.){3})zip" to="\1.\2app" />
 		</move>
 	</target>
 
