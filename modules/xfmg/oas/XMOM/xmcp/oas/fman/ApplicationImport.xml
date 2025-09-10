@@ -24,27 +24,27 @@
     </Input>
     <Output/>
     <Throws>
-      <Exception Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException53658">
+      <Exception Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException53570">
         <Meta>
           <Type>XynaException</Type>
         </Meta>
       </Exception>
     </Throws>
-    <ServiceReference ID="51490" Label="Application Generation" ReferenceName="ApplicationGeneration.ApplicationGeneration" ReferencePath="xfmg.oas.generation">
-      <Source RefID="51489"/>
-      <Target RefID="51489"/>
-    </ServiceReference>
     <ServiceReference ID="12544" Label="FileManagement" ReferenceName="FileManagement.FileManagement" ReferencePath="xfmg.xfctrl.filemgmt">
       <Source RefID="12543"/>
       <Target RefID="12543"/>
+    </ServiceReference>
+    <ServiceReference ID="51962" Label="Application Import Impl" ReferenceName="ApplicationImportImpl" ReferencePath="xmcp.oas.fman">
+      <Source RefID="51961"/>
+      <Target RefID="51961"/>
     </ServiceReference>
     <ServiceReference ID="107" Label="FileManagement" ReferenceName="FileManagement.FileManagement" ReferencePath="xfmg.xfctrl.filemgmt">
       <Source RefID="106"/>
       <Target RefID="106"/>
     </ServiceReference>
-    <ServiceReference ID="51962" Label="Application Import Impl" ReferenceName="ApplicationImportImpl" ReferencePath="xmcp.oas.fman">
-      <Source RefID="51961"/>
-      <Target RefID="51961"/>
+    <ServiceReference ID="51490" Label="Application Generation" ReferenceName="ApplicationGeneration.ApplicationGeneration" ReferencePath="xfmg.oas.generation">
+      <Source RefID="51489"/>
+      <Target RefID="51489"/>
     </ServiceReference>
     <Mappings ID="53" Label="Mapping">
       <Output>
