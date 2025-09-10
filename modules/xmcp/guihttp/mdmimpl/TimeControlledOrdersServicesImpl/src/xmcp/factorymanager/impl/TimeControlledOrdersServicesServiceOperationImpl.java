@@ -510,13 +510,14 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
     try {
       List<TimeControlledOrderTableEntry> result = new ArrayList<>();
       Long lowestBatchProcessId = Long.MAX_VALUE;
-      while(true) {
+      int batchProcessSearchLimit = (tableInfo.getLimit() != null) ? tableInfo.getLimit() : 1000;
+      while (true) {
         BatchProcessSelectImpl select = new BatchProcessSelectImpl();
         List<TableHelper.Filter> filters = filterFunction.apply(tableInfo);
         filters.forEach(f -> addWhereClause(tableHelper, select, f));
         select.addWhereClause(select.whereBatchProcessId().isSmallerThan(lowestBatchProcessId));
 
-        List<BatchProcessInformation> batchProcessInformation = batchProcessManagement.searchBatchProcesses(select, tableInfo.getLimit()).getResult();
+        List<BatchProcessInformation> batchProcessInformation = batchProcessManagement.searchBatchProcesses(select, batchProcessSearchLimit).getResult();
         List<TimeControlledOrderTableEntry> partialResult = batchProcessInformation.stream()
             .filter(bi -> filter.getShowArchived() != null && (bi.getMasterOrderCreationParameter() != null || filter.getShowArchived()))
             .map(this::convertToTableEntry)
@@ -525,10 +526,10 @@ public class TimeControlledOrdersServicesServiceOperationImpl implements Extende
         result.addAll(partialResult);
         tableHelper.sort(result);
         result = tableHelper.limit(result);
-        if(batchProcessInformation.size() == 0 || batchProcessInformation.size() < tableInfo.getLimit()) {
+        if (batchProcessInformation.size() == 0 || batchProcessInformation.size() < tableInfo.getLimit()) {
           break;
         }
-        lowestBatchProcessId = batchProcessInformation.get(batchProcessInformation.size()-1).getBatchProcessId();
+        lowestBatchProcessId = batchProcessInformation.get(batchProcessInformation.size() - 1).getBatchProcessId();
       }
       return result;
     } catch (PersistenceLayerException | XNWH_WhereClauseBuildException ex) {
