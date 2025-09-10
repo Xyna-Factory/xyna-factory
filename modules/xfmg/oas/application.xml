@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="OAS_Base" factoryVersion="" versionName="1.7.6" xmlVersion="1.1">
+<Application applicationName="OAS_Base" factoryVersion="" versionName="1.7.5" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -51,15 +51,19 @@
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
-      <DestinationKey>xmcp.oas.fman.ApplicationImportImpl</DestinationKey>
+      <DestinationKey>xmcp.oas.fman.CreateEndpointDetailsEntryChildren</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.oas.fman.CreateEndpointImplementationWorkflow</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
       <DestinationKey>xmcp.oas.fman.DefineGenerationDialog</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
-    <Ordertype implicitDependency="false">
-      <DestinationKey>xmcp.oas.fman.GetGenerationPanelDefinition</DestinationKey>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.oas.fman.EndpointImplementation</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -74,8 +78,12 @@
       <DestinationKey>xmcp.oas.fman.GetOasApiEndpointsDefinition</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
-    <Ordertype implicitDependency="false">
-      <DestinationKey>xmcp.oas.fman.GetRecentOASImportHistoryDefinition</DestinationKey>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.oas.fman.LinkEndpointImplementationWorkflow</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.oas.fman.OASEndpointDetailsDefinition</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -86,8 +94,28 @@
       <DestinationKey>xmcp.oas.fman.OasApiEndpointsTableInfo</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
-    <Ordertype implicitDependency="false">
-      <DestinationKey>xmcp.oas.fman.RecentOASImportTableInfo</DestinationKey>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.oas.fman.OasEndpointDetailsCreateServicePanels</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.oas.fman.OasEndpointDetailsMissingDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.oas.fman.OasEndpointDetailsMissingNoDatatypeDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.oas.fman.OasEndpointDetailsMissingNoWorkspaceDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.oas.fman.OasEndpointDetailsWithDatatypeDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.oas.fman.OasEndpointDetailsWithDatatypeModifyDefinition</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -165,11 +193,11 @@
       <FqName>xmcp.oas.datatype.provider.JSONParserErrorResponse</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="true">
+    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.datatype.provider.RequestParameter</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="true">
+    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.datatype.provider.ResponseParameter</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
@@ -177,7 +205,7 @@
       <FqName>xmcp.oas.datatype.provider.ValidationErrorResponse</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="true">
+    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.exception.BuildResposeAfterError</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
@@ -201,16 +229,20 @@
       <FqName>xmcp.oas.fman.ApplicationImport</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="true">
-      <FqName>xmcp.oas.fman.ApplicationImportImpl</FqName>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.CreateEndpointDetailsEntryChildren</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.CreateEndpointImplementationWorkflow</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.fman.DefineGenerationDialog</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="true">
-      <FqName>xmcp.oas.fman.GetGenerationPanelDefinition</FqName>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.EndpointImplementation</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
@@ -221,35 +253,67 @@
       <FqName>xmcp.oas.fman.GetOASImportHistoryDefinition</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="true">
+    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.fman.GetOasApiEndpointsDefinition</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="true">
-      <FqName>xmcp.oas.fman.GetRecentOASImportHistoryDefinition</FqName>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.LinkEndpointImplementationWorkflow</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.OASEndpointDetailsDefinition</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.fman.OASImportTableInfo</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="true">
+    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.fman.OasApiEndpointsTableInfo</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.OasEndpointDetailsCreateServicePanels</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.OasEndpointDetailsMissingDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.OasEndpointDetailsMissingNoDatatypeDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.OasEndpointDetailsMissingNoWorkspaceDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.OasEndpointDetailsWithDatatypeDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.OasEndpointDetailsWithDatatypeModifyDefinition</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.fman.OasGuiServices</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="true">
-      <FqName>xmcp.oas.fman.RecentOASImportTableInfo</FqName>
-      <Type>WORKFLOW</Type>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.datatypes.EndpointImplementationCreationData</FqName>
+      <Type>DATATYPE</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="true">
+    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.fman.datatypes.OasApiDatatypeInfo</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="true">
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.oas.fman.datatypes.OasEndpointService</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
       <FqName>xmcp.oas.fman.storables.OAS_ImportHistory</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>

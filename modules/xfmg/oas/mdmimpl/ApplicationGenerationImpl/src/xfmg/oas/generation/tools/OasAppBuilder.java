@@ -30,7 +30,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.zip.ZipOutputStream;
 
@@ -113,13 +112,40 @@ public class OasAppBuilder {
     return new OASApplicationData(id, files);
   }
   
+  
+  public void createOasAppOffline(String generator, String targetDir, String specFile) {
+    try {
+      Path tmpDir = Files.createTempDirectory("oasmain");
+      File tmpDirFile = tmpDir.toFile();
+      try {
+        String tmpDirAsString = tmpDir.toString();
 
+        callGenerator(generator, tmpDirAsString, specFile);
+        separateFiles(tmpDirAsString);
+        String appName = readApplicationXML(tmpDirAsString);
+
+        File targetAppFile = new File(targetDir, appName + ".zip");
+        try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(targetAppFile))) {
+          FileUtils.zipDir(tmpDirFile, zos, tmpDirFile);
+        }
+
+      } finally {
+        FileUtils.deleteDirectoryRecursively(tmpDirFile);
+      }
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    } 
+  }
+
+  
   private void callGenerator(String generatorName, String target, String specFile) {
     final CodegenConfigurator configurator = new CodegenConfigurator()
         .setGeneratorName(generatorName)
         .setInputSpec(specFile)
-        .addAdditionalProperty("generateAliasAsModel", ApplicationGenerationServiceOperationImpl.createListWrappers.get())
-        .addAdditionalProperty("x-createListWrappers", ApplicationGenerationServiceOperationImpl.createListWrappers.get())
+        .addAdditionalProperty("generateAliasAsModel", XynaFactory.isFactoryServer() ?
+                               ApplicationGenerationServiceOperationImpl.createListWrappers.get() : true)
+        .addAdditionalProperty("x-createListWrappers", XynaFactory.isFactoryServer() ? 
+                               ApplicationGenerationServiceOperationImpl.createListWrappers.get() : true)
         .setOutputDir(target);
     
       final ClientOptInput clientOptInput = configurator.toClientOptInput();

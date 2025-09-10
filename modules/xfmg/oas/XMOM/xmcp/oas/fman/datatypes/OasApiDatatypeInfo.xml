@@ -44,4 +44,19 @@
       <Type>String</Type>
     </Meta>
   </Data>
+  <Data Label="Implementation Rtc Revision" VariableName="implementationRtcRevision">
+    <Meta>
+      <Type>Long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Generated Rtc Revision" VariableName="generatedRtcRevision">
+    <Meta>
+      <Type>Long</Type>
+    </Meta>
+  </Data>
+  <Data Label="Implementation Rtc is Workspace" VariableName="implementationRtcIsWorkspace">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
 </DataType>
