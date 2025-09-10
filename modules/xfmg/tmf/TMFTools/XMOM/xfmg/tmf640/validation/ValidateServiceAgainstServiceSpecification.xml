@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Validate Service Against Service Specification" TypeName="ValidateServiceAgainstServiceSpecification" TypePath="xfmg.tmf640.validation" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Validate Service Against Service Specification" Name="ValidateServiceAgainstServiceSpecification">
+    <Input>
+      <Data ID="6631" Label="Service" ReferenceName="Service" ReferencePath="tmf640.datamodel" VariableName="service6631"/>
+      <Data ID="6492" Label="ServiceSpecification" ReferenceName="ServiceSpecification" ReferencePath="tmf633.datamodel" VariableName="serviceSpecification6492"/>
+      <Data ID="8290" Label="Constraint Context" ReferenceName="Text" ReferencePath="base" VariableName="text8290"/>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="CharacteristicValueDoesNotMatchRegularExpression" ReferenceName="CharacteristicValueDoesNotMatchRegularExpression" ReferencePath="xfmg.tmf633" VariableName="characteristicValueDoesNotMatchRegularExpression14170"/>
+      <Exception Label="CharacteristicValueNotInEnumeration" ReferenceName="CharacteristicValueNotInEnumeration" ReferencePath="xfmg.tmf640" VariableName="characteristicValueNotInEnumeration14171"/>
+      <Exception Label="DuplicateCharacteristicFound" ReferenceName="DuplicateCharacteristicFound" ReferencePath="xfmg.tmf640" VariableName="duplicateCharacteristicFound14172"/>
+      <Exception Label="ExceededAllowedValueRange" ReferenceName="ExceededAllowedValueRange" ReferencePath="xfmg.tmf640" VariableName="exceededAllowedValueRange14173"/>
+      <Exception Label="InvalidCharacteristicsCardinality" ReferenceName="InvalidCharacteristicsCardinality" ReferencePath="xfmg.tmf640" VariableName="invalidCharacteristicsCardinality14174"/>
+      <Exception Label="Service Characteristic not found" ReferenceName="ServiceCharacteristicNotFound" ReferencePath="xfmg.tmf640" VariableName="serviceCharacteristicNotFound14175"/>
+      <Exception Label="UnexpectedCharacteristicsType" ReferenceName="UnexpectedCharacteristicsType" ReferencePath="xfmg.tmf640" VariableName="unexpectedCharacteristicsType14176"/>
+      <Exception Label="ConstraintValidationFailed3" ReferenceName="ConstraintValidationFailed3" ReferencePath="xfmg.tmf640.validation" VariableName="constraintValidationFailed314177"/>
+    </Throws>
+    <ServiceReference ID="9415" Label="JSON Datamodel Services" ReferenceName="JSONDatamodelServices.JSONDatamodelServices" ReferencePath="xfmg.xfctrl.datamodel.json">
+      <Source RefID="9414"/>
+      <Target RefID="9414"/>
+    </ServiceReference>
+    <ServiceReference ID="13677" Label="Validate Constraints V2" ReferenceName="ValidateConstraintsV2" ReferencePath="xfmg.tmf640.validation">
+      <Source RefID="13676"/>
+      <Target RefID="13676"/>
+    </ServiceReference>
+    <ServiceReference ID="6663" Label="Validate Service Characteristics" ReferenceName="ValidateServiceCharacteristics" ReferencePath="xfmg.tmf640.validation">
+      <Source RefID="6662"/>
+      <Target RefID="6662"/>
+    </ServiceReference>
+    <ServiceReference ID="7074" Label="Validate Service Relationships" ReferenceName="ValidateServiceRelationships" ReferencePath="xfmg.tmf640.validation">
+      <Source RefID="7073"/>
+      <Target RefID="7073"/>
+    </ServiceReference>
+    <Function ID="6662" Label="Validate Service Characteristics">
+      <Source RefID="6663"/>
+      <Source RefID="6631"/>
+      <Source RefID="6492"/>
+      <Target RefID="6663"/>
+      <Invoke Operation="ValidateServiceCharacteristics" ServiceID="6663">
+        <Source RefID="6631"/>
+        <Source RefID="6492"/>
+      </Invoke>
+      <Receive ServiceID="6663"/>
+    </Function>
+    <Function ID="7073" Label="Validate Service Relationships">
+      <Source RefID="7074"/>
+      <Source RefID="6631"/>
+      <Source RefID="6492"/>
+      <Target RefID="7074"/>
+      <Invoke Operation="ValidateServiceRelationships" ServiceID="7074">
+        <Source RefID="6631"/>
+        <Source RefID="6492"/>
+      </Invoke>
+      <Receive ServiceID="7074"/>
+    </Function>
+    <Function ID="9414" Label="Write JSON with Options">
+      <Source RefID="9415"/>
+      <Source RefID="6631"/>
+      <Source RefID="9417"/>
+      <Target RefID="9415"/>
+      <Target RefID="9403"/>
+      <Invoke Operation="writeJSONWithOptions" ServiceID="9415">
+        <Source RefID="6631">
+          <Meta>
+            <ExpectedType>tmf640.datamodel.Service</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="9417">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="9415">
+        <Target RefID="9403"/>
+      </Receive>
+    </Function>
+    <Mappings ID="10952" Label="Mapping">
+      <Input>
+        <Data ID="11580" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document11580">
+          <Source RefID="10952"/>
+        </Data>
+        <Source RefID="9403"/>
+      </Input>
+      <Output>
+        <Data ID="11841" Label="JSON" ReferenceName="Text" ReferencePath="base" VariableName="text11841">
+          <Source RefID="10952"/>
+        </Data>
+        <Target RefID="11842"/>
+      </Output>
+      <Mapping>%1%.text=%0%.text</Mapping>
+    </Mappings>
+    <Function ID="13676" Label="Validate Constraints V2">
+      <Source RefID="13677"/>
+      <Source RefID="11842"/>
+      <Source RefID="6492"/>
+      <Source RefID="8290"/>
+      <Target RefID="13677"/>
+      <Invoke Operation="ValidateConstraintsV2" ServiceID="13677">
+        <Source RefID="11842">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="6492"/>
+        <Source RefID="8290">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="13677"/>
+    </Function>
+    <Data ID="9403" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document9403"/>
+    <Data ID="9417" ReferenceName="JSONWritingOptions" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="jSONWritingOptions9417">
+      <Data IsList="true" ReferenceName="ListToMapTransformation" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="listToMapTransformation"/>
+      <Data IsList="true" ReferenceName="MemberSubstitution" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="memberSubstitution"/>
+      <Data VariableName="useLabels">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>true</Value>
+      </Data>
+      <Data VariableName="oASMessageType">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+      <Data IsList="true" ReferenceName="ListWrapper" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="listWrapper"/>
+      <Data VariableName="processAllInputGenerically">
+        <Meta>
+          <Type>Boolean</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="11842" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text11842">
+      <Source RefID="10952"/>
+    </Data>
+    <Assign ID="1"/>
+  </Operation>
+</Service>
