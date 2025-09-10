@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Create Endpoint  Details Entry Children" TypeName="CreateEndpointDetailsEntryChildren" TypePath="xmcp.oas.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Create Endpoint  Details Entry Children" Name="CreateEndpointDetailsEntryChildren">
+    <Input>
+      <Data ID="27" Label="Oas Endpoint Service" ReferenceName="OasEndpointService" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasEndpointService27"/>
+    </Input>
+    <Output>
+      <Data ID="40" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition40"/>
+    </Output>
+    <Mappings ID="16" Label="Create Child Element">
+      <Input>
+        <Data ID="17" Label="Oas Endpoint Service" ReferenceName="OasEndpointService" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasEndpointService17"/>
+        <Source RefID="27"/>
+      </Input>
+      <Output>
+        <Data ID="18" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition18"/>
+        <Target RefID="15"/>
+      </Output>
+      <Mapping>%1%.label=%0%.implementationWorkflowFqn</Mapping>
+    </Mappings>
+    <Data ID="15" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition15"/>
+    <Assign ID="1">
+      <Source RefID="15"/>
+      <Target RefID="40"/>
+      <Copy>
+        <Source RefID="15"/>
+        <Target RefID="40"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

@@ -15,26 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Oas Api Datatype Info" TypeName="OasApiDatatypeInfo" TypePath="xmcp.oas.fman.datatypes" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Oas Endpoint Service" TypeName="OasEndpointService" TypePath="xmcp.oas.fman.datatypes" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Generated Rtc" VariableName="generatedRtc">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Implementation Rtc" VariableName="implementationRtc">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Api Datatype" VariableName="apiDatatype">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Implementation Datatype" VariableName="implementationDatatype">
+  <Data Label="Service Name" VariableName="serviceName">
     <Meta>
       <Type>String</Type>
     </Meta>
@@ -44,19 +29,19 @@
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Implementation Rtc Revision" VariableName="implementationRtcRevision">
+  <Data Label="Implementation Workflow fqn" VariableName="implementationWorkflowFqn">
     <Meta>
-      <Type>Long</Type>
+      <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Generated Rtc Revision" VariableName="generatedRtcRevision">
+  <Data Label="Index" VariableName="index">
     <Meta>
-      <Type>Long</Type>
+      <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Implementation Rtc is Workspace" VariableName="implementationRtcIsWorkspace">
+  <Data Label="Name" VariableName="name">
     <Meta>
-      <Type>boolean</Type>
+      <Type>String</Type>
     </Meta>
   </Data>
 </DataType>

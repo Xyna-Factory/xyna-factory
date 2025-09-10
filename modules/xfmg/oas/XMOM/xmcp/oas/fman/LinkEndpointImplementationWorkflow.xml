@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Link Endpoint Implementation Workflow" TypeName="LinkEndpointImplementationWorkflow" TypePath="xmcp.oas.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Link Endpoint Implementation Workflow" Name="LinkEndpointImplementationWorkflow">
+    <Input>
+      <Data ID="22" Label="Endpoint Implementation Creation Data" ReferenceName="EndpointImplementationCreationData" ReferencePath="xmcp.oas.fman.datatypes" VariableName="endpointImplementationCreationData22"/>
+      <Data ID="35" Label="Oas Endpoint Service" ReferenceName="OasEndpointService" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasEndpointService35"/>
+    </Input>
+    <Output/>
+    <ServiceReference ID="64" Label="Oas Gui Services" ReferenceName="OasGuiServices.OasGuiServices" ReferencePath="xmcp.oas.fman">
+      <Source RefID="63"/>
+      <Target RefID="63"/>
+    </ServiceReference>
+    <Mappings ID="49" Label="Mapping">
+      <Input>
+        <Data ID="51" Label="Endpoint Implementation Creation Data" ReferenceName="EndpointImplementationCreationData" ReferencePath="xmcp.oas.fman.datatypes" VariableName="endpointImplementationCreationData51"/>
+        <Source RefID="22"/>
+      </Input>
+      <Input>
+        <Data ID="53" Label="Oas Endpoint Service" ReferenceName="OasEndpointService" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasEndpointService53"/>
+        <Source RefID="35"/>
+      </Input>
+      <Output>
+        <Data ID="54" Label="Endpoint Implementation Creation Data" ReferenceName="EndpointImplementationCreationData" ReferencePath="xmcp.oas.fman.datatypes" VariableName="endpointImplementationCreationData54"/>
+        <Target RefID="48"/>
+      </Output>
+      <Mapping>%2%~=%0%</Mapping>
+      <Mapping>%2%.serviceName=%1%.name</Mapping>
+      <Mapping>%2%.action="LinkEndpointWorkflow"</Mapping>
+    </Mappings>
+    <Function ID="63" Label="Endpoint Implementation">
+      <Source RefID="64"/>
+      <Source RefID="48"/>
+      <Target RefID="64"/>
+      <Invoke Operation="endpointImplementation" ServiceID="64">
+        <Source RefID="48">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="64"/>
+    </Function>
+    <Data ID="48" Label="Endpoint Implementation Creation Data" ReferenceName="EndpointImplementationCreationData" ReferencePath="xmcp.oas.fman.datatypes" VariableName="endpointImplementationCreationData48"/>
+    <Assign ID="1"/>
+  </Operation>
+</Service>
