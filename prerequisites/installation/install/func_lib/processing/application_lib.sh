@@ -380,7 +380,17 @@ f_find_application_in_components () {
     EXISTS=$?
   fi;
   if [ ${EXISTS} != 0 ] ; then
+    FILTER="components/*/*/${1}.app";
+    FILENAME=$(${VOLATILE_LS} ${FILTER} 2> /dev/null)
+    EXISTS=$?
+  fi;
+  if [ ${EXISTS} != 0 ] ; then
     FILTER="components/*/${1}";
+    FILENAME=$(${VOLATILE_LS} ${FILTER} 2> /dev/null)
+    EXISTS=$?
+  fi;
+  if [ ${EXISTS} != 0 ] ; then
+    FILTER="components/*/*/${1}";
     FILENAME=$(${VOLATILE_LS} ${FILTER} 2> /dev/null)
     EXISTS=$?
   fi;
