@@ -129,7 +129,7 @@ public class GenerateApplicationTool {
                                           String target, String specFile, String workspace,
                                           OasImportStatusHandler statusHandler) {
     OasAppBuilder oasAppBuilder = new OasAppBuilder();
-    try (OASApplicationData data = oasAppBuilder.createOasApp(generator, target, specFile)) {
+    try (OASApplicationData data = oasAppBuilder.createOasApp(generator, target, specFile, statusHandler)) {
       statusHandler.storeStatusAppImport();
       importApplication(correlatedXynaOrder, data.getId(), workspace);
     } catch (IOException e) {
