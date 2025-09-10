@@ -20,7 +20,9 @@ package xmcp.oas.fman.tools;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -29,8 +31,11 @@ import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationInformation;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagement;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationManagementImpl;
+import com.gip.xyna.xfmg.xfctrl.dependencies.RuntimeContextDependencyManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.Application;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.ApplicationDefinition;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
+import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeDependencyContext;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabaseEntryColumn;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabaseType;
@@ -164,6 +169,34 @@ public class OasGuiTools {
     } catch (Exception e) {
       throw new RuntimeException(e.getMessage(), e);
     }
+  }
+
+
+  public List<RtcData> findImplRtcs(RtcData rtc) {
+    List<RtcData> result = new ArrayList<RtcData>();
+    RuntimeContextDependencyManagement rtcdMgmt = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
+    Collection<RuntimeDependencyContext> deps = rtcdMgmt.getParentRuntimeContexts(RuntimeContextDependencyManagement.asRuntimeDependencyContext(rtc.getRuntimeContext()));
+    for(RuntimeDependencyContext dep : deps) {
+      if(dep instanceof ApplicationDefinition) {
+        continue;
+      }
+      result.add(new RtcData(dep.asCorrespondingRuntimeContext()));
+    }
+    return result;
+  }
+
+
+  public List<ImplementedOasApiType> getAcessibleImplDts(RtcData implRtc, List<ImplementedOasApiType> candidates) {
+    List<ImplementedOasApiType> result = new ArrayList<>();
+    Set<Long> dependencies = new HashSet<>();
+    XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement().getDependenciesRecursivly(implRtc.getRevision(), dependencies);
+    dependencies.add(implRtc.getRevision());
+    for(ImplementedOasApiType candidate : candidates) {
+      if(dependencies.contains(candidate.getRtc().getRevision())) {
+        result.add(candidate);
+      }
+    }
+    return result;
   }
   
 }

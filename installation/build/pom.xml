@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -217,7 +217,7 @@
             <dependency>
                 <groupId>com.oracle.database.jdbc</groupId>
                 <artifactId>ojdbc11</artifactId>
-                <version>23.8.0.25.04</version>
+                <version>23.9.0.25.07</version>
             </dependency>
             <dependency>
                 <groupId>com.oracle.database.xml</groupId>
@@ -357,12 +357,12 @@
             <dependency>
                 <groupId>com.mysql</groupId>
                 <artifactId>mysql-connector-j</artifactId>
-                <version>9.3.0</version>
+                <version>9.4.0</version>
             </dependency>
             <dependency>
                 <groupId>org.mariadb.jdbc</groupId>
                 <artifactId>mariadb-java-client</artifactId>
-                <version>3.5.4</version>
+                <version>3.5.5</version>
             </dependency>
             <dependency>
                 <groupId>net.jradius</groupId>
@@ -583,6 +583,16 @@
                 <groupId>io.github.yang-central.yangkit</groupId>
                 <artifactId>yangkit-parser</artifactId>
                 <version>1.4.5</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jayway.jsonpath</groupId>
+                <artifactId>json-path</artifactId>
+                <version>2.9.0</version>
+            </dependency>
+            <dependency>
+                <groupId>net.minidev</groupId>
+                <artifactId>json-smart</artifactId>
+                <version>2.6.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

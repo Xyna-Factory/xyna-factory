@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Compare List Recursively" TypeName="CompareListRecursively" TypePath="base.list.object" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Compare List Recursively" Name="CompareListRecursively">
+    <Input>
+      <Data ID="1301" Label="Compare List Children" ReferenceName="CompareListChildren" ReferencePath="base.list.object" VariableName="compareListChildren1301"/>
+      <Data ID="1248" Label="Object Comparer" ReferenceName="ObjectComparer" ReferencePath="base.list.object" VariableName="objectComparer1248"/>
+    </Input>
+    <Output>
+      <Data ID="1998" IsList="true" Label="Simple Compare Result" ReferenceName="SimpleCompareResult" ReferencePath="base.list.object" VariableName="simpleCompareResult1998"/>
+    </Output>
+    <ServiceReference ID="1197" Label="Object Comparer" ReferenceName="ObjectComparer.ObjectComparer" ReferencePath="base.list.object">
+      <Source RefID="1196"/>
+      <Target RefID="1196"/>
+    </ServiceReference>
+    <ServiceReference ID="1722" Label="Compare List Children" ReferenceName="CompareListChildren.CompareListChildren" ReferencePath="base.list.object">
+      <Source RefID="1721"/>
+      <Target RefID="1721"/>
+    </ServiceReference>
+    <ServiceReference ID="1816" Label="Compare Children" ReferenceName="CompareChildren.CompareChildren" ReferencePath="base.list.object">
+      <Source RefID="1815"/>
+      <Target RefID="1815"/>
+    </ServiceReference>
+    <ServiceReference ID="2190" Label="Compare List Children" ReferenceName="CompareListChildren.CompareListChildren" ReferencePath="base.list.object">
+      <Source RefID="2189"/>
+      <Target RefID="2189"/>
+    </ServiceReference>
+    <Function ID="1196" Label="Create List Comparator">
+      <Source RefID="1197"/>
+      <Source RefID="1248"/>
+      <Source RefID="1301"/>
+      <Target RefID="1197"/>
+      <Target RefID="1199"/>
+      <Invoke Operation="createListComparator" ServiceID="1197">
+        <Source RefID="1248"/>
+        <Source RefID="1301"/>
+      </Invoke>
+      <Receive ServiceID="1197">
+        <Target RefID="1199"/>
+      </Receive>
+    </Function>
+    <Choice ID="252" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="1199"/>
+      <Target RefID="2124"/>
+      <Meta>
+        <OuterConditionPart>%0%==?</OuterConditionPart>
+      </Meta>
+      <Input>
+        <Data ID="2039" Label="Comparator" ReferenceName="Comparator" ReferencePath="base.list.comparator" VariableName="comparator2039">
+          <Source RefID="252"/>
+        </Data>
+        <Source RefID="1199"/>
+      </Input>
+      <Case ID="285" Label="" Premise="%0%==null">
+        <Function ID="1721" Label="Compare Index">
+          <Source RefID="1722"/>
+          <Source RefID="1301"/>
+          <Target RefID="1722"/>
+          <Target RefID="1724"/>
+          <Invoke Operation="compareIndex" ServiceID="1722">
+            <Source RefID="1301"/>
+          </Invoke>
+          <Receive ServiceID="1722">
+            <Target RefID="1724"/>
+          </Receive>
+        </Function>
+        <Assign ID="287">
+          <Source RefID="1724"/>
+          <Target RefID="2124"/>
+          <Copy>
+            <Source RefID="1724"/>
+            <Target RefID="2124"/>
+          </Copy>
+        </Assign>
+        <Data ID="1724" IsList="true" Label="Children" ReferenceName="CompareChildren" ReferencePath="base.list.object" VariableName="compareChildren1724">
+          <Source RefID="1721"/>
+        </Data>
+      </Case>
+      <Case ID="253" IsDefault="true" Label="default">
+        <Function ID="2189" Label="Compare by Comparator">
+          <Source RefID="2190"/>
+          <Source RefID="1301"/>
+          <Source RefID="1199"/>
+          <Source RefID="1248"/>
+          <Target RefID="2190"/>
+          <Target RefID="2192"/>
+          <Invoke Operation="compareByComparator" ServiceID="2190">
+            <Source RefID="1301"/>
+            <Source RefID="1199"/>
+            <Source RefID="1248"/>
+          </Invoke>
+          <Receive ServiceID="2190">
+            <Target RefID="2192"/>
+          </Receive>
+        </Function>
+        <Assign ID="255">
+          <Source RefID="2192"/>
+          <Target RefID="2124"/>
+          <Copy>
+            <Source RefID="2192"/>
+            <Target RefID="2124"/>
+          </Copy>
+        </Assign>
+        <Data ID="2192" IsList="true" Label="Children" ReferenceName="CompareChildren" ReferencePath="base.list.object" VariableName="compareChildren2192">
+          <Source RefID="2189"/>
+        </Data>
+      </Case>
+    </Choice>
+    <Foreach ID="2125">
+      <Source RefID="2124"/>
+      <Target RefID="2127"/>
+      <InputList RefID="2124">
+        <Data ID="2126" Label="Compare Children" ReferenceName="CompareChildren" ReferencePath="base.list.object" VariableName="compareChildren2126"/>
+      </InputList>
+      <OutputList RefID="2127">
+        <Data ID="1818" IsList="true" Label="Simple Compare Result" ReferenceName="SimpleCompareResult" ReferencePath="base.list.object" VariableName="simpleCompareResult1818">
+          <Source RefID="1815"/>
+        </Data>
+      </OutputList>
+      <Function ID="1815" Label="Compare Recursively">
+        <Source RefID="1816"/>
+        <Source RefID="2126"/>
+        <Source RefID="1248"/>
+        <Target RefID="1816"/>
+        <Target RefID="1818"/>
+        <Invoke Operation="compareRecursively" ServiceID="1816">
+          <Source RefID="2126"/>
+          <Source RefID="1248"/>
+        </Invoke>
+        <Receive ServiceID="1816">
+          <Target RefID="1818"/>
+        </Receive>
+      </Function>
+    </Foreach>
+    <Data ID="1199" Label="Sort Criteria Comparator" ReferenceName="Comparator" ReferencePath="base.list.comparator" VariableName="comparator1199">
+      <Source RefID="1196"/>
+    </Data>
+    <Data ID="2124" IsList="true" Label="Compare Children" ReferenceName="CompareChildren" ReferencePath="base.list.object" VariableName="compareChildren2124">
+      <Source RefID="252"/>
+    </Data>
+    <Data ID="2127" IsList="true" Label="Simple Compare Result" ReferenceName="SimpleCompareResult" ReferencePath="base.list.object" VariableName="simpleCompareResult2127">
+      <Source RefID="2125"/>
+      <Target RefID="2127"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="2127"/>
+      <Target RefID="1998"/>
+      <Copy>
+        <Source RefID="2127"/>
+        <Target RefID="1998"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

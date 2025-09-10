@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Validate Characteristics" TypeName="ValidateCharacteristics" TypePath="xfmg.tmf640.validation" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Validate Characteristics" Name="ValidateCharacteristics">
+    <Input>
+      <Data ID="647" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic647"/>
+      <Data ID="1621" IsList="true" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification1621"/>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="CharacteristicValueDoesNotMatchRegularExpression" ReferenceName="CharacteristicValueDoesNotMatchRegularExpression" ReferencePath="xfmg.tmf633" VariableName="characteristicValueDoesNotMatchRegularExpression8344"/>
+      <Exception Label="CharacteristicValueNotInEnumeration" ReferenceName="CharacteristicValueNotInEnumeration" ReferencePath="xfmg.tmf640" VariableName="characteristicValueNotInEnumeration8345"/>
+      <Exception Label="DuplicateCharacteristicFound" ReferenceName="DuplicateCharacteristicFound" ReferencePath="xfmg.tmf640" VariableName="duplicateCharacteristicFound8346"/>
+      <Exception Label="ExceededAllowedValueRange" ReferenceName="ExceededAllowedValueRange" ReferencePath="xfmg.tmf640" VariableName="exceededAllowedValueRange8347"/>
+      <Exception Label="InvalidCharacteristicsCardinality" ReferenceName="InvalidCharacteristicsCardinality" ReferencePath="xfmg.tmf640" VariableName="invalidCharacteristicsCardinality8348"/>
+      <Exception Label="Service Characteristic not found" ReferenceName="ServiceCharacteristicNotFound" ReferencePath="xfmg.tmf640" VariableName="serviceCharacteristicNotFound8349"/>
+      <Exception Label="UnexpectedCharacteristicsType" ReferenceName="UnexpectedCharacteristicsType" ReferencePath="xfmg.tmf640" VariableName="unexpectedCharacteristicsType8350"/>
+    </Throws>
+    <ServiceReference ID="907" Label="Validate Single Characteristic" ReferenceName="ValidateSingleCharacteristic" ReferencePath="xfmg.tmf640.validation">
+      <Source RefID="906"/>
+      <Target RefID="906"/>
+    </ServiceReference>
+    <ServiceReference ID="6810" Label="Get Characteristic by Spec" ReferenceName="GetCharacteristicBySpec" ReferencePath="xfmg.tmf640">
+      <Source RefID="6809"/>
+      <Target RefID="6809"/>
+    </ServiceReference>
+    <Foreach ID="7739">
+      <Source RefID="1621"/>
+      <InputList RefID="1621">
+        <Data ID="7740" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification7740"/>
+      </InputList>
+      <Choice ID="16" TypeName="BaseChoiceTypeFormula" TypePath="server">
+        <Source RefID="7740"/>
+        <Input>
+          <Data ID="2065" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification2065">
+            <Source RefID="16"/>
+          </Data>
+          <Source RefID="7740"/>
+        </Input>
+        <Case ID="17" Label="true" Premise="%0%!=null">
+          <Function ID="6809" Label="Get Characteristic by Spec">
+            <Source RefID="6810"/>
+            <Source RefID="647"/>
+            <Source RefID="7740"/>
+            <Target RefID="6810"/>
+            <Target RefID="6987"/>
+            <Invoke Operation="GetCharacteristicBySpec" ServiceID="6810">
+              <Source RefID="647"/>
+              <Source RefID="7740">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Invoke>
+            <Receive ServiceID="6810">
+              <Target RefID="6987"/>
+            </Receive>
+          </Function>
+          <Choice ID="1029" TypeName="BaseChoiceTypeFormula" TypePath="server">
+            <Source RefID="6987"/>
+            <Input>
+              <Data ID="1076" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic1076">
+                <Source RefID="1029"/>
+              </Data>
+              <Source RefID="6987">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Case ID="1030" Label="true" Premise="%0%!=null">
+              <Function ID="906" Label="Validate Single Characteristic">
+                <Source RefID="907"/>
+                <Source RefID="6987"/>
+                <Source RefID="7740"/>
+                <Target RefID="907"/>
+                <Invoke Operation="ValidateSingleCharacteristic" ServiceID="907">
+                  <Source RefID="6987">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                  <Source RefID="7740">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                </Invoke>
+                <Receive ServiceID="907"/>
+              </Function>
+              <Assign ID="1033"/>
+            </Case>
+            <Case ID="1031" Label="false">
+              <Assign ID="1035"/>
+            </Case>
+          </Choice>
+          <Assign ID="20"/>
+          <Data ID="6987" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic6987">
+            <Source RefID="6809"/>
+          </Data>
+        </Case>
+        <Case ID="18" Label="false">
+          <Assign ID="22"/>
+        </Case>
+      </Choice>
+    </Foreach>
+    <Assign ID="1"/>
+  </Operation>
+</Service>
