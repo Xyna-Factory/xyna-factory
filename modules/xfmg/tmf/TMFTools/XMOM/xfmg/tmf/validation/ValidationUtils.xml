@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Validation Utils" TypeName="ValidationUtils" TypePath="xfmg.tmf.validation" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Libraries>ValidationUtilsImpl.jar</Libraries>
+  <Libraries>accessors-smart-2.6.0.jar</Libraries>
+  <Libraries>asm-9.7.1.jar</Libraries>
+  <Libraries>json-path-2.9.0.jar</Libraries>
+  <Libraries>json-smart-2.6.0.jar</Libraries>
+  <Libraries>slf4j-api-1.7.36.jar</Libraries>
+  <Service Label="Validation Utils" TypeName="ValidationUtils">
+    <Operation IsStatic="true" Label="validate Constraints" Name="validateConstraints">
+      <Input>
+        <Data ID="2" Label="JSON" ReferenceName="Text" ReferencePath="base" VariableName="text2"/>
+        <Data ID="1" IsList="true" Label="Constraint" ReferenceName="Constraint" ReferencePath="xfmg.tmf.validation" VariableName="constraint1"/>
+      </Input>
+      <Output>
+        <Data ID="3" IsList="true" Label="Constraint Validation Result" ReferenceName="ConstraintValidationResult" ReferencePath="xfmg.tmf.validation" VariableName="constraintValidationResult3"/>
+      </Output>
+      <Meta>
+        <Documentation>returns all constraints that failed to validate</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">String json = text2.getText();
+    java.util.List&lt;ConstraintValidationResult&gt; result = new ArrayList&lt;&gt;();
+	com.jayway.jsonpath.DocumentContext ctx = com.jayway.jsonpath.JsonPath.parse(json);
+    for (Constraint c : constraint1) {
+      if (eval(ctx, c.getCondition()).success) {
+          EvalResult r = eval(ctx, c.getRule());
+          if (!r.success) {
+            result.add(new ConstraintValidationResult.Builder()
+                       .condition(c.getCondition())
+                       .rule(c.getRule())
+                       .ruleLeftResult(r.left)
+                       .ruleRightResult(r.right)
+                       .instance());
+          }
+      }
+    }
+    return result;
+  }
+  
+  private static class EvalResult {
+    public final String left;
+    public final String right;
+    public final boolean success;
+    public EvalResult(String left, String right, boolean success) {
+      this.left = left;
+      this.right = right;
+      this.success = success;
+    }
+    
+  }
+  
+  private static EvalResult eval(com.jayway.jsonpath.DocumentContext ctx, xfmg.tmf.validation.JSONPathExpression c) {
+    String comp = c.getComparator().trim();
+    boolean sizeLeft = comp.startsWith("size");
+    if (sizeLeft) {
+      comp = comp.substring(4).trim();
+    }
+	boolean sizeRight = comp.endsWith("size");
+	if (sizeRight) {
+	  comp = comp.substring(0, comp.length() - 4).trim();
+	}
+    String left = evalPathOrValue(ctx, c.getLeft(), sizeLeft);
+    String right = evalPathOrValue(ctx, c.getRight(), sizeRight);
+    if ("&lt;".equals(comp)) {
+      return new EvalResult(left, right, left != null &amp;&amp; right != null &amp;&amp; Double.valueOf(left) &lt; Double.valueOf(right));
+    } else if ("&gt;".equals(comp)) {
+      return new EvalResult(left, right, left != null &amp;&amp; right != null &amp;&amp; Double.valueOf(left) &gt; Double.valueOf(right));
+    } else if ("&lt;=".equals(comp)) {
+      return new EvalResult(left, right, left != null &amp;&amp; right != null &amp;&amp; Double.valueOf(left) &lt;= Double.valueOf(right));
+    } else if ("&gt;=".equals(comp)) {
+      return new EvalResult(left, right, left != null &amp;&amp; right != null &amp;&amp; Double.valueOf(left) &gt;= Double.valueOf(right));
+    } else if ("==".equals(comp)) {
+      return new EvalResult(left, right, left != null &amp;&amp; left.equals(right));
+    } else if ("!=".equals(comp)) {
+      return new EvalResult(left, right, left != null &amp;&amp; !left.equals(right));
+    } else if ("=~".equals(comp)) {
+      return new EvalResult(left, right, left != null &amp;&amp; left.matches(right));
+    }
+    throw new RuntimeException("Invalid Comparator &lt;" + comp + "&gt;"); 
+  }
+  
+  private static String evalPathOrValue(com.jayway.jsonpath.DocumentContext ctx, String path, boolean getSize) {
+    if (!path.startsWith("$.")) {
+      if (getSize) {
+        return String.valueOf(path.length());
+      } else {
+        return path;
+      }
+    }
+    Object o = ctx.read(path);
+    if (o instanceof List) {
+      List l = (List) o;
+      if (getSize) {
+        return String.valueOf(l.size());
+      }
+      if (l.size() == 0) {
+        return null;
+      }
+      Object e = l.get(0);
+      if (e == null) {
+        return null;
+      }
+      if (e instanceof String) {
+        return (String)e;
+      }
+      return e.toString();
+    } else {
+        String val;
+        if (o instanceof String) {      
+            val = (String)o;
+        } else {
+            val = o.toString();
+        }
+        if (getSize) {
+            return String.valueOf(val.length());
+        } else {
+            return val;
+        }
+    }
+    
+  }
+
+static {</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="validate Constraints V2" Name="validateConstraintsV2" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="5" Label="JSON" ReferenceName="Text" ReferencePath="base" VariableName="text5"/>
+        <Data ID="6" IsList="true" Label="ConstraintV2" ReferenceName="ConstraintV2" ReferencePath="xfmg.tmf.validation" VariableName="constraintV26"/>
+      </Input>
+      <Output>
+        <Data ID="7" IsList="true" Label="Constraint Validation Result V2" ReferenceName="ConstraintValidationResultV2" ReferencePath="xfmg.tmf.validation" VariableName="constraintValidationResultV27"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.tmf.validation.ValidationUtilsImpl.validateConstraintsV2(correlatedXynaOrder, text5, constraintV26);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="validate Allowed Changes" Name="validateAllowedChanges">
+      <Input>
+        <Data ID="8" Label="AllowedChanges" ReferenceName="AllowedChanges" ReferencePath="tmf633.datamodel" VariableName="allowedChanges8"/>
+        <Data ID="9" Label="JSON1" ReferenceName="Text" ReferencePath="base" VariableName="text9"/>
+        <Data ID="10" Label="JSON2" ReferenceName="Text" ReferencePath="base" VariableName="text10"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="11" Label="Not An Allowed Change" ReferenceName="NotAnAllowedChange" ReferencePath="xfmg.tmf640.validation" VariableName="notAnAllowedChange11"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.tmf.validation.ValidationUtilsImpl.validateAllowedChanges(allowedChanges8, text9, text10);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

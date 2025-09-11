@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="JSONPathExpressionV2" TypeName="JSONPathExpressionV2" TypePath="xfmg.tmf.validation" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data IsList="true" Label="json Paths" VariableName="jsonPaths">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="expression" VariableName="expression">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>
+        <![CDATA[Expression to evaluate:
+Syntax:
+expression ::= "(" expression ")" |
+                        function "(" expression ("," expression)* ")" |
+                        value |
+                        expression infix expression |
+						pathref
+function ::= builtin | userdefined
+builtin ::= "EVAL" | "LEN" | "NOT" | "CONCAT" | "PROPERTY" | "ISNULL" | "MATCH"
+infix ::= "+" | "-" | "*" | "/" | "&gt;" | "&lt;" | "&gt;=" | "&lt;=" | "==" | "!=" | "=~" | "~=" | "AND" | "&amp;&amp;" | "OR" | "||" 
+value ::= "\"" string "\"" | number | "true" | "false"
+pathref ::= "$" integer
+
+Quotations and backslashes in strings have to be escaped with backslash
+number can be float (i.e. negative and with negative exponent. Example: -3.4e-4)
+
+EVAL([&lt;json&gt;, ] pathref)
+EVAL expects either one argument as pathref ($n referring to the n-th entry of the list of json paths) or a json as an additional first argument. If no json is provided, the default json is used to evaluate the expression.
+
+LEN returns the length of the argument, either length of array or length of string.
+
+NOT negates the argument, assuming it is of type (or convertable to) boolean
+
+CONCAT concatenates all arguments as strings
+
+PROPERTY&lt;propertyName&gt;[, &lt;defaultValue&gt;])
+PROPERTY returns the value of the xyna property given by the first argument. A second argument is optional for the default value to be returned if the property is not set (or null).
+
+ISNULL(&lt;value&gt;, &lt;substitution value&gt;)
+ISNULL replaces the value with the substitution value if the value is null.
+
+MATCH(&lt;value&gt;, &lt;regex&gt;)
+Matches the value against the regular expression, returns true or false.
+Is the same as 
+&lt;value&gt; =~ &lt;regex&gt;
+and 
+&lt;regex&gt; ~= &lt;value&gt;
+
+Operator precedence of infix functions: ("(",")") (*/) (+-) (&gt;,...) (==,!=,~=,=~) (AND,&amp;&amp;) (OR,||)
+
+Using AND/OR/&amp;&amp;/|| the second Argument is evaluated lazily.
+
+Userdefined functions can be integrated via workflows: Define workflows in the package given by the xyna property xfmg.tmf.validation.constraint.function.package. Their simple name is then the name of the function that can be used in expressions. The workflow has to have a single base.Text output and either 1-4 base.Text inputs or a base.Text list as input. The workflow has to be reachable via runtime context dependencies from the root order context of the order evaluating the expression.
+]]>
+      </Documentation>
+    </Meta>
+  </Data>
+</DataType>

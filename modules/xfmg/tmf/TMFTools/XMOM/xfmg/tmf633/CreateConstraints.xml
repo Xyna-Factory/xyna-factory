@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Create Constraints" TypeName="CreateConstraints" TypePath="xfmg.tmf633" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Create Constraints" Name="CreateConstraints">
+    <Input>
+      <Data ID="2" Label="Spec Generator Context" ReferenceName="SpecGeneratorContext" ReferencePath="xfmg.tmf633" VariableName="specGeneratorContext2"/>
+      <Data ID="7" Label="HashMap" ReferenceName="HashMap" ReferencePath="xprc.base.list" VariableName="hashMap7"/>
+      <Data ID="854" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector854"/>
+    </Input>
+    <Output>
+      <Data ID="89" IsList="true" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="constraint89"/>
+    </Output>
+    <ServiceReference ID="1085" Label="Create Constraints" ReferenceName="CreateConstraints" ReferencePath="xfmg.tmf633">
+      <Source RefID="1084"/>
+      <Target RefID="1084"/>
+    </ServiceReference>
+    <ServiceReference ID="1134" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="1133"/>
+      <Target RefID="1133"/>
+    </ServiceReference>
+    <ServiceReference ID="216" Label="JSON Datamodel Services" ReferenceName="JSONDatamodelServices.JSONDatamodelServices" ReferencePath="xfmg.xfctrl.datamodel.json">
+      <Source RefID="215"/>
+      <Target RefID="215"/>
+    </ServiceReference>
+    <ServiceReference ID="1433" Label="Get Meta Tags Of Datatype As Map" ReferenceName="GetMetaTagsOfDatatypeAsMap" ReferencePath="xfmg.tmf.inspect">
+      <Source RefID="1432"/>
+      <Target RefID="1432"/>
+    </ServiceReference>
+    <ServiceReference ID="815" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="814"/>
+      <Target RefID="814"/>
+    </ServiceReference>
+    <Mappings ID="130" Label="Mapping">
+      <Input>
+        <Data ID="153" Label="HashMap" ReferenceName="HashMap" ReferencePath="xprc.base.list" VariableName="hashMap153">
+          <Source RefID="130"/>
+        </Data>
+        <Source RefID="7"/>
+      </Input>
+      <Output>
+        <Data ID="277" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document277">
+          <Source RefID="130"/>
+        </Data>
+        <Target RefID="278"/>
+      </Output>
+      <Mapping>%1%.text=%0%.getr("TMFConstraints")</Mapping>
+    </Mappings>
+    <Function ID="215" Label="Parse List from JSON">
+      <Source RefID="216"/>
+      <Source RefID="278"/>
+      <Source RefID="768"/>
+      <Target RefID="216"/>
+      <Target RefID="220"/>
+      <Invoke Operation="parseListFromJSON" ServiceID="216">
+        <Source RefID="278"/>
+        <Source RefID="768">
+          <Meta>
+            <LinkType>Constant</LinkType>
+            <ExpectedType>tmf633.datamodel.Constraint</ExpectedType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="216">
+        <Target RefID="220">
+          <Meta>
+            <ExpectedType>tmf633.datamodel.Constraint</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
+    <Function ID="814" Label="Get Supertype">
+      <Source RefID="815"/>
+      <Source RefID="854"/>
+      <Target RefID="815"/>
+      <Target RefID="817"/>
+      <Invoke Operation="getSupertype" ServiceID="815">
+        <Source RefID="854"/>
+      </Invoke>
+      <Receive ServiceID="815">
+        <Target RefID="817"/>
+      </Receive>
+    </Function>
+    <Choice ID="895" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="817"/>
+      <Target RefID="1709"/>
+      <Input>
+        <Data ID="938" Label="Supertype" ReferenceName="Text" ReferencePath="base" VariableName="text938">
+          <Source RefID="895"/>
+        </Data>
+        <Source RefID="817"/>
+      </Input>
+      <Case ID="896" Label="true" Premise="%0%!=null">
+        <Function ID="1133" Label="Inspect Datatype by Name">
+          <Source RefID="1134"/>
+          <Source RefID="817"/>
+          <Target RefID="1134"/>
+          <Target RefID="1136"/>
+          <Invoke Operation="inspectDatatypeByName" ServiceID="1134">
+            <Source RefID="817"/>
+          </Invoke>
+          <Receive ServiceID="1134">
+            <Target RefID="1136"/>
+          </Receive>
+        </Function>
+        <Function ID="1432" Label="Get Meta Tags Of Datatype As Map">
+          <Source RefID="1433"/>
+          <Source RefID="1136"/>
+          <Target RefID="1433"/>
+          <Target RefID="1435"/>
+          <Invoke Operation="GetMetaTagsOfDatatypeAsMap" ServiceID="1433">
+            <Source RefID="1136">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="1433">
+            <Target RefID="1435"/>
+          </Receive>
+        </Function>
+        <Function ID="1084" Label="Create Constraints">
+          <Source RefID="1085"/>
+          <Source RefID="2"/>
+          <Source RefID="1435"/>
+          <Source RefID="1136"/>
+          <Target RefID="1085"/>
+          <Target RefID="1087"/>
+          <Invoke Operation="CreateConstraints" ServiceID="1085">
+            <Source RefID="2"/>
+            <Source RefID="1435">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+            <Source RefID="1136">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="1085">
+            <Target RefID="1087"/>
+          </Receive>
+        </Function>
+        <Mappings ID="2053" Label="Mapping">
+          <Input>
+            <Data ID="2114" IsList="true" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="constraint2114">
+              <Source RefID="2053"/>
+            </Data>
+            <Source RefID="220">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Input>
+            <Data ID="2175" IsList="true" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="constraint2175">
+              <Source RefID="2053"/>
+            </Data>
+            <Source RefID="1087">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="2284" IsList="true" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="constraint2284">
+              <Source RefID="2053"/>
+            </Data>
+            <Target RefID="2285"/>
+          </Output>
+          <Mapping>%2%=concatlists(%0%, %1%)</Mapping>
+        </Mappings>
+        <Assign ID="899">
+          <Source RefID="2285"/>
+          <Target RefID="1709"/>
+          <Copy>
+            <Source RefID="2285"/>
+            <Target RefID="1709"/>
+          </Copy>
+        </Assign>
+        <Data ID="1087" IsList="true" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="constraint1087">
+          <Source RefID="1084"/>
+        </Data>
+        <Data ID="1136" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector1136">
+          <Source RefID="1133"/>
+        </Data>
+        <Data ID="1435" Label="HashMap" ReferenceName="HashMap" ReferencePath="xprc.base.list" VariableName="hashMap1435">
+          <Source RefID="1432"/>
+        </Data>
+      </Case>
+      <Case ID="897" Label="false">
+        <Mappings ID="1640" Label="Mapping">
+          <Input>
+            <Data ID="1764" IsList="true" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="constraint1764">
+              <Source RefID="1640"/>
+            </Data>
+            <Source RefID="220"/>
+          </Input>
+          <Output>
+            <Data ID="1701" IsList="true" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="constraint1701">
+              <Source RefID="1640"/>
+            </Data>
+            <Target RefID="1702"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign ID="901">
+          <Source RefID="1702"/>
+          <Target RefID="1709"/>
+          <Copy>
+            <Source RefID="1702"/>
+            <Target RefID="1709"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="220" IsList="true" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="constraint220"/>
+    <Data ID="278" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document278">
+      <Source RefID="130"/>
+    </Data>
+    <Data ID="768" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="const_Constraint768"/>
+    <Data ID="817" Label="Supertype" ReferenceName="Text" ReferencePath="base" VariableName="text817">
+      <Source RefID="814"/>
+    </Data>
+    <Data ID="1702" IsList="true" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="constraint1702">
+      <Source RefID="1640"/>
+    </Data>
+    <Data ID="1709" IsList="true" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="constraint1709">
+      <Source RefID="895"/>
+    </Data>
+    <Data ID="2285" IsList="true" Label="Constraint" ReferenceName="Constraint" ReferencePath="tmf633.datamodel" VariableName="constraint2285">
+      <Source RefID="2053"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="1709"/>
+      <Target RefID="89"/>
+      <Copy>
+        <Source RefID="1709">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="89"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

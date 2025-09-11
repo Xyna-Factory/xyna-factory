@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
   <Libraries>ApplicationGenerationImpl.jar</Libraries>
+  <SharedLibraries>ZetaTools</SharedLibraries>
   <SharedLibraries>xyna-openapi</SharedLibraries>
   <Service Label="Application Generation" TypeName="ApplicationGeneration">
     <Meta>
@@ -41,10 +42,44 @@
       <Input>
         <Data ID="2" Label="Application Generation Parameter" ReferenceName="ApplicationGenerationParameter" ReferencePath="xfmg.oas.generation" VariableName="applicationGenerationParameter2"/>
         <Data ID="3" Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId3"/>
+        <Data ID="11" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory11"/>
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">xfmg.oas.generation.ApplicationGenerationImpl.generateApplicationByManagedFileID(correlatedXynaOrder, applicationGenerationParameter2, managedFileId3);</CodeSnippet>
+        <CodeSnippet Type="Java">xfmg.oas.generation.ApplicationGenerationImpl.generateApplicationByManagedFileID(correlatedXynaOrder, applicationGenerationParameter2, managedFileId3, oAS_ImportHistory11);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Query Oas Import History" Name="queryOasImportHistory">
+      <Input>
+        <Data ID="6" Label="Table Info" ReferenceName="TableInfo" ReferencePath="xmcp.tables.datatypes" VariableName="tableInfo6"/>
+      </Input>
+      <Output>
+        <Data ID="5" IsList="true" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory5"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.oas.generation.ApplicationGenerationImpl.queryOasImportHistory(tableInfo6);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Store Oas Import History" Name="storeOasImportHistory">
+      <Input>
+        <Data ID="7" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory7"/>
+      </Input>
+      <Output>
+        <Data ID="10" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory10"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.oas.generation.ApplicationGenerationImpl.storeOasImportHistory(oAS_ImportHistory7);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Query Oas Import History Details" Name="queryOasImportHistoryDetails">
+      <Input>
+        <Data ID="8" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory8"/>
+      </Input>
+      <Output>
+        <Data ID="9" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory9"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.oas.generation.ApplicationGenerationImpl.queryOasImportHistoryDetails(oAS_ImportHistory8);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

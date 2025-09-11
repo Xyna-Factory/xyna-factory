@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Transform External Identifier" TypeName="TransformExternalIdentifier" TypePath="xfmg.tmf640" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Transform External Identifier" Name="TransformExternalIdentifier">
+    <Input>
+      <Data ID="2" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember2"/>
+      <Data ID="7" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable7"/>
+    </Input>
+    <Output>
+      <Data ID="43" Label="ExternalIdentifier" ReferenceName="ExternalIdentifier" ReferencePath="tmf640.datamodel" VariableName="externalIdentifier43"/>
+    </Output>
+    <Mappings ID="25" Label="Mapping">
+      <Input>
+        <Data ID="72" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable72">
+          <Source RefID="25"/>
+        </Data>
+        <Source RefID="7"/>
+      </Input>
+      <Input>
+        <Data ID="113" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember113">
+          <Source RefID="25"/>
+        </Data>
+        <Source RefID="2"/>
+      </Input>
+      <Output>
+        <Data ID="12" Label="ExternalIdentifier" ReferenceName="ExternalIdentifier" ReferencePath="tmf640.datamodel" VariableName="externalIdentifier12"/>
+        <Target RefID="34"/>
+      </Output>
+      <Mapping>%2%.name=%0%.tMFExternalIdentifierSpecAnnotations.name</Mapping>
+      <Mapping>%2%.id=%1%.getMemberValue()</Mapping>
+      <Mapping>%2%.attype="ExternalIdentifier"</Mapping>
+    </Mappings>
+    <Data ID="34" Label="ExternalIdentifier" ReferenceName="ExternalIdentifier" ReferencePath="tmf640.datamodel" VariableName="externalIdentifier34"/>
+    <Assign ID="1">
+      <Source RefID="34"/>
+      <Target RefID="43"/>
+      <Copy>
+        <Source RefID="34"/>
+        <Target RefID="43"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

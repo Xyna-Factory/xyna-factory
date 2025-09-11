@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Extract Annotations Of Member" TypeName="ExtractAnnotationsOfMember" TypePath="xfmg.tmf.inspect" Version="1.8">
+  <Meta>
+    <Documentation>Statt jedes Meta Tag per Filter zu suchen, wäre eine "Map" Implementierung sinnvoller</Documentation>
+  </Meta>
+  <Operation ID="0" IsStatic="false" Label="Extract Annotations Of Member" Name="ExtractAnnotationsOfMember">
+    <Input>
+      <Data ID="2" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember2"/>
+    </Input>
+    <Output>
+      <Data ID="7" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable7"/>
+    </Output>
+    <ServiceReference ID="565" Label="HashMap" ReferenceName="HashMap.HashMap" ReferencePath="xprc.base.list">
+      <Source RefID="564"/>
+      <Target RefID="564"/>
+    </ServiceReference>
+    <Mappings ID="127" Label="Mapping">
+      <Input>
+        <Data ID="178" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember178">
+          <Source RefID="127"/>
+        </Data>
+        <Source RefID="2"/>
+      </Input>
+      <Output>
+        <Data ID="144" IsList="true" Label="Meta tag" ReferenceName="MetaTag" ReferencePath="xprc.xpce.datatype" VariableName="metaTag144">
+          <Source RefID="127"/>
+        </Data>
+        <Target RefID="145"/>
+      </Output>
+      <Mapping>%1%=%0%.metaTags</Mapping>
+    </Mappings>
+    <Mappings ID="609" Label="Mapping">
+      <Output>
+        <Data ID="652" Label="HashMap" ReferenceName="HashMap" ReferencePath="xprc.base.list" VariableName="hashMap652">
+          <Source RefID="609"/>
+        </Data>
+        <Target RefID="653"/>
+      </Output>
+    </Mappings>
+    <Foreach ID="1009">
+      <Source RefID="145"/>
+      <InputList RefID="145">
+        <Data ID="1010" Label="Meta tag" ReferenceName="MetaTag" ReferencePath="xprc.xpce.datatype" VariableName="metaTag1010"/>
+      </InputList>
+      <Choice ID="739" TypeName="BaseChoiceTypeFormula" TypePath="server">
+        <Source RefID="1010"/>
+        <Input>
+          <Data ID="915" Label="Meta tag" ReferenceName="MetaTag" ReferencePath="xprc.xpce.datatype" VariableName="metaTag915">
+            <Source RefID="739"/>
+          </Data>
+          <Source RefID="1010"/>
+        </Input>
+        <Case ID="740" Label="true" Premise="%0%!=null">
+          <Mappings ID="696" Label="Mapping">
+            <Input>
+              <Data ID="872" Label="Meta tag" ReferenceName="MetaTag" ReferencePath="xprc.xpce.datatype" VariableName="metaTag872">
+                <Source RefID="696"/>
+              </Data>
+              <Source RefID="1010">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Output>
+              <Data ID="1164" Label="Key" ReferenceName="Text" ReferencePath="base" VariableName="text1164">
+                <Source RefID="696"/>
+              </Data>
+              <Target RefID="1165"/>
+            </Output>
+            <Output>
+              <Data ID="1208" Label="Value" ReferenceName="Text" ReferencePath="base" VariableName="text1208">
+                <Source RefID="696"/>
+              </Data>
+              <Target RefID="1209"/>
+            </Output>
+            <Mapping>%1%.text=%0%.name</Mapping>
+            <Mapping>%2%.text=%0%.value</Mapping>
+          </Mappings>
+          <Function ID="564" Label="put">
+            <Source RefID="565"/>
+            <Source RefID="653"/>
+            <Source RefID="1165"/>
+            <Source RefID="1209"/>
+            <Target RefID="565"/>
+            <Invoke Operation="put" ServiceID="565">
+              <Source RefID="653"/>
+              <Source RefID="1165">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+              <Source RefID="1209">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Invoke>
+            <Receive ServiceID="565"/>
+          </Function>
+          <Assign ID="743"/>
+        </Case>
+        <Case ID="741" Label="false">
+          <Assign ID="745"/>
+        </Case>
+      </Choice>
+      <Data ID="1165" Label="Key" ReferenceName="Text" ReferencePath="base" VariableName="text1165">
+        <Source RefID="696"/>
+      </Data>
+      <Data ID="1209" Label="Value" ReferenceName="Text" ReferencePath="base" VariableName="text1209">
+        <Source RefID="696"/>
+      </Data>
+    </Foreach>
+    <Mappings ID="24" Label="Mapping">
+      <Input>
+        <Data ID="59" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember59">
+          <Source RefID="24"/>
+        </Data>
+        <Source RefID="2"/>
+      </Input>
+      <Input>
+        <Data ID="1798" Label="HashMap" ReferenceName="HashMap" ReferencePath="xprc.base.list" VariableName="hashMap1798">
+          <Source RefID="24"/>
+        </Data>
+        <Source RefID="653"/>
+      </Input>
+      <Output>
+        <Data ID="33" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable33">
+          <Source RefID="24"/>
+        </Data>
+        <Target RefID="34"/>
+      </Output>
+      <Mapping>%2%.tMFCharacteristicSpecAnnotations.defaultValue=%1%.getr("TMFCharValueDefault")</Mapping>
+      <Mapping>%2%.tMFCharacteristicSpecAnnotations.maxCardinality=%1%.getr("TMFCharMaxCardinality")</Mapping>
+      <Mapping>%2%.tMFCharacteristicSpecAnnotations.minCardinality=%1%.getr("TMFCharMinCardinality")</Mapping>
+      <Mapping>%2%.tMFCharacteristicSpecAnnotations.regex=%1%.getr("TMFCharValueRegex")</Mapping>
+      <Mapping>%2%.tMFCharacteristicSpecAnnotations.valueEnumeration=%1%.getr("TMFCharValueEnums")</Mapping>
+      <Mapping>%2%.tMFCharacteristicSpecAnnotations.valueFrom=%1%.getr("TMFCharValueFrom")</Mapping>
+      <Mapping>%2%.tMFCharacteristicSpecAnnotations.valueTo0=%1%.getr("TMFCharValueTo")</Mapping>
+      <Mapping>%2%.tMFExternalIdentifierSpecAnnotations.name=%1%.getr("TMFExternalIdentifierName")</Mapping>
+      <Mapping>%2%.tMFPartyRelationshipSpecAnnotations.id=%1%.getr("TMFRelatedPartyId")</Mapping>
+      <Mapping>%2%.tMFPartyRelationshipSpecAnnotations.partyType=%1%.getr("TMFRelatedPartyType")</Mapping>
+      <Mapping>%2%.tMFResourceSpecAnnotations.property=%1%.getr("TMFResourceRefProperty")</Mapping>
+      <Mapping>%2%.tMFResourceSpecAnnotations.referredType=%1%.getr("TMFResourceReferredType")</Mapping>
+      <Mapping>%2%.tMFResourceSpecAnnotations.resourceRefId=%1%.getr("TMFResourceRefId")</Mapping>
+      <Mapping>%2%.tMFServicePropertyAnnotations.propertyName=%1%.getr("TMFServicePropertyName")</Mapping>
+      <Mapping>%2%.tMFServiceReferenceSpecAnnotations.id=%1%.getr("TMFServiceRefId")</Mapping>
+      <Mapping>%2%.tMFServiceReferenceSpecAnnotations.referencedServiceName=%1%.getr("TMFServiceRefServiceName")</Mapping>
+      <Mapping>%2%.tMFServiceReferenceSpecAnnotations.role=%1%.getr("TMFServiceRefRole")</Mapping>
+      <Mapping>%2%.tMFServiceReferenceSpecAnnotations.useParentServiceId=tolowercase(%1%.getr("TMFServiceRefUseParentId"))=="true"</Mapping>
+      <Mapping>%2%.tMFType=%1%.getr("TMFType")</Mapping>
+    </Mappings>
+    <Choice ID="2007" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="34"/>
+      <Target RefID="2311"/>
+      <Input>
+        <Data ID="2030" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable2030">
+          <Source RefID="2007"/>
+        </Data>
+        <Source RefID="34"/>
+      </Input>
+      <Case ID="2008" Label="true" Premise="%0%.tMFCharacteristicSpecAnnotations.valueEnumeration==null&amp;&amp;%0%.tMFCharacteristicSpecAnnotations.defaultValue!=null">
+        <Mappings ID="2095" Label="Mapping">
+          <Input>
+            <Data ID="2112" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable2112">
+              <Source RefID="2095"/>
+            </Data>
+            <Source RefID="34"/>
+          </Input>
+          <Output>
+            <Data ID="2129" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable2129">
+              <Source RefID="2095"/>
+            </Data>
+            <Target RefID="2130"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+          <Mapping>%1%.tMFCharacteristicSpecAnnotations.valueEnumeration=%0%.tMFCharacteristicSpecAnnotations.defaultValue</Mapping>
+        </Mappings>
+        <Assign ID="2011">
+          <Source RefID="2130"/>
+          <Target RefID="2311"/>
+          <Copy>
+            <Source RefID="2130"/>
+            <Target RefID="2311"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="2009" Label="false">
+        <Mappings ID="2275" Label="Mapping">
+          <Input>
+            <Data ID="2292" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable2292">
+              <Source RefID="2275"/>
+            </Data>
+            <Source RefID="34"/>
+          </Input>
+          <Output>
+            <Data ID="2309" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable2309">
+              <Source RefID="2275"/>
+            </Data>
+            <Target RefID="2310"/>
+          </Output>
+          <Mapping>%1%=%0%</Mapping>
+        </Mappings>
+        <Assign ID="2013">
+          <Source RefID="2310"/>
+          <Target RefID="2311"/>
+          <Copy>
+            <Source RefID="2310"/>
+            <Target RefID="2311"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="34" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable34">
+      <Source RefID="24"/>
+    </Data>
+    <Data ID="145" IsList="true" Label="Meta tag" ReferenceName="MetaTag" ReferencePath="xprc.xpce.datatype" VariableName="metaTag145">
+      <Source RefID="127"/>
+    </Data>
+    <Data ID="653" Label="HashMap" ReferenceName="HashMap" ReferencePath="xprc.base.list" VariableName="hashMap653">
+      <Source RefID="609"/>
+    </Data>
+    <Data ID="2130" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable2130">
+      <Source RefID="2095"/>
+    </Data>
+    <Data ID="2310" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable2310">
+      <Source RefID="2275"/>
+    </Data>
+    <Data ID="2311" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable2311">
+      <Source RefID="2007"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="2311"/>
+      <Target RefID="7"/>
+      <Copy>
+        <Source RefID="2311">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="7"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
