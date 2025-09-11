@@ -5,6 +5,7 @@ info:
     ## Description
     TMF633 based service catalog API.
     ### Change History
+     + 10.09.2025 (1.1.15): Version bump because Xyna installer doesnt support letters in versions
      + 15.07.2025 (1.1.14a): Change of version because of usage of new OAS Base Application 1.7.2
      + 10.06.2025 (1.1.14): Added ignored list to allowed changes.
      + 19.05.2025 (1.1.13): Added objects for new type of constraints: Allowed changes
@@ -18,7 +19,7 @@ info:
      + 23.07.2024 (1.1.6): Constraints, deleted examples
      + 15.07.2024 (1.1.5): Set x-provider-path and x-client-path
      + 08.07.2024 (1.1.3): Subclasses for CharacteristicValueSpecification added (ported from v5)
-  version: 1.1.14a
+  version: 1.1.15
   x-api-category: G-API
   x-segment:
     - B2B
