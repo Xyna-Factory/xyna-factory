@@ -93,7 +93,7 @@
       <Mapping>%2%.tableWorkflowFQN="xmcp.oas.fman.OASImportTableInfo"</Mapping>
       <Mapping>%2%.triggerRefresh.eventId="oas_imp_hist_refresh"</Mapping>
       <Mapping>%2%.tableWorkflowRTC=%1%</Mapping>
-      <Mapping>%2%.label="OAS Import History"</Mapping>
+      <Mapping>%2%.label="Import History"</Mapping>
     </Mappings>
     <Mappings ID="16274" Label="Mapping">
       <Input>
@@ -117,7 +117,7 @@
       <Mapping>%2%.closable="true"</Mapping>
       <Mapping>%2%.children["0"]=%1%</Mapping>
       <Mapping>%2%.children["1"]=%0%</Mapping>
-      <Mapping>%2%.label="Import History"</Mapping>
+      <Mapping>%2%.label="OAS Import History"</Mapping>
     </Mappings>
     <Data ID="2275" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition2275">
       <Source RefID="2265"/>
