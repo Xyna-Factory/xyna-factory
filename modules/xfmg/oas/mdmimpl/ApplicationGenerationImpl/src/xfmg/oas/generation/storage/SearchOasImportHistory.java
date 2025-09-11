@@ -18,7 +18,9 @@
 
 package xfmg.oas.generation.storage;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.gip.xyna.xnwh.persistence.ODSConnection;
@@ -26,11 +28,13 @@ import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.persistence.PreparedQuery;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoException;
 
-import xfmg.oas.generation.storage.filter.FilterColumnConfig;
-import xfmg.oas.generation.storage.filter.TableFilter;
-import xfmg.oas.generation.storage.filter.TableFilterBuilder;
 import xmcp.oas.fman.storables.OAS_ImportHistory;
+import xmcp.tables.datatypes.TableColumn;
 import xmcp.tables.datatypes.TableInfo;
+import xmcp.zeta.storage.generic.filter.FilterColumnConfig;
+import xmcp.zeta.storage.generic.filter.FilterColumnInput;
+import xmcp.zeta.storage.generic.filter.TableFilter;
+import xmcp.zeta.storage.generic.filter.TableFilterBuilder;
 
 
 public class SearchOasImportHistory implements WarehouseRetryExecutableNoException<List<OAS_ImportHistory>> {
@@ -60,7 +64,12 @@ public class SearchOasImportHistory implements WarehouseRetryExecutableNoExcepti
   
   public SearchOasImportHistory(TableInfo info) {
     super();
-    this.filter = _filterBuilder.build(info);
+    List<FilterColumnInput> adaptedColumns = new ArrayList<>();
+    for (TableColumn tc : info.getColumns()) {
+      adaptedColumns.add(adapt(tc));
+    }
+    Function<String, String> escape = (x -> "`" + x + "`");
+    this.filter = _filterBuilder.build(adaptedColumns, escape);
   }
 
 
@@ -75,7 +84,14 @@ public class SearchOasImportHistory implements WarehouseRetryExecutableNoExcepti
   
   
   private String getQuerySql() {
-    return SELECT_BASE + filter.buildWhereClause();
+    return SELECT_BASE + filter.getWhereClause();
+  }
+  
+  private FilterColumnInput adapt(TableColumn tc) {
+    FilterColumnInput ret = new FilterColumnInput();
+    ret.setFilter(tc.getFilter());
+    ret.setPath(tc.getPath());
+    return ret;
   }
   
 }
