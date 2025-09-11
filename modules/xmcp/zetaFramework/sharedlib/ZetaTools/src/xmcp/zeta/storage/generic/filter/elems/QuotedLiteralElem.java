@@ -27,6 +27,7 @@ public class QuotedLiteralElem extends RelationalOperandElem {
   
   
   public QuotedLiteralElem(String input) {
+    if (input == null) { throw new IllegalArgumentException("QuotedLiteralElem: Content is null."); }
     this._content = input;
   }
   

@@ -564,7 +564,7 @@ public class TestFilterInputParser {
   
   public static void main(String[] args) {
     try {
-      new TestFilterInputParser().testQuotes2();
+      new TestFilterInputParser().testSql1();
     }
     catch (Throwable e) {
       e.printStackTrace();

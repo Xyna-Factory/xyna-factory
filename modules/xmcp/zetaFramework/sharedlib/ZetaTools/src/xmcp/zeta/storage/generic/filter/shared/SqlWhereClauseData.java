@@ -49,6 +49,8 @@ public class SqlWhereClauseData {
   }
   
   public void addQueryParameter(String param) {
+    if (param == null) { throw new IllegalArgumentException("Query parameter is null."); }
+    if (param.isEmpty()) { throw new IllegalArgumentException("Query parameter is empty."); }
     parameters.add(param);
   }
   

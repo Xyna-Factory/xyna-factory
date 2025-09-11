@@ -29,6 +29,7 @@ public class LiteralElem extends RelationalOperandElem {
   
   
   public LiteralElem(String input) {
+    if (input == null) { throw new IllegalArgumentException("LiteralElem: Content is null."); }
     this._content = input;
     _isNumerical = FilterInputConstants.NUMERICAL_PATTERN.matcher(_content).matches();
   }
