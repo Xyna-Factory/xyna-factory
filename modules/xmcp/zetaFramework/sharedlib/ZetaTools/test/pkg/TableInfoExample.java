@@ -133,6 +133,8 @@ public class TableInfoExample {
     List<FilterColumnConfig> configList = new ArrayList<>();
     
     for (TableColumn tc : tableInfo.getColumns()) {
+      if (tc.getFilter() == null) { continue; }
+      if (tc.getFilter().isEmpty()) { continue; }
       FilterColumnConfig fcc = colConfigMap.get(tc.getPath());
       if (fcc != null) {
         adaptedColumns.add(adapt(tc));
