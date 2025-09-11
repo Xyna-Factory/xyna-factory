@@ -71,8 +71,7 @@ public class OasImportHistoryStorage {
   
   public OAS_ImportHistory storeOasImportHistory(OAS_ImportHistory input) throws PersistenceLayerException {
     StoreOasImportHistory soih = new StoreOasImportHistory(input);
-    buildExecutor().execute(soih);
-    return soih.getStorable();
+    return buildExecutor().execute(soih);
   }
   
 }

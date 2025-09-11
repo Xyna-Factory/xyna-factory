@@ -21,12 +21,12 @@ package xfmg.oas.generation.storage;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xnwh.persistence.ODSConnection;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
-import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoResult;
+import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoException;
 
 import xmcp.oas.fman.storables.OAS_ImportHistory;
 
 
-public class StoreOasImportHistory implements WarehouseRetryExecutableNoResult {
+public class StoreOasImportHistory implements WarehouseRetryExecutableNoException<OAS_ImportHistory> {
 
   private static final OasImportHistoryAdapter _adapter = new OasImportHistoryAdapter();
   private OAS_ImportHistory _input;
@@ -39,17 +39,13 @@ public class StoreOasImportHistory implements WarehouseRetryExecutableNoResult {
 
 
   @Override
-  public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
+  public OAS_ImportHistory executeAndCommit(ODSConnection con) throws PersistenceLayerException {
     if (_input.getUniqueIdentifier() <= 0) {
       _input.setUniqueIdentifier(XynaFactory.getInstance().getIDGenerator().getUniqueId());
     }
     OasImportHistoryStorable storable = _adapter.adapt(_input);
     con.persistObject(storable);
-  }
-
-
-  public OAS_ImportHistory getStorable() {
     return _input;
   }
-  
+
 }
