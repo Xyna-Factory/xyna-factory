@@ -45,7 +45,7 @@ public interface FilterElement {
   
   
   public default void writeTreeInfoElem(String branch, StringBuilder str) {
-    str.append(branch + " : " + this.getInfoString()).append("\n");
+    str.append(branch).append(" : ").append(this.getInfoString()).append("\n");
     int i = 0;
     while (true) {
       Optional<FilterElement> child = this.getChild(i);
