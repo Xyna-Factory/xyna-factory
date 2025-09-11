@@ -1080,7 +1080,7 @@ public class HTTPTriggerConnection extends TriggerConnection {
 
 
   public String getMethod() {
-    return methodEnum.name();
+    return methodEnum == null ? null : methodEnum.name();
   }
   
   public Method getMethodEnum() {
