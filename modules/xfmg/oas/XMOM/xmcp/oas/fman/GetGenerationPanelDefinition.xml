@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Generation Panel Definition" TypeName="GetGenerationPanelDefinition" TypePath="xmcp.oas.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Get Generation Panel Definition" Name="GetGenerationPanelDefinition">
+    <Input/>
+    <Output>
+      <Data ID="6640" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition6640"/>
+      <Data ID="903" IsList="true" Label="Key Value - applications" ReferenceName="KeyValue" ReferencePath="base" VariableName="keyValue903"/>
+      <Data ID="1336" Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId1336"/>
+      <Data ID="1264" Label="ApplicationParam" ReferenceName="Text" ReferencePath="base" VariableName="text1264"/>
+      <Data ID="6114" IsList="true" Label="Key Value - workspace import" ReferenceName="KeyValue" ReferencePath="base" VariableName="keyValue6114"/>
+      <Data ID="6203" Label="Workspace Name" ReferenceName="Text" ReferencePath="base" VariableName="text6203"/>
+    </Output>
+    <ServiceReference ID="6715" Label="Get Recent OAS Import History Definition" ReferenceName="GetRecentOASImportHistoryDefinition" ReferencePath="xmcp.oas.fman">
+      <Source RefID="6714"/>
+      <Target RefID="6714"/>
+    </ServiceReference>
+    <ServiceReference ID="6395" Label="Oas Gui Services" ReferenceName="OasGuiServices.OasGuiServices" ReferencePath="xmcp.oas.fman">
+      <Source RefID="6394"/>
+      <Target RefID="6394"/>
+    </ServiceReference>
+    <ServiceReference ID="1412" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="1411"/>
+      <Target RefID="1411"/>
+    </ServiceReference>
+    <Mappings ID="964" Label="Mapping">
+      <Output>
+        <Data ID="973" IsList="true" Label="Key Value" ReferenceName="KeyValue" ReferencePath="base" VariableName="keyValue973">
+          <Source RefID="964"/>
+        </Data>
+        <Target RefID="1119"/>
+      </Output>
+      <Output>
+        <Data ID="1301" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1301">
+          <Source RefID="964"/>
+        </Data>
+        <Target RefID="1302"/>
+      </Output>
+      <Mapping>%0%["0"].key="Only datamodel"</Mapping>
+      <Mapping>%0%["0"].value="Datamodel Application"</Mapping>
+      <Mapping>%0%["1"].key="Datamodel and Provider"</Mapping>
+      <Mapping>%0%["1"].value="Provider Application"</Mapping>
+      <Mapping>%0%["2"].key="Datamodel and Client"</Mapping>
+      <Mapping>%0%["2"].value="Client Application"</Mapping>
+      <Mapping>%0%["3"].key="All three Applications"</Mapping>
+      <Mapping>%0%["3"].value="OAS Applications"</Mapping>
+      <Mapping>%1%.text="OAS Applications"</Mapping>
+    </Mappings>
+    <Mappings ID="101" Label="Mapping">
+      <Output>
+        <Data ID="370" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition370">
+          <Source RefID="101"/>
+        </Data>
+        <Target RefID="371"/>
+      </Output>
+      <Output>
+        <Data ID="695" Label="Dropdown Definition" ReferenceName="DropdownDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="dropdownDefinition695">
+          <Source RefID="101"/>
+        </Data>
+        <Target RefID="696"/>
+      </Output>
+      <Mapping>%0%.label="File Id"</Mapping>
+      <Mapping>%0%.dataPath="%1%.id"</Mapping>
+      <Mapping>%1%.possibleValues.listItemLabelPath="key"</Mapping>
+      <Mapping>%1%.possibleValues.listItemValuePath="value"</Mapping>
+      <Mapping>%1%.dataPath="%2%.text"</Mapping>
+      <Mapping>%1%.possibleValues.dataPath="%0%"</Mapping>
+      <Mapping>%1%.label="Generate..."</Mapping>
+    </Mappings>
+    <Function ID="1411" Label="get Own RuntimeContext">
+      <Source RefID="1412"/>
+      <Target RefID="1412"/>
+      <Target RefID="1410"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="1412"/>
+      <Receive ServiceID="1412">
+        <Target RefID="1410"/>
+      </Receive>
+    </Function>
+    <Mappings ID="1316" Label="Import OAS Applications">
+      <Input>
+        <Data ID="4906" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext4906">
+          <Source RefID="1316"/>
+        </Data>
+        <Source RefID="1410"/>
+      </Input>
+      <Output>
+        <Data ID="1319" Label="Import OAS Applications" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1319"/>
+        <Target RefID="1315"/>
+      </Output>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.dataPath="%1%, %2%, %4%"</Mapping>
+      <Mapping>%1%.label="Start generation and import"</Mapping>
+      <Mapping>%1%.serviceFQN="xmcp.oas.fman.ApplicationImport"</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
+      <Mapping>%1%.showResult="true"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="oas_imp_hist_refresh"</Mapping>
+    </Mappings>
+    <Mappings ID="5061" Label="spec file imput">
+      <Output>
+        <Data ID="5062" Label="Upload Button Definition" ReferenceName="UploadButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="uploadButtonDefinition5062"/>
+        <Target RefID="5060"/>
+      </Output>
+      <Mapping>%0%.dataPath="%1%.id"</Mapping>
+      <Mapping>%0%.label="Upload Spec"</Mapping>
+    </Mappings>
+    <Function ID="6394" Label="Create Workspace Input Download Data">
+      <Source RefID="6395"/>
+      <Target RefID="6395"/>
+      <Target RefID="6397"/>
+      <Invoke Operation="createWorkspaceInputDownloadData" ServiceID="6395"/>
+      <Receive ServiceID="6395">
+        <Target RefID="6397"/>
+      </Receive>
+    </Function>
+    <Mappings ID="6282" Label="Mapping">
+      <Output>
+        <Data ID="6240" Label="Workspace Name" ReferenceName="Text" ReferencePath="base" VariableName="text6240"/>
+        <Target RefID="6299"/>
+      </Output>
+      <Mapping>%0%.text=" "</Mapping>
+    </Mappings>
+    <Mappings ID="5758" Label="Mapping">
+      <Output>
+        <Data ID="5775" Label="Dropdown Definition" ReferenceName="DropdownDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="dropdownDefinition5775">
+          <Source RefID="5758"/>
+        </Data>
+        <Target RefID="5776"/>
+      </Output>
+      <Mapping>%0%.possibleValues.listItemLabelPath="key"</Mapping>
+      <Mapping>%0%.possibleValues.listItemValuePath="value"</Mapping>
+      <Mapping>%0%.dataPath="%4%.text"</Mapping>
+      <Mapping>%0%.possibleValues.dataPath="%3%"</Mapping>
+      <Mapping>%0%.label="Load into..."</Mapping>
+    </Mappings>
+    <Function ID="6714" Label="Get Recent OAS Import History Definition">
+      <Source RefID="6715"/>
+      <Target RefID="6715"/>
+      <Target RefID="6717"/>
+      <Invoke Operation="GetRecentOASImportHistoryDefinition" ServiceID="6715"/>
+      <Receive ServiceID="6715">
+        <Target RefID="6717"/>
+      </Receive>
+    </Function>
+    <Mappings ID="11" Label="Mapping">
+      <Input>
+        <Data ID="5724" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5724">
+          <Source RefID="11"/>
+        </Data>
+        <Source RefID="371"/>
+      </Input>
+      <Input>
+        <Data ID="5741" Label="Upload Button Definition" ReferenceName="UploadButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="uploadButtonDefinition5741">
+          <Source RefID="11"/>
+        </Data>
+        <Source RefID="5060"/>
+      </Input>
+      <Input>
+        <Data ID="721" Label="Dropdown Definition" ReferenceName="DropdownDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="dropdownDefinition721">
+          <Source RefID="11"/>
+        </Data>
+        <Source RefID="696">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="5003" Label="Import OAS Applications" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition5003">
+          <Source RefID="11"/>
+        </Data>
+        <Source RefID="1315"/>
+      </Input>
+      <Input>
+        <Data ID="5809" Label="Dropdown Definition" ReferenceName="DropdownDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="dropdownDefinition5809">
+          <Source RefID="11"/>
+        </Data>
+        <Source RefID="5776">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="6750" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition6750">
+          <Source RefID="11"/>
+        </Data>
+        <Source RefID="6717"/>
+      </Input>
+      <Output>
+        <Data ID="6422" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition6422">
+          <Source RefID="11"/>
+        </Data>
+        <Target RefID="6423"/>
+      </Output>
+      <Mapping>%6%.children["0"]#cast("xmcp.forms.datatypes.UploadButtonDefinition")=%1%</Mapping>
+      <Mapping>%6%.children["1"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%0%</Mapping>
+      <Mapping>%6%.children["2"]#cast("xmcp.forms.datatypes.DropdownDefinition")=%2%</Mapping>
+      <Mapping>%6%.children["3"]#cast("xmcp.forms.datatypes.DropdownDefinition")=%4%</Mapping>
+      <Mapping>%6%.children["4"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%3%</Mapping>
+      <Mapping>%6%.children["5"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%5%</Mapping>
+      <Mapping>%6%.label="Generate and Import OAS App"</Mapping>
+      <Mapping>%6%.closable="true"</Mapping>
+    </Mappings>
+    <Data ID="371" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition371">
+      <Source RefID="101"/>
+    </Data>
+    <Data ID="696" Label="Dropdown Definition" ReferenceName="DropdownDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="dropdownDefinition696">
+      <Source RefID="101"/>
+    </Data>
+    <Data ID="1119" IsList="true" Label="Key Value" ReferenceName="KeyValue" ReferencePath="base" VariableName="keyValue1119">
+      <Source RefID="964"/>
+    </Data>
+    <Data ID="1302" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1302">
+      <Source RefID="964"/>
+    </Data>
+    <Data ID="1315" Label="Import OAS Applications" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition1315"/>
+    <Data ID="1389" Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="const_ManagedFileId1389">
+      <Data VariableName="id">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+      </Data>
+    </Data>
+    <Data ID="1410" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext1410"/>
+    <Data ID="5060" Label="Upload Button Definition" ReferenceName="UploadButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="uploadButtonDefinition5060"/>
+    <Data ID="5776" Label="Dropdown Definition" ReferenceName="DropdownDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="dropdownDefinition5776">
+      <Source RefID="5758"/>
+    </Data>
+    <Data ID="6299" Label="Workspace Name" ReferenceName="Text" ReferencePath="base" VariableName="text6299"/>
+    <Data ID="6397" IsList="true" Label="Key Value" ReferenceName="KeyValue" ReferencePath="base" VariableName="keyValue6397">
+      <Source RefID="6394"/>
+    </Data>
+    <Data ID="6423" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition6423">
+      <Source RefID="11"/>
+    </Data>
+    <Data ID="6717" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition6717">
+      <Source RefID="6714"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="6423"/>
+      <Source RefID="1119"/>
+      <Source RefID="1389"/>
+      <Source RefID="1302"/>
+      <Source RefID="6397"/>
+      <Source RefID="6299"/>
+      <Target RefID="6640"/>
+      <Target RefID="903"/>
+      <Target RefID="1336"/>
+      <Target RefID="1264"/>
+      <Target RefID="6114"/>
+      <Target RefID="6203"/>
+      <Copy>
+        <Source RefID="6423">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="6640"/>
+      </Copy>
+      <Copy>
+        <Source RefID="1119">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="903"/>
+      </Copy>
+      <Copy>
+        <Source RefID="1389">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="1336"/>
+      </Copy>
+      <Copy>
+        <Source RefID="1302">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="1264"/>
+      </Copy>
+      <Copy>
+        <Source RefID="6397">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="6114"/>
+      </Copy>
+      <Copy>
+        <Source RefID="6299">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="6203"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
