@@ -18,7 +18,6 @@
 
 package xfmg.oas.generation.storage;
 
-import com.gip.xyna.xnwh.persistence.Command;
 import com.gip.xyna.xnwh.persistence.ODSConnection;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoResult;
@@ -26,12 +25,9 @@ import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoResult;
 
 public class DeleteOasImportHistoryEntries implements WarehouseRetryExecutableNoResult {
 
-  private static final String SQL_DELETE = "DELETE FROM " + OasImportHistoryStorable.TABLE_NAME;
-  
   @Override
   public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-    Command command = new Command(SQL_DELETE);
-    con.executeDML(con.prepareCommand(command), null);
+    con.deleteAll(OasImportHistoryStorable.class);
   }
 
 }
