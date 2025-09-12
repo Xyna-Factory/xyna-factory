@@ -20,12 +20,13 @@ package xfmg.oas.generation.storage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.gip.xyna.xnwh.persistence.ODSConnection;
+import com.gip.xyna.xnwh.persistence.ODSImpl;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.persistence.PreparedQuery;
+import com.gip.xyna.xnwh.persistence.xmom.QueryGenerator;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoException;
 
 import xmcp.oas.fman.storables.OAS_ImportHistory;
@@ -59,7 +60,7 @@ public class SearchOasImportHistory implements WarehouseRetryExecutableNoExcepti
      FilterColumnConfig.builder().xmomPath(OasImportHistoryConstants.PATH_IMPORTSTATUS).
                                   sqlColumnName(OasImportHistoryStorable.COL_IMPORT_STATUS).build()));
   
-  private final TableFilter filter;
+  private final List<FilterColumnInput> filterColumnInputList;
   
   
   public SearchOasImportHistory(TableInfo info) {
@@ -68,24 +69,21 @@ public class SearchOasImportHistory implements WarehouseRetryExecutableNoExcepti
     for (TableColumn tc : info.getColumns()) {
       adaptedColumns.add(adapt(tc));
     }
-    Function<String, String> escape = (x -> "`" + x + "`");
-    this.filter = _filterBuilder.build(adaptedColumns, escape);
+    filterColumnInputList = adaptedColumns;
   }
 
 
   @Override
   public List<OAS_ImportHistory> executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-    String sql = getQuerySql();
+    QueryGenerator qg = ODSImpl.getInstance().getQueryGenerator(con.getConnectionType(), OasImportHistoryStorable.TABLE_NAME);
+    TableFilter filter = _filterBuilder.build(filterColumnInputList, qg.escape);
+    String sql = SELECT_BASE + filter.getWhereClause();
     PreparedQuery<OasImportHistoryStorable> query = OasImportHistoryStorage.getQueryCache().getQueryFromCache(sql, con,
                                                       OasImportHistoryStorable.getOasImportHistoryMultiLineReader());
-    List<OasImportHistoryStorable> result = con.query(query, filter.buildParameter(), -1);
+    List<OasImportHistoryStorable> result = con.query(query, filter.buildParameter(), 200);
     return result.stream().map(x -> _adapter.adapt(x)).collect(Collectors.toList());
   }
   
-  
-  private String getQuerySql() {
-    return SELECT_BASE + filter.getWhereClause();
-  }
   
   private FilterColumnInput adapt(TableColumn tc) {
     FilterColumnInput ret = new FilterColumnInput();
