@@ -18,19 +18,24 @@
 
 package xfmg.oas.generation.storage;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.gip.xyna.xnwh.persistence.ODSConnection;
+import com.gip.xyna.xnwh.persistence.ODSImpl;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.persistence.PreparedQuery;
+import com.gip.xyna.xnwh.persistence.xmom.QueryGenerator;
 import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoException;
 
-import xfmg.oas.generation.storage.filter.FilterColumnConfig;
-import xfmg.oas.generation.storage.filter.TableFilter;
-import xfmg.oas.generation.storage.filter.TableFilterBuilder;
 import xmcp.oas.fman.storables.OAS_ImportHistory;
+import xmcp.tables.datatypes.TableColumn;
 import xmcp.tables.datatypes.TableInfo;
+import xmcp.zeta.storage.generic.filter.FilterColumnConfig;
+import xmcp.zeta.storage.generic.filter.FilterColumnInput;
+import xmcp.zeta.storage.generic.filter.TableFilter;
+import xmcp.zeta.storage.generic.filter.TableFilterBuilder;
 
 
 public class SearchOasImportHistory implements WarehouseRetryExecutableNoException<List<OAS_ImportHistory>> {
@@ -55,27 +60,40 @@ public class SearchOasImportHistory implements WarehouseRetryExecutableNoExcepti
      FilterColumnConfig.builder().xmomPath(OasImportHistoryConstants.PATH_IMPORTSTATUS).
                                   sqlColumnName(OasImportHistoryStorable.COL_IMPORT_STATUS).build()));
   
-  private final TableFilter filter;
+  private final List<FilterColumnInput> _filterColumnInputList;
+  private int _queryLength = 200;
   
   
   public SearchOasImportHistory(TableInfo info) {
     super();
-    this.filter = _filterBuilder.build(info);
+    List<FilterColumnInput> adaptedColumns = new ArrayList<>();
+    for (TableColumn tc : info.getColumns()) {
+      adaptedColumns.add(adapt(tc));
+    }
+    if ((info.getLength() != null) && (info.getLength() > 0)) {
+      _queryLength = info.getLength();
+    }
+    _filterColumnInputList = adaptedColumns;
   }
 
 
   @Override
   public List<OAS_ImportHistory> executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-    String sql = getQuerySql();
+    QueryGenerator qg = ODSImpl.getInstance().getQueryGenerator(con.getConnectionType(), OasImportHistoryStorable.TABLE_NAME);
+    TableFilter filter = _filterBuilder.build(_filterColumnInputList, qg.escape);
+    String sql = SELECT_BASE + filter.getWhereClause();
     PreparedQuery<OasImportHistoryStorable> query = OasImportHistoryStorage.getQueryCache().getQueryFromCache(sql, con,
                                                       OasImportHistoryStorable.getOasImportHistoryMultiLineReader());
-    List<OasImportHistoryStorable> result = con.query(query, filter.buildParameter(), -1);
+    List<OasImportHistoryStorable> result = con.query(query, filter.buildParameter(), _queryLength);
     return result.stream().map(x -> _adapter.adapt(x)).collect(Collectors.toList());
   }
   
   
-  private String getQuerySql() {
-    return SELECT_BASE + filter.buildWhereClause();
+  private FilterColumnInput adapt(TableColumn tc) {
+    FilterColumnInput ret = new FilterColumnInput();
+    ret.setFilter(tc.getFilter());
+    ret.setPath(tc.getPath());
+    return ret;
   }
   
 }
