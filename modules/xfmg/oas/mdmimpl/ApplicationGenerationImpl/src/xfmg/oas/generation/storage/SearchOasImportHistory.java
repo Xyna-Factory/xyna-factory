@@ -60,7 +60,8 @@ public class SearchOasImportHistory implements WarehouseRetryExecutableNoExcepti
      FilterColumnConfig.builder().xmomPath(OasImportHistoryConstants.PATH_IMPORTSTATUS).
                                   sqlColumnName(OasImportHistoryStorable.COL_IMPORT_STATUS).build()));
   
-  private final List<FilterColumnInput> filterColumnInputList;
+  private final List<FilterColumnInput> _filterColumnInputList;
+  private int _queryLength = 200;
   
   
   public SearchOasImportHistory(TableInfo info) {
@@ -69,18 +70,21 @@ public class SearchOasImportHistory implements WarehouseRetryExecutableNoExcepti
     for (TableColumn tc : info.getColumns()) {
       adaptedColumns.add(adapt(tc));
     }
-    filterColumnInputList = adaptedColumns;
+    if ((info.getLength() != null) && (info.getLength() > 0)) {
+      _queryLength = info.getLength();
+    }
+    _filterColumnInputList = adaptedColumns;
   }
 
 
   @Override
   public List<OAS_ImportHistory> executeAndCommit(ODSConnection con) throws PersistenceLayerException {
     QueryGenerator qg = ODSImpl.getInstance().getQueryGenerator(con.getConnectionType(), OasImportHistoryStorable.TABLE_NAME);
-    TableFilter filter = _filterBuilder.build(filterColumnInputList, qg.escape);
+    TableFilter filter = _filterBuilder.build(_filterColumnInputList, qg.escape);
     String sql = SELECT_BASE + filter.getWhereClause();
     PreparedQuery<OasImportHistoryStorable> query = OasImportHistoryStorage.getQueryCache().getQueryFromCache(sql, con,
                                                       OasImportHistoryStorable.getOasImportHistoryMultiLineReader());
-    List<OasImportHistoryStorable> result = con.query(query, filter.buildParameter(), 200);
+    List<OasImportHistoryStorable> result = con.query(query, filter.buildParameter(), _queryLength);
     return result.stream().map(x -> _adapter.adapt(x)).collect(Collectors.toList());
   }
   
