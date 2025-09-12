@@ -82,5 +82,12 @@
         <CodeSnippet Type="Java">return xfmg.oas.generation.ApplicationGenerationImpl.queryOasImportHistoryDetails(oAS_ImportHistory8);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Delete Oas Import History Entries" Name="deleteOasImportHistoryEntries">
+      <Input/>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.oas.generation.ApplicationGenerationImpl.deleteOasImportHistoryEntries();</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

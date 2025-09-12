@@ -74,4 +74,10 @@ public class OasImportHistoryStorage {
     return buildExecutor().execute(soih);
   }
   
+  
+  public void deleteOasImportHistoryEntries() throws PersistenceLayerException {
+    DeleteOasImportHistoryEntries del = new DeleteOasImportHistoryEntries();
+    buildExecutor().execute(del);
+  }
+
 }
