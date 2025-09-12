@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xfmg.oas.generation.storage.filter;
+package xmcp.zeta.storage.generic.filter;
 
 
 public class FilterColumnConfig {
