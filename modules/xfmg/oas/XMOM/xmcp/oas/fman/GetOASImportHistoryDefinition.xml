@@ -19,7 +19,7 @@
   <Operation ID="0" IsStatic="false" Label="Get OAS Import History Definition" Name="GetOASImportHistoryDefinition">
     <Input/>
     <Output>
-      <Data ID="16383" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition16383"/>
+      <Data ID="16448" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition16448"/>
     </Output>
     <ServiceReference ID="8471" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="8470"/>
@@ -82,26 +82,6 @@
         </Data>
         <Source RefID="8473"/>
       </Input>
-      <Output>
-        <Data ID="2274" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition2274">
-          <Source RefID="2265"/>
-        </Data>
-        <Target RefID="2275"/>
-      </Output>
-      <Mapping>%2%.dataPath="%%"</Mapping>
-      <Mapping>%2%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%0%</Mapping>
-      <Mapping>%2%.tableWorkflowFQN="xmcp.oas.fman.OASImportTableInfo"</Mapping>
-      <Mapping>%2%.triggerRefresh.eventId="oas_imp_hist_refresh"</Mapping>
-      <Mapping>%2%.tableWorkflowRTC=%1%</Mapping>
-      <Mapping>%2%.label="Import History"</Mapping>
-    </Mappings>
-    <Mappings ID="16274" Label="Mapping">
-      <Input>
-        <Data ID="16349" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition16349">
-          <Source RefID="16274"/>
-        </Data>
-        <Source RefID="2275"/>
-      </Input>
       <Input>
         <Data ID="16366" Label="Delete All Button" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition16366">
           <Source RefID="16274"/>
@@ -109,15 +89,19 @@
         <Source RefID="16149"/>
       </Input>
       <Output>
-        <Data ID="16291" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition16291">
-          <Source RefID="16274"/>
+        <Data ID="2274" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition2274">
+          <Source RefID="2265"/>
         </Data>
-        <Target RefID="16292"/>
+        <Target RefID="2275"/>
       </Output>
-      <Mapping>%2%.closable="true"</Mapping>
-      <Mapping>%2%.children["0"]=%1%</Mapping>
-      <Mapping>%2%.children["1"]=%0%</Mapping>
-      <Mapping>%2%.label="OAS Import History"</Mapping>
+      <Mapping>%3%.dataPath="%%"</Mapping>
+      <Mapping>%3%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%0%</Mapping>
+      <Mapping>%3%.tableWorkflowFQN="xmcp.oas.fman.OASImportTableInfo"</Mapping>
+      <Mapping>%3%.triggerRefresh.eventId="oas_imp_hist_refresh"</Mapping>
+      <Mapping>%3%.tableWorkflowRTC=%1%</Mapping>
+      <Mapping>%3%.label="OAS Import History"</Mapping>
+      <Mapping>%3%.header.leftArea.children["0"]=%2%</Mapping>
+      <Mapping>%3%.closable="true"</Mapping>
     </Mappings>
     <Data ID="2275" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition2275">
       <Source RefID="2265"/>
@@ -127,19 +111,12 @@
       <Source RefID="8470"/>
     </Data>
     <Data ID="16149" Label="Import OAS Applications" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition16149"/>
-    <Data ID="16292" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition16292">
-      <Source RefID="16274"/>
-    </Data>
     <Assign ID="1">
-      <Source RefID="16292"/>
-      <Target RefID="16383"/>
+      <Source RefID="2275"/>
+      <Target RefID="16448"/>
       <Copy>
-        <Source RefID="16292">
-          <Meta>
-            <LinkType>UserConnected</LinkType>
-          </Meta>
-        </Source>
-        <Target RefID="16383"/>
+        <Source RefID="2275"/>
+        <Target RefID="16448"/>
       </Copy>
     </Assign>
   </Operation>
