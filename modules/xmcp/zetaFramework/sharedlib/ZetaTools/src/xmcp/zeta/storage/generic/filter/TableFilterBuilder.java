@@ -16,16 +16,16 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xfmg.oas.generation.storage.filter;
+package xmcp.zeta.storage.generic.filter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
-import xmcp.tables.datatypes.TableColumn;
-import xmcp.tables.datatypes.TableInfo;
+import com.gip.xyna.xnwh.persistence.xmom.QueryGenerator;
 
 
 public class TableFilterBuilder {
@@ -41,11 +41,15 @@ public class TableFilterBuilder {
   }
   
   
-  public TableFilter build(TableInfo info) {
+  public TableFilter build(List<FilterColumnInput> input, QueryGenerator queryGenerator) {
+    return build(input, queryGenerator.escape);
+  }
+  
+  
+  public TableFilter build(List<FilterColumnInput> input, Function<String, String> escape) {
     List<FilterColumn> ret = new ArrayList<>();
-    if (info == null) { return build(ret); }
-    if (info.getColumns() == null) { return build(ret); }
-    for (TableColumn col : info.getColumns()) {
+    if (input == null) { return buildImpl(ret, escape); }
+    for (FilterColumnInput col : input) {
       Optional<String> path = getTrimmedOrEmpty(col.getPath());
       if (path.isEmpty()) { continue; }
       Optional<String> filter = getTrimmedOrEmpty(col.getFilter());
@@ -54,12 +58,12 @@ public class TableFilterBuilder {
       if (conf == null) { continue; }
       ret.add(new FilterColumn(conf, filter.get()));
     }
-    return build(ret);
+    return buildImpl(ret, escape);
   }
   
   
-  private TableFilter build(List<FilterColumn> list) {
-    return new TableFilter(list);
+  private TableFilter buildImpl(List<FilterColumn> list, Function<String, String> escape) {
+    return new TableFilter(list, escape);
   }
   
   

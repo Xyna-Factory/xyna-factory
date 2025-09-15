@@ -21,30 +21,31 @@ package xfmg.oas.generation.storage;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xnwh.persistence.ODSConnection;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
-import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoResult;
+import com.gip.xyna.xnwh.xclusteringservices.WarehouseRetryExecutableNoException;
 
 import xmcp.oas.fman.storables.OAS_ImportHistory;
 
 
-public class StoreOasImportHistory implements WarehouseRetryExecutableNoResult {
+public class StoreOasImportHistory implements WarehouseRetryExecutableNoException<OAS_ImportHistory> {
 
   private static final OasImportHistoryAdapter _adapter = new OasImportHistoryAdapter();
-  private OAS_ImportHistory input;
+  private OAS_ImportHistory _input;
   
   
   public StoreOasImportHistory(OAS_ImportHistory input) {
     super();
-    this.input = input;
+    this._input = input;
   }
 
 
   @Override
-  public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-    OasImportHistoryStorable storable = _adapter.adapt(input);
-    if (input.getUniqueIdentifier() <= 0) {
-      storable.setUniqueIdentifier(XynaFactory.getInstance().getIDGenerator().getUniqueId());
+  public OAS_ImportHistory executeAndCommit(ODSConnection con) throws PersistenceLayerException {
+    if (_input.getUniqueIdentifier() <= 0) {
+      _input.setUniqueIdentifier(XynaFactory.getInstance().getIDGenerator().getUniqueId());
     }
+    OasImportHistoryStorable storable = _adapter.adapt(_input);
     con.persistObject(storable);
+    return _input;
   }
-  
+
 }

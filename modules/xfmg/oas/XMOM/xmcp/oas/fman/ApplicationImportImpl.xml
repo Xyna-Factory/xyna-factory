@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Application Import Impl" TypeName="ApplicationImportImpl" TypePath="xmcp.oas.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Application Import Impl" Name="ApplicationImportImpl">
+    <Input>
+      <Data ID="9084" Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId9084"/>
+      <Data ID="52471" Label="Application Generation Parameter" ReferenceName="ApplicationGenerationParameter" ReferencePath="xfmg.oas.generation" VariableName="applicationGenerationParameter52471"/>
+      <Data ID="52514" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory52514"/>
+    </Input>
+    <Output/>
+    <ServiceReference ID="49590" Label="Exception Service" ReferenceName="ExceptionService.ExceptionService" ReferencePath="core.exception">
+      <Source RefID="49589"/>
+      <Target RefID="49589"/>
+    </ServiceReference>
+    <ServiceReference ID="51878" Label="Application Generation" ReferenceName="ApplicationGeneration.ApplicationGeneration" ReferencePath="xfmg.oas.generation">
+      <Source RefID="51877"/>
+      <Target RefID="51877"/>
+    </ServiceReference>
+    <ServiceReference ID="38737" Label="Exception Service" ReferenceName="ExceptionService.ExceptionService" ReferencePath="core.exception">
+      <Source RefID="38736"/>
+      <Target RefID="38736"/>
+    </ServiceReference>
+    <ServiceReference ID="39968" Label="Application Generation" ReferenceName="ApplicationGeneration.ApplicationGeneration" ReferencePath="xfmg.oas.generation">
+      <Source RefID="39967"/>
+      <Target RefID="39967"/>
+    </ServiceReference>
+    <Function ID="39967" Label="Generate Application by managed File ID">
+      <Source RefID="39968"/>
+      <Source RefID="52471"/>
+      <Source RefID="9084"/>
+      <Source RefID="52514"/>
+      <Target RefID="39968"/>
+      <Invoke Operation="generateApplicationByManagedFileID" ServiceID="39968">
+        <Source RefID="52471"/>
+        <Source RefID="9084"/>
+        <Source RefID="52514"/>
+      </Invoke>
+      <Receive ServiceID="39968"/>
+    </Function>
+    <Data ID="38510" Label="Now" ReferenceName="Now" ReferencePath="base.date" VariableName="now38510"/>
+    <Data ID="38975" Label="Exception Message" ReferenceName="Text" ReferencePath="base" VariableName="text38975"/>
+    <Data ID="39212" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory39212"/>
+    <Data ID="51882" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory51882"/>
+    <Exception ID="36984" Label="Exception" ReferenceName="Exception" ReferencePath="core.exception" VariableName="exception36984"/>
+    <Assign ID="1"/>
+    <Catch ExceptionID="36984" ID="36987">
+      <Mappings ID="38508" Label="Mapping">
+        <Output>
+          <Data ID="38509" Label="Now" ReferenceName="Now" ReferencePath="base.date" VariableName="now38509"/>
+          <Target RefID="38510"/>
+        </Output>
+      </Mappings>
+      <Function ID="38736" Label="Wrap Exception">
+        <Source RefID="38737"/>
+        <Source RefID="36984"/>
+        <Target RefID="38737"/>
+        <Target RefID="38739"/>
+        <Invoke Operation="wrapException" ServiceID="38737">
+          <Source RefID="36984"/>
+        </Invoke>
+        <Receive ServiceID="38737">
+          <Target RefID="38739"/>
+        </Receive>
+      </Function>
+      <Mappings ID="38972" Label="Mapping">
+        <Input>
+          <Data ID="38973" Label="Exception Holder" ReferenceName="ExceptionHolder" ReferencePath="core.exception" VariableName="exceptionHolder38973"/>
+          <Source RefID="38739"/>
+        </Input>
+        <Output>
+          <Data ID="38974" Label="Exception Message" ReferenceName="Text" ReferencePath="base" VariableName="text38974"/>
+          <Target RefID="38975"/>
+        </Output>
+        <Mapping>%1%.text=%0%.getExceptionMessage().message</Mapping>
+      </Mappings>
+      <Mappings ID="39208" Label="Mapping">
+        <Input>
+          <Data ID="39210" Label="Exception Message" ReferenceName="Text" ReferencePath="base" VariableName="text39210"/>
+          <Source RefID="38975">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Input>
+        <Input>
+          <Data ID="42030" Label="Now" ReferenceName="Now" ReferencePath="base.date" VariableName="now42030">
+            <Source RefID="39208"/>
+          </Data>
+          <Source RefID="38510"/>
+        </Input>
+        <Input>
+          <Data ID="52557" Label="OAS_ImportHistory IN" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory52557">
+            <Source RefID="39208"/>
+          </Data>
+          <Source RefID="52514"/>
+        </Input>
+        <Output>
+          <Data ID="39211" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory39211"/>
+          <Target RefID="39212"/>
+        </Output>
+        <Mapping>%3%=%2%</Mapping>
+        <Mapping>%3%.date0=%1%.date</Mapping>
+        <Mapping>%3%.errorMessage=%0%.text</Mapping>
+        <Mapping>%3%.importStatus="Error"</Mapping>
+      </Mappings>
+      <Function ID="51877" Label="Store Oas Import History">
+        <Source RefID="51878"/>
+        <Source RefID="39212"/>
+        <Target RefID="51878"/>
+        <Target RefID="51882"/>
+        <Invoke Operation="storeOasImportHistory" ServiceID="51878">
+          <Source RefID="39212">
+            <Meta>
+              <LinkType>UserConnected</LinkType>
+            </Meta>
+          </Source>
+        </Invoke>
+        <Receive ServiceID="51878">
+          <Target RefID="51882"/>
+        </Receive>
+      </Function>
+      <Function ID="49589" Label="Rethrow Exception">
+        <Source RefID="49590"/>
+        <Source RefID="38739"/>
+        <Target RefID="49590"/>
+        <Invoke Operation="rethrowException_1" ServiceID="49590">
+          <Source RefID="38739"/>
+        </Invoke>
+        <Receive ServiceID="49590"/>
+      </Function>
+      <Assign/>
+      <Data ID="38739" Label="Exception Holder" ReferenceName="ExceptionHolder" ReferencePath="core.exception" VariableName="exceptionHolder38739">
+        <Source RefID="38736"/>
+      </Data>
+    </Catch>
+  </Operation>
+</Service>

@@ -69,8 +69,15 @@ public class OasImportHistoryStorage {
   }
   
   
-  public void storeOasImportHistory(OAS_ImportHistory input) throws PersistenceLayerException {
-    buildExecutor().execute(new StoreOasImportHistory(input));
+  public OAS_ImportHistory storeOasImportHistory(OAS_ImportHistory input) throws PersistenceLayerException {
+    StoreOasImportHistory soih = new StoreOasImportHistory(input);
+    return buildExecutor().execute(soih);
   }
   
+  
+  public void deleteOasImportHistoryEntries() throws PersistenceLayerException {
+    DeleteOasImportHistoryEntries del = new DeleteOasImportHistoryEntries();
+    buildExecutor().execute(del);
+  }
+
 }
