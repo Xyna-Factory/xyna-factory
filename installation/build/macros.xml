@@ -25,6 +25,213 @@
     </taskdef>
 
 
+ <!-- = = = = = = = = = = = = = = = = =
+              macrodef: buildJar
+             = = = = = = = = = = = = = = = = =
+    -->
+    <macrodef name="buildJar">
+        <attribute name="basedir"
+                   default="${basedir}"
+                   description="the directory from which to jar the files." />
+        <attribute name="destfile" description="the JAR file to create." />
+        <attribute name="src.dir" default="@{basedir}/src" />
+        <attribute name="classes.dir" default="@{basedir}/classes" />
+        <attribute name="lib.dir" default="@{basedir}/lib" />
+        <attribute name="encoding" default="iso-8859-1" />
+        <!--<element name="attributes"
+                 optional="true"
+                 description="Additional attributes for manifest" />-->
+        <element name="additionalSrcDirs" optional="true" implicit="true" />
+        <sequential>
+            <compile basedir="@{basedir}"
+                     src.dir="@{src.dir}"
+                     classes.dir="@{classes.dir}"
+                     lib.dir="@{lib.dir}"
+                     encoding="@{encoding}">
+                <additionalSrcDirs />
+            </compile>
+            <dirname file="@{destfile}" property="destdir" />
+            <mkdir dir="${destdir}" />
+            <jar destfile="@{destfile}">
+                <manifest>
+                    <attribute name="Vendor" value="${vendor.name}" />
+                    <attribute name="Version" value="${release.number}" />
+                    <attribute name="Build-Date" value="${timestamp}" />
+                    <!--<attributes />-->
+                </manifest>
+                <fileset dir="@{classes.dir}">
+                    <exclude name="**/*Test.java" />
+                    <exclude name="**/AllTests.java" />
+                </fileset>
+                <fileset dir="@{basedir}" includes="**/Exceptions.xml" />
+            </jar>
+        </sequential>
+    </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: compile
+         = = = = = = = = = = = = = = = = =
+-->
+    <macrodef name="compile" description="Compiles all source files (excluding test sources).">
+        <attribute name="basedir" default="${basedir}" />
+        <attribute name="src.dir" default="@{basedir}/src" />
+        <attribute name="classes.dir" default="@{basedir}/classes" />
+        <attribute name="lib.dir" default="@{basedir}/lib" />
+        <attribute name="encoding" default="iso-8859-1" />
+        <attribute name="memoryInitialSize" default="32m" />
+        <!-- wird nur benutzt, wenn auch max ungleich -1 ist. -->
+        <attribute name="memoryMaximumSize" default="-1" />
+        <attribute name="target" default="-1" />
+        <element name="additionalSrcDirs" implicit="true" optional="true" />
+        <sequential>
+            <classpath-run basedir="@{basedir}" classes.dir="@{classes.dir}" lib.dir="@{lib.dir}" />
+            <delete dir="@{classes.dir}" includeemptydirs="true" failonerror="false" />
+            <mkdir dir="@{classes.dir}" />
+            <!-- copy meta data -->
+            <copy todir="@{classes.dir}">
+                <fileset dir="@{src.dir}">
+                    <exclude name="**/*.java" />
+                </fileset>
+            </copy>
+            <if>
+                <equals arg1="@{memoryMaximumSize}" arg2="-1" />
+                <then>
+                    <if>
+                        <equals arg1="@{target}" arg2="-1" />
+                        <then>
+                            <!-- use defaults of jvm for min and max-memory and target -->
+                            <javac destdir="@{classes.dir}" sourcepath="" encoding="@{encoding}" debug="on" fork="yes" includeJavaRuntime="true">
+                                <src path="@{src.dir}" />
+                                <additionalSrcDirs />
+                                <classpath refid="${classpath.run.@{basedir}}" />
+                            </javac>
+                        </then>
+                        <else>
+                            <!-- use defaults of jvm for min and max-memory -->
+                            <javac destdir="@{classes.dir}" sourcepath="" encoding="@{encoding}" debug="on" fork="yes" includeJavaRuntime="true" target="@{target}">
+                                <src path="@{src.dir}" />
+                                <additionalSrcDirs />
+                                <classpath refid="${classpath.run.@{basedir}}" />
+                            </javac>
+                        </else>
+                    </if>
+                </then>
+                <else>
+                    <if>
+                        <equals arg1="@{target}" arg2="-1" />
+                        <then>
+                            <!-- use defaults of jvm for target -->
+                            <javac destdir="@{classes.dir}" sourcepath="" encoding="@{encoding}" debug="on" fork="yes" includeJavaRuntime="true" memoryInitialSize="@{memoryInitialSize}" memoryMaximumSize="@{memoryMaximumSize}">
+                                <src path="@{src.dir}" />
+                                <additionalSrcDirs />
+                                <classpath refid="${classpath.run.@{basedir}}" />
+                            </javac>
+                        </then>
+                        <else>
+                            <!-- use no defaults of jvm -->
+                            <javac destdir="@{classes.dir}" sourcepath="" encoding="@{encoding}" debug="on" fork="yes" includeJavaRuntime="true" memoryInitialSize="@{memoryInitialSize}" memoryMaximumSize="@{memoryMaximumSize}" target="@{target}">
+                                <src path="@{src.dir}" />
+                                <additionalSrcDirs />
+                                <classpath refid="${classpath.run.@{basedir}}" />
+                            </javac>
+                        </else>
+                    </if>
+                </else>
+            </if>
+        </sequential>
+    </macrodef>
+
+  <!-- = = = = = = = = = = = = = = = = =
+                macrodef: classpath-run
+               = = = = = = = = = = = = = = = = =
+-->
+    <macrodef name="classpath-run" description="Set classpath properties for compile. Should only called from compile macro.">
+        <attribute name="basedir" default="${basedir}" />
+        <attribute name="classes.dir" default="@{basedir}/classes" />
+        <attribute name="lib.dir" default="@{basedir}/lib" />
+        <sequential>
+            <if>
+                <isreference refid="libraries" />
+                <then>
+                    <echo message="Using Libraries" />
+                    <path id="classpath.run.libs">
+                        <fileset dir="@{lib.dir}">
+                            <include name="**/*.jar" />
+                        </fileset>
+                        <path refid="libraries" />
+                        <path refid="classpath.run.nolibs" />
+                    </path>
+                </then>
+                <else>
+                    <echo message="NOT using Libraries" />
+                    <path id="classpath.run.libs">
+                        <fileset dir="@{lib.dir}">
+                            <include name="**/*.jar" />
+                        </fileset>
+                        <path refid="classpath.run.nolibs" />
+                    </path>
+                </else>
+            </if>
+            <path id="classpath.run.nolibs">
+                <pathelement location="@{classes.dir}" />
+                <path refid="classpath.oc4j" />
+            </path>
+            <condition property="classpath.run.@{basedir}" value="classpath.run.libs" else="classpath.run.nolibs">
+                <or>
+                    <available file="@{lib.dir}" />
+                    <isreference refid="libraries" />
+                </or>
+            </condition>
+        </sequential>
+    </macrodef>
+
+    <!-- ================================= 
+         macro: xynaTarget
+         ================================= -->
+    <macrodef name="xynaTarget">
+        <attribute name="name" description="name des targets" />
+        <attribute name="if" default="${xynaTarget.default}" description="dependencies und subtargets werden nur ausgefuehrt, falls if=true oder wert von if=true oder nicht angegeben                             achtung: das ist anders als das if= verhalten in einem normalen target." />
+        <attribute name="unless" default="${xynaTarget.default}" description="dependencies und subelemente werden nur ausgefuehrt, falls if=false oder wert von if=false oder nicht angegeben                            achtung: das ist anders als das unless= verhalten in einem normalen target." />
+        <attribute name="depends" default="" description="wie bei einem normalen target die kommaseparierte liste von abhaengigen targets" />
+        <attribute name="inheritall" default="true" description="wirkt sich auf die dependency-aufrufe aus" />
+        <attribute name="inheritrefs" default="true" description="wirkt sich auf die dependency-aufrufe aus" />
+        <element name="sub-elements" implicit="yes" optional="true" />
+        <sequential>
+            <if>
+                <or>
+                    <and>
+                        <or>
+                            <equals arg1="@{if}" arg2="${xynaTarget.default}" />
+                            <not>
+                                <!-- includes ${@{if}} is not set -->
+                                <equals arg1="${@{if}}" arg2="false" />
+                            </not>
+                        </or>
+                        <or>
+                            <!-- attribute 'unless' dont prohibits execution -->
+                            <equals arg1="@{unless}" arg2="false" />
+                            <equals arg1="${@{unless}}" arg2="false" />
+                            <equals arg1="@{unless}" arg2="${xynaTarget.default}" />
+                            <not>
+                                <!-- includes ${@{unless}} is not set -->
+                                <equals arg1="${@{unless}}" arg2="true" />
+                            </not>
+                        </or>
+                    </and>
+                    <!-- always execute if attribute 'if' has the value 'true' -->
+                    <equals arg1="@{if}" arg2="true" />
+                    <equals arg1="${@{if}}" arg2="true" />
+                </or>
+                <then>
+                    <sub-elements />
+                </then>
+                <else>
+                    <echo message="Target @{name} not executed, because necessary condition wasn't true." />
+                </else>
+            </if>
+        </sequential>
+    </macrodef>
+
     <!-- ================================= 
          macro: copyJar
          ================================= -->
