@@ -191,4 +191,18 @@ public class ApplicationGenerationServiceOperationImpl implements ExtendedDeploy
     }
   }
 
+  
+  @Override
+  public void deleteOasImportHistoryEntries() {
+    try {
+      new OasImportHistoryStorage().deleteOasImportHistoryEntries();
+    } catch (RuntimeException e) {
+      logger.error(e.getMessage(), e);
+      throw e;
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
+  
 }

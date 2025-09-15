@@ -19,7 +19,7 @@
   <Operation ID="0" IsStatic="false" Label="Get OAS Import History Definition" Name="GetOASImportHistoryDefinition">
     <Input/>
     <Output>
-      <Data ID="14" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition14"/>
+      <Data ID="16448" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition16448"/>
     </Output>
     <ServiceReference ID="8471" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="8470"/>
@@ -48,6 +48,23 @@
       <Mapping>%1%.fQN="xmcp.oas.fman.GetOASImportDetailsDefinition"</Mapping>
       <Mapping>%1%.rTC=%0%</Mapping>
     </Mappings>
+    <Mappings ID="16150" Label="Delete All Button">
+      <Input>
+        <Data ID="16152" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext16152"/>
+        <Source RefID="8473"/>
+      </Input>
+      <Output>
+        <Data ID="16153" Label="Delete All Button" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition16153"/>
+        <Target RefID="16149"/>
+      </Output>
+      <Mapping>%1%.serviceRTC=%0%</Mapping>
+      <Mapping>%1%.dataPath=null</Mapping>
+      <Mapping>%1%.label="Delete All"</Mapping>
+      <Mapping>%1%.serviceFQN="xmcp.oas.fman.DeleteImportHistory"</Mapping>
+      <Mapping>%1%.synchronously="true"</Mapping>
+      <Mapping>%1%.showResult="true"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["0"].eventId="oas_imp_hist_refresh"</Mapping>
+    </Mappings>
     <Mappings ID="2265" Label="Table Panel">
       <Input>
         <Data ID="2490" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow2490">
@@ -65,19 +82,26 @@
         </Data>
         <Source RefID="8473"/>
       </Input>
+      <Input>
+        <Data ID="16366" Label="Delete All Button" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition16366">
+          <Source RefID="16274"/>
+        </Data>
+        <Source RefID="16149"/>
+      </Input>
       <Output>
         <Data ID="2274" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition2274">
           <Source RefID="2265"/>
         </Data>
         <Target RefID="2275"/>
       </Output>
-      <Mapping>%2%.dataPath="%%"</Mapping>
-      <Mapping>%2%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%0%</Mapping>
-      <Mapping>%2%.label="OAS Import History"</Mapping>
-      <Mapping>%2%.tableWorkflowFQN="xmcp.oas.fman.OASImportTableInfo"</Mapping>
-      <Mapping>%2%.triggerRefresh.eventId="oas_imp_hist_refresh"</Mapping>
-      <Mapping>%2%.tableWorkflowRTC=%1%</Mapping>
-      <Mapping>%2%.closable="true"</Mapping>
+      <Mapping>%3%.dataPath="%%"</Mapping>
+      <Mapping>%3%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%0%</Mapping>
+      <Mapping>%3%.tableWorkflowFQN="xmcp.oas.fman.OASImportTableInfo"</Mapping>
+      <Mapping>%3%.triggerRefresh.eventId="oas_imp_hist_refresh"</Mapping>
+      <Mapping>%3%.tableWorkflowRTC=%1%</Mapping>
+      <Mapping>%3%.label="OAS Import History"</Mapping>
+      <Mapping>%3%.header.leftArea.children["0"]=%2%</Mapping>
+      <Mapping>%3%.closable="true"</Mapping>
     </Mappings>
     <Data ID="2275" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition2275">
       <Source RefID="2265"/>
@@ -86,12 +110,13 @@
     <Data ID="8473" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext8473">
       <Source RefID="8470"/>
     </Data>
+    <Data ID="16149" Label="Import OAS Applications" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition16149"/>
     <Assign ID="1">
       <Source RefID="2275"/>
-      <Target RefID="14"/>
+      <Target RefID="16448"/>
       <Copy>
         <Source RefID="2275"/>
-        <Target RefID="14"/>
+        <Target RefID="16448"/>
       </Copy>
     </Assign>
   </Operation>
