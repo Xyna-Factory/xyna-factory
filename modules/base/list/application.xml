@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="List" factoryVersion="" versionName="1.0.0" xmlVersion="1.1">
+<Application applicationName="List" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -110,6 +110,18 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
       <FqName>base.list.pair.Pair</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>base.list.HashMap</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+      <XMOMEntry implicitDependency="true">
+      <FqName>base.list.MapEntry</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+      <XMOMEntry implicitDependency="false">
+      <FqName>base.list.ArrayWrapper</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
   </XMOMEntries>
