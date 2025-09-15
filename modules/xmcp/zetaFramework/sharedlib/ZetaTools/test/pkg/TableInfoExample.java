@@ -105,12 +105,18 @@ public class TableInfoExample {
       col.setFilter("*my-filter-val-1");
       col.setPath("col1");
       colList.add(col);
+      
+      col = new TableColumn();
+      col.setFilter(null);
+      col.setPath(null);
+      colList.add(col);
+      
       col = new TableColumn();
       col.setFilter("'=my-filter-val-2'");
       col.setPath("col2");
       colList.add(col);
-      tableInfo.setColumns(colList);
       
+      tableInfo.setColumns(colList);
       TableFilter tf = buildTableFilter(tableInfo);
       
       Parameter param = tf.buildParameter();
@@ -128,18 +134,10 @@ public class TableInfoExample {
   
   
   private TableFilter buildTableFilter(TableInfo tableInfo) {
-    Map<String, FilterColumnConfig> colConfigMap = initMap();
+    List<FilterColumnConfig> configList = initConfigList();
     List<FilterColumnInput> adaptedColumns = new ArrayList<>();
-    List<FilterColumnConfig> configList = new ArrayList<>();
-    
     for (TableColumn tc : tableInfo.getColumns()) {
-      if (tc.getFilter() == null) { continue; }
-      if (tc.getFilter().isEmpty()) { continue; }
-      FilterColumnConfig fcc = colConfigMap.get(tc.getPath());
-      if (fcc != null) {
-        adaptedColumns.add(adapt(tc));
-        configList.add(fcc);
-      }
+      adaptedColumns.add(adapt(tc));
     }
     Function<String, String> escape = (x -> "`" + x + "`");
     
@@ -148,15 +146,15 @@ public class TableInfoExample {
   }
   
   
-  private Map<String, FilterColumnConfig> initMap() {
-    Map<String, FilterColumnConfig> colConfigMap = new HashMap<>();
+  private List<FilterColumnConfig> initConfigList() {
+    List<FilterColumnConfig> ret = new ArrayList<>();
     FilterColumnConfig confCol = FilterColumnConfig.builder().sqlColumnName(Constants.SqlTableColumnNames.COLUMN_1).
                                                               xmomPath(Constants.XmomAttributeNames.COL_1).build();
-    colConfigMap.put(confCol.getXmomPath(), confCol);
+    ret.add(confCol);
     confCol = FilterColumnConfig.builder().sqlColumnName(Constants.SqlTableColumnNames.COLUMN_2).
                                            xmomPath(Constants.XmomAttributeNames.COL_2).build();
-    colConfigMap.put(confCol.getXmomPath(), confCol);
-    return colConfigMap;
+    ret.add(confCol);
+    return ret;
   }
   
   
