@@ -30,6 +30,7 @@ import com.gip.xyna.utils.misc.JsonParser.EmptyJsonVisitor;
 import com.gip.xyna.utils.misc.JsonParser.JsonVisitor;
 import com.gip.xyna.utils.misc.JsonParser.UnexpectedJSONContentException;
 import com.gip.xyna.xdev.exceptions.XDEV_PARAMETER_NAME_NOT_FOUND;
+import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObjectList;
 import com.gip.xyna.xfmg.xfctrl.XynaFactoryControl;
@@ -263,14 +264,18 @@ public class XynaObjectVisitor extends EmptyJsonVisitor<GeneralXynaObject> {
     if (isComplexListWrapper) {
       object = new XynaObjectList(values, info.getFqName());
     } else {
-      //TODO was ist das für ein fall?
-      try {
-        Field field = oFindField(getObject().getClass(), label);
-        if (field != null) {
-          getObject().set(label, new ArrayList(values));
+      if (label == null) {
+        object = new Container(values.toArray(new GeneralXynaObject[] {}));
+      } else {
+        //TODO was ist das für ein fall?
+        try {
+          Field field = oFindField(getObject().getClass(), label);
+          if (field != null) {
+            getObject().set(label, new ArrayList(values));
+          }
+        } catch (XDEV_PARAMETER_NAME_NOT_FOUND e) {
+          throw new RuntimeException(e);
         }
-      } catch (XDEV_PARAMETER_NAME_NOT_FOUND e) {
-        throw new RuntimeException(e);
       }
     }
   }
