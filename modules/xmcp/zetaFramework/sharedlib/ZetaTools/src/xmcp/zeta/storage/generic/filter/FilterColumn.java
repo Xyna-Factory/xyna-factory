@@ -16,7 +16,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
 
-package xfmg.oas.generation.storage.filter;
+package xmcp.zeta.storage.generic.filter;
 
 
 public class FilterColumn {
@@ -29,20 +29,9 @@ public class FilterColumn {
     if (config == null) { throw new IllegalArgumentException("FilterColumnConfig is null"); }
     if (value == null) { throw new IllegalArgumentException("Filter column value is null"); }
     this.config = config;
-    this.value = adaptWildcards(value);
+    this.value = value;
   }
   
-  
-  private String adaptWildcards(String val) {
-    String ret = val.trim();
-    if (ret.contains("*")) {
-      ret = ret.replace("*", "%");
-    } else {
-      ret = "%" + ret + "%";
-    }
-    return ret;
-  }
-
   
   public FilterColumnConfig getConfig() {
     return config;

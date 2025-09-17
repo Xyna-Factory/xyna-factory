@@ -22,7 +22,7 @@ package xfmg.oas.offline;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import xfmg.oas.generation.cli.impl.BuildoasapplicationImpl;
+import xfmg.oas.generation.tools.OasAppBuilder;
 
 
 
@@ -44,9 +44,9 @@ public class OASApplicationGeneration {
     switch (args[1]) {
       case "client" :
       case "all" :
-        new BuildoasapplicationImpl().createOasAppOffline("xmom-client", target, yaml);
+        new OasAppBuilder().createOasAppOffline("xmom-client", target, yaml);
       case "datamodel" :
-        new BuildoasapplicationImpl().createOasAppOffline("xmom-data-model", target, yaml);
+        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml);
         break;
       default :
         System.out.println("Unexpected Generation Target: \"" + args[1] + "\".");

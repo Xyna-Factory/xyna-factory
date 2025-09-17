@@ -42,10 +42,11 @@
       <Input>
         <Data ID="2" Label="Application Generation Parameter" ReferenceName="ApplicationGenerationParameter" ReferencePath="xfmg.oas.generation" VariableName="applicationGenerationParameter2"/>
         <Data ID="3" Label="Managed File Id" ReferenceName="ManagedFileId" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="managedFileId3"/>
+        <Data ID="11" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory11"/>
       </Input>
       <Output/>
       <SourceCode>
-        <CodeSnippet Type="Java">xfmg.oas.generation.ApplicationGenerationImpl.generateApplicationByManagedFileID(correlatedXynaOrder, applicationGenerationParameter2, managedFileId3);</CodeSnippet>
+        <CodeSnippet Type="Java">xfmg.oas.generation.ApplicationGenerationImpl.generateApplicationByManagedFileID(correlatedXynaOrder, applicationGenerationParameter2, managedFileId3, oAS_ImportHistory11);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Query Oas Import History" Name="queryOasImportHistory">
@@ -63,9 +64,11 @@
       <Input>
         <Data ID="7" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory7"/>
       </Input>
-      <Output/>
+      <Output>
+        <Data ID="10" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory10"/>
+      </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">xfmg.oas.generation.ApplicationGenerationImpl.storeOasImportHistory(oAS_ImportHistory7);</CodeSnippet>
+        <CodeSnippet Type="Java">return xfmg.oas.generation.ApplicationGenerationImpl.storeOasImportHistory(oAS_ImportHistory7);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Query Oas Import History Details" Name="queryOasImportHistoryDetails">
@@ -77,6 +80,13 @@
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return xfmg.oas.generation.ApplicationGenerationImpl.queryOasImportHistoryDetails(oAS_ImportHistory8);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Delete Oas Import History Entries" Name="deleteOasImportHistoryEntries">
+      <Input/>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.oas.generation.ApplicationGenerationImpl.deleteOasImportHistoryEntries();</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>
