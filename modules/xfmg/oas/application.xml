@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="OAS_Base" factoryVersion="" versionName="1.7.8" xmlVersion="1.1">
+--><Application applicationName="OAS_Base" factoryVersion="" versionName="1.7.9" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -24,7 +24,7 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>Http</ApplicationName>
-        <VersionName>1.5.5</VersionName>
+        <VersionName>1.5.6</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>Json</ApplicationName>
