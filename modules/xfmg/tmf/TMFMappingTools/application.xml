@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="TMF_Mapping_Tools" factoryVersion="10.4.0.2" versionName="" xmlVersion="1.1">
+<Application applicationName="TMF_Mapping_Tools" factoryVersion="10.4.0.2" versionName="1.0.0" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -33,7 +33,7 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>Service_Catalog_Management_Client</ApplicationName>
-        <VersionName>1.1.14a</VersionName>
+        <VersionName>1.1.15</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

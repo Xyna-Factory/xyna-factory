@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version = '1.0' encoding = 'UTF-8'?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -16,141 +16,141 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Service Relationship" TypeName="GetServiceRelationship" TypePath="xfmg.tmf640.validation" Version="1.8">
-  <Operation ID="0" IsStatic="false" Label="Get Service Relationship" Name="GetServiceRelationship">
-    <Input>
-      <Data ID="2" IsList="true" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="tmf640.datamodel" VariableName="serviceRelationship2"/>
-      <Data ID="7" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="tmf633.datamodel" VariableName="serviceSpecRelationship7"/>
-    </Input>
-    <Output>
-      <Data ID="12" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="tmf640.datamodel" VariableName="serviceRelationship12"/>
-    </Output>
-    <ServiceReference ID="23" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
-      <Source RefID="22"/>
-      <Target RefID="22"/>
-    </ServiceReference>
-    <Mappings ID="177" Label="Mapping">
+   <Operation ID="0" IsStatic="false" Label="Get Service Relationship" Name="GetServiceRelationship">
       <Input>
-        <Data ID="316" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="tmf633.datamodel" VariableName="serviceSpecRelationship316">
-          <Source RefID="177"/>
-        </Data>
-        <Source RefID="7"/>
+         <Data ID="2" IsList="true" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="internalized.tmf640.datamodel" VariableName="serviceRelationship2"/>
+         <Data ID="7" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="internalized.tmf633.datamodel" VariableName="serviceSpecRelationship7"/>
       </Input>
       <Output>
-        <Data ID="212" Label="Filter by Service Relationship Type" ReferenceName="FilterByServiceRelationshipType" ReferencePath="xfmg.tmf.inspect" VariableName="filterByServiceRelationshipType212">
-          <Source RefID="177"/>
-        </Data>
-        <Target RefID="213"/>
+         <Data ID="12" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="internalized.tmf640.datamodel" VariableName="serviceRelationship12"/>
       </Output>
-      <Mapping>%1%.relationshipType=%0%.relationshipType</Mapping>
-    </Mappings>
-    <Function ID="22" Label="Filter">
-      <Source RefID="23"/>
-      <Source RefID="2"/>
-      <Source RefID="213"/>
-      <Target RefID="23"/>
-      <Target RefID="25"/>
-      <Invoke Operation="filter" ServiceID="23">
-        <Source RefID="2">
-          <Meta>
-            <ExpectedType>tmf640.datamodel.ServiceRelationship</ExpectedType>
-          </Meta>
-        </Source>
-        <Source RefID="213">
-          <Meta>
-            <ExpectedType>xfmg.tmf.inspect.FilterByServiceRelationshipType</ExpectedType>
-          </Meta>
-        </Source>
-      </Invoke>
-      <Receive ServiceID="23">
-        <Target RefID="25">
-          <Meta>
-            <ExpectedType>tmf640.datamodel.ServiceRelationship</ExpectedType>
-          </Meta>
-        </Target>
-      </Receive>
-    </Function>
-    <Choice ID="419" TypeName="BaseChoiceTypeFormula" TypePath="server">
-      <Source RefID="25"/>
-      <Target RefID="748"/>
-      <Input>
-        <Data ID="494" IsList="true" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="tmf640.datamodel" VariableName="serviceRelationship494">
-          <Source RefID="419"/>
-        </Data>
-        <Source RefID="25">
-          <Meta>
-            <LinkType>UserConnected</LinkType>
-          </Meta>
-        </Source>
-      </Input>
-      <Case ID="420" Label="true" Premise="length(%0%)==&quot;0&quot;">
-        <Mappings ID="631" Label="Mapping">
-          <Output>
-            <Data ID="701" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="tmf640.datamodel" VariableName="serviceRelationship701">
-              <Source RefID="631"/>
+      <ServiceReference ID="23" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+         <Source RefID="22"/>
+         <Target RefID="22"/>
+      </ServiceReference>
+      <Mappings ID="177" Label="Mapping">
+         <Input>
+            <Data ID="316" Label="ServiceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="internalized.tmf633.datamodel" VariableName="serviceSpecRelationship316">
+               <Source RefID="177"/>
             </Data>
-            <Target RefID="702"/>
-          </Output>
-          <Mapping>%0%=null</Mapping>
-        </Mappings>
-        <Assign ID="423">
-          <Source RefID="702"/>
-          <Target RefID="748"/>
-          <Copy>
-            <Source RefID="702"/>
-            <Target RefID="748"/>
-          </Copy>
-        </Assign>
-      </Case>
-      <Case ID="421" Label="false">
-        <Mappings ID="666" Label="Mapping">
-          <Input>
-            <Data ID="774" IsList="true" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="tmf640.datamodel" VariableName="serviceRelationship774">
-              <Source RefID="666"/>
+            <Source RefID="7"/>
+         </Input>
+         <Output>
+            <Data ID="212" Label="Filter by Service Relationship Type" ReferenceName="FilterByServiceRelationshipType" ReferencePath="xfmg.tmf.inspect" VariableName="filterByServiceRelationshipType212">
+               <Source RefID="177"/>
+            </Data>
+            <Target RefID="213"/>
+         </Output>
+         <Mapping>%1%.relationshipType=%0%.relationshipType</Mapping>
+      </Mappings>
+      <Function ID="22" Label="Filter">
+         <Source RefID="23"/>
+         <Source RefID="2"/>
+         <Source RefID="213"/>
+         <Target RefID="23"/>
+         <Target RefID="25"/>
+         <Invoke Operation="filter" ServiceID="23">
+            <Source RefID="2">
+               <Meta>
+                  <ExpectedType>tmf640.datamodel.ServiceRelationship</ExpectedType>
+               </Meta>
+            </Source>
+            <Source RefID="213">
+               <Meta>
+                  <ExpectedType>xfmg.tmf.inspect.FilterByServiceRelationshipType</ExpectedType>
+               </Meta>
+            </Source>
+         </Invoke>
+         <Receive ServiceID="23">
+            <Target RefID="25">
+               <Meta>
+                  <ExpectedType>tmf640.datamodel.ServiceRelationship</ExpectedType>
+               </Meta>
+            </Target>
+         </Receive>
+      </Function>
+      <Choice ID="419" TypeName="BaseChoiceTypeFormula" TypePath="server">
+         <Source RefID="25"/>
+         <Target RefID="748"/>
+         <Input>
+            <Data ID="494" IsList="true" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="internalized.tmf640.datamodel" VariableName="serviceRelationship494">
+               <Source RefID="419"/>
             </Data>
             <Source RefID="25">
-              <Meta>
-                <LinkType>UserConnected</LinkType>
-              </Meta>
+               <Meta>
+                  <LinkType>UserConnected</LinkType>
+               </Meta>
             </Source>
-          </Input>
-          <Output>
-            <Data ID="737" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="tmf640.datamodel" VariableName="serviceRelationship737">
-              <Source RefID="666"/>
-            </Data>
-            <Target RefID="738"/>
-          </Output>
-          <Mapping>%1%=%0%["0"]</Mapping>
-        </Mappings>
-        <Assign ID="425">
-          <Source RefID="738"/>
-          <Target RefID="748"/>
-          <Copy>
-            <Source RefID="738"/>
-            <Target RefID="748"/>
-          </Copy>
-        </Assign>
-      </Case>
-    </Choice>
-    <Data ID="25" IsList="true" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="tmf640.datamodel" VariableName="serviceRelationship25"/>
-    <Data ID="213" Label="Filter by Service Relationship Type" ReferenceName="FilterByServiceRelationshipType" ReferencePath="xfmg.tmf.inspect" VariableName="filterByServiceRelationshipType213">
-      <Source RefID="177"/>
-    </Data>
-    <Data ID="702" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="tmf640.datamodel" VariableName="serviceRelationship702">
-      <Source RefID="631"/>
-    </Data>
-    <Data ID="738" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="tmf640.datamodel" VariableName="serviceRelationship738">
-      <Source RefID="666"/>
-    </Data>
-    <Data ID="748" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="tmf640.datamodel" VariableName="serviceRelationship748">
-      <Source RefID="419"/>
-    </Data>
-    <Assign ID="1">
-      <Source RefID="748"/>
-      <Target RefID="12"/>
-      <Copy>
-        <Source RefID="748"/>
-        <Target RefID="12"/>
-      </Copy>
-    </Assign>
-  </Operation>
+         </Input>
+         <Case ID="420" Label="true" Premise="length(%0%)==&quot;0&quot;">
+            <Mappings ID="631" Label="Mapping">
+               <Output>
+                  <Data ID="701" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="internalized.tmf640.datamodel" VariableName="serviceRelationship701">
+                     <Source RefID="631"/>
+                  </Data>
+                  <Target RefID="702"/>
+               </Output>
+               <Mapping>%0%=null</Mapping>
+            </Mappings>
+            <Assign ID="423">
+               <Source RefID="702"/>
+               <Target RefID="748"/>
+               <Copy>
+                  <Source RefID="702"/>
+                  <Target RefID="748"/>
+               </Copy>
+            </Assign>
+         </Case>
+         <Case ID="421" Label="false">
+            <Mappings ID="666" Label="Mapping">
+               <Input>
+                  <Data ID="774" IsList="true" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="internalized.tmf640.datamodel" VariableName="serviceRelationship774">
+                     <Source RefID="666"/>
+                  </Data>
+                  <Source RefID="25">
+                     <Meta>
+                        <LinkType>UserConnected</LinkType>
+                     </Meta>
+                  </Source>
+               </Input>
+               <Output>
+                  <Data ID="737" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="internalized.tmf640.datamodel" VariableName="serviceRelationship737">
+                     <Source RefID="666"/>
+                  </Data>
+                  <Target RefID="738"/>
+               </Output>
+               <Mapping>%1%=%0%["0"]</Mapping>
+            </Mappings>
+            <Assign ID="425">
+               <Source RefID="738"/>
+               <Target RefID="748"/>
+               <Copy>
+                  <Source RefID="738"/>
+                  <Target RefID="748"/>
+               </Copy>
+            </Assign>
+         </Case>
+      </Choice>
+      <Data ID="25" IsList="true" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="internalized.tmf640.datamodel" VariableName="serviceRelationship25"/>
+      <Data ID="213" Label="Filter by Service Relationship Type" ReferenceName="FilterByServiceRelationshipType" ReferencePath="xfmg.tmf.inspect" VariableName="filterByServiceRelationshipType213">
+         <Source RefID="177"/>
+      </Data>
+      <Data ID="702" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="internalized.tmf640.datamodel" VariableName="serviceRelationship702">
+         <Source RefID="631"/>
+      </Data>
+      <Data ID="738" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="internalized.tmf640.datamodel" VariableName="serviceRelationship738">
+         <Source RefID="666"/>
+      </Data>
+      <Data ID="748" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="internalized.tmf640.datamodel" VariableName="serviceRelationship748">
+         <Source RefID="419"/>
+      </Data>
+      <Assign ID="1">
+         <Source RefID="748"/>
+         <Target RefID="12"/>
+         <Copy>
+            <Source RefID="748"/>
+            <Target RefID="12"/>
+         </Copy>
+      </Assign>
+   </Operation>
 </Service>

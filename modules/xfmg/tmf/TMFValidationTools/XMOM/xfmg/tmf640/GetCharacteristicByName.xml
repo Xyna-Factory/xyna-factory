@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version = '1.0' encoding = 'UTF-8'?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -17,234 +17,234 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Characteristic by Name" TypeName="GetCharacteristicByName" TypePath="xfmg.tmf640" Version="1.8">
-  <Operation ID="0" IsStatic="false" Label="Get Characteristic by Name" Name="GetCharacteristicByName">
-    <Input>
-      <Data ID="2" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember2"/>
-      <Data ID="7" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic7"/>
-      <Data ID="1310" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification1310"/>
-    </Input>
-    <Output>
-      <Data ID="12" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic12"/>
-    </Output>
-    <Throws>
-      <Exception Label="DuplicateCharacteristicFound" ReferenceName="DuplicateCharacteristicFound" ReferencePath="xfmg.tmf640" VariableName="duplicateCharacteristicFound1687"/>
-      <Exception Label="Service Characteristic not found" ReferenceName="ServiceCharacteristicNotFound" ReferencePath="xfmg.tmf640" VariableName="serviceCharacteristicNotFound1688"/>
-    </Throws>
-    <ServiceReference ID="40" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
-      <Source RefID="39"/>
-      <Target RefID="39"/>
-    </ServiceReference>
-    <Mappings ID="27" Label="Mapping">
+   <Operation ID="0" IsStatic="false" Label="Get Characteristic by Name" Name="GetCharacteristicByName">
       <Input>
-        <Data ID="28" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember28"/>
-        <Source RefID="2"/>
+         <Data ID="2" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember2"/>
+         <Data ID="7" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic7"/>
+         <Data ID="1310" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicSpecification1310"/>
       </Input>
       <Output>
-        <Data ID="29" Label="Filter Characteristic by Name" ReferenceName="FilterCharacteristicByName" ReferencePath="xfmg.tmf.inspect" VariableName="filterCharacteristicByName29"/>
-        <Target RefID="26"/>
+         <Data ID="12" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic12"/>
       </Output>
-      <Mapping>%1%.name=%0%.label</Mapping>
-    </Mappings>
-    <Function ID="39" Label="Filter">
-      <Source RefID="40"/>
-      <Source RefID="7"/>
-      <Source RefID="26"/>
-      <Target RefID="40"/>
-      <Target RefID="38"/>
-      <Invoke Operation="filter" ServiceID="40">
-        <Source RefID="7">
-          <Meta>
-            <ExpectedType>tmf640.datamodel.Characteristic</ExpectedType>
-          </Meta>
-        </Source>
-        <Source RefID="26"/>
-      </Invoke>
-      <Receive ServiceID="40">
-        <Target RefID="38">
-          <Meta>
-            <ExpectedType>tmf640.datamodel.Characteristic</ExpectedType>
-          </Meta>
-        </Target>
-      </Receive>
-    </Function>
-    <Choice ID="74" TypeName="BaseChoiceTypeFormula" TypePath="server">
-      <Source RefID="38"/>
-      <Target RefID="987"/>
-      <Input>
-        <Data ID="81" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic81"/>
-        <Source RefID="38">
-          <Meta>
-            <LinkType>UserConnected</LinkType>
-          </Meta>
-        </Source>
-      </Input>
-      <Case ID="75" Label="true" Premise="length(%0%)==&quot;0&quot;">
-        <Choice ID="208" TypeName="BaseChoiceTypeFormula" TypePath="server">
-          <Source RefID="1310"/>
-          <Target RefID="1654"/>
-          <Input>
-            <Data ID="1464" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification1464">
-              <Source RefID="208"/>
-            </Data>
-            <Source RefID="1310"/>
-          </Input>
-          <Input>
-            <Data ID="1599" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="tmf633.datamodel" VariableName="characteristicSpecification1599">
-              <Source RefID="208"/>
-            </Data>
-            <Source RefID="1310"/>
-          </Input>
-          <Case ID="209" Label="true" Premise="%0%.minCardinality!=null&amp;&amp;%1%.minCardinality&gt;&quot;0&quot;">
-            <Mappings ID="83" Label="Mapping">
-              <Input>
-                <Data ID="84" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember84"/>
-                <Source RefID="2"/>
-              </Input>
-              <Output>
-                <Exception ID="85" Label="Service Characteristic not found" ReferenceName="ServiceCharacteristicNotFound" ReferencePath="xfmg.tmf640" VariableName="serviceCharacteristicNotFound85"/>
-                <Target RefID="522"/>
-              </Output>
-              <Mapping>%1%.characteristicName=%0%.label</Mapping>
-            </Mappings>
-            <Throw ExceptionID="522" ID="86" Label="Throw Service Characteristic not found">
-              <Meta>
-                <PreferedExceptionType>cl.test.ServiceCharacteristicNotFound</PreferedExceptionType>
-              </Meta>
-              <Source RefID="522"/>
-            </Throw>
-            <Assign ID="212"/>
-            <Exception ID="522" Label="Service Characteristic not found" ReferenceName="ServiceCharacteristicNotFound" ReferencePath="xfmg.tmf640" VariableName="serviceCharacteristicNotFound522">
-              <Target RefID="86"/>
-            </Exception>
-          </Case>
-          <Case ID="210" Label="false">
-            <Mappings ID="595" Label="null">
-              <Output>
-                <Data ID="632" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic632">
-                  <Source RefID="595"/>
-                </Data>
-                <Target RefID="633"/>
-              </Output>
-              <Mapping>%0%=null</Mapping>
-            </Mappings>
-            <Assign ID="214">
-              <Source RefID="633"/>
-              <Target RefID="1654"/>
-              <Copy>
-                <Source RefID="633"/>
-                <Target RefID="1654"/>
-              </Copy>
-            </Assign>
-          </Case>
-        </Choice>
-        <Assign>
-          <Source RefID="1654"/>
-          <Target RefID="987"/>
-          <Copy>
-            <Source RefID="1654"/>
-            <Target RefID="987"/>
-          </Copy>
-        </Assign>
-      </Case>
-      <Case ID="76" Label="false">
-        <Choice ID="686" TypeName="BaseChoiceTypeFormula" TypePath="server">
-          <Source RefID="38"/>
-          <Target RefID="986"/>
-          <Input>
-            <Data ID="765" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic765">
-              <Source RefID="686"/>
-            </Data>
-            <Source RefID="38">
-              <Meta>
-                <LinkType>UserConnected</LinkType>
-              </Meta>
+      <Throws>
+         <Exception Label="DuplicateCharacteristicFound" ReferenceName="DuplicateCharacteristicFound" ReferencePath="xfmg.tmf640" VariableName="duplicateCharacteristicFound1687"/>
+         <Exception Label="Service Characteristic not found" ReferenceName="ServiceCharacteristicNotFound" ReferencePath="xfmg.tmf640" VariableName="serviceCharacteristicNotFound1688"/>
+      </Throws>
+      <ServiceReference ID="40" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+         <Source RefID="39"/>
+         <Target RefID="39"/>
+      </ServiceReference>
+      <Mappings ID="27" Label="Mapping">
+         <Input>
+            <Data ID="28" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember28"/>
+            <Source RefID="2"/>
+         </Input>
+         <Output>
+            <Data ID="29" Label="Filter Characteristic by Name" ReferenceName="FilterCharacteristicByName" ReferencePath="xfmg.tmf.inspect" VariableName="filterCharacteristicByName29"/>
+            <Target RefID="26"/>
+         </Output>
+         <Mapping>%1%.name=%0%.label</Mapping>
+      </Mappings>
+      <Function ID="39" Label="Filter">
+         <Source RefID="40"/>
+         <Source RefID="7"/>
+         <Source RefID="26"/>
+         <Target RefID="40"/>
+         <Target RefID="38"/>
+         <Invoke Operation="filter" ServiceID="40">
+            <Source RefID="7">
+               <Meta>
+                  <ExpectedType>tmf640.datamodel.Characteristic</ExpectedType>
+               </Meta>
             </Source>
-          </Input>
-          <Case ID="687" Label="true" Premise="length(%0%)&gt;&quot;1&quot;">
-            <Mappings ID="1022" Label="Mapping">
-              <Input>
-                <Data ID="1201" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember1201">
-                  <Source RefID="1022"/>
-                </Data>
-                <Source RefID="2"/>
-              </Input>
-              <Output>
-                <Exception ID="1067" Label="DuplicateCharacteristicFound" ReferenceName="DuplicateCharacteristicFound" ReferencePath="xfmg.tmf640" VariableName="duplicateCharacteristicFound1067">
-                  <Source RefID="1022"/>
-                </Exception>
-                <Target RefID="1068"/>
-              </Output>
-              <Mapping>%1%.characteristicName=%0%.label</Mapping>
-            </Mappings>
-            <Throw ExceptionID="1068" ID="975" Label="Throw Duplicate Characteristic found">
-              <Meta>
-                <PreferedExceptionType>xfmg.tmf640.DuplicateCharacteristicFound</PreferedExceptionType>
-              </Meta>
-              <Source RefID="1068"/>
-            </Throw>
-            <Assign ID="690"/>
-          </Case>
-          <Case ID="688" Label="false">
-            <Mappings ID="124" Label="Mapping">
-              <Input>
-                <Data ID="126" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic126"/>
-                <Source RefID="38">
-                  <Meta>
-                    <LinkType>UserConnected</LinkType>
-                  </Meta>
-                </Source>
-              </Input>
-              <Output>
-                <Data ID="127" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic127"/>
-                <Target RefID="918"/>
-              </Output>
-              <Mapping>%1%=%0%["0"]</Mapping>
-            </Mappings>
-            <Assign ID="692">
-              <Source RefID="918"/>
-              <Target RefID="986"/>
-              <Copy>
-                <Source RefID="918"/>
-                <Target RefID="986"/>
-              </Copy>
+            <Source RefID="26"/>
+         </Invoke>
+         <Receive ServiceID="40">
+            <Target RefID="38">
+               <Meta>
+                  <ExpectedType>tmf640.datamodel.Characteristic</ExpectedType>
+               </Meta>
+            </Target>
+         </Receive>
+      </Function>
+      <Choice ID="74" TypeName="BaseChoiceTypeFormula" TypePath="server">
+         <Source RefID="38"/>
+         <Target RefID="987"/>
+         <Input>
+            <Data ID="81" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic81"/>
+            <Source RefID="38">
+               <Meta>
+                  <LinkType>UserConnected</LinkType>
+               </Meta>
+            </Source>
+         </Input>
+         <Case ID="75" Label="true" Premise="length(%0%)==&quot;0&quot;">
+            <Choice ID="208" TypeName="BaseChoiceTypeFormula" TypePath="server">
+               <Source RefID="1310"/>
+               <Target RefID="1654"/>
+               <Input>
+                  <Data ID="1464" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicSpecification1464">
+                     <Source RefID="208"/>
+                  </Data>
+                  <Source RefID="1310"/>
+               </Input>
+               <Input>
+                  <Data ID="1599" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicSpecification1599">
+                     <Source RefID="208"/>
+                  </Data>
+                  <Source RefID="1310"/>
+               </Input>
+               <Case ID="209" Label="true" Premise="%0%.minCardinality!=null&amp;&amp;%1%.minCardinality>&quot;0&quot;">
+                  <Mappings ID="83" Label="Mapping">
+                     <Input>
+                        <Data ID="84" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember84"/>
+                        <Source RefID="2"/>
+                     </Input>
+                     <Output>
+                        <Exception ID="85" Label="Service Characteristic not found" ReferenceName="ServiceCharacteristicNotFound" ReferencePath="xfmg.tmf640" VariableName="serviceCharacteristicNotFound85"/>
+                        <Target RefID="522"/>
+                     </Output>
+                     <Mapping>%1%.characteristicName=%0%.label</Mapping>
+                  </Mappings>
+                  <Throw ExceptionID="522" ID="86" Label="Throw Service Characteristic not found">
+                     <Meta>
+                        <PreferedExceptionType>cl.test.ServiceCharacteristicNotFound</PreferedExceptionType>
+                     </Meta>
+                     <Source RefID="522"/>
+                  </Throw>
+                  <Assign ID="212"/>
+                  <Exception ID="522" Label="Service Characteristic not found" ReferenceName="ServiceCharacteristicNotFound" ReferencePath="xfmg.tmf640" VariableName="serviceCharacteristicNotFound522">
+                     <Target RefID="86"/>
+                  </Exception>
+               </Case>
+               <Case ID="210" Label="false">
+                  <Mappings ID="595" Label="null">
+                     <Output>
+                        <Data ID="632" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic632">
+                           <Source RefID="595"/>
+                        </Data>
+                        <Target RefID="633"/>
+                     </Output>
+                     <Mapping>%0%=null</Mapping>
+                  </Mappings>
+                  <Assign ID="214">
+                     <Source RefID="633"/>
+                     <Target RefID="1654"/>
+                     <Copy>
+                        <Source RefID="633"/>
+                        <Target RefID="1654"/>
+                     </Copy>
+                  </Assign>
+               </Case>
+            </Choice>
+            <Assign>
+               <Source RefID="1654"/>
+               <Target RefID="987"/>
+               <Copy>
+                  <Source RefID="1654"/>
+                  <Target RefID="987"/>
+               </Copy>
             </Assign>
-            <Data ID="918" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic918"/>
-          </Case>
-        </Choice>
-        <Assign>
-          <Source RefID="986"/>
-          <Target RefID="987"/>
-          <Copy>
-            <Source RefID="986"/>
-            <Target RefID="987"/>
-          </Copy>
-        </Assign>
-      </Case>
-    </Choice>
-    <Data ID="26" Label="Filter Characteristic by Name" ReferenceName="FilterCharacteristicByName" ReferencePath="xfmg.tmf.inspect" VariableName="filterCharacteristicByName26"/>
-    <Data ID="38" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic38"/>
-    <Data ID="633" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic633">
-      <Source RefID="595"/>
-    </Data>
-    <Data ID="986" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic986">
-      <Source RefID="686"/>
-    </Data>
-    <Data ID="987" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic987">
-      <Source RefID="74"/>
-    </Data>
-    <Data ID="1654" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic1654">
-      <Source RefID="208"/>
-    </Data>
-    <Exception ID="1068" Label="DuplicateCharacteristicFound" ReferenceName="DuplicateCharacteristicFound" ReferencePath="xfmg.tmf640" VariableName="duplicateCharacteristicFound1068">
-      <Target RefID="975"/>
-    </Exception>
-    <Assign ID="1">
-      <Source RefID="987"/>
-      <Target RefID="12"/>
-      <Copy>
-        <Source RefID="987"/>
-        <Target RefID="12"/>
-      </Copy>
-    </Assign>
-  </Operation>
+         </Case>
+         <Case ID="76" Label="false">
+            <Choice ID="686" TypeName="BaseChoiceTypeFormula" TypePath="server">
+               <Source RefID="38"/>
+               <Target RefID="986"/>
+               <Input>
+                  <Data ID="765" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic765">
+                     <Source RefID="686"/>
+                  </Data>
+                  <Source RefID="38">
+                     <Meta>
+                        <LinkType>UserConnected</LinkType>
+                     </Meta>
+                  </Source>
+               </Input>
+               <Case ID="687" Label="true" Premise="length(%0%)>&quot;1&quot;">
+                  <Mappings ID="1022" Label="Mapping">
+                     <Input>
+                        <Data ID="1201" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember1201">
+                           <Source RefID="1022"/>
+                        </Data>
+                        <Source RefID="2"/>
+                     </Input>
+                     <Output>
+                        <Exception ID="1067" Label="DuplicateCharacteristicFound" ReferenceName="DuplicateCharacteristicFound" ReferencePath="xfmg.tmf640" VariableName="duplicateCharacteristicFound1067">
+                           <Source RefID="1022"/>
+                        </Exception>
+                        <Target RefID="1068"/>
+                     </Output>
+                     <Mapping>%1%.characteristicName=%0%.label</Mapping>
+                  </Mappings>
+                  <Throw ExceptionID="1068" ID="975" Label="Throw Duplicate Characteristic found">
+                     <Meta>
+                        <PreferedExceptionType>xfmg.tmf640.DuplicateCharacteristicFound</PreferedExceptionType>
+                     </Meta>
+                     <Source RefID="1068"/>
+                  </Throw>
+                  <Assign ID="690"/>
+               </Case>
+               <Case ID="688" Label="false">
+                  <Mappings ID="124" Label="Mapping">
+                     <Input>
+                        <Data ID="126" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic126"/>
+                        <Source RefID="38">
+                           <Meta>
+                              <LinkType>UserConnected</LinkType>
+                           </Meta>
+                        </Source>
+                     </Input>
+                     <Output>
+                        <Data ID="127" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic127"/>
+                        <Target RefID="918"/>
+                     </Output>
+                     <Mapping>%1%=%0%["0"]</Mapping>
+                  </Mappings>
+                  <Assign ID="692">
+                     <Source RefID="918"/>
+                     <Target RefID="986"/>
+                     <Copy>
+                        <Source RefID="918"/>
+                        <Target RefID="986"/>
+                     </Copy>
+                  </Assign>
+                  <Data ID="918" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic918"/>
+               </Case>
+            </Choice>
+            <Assign>
+               <Source RefID="986"/>
+               <Target RefID="987"/>
+               <Copy>
+                  <Source RefID="986"/>
+                  <Target RefID="987"/>
+               </Copy>
+            </Assign>
+         </Case>
+      </Choice>
+      <Data ID="26" Label="Filter Characteristic by Name" ReferenceName="FilterCharacteristicByName" ReferencePath="xfmg.tmf.inspect" VariableName="filterCharacteristicByName26"/>
+      <Data ID="38" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic38"/>
+      <Data ID="633" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic633">
+         <Source RefID="595"/>
+      </Data>
+      <Data ID="986" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic986">
+         <Source RefID="686"/>
+      </Data>
+      <Data ID="987" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic987">
+         <Source RefID="74"/>
+      </Data>
+      <Data ID="1654" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic1654">
+         <Source RefID="208"/>
+      </Data>
+      <Exception ID="1068" Label="DuplicateCharacteristicFound" ReferenceName="DuplicateCharacteristicFound" ReferencePath="xfmg.tmf640" VariableName="duplicateCharacteristicFound1068">
+         <Target RefID="975"/>
+      </Exception>
+      <Assign ID="1">
+         <Source RefID="987"/>
+         <Target RefID="12"/>
+         <Copy>
+            <Source RefID="987"/>
+            <Target RefID="12"/>
+         </Copy>
+      </Assign>
+   </Operation>
 </Service>

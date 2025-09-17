@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version = '1.0' encoding = 'UTF-8'?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -16,33 +16,33 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Filter" BaseTypePath="base.list.filter" IsAbstract="false" Label="Filter Context" TypeName="FilterContext" TypePath="xfmg.tmf.validation" Version="1.8">
-  <Meta>
-    <IsServiceGroupOnly>false</IsServiceGroupOnly>
-  </Meta>
-  <Data IsList="true" Label="Constraint Context" ReferenceName="ConstraintContext" ReferencePath="xfmg.tmf.validation" VariableName="constraintContext"/>
-  <Service Label="Filter Context" TypeName="FilterContext">
-    <Operation IsStatic="false" Label="Accept" Name="accept">
-      <Input>
-        <Data ID="6" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype6">
-          <Meta>
-            <Type>GeneralXynaObject</Type>
-          </Meta>
-        </Data>
-      </Input>
-      <Output>
-        <Data ID="7" Label="Result" VariableName="boolean7">
-          <Meta>
-            <Type>boolean</Type>
-          </Meta>
-        </Data>
-      </Output>
-      <SourceCode>
-        <CodeSnippet Type="Java">tmf633.datamodel.Constraint input = (tmf633.datamodel.Constraint) anytype6;
+   <Meta>
+      <IsServiceGroupOnly>false</IsServiceGroupOnly>
+   </Meta>
+   <Data IsList="true" Label="Constraint Context" ReferenceName="ConstraintContext" ReferencePath="xfmg.tmf.validation" VariableName="constraintContext"/>
+   <Service Label="Filter Context" TypeName="FilterContext">
+      <Operation IsStatic="false" Label="Accept" Name="accept">
+         <Input>
+            <Data ID="6" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype6">
+               <Meta>
+                  <Type>GeneralXynaObject</Type>
+               </Meta>
+            </Data>
+         </Input>
+         <Output>
+            <Data ID="7" Label="Result" VariableName="boolean7">
+               <Meta>
+                  <Type>boolean</Type>
+               </Meta>
+            </Data>
+         </Output>
+         <SourceCode>
+            <CodeSnippet Type="Java">tmf633.datamodel.Constraint input = (internalized.tmf633.datamodel.Constraint) anytype6;
 if (input.getContext() == null || input.getContext().size() == 0) {
   //no restrictions in constraint
   return true;
 }
-List&lt;tmf633.datamodel.ConstraintContext&gt; contexts = new ArrayList&lt;&gt;(input.getContext());
+List&lt;internalized.tmf633.datamodel.ConstraintContext> contexts = new ArrayList&lt;>(input.getContext());
 outer: for (xfmg.tmf.validation.ConstraintContext currentctx : getConstraintContext()) {
   String currentVal = currentctx.getValue();
   if (currentVal == null || currentVal.isEmpty()) {
@@ -50,7 +50,7 @@ outer: for (xfmg.tmf.validation.ConstraintContext currentctx : getConstraintCont
     continue;
   }
   //does the constraint define a restriction for this context?
-  for (tmf633.datamodel.ConstraintContext ctx : contexts) {
+  for (internalized.tmf633.datamodel.ConstraintContext ctx : contexts) {
     if (ctx.getType().equals(currentctx.getType())) {
       if (ctx.getValue() == null || ctx.getValue().isEmpty()) {
         //ok, no restriction set
@@ -63,10 +63,10 @@ outer: for (xfmg.tmf.validation.ConstraintContext currentctx : getConstraintCont
     }
     //else other context type
   }
-  //context not mentioned in constraint -&gt; not restricted -&gt; ignore
+  //context not mentioned in constraint -> not restricted -> ignore
 }
 return true;</CodeSnippet>
-      </SourceCode>
-    </Operation>
-  </Service>
+         </SourceCode>
+      </Operation>
+   </Service>
 </DataType>

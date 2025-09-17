@@ -1,0 +1,134 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Characteristic" BaseTypePath="internalized.tmf640.datamodel" IsAbstract="false" Label="ObjectCharacteristic" TypeName="ObjectCharacteristic" TypePath="internalized.tmf640.datamodel" Version="1.8">
+   <Meta>
+      <IsServiceGroupOnly>false</IsServiceGroupOnly>
+      <Documentation>This data type is "allOf": Characteristic
+        </Documentation>
+   </Meta>
+   <Data Label="value" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="value">
+      <Meta>
+         <Documentation>Value of the characteristic
+required
+        </Documentation>
+      </Meta>
+   </Data>
+   <Service Label="ObjectCharacteristic" TypeName="ObjectCharacteristic">
+      <Operation IsStatic="false" Label="Validate" Name="validate">
+         <Input/>
+         <Output>
+            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+         </Output>
+         <SourceCode>
+            <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String>());
+// validate ObjectCharacteristic.atbaseType of type String
+try {
+    var validator_atbaseType = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atbaseType.setName("@baseType");
+    validator_atbaseType.setValue(getAtbaseType());
+    result.getErrorMessages().addAll(validator_atbaseType.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ObjectCharacteristic.atbaseType");
+}
+
+// validate ObjectCharacteristic.atschemaLocation of type String
+try {
+    var validator_atschemaLocation = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atschemaLocation.setName("@schemaLocation");
+    validator_atschemaLocation.setValue(getAtschemaLocation());
+    validator_atschemaLocation.setFormat("uri");
+    result.getErrorMessages().addAll(validator_atschemaLocation.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ObjectCharacteristic.atschemaLocation");
+}
+
+// validate ObjectCharacteristic.attype of type String
+try {
+    var validator_attype = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_attype.setName("@type");
+    validator_attype.setValue(getAttype());
+    result.getErrorMessages().addAll(validator_attype.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ObjectCharacteristic.attype");
+}
+
+// validate ObjectCharacteristic.id of type String
+try {
+    var validator_id = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_id.setName("id");
+    validator_id.setValue(getId());
+    validator_id.setPattern("^[\\w\\-\\.]*$");
+    result.getErrorMessages().addAll(validator_id.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ObjectCharacteristic.id");
+}
+
+// validate ObjectCharacteristic.name of type String
+try {
+    var validator_name = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_name.setName("name");
+    validator_name.setValue(getName());
+    validator_name.setPattern("^[\\w\\-\\.]*$");
+    validator_name.setRequired();
+    result.getErrorMessages().addAll(validator_name.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ObjectCharacteristic.name");
+}
+
+// validate ObjectCharacteristic.valueType of type String
+try {
+    var validator_valueType = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_valueType.setName("valueType");
+    validator_valueType.setValue(getValueType());
+    result.getErrorMessages().addAll(validator_valueType.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ObjectCharacteristic.valueType");
+}
+
+// validate ObjectCharacteristic.characteristicRelationship of type CharacteristicRelationship
+try {
+    List&lt;? extends internalized.tmf640.datamodel.CharacteristicRelationship> characteristicRelationship = getCharacteristicRelationship();
+    if (characteristicRelationship != null) {
+        for (internalized.tmf640.datamodel.CharacteristicRelationship obj : characteristicRelationship) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ObjectCharacteristic.characteristicRelationship");
+}
+
+// validate ObjectCharacteristic.value of type JSONObject
+try {
+    xfmg.xfctrl.datamodel.json.JSONObject value = getValue();
+    if (value != null) {
+    } else {
+        result.getErrorMessages().add("ObjectCharacteristic.value: Object of type JSONObject is required but is null");
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ObjectCharacteristic.value");
+}
+
+return result.getResult();
+                </CodeSnippet>
+         </SourceCode>
+      </Operation>
+   </Service>
+</DataType>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version = '1.0' encoding = 'UTF-8'?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -16,17 +16,17 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Constraint" TypeName="Constraint" TypePath="xfmg.tmf.validation" Version="1.8">
-  <Meta>
-    <IsServiceGroupOnly>false</IsServiceGroupOnly>
-    <Documentation>Constraints describe conditional rules for JSON documents.
+   <Meta>
+      <IsServiceGroupOnly>false</IsServiceGroupOnly>
+      <Documentation>Constraints describe conditional rules for JSON documents.
 If the condition holds, the rule is to be evaluated to validate the constraint.
 Both, the condition and the rule are JSONPathExpressions, consisting of a JSONPath and a value to compare to.</Documentation>
-  </Meta>
-  <Data Label="name" VariableName="name">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="condition" ReferenceName="JSONPathExpression" ReferencePath="xfmg.tmf.validation" VariableName="condition"/>
-  <Data Label="rule" ReferenceName="JSONPathExpression" ReferencePath="xfmg.tmf.validation" VariableName="rule"/>
+   </Meta>
+   <Data Label="name" VariableName="name">
+      <Meta>
+         <Type>String</Type>
+      </Meta>
+   </Data>
+   <Data Label="condition" ReferenceName="JSONPathExpression" ReferencePath="xfmg.tmf.validation" VariableName="condition"/>
+   <Data Label="rule" ReferenceName="JSONPathExpression" ReferencePath="xfmg.tmf.validation" VariableName="rule"/>
 </DataType>

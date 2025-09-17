@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version = '1.0' encoding = 'UTF-8'?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -16,27 +16,27 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
-  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="TMF640-00004" IsAbstract="false" Label="Exceeded Allowed Value Range" TypeName="ExceededAllowedValueRange" TypePath="xfmg.tmf640">
-    <Data Label="characteristic name" VariableName="characteristicName">
-      <Meta>
-        <Type>String</Type>
-      </Meta>
-    </Data>
-    <Data Label="characteristic value" VariableName="characteristicValue">
-      <Meta>
-        <Type>String</Type>
-      </Meta>
-    </Data>
-    <Data Label="min value" VariableName="minValue">
-      <Meta>
-        <Type>String</Type>
-      </Meta>
-    </Data>
-    <Data Label="max value" VariableName="maxValue">
-      <Meta>
-        <Type>String</Type>
-      </Meta>
-    </Data>
-    <MessageText Language="EN">Characteristic &lt;%0%&gt; has value &lt;%1%&gt; which is outside the range specified in the specification [%2%, %3%].</MessageText>
-  </ExceptionType>
+   <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="TMF640-00004" IsAbstract="false" Label="Exceeded Allowed Value Range" TypeName="ExceededAllowedValueRange" TypePath="xfmg.tmf640">
+      <Data Label="characteristic name" VariableName="characteristicName">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="characteristic value" VariableName="characteristicValue">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="min value" VariableName="minValue">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <Data Label="max value" VariableName="maxValue">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="EN">Characteristic &lt;%0%> has value &lt;%1%> which is outside the range specified in the specification [%2%, %3%].</MessageText>
+   </ExceptionType>
 </ExceptionStore>

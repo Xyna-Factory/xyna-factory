@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="TMF_Validation_Tools" factoryVersion="10.4.0.2" versionName="" xmlVersion="1.1">
+<Application applicationName="TMF_Validation_Tools" factoryVersion="10.4.0.2" versionName="1.0.0" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -24,16 +24,20 @@
         <VersionName>1.0.1</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
-        <ApplicationName>Service_Activation_and_Configuration_Data_Model</ApplicationName>
-        <VersionName>1.1.8</VersionName>
-      </RuntimeContextRequirement>
-      <RuntimeContextRequirement>
-        <ApplicationName>Service_Catalog_Management_Client</ApplicationName>
-        <VersionName>1.1.15</VersionName>
+        <ApplicationName>OAS_Base</ApplicationName>
+        <VersionName>1.7.8</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
   <Ordertypes>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>internalized.tmf633.client.serviceSpecification.wf.RequestGETServiceSpecificationId</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>internalized.tmf633.client.serviceSpecification.wf.RequestGETServiceSpecificationIdWithProcessing</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
     <Ordertype implicitDependency="true">
       <DestinationKey>xfmg.tmf.validation.constraint.function.workflow.GET_SERVICE</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
@@ -96,6 +100,510 @@
     </Ordertype>
   </Ordertypes>
   <XMOMEntries>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.request.ParseGETServiceSpecificationIdResponse</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse200OK</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse400BadRequest</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse401Unauthorized</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse403Forbidden</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse404NotFound</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse409Conflict</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse415UnsupportedMediaType</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse500InternalServerError</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationResponse</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationResponse200OK</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationResponse400BadRequest</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationResponse401Unauthorized</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationResponse403Forbidden</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationResponse409Conflict</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationResponse415UnsupportedMediaType</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationResponse500InternalServerError</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.POSTServiceSpecificationResponse</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.POSTServiceSpecificationResponse201Created</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.POSTServiceSpecificationResponse400BadRequest</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.POSTServiceSpecificationResponse401Unauthorized</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.POSTServiceSpecificationResponse403Forbidden</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.POSTServiceSpecificationResponse409Conflict</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.POSTServiceSpecificationResponse415UnsupportedMediaType</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.response.POSTServiceSpecificationResponse500InternalServerError</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.send.GETServiceSpecificationIdSendParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.send.GETServiceSpecificationSendParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.send.POSTServiceSpecificationSendParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.wf.RequestGETServiceSpecificationId</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.client.serviceSpecification.wf.RequestGETServiceSpecificationIdWithProcessing</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.AllowedChanges</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.AssociationSpecificationRef</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.BooleanArrayCharacteristicValueSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.BooleanCharacteristicValueSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.ChangeList</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.CharacteristicSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.CharacteristicSpecificationBase</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.CharacteristicSpecificationRelationship</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.CharacteristicValueSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.Constraint</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.ConstraintContext</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.ConstraintRef</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.ConstraintRuleDefinition</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.EntityRef</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.EntitySpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.EntitySpecificationRelationship</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.Error</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.EventSubscription</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.EventSubscriptionInput</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.Extensible</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.ExternalIdentifierSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.FeatureSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.FeatureSpecificationCharacteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.FeatureSpecificationCharacteristicRelationship</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.FeatureSpecificationRelationship</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.IntegerArrayCharacteristicValueSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.IntegerCharacteristicValueSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>internalized.tmf633.datamodel.ListWrapperProvider</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.NumberArrayCharacteristicValueSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.NumberCharacteristicValueSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.ObjectArrayCharacteristicValueSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.ObjectCharacteristicValueSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.Quantity</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.RelatedParty</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.ResourceSpecificationRef</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.ServiceLevelSpecificationRef</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.ServiceSpecRelationship</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.ServiceSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.ServiceSpecificationCreate</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.ServiceSpecificationRef</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.ServiceSpecificationUpdate</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.StringArrayCharacteristicValueSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.StringCharacteristicValueSpecification</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.TargetEntitySchema</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf633.datamodel.TimePeriod</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>internalized.tmf633.datamodel.decider.OASDecider</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.Addressable</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.BooleanArrayCharacteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.BooleanCharacteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.Characteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.CharacteristicRelationship</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.ConstraintRef</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.EntityRef</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.EntityValue</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.Error</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.Extensible</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.ExternalIdentifier</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.Feature</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.FeatureRelationship</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.HeaderItem</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.IntegerArrayCharacteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.IntegerCharacteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.Note</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.NumberArrayCharacteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.NumberCharacteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.ObjectArrayCharacteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.ObjectCharacteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.OrderItemActionType</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.Place</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.PlaceRef</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.RelatedEntityRefOrValue</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.RelatedParty</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.RelatedPlaceRefOrValue</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.RelatedServiceOrderItem</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.Request</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.Resource</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.ResourceAdministrativeStateType</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.ResourceOperationalStateType</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.ResourceRef</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.ResourceRefOrValue</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.ResourceSpecificationRef</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.ResourceStatusType</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.ResourceUsageStateType</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.Response</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.Service</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.ServiceCreate</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.ServiceRef</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.ServiceRefOrValue</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.ServiceRelationship</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.ServiceSpecificationRef</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.ServiceStateType</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.ServiceUpdate</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.StringArrayCharacteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.StringCharacteristic</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.TimePeriod</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
     <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf.inspect.FilterByServiceRelationshipType</FqName>
       <Type>DATATYPE</Type>

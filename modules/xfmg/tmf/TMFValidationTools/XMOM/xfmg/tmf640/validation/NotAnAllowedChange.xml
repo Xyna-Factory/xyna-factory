@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version = '1.0' encoding = 'UTF-8'?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -16,13 +16,13 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
-  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="TMF640-00012" IsAbstract="false" Label="Not An Allowed Change" TypeName="NotAnAllowedChange" TypePath="xfmg.tmf640.validation">
-    <Data Label="detected changes" VariableName="detectedChanges">
-      <Meta>
-        <Type>String</Type>
-      </Meta>
-    </Data>
-    <MessageText Language="DE">Die Änderung ist nicht in der Liste der erlaubten Änderungen dieses Services enthalten. Erkannte Änderungen sind: %0%</MessageText>
-    <MessageText Language="EN">This change is not included in the list of allowed changes for this service. Changes detected are: %0%</MessageText>
-  </ExceptionType>
+   <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="TMF640-00012" IsAbstract="false" Label="Not An Allowed Change" TypeName="NotAnAllowedChange" TypePath="xfmg.tmf640.validation">
+      <Data Label="detected changes" VariableName="detectedChanges">
+         <Meta>
+            <Type>String</Type>
+         </Meta>
+      </Data>
+      <MessageText Language="DE">Die Änderung ist nicht in der Liste der erlaubten Änderungen dieses Services enthalten. Erkannte Änderungen sind: %0%</MessageText>
+      <MessageText Language="EN">This change is not included in the list of allowed changes for this service. Changes detected are: %0%</MessageText>
+   </ExceptionType>
 </ExceptionStore>

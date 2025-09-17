@@ -1,0 +1,93 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="AllowedChanges" TypeName="AllowedChanges" TypePath="internalized.tmf633.datamodel" Version="1.8">
+   <Meta>
+      <IsServiceGroupOnly>false</IsServiceGroupOnly>
+      <Documentation>Contains nested lists of json path expressions that will be evaluated on the old service as well as on the new service to detect changes in that part of the json. If the changes done to the service are not included in any of the sets defined here, the change is not allowed (except when whole AllowedChanges is empty). One can define two kinds of json path lists. Either a list of things that _all_ have to be changed (and nothing else). Or a list of possible changes that _may_ or may not have been changed (but again nothing else is changed).
+        </Documentation>
+   </Meta>
+   <Data IsList="true" Label="allof" ReferenceName="ChangeList" ReferencePath="internalized.tmf633.datamodel" VariableName="allof">
+      <Meta>
+         <Documentation>Each of the nested list is a valid _allof_ allowed change, i.e. a service update is valid with regards to this list, if all of its entries are changed in the service update and nothing else.
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data IsList="true" Label="anyof" ReferenceName="ChangeList" ReferencePath="internalized.tmf633.datamodel" VariableName="anyof">
+      <Meta>
+         <Documentation>Each of these nested lists is a valid _anyof_ allowed change, i.e. any of its entries may have been changed in the service update, but nothing else.
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data IsList="true" Label="ignored" VariableName="ignored">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>Changes to these paths will be ignored.
+        </Documentation>
+      </Meta>
+   </Data>
+   <Service Label="AllowedChanges" TypeName="AllowedChanges">
+      <Operation IsStatic="false" Label="Validate" Name="validate">
+         <Input/>
+         <Output>
+            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+         </Output>
+         <SourceCode>
+            <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String>());
+// validate AllowedChanges.allof of type ChangeList
+try {
+    List&lt;? extends internalized.tmf633.datamodel.ChangeList> allof = getAllof();
+    if (allof != null) {
+        for (internalized.tmf633.datamodel.ChangeList obj : allof) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate AllowedChanges.allof");
+}
+
+// validate AllowedChanges.anyof of type ChangeList
+try {
+    List&lt;? extends internalized.tmf633.datamodel.ChangeList> anyof = getAnyof();
+    if (anyof != null) {
+        for (internalized.tmf633.datamodel.ChangeList obj : anyof) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate AllowedChanges.anyof");
+}
+
+// validate AllowedChanges.ignored of type String
+try {
+    var validator_ignored = new com.gip.xyna.openapi.PrimitiveListTypeValidator&lt;String,com.gip.xyna.openapi.StringTypeValidator>(com.gip.xyna.openapi.StringTypeValidator::new);
+    validator_ignored.setName("ignored");
+    validator_ignored.setValue(getIgnored());
+    result.getErrorMessages().addAll(validator_ignored.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate AllowedChanges.ignored");
+}
+
+return result.getResult();
+                </CodeSnippet>
+         </SourceCode>
+      </Operation>
+   </Service>
+</DataType>

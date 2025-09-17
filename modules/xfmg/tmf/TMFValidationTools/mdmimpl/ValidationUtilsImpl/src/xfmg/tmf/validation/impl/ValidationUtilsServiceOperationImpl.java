@@ -37,8 +37,8 @@ import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 import com.gip.xyna.xprc.XynaOrderServerExtension;
 
 import base.Text;
-import tmf633.datamodel.AllowedChanges;
-import tmf633.datamodel.ChangeList;
+import internalized.tmf633.datamodel.AllowedChanges;
+import internalized.tmf633.datamodel.ChangeList;
 import xfmg.tmf.validation.Constraint;
 import xfmg.tmf.validation.ConstraintV2;
 import xfmg.tmf.validation.ConstraintValidationResult;

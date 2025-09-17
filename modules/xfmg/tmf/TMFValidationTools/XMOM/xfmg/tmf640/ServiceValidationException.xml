@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version = '1.0' encoding = 'UTF-8'?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -16,5 +16,5 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
-  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" IsAbstract="true" Label="Service Validation Exception" TypeName="ServiceValidationException" TypePath="xfmg.tmf640"/>
+   <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" IsAbstract="true" Label="Service Validation Exception" TypeName="ServiceValidationException" TypePath="xfmg.tmf640"/>
 </ExceptionStore>

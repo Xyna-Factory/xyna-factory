@@ -1,0 +1,440 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="ServiceSpecification" TypeName="ServiceSpecification" TypePath="internalized.tmf633.datamodel" Version="1.8">
+   <Meta>
+      <IsServiceGroupOnly>false</IsServiceGroupOnly>
+      <Documentation>ServiceSpecification is a class that offers characteristics to describe a type of service. Functionally, it acts as a template by which Services may be instantiated. By sharing the same specification, these services would therefore share the same set of characteristics.
+        </Documentation>
+   </Meta>
+   <Data Label="id" VariableName="id">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>unique identifier
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="href" VariableName="href">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>Hyperlink reference
+format: uri
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="description" VariableName="description">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>Description of the specification
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="isBundle" VariableName="isBundle">
+      <Meta>
+         <Type>Boolean</Type>
+         <Documentation>isBundle determines whether specification represents a single specification (false), or a bundle of specifications (true).
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="lastUpdate" VariableName="lastUpdate">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>Date and time of the last update of the specification
+format: date-time
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="lifecycleStatus" VariableName="lifecycleStatus">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>Used to indicate the current lifecycle status of this catalog item
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="name" VariableName="name">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>Name given to the specification
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="version" VariableName="version">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>specification version
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data IsList="true" Label="constraint" ReferenceName="Constraint" ReferencePath="internalized.tmf633.datamodel" VariableName="constraint">
+      <Meta>
+         <Documentation>This is a list of constraint references applied to this specification
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="allowedChanges" ReferenceName="AllowedChanges" ReferencePath="internalized.tmf633.datamodel" VariableName="allowedChanges">
+      <Meta>
+         <Documentation/>
+      </Meta>
+   </Data>
+   <Data IsList="true" Label="entitySpecRelationship" ReferenceName="EntitySpecificationRelationship" ReferencePath="internalized.tmf633.datamodel" VariableName="entitySpecRelationship">
+      <Meta>
+         <Documentation>Relationship to another specification
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data IsList="true" Label="externalIdentifierSpecification" ReferenceName="ExternalIdentifierSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="externalIdentifierSpecification">
+      <Meta>
+         <Documentation>A list of specifications of external identifiers associated with this specification
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data IsList="true" Label="featureSpecification" ReferenceName="FeatureSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="featureSpecification">
+      <Meta>
+         <Documentation>A list of Features for this specification.
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data IsList="true" Label="relatedParty" ReferenceName="RelatedParty" ReferencePath="internalized.tmf633.datamodel" VariableName="relatedParty">
+      <Meta>
+         <Documentation>Parties who manage or otherwise have an interest in this specification
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data IsList="true" Label="resourceSpecification" ReferenceName="ResourceSpecificationRef" ReferencePath="internalized.tmf633.datamodel" VariableName="resourceSpecification">
+      <Meta>
+         <Documentation>A list of resource specification references (ResourceSpecificationRef [*]). The ResourceSpecification is required for a service specification with type ResourceFacingServiceSpecification (RFSS).
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data IsList="true" Label="serviceLevelSpecification" ReferenceName="ServiceLevelSpecificationRef" ReferencePath="internalized.tmf633.datamodel" VariableName="serviceLevelSpecification">
+      <Meta>
+         <Documentation>A list of service level specifications related to this service specification, and which will need to be satisifiable for corresponding service instances; e.g. Gold, Platinum
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data IsList="true" Label="serviceSpecRelationship" ReferenceName="ServiceSpecRelationship" ReferencePath="internalized.tmf633.datamodel" VariableName="serviceSpecRelationship">
+      <Meta>
+         <Documentation>A list of service specifications related to this specification, e.g. migration, substitution, dependency or exclusivity relationship
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data IsList="true" Label="specCharacteristic" ReferenceName="CharacteristicSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="specCharacteristic">
+      <Meta>
+         <Documentation>List of characteristics that the entity can take
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="targetEntitySchema" ReferenceName="TargetEntitySchema" ReferencePath="internalized.tmf633.datamodel" VariableName="targetEntitySchema">
+      <Meta>
+         <Documentation/>
+      </Meta>
+   </Data>
+   <Data Label="validFor" ReferenceName="TimePeriod" ReferencePath="internalized.tmf633.datamodel" VariableName="validFor">
+      <Meta>
+         <Documentation/>
+      </Meta>
+   </Data>
+   <Data Label="@baseType" VariableName="atbaseType">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>When sub-classing, this defines the super-class
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="@schemaLocation" VariableName="atschemaLocation">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
+format: uri
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="@type" VariableName="attype">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>When sub-classing, this defines the sub-class Extensible name
+        </Documentation>
+      </Meta>
+   </Data>
+   <Service Label="ServiceSpecification" TypeName="ServiceSpecification">
+      <Operation IsStatic="false" Label="Validate" Name="validate">
+         <Input/>
+         <Output>
+            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+         </Output>
+         <SourceCode>
+            <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String>());
+// validate ServiceSpecification.id of type String
+try {
+    var validator_id = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_id.setName("id");
+    validator_id.setValue(getId());
+    result.getErrorMessages().addAll(validator_id.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.id");
+}
+
+// validate ServiceSpecification.href of type String
+try {
+    var validator_href = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_href.setName("href");
+    validator_href.setValue(getHref());
+    validator_href.setFormat("uri");
+    result.getErrorMessages().addAll(validator_href.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.href");
+}
+
+// validate ServiceSpecification.description of type String
+try {
+    var validator_description = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_description.setName("description");
+    validator_description.setValue(getDescription());
+    result.getErrorMessages().addAll(validator_description.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.description");
+}
+
+// validate ServiceSpecification.isBundle of type Boolean
+try {
+    var validator_isBundle = new com.gip.xyna.openapi.BooleanTypeValidator();
+    validator_isBundle.setName("isBundle");
+    validator_isBundle.setValue(getIsBundle());
+    result.getErrorMessages().addAll(validator_isBundle.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.isBundle");
+}
+
+// validate ServiceSpecification.lastUpdate of type String
+try {
+    var validator_lastUpdate = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_lastUpdate.setName("lastUpdate");
+    validator_lastUpdate.setValue(getLastUpdate());
+    validator_lastUpdate.setFormat("date-time");
+    result.getErrorMessages().addAll(validator_lastUpdate.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.lastUpdate");
+}
+
+// validate ServiceSpecification.lifecycleStatus of type String
+try {
+    var validator_lifecycleStatus = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_lifecycleStatus.setName("lifecycleStatus");
+    validator_lifecycleStatus.setValue(getLifecycleStatus());
+    result.getErrorMessages().addAll(validator_lifecycleStatus.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.lifecycleStatus");
+}
+
+// validate ServiceSpecification.name of type String
+try {
+    var validator_name = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_name.setName("name");
+    validator_name.setValue(getName());
+    result.getErrorMessages().addAll(validator_name.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.name");
+}
+
+// validate ServiceSpecification.version of type String
+try {
+    var validator_version = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_version.setName("version");
+    validator_version.setValue(getVersion());
+    result.getErrorMessages().addAll(validator_version.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.version");
+}
+
+// validate ServiceSpecification.constraint of type Constraint
+try {
+    List&lt;? extends internalized.tmf633.datamodel.Constraint> constraint = getConstraint();
+    if (constraint != null) {
+        for (internalized.tmf633.datamodel.Constraint obj : constraint) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.constraint");
+}
+
+// validate ServiceSpecification.allowedChanges of type AllowedChanges
+try {
+    internalized.tmf633.datamodel.AllowedChanges allowedChanges = getAllowedChanges();
+    if (allowedChanges != null) {
+        result.getErrorMessages().addAll(allowedChanges.validate().getErrorMessages());
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.allowedChanges");
+}
+
+// validate ServiceSpecification.entitySpecRelationship of type EntitySpecificationRelationship
+try {
+    List&lt;? extends internalized.tmf633.datamodel.EntitySpecificationRelationship> entitySpecRelationship = getEntitySpecRelationship();
+    if (entitySpecRelationship != null) {
+        for (internalized.tmf633.datamodel.EntitySpecificationRelationship obj : entitySpecRelationship) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.entitySpecRelationship");
+}
+
+// validate ServiceSpecification.externalIdentifierSpecification of type ExternalIdentifierSpecification
+try {
+    List&lt;? extends internalized.tmf633.datamodel.ExternalIdentifierSpecification> externalIdentifierSpecification = getExternalIdentifierSpecification();
+    if (externalIdentifierSpecification != null) {
+        for (internalized.tmf633.datamodel.ExternalIdentifierSpecification obj : externalIdentifierSpecification) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.externalIdentifierSpecification");
+}
+
+// validate ServiceSpecification.featureSpecification of type FeatureSpecification
+try {
+    List&lt;? extends internalized.tmf633.datamodel.FeatureSpecification> featureSpecification = getFeatureSpecification();
+    if (featureSpecification != null) {
+        for (internalized.tmf633.datamodel.FeatureSpecification obj : featureSpecification) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.featureSpecification");
+}
+
+// validate ServiceSpecification.relatedParty of type RelatedParty
+try {
+    List&lt;? extends internalized.tmf633.datamodel.RelatedParty> relatedParty = getRelatedParty();
+    if (relatedParty != null) {
+        for (internalized.tmf633.datamodel.RelatedParty obj : relatedParty) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.relatedParty");
+}
+
+// validate ServiceSpecification.resourceSpecification of type ResourceSpecificationRef
+try {
+    List&lt;? extends internalized.tmf633.datamodel.ResourceSpecificationRef> resourceSpecification = getResourceSpecification();
+    if (resourceSpecification != null) {
+        for (internalized.tmf633.datamodel.ResourceSpecificationRef obj : resourceSpecification) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.resourceSpecification");
+}
+
+// validate ServiceSpecification.serviceLevelSpecification of type ServiceLevelSpecificationRef
+try {
+    List&lt;? extends internalized.tmf633.datamodel.ServiceLevelSpecificationRef> serviceLevelSpecification = getServiceLevelSpecification();
+    if (serviceLevelSpecification != null) {
+        for (internalized.tmf633.datamodel.ServiceLevelSpecificationRef obj : serviceLevelSpecification) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.serviceLevelSpecification");
+}
+
+// validate ServiceSpecification.serviceSpecRelationship of type ServiceSpecRelationship
+try {
+    List&lt;? extends internalized.tmf633.datamodel.ServiceSpecRelationship> serviceSpecRelationship = getServiceSpecRelationship();
+    if (serviceSpecRelationship != null) {
+        for (internalized.tmf633.datamodel.ServiceSpecRelationship obj : serviceSpecRelationship) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.serviceSpecRelationship");
+}
+
+// validate ServiceSpecification.specCharacteristic of type CharacteristicSpecification
+try {
+    List&lt;? extends internalized.tmf633.datamodel.CharacteristicSpecification> specCharacteristic = getSpecCharacteristic();
+    if (specCharacteristic != null) {
+        for (internalized.tmf633.datamodel.CharacteristicSpecification obj : specCharacteristic) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.specCharacteristic");
+}
+
+// validate ServiceSpecification.targetEntitySchema of type TargetEntitySchema
+try {
+    internalized.tmf633.datamodel.TargetEntitySchema targetEntitySchema = getTargetEntitySchema();
+    if (targetEntitySchema != null) {
+        result.getErrorMessages().addAll(targetEntitySchema.validate().getErrorMessages());
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.targetEntitySchema");
+}
+
+// validate ServiceSpecification.validFor of type TimePeriod
+try {
+    internalized.tmf633.datamodel.TimePeriod validFor = getValidFor();
+    if (validFor != null) {
+        result.getErrorMessages().addAll(validFor.validate().getErrorMessages());
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.validFor");
+}
+
+// validate ServiceSpecification.atbaseType of type String
+try {
+    var validator_atbaseType = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atbaseType.setName("@baseType");
+    validator_atbaseType.setValue(getAtbaseType());
+    result.getErrorMessages().addAll(validator_atbaseType.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.atbaseType");
+}
+
+// validate ServiceSpecification.atschemaLocation of type String
+try {
+    var validator_atschemaLocation = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atschemaLocation.setName("@schemaLocation");
+    validator_atschemaLocation.setValue(getAtschemaLocation());
+    validator_atschemaLocation.setFormat("uri");
+    result.getErrorMessages().addAll(validator_atschemaLocation.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.atschemaLocation");
+}
+
+// validate ServiceSpecification.attype of type String
+try {
+    var validator_attype = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_attype.setName("@type");
+    validator_attype.setValue(getAttype());
+    result.getErrorMessages().addAll(validator_attype.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecification.attype");
+}
+
+return result.getResult();
+                </CodeSnippet>
+         </SourceCode>
+      </Operation>
+   </Service>
+</DataType>

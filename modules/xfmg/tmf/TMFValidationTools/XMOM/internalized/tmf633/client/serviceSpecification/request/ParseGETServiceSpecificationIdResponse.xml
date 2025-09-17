@@ -1,0 +1,191 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Parse GET /serviceSpecification/{id} Response" TypeName="ParseGETServiceSpecificationIdResponse" TypePath="internalized.tmf633.client.serviceSpecification.request" Version="1.8">
+   <Meta>
+      <IsServiceGroupOnly>true</IsServiceGroupOnly>
+   </Meta>
+   <Service Label="Parse GET /serviceSpecification/{id} Response" TypeName="ParseGETServiceSpecificationIdResponse">
+      <Operation IsStatic="true" Label="parseResponse" Name="parseResponse">
+         <Input>
+            <Data ID="1" Label="HTTP Connection" ReferenceName="HTTPConnection" ReferencePath="xact.http" VariableName="hTTPConnection1"/>
+            <Data ID="2" Label="HTTP Status Code" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode" VariableName="hTTPStatusCode2"/>
+            <Data ID="3" Label="Header" ReferenceName="Header" ReferencePath="xact.http" VariableName="header3"/>
+            <Data ID="8" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document8"/>
+         </Input>
+         <Output>
+            <Data ID="4" Label="GET /serviceSpecification/{id} Response" ReferenceName="GETServiceSpecificationIdResponse" ReferencePath="internalized.tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse4"/>
+         </Output>
+         <Throws>
+            <Exception ID="6" Label="Connection Already Closed Exception" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions" VariableName="connectionAlreadyClosedException6"/>
+            <Exception ID="7" Label="Http Exception" ReferenceName="HttpException" ReferencePath="xact.http.exceptions" VariableName="httpException7"/>
+            <Exception ID="5" Label="Unexpected HTTP Response Exception" ReferenceName="UnexpectedHTTPResponseException" ReferencePath="xact.http.exceptions" VariableName="unexpectedHTTPResponseException5"/>
+         </Throws>
+         <Meta>
+            <Documentation>Specified Responses:
+    200 OK
+    400 Bad Request
+    401 Unauthorized
+    403 Forbidden
+    404 Not Found
+    409 Conflict
+    415 Unsupported Media Type
+    500 Internal Server Error
+    
+        </Documentation>
+         </Meta>
+         <SourceCode>
+            <CodeSnippet Type="Java">
+int statusCode = hTTPStatusCode2.getCode();
+xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
+jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation>());
+jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution>());
+jsonOptions.setUseLabels(true);
+jsonOptions.setProcessAllInputGenerically(false);
+jsonOptions.setListWrapper((List)internalized.tmf633.datamodel.ListWrapperProvider.getListWrapper());
+jsonOptions.setObjectDecider(new internalized.tmf633.datamodel.decider.OASDecider());
+
+xact.templates.Document document = document8;
+if (statusCode == 200) {
+    internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse200OK responseDataType = new internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse200OK();
+
+
+    if (!document.getText().trim().isEmpty()) {
+        internalized.tmf633.datamodel.ServiceSpecification body;
+        body = (internalized.tmf633.datamodel.ServiceSpecification)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new internalized.tmf633.datamodel.ServiceSpecification(), jsonOptions);
+        responseDataType.setResponse(body);
+    } else {
+        responseDataType.setResponse(null);
+    }
+    for (xact.http.HeaderField field : header3.getHeaderField()) {
+    }
+
+    return responseDataType;
+}
+if (statusCode == 400) {
+    internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse400BadRequest responseDataType = new internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse400BadRequest();
+
+
+    if (!document.getText().trim().isEmpty()) {
+        internalized.tmf633.datamodel.Error body;
+        body = (internalized.tmf633.datamodel.Error)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new internalized.tmf633.datamodel.Error(), jsonOptions);
+        responseDataType.setResponse(body);
+    } else {
+        responseDataType.setResponse(null);
+    }
+    for (xact.http.HeaderField field : header3.getHeaderField()) {
+    }
+
+    return responseDataType;
+}
+if (statusCode == 401) {
+    internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse401Unauthorized responseDataType = new internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse401Unauthorized();
+
+
+    if (!document.getText().trim().isEmpty()) {
+        internalized.tmf633.datamodel.Error body;
+        body = (internalized.tmf633.datamodel.Error)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new internalized.tmf633.datamodel.Error(), jsonOptions);
+        responseDataType.setResponse(body);
+    } else {
+        responseDataType.setResponse(null);
+    }
+    for (xact.http.HeaderField field : header3.getHeaderField()) {
+    }
+
+    return responseDataType;
+}
+if (statusCode == 403) {
+    internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse403Forbidden responseDataType = new internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse403Forbidden();
+
+
+    if (!document.getText().trim().isEmpty()) {
+        internalized.tmf633.datamodel.Error body;
+        body = (internalized.tmf633.datamodel.Error)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new internalized.tmf633.datamodel.Error(), jsonOptions);
+        responseDataType.setResponse(body);
+    } else {
+        responseDataType.setResponse(null);
+    }
+    for (xact.http.HeaderField field : header3.getHeaderField()) {
+    }
+
+    return responseDataType;
+}
+if (statusCode == 404) {
+    internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse404NotFound responseDataType = new internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse404NotFound();
+
+
+    for (xact.http.HeaderField field : header3.getHeaderField()) {
+    }
+
+    return responseDataType;
+}
+if (statusCode == 409) {
+    internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse409Conflict responseDataType = new internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse409Conflict();
+
+
+    if (!document.getText().trim().isEmpty()) {
+        internalized.tmf633.datamodel.Error body;
+        body = (internalized.tmf633.datamodel.Error)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new internalized.tmf633.datamodel.Error(), jsonOptions);
+        responseDataType.setResponse(body);
+    } else {
+        responseDataType.setResponse(null);
+    }
+    for (xact.http.HeaderField field : header3.getHeaderField()) {
+    }
+
+    return responseDataType;
+}
+if (statusCode == 415) {
+    internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse415UnsupportedMediaType responseDataType = new internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse415UnsupportedMediaType();
+
+
+    if (!document.getText().trim().isEmpty()) {
+        internalized.tmf633.datamodel.Error body;
+        body = (internalized.tmf633.datamodel.Error)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new internalized.tmf633.datamodel.Error(), jsonOptions);
+        responseDataType.setResponse(body);
+    } else {
+        responseDataType.setResponse(null);
+    }
+    for (xact.http.HeaderField field : header3.getHeaderField()) {
+    }
+
+    return responseDataType;
+}
+if (statusCode == 500) {
+    internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse500InternalServerError responseDataType = new internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse500InternalServerError();
+
+
+    if (!document.getText().trim().isEmpty()) {
+        internalized.tmf633.datamodel.Error body;
+        body = (internalized.tmf633.datamodel.Error)xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document, new internalized.tmf633.datamodel.Error(), jsonOptions);
+        responseDataType.setResponse(body);
+    } else {
+        responseDataType.setResponse(null);
+    }
+    for (xact.http.HeaderField field : header3.getHeaderField()) {
+    }
+
+    return responseDataType;
+}
+
+throw new xact.http.exceptions.UnexpectedHTTPResponseException("", hTTPStatusCode2, header3);
+        </CodeSnippet>
+         </SourceCode>
+      </Operation>
+   </Service>
+</DataType>

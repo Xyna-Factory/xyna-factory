@@ -1,0 +1,184 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="ServiceSpecificationRef" TypeName="ServiceSpecificationRef" TypePath="internalized.tmf640.datamodel" Version="1.8">
+   <Meta>
+      <IsServiceGroupOnly>false</IsServiceGroupOnly>
+      <Documentation>Service specification reference: ServiceSpecification(s) required to realize a ProductSpecification.
+        </Documentation>
+   </Meta>
+   <Data Label="id" VariableName="id">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>Type for Id Attributes with pattern
+required
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="href" VariableName="href">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>Hyperlink reference
+format: uri
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="name" VariableName="name">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>Type for Name Attributes with pattern
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="version" VariableName="version">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>Service specification version
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="@baseType" VariableName="atbaseType">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>When sub-classing, this defines the super-class
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="@schemaLocation" VariableName="atschemaLocation">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
+format: uri
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="@type" VariableName="attype">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>When sub-classing, this defines the sub-class Extensible name
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="@referredType" VariableName="atreferredType">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>The actual type of the target instance when needed for disambiguation.
+        </Documentation>
+      </Meta>
+   </Data>
+   <Service Label="ServiceSpecificationRef" TypeName="ServiceSpecificationRef">
+      <Operation IsStatic="false" Label="Validate" Name="validate">
+         <Input/>
+         <Output>
+            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+         </Output>
+         <SourceCode>
+            <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String>());
+// validate ServiceSpecificationRef.id of type String
+try {
+    var validator_id = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_id.setName("id");
+    validator_id.setValue(getId());
+    validator_id.setPattern("^[\\w\\-\\.]*$");
+    validator_id.setRequired();
+    result.getErrorMessages().addAll(validator_id.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecificationRef.id");
+}
+
+// validate ServiceSpecificationRef.href of type String
+try {
+    var validator_href = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_href.setName("href");
+    validator_href.setValue(getHref());
+    validator_href.setFormat("uri");
+    result.getErrorMessages().addAll(validator_href.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecificationRef.href");
+}
+
+// validate ServiceSpecificationRef.name of type String
+try {
+    var validator_name = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_name.setName("name");
+    validator_name.setValue(getName());
+    validator_name.setPattern("^[\\w\\-\\.]*$");
+    result.getErrorMessages().addAll(validator_name.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecificationRef.name");
+}
+
+// validate ServiceSpecificationRef.version of type String
+try {
+    var validator_version = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_version.setName("version");
+    validator_version.setValue(getVersion());
+    result.getErrorMessages().addAll(validator_version.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecificationRef.version");
+}
+
+// validate ServiceSpecificationRef.atbaseType of type String
+try {
+    var validator_atbaseType = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atbaseType.setName("@baseType");
+    validator_atbaseType.setValue(getAtbaseType());
+    result.getErrorMessages().addAll(validator_atbaseType.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecificationRef.atbaseType");
+}
+
+// validate ServiceSpecificationRef.atschemaLocation of type String
+try {
+    var validator_atschemaLocation = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atschemaLocation.setName("@schemaLocation");
+    validator_atschemaLocation.setValue(getAtschemaLocation());
+    validator_atschemaLocation.setFormat("uri");
+    result.getErrorMessages().addAll(validator_atschemaLocation.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecificationRef.atschemaLocation");
+}
+
+// validate ServiceSpecificationRef.attype of type String
+try {
+    var validator_attype = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_attype.setName("@type");
+    validator_attype.setValue(getAttype());
+    result.getErrorMessages().addAll(validator_attype.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecificationRef.attype");
+}
+
+// validate ServiceSpecificationRef.atreferredType of type String
+try {
+    var validator_atreferredType = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atreferredType.setName("@referredType");
+    validator_atreferredType.setValue(getAtreferredType());
+    result.getErrorMessages().addAll(validator_atreferredType.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ServiceSpecificationRef.atreferredType");
+}
+
+return result.getResult();
+                </CodeSnippet>
+         </SourceCode>
+      </Operation>
+   </Service>
+</DataType>

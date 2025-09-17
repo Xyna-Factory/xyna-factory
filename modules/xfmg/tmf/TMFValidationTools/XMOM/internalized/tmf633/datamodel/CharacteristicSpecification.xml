@@ -1,0 +1,331 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="CharacteristicSpecification" TypeName="CharacteristicSpecification" TypePath="internalized.tmf633.datamodel" Version="1.8">
+   <Meta>
+      <IsServiceGroupOnly>false</IsServiceGroupOnly>
+      <Documentation>This class defines a characteristic specification.
+        </Documentation>
+   </Meta>
+   <Data Label="id" VariableName="id">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>Unique ID for the characteristic
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="configurable" VariableName="configurable">
+      <Meta>
+         <Type>Boolean</Type>
+         <Documentation>If true, the Boolean indicates that the target Characteristic is configurable
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="description" VariableName="description">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>A narrative that explains the CharacteristicSpecification.
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="extensible" VariableName="extensible">
+      <Meta>
+         <Type>Boolean</Type>
+         <Documentation>An indicator that specifies that the values for the characteristic can be extended by adding new values when instantiating a characteristic for a resource.
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="isUnique" VariableName="isUnique">
+      <Meta>
+         <Type>Boolean</Type>
+         <Documentation>An indicator that specifies if a value is unique for the specification. Possible values are; \"unique while value is in effect\" and \"unique whether value is in effect or not\"
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="maxCardinality" VariableName="maxCardinality">
+      <Meta>
+         <Type>Long</Type>
+         <Documentation>The maximum number of instances a CharacteristicValue can take on. For example, zero to five phone numbers in a group calling plan, where five is the value for the maxCardinality.
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="minCardinality" VariableName="minCardinality">
+      <Meta>
+         <Type>Long</Type>
+         <Documentation>The minimum number of instances a CharacteristicValue can take on. For example, zero to five phone numbers in a group calling plan, where zero is the value for the minCardinality.
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="name" VariableName="name">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>A word, term, or phrase by which this characteristic specification is known and distinguished from other characteristic specifications.
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="regex" VariableName="regex">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>A rule or principle represented in regular expression used to derive the value of a characteristic value.
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="valueType" VariableName="valueType">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>A kind of value that the characteristic can take on, such as numeric, text and so forth
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data IsList="true" Label="charSpecRelationship" ReferenceName="CharacteristicSpecificationRelationship" ReferencePath="internalized.tmf633.datamodel" VariableName="charSpecRelationship">
+      <Meta>
+         <Documentation>An aggregation, migration, substitution, dependency or exclusivity relationship between/among Specification Characteristics.
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data IsList="true" Label="characteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicValueSpecification">
+      <Meta>
+         <Documentation>A CharacteristicValueSpecification object is used to define a set of attributes, each of which can be assigned to a corresponding set of attributes in a CharacteristicSpecification object. The values of the attributes in the CharacteristicValueSpecification object describe the values of the attributes that a corresponding Characteristic object can take on.
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="validFor" ReferenceName="TimePeriod" ReferencePath="internalized.tmf633.datamodel" VariableName="validFor">
+      <Meta>
+         <Documentation/>
+      </Meta>
+   </Data>
+   <Data Label="@baseType" VariableName="atbaseType">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>When sub-classing, this defines the super-class
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="@schemaLocation" VariableName="atschemaLocation">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
+format: uri
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="@type" VariableName="attype">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>When sub-classing, this defines the sub-class Extensible name
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="@valueSchemaLocation" VariableName="atvalueSchemaLocation">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>This (optional) field provides a link to the schema describing the value type.
+        </Documentation>
+      </Meta>
+   </Data>
+   <Service Label="CharacteristicSpecification" TypeName="CharacteristicSpecification">
+      <Operation IsStatic="false" Label="Validate" Name="validate">
+         <Input/>
+         <Output>
+            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+         </Output>
+         <SourceCode>
+            <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String>());
+// validate CharacteristicSpecification.id of type String
+try {
+    var validator_id = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_id.setName("id");
+    validator_id.setValue(getId());
+    result.getErrorMessages().addAll(validator_id.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate CharacteristicSpecification.id");
+}
+
+// validate CharacteristicSpecification.configurable of type Boolean
+try {
+    var validator_configurable = new com.gip.xyna.openapi.BooleanTypeValidator();
+    validator_configurable.setName("configurable");
+    validator_configurable.setValue(getConfigurable());
+    result.getErrorMessages().addAll(validator_configurable.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate CharacteristicSpecification.configurable");
+}
+
+// validate CharacteristicSpecification.description of type String
+try {
+    var validator_description = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_description.setName("description");
+    validator_description.setValue(getDescription());
+    result.getErrorMessages().addAll(validator_description.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate CharacteristicSpecification.description");
+}
+
+// validate CharacteristicSpecification.extensible of type Boolean
+try {
+    var validator_extensible = new com.gip.xyna.openapi.BooleanTypeValidator();
+    validator_extensible.setName("extensible");
+    validator_extensible.setValue(getExtensible());
+    result.getErrorMessages().addAll(validator_extensible.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate CharacteristicSpecification.extensible");
+}
+
+// validate CharacteristicSpecification.isUnique of type Boolean
+try {
+    var validator_isUnique = new com.gip.xyna.openapi.BooleanTypeValidator();
+    validator_isUnique.setName("isUnique");
+    validator_isUnique.setValue(getIsUnique());
+    result.getErrorMessages().addAll(validator_isUnique.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate CharacteristicSpecification.isUnique");
+}
+
+// validate CharacteristicSpecification.maxCardinality of type Long
+try {
+    var validator_maxCardinality = new com.gip.xyna.openapi.NumberTypeValidator&lt;Long>();
+    validator_maxCardinality.setName("maxCardinality");
+    validator_maxCardinality.setValue(getMaxCardinality());
+    result.getErrorMessages().addAll(validator_maxCardinality.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate CharacteristicSpecification.maxCardinality");
+}
+
+// validate CharacteristicSpecification.minCardinality of type Long
+try {
+    var validator_minCardinality = new com.gip.xyna.openapi.NumberTypeValidator&lt;Long>();
+    validator_minCardinality.setName("minCardinality");
+    validator_minCardinality.setValue(getMinCardinality());
+    result.getErrorMessages().addAll(validator_minCardinality.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate CharacteristicSpecification.minCardinality");
+}
+
+// validate CharacteristicSpecification.name of type String
+try {
+    var validator_name = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_name.setName("name");
+    validator_name.setValue(getName());
+    result.getErrorMessages().addAll(validator_name.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate CharacteristicSpecification.name");
+}
+
+// validate CharacteristicSpecification.regex of type String
+try {
+    var validator_regex = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_regex.setName("regex");
+    validator_regex.setValue(getRegex());
+    result.getErrorMessages().addAll(validator_regex.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate CharacteristicSpecification.regex");
+}
+
+// validate CharacteristicSpecification.valueType of type String
+try {
+    var validator_valueType = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_valueType.setName("valueType");
+    validator_valueType.setValue(getValueType());
+    result.getErrorMessages().addAll(validator_valueType.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate CharacteristicSpecification.valueType");
+}
+
+// validate CharacteristicSpecification.charSpecRelationship of type CharacteristicSpecificationRelationship
+try {
+    List&lt;? extends internalized.tmf633.datamodel.CharacteristicSpecificationRelationship> charSpecRelationship = getCharSpecRelationship();
+    if (charSpecRelationship != null) {
+        for (internalized.tmf633.datamodel.CharacteristicSpecificationRelationship obj : charSpecRelationship) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate CharacteristicSpecification.charSpecRelationship");
+}
+
+// validate CharacteristicSpecification.characteristicValueSpecification of type CharacteristicValueSpecification
+try {
+    List&lt;? extends internalized.tmf633.datamodel.CharacteristicValueSpecification> characteristicValueSpecification = getCharacteristicValueSpecification();
+    if (characteristicValueSpecification != null) {
+        for (internalized.tmf633.datamodel.CharacteristicValueSpecification obj : characteristicValueSpecification) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate CharacteristicSpecification.characteristicValueSpecification");
+}
+
+// validate CharacteristicSpecification.validFor of type TimePeriod
+try {
+    internalized.tmf633.datamodel.TimePeriod validFor = getValidFor();
+    if (validFor != null) {
+        result.getErrorMessages().addAll(validFor.validate().getErrorMessages());
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate CharacteristicSpecification.validFor");
+}
+
+// validate CharacteristicSpecification.atbaseType of type String
+try {
+    var validator_atbaseType = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atbaseType.setName("@baseType");
+    validator_atbaseType.setValue(getAtbaseType());
+    result.getErrorMessages().addAll(validator_atbaseType.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate CharacteristicSpecification.atbaseType");
+}
+
+// validate CharacteristicSpecification.atschemaLocation of type String
+try {
+    var validator_atschemaLocation = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atschemaLocation.setName("@schemaLocation");
+    validator_atschemaLocation.setValue(getAtschemaLocation());
+    validator_atschemaLocation.setFormat("uri");
+    result.getErrorMessages().addAll(validator_atschemaLocation.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate CharacteristicSpecification.atschemaLocation");
+}
+
+// validate CharacteristicSpecification.attype of type String
+try {
+    var validator_attype = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_attype.setName("@type");
+    validator_attype.setValue(getAttype());
+    result.getErrorMessages().addAll(validator_attype.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate CharacteristicSpecification.attype");
+}
+
+// validate CharacteristicSpecification.atvalueSchemaLocation of type String
+try {
+    var validator_atvalueSchemaLocation = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atvalueSchemaLocation.setName("@valueSchemaLocation");
+    validator_atvalueSchemaLocation.setValue(getAtvalueSchemaLocation());
+    result.getErrorMessages().addAll(validator_atvalueSchemaLocation.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate CharacteristicSpecification.atvalueSchemaLocation");
+}
+
+return result.getResult();
+                </CodeSnippet>
+         </SourceCode>
+      </Operation>
+   </Service>
+</DataType>

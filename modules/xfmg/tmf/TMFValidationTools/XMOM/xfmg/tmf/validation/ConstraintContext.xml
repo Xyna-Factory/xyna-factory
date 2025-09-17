@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version = '1.0' encoding = 'UTF-8'?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -16,17 +16,17 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Constraint Context" TypeName="ConstraintContext" TypePath="xfmg.tmf.validation" Version="1.8">
-  <Meta>
-    <IsServiceGroupOnly>false</IsServiceGroupOnly>
-  </Meta>
-  <Data Label="type" VariableName="type">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="value" VariableName="value">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
+   <Meta>
+      <IsServiceGroupOnly>false</IsServiceGroupOnly>
+   </Meta>
+   <Data Label="type" VariableName="type">
+      <Meta>
+         <Type>String</Type>
+      </Meta>
+   </Data>
+   <Data Label="value" VariableName="value">
+      <Meta>
+         <Type>String</Type>
+      </Meta>
+   </Data>
 </DataType>

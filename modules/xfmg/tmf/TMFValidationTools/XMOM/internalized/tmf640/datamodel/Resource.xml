@@ -1,0 +1,411 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="Resource" TypeName="Resource" TypePath="internalized.tmf640.datamodel" Version="1.8">
+   <Meta>
+      <IsServiceGroupOnly>false</IsServiceGroupOnly>
+      <Documentation>Resource is an abstract entity that describes the common set of attributes shared by all concrete resources (e.g. TPE, EQUIPMENT) in the inventory.
+        </Documentation>
+   </Meta>
+   <Data Label="id" VariableName="id">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>Type for Id Attributes with pattern
+required
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="href" VariableName="href">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>The URI for the object itself.
+required
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="category" VariableName="category">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>Category of the concrete resource. e.g Gold, Silver for MSISDN concrete resource
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="description" VariableName="description">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>Type for Description Attributes with pattern
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="endOperatingDate" VariableName="endOperatingDate">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>A date time( DateTime). The date till the resource is operating
+format: date-time
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="name" VariableName="name">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>Type for Name Attributes with pattern
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="resourceVersion" VariableName="resourceVersion">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>A field that identifies the specific version of an instance of a resource.
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="startOperatingDate" VariableName="startOperatingDate">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>A date time( DateTime). The date from which the resource is operating
+format: date-time
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data IsList="true" Label="activationFeature" ReferenceName="Feature" ReferencePath="internalized.tmf640.datamodel" VariableName="activationFeature">
+      <Meta>
+         <Documentation>Configuration features
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="administrativeState" VariableName="administrativeState">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>values: locked, unlocked, shutdown
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data IsList="true" Label="note" ReferenceName="Note" ReferencePath="internalized.tmf640.datamodel" VariableName="note">
+      <Meta>
+         <Documentation/>
+      </Meta>
+   </Data>
+   <Data Label="operationalState" VariableName="operationalState">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>values: enable, disable
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="place" ReferenceName="RelatedPlaceRefOrValue" ReferencePath="internalized.tmf640.datamodel" VariableName="place">
+      <Meta>
+         <Documentation/>
+      </Meta>
+   </Data>
+   <Data IsList="true" Label="relatedParty" ReferenceName="RelatedParty" ReferencePath="internalized.tmf640.datamodel" VariableName="relatedParty">
+      <Meta>
+         <Documentation/>
+      </Meta>
+   </Data>
+   <Data IsList="true" Label="resourceCharacteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="resourceCharacteristic">
+      <Meta>
+         <Documentation/>
+      </Meta>
+   </Data>
+   <Data Label="resourceSpecification" ReferenceName="ResourceSpecificationRef" ReferencePath="internalized.tmf640.datamodel" VariableName="resourceSpecification">
+      <Meta>
+         <Documentation/>
+      </Meta>
+   </Data>
+   <Data Label="resourceStatus" VariableName="resourceStatus">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>values: standby, alarm, available, reserved, unknown, suspended
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="usageState" VariableName="usageState">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>values: idle, active, busy
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="@baseType" VariableName="atbaseType">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>When sub-classing, this defines the super-class
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="@schemaLocation" VariableName="atschemaLocation">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
+format: uri
+        </Documentation>
+      </Meta>
+   </Data>
+   <Data Label="@type" VariableName="attype">
+      <Meta>
+         <Type>String</Type>
+         <Documentation>When sub-classing, this defines the sub-class Extensible name
+        </Documentation>
+      </Meta>
+   </Data>
+   <Service Label="Resource" TypeName="Resource">
+      <Operation IsStatic="false" Label="Validate" Name="validate">
+         <Input/>
+         <Output>
+            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+         </Output>
+         <SourceCode>
+            <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String>());
+// validate Resource.id of type String
+try {
+    var validator_id = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_id.setName("id");
+    validator_id.setValue(getId());
+    validator_id.setPattern("^[\\w\\-\\.]*$");
+    validator_id.setRequired();
+    result.getErrorMessages().addAll(validator_id.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Resource.id");
+}
+
+// validate Resource.href of type String
+try {
+    var validator_href = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_href.setName("href");
+    validator_href.setValue(getHref());
+    validator_href.setRequired();
+    result.getErrorMessages().addAll(validator_href.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Resource.href");
+}
+
+// validate Resource.category of type String
+try {
+    var validator_category = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_category.setName("category");
+    validator_category.setValue(getCategory());
+    result.getErrorMessages().addAll(validator_category.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Resource.category");
+}
+
+// validate Resource.description of type String
+try {
+    var validator_description = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_description.setName("description");
+    validator_description.setValue(getDescription());
+    validator_description.setPattern("^[\\w\\-\\. ]*$");
+    result.getErrorMessages().addAll(validator_description.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Resource.description");
+}
+
+// validate Resource.endOperatingDate of type String
+try {
+    var validator_endOperatingDate = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_endOperatingDate.setName("endOperatingDate");
+    validator_endOperatingDate.setValue(getEndOperatingDate());
+    validator_endOperatingDate.setFormat("date-time");
+    result.getErrorMessages().addAll(validator_endOperatingDate.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Resource.endOperatingDate");
+}
+
+// validate Resource.name of type String
+try {
+    var validator_name = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_name.setName("name");
+    validator_name.setValue(getName());
+    validator_name.setPattern("^[\\w\\-\\.]*$");
+    result.getErrorMessages().addAll(validator_name.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Resource.name");
+}
+
+// validate Resource.resourceVersion of type String
+try {
+    var validator_resourceVersion = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_resourceVersion.setName("resourceVersion");
+    validator_resourceVersion.setValue(getResourceVersion());
+    result.getErrorMessages().addAll(validator_resourceVersion.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Resource.resourceVersion");
+}
+
+// validate Resource.startOperatingDate of type String
+try {
+    var validator_startOperatingDate = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_startOperatingDate.setName("startOperatingDate");
+    validator_startOperatingDate.setValue(getStartOperatingDate());
+    validator_startOperatingDate.setFormat("date-time");
+    result.getErrorMessages().addAll(validator_startOperatingDate.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Resource.startOperatingDate");
+}
+
+// validate Resource.activationFeature of type Feature
+try {
+    List&lt;? extends internalized.tmf640.datamodel.Feature> activationFeature = getActivationFeature();
+    if (activationFeature != null) {
+        for (internalized.tmf640.datamodel.Feature obj : activationFeature) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Resource.activationFeature");
+}
+
+// validate Resource.administrativeState of type String
+try {
+    var validator_administrativeState = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_administrativeState.setName("administrativeState");
+    validator_administrativeState.setValue(getAdministrativeState());
+    validator_administrativeState.setAllowableValues("locked", "unlocked", "shutdown");
+    result.getErrorMessages().addAll(validator_administrativeState.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Resource.administrativeState");
+}
+
+// validate Resource.note of type Note
+try {
+    List&lt;? extends internalized.tmf640.datamodel.Note> note = getNote();
+    if (note != null) {
+        for (internalized.tmf640.datamodel.Note obj : note) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Resource.note");
+}
+
+// validate Resource.operationalState of type String
+try {
+    var validator_operationalState = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_operationalState.setName("operationalState");
+    validator_operationalState.setValue(getOperationalState());
+    validator_operationalState.setAllowableValues("enable", "disable");
+    result.getErrorMessages().addAll(validator_operationalState.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Resource.operationalState");
+}
+
+// validate Resource.place of type RelatedPlaceRefOrValue
+try {
+    internalized.tmf640.datamodel.RelatedPlaceRefOrValue place = getPlace();
+    if (place != null) {
+        result.getErrorMessages().addAll(place.validate().getErrorMessages());
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Resource.place");
+}
+
+// validate Resource.relatedParty of type RelatedParty
+try {
+    List&lt;? extends internalized.tmf640.datamodel.RelatedParty> relatedParty = getRelatedParty();
+    if (relatedParty != null) {
+        for (internalized.tmf640.datamodel.RelatedParty obj : relatedParty) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Resource.relatedParty");
+}
+
+// validate Resource.resourceCharacteristic of type Characteristic
+try {
+    List&lt;? extends internalized.tmf640.datamodel.Characteristic> resourceCharacteristic = getResourceCharacteristic();
+    if (resourceCharacteristic != null) {
+        for (internalized.tmf640.datamodel.Characteristic obj : resourceCharacteristic) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Resource.resourceCharacteristic");
+}
+
+// validate Resource.resourceSpecification of type ResourceSpecificationRef
+try {
+    internalized.tmf640.datamodel.ResourceSpecificationRef resourceSpecification = getResourceSpecification();
+    if (resourceSpecification != null) {
+        result.getErrorMessages().addAll(resourceSpecification.validate().getErrorMessages());
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Resource.resourceSpecification");
+}
+
+// validate Resource.resourceStatus of type String
+try {
+    var validator_resourceStatus = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_resourceStatus.setName("resourceStatus");
+    validator_resourceStatus.setValue(getResourceStatus());
+    validator_resourceStatus.setAllowableValues("standby", "alarm", "available", "reserved", "unknown", "suspended");
+    result.getErrorMessages().addAll(validator_resourceStatus.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Resource.resourceStatus");
+}
+
+// validate Resource.usageState of type String
+try {
+    var validator_usageState = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_usageState.setName("usageState");
+    validator_usageState.setValue(getUsageState());
+    validator_usageState.setAllowableValues("idle", "active", "busy");
+    result.getErrorMessages().addAll(validator_usageState.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Resource.usageState");
+}
+
+// validate Resource.atbaseType of type String
+try {
+    var validator_atbaseType = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atbaseType.setName("@baseType");
+    validator_atbaseType.setValue(getAtbaseType());
+    result.getErrorMessages().addAll(validator_atbaseType.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Resource.atbaseType");
+}
+
+// validate Resource.atschemaLocation of type String
+try {
+    var validator_atschemaLocation = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atschemaLocation.setName("@schemaLocation");
+    validator_atschemaLocation.setValue(getAtschemaLocation());
+    validator_atschemaLocation.setFormat("uri");
+    result.getErrorMessages().addAll(validator_atschemaLocation.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Resource.atschemaLocation");
+}
+
+// validate Resource.attype of type String
+try {
+    var validator_attype = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_attype.setName("@type");
+    validator_attype.setValue(getAttype());
+    result.getErrorMessages().addAll(validator_attype.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Resource.attype");
+}
+
+return result.getResult();
+                </CodeSnippet>
+         </SourceCode>
+      </Operation>
+   </Service>
+</DataType>
