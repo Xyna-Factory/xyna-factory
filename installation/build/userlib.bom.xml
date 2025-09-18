@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,32 +16,37 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
+<!--
+  dependencies listed here are used by xyna module applications. To install these
+  applications, the artifacts defined here, and their dependencies, have to be
+  provided in the userlib directory.
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>com.gip.xyna</groupId>
-        <artifactId>userlib-bom</artifactId>
+        <artifactId>bom</artifactId>
         <version>1.0.0</version>
-        <relativePath>../../../../../../installation/build/userlib.xml</relativePath>
+        <relativePath>pom.xml</relativePath>
     </parent>
-
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gip.xyna</groupId>
-    <artifactId>webspheremq</artifactId>
-    <version>1.0.8</version>
-    <packaging>jar</packaging>
+    <artifactId>userlib-bom</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
-    <dependencies>
-        <dependency>
-            <groupId>com.gip.xyna</groupId>
-            <artifactId>webspheremq_third_parties</artifactId>
-            <version>1.0.0</version>
-            <type>pom</type>
-            <scope>runtime</scope>
-        </dependency>
-    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.ibm.mq</groupId>
+                <artifactId>com.ibm.mq.allclient</artifactId>
+                <version>9.4.1.1</version>
+            </dependency>
+        </dependencies>
+	</dependencyManagement>
 </project>
