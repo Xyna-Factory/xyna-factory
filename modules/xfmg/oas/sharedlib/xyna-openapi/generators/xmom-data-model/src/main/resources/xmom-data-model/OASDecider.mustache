@@ -244,6 +244,7 @@ return anytype;
       <SourceCode>
         <CodeSnippet Type="Java">xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
 jsonOptions.setUseLabels(true);
+jsonOptions.setObjectDecider(this);
 
 return xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(oASBaseType6, jsonOptions);</CodeSnippet>
       </SourceCode>
