@@ -16,7 +16,6 @@
 --> """
 
 import subprocess
-import sys
 import os
 import logging
 import json
@@ -25,7 +24,7 @@ import time
 import uvicorn
 import argparse
 
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from error import CopilotException
@@ -67,7 +66,7 @@ async def copilot_handler(request: Request, exc: CopilotException) -> JSONRespon
     """
     return JSONResponse(
         status_code=exc.code,
-        content=exc.json()
+        content=json.dumps(exc.toJson())
     )
 
 
@@ -103,17 +102,16 @@ async def completions(request: CompletionRequest) -> JSONResponse:
             for choice, i in zip(response.choices, range(len(response.choices))):
                 app_logger.info(f"Choice {i}:\n{choice.text}\n")
 
-        return Response(
+        return JSONResponse(
             status_code=200,
             content=json.dumps(response.dict()),
-            media_type="application/json"
         )
     except OSError as e:
         app_logger.error(e.strerror)
         raise CopilotException(
-            code=500,
+            message=e.strerror if e.strerror else "Unknown error",
             error_type="OSError",
-            message=e.strerror
+            code=500,
         )
 
 
@@ -135,14 +133,14 @@ def setup_certificates() -> tuple[str, str]:
     ip = subprocess.run(["hostname", "-i"], stdout=subprocess.PIPE).stdout.decode("utf-8").strip()
     os.system(f"openssl req -newkey rsa:4069 -nodes -keyout {keypath} -x509 -days 3650 -out {certpath} -subj \"/CN={ip}\"")
 
-    return [keypath, certpath]
+    return (keypath, certpath)
 
 
 if __name__ == "__main__":
     if args.secure:
-        paths = setup_certificates()
-        print(f"path[0]: {paths[0]}")
-        print(f"path[1]: {paths[1]}")
-        uvicorn.run("app:app", host="0.0.0.0", port=5000, ssl_keyfile=paths[1], ssl_certfile=paths[0])
+        keypath, certpath = setup_certificates()
+        print(f"Using SSL with key: {keypath} and cert: {certpath}")
+        print("Starting server with SSL...")
+        uvicorn.run("app:app", host="0.0.0.0", port=5000, ssl_keyfile=keypath, ssl_certfile=certpath)
     else:
         uvicorn.run("app:app", host="0.0.0.0", port=5000)
