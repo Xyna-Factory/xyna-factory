@@ -22,7 +22,7 @@
         <groupId>com.gip.xyna</groupId>
         <artifactId>userlib-bom</artifactId>
         <version>1.0.0</version>
-        <relativePath>../../../../../../installation/build/userlib.xml</relativePath>
+        <relativePath>../../../../../../installation/build/userlib.bom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
