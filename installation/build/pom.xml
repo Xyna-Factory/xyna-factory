@@ -195,11 +195,6 @@
             </dependency>
             <dependency>
                 <groupId>com.ibm.mq</groupId>
-                <artifactId>com.ibm.mq.allclient</artifactId>                <!-- unfree -->
-                <version>9.4.1.1</version>
-            </dependency>
-            <dependency>
-                <groupId>com.ibm.mq</groupId>
                 <artifactId>com.ibm.mq.traceControl</artifactId>                <!-- unfree -->
                 <version>9.0.0.13</version>
             </dependency>
