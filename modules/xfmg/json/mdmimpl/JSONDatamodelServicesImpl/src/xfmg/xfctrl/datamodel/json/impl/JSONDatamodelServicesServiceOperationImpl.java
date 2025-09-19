@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -977,6 +977,8 @@ public class JSONDatamodelServicesServiceOperationImpl implements ExtendedDeploy
         JSONValue jval = new JSONValue();
         if (o == null) {
           jval.unversionedSetType(JSONVALTYPES.NULL);
+        } else if(o instanceof JSONValue && options.inlineGenerics) {
+          jval = (JSONValue)o;
         } else if (o instanceof XynaObject) {
           JSONObject childJob = createFromXynaObjectRecursivly((XynaObject) o, newPath+"[]", options, scope, decider);
           jval.unversionedSetObjectValue(childJob);
