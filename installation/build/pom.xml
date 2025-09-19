@@ -126,7 +126,7 @@
             <dependency>
                 <groupId>com.gip.xyna</groupId>
                 <artifactId>xynafactory</artifactId>
-                <version>10.5.0.0</version>
+                <version>10.6.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
