@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -16,34 +16,34 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Filter" BaseTypePath="base.list.filter" IsAbstract="false" Label="Filter Characteristic by Name" TypeName="FilterCharacteristicByName" TypePath="xfmg.tmf.inspect" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-   </Meta>
-   <Data Label="name" VariableName="name">
-      <Meta>
-         <Type>String</Type>
-      </Meta>
-   </Data>
-   <Service Label="Filter Characteristic by Name" TypeName="FilterCharacteristicByName">
-      <Operation IsStatic="false" Label="Accept" Name="accept">
-         <Input>
-            <Data ID="2" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype2">
-               <Meta>
-                  <Type>GeneralXynaObject</Type>
-               </Meta>
-            </Data>
-         </Input>
-         <Output>
-            <Data ID="3" Label="Result" VariableName="boolean3">
-               <Meta>
-                  <Type>boolean</Type>
-               </Meta>
-            </Data>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">internalized.tmf640.datamodel.Characteristic input = (internalized.tmf640.datamodel.Characteristic) anytype2;
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Service Label="Filter Characteristic by Name" TypeName="FilterCharacteristicByName">
+    <Operation IsStatic="false" Label="Accept" Name="accept">
+      <Input>
+        <Data ID="2" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype2">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="3" Label="Result" VariableName="boolean3">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">internalized.tmf640.datamodel.Characteristic input = (internalized.tmf640.datamodel.Characteristic) anytype2;
 return input.getName().equals(getName());</CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

@@ -119,6 +119,10 @@
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.tmf640.InstantiateServiceJSON</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
       <DestinationKey>xfmg.tmf640.SetObjectArrayCharacteristic</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
@@ -176,6 +180,10 @@
     </Ordertype>
     <Ordertype implicitDependency="true">
       <DestinationKey>xfmg.tmf640.TransformService</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.tmf640.TransformServiceJSON</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -380,8 +388,12 @@
       <FqName>xfmg.tmf640.FindServiceBySimpleName</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
+    <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf640.InstantiateService</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xfmg.tmf640.InstantiateServiceJSON</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
@@ -448,8 +460,12 @@
       <FqName>xfmg.tmf640.TransformResource</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
+    <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf640.TransformService</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xfmg.tmf640.TransformServiceJSON</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">

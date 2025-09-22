@@ -71,6 +71,10 @@
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.tmf640.validation.ValidateAllowedChangesJSON</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
       <DestinationKey>xfmg.tmf640.validation.ValidateCharacteristics</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
@@ -88,6 +92,10 @@
     </Ordertype>
     <Ordertype implicitDependency="true">
       <DestinationKey>xfmg.tmf640.validation.ValidateServiceCharacteristics</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.tmf640.validation.ValidateServiceJSON</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -404,7 +412,7 @@
       <FqName>internalized.tmf633.datamodel.TimePeriod</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
+    <XMOMEntry implicitDependency="true">
       <FqName>internalized.tmf633.datamodel.decider.OASDecider</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
@@ -605,6 +613,10 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
+      <FqName>internalized.tmf640.datamodel.decider.OASDecider</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf.inspect.FilterByServiceRelationshipType</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
@@ -732,8 +744,12 @@
       <FqName>xfmg.tmf640.validation.UnexpectedServiceSpecificationName</FqName>
       <Type>EXCEPTION</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
+    <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf640.validation.ValidateAllowedChanges</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xfmg.tmf640.validation.ValidateAllowedChangesJSON</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
@@ -744,7 +760,7 @@
       <FqName>xfmg.tmf640.validation.ValidateConstraintsV3</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
+    <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf640.validation.ValidateService</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
@@ -754,6 +770,10 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf640.validation.ValidateServiceCharacteristics</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xfmg.tmf640.validation.ValidateServiceJSON</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">

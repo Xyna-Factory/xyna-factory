@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,57 +15,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="GET /serviceSpecification/{id} Send Parameter" TypeName="GETServiceSpecificationIdSendParameter" TypePath="internalized.tmf633.client.serviceSpecification.send" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-   </Meta>
-   <Data Label="id" VariableName="id">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Identifier of the ServiceSpecification
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="GET /serviceSpecification/{id} Send Parameter" TypeName="GETServiceSpecificationIdSendParameter" TypePath="internalized.tmf633.client.serviceSpecification.send" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="id" VariableName="id">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Identifier of the ServiceSpecification
 required
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="fields" VariableName="fields">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Comma-separated properties to provide in response
+    </Meta>
+  </Data>
+  <Data Label="fields" VariableName="fields">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Comma-separated properties to provide in response
         </Documentation>
-      </Meta>
-   </Data>
-   <Service Label="GET /serviceSpecification/{id} Send Parameter" TypeName="GETServiceSpecificationIdSendParameter">
-      <Operation IsStatic="false" Label="Send Request" Name="sendRequest">
-         <Input>
-            <Data ID="1" Label="HTTP Connection" ReferenceName="HTTPConnection" ReferencePath="xact.http" VariableName="hTTPConnection1"/>
-            <Data ID="2" Label="Send Parameter" ReferenceName="SendParameter" ReferencePath="xact.http" VariableName="sendParameter2"/>
-         </Input>
-         <Output>
-            <Data ID="3" Label="HTTP Status Code" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode" VariableName="hTTPStatusCode3"/>
-            <Data ID="4" Label="Header" ReferenceName="Header" ReferencePath="xact.http" VariableName="header4"/>
-         </Output>
-         <Throws>
-            <Exception ID="5" Label="Unexpected HTTP Response Exception" ReferenceName="UnexpectedHTTPResponseException" ReferencePath="xact.http.exceptions" VariableName="unexpectedHTTPResponseException5"/>
-            <Exception ID="6" Label="Http Exception" ReferenceName="HttpException" ReferencePath="xact.http.exceptions" VariableName="httpException6"/>
-            <Exception ID="7" Label="Timeout Exception" ReferenceName="TimeoutException" ReferencePath="xact.http.exceptions" VariableName="timeoutException7"/>
-            <Exception ID="8" Label="Connection Already Closed Exception" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions" VariableName="connectionAlreadyClosedException8"/>
-         </Throws>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+    </Meta>
+  </Data>
+  <Service Label="GET /serviceSpecification/{id} Send Parameter" TypeName="GETServiceSpecificationIdSendParameter">
+    <Operation IsStatic="false" Label="Send Request" Name="sendRequest">
+      <Input>
+        <Data ID="1" Label="HTTP Connection" ReferenceName="HTTPConnection" ReferencePath="xact.http" VariableName="hTTPConnection1"/>
+        <Data ID="2" Label="Send Parameter" ReferenceName="SendParameter" ReferencePath="xact.http" VariableName="sendParameter2"/>
+      </Input>
+      <Output>
+        <Data ID="3" Label="HTTP Status Code" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode" VariableName="hTTPStatusCode3"/>
+        <Data ID="4" Label="Header" ReferenceName="Header" ReferencePath="xact.http" VariableName="header4"/>
+      </Output>
+      <Throws>
+        <Exception ID="5" Label="Unexpected HTTP Response Exception" ReferenceName="UnexpectedHTTPResponseException" ReferencePath="xact.http.exceptions" VariableName="unexpectedHTTPResponseException5"/>
+        <Exception ID="6" Label="Http Exception" ReferenceName="HttpException" ReferencePath="xact.http.exceptions" VariableName="httpException6"/>
+        <Exception ID="7" Label="Timeout Exception" ReferenceName="TimeoutException" ReferencePath="xact.http.exceptions" VariableName="timeoutException7"/>
+        <Exception ID="8" Label="Connection Already Closed Exception" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions" VariableName="connectionAlreadyClosedException8"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 return xact.http.HTTPService.send(hTTPConnection1, sendParameter2);
         </CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="Validate" Name="validate">
-         <Input/>
-         <Output>
-            <Data ID="9" Label="OASValidationResult" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult9"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="9" Label="OASValidationResult" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult9"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
-result.setErrorMessages(new ArrayList&lt;String>());
+result.setErrorMessages(new ArrayList&lt;String&gt;());
 
 // validate GETServiceSpecificationIdResponse.id of type String
 try {
@@ -90,34 +89,34 @@ try {
 
 return result.getResult();
         </CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="Build Header Fields" Name="buildHeaderFields">
-         <Input/>
-         <Output>
-            <Data ID="22" IsList="true" Label="Header Field" ReferenceName="HeaderField" ReferencePath="xact.http" VariableName="headerField22"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">
-List&lt;HeaderField> headerFields = new ArrayList&lt;HeaderField>();
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Build Header Fields" Name="buildHeaderFields">
+      <Input/>
+      <Output>
+        <Data ID="22" IsList="true" Label="Header Field" ReferenceName="HeaderField" ReferencePath="xact.http" VariableName="headerField22"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+List&lt;HeaderField&gt; headerFields = new ArrayList&lt;HeaderField&gt;();
 return headerFields;
         </CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="Build Query" Name="buildQuery">
-         <Input/>
-         <Output>
-            <Data ID="47" IsList="true" Label="URL-path Query" ReferenceName="URLPathQuery" ReferencePath="xact.http" VariableName="uRLPathQuery47"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">
-List&lt;URLPathQuery> urlPathQuery = new ArrayList&lt;URLPathQuery>();
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Build Query" Name="buildQuery">
+      <Input/>
+      <Output>
+        <Data ID="47" IsList="true" Label="URL-path Query" ReferenceName="URLPathQuery" ReferencePath="xact.http" VariableName="uRLPathQuery47"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+List&lt;URLPathQuery&gt; urlPathQuery = new ArrayList&lt;URLPathQuery&gt;();
 if (getFields() != null) {
   urlPathQuery.add(new URLPathQuery("fields", String.valueOf(getFields())));
 }
 return urlPathQuery;
         </CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

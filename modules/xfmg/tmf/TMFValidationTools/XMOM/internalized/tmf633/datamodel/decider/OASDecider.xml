@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,30 +15,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="XynaObjectDecider" BaseTypePath="xfmg.xfctrl.datamodel.json.parameter" IsAbstract="false" Label="OASDecider" TypeName="OASDecider" TypePath="internalized.tmf633.datamodel.decider" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-   </Meta>
-   <Service Label="OASDecider" TypeName="OASDecider">
-      <Operation IsStatic="false" Label="Decide Object on Read" Name="decideObjectOnRead">
-         <Input>
-            <Data ID="16" Label="Generic Type" VariableName="string16">
-               <Meta>
-                  <Type>String</Type>
-               </Meta>
-            </Data>
-            <Data ID="2" Label="JSON Object" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONObject2"/>
-         </Input>
-         <Output>
-            <Data ID="17" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype17">
-               <Meta>
-                  <Type>GeneralXynaObject</Type>
-               </Meta>
-            </Data>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="XynaObjectDecider" BaseTypePath="xfmg.xfctrl.datamodel.json.parameter" IsAbstract="false" Label="OASDecider" TypeName="OASDecider" TypePath="internalized.tmf633.datamodel.decider" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="OASDecider" TypeName="OASDecider">
+    <Operation IsStatic="false" Label="Decide Object on Read" Name="decideObjectOnRead">
+      <Input>
+        <Data ID="16" Label="Generic Type" VariableName="string16">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="2" Label="JSON Object" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONObject2"/>
+      </Input>
+      <Output>
+        <Data ID="17" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype17">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 if (string16.equals("internalized.tmf633.datamodel.CharacteristicValueSpecification")) {
   String dyntype = "";
   xfmg.xfctrl.datamodel.json.JSONValue value = jSONObject2.getMember("@type");
@@ -84,77 +83,77 @@ try {
 } catch(Exception e) {
   return null;
 }</CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="Continue Read with Object" Name="continueReadWithObject">
-         <Input>
-            <Data ID="10" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype">
-               <Meta>
-                  <Type>GeneralXynaObject</Type>
-               </Meta>
-            </Data>
-            <Data ID="11" Label="JSON Object" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONObject"/>
-         </Input>
-         <Output>
-            <Data ID="12" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype1">
-               <Meta>
-                  <Type>GeneralXynaObject</Type>
-               </Meta>
-            </Data>
-         </Output>
-         <Meta>
-            <HasBeenPersisted>false</HasBeenPersisted>
-         </Meta>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Continue Read with Object" Name="continueReadWithObject">
+      <Input>
+        <Data ID="10" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data ID="11" Label="JSON Object" ReferenceName="JSONObject" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONObject"/>
+      </Input>
+      <Output>
+        <Data ID="12" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype1">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <Meta>
+        <HasBeenPersisted>false</HasBeenPersisted>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 return anytype;
         </CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="Decide Object on Write" Name="decideObjectOnWrite">
-         <Input>
-            <Data ID="13" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype">
-               <Meta>
-                  <Type>GeneralXynaObject</Type>
-               </Meta>
-            </Data>
-         </Input>
-         <Output>
-            <Data ID="14" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype">
-               <Meta>
-                  <Type>GeneralXynaObject</Type>
-               </Meta>
-            </Data>
-         </Output>
-         <Meta>
-            <HasBeenPersisted>false</HasBeenPersisted>
-         </Meta>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Decide Object on Write" Name="decideObjectOnWrite">
+      <Input>
+        <Data ID="13" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="14" Label="AnyType" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <Meta>
+        <HasBeenPersisted>false</HasBeenPersisted>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 return anytype;
       </CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="On Unknown Member" Name="onUnknownMember">
-         <Input>
-            <Data ID="20" Label="xyna object" ReferenceName="AnyType" ReferencePath="base" VariableName="xo">
-               <Meta>
-                  <Type>GeneralXynaObject</Type>
-               </Meta>
-            </Data>
-            <Data ID="21" Label="Variable Name" VariableName="varName">
-               <Meta>
-                  <Type>String</Type>
-               </Meta>
-            </Data>
-            <Data ID="22" Label="JSON Value" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONValue30"/>
-         </Input>
-         <Output/>
-         <Meta>
-            <Documentation>Called when the json contains a member that does not appear in the xyna object.</Documentation>
-         </Meta>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="On Unknown Member" Name="onUnknownMember">
+      <Input>
+        <Data ID="20" Label="xyna object" ReferenceName="AnyType" ReferencePath="base" VariableName="xo">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+        <Data ID="21" Label="Variable Name" VariableName="varName">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="22" Label="JSON Value" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="jSONValue30"/>
+      </Input>
+      <Output/>
+      <Meta>
+        <Documentation>Called when the json contains a member that does not appear in the xyna object.</Documentation>
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">
       try {
       } catch(Exception e) {
         if (logger.isWarnEnabled()) {
@@ -162,37 +161,37 @@ return anytype;
         }
       }
         </CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="Write" Name="write">
-         <Input>
-            <Data ID="6" Label="OAS Base Type" ReferenceName="OASBaseType" ReferencePath="xmcp.oas.datatype" VariableName="oASBaseType6"/>
-         </Input>
-         <Output>
-            <Data ID="7" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document7"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Write" Name="write">
+      <Input>
+        <Data ID="6" Label="OAS Base Type" ReferenceName="OASBaseType" ReferencePath="xmcp.oas.datatype" VariableName="oASBaseType6"/>
+      </Input>
+      <Output>
+        <Data ID="7" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document7"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONWritingOptions();
 jsonOptions.setUseLabels(true);
 
 return xfmg.xfctrl.datamodel.json.JSONDatamodelServices.writeJSONWithOptions(oASBaseType6, jsonOptions);</CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="Parse" Name="parse">
-         <Input>
-            <Data ID="3" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document3"/>
-            <Data ID="4" Label="OAS Base Type" ReferenceName="OASBaseType" ReferencePath="xmcp.oas.datatype" VariableName="oASBaseType4"/>
-         </Input>
-         <Output>
-            <Data ID="5" Label="OAS Base Type" ReferenceName="OASBaseType" ReferencePath="xmcp.oas.datatype" VariableName="oASBaseType5"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Parse" Name="parse">
+      <Input>
+        <Data ID="3" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document3"/>
+        <Data ID="4" Label="OAS Base Type" ReferenceName="OASBaseType" ReferencePath="xmcp.oas.datatype" VariableName="oASBaseType4"/>
+      </Input>
+      <Output>
+        <Data ID="5" Label="OAS Base Type" ReferenceName="OASBaseType" ReferencePath="xmcp.oas.datatype" VariableName="oASBaseType5"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
 jsonOptions.setUseLabels(true);
 jsonOptions.setObjectDecider(this);
 
 return (xmcp.oas.datatype.OASBaseType) xfmg.xfctrl.datamodel.json.JSONDatamodelServices.parseObjectFromJSONWithOptions(document3, oASBaseType4, jsonOptions);</CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,64 +15,63 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="CharacteristicSpecificationRelationship" TypeName="CharacteristicSpecificationRelationship" TypePath="internalized.tmf633.datamodel" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-      <Documentation>An aggregation, migration, substitution, dependency or exclusivity relationship between/among Characteristic specifications. The specification characteristic is embedded within the specification whose ID and href are in this entity, and identified by its ID.
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="CharacteristicSpecificationRelationship" TypeName="CharacteristicSpecificationRelationship" TypePath="internalized.tmf633.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>An aggregation, migration, substitution, dependency or exclusivity relationship between/among Characteristic specifications. The specification characteristic is embedded within the specification whose ID and href are in this entity, and identified by its ID.
         </Documentation>
-   </Meta>
-   <Data Label="characteristicSpecificationId" VariableName="characteristicSpecificationId">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Unique identifier of the characteristic within the specification
+  </Meta>
+  <Data Label="characteristicSpecificationId" VariableName="characteristicSpecificationId">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Unique identifier of the characteristic within the specification
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="name" VariableName="name">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Name of the target characteristic within the specification
+    </Meta>
+  </Data>
+  <Data Label="name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Name of the target characteristic within the specification
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="parentSpecificationHref" VariableName="parentSpecificationHref">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Hyperlink reference to the parent specification containing the target characteristic
+    </Meta>
+  </Data>
+  <Data Label="parentSpecificationHref" VariableName="parentSpecificationHref">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Hyperlink reference to the parent specification containing the target characteristic
 format: uri
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="parentSpecificationId" VariableName="parentSpecificationId">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Unique identifier of the parent specification containing the target characteristic
+    </Meta>
+  </Data>
+  <Data Label="parentSpecificationId" VariableName="parentSpecificationId">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Unique identifier of the parent specification containing the target characteristic
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="relationshipType" VariableName="relationshipType">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Type of relationship such as aggregation, migration, substitution, dependency, exclusivity
+    </Meta>
+  </Data>
+  <Data Label="relationshipType" VariableName="relationshipType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Type of relationship such as aggregation, migration, substitution, dependency, exclusivity
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="validFor" ReferenceName="TimePeriod" ReferencePath="internalized.tmf633.datamodel" VariableName="validFor">
-      <Meta>
-         <Documentation/>
-      </Meta>
-   </Data>
-   <Service Label="CharacteristicSpecificationRelationship" TypeName="CharacteristicSpecificationRelationship">
-      <Operation IsStatic="false" Label="Validate" Name="validate">
-         <Input/>
-         <Output>
-            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+    </Meta>
+  </Data>
+  <Data Label="validFor" ReferenceName="TimePeriod" ReferencePath="internalized.tmf633.datamodel" VariableName="validFor">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Service Label="CharacteristicSpecificationRelationship" TypeName="CharacteristicSpecificationRelationship">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
-result.setErrorMessages(new ArrayList&lt;String>());
+result.setErrorMessages(new ArrayList&lt;String&gt;());
 // validate CharacteristicSpecificationRelationship.characteristicSpecificationId of type String
 try {
     var validator_characteristicSpecificationId = new com.gip.xyna.openapi.StringTypeValidator();
@@ -136,7 +135,7 @@ try {
 
 return result.getResult();
                 </CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

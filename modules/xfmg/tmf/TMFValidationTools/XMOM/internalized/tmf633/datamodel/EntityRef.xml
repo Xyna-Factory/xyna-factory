@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,75 +15,74 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="EntityRef" TypeName="EntityRef" TypePath="internalized.tmf633.datamodel" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-      <Documentation>Entity reference schema to be use for all entityRef class.
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="EntityRef" TypeName="EntityRef" TypePath="internalized.tmf633.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Entity reference schema to be use for all entityRef class.
         </Documentation>
-   </Meta>
-   <Data Label="id" VariableName="id">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>unique identifier
+  </Meta>
+  <Data Label="id" VariableName="id">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>unique identifier
 required
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="href" VariableName="href">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Hyperlink reference
+    </Meta>
+  </Data>
+  <Data Label="href" VariableName="href">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Hyperlink reference
 format: uri
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="name" VariableName="name">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Name of the related entity.
+    </Meta>
+  </Data>
+  <Data Label="name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Name of the related entity.
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="@baseType" VariableName="atbaseType">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>When sub-classing, this defines the super-class
+    </Meta>
+  </Data>
+  <Data Label="@baseType" VariableName="atbaseType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the super-class
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="@schemaLocation" VariableName="atschemaLocation">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
+    </Meta>
+  </Data>
+  <Data Label="@schemaLocation" VariableName="atschemaLocation">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
 format: uri
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="@type" VariableName="attype">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>When sub-classing, this defines the sub-class Extensible name
+    </Meta>
+  </Data>
+  <Data Label="@type" VariableName="attype">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the sub-class Extensible name
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="@referredType" VariableName="atreferredType">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>The actual type of the target instance when needed for disambiguation.
+    </Meta>
+  </Data>
+  <Data Label="@referredType" VariableName="atreferredType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>The actual type of the target instance when needed for disambiguation.
         </Documentation>
-      </Meta>
-   </Data>
-   <Service Label="EntityRef" TypeName="EntityRef">
-      <Operation IsStatic="false" Label="Validate" Name="validate">
-         <Input/>
-         <Output>
-            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+    </Meta>
+  </Data>
+  <Service Label="EntityRef" TypeName="EntityRef">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
-result.setErrorMessages(new ArrayList&lt;String>());
+result.setErrorMessages(new ArrayList&lt;String&gt;());
 // validate EntityRef.id of type String
 try {
     var validator_id = new com.gip.xyna.openapi.StringTypeValidator();
@@ -159,7 +158,7 @@ try {
 
 return result.getResult();
                 </CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

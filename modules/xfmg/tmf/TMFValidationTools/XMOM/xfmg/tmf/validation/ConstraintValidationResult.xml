@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -16,17 +16,17 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Constraint" BaseTypePath="xfmg.tmf.validation" IsAbstract="false" Label="Constraint Validation Result" TypeName="ConstraintValidationResult" TypePath="xfmg.tmf.validation" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-   </Meta>
-   <Data Label="rule left result" VariableName="ruleLeftResult">
-      <Meta>
-         <Type>String</Type>
-      </Meta>
-   </Data>
-   <Data Label="rule right result" VariableName="ruleRightResult">
-      <Meta>
-         <Type>String</Type>
-      </Meta>
-   </Data>
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="rule left result" VariableName="ruleLeftResult">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data Label="rule right result" VariableName="ruleRightResult">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
 </DataType>

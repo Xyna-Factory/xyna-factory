@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,59 +15,58 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="Constraint" TypeName="Constraint" TypePath="internalized.tmf633.datamodel" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="Constraint" TypeName="Constraint" TypePath="internalized.tmf633.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation/>
+  </Meta>
+  <Data Label="name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Name of the constraint.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="description" VariableName="description">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Description of the constraint.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="dependencies" VariableName="dependencies">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Names of dependent constraints. This constraint will only be evaluated after the conditions of all dependent constraints were evaluated successfully.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="context" ReferenceName="ConstraintContext" ReferencePath="internalized.tmf633.datamodel" VariableName="context">
+    <Meta>
+      <Documentation>For each context type all context values that this constraint is restricted to. The constraint will only be evaluated if all _current_ (provided at runtime) values are included in context values provided here. If this array does not contain an entry for a _current_ context type, it is assumed to have no restriction for that context type.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="condition" ReferenceName="ConstraintRuleDefinition" ReferencePath="internalized.tmf633.datamodel" VariableName="condition">
+    <Meta>
       <Documentation/>
-   </Meta>
-   <Data Label="name" VariableName="name">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Name of the constraint.
-        </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="description" VariableName="description">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Description of the constraint.
-        </Documentation>
-      </Meta>
-   </Data>
-   <Data IsList="true" Label="dependencies" VariableName="dependencies">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Names of dependent constraints. This constraint will only be evaluated after the conditions of all dependent constraints were evaluated successfully.
-        </Documentation>
-      </Meta>
-   </Data>
-   <Data IsList="true" Label="context" ReferenceName="ConstraintContext" ReferencePath="internalized.tmf633.datamodel" VariableName="context">
-      <Meta>
-         <Documentation>For each context type all context values that this constraint is restricted to. The constraint will only be evaluated if all _current_ (provided at runtime) values are included in context values provided here. If this array does not contain an entry for a _current_ context type, it is assumed to have no restriction for that context type.
-        </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="condition" ReferenceName="ConstraintRuleDefinition" ReferencePath="internalized.tmf633.datamodel" VariableName="condition">
-      <Meta>
-         <Documentation/>
-      </Meta>
-   </Data>
-   <Data Label="rule" ReferenceName="ConstraintRuleDefinition" ReferencePath="internalized.tmf633.datamodel" VariableName="rule">
-      <Meta>
-         <Documentation/>
-      </Meta>
-   </Data>
-   <Service Label="Constraint" TypeName="Constraint">
-      <Operation IsStatic="false" Label="Validate" Name="validate">
-         <Input/>
-         <Output>
-            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+    </Meta>
+  </Data>
+  <Data Label="rule" ReferenceName="ConstraintRuleDefinition" ReferencePath="internalized.tmf633.datamodel" VariableName="rule">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Service Label="Constraint" TypeName="Constraint">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
-result.setErrorMessages(new ArrayList&lt;String>());
+result.setErrorMessages(new ArrayList&lt;String&gt;());
 // validate Constraint.name of type String
 try {
     var validator_name = new com.gip.xyna.openapi.StringTypeValidator();
@@ -90,7 +89,7 @@ try {
 
 // validate Constraint.dependencies of type String
 try {
-    var validator_dependencies = new com.gip.xyna.openapi.PrimitiveListTypeValidator&lt;String,com.gip.xyna.openapi.StringTypeValidator>(com.gip.xyna.openapi.StringTypeValidator::new);
+    var validator_dependencies = new com.gip.xyna.openapi.PrimitiveListTypeValidator&lt;String,com.gip.xyna.openapi.StringTypeValidator&gt;(com.gip.xyna.openapi.StringTypeValidator::new);
     validator_dependencies.setName("dependencies");
     validator_dependencies.setValue(getDependencies());
     result.getErrorMessages().addAll(validator_dependencies.checkValid());
@@ -100,7 +99,7 @@ try {
 
 // validate Constraint.context of type ConstraintContext
 try {
-    List&lt;? extends internalized.tmf633.datamodel.ConstraintContext> context = getContext();
+    List&lt;? extends internalized.tmf633.datamodel.ConstraintContext&gt; context = getContext();
     if (context != null) {
         for (internalized.tmf633.datamodel.ConstraintContext obj : context) {
             result.getErrorMessages().addAll(obj.validate().getErrorMessages());
@@ -132,7 +131,7 @@ try {
 
 return result.getResult();
                 </CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

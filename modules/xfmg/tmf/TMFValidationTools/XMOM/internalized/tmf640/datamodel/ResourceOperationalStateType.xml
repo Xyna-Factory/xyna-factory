@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,31 +15,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="ResourceOperationalStateType" TypeName="ResourceOperationalStateType" TypePath="internalized.tmf640.datamodel" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-      <Documentation>ResourceOperationalStateType enumerations
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="ResourceOperationalStateType" TypeName="ResourceOperationalStateType" TypePath="internalized.tmf640.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>ResourceOperationalStateType enumerations
         </Documentation>
-   </Meta>
-   <Data Label="Value" VariableName="value">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>
+  </Meta>
+  <Data Label="Value" VariableName="value">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>
 values: enable, disable
         </Documentation>
-      </Meta>
-   </Data>
-   <Service Label="ResourceOperationalStateType" TypeName="ResourceOperationalStateType">
-      <Operation IsStatic="false" Label="Validate" Name="validate">
-         <Input/>
-         <Output>
-            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+    </Meta>
+  </Data>
+  <Service Label="ResourceOperationalStateType" TypeName="ResourceOperationalStateType">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
-result.setErrorMessages(new ArrayList&lt;String>());
+result.setErrorMessages(new ArrayList&lt;String&gt;());
 // validate ResourceOperationalStateType.value of type String
 try {
     var validator_value = new com.gip.xyna.openapi.StringTypeValidator();
@@ -53,51 +52,51 @@ try {
 
 return result.getResult();
         </CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="get ENABLE" Name="getENABLE">
-         <Input/>
-         <Output>
-            <Data ID="2" Label="ResourceOperationalStateType" ReferenceName="ResourceOperationalStateType" ReferencePath="internalized.tmf640.datamodel" VariableName="varName"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">return new ResourceOperationalStateType("enable");</CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="is ENABLE" Name="isENABLE">
-         <Input/>
-         <Output>
-            <Data Label="ENABLE" VariableName="isENABLE">
-               <Meta>
-                  <Type>boolean</Type>
-               </Meta>
-            </Data>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">return "enable".equals(this.getValue());</CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="get DISABLE" Name="getDISABLE">
-         <Input/>
-         <Output>
-            <Data ID="2" Label="ResourceOperationalStateType" ReferenceName="ResourceOperationalStateType" ReferencePath="internalized.tmf640.datamodel" VariableName="varName"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">return new ResourceOperationalStateType("disable");</CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="is DISABLE" Name="isDISABLE">
-         <Input/>
-         <Output>
-            <Data Label="DISABLE" VariableName="isDISABLE">
-               <Meta>
-                  <Type>boolean</Type>
-               </Meta>
-            </Data>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">return "disable".equals(this.getValue());</CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get ENABLE" Name="getENABLE">
+      <Input/>
+      <Output>
+        <Data ID="2" Label="ResourceOperationalStateType" ReferenceName="ResourceOperationalStateType" ReferencePath="internalized.tmf640.datamodel" VariableName="varName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new ResourceOperationalStateType("enable");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="is ENABLE" Name="isENABLE">
+      <Input/>
+      <Output>
+        <Data Label="ENABLE" VariableName="isENABLE">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return "enable".equals(this.getValue());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get DISABLE" Name="getDISABLE">
+      <Input/>
+      <Output>
+        <Data ID="2" Label="ResourceOperationalStateType" ReferenceName="ResourceOperationalStateType" ReferencePath="internalized.tmf640.datamodel" VariableName="varName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new ResourceOperationalStateType("disable");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="is DISABLE" Name="isDISABLE">
+      <Input/>
+      <Output>
+        <Data Label="DISABLE" VariableName="isDISABLE">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return "disable".equals(this.getValue());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,31 +15,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="ResourceUsageStateType" TypeName="ResourceUsageStateType" TypePath="internalized.tmf640.datamodel" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-      <Documentation>ResourceUsageStateType enumerations
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="ResourceUsageStateType" TypeName="ResourceUsageStateType" TypePath="internalized.tmf640.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>ResourceUsageStateType enumerations
         </Documentation>
-   </Meta>
-   <Data Label="Value" VariableName="value">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>
+  </Meta>
+  <Data Label="Value" VariableName="value">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>
 values: idle, active, busy
         </Documentation>
-      </Meta>
-   </Data>
-   <Service Label="ResourceUsageStateType" TypeName="ResourceUsageStateType">
-      <Operation IsStatic="false" Label="Validate" Name="validate">
-         <Input/>
-         <Output>
-            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+    </Meta>
+  </Data>
+  <Service Label="ResourceUsageStateType" TypeName="ResourceUsageStateType">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
-result.setErrorMessages(new ArrayList&lt;String>());
+result.setErrorMessages(new ArrayList&lt;String&gt;());
 // validate ResourceUsageStateType.value of type String
 try {
     var validator_value = new com.gip.xyna.openapi.StringTypeValidator();
@@ -53,73 +52,73 @@ try {
 
 return result.getResult();
         </CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="get IDLE" Name="getIDLE">
-         <Input/>
-         <Output>
-            <Data ID="2" Label="ResourceUsageStateType" ReferenceName="ResourceUsageStateType" ReferencePath="internalized.tmf640.datamodel" VariableName="varName"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">return new ResourceUsageStateType("idle");</CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="is IDLE" Name="isIDLE">
-         <Input/>
-         <Output>
-            <Data Label="IDLE" VariableName="isIDLE">
-               <Meta>
-                  <Type>boolean</Type>
-               </Meta>
-            </Data>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">return "idle".equals(this.getValue());</CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="get ACTIVE" Name="getACTIVE">
-         <Input/>
-         <Output>
-            <Data ID="2" Label="ResourceUsageStateType" ReferenceName="ResourceUsageStateType" ReferencePath="internalized.tmf640.datamodel" VariableName="varName"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">return new ResourceUsageStateType("active");</CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="is ACTIVE" Name="isACTIVE">
-         <Input/>
-         <Output>
-            <Data Label="ACTIVE" VariableName="isACTIVE">
-               <Meta>
-                  <Type>boolean</Type>
-               </Meta>
-            </Data>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">return "active".equals(this.getValue());</CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="get BUSY" Name="getBUSY">
-         <Input/>
-         <Output>
-            <Data ID="2" Label="ResourceUsageStateType" ReferenceName="ResourceUsageStateType" ReferencePath="internalized.tmf640.datamodel" VariableName="varName"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">return new ResourceUsageStateType("busy");</CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="is BUSY" Name="isBUSY">
-         <Input/>
-         <Output>
-            <Data Label="BUSY" VariableName="isBUSY">
-               <Meta>
-                  <Type>boolean</Type>
-               </Meta>
-            </Data>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">return "busy".equals(this.getValue());</CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get IDLE" Name="getIDLE">
+      <Input/>
+      <Output>
+        <Data ID="2" Label="ResourceUsageStateType" ReferenceName="ResourceUsageStateType" ReferencePath="internalized.tmf640.datamodel" VariableName="varName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new ResourceUsageStateType("idle");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="is IDLE" Name="isIDLE">
+      <Input/>
+      <Output>
+        <Data Label="IDLE" VariableName="isIDLE">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return "idle".equals(this.getValue());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get ACTIVE" Name="getACTIVE">
+      <Input/>
+      <Output>
+        <Data ID="2" Label="ResourceUsageStateType" ReferenceName="ResourceUsageStateType" ReferencePath="internalized.tmf640.datamodel" VariableName="varName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new ResourceUsageStateType("active");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="is ACTIVE" Name="isACTIVE">
+      <Input/>
+      <Output>
+        <Data Label="ACTIVE" VariableName="isACTIVE">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return "active".equals(this.getValue());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get BUSY" Name="getBUSY">
+      <Input/>
+      <Output>
+        <Data ID="2" Label="ResourceUsageStateType" ReferenceName="ResourceUsageStateType" ReferencePath="internalized.tmf640.datamodel" VariableName="varName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new ResourceUsageStateType("busy");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="is BUSY" Name="isBUSY">
+      <Input/>
+      <Output>
+        <Data Label="BUSY" VariableName="isBUSY">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return "busy".equals(this.getValue());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

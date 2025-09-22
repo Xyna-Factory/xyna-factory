@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -16,20 +16,20 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="GET_SERVICE" TypeName="GET_SERVICE" TypePath="xfmg.tmf.validation.constraint.function.workflow" Version="1.8">
-   <Operation ID="0" IsStatic="false" Label="GET_SERVICE" Name="GET_SERVICE">
-      <Input>
-         <Data ID="18" Label="Service Id" ReferenceName="Text" ReferencePath="base" VariableName="text18"/>
-      </Input>
-      <Output>
-         <Data ID="31" Label="Service JSON" ReferenceName="Text" ReferencePath="base" VariableName="text31"/>
-      </Output>
-      <Assign ID="1">
-         <Source RefID="18"/>
-         <Target RefID="31"/>
-         <Copy>
-            <Source RefID="18"/>
-            <Target RefID="31"/>
-         </Copy>
-      </Assign>
-   </Operation>
+  <Operation ID="0" IsStatic="false" Label="GET_SERVICE" Name="GET_SERVICE">
+    <Input>
+      <Data ID="18" Label="Service Id" ReferenceName="Text" ReferencePath="base" VariableName="text18"/>
+    </Input>
+    <Output>
+      <Data ID="31" Label="Service JSON" ReferenceName="Text" ReferencePath="base" VariableName="text31"/>
+    </Output>
+    <Assign ID="1">
+      <Source RefID="18"/>
+      <Target RefID="31"/>
+      <Copy>
+        <Source RefID="18"/>
+        <Target RefID="31"/>
+      </Copy>
+    </Assign>
+  </Operation>
 </Service>

@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,29 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Characteristic" BaseTypePath="internalized.tmf640.datamodel" IsAbstract="false" Label="ObjectArrayCharacteristic" TypeName="ObjectArrayCharacteristic" TypePath="internalized.tmf640.datamodel" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-      <Documentation>This data type is "allOf": Characteristic
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Characteristic" BaseTypePath="internalized.tmf640.datamodel" IsAbstract="false" Label="ObjectArrayCharacteristic" TypeName="ObjectArrayCharacteristic" TypePath="internalized.tmf640.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>This data type is "allOf": Characteristic
         </Documentation>
-   </Meta>
-   <Data IsList="true" Label="value" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="value">
-      <Meta>
-         <Documentation>required
+  </Meta>
+  <Data IsList="true" Label="value" ReferenceName="JSONValue" ReferencePath="xfmg.xfctrl.datamodel.json" VariableName="value">
+    <Meta>
+      <Documentation>required
         </Documentation>
-      </Meta>
-   </Data>
-   <Service Label="ObjectArrayCharacteristic" TypeName="ObjectArrayCharacteristic">
-      <Operation IsStatic="false" Label="Validate" Name="validate">
-         <Input/>
-         <Output>
-            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+    </Meta>
+  </Data>
+  <Service Label="ObjectArrayCharacteristic" TypeName="ObjectArrayCharacteristic">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
-result.setErrorMessages(new ArrayList&lt;String>());
+result.setErrorMessages(new ArrayList&lt;String&gt;());
 // validate ObjectArrayCharacteristic.atbaseType of type String
 try {
     var validator_atbaseType = new com.gip.xyna.openapi.StringTypeValidator();
@@ -104,7 +103,7 @@ try {
 
 // validate ObjectArrayCharacteristic.characteristicRelationship of type CharacteristicRelationship
 try {
-    List&lt;? extends internalized.tmf640.datamodel.CharacteristicRelationship> characteristicRelationship = getCharacteristicRelationship();
+    List&lt;? extends internalized.tmf640.datamodel.CharacteristicRelationship&gt; characteristicRelationship = getCharacteristicRelationship();
     if (characteristicRelationship != null) {
         for (internalized.tmf640.datamodel.CharacteristicRelationship obj : characteristicRelationship) {
             result.getErrorMessages().addAll(obj.validate().getErrorMessages());
@@ -116,7 +115,7 @@ try {
 
 // validate ObjectArrayCharacteristic.value of type JSONValue
 try {
-    List&lt;? extends xfmg.xfctrl.datamodel.json.JSONValue> value = getValue();
+    List&lt;? extends xfmg.xfctrl.datamodel.json.JSONValue&gt; value = getValue();
     if (value != null) {
     } else {
         result.getErrorMessages().add("ObjectArrayCharacteristic.value: List of type JSONValue is required but is null");
@@ -127,7 +126,7 @@ try {
 
 return result.getResult();
                 </CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

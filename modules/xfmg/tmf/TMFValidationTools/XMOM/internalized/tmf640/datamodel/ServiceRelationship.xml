@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,61 +15,60 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="ServiceRelationship" TypeName="ServiceRelationship" TypePath="internalized.tmf640.datamodel" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="ServiceRelationship" TypeName="ServiceRelationship" TypePath="internalized.tmf640.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation/>
+  </Meta>
+  <Data Label="relationshipType" VariableName="relationshipType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>required
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="serviceRelationshipCharacteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="serviceRelationshipCharacteristic">
+    <Meta>
       <Documentation/>
-   </Meta>
-   <Data Label="relationshipType" VariableName="relationshipType">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>required
+    </Meta>
+  </Data>
+  <Data Label="service" ReferenceName="ServiceRefOrValue" ReferencePath="internalized.tmf640.datamodel" VariableName="service">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Data Label="@baseType" VariableName="atbaseType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the super-class
         </Documentation>
-      </Meta>
-   </Data>
-   <Data IsList="true" Label="serviceRelationshipCharacteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="serviceRelationshipCharacteristic">
-      <Meta>
-         <Documentation/>
-      </Meta>
-   </Data>
-   <Data Label="service" ReferenceName="ServiceRefOrValue" ReferencePath="internalized.tmf640.datamodel" VariableName="service">
-      <Meta>
-         <Documentation/>
-      </Meta>
-   </Data>
-   <Data Label="@baseType" VariableName="atbaseType">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>When sub-classing, this defines the super-class
-        </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="@schemaLocation" VariableName="atschemaLocation">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
+    </Meta>
+  </Data>
+  <Data Label="@schemaLocation" VariableName="atschemaLocation">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
 format: uri
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="@type" VariableName="attype">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>When sub-classing, this defines the sub-class entity name
+    </Meta>
+  </Data>
+  <Data Label="@type" VariableName="attype">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the sub-class entity name
         </Documentation>
-      </Meta>
-   </Data>
-   <Service Label="ServiceRelationship" TypeName="ServiceRelationship">
-      <Operation IsStatic="false" Label="Validate" Name="validate">
-         <Input/>
-         <Output>
-            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+    </Meta>
+  </Data>
+  <Service Label="ServiceRelationship" TypeName="ServiceRelationship">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
-result.setErrorMessages(new ArrayList&lt;String>());
+result.setErrorMessages(new ArrayList&lt;String&gt;());
 // validate ServiceRelationship.relationshipType of type String
 try {
     var validator_relationshipType = new com.gip.xyna.openapi.StringTypeValidator();
@@ -83,7 +82,7 @@ try {
 
 // validate ServiceRelationship.serviceRelationshipCharacteristic of type Characteristic
 try {
-    List&lt;? extends internalized.tmf640.datamodel.Characteristic> serviceRelationshipCharacteristic = getServiceRelationshipCharacteristic();
+    List&lt;? extends internalized.tmf640.datamodel.Characteristic&gt; serviceRelationshipCharacteristic = getServiceRelationshipCharacteristic();
     if (serviceRelationshipCharacteristic != null) {
         for (internalized.tmf640.datamodel.Characteristic obj : serviceRelationshipCharacteristic) {
             result.getErrorMessages().addAll(obj.validate().getErrorMessages());
@@ -136,7 +135,7 @@ try {
 
 return result.getResult();
                 </CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

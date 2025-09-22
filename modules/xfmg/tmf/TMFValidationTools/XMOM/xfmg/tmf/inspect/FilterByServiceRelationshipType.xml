@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -16,36 +16,36 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="Filter" BaseTypePath="base.list.filter" IsAbstract="false" Label="Filter by Service Relationship Type" TypeName="FilterByServiceRelationshipType" TypePath="xfmg.tmf.inspect" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-   </Meta>
-   <Data Label="relationshipType" VariableName="relationshipType">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>tmf640.datamodel.ServiceRelationship input = (tmf640.datamodel.ServiceRelationship) anytype2;
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="relationshipType" VariableName="relationshipType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>tmf640.datamodel.ServiceRelationship input = (tmf640.datamodel.ServiceRelationship) anytype2;
 return input.getRelationshipType().equals(getRelationshipType());</Documentation>
-      </Meta>
-   </Data>
-   <Service Label="Filter by Service Relationship Type" TypeName="FilterByServiceRelationshipType">
-      <Operation IsStatic="false" Label="Accept" Name="accept">
-         <Input>
-            <Data ID="2" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype2">
-               <Meta>
-                  <Type>GeneralXynaObject</Type>
-               </Meta>
-            </Data>
-         </Input>
-         <Output>
-            <Data ID="3" Label="Result" VariableName="boolean3">
-               <Meta>
-                  <Type>boolean</Type>
-               </Meta>
-            </Data>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">internalized.tmf640.datamodel.ServiceRelationship input = (internalized.tmf640.datamodel.ServiceRelationship) anytype2;
+    </Meta>
+  </Data>
+  <Service Label="Filter by Service Relationship Type" TypeName="FilterByServiceRelationshipType">
+    <Operation IsStatic="false" Label="Accept" Name="accept">
+      <Input>
+        <Data ID="2" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anytype2">
+          <Meta>
+            <Type>GeneralXynaObject</Type>
+          </Meta>
+        </Data>
+      </Input>
+      <Output>
+        <Data ID="3" Label="Result" VariableName="boolean3">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">internalized.tmf640.datamodel.ServiceRelationship input = (internalized.tmf640.datamodel.ServiceRelationship) anytype2;
 return input.getRelationshipType().equals(getRelationshipType());</CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

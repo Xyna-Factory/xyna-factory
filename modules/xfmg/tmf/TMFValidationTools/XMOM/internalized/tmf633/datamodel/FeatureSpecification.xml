@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,81 +15,80 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="FeatureSpecification" TypeName="FeatureSpecification" TypePath="internalized.tmf633.datamodel" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-      <Documentation>Specification for resource, service or product features
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="FeatureSpecification" TypeName="FeatureSpecification" TypePath="internalized.tmf633.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Specification for resource, service or product features
         </Documentation>
-   </Meta>
-   <Data Label="id" VariableName="id">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Identifier of the feature specification. Must be locally unique within the containing specification, thus allowing direct access to the feature spec.
+  </Meta>
+  <Data Label="id" VariableName="id">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Identifier of the feature specification. Must be locally unique within the containing specification, thus allowing direct access to the feature spec.
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="isBundle" VariableName="isBundle">
-      <Meta>
-         <Type>Boolean</Type>
-         <Documentation>A flag indicating if this is a feature group (true) or not (false)
+    </Meta>
+  </Data>
+  <Data Label="isBundle" VariableName="isBundle">
+    <Meta>
+      <Type>Boolean</Type>
+      <Documentation>A flag indicating if this is a feature group (true) or not (false)
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="isEnabled" VariableName="isEnabled">
-      <Meta>
-         <Type>Boolean</Type>
-         <Documentation>A flag indicating if the feature is enabled (true) or not (false)
+    </Meta>
+  </Data>
+  <Data Label="isEnabled" VariableName="isEnabled">
+    <Meta>
+      <Type>Boolean</Type>
+      <Documentation>A flag indicating if the feature is enabled (true) or not (false)
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="name" VariableName="name">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Unique name given to the feature specification
+    </Meta>
+  </Data>
+  <Data Label="name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Unique name given to the feature specification
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="version" VariableName="version">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Version of the feature specification
+    </Meta>
+  </Data>
+  <Data Label="version" VariableName="version">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Version of the feature specification
         </Documentation>
-      </Meta>
-   </Data>
-   <Data IsList="true" Label="constraint" ReferenceName="Constraint" ReferencePath="internalized.tmf633.datamodel" VariableName="constraint">
-      <Meta>
-         <Documentation>This is a list of feature constraints
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="constraint" ReferenceName="Constraint" ReferencePath="internalized.tmf633.datamodel" VariableName="constraint">
+    <Meta>
+      <Documentation>This is a list of feature constraints
         </Documentation>
-      </Meta>
-   </Data>
-   <Data IsList="true" Label="featureSpecCharacteristic" ReferenceName="FeatureSpecificationCharacteristic" ReferencePath="internalized.tmf633.datamodel" VariableName="featureSpecCharacteristic">
-      <Meta>
-         <Documentation>This is a list of characteristics for a particular feature
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="featureSpecCharacteristic" ReferenceName="FeatureSpecificationCharacteristic" ReferencePath="internalized.tmf633.datamodel" VariableName="featureSpecCharacteristic">
+    <Meta>
+      <Documentation>This is a list of characteristics for a particular feature
         </Documentation>
-      </Meta>
-   </Data>
-   <Data IsList="true" Label="featureSpecRelationship" ReferenceName="FeatureSpecificationRelationship" ReferencePath="internalized.tmf633.datamodel" VariableName="featureSpecRelationship">
-      <Meta>
-         <Documentation>A dependency, exclusivity or aggratation relationship between/among feature specifications.
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="featureSpecRelationship" ReferenceName="FeatureSpecificationRelationship" ReferencePath="internalized.tmf633.datamodel" VariableName="featureSpecRelationship">
+    <Meta>
+      <Documentation>A dependency, exclusivity or aggratation relationship between/among feature specifications.
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="validFor" ReferenceName="TimePeriod" ReferencePath="internalized.tmf633.datamodel" VariableName="validFor">
-      <Meta>
-         <Documentation/>
-      </Meta>
-   </Data>
-   <Service Label="FeatureSpecification" TypeName="FeatureSpecification">
-      <Operation IsStatic="false" Label="Validate" Name="validate">
-         <Input/>
-         <Output>
-            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+    </Meta>
+  </Data>
+  <Data Label="validFor" ReferenceName="TimePeriod" ReferencePath="internalized.tmf633.datamodel" VariableName="validFor">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Service Label="FeatureSpecification" TypeName="FeatureSpecification">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
-result.setErrorMessages(new ArrayList&lt;String>());
+result.setErrorMessages(new ArrayList&lt;String&gt;());
 // validate FeatureSpecification.id of type String
 try {
     var validator_id = new com.gip.xyna.openapi.StringTypeValidator();
@@ -142,7 +141,7 @@ try {
 
 // validate FeatureSpecification.constraint of type Constraint
 try {
-    List&lt;? extends internalized.tmf633.datamodel.Constraint> constraint = getConstraint();
+    List&lt;? extends internalized.tmf633.datamodel.Constraint&gt; constraint = getConstraint();
     if (constraint != null) {
         for (internalized.tmf633.datamodel.Constraint obj : constraint) {
             result.getErrorMessages().addAll(obj.validate().getErrorMessages());
@@ -154,7 +153,7 @@ try {
 
 // validate FeatureSpecification.featureSpecCharacteristic of type FeatureSpecificationCharacteristic
 try {
-    List&lt;? extends internalized.tmf633.datamodel.FeatureSpecificationCharacteristic> featureSpecCharacteristic = getFeatureSpecCharacteristic();
+    List&lt;? extends internalized.tmf633.datamodel.FeatureSpecificationCharacteristic&gt; featureSpecCharacteristic = getFeatureSpecCharacteristic();
     if (featureSpecCharacteristic != null) {
         for (internalized.tmf633.datamodel.FeatureSpecificationCharacteristic obj : featureSpecCharacteristic) {
             result.getErrorMessages().addAll(obj.validate().getErrorMessages());
@@ -166,7 +165,7 @@ try {
 
 // validate FeatureSpecification.featureSpecRelationship of type FeatureSpecificationRelationship
 try {
-    List&lt;? extends internalized.tmf633.datamodel.FeatureSpecificationRelationship> featureSpecRelationship = getFeatureSpecRelationship();
+    List&lt;? extends internalized.tmf633.datamodel.FeatureSpecificationRelationship&gt; featureSpecRelationship = getFeatureSpecRelationship();
     if (featureSpecRelationship != null) {
         for (internalized.tmf633.datamodel.FeatureSpecificationRelationship obj : featureSpecRelationship) {
             result.getErrorMessages().addAll(obj.validate().getErrorMessages());
@@ -188,7 +187,7 @@ try {
 
 return result.getResult();
                 </CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

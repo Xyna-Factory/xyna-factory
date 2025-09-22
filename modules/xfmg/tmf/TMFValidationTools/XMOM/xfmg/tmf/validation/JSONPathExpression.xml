@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -16,31 +16,31 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="JSON Path Expression" TypeName="JSONPathExpression" TypePath="xfmg.tmf.validation" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-   </Meta>
-   <Data Label="left" VariableName="left">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>JSONPath or Constant</Documentation>
-      </Meta>
-   </Data>
-   <Data Label="comparator" VariableName="comparator">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Possible values:
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="left" VariableName="left">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>JSONPath or Constant</Documentation>
+    </Meta>
+  </Data>
+  <Data Label="comparator" VariableName="comparator">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Possible values:
 all types: ==, !=
 numbers: &amp;lt;, &amp;gt;, &amp;lt;=, &amp;gt;=
 &amp;lt;left&amp;gt; matches regex &amp;lt;right&amp;gt;: =~
 size(&amp;lt;left&amp;gt; as array)  &amp;lt;cmp&amp;gt; &amp;lt;right&amp;gt;: size &amp;lt;cmp&amp;gt;
   example: comparator="size &amp;lt;="
 </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="right" VariableName="right">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>JSONPath or Constant</Documentation>
-      </Meta>
-   </Data>
+    </Meta>
+  </Data>
+  <Data Label="right" VariableName="right">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>JSONPath or Constant</Documentation>
+    </Meta>
+  </Data>
 </DataType>

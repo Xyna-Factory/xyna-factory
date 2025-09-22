@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -16,75 +16,75 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Connect Parameter Servicecatalog API" TypeName="GetConnectParameterServicecatalogAPI" TypePath="xfmg.tmf633" Version="1.8">
-   <Operation ID="0" IsStatic="false" Label="Get Connect Parameter Servicecatalog API" Name="GetConnectParameterServicecatalogAPI">
-      <Input/>
+  <Operation ID="0" IsStatic="false" Label="Get Connect Parameter Servicecatalog API" Name="GetConnectParameterServicecatalogAPI">
+    <Input/>
+    <Output>
+      <Data ID="817" Label="Connect Parameter Host Port" ReferenceName="ConnectParameterHostPort" ReferencePath="xact.http" VariableName="connectParameterHostPort817"/>
+    </Output>
+    <Mappings ID="830" Label="Mapping">
+      <Input>
+        <Data ID="897" Label="Xyna Property Host" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration" VariableName="xynaPropertyString897">
+          <Source RefID="830"/>
+        </Data>
+        <Source RefID="988">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="938" Label="Xyna Property Port" ReferenceName="XynaPropertyInteger" ReferencePath="xfmg.xods.configuration" VariableName="xynaPropertyInteger938">
+          <Source RefID="830"/>
+        </Data>
+        <Source RefID="997">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Input>
       <Output>
-         <Data ID="817" Label="Connect Parameter Host Port" ReferenceName="ConnectParameterHostPort" ReferencePath="xact.http" VariableName="connectParameterHostPort817"/>
+        <Data ID="839" Label="Connect Parameter Host Port" ReferenceName="ConnectParameterHostPort" ReferencePath="xact.http" VariableName="connectParameterHostPort839">
+          <Source RefID="830"/>
+        </Data>
+        <Target RefID="840"/>
       </Output>
-      <Mappings ID="830" Label="Mapping">
-         <Input>
-            <Data ID="897" Label="Xyna Property Host" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration" VariableName="xynaPropertyString897">
-               <Source RefID="830"/>
-            </Data>
-            <Source RefID="988">
-               <Meta>
-                  <LinkType>Constant</LinkType>
-               </Meta>
-            </Source>
-         </Input>
-         <Input>
-            <Data ID="938" Label="Xyna Property Port" ReferenceName="XynaPropertyInteger" ReferencePath="xfmg.xods.configuration" VariableName="xynaPropertyInteger938">
-               <Source RefID="830"/>
-            </Data>
-            <Source RefID="997">
-               <Meta>
-                  <LinkType>Constant</LinkType>
-               </Meta>
-            </Source>
-         </Input>
-         <Output>
-            <Data ID="839" Label="Connect Parameter Host Port" ReferenceName="ConnectParameterHostPort" ReferencePath="xact.http" VariableName="connectParameterHostPort839">
-               <Source RefID="830"/>
-            </Data>
-            <Target RefID="840"/>
-         </Output>
-         <Mapping>%2%.host=%0%.get()</Mapping>
-         <Mapping>%2%.port=%1%.get()</Mapping>
-      </Mappings>
-      <Data ID="840" Label="Connect Parameter Host Port" ReferenceName="ConnectParameterHostPort" ReferencePath="xact.http" VariableName="connectParameterHostPort840">
-         <Source RefID="830"/>
+      <Mapping>%2%.host=%0%.get()</Mapping>
+      <Mapping>%2%.port=%1%.get()</Mapping>
+    </Mappings>
+    <Data ID="840" Label="Connect Parameter Host Port" ReferenceName="ConnectParameterHostPort" ReferencePath="xact.http" VariableName="connectParameterHostPort840">
+      <Source RefID="830"/>
+    </Data>
+    <Data ID="988" Label="Xyna Property String" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration" VariableName="const_XynaPropertyString988">
+      <Data VariableName="propertyName">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>tmf633.config.connect.host</Value>
       </Data>
-      <Data ID="988" Label="Xyna Property String" ReferenceName="XynaPropertyString" ReferencePath="xfmg.xods.configuration" VariableName="const_XynaPropertyString988">
-         <Data VariableName="propertyName">
-            <Meta>
-               <Type>String</Type>
-            </Meta>
-            <Value>tmf633.config.connect.host</Value>
-         </Data>
-         <Data ReferenceName="ThrowException" ReferencePath="xfmg.xods.configuration.parameter" VariableName="behaviourIfPropertyNotSet"/>
+      <Data ReferenceName="ThrowException" ReferencePath="xfmg.xods.configuration.parameter" VariableName="behaviourIfPropertyNotSet"/>
+    </Data>
+    <Data ID="997" Label="Xyna Property Integer" ReferenceName="XynaPropertyInteger" ReferencePath="xfmg.xods.configuration" VariableName="const_XynaPropertyInteger997">
+      <Data VariableName="propertyName">
+        <Meta>
+          <Type>String</Type>
+        </Meta>
+        <Value>tmf633.config.connect.port</Value>
       </Data>
-      <Data ID="997" Label="Xyna Property Integer" ReferenceName="XynaPropertyInteger" ReferencePath="xfmg.xods.configuration" VariableName="const_XynaPropertyInteger997">
-         <Data VariableName="propertyName">
-            <Meta>
-               <Type>String</Type>
-            </Meta>
-            <Value>tmf633.config.connect.port</Value>
-         </Data>
-         <Data VariableName="value">
-            <Meta>
-               <Type>Integer</Type>
-            </Meta>
-            <Value>80</Value>
-         </Data>
-         <Data ReferenceName="UseValue" ReferencePath="xfmg.xods.configuration.parameter" VariableName="behaviourIfPropertyNotSet"/>
+      <Data VariableName="value">
+        <Meta>
+          <Type>Integer</Type>
+        </Meta>
+        <Value>80</Value>
       </Data>
-      <Assign ID="1">
-         <Source RefID="840"/>
-         <Target RefID="817"/>
-         <Copy>
-            <Source RefID="840"/>
-            <Target RefID="817"/>
-         </Copy>
-      </Assign>
-   </Operation>
+      <Data ReferenceName="UseValue" ReferencePath="xfmg.xods.configuration.parameter" VariableName="behaviourIfPropertyNotSet"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="840"/>
+      <Target RefID="817"/>
+      <Copy>
+        <Source RefID="840"/>
+        <Target RefID="817"/>
+      </Copy>
+    </Assign>
+  </Operation>
 </Service>

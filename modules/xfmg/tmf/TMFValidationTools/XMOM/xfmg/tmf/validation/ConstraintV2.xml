@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -16,20 +16,20 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="ConstraintV2" TypeName="ConstraintV2" TypePath="xfmg.tmf.validation" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-   </Meta>
-   <Data Label="condition" ReferenceName="JSONPathExpressionV2" ReferencePath="xfmg.tmf.validation" VariableName="condition"/>
-   <Data Label="rule" ReferenceName="JSONPathExpressionV2" ReferencePath="xfmg.tmf.validation" VariableName="rule"/>
-   <Data Label="name" VariableName="name">
-      <Meta>
-         <Type>String</Type>
-      </Meta>
-   </Data>
-   <Data IsList="true" Label="dependencies" VariableName="dependencies">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>List of names of other Constraints.
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="condition" ReferenceName="JSONPathExpressionV2" ReferencePath="xfmg.tmf.validation" VariableName="condition"/>
+  <Data Label="rule" ReferenceName="JSONPathExpressionV2" ReferencePath="xfmg.tmf.validation" VariableName="rule"/>
+  <Data Label="name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="dependencies" VariableName="dependencies">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>List of names of other Constraints.
 
 This Constraint will not be checked (i.e. it will be "skipped") if 
 1. It contains a dependency to another Constraint (lets call it C) 
@@ -37,11 +37,11 @@ AND
   2.1 The condition of C evaluated to false
   OR
   2.2 C was skipped itself</Documentation>
-      </Meta>
-   </Data>
-   <Data Label="description" VariableName="description">
-      <Meta>
-         <Type>String</Type>
-      </Meta>
-   </Data>
+    </Meta>
+  </Data>
+  <Data Label="description" VariableName="description">
+    <Meta>
+      <Type>String</Type>
+    </Meta>
+  </Data>
 </DataType>

@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,32 +15,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="ChangeList" TypeName="ChangeList" TypePath="internalized.tmf633.datamodel" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-      <Documentation>List of changes as json path expressions
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="ChangeList" TypeName="ChangeList" TypePath="internalized.tmf633.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>List of changes as json path expressions
         </Documentation>
-   </Meta>
-   <Data IsList="true" Label="changes" VariableName="changes">
-      <Meta>
-         <Type>String</Type>
-         <Documentation/>
-      </Meta>
-   </Data>
-   <Service Label="ChangeList" TypeName="ChangeList">
-      <Operation IsStatic="false" Label="Validate" Name="validate">
-         <Input/>
-         <Output>
-            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+  </Meta>
+  <Data IsList="true" Label="changes" VariableName="changes">
+    <Meta>
+      <Type>String</Type>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Service Label="ChangeList" TypeName="ChangeList">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
-result.setErrorMessages(new ArrayList&lt;String>());
+result.setErrorMessages(new ArrayList&lt;String&gt;());
 // validate ChangeList.changes of type String
 try {
-    var validator_changes = new com.gip.xyna.openapi.PrimitiveListTypeValidator&lt;String,com.gip.xyna.openapi.StringTypeValidator>(com.gip.xyna.openapi.StringTypeValidator::new);
+    var validator_changes = new com.gip.xyna.openapi.PrimitiveListTypeValidator&lt;String,com.gip.xyna.openapi.StringTypeValidator&gt;(com.gip.xyna.openapi.StringTypeValidator::new);
     validator_changes.setName("changes");
     validator_changes.setValue(getChanges());
     result.getErrorMessages().addAll(validator_changes.checkValid());
@@ -50,7 +49,7 @@ try {
 
 return result.getResult();
                 </CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

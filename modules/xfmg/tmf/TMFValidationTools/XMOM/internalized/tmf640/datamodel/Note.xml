@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,74 +15,73 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="Note" TypeName="Note" TypePath="internalized.tmf640.datamodel" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-      <Documentation>Extra information about a given entity
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="Note" TypeName="Note" TypePath="internalized.tmf640.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Extra information about a given entity
         </Documentation>
-   </Meta>
-   <Data Label="id" VariableName="id">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Type for Id Attributes with pattern
+  </Meta>
+  <Data Label="id" VariableName="id">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Type for Id Attributes with pattern
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="author" VariableName="author">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Author of the note
+    </Meta>
+  </Data>
+  <Data Label="author" VariableName="author">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Author of the note
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="date" VariableName="date">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Date of the note
+    </Meta>
+  </Data>
+  <Data Label="date" VariableName="date">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Date of the note
 format: date-time
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="text" VariableName="text">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Text of the note
+    </Meta>
+  </Data>
+  <Data Label="text" VariableName="text">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Text of the note
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="@baseType" VariableName="atbaseType">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>When sub-classing, this defines the super-class
+    </Meta>
+  </Data>
+  <Data Label="@baseType" VariableName="atbaseType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the super-class
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="@schemaLocation" VariableName="atschemaLocation">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
+    </Meta>
+  </Data>
+  <Data Label="@schemaLocation" VariableName="atschemaLocation">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
 format: uri
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="@type" VariableName="attype">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>When sub-classing, this defines the sub-class entity name
+    </Meta>
+  </Data>
+  <Data Label="@type" VariableName="attype">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the sub-class entity name
         </Documentation>
-      </Meta>
-   </Data>
-   <Service Label="Note" TypeName="Note">
-      <Operation IsStatic="false" Label="Validate" Name="validate">
-         <Input/>
-         <Output>
-            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+    </Meta>
+  </Data>
+  <Service Label="Note" TypeName="Note">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
-result.setErrorMessages(new ArrayList&lt;String>());
+result.setErrorMessages(new ArrayList&lt;String&gt;());
 // validate Note.id of type String
 try {
     var validator_id = new com.gip.xyna.openapi.StringTypeValidator();
@@ -158,7 +157,7 @@ try {
 
 return result.getResult();
                 </CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

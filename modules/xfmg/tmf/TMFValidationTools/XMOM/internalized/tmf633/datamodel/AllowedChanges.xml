@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,45 +15,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="AllowedChanges" TypeName="AllowedChanges" TypePath="internalized.tmf633.datamodel" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-      <Documentation>Contains nested lists of json path expressions that will be evaluated on the old service as well as on the new service to detect changes in that part of the json. If the changes done to the service are not included in any of the sets defined here, the change is not allowed (except when whole AllowedChanges is empty). One can define two kinds of json path lists. Either a list of things that _all_ have to be changed (and nothing else). Or a list of possible changes that _may_ or may not have been changed (but again nothing else is changed).
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="AllowedChanges" TypeName="AllowedChanges" TypePath="internalized.tmf633.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Contains nested lists of json path expressions that will be evaluated on the old service as well as on the new service to detect changes in that part of the json. If the changes done to the service are not included in any of the sets defined here, the change is not allowed (except when whole AllowedChanges is empty). One can define two kinds of json path lists. Either a list of things that _all_ have to be changed (and nothing else). Or a list of possible changes that _may_ or may not have been changed (but again nothing else is changed).
         </Documentation>
-   </Meta>
-   <Data IsList="true" Label="allof" ReferenceName="ChangeList" ReferencePath="internalized.tmf633.datamodel" VariableName="allof">
-      <Meta>
-         <Documentation>Each of the nested list is a valid _allof_ allowed change, i.e. a service update is valid with regards to this list, if all of its entries are changed in the service update and nothing else.
+  </Meta>
+  <Data IsList="true" Label="allof" ReferenceName="ChangeList" ReferencePath="internalized.tmf633.datamodel" VariableName="allof">
+    <Meta>
+      <Documentation>Each of the nested list is a valid _allof_ allowed change, i.e. a service update is valid with regards to this list, if all of its entries are changed in the service update and nothing else.
         </Documentation>
-      </Meta>
-   </Data>
-   <Data IsList="true" Label="anyof" ReferenceName="ChangeList" ReferencePath="internalized.tmf633.datamodel" VariableName="anyof">
-      <Meta>
-         <Documentation>Each of these nested lists is a valid _anyof_ allowed change, i.e. any of its entries may have been changed in the service update, but nothing else.
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="anyof" ReferenceName="ChangeList" ReferencePath="internalized.tmf633.datamodel" VariableName="anyof">
+    <Meta>
+      <Documentation>Each of these nested lists is a valid _anyof_ allowed change, i.e. any of its entries may have been changed in the service update, but nothing else.
         </Documentation>
-      </Meta>
-   </Data>
-   <Data IsList="true" Label="ignored" VariableName="ignored">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Changes to these paths will be ignored.
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="ignored" VariableName="ignored">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Changes to these paths will be ignored.
         </Documentation>
-      </Meta>
-   </Data>
-   <Service Label="AllowedChanges" TypeName="AllowedChanges">
-      <Operation IsStatic="false" Label="Validate" Name="validate">
-         <Input/>
-         <Output>
-            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+    </Meta>
+  </Data>
+  <Service Label="AllowedChanges" TypeName="AllowedChanges">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
-result.setErrorMessages(new ArrayList&lt;String>());
+result.setErrorMessages(new ArrayList&lt;String&gt;());
 // validate AllowedChanges.allof of type ChangeList
 try {
-    List&lt;? extends internalized.tmf633.datamodel.ChangeList> allof = getAllof();
+    List&lt;? extends internalized.tmf633.datamodel.ChangeList&gt; allof = getAllof();
     if (allof != null) {
         for (internalized.tmf633.datamodel.ChangeList obj : allof) {
             result.getErrorMessages().addAll(obj.validate().getErrorMessages());
@@ -65,7 +64,7 @@ try {
 
 // validate AllowedChanges.anyof of type ChangeList
 try {
-    List&lt;? extends internalized.tmf633.datamodel.ChangeList> anyof = getAnyof();
+    List&lt;? extends internalized.tmf633.datamodel.ChangeList&gt; anyof = getAnyof();
     if (anyof != null) {
         for (internalized.tmf633.datamodel.ChangeList obj : anyof) {
             result.getErrorMessages().addAll(obj.validate().getErrorMessages());
@@ -77,7 +76,7 @@ try {
 
 // validate AllowedChanges.ignored of type String
 try {
-    var validator_ignored = new com.gip.xyna.openapi.PrimitiveListTypeValidator&lt;String,com.gip.xyna.openapi.StringTypeValidator>(com.gip.xyna.openapi.StringTypeValidator::new);
+    var validator_ignored = new com.gip.xyna.openapi.PrimitiveListTypeValidator&lt;String,com.gip.xyna.openapi.StringTypeValidator&gt;(com.gip.xyna.openapi.StringTypeValidator::new);
     validator_ignored.setName("ignored");
     validator_ignored.setValue(getIgnored());
     result.getErrorMessages().addAll(validator_ignored.checkValid());
@@ -87,7 +86,7 @@ try {
 
 return result.getResult();
                 </CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

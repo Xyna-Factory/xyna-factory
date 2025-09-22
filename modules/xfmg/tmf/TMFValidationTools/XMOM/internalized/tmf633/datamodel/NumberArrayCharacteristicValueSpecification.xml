@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,29 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="CharacteristicValueSpecification" BaseTypePath="internalized.tmf633.datamodel" IsAbstract="false" Label="NumberArrayCharacteristicValueSpecification" TypeName="NumberArrayCharacteristicValueSpecification" TypePath="internalized.tmf633.datamodel" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-      <Documentation>This data type is "allOf": CharacteristicValueSpecification
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="CharacteristicValueSpecification" BaseTypePath="internalized.tmf633.datamodel" IsAbstract="false" Label="NumberArrayCharacteristicValueSpecification" TypeName="NumberArrayCharacteristicValueSpecification" TypePath="internalized.tmf633.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>This data type is "allOf": CharacteristicValueSpecification
         </Documentation>
-   </Meta>
-   <Data IsList="true" Label="value" VariableName="value">
-      <Meta>
-         <Type>Double</Type>
-         <Documentation/>
-      </Meta>
-   </Data>
-   <Service Label="NumberArrayCharacteristicValueSpecification" TypeName="NumberArrayCharacteristicValueSpecification">
-      <Operation IsStatic="false" Label="Validate" Name="validate">
-         <Input/>
-         <Output>
-            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+  </Meta>
+  <Data IsList="true" Label="value" VariableName="value">
+    <Meta>
+      <Type>Double</Type>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Service Label="NumberArrayCharacteristicValueSpecification" TypeName="NumberArrayCharacteristicValueSpecification">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
-result.setErrorMessages(new ArrayList&lt;String>());
+result.setErrorMessages(new ArrayList&lt;String&gt;());
 // validate NumberArrayCharacteristicValueSpecification.isDefault of type Boolean
 try {
     var validator_isDefault = new com.gip.xyna.openapi.BooleanTypeValidator();
@@ -80,7 +79,7 @@ try {
 
 // validate NumberArrayCharacteristicValueSpecification.valueFrom of type Long
 try {
-    var validator_valueFrom = new com.gip.xyna.openapi.NumberTypeValidator&lt;Long>();
+    var validator_valueFrom = new com.gip.xyna.openapi.NumberTypeValidator&lt;Long&gt;();
     validator_valueFrom.setName("valueFrom");
     validator_valueFrom.setValue(getValueFrom());
     result.getErrorMessages().addAll(validator_valueFrom.checkValid());
@@ -90,7 +89,7 @@ try {
 
 // validate NumberArrayCharacteristicValueSpecification.valueTo of type Long
 try {
-    var validator_valueTo = new com.gip.xyna.openapi.NumberTypeValidator&lt;Long>();
+    var validator_valueTo = new com.gip.xyna.openapi.NumberTypeValidator&lt;Long&gt;();
     validator_valueTo.setName("valueTo");
     validator_valueTo.setValue(getValueTo());
     result.getErrorMessages().addAll(validator_valueTo.checkValid());
@@ -151,7 +150,7 @@ try {
 
 // validate NumberArrayCharacteristicValueSpecification.value of type Double
 try {
-    var validator_value = new com.gip.xyna.openapi.PrimitiveListTypeValidator&lt;Double,com.gip.xyna.openapi.NumberTypeValidator&lt;Double>>(com.gip.xyna.openapi.NumberTypeValidator&lt;Double>::new);
+    var validator_value = new com.gip.xyna.openapi.PrimitiveListTypeValidator&lt;Double,com.gip.xyna.openapi.NumberTypeValidator&lt;Double&gt;&gt;(com.gip.xyna.openapi.NumberTypeValidator&lt;Double&gt;::new);
     validator_value.setName("value");
     validator_value.setValue(getValue());
     result.getErrorMessages().addAll(validator_value.checkValid());
@@ -161,7 +160,7 @@ try {
 
 return result.getResult();
                 </CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

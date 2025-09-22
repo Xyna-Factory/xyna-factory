@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,41 +15,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="Quantity" TypeName="Quantity" TypePath="internalized.tmf633.datamodel" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-      <Documentation>An amount in a given unit
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="Quantity" TypeName="Quantity" TypePath="internalized.tmf633.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>An amount in a given unit
         </Documentation>
-   </Meta>
-   <Data Label="amount" VariableName="amount">
-      <Meta>
-         <Type>Double</Type>
-         <Documentation>Numeric value in a given unit
+  </Meta>
+  <Data Label="amount" VariableName="amount">
+    <Meta>
+      <Type>Double</Type>
+      <Documentation>Numeric value in a given unit
 format: float
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="units" VariableName="units">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Unit
+    </Meta>
+  </Data>
+  <Data Label="units" VariableName="units">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Unit
         </Documentation>
-      </Meta>
-   </Data>
-   <Service Label="Quantity" TypeName="Quantity">
-      <Operation IsStatic="false" Label="Validate" Name="validate">
-         <Input/>
-         <Output>
-            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+    </Meta>
+  </Data>
+  <Service Label="Quantity" TypeName="Quantity">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
-result.setErrorMessages(new ArrayList&lt;String>());
+result.setErrorMessages(new ArrayList&lt;String&gt;());
 // validate Quantity.amount of type Double
 try {
-    var validator_amount = new com.gip.xyna.openapi.NumberTypeValidator&lt;Double>();
+    var validator_amount = new com.gip.xyna.openapi.NumberTypeValidator&lt;Double&gt;();
     validator_amount.setName("amount");
     validator_amount.setValue(getAmount());
     validator_amount.setFormat("float");
@@ -70,7 +69,7 @@ try {
 
 return result.getResult();
                 </CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

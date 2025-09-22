@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,31 +15,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="ResourceStatusType" TypeName="ResourceStatusType" TypePath="internalized.tmf640.datamodel" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-      <Documentation>ResourceStatusType enumerations
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="ResourceStatusType" TypeName="ResourceStatusType" TypePath="internalized.tmf640.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>ResourceStatusType enumerations
         </Documentation>
-   </Meta>
-   <Data Label="Value" VariableName="value">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>
+  </Meta>
+  <Data Label="Value" VariableName="value">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>
 values: standby, alarm, available, reserved, unknown, suspended
         </Documentation>
-      </Meta>
-   </Data>
-   <Service Label="ResourceStatusType" TypeName="ResourceStatusType">
-      <Operation IsStatic="false" Label="Validate" Name="validate">
-         <Input/>
-         <Output>
-            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+    </Meta>
+  </Data>
+  <Service Label="ResourceStatusType" TypeName="ResourceStatusType">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
-result.setErrorMessages(new ArrayList&lt;String>());
+result.setErrorMessages(new ArrayList&lt;String&gt;());
 // validate ResourceStatusType.value of type String
 try {
     var validator_value = new com.gip.xyna.openapi.StringTypeValidator();
@@ -53,139 +52,139 @@ try {
 
 return result.getResult();
         </CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="get STANDBY" Name="getSTANDBY">
-         <Input/>
-         <Output>
-            <Data ID="2" Label="ResourceStatusType" ReferenceName="ResourceStatusType" ReferencePath="internalized.tmf640.datamodel" VariableName="varName"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">return new ResourceStatusType("standby");</CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="is STANDBY" Name="isSTANDBY">
-         <Input/>
-         <Output>
-            <Data Label="STANDBY" VariableName="isSTANDBY">
-               <Meta>
-                  <Type>boolean</Type>
-               </Meta>
-            </Data>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">return "standby".equals(this.getValue());</CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="get ALARM" Name="getALARM">
-         <Input/>
-         <Output>
-            <Data ID="2" Label="ResourceStatusType" ReferenceName="ResourceStatusType" ReferencePath="internalized.tmf640.datamodel" VariableName="varName"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">return new ResourceStatusType("alarm");</CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="is ALARM" Name="isALARM">
-         <Input/>
-         <Output>
-            <Data Label="ALARM" VariableName="isALARM">
-               <Meta>
-                  <Type>boolean</Type>
-               </Meta>
-            </Data>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">return "alarm".equals(this.getValue());</CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="get AVAILABLE" Name="getAVAILABLE">
-         <Input/>
-         <Output>
-            <Data ID="2" Label="ResourceStatusType" ReferenceName="ResourceStatusType" ReferencePath="internalized.tmf640.datamodel" VariableName="varName"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">return new ResourceStatusType("available");</CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="is AVAILABLE" Name="isAVAILABLE">
-         <Input/>
-         <Output>
-            <Data Label="AVAILABLE" VariableName="isAVAILABLE">
-               <Meta>
-                  <Type>boolean</Type>
-               </Meta>
-            </Data>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">return "available".equals(this.getValue());</CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="get RESERVED" Name="getRESERVED">
-         <Input/>
-         <Output>
-            <Data ID="2" Label="ResourceStatusType" ReferenceName="ResourceStatusType" ReferencePath="internalized.tmf640.datamodel" VariableName="varName"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">return new ResourceStatusType("reserved");</CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="is RESERVED" Name="isRESERVED">
-         <Input/>
-         <Output>
-            <Data Label="RESERVED" VariableName="isRESERVED">
-               <Meta>
-                  <Type>boolean</Type>
-               </Meta>
-            </Data>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">return "reserved".equals(this.getValue());</CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="get UNKNOWN" Name="getUNKNOWN">
-         <Input/>
-         <Output>
-            <Data ID="2" Label="ResourceStatusType" ReferenceName="ResourceStatusType" ReferencePath="internalized.tmf640.datamodel" VariableName="varName"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">return new ResourceStatusType("unknown");</CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="is UNKNOWN" Name="isUNKNOWN">
-         <Input/>
-         <Output>
-            <Data Label="UNKNOWN" VariableName="isUNKNOWN">
-               <Meta>
-                  <Type>boolean</Type>
-               </Meta>
-            </Data>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">return "unknown".equals(this.getValue());</CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="get SUSPENDED" Name="getSUSPENDED">
-         <Input/>
-         <Output>
-            <Data ID="2" Label="ResourceStatusType" ReferenceName="ResourceStatusType" ReferencePath="internalized.tmf640.datamodel" VariableName="varName"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">return new ResourceStatusType("suspended");</CodeSnippet>
-         </SourceCode>
-      </Operation>
-      <Operation IsStatic="false" Label="is SUSPENDED" Name="isSUSPENDED">
-         <Input/>
-         <Output>
-            <Data Label="SUSPENDED" VariableName="isSUSPENDED">
-               <Meta>
-                  <Type>boolean</Type>
-               </Meta>
-            </Data>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">return "suspended".equals(this.getValue());</CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get STANDBY" Name="getSTANDBY">
+      <Input/>
+      <Output>
+        <Data ID="2" Label="ResourceStatusType" ReferenceName="ResourceStatusType" ReferencePath="internalized.tmf640.datamodel" VariableName="varName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new ResourceStatusType("standby");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="is STANDBY" Name="isSTANDBY">
+      <Input/>
+      <Output>
+        <Data Label="STANDBY" VariableName="isSTANDBY">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return "standby".equals(this.getValue());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get ALARM" Name="getALARM">
+      <Input/>
+      <Output>
+        <Data ID="2" Label="ResourceStatusType" ReferenceName="ResourceStatusType" ReferencePath="internalized.tmf640.datamodel" VariableName="varName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new ResourceStatusType("alarm");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="is ALARM" Name="isALARM">
+      <Input/>
+      <Output>
+        <Data Label="ALARM" VariableName="isALARM">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return "alarm".equals(this.getValue());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get AVAILABLE" Name="getAVAILABLE">
+      <Input/>
+      <Output>
+        <Data ID="2" Label="ResourceStatusType" ReferenceName="ResourceStatusType" ReferencePath="internalized.tmf640.datamodel" VariableName="varName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new ResourceStatusType("available");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="is AVAILABLE" Name="isAVAILABLE">
+      <Input/>
+      <Output>
+        <Data Label="AVAILABLE" VariableName="isAVAILABLE">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return "available".equals(this.getValue());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get RESERVED" Name="getRESERVED">
+      <Input/>
+      <Output>
+        <Data ID="2" Label="ResourceStatusType" ReferenceName="ResourceStatusType" ReferencePath="internalized.tmf640.datamodel" VariableName="varName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new ResourceStatusType("reserved");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="is RESERVED" Name="isRESERVED">
+      <Input/>
+      <Output>
+        <Data Label="RESERVED" VariableName="isRESERVED">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return "reserved".equals(this.getValue());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get UNKNOWN" Name="getUNKNOWN">
+      <Input/>
+      <Output>
+        <Data ID="2" Label="ResourceStatusType" ReferenceName="ResourceStatusType" ReferencePath="internalized.tmf640.datamodel" VariableName="varName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new ResourceStatusType("unknown");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="is UNKNOWN" Name="isUNKNOWN">
+      <Input/>
+      <Output>
+        <Data Label="UNKNOWN" VariableName="isUNKNOWN">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return "unknown".equals(this.getValue());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="get SUSPENDED" Name="getSUSPENDED">
+      <Input/>
+      <Output>
+        <Data ID="2" Label="ResourceStatusType" ReferenceName="ResourceStatusType" ReferencePath="internalized.tmf640.datamodel" VariableName="varName"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return new ResourceStatusType("suspended");</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="is SUSPENDED" Name="isSUSPENDED">
+      <Input/>
+      <Output>
+        <Data Label="SUSPENDED" VariableName="isSUSPENDED">
+          <Meta>
+            <Type>boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return "suspended".equals(this.getValue());</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

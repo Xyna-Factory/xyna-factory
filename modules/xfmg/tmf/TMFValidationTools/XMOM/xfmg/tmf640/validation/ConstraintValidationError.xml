@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -16,17 +16,17 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
-   <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="TMF-00004" IsAbstract="false" Label="Constraint Validation Error" TypeName="ConstraintValidationError" TypePath="xfmg.tmf640.validation">
-      <Data Label="constraint name" VariableName="constraintName">
-         <Meta>
-            <Type>String</Type>
-         </Meta>
-      </Data>
-      <Data Label="caused" VariableName="caused">
-         <Meta>
-            <Type>String</Type>
-         </Meta>
-      </Data>
-      <MessageText Language="EN">Evaluation of Constraint &lt;%0%> encountered an unexpected error: %1%</MessageText>
-   </ExceptionType>
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="TMF-00004" IsAbstract="false" Label="Constraint Validation Error" TypeName="ConstraintValidationError" TypePath="xfmg.tmf640.validation">
+    <Data Label="constraint name" VariableName="constraintName">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <Data Label="caused" VariableName="caused">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <MessageText Language="EN">Evaluation of Constraint &lt;%0%&gt; encountered an unexpected error: %1%</MessageText>
+  </ExceptionType>
 </ExceptionStore>

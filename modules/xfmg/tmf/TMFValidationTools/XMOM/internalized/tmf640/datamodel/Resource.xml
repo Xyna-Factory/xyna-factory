@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,164 +15,163 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="Resource" TypeName="Resource" TypePath="internalized.tmf640.datamodel" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-      <Documentation>Resource is an abstract entity that describes the common set of attributes shared by all concrete resources (e.g. TPE, EQUIPMENT) in the inventory.
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="Resource" TypeName="Resource" TypePath="internalized.tmf640.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Resource is an abstract entity that describes the common set of attributes shared by all concrete resources (e.g. TPE, EQUIPMENT) in the inventory.
         </Documentation>
-   </Meta>
-   <Data Label="id" VariableName="id">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Type for Id Attributes with pattern
+  </Meta>
+  <Data Label="id" VariableName="id">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Type for Id Attributes with pattern
 required
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="href" VariableName="href">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>The URI for the object itself.
+    </Meta>
+  </Data>
+  <Data Label="href" VariableName="href">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>The URI for the object itself.
 required
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="category" VariableName="category">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Category of the concrete resource. e.g Gold, Silver for MSISDN concrete resource
+    </Meta>
+  </Data>
+  <Data Label="category" VariableName="category">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Category of the concrete resource. e.g Gold, Silver for MSISDN concrete resource
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="description" VariableName="description">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Type for Description Attributes with pattern
+    </Meta>
+  </Data>
+  <Data Label="description" VariableName="description">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Type for Description Attributes with pattern
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="endOperatingDate" VariableName="endOperatingDate">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>A date time( DateTime). The date till the resource is operating
+    </Meta>
+  </Data>
+  <Data Label="endOperatingDate" VariableName="endOperatingDate">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A date time( DateTime). The date till the resource is operating
 format: date-time
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="name" VariableName="name">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Type for Name Attributes with pattern
+    </Meta>
+  </Data>
+  <Data Label="name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Type for Name Attributes with pattern
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="resourceVersion" VariableName="resourceVersion">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>A field that identifies the specific version of an instance of a resource.
+    </Meta>
+  </Data>
+  <Data Label="resourceVersion" VariableName="resourceVersion">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A field that identifies the specific version of an instance of a resource.
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="startOperatingDate" VariableName="startOperatingDate">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>A date time( DateTime). The date from which the resource is operating
+    </Meta>
+  </Data>
+  <Data Label="startOperatingDate" VariableName="startOperatingDate">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A date time( DateTime). The date from which the resource is operating
 format: date-time
         </Documentation>
-      </Meta>
-   </Data>
-   <Data IsList="true" Label="activationFeature" ReferenceName="Feature" ReferencePath="internalized.tmf640.datamodel" VariableName="activationFeature">
-      <Meta>
-         <Documentation>Configuration features
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="activationFeature" ReferenceName="Feature" ReferencePath="internalized.tmf640.datamodel" VariableName="activationFeature">
+    <Meta>
+      <Documentation>Configuration features
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="administrativeState" VariableName="administrativeState">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>values: locked, unlocked, shutdown
+    </Meta>
+  </Data>
+  <Data Label="administrativeState" VariableName="administrativeState">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>values: locked, unlocked, shutdown
         </Documentation>
-      </Meta>
-   </Data>
-   <Data IsList="true" Label="note" ReferenceName="Note" ReferencePath="internalized.tmf640.datamodel" VariableName="note">
-      <Meta>
-         <Documentation/>
-      </Meta>
-   </Data>
-   <Data Label="operationalState" VariableName="operationalState">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>values: enable, disable
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="note" ReferenceName="Note" ReferencePath="internalized.tmf640.datamodel" VariableName="note">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Data Label="operationalState" VariableName="operationalState">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>values: enable, disable
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="place" ReferenceName="RelatedPlaceRefOrValue" ReferencePath="internalized.tmf640.datamodel" VariableName="place">
-      <Meta>
-         <Documentation/>
-      </Meta>
-   </Data>
-   <Data IsList="true" Label="relatedParty" ReferenceName="RelatedParty" ReferencePath="internalized.tmf640.datamodel" VariableName="relatedParty">
-      <Meta>
-         <Documentation/>
-      </Meta>
-   </Data>
-   <Data IsList="true" Label="resourceCharacteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="resourceCharacteristic">
-      <Meta>
-         <Documentation/>
-      </Meta>
-   </Data>
-   <Data Label="resourceSpecification" ReferenceName="ResourceSpecificationRef" ReferencePath="internalized.tmf640.datamodel" VariableName="resourceSpecification">
-      <Meta>
-         <Documentation/>
-      </Meta>
-   </Data>
-   <Data Label="resourceStatus" VariableName="resourceStatus">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>values: standby, alarm, available, reserved, unknown, suspended
+    </Meta>
+  </Data>
+  <Data Label="place" ReferenceName="RelatedPlaceRefOrValue" ReferencePath="internalized.tmf640.datamodel" VariableName="place">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="relatedParty" ReferenceName="RelatedParty" ReferencePath="internalized.tmf640.datamodel" VariableName="relatedParty">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="resourceCharacteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="resourceCharacteristic">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Data Label="resourceSpecification" ReferenceName="ResourceSpecificationRef" ReferencePath="internalized.tmf640.datamodel" VariableName="resourceSpecification">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Data Label="resourceStatus" VariableName="resourceStatus">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>values: standby, alarm, available, reserved, unknown, suspended
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="usageState" VariableName="usageState">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>values: idle, active, busy
+    </Meta>
+  </Data>
+  <Data Label="usageState" VariableName="usageState">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>values: idle, active, busy
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="@baseType" VariableName="atbaseType">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>When sub-classing, this defines the super-class
+    </Meta>
+  </Data>
+  <Data Label="@baseType" VariableName="atbaseType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the super-class
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="@schemaLocation" VariableName="atschemaLocation">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
+    </Meta>
+  </Data>
+  <Data Label="@schemaLocation" VariableName="atschemaLocation">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
 format: uri
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="@type" VariableName="attype">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>When sub-classing, this defines the sub-class Extensible name
+    </Meta>
+  </Data>
+  <Data Label="@type" VariableName="attype">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the sub-class Extensible name
         </Documentation>
-      </Meta>
-   </Data>
-   <Service Label="Resource" TypeName="Resource">
-      <Operation IsStatic="false" Label="Validate" Name="validate">
-         <Input/>
-         <Output>
-            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+    </Meta>
+  </Data>
+  <Service Label="Resource" TypeName="Resource">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
-result.setErrorMessages(new ArrayList&lt;String>());
+result.setErrorMessages(new ArrayList&lt;String&gt;());
 // validate Resource.id of type String
 try {
     var validator_id = new com.gip.xyna.openapi.StringTypeValidator();
@@ -262,7 +261,7 @@ try {
 
 // validate Resource.activationFeature of type Feature
 try {
-    List&lt;? extends internalized.tmf640.datamodel.Feature> activationFeature = getActivationFeature();
+    List&lt;? extends internalized.tmf640.datamodel.Feature&gt; activationFeature = getActivationFeature();
     if (activationFeature != null) {
         for (internalized.tmf640.datamodel.Feature obj : activationFeature) {
             result.getErrorMessages().addAll(obj.validate().getErrorMessages());
@@ -285,7 +284,7 @@ try {
 
 // validate Resource.note of type Note
 try {
-    List&lt;? extends internalized.tmf640.datamodel.Note> note = getNote();
+    List&lt;? extends internalized.tmf640.datamodel.Note&gt; note = getNote();
     if (note != null) {
         for (internalized.tmf640.datamodel.Note obj : note) {
             result.getErrorMessages().addAll(obj.validate().getErrorMessages());
@@ -318,7 +317,7 @@ try {
 
 // validate Resource.relatedParty of type RelatedParty
 try {
-    List&lt;? extends internalized.tmf640.datamodel.RelatedParty> relatedParty = getRelatedParty();
+    List&lt;? extends internalized.tmf640.datamodel.RelatedParty&gt; relatedParty = getRelatedParty();
     if (relatedParty != null) {
         for (internalized.tmf640.datamodel.RelatedParty obj : relatedParty) {
             result.getErrorMessages().addAll(obj.validate().getErrorMessages());
@@ -330,7 +329,7 @@ try {
 
 // validate Resource.resourceCharacteristic of type Characteristic
 try {
-    List&lt;? extends internalized.tmf640.datamodel.Characteristic> resourceCharacteristic = getResourceCharacteristic();
+    List&lt;? extends internalized.tmf640.datamodel.Characteristic&gt; resourceCharacteristic = getResourceCharacteristic();
     if (resourceCharacteristic != null) {
         for (internalized.tmf640.datamodel.Characteristic obj : resourceCharacteristic) {
             result.getErrorMessages().addAll(obj.validate().getErrorMessages());
@@ -405,7 +404,7 @@ try {
 
 return result.getResult();
                 </CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

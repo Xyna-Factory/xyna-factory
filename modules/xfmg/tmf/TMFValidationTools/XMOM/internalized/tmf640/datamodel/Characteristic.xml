@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,72 +15,71 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="Characteristic" TypeName="Characteristic" TypePath="internalized.tmf640.datamodel" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-      <Documentation>This data type is "allOf": Extensible
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="Characteristic" TypeName="Characteristic" TypePath="internalized.tmf640.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>This data type is "allOf": Extensible
         </Documentation>
-   </Meta>
-   <Data Label="@baseType" VariableName="atbaseType">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>When sub-classing, this defines the super-class
+  </Meta>
+  <Data Label="@baseType" VariableName="atbaseType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the super-class
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="@schemaLocation" VariableName="atschemaLocation">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
+    </Meta>
+  </Data>
+  <Data Label="@schemaLocation" VariableName="atschemaLocation">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
 format: uri
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="@type" VariableName="attype">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>When sub-classing, this defines the sub-class Extensible name
+    </Meta>
+  </Data>
+  <Data Label="@type" VariableName="attype">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the sub-class Extensible name
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="id" VariableName="id">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Type for Id Attributes with pattern
+    </Meta>
+  </Data>
+  <Data Label="id" VariableName="id">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Type for Id Attributes with pattern
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="name" VariableName="name">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Type for Name Attributes with pattern
+    </Meta>
+  </Data>
+  <Data Label="name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Type for Name Attributes with pattern
 required
         </Documentation>
-      </Meta>
-   </Data>
-   <Data Label="valueType" VariableName="valueType">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>Data type of the value of the characteristic
+    </Meta>
+  </Data>
+  <Data Label="valueType" VariableName="valueType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Data type of the value of the characteristic
         </Documentation>
-      </Meta>
-   </Data>
-   <Data IsList="true" Label="characteristicRelationship" ReferenceName="CharacteristicRelationship" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristicRelationship">
-      <Meta>
-         <Documentation/>
-      </Meta>
-   </Data>
-   <Service Label="Characteristic" TypeName="Characteristic">
-      <Operation IsStatic="false" Label="Validate" Name="validate">
-         <Input/>
-         <Output>
-            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="characteristicRelationship" ReferenceName="CharacteristicRelationship" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristicRelationship">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Service Label="Characteristic" TypeName="Characteristic">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
-result.setErrorMessages(new ArrayList&lt;String>());
+result.setErrorMessages(new ArrayList&lt;String&gt;());
 // validate Characteristic.atbaseType of type String
 try {
     var validator_atbaseType = new com.gip.xyna.openapi.StringTypeValidator();
@@ -147,7 +146,7 @@ try {
 
 // validate Characteristic.characteristicRelationship of type CharacteristicRelationship
 try {
-    List&lt;? extends internalized.tmf640.datamodel.CharacteristicRelationship> characteristicRelationship = getCharacteristicRelationship();
+    List&lt;? extends internalized.tmf640.datamodel.CharacteristicRelationship&gt; characteristicRelationship = getCharacteristicRelationship();
     if (characteristicRelationship != null) {
         for (internalized.tmf640.datamodel.CharacteristicRelationship obj : characteristicRelationship) {
             result.getErrorMessages().addAll(obj.validate().getErrorMessages());
@@ -159,7 +158,7 @@ try {
 
 return result.getResult();
                 </CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

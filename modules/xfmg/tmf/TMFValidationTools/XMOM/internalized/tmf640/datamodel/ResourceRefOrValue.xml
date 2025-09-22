@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,42 +15,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="ResourceRefOrValue" TypeName="ResourceRefOrValue" TypePath="internalized.tmf640.datamodel" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-      <Documentation>A Resource to be created defined by value or existing defined by reference. The polymorphic attributes @type, @schemaLocation &amp; @referredType are related to the Service entity and not the RelatedServiceRefOrValue class itself
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="ResourceRefOrValue" TypeName="ResourceRefOrValue" TypePath="internalized.tmf640.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>A Resource to be created defined by value or existing defined by reference. The polymorphic attributes @type, @schemaLocation &amp; @referredType are related to the Service entity and not the RelatedServiceRefOrValue class itself
 This data type is "oneOf": Resource, ResourceRef
 This is an Orwrapper!
         </Documentation>
-   </Meta>
-   <Data Label="Resource" ReferenceName="Resource" ReferencePath="internalized.tmf640.datamodel" VariableName="resource">
-      <Meta>
-         <Documentation/>
-      </Meta>
-   </Data>
-   <Data Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="internalized.tmf640.datamodel" VariableName="resourceRef">
-      <Meta>
-         <Documentation/>
-      </Meta>
-   </Data>
-   <Data Label="@type" VariableName="attype">
-      <Meta>
-         <Type>String</Type>
-         <Documentation>When sub-classing, this defines the sub-class Extensible name
+  </Meta>
+  <Data Label="Resource" ReferenceName="Resource" ReferencePath="internalized.tmf640.datamodel" VariableName="resource">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Data Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="internalized.tmf640.datamodel" VariableName="resourceRef">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Data Label="@type" VariableName="attype">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the sub-class Extensible name
         </Documentation>
-      </Meta>
-   </Data>
-   <Service Label="ResourceRefOrValue" TypeName="ResourceRefOrValue">
-      <Operation IsStatic="false" Label="Validate" Name="validate">
-         <Input/>
-         <Output>
-            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+    </Meta>
+  </Data>
+  <Service Label="ResourceRefOrValue" TypeName="ResourceRefOrValue">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
-result.setErrorMessages(new ArrayList&lt;String>());
+result.setErrorMessages(new ArrayList&lt;String&gt;());
 // validate ResourceRefOrValue.resource of type Resource
 try {
     internalized.tmf640.datamodel.Resource resource = getResource();
@@ -83,7 +82,7 @@ try {
 
 return result.getResult();
                 </CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

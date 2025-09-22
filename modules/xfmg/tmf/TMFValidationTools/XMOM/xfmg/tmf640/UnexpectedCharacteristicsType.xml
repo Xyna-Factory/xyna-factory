@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -16,22 +16,22 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
-   <ExceptionType BaseTypeName="ServiceValidationException" BaseTypePath="xfmg.tmf640" Code="TMF640-00009" IsAbstract="false" Label="Unexpected Characteristics Type" TypeName="UnexpectedCharacteristicsType" TypePath="xfmg.tmf640">
-      <Data Label="expected type" VariableName="expectedType">
-         <Meta>
-            <Type>String</Type>
-         </Meta>
-      </Data>
-      <Data Label="characteristic name" VariableName="characteristicName">
-         <Meta>
-            <Type>String</Type>
-         </Meta>
-      </Data>
-      <Data Label="characteristic type" VariableName="characteristicType">
-         <Meta>
-            <Type>String</Type>
-         </Meta>
-      </Data>
-      <MessageText Language="EN">Expected characteristics type %0% for characteristic %1%, but got %2%.</MessageText>
-   </ExceptionType>
+  <ExceptionType BaseTypeName="ServiceValidationException" BaseTypePath="xfmg.tmf640" Code="TMF640-00009" IsAbstract="false" Label="Unexpected Characteristics Type" TypeName="UnexpectedCharacteristicsType" TypePath="xfmg.tmf640">
+    <Data Label="expected type" VariableName="expectedType">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <Data Label="characteristic name" VariableName="characteristicName">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <Data Label="characteristic type" VariableName="characteristicType">
+      <Meta>
+        <Type>String</Type>
+      </Meta>
+    </Data>
+    <MessageText Language="EN">Expected characteristics type %0% for characteristic %1%, but got %2%.</MessageText>
+  </ExceptionType>
 </ExceptionStore>

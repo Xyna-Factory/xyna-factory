@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,27 +15,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="GETServiceSpecificationIdResponse" BaseTypePath="internalized.tmf633.client.serviceSpecification.response" IsAbstract="false" Label="GET /serviceSpecification/{id} Response 404 Not Found" TypeName="GETServiceSpecificationIdResponse404NotFound" TypePath="internalized.tmf633.client.serviceSpecification.response" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>false</IsServiceGroupOnly>
-      <Documentation>Response message: Not Found</Documentation>
-   </Meta>
-   <Service Label="GET /serviceSpecification/{id} Response 404 Not Found" TypeName="GETServiceSpecificationIdResponse404NotFound">
-      <Operation IsStatic="false" Label="Validate" Name="validate">
-         <Input/>
-         <Output>
-            <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
-         </Output>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="GETServiceSpecificationIdResponse" BaseTypePath="internalized.tmf633.client.serviceSpecification.response" IsAbstract="false" Label="GET /serviceSpecification/{id} Response 404 Not Found" TypeName="GETServiceSpecificationIdResponse404NotFound" TypePath="internalized.tmf633.client.serviceSpecification.response" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Response message: Not Found</Documentation>
+  </Meta>
+  <Service Label="GET /serviceSpecification/{id} Response 404 Not Found" TypeName="GETServiceSpecificationIdResponse404NotFound">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
-result.setErrorMessages(new ArrayList&lt;String>());
+result.setErrorMessages(new ArrayList&lt;String&gt;());
 
 
 return result.getResult();
           </CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>

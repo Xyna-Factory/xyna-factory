@@ -1,4 +1,4 @@
-<?xml version = '1.0' encoding = 'UTF-8'?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,29 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Parse GET /serviceSpecification/{id} Response" TypeName="ParseGETServiceSpecificationIdResponse" TypePath="internalized.tmf633.client.serviceSpecification.request" Version="1.8">
-   <Meta>
-      <IsServiceGroupOnly>true</IsServiceGroupOnly>
-   </Meta>
-   <Service Label="Parse GET /serviceSpecification/{id} Response" TypeName="ParseGETServiceSpecificationIdResponse">
-      <Operation IsStatic="true" Label="parseResponse" Name="parseResponse">
-         <Input>
-            <Data ID="1" Label="HTTP Connection" ReferenceName="HTTPConnection" ReferencePath="xact.http" VariableName="hTTPConnection1"/>
-            <Data ID="2" Label="HTTP Status Code" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode" VariableName="hTTPStatusCode2"/>
-            <Data ID="3" Label="Header" ReferenceName="Header" ReferencePath="xact.http" VariableName="header3"/>
-            <Data ID="8" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document8"/>
-         </Input>
-         <Output>
-            <Data ID="4" Label="GET /serviceSpecification/{id} Response" ReferenceName="GETServiceSpecificationIdResponse" ReferencePath="internalized.tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse4"/>
-         </Output>
-         <Throws>
-            <Exception ID="6" Label="Connection Already Closed Exception" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions" VariableName="connectionAlreadyClosedException6"/>
-            <Exception ID="7" Label="Http Exception" ReferenceName="HttpException" ReferencePath="xact.http.exceptions" VariableName="httpException7"/>
-            <Exception ID="5" Label="Unexpected HTTP Response Exception" ReferenceName="UnexpectedHTTPResponseException" ReferencePath="xact.http.exceptions" VariableName="unexpectedHTTPResponseException5"/>
-         </Throws>
-         <Meta>
-            <Documentation>Specified Responses:
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Parse GET /serviceSpecification/{id} Response" TypeName="ParseGETServiceSpecificationIdResponse" TypePath="internalized.tmf633.client.serviceSpecification.request" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>true</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="Parse GET /serviceSpecification/{id} Response" TypeName="ParseGETServiceSpecificationIdResponse">
+    <Operation IsStatic="true" Label="parseResponse" Name="parseResponse">
+      <Input>
+        <Data ID="1" Label="HTTP Connection" ReferenceName="HTTPConnection" ReferencePath="xact.http" VariableName="hTTPConnection1"/>
+        <Data ID="2" Label="HTTP Status Code" ReferenceName="HTTPStatusCode" ReferencePath="xact.http.enums.statuscode" VariableName="hTTPStatusCode2"/>
+        <Data ID="3" Label="Header" ReferenceName="Header" ReferencePath="xact.http" VariableName="header3"/>
+        <Data ID="8" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document8"/>
+      </Input>
+      <Output>
+        <Data ID="4" Label="GET /serviceSpecification/{id} Response" ReferenceName="GETServiceSpecificationIdResponse" ReferencePath="internalized.tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse4"/>
+      </Output>
+      <Throws>
+        <Exception ID="6" Label="Connection Already Closed Exception" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions" VariableName="connectionAlreadyClosedException6"/>
+        <Exception ID="7" Label="Http Exception" ReferenceName="HttpException" ReferencePath="xact.http.exceptions" VariableName="httpException7"/>
+        <Exception ID="5" Label="Unexpected HTTP Response Exception" ReferenceName="UnexpectedHTTPResponseException" ReferencePath="xact.http.exceptions" VariableName="unexpectedHTTPResponseException5"/>
+      </Throws>
+      <Meta>
+        <Documentation>Specified Responses:
     200 OK
     400 Bad Request
     401 Unauthorized
@@ -48,13 +47,13 @@
     500 Internal Server Error
     
         </Documentation>
-         </Meta>
-         <SourceCode>
-            <CodeSnippet Type="Java">
+      </Meta>
+      <SourceCode>
+        <CodeSnippet Type="Java">
 int statusCode = hTTPStatusCode2.getCode();
 xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions jsonOptions = new xfmg.xfctrl.datamodel.json.parameter.JSONParsingOptions();
-jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation>());
-jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution>());
+jsonOptions.setListToMapTransformation(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.ListToMapTransformation&gt;());
+jsonOptions.setMemberSubstitution(new ArrayList&lt;xfmg.xfctrl.datamodel.json.parameter.MemberSubstitution&gt;());
 jsonOptions.setUseLabels(true);
 jsonOptions.setProcessAllInputGenerically(false);
 jsonOptions.setListWrapper((List)internalized.tmf633.datamodel.ListWrapperProvider.getListWrapper());
@@ -185,7 +184,7 @@ if (statusCode == 500) {
 
 throw new xact.http.exceptions.UnexpectedHTTPResponseException("", hTTPStatusCode2, header3);
         </CodeSnippet>
-         </SourceCode>
-      </Operation>
-   </Service>
+      </SourceCode>
+    </Operation>
+  </Service>
 </DataType>
