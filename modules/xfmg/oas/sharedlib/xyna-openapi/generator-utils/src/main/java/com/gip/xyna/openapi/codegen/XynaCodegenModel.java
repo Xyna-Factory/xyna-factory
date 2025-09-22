@@ -113,6 +113,9 @@ public class XynaCodegenModel {
       discriminatorKey = model.discriminator.getPropertyBaseName();
       discriminatorMap = new ArrayList<DiscriminatorMap>();
       for (MappedModel mappedModel: model.discriminator.getMappedModels()) {
+        if (mappedModel.getModel() == null) { 
+          throw new RuntimeException("No model is referenced by MappedModel " + mappedModel.getModelName());
+        }
         String fqn = getFQN(mappedModel.getModel(), gen);
         if (isOrWrapper) {
           XynaCodegenProperty prop = vars.stream().
