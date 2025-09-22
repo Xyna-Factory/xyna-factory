@@ -37,7 +37,7 @@
             </Data>
          </Output>
          <SourceCode>
-            <CodeSnippet Type="Java">tmf633.datamodel.Constraint input = (internalized.tmf633.datamodel.Constraint) anytype6;
+            <CodeSnippet Type="Java">internalized.tmf633.datamodel.Constraint input = (internalized.tmf633.datamodel.Constraint) anytype6;
 if (input.getContext() == null || input.getContext().size() == 0) {
   //no restrictions in constraint
   return true;

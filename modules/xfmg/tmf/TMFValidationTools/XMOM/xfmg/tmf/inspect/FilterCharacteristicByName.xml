@@ -41,7 +41,7 @@
             </Data>
          </Output>
          <SourceCode>
-            <CodeSnippet Type="Java">tmf640.datamodel.Characteristic input = (internalized.tmf640.datamodel.Characteristic) anytype2;
+            <CodeSnippet Type="Java">internalized.tmf640.datamodel.Characteristic input = (internalized.tmf640.datamodel.Characteristic) anytype2;
 return input.getName().equals(getName());</CodeSnippet>
          </SourceCode>
       </Operation>

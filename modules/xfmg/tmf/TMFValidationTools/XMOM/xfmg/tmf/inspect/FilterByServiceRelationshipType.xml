@@ -43,7 +43,7 @@ return input.getRelationshipType().equals(getRelationshipType());</Documentation
             </Data>
          </Output>
          <SourceCode>
-            <CodeSnippet Type="Java">tmf640.datamodel.ServiceRelationship input = (internalized.tmf640.datamodel.ServiceRelationship) anytype2;
+            <CodeSnippet Type="Java">internalized.tmf640.datamodel.ServiceRelationship input = (internalized.tmf640.datamodel.ServiceRelationship) anytype2;
 return input.getRelationshipType().equals(getRelationshipType());</CodeSnippet>
          </SourceCode>
       </Operation>
