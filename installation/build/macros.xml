@@ -185,6 +185,56 @@
         </sequential>
     </macrodef>
 
+  <!-- = = = = = = = = = = = = = = = = =
+          macrodef: genCodeClass          
+         = = = = = = = = = = = = = = = = =
+-->
+  <macrodef name="genCodeClass">
+    <attribute name="basedir" default="${basedir}" />
+    <attribute name="libdir" default="@{basedir}/lib" />
+    <attribute name="srcdir" default="@{basedir}/src" />
+    <attribute name="exceptionfile" default="@{basedir}/Exceptions.xml" />
+    <attribute name="lookupjar"
+               default=""
+               description="Load exception message from inside jar file. Use 'y' for true." />
+    <sequential>
+      <if>
+        <isreference refid="libraries" />
+        <then>
+          <echo message="Using Libraries" />
+          <java fork="true"
+                failonerror="yes"
+                classname="com.gip.xyna.utils.exceptions.ExceptionStorage">
+            <classpath>
+              <fileset dir="@{libdir}">
+                <include name="**/*.jar" />
+              </fileset>
+              <path refid="libraries" />
+            </classpath>
+            <arg value="@{exceptionfile}" />
+            <arg value="@{srcdir}" />
+            <arg value="@{lookupjar}" />
+          </java>
+        </then>
+        <else>
+          <echo message="NOT using Libraries" />
+          <java fork="true"
+                failonerror="yes"
+                classname="com.gip.xyna.utils.exceptions.ExceptionStorage">
+            <classpath>
+              <fileset dir="@{libdir}">
+                <include name="**/*.jar" />
+              </fileset>
+            </classpath>
+            <arg value="@{exceptionfile}" />
+            <arg value="@{srcdir}" />
+            <arg value="@{lookupjar}" />
+          </java>
+        </else>
+      </if>
+    </sequential>
+  </macrodef>
+
     <!-- ================================= 
          macro: xynaTarget
          ================================= -->
