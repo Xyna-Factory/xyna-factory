@@ -85,7 +85,10 @@ public class CSGetOasApiEndpoints {
     if(implRtcs.isEmpty()) {
       OasApiDatatypeInfo.Builder builder = createBuilder(genTypeOpGroup);
       builder.status(OasGuiConstants.EndpointStatus.MISSING);
-      candidatesToAdd = List.of(builder.instance());
+      OasApiDatatypeInfo built = builder.instance();
+      if (matchFilter(filter, built)) {
+        ret.add(built);
+      }
     }
     
     GeneratedOasApiType goat = new GeneratedOasApiType(genTypeOpGroup.getXmomType());
@@ -114,15 +117,19 @@ public class CSGetOasApiEndpoints {
       }
       
       for(OasApiDatatypeInfo built : candidatesToAdd) {
-        if (filter.matchesImplementationRtcFilter(built.getImplementationRtc()) &&
-            filter.matchesImplementationDatatypeFilter(built.getImplementationDatatype()) &&
-            filter.matchesStatusFilter(built.getStatus())) {
+        if (matchFilter(filter, built)) {
           ret.add(built);
         }
       }
     }
   }
   
+  private boolean matchFilter(OasEndpointsFilterData filter, OasApiDatatypeInfo candidate) {
+    return filter.matchesImplementationRtcFilter(candidate.getImplementationRtc()) &&
+        filter.matchesImplementationDatatypeFilter(candidate.getImplementationDatatype()) &&
+        filter.matchesStatusFilter(candidate.getStatus());
+  }
+
   private OasApiDatatypeInfo.Builder createBuilder(OperationGroup genTypeOpGroup) {
     OasApiDatatypeInfo.Builder builder = new OasApiDatatypeInfo.Builder();;
     builder.generatedRtc(genTypeOpGroup.getXmomType().getRtc().toString());
