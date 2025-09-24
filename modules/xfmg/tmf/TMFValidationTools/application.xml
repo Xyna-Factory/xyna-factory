@@ -51,6 +51,10 @@
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.tmf640.CreateCharacteristicWithDefaultValue</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
       <DestinationKey>xfmg.tmf640.GetCharacteristicByName</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
@@ -60,6 +64,22 @@
     </Ordertype>
     <Ordertype implicitDependency="true">
       <DestinationKey>xfmg.tmf640.GetServiceSpecificationFromCatalogByService</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.tmf640.SetDefaultForSingleCharacteristic</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.tmf640.SetDefaultsForMissingCharacteristics</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.tmf640.SetDefaultsForMissingCharacteristicsJSON</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.tmf640.SetDefaultsForMissingCharacteristicsJSONLoadSpec</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -84,6 +104,10 @@
     </Ordertype>
     <Ordertype implicitDependency="true">
       <DestinationKey>xfmg.tmf640.validation.ValidateService</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xfmg.tmf640.validation.ValidateServiceAgainstServiceSpecificationJSON</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -625,6 +649,18 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.tmf.util.CharacteristicListWrapper</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.tmf.util.FilterServiceSpecRelationshipByType</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.tmf.util.ServiceRelationshipNotFound</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf.util.TMFClientRequestFailed</FqName>
       <Type>EXCEPTION</Type>
     </XMOMEntry>
@@ -651,6 +687,10 @@
     <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf.validation.FilterContext</FqName>
       <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.tmf.validation.IncompatibleServiceSpecification</FqName>
+      <Type>EXCEPTION</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf.validation.JSONPathExpression</FqName>
@@ -683,6 +723,10 @@
     <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf640.CharacteristicValueNotInEnumeration</FqName>
       <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.tmf640.CreateCharacteristicWithDefaultValue</FqName>
+      <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf640.DuplicateCharacteristicFound</FqName>
@@ -719,6 +763,22 @@
     <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf640.ServiceValidationException</FqName>
       <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.tmf640.SetDefaultForSingleCharacteristic</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xfmg.tmf640.SetDefaultsForMissingCharacteristics</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xfmg.tmf640.SetDefaultsForMissingCharacteristicsJSON</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xfmg.tmf640.SetDefaultsForMissingCharacteristicsJSONLoadSpec</FqName>
+      <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf640.UnexpectedCharacteristicsType</FqName>
@@ -762,6 +822,10 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
       <FqName>xfmg.tmf640.validation.ValidateService</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xfmg.tmf640.validation.ValidateServiceAgainstServiceSpecificationJSON</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
