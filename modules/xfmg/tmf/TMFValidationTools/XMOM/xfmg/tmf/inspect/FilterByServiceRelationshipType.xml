@@ -22,8 +22,6 @@
   <Data Label="relationshipType" VariableName="relationshipType">
     <Meta>
       <Type>String</Type>
-      <Documentation>tmf640.datamodel.ServiceRelationship input = (tmf640.datamodel.ServiceRelationship) anytype2;
-return input.getRelationshipType().equals(getRelationshipType());</Documentation>
     </Meta>
   </Data>
   <Service Label="Filter by Service Relationship Type" TypeName="FilterByServiceRelationshipType">
