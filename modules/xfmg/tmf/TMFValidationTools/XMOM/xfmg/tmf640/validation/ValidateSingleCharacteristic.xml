@@ -15,7 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Validate Single Characteristic" TypeName="ValidateSingleCharacteristic" TypePath="xfmg.tmf640.validation" Version="1.8">
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Validate Single Characteristic" TypeName="ValidateSingleCharacteristic" TypePath="xfmg.tmf640.validation" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Validate Single Characteristic" Name="ValidateSingleCharacteristic">
     <Input>
       <Data ID="12" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic12"/>
@@ -23,23 +24,35 @@
     </Input>
     <Output/>
     <Throws>
-      <Exception Label="CharacteristicValueDoesNotMatchRegularExpression" ReferenceName="CharacteristicValueDoesNotMatchRegularExpression" ReferencePath="xfmg.tmf633" VariableName="characteristicValueDoesNotMatchRegularExpression20060"/>
-      <Exception Label="CharacteristicValueNotInEnumeration" ReferenceName="CharacteristicValueNotInEnumeration" ReferencePath="xfmg.tmf640" VariableName="characteristicValueNotInEnumeration44164"/>
-      <Exception Label="ExceededAllowedValueRange" ReferenceName="ExceededAllowedValueRange" ReferencePath="xfmg.tmf640" VariableName="exceededAllowedValueRange53824"/>
-      <Exception Label="InvalidCharacteristicsCardinality" ReferenceName="InvalidCharacteristicsCardinality" ReferencePath="xfmg.tmf640" VariableName="invalidCharacteristicsCardinality29401"/>
-      <Exception Label="UnexpectedCharacteristicsType" ReferenceName="UnexpectedCharacteristicsType" ReferencePath="xfmg.tmf640" VariableName="unexpectedCharacteristicsType7625"/>
+      <Exception Label="CharacteristicValueDoesNotMatchRegularExpression" ReferenceName="CharacteristicValueDoesNotMatchRegularExpression" ReferencePath="xfmg.tmf633" VariableName="characteristicValueDoesNotMatchRegularExpression61329"/>
+      <Exception Label="CharacteristicValueNotInEnumeration" ReferenceName="CharacteristicValueNotInEnumeration" ReferencePath="xfmg.tmf640" VariableName="characteristicValueNotInEnumeration61330"/>
+      <Exception Label="ExceededAllowedValueRange" ReferenceName="ExceededAllowedValueRange" ReferencePath="xfmg.tmf640" VariableName="exceededAllowedValueRange61331"/>
+      <Exception Label="InvalidCharacteristicsCardinality" ReferenceName="InvalidCharacteristicsCardinality" ReferencePath="xfmg.tmf640" VariableName="invalidCharacteristicsCardinality61332"/>
+      <Exception Label="UnexpectedCharacteristicsType" ReferenceName="UnexpectedCharacteristicsType" ReferencePath="xfmg.tmf640" VariableName="unexpectedCharacteristicsType61333"/>
     </Throws>
-    <ServiceReference ID="59394" Label="Array Wrapper" ReferenceName="ArrayWrapper.ArrayWrapper" ReferencePath="base.list">
-      <Source RefID="59393"/>
-      <Target RefID="59393"/>
+    <ServiceReference ID="60898" Label="Array Wrapper" ReferenceName="ArrayWrapper.ArrayWrapper" ReferencePath="base.list">
+      <Source RefID="60897"/>
+      <Target RefID="60897"/>
     </ServiceReference>
     <ServiceReference ID="36694" Label="Get Enum Values" ReferenceName="GetEnumValues" ReferencePath="xfmg.tmf633">
       <Source RefID="36693"/>
       <Target RefID="36693"/>
     </ServiceReference>
+    <ServiceReference ID="60079" Label="Array Wrapper" ReferenceName="ArrayWrapper.ArrayWrapper" ReferencePath="base.list">
+      <Source RefID="60078"/>
+      <Target RefID="60078"/>
+    </ServiceReference>
     <ServiceReference ID="6228" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
       <Source RefID="6227"/>
       <Target RefID="6227"/>
+    </ServiceReference>
+    <ServiceReference ID="59394" Label="Array Wrapper" ReferenceName="ArrayWrapper.ArrayWrapper" ReferencePath="base.list">
+      <Source RefID="59393"/>
+      <Target RefID="59393"/>
+    </ServiceReference>
+    <ServiceReference ID="58709" Label="Array Wrapper" ReferenceName="ArrayWrapper.ArrayWrapper" ReferencePath="base.list">
+      <Source RefID="58708"/>
+      <Target RefID="58708"/>
     </ServiceReference>
     <ServiceReference ID="6382" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
       <Source RefID="6381"/>
@@ -48,18 +61,6 @@
     <ServiceReference ID="41462" Label="Get Enum Values" ReferenceName="GetEnumValues" ReferencePath="xfmg.tmf633">
       <Source RefID="41461"/>
       <Target RefID="41461"/>
-    </ServiceReference>
-    <ServiceReference ID="60079" Label="Array Wrapper" ReferenceName="ArrayWrapper.ArrayWrapper" ReferencePath="base.list">
-      <Source RefID="60078"/>
-      <Target RefID="60078"/>
-    </ServiceReference>
-    <ServiceReference ID="58709" Label="Array Wrapper" ReferenceName="ArrayWrapper.ArrayWrapper" ReferencePath="base.list">
-      <Source RefID="58708"/>
-      <Target RefID="58708"/>
-    </ServiceReference>
-    <ServiceReference ID="60898" Label="Array Wrapper" ReferenceName="ArrayWrapper.ArrayWrapper" ReferencePath="base.list">
-      <Source RefID="60897"/>
-      <Target RefID="60897"/>
     </ServiceReference>
     <Parallel>
       <Serial>
@@ -71,7 +72,7 @@
           <Invoke Operation="inspectDatatype" ServiceID="6228">
             <Source RefID="12">
               <Meta>
-                <ExpectedType>tmf640.datamodel.Characteristic</ExpectedType>
+                <ExpectedType>internalized.tmf640.datamodel.Characteristic</ExpectedType>
               </Meta>
             </Source>
           </Invoke>
@@ -104,7 +105,7 @@
           <Invoke Operation="inspectDatatype" ServiceID="6382">
             <Source RefID="6925">
               <Meta>
-                <ExpectedType>tmf633.datamodel.CharacteristicValueSpecification</ExpectedType>
+                <ExpectedType>internalized.tmf633.datamodel.CharacteristicValueSpecification</ExpectedType>
               </Meta>
             </Source>
           </Invoke>
@@ -204,6 +205,8 @@
     </Choice>
     <Choice ID="8767" TypeName="BaseChoiceTypeSubclasses" TypePath="server">
       <Source RefID="12"/>
+      <Target RefID="50564"/>
+      <Target RefID="50565"/>
       <Input>
         <Data ID="8825" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic8825">
           <Source RefID="8767"/>

@@ -15,7 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Service Relationship" TypeName="GetServiceRelationship" TypePath="xfmg.tmf640.validation" Version="1.8">
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Service Relationship" TypeName="GetServiceRelationship" TypePath="xfmg.tmf640.validation" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Get Service Relationship" Name="GetServiceRelationship">
     <Input>
       <Data ID="2" IsList="true" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="internalized.tmf640.datamodel" VariableName="serviceRelationship2"/>
@@ -52,7 +53,7 @@
       <Invoke Operation="filter" ServiceID="23">
         <Source RefID="2">
           <Meta>
-            <ExpectedType>tmf640.datamodel.ServiceRelationship</ExpectedType>
+            <ExpectedType>internalized.tmf640.datamodel.ServiceRelationship</ExpectedType>
           </Meta>
         </Source>
         <Source RefID="213">
@@ -64,7 +65,7 @@
       <Receive ServiceID="23">
         <Target RefID="25">
           <Meta>
-            <ExpectedType>tmf640.datamodel.ServiceRelationship</ExpectedType>
+            <ExpectedType>internalized.tmf640.datamodel.ServiceRelationship</ExpectedType>
           </Meta>
         </Target>
       </Receive>
@@ -107,7 +108,7 @@
             <Data ID="774" IsList="true" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="internalized.tmf640.datamodel" VariableName="serviceRelationship774">
               <Source RefID="666"/>
             </Data>
-            <Source RefID="25">
+            <Source RefID="2">
               <Meta>
                 <LinkType>UserConnected</LinkType>
               </Meta>

@@ -92,7 +92,7 @@
         <Source RefID="13362"/>
         <Source RefID="11">
           <Meta>
-            <ExpectedType>tmf633.client.serviceSpecification.send.GETServiceSpecificationIdSendParameter</ExpectedType>
+            <ExpectedType>internalized.tmf633.client.serviceSpecification.send.GETServiceSpecificationIdSendParameter</ExpectedType>
           </Meta>
         </Source>
       </Invoke>
@@ -108,7 +108,7 @@
       <Invoke Operation="OASTypeValidation" ServiceID="24">
         <Source RefID="11">
           <Meta>
-            <ExpectedType>tmf633.client.serviceSpecification.send.GETServiceSpecificationIdSendParameter</ExpectedType>
+            <ExpectedType>internalized.tmf633.client.serviceSpecification.send.GETServiceSpecificationIdSendParameter</ExpectedType>
           </Meta>
         </Source>
         <Source RefID="16006"/>
@@ -302,7 +302,7 @@
         <Source RefID="13362"/>
         <Source RefID="18">
           <Meta>
-            <ExpectedType>tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse</ExpectedType>
+            <ExpectedType>internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse</ExpectedType>
           </Meta>
         </Source>
       </Invoke>
@@ -318,7 +318,7 @@
       <Invoke Operation="OASTypeValidation" ServiceID="27">
         <Source RefID="18">
           <Meta>
-            <ExpectedType>tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse</ExpectedType>
+            <ExpectedType>internalized.tmf633.client.serviceSpecification.response.GETServiceSpecificationIdResponse</ExpectedType>
           </Meta>
         </Source>
         <Source RefID="16629">

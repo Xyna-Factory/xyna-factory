@@ -15,7 +15,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Characteristic by Name" TypeName="GetCharacteristicByName" TypePath="xfmg.tmf640" Version="1.8">
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Characteristic by Name" TypeName="GetCharacteristicByName" TypePath="xfmg.tmf640" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Get Characteristic by Name" Name="GetCharacteristicByName">
     <Input>
       <Data ID="2" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember2"/>
@@ -26,8 +27,8 @@
       <Data ID="12" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic12"/>
     </Output>
     <Throws>
-      <Exception Label="DuplicateCharacteristicFound" ReferenceName="DuplicateCharacteristicFound" ReferencePath="xfmg.tmf640" VariableName="duplicateCharacteristicFound1687"/>
-      <Exception Label="Service Characteristic not found" ReferenceName="ServiceCharacteristicNotFound" ReferencePath="xfmg.tmf640" VariableName="serviceCharacteristicNotFound1688"/>
+      <Exception Label="DuplicateCharacteristicFound" ReferenceName="DuplicateCharacteristicFound" ReferencePath="xfmg.tmf640" VariableName="duplicateCharacteristicFound1771"/>
+      <Exception Label="Service Characteristic not found" ReferenceName="ServiceCharacteristicNotFound" ReferencePath="xfmg.tmf640" VariableName="serviceCharacteristicNotFound1772"/>
     </Throws>
     <ServiceReference ID="40" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
       <Source RefID="39"/>
@@ -53,15 +54,19 @@
       <Invoke Operation="filter" ServiceID="40">
         <Source RefID="7">
           <Meta>
-            <ExpectedType>tmf640.datamodel.Characteristic</ExpectedType>
+            <ExpectedType>internalized.tmf640.datamodel.Characteristic</ExpectedType>
           </Meta>
         </Source>
-        <Source RefID="26"/>
+        <Source RefID="26">
+          <Meta>
+            <ExpectedType>xfmg.tmf.inspect.FilterCharacteristicByName</ExpectedType>
+          </Meta>
+        </Source>
       </Invoke>
       <Receive ServiceID="40">
         <Target RefID="38">
           <Meta>
-            <ExpectedType>tmf640.datamodel.Characteristic</ExpectedType>
+            <ExpectedType>internalized.tmf640.datamodel.Characteristic</ExpectedType>
           </Meta>
         </Target>
       </Receive>
@@ -147,13 +152,13 @@
       </Case>
       <Case ID="76" Label="false">
         <Choice ID="686" TypeName="BaseChoiceTypeFormula" TypePath="server">
-          <Source RefID="38"/>
+          <Source RefID="7"/>
           <Target RefID="986"/>
           <Input>
             <Data ID="765" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic765">
               <Source RefID="686"/>
             </Data>
-            <Source RefID="38">
+            <Source RefID="7">
               <Meta>
                 <LinkType>UserConnected</LinkType>
               </Meta>
@@ -187,7 +192,7 @@
             <Mappings ID="124" Label="Mapping">
               <Input>
                 <Data ID="126" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic126"/>
-                <Source RefID="38">
+                <Source RefID="7">
                   <Meta>
                     <LinkType>UserConnected</LinkType>
                   </Meta>
