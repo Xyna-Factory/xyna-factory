@@ -154,9 +154,6 @@ public class HttpConnectionImpl {
 
 
   public void connect(boolean https) throws ConnectException, TimeoutException {
-    logger.warn("### http connect...");
-    logger.warn("### proxy selector: " + ProxySelector.getDefault());
-    
     context = HttpClientContext.create();
     context.setTargetHost(host);
     HttpClientBuilder builder = HttpClients.custom()
@@ -164,9 +161,7 @@ public class HttpConnectionImpl {
         .setUserAgent(userAgent)
         .setRoutePlanner( createHttpRoutePlanner(new HttpRoute(host,null,https)) )
         .setDefaultCredentialsProvider( createCredentialsProvider() )
-        .setRetryHandler(new CountBasedRetryHandler(retries))
-        ;
-        //.build();
+        .setRetryHandler(new CountBasedRetryHandler(retries));
     Optional<HttpHost> proxy = createProxy(https);
     if (proxy.isPresent()) {
       builder.setProxy(proxy.get());
@@ -178,8 +173,9 @@ public class HttpConnectionImpl {
   private Optional<HttpHost> createProxy(boolean https) {
     String portAsString = https ? System.getProperty("https.proxyPort") : System.getProperty("http.proxyPort");
     String hostname = https ? System.getProperty("https.proxyHost") : System.getProperty("http.proxyHost");
-    logger.warn("### Got proxy properties: " + hostname + ":" + portAsString);
-    
+    if (logger.isDebugEnabled()) {
+      logger.debug("Got proxy properties: " + hostname + ":" + portAsString);
+    }
     if (portAsString == null || hostname == null) {
       return Optional.empty();
     }
@@ -192,9 +188,10 @@ public class HttpConnectionImpl {
       }
       return Optional.empty();
     }
-    
-    logger.warn("### Creating proxy: " + hostname + ":" + port);
-    return Optional.of(new HttpHost(hostname,port,"http"));
+    if (logger.isDebugEnabled()) {
+      logger.debug("Going to use proxy: " + hostname + ":" + port);
+    }
+    return Optional.of(new HttpHost(hostname, port, "http"));
   }
   
   
