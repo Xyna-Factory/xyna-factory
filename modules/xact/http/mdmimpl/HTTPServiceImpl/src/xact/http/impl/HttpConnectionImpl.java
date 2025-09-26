@@ -20,6 +20,7 @@ package xact.http.impl;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -54,6 +55,7 @@ import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
@@ -152,20 +154,47 @@ public class HttpConnectionImpl {
 
 
   public void connect(boolean https) throws ConnectException, TimeoutException {
-
     context = HttpClientContext.create();
     context.setTargetHost(host);
-
-    httpClient = HttpClients.custom()
+    HttpClientBuilder builder = HttpClients.custom()
         .setConnectionManager(createConnectionManager(https, createConnectionFactoryLookup()))
         .setUserAgent(userAgent)
         .setRoutePlanner( createHttpRoutePlanner(new HttpRoute(host,null,https)) )
         .setDefaultCredentialsProvider( createCredentialsProvider() )
-        .setRetryHandler(new CountBasedRetryHandler(retries))
-        .build();
-
+        .setRetryHandler(new CountBasedRetryHandler(retries));
+    Optional<HttpHost> proxy = createProxy(https);
+    if (proxy.isPresent()) {
+      builder.setProxy(proxy.get());
+    }
+    httpClient = builder.build();
   }
 
+  
+  private Optional<HttpHost> createProxy(boolean https) {
+    String portAsString = https ? System.getProperty("https.proxyPort") : System.getProperty("http.proxyPort");
+    String hostname = https ? System.getProperty("https.proxyHost") : System.getProperty("http.proxyHost");
+    if (logger.isDebugEnabled()) {
+      logger.debug("Got proxy properties: " + hostname + ":" + portAsString);
+    }
+    if (portAsString == null || hostname == null) {
+      return Optional.empty();
+    }
+    int port = -1;
+    try {
+      port = Integer.valueOf(portAsString);
+    } catch (Exception e) {
+      if (logger.isErrorEnabled()) {
+        logger.error("cannot parse proxy port value from system property 'https.proxyPort': " + portAsString, e);
+      }
+      return Optional.empty();
+    }
+    if (logger.isDebugEnabled()) {
+      logger.debug("Going to use proxy: " + hostname + ":" + port);
+    }
+    return Optional.of(new HttpHost(hostname, port, "http"));
+  }
+  
+  
   private Lookup<ConnectionSocketFactory> createConnectionFactoryLookup() throws ConnectException {
     return RegistryBuilder.<ConnectionSocketFactory>create()
                           .register("http", new PlainConnectionSocketFactory())
