@@ -779,7 +779,7 @@ public interface XynaProperty {
       .setDefaultDocumentation(DocumentationLanguage.DE, "Erzeuge umschliessendes <container>-Tag für xdev.fractmod.xmdm.Container beim Erstellen von Xml")
       .setDefaultDocumentation(DocumentationLanguage.EN, "Create <container> tag around toXml for xdev.fractmod.xmdm.Container");
 
-  public static final XynaPropertyBoolean QUERY_ESCAPE = new XynaPropertyBoolean("xnwh.queries.escape", true)
+  public static final XynaPropertyBoolean QUERY_ESCAPE = new XynaPropertyBoolean("xnwh.queries.escape", false)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Escape table and column names in queries")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Escapen von Tabellen- und Spaltennamen in Querys");
 }
