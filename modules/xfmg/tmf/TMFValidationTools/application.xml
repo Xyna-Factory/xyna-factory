@@ -25,7 +25,7 @@
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>OAS_Base</ApplicationName>
-        <VersionName>1.7.8</VersionName>
+        <VersionName>1.7.9</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
