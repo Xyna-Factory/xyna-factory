@@ -20,8 +20,8 @@
     <IsServiceGroupOnly>true</IsServiceGroupOnly>
   </Meta>
   <Libraries>ValidationUtilsImpl.jar</Libraries>
-  <Libraries>accessors-smart-2.5.0.jar</Libraries>
-  <Libraries>asm-9.3.jar</Libraries>
+  <Libraries>accessors-smart-2.6.0.jar</Libraries>
+  <Libraries>asm-9.7.1.jar</Libraries>
   <Libraries>json-path-2.9.0.jar</Libraries>
   <Libraries>json-smart-2.6.0.jar</Libraries>
   <Libraries>slf4j-api-1.7.36.jar</Libraries>
