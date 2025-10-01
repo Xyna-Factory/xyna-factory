@@ -27,8 +27,8 @@
       <Data ID="12" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic12"/>
     </Output>
     <Throws>
-      <Exception Label="DuplicateCharacteristicFound" ReferenceName="DuplicateCharacteristicFound" ReferencePath="xfmg.tmf640" VariableName="duplicateCharacteristicFound1771"/>
-      <Exception Label="Service Characteristic not found" ReferenceName="ServiceCharacteristicNotFound" ReferencePath="xfmg.tmf640" VariableName="serviceCharacteristicNotFound1772"/>
+      <Exception Label="DuplicateCharacteristicFound" ReferenceName="DuplicateCharacteristicFound" ReferencePath="xfmg.tmf640" VariableName="duplicateCharacteristicFound2038"/>
+      <Exception Label="Service Characteristic not found" ReferenceName="ServiceCharacteristicNotFound" ReferencePath="xfmg.tmf640" VariableName="serviceCharacteristicNotFound2039"/>
     </Throws>
     <ServiceReference ID="40" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
       <Source RefID="39"/>
@@ -152,13 +152,13 @@
       </Case>
       <Case ID="76" Label="false">
         <Choice ID="686" TypeName="BaseChoiceTypeFormula" TypePath="server">
-          <Source RefID="7"/>
+          <Source RefID="38"/>
           <Target RefID="986"/>
           <Input>
             <Data ID="765" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic765">
               <Source RefID="686"/>
             </Data>
-            <Source RefID="7">
+            <Source RefID="38">
               <Meta>
                 <LinkType>UserConnected</LinkType>
               </Meta>
@@ -192,7 +192,7 @@
             <Mappings ID="124" Label="Mapping">
               <Input>
                 <Data ID="126" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic126"/>
-                <Source RefID="7">
+                <Source RefID="38">
                   <Meta>
                     <LinkType>UserConnected</LinkType>
                   </Meta>
