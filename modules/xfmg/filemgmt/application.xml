@@ -18,6 +18,8 @@
 -->
 <Application applicationName="FileMgmt" comment="" factoryVersion="" versionName="1.0.10" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Tools zum Lesen und Schreiben von lokalen Dateien, sowie zur Behandlung von Zip-Archivdateien</Description>
+    <Description Lang="EN">Tools to read and write local files, as well as handling zip-archive-files</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Processing</ApplicationName>

@@ -18,8 +18,8 @@
 -->
 <Application applicationName="Net" comment="" factoryVersion="" versionName="1.0.6" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">Network Utils</Description>
-    <Description Lang="EN">Network Utils</Description>
+    <Description Lang="DE">Datentypen zur Beschreibung von Ipv4 und Ipv6 Netzwerken</Description>
+    <Description Lang="EN">Datatypes to describe IPv4 and Ipv6 networks</Description>
     <BuildDate>2015.06.25 10:13:00</BuildDate>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>

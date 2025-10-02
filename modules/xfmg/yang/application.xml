@@ -17,6 +17,8 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><Application applicationName="YangBase" factoryVersion="" versionName="1.1.6" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Basisfunktionalität zum Umgang mit YANG Datenmodellen</Description>
+    <Description Lang="EN">Basic functionality for handling of YANG data models</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>

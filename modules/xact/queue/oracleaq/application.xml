@@ -18,9 +18,8 @@
 -->
 <Application applicationName="OracleAQ" comment="" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">OracleAQ</Description>
-    <Description Lang="EN">OracleAQ</Description>
-    <BuildDate>2015.06.25 10:13:00</BuildDate>
+    <Description Lang="DE">Benutzung von JMS-Queues mit (externen) OracleAQ-Servern</Description>
+    <Description Lang="EN">Using JMS-queues with (external) OracleAQ servers</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Queue</ApplicationName>

@@ -19,9 +19,8 @@
 <!--                                               ################# Version auch in blackedition_lib.sh updaten ########### -->
 <Application applicationName="GlobalApplicationMgmt" factoryVersion="" versionName="1.0.10" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">GlobalApplicationManagementServices</Description>
-    <Description Lang="EN">GlobalApplicationManagementServices</Description>
-    <BuildDate>2015.06.25 10:13:00</BuildDate>
+    <Description Lang="DE">Funktionalität, die die Xyna Factory zum Managen von Applications verwendet</Description>
+    <Description Lang="EN">Functionality used by the Xyna Factory to manage applications</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>FileMgmt</ApplicationName>

@@ -18,6 +18,8 @@
 -->
 <Application applicationName="Mail" comment="" factoryVersion="" versionName="1.4.5" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">EMail senden und empfangen</Description>
+    <Description Lang="EN">Sending and receiving EMail</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>

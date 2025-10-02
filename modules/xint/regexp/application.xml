@@ -18,8 +18,8 @@
 -->
 <Application applicationName="RegExp" comment="" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">RegExp</Description>
-    <Description Lang="EN">RegExp</Description>
+    <Description Lang="DE">Tools für reguläre Ausdrücke</Description>
+    <Description Lang="EN">Tools for regular expressions</Description>
     <BuildDate>2015.06.25 10:13:00</BuildDate>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>

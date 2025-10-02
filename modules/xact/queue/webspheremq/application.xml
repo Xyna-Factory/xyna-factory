@@ -18,9 +18,8 @@
 -->
 <Application applicationName="WebSphereMQ" comment="" factoryVersion="" versionName="2.0.0" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">WebSphereMQ</Description>
-    <Description Lang="EN">WebSphereMQ</Description>
-    <BuildDate>2015.06.25 10:13:00</BuildDate>
+    <Description Lang="DE">Benutzung von JMS-Queues mit (externen) WebSphereMQ-Servern</Description>
+    <Description Lang="EN">Using JMS-queues with (external) WebSphereMQ-servers</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Queue</ApplicationName>

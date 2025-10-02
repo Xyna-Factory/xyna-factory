@@ -18,6 +18,8 @@
 -->
 <Application applicationName="DHCPClient" comment="" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">DHCP Messages senden und empfangen</Description>
+    <Description Lang="EN">Sending and receiving DHCP messages</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>
