@@ -24,7 +24,7 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Http</ApplicationName>
-        <VersionName>1.5.6</VersionName>
+        <VersionName>1.5.7</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>ZetaFramework</ApplicationName>
