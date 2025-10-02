@@ -23,13 +23,13 @@
         <path location="${basedir}/../../../../.."/>
     </pathconvert>
     <property name="xmom.dir" value="${basedir}/../../XMOM" />
+    <property name="application.dir" value="${basedir}/../../" />
 
     <property name="project.name" value="HTTPServiceImpl" />
     <property name="fqclassname" value="xact.http.HTTPService" />
     <property name="mdm.xml.path" value="xact/http" />
     <property name="mdm.xml.filename" value="HTTPService.xml" />
     <property name="mdm.service.path" value="xact.http.HTTPService" />
-    <property name="workspacename" value="HTTP" />
 
     <import file="${root.dir}/installation/build/buildService.xml" />
 

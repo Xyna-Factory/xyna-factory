@@ -23,6 +23,7 @@
         <path location="${basedir}/../../../../.."/>
     </pathconvert>
 
+    <property name="application.dir" value="${basedir}/../../" />
     <property name="sharedLib.folder.name" value="xyna-openapi" />
     <property name="sharedLib.name" value="xyna-openapi" />
     <property name="target.dir" value="${basedir}/deploy/" />
