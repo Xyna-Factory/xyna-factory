@@ -17,7 +17,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><Application applicationName="Http" factoryVersion="" versionName="1.5.7" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">HTTP-verbindungen öffnen und schließen, HTTP-Nachrichten senden und empfangen</Description>
+    <Description Lang="DE">HTTP-Verbindungen öffnen und schließen, HTTP-Nachrichten senden und empfangen</Description>
     <Description Lang="EN">Open and close HTTP connections, send and receive HTTP messages</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
