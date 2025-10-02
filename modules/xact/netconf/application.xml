@@ -17,6 +17,8 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><Application applicationName="NetConf" factoryVersion="" versionName="1.0.0" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Tools zur Benutzung des NETCONF-Protokolls</Description>
+    <Description Lang="EN">Tools for using the NETCONF protocol</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>SSH</ApplicationName>

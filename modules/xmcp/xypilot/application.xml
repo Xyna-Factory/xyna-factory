@@ -17,6 +17,8 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  --><Application applicationName="XyPilot" comment="" factoryVersion="" versionName="1.1.13" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Graphische Benutzeroberfläche und Funktionalität zum Generieren von Xyna Factory Quellcode mit künstlicher Intelligenz (KI)</Description>
+    <Description Lang="EN">Graphical user interface and functionality to generate Xyna Factory source code with artificial intelligence (AI)</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>GuiHttp</ApplicationName>

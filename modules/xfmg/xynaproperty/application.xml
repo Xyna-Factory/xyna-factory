@@ -18,8 +18,8 @@
 -->
 <Application applicationName="XynaPropertyMgmt" comment="" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">XynaProperties abfragen und definieren</Description>
-    <Description Lang="EN">XynaProperty get value and define</Description>
+    <Description Lang="DE">XynaProperties definieren und abfragen</Description>
+    <Description Lang="EN">Define and get values of XynaProperties</Description>
     <BuildDate>2015.06.25 10:13:00</BuildDate>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>

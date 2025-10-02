@@ -18,9 +18,8 @@
 -->
 <Application applicationName="SOAP" comment="" factoryVersion="" versionName="1.0.4" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">soaplibs, SoapHelperService, SOAPServices</Description>
-    <Description Lang="EN">soaplibs, SoapHelperService, SOAPServices</Description>
-    <BuildDate>2015.06.25 10:13:00</BuildDate>
+    <Description Lang="DE">Tools zur Benutzung des SOAP-Protokolls</Description>
+    <Description Lang="EN">Tools for using the SOAP protocol</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>

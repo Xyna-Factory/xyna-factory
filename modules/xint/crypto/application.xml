@@ -18,6 +18,8 @@
 -->
 <Application applicationName="Crypto" factoryVersion="" versionName="1.0.10" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Tools für Kryptographie</Description>
+    <Description Lang="EN">Tools for cryptography</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>

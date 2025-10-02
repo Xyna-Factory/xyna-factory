@@ -19,9 +19,8 @@
 <!--                                               ################# Version auch in blackedition_lib.sh updaten ########### -->
 <Application applicationName="Processing" comment="" factoryVersion="" versionName="1.0.27" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">Konfiguration im Planning-Workflow, Starten von Aufträgen</Description>
-    <Description Lang="EN">Configuration in Planning workflow, starting orders</Description>
-    <BuildDate>2015.06.25 10:13:00</BuildDate>
+    <Description Lang="DE">Grundfunktionalität zum Xyna factory Processing von Aufträgen</Description>
+    <Description Lang="EN">Basic functionality for Xyna Factory processing of orders</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>

@@ -18,6 +18,8 @@
 -->
 <Application applicationName="StorableOperations" comment="" factoryVersion="" versionName="1.0" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Workflows und Exceptions, um die Multiplizität von Storable-Listen zu verifizieren</Description>
+    <Description Lang="EN">Workflows and exceptions to verify multiplicity of storable lists</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>

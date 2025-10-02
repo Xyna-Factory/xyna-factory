@@ -18,9 +18,8 @@
 -->
 <Application applicationName="Queue" comment="" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">Queue-Operationen und -Management</Description>
-    <Description Lang="EN">queue operations and management</Description>
-    <BuildDate>2015.06.25 10:13:00</BuildDate>
+    <Description Lang="DE">Basisfunktionalität für Queue-Operationen und -Management</Description>
+    <Description Lang="EN">Basic functionality for queue operations and management</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>

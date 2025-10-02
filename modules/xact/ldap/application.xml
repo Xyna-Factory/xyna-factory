@@ -20,7 +20,6 @@
   <ApplicationInfo>
     <Description Lang="DE">LDAPDictionary, LDAPManagement, LDAPServices</Description>
     <Description Lang="EN">LDAPDictionary, LDAPManagement, LDAPServices</Description>
-    <BuildDate>2015.06.25 10:13:00</BuildDate>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>

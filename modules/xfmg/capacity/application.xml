@@ -18,9 +18,8 @@
 -->
 <Application applicationName="CapacityMgmt" comment="" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">CapacityManagement</Description>
-    <Description Lang="EN">CapacityManagement</Description>
-    <BuildDate>2015.06.25 10:13:00</BuildDate>
+    <Description Lang="DE">Funktionalität zum Managen von Xyna-Capacities</Description>
+    <Description Lang="EN">Functionality to manage Xyna capacities</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Processing</ApplicationName>

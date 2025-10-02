@@ -20,7 +20,6 @@
   <ApplicationInfo>
     <Description Lang="DE">Diverse grundlegende DatenTypen und Services</Description>
     <Description Lang="EN">Miscellaneous essential data types and services</Description>
-    <BuildDate>2015.06.25 10:13:00</BuildDate>
   </ApplicationInfo>
   <Ordertypes>
     <Ordertype implicitDependency="false">

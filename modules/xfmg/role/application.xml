@@ -18,6 +18,8 @@
 -->
 <Application applicationName="UserRoleManagement" comment="" factoryVersion="" versionName="1.0.7" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Funktionalität zum Management von Xyna Factory Benutzerrollen</Description>
+    <Description Lang="EN">Functionality to manage Xyna Factory user roles</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>UserSessionMgmt</ApplicationName>

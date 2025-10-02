@@ -18,9 +18,8 @@
 -->
 <Application applicationName="SNMP" comment="" factoryVersion="" versionName="1.1.1" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">SNMPSHaredLibs, SNMPTrigger, SNMPTrapFilter, SNMPServices</Description>
-    <Description Lang="EN">SNMPSHaredLibs, SNMPTrigger, SNMPTrapFilter, SNMPServices</Description>
-    <BuildDate>2015.07.30 10:20:00</BuildDate>
+    <Description Lang="DE">Tools for using the SNMP protocol</Description>
+    <Description Lang="EN">Tools zur Benutzung des SNMP-Protokolls</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>

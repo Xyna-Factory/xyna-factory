@@ -19,9 +19,8 @@
 <!--                                               ################# Version auch in blackedition_lib.sh updaten ########### -->
 <Application applicationName="SNMPStatistics" comment="" factoryVersion="" versionName="1.0.3" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">SNMPStatisticsFilter</Description>
-    <Description Lang="EN">SNMPStatisticsFilter</Description>
-    <BuildDate>2015.07.30 10:20:00</BuildDate>
+    <Description Lang="DE">Zugriff auf Statistik-Informationen über eine laufende Xyna Factory per SNMP Protokoll</Description>
+    <Description Lang="EN">Accessing statistics information of a running Xyna Factory via SNMP protocol</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>SNMP</ApplicationName>

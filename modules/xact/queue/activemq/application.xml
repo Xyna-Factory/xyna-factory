@@ -18,9 +18,8 @@
 -->
 <Application applicationName="ActiveMQ" comment="" factoryVersion="" versionName="1.0.8" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">ActiveMQ</Description>
-    <Description Lang="EN">ActiveMQ</Description>
-    <BuildDate>2015.06.25 10:13:00</BuildDate>
+    <Description Lang="DE">Benutzung von JMS-Queues mit (externen) Apache ActiveMQ Servern</Description>
+    <Description Lang="EN">Using JMS-queues with (external) Apache ActiveMQ servers</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Queue</ApplicationName>

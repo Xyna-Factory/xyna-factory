@@ -20,7 +20,6 @@
   <ApplicationInfo>
     <Description Lang="DE">Starten von BatchProzessen, Bearbeitung der Custom-Daten</Description>
     <Description Lang="EN">Starting batch processes, Modification of custom fields</Description>
-    <BuildDate>2015.06.25 10:13:00</BuildDate>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Processing</ApplicationName>

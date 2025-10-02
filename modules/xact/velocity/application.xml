@@ -18,6 +18,8 @@
 -->
 <Application applicationName="VelocityTemplateEngine" comment="" factoryVersion="" versionName="1.2.5" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Tools zur Benutzung von Apache Velocity Templates</Description>
+    <Description Lang="EN">Tools for using apache velocity templates</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>
