@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,16 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<project name="build" default="build-all" basedir=".">
-    
-    <property name="target.dir" value="${basedir}/deploy/" />
-    <import file="../../buildModule.xml" />
-    
-    <target name="build-all">
-        <buildModule target="build" dir="datamodels"          target.dir="${target.dir}/datamodels" />
-        <buildModule target="build" dir="TMFMappingTools"     target.dir="${target.dir}/TMFMappingTools" />
-        <buildModule target="build" dir="TMFValidationTools"  target.dir="${target.dir}/TMFValidationTools" />
-     </target>
-    
-</project>
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="true" Label="GET /serviceSpecification/{id} Response" TypeName="GETServiceSpecificationIdResponse" TypePath="internalized.tmf633.client.serviceSpecification.response" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Specified Responses:
+    200 OK
+    400 Bad Request
+    401 Unauthorized
+    403 Forbidden
+    404 Not Found
+    409 Conflict
+    415 Unsupported Media Type
+    500 Internal Server Error
+    </Documentation>
+  </Meta>
+</DataType>

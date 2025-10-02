@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="RelatedServiceOrderItem" TypeName="RelatedServiceOrderItem" TypePath="internalized.tmf640.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>RelatedServiceOrderItem (a ServiceOrder item) .The service order item which triggered service creation/change/termination.
+        </Documentation>
+  </Meta>
+  <Data Label="itemId" VariableName="itemId">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Type for Id Attributes with pattern
+required
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="role" VariableName="role">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>role of the service order item for this service
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="serviceOrderHref" VariableName="serviceOrderHref">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Reference of the related entity.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="serviceOrderId" VariableName="serviceOrderId">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Type for Id Attributes with pattern
+required
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="itemAction" VariableName="itemAction">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>values: add, modify, delete, noChange
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@baseType" VariableName="atbaseType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the super-class
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@schemaLocation" VariableName="atschemaLocation">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
+format: uri
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@type" VariableName="attype">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the sub-class entity name
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@referredType" VariableName="atreferredType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>The actual type of the target instance when needed for disambiguation.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Service Label="RelatedServiceOrderItem" TypeName="RelatedServiceOrderItem">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+// validate RelatedServiceOrderItem.itemId of type String
+try {
+    var validator_itemId = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_itemId.setName("itemId");
+    validator_itemId.setValue(getItemId());
+    validator_itemId.setPattern("^[\\w\\-\\.]*$");
+    validator_itemId.setRequired();
+    result.getErrorMessages().addAll(validator_itemId.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate RelatedServiceOrderItem.itemId");
+}
+
+// validate RelatedServiceOrderItem.role of type String
+try {
+    var validator_role = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_role.setName("role");
+    validator_role.setValue(getRole());
+    result.getErrorMessages().addAll(validator_role.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate RelatedServiceOrderItem.role");
+}
+
+// validate RelatedServiceOrderItem.serviceOrderHref of type String
+try {
+    var validator_serviceOrderHref = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_serviceOrderHref.setName("serviceOrderHref");
+    validator_serviceOrderHref.setValue(getServiceOrderHref());
+    result.getErrorMessages().addAll(validator_serviceOrderHref.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate RelatedServiceOrderItem.serviceOrderHref");
+}
+
+// validate RelatedServiceOrderItem.serviceOrderId of type String
+try {
+    var validator_serviceOrderId = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_serviceOrderId.setName("serviceOrderId");
+    validator_serviceOrderId.setValue(getServiceOrderId());
+    validator_serviceOrderId.setPattern("^[\\w\\-\\.]*$");
+    validator_serviceOrderId.setRequired();
+    result.getErrorMessages().addAll(validator_serviceOrderId.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate RelatedServiceOrderItem.serviceOrderId");
+}
+
+// validate RelatedServiceOrderItem.itemAction of type String
+try {
+    var validator_itemAction = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_itemAction.setName("itemAction");
+    validator_itemAction.setValue(getItemAction());
+    validator_itemAction.setAllowableValues("add", "modify", "delete", "noChange");
+    result.getErrorMessages().addAll(validator_itemAction.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate RelatedServiceOrderItem.itemAction");
+}
+
+// validate RelatedServiceOrderItem.atbaseType of type String
+try {
+    var validator_atbaseType = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atbaseType.setName("@baseType");
+    validator_atbaseType.setValue(getAtbaseType());
+    result.getErrorMessages().addAll(validator_atbaseType.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate RelatedServiceOrderItem.atbaseType");
+}
+
+// validate RelatedServiceOrderItem.atschemaLocation of type String
+try {
+    var validator_atschemaLocation = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atschemaLocation.setName("@schemaLocation");
+    validator_atschemaLocation.setValue(getAtschemaLocation());
+    validator_atschemaLocation.setFormat("uri");
+    result.getErrorMessages().addAll(validator_atschemaLocation.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate RelatedServiceOrderItem.atschemaLocation");
+}
+
+// validate RelatedServiceOrderItem.attype of type String
+try {
+    var validator_attype = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_attype.setName("@type");
+    validator_attype.setValue(getAttype());
+    result.getErrorMessages().addAll(validator_attype.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate RelatedServiceOrderItem.attype");
+}
+
+// validate RelatedServiceOrderItem.atreferredType of type String
+try {
+    var validator_atreferredType = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atreferredType.setName("@referredType");
+    validator_atreferredType.setValue(getAtreferredType());
+    result.getErrorMessages().addAll(validator_atreferredType.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate RelatedServiceOrderItem.atreferredType");
+}
+
+return result.getResult();
+                </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

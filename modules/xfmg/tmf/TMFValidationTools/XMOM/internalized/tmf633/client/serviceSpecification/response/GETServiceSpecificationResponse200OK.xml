@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="GETServiceSpecificationResponse" BaseTypePath="internalized.tmf633.client.serviceSpecification.response" IsAbstract="false" Label="GET /serviceSpecification Response 200 OK" TypeName="GETServiceSpecificationResponse200OK" TypePath="internalized.tmf633.client.serviceSpecification.response" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Response message: Success</Documentation>
+  </Meta>
+  <Data IsList="true" Label="response" ReferenceName="ServiceSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="response">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Data Label="X-Total-Count" VariableName="xMinusTotalMinusCount">
+    <Meta>
+      <Type>Long</Type>
+      <Documentation>Total number of items matching criteria
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="X-Result-Count" VariableName="xMinusResultMinusCount">
+    <Meta>
+      <Type>Long</Type>
+      <Documentation>Actual number of items returned in the response body
+        </Documentation>
+    </Meta>
+  </Data>
+  <Service Label="GET /serviceSpecification Response 200 OK" TypeName="GETServiceSpecificationResponse200OK">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+// validate GETServiceSpecificationResponse200OK.response of type ServiceSpecification
+try {
+    List&lt;? extends internalized.tmf633.datamodel.ServiceSpecification&gt; response = getResponse();
+    if (response != null) {
+        for (internalized.tmf633.datamodel.ServiceSpecification obj : response) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate GETServiceSpecificationResponse200OK.response");
+}
+
+// validate GETServiceSpecificationResponse200OK.xMinusTotalMinusCount of type Long
+try {
+    var validator_xMinusTotalMinusCount = new com.gip.xyna.openapi.NumberTypeValidator&lt;Long&gt;();
+    validator_xMinusTotalMinusCount.setName("X-Total-Count");
+    validator_xMinusTotalMinusCount.setValue(getXMinusTotalMinusCount());
+    result.getErrorMessages().addAll(validator_xMinusTotalMinusCount.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate GETServiceSpecificationResponse200OK.xMinusTotalMinusCount");
+}
+// validate GETServiceSpecificationResponse200OK.xMinusResultMinusCount of type Long
+try {
+    var validator_xMinusResultMinusCount = new com.gip.xyna.openapi.NumberTypeValidator&lt;Long&gt;();
+    validator_xMinusResultMinusCount.setName("X-Result-Count");
+    validator_xMinusResultMinusCount.setValue(getXMinusResultMinusCount());
+    result.getErrorMessages().addAll(validator_xMinusResultMinusCount.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate GETServiceSpecificationResponse200OK.xMinusResultMinusCount");
+}
+
+return result.getResult();
+          </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

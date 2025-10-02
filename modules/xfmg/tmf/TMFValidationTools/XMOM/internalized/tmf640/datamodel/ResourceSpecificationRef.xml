@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="ResourceSpecificationRef" TypeName="ResourceSpecificationRef" TypePath="internalized.tmf640.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Resources are physical or non-physical components (or some combination of these) within an enterprise's infrastructure or inventory. They are typically consumed or used by services (for example a physical port assigned to a service) or contribute to the realization of a Product (for example, a SIM card). They can be drawn from the Application, Computing and Network domains, and include, for example, Network Elements, software, IT systems, content and information, and technology components. A ResourceSpecification is an abstract base class for representing a generic means for implementing a particular type of Resource. In essence, a ResourceSpecification defines the common attributes and relationships of a set of related Resources, while Resource defines a specific instance that is based on a particular ResourceSpecification.
+        </Documentation>
+  </Meta>
+  <Data Label="id" VariableName="id">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Type for Id Attributes with pattern
+required
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="href" VariableName="href">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Hyperlink reference
+format: uri
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Name of the related entity.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="version" VariableName="version">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Resource Specification version
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@baseType" VariableName="atbaseType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the super-class
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@schemaLocation" VariableName="atschemaLocation">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
+format: uri
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@type" VariableName="attype">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the sub-class Extensible name
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@referredType" VariableName="atreferredType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>The actual type of the target instance when needed for disambiguation.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Service Label="ResourceSpecificationRef" TypeName="ResourceSpecificationRef">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+// validate ResourceSpecificationRef.id of type String
+try {
+    var validator_id = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_id.setName("id");
+    validator_id.setValue(getId());
+    validator_id.setPattern("^[\\w\\-\\.]*$");
+    validator_id.setRequired();
+    result.getErrorMessages().addAll(validator_id.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ResourceSpecificationRef.id");
+}
+
+// validate ResourceSpecificationRef.href of type String
+try {
+    var validator_href = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_href.setName("href");
+    validator_href.setValue(getHref());
+    validator_href.setFormat("uri");
+    result.getErrorMessages().addAll(validator_href.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ResourceSpecificationRef.href");
+}
+
+// validate ResourceSpecificationRef.name of type String
+try {
+    var validator_name = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_name.setName("name");
+    validator_name.setValue(getName());
+    result.getErrorMessages().addAll(validator_name.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ResourceSpecificationRef.name");
+}
+
+// validate ResourceSpecificationRef.version of type String
+try {
+    var validator_version = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_version.setName("version");
+    validator_version.setValue(getVersion());
+    result.getErrorMessages().addAll(validator_version.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ResourceSpecificationRef.version");
+}
+
+// validate ResourceSpecificationRef.atbaseType of type String
+try {
+    var validator_atbaseType = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atbaseType.setName("@baseType");
+    validator_atbaseType.setValue(getAtbaseType());
+    result.getErrorMessages().addAll(validator_atbaseType.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ResourceSpecificationRef.atbaseType");
+}
+
+// validate ResourceSpecificationRef.atschemaLocation of type String
+try {
+    var validator_atschemaLocation = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atschemaLocation.setName("@schemaLocation");
+    validator_atschemaLocation.setValue(getAtschemaLocation());
+    validator_atschemaLocation.setFormat("uri");
+    result.getErrorMessages().addAll(validator_atschemaLocation.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ResourceSpecificationRef.atschemaLocation");
+}
+
+// validate ResourceSpecificationRef.attype of type String
+try {
+    var validator_attype = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_attype.setName("@type");
+    validator_attype.setValue(getAttype());
+    result.getErrorMessages().addAll(validator_attype.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ResourceSpecificationRef.attype");
+}
+
+// validate ResourceSpecificationRef.atreferredType of type String
+try {
+    var validator_atreferredType = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atreferredType.setName("@referredType");
+    validator_atreferredType.setValue(getAtreferredType());
+    result.getErrorMessages().addAll(validator_atreferredType.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate ResourceSpecificationRef.atreferredType");
+}
+
+return result.getResult();
+                </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

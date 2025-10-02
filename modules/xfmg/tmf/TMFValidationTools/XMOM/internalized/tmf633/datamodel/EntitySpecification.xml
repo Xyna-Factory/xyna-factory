@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="EntitySpecification" TypeName="EntitySpecification" TypePath="internalized.tmf633.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>EntitySpecification is a class that offers characteristics to describe a type of entity. Entities are generic constructs that may be used to describe bespoke business entities that are not effectively covered by the existing SID model. Functionally, the entity specification acts as a template by which entities may be instantiated and described. By sharing the same specification, these entities would therefore share the same set of characteristics. Note: The ‘configurable’ attribute on the specCharacteristics determines if an entity instantiated from the entity specification can override the value of the attribute. When set to false, the entity instance may not define a value that differs from the value in the specification.
+        </Documentation>
+  </Meta>
+  <Data Label="id" VariableName="id">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>unique identifier
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="href" VariableName="href">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Hyperlink reference
+format: uri
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="description" VariableName="description">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Description of the specification
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="isBundle" VariableName="isBundle">
+    <Meta>
+      <Type>Boolean</Type>
+      <Documentation>isBundle determines whether specification represents a single specification (false), or a bundle of specifications (true).
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="lastUpdate" VariableName="lastUpdate">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Date and time of the last update of the specification
+format: date-time
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="lifecycleStatus" VariableName="lifecycleStatus">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Used to indicate the current lifecycle status of this catalog item
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Name given to the specification
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="version" VariableName="version">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>specification version
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="constraint" ReferenceName="Constraint" ReferencePath="internalized.tmf633.datamodel" VariableName="constraint">
+    <Meta>
+      <Documentation>This is a list of constraint references applied to this specification
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="entitySpecRelationship" ReferenceName="EntitySpecificationRelationship" ReferencePath="internalized.tmf633.datamodel" VariableName="entitySpecRelationship">
+    <Meta>
+      <Documentation>Relationship to another specification
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="relatedParty" ReferenceName="RelatedParty" ReferencePath="internalized.tmf633.datamodel" VariableName="relatedParty">
+    <Meta>
+      <Documentation>Parties who manage or otherwise have an interest in this specification
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="specCharacteristic" ReferenceName="CharacteristicSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="specCharacteristic">
+    <Meta>
+      <Documentation>List of characteristics that the entity can take
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="targetEntitySchema" ReferenceName="TargetEntitySchema" ReferencePath="internalized.tmf633.datamodel" VariableName="targetEntitySchema">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Data Label="validFor" ReferenceName="TimePeriod" ReferencePath="internalized.tmf633.datamodel" VariableName="validFor">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Data Label="@baseType" VariableName="atbaseType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the super-class
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@schemaLocation" VariableName="atschemaLocation">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
+format: uri
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@type" VariableName="attype">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the sub-class Extensible name
+        </Documentation>
+    </Meta>
+  </Data>
+  <Service Label="EntitySpecification" TypeName="EntitySpecification">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+// validate EntitySpecification.id of type String
+try {
+    var validator_id = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_id.setName("id");
+    validator_id.setValue(getId());
+    result.getErrorMessages().addAll(validator_id.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate EntitySpecification.id");
+}
+
+// validate EntitySpecification.href of type String
+try {
+    var validator_href = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_href.setName("href");
+    validator_href.setValue(getHref());
+    validator_href.setFormat("uri");
+    result.getErrorMessages().addAll(validator_href.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate EntitySpecification.href");
+}
+
+// validate EntitySpecification.description of type String
+try {
+    var validator_description = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_description.setName("description");
+    validator_description.setValue(getDescription());
+    result.getErrorMessages().addAll(validator_description.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate EntitySpecification.description");
+}
+
+// validate EntitySpecification.isBundle of type Boolean
+try {
+    var validator_isBundle = new com.gip.xyna.openapi.BooleanTypeValidator();
+    validator_isBundle.setName("isBundle");
+    validator_isBundle.setValue(getIsBundle());
+    result.getErrorMessages().addAll(validator_isBundle.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate EntitySpecification.isBundle");
+}
+
+// validate EntitySpecification.lastUpdate of type String
+try {
+    var validator_lastUpdate = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_lastUpdate.setName("lastUpdate");
+    validator_lastUpdate.setValue(getLastUpdate());
+    validator_lastUpdate.setFormat("date-time");
+    result.getErrorMessages().addAll(validator_lastUpdate.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate EntitySpecification.lastUpdate");
+}
+
+// validate EntitySpecification.lifecycleStatus of type String
+try {
+    var validator_lifecycleStatus = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_lifecycleStatus.setName("lifecycleStatus");
+    validator_lifecycleStatus.setValue(getLifecycleStatus());
+    result.getErrorMessages().addAll(validator_lifecycleStatus.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate EntitySpecification.lifecycleStatus");
+}
+
+// validate EntitySpecification.name of type String
+try {
+    var validator_name = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_name.setName("name");
+    validator_name.setValue(getName());
+    result.getErrorMessages().addAll(validator_name.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate EntitySpecification.name");
+}
+
+// validate EntitySpecification.version of type String
+try {
+    var validator_version = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_version.setName("version");
+    validator_version.setValue(getVersion());
+    result.getErrorMessages().addAll(validator_version.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate EntitySpecification.version");
+}
+
+// validate EntitySpecification.constraint of type Constraint
+try {
+    List&lt;? extends internalized.tmf633.datamodel.Constraint&gt; constraint = getConstraint();
+    if (constraint != null) {
+        for (internalized.tmf633.datamodel.Constraint obj : constraint) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate EntitySpecification.constraint");
+}
+
+// validate EntitySpecification.entitySpecRelationship of type EntitySpecificationRelationship
+try {
+    List&lt;? extends internalized.tmf633.datamodel.EntitySpecificationRelationship&gt; entitySpecRelationship = getEntitySpecRelationship();
+    if (entitySpecRelationship != null) {
+        for (internalized.tmf633.datamodel.EntitySpecificationRelationship obj : entitySpecRelationship) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate EntitySpecification.entitySpecRelationship");
+}
+
+// validate EntitySpecification.relatedParty of type RelatedParty
+try {
+    List&lt;? extends internalized.tmf633.datamodel.RelatedParty&gt; relatedParty = getRelatedParty();
+    if (relatedParty != null) {
+        for (internalized.tmf633.datamodel.RelatedParty obj : relatedParty) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate EntitySpecification.relatedParty");
+}
+
+// validate EntitySpecification.specCharacteristic of type CharacteristicSpecification
+try {
+    List&lt;? extends internalized.tmf633.datamodel.CharacteristicSpecification&gt; specCharacteristic = getSpecCharacteristic();
+    if (specCharacteristic != null) {
+        for (internalized.tmf633.datamodel.CharacteristicSpecification obj : specCharacteristic) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate EntitySpecification.specCharacteristic");
+}
+
+// validate EntitySpecification.targetEntitySchema of type TargetEntitySchema
+try {
+    internalized.tmf633.datamodel.TargetEntitySchema targetEntitySchema = getTargetEntitySchema();
+    if (targetEntitySchema != null) {
+        result.getErrorMessages().addAll(targetEntitySchema.validate().getErrorMessages());
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate EntitySpecification.targetEntitySchema");
+}
+
+// validate EntitySpecification.validFor of type TimePeriod
+try {
+    internalized.tmf633.datamodel.TimePeriod validFor = getValidFor();
+    if (validFor != null) {
+        result.getErrorMessages().addAll(validFor.validate().getErrorMessages());
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate EntitySpecification.validFor");
+}
+
+// validate EntitySpecification.atbaseType of type String
+try {
+    var validator_atbaseType = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atbaseType.setName("@baseType");
+    validator_atbaseType.setValue(getAtbaseType());
+    result.getErrorMessages().addAll(validator_atbaseType.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate EntitySpecification.atbaseType");
+}
+
+// validate EntitySpecification.atschemaLocation of type String
+try {
+    var validator_atschemaLocation = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atschemaLocation.setName("@schemaLocation");
+    validator_atschemaLocation.setValue(getAtschemaLocation());
+    validator_atschemaLocation.setFormat("uri");
+    result.getErrorMessages().addAll(validator_atschemaLocation.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate EntitySpecification.atschemaLocation");
+}
+
+// validate EntitySpecification.attype of type String
+try {
+    var validator_attype = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_attype.setName("@type");
+    validator_attype.setValue(getAttype());
+    result.getErrorMessages().addAll(validator_attype.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate EntitySpecification.attype");
+}
+
+return result.getResult();
+                </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

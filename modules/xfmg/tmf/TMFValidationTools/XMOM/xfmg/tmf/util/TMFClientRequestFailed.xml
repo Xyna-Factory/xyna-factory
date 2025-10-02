@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,16 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<project name="build" default="build-all" basedir=".">
-    
-    <property name="target.dir" value="${basedir}/deploy/" />
-    <import file="../../buildModule.xml" />
-    
-    <target name="build-all">
-        <buildModule target="build" dir="datamodels"          target.dir="${target.dir}/datamodels" />
-        <buildModule target="build" dir="TMFMappingTools"     target.dir="${target.dir}/TMFMappingTools" />
-        <buildModule target="build" dir="TMFValidationTools"  target.dir="${target.dir}/TMFValidationTools" />
-     </target>
-    
-</project>
+--><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="TMF633-00000" IsAbstract="false" Label="TMF Client Request Failed" TypeName="TMFClientRequestFailed" TypePath="xfmg.tmf.util">
+    <Data Label="Error" ReferenceName="Error" ReferencePath="internalized.tmf633.datamodel" VariableName="error"/>
+    <Data Label="Connect Parameter Host Port" ReferenceName="ConnectParameterHostPort" ReferencePath="xact.http" VariableName="connectParameterHostPort"/>
+  </ExceptionType>
+</ExceptionStore>

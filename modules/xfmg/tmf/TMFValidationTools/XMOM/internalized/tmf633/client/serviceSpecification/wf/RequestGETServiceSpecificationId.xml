@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Request GET /serviceSpecification/{id}" TypeName="RequestGETServiceSpecificationId" TypePath="internalized.tmf633.client.serviceSpecification.wf" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Request GET /serviceSpecification/{id}" Name="RequestGETServiceSpecificationId">
+    <Input>
+      <Data ID="10" Label="Connect Parameter" ReferenceName="ConnectParameter" ReferencePath="xact.http" VariableName="connectParameter10"/>
+      <Data ID="11" Label="GET /serviceSpecification/{id} Send Parameter" ReferenceName="GETServiceSpecificationIdSendParameter" ReferencePath="internalized.tmf633.client.serviceSpecification.send" VariableName="gETServiceSpecificationIdSendParameter11"/>
+    </Input>
+    <Output>
+      <Data ID="15" Label="GET /serviceSpecification/{id} Response" ReferenceName="GETServiceSpecificationIdResponse" ReferencePath="internalized.tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse15"/>
+    </Output>
+    <Throws>
+      <Exception Label="Connect Exception" ReferenceName="ConnectException" ReferencePath="xact.http.exceptions" VariableName="connectException1994"/>
+      <Exception Label="Connection Already Closed Exception" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions" VariableName="connectionAlreadyClosedException1995"/>
+      <Exception Label="Http Exception" ReferenceName="HttpException" ReferencePath="xact.http.exceptions" VariableName="httpException1996"/>
+      <Exception Label="Timeout Exception" ReferenceName="TimeoutException" ReferencePath="xact.http.exceptions" VariableName="timeoutException1997"/>
+      <Exception Label="Unexpected HTTP Response Exception" ReferenceName="UnexpectedHTTPResponseException" ReferencePath="xact.http.exceptions" VariableName="unexpectedHTTPResponseException1998"/>
+      <Exception Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception" VariableName="validationException1999"/>
+    </Throws>
+    <ServiceReference ID="1090" Label="Request GET /serviceSpecification/{id} with Processing" ReferenceName="RequestGETServiceSpecificationIdWithProcessing" ReferencePath="internalized.tmf633.client.serviceSpecification.wf">
+      <Source RefID="1089"/>
+      <Target RefID="1089"/>
+    </ServiceReference>
+    <Mappings ID="1209" Label="Mapping">
+      <Output>
+        <Data ID="1326" Label="ClientProcessingHook" ReferenceName="ClientProcessingHook" ReferencePath="xmcp.oas.datatype.client" VariableName="clientProcessingHook1326">
+          <Source RefID="1209"/>
+        </Data>
+        <Target RefID="1327"/>
+      </Output>
+    </Mappings>
+    <Function ID="1089" Label="Request GET /serviceSpecification/{id} with Processing">
+      <Source RefID="1090"/>
+      <Source RefID="10"/>
+      <Source RefID="11"/>
+      <Source RefID="1327"/>
+      <Target RefID="1090"/>
+      <Target RefID="1092"/>
+      <Invoke Operation="RequestGETServiceSpecificationIdWithProcessing" ServiceID="1090">
+        <Source RefID="10"/>
+        <Source RefID="11"/>
+        <Source RefID="1327"/>
+      </Invoke>
+      <Receive ServiceID="1090">
+        <Target RefID="1092"/>
+      </Receive>
+    </Function>
+    <Data ID="1092" Label="GET /serviceSpecification/{id} Response" ReferenceName="GETServiceSpecificationIdResponse" ReferencePath="internalized.tmf633.client.serviceSpecification.response" VariableName="gETServiceSpecificationIdResponse1092">
+      <Source RefID="1089"/>
+    </Data>
+    <Data ID="1327" Label="ClientProcessingHook" ReferenceName="ClientProcessingHook" ReferencePath="xmcp.oas.datatype.client" VariableName="clientProcessingHook1327">
+      <Source RefID="1209"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="1092"/>
+      <Target RefID="15"/>
+      <Copy>
+        <Source RefID="1092"/>
+        <Target RefID="15"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

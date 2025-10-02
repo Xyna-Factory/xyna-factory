@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Validate Service JSON" TypeName="ValidateServiceJSON" TypePath="xfmg.tmf640.validation" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Validate Service JSON" Name="ValidateServiceJSON">
+    <Input>
+      <Data ID="684" Label="Service JSON" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document684"/>
+      <Data ID="2610" IsList="true" Label="Constraint Context" ReferenceName="ConstraintContext" ReferencePath="xfmg.tmf.validation" VariableName="constraintContext2610"/>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Connect Exception" ReferenceName="ConnectException" ReferencePath="xact.http.exceptions" VariableName="connectException3219"/>
+      <Exception Label="Connection Already Closed Exception" ReferenceName="ConnectionAlreadyClosedException" ReferencePath="xact.http.exceptions" VariableName="connectionAlreadyClosedException3220"/>
+      <Exception Label="Http Exception" ReferenceName="HttpException" ReferencePath="xact.http.exceptions" VariableName="httpException3221"/>
+      <Exception Label="Timeout Exception" ReferenceName="TimeoutException" ReferencePath="xact.http.exceptions" VariableName="timeoutException3222"/>
+      <Exception Label="Unexpected HTTP Response Exception" ReferenceName="UnexpectedHTTPResponseException" ReferencePath="xact.http.exceptions" VariableName="unexpectedHTTPResponseException3223"/>
+      <Exception Label="TMF Client Request Failed" ReferenceName="TMFClientRequestFailed" ReferencePath="xfmg.tmf.util" VariableName="tMFClientRequestFailed3224"/>
+      <Exception Label="CharacteristicValueDoesNotMatchRegularExpression" ReferenceName="CharacteristicValueDoesNotMatchRegularExpression" ReferencePath="xfmg.tmf633" VariableName="characteristicValueDoesNotMatchRegularExpression3225"/>
+      <Exception Label="CharacteristicValueNotInEnumeration" ReferenceName="CharacteristicValueNotInEnumeration" ReferencePath="xfmg.tmf640" VariableName="characteristicValueNotInEnumeration3226"/>
+      <Exception Label="DuplicateCharacteristicFound" ReferenceName="DuplicateCharacteristicFound" ReferencePath="xfmg.tmf640" VariableName="duplicateCharacteristicFound3227"/>
+      <Exception Label="ExceededAllowedValueRange" ReferenceName="ExceededAllowedValueRange" ReferencePath="xfmg.tmf640" VariableName="exceededAllowedValueRange3228"/>
+      <Exception Label="InvalidCharacteristicsCardinality" ReferenceName="InvalidCharacteristicsCardinality" ReferencePath="xfmg.tmf640" VariableName="invalidCharacteristicsCardinality3229"/>
+      <Exception Label="OASDatamodelValidationException" ReferenceName="OASDatamodelValidationException" ReferencePath="xfmg.tmf640" VariableName="oASDatamodelValidationException3230"/>
+      <Exception Label="Service Characteristic not found" ReferenceName="ServiceCharacteristicNotFound" ReferencePath="xfmg.tmf640" VariableName="serviceCharacteristicNotFound3231"/>
+      <Exception Label="UnexpectedCharacteristicsType" ReferenceName="UnexpectedCharacteristicsType" ReferencePath="xfmg.tmf640" VariableName="unexpectedCharacteristicsType3232"/>
+      <Exception Label="ConstraintValidationFailed3" ReferenceName="ConstraintValidationFailed3" ReferencePath="xfmg.tmf640.validation" VariableName="constraintValidationFailed33233"/>
+      <Exception Label="UnexpectedServiceSpecificationName" ReferenceName="UnexpectedServiceSpecificationName" ReferencePath="xfmg.tmf640.validation" VariableName="unexpectedServiceSpecificationName3234"/>
+      <Exception Label="ValidationException" ReferenceName="ValidationException" ReferencePath="xmcp.oas.exception" VariableName="validationException3235"/>
+    </Throws>
+    <ServiceReference ID="337" Label="JSON Datamodel Services" ReferenceName="JSONDatamodelServices.JSONDatamodelServices" ReferencePath="xfmg.xfctrl.datamodel.json">
+      <Source RefID="336"/>
+      <Target RefID="336"/>
+    </ServiceReference>
+    <ServiceReference ID="11" Label="Validate Service" ReferenceName="ValidateService" ReferencePath="xfmg.tmf640.validation">
+      <Source RefID="10"/>
+      <Target RefID="10"/>
+    </ServiceReference>
+    <Function ID="336" Label="Parse Object From JSON with Options">
+      <Source RefID="337"/>
+      <Source RefID="684"/>
+      <Source RefID="1730"/>
+      <Source RefID="2893"/>
+      <Target RefID="337"/>
+      <Target RefID="341"/>
+      <Invoke Operation="parseObjectFromJSONWithOptions" ServiceID="337">
+        <Source RefID="684"/>
+        <Source RefID="1730">
+          <Meta>
+            <LinkType>Constant</LinkType>
+            <ExpectedType>internalized.tmf640.datamodel.Service</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="2893">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="337">
+        <Target RefID="341">
+          <Meta>
+            <ExpectedType>internalized.tmf640.datamodel.Service</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
+    <Function ID="10" Label="Validate Service">
+      <Source RefID="11"/>
+      <Source RefID="341"/>
+      <Source RefID="2610"/>
+      <Target RefID="11"/>
+      <Invoke Operation="ValidateService" ServiceID="11">
+        <Source RefID="341"/>
+        <Source RefID="2610"/>
+      </Invoke>
+      <Receive ServiceID="11"/>
+    </Function>
+    <Data ID="341" Label="Service" ReferenceName="Service" ReferencePath="internalized.tmf640.datamodel" VariableName="service341"/>
+    <Data ID="1730" Label="Service" ReferenceName="Service" ReferencePath="internalized.tmf640.datamodel" VariableName="const_Service1730"/>
+    <Data ID="2893" Label="JSON Parsing Options" ReferenceName="JSONParsingOptions" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="const_JSONParsingOptions2893">
+      <Data VariableName="useLabels">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>true</Value>
+      </Data>
+      <Data ReferenceName="OASDecider" ReferencePath="internalized.tmf640.datamodel.decider" VariableName="objectDecider"/>
+    </Data>
+    <Assign ID="1"/>
+  </Operation>
+</Service>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="Request" TypeName="Request" TypePath="internalized.tmf640.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>A response to a request
+        </Documentation>
+  </Meta>
+  <Data Label="body" VariableName="body">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>The body of the request. For example for an HTTP request might contain content of a form .
+required
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="method" VariableName="method">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>The protocol of the request, e.g. http
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="to" VariableName="to">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>The target of the request, e.g. a URL for an HTTP request
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data IsList="true" Label="header" ReferenceName="HeaderItem" ReferencePath="internalized.tmf640.datamodel" VariableName="header">
+    <Meta>
+      <Documentation>Items included in the header of the request. For example for an HTTP request might contain requested locale, basic authentication.
+required
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@baseType" VariableName="atbaseType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the super-class
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@schemaLocation" VariableName="atschemaLocation">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
+format: uri
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@type" VariableName="attype">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the sub-class entity name
+        </Documentation>
+    </Meta>
+  </Data>
+  <Service Label="Request" TypeName="Request">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+// validate Request.body of type String
+try {
+    var validator_body = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_body.setName("body");
+    validator_body.setValue(getBody());
+    validator_body.setRequired();
+    result.getErrorMessages().addAll(validator_body.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Request.body");
+}
+
+// validate Request.method of type String
+try {
+    var validator_method = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_method.setName("method");
+    validator_method.setValue(getMethod());
+    result.getErrorMessages().addAll(validator_method.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Request.method");
+}
+
+// validate Request.to of type String
+try {
+    var validator_to = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_to.setName("to");
+    validator_to.setValue(getTo());
+    result.getErrorMessages().addAll(validator_to.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Request.to");
+}
+
+// validate Request.header of type HeaderItem
+try {
+    List&lt;? extends internalized.tmf640.datamodel.HeaderItem&gt; header = getHeader();
+    if (header != null) {
+        if (header.size() &lt; 1) {
+          result.getErrorMessages().add("Request.header: List of type HeaderItem must have at least 1 items but has fewer");
+        }
+        for (internalized.tmf640.datamodel.HeaderItem obj : header) {
+            result.getErrorMessages().addAll(obj.validate().getErrorMessages());
+        }
+    } else {
+        result.getErrorMessages().add("Request.header: List of type HeaderItem is required but is null");
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Request.header");
+}
+
+// validate Request.atbaseType of type String
+try {
+    var validator_atbaseType = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atbaseType.setName("@baseType");
+    validator_atbaseType.setValue(getAtbaseType());
+    result.getErrorMessages().addAll(validator_atbaseType.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Request.atbaseType");
+}
+
+// validate Request.atschemaLocation of type String
+try {
+    var validator_atschemaLocation = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atschemaLocation.setName("@schemaLocation");
+    validator_atschemaLocation.setValue(getAtschemaLocation());
+    validator_atschemaLocation.setFormat("uri");
+    result.getErrorMessages().addAll(validator_atschemaLocation.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Request.atschemaLocation");
+}
+
+// validate Request.attype of type String
+try {
+    var validator_attype = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_attype.setName("@type");
+    validator_attype.setValue(getAttype());
+    result.getErrorMessages().addAll(validator_attype.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Request.attype");
+}
+
+return result.getResult();
+                </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

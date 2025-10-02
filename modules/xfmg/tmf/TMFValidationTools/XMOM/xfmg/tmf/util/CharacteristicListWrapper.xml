@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -16,15 +16,9 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="build" default="build-all" basedir=".">
-    
-    <property name="target.dir" value="${basedir}/deploy/" />
-    <import file="../../buildModule.xml" />
-    
-    <target name="build-all">
-        <buildModule target="build" dir="datamodels"          target.dir="${target.dir}/datamodels" />
-        <buildModule target="build" dir="TMFMappingTools"     target.dir="${target.dir}/TMFMappingTools" />
-        <buildModule target="build" dir="TMFValidationTools"  target.dir="${target.dir}/TMFValidationTools" />
-     </target>
-    
-</project>
+<DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="CharacteristicListWrapper" TypeName="CharacteristicListWrapper" TypePath="xfmg.tmf.util" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic"/>
+</DataType>

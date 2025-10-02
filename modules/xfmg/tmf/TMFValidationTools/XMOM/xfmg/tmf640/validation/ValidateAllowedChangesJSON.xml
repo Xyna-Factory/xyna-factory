@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Validate Allowed Changes JSON" TypeName="ValidateAllowedChangesJSON" TypePath="xfmg.tmf640.validation" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Validate Allowed Changes JSON" Name="ValidateAllowedChangesJSON">
+    <Input>
+      <Data ID="47" Label="JSON old Service" ReferenceName="Text" ReferencePath="base" VariableName="text47"/>
+      <Data ID="89" Label="JSON new Service" ReferenceName="Text" ReferencePath="base" VariableName="text89"/>
+      <Data ID="512" Label="ServiceSpecification JSON" ReferenceName="Text" ReferencePath="base" VariableName="text512"/>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="Not An Allowed Change" ReferenceName="NotAnAllowedChange" ReferencePath="xfmg.tmf640.validation" VariableName="notAnAllowedChange797"/>
+    </Throws>
+    <ServiceReference ID="11" Label="Validate Allowed Changes" ReferenceName="ValidateAllowedChanges" ReferencePath="xfmg.tmf640.validation">
+      <Source RefID="10"/>
+      <Target RefID="10"/>
+    </ServiceReference>
+    <ServiceReference ID="224" Label="JSON Datamodel Services" ReferenceName="JSONDatamodelServices.JSONDatamodelServices" ReferencePath="xfmg.xfctrl.datamodel.json">
+      <Source RefID="223"/>
+      <Target RefID="223"/>
+    </ServiceReference>
+    <Mappings ID="628" Label="Mapping">
+      <Input>
+        <Data ID="739" Label="ServiceSpecification JSON" ReferenceName="Text" ReferencePath="base" VariableName="text739">
+          <Source RefID="628"/>
+        </Data>
+        <Source RefID="512">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="683" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document683">
+          <Source RefID="628"/>
+        </Data>
+        <Target RefID="684"/>
+      </Output>
+      <Mapping>%1%.text=%0%.text</Mapping>
+    </Mappings>
+    <Function ID="223" Label="Parse Object From JSON with Options">
+      <Source RefID="224"/>
+      <Source RefID="684"/>
+      <Source RefID="402"/>
+      <Source RefID="457"/>
+      <Target RefID="224"/>
+      <Target RefID="228"/>
+      <Invoke Operation="parseObjectFromJSONWithOptions" ServiceID="224">
+        <Source RefID="684"/>
+        <Source RefID="402">
+          <Meta>
+            <LinkType>Constant</LinkType>
+            <ExpectedType>internalized.tmf633.datamodel.ServiceSpecification</ExpectedType>
+          </Meta>
+        </Source>
+        <Source RefID="457">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="224">
+        <Target RefID="228">
+          <Meta>
+            <ExpectedType>internalized.tmf633.datamodel.ServiceSpecification</ExpectedType>
+          </Meta>
+        </Target>
+      </Receive>
+    </Function>
+    <Function ID="10" Label="Validate Allowed Changes">
+      <Source RefID="11"/>
+      <Source RefID="47"/>
+      <Source RefID="89"/>
+      <Source RefID="228"/>
+      <Target RefID="11"/>
+      <Invoke Operation="ValidateAllowedChanges" ServiceID="11">
+        <Source RefID="47">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="89">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Source RefID="228"/>
+      </Invoke>
+      <Receive ServiceID="11"/>
+    </Function>
+    <Data ID="228" Label="ServiceSpecification" ReferenceName="ServiceSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="serviceSpecification228"/>
+    <Data ID="402" Label="ServiceSpecification" ReferenceName="ServiceSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="const_ServiceSpecification402"/>
+    <Data ID="457" Label="JSON Parsing Options" ReferenceName="JSONParsingOptions" ReferencePath="xfmg.xfctrl.datamodel.json.parameter" VariableName="const_JSONParsingOptions457">
+      <Data ReferenceName="OASDecider" ReferencePath="internalized.tmf633.datamodel.decider" VariableName="objectDecider"/>
+    </Data>
+    <Data ID="684" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document684">
+      <Source RefID="628"/>
+    </Data>
+    <Assign ID="1"/>
+  </Operation>
+</Service>

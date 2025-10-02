@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="FeatureSpecificationCharacteristicRelationship" TypeName="FeatureSpecificationCharacteristicRelationship" TypePath="internalized.tmf633.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>An aggregation, migration, substitution, dependency or exclusivity relationship between/among FeatureSpecificationCharacteristics.
+        </Documentation>
+  </Meta>
+  <Data Label="characteristicId" VariableName="characteristicId">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Unique identifier of the characteristic within the the target feature specification
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="featureId" VariableName="featureId">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Unique identifier of the target feature specification within the resource specification.
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="name" VariableName="name">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Name of the target characteristic
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="relationshipType" VariableName="relationshipType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Type of relationship such as aggregation, migration, substitution, dependency, exclusivity
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="resourceSpecificationHref" VariableName="resourceSpecificationHref">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Hyperlink reference to the resource specification containing the target feature and feature characteristic
+format: uri
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="resourceSpecificationId" VariableName="resourceSpecificationId">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Unique identifier of the resource specification containing the target feature and feature characteristic
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="validFor" ReferenceName="TimePeriod" ReferencePath="internalized.tmf633.datamodel" VariableName="validFor">
+    <Meta>
+      <Documentation/>
+    </Meta>
+  </Data>
+  <Service Label="FeatureSpecificationCharacteristicRelationship" TypeName="FeatureSpecificationCharacteristicRelationship">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+// validate FeatureSpecificationCharacteristicRelationship.characteristicId of type String
+try {
+    var validator_characteristicId = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_characteristicId.setName("characteristicId");
+    validator_characteristicId.setValue(getCharacteristicId());
+    result.getErrorMessages().addAll(validator_characteristicId.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate FeatureSpecificationCharacteristicRelationship.characteristicId");
+}
+
+// validate FeatureSpecificationCharacteristicRelationship.featureId of type String
+try {
+    var validator_featureId = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_featureId.setName("featureId");
+    validator_featureId.setValue(getFeatureId());
+    result.getErrorMessages().addAll(validator_featureId.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate FeatureSpecificationCharacteristicRelationship.featureId");
+}
+
+// validate FeatureSpecificationCharacteristicRelationship.name of type String
+try {
+    var validator_name = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_name.setName("name");
+    validator_name.setValue(getName());
+    result.getErrorMessages().addAll(validator_name.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate FeatureSpecificationCharacteristicRelationship.name");
+}
+
+// validate FeatureSpecificationCharacteristicRelationship.relationshipType of type String
+try {
+    var validator_relationshipType = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_relationshipType.setName("relationshipType");
+    validator_relationshipType.setValue(getRelationshipType());
+    result.getErrorMessages().addAll(validator_relationshipType.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate FeatureSpecificationCharacteristicRelationship.relationshipType");
+}
+
+// validate FeatureSpecificationCharacteristicRelationship.resourceSpecificationHref of type String
+try {
+    var validator_resourceSpecificationHref = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_resourceSpecificationHref.setName("resourceSpecificationHref");
+    validator_resourceSpecificationHref.setValue(getResourceSpecificationHref());
+    validator_resourceSpecificationHref.setFormat("uri");
+    result.getErrorMessages().addAll(validator_resourceSpecificationHref.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate FeatureSpecificationCharacteristicRelationship.resourceSpecificationHref");
+}
+
+// validate FeatureSpecificationCharacteristicRelationship.resourceSpecificationId of type String
+try {
+    var validator_resourceSpecificationId = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_resourceSpecificationId.setName("resourceSpecificationId");
+    validator_resourceSpecificationId.setValue(getResourceSpecificationId());
+    result.getErrorMessages().addAll(validator_resourceSpecificationId.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate FeatureSpecificationCharacteristicRelationship.resourceSpecificationId");
+}
+
+// validate FeatureSpecificationCharacteristicRelationship.validFor of type TimePeriod
+try {
+    internalized.tmf633.datamodel.TimePeriod validFor = getValidFor();
+    if (validFor != null) {
+        result.getErrorMessages().addAll(validFor.validate().getErrorMessages());
+    }
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate FeatureSpecificationCharacteristicRelationship.validFor");
+}
+
+return result.getResult();
+                </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>

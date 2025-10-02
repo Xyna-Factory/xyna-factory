@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Create Characteristic With Default Value" TypeName="CreateCharacteristicWithDefaultValue" TypePath="xfmg.tmf640" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Create Characteristic With Default Value" Name="CreateCharacteristicWithDefaultValue">
+    <Input>
+      <Data ID="2" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicSpecification2"/>
+      <Data ID="7" Label="CharacteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicValueSpecification7"/>
+    </Input>
+    <Output>
+      <Data ID="12" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic12"/>
+    </Output>
+    <Choice ID="41" TypeName="BaseChoiceTypeSubclasses" TypePath="server">
+      <Source RefID="7"/>
+      <Target RefID="2689"/>
+      <Input>
+        <Data ID="55" Label="CharacteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicValueSpecification55">
+          <Source RefID="41"/>
+        </Data>
+        <Source RefID="7"/>
+      </Input>
+      <Case ID="56" Label="CharacteristicValueSpecification" Premise="internalized.tmf633.datamodel.CharacteristicValueSpecification">
+        <Assign ID="68">
+          <Source RefID="7"/>
+          <Target RefID="2701"/>
+          <Copy>
+            <Source RefID="7"/>
+            <Target RefID="2701"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="2675" Label="Mapping">
+          <Input>
+            <Data ID="2700" Label="CharacteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicValueSpecification2700">
+              <Source RefID="2675"/>
+            </Data>
+            <Source RefID="2701">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="2686" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic2686">
+              <Source RefID="2675"/>
+            </Data>
+            <Target RefID="2687"/>
+          </Output>
+          <Mapping>%1%.attype="Characteristic"</Mapping>
+        </Mappings>
+        <Assign ID="69">
+          <Source RefID="2687"/>
+          <Target RefID="2689"/>
+          <Copy>
+            <Source RefID="2687"/>
+            <Target RefID="2689"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="57" Label="BooleanArrayCharacteristicValueSpecification" Premise="internalized.tmf633.datamodel.BooleanArrayCharacteristicValueSpecification">
+        <Assign ID="71">
+          <Source RefID="7"/>
+          <Target RefID="970"/>
+          <Copy>
+            <Source RefID="7"/>
+            <Target RefID="970"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="130" Label="Mapping">
+          <Input>
+            <Data ID="998" Label="BooleanArrayCharacteristicValueSpecification" ReferenceName="BooleanArrayCharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="booleanArrayCharacteristicValueSpecification998">
+              <Source RefID="130"/>
+            </Data>
+            <Source RefID="970"/>
+          </Input>
+          <Output>
+            <Data ID="161" Label="BooleanArrayCharacteristic" ReferenceName="BooleanArrayCharacteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="booleanArrayCharacteristic161">
+              <Source RefID="130"/>
+            </Data>
+            <Target RefID="162"/>
+          </Output>
+          <Mapping>%1%.attype="BooleanArrayCharacteristic"</Mapping>
+          <Mapping>%1%.value=%0%.value</Mapping>
+        </Mappings>
+        <Assign ID="72">
+          <Source RefID="162"/>
+          <Target RefID="2689"/>
+          <Copy>
+            <Source RefID="162"/>
+            <Target RefID="2689"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="58" Label="NumberCharacteristicValueSpecification" Premise="internalized.tmf633.datamodel.NumberCharacteristicValueSpecification">
+        <Assign ID="74">
+          <Source RefID="7"/>
+          <Target RefID="1196"/>
+          <Copy>
+            <Source RefID="7"/>
+            <Target RefID="1196"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="1123" Label="Mapping">
+          <Input>
+            <Data ID="1194" Label="NumberCharacteristicValueSpecification" ReferenceName="NumberCharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="numberCharacteristicValueSpecification1194">
+              <Source RefID="1123"/>
+            </Data>
+            <Source RefID="1196"/>
+          </Input>
+          <Output>
+            <Data ID="1274" Label="NumberCharacteristic" ReferenceName="NumberCharacteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="numberCharacteristic1274">
+              <Source RefID="1123"/>
+            </Data>
+            <Target RefID="1275"/>
+          </Output>
+          <Mapping>%1%.attype="NumberCharacteristic"</Mapping>
+          <Mapping>%1%.value=%0%.value</Mapping>
+        </Mappings>
+        <Assign ID="75">
+          <Source RefID="1275"/>
+          <Target RefID="2689"/>
+          <Copy>
+            <Source RefID="1275"/>
+            <Target RefID="2689"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="59" Label="IntegerArrayCharacteristicValueSpecification" Premise="internalized.tmf633.datamodel.IntegerArrayCharacteristicValueSpecification">
+        <Assign ID="77">
+          <Source RefID="7"/>
+          <Target RefID="1410"/>
+          <Copy>
+            <Source RefID="7"/>
+            <Target RefID="1410"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="1380" Label="Mapping">
+          <Input>
+            <Data ID="1408" Label="IntegerArrayCharacteristicValueSpecification" ReferenceName="IntegerArrayCharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="integerArrayCharacteristicValueSpecification1408">
+              <Source RefID="1380"/>
+            </Data>
+            <Source RefID="1410"/>
+          </Input>
+          <Output>
+            <Data ID="1434" Label="IntegerArrayCharacteristic" ReferenceName="IntegerArrayCharacteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="integerArrayCharacteristic1434">
+              <Source RefID="1380"/>
+            </Data>
+            <Target RefID="1435"/>
+          </Output>
+          <Mapping>%1%.attype="IntegerArrayCharacteristic"</Mapping>
+          <Mapping>%1%.value=%0%.value</Mapping>
+        </Mappings>
+        <Assign ID="78">
+          <Source RefID="1435"/>
+          <Target RefID="2689"/>
+          <Copy>
+            <Source RefID="1435"/>
+            <Target RefID="2689"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="60" Label="StringArrayCharacteristicValueSpecification" Premise="internalized.tmf633.datamodel.StringArrayCharacteristicValueSpecification">
+        <Assign ID="80">
+          <Source RefID="7"/>
+          <Target RefID="1632"/>
+          <Copy>
+            <Source RefID="7"/>
+            <Target RefID="1632"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="1604" Label="Mapping">
+          <Input>
+            <Data ID="1630" Label="StringArrayCharacteristicValueSpecification" ReferenceName="StringArrayCharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="stringArrayCharacteristicValueSpecification1630">
+              <Source RefID="1604"/>
+            </Data>
+            <Source RefID="1632"/>
+          </Input>
+          <Output>
+            <Data ID="1654" Label="StringArrayCharacteristic" ReferenceName="StringArrayCharacteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="stringArrayCharacteristic1654">
+              <Source RefID="1604"/>
+            </Data>
+            <Target RefID="1655"/>
+          </Output>
+          <Mapping>%1%.attype="StringArrayCharacteristic"</Mapping>
+          <Mapping>%1%.value=%0%.value</Mapping>
+        </Mappings>
+        <Assign ID="81">
+          <Source RefID="1655"/>
+          <Target RefID="2689"/>
+          <Copy>
+            <Source RefID="1655"/>
+            <Target RefID="2689"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="61" Label="StringCharacteristicValueSpecification" Premise="internalized.tmf633.datamodel.StringCharacteristicValueSpecification">
+        <Assign ID="83">
+          <Source RefID="7"/>
+          <Target RefID="1836"/>
+          <Copy>
+            <Source RefID="7"/>
+            <Target RefID="1836"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="1810" Label="Mapping">
+          <Input>
+            <Data ID="1834" Label="StringCharacteristicValueSpecification" ReferenceName="StringCharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="stringCharacteristicValueSpecification1834">
+              <Source RefID="1810"/>
+            </Data>
+            <Source RefID="1836"/>
+          </Input>
+          <Output>
+            <Data ID="1856" Label="StringCharacteristic" ReferenceName="StringCharacteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="stringCharacteristic1856">
+              <Source RefID="1810"/>
+            </Data>
+            <Target RefID="1857"/>
+          </Output>
+          <Mapping>%1%.attype="StringCharacteristic"</Mapping>
+          <Mapping>%1%.value=%0%.value</Mapping>
+        </Mappings>
+        <Assign ID="84">
+          <Source RefID="1857"/>
+          <Target RefID="2689"/>
+          <Copy>
+            <Source RefID="1857"/>
+            <Target RefID="2689"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="62" Label="ObjectArrayCharacteristicValueSpecification" Premise="internalized.tmf633.datamodel.ObjectArrayCharacteristicValueSpecification">
+        <Assign ID="86">
+          <Source RefID="7"/>
+          <Target RefID="2022"/>
+          <Copy>
+            <Source RefID="7"/>
+            <Target RefID="2022"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="1998" Label="Mapping">
+          <Input>
+            <Data ID="2020" Label="ObjectArrayCharacteristicValueSpecification" ReferenceName="ObjectArrayCharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="objectArrayCharacteristicValueSpecification2020">
+              <Source RefID="1998"/>
+            </Data>
+            <Source RefID="2022"/>
+          </Input>
+          <Output>
+            <Data ID="2040" Label="ObjectArrayCharacteristic" ReferenceName="ObjectArrayCharacteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="objectArrayCharacteristic2040">
+              <Source RefID="1998"/>
+            </Data>
+            <Target RefID="2041"/>
+          </Output>
+          <Mapping>%1%.attype="ObjectArrayCharacteristic"</Mapping>
+          <Mapping>%1%.value=%0%.value</Mapping>
+        </Mappings>
+        <Assign ID="87">
+          <Source RefID="2041"/>
+          <Target RefID="2689"/>
+          <Copy>
+            <Source RefID="2041"/>
+            <Target RefID="2689"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="63" Label="BooleanCharacteristicValueSpecification" Premise="internalized.tmf633.datamodel.BooleanCharacteristicValueSpecification">
+        <Assign ID="89">
+          <Source RefID="7"/>
+          <Target RefID="2207"/>
+          <Copy>
+            <Source RefID="7"/>
+            <Target RefID="2207"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="2185" Label="Mapping">
+          <Input>
+            <Data ID="2205" Label="BooleanCharacteristicValueSpecification" ReferenceName="BooleanCharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="booleanCharacteristicValueSpecification2205">
+              <Source RefID="2185"/>
+            </Data>
+            <Source RefID="2207"/>
+          </Input>
+          <Output>
+            <Data ID="2223" Label="BooleanCharacteristic" ReferenceName="BooleanCharacteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="booleanCharacteristic2223">
+              <Source RefID="2185"/>
+            </Data>
+            <Target RefID="2224"/>
+          </Output>
+          <Mapping>%1%.attype="BooleanCharacteristic"</Mapping>
+          <Mapping>%1%.value=%0%.value</Mapping>
+        </Mappings>
+        <Assign ID="90">
+          <Source RefID="2224"/>
+          <Target RefID="2689"/>
+          <Copy>
+            <Source RefID="2224"/>
+            <Target RefID="2689"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="64" Label="NumberArrayCharacteristicValueSpecification" Premise="internalized.tmf633.datamodel.NumberArrayCharacteristicValueSpecification">
+        <Assign ID="92">
+          <Source RefID="7"/>
+          <Target RefID="2357"/>
+          <Copy>
+            <Source RefID="7"/>
+            <Target RefID="2357"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="2337" Label="Mapping">
+          <Input>
+            <Data ID="2355" Label="NumberArrayCharacteristicValueSpecification" ReferenceName="NumberArrayCharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="numberArrayCharacteristicValueSpecification2355">
+              <Source RefID="2337"/>
+            </Data>
+            <Source RefID="2357"/>
+          </Input>
+          <Output>
+            <Data ID="2371" Label="NumberArrayCharacteristic" ReferenceName="NumberArrayCharacteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="numberArrayCharacteristic2371">
+              <Source RefID="2337"/>
+            </Data>
+            <Target RefID="2372"/>
+          </Output>
+          <Mapping>%1%.attype="NumberArrayCharacteristic"</Mapping>
+          <Mapping>%1%.value=%0%.value</Mapping>
+        </Mappings>
+        <Assign ID="93">
+          <Source RefID="2372"/>
+          <Target RefID="2689"/>
+          <Copy>
+            <Source RefID="2372"/>
+            <Target RefID="2689"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="65" Label="IntegerCharacteristicValueSpecification" Premise="internalized.tmf633.datamodel.IntegerCharacteristicValueSpecification">
+        <Assign ID="95">
+          <Source RefID="7"/>
+          <Target RefID="2489"/>
+          <Copy>
+            <Source RefID="7"/>
+            <Target RefID="2489"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="2471" Label="Mapping">
+          <Input>
+            <Data ID="2487" Label="IntegerCharacteristicValueSpecification" ReferenceName="IntegerCharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="integerCharacteristicValueSpecification2487">
+              <Source RefID="2471"/>
+            </Data>
+            <Source RefID="2489"/>
+          </Input>
+          <Output>
+            <Data ID="2501" Label="IntegerCharacteristic" ReferenceName="IntegerCharacteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="integerCharacteristic2501">
+              <Source RefID="2471"/>
+            </Data>
+            <Target RefID="2502"/>
+          </Output>
+          <Mapping>%1%.attype="IntegerCharacteristic"</Mapping>
+          <Mapping>%1%.value=%0%.value</Mapping>
+        </Mappings>
+        <Assign ID="96">
+          <Source RefID="2502"/>
+          <Target RefID="2689"/>
+          <Copy>
+            <Source RefID="2502"/>
+            <Target RefID="2689"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="66" Label="ObjectCharacteristicValueSpecification" Premise="internalized.tmf633.datamodel.ObjectCharacteristicValueSpecification">
+        <Assign ID="98">
+          <Source RefID="7"/>
+          <Target RefID="2603"/>
+          <Copy>
+            <Source RefID="7"/>
+            <Target RefID="2603"/>
+          </Copy>
+        </Assign>
+        <Mappings ID="2587" Label="Mapping">
+          <Input>
+            <Data ID="2601" Label="ObjectCharacteristicValueSpecification" ReferenceName="ObjectCharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="objectCharacteristicValueSpecification2601">
+              <Source RefID="2587"/>
+            </Data>
+            <Source RefID="2603"/>
+          </Input>
+          <Output>
+            <Data ID="2613" Label="ObjectCharacteristic" ReferenceName="ObjectCharacteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="objectCharacteristic2613">
+              <Source RefID="2587"/>
+            </Data>
+            <Target RefID="2614"/>
+          </Output>
+          <Mapping>%1%.attype="ObjectCharacteristic"</Mapping>
+          <Mapping>%1%.value=%0%.value</Mapping>
+        </Mappings>
+        <Assign ID="99">
+          <Source RefID="2614"/>
+          <Target RefID="2689"/>
+          <Copy>
+            <Source RefID="2614"/>
+            <Target RefID="2689"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Mappings ID="509" Label="Mapping">
+      <Input>
+        <Data ID="572" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic572">
+          <Source RefID="509"/>
+        </Data>
+        <Source RefID="2689"/>
+      </Input>
+      <Input>
+        <Data ID="603" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicSpecification603">
+          <Source RefID="509"/>
+        </Data>
+        <Source RefID="2"/>
+      </Input>
+      <Output>
+        <Data ID="540" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic540">
+          <Source RefID="509"/>
+        </Data>
+        <Target RefID="541"/>
+      </Output>
+      <Mapping>%2%=%0%</Mapping>
+      <Mapping>%2%.name=%1%.name</Mapping>
+    </Mappings>
+    <Data ID="162" Label="BooleanArrayCharacteristic" ReferenceName="BooleanArrayCharacteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="booleanArrayCharacteristic162">
+      <Source RefID="130"/>
+    </Data>
+    <Data ID="541" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic541">
+      <Source RefID="509"/>
+    </Data>
+    <Data ID="970" Label="BooleanArrayCharacteristicValueSpecification" ReferenceName="BooleanArrayCharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="booleanArrayCharacteristicValueSpecification970">
+      <Source RefID="71"/>
+    </Data>
+    <Data ID="1196" Label="NumberCharacteristicValueSpecification" ReferenceName="NumberCharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="numberCharacteristicValueSpecification1196">
+      <Source RefID="74"/>
+    </Data>
+    <Data ID="1275" Label="NumberCharacteristic" ReferenceName="NumberCharacteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="numberCharacteristic1275">
+      <Source RefID="1123"/>
+    </Data>
+    <Data ID="1410" Label="IntegerArrayCharacteristicValueSpecification" ReferenceName="IntegerArrayCharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="integerArrayCharacteristicValueSpecification1410">
+      <Source RefID="77"/>
+    </Data>
+    <Data ID="1435" Label="IntegerArrayCharacteristic" ReferenceName="IntegerArrayCharacteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="integerArrayCharacteristic1435">
+      <Source RefID="1380"/>
+    </Data>
+    <Data ID="1632" Label="StringArrayCharacteristicValueSpecification" ReferenceName="StringArrayCharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="stringArrayCharacteristicValueSpecification1632">
+      <Source RefID="80"/>
+    </Data>
+    <Data ID="1655" Label="StringArrayCharacteristic" ReferenceName="StringArrayCharacteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="stringArrayCharacteristic1655">
+      <Source RefID="1604"/>
+    </Data>
+    <Data ID="1836" Label="StringCharacteristicValueSpecification" ReferenceName="StringCharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="stringCharacteristicValueSpecification1836">
+      <Source RefID="83"/>
+    </Data>
+    <Data ID="1857" Label="StringCharacteristic" ReferenceName="StringCharacteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="stringCharacteristic1857">
+      <Source RefID="1810"/>
+    </Data>
+    <Data ID="2022" Label="ObjectArrayCharacteristicValueSpecification" ReferenceName="ObjectArrayCharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="objectArrayCharacteristicValueSpecification2022">
+      <Source RefID="86"/>
+    </Data>
+    <Data ID="2041" Label="ObjectArrayCharacteristic" ReferenceName="ObjectArrayCharacteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="objectArrayCharacteristic2041">
+      <Source RefID="1998"/>
+    </Data>
+    <Data ID="2207" Label="BooleanCharacteristicValueSpecification" ReferenceName="BooleanCharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="booleanCharacteristicValueSpecification2207">
+      <Source RefID="89"/>
+    </Data>
+    <Data ID="2224" Label="BooleanCharacteristic" ReferenceName="BooleanCharacteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="booleanCharacteristic2224">
+      <Source RefID="2185"/>
+    </Data>
+    <Data ID="2357" Label="NumberArrayCharacteristicValueSpecification" ReferenceName="NumberArrayCharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="numberArrayCharacteristicValueSpecification2357">
+      <Source RefID="92"/>
+    </Data>
+    <Data ID="2372" Label="NumberArrayCharacteristic" ReferenceName="NumberArrayCharacteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="numberArrayCharacteristic2372">
+      <Source RefID="2337"/>
+    </Data>
+    <Data ID="2489" Label="IntegerCharacteristicValueSpecification" ReferenceName="IntegerCharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="integerCharacteristicValueSpecification2489">
+      <Source RefID="95"/>
+    </Data>
+    <Data ID="2502" Label="IntegerCharacteristic" ReferenceName="IntegerCharacteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="integerCharacteristic2502">
+      <Source RefID="2471"/>
+    </Data>
+    <Data ID="2603" Label="ObjectCharacteristicValueSpecification" ReferenceName="ObjectCharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="objectCharacteristicValueSpecification2603">
+      <Source RefID="98"/>
+    </Data>
+    <Data ID="2614" Label="ObjectCharacteristic" ReferenceName="ObjectCharacteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="objectCharacteristic2614">
+      <Source RefID="2587"/>
+    </Data>
+    <Data ID="2687" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic2687">
+      <Source RefID="2675"/>
+    </Data>
+    <Data ID="2689" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic2689">
+      <Source RefID="41"/>
+    </Data>
+    <Data ID="2701" Label="CharacteristicValueSpecification" ReferenceName="CharacteristicValueSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicValueSpecification2701">
+      <Source RefID="68"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="541"/>
+      <Target RefID="12"/>
+      <Copy>
+        <Source RefID="541">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="12"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

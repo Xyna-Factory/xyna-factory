@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="OASBaseType" BaseTypePath="xmcp.oas.datatype" IsAbstract="false" Label="Note" TypeName="Note" TypePath="internalized.tmf640.datamodel" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+    <Documentation>Extra information about a given entity
+        </Documentation>
+  </Meta>
+  <Data Label="id" VariableName="id">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Type for Id Attributes with pattern
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="author" VariableName="author">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Author of the note
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="date" VariableName="date">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Date of the note
+format: date-time
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="text" VariableName="text">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Text of the note
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@baseType" VariableName="atbaseType">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the super-class
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@schemaLocation" VariableName="atschemaLocation">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>A URI to a JSON-Schema file that defines additional attributes and relationships
+format: uri
+        </Documentation>
+    </Meta>
+  </Data>
+  <Data Label="@type" VariableName="attype">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>When sub-classing, this defines the sub-class entity name
+        </Documentation>
+    </Meta>
+  </Data>
+  <Service Label="Note" TypeName="Note">
+    <Operation IsStatic="false" Label="Validate" Name="validate">
+      <Input/>
+      <Output>
+        <Data ID="1" Label="OAS Validation Result" ReferenceName="OASValidationResult" ReferencePath="xmcp.oas.datatype" VariableName="oASValidationResult1"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">
+xmcp.oas.datatype.OASValidationResult result = new xmcp.oas.datatype.OASValidationResult();
+result.setErrorMessages(new ArrayList&lt;String&gt;());
+// validate Note.id of type String
+try {
+    var validator_id = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_id.setName("id");
+    validator_id.setValue(getId());
+    validator_id.setPattern("^[\\w\\-\\.]*$");
+    result.getErrorMessages().addAll(validator_id.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Note.id");
+}
+
+// validate Note.author of type String
+try {
+    var validator_author = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_author.setName("author");
+    validator_author.setValue(getAuthor());
+    result.getErrorMessages().addAll(validator_author.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Note.author");
+}
+
+// validate Note.date of type String
+try {
+    var validator_date = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_date.setName("date");
+    validator_date.setValue(getDate());
+    validator_date.setFormat("date-time");
+    result.getErrorMessages().addAll(validator_date.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Note.date");
+}
+
+// validate Note.text of type String
+try {
+    var validator_text = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_text.setName("text");
+    validator_text.setValue(getText());
+    result.getErrorMessages().addAll(validator_text.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Note.text");
+}
+
+// validate Note.atbaseType of type String
+try {
+    var validator_atbaseType = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atbaseType.setName("@baseType");
+    validator_atbaseType.setValue(getAtbaseType());
+    result.getErrorMessages().addAll(validator_atbaseType.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Note.atbaseType");
+}
+
+// validate Note.atschemaLocation of type String
+try {
+    var validator_atschemaLocation = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_atschemaLocation.setName("@schemaLocation");
+    validator_atschemaLocation.setValue(getAtschemaLocation());
+    validator_atschemaLocation.setFormat("uri");
+    result.getErrorMessages().addAll(validator_atschemaLocation.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Note.atschemaLocation");
+}
+
+// validate Note.attype of type String
+try {
+    var validator_attype = new com.gip.xyna.openapi.StringTypeValidator();
+    validator_attype.setName("@type");
+    validator_attype.setValue(getAttype());
+    result.getErrorMessages().addAll(validator_attype.checkValid());
+} catch (Exception e) {
+    result.getErrorMessages().add("Error: could not validate Note.attype");
+}
+
+return result.getResult();
+                </CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
