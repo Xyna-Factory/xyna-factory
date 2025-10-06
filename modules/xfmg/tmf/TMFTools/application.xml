@@ -23,15 +23,15 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>List</ApplicationName>
-        <VersionName>1.0.0</VersionName>
+        <VersionName>1.0.1</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>Processing</ApplicationName>
-        <VersionName>1.0.27</VersionName>
+        <VersionName>1.0.28</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>RegExp</ApplicationName>
-        <VersionName>1.0.1</VersionName>
+        <VersionName>1.0.2</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>Service_Activation_and_Configuration_Data_Model</ApplicationName>

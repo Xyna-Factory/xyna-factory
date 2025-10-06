@@ -22,7 +22,7 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>XyPilotMetrics</ApplicationName>
-        <VersionName>1.0.8</VersionName>
+        <VersionName>1.0.9</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

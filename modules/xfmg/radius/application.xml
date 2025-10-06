@@ -23,7 +23,7 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>UserSessionMgmt</ApplicationName>
-        <VersionName>1.0.2</VersionName>
+        <VersionName>1.0.3</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>>
   </ApplicationInfo>

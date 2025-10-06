@@ -23,15 +23,15 @@
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>StorableOperations</ApplicationName>
-        <VersionName>1.0</VersionName>
+        <VersionName>1.0.1</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>UserRoleManagement</ApplicationName>
-        <VersionName>1.0.7</VersionName>
+        <VersionName>1.0.8</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>ZetaFramework</ApplicationName>
-        <VersionName>0.6.61</VersionName>
+        <VersionName>0.6.62</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
