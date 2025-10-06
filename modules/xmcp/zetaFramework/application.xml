@@ -16,12 +16,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="ZetaFramework" comment="" factoryVersion="" versionName="0.6.61" xmlVersion="1.1">
+<Application applicationName="ZetaFramework" comment="" factoryVersion="" versionName="0.6.62" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Framework für HTML-GUIs, auf dem der Xyna Fractal Modeller basiert</Description>
+    <Description Lang="EN">Framework for HTML GUIs on which the Xyna Fractal Modeller is based</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Processing</ApplicationName>
-        <VersionName>1.0.27</VersionName>
+        <VersionName>1.0.28</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

@@ -16,12 +16,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="Timeseries" comment="" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
+<Application applicationName="Timeseries" comment="" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Funktionalität zum Management von Xyna Factory Time Series (zeitgesteuerte Auftragsserien)</Description>
+    <Description Lang="EN">Functionality to manage Xyna Factory time series (time-controlled order series)</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>
-        <VersionName>1.1.2</VersionName>
+        <VersionName>1.1.3</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
