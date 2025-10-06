@@ -40,5 +40,13 @@
             <groupId>org.gnu</groupId>
             <artifactId>gnu-crypto</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.sun.jndi</groupId>
+            <artifactId>fscontext</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jndi</groupId>
+            <artifactId>providerutil</artifactId>
+        </dependency>
     </dependencies>
 </project>
