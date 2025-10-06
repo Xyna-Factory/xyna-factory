@@ -35,10 +35,6 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>org.gnu</groupId>
-            <artifactId>gnu-crypto</artifactId>
-        </dependency>
-        <dependency>
             <groupId>net.jradius</groupId>
             <artifactId>jradius-core</artifactId>
             <exclusions>
