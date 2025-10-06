@@ -17,8 +17,8 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  --><Application applicationName="XyPilotMetricsDefaults" comment="" factoryVersion="" versionName="1.0.9" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">Unterstützende Funktionalität für XyPilot</Description>
-    <Description Lang="EN">Supporting functionality for XyPilot</Description>
+    <Description Lang="DE">Beispiel für Metriken, um den XyPilot-Output zu evaluieren</Description>
+    <Description Lang="EN">Example metrics to evaluate XyPilot output</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>XyPilotMetrics</ApplicationName>
