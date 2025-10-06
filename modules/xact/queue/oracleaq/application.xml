@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="OracleAQ" comment="" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
+<Application applicationName="OracleAQ" comment="" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Benutzung von JMS-Queues mit (externen) OracleAQ-Servern</Description>
     <Description Lang="EN">Using JMS-queues with (external) OracleAQ servers</Description>

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="NetConf" factoryVersion="" versionName="1.0.0" xmlVersion="1.1">
+--><Application applicationName="NetConf" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Tools zur Benutzung des NETCONF-Protokolls</Description>
     <Description Lang="EN">Tools for using the NETCONF protocol</Description>

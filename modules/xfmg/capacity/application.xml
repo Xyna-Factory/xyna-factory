@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="CapacityMgmt" comment="" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
+<Application applicationName="CapacityMgmt" comment="" factoryVersion="" versionName="1.0.3" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Funktionalität zum Managen von Xyna-Capacities</Description>
     <Description Lang="EN">Functionality to manage Xyna capacities</Description>

@@ -16,10 +16,10 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="SNMP" comment="" factoryVersion="" versionName="1.1.1" xmlVersion="1.1">
+<Application applicationName="SNMP" comment="" factoryVersion="" versionName="1.1.2" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">Tools for using the SNMP protocol</Description>
-    <Description Lang="EN">Tools zur Benutzung des SNMP-Protokolls</Description>
+    <Description Lang="DE">Tools zur Verwendung des SNMP-Protokolls</Description>
+    <Description Lang="EN">Tools for using the SNMP protocol</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>

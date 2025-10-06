@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="OAS_Base" factoryVersion="" versionName="1.7.10" xmlVersion="1.1">
+--><Application applicationName="OAS_Base" factoryVersion="" versionName="1.7.11" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Graphische Benutzeroberfläche und Funktionalität zum automatisierten Generieren von gebrauchsfertigen HTTP API Applikationen, die auf OpenAPI-Yaml-Dateien basieren</Description>
     <Description Lang="EN">Graphic user interface and functionality for automatic generation of ready-to-use HTTP API applications based on OpenAPI yaml-files</Description>

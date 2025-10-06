@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="XynaTestFactoryInfrastructure" comment="" factoryVersion="" versionName="9.0.2" xmlVersion="1.1">
+--><Application applicationName="XynaTestFactoryInfrastructure" comment="" factoryVersion="" versionName="9.0.3" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Von der Xyna Test Factory benötigte Funktionalität</Description>
     <Description Lang="EN">Functionality required by Xyna Test Factory</Description>

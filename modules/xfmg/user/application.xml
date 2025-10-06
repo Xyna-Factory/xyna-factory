@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="UserSessionMgmt" comment="" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
+<Application applicationName="UserSessionMgmt" comment="" factoryVersion="" versionName="1.0.3" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Xyna Factory User- und Session-Management</Description>
     <Description Lang="EN">Xyna Factory user and session management </Description>

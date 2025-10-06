@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="SOAP" comment="" factoryVersion="" versionName="1.0.4" xmlVersion="1.1">
+<Application applicationName="SOAP" comment="" factoryVersion="" versionName="1.0.5" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Tools zur Benutzung des SOAP-Protokolls</Description>
     <Description Lang="EN">Tools for using the SOAP protocol</Description>

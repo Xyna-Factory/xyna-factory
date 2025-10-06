@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="Http" factoryVersion="" versionName="1.5.7" xmlVersion="1.1">
+--><Application applicationName="Http" factoryVersion="" versionName="1.5.8" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">HTTP-Verbindungen öffnen und schließen, HTTP-Nachrichten senden und empfangen</Description>
     <Description Lang="EN">Open and close HTTP connections, send and receive HTTP messages</Description>
