@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="MultiRoleAdvancedUser" comment="" factoryVersion="" versionName="1.0.16" xmlVersion="1.1">
+<Application applicationName="MultiRoleAdvancedUser" comment="" factoryVersion="" versionName="1.0.17" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Fortgeschrittene Funktionalität zum Management von Xyna Factory Benutzern und Rollen</Description>
     <Description Lang="EN">Advanced functionality to manage xyna factory users and roles</Description>

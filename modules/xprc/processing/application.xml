@@ -17,9 +17,9 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <!--                                               ################# Version auch in blackedition_lib.sh updaten ########### -->
-<Application applicationName="Processing" comment="" factoryVersion="" versionName="1.0.27" xmlVersion="1.1">
+<Application applicationName="Processing" comment="" factoryVersion="" versionName="1.0.28" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">Grundfunktionalität zum Xyna factory Processing von Aufträgen</Description>
+    <Description Lang="DE">Grundfunktionalität zum Xyna Factory Processing von Aufträgen</Description>
     <Description Lang="EN">Basic functionality for Xyna Factory processing of orders</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>

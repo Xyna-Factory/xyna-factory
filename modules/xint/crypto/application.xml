@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="Crypto" factoryVersion="" versionName="1.0.10" xmlVersion="1.1">
+<Application applicationName="Crypto" factoryVersion="" versionName="1.0.11" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Tools für Kryptographie</Description>
     <Description Lang="EN">Tools for cryptography</Description>

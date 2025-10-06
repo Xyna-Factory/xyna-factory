@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="BatchProcessMgmt" comment="" factoryVersion="" versionName="1.1.7" xmlVersion="1.1">
+<Application applicationName="BatchProcessMgmt" comment="" factoryVersion="" versionName="1.1.8" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Starten von BatchProzessen, Bearbeitung der Custom-Daten</Description>
     <Description Lang="EN">Starting batch processes, Modification of custom fields</Description>

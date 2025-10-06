@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="RegExp" comment="" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
+<Application applicationName="RegExp" comment="" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Tools für reguläre Ausdrücke</Description>
     <Description Lang="EN">Tools for regular expressions</Description>
