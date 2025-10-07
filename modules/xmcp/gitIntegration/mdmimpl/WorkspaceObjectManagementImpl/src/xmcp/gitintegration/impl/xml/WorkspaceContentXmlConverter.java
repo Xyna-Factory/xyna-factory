@@ -230,7 +230,15 @@ public class WorkspaceContentXmlConverter {
   }
 
   private String sanitize(String s) {
-    return s.replaceAll("[^a-zA-Z0-9_\\-\\.]", "-");
+    String result = s.replaceAll("[^a-zA-Z0-9_\\-\\.]", "-");
+    s = s.replaceAll("^-+", "");
+    if(s.isEmpty()) {
+      return "unnamed";
+    }
+    if(s.length() > 50) {
+      return s.substring(0, 50);
+    }
+    return result;
   }
   
 }
