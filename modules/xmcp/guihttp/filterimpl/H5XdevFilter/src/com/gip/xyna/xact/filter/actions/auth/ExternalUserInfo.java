@@ -101,6 +101,37 @@ public class ExternalUserInfo {
     }
   }
 
+  public static ExternalUserInfo createFromJWT(String jwt) {
+    if (jwt == null || jwt.isEmpty()) {
+        return null;
+    }
+
+    // Split the JWT into its components: header, payload, and signature
+    String[] parts = jwt.split("\\.");
+    if (parts.length != 3) {
+        return null;
+    }
+
+    // Decode the payload (Base64 URL-decoded)
+    String payload = new String(java.util.Base64.getUrlDecoder().decode(parts[1]));
+
+    // Extract the email claim from the payload
+    String emailKey = "\"email\":\"";
+    int emailStart = payload.indexOf(emailKey);
+    if (emailStart == -1) {
+        return null;
+    }
+
+    emailStart += emailKey.length();
+    int emailEnd = payload.indexOf("\"", emailStart);
+    if (emailEnd == -1) {
+        return null;
+    }
+
+    String email = payload.substring(emailStart, emailEnd);
+    String user_displayname = email.substring(0, email.indexOf('@'));
+    return new ExternalUserInfo(email, user_displayname, jwt);
+  }
 
   private static String getFromLdapName(LdapName ldapname, String key) {
     for (Rdn rdn : ldapname.getRdns()) {

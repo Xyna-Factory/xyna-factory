@@ -67,6 +67,7 @@ import com.gip.xyna.xact.trigger.HTTPTriggerConnection;
 import com.gip.xyna.xact.trigger.HTTPTriggerConnection.Method;
 import com.gip.xyna.xdev.xfractmod.xmdm.ConnectionFilter;
 import com.gip.xyna.xdev.xfractmod.xmdm.EventListener;
+import com.gip.xyna.xdev.xfractmod.xmdm.FilterConfigurationParameter;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.RevisionOrderControl;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.RevisionOrderControl.CustomOrderEntryInformation;
@@ -140,7 +141,13 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
       .setDefaultDocumentation(DocumentationLanguage.EN, "If set, all startorder Requests outside of GuiHttp are first processed by the given Workflow. Inputs are Document and OrderType, output is Document. Format: <fqn>@<rtc>. <rtc> is either workspaceName or applicationName/versionName.")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Falls gesetzt, werden alle startorder-Requests auﬂerhalb von GuiHttp zuerst vom angegebenen Workflow verarbeitet. Inputs sind Document und Ordertype, Output ist Document. Format: <fqn>@<rtc>. <rtc> ist entweder workspaceName oder applicationName/versionName.");
 
+    
+  private H5XdevFilterParameter config;
 
+  @Override
+  public FilterConfigurationParameter createFilterConfigurationTemplate() {
+    return new H5XdevFilterParameter();
+  }
 
   private static class WorkspaceRevisionBuilder implements XynaPropertyBuilds.Builder<Long> {
 
@@ -464,6 +471,22 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     XmomUndoRedoHistory.UNDO_LIMIT.unregister();
   }
 
+  @Override
+  public FilterResponse createXynaOrder(HTTPTriggerConnection tc, FilterConfigurationParameter params) throws XynaException {
+
+    if (params != null && !params.equals(config)) {
+      if (logger.isInfoEnabled()) {
+        logger.info("Updating H5Xdev filter configuration: " + (config != null ? config : "none") + " => "+ params);
+      }
+
+      config = (H5XdevFilterParameter)params;
+
+      ExternalUserLoginAction.setExternalAuthType(config.getExternalAuthType());
+      ExternalUserLoginAction.setAuthTokenHeaderName(config.getExternalAuthHeader());
+    }
+
+    return createXynaOrder(tc);
+  }
 
   /**
    * Analyzes TriggerConnection and creates XynaOrder if it accepts the connection.

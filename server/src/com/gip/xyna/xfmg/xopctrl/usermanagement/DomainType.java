@@ -20,6 +20,7 @@ package com.gip.xyna.xfmg.xopctrl.usermanagement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
@@ -39,6 +40,7 @@ import com.gip.xyna.xfmg.xopctrl.usermanagement.ldap.LDAPServer;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.ldap.LDAPUserAuthentication;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.ldap.SSLKeyAndTruststoreParameter;
 import com.gip.xyna.xfmg.xopctrl.usermanagement.ldap.SSLKeystoreParameter;
+import com.gip.xyna.xfmg.xopctrl.usermanagement.jwt.*;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 
 
@@ -168,6 +170,30 @@ public enum DomainType {
         sslBuilder.passphrase(args[index + 2]);
       }
       return sslBuilder.instance();
+    }
+  },
+  JWT("JWT") {
+
+    @Override
+    public JWTUserAuthentication generateAuthenticationMethod(Domain domain) {
+      return new JWTUserAuthentication((JWTDomainSpecificData) domain.getDomainSpecificData(), null /*new JWKSCache()*/);
+    }
+
+    @Override
+    public JWTDomainSpecificData generateDomainTypeSpecificData(Map<String, List<String>> specifics) {
+      List<String> trustedIssuers = specifics.get("trustedIssuers");
+      if (trustedIssuers == null || trustedIssuers.isEmpty()) {
+        throw new IllegalArgumentException("No trusted issuers provided for JWT domain!");
+      }
+      List<String> roleClaimPathList = specifics.get("roleClaimPath");
+      Optional<String> roleClaimPath = (roleClaimPathList != null && !roleClaimPathList.isEmpty())
+          ? Optional.of(roleClaimPathList.get(0))
+          : Optional.empty();
+      List<String> defaultRoleList = specifics.get("defaultRole");
+      Optional<String> defaultRole = (defaultRoleList != null && !defaultRoleList.isEmpty())
+          ? Optional.of(defaultRoleList.get(0))
+          : Optional.empty();
+      return new JWTDomainSpecificData(trustedIssuers, roleClaimPath, defaultRole);
     }
   };
   
