@@ -16,12 +16,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="List" factoryVersion="" versionName="1.0.0" xmlVersion="1.1">
+<Application applicationName="List" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Tools zum Umgang mit Listen in Xyna-Workflows</Description>
+    <Description Lang="EN">Tools to handle lists in xyna workflows</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>
-        <VersionName>1.1.2</VersionName>
+        <VersionName>1.1.3</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

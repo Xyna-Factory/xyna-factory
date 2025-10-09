@@ -16,20 +16,22 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="TMF_Tools" factoryVersion="" versionName="1.0.0" xmlVersion="1.1">
+<Application applicationName="TMF_Tools" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Tools zum Umgang mit TMF633 und TMF640 API Applicationen, die mit der OASBase-Applikation generiert wurden</Description>
+    <Description Lang="EN">Tools to work with TMF633 and TMF640 API applications generated with the OASBase application</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>List</ApplicationName>
-        <VersionName>1.0.0</VersionName>
+        <VersionName>1.0.1</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>Processing</ApplicationName>
-        <VersionName>1.0.27</VersionName>
+        <VersionName>1.0.28</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>RegExp</ApplicationName>
-        <VersionName>1.0.1</VersionName>
+        <VersionName>1.0.2</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>Service_Activation_and_Configuration_Data_Model</ApplicationName>

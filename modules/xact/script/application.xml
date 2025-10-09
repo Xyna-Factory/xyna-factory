@@ -16,15 +16,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="ScriptExecutor" comment="" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
+<Application applicationName="ScriptExecutor" comment="" factoryVersion="" versionName="1.0.3" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Ausführen von Shell-Kommandos</Description>
     <Description Lang="EN">Exceute shell commands</Description>
-    <BuildDate>2015.06.25 10:13:00</BuildDate>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>
-        <VersionName>1.1.2</VersionName>
+        <VersionName>1.1.3</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

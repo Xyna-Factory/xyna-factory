@@ -16,15 +16,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="Node" comment="" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
+<Application applicationName="Node" comment="" factoryVersion="" versionName="1.0.4" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">NodeManagement</Description>
-    <Description Lang="EN">NodeManagement</Description>
-    <BuildDate>2015.07.30 10:20:00</BuildDate>
+    <Description Lang="DE">Funktionalität zum Management von Remote-Xyna-Factory-Nodes</Description>
+    <Description Lang="EN">Functionality to manage remote Xyna Factory nodes</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>
-        <VersionName>1.1.2</VersionName>
+        <VersionName>1.1.3</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

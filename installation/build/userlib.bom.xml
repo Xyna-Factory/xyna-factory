@@ -16,31 +16,42 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<!--
+  dependencies listed here are used by xyna module applications. To install these
+  applications, the artifacts defined here, and their dependencies, have to be
+  provided in the userlib directory.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>com.gip.xyna</groupId>
-        <artifactId>userlib-bom</artifactId>
+        <artifactId>bom</artifactId>
         <version>1.0.0</version>
-        <relativePath>../../../../../installation/build/userlib.bom.xml</relativePath>
+        <relativePath>pom.xml</relativePath>
     </parent>
-    
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gip.xyna</groupId>
-    <artifactId>radius</artifactId>
+    <artifactId>userlib-bom</artifactId>
     <version>1.0.0</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
-    <dependencies>
-      <dependency>
-        <groupId>com.gip.xyna</groupId>
-        <artifactId>radius_third_parties</artifactId>
-        <version>1.0.0</version>
-        <type>pom</type>
-        <scope>runtime</scope>
-      </dependency>
-    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.ibm.mq</groupId>
+                <artifactId>com.ibm.mq.allclient</artifactId>
+                <version>9.4.1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.gnu</groupId>
+                <artifactId>gnu-crypto</artifactId>
+                <version>2.0.1</version>
+            </dependency>
+        </dependencies>
+	</dependencyManagement>
 </project>

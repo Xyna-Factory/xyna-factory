@@ -126,7 +126,7 @@
             <dependency>
                 <groupId>com.gip.xyna</groupId>
                 <artifactId>xynafactory</artifactId>
-                <version>10.5.0.0</version>
+                <version>10.6.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.gip.xyna</groupId>
@@ -195,11 +195,6 @@
             </dependency>
             <dependency>
                 <groupId>com.ibm.mq</groupId>
-                <artifactId>com.ibm.mq.allclient</artifactId>                <!-- unfree -->
-                <version>9.4.1.1</version>
-            </dependency>
-            <dependency>
-                <groupId>com.ibm.mq</groupId>
                 <artifactId>com.ibm.mq.traceControl</artifactId>                <!-- unfree -->
                 <version>9.0.0.13</version>
             </dependency>
@@ -238,16 +233,6 @@
                 <groupId>com.sun.activation</groupId>
                 <artifactId>jakarta.activation</artifactId>
                 <version>1.2.1</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.jndi</groupId>
-                <artifactId>fscontext</artifactId>                <!-- unfree -->
-                <version>1.2</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.jndi</groupId>
-                <artifactId>providerutil</artifactId>                <!-- unfree -->
-                <version>1.2</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.mail</groupId>
@@ -362,7 +347,7 @@
             <dependency>
                 <groupId>org.mariadb.jdbc</groupId>
                 <artifactId>mariadb-java-client</artifactId>
-                <version>3.5.5</version>
+                <version>3.5.6</version>
             </dependency>
             <dependency>
                 <groupId>net.jradius</groupId>
@@ -493,11 +478,6 @@
                 <groupId>org.fusesource.hawtbuf</groupId>
                 <artifactId>hawtbuf</artifactId>
                 <version>1.11</version>
-            </dependency>
-            <dependency>
-                <groupId>org.gnu</groupId>
-                <artifactId>gnu-crypto</artifactId>                <!-- unfree -->
-                <version>2.0.1</version>
             </dependency>
             <dependency>
                 <groupId>org.jsmiparser</groupId>

@@ -16,14 +16,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="Radius" comment="" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
+<Application applicationName="Radius" comment="" factoryVersion="" versionName="2.0.2" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">Radius</Description>
-    <Description Lang="EN">Radius</Description>
+    <Description Lang="DE">Tools zum Umgang mit dem RADIUS Authentifizierungsprotokoll</Description>
+    <Description Lang="EN">Tools for usage of RADIUS authentification protocol</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>UserSessionMgmt</ApplicationName>
-        <VersionName>1.0.2</VersionName>
+        <VersionName>1.0.3</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>>
   </ApplicationInfo>

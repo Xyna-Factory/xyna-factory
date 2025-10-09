@@ -158,18 +158,7 @@ public class CreateWorkspaceXmlTools {
     FileUtils.writeStringToFile(xml, workspaceXmlFile);
     createWsXmlLinkIfNotExists(path, repositoryConnection);
   }
-  
-  
-  private void removeExistingFiles(String path) {
-    if (Files.exists(Path.of(path, WorkspaceContentCreator.WORKSPACE_XML_SPLITNAME))) {
-      try (Stream<Path> files = Files.list(Path.of(path, WorkspaceContentCreator.WORKSPACE_XML_SPLITNAME))) {
-        files.forEach(x -> FileUtils.deleteFileWithRetries(x.toFile()));
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-    }
-  }
-  
+
 
   private void writeSplit(WorkspaceContent content, String revisionPathStr, RepositoryConnection repconn) throws Exception {
     Path configFolder = createOrGetConfigDir(repconn);
@@ -191,14 +180,14 @@ public class CreateWorkspaceXmlTools {
   
   private void removeObsoleteFilesAndDirs(String revisionPathStr) throws IOException {
     Path rootPath = Paths.get(revisionPathStr);
+    Path configDir = rootPath.resolve(WorkspaceContentCreator.WORKSPACE_XML_SPLITNAME);
+    if (Files.exists(configDir) && !Files.isSymbolicLink(configDir)) {
+      FileUtils.deleteDirectoryRecursively(configDir.toFile());
+    }
+    
     Path wsxml = rootPath.resolve(WorkspaceContentCreator.WORKSPACE_XML_FILENAME);
     if (Files.exists(wsxml) && !Files.isSymbolicLink(wsxml)) {
       Files.delete(wsxml);
-    }
-    Path configDir = rootPath.resolve(WorkspaceContentCreator.WORKSPACE_XML_SPLITNAME);
-    if (Files.exists(configDir) && !Files.isSymbolicLink(configDir)) {
-      removeExistingFiles(revisionPathStr);
-      Files.delete(configDir);
     }
   }
   

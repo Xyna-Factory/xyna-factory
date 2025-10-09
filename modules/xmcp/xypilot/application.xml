@@ -15,16 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- --><Application applicationName="XyPilot" comment="" factoryVersion="" versionName="1.1.13" xmlVersion="1.1">
+ --><Application applicationName="XyPilot" comment="" factoryVersion="" versionName="1.1.14" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Graphische Benutzeroberfläche und Funktionalität zum Generieren von Xyna Factory Quellcode mit künstlicher Intelligenz (KI)</Description>
+    <Description Lang="EN">Graphical user interface and functionality to generate Xyna Factory source code with artificial intelligence (AI)</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>GuiHttp</ApplicationName>
-        <VersionName>1.3.37</VersionName>
+        <VersionName>1.3.39</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>XyPilotMetricsDefaults</ApplicationName>
-        <VersionName>1.0.8</VersionName>
+        <VersionName>1.0.9</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
