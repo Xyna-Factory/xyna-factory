@@ -185,6 +185,10 @@ public enum DomainType {
       if (trustedIssuers == null || trustedIssuers.isEmpty()) {
         throw new IllegalArgumentException("No trusted issuers provided for JWT domain!");
       }
+      List<String> intendedAudience = specifics.get("intendedAudience");
+      if (intendedAudience == null || intendedAudience.isEmpty()) {
+        throw new IllegalArgumentException("No intended audience provided for JWT domain!");
+      }
       List<String> roleClaimPathList = specifics.get("roleClaimPath");
       Optional<String> roleClaimPath = (roleClaimPathList != null && !roleClaimPathList.isEmpty())
           ? Optional.of(roleClaimPathList.get(0))
@@ -193,7 +197,7 @@ public enum DomainType {
       Optional<String> defaultRole = (defaultRoleList != null && !defaultRoleList.isEmpty())
           ? Optional.of(defaultRoleList.get(0))
           : Optional.empty();
-      return new JWTDomainSpecificData(trustedIssuers, roleClaimPath, defaultRole);
+      return new JWTDomainSpecificData(trustedIssuers, intendedAudience, roleClaimPath, defaultRole);
     }
   };
   

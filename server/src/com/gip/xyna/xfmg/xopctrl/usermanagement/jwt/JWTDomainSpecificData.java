@@ -13,13 +13,15 @@ import java.util.Optional;
 public class JWTDomainSpecificData implements DomainTypeSpecificData {
 
     private List<String> trustedIssuers;
+    private List<String> intendedAudience;
     private String roleClaimPath;
     private String defaultRole;
 
     public JWTDomainSpecificData() {}
 
-    public JWTDomainSpecificData(List<String> trustedIssuers, Optional<String> roleClaimPath, Optional<String> defaultRole) {
+    public JWTDomainSpecificData(List<String> trustedIssuers, List<String> intendedAudience, Optional<String> roleClaimPath, Optional<String> defaultRole) {
         this.trustedIssuers = trustedIssuers;
+        this.intendedAudience = intendedAudience;
         this.roleClaimPath = roleClaimPath.orElse(null);
         this.defaultRole = defaultRole.orElse(null);
     }
@@ -30,6 +32,14 @@ public class JWTDomainSpecificData implements DomainTypeSpecificData {
 
     public void setTrustedIssuers(List<String> trustedIssuers) {
         this.trustedIssuers = trustedIssuers;
+    }
+
+    public List<String> getIntendedAudience() {
+        return intendedAudience;
+    }
+
+    public void setIntendedAudience(List<String> intendedAudience) {
+        this.intendedAudience = intendedAudience;
     }
 
     public Optional<String> getRoleClaimPath() {
@@ -52,6 +62,8 @@ public class JWTDomainSpecificData implements DomainTypeSpecificData {
     public void appendInformation(StringBuilder output) {
         output.append(UserManagement.INDENT_FOR_DOMAIN_SPECIFIC_DATA)
               .append("Trusted Issuers: ").append(trustedIssuers).append("\n");
+        output.append(UserManagement.INDENT_FOR_DOMAIN_SPECIFIC_DATA)
+              .append("Intended Audience: ").append(intendedAudience).append("\n");
         output.append(UserManagement.INDENT_FOR_DOMAIN_SPECIFIC_DATA)
               .append("Role Claim Path: ").append(getRoleClaimPath().orElse("Not Configured")).append("\n");
         output.append(UserManagement.INDENT_FOR_DOMAIN_SPECIFIC_DATA)

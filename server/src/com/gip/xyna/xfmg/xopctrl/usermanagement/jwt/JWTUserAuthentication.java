@@ -36,11 +36,17 @@ public class JWTUserAuthentication extends UserAuthentificationMethod {
             String issuer = claims.getIssuer();
             if (!domainSpecificData.getTrustedIssuers().contains(issuer)) {
                 throw new XFMG_UserAuthenticationFailedException("Untrusted issuer: " + issuer);
-            }*/
+            }
+                
+            // validate intended audience, so we know the token is addressed at xyna and not another software
+            */
 
             String role = null; //claims.get(domainSpecificData.getRoleClaimPath().orElse(""), String.class);
             if (role == null) {
                 role = domainSpecificData.getDefaultRole().orElse(null);
+            }
+            if (role == null) {
+                throw new XFMG_UserAuthenticationFailedException("No role for user: " + username);
             }
 
             return com.gip.xyna.XynaFactory.getPortalInstance().getXynaMultiChannelPortalPortal().getRole(role, UserManagement.PREDEFINED_LOCALDOMAIN_NAME);
