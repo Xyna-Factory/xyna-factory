@@ -16,15 +16,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="RegExp" comment="" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
+<Application applicationName="RegExp" comment="" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">RegExp</Description>
-    <Description Lang="EN">RegExp</Description>
-    <BuildDate>2015.06.25 10:13:00</BuildDate>
+    <Description Lang="DE">Tools für reguläre Ausdrücke</Description>
+    <Description Lang="EN">Tools for regular expressions</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>
-        <VersionName>1.1.2</VersionName>
+        <VersionName>1.1.3</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

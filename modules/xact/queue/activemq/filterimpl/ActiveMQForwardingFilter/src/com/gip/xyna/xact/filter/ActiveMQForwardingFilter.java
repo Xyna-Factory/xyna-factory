@@ -50,7 +50,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.EventListener;
 public class ActiveMQForwardingFilter extends ConnectionFilter<ActiveMQTriggerConnection> {
 
   private static final XynaPropertyBoolean useLegacyOrdertype 
-    = new XynaPropertyBoolean("xact.activemq.filter.forwarding.useLegacyOrdertype", true)
+    = new XynaPropertyBoolean("xact.activemq.filter.forwarding.useLegacyOrdertype", false)
       .setDefaultDocumentation(DocumentationLanguage.EN,
                                "User ordertypename with external queue name and prefix xact.activemq.filter.forwarding.");
 

@@ -235,16 +235,6 @@
                 <version>1.2.1</version>
             </dependency>
             <dependency>
-                <groupId>com.sun.jndi</groupId>
-                <artifactId>fscontext</artifactId>                <!-- unfree -->
-                <version>1.2</version>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.jndi</groupId>
-                <artifactId>providerutil</artifactId>                <!-- unfree -->
-                <version>1.2</version>
-            </dependency>
-            <dependency>
                 <groupId>com.sun.mail</groupId>
                 <artifactId>javax.mail</artifactId>
                 <version>1.5.6</version>
@@ -488,11 +478,6 @@
                 <groupId>org.fusesource.hawtbuf</groupId>
                 <artifactId>hawtbuf</artifactId>
                 <version>1.11</version>
-            </dependency>
-            <dependency>
-                <groupId>org.gnu</groupId>
-                <artifactId>gnu-crypto</artifactId>                <!-- unfree -->
-                <version>2.0.1</version>
             </dependency>
             <dependency>
                 <groupId>org.jsmiparser</groupId>

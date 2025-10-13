@@ -15,16 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="YangAppGenerator" factoryVersion="" versionName="1.1.10" xmlVersion="1.1">
+--><Application applicationName="YangAppGenerator" factoryVersion="" versionName="1.1.11" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Benutzeroberfläche und Funktionalität zum Einlesen und Arbeiten mit Datenmodellen im YANG Format</Description>
+    <Description Lang="EN">Graphic User interface and functionality for parsing and working with datamodels in the YANG format</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>GuiHttp</ApplicationName>
-        <VersionName>1.3.38</VersionName>
+        <VersionName>1.3.40</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>YangBase</ApplicationName>
-        <VersionName>1.1.6</VersionName>
+        <VersionName>1.1.7</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

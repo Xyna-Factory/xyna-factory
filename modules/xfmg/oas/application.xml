@@ -15,28 +15,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="OAS_Base" factoryVersion="" versionName="1.7.10" xmlVersion="1.1">
+--><Application applicationName="OAS_Base" factoryVersion="" versionName="1.7.12" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Graphische Benutzeroberfläche und Funktionalität zum automatisierten Generieren von gebrauchsfertigen HTTP API Applikationen, die auf OpenAPI-Yaml-Dateien basieren</Description>
+    <Description Lang="EN">Graphic user interface and functionality for automatic generation of ready-to-use HTTP API applications based on OpenAPI yaml-files</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>FileMgmt</ApplicationName>
-        <VersionName>1.0.10</VersionName>
+        <VersionName>1.0.11</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>Http</ApplicationName>
-        <VersionName>1.5.7</VersionName>
+        <VersionName>1.5.8</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>Json</ApplicationName>
-        <VersionName>1.5.1</VersionName>
+        <VersionName>1.5.2</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>XynaPropertyMgmt</ApplicationName>
-        <VersionName>1.0.1</VersionName>
+        <VersionName>1.0.3</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>ZetaFramework</ApplicationName>
-        <VersionName>0.6.61</VersionName>
+        <VersionName>0.6.62</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

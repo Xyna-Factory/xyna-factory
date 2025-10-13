@@ -17,30 +17,30 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <!--                                               ################# Version auch in blackedition_lib.sh updaten ########### -->
-<Application applicationName="GuiHttp" comment="" factoryVersion="" versionName="1.3.38" xmlVersion="1.1">
+<Application applicationName="GuiHttp" comment="" factoryVersion="" versionName="1.3.40" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">GuiHTTPFilter</Description>
-    <Description Lang="EN">GuiHTTPFilter</Description>
+    <Description Lang="DE">Interne Funktionalität zum Interagieren des Xyna Fractal Modellers mit dem Xyna Factory Server</Description>
+    <Description Lang="EN">Internal functionality for interaction of the Xyna Fractal Modeller with the Xyna Factory Server</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Http</ApplicationName>
-        <VersionName>1.5.7</VersionName>
+        <VersionName>1.5.8</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>ZetaFramework</ApplicationName>
-        <VersionName>0.6.61</VersionName>
+        <VersionName>0.6.62</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>XynaPropertyMgmt</ApplicationName>
-        <VersionName>1.0.1</VersionName>
+        <VersionName>1.0.3</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>UserRoleManagement</ApplicationName>
-        <VersionName>1.0.7</VersionName>
+        <VersionName>1.0.8</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>GlobalApplicationMgmt</ApplicationName>
-        <VersionName>1.0.10</VersionName>
+        <VersionName>1.0.11</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>

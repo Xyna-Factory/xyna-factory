@@ -16,12 +16,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="SSHMock" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
+<Application applicationName="SSHMock" factoryVersion="" versionName="1.0.3" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Tools, um einen Mock einer Remote-Device aufzusetzen, welche per SSH-Protokoll angesprochen wird</Description>
+    <Description Lang="EN">Tools for running a mock of a remote device accessed via SSH protocol</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>SSHServer</ApplicationName>
-        <VersionName>1.0.6</VersionName>
+        <VersionName>1.0.7</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
