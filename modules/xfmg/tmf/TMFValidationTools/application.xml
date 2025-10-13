@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="TMF_Validation_Tools" factoryVersion="10.4.0.2" versionName="1.0.0" xmlVersion="1.1">
+<Application applicationName="TMF_Validation_Tools" factoryVersion="" versionName="1.0.0" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
