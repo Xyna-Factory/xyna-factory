@@ -1,8 +1,0 @@
-/bin/
-classes
-deploy
-lib/*.jar
-lib/xyna/*.jar
-.project
-.classpath
-.settings/
