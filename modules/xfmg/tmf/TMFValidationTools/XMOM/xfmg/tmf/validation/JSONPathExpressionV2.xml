@@ -27,7 +27,7 @@
   <Data Label="expression" VariableName="expression">
     <Meta>
       <Type>String</Type>
-      <Documentation>Expression to evaluate:
+      <Documentation><![CDATA[Expression to evaluate:
 Syntax:
 expression ::= "(" expression ")" |
                         function "(" expression ("," expression)* ")" |
@@ -36,14 +36,14 @@ expression ::= "(" expression ")" |
 						pathref
 function ::= builtin | userdefined
 builtin ::= "EVAL" | "LEN" | "NOT" | "CONCAT" | "PROPERTY" | "ISNULL" | "MATCH"
-infix ::= "+" | "-" | "*" | "/" | "&amp;gt;" | "&amp;lt;" | "&amp;gt;=" | "&amp;lt;=" | "==" | "!=" | "=~" | "~=" | "AND" | "&amp;amp;&amp;amp;" | "OR" | "||" 
+infix ::= "+" | "-" | "*" | "/" | "<" | ">" | ">=" | "<=" | "==" | "!=" | "=~" | "~=" | "AND" | "&&" | "OR" | "||" 
 value ::= "\"" string "\"" | number | "true" | "false"
 pathref ::= "$" integer
 
 Quotations and backslashes in strings have to be escaped with backslash
 number can be float (i.e. negative and with negative exponent. Example: -3.4e-4)
 
-EVAL([&amp;lt;json&amp;gt;, ] pathref)
+EVAL([<json>, ] pathref)
 EVAL expects either one argument as pathref ($n referring to the n-th entry of the list of json paths) or a json as an additional first argument. If no json is provided, the default json is used to evaluate the expression.
 
 LEN returns the length of the argument, either length of array or length of string.
@@ -52,25 +52,25 @@ NOT negates the argument, assuming it is of type (or convertable to) boolean
 
 CONCAT concatenates all arguments as strings
 
-PROPERTY&amp;lt;propertyName&amp;gt;[, &amp;lt;defaultValue&amp;gt;])
+PROPERTY<propertyName>[, <defaultValue>])
 PROPERTY returns the value of the xyna property given by the first argument. A second argument is optional for the default value to be returned if the property is not set (or null).
 
-ISNULL(&amp;lt;value&amp;gt;, &amp;lt;substitution value&amp;gt;)
+ISNULL(<value>, <substitution value>)
 ISNULL replaces the value with the substitution value if the value is null.
 
-MATCH(&amp;lt;value&amp;gt;, &amp;lt;regex&amp;gt;)
+MATCH(<value>, <regex>)
 Matches the value against the regular expression, returns true or false.
 Is the same as 
-&amp;lt;value&amp;gt; =~ &amp;lt;regex&amp;gt;
+<value> =~ <regex>
 and 
-&amp;lt;regex&amp;gt; ~= &amp;lt;value&amp;gt;
+<regex> ~= <value>
 
-Operator precedence of infix functions: ("(",")") (*/) (+-) (&amp;gt;,...) (==,!=,~=,=~) (AND,&amp;amp;&amp;amp;) (OR,||)
+Operator precedence of infix functions: ("(",")") (*/) (+-) (>,...) (==,!=,~=,=~) (AND,&&) (OR,||)
 
-Using AND/OR/&amp;amp;&amp;amp;/|| the second Argument is evaluated lazily.
+Using AND/OR/&&/|| the second Argument is evaluated lazily.
 
 Userdefined functions can be integrated via workflows: Define workflows in the package given by the xyna property xfmg.tmf.validation.constraint.function.package. Their simple name is then the name of the function that can be used in expressions. The workflow has to have a single base.Text output and either 1-4 base.Text inputs or a base.Text list as input. The workflow has to be reachable via runtime context dependencies from the root order context of the order evaluating the expression.
-</Documentation>
+]]></Documentation>
     </Meta>
   </Data>
 </DataType>
