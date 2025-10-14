@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  * Copyright 2025 Xyna GmbH, Germany
@@ -15,16 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<project name="build" default="build-all" basedir=".">
-    
-    <property name="target.dir" value="${basedir}/deploy/" />
-    <import file="../../buildModule.xml" />
-    
-    <target name="build-all">
-        <buildModule target="build" dir="datamodels"          target.dir="${target.dir}/datamodels" />
-        <buildModule target="build" dir="TMFMappingTools"     target.dir="${target.dir}/TMFMappingTools" />
-        <buildModule target="build" dir="TMFValidationTools"  target.dir="${target.dir}/TMFValidationTools" />
-     </target>
-    
-</project>
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Service Identification Config" TypeName="ServiceIdentificationConfig" TypePath="xfmg.tmf640" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Data Label="Base Type of Services" VariableName="baseTypeOfServices">
+    <Meta>
+      <Type>String</Type>
+      <Documentation>Xyna Datatype of target service will be assumed to be a type extended of this base type. Fully qualified name of Xyna Datatype.</Documentation>
+    </Meta>
+  </Data>
+</DataType>
