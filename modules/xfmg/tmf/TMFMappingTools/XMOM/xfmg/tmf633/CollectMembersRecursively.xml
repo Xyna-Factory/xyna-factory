@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Collect Members recursively" TypeName="CollectMembersRecursively" TypePath="xfmg.tmf633" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Collect Members recursively" Name="CollectMembersRecursively">
+    <Input>
+      <Data ID="39" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector39"/>
+    </Input>
+    <Output>
+      <Data ID="776" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember776"/>
+    </Output>
+    <ServiceReference ID="1500" Label="Extract Annotations Of Member" ReferenceName="ExtractAnnotationsOfMember" ReferencePath="xfmg.tmf.inspect">
+      <Source RefID="1499"/>
+      <Target RefID="1499"/>
+    </ServiceReference>
+    <ServiceReference ID="998" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="997"/>
+      <Target RefID="997"/>
+    </ServiceReference>
+    <ServiceReference ID="815" Label="Collect Members recursively" ReferenceName="CollectMembersRecursively" ReferencePath="xfmg.tmf633">
+      <Source RefID="814"/>
+      <Target RefID="814"/>
+    </ServiceReference>
+    <ServiceReference ID="20" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="19"/>
+      <Target RefID="19"/>
+    </ServiceReference>
+    <Function ID="19" Label="List All Variable Members With Params">
+      <Source RefID="20"/>
+      <Source RefID="39"/>
+      <Source RefID="68"/>
+      <Target RefID="20"/>
+      <Target RefID="22"/>
+      <Invoke Operation="listAllVariableMembersWithParams" ServiceID="20">
+        <Source RefID="39"/>
+        <Source RefID="68">
+          <Meta>
+            <LinkType>Constant</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="20">
+        <Target RefID="22"/>
+      </Receive>
+    </Function>
+    <Foreach ID="268">
+      <Source RefID="22"/>
+      <Target RefID="2003"/>
+      <InputList RefID="22">
+        <Data ID="269" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember269"/>
+      </InputList>
+      <OutputList RefID="2003">
+        <Data ID="2002" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember2002">
+          <Source RefID="215"/>
+        </Data>
+      </OutputList>
+      <Choice ID="215" TypeName="BaseChoiceTypeFormula" TypePath="server">
+        <Source RefID="269"/>
+        <Target RefID="2002"/>
+        <Meta>
+          <OuterConditionPart>%0%.type==?</OuterConditionPart>
+        </Meta>
+        <Input>
+          <Data ID="235" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember235">
+            <Source RefID="215"/>
+          </Data>
+          <Source RefID="269"/>
+        </Input>
+        <Case ID="302" Label="" Premise="%0%.type==&quot;java.lang.String&quot;">
+          <Mappings ID="1364" Label="Mapping">
+            <Input>
+              <Data ID="1397" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember1397">
+                <Source RefID="1364"/>
+              </Data>
+              <Source RefID="269">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Output>
+              <Data ID="1430" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember1430">
+                <Source RefID="1364"/>
+              </Data>
+              <Target RefID="1431"/>
+            </Output>
+            <Mapping>%1%["0"]=%0%</Mapping>
+          </Mappings>
+          <Assign ID="304">
+            <Source RefID="1431"/>
+            <Target RefID="2002"/>
+            <Copy>
+              <Source RefID="1431"/>
+              <Target RefID="2002"/>
+            </Copy>
+          </Assign>
+        </Case>
+        <Case Alias="302" ID="372" Label="" Premise="%0%.type==&quot;boolean&quot;"/>
+        <Case Alias="302" ID="441" Label="" Premise="%0%.type==&quot;java.lang.Boolean&quot;"/>
+        <Case Alias="302" ID="494" Label="" Premise="%0%.type==&quot;int&quot;"/>
+        <Case Alias="302" ID="547" Label="" Premise="%0%.type==&quot;java.lang.Integer&quot;"/>
+        <Case Alias="302" ID="600" Label="" Premise="%0%.type==&quot;long&quot;"/>
+        <Case Alias="302" ID="653" Label="" Premise="%0%.type==&quot;java.lang.Long&quot;"/>
+        <Case Alias="302" ID="706" Label="" Premise="%0%.type==&quot;double&quot;"/>
+        <Case Alias="302" ID="759" Label="" Premise="%0%.type==&quot;java.lang.Double&quot;"/>
+        <Case ID="216" IsDefault="true" Label="default">
+          <Function ID="1499" Label="Extract Annotations Of Member">
+            <Source RefID="1500"/>
+            <Source RefID="269"/>
+            <Target RefID="1500"/>
+            <Target RefID="1543"/>
+            <Invoke Operation="ExtractAnnotationsOfMember" ServiceID="1500">
+              <Source RefID="269">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Invoke>
+            <Receive ServiceID="1500">
+              <Target RefID="1543"/>
+            </Receive>
+          </Function>
+          <Choice ID="1624" TypeName="BaseChoiceTypeFormula" TypePath="server">
+            <Source RefID="1543"/>
+            <Target RefID="2001"/>
+            <Input>
+              <Data ID="1671" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable1671">
+                <Source RefID="1624"/>
+              </Data>
+              <Source RefID="1543"/>
+            </Input>
+            <Case ID="1625" Label="true" Premise="%0%.tMFType==&quot;ServiceRelationship&quot;">
+              <Mappings ID="1956" Label="Mapping">
+                <Input>
+                  <Data ID="1958" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember1958"/>
+                  <Source RefID="269">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                </Input>
+                <Output>
+                  <Data ID="1959" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember1959"/>
+                  <Target RefID="2000"/>
+                </Output>
+                <Mapping>%1%["0"]=%0%</Mapping>
+              </Mappings>
+              <Assign ID="1628">
+                <Source RefID="2000"/>
+                <Target RefID="2001"/>
+                <Copy>
+                  <Source RefID="2000"/>
+                  <Target RefID="2001"/>
+                </Copy>
+              </Assign>
+              <Data ID="2000" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember2000"/>
+            </Case>
+            <Case ID="1626" Label="false">
+              <Mappings ID="947" Label="Mapping">
+                <Input>
+                  <Data ID="1107" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember1107">
+                    <Source RefID="947"/>
+                  </Data>
+                  <Source RefID="269">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                </Input>
+                <Output>
+                  <Data ID="1073" Label="FqXmlName" ReferenceName="Text" ReferencePath="base" VariableName="text1073">
+                    <Source RefID="947"/>
+                  </Data>
+                  <Target RefID="1792"/>
+                </Output>
+                <Mapping>%1%.text=%0%.type</Mapping>
+              </Mappings>
+              <Function ID="997" Label="Inspect Datatype by Name">
+                <Source RefID="998"/>
+                <Source RefID="1792"/>
+                <Target RefID="998"/>
+                <Target RefID="1833"/>
+                <Invoke Operation="inspectDatatypeByName" ServiceID="998">
+                  <Source RefID="1792"/>
+                </Invoke>
+                <Receive ServiceID="998">
+                  <Target RefID="1833"/>
+                </Receive>
+              </Function>
+              <Function ID="814" Label="Collect Members recursively">
+                <Source RefID="815"/>
+                <Source RefID="1833"/>
+                <Target RefID="815"/>
+                <Target RefID="1874"/>
+                <Invoke Operation="CollectMembersRecursively" ServiceID="815">
+                  <Source RefID="1833">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                </Invoke>
+                <Receive ServiceID="815">
+                  <Target RefID="1874"/>
+                </Receive>
+              </Function>
+              <Assign ID="1630">
+                <Source RefID="1874"/>
+                <Target RefID="2001"/>
+                <Copy>
+                  <Source RefID="1874"/>
+                  <Target RefID="2001"/>
+                </Copy>
+              </Assign>
+              <Data ID="1792" Label="FqXmlName" ReferenceName="Text" ReferencePath="base" VariableName="text1792">
+                <Source RefID="947"/>
+              </Data>
+              <Data ID="1833" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector1833">
+                <Source RefID="997"/>
+              </Data>
+              <Data ID="1874" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember1874">
+                <Source RefID="814"/>
+              </Data>
+            </Case>
+          </Choice>
+          <Assign ID="218">
+            <Source RefID="2001"/>
+            <Target RefID="2002"/>
+            <Copy>
+              <Source RefID="2001"/>
+              <Target RefID="2002"/>
+            </Copy>
+          </Assign>
+          <Data ID="1543" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable1543">
+            <Source RefID="1499"/>
+          </Data>
+        </Case>
+      </Choice>
+      <Data ID="1431" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember1431">
+        <Source RefID="1364"/>
+      </Data>
+      <Data ID="2001" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember2001">
+        <Source RefID="1624"/>
+      </Data>
+    </Foreach>
+    <Data ID="22" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember22">
+      <Source RefID="19"/>
+    </Data>
+    <Data ID="68" Label="Inspection Parameter" ReferenceName="InspectionParameter" ReferencePath="xprc.xpce.datatype" VariableName="const_InspectionParameter68">
+      <Data VariableName="includeComplexMembers">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>true</Value>
+      </Data>
+    </Data>
+    <Data ID="2003" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember2003">
+      <Source RefID="268"/>
+      <Target RefID="2003"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="2003"/>
+      <Target RefID="776"/>
+      <Copy>
+        <Source RefID="2003">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="776"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
