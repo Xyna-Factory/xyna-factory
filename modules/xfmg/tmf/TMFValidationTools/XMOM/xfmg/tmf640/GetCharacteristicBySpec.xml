@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Get Characteristic by Spec" TypeName="GetCharacteristicBySpec" TypePath="xfmg.tmf640" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Get Characteristic by Spec" Name="GetCharacteristicBySpec">
+    <Input>
+      <Data ID="2" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic2"/>
+      <Data ID="7" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicSpecification7"/>
+    </Input>
+    <Output>
+      <Data ID="12" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic12"/>
+    </Output>
+    <Throws>
+      <Exception Label="DuplicateCharacteristicFound" ReferenceName="DuplicateCharacteristicFound" ReferencePath="xfmg.tmf640" VariableName="duplicateCharacteristicFound593"/>
+      <Exception Label="Service Characteristic not found" ReferenceName="ServiceCharacteristicNotFound" ReferencePath="xfmg.tmf640" VariableName="serviceCharacteristicNotFound594"/>
+    </Throws>
+    <ServiceReference ID="444" Label="Get Characteristic by Name" ReferenceName="GetCharacteristicByName" ReferencePath="xfmg.tmf640">
+      <Source RefID="443"/>
+      <Target RefID="443"/>
+    </ServiceReference>
+    <Mappings ID="172" Label="Mapping">
+      <Input>
+        <Data ID="211" Label="CharacteristicSpecification" ReferenceName="CharacteristicSpecification" ReferencePath="internalized.tmf633.datamodel" VariableName="characteristicSpecification211">
+          <Source RefID="172"/>
+        </Data>
+        <Source RefID="7"/>
+      </Input>
+      <Output>
+        <Data ID="173" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember173">
+          <Source RefID="172"/>
+        </Data>
+        <Target RefID="174"/>
+      </Output>
+      <Mapping>%1%.label=%0%.name</Mapping>
+    </Mappings>
+    <Function ID="443" Label="Get Characteristic by Name">
+      <Source RefID="444"/>
+      <Source RefID="174"/>
+      <Source RefID="2"/>
+      <Source RefID="7"/>
+      <Target RefID="444"/>
+      <Target RefID="446"/>
+      <Invoke Operation="GetCharacteristicByName" ServiceID="444">
+        <Source RefID="174"/>
+        <Source RefID="2"/>
+        <Source RefID="7"/>
+      </Invoke>
+      <Receive ServiceID="444">
+        <Target RefID="446"/>
+      </Receive>
+    </Function>
+    <Data ID="174" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember174">
+      <Source RefID="172"/>
+    </Data>
+    <Data ID="446" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="internalized.tmf640.datamodel" VariableName="characteristic446">
+      <Source RefID="443"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="446"/>
+      <Target RefID="12"/>
+      <Copy>
+        <Source RefID="446"/>
+        <Target RefID="12"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

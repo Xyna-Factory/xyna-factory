@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Set Value For Structure" TypeName="SetValueForStructure" TypePath="xfmg.tmf640" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Set Value For Structure" Name="SetValueForStructure">
+    <Input>
+      <Data ID="22" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember22"/>
+      <Data ID="48" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic48"/>
+      <Data ID="47869" IsList="true" Label="ExternalIdentifier" ReferenceName="ExternalIdentifier" ReferencePath="tmf640.datamodel" VariableName="externalIdentifier47869"/>
+      <Data ID="33457" Label="Service Identification Config" ReferenceName="ServiceIdentificationConfig" ReferencePath="xfmg.tmf640" VariableName="serviceIdentificationConfig33457"/>
+      <Data ID="41420" Label="Service" ReferenceName="Service" ReferencePath="tmf640.datamodel" VariableName="service41420"/>
+    </Input>
+    <Output/>
+    <Throws>
+      <Exception Label="MemberVariableNotFound" ReferenceName="MemberVariableNotFound" ReferencePath="xfmg.tmf.inspect" VariableName="memberVariableNotFound59406"/>
+      <Exception Label="" ReferenceName="UnsupportedTMFType" ReferencePath="xfmg.tmf.inspect" VariableName="unsupportedTMFType59407"/>
+      <Exception Label="Duplicate Characteristic found" ReferenceName="DuplicateCharacteristicFound" ReferencePath="xfmg.tmf640.mapping" VariableName="duplicateCharacteristicFound59408"/>
+      <Exception Label="Service Characteristic not found" ReferenceName="ServiceCharacteristicNotFound" ReferencePath="xfmg.tmf640.mapping" VariableName="serviceCharacteristicNotFound59409"/>
+    </Throws>
+    <ServiceReference ID="58992" Label="Set Value For Structure" ReferenceName="SetValueForStructure" ReferencePath="xfmg.tmf640">
+      <Source RefID="58991"/>
+      <Target RefID="58991"/>
+    </ServiceReference>
+    <ServiceReference ID="47487" Label="Set Value for External Identifier" ReferenceName="SetValueForExternalIdentifier" ReferencePath="xfmg.tmf640">
+      <Source RefID="47486"/>
+      <Target RefID="47486"/>
+    </ServiceReference>
+    <ServiceReference ID="46060" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="46059"/>
+      <Target RefID="46059"/>
+    </ServiceReference>
+    <ServiceReference ID="75" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="74"/>
+      <Target RefID="74"/>
+    </ServiceReference>
+    <ServiceReference ID="697" Label="Set Value For Characteristic" ReferenceName="SetValueForCharacteristic" ReferencePath="xfmg.tmf640">
+      <Source RefID="696"/>
+      <Target RefID="696"/>
+    </ServiceReference>
+    <ServiceReference ID="32940" Label="Set Value For Service Relationship" ReferenceName="SetValueForServiceRelationship" ReferencePath="xfmg.tmf640">
+      <Source RefID="32939"/>
+      <Target RefID="32939"/>
+    </ServiceReference>
+    <ServiceReference ID="394" Label="Extract Annotations Of Member" ReferenceName="ExtractAnnotationsOfMember" ReferencePath="xfmg.tmf.inspect">
+      <Source RefID="393"/>
+      <Target RefID="393"/>
+    </ServiceReference>
+    <ServiceReference ID="40358" Label="Set Value for Service Property" ReferenceName="SetValueForServiceProperty" ReferencePath="xfmg.tmf640">
+      <Source RefID="40357"/>
+      <Target RefID="40357"/>
+    </ServiceReference>
+    <ServiceReference ID="212" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="211"/>
+      <Target RefID="211"/>
+    </ServiceReference>
+    <ServiceReference ID="46428" Label="Named Variable Member" ReferenceName="NamedVariableMember.NamedVariableMember" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="46427"/>
+      <Target RefID="46427"/>
+    </ServiceReference>
+    <Choice ID="36039" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="22"/>
+      <Meta>
+        <OuterConditionPart>%0%.type==?</OuterConditionPart>
+      </Meta>
+      <Input>
+        <Data ID="36043" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember36043"/>
+        <Source RefID="22"/>
+      </Input>
+      <Case ID="36045" Label="" Premise="%0%.type==&quot;java.lang.String&quot;">
+        <Mappings ID="39399" Label="ntbd"/>
+        <Assign/>
+      </Case>
+      <Case Alias="36045" ID="36048" Label="" Premise="%0%.type==&quot;boolean&quot;"/>
+      <Case Alias="36045" ID="36050" Label="" Premise="%0%.type==&quot;java.lang.Boolean&quot;"/>
+      <Case Alias="36045" ID="36052" Label="" Premise="%0%.type==&quot;int&quot;"/>
+      <Case Alias="36045" ID="36054" Label="" Premise="%0%.type==&quot;java.lang.Integer&quot;"/>
+      <Case Alias="36045" ID="36056" Label="" Premise="%0%.type==&quot;long&quot;"/>
+      <Case Alias="36045" ID="36058" Label="" Premise="%0%.type==&quot;java.lang.Long&quot;"/>
+      <Case Alias="36045" ID="36060" Label="" Premise="%0%.type==&quot;double&quot;"/>
+      <Case Alias="36045" ID="36062" Label="" Premise="%0%.type==&quot;java.lang.Double&quot;"/>
+      <Case ID="36040" IsDefault="true" Label="default">
+        <Mappings ID="94" Label="Mapping">
+          <Input>
+            <Data ID="111" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember111">
+              <Source RefID="94"/>
+            </Data>
+            <Source RefID="22"/>
+          </Input>
+          <Output>
+            <Data ID="128" Label="FqXmlName" ReferenceName="Text" ReferencePath="base" VariableName="text128">
+              <Source RefID="94"/>
+            </Data>
+            <Target RefID="37824"/>
+          </Output>
+          <Mapping>%1%.text=%0%.type</Mapping>
+        </Mappings>
+        <Function ID="74" Label="Inspect Datatype by Name">
+          <Source RefID="75"/>
+          <Source RefID="37824"/>
+          <Target RefID="75"/>
+          <Target RefID="38163"/>
+          <Invoke Operation="inspectDatatypeByName" ServiceID="75">
+            <Source RefID="37824"/>
+          </Invoke>
+          <Receive ServiceID="75">
+            <Target RefID="38163"/>
+          </Receive>
+        </Function>
+        <Function ID="211" Label="List All Variable Members With Params">
+          <Source RefID="212"/>
+          <Source RefID="38163"/>
+          <Source RefID="239"/>
+          <Target RefID="212"/>
+          <Target RefID="38502"/>
+          <Invoke Operation="listAllVariableMembersWithParams" ServiceID="212">
+            <Source RefID="38163"/>
+            <Source RefID="239">
+              <Meta>
+                <LinkType>Constant</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="212">
+            <Target RefID="38502"/>
+          </Receive>
+        </Function>
+        <Foreach ID="39119">
+          <Source RefID="38502"/>
+          <InputList RefID="38502">
+            <Data ID="39120" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember39120"/>
+          </InputList>
+          <Choice ID="264" TypeName="BaseChoiceTypeFormula" TypePath="server">
+            <Source RefID="39120"/>
+            <Input>
+              <Data ID="295" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember295">
+                <Source RefID="264"/>
+              </Data>
+              <Source RefID="39120">
+                <Meta>
+                  <LinkType>UserConnected</LinkType>
+                </Meta>
+              </Source>
+            </Input>
+            <Case ID="265" Label="true" Premise="%0%!=null">
+              <Function ID="393" Label="Extract Annotations Of Member">
+                <Source RefID="394"/>
+                <Source RefID="39120"/>
+                <Target RefID="394"/>
+                <Target RefID="396"/>
+                <Invoke Operation="ExtractAnnotationsOfMember" ServiceID="394">
+                  <Source RefID="39120">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                </Invoke>
+                <Receive ServiceID="394">
+                  <Target RefID="396"/>
+                </Receive>
+              </Function>
+              <Choice ID="429" TypeName="BaseChoiceTypeFormula" TypePath="server">
+                <Source RefID="396"/>
+                <Meta>
+                  <OuterConditionPart>%0%.tMFType==?</OuterConditionPart>
+                </Meta>
+                <Input>
+                  <Data ID="465" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable465">
+                    <Source RefID="429"/>
+                  </Data>
+                  <Source RefID="396">
+                    <Meta>
+                      <LinkType>UserConnected</LinkType>
+                    </Meta>
+                  </Source>
+                </Input>
+                <Case ID="562" Label="" Premise="%0%.tMFType==&quot;Characteristic&quot;">
+                  <Function ID="696" Label="Set Value For Characteristic">
+                    <Source RefID="697"/>
+                    <Source RefID="39120"/>
+                    <Source RefID="396"/>
+                    <Source RefID="48"/>
+                    <Target RefID="697"/>
+                    <Invoke Operation="SetValueForCharacteristic" ServiceID="697">
+                      <Source RefID="39120">
+                        <Meta>
+                          <LinkType>UserConnected</LinkType>
+                        </Meta>
+                      </Source>
+                      <Source RefID="396">
+                        <Meta>
+                          <LinkType>UserConnected</LinkType>
+                        </Meta>
+                      </Source>
+                      <Source RefID="48"/>
+                    </Invoke>
+                    <Receive ServiceID="697"/>
+                  </Function>
+                  <Assign ID="564"/>
+                </Case>
+                <Case ID="629" Label="" Premise="%0%.tMFType==null">
+                  <Function ID="58991" Label="Set Value For Structure">
+                    <Source RefID="58992"/>
+                    <Source RefID="39120"/>
+                    <Source RefID="48"/>
+                    <Source RefID="47869"/>
+                    <Source RefID="33457"/>
+                    <Source RefID="41420"/>
+                    <Target RefID="58992"/>
+                    <Invoke Operation="SetValueForStructure" ServiceID="58992">
+                      <Source RefID="39120">
+                        <Meta>
+                          <LinkType>UserConnected</LinkType>
+                        </Meta>
+                      </Source>
+                      <Source RefID="48"/>
+                      <Source RefID="47869"/>
+                      <Source RefID="33457"/>
+                      <Source RefID="41420"/>
+                    </Invoke>
+                    <Receive ServiceID="58992"/>
+                  </Function>
+                  <Assign ID="631"/>
+                </Case>
+                <Case ID="32748" Label="" Premise="%0%.tMFType==&quot;ServiceRelationship&quot;">
+                  <Function ID="32939" Label="Set Value For Service Relationship">
+                    <Source RefID="32940"/>
+                    <Source RefID="39120"/>
+                    <Source RefID="396"/>
+                    <Source RefID="41420"/>
+                    <Source RefID="33457"/>
+                    <Target RefID="32940"/>
+                    <Invoke Operation="SetValueForServiceRelationship" ServiceID="32940">
+                      <Source RefID="39120">
+                        <Meta>
+                          <LinkType>UserConnected</LinkType>
+                        </Meta>
+                      </Source>
+                      <Source RefID="396"/>
+                      <Source RefID="41420"/>
+                      <Source RefID="33457"/>
+                    </Invoke>
+                    <Receive ServiceID="32940"/>
+                  </Function>
+                  <Assign ID="32750"/>
+                </Case>
+                <Case ID="39678" Label="" Premise="%0%.tMFType==&quot;ServiceProperty&quot;">
+                  <Function ID="40357" Label="Set Value for Service Property">
+                    <Source RefID="40358"/>
+                    <Source RefID="39120"/>
+                    <Source RefID="396"/>
+                    <Source RefID="41420"/>
+                    <Target RefID="40358"/>
+                    <Invoke Operation="SetValueForServiceProperty" ServiceID="40358">
+                      <Source RefID="39120">
+                        <Meta>
+                          <LinkType>UserConnected</LinkType>
+                        </Meta>
+                      </Source>
+                      <Source RefID="396"/>
+                      <Source RefID="41420"/>
+                    </Invoke>
+                    <Receive ServiceID="40358"/>
+                  </Function>
+                  <Assign ID="39680"/>
+                </Case>
+                <Case ID="46739" Label="" Premise="%0%.tMFType==&quot;ExternalIdentifier&quot;">
+                  <Function ID="47486" Label="Set Value for External Identifier">
+                    <Source RefID="47487"/>
+                    <Source RefID="39120"/>
+                    <Source RefID="396"/>
+                    <Source RefID="47869"/>
+                    <Target RefID="47487"/>
+                    <Invoke Operation="SetValueForExternalIdentifier" ServiceID="47487">
+                      <Source RefID="39120">
+                        <Meta>
+                          <LinkType>UserConnected</LinkType>
+                        </Meta>
+                      </Source>
+                      <Source RefID="396"/>
+                      <Source RefID="47869"/>
+                    </Invoke>
+                    <Receive ServiceID="47487"/>
+                  </Function>
+                  <Assign ID="46741"/>
+                </Case>
+                <Case ID="430" IsDefault="true" Label="default">
+                  <Mappings ID="32372" Label="Mapping">
+                    <Input>
+                      <Data ID="32374" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable32374"/>
+                      <Source RefID="396"/>
+                    </Input>
+                    <Output>
+                      <Exception ID="32375" Label="UnsupportedTMFType" ReferenceName="UnsupportedTMFType" ReferencePath="xfmg.tmf.inspect" VariableName="unsupportedTMFType32375"/>
+                      <Target RefID="52720"/>
+                    </Output>
+                    <Mapping>%1%.tmfTypeName=%0%.tMFType</Mapping>
+                  </Mappings>
+                  <Throw ExceptionID="52720" ID="32085" Label="Throw Unsupported TMF Type">
+                    <Meta>
+                      <PreferedExceptionType>xfmg.tmf.inspect.UnsupportedTMFType</PreferedExceptionType>
+                    </Meta>
+                    <Source RefID="52720"/>
+                  </Throw>
+                  <Assign ID="432"/>
+                  <Exception ID="52720" Label="UnsupportedTMFType" ReferenceName="UnsupportedTMFType" ReferencePath="xfmg.tmf.inspect" VariableName="unsupportedTMFType52720">
+                    <Target RefID="32085"/>
+                  </Exception>
+                </Case>
+              </Choice>
+              <Assign ID="268"/>
+              <Data ID="396" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable396">
+                <Source RefID="393"/>
+              </Data>
+            </Case>
+            <Case ID="266" Label="false">
+              <Assign ID="270"/>
+            </Case>
+          </Choice>
+        </Foreach>
+        <Function ID="46059" Label="Get Datatype Instance">
+          <Source RefID="46060"/>
+          <Source RefID="38163"/>
+          <Target RefID="46060"/>
+          <Target RefID="46062"/>
+          <Invoke Operation="getDatatypeInstance" ServiceID="46060">
+            <Source RefID="38163"/>
+          </Invoke>
+          <Receive ServiceID="46060">
+            <Target RefID="46062"/>
+          </Receive>
+        </Function>
+        <Function ID="46427" Label="Set Member Object">
+          <Source RefID="46428"/>
+          <Source RefID="22"/>
+          <Source RefID="46062"/>
+          <Target RefID="46428"/>
+          <Invoke Operation="setMemberObject" ServiceID="46428">
+            <Source RefID="22">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+            <Source RefID="46062">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Invoke>
+          <Receive ServiceID="46428"/>
+        </Function>
+        <Assign/>
+        <Data ID="37824" Label="FqXmlName" ReferenceName="Text" ReferencePath="base" VariableName="text37824">
+          <Source RefID="94"/>
+        </Data>
+        <Data ID="38163" Label="Datatype Inspector" ReferenceName="DatatypeInspector" ReferencePath="xprc.xpce.datatype" VariableName="datatypeInspector38163">
+          <Source RefID="74"/>
+        </Data>
+        <Data ID="38502" IsList="true" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember38502">
+          <Source RefID="211"/>
+        </Data>
+        <Data ID="46062" Label="Any Type" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType46062">
+          <Meta/>
+          <Source RefID="46059"/>
+        </Data>
+      </Case>
+    </Choice>
+    <Data ID="239" Label="Inspection Parameter" ReferenceName="InspectionParameter" ReferencePath="xprc.xpce.datatype" VariableName="const_InspectionParameter239">
+      <Data VariableName="includeComplexMembers">
+        <Meta>
+          <Type>boolean</Type>
+        </Meta>
+        <Value>true</Value>
+      </Data>
+    </Data>
+    <Assign ID="1"/>
+  </Operation>
+</Service>
