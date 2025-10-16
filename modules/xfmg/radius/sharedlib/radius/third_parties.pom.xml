@@ -35,43 +35,8 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>net.jradius</groupId>
-            <artifactId>jradius-core</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-configuration</groupId>
-                    <artifactId>commons-configuration</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-                <exclusion>
-				    <groupId>net.sf.ehcache</groupId>
-				    <artifactId>ehcache-core</artifactId>
-                </exclusion>
-                <exclusion>
-				    <groupId>org.slf4j</groupId>
-				    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-                <exclusion>
-				    <groupId>org.springframework</groupId>
-				    <artifactId>spring-context</artifactId>
-                </exclusion>
-                <exclusion>
-				    <groupId>commons-chain</groupId>
-				    <artifactId>commons-chain</artifactId>
-                </exclusion>
-
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>net.jradius</groupId>
-            <artifactId>jradius-dictionary</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.jradius</groupId>
-            <artifactId>jradius-extended</artifactId>
+            <groupId>commons-pool</groupId>
+            <artifactId>commons-pool</artifactId>
         </dependency>
     </dependencies>
 </project>

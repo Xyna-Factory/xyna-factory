@@ -114,5 +114,17 @@
       <FqName>base.list.pair.Pair</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>base.list.HashMap</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+      <XMOMEntry implicitDependency="true">
+      <FqName>base.list.MapEntry</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+      <XMOMEntry implicitDependency="false">
+      <FqName>base.list.ArrayWrapper</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
   </XMOMEntries>
 </Application>

@@ -36,6 +36,8 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.RevisionOrderControl;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RuntimeContext;
+import com.gip.xyna.xfmg.xopctrl.usermanagement.Role;
+import com.gip.xyna.xfmg.xopctrl.usermanagement.UserManagement;
 import com.gip.xyna.xmcp.xfcli.XynaCommandImplementation;
 import com.gip.xyna.xmcp.xfcli.generated.Startorder;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
@@ -71,9 +73,15 @@ public class StartorderImpl extends XynaCommandImplementation<Startorder> {
     String orderType = parameter.getOrderType();
 
     XynaOrderCreationParameter xocp = new XynaOrderCreationParameter(orderType);
-    RevisionManagement revisionManagement = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
     RuntimeContext runtimeContext = RevisionManagement.getRuntimeContext(parameter.getApplicationName(), parameter.getVersionName(), parameter.getWorkspaceName());
     xocp.getDestinationKey().setRuntimeContext(runtimeContext);
+
+    String roleName = parameter.getRole();
+    if (roleName != null) {
+      UserManagement um = XynaFactory.getInstance().getFactoryManagement().getXynaOperatorControl().getUserManagement();
+      Role role = um.getRole(roleName);
+      xocp.setTransientCreationRole(role);
+    }
 
     try {
       handleTimeout(xocp, parameter);
