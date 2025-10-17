@@ -124,7 +124,8 @@ public class OrderContextConfiguration extends FunctionGroup {
           cache.add(new DestinationKey(storable.getOrderType(), runtimeContext));
         }
         try {
-          queryByOrdertype = con.prepareQuery(new Query<OrderContextConfigStorable>(QUERY_BY_ORDERTYPE, OrderContextConfigStorable.reader));
+          queryByOrdertype = con.prepareQuery(new Query<OrderContextConfigStorable>(QUERY_BY_ORDERTYPE, OrderContextConfigStorable.reader,
+              OrderContextConfigStorable.TABLE_NAME));
         } catch (XNWH_UnsupportedPersistenceLayerFeatureException e) {
           queryByOrdertype = null;
         }

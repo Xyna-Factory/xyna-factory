@@ -271,7 +271,8 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
     ODSConnection con = ods.openConnection();
     try {
       PreparedQuery<? extends XMOMVersionStorable> query = queryCache
-                      .getQueryFromCache(sqlQueryXMOMVersionForRevision, con, XMOMVersionStorable.getStaticReader());
+                      .getQueryFromCache(sqlQueryXMOMVersionForRevision, con, XMOMVersionStorable.getStaticReader(),
+                                         XMOMVersionStorable.TABLE_NAME);
       XMOMVersionStorable xmomversion = con.queryOneRow(query, new Parameter(revision, getOwnBinding()));
       
       if (xmomversion == null) {
@@ -312,7 +313,7 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
         }
       }
       PreparedQuery<? extends XMOMVersionStorable> query = queryCache
-                      .getQueryFromCache(sqlQueryXMOMVersionForOwnBinding, con, XMOMVersionStorable.getStaticReader());
+                      .getQueryFromCache(sqlQueryXMOMVersionForOwnBinding, con, XMOMVersionStorable.getStaticReader(), XMOMVersionStorable.TABLE_NAME);
       List<? extends XMOMVersionStorable> xmomversions = con.query(query, new Parameter(getOwnBinding()), -1);
       
       for(XMOMVersionStorable xmomversion : xmomversions) {
@@ -523,7 +524,7 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
     boolean success = false;
     try {
       PreparedQuery<? extends XMOMVersionStorable> query = queryCache
-                        .getQueryFromCache(sqlQueryXMOMVersionForApplicationAndVersionForAllBindings, con, XMOMVersionStorable.getStaticReader());
+                        .getQueryFromCache(sqlQueryXMOMVersionForApplicationAndVersionForAllBindings, con, XMOMVersionStorable.getStaticReader(), XMOMVersionStorable.TABLE_NAME);
       List<? extends XMOMVersionStorable> xmomversions = con.query(query, new Parameter(applicationName, newVersion), -1);
       
       for(XMOMVersionStorable xmomversion : xmomversions) {
@@ -600,7 +601,7 @@ public class RevisionManagement extends FunctionGroup implements ClusterStateCha
     boolean success = false;
     try {
       PreparedQuery<? extends XMOMVersionStorable> query = queryCache
-                      .getQueryFromCache(sqlQueryXMOMVersionForWorkspaceForAllBindings, con, XMOMVersionStorable.getStaticReader());
+                      .getQueryFromCache(sqlQueryXMOMVersionForWorkspaceForAllBindings, con, XMOMVersionStorable.getStaticReader(), XMOMVersionStorable.TABLE_NAME);
       List<? extends XMOMVersionStorable> xmomversions = con.query(query, new Parameter(workspace.getName()), -1);
       
       for(XMOMVersionStorable xmomversion : xmomversions) {

@@ -254,7 +254,7 @@ public class LocalRemote implements RemoteInterface {
     ODSConnection con = ods.openConnection(connectionType);
     try {
       PreparedQuery<? extends OrderCount> queryCount =
-          OrderArchive.cache.getQueryFromCache(selectCountString, con, OrderCount.getCountReader());
+          OrderArchive.cache.getQueryFromCache(selectCountString, con, OrderCount.getCountReader(), select.getTableName());
       OrderCount count = con.queryOneRow(queryCount, paras);
       return count.getCount();
     } finally {

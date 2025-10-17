@@ -54,9 +54,10 @@ public class OrderWithMissingCapacity extends AbandonedOrderDetectionRule<OrderW
       ODSConnection con = ODSImpl.getInstance().openConnection();
       try {
         OrderArchive oa = XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getOrderArchive();
+        String tableName = oa.getAuditAccess().getQueryBackingClass(con).getTableName();
         readOrderarchivesWithRootOrderId =
-            con.prepareQuery(new Query<OrderInstance>("select * from " + oa.getAuditAccess().getQueryBackingClass(con).getTableName()
-                + " where " + OrderInstance.COL_ROOT_ID + "=?", new OrderInstance().getReader()), true);
+            con.prepareQuery(new Query<OrderInstance>("select * from " + tableName
+                + " where " + OrderInstance.COL_ROOT_ID + "=?", new OrderInstance().getReader(), tableName), true);
       } catch (PersistenceLayerException e) {
         throw new RuntimeException("Failed to prepare query. ", e);
       } finally {
@@ -87,11 +88,13 @@ public class OrderWithMissingCapacity extends AbandonedOrderDetectionRule<OrderW
       OrderArchive oa = XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getOrderArchive();
       PreparedQuery<OrderCount> querySelectOrderinstanceCount = 
             con.prepareQuery(new Query<OrderCount>("select count(*) from " + oa.getAuditAccess().getQueryBackingClass(con).getTableName() + " where " +
-                            OrderInstance.COL_ORDERTYPE + "=?", OrderCount.getCountReader()));
+                            OrderInstance.COL_ORDERTYPE + "=?", OrderCount.getCountReader(), 
+                            oa.getAuditAccess().getQueryBackingClass(con).getTableName()));
       
       PreparedQuery<OrderInstance> querySelectOrderinstances = 
         con.prepareQuery(new Query<OrderInstance>("select * from " + oa.getAuditAccess().getQueryBackingClass(con).getTableName() + " where " +
-                        OrderInstance.COL_ORDERTYPE + "=?", new OrderInstance().getReaderWithoutExceptions()));
+                        OrderInstance.COL_ORDERTYPE + "=?", new OrderInstance().getReaderWithoutExceptions(), 
+                        oa.getAuditAccess().getQueryBackingClass(con).getTableName()));
       
       Collection<CapacityStorable> allCapacities = con.loadCollection(CapacityStorable.class);
       HashMap<String, CapacityStorables> hashedCapacities = new HashMap<String, CapacityStorables>();

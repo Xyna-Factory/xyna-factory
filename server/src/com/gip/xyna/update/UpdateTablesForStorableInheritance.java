@@ -270,7 +270,7 @@ public class UpdateTablesForStorableInheritance extends UpdateJustVersion {
           // read
           ODSConnection con = ods.openConnection(aConTyp);
           try {
-            FactoryWarehouseCursor<? extends Storable<?>> cursor = con.getCursor("SELECT * FROM " + instance.getTableName(), new Parameter(), instance.getReader(), 10);
+            FactoryWarehouseCursor<? extends Storable<?>> cursor = con.getCursor("SELECT * FROM " + instance.getTableName(), instance.getTableName(), new Parameter(), instance.getReader(), 10);
             List<? extends Storable<?>> someInstances = cursor.getRemainingCacheOrNextIfEmpty();
             while (someInstances.size() > 0) {
               for (Storable<?> aInstance : someInstances) {

@@ -505,7 +505,8 @@ public class MigrateRuntimeContext {
     try {
       ODSConnection con = context.getConnection();
       FactoryWarehouseCursor<ManualInteractionEntry> cursor = con
-                      .getCursor("select * from " + ManualInteractionEntry.TABLE_NAME, new Parameter(),
+                      .getCursor("select * from " + ManualInteractionEntry.TABLE_NAME, 
+                                 ManualInteractionEntry.TABLE_NAME, new Parameter(),
                                  ManualInteractionEntry.reader, 20);
 
       List<? extends ManualInteractionEntry> next = cursor.getRemainingCacheOrNextIfEmpty();
@@ -739,7 +740,7 @@ public class MigrateRuntimeContext {
     ResultSetReader<MigrationSerialVersionIgnoringOrderInstanceBackup> reader = MigrationSerialVersionIgnoringOrderInstanceBackup
                     .getSerialVersionIgnoringReader(fromRevision, toRevision, rootRevision);
     PreparedQuery<MigrationSerialVersionIgnoringOrderInstanceBackup> oibQuery = queryCache
-                    .getQueryFromCache(selectOrderInstanceBackup, con, reader);
+                    .getQueryFromCache(selectOrderInstanceBackup, con, reader, OrderInstanceBackup.TABLE_NAME);
     List<MigrationSerialVersionIgnoringOrderInstanceBackup> oibs = con.query(oibQuery, new Parameter(orderId), 1,
                                                                              reader);
     if (oibs.size() <= 0) {
@@ -884,7 +885,7 @@ public class MigrateRuntimeContext {
                                                                                           rs.getLong(OrderInstanceBackup.COL_ROOT_ID),
                                                                                           rs.getLong(OrderInstanceBackup.COL_REVISION));
                                                                                    }
-                                                                                 });
+                                                                                 }, OrderInstanceBackup.TABLE_NAME);
     Collection<Triple<Long, Long, Long>> result = con.query(query, new Parameter(binding), -1);
     List<Pair<Long, Long>> rootOrderIds = new ArrayList<Pair<Long, Long>>();
     for (Triple<Long, Long, Long> triple : result) {
@@ -905,7 +906,7 @@ public class MigrateRuntimeContext {
                                                                public Long read(ResultSet rs) throws SQLException {
                                                                  return rs.getLong(OrderInstanceBackup.COL_ID);
                                                                }
-                                                             });
+                                                             }, OrderInstanceBackup.TABLE_NAME);
     return con.query(query, new Parameter(binding, rootOrderId, rootOrderId), -1);
   }
 

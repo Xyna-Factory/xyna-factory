@@ -973,7 +973,8 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
         }
 
         PreparedQuery<? extends ApplicationEntryStorable> query =
-            queryCache.getQueryFromCache(sqlGetRuntimeApplicationEntries, con, ApplicationEntryStorable.getStaticReader());
+            queryCache.getQueryFromCache(sqlGetRuntimeApplicationEntries, con, ApplicationEntryStorable.getStaticReader(), 
+                                         ApplicationEntryStorable.TABLE_NAME);
 
         XynaProcess.instanceMethodTypes.remove(revision);
 
@@ -1400,7 +1401,7 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
                                                                                                                          versionName,
                                                                                                                          parentRevision);
       PreparedQuery<? extends ApplicationEntryStorable> query =
-          queryCache.getQueryFromCache(sql, con, ApplicationEntryStorable.getStaticReader());
+          queryCache.getQueryFromCache(sql, con, ApplicationEntryStorable.getStaticReader(), ApplicationEntryStorable.TABLE_NAME);
       List<? extends ApplicationEntryStorable> appEntries = con.query(query, paras, -1);
 
       con.deleteOneRow(applicationStorable);
@@ -1848,7 +1849,8 @@ public class ApplicationManagementImpl extends FunctionGroup implements Applicat
       throws PersistenceLayerException {
     Map<String, Set<String>> triggerFilterInstances = new HashMap<String, Set<String>>();
     PreparedQuery<? extends ApplicationEntryStorable> query =
-        queryCache.getQueryFromCache(sqlGetRuntimeApplicationEntries, con, ApplicationEntryStorable.getStaticReader());
+        queryCache.getQueryFromCache(sqlGetRuntimeApplicationEntries, con, ApplicationEntryStorable.getStaticReader(),
+                                     ApplicationEntryStorable.TABLE_NAME);
     List<? extends ApplicationEntryStorable> appEntries =
         con.query(query, new Parameter(application.getName(), application.getVersionName()), -1);
 
@@ -8354,9 +8356,9 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
 
       if (withObjectCounts) {
         PreparedQuery<? extends OrderCount> queryDefinition =
-            queryCache.getQueryFromCache(sqlcountApplicationDefinitionEntries, con, OrderCount.getCountReader());
+            queryCache.getQueryFromCache(sqlcountApplicationDefinitionEntries, con, OrderCount.getCountReader(), ApplicationEntryStorable.TABLE_NAME);
         PreparedQuery<? extends OrderCount> queryRuntimeApplication =
-            queryCache.getQueryFromCache(sqlcountRuntimeApplicationEntries, con, OrderCount.getCountReader());
+            queryCache.getQueryFromCache(sqlcountRuntimeApplicationEntries, con, OrderCount.getCountReader(), ApplicationEntryStorable.TABLE_NAME);
 
         for (ApplicationStorable app : allApplications) {
           ApplicationInformation appInfo = getApplicationInformation(app, includeProblems);
@@ -8746,7 +8748,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
                                                                            ApplicationEntryType type, ODSConnection con)
       throws PersistenceLayerException {
     PreparedQuery<? extends ApplicationEntryStorable> query =
-        queryCache.getQueryFromCache(sqlGetApplicationDefinitionEntry, con, ApplicationEntryStorable.getStaticReader());
+        queryCache.getQueryFromCache(sqlGetApplicationDefinitionEntry, con, ApplicationEntryStorable.getStaticReader(), ApplicationEntryStorable.TABLE_NAME);
 
     return con.queryOneRow(query, new Parameter(application, name, type.toString(), parentRevision));
   }
@@ -8755,7 +8757,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
   protected ApplicationStorable queryRuntimeApplicationStorable(String application, String version, ODSConnection con)
       throws PersistenceLayerException {
     PreparedQuery<? extends ApplicationStorable> query =
-        queryCache.getQueryFromCache(sqlGetRuntimeApplication, con, ApplicationStorable.getStaticReader());
+        queryCache.getQueryFromCache(sqlGetRuntimeApplication, con, ApplicationStorable.getStaticReader(), ApplicationStorable.TABLE_NAME);
 
     return con.queryOneRow(query, new Parameter(application, version));
   }
@@ -8765,7 +8767,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
                                                                                   ODSConnection con)
       throws PersistenceLayerException {
     PreparedQuery<? extends ApplicationStorable> query =
-        queryCache.getQueryFromCache(sqlGetRuntimeApplicationsByName, con, ApplicationStorable.getStaticReader());
+        queryCache.getQueryFromCache(sqlGetRuntimeApplicationsByName, con, ApplicationStorable.getStaticReader(), ApplicationStorable.TABLE_NAME);
 
     return con.query(query, new Parameter(application), -1);
   }
@@ -8774,7 +8776,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
   private ApplicationStorable queryApplicationDefinitionStorable(String application, Long parentRevision, ODSConnection con)
       throws PersistenceLayerException {
     PreparedQuery<? extends ApplicationStorable> query =
-        queryCache.getQueryFromCache(sqlGetApplicationDefinition, con, ApplicationStorable.getStaticReader());
+        queryCache.getQueryFromCache(sqlGetApplicationDefinition, con, ApplicationStorable.getStaticReader(), ApplicationStorable.TABLE_NAME);
 
     return con.queryOneRow(query, new Parameter(application, parentRevision));
   }
@@ -8783,7 +8785,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
   private List<ApplicationEntryStorable> queryAllRuntimeApplicationStorables(String application, String version, ODSConnection con)
       throws PersistenceLayerException {
     PreparedQuery<ApplicationEntryStorable> query =
-        queryCache.getQueryFromCache(sqlGetRuntimeApplicationEntries, con, ApplicationEntryStorable.getStaticReader());
+        queryCache.getQueryFromCache(sqlGetRuntimeApplicationEntries, con, ApplicationEntryStorable.getStaticReader(), ApplicationEntryStorable.TABLE_NAME);
     return con.query(query, new Parameter(application, version), -1);
   }
 
@@ -8792,7 +8794,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
                                                                                           ODSConnection con)
       throws PersistenceLayerException {
     PreparedQuery<? extends ApplicationEntryStorable> query =
-        queryCache.getQueryFromCache(sqlGetApplicationDefinitionEntries, con, ApplicationEntryStorable.getStaticReader());
+        queryCache.getQueryFromCache(sqlGetApplicationDefinitionEntries, con, ApplicationEntryStorable.getStaticReader(), ApplicationEntryStorable.TABLE_NAME);
     return con.query(query, new Parameter(application, parentRevision), -1);
   }
 
@@ -8800,7 +8802,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
                                                                                           ODSConnection con)
       throws PersistenceLayerException {
     PreparedQuery<? extends ApplicationEntryStorable> query =
-        queryCache.getQueryFromCache(sqlGetRuntimeApplicationEntry, con, ApplicationEntryStorable.getStaticReader());
+        queryCache.getQueryFromCache(sqlGetRuntimeApplicationEntry, con, ApplicationEntryStorable.getStaticReader(), ApplicationEntryStorable.TABLE_NAME);
     return con.queryOneRow(query, new Parameter(applicationName, versionName, objectName, type.toString()));
   }
 
@@ -9943,7 +9945,7 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
                     .getString(ApplicationEntryStorable.COL_VERSION));
               }
 
-            }));
+            }, ApplicationEntryStorable.TABLE_NAME));
         queryApplicationContainingObject = pq;
       }
       List<ApplicationName> applications =

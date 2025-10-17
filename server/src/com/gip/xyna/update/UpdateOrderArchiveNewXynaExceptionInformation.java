@@ -179,7 +179,7 @@ public class UpdateOrderArchiveNewXynaExceptionInformation extends Update {
 
         }
 
-      }));
+      }, OrderInstance.TABLE_NAME));
 
       PreparedCommand pc =
           con.prepareCommand(new Command("update " + p.tableName() + " set " + OrderInstance.COL_EXCEPTIONS
