@@ -16,8 +16,10 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="SSHServer" comment="SSH Trigger und Filter" factoryVersion="" versionName="1.0.6" xmlVersion="1.1">
+<Application applicationName="SSHServer" comment="SSH Trigger und Filter" factoryVersion="" versionName="1.0.7" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Tools, um Daten per SSH-Protokoll zu senden und zu empfangen</Description>
+    <Description Lang="EN">Tools for sending and receiving data via SSH protocol</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Connection</ApplicationName>

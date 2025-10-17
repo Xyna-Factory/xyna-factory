@@ -16,15 +16,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="UserSessionMgmt" comment="" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
+<Application applicationName="UserSessionMgmt" comment="" factoryVersion="" versionName="1.0.3" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">User- und Session-Management</Description>
-    <Description Lang="EN">User and session management </Description>
-    <BuildDate>2015.06.25 10:13:00</BuildDate>
+    <Description Lang="DE">Xyna Factory User- und Session-Management</Description>
+    <Description Lang="EN">Xyna Factory user and session management </Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>
-        <VersionName>1.1.2</VersionName>
+        <VersionName>1.1.3</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>>
   </ApplicationInfo>

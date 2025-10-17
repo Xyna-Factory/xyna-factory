@@ -1876,7 +1876,6 @@ public class SessionBasedData {
     
     try {
       modification.execute();
-      gbo.markAsModified();
     } catch (MergeConflictException e) {
       throw e;
     } catch (Exception e) {

@@ -16,12 +16,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="List" factoryVersion="" versionName="1.0.0" xmlVersion="1.1">
+<Application applicationName="List" factoryVersion="" versionName="1.0.1" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Tools zum Umgang mit Listen in Xyna-Workflows</Description>
+    <Description Lang="EN">Tools to handle lists in xyna workflows</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>
-        <VersionName>1.1.2</VersionName>
+        <VersionName>1.1.3</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
@@ -110,6 +112,18 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
       <FqName>base.list.pair.Pair</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>base.list.HashMap</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+      <XMOMEntry implicitDependency="true">
+      <FqName>base.list.MapEntry</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+      <XMOMEntry implicitDependency="false">
+      <FqName>base.list.ArrayWrapper</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
   </XMOMEntries>

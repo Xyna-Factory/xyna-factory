@@ -16,12 +16,14 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="FileMgmt" comment="" factoryVersion="" versionName="1.0.10" xmlVersion="1.1">
+<Application applicationName="FileMgmt" comment="" factoryVersion="" versionName="1.0.11" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Tools zum Lesen und Schreiben von lokalen Dateien, sowie zur Behandlung von Zip-Archivdateien</Description>
+    <Description Lang="EN">Tools to read and write local files, as well as handling zip-archive-files</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Processing</ApplicationName>
-        <VersionName>1.0.27</VersionName>
+        <VersionName>1.0.28</VersionName>
       </RuntimeContextRequirement>
     </RuntimeContextRequirements>
   </ApplicationInfo>
