@@ -19,12 +19,14 @@ package com.gip.xyna.openapi.codegen;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.openapitools.codegen.CodegenDiscriminator.MappedModel;
 
@@ -89,10 +91,17 @@ public class XynaCodegenModel {
       vars = model.getComposedSchemas().getOneOf().stream().
           map(prop -> factory.getOrCreateXynaCodegenPropertyUsingComplexType(prop, typeName)).
           collect(Collectors.toList());
-      CodegenProperty discriminator = model.getAllVars().stream().
-          filter(var -> model.discriminator.getPropertyBaseName().equals(var.baseName)).
-          findAny().get();
-      XynaCodegenProperty xynaProp = factory.getOrCreateXynaCodegenProperty(discriminator, typeName);
+      Stream<CodegenProperty> discriminatorStream = model.getAllVars().stream().
+          filter(var -> model.discriminator.getPropertyBaseName().equals(var.baseName));
+      CodegenProperty discriminator = discriminatorStream.findAny().get();
+      Map<String, Object> allowableValues = discriminatorStream.
+          map(prop -> prop.allowableValues).
+          reduce(new HashMap<String, Object>(),
+                 (map1, map2) -> {
+                   map1.putAll(map2);
+                   return map1;
+                 });
+      XynaCodegenProperty xynaProp = factory.getOrCreateXynaCodegenPropertyWithAllowableValues(discriminator, typeName, allowableValues);
       vars.add(xynaProp);
       discProp = xynaProp.propVarName;
     } else {

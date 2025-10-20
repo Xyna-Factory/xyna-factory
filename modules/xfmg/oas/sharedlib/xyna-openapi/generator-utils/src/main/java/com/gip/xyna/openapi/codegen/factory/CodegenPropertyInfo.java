@@ -68,16 +68,24 @@ class CodegenPropertyHolder implements CodegenPropertyInfo{
   private CodegenPropertyInfo items;
   private CodegenPropertyInfo mostInnerItems;
   private boolean useComplexType;
+  private Map<String, Object> allowableValues;
 
   CodegenPropertyHolder(CodegenProperty property) {
     this.property = property;
     useComplexType = false;
+    this.allowableValues = null;
   }
-
-
+  
   CodegenPropertyHolder(CodegenProperty property, boolean useComplexTypeAsName) {
     this.property = property;
     useComplexType = useComplexTypeAsName;
+    this.allowableValues = null;
+  }
+
+  CodegenPropertyHolder(CodegenProperty property, boolean useComplexTypeAsName, Map<String, Object> allowableValues) {
+    this.property = property;
+    useComplexType = useComplexTypeAsName;
+    this.allowableValues = allowableValues;
   }
 
   public String getBaseName() {
@@ -165,7 +173,7 @@ class CodegenPropertyHolder implements CodegenPropertyInfo{
   }
 
   public String getPattern() {
-      return property.pattern;
+    return property.pattern;
   }
 
   public Integer getMinLength() {
@@ -193,7 +201,7 @@ class CodegenPropertyHolder implements CodegenPropertyInfo{
   }
 
   public Map<String, Object> getAllowableValues() {
-    return property.allowableValues;
+    return allowableValues == null? property.allowableValues : allowableValues;
   }
 
   public boolean getIsString() {
