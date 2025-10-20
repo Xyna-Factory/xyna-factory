@@ -86,6 +86,7 @@ public class LoadOperationsTable {
         data.operation(operation.getName());
         data.mappingCount(countMappings(xml));
         data.runtimeContext(datatype.getRuntimeContext().getName());
+        data.isConfig(OperationAssignmentUtils.readIsConfig(xml));
         result.add(data.instance());
       }
     } catch (Exception e) {

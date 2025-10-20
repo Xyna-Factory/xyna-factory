@@ -273,10 +273,11 @@ public class OperationAssignmentUtils {
     List<OperationAssignmentTableData> result = new ArrayList<>();
     
     for (YangStatement element : subElements) {
-      if (isSupportedElement(element, supportedFeatures) && helper.getConfigSubelementValueBoolean(element)) {
+      if (isSupportedElement(element, supportedFeatures)) {
         String localName = YangStatementTranslation.getLocalName(element);
         String namespace = YangStatementTranslation.getNamespace(element);
         String keyword = element.getYangKeyword().getLocalName();
+        boolean localIsConfig = YangStatementTranslation.getLocalIsConfig(element);
         OperationAssignmentTableData.Builder builder = new OperationAssignmentTableData.Builder();
         LoadYangAssignmentsData updatedData = data.clone();
         updatedData.unversionedSetTotalYangPath(updatedData.getTotalYangPath() + "/" + localName);
@@ -286,6 +287,7 @@ public class OperationAssignmentUtils {
         updatedData.unversionedSetDeviationInfo(null);
         updatedData.unversionedSetSubelementDeviationInfo(null);
         updatedData.unversionedSetIsNotSupportedDeviation(false);
+        updatedData.unversionedSetIsConfig(data.getIsConfig() && localIsConfig);
         handleListKeys(element, updatedData);
         helper.copyRelevantSubelementValues(element, updatedData);
         deviationTools.handleDeviationsForElement(moduleDeviations, element, data, updatedData);
@@ -565,6 +567,11 @@ public class OperationAssignmentUtils {
   public static String readDeviceFqn(Document operationMeta) {
     Element deviceFqnEle = XMLUtils.getChildElementByName(operationMeta.getDocumentElement(), Constants.TAG_DEVICE_FQN);
     return deviceFqnEle.getTextContent();
+  }
+  
+  public static boolean readIsConfig(Document operationMeta) {
+    Element isConfig = XMLUtils.getChildElementByName(operationMeta.getDocumentElement(), Constants.TAG_IS_CONFIG);
+    return isConfig == null ? true : Boolean.valueOf(isConfig.getTextContent());
   }
 
   public static YangStatementInfo loadTagInfo(String tag, String deviceFqn, String workspaceName, boolean isRpc) {
