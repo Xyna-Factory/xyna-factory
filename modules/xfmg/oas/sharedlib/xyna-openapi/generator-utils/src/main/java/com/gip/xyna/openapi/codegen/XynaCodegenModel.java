@@ -91,10 +91,11 @@ public class XynaCodegenModel {
       vars = model.getComposedSchemas().getOneOf().stream().
           map(prop -> factory.getOrCreateXynaCodegenPropertyUsingComplexType(prop, typeName)).
           collect(Collectors.toList());
-      Stream<CodegenProperty> discriminatorStream = model.getAllVars().stream().
-          filter(var -> model.discriminator.getPropertyBaseName().equals(var.baseName));
-      CodegenProperty discriminator = discriminatorStream.findAny().get();
-      Map<String, Object> allowableValues = discriminatorStream.
+      CodegenProperty discriminator = model.getAllVars().stream().
+          filter(var -> model.discriminator.getPropertyBaseName().equals(var.baseName)).
+          findAny().get();
+      Map<String, Object> allowableValues = model.getAllVars().stream().
+          filter(var -> model.discriminator.getPropertyBaseName().equals(var.baseName)).
           map(prop -> prop.allowableValues).
           reduce(new HashMap<String, Object>(),
                  (map1, map2) -> {
