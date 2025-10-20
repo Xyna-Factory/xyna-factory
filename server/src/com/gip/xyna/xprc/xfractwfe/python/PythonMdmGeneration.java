@@ -291,6 +291,8 @@ public class PythonMdmGeneration {
       sb.append("  pass\n\n");
       return;
     }
+    sb.append("  if obj is None:\n");
+    sb.append("    return None\n");
     sb.append("  fqn = obj[\"_fqn\"].replace('.', '_')\n");
     sb.append("  result = eval(f\"{fqn}()\")\n");
     sb.append("  for f in obj:\n");
@@ -302,6 +304,8 @@ public class PythonMdmGeneration {
   //can't use match yet - python version might be too old
   private void fillConvertList(StringBuilder sb) {
     sb.append("def _convert_list(values):\n");
+    sb.append("  if values is None:\n");
+    sb.append("    return None\n");
     sb.append("  result = []\n");
     sb.append("  for value in values:\n");
     sb.append("    if type(value).__name__ == \"HashMap\":\n");
