@@ -83,8 +83,8 @@ public class XynaCodegenFactory {
     return getOrCreateXynaCodegenProperty(holder, className);
   }
   
-  public XynaCodegenProperty getOrCreateXynaCodegenPropertyWithAllowableValues(CodegenProperty property, String className, Map<String, Object> allowableValues) {
-    CodegenPropertyHolder holder = new CodegenPropertyHolder(property, false, allowableValues);
+  public XynaCodegenProperty getOrCreateXynaCodegenPropertyOnlyRequiredValidation(CodegenProperty property, String className) {
+    CodegenPropertyHolder holder = new CodegenPropertyHolder(property, false, true);
     return getOrCreateXynaCodegenProperty(holder, className);
   }
 

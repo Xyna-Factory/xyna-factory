@@ -92,17 +92,8 @@ public class XynaCodegenModel {
           map(prop -> factory.getOrCreateXynaCodegenPropertyUsingComplexType(prop, typeName)).
           collect(Collectors.toList());
       CodegenProperty discriminator = model.getAllVars().stream().
-          filter(var -> model.discriminator.getPropertyBaseName().equals(var.baseName)).
-          findAny().get();
-      Map<String, Object> allowableValues = model.getAllVars().stream().
-          filter(var -> model.discriminator.getPropertyBaseName().equals(var.baseName)).
-          map(prop -> prop.allowableValues).
-          reduce(new HashMap<String, Object>(),
-                 (map1, map2) -> {
-                   map1.putAll(map2);
-                   return map1;
-                 });
-      XynaCodegenProperty xynaProp = factory.getOrCreateXynaCodegenPropertyWithAllowableValues(discriminator, typeName, allowableValues);
+          filter(var -> model.discriminator.getPropertyBaseName().equals(var.baseName)).findAny().get();
+      XynaCodegenProperty xynaProp = factory.getOrCreateXynaCodegenPropertyOnlyRequiredValidation(discriminator, typeName);
       vars.add(xynaProp);
       discProp = xynaProp.propVarName;
     } else {
