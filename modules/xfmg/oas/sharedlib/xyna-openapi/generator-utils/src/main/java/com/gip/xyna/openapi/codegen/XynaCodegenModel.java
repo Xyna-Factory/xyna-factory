@@ -19,12 +19,14 @@ package com.gip.xyna.openapi.codegen;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.openapitools.codegen.CodegenDiscriminator.MappedModel;
 
@@ -90,9 +92,8 @@ public class XynaCodegenModel {
           map(prop -> factory.getOrCreateXynaCodegenPropertyUsingComplexType(prop, typeName)).
           collect(Collectors.toList());
       CodegenProperty discriminator = model.getAllVars().stream().
-          filter(var -> model.discriminator.getPropertyBaseName().equals(var.baseName)).
-          findAny().get();
-      XynaCodegenProperty xynaProp = factory.getOrCreateXynaCodegenProperty(discriminator, typeName);
+          filter(var -> model.discriminator.getPropertyBaseName().equals(var.baseName)).findAny().get();
+      XynaCodegenProperty xynaProp = factory.getOrCreateXynaCodegenPropertyOnlyRequiredValidation(discriminator, typeName);
       vars.add(xynaProp);
       discProp = xynaProp.propVarName;
     } else {
