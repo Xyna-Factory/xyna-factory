@@ -68,16 +68,24 @@ class CodegenPropertyHolder implements CodegenPropertyInfo{
   private CodegenPropertyInfo items;
   private CodegenPropertyInfo mostInnerItems;
   private boolean useComplexType;
+  private boolean onlyRequiredValidation;
 
   CodegenPropertyHolder(CodegenProperty property) {
     this.property = property;
     useComplexType = false;
+    onlyRequiredValidation = false;
   }
-
-
+  
   CodegenPropertyHolder(CodegenProperty property, boolean useComplexTypeAsName) {
     this.property = property;
     useComplexType = useComplexTypeAsName;
+    onlyRequiredValidation = false;
+  }
+
+  CodegenPropertyHolder(CodegenProperty property, boolean useComplexTypeAsName, boolean onlyRequiredValidation) {
+    this.property = property;
+    useComplexType = useComplexTypeAsName;
+    this.onlyRequiredValidation = onlyRequiredValidation;
   }
 
   public String getBaseName() {
@@ -141,47 +149,47 @@ class CodegenPropertyHolder implements CodegenPropertyInfo{
   }
 
   public String getMinimum() {
-    return property.minimum;
+    return onlyRequiredValidation ? null : property.minimum;
   }
 
   public String getMaximum() {
-    return property.maximum;
+    return onlyRequiredValidation ? null : property.maximum;
   }
 
   public boolean getExclusiveMinimum() {
-    return property.exclusiveMinimum;
+    return onlyRequiredValidation ? false : property.exclusiveMinimum;
   }
 
   public boolean getExclusiveMaximum() {
-    return property.exclusiveMaximum;
+    return onlyRequiredValidation ? false : property.exclusiveMaximum;
   }
 
   public Number getMultipleOf() {
-    return property.multipleOf;
+    return onlyRequiredValidation ? null : property.multipleOf;
   }
 
   public String getDataFormat() {
-    return property.dataFormat;
+    return onlyRequiredValidation ? null : property.dataFormat;
   }
 
   public String getPattern() {
-      return property.pattern;
+    return onlyRequiredValidation ? null : property.pattern;
   }
 
   public Integer getMinLength() {
-    return property.minLength;
+    return onlyRequiredValidation ? null : property.minLength;
   }
 
   public Integer getMaxLength() {
-    return property.maxLength;
+    return onlyRequiredValidation ? null : property.maxLength;
   }
 
   public Integer getMinItems() {
-    return property.minItems;
+    return onlyRequiredValidation ? null :property.minItems;
   }
 
   public Integer getMaxItems() {
-    return property.maxItems;
+    return onlyRequiredValidation ? null : property.maxItems;
   }
 
   public boolean getRequired() {
@@ -189,11 +197,11 @@ class CodegenPropertyHolder implements CodegenPropertyInfo{
   }
 
   public boolean getIsNullable() {
-    return property.isNullable;
+    return onlyRequiredValidation ? true : property.isNullable;
   }
 
   public Map<String, Object> getAllowableValues() {
-    return property.allowableValues;
+    return onlyRequiredValidation ? null : property.allowableValues;
   }
 
   public boolean getIsString() {

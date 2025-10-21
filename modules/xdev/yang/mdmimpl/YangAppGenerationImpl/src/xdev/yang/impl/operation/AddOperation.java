@@ -18,6 +18,8 @@
 package xdev.yang.impl.operation;
 
 
+import java.util.List;
+
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.xact.trigger.RunnableForFilterAccess;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
@@ -32,9 +34,13 @@ import xact.http.enums.httpmethods.HTTPMethod;
 import xdev.yang.OperationCreationParameter;
 import xdev.yang.impl.Constants;
 import xdev.yang.impl.GuiHttpInteraction;
+import xdev.yang.impl.YangCapabilityUtils;
+import xdev.yang.impl.YangCapabilityUtils.YangDeviceCapability;
 import xdev.yang.impl.operation.OperationAssignmentUtils.YangStatementInfo;
 import xmcp.processmodeller.datatypes.response.GetDataTypeResponse;
 import xmcp.processmodeller.datatypes.response.UpdateXMOMItemResponse;
+import org.yangcentral.yangkit.model.api.stmt.Module;
+import org.yangcentral.yangkit.model.api.stmt.YangStatement;
 
 
 public class AddOperation {
@@ -58,7 +64,10 @@ public class AddOperation {
       throw new RuntimeException(e);
     }
 
-    addOperationToDatatype(order, parameter);
+    boolean isConfig = parameter.getIsRpc() ? true : getIsConfig(parameter.getYangTagName(), workspace, parameter.getDeviceFqn());
+
+    addOperationToDatatype(order, parameter, isConfig);
+
     try (Operation result = Operation.open(order, fqn, workspace, operation)) {
       if (parameter.getIsRpc()) {
         result.addInput("MessageId", "xmcp.yang.MessageId");
@@ -75,7 +84,23 @@ public class AddOperation {
   }
 
 
-  private static String createMetaTag(String deviceFqn, String tag, String nsp, boolean isRpc, String keyword) {
+  private boolean getIsConfig(String tagName, String workspaceName, String deviceFqn) {
+    List<YangDeviceCapability> moduleCapabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
+    List<ModuleGroup> groups = OperationAssignmentUtils.loadModules(workspaceName);
+    List<Module> filteredModules = new ModuleFilterTools().filterAndReload(groups, moduleCapabilities);
+    List<YangStatement> rootStatements = OperationAssignmentUtils.findRootLevelStatements(filteredModules, tagName);
+    YangSubelementContentHelper helper = new YangSubelementContentHelper();
+    for(YangStatement candidate : rootStatements) {
+      if(tagName.equals(candidate.getArgStr())) {
+        return helper.getConfigSubelementValueBoolean(candidate);
+      }
+    }
+
+    throw new RuntimeException("Could not find " + tagName + " in root tags.");
+  }
+
+
+  private static String createMetaTag(String deviceFqn, String tag, String nsp, boolean isRpc, String keyword, boolean isConfig) {
     XmlBuilder builder = new XmlBuilder();
     builder.startElementWithAttributes(Constants.TAG_YANG);
     builder.addAttribute(Constants.ATT_YANG_TYPE, Constants.VAL_OPERATION);
@@ -89,6 +114,7 @@ public class AddOperation {
     }
     builder.element(Constants.TAG_YANG_TAG_KEYWORD, keyword);
     builder.element(Constants.TAG_DEVICE_FQN, deviceFqn);
+    builder.element(Constants.TAG_IS_CONFIG, String.valueOf(isConfig));
     builder.element(Constants.TAG_LISTCONFIGS);
     builder.startElementWithAttributes(Constants.TAG_SIGNATURE);
     builder.addAttribute(Constants.ATT_SIGNATURE_LOCATION, Constants.VAL_LOCATION_INPUT);
@@ -138,7 +164,7 @@ public class AddOperation {
     GuiHttpInteraction.executeRunnable(runnable, url, GuiHttpInteraction.METHOD_PUT, payload, "Could not add supertype to datatype.");
   }
   
-  public static void addOperationToDatatype(XynaOrderServerExtension order, OperationCreationParameter parameter) {
+  public static void addOperationToDatatype(XynaOrderServerExtension order, OperationCreationParameter parameter, boolean isConfig) {
     String tagNsp = parameter.getYangTagNamespace();
     String deviceFqn = parameter.getDeviceFqn();
     String tag = parameter.getYangTagName();
@@ -159,7 +185,7 @@ public class AddOperation {
       throw new RuntimeException("could not add service " + operation + " to datatype " + path + "." + label);
     }
     
-    String meta = createMetaTag(deviceFqn, tag, tagNsp, isRpc, ysi.keyword);
+    String meta = createMetaTag(deviceFqn, tag, tagNsp, isRpc, ysi.keyword, isConfig);
     meta = meta.replaceAll("\n", "\\\\n").replaceAll("\"", "\\\\\"");
     GuiHttpInteraction.setMetaTag(path, label, workspaceName, operation, meta, order);
     

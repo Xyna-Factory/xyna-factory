@@ -64,4 +64,9 @@
       <Type>String</Type>
     </Meta>
   </Data>
+  <Data Label="Is Config" VariableName="isConfig">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
 </DataType>
