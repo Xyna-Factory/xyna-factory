@@ -29,6 +29,7 @@ import org.yangcentral.yangkit.model.api.stmt.Anydata;
 import org.yangcentral.yangkit.model.api.stmt.Anyxml;
 import org.yangcentral.yangkit.model.api.stmt.Case;
 import org.yangcentral.yangkit.model.api.stmt.Choice;
+import org.yangcentral.yangkit.model.api.stmt.Config;
 import org.yangcentral.yangkit.model.api.stmt.Container;
 import org.yangcentral.yangkit.model.api.stmt.Grouping;
 import org.yangcentral.yangkit.model.api.stmt.Leaf;
@@ -97,6 +98,15 @@ public class YangStatementTranslator {
       throw new RuntimeException("Namespace not found for " + statement);
     }
 
+    public static boolean getLocalIsConfig(YangStatement statement) {
+      for(YangElement subStatement : getSubStatements(statement)) {
+        if(subStatement instanceof Config) {
+          return ((Config)subStatement).isConfig();
+        }
+      }
+
+      return true;
+    }
 
     public static List<YangElement> getSubStatements(YangStatement statement) {
       if (statement instanceof Uses) {

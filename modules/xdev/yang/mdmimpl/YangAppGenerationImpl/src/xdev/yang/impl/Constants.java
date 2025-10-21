@@ -59,6 +59,7 @@ public class Constants {
   public static final String TAG_MAPPING = "Mapping";
   public static final String TAG_SIGNATURE = "Signature";
   public static final String TAG_SIGNATURE_ENTRY = "SignatureEntry";
+  public static final String TAG_IS_CONFIG = "IsConfig";
   
   public static final String TAG_ANYXMLCONFIGS = "AnyXmlConfigurations";
   public static final String TAG_ANYXMLCONFIG = "AnyXmlConfiguration";
