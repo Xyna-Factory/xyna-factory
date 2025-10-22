@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Create Set Empty Panel Definition" TypeName="CreateSetEmptyPanelDefinition" TypePath="xmcp.yang.fman" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Create Set Empty Panel Definition" Name="CreateSetEmptyPanelDefinition">
+    <Input>
+      <Data ID="22" Label="Operation Assignment Table Data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData22"/>
+    </Input>
+    <Output>
+      <Data ID="35" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition35"/>
+    </Output>
+    <ServiceReference ID="5577" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="5576"/>
+      <Target RefID="5576"/>
+    </ServiceReference>
+    <Function ID="5576" Label="get Own RuntimeContext">
+      <Source RefID="5577"/>
+      <Target RefID="5577"/>
+      <Target RefID="5579"/>
+      <Invoke Operation="getOwnRuntimeContext" ServiceID="5577"/>
+      <Receive ServiceID="5577">
+        <Target RefID="5579"/>
+      </Receive>
+    </Function>
+    <Choice ID="6262" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="22"/>
+      <Target RefID="6489"/>
+      <Meta>
+        <OuterConditionPart>%0%.type==?</OuterConditionPart>
+      </Meta>
+      <Input>
+        <Data ID="6282" Label="Operation Assignment Table Data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData6282">
+          <Source RefID="6262"/>
+        </Data>
+        <Source RefID="22"/>
+      </Input>
+      <Case ID="6331" Label="" Premise="%0%.type==&quot;container&quot;">
+        <Mappings ID="119" Label="Mapping">
+          <Input>
+            <Data ID="5596" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext5596">
+              <Source RefID="119"/>
+            </Data>
+            <Source RefID="5579"/>
+          </Input>
+          <Output>
+            <Data ID="128" Label="Keep - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition128">
+              <Source RefID="119"/>
+            </Data>
+            <Target RefID="6387"/>
+          </Output>
+          <Mapping>%1%.label="Keep"</Mapping>
+          <Mapping>%1%.serviceRTC=%0%</Mapping>
+          <Mapping>%1%.serviceFQN="xmcp.yang.fman.SaveOperationAssignment"</Mapping>
+          <Mapping>%1%.dataPath="%0%"</Mapping>
+          <Mapping>%1%.synchronously="true"</Mapping>
+        </Mappings>
+        <Mappings ID="138" Label="Mapping">
+          <Input>
+            <Data ID="5613" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext5613">
+              <Source RefID="138"/>
+            </Data>
+            <Source RefID="5579"/>
+          </Input>
+          <Output>
+            <Data ID="147" Label="Delete - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition147">
+              <Source RefID="138"/>
+            </Data>
+            <Target RefID="6404"/>
+          </Output>
+          <Mapping>%1%.label="Delete"</Mapping>
+          <Mapping>%1%.serviceRTC=%0%</Mapping>
+          <Mapping>%1%.serviceFQN="xmcp.yang.fman.DeleteOperationAssignment"</Mapping>
+          <Mapping>%1%.dataPath="%0%"</Mapping>
+          <Mapping>%1%.synchronously="true"</Mapping>
+        </Mappings>
+        <Mappings ID="48" Label="Mapping">
+          <Input>
+            <Data ID="67" Label="Keep - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition67">
+              <Source RefID="48"/>
+            </Data>
+            <Source RefID="6387">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Input>
+            <Data ID="77" Label="Delete - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition77">
+              <Source RefID="48"/>
+            </Data>
+            <Source RefID="6404">
+              <Meta>
+                <LinkType>UserConnected</LinkType>
+              </Meta>
+            </Source>
+          </Input>
+          <Output>
+            <Data ID="57" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition57">
+              <Source RefID="48"/>
+            </Data>
+            <Target RefID="6421"/>
+          </Output>
+          <Mapping>%2%.header.leftArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%0%</Mapping>
+          <Mapping>%2%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
+        </Mappings>
+        <Assign ID="6333">
+          <Source RefID="6421"/>
+          <Target RefID="6489"/>
+          <Copy>
+            <Source RefID="6421"/>
+            <Target RefID="6489"/>
+          </Copy>
+        </Assign>
+        <Data ID="6387" Label="Keep - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition6387">
+          <Source RefID="119"/>
+        </Data>
+        <Data ID="6404" Label="Delete - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition6404">
+          <Source RefID="138"/>
+        </Data>
+        <Data ID="6421" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition6421">
+          <Source RefID="48"/>
+        </Data>
+      </Case>
+      <Case Alias="6331" ID="6369" Label="" Premise="%0%.type==&quot;list&quot;"/>
+      <Case ID="6263" IsDefault="true" Label="default">
+        <Mappings ID="6470" Label="Mapping">
+          <Output>
+            <Data ID="6487" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition6487">
+              <Source RefID="6470"/>
+            </Data>
+            <Target RefID="6488"/>
+          </Output>
+          <Mapping>%0%.hidden="true"</Mapping>
+        </Mappings>
+        <Assign ID="6265">
+          <Source RefID="6488"/>
+          <Target RefID="6489"/>
+          <Copy>
+            <Source RefID="6488"/>
+            <Target RefID="6489"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Data ID="5579" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext5579">
+      <Source RefID="5576"/>
+    </Data>
+    <Data ID="6488" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition6488">
+      <Source RefID="6470"/>
+    </Data>
+    <Data ID="6489" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition6489">
+      <Source RefID="6262"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="6489"/>
+      <Target RefID="35"/>
+      <Copy>
+        <Source RefID="6489"/>
+        <Target RefID="35"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>
