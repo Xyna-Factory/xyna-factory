@@ -304,7 +304,7 @@ public abstract class CronLikeSchedulingClusterServices extends FunctionGroup
 
         FactoryWarehouseCursor<CronLikeOrder> cursor = new FactoryWarehouseCursor<CronLikeOrder>(con, CronLikeOrderHelpers.sqlGetCronLikeOrdersForBinding,
                                                                   new Parameter(XynaClusteringServicesManagement.DEFAULT_BINDING_NO_CLUSTER),
-                                                                  new CronLikeOrderReader(), 250, cursorQueryCache);
+                                                                  new CronLikeOrderReader(), 250, cursorQueryCache, CronLikeOrder.TABLE_NAME);
 
         List<CronLikeOrder> clordersdefault = cursor.getRemainingCacheOrNextIfEmpty();
         while (!clordersdefault.isEmpty()) {
@@ -339,7 +339,7 @@ public abstract class CronLikeSchedulingClusterServices extends FunctionGroup
           
           FactoryWarehouseCursor<CronLikeOrder> cursor = new FactoryWarehouseCursor<CronLikeOrder>(con, CronLikeOrderHelpers.sqlGetCronLikeOrdersForBinding,
                                                                     new Parameter(XynaClusteringServicesManagement.DEFAULT_BINDING_NO_CLUSTER),
-                                                                    new CronLikeOrderReader(), 250, cursorQueryCache);
+                                                                    new CronLikeOrderReader(), 250, cursorQueryCache, CronLikeOrder.TABLE_NAME);
           
           List<CronLikeOrder> clordersdefault = cursor.getRemainingCacheOrNextIfEmpty();
           while(!clordersdefault.isEmpty()) {

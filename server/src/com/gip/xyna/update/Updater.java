@@ -1880,7 +1880,7 @@ public class Updater implements UpdaterInterface {
         selectHistoryOfVersionSorted =
             con.prepareQuery(new Query<UpdateHistoryStorable>("select * from " + UpdateHistoryStorable.TABLE_NAME + " where "
                 + UpdateHistoryStorable.COL_VERSION + " = ? and " + UpdateHistoryStorable.COL_SUCCESS + " = ? and "
-                + UpdateHistoryStorable.COL_UPDATE_TYPE + " = ?", UpdateHistoryStorable.reader));
+                + UpdateHistoryStorable.COL_UPDATE_TYPE + " = ?", UpdateHistoryStorable.reader, UpdateHistoryStorable.TABLE_NAME));
       }
       UpdateHistoryStorable s = con.queryOneRow(selectHistoryOfVersionSorted, new Parameter(v.getString(), true, time.name()));
       if (s == null) {
@@ -1910,7 +1910,8 @@ public class Updater implements UpdaterInterface {
     try {
       if (selectCountUpdateHistory == null) {
         selectCountUpdateHistory =
-            con.prepareQuery(new Query<OrderCount>("select count(*) from " + UpdateHistoryStorable.TABLE_NAME, OrderCount.getCountReader()));
+            con.prepareQuery(new Query<OrderCount>("select count(*) from " + UpdateHistoryStorable.TABLE_NAME, OrderCount.getCountReader(),
+                UpdateHistoryStorable.TABLE_NAME));
       }
       long id = con.queryOneRow(selectCountUpdateHistory, new Parameter()).getCount();
       UpdateHistoryStorable s =

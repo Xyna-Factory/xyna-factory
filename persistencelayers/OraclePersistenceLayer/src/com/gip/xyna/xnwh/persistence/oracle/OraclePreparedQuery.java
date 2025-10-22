@@ -83,15 +83,9 @@ public class OraclePreparedQuery<T> implements PreparedQuery<T> {
     //System.out.println(sqlQuery);
   }
 
-  // copy & paste from QueryGenerator (to allow it to develop independently)
-  private static String PQC /* possibly qualified column - regexp pattern */ = "\\\"?[a-zA-Z0-9_]+\\\"?(\\.\\\"?[a-zA-Z0-9_]+\\\"?)?";
-  private static String PLACE_FOR_WHERE_PATTERN = "\\s+FROM\\s+"+PQC+"(((\\s+(LEFT|RIGHT))?\\s+((INNER|OUTER)\\s+)?)?\\s*JOIN\\s+"+PQC+"(\\s+[a-zA-Z0-9_]+)?\\s+ON\\s+"+PQC+"\\s*=\\s*"+PQC+")*";
-
   private static final Pattern forUpdatePattern =
-      Pattern
-          .compile(
-                   "select(.*?)(" + PLACE_FOR_WHERE_PATTERN + ")\\s+((?:where.*?\\s+)?)((?:order\\s+by\\s+(?:[^\\s]+\\s+(?:asc\\s+|desc\\s+)?)+)?)for\\s+update.*",
-                   Pattern.CASE_INSENSITIVE);
+      Pattern.compile("select(.*?)(" + OraclePersistenceLayer.PLACE_FOR_WHERE_PATTERN + ")\\s+((?:where.*?\\s+)?)((?:order\\s+by\\s+(?:[^\\s]+\\s+(?:asc\\s+|desc\\s+)?)+)?)for\\s+update.*",
+                      Pattern.CASE_INSENSITIVE);
 
 
   public String getTransformedQueryToUseWithMaxRows(Class<? extends Storable> storableClass) {

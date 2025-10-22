@@ -730,8 +730,9 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
                     return rs.getLong(1);
                   }
                 };
+                String tableName = update.getUnfinishedUpdateStatement().getQualifiedColumn().get(0).getColumn().getParentStorableInfo().getTableName();
                 Pair<String, Parameter> existenceVerification = update.getUnfinishedUpdateStatement().getExistenceVerificationRequest(primaryKeyOfPossessingXMOMStorable);
-                PreparedQuery<Long> query = con.prepareQuery(new Query<Long>(existenceVerification.getFirst(), reader));
+                PreparedQuery<Long> query = con.prepareQuery(new Query<Long>(existenceVerification.getFirst(), reader, tableName));
                 Long count = con.queryOneRow(query, existenceVerification.getSecond());
                 if (count <= 0) {
                   String typename = determineTypeName(storable, update.getListIndizesForRootObject(), update.getUnfinishedUpdateStatement().getQualifiedColumn().get(0));
@@ -740,7 +741,7 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
                   modifiedRows = con.executeDML(insertCmd, finishedInsertStatement.getSecond());
                   if (modifiedRows <= 0) {
                     throw new RuntimeException(new XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY(String.valueOf(existenceVerification.getSecond().get(0)),
-                                                                                         update.getUnfinishedUpdateStatement().getQualifiedColumn().get(0).getColumn().getParentStorableInfo().getTableName()));                  
+                                                                                         tableName));                  
                   }
                 }
               }
@@ -1485,7 +1486,7 @@ public class XMOMPersistenceOperationAlgorithms implements XMOMPersistenceOperat
       };
       
       Long count = null;
-      PreparedQuery<Long> countQuery = con.prepareQuery(new Query<>(queryBuilder.toString(), reader));
+      PreparedQuery<Long> countQuery = con.prepareQuery(new Query<>(queryBuilder.toString(), reader, parent.getTableName()));
       count = con.queryOneRow(countQuery, params);
       if (count > 0) {
         throw new RuntimeException("Object ist still referenced from " + columnReferencedBy.getParentStorableInfo().getTableName() + "." + columnReferencedBy.getColumnName());

@@ -80,7 +80,7 @@ public class UpdateMakeMIEntryResponseNull extends Update {
   
         PreparedQuery<OrderCount> q =
             defaultCon.prepareQuery(new Query<OrderCount>("select count(*) from " + ManualInteractionEntry.TABLE_NAME,
-                                                          OrderCount.getCountReader()));
+                                                          OrderCount.getCountReader(), ManualInteractionEntry.TABLE_NAME));
         OrderCount existingEntries = defaultCon.queryOneRow(q, new Parameter());
   
         if (existingEntries.getCount() > 0) {

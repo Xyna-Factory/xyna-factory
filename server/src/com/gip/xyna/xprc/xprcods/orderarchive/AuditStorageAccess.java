@@ -195,9 +195,10 @@ public enum AuditStorageAccess {
   public abstract OrderInstance getQueryBackingClass(ODSConnection con);
   
   public PreparedQuery<OrderInstance> prepareQuery(ODSConnection con, OrderInstanceSelect select) throws PersistenceLayerException {
-    select.setBackingClass(getQueryBackingClass(con));
+    OrderInstance backingClass = getQueryBackingClass(con);
+    select.setBackingClass(backingClass);
     try {
-      return OrderArchive.cache.getQueryFromCache(select.getSelectString(), con, select.getReader());
+      return OrderArchive.cache.getQueryFromCache(select.getSelectString(), con, select.getReader(), backingClass.getTableName());
     } catch (XNWH_InvalidSelectStatementException e) {
       throw new RuntimeException("problem with select statement", e);
     }

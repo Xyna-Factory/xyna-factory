@@ -89,11 +89,13 @@ public class OSMCacheDBImpl implements OSMCache {
     
     loadByCorrelationIdQuery = con.prepareQuery(new Query<SeriesInformationStorable>(
                                     loadByCorrelationIdQueryString, 
-                                    SeriesInformationStorable.reader),
+                                    SeriesInformationStorable.reader,
+                                    SeriesInformationStorable.TABLE_NAME),
                                     true);
     loadByOrderIdQuery = con.prepareQuery(new Query<SeriesInformationStorable>(
                     loadByOrderIdQueryString, 
-                    SeriesInformationStorable.reader),
+                    SeriesInformationStorable.reader,
+                    SeriesInformationStorable.TABLE_NAME),
                     true);
     con.commit();
   }

@@ -633,8 +633,12 @@ public class MySQLPersistenceLayer implements PersistenceLayer {
   }
 
   public QueryGenerator getQueryGenerator() {
-    return new QueryGenerator(MySQLPersistenceLayer::escape);
+    return new QueryGenerator(MySQLPersistenceLayer::escape, PLACE_FOR_WHERE);
   }
+
+  private static final String PQC /* possibly qualified column - regexp pattern */ = "`?[a-zA-Z0-9_]+`?(\\.`?[a-zA-Z0-9_]+`?)?";
+  private static final String PLACE_FOR_WHERE_PATTERN = "\\s+FROM\\s+" + PQC + "(((\\s+(LEFT|RIGHT))?\\s+((INNER|OUTER)\\s+)?)?\\s*JOIN\\s+" + PQC + "(\\s+`?[a-zA-Z0-9_]+`?)?\\s+ON\\s+" + PQC + "\\s*=\\s*" + PQC + ")*";
+  private static Pattern PLACE_FOR_WHERE = Pattern.compile(PLACE_FOR_WHERE_PATTERN, Pattern.CASE_INSENSITIVE);
 
   public static String escape(String s) {
     if(XynaProperty.QUERY_ESCAPE.get() && !s.contains(".")) {

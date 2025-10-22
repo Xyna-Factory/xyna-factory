@@ -154,7 +154,7 @@ public class DataModelStorage {
     
   public int countDataModels(String dataModelType) throws PersistenceLayerException {
     ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
-    PreparedQuery<Integer> query =  queryCache.getQueryFromCache(QUERY_COUNT_DATA_MODEL_FOR_TYPE, con, countReader);
+    PreparedQuery<Integer> query =  queryCache.getQueryFromCache(QUERY_COUNT_DATA_MODEL_FOR_TYPE, con, countReader, DataModelStorable.TABLENAME);
     Integer count = con.queryOneRow(query, new Parameter(dataModelType) );
     return count;
   }
@@ -315,13 +315,13 @@ public class DataModelStorage {
 
   private List<DataModelSpecificStorable> getAllDataModelSpecificForFqName(ODSConnection con, String fqName) throws PersistenceLayerException {
     PreparedQuery<DataModelSpecificStorable> query = 
-        queryCache.getQueryFromCache(QUERY_GET_DATA_MODEL_SPECIFIC_FOR_FQNAME, con, DataModelSpecificStorable.reader);
+        queryCache.getQueryFromCache(QUERY_GET_DATA_MODEL_SPECIFIC_FOR_FQNAME, con, DataModelSpecificStorable.reader, DataModelSpecificStorable.TABLENAME);
     return con.query(query, new Parameter(fqName), -1);
   }
   
   private List<DataModelXmomTypeStorable> getAllDataModelXmomTypeForFqName(ODSConnection con, String fqName) throws PersistenceLayerException {
     PreparedQuery<DataModelXmomTypeStorable> query = 
-        queryCache.getQueryFromCache(QUERY_GET_DATA_MODEL_XMOM_TYPE_FOR_FQNAME, con, DataModelXmomTypeStorable.reader);
+        queryCache.getQueryFromCache(QUERY_GET_DATA_MODEL_XMOM_TYPE_FOR_FQNAME, con, DataModelXmomTypeStorable.reader, DataModelXmomTypeStorable.TABLENAME);
     return con.query(query, new Parameter(fqName), -1);
   }
 
@@ -348,11 +348,12 @@ public class DataModelStorage {
     Selection selection = SelectionParser.generateSelectObjectFromSearchRequestBean(searchRequest);
     ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
     try {
-      PreparedQuery<DataModelStorable> query = queryCache.getQueryFromCache(selection.getSelectString(), con, selection.getReader(DataModelStorable.class) );
+      PreparedQuery<DataModelStorable> query = queryCache.getQueryFromCache(selection.getSelectString(), con, selection.getReader(DataModelStorable.class),
+                                                                            DataModelStorable.TABLENAME);
       List<DataModelStorable> dataModels = con.query(query, selection.getParameter(), searchRequest.getMaxRows() );
       result.setResult(dataModels);
       if (dataModels.size() >= searchRequest.getMaxRows() ) {
-        PreparedQuery<Integer> queryCount = queryCache.getQueryFromCache(selection.getSelectCountString(), con, countReader);
+        PreparedQuery<Integer> queryCount = queryCache.getQueryFromCache(selection.getSelectCountString(), con, countReader, DataModelStorable.TABLENAME);
         result.setCount( con.queryOneRow(queryCount, selection.getParameter()) );
       } else {
         result.setCount( dataModels.size() );

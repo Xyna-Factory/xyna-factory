@@ -541,10 +541,12 @@ public class XynaFrequencyControl extends Section {
             con.commit();
           }
 
-          PreparedQuery<FrequencyControlledTaskInformation> query = cache.getQueryFromCache(selectString, con, reader);
+          PreparedQuery<FrequencyControlledTaskInformation> query = cache.getQueryFromCache(selectString, con, reader, 
+                                                                                            FrequencyControlledTaskInformation.TABLE_NAME);
           infos.addAll(con.query(query, paras, maxRows));
           if (infos.size() > maxRows) {
-            PreparedQuery<? extends OrderCount> queryCount = cache.getQueryFromCache(selectCountString, con, OrderCount.getCountReader());
+            PreparedQuery<? extends OrderCount> queryCount = cache.getQueryFromCache(selectCountString, con, OrderCount.getCountReader(),
+                                                                                     FrequencyControlledTaskInformation.TABLE_NAME);
             countAll = con.queryOneRow(queryCount, paras).getCount();
           } else {
             countAll = infos.size();
@@ -563,7 +565,8 @@ public class XynaFrequencyControl extends Section {
     if (countAll > maxRows && maxRows > -1) {
       con = ods.openConnection(ODSConnectionType.HISTORY);
       try {
-        PreparedQuery<? extends OrderCount> queryCount = cache.getQueryFromCache(selectCountString, con, OrderCount.getCountReader());
+        PreparedQuery<? extends OrderCount> queryCount = cache.getQueryFromCache(selectCountString, con, OrderCount.getCountReader(),
+                                                                                 FrequencyControlledTaskInformation.TABLE_NAME);
         countAll += con.queryOneRow(queryCount, paras).getCount();
       } finally {
         con.closeConnection();
@@ -584,10 +587,12 @@ public class XynaFrequencyControl extends Section {
     if (needToSearchHistory) {
       con = ods.openConnection(ODSConnectionType.HISTORY);
       try {
-        PreparedQuery<FrequencyControlledTaskInformation> query = cache.getQueryFromCache(selectString, con, reader);
+        PreparedQuery<FrequencyControlledTaskInformation> query = cache.getQueryFromCache(selectString, con, reader, 
+                                                                                          FrequencyControlledTaskInformation.TABLE_NAME);
         infos.addAll(con.query(query, paras, newMaxRows));
         if (infos.size() >= maxRows) {
-          PreparedQuery<? extends OrderCount> queryCount = cache.getQueryFromCache(selectCountString, con, OrderCount.getCountReader());
+          PreparedQuery<? extends OrderCount> queryCount = cache.getQueryFromCache(selectCountString, con, OrderCount.getCountReader(),
+                                                                                   FrequencyControlledTaskInformation.TABLE_NAME);
           countAll += con.queryOneRow(queryCount, paras).getCount();
         } else {
           countAll = infos.size();

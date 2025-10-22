@@ -122,11 +122,13 @@ public class IdGenerationAlgorithmUsingBlocksAndClusteredStorable implements IdG
       public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
         if (isClustered) {
           loadAllGeneratedIDsForUpdateQueryForRealm = con.prepareQuery(new Query<GeneratedIDsStorable>("select * from "
-                          + GeneratedIDsStorable.TABLE_NAME + " where " + GeneratedIDsStorable.COL_REALM + " = ? for update", new GeneratedIDsStorable().getReader()));
+                          + GeneratedIDsStorable.TABLE_NAME + " where " + GeneratedIDsStorable.COL_REALM + " = ? for update", new GeneratedIDsStorable().getReader(),
+                          GeneratedIDsStorable.TABLE_NAME));
           loadGeneratedIDQueryByRealmAndBinding =
               con.prepareQuery(new Query<GeneratedIDsStorable>("select * from " + GeneratedIDsStorable.TABLE_NAME + " where "
                   + GeneratedIDsStorable.COL_REALM + " = ? and " + GeneratedIDsStorable.COL_BINDING + " = ?",
-                                                               new GeneratedIDsStorable().getReader()));
+                                                               new GeneratedIDsStorable().getReader(),
+                                                               GeneratedIDsStorable.TABLE_NAME));
         }
 
         String realm = IDGenerator.REALM_DEFAULT;

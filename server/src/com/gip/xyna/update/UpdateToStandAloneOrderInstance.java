@@ -127,12 +127,12 @@ public class UpdateToStandAloneOrderInstance extends UpdateJustVersion {
         
       };
       
-      Query<Long> countOld = new Query<>(COUNT_OLD_SQL, longReader);
+      Query<Long> countOld = new Query<>(COUNT_OLD_SQL, longReader, OrderInstanceDetails.TABLE_NAME);
       PreparedQuery<Long> pCountOld = conHis.prepareQuery(countOld);
       
       Long resultOld = conHis.queryOneRow(pCountOld, new Parameter());
       if (resultOld != null && resultOld > 0) {
-        Query<Long> count = new Query<>(COUNT_SQL, longReader);
+        Query<Long> count = new Query<>(COUNT_SQL, longReader, OrderInfoStorable.TABLE_NAME);
         PreparedQuery<Long> pCount = conHis.prepareQuery(count);
         
         Long result = conHis.queryOneRow(pCount, new Parameter());

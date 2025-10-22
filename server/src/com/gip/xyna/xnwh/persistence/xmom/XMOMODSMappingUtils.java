@@ -165,7 +165,7 @@ public class XMOMODSMappingUtils {
       
       protected PreparedQuery<XMOMODSMapping> getIdentifierQuerySQL(ODSConnection con)
                       throws PersistenceLayerException {
-        return pqCache.getQueryFromCache(TABLENAME_QUERY, con, XMOMODSMapping.reader);
+        return pqCache.getQueryFromCache(TABLENAME_QUERY, con, XMOMODSMapping.reader, XMOMODSMapping.TABLENAME);
       }
 
     },
@@ -219,7 +219,7 @@ public class XMOMODSMappingUtils {
 
       protected PreparedQuery<XMOMODSMapping> getIdentifierQuerySQL(ODSConnection con)
                       throws PersistenceLayerException {
-        return pqCache.getQueryFromCache(COLUMNNAME_QUERY, con, XMOMODSMapping.reader);
+        return pqCache.getQueryFromCache(COLUMNNAME_QUERY, con, XMOMODSMapping.reader, XMOMODSMapping.TABLENAME);
       }
       
     };
@@ -775,11 +775,11 @@ public class XMOMODSMappingUtils {
 
   private static List<XMOMODSMapping> executeQuery(ODSConnection con, String query, Parameter params) throws PersistenceLayerException {
     try {
-      PreparedQuery<XMOMODSMapping> pq = pqCache.getQueryFromCache(query, con, XMOMODSMapping.reader);
+      PreparedQuery<XMOMODSMapping> pq = pqCache.getQueryFromCache(query, con, XMOMODSMapping.reader, XMOMODSMapping.TABLENAME);
       return con.query(pq, params, -1);
     } catch (XNWH_IncompatiblePreparedObjectException e) {
       pqCache.clear();
-      PreparedQuery<XMOMODSMapping> pq = pqCache.getQueryFromCache(query, con, XMOMODSMapping.reader);
+      PreparedQuery<XMOMODSMapping> pq = pqCache.getQueryFromCache(query, con, XMOMODSMapping.reader, XMOMODSMapping.TABLENAME);
       return con.query(pq, params, -1);
     }
   }
@@ -787,7 +787,7 @@ public class XMOMODSMappingUtils {
 
   public static FactoryWarehouseCursor<XMOMODSMapping> getCursorOverAll(ODSConnection con) throws PersistenceLayerException {
     final int CACHE_SIZE = 100;
-    return con.getCursor(ALL_QUERY, new Parameter(), XMOMODSMapping.reader, CACHE_SIZE, pqCache);
+    return con.getCursor(ALL_QUERY, XMOMODSMapping.TABLENAME, new Parameter(), XMOMODSMapping.reader, CACHE_SIZE, pqCache);
   }
   
   

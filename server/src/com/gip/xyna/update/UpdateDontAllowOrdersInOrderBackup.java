@@ -77,7 +77,7 @@ public class UpdateDontAllowOrdersInOrderBackup extends UpdateJustVersion {
             return rs.getInt(1);        
           }
 
-        }));
+        }, persistableOrderBackup.tableName()));
         cntBackup = con.queryOneRow(pq, null);
       } finally {
         con.closeConnection();

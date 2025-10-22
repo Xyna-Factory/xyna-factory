@@ -138,7 +138,8 @@ public class RuntimeContextDependencyStorage {
     }
     
     PreparedQuery<RuntimeContextDependencyStorable> query = 
-                    queryCache.getQueryFromCache(queryString, con, RuntimeContextDependencyStorable.reader);
+                    queryCache.getQueryFromCache(queryString, con, RuntimeContextDependencyStorable.reader, 
+                                                 RuntimeContextDependencyStorable.TABLENAME);
     return con.query(query, parameter, -1);
   }
   

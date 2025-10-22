@@ -77,7 +77,7 @@ public class UpdateSynchronizationEntries extends UpdateJustVersion {
     }
   
     FactoryWarehouseCursor<? extends com.gip.xyna.update.outdatedclasses_5_0_0_3.SynchronizationEntry> cursor =
-        conDef.getCursor( sqlGetAllSynchronizationEntriesWithLaneId, new Parameter(),
+        conDef.getCursor( sqlGetAllSynchronizationEntriesWithLaneId, oldSynchronizationEntry.TABLE_NAME, new Parameter(),
                          oldSynchronizationEntry.getReader(), 100);
     try {
       for( com.gip.xyna.update.outdatedclasses_5_0_0_3.SynchronizationEntry se : cursor.separated() ) {

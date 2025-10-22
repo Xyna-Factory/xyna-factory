@@ -161,13 +161,14 @@ public class OrderInputSourceStorage {
     try {
       PreparedQuery<OrderInputSourceStorable> query = queryCache
                       .getQueryFromCache(selection.getSelectString(), con,
-                                         selection.getReader(OrderInputSourceStorable.class));
+                                         selection.getReader(OrderInputSourceStorable.class),
+                                         OrderInputSourceStorable.TABLENAME);
       List<OrderInputSourceStorable> orderInputSources = con.query(query, selection.getParameter(),
                                                                          searchRequest.getMaxRows());
       result.setResult(orderInputSources);
       if (orderInputSources.size() >= searchRequest.getMaxRows()) {
         PreparedQuery<Integer> queryCount = queryCache.getQueryFromCache(selection.getSelectCountString(), con,
-                                                                         countReader);
+                                                                         countReader, OrderInputSourceStorable.TABLENAME);
         result.setCount(con.queryOneRow(queryCount, selection.getParameter()));
       } else {
         result.setCount(orderInputSources.size());
@@ -227,7 +228,8 @@ public class OrderInputSourceStorage {
 
   public List<OrderInputSourceSpecificStorable> getOrderInputSpecifics(ODSConnection con, long orderInputSourceId) throws PersistenceLayerException {
     PreparedQuery<OrderInputSourceSpecificStorable> query = 
-        queryCache.getQueryFromCache(QUERY_GET_ORDER_INPUT_SOURCE_SPECIFIC, con, OrderInputSourceSpecificStorable.reader);
+        queryCache.getQueryFromCache(QUERY_GET_ORDER_INPUT_SOURCE_SPECIFIC, con, OrderInputSourceSpecificStorable.reader, 
+                                     OrderInputSourceSpecificStorable.TABLENAME);
     return con.query(query, new Parameter(orderInputSourceId), -1);
   }
 
@@ -238,7 +240,7 @@ public class OrderInputSourceStorage {
     ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
     try {
       PreparedQuery<OrderInputSourceStorable> pq =
-          queryCache.getQueryFromCache(QUERY_GET_ORDER_INPUT_SOURCE_BY_NAME, con, OrderInputSourceStorable.reader);
+          queryCache.getQueryFromCache(QUERY_GET_ORDER_INPUT_SOURCE_BY_NAME, con, OrderInputSourceStorable.reader, OrderInputSourceStorable.TABLENAME);
       //nulls werden nicht unterstützt, deshalb hier etwas tricksen und in der query mit "or" arbeiten
       List<OrderInputSourceStorable> list =
           con.query(pq,
@@ -353,7 +355,7 @@ public class OrderInputSourceStorage {
     ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
     try {
       PreparedQuery<OrderInputSourceStorable> pq =
-          queryCache.getQueryFromCache(QUERY_GET_ORDER_INPUT_SOURCE_BY_NAME, con, OrderInputSourceStorable.reader);
+          queryCache.getQueryFromCache(QUERY_GET_ORDER_INPUT_SOURCE_BY_NAME, con, OrderInputSourceStorable.reader, OrderInputSourceStorable.TABLENAME);
       //nulls werden nicht unterstützt, deshalb hier etwas tricksen und in der query mit "or" arbeiten
       List<OrderInputSourceStorable> list =
           con.query(pq, new Parameter(name, notNull(applicationName), notNull(versionName), notNull(workspaceName)), 1);
@@ -406,7 +408,8 @@ public class OrderInputSourceStorage {
   public int countInputSourcesOfType(String typeName) throws PersistenceLayerException {
     ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
     try {
-      PreparedQuery<? extends OrderCount> pq = queryCache.getQueryFromCache(QUERY_COUNT_BY_TYPE, con, OrderCount.getCountReader());
+      PreparedQuery<? extends OrderCount> pq = queryCache.getQueryFromCache(QUERY_COUNT_BY_TYPE, con, OrderCount.getCountReader(),
+                                                                            OrderInputSourceStorable.TABLENAME);
       return con.queryOneRow(pq, new Parameter(typeName)).getCount();
     } finally {
       finallyClose(con);

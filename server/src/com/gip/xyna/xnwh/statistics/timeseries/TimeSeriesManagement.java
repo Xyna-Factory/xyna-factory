@@ -162,7 +162,7 @@ public class TimeSeriesManagement extends FunctionGroup {
       queryByTSId = con.prepareQuery(new Query<>(
                                                  "select * from " + TimeSeriesStorageStorable.TABLE_NAME + " where "
                                                      + TimeSeriesStorageStorable.COL_TIMESERIES_ID + " = ?",
-                                                 TimeSeriesStorageStorable.reader));
+                                                 TimeSeriesStorageStorable.reader, TimeSeriesStorageStorable.TABLE_NAME));
     } finally {
       con.closeConnection();
     }

@@ -118,7 +118,7 @@ public class UpdateOrderInstanceBackupWithRootOrderID extends UpdateJustVersion 
 
   private void updateOrderBackup(ODSConnection conDef) throws PersistenceLayerException {
     FactoryWarehouseCursor<OrderInstanceBackupPreservingSerializedData> cursorOIB =
-        conDef.getCursor(sqlGetAllOrderBackupWithNonNullXynaOrder, new Parameter(),
+        conDef.getCursor(sqlGetAllOrderBackupWithNonNullXynaOrder, OrderInstanceBackup.TABLE_NAME, new Parameter(),
                          OrderInstanceBackupPreservingSerializedData.reader, 100);
     try {
       for( List<OrderInstanceBackupPreservingSerializedData> nextOBs : cursorOIB.batched(100) ) {
@@ -138,7 +138,7 @@ public class UpdateOrderInstanceBackupWithRootOrderID extends UpdateJustVersion 
     selectiveReadColumns.add(OrderInstanceColumn.C_ID);
     selectiveReadColumns.add(OrderInstanceColumn.C_PARENT_ID);
     FactoryWarehouseCursor<OrderInstance> cursorOI =
-        conHis.getCursor(sqlGetAllOrderArchiveIDs, new Parameter(),
+        conHis.getCursor(sqlGetAllOrderArchiveIDs, OrderInstance.COL_ID, new Parameter(),
                          new DynamicOrderInstanceReader(selectiveReadColumns), 100);
 
     try {
@@ -178,7 +178,7 @@ public class UpdateOrderInstanceBackupWithRootOrderID extends UpdateJustVersion 
       //falls Update in diesem PersistenceLayer nicht existiert: 
       //Fallback auf umständliches komplettes Auslesen und Persistieren
       FactoryWarehouseCursor<OrderInstanceDetailsPreservingSerializedData> cursorOID =
-          conHis.getCursor(sqlGetAllOrderArchive, new Parameter(),
+          conHis.getCursor(sqlGetAllOrderArchive, OrderInstance.TABLE_NAME, new Parameter(),
             new OrderInstanceDetailsPreservingSerializedData().getReader(),
             100);
 
@@ -203,7 +203,7 @@ public class UpdateOrderInstanceBackupWithRootOrderID extends UpdateJustVersion 
     PreparedQuery<OrderInstanceBackupPreservingSerializedData> childOrderBackupPreparedQuery = 
     (PreparedQuery<OrderInstanceBackupPreservingSerializedData>) queryCache
     .getQueryFromCache(sqlGetChildOrderBackupWithID, con,
-                       OrderInstanceBackupPreservingSerializedData.reader);
+                       OrderInstanceBackupPreservingSerializedData.reader, OrderInstanceBackup.TABLE_NAME);
     
     
     for (OrderInstanceBackupPreservingSerializedData orderBackup : orderBackups) {

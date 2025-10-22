@@ -1149,18 +1149,31 @@ public class ODSImpl implements ODS {
      * d.h. zb 'where pk > ?'
      * FIXME validierung, dass das gegeben ist 
      */
+    @Deprecated
     public <T extends Storable<?>> FactoryWarehouseCursor<T> getCursor(final String sqlQuery, final Parameter parameters, final ResultSetReader<T> rsr, final int cacheSize)
         throws PersistenceLayerException {
       return getCursor(sqlQuery, parameters, rsr, cacheSize, null);
     }
     
+    public <T extends Storable<?>> FactoryWarehouseCursor<T> getCursor(final String sqlQuery, final String tableName, final Parameter parameters, final ResultSetReader<T> rsr, final int cacheSize)
+        throws PersistenceLayerException {
+      return getCursor(sqlQuery, tableName, parameters, rsr, cacheSize, null);
+    }
+
+    @Deprecated
     public <T extends Storable<?>> FactoryWarehouseCursor<T> getCursor(final String sqlQuery, final Parameter parameters, final ResultSetReader<T> rsr,
                                                                        final int cacheSize, final PreparedQueryCache cache) throws PersistenceLayerException {
-      if (sqlLogger.isDebugEnabled() ) {// && !isStorableProtected(query.getTable())) {
+      String tableName = Query.parseSqlStringFindTable(sqlQuery);
+      return getCursor(sqlQuery, tableName, parameters, rsr, cacheSize, cache);
+    }
+      
+    public <T extends Storable<?>> FactoryWarehouseCursor<T> getCursor(final String sqlQuery, final String tableName, final Parameter parameters, final ResultSetReader<T> rsr,
+                                                                       final int cacheSize, final PreparedQueryCache cache) throws PersistenceLayerException {
+      if (sqlLogger.isDebugEnabled() ) {
         sqlLogger.debug(conType + " GET CURSOR for query " + sqlQuery + " cachesize=" + cacheSize + " " + parameters);
       }
       
-      FactoryWarehouseCursor<T> newCursor = new FactoryWarehouseCursor<T>(this, sqlQuery, parameters, rsr, cacheSize, cache);
+      FactoryWarehouseCursor<T> newCursor = new FactoryWarehouseCursor<T>(this, sqlQuery, parameters, rsr, cacheSize, cache, tableName);
       if (cursors == null) {
         cursors = new ArrayList<FactoryWarehouseCursor<?>>();
       }
