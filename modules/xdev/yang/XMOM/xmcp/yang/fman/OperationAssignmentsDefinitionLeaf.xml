@@ -133,6 +133,16 @@
       <Mapping>%0%.dataPath="%0%.loadYangAssignmentsData.deviationInfo"</Mapping>
       <Mapping>%0%.hideIfEmpty="true"</Mapping>
     </Mappings>
+    <Mappings ID="5568" Label="Mapping">
+      <Output>
+        <Data ID="5585" Label="config - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5585">
+          <Source RefID="5568"/>
+        </Data>
+        <Target RefID="5586"/>
+      </Output>
+      <Mapping>%0%.dataPath="%0%.loadYangAssignmentsData.isConfig"</Mapping>
+      <Mapping>%0%.label="Is Config"</Mapping>
+    </Mappings>
     <Mappings ID="3211" Label="Mapping">
       <Input>
         <Data ID="3213" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition3213"/>
@@ -180,20 +190,31 @@
           </Meta>
         </Source>
       </Input>
+      <Input>
+        <Data ID="5659" Label="config - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5659">
+          <Source RefID="3211"/>
+        </Data>
+        <Source RefID="5586">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
       <Output>
         <Data ID="3218" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition3218"/>
         <Target RefID="3210"/>
       </Output>
-      <Mapping>%6%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
-      <Mapping>%6%.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
-      <Mapping>%6%.children["2"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%2%</Mapping>
-      <Mapping>%6%.children["3"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%4%</Mapping>
-      <Mapping>%6%.children["4"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%5%</Mapping>
-      <Mapping>%6%.label=%3%.yangPath</Mapping>
-      <Mapping>%6%.closable="true"</Mapping>
-      <Mapping>%6%.disabled=%3%.loadYangAssignmentsData.isNotSupportedDeviation</Mapping>
-      <Mapping>%6%.triggerClose.eventId="yang_leaf_close"</Mapping>
-      <Mapping>%6%.triggerClearDataChangeState.eventId="yang_leaf_clean"</Mapping>
+      <Mapping>%7%.children["0"]#cast("xmcp.forms.datatypes.TextInputDefinition")=%0%</Mapping>
+      <Mapping>%7%.children["1"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
+      <Mapping>%7%.children["2"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%2%</Mapping>
+      <Mapping>%7%.children["3"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%6%</Mapping>
+      <Mapping>%7%.children["4"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%4%</Mapping>
+      <Mapping>%7%.children["5"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%5%</Mapping>
+      <Mapping>%7%.label=%3%.yangPath</Mapping>
+      <Mapping>%7%.closable="true"</Mapping>
+      <Mapping>%7%.disabled=%3%.loadYangAssignmentsData.isNotSupportedDeviation</Mapping>
+      <Mapping>%7%.triggerClose.eventId="yang_leaf_close"</Mapping>
+      <Mapping>%7%.triggerClearDataChangeState.eventId="yang_leaf_clean"</Mapping>
     </Mappings>
     <Choice ID="4105" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="109"/>
@@ -280,6 +301,9 @@
     <Data ID="4261" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition4261"/>
     <Data ID="4764" Label="Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent4764">
       <Source RefID="4688"/>
+    </Data>
+    <Data ID="5586" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5586">
+      <Source RefID="5568"/>
     </Data>
     <Assign ID="1">
       <Source RefID="4225"/>

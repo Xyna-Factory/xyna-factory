@@ -51,7 +51,7 @@ public class PythonOperation extends CodeOperation {
     String result = "(" + type + ")pyMgmt.convertToJava(context, \"" + type + "\", " + var.getVarName() + ")";
     if(var.isList) {
       String fqn = var.getOriginalPath() + "." + var.getOriginalName();
-      result = "new com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObjectList("+ result + ", " + fqn + ".class)";
+      result = var.getVarName() + " == null ? null : new com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObjectList("+ result + ", " + fqn + ".class)";
     }
     return result;
   }
@@ -97,6 +97,7 @@ public class PythonOperation extends CodeOperation {
     }
     pythonscript.append("def ").append(getAdaptedNameWithoutVersion()).append("(").append(input).append("):");
     String impl = getImpl().replaceAll("(?m)^", "  ");
+    impl = impl.replaceAll("\\\\", "\\\\\\\\");
     impl = impl.replaceAll("\"", "\\\\\\\"");
     impl = impl.replaceAll("\n", "\\\\n");
     pythonscript.append("\\n").append(impl).append("\\n");
