@@ -135,10 +135,15 @@ public class UserManagementStorage {
   }
 
 
-  public void removeUserFromRepository(String repository, String factoryUser, String repoUser) {
+  public void removeUserFromRepository(String repository, String factoryUser) {
     try {
-      buildExecutor().execute(new RemoveUserFromRepository(repository, factoryUser, repoUser));
-    } catch (PersistenceLayerException e) {
+      buildExecutor().execute(new RemoveUserFromRepository(repository, factoryUser));
+      SecureStorage sec = SecureStorage.getInstance();
+      String identifier = RepositoryUserStorable.createIdentifier(factoryUser, repository);
+        sec.remove(SEC_STORE_PW_DESTINATION, identifier);
+        sec.remove(SEC_STORE_KEY_DESTINATION, identifier);
+        sec.remove(SEC_STORE_PASSPHRASE_DESTINATION, identifier);
+    } catch (Exception e) {
       new RuntimeException(e);
     }
   }
@@ -269,19 +274,17 @@ public class UserManagementStorage {
 
     private String repository;
     private String factoryUser;
-    private String repoUser;
 
 
-    public RemoveUserFromRepository(String repository, String factoryUser, String repoUser) {
+    public RemoveUserFromRepository(String repository, String factoryUser) {
       this.repository = repository;
       this.factoryUser = factoryUser;
-      this.repoUser = repoUser;
     }
 
 
     @Override
     public void executeAndCommit(ODSConnection con) throws PersistenceLayerException {
-      RepositoryUserStorable storable = new RepositoryUserStorable(factoryUser, repoUser, repository, -1l, "");
+      RepositoryUserStorable storable = new RepositoryUserStorable(factoryUser, "", repository, -1l, "");
       con.deleteOneRow(storable);
     }
   }
