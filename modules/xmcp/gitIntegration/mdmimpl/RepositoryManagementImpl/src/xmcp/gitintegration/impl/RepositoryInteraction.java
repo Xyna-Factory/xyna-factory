@@ -214,15 +214,25 @@ public class RepositoryInteraction {
       List<Ref> branches = git.branchList().setListMode(ListMode.ALL).call();
       for (Ref branch : branches) {
         Branch.Builder branchBuilder = new Branch.Builder();
-        branchBuilder.name(branch.getName()).commitHash(branch.getObjectId().getName()).target(branch.getTarget().getName());
+        branchBuilder.commitHash(branch.getObjectId().getName()).target(branch.getTarget().getName());
         resultBranches.add(branchBuilder.instance());
-        if (Objects.equals(currentBranchName, branch.getName())) {
+        boolean isCurrentBranch = Objects.equals(currentBranchName, branch.getName());
+        branchBuilder.name(cleanupName(branch.getName()));
+        if (isCurrentBranch) {
           result.currentBranch(branchBuilder.instance());
         }
       }
     }
     result.branches(resultBranches);
     return result.instance();
+  }
+
+
+  private String cleanupName(String name) {
+    if(name.startsWith("refs/heads/")) {
+      return name.substring("refs/heads/".length());
+    }
+    return name;
   }
 
 
