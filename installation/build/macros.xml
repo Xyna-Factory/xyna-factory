@@ -393,6 +393,35 @@
         </sequential>
     </macrodef>
 
+
+    <!-- =================================
+          macro: custom-replace-jars-in-remote-xyna-dir
+          ================================= -->
+    <macrodef name="custom-replace-jars-in-remote-xyna-dir">
+        <attribute name="source.dir" />
+        <attribute name="remote.target.dir" />
+        <attribute name="xyna.server.path" />
+        <sequential>
+            <!-- in case directory does not exist yet -->
+            <custom-ssh-exec host="${server.host}" username="${server.userid}" command="mkdir -p @{remote.target.dir}"  />
+            <!-- add dummy jar so that remove does not fail if directory is empty -->
+            <custom-ssh-exec host="${server.host}" username="${server.userid}" command="touch @{remote.target.dir}/tmp.jar"  />
+            <custom-ssh-exec host="${server.host}" username="${server.userid}" command="rm -rf @{remote.target.dir}/*.jar"  />
+            <default-scp-to-remote fromdir="@{source.dir}" frominclude="**/*" todir="@{remote.target.dir}" />
+            <if>
+                <isset property="server.containername" />
+                <then>
+                  <custom-ssh-exec host="${server.host}" username="${server.userid}" command="ls -lat @{xyna.server.path}/xynafactory.sh | awk \&quot;{print \$3}\&quot;  " outputproperty="remote.xyna.username" />
+                  <echo message="username: ${remote.xyna.username}"/>
+                  <custom-ssh-exec host="${server.host}" username="${server.userid}" command="ls -lat @{xyna.server.path}/xynafactory.sh | awk \&quot;{print \$4}\&quot;  " outputproperty="remote.xyna.usergroup" />
+                  <echo message="usergoup: ${remote.xyna.usergroup}"/>
+                  <custom-ssh-exec host="${server.host}" username="root" command="chown ${remote.xyna.username}:${remote.xyna.usergroup} @{remote.target.dir}/*"  />
+                </then>
+            </if>
+        </sequential>
+    </macrodef>
+
+
     <!-- ================================= 
       macro: custom-ssh-exec         
       ================================= -->
