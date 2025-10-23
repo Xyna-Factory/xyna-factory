@@ -168,22 +168,22 @@
         </Data>
         <Target RefID="1889"/>
       </Output>
-      <Mapping>%3%.label="pull"</Mapping>
+      <Mapping>%3%.label="Pull..."</Mapping>
       <Mapping>%3%.dataPath=null</Mapping>
       <Mapping>%3%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").dataPath=%0%.text</Mapping>
       <Mapping>%3%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%2%</Mapping>
       <Mapping>%3%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.PullDefinition"</Mapping>
-      <Mapping>%4%.label="push"</Mapping>
+      <Mapping>%4%.label="Push..."</Mapping>
       <Mapping>%4%.dataPath=null</Mapping>
       <Mapping>%4%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").dataPath=%1%.text</Mapping>
       <Mapping>%4%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%2%</Mapping>
       <Mapping>%4%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.PushDefinition"</Mapping>
-      <Mapping>%5%.label="checkout"</Mapping>
+      <Mapping>%5%.label="Checkout..."</Mapping>
       <Mapping>%5%.dataPath=null</Mapping>
       <Mapping>%5%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").dataPath=%0%.text</Mapping>
       <Mapping>%5%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%2%</Mapping>
       <Mapping>%5%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.CheckoutDefinition"</Mapping>
-      <Mapping>%6%.label="manage credentials"</Mapping>
+      <Mapping>%6%.label="Manage credentials..."</Mapping>
       <Mapping>%6%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").dataPath=%0%.text</Mapping>
       <Mapping>%6%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").rTC=%2%</Mapping>
       <Mapping>%6%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow").fQN="xmcp.gitintegration.ui.ManageCredentialsDefinition"</Mapping>

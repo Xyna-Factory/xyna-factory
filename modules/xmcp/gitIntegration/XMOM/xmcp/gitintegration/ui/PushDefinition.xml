@@ -24,13 +24,13 @@
       <Data ID="10" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition10"/>
       <Data ID="1879" Label="Push Input" ReferenceName="PushInput" ReferencePath="xmcp.gitintegration.repository" VariableName="pushInput1879"/>
     </Output>
-    <ServiceReference ID="696" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
-      <Source RefID="695"/>
-      <Target RefID="695"/>
-    </ServiceReference>
     <ServiceReference ID="5022" Label="Create Workspace File Change Panel List" ReferenceName="CreateWorkspaceFileChangePanelList" ReferencePath="xmcp.gitintegration.ui">
       <Source RefID="5021"/>
       <Target RefID="5021"/>
+    </ServiceReference>
+    <ServiceReference ID="696" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="695"/>
+      <Target RefID="695"/>
     </ServiceReference>
     <ServiceReference ID="70" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
       <Source RefID="69"/>
@@ -136,8 +136,8 @@
     </Choice>
     <Choice ID="3567" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="4839"/>
-      <Target RefID="5388"/>
-      <Target RefID="5649"/>
+      <Target RefID="8104"/>
+      <Target RefID="8105"/>
       <Input>
         <Data ID="3598" Label="Change Set" ReferenceName="ChangeSet" ReferencePath="xmcp.gitintegration.repository" VariableName="changeSet3598">
           <Source RefID="3567"/>
@@ -150,32 +150,35 @@
           <Source RefID="5057"/>
           <Source RefID="4839"/>
           <Target RefID="5022"/>
-          <Target RefID="5024"/>
-          <Target RefID="5454"/>
+          <Target RefID="7958"/>
+          <Target RefID="7959"/>
           <Invoke Operation="CreateWorkspaceFileChangePanelList" ServiceID="5022">
             <Source RefID="5057"/>
             <Source RefID="4839"/>
           </Invoke>
           <Receive ServiceID="5022">
-            <Target RefID="5024"/>
-            <Target RefID="5454"/>
+            <Target RefID="7958"/>
+            <Target RefID="7959"/>
           </Receive>
         </Function>
         <Assign ID="3571">
-          <Source RefID="5024"/>
-          <Source RefID="5454"/>
-          <Target RefID="5388"/>
-          <Target RefID="5649"/>
+          <Source RefID="7958"/>
+          <Source RefID="7959"/>
+          <Target RefID="8104"/>
+          <Target RefID="8105"/>
           <Copy>
-            <Source RefID="5024"/>
-            <Target RefID="5388"/>
+            <Source RefID="7958"/>
+            <Target RefID="8104"/>
           </Copy>
           <Copy>
-            <Source RefID="5454"/>
-            <Target RefID="5649"/>
+            <Source RefID="7959"/>
+            <Target RefID="8105"/>
           </Copy>
         </Assign>
-        <Data ID="5024" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5024">
+        <Data ID="7958" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition7958">
+          <Source RefID="5021"/>
+        </Data>
+        <Data ID="7959" IsList="true" Label="Workspace Selected File Change List" ReferenceName="WorkspaceSelectedFileChangeList" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceSelectedFileChangeList7959">
           <Source RefID="5021"/>
         </Data>
       </Case>
@@ -199,15 +202,15 @@
         <Assign ID="3573">
           <Source RefID="5387"/>
           <Source RefID="5648"/>
-          <Target RefID="5388"/>
-          <Target RefID="5649"/>
+          <Target RefID="8104"/>
+          <Target RefID="8105"/>
           <Copy>
             <Source RefID="5387"/>
-            <Target RefID="5388"/>
+            <Target RefID="8104"/>
           </Copy>
           <Copy>
             <Source RefID="5648"/>
-            <Target RefID="5649"/>
+            <Target RefID="8105"/>
           </Copy>
         </Assign>
       </Case>
@@ -227,7 +230,7 @@
         <Data ID="5453" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5453">
           <Source RefID="23"/>
         </Data>
-        <Source RefID="5388"/>
+        <Source RefID="8104"/>
       </Input>
       <Input>
         <Data ID="6683" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition6683">
@@ -313,7 +316,7 @@
         <Data ID="5682" IsList="true" Label="Workspace Selected File Change List" ReferenceName="WorkspaceSelectedFileChangeList" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceSelectedFileChangeList5682">
           <Source RefID="1611"/>
         </Data>
-        <Source RefID="5649"/>
+        <Source RefID="8105"/>
       </Input>
       <Output>
         <Data ID="1636" Label="Push Input" ReferenceName="PushInput" ReferencePath="xmcp.gitintegration.repository" VariableName="pushInput1636">
@@ -345,19 +348,18 @@
     <Data ID="5387" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5387">
       <Source RefID="3779"/>
     </Data>
-    <Data ID="5388" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5388">
-      <Source RefID="3567"/>
-    </Data>
-    <Data ID="5454" IsList="true" Label="Workspace Selected File Change List" ReferenceName="WorkspaceSelectedFileChangeList" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceSelectedFileChangeList5454"/>
     <Data ID="5648" IsList="true" Label="Workspace Selected File Change List" ReferenceName="WorkspaceSelectedFileChangeList" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceSelectedFileChangeList5648">
       <Source RefID="3832"/>
-    </Data>
-    <Data ID="5649" IsList="true" Label="Workspace Selected File Change List" ReferenceName="WorkspaceSelectedFileChangeList" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceSelectedFileChangeList5649">
-      <Source RefID="3567"/>
     </Data>
     <Data ID="5862" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition5862"/>
     <Data ID="7452" Label="Text Input Definition" ReferenceName="TextInputDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textInputDefinition7452">
       <Source RefID="6440"/>
+    </Data>
+    <Data ID="8104" IsList="true" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition8104">
+      <Source RefID="3567"/>
+    </Data>
+    <Data ID="8105" IsList="true" Label="Workspace Selected File Change List" ReferenceName="WorkspaceSelectedFileChangeList" ReferencePath="xmcp.gitintegration.repository" VariableName="workspaceSelectedFileChangeList8105">
+      <Source RefID="3567"/>
     </Data>
     <Assign ID="1">
       <Source RefID="1177"/>
