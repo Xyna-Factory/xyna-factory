@@ -83,6 +83,11 @@
         <property name="server.mdm.xml.path" value="${server.path}/${revision.dir}/saved/filter/${mdm.xml.name}" />
         <property name="deploy.template" value="addtrigger -fqClassName ${fqclassname} -workspaceName '${workspacename}' -jarFiles ${server.mdm.path}/${project.name}.jar -sharedLibs ${deploy.sharedlibs} -triggerName ${project.name}" />
 
+        <condition property="foldername.not.ok">
+          <contains string="${project.name}" substring="../" />
+        </condition>
+        <fail if="foldername.not.ok" message="Foldername contains ../" />
+
         <!-- create directory on xyna server -->
         <custom-ssh-exec host="${server.host}" username="${server.userid}" command="mkdir -p ${server.mdm.path}" />
         <!-- copy xml file to server -->
