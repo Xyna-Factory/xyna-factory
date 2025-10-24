@@ -406,7 +406,7 @@
             <custom-ssh-exec host="${server.host}" username="${server.userid}" command="mkdir -p @{remote.target.dir}"  />
             <!-- add dummy jar so that remove does not fail if directory is empty -->
             <custom-ssh-exec host="${server.host}" username="${server.userid}" command="touch @{remote.target.dir}/tmp.jar"  />
-            <custom-ssh-exec host="${server.host}" username="${server.userid}" command="rm -rf @{remote.target.dir}/*.jar"  />
+            <custom-ssh-exec host="${server.host}" username="${server.userid}" command="find @{remote.target.dir} -iname \*.jar | xargs rm"  />
             <default-scp-to-remote fromdir="@{source.dir}" frominclude="**/*" todir="@{remote.target.dir}" />
             <if>
                 <isset property="server.containername" />
