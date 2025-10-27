@@ -138,7 +138,7 @@ public class UpdateOrderInstanceBackupWithRootOrderID extends UpdateJustVersion 
     selectiveReadColumns.add(OrderInstanceColumn.C_ID);
     selectiveReadColumns.add(OrderInstanceColumn.C_PARENT_ID);
     FactoryWarehouseCursor<OrderInstance> cursorOI =
-        conHis.getCursor(sqlGetAllOrderArchiveIDs, OrderInstance.COL_ID, new Parameter(),
+        conHis.getCursor(sqlGetAllOrderArchiveIDs, OrderInstance.TABLE_NAME, new Parameter(),
                          new DynamicOrderInstanceReader(selectiveReadColumns), 100);
 
     try {

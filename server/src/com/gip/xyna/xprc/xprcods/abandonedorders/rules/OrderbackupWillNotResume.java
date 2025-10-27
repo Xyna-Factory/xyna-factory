@@ -130,7 +130,7 @@ public class OrderbackupWillNotResume extends AbandonedOrderDetectionRule<Abando
               oib.setRootId(rs.getLong(OrderInstance.COL_ROOT_ID));
               return oib;
             }
-          }, OrderInstanceBackup.COL_ID));
+          }, OrderInstanceBackup.TABLE_NAME));
 
       List<OrderInstanceBackup> orders = con.query(query, new Parameter(targetBinding), Integer.MAX_VALUE);
 
