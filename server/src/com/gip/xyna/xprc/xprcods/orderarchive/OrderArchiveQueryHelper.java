@@ -70,7 +70,8 @@ public final class OrderArchiveQueryHelper {
     Query<OrderInstanceBackup> qB =
         new Query<OrderInstanceBackup>("select * from " + OrderInstanceBackup.TABLE_NAME + " where "
             + OrderInstanceBackup.COL_ID + "<? and " + OrderInstanceBackup.COL_ID + ">? and "
-            + OrderInstanceBackup.COL_BINDING + "=?", new OrderInstanceBackup().getReader());
+            + OrderInstanceBackup.COL_BINDING + "=?", new OrderInstanceBackup().getReader(), 
+            OrderInstanceBackup.TABLE_NAME);
     return connection.prepareQuery(qB, true);
   }
 
@@ -127,7 +128,8 @@ public final class OrderArchiveQueryHelper {
     selectRelevantByParentIdSQL.append(OrderInstance.COL_PARENT_ID).append("=?");
 
     return con.prepareQuery(new Query<OrderInstance>(selectRelevantByParentIdSQL.toString(),
-                                                     orderInstanceReaderWithoutExceptionsAndExecType), true);
+                                                     orderInstanceReaderWithoutExceptionsAndExecType,
+                                                     backingClass.getTableName()), true);
 
   }
 
@@ -142,7 +144,8 @@ public final class OrderArchiveQueryHelper {
     
     selectRelevantColumns.append(OrderInstance.COL_ID).append("=?");
     return connection.prepareQuery(new Query<OrderInstance>(selectRelevantColumns.toString(),
-                                                            orderInstanceReaderWithoutExceptionsAndExecType), true);
+                                                            orderInstanceReaderWithoutExceptionsAndExecType,
+                                                            backingClass.getTableName()), true);
   }
   
 
@@ -156,7 +159,8 @@ public final class OrderArchiveQueryHelper {
     
     selectRelevantColumns.append(OrderInstance.COL_ROOT_ID).append("=?");
     return connection.prepareQuery(new Query<OrderInstance>(selectRelevantColumns.toString(),
-                                                            orderInstanceReaderWithoutExceptionsAndExecType), true);
+                                                            orderInstanceReaderWithoutExceptionsAndExecType,
+                                                            backingClass.getTableName()), true);
   }
 
 
@@ -174,7 +178,7 @@ public final class OrderArchiveQueryHelper {
         return rs.getLong(1);
       }
     };
-    return connection.prepareQuery(new Query<Long>(sql, rsr), true);
+    return connection.prepareQuery(new Query<Long>(sql, rsr, OrderInstanceBackup.TABLE_NAME), true);
   }
  
 }

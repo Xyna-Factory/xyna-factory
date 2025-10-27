@@ -798,4 +798,8 @@ public class OrderInstanceSelect extends WhereClausesContainerImpl implements Se
   }
 
 
+  public String getTableName() {
+    return backingClass.getTableName();
+  }
+
 }

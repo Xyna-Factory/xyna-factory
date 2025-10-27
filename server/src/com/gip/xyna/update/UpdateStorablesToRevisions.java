@@ -94,7 +94,7 @@ public class UpdateStorablesToRevisions extends UpdateJustVersion{
       //binding ist egal, weil im cluster immer sichergestellt wird, dass beide knoten die gleiche revision bekommen
       //ausserdem kann zu diesem zeitpunkt das localbinding noch nicht einfach ermittelt werden, weil clusteringservicesmgmt nicht initialisiert ist.
       
-      PreparedQuery<XMOMVersionStorable> query = conHis.prepareQuery(new Query<XMOMVersionStorable>(sql, XMOMVersionStorable.getStaticReader()));
+      PreparedQuery<XMOMVersionStorable> query = conHis.prepareQuery(new Query<XMOMVersionStorable>(sql, XMOMVersionStorable.getStaticReader(), XMOMVersionStorable.TABLE_NAME));
       List<? extends XMOMVersionStorable> xmomversions = conHis.query(query, new Parameter(), -1);
       
       applications = new HashMap<Application, Long>();
