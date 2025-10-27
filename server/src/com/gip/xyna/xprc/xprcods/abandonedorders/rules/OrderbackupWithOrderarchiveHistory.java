@@ -86,7 +86,7 @@ public class OrderbackupWithOrderarchiveHistory extends AbandonedOrderDetectionR
           con.prepareQuery(new Query<OrderInstanceBackup>("select " + OrderInstanceBackup.COL_ID + ","
               + OrderInstanceBackup.COL_ROOT_ID + " from " + OrderInstanceBackup.TABLE_NAME + " where "
               + OrderInstanceBackup.COL_BINDING + "=?", OrderInstanceBackup.getSelectiveReader(), 
-              OrderInstanceBackup.COL_ID));
+              OrderInstanceBackup.TABLE_NAME));
 
       orders = con.query(query, new Parameter(targetBinding), Integer.MAX_VALUE);
     } finally {
