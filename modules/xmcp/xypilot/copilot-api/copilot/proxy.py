@@ -117,7 +117,7 @@ class CopilotProxy:
             index_of_stopword = output.find(stopword)
             if index_of_stopword != -1:
                 stop_index = min(stop_index, index_of_stopword)
-        return [output[:stop_index], stop_index < len(output)]
+        return (output[:stop_index], stop_index < len(output))
 
     @staticmethod
     def num_tokens(s: str) -> int:
@@ -147,7 +147,7 @@ class CopilotProxy:
 
     @staticmethod
     def post_process_completion(
-        completion: str, max_tokens: int, stopwords: list
+        completion: str, max_completion_tokens: int, stopwords: list
     ) -> CompletionResult:
         """
         Trims the completion at the first occurrence of any of the stopwords or at the maximum number of tokens whichever comes first.
@@ -175,21 +175,21 @@ class CopilotProxy:
         # "timeout": copilot stopped generating before reaching max_tokens or a stopword
         completion_tokens = CopilotProxy.num_tokens(completion)
         finish_reason = None
-        if completion_tokens > max_tokens:
+        if completion_tokens > max_completion_tokens:
             finish_reason = "length"
         elif found_stopword:
             finish_reason = "stop"
-        elif completion_tokens == max_tokens:
+        elif completion_tokens == max_completion_tokens:
             finish_reason = "length"
         else:
             finish_reason = "timeout"
 
         # trim at maximum number of tokens
-        if completion_tokens >= max_tokens:
+        if completion_tokens >= max_completion_tokens:
             completion = completion[
                 : CopilotProxy.num_characters(max_completion_tokens)
             ]
-            completion_tokens = max_tokens
+            completion_tokens = max_completion_tokens
 
         return CompletionResult(
             completion=completion,

@@ -46,6 +46,7 @@
       <Mapping>%1%.loadYangAssignmentsData.fqn=%0%.operationGroup</Mapping>
       <Mapping>%1%.loadYangAssignmentsData.operation=%0%.operation</Mapping>
       <Mapping>%1%.loadYangAssignmentsData.workspaceName=%0%.runtimeContext</Mapping>
+      <Mapping>%1%.loadYangAssignmentsData.isConfig=%0%.isConfig</Mapping>
     </Mappings>
     <Choice ID="3145" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="446"/>

@@ -82,14 +82,15 @@ public class DetermineOperationAssignments {
   
   private FilteredModuleData getFilteredModules(LoadYangAssignmentsData data, String workspaceName, List<YangDeviceCapability> capabilities) {
     FilteredModuleData ret = new FilteredModuleData();
-    Optional<List<Module>> opt = OperationCache.getInstance().get(data);
+    OperationCacheId id = OperationCacheId.fromLoadYangAssignmentsData(data);
+    Optional<List<Module>> opt = OperationCache.getInstance().get(id);
     if (opt.isPresent()) {
       ret.filteredModules = opt.get();
       ret.fromCache = true;
     } else {
       List<ModuleGroup> groups = OperationAssignmentUtils.loadModules(workspaceName);
       ret.filteredModules = new ModuleFilterTools().filterAndReload(groups, capabilities);
-      OperationCache.getInstance().put(data, ret.filteredModules);
+      OperationCache.getInstance().put(id, ret.filteredModules);
     }
     return ret;
   }

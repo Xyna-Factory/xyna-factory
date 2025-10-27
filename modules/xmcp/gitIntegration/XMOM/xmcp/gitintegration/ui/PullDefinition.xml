@@ -26,13 +26,13 @@
       <Data ID="1397" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository1397"/>
       <Data ID="1737" Label="Branch Data" ReferenceName="BranchData" ReferencePath="xmcp.gitintegration.repository" VariableName="branchData1737"/>
     </Output>
-    <ServiceReference ID="1662" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="1661"/>
-      <Target RefID="1661"/>
-    </ServiceReference>
     <ServiceReference ID="1448" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="1447"/>
       <Target RefID="1447"/>
+    </ServiceReference>
+    <ServiceReference ID="1662" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="1661"/>
+      <Target RefID="1661"/>
     </ServiceReference>
     <Function ID="1661" Label="List Branches">
       <Source RefID="1662"/>
@@ -53,7 +53,7 @@
         </Data>
         <Target RefID="108"/>
       </Output>
-      <Mapping>%0%.label="Current Branch"</Mapping>
+      <Mapping>%0%.label="Current branch"</Mapping>
       <Mapping>%0%.dataPath="%2%.currentBranch.name"</Mapping>
     </Mappings>
     <Function ID="1447" Label="get Own RuntimeContext">

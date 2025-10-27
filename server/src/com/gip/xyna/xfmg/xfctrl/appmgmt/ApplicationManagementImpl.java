@@ -124,7 +124,6 @@ import com.gip.xyna.xdev.exceptions.XDEV_AlreadyExistsException;
 import com.gip.xyna.xdev.exceptions.XDEV_CodeAccessInitializationException;
 import com.gip.xyna.xdev.exceptions.XDEV_PathNotFoundException;
 import com.gip.xyna.xdev.exceptions.XDEV_RepositoryAccessException;
-import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject;
 import com.gip.xyna.xdev.xlibdev.repositoryaccess.RepositoryAccess;
@@ -9874,10 +9873,6 @@ XPRC_ChangeCapacityCardinalityFailedTooManyInuse_TryAgain {
     if (gxo != null) {
       String asXML = gxo.toXml();
       if (asXML.length() > 0) {
-        if (gxo instanceof Container) {
-          //bei Containern noch ein umschlieﬂendes Tag einbauen, damit das xml valide ist
-          asXML = "<container>" + asXML + "</container>";
-        }
         try {
           gxo = XynaObject.generalFromXml(asXML, revTarget);
         } catch (XPRC_XmlParsingException e) {
