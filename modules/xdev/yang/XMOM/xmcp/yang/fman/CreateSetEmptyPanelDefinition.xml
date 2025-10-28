@@ -49,27 +49,94 @@
         <Source RefID="22"/>
       </Input>
       <Case ID="6331" Label="" Premise="%0%.type==&quot;container&quot;">
-        <Mappings ID="7419" Label="Mapping">
+        <Mappings ID="8928" Label="Mapping">
           <Input>
-            <Data ID="8061" Label="data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData8061">
-              <Source RefID="7419"/>
+            <Data ID="9277" Label="data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData9277">
+              <Source RefID="8928"/>
             </Data>
             <Source RefID="22"/>
           </Input>
           <Output>
-            <Data ID="7799" Label="Close - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent7799">
-              <Source RefID="7419"/>
+            <Data ID="8945" Label="IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber8945">
+              <Source RefID="8928"/>
             </Data>
-            <Target RefID="7800"/>
+            <Target RefID="8946"/>
           </Output>
-          <Output>
-            <Data ID="7817" Label="Refresh - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent7817">
+          <Mapping>%1%.value=(length(%0%.loadYangAssignmentsData.totalYangPath)-length(%0%.yangPath))-"1"</Mapping>
+        </Mappings>
+        <Choice ID="8963" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="8946"/>
+          <Target RefID="9196"/>
+          <Input>
+            <Data ID="9162" Label="IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber9162">
+              <Source RefID="8963"/>
+            </Data>
+            <Source RefID="8946"/>
+          </Input>
+          <Case ID="8964" Label="true" Premise="%0%.value&gt;&quot;-1&quot;">
+            <Mappings ID="7419" Label="Mapping">
+              <Input>
+                <Data ID="8061" Label="data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData8061">
+                  <Source RefID="7419"/>
+                </Data>
+                <Source RefID="22"/>
+              </Input>
+              <Input>
+                <Data ID="9145" Label="length" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber9145">
+                  <Source RefID="7419"/>
+                </Data>
+                <Source RefID="8946"/>
+              </Input>
+              <Output>
+                <Data ID="7817" Label="Refresh - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent7817">
+                  <Source RefID="7419"/>
+                </Data>
+                <Target RefID="8987"/>
+              </Output>
+              <Mapping>%2%.eventId=concat("yang_assignment_refresh_", substring(%0%.loadYangAssignmentsData.totalYangPath, "0", %1%.value))</Mapping>
+            </Mappings>
+            <Assign ID="8967">
+              <Source RefID="8987"/>
+              <Target RefID="9196"/>
+              <Copy>
+                <Source RefID="8987"/>
+                <Target RefID="9196"/>
+              </Copy>
+            </Assign>
+            <Data ID="8987" Label="Refresh - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent8987">
               <Source RefID="7419"/>
             </Data>
-            <Target RefID="7818"/>
+          </Case>
+          <Case ID="8965" Label="false">
+            <Mappings ID="9004" Label="Mapping">
+              <Output>
+                <Data ID="9040" Label="Refresh - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent9040">
+                  <Source RefID="9004"/>
+                </Data>
+                <Target RefID="9041"/>
+              </Output>
+              <Mapping>%0%.eventId="yang_operation_refresh"</Mapping>
+            </Mappings>
+            <Assign ID="8969">
+              <Source RefID="9041"/>
+              <Target RefID="9196"/>
+              <Copy>
+                <Source RefID="9041"/>
+                <Target RefID="9196"/>
+              </Copy>
+            </Assign>
+          </Case>
+        </Choice>
+        <Mappings ID="9074" Label="Mapping">
+          <Input>
+            <Data ID="9075" Label="data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData9075"/>
+            <Source RefID="22"/>
+          </Input>
+          <Output>
+            <Data ID="9076" Label="Close - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent9076"/>
+            <Target RefID="9077"/>
           </Output>
           <Mapping>%1%.eventId=concat("yang_assignment_close_", %0%.loadYangAssignmentsData.totalYangPath)</Mapping>
-          <Mapping>%2%.eventId=concat("yang_assignment_refresh_", substring(%0%.loadYangAssignmentsData.totalYangPath, "0", ((length(%0%.loadYangAssignmentsData.totalYangPath)-length(%0%.yangPath))-"1")))</Mapping>
         </Mappings>
         <Choice ID="6738" TypeName="BaseChoiceTypeFormula" TypePath="server">
           <Source RefID="22"/>
@@ -93,7 +160,7 @@
                 <Data ID="7931" Label="Close - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent7931">
                   <Source RefID="138"/>
                 </Data>
-                <Source RefID="7800">
+                <Source RefID="9077">
                   <Meta>
                     <LinkType>UserConnected</LinkType>
                   </Meta>
@@ -103,7 +170,7 @@
                 <Data ID="7948" Label="Refresh - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent7948">
                   <Source RefID="138"/>
                 </Data>
-                <Source RefID="7818">
+                <Source RefID="9196">
                   <Meta>
                     <LinkType>UserConnected</LinkType>
                   </Meta>
@@ -165,7 +232,7 @@
                 <Data ID="8222" Label="Close - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent8222">
                   <Source RefID="119"/>
                 </Data>
-                <Source RefID="7800">
+                <Source RefID="9077">
                   <Meta>
                     <LinkType>UserConnected</LinkType>
                   </Meta>
@@ -175,7 +242,7 @@
                 <Data ID="8239" Label="Refresh - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent8239">
                   <Source RefID="119"/>
                 </Data>
-                <Source RefID="7818">
+                <Source RefID="9196">
                   <Meta>
                     <LinkType>UserConnected</LinkType>
                   </Meta>
@@ -292,11 +359,15 @@
     <Data ID="6881" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition6881">
       <Source RefID="6738"/>
     </Data>
-    <Data ID="7800" Label="Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent7800">
-      <Source RefID="7419"/>
+    <Data ID="8946" Label="IntegerNumber" ReferenceName="IntegerNumber" ReferencePath="base.math" VariableName="integerNumber8946">
+      <Source RefID="8928"/>
     </Data>
-    <Data ID="7818" Label="Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent7818">
-      <Source RefID="7419"/>
+    <Data ID="9041" Label="Refresh - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent9041">
+      <Source RefID="9004"/>
+    </Data>
+    <Data ID="9077" Label="Close - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent9077"/>
+    <Data ID="9196" Label="Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent9196">
+      <Source RefID="8963"/>
     </Data>
     <Assign ID="1">
       <Source RefID="6489"/>
