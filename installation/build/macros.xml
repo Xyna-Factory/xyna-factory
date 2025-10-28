@@ -395,9 +395,9 @@
 
 
     <!-- =================================
-          macro: custom-replace-jars-in-remote-xyna-dir
+          macro: replace-jars-in-remote-dir
           ================================= -->
-    <macrodef name="custom-replace-jars-in-remote-xyna-dir">
+    <macrodef name="replace-jars-in-remote-dir">
         <attribute name="source.dir" />
         <attribute name="remote.target.dir" />
         <attribute name="xyna.server.path" />

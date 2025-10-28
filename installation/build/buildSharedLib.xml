@@ -77,7 +77,7 @@
         <determine-revision workspacename="${workspacename}" outputproperty="revision" />
         <property name="revision.dir" value="../revisions/rev_${revision}" />
         <property name="server.sharedLib.path" value="${server.path}/${revision.dir}/saved/sharedLibs/${sharedLib.folder.name}" />
-        <custom-replace-jars-in-remote-xyna-dir source.dir="${target.dir}" remote.target.dir="${server.sharedLib.path}" xyna.server.path="${server.path}" />
+        <replace-jars-in-remote-dir source.dir="${target.dir}" remote.target.dir="${server.sharedLib.path}" xyna.server.path="${server.path}" />
         <custom-ssh-exec host="${server.host}" username="${server.userid}" command="cd ${server.path}; ./xynafactory.sh deploysharedlib -sharedLibName ${sharedLib.folder.name} -workspaceName '${workspacename}'" />
     </target>
 
