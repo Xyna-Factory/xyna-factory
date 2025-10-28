@@ -63,7 +63,7 @@ public class OutputCreator <ITEM, DIFFERENCE, SELECTOR extends XynaObjectDiffere
 
 
   private String createModifyString(DIFFERENCE diff, XynaContentProcessingPortal<ITEM, DIFFERENCE> portal) {
-    return portal.createItemKeyString(selector.selectExistingItem(diff)) + portal.createDifferenceString(diff);
+    return portal.createDifferenceString(diff);
   }
 
 
