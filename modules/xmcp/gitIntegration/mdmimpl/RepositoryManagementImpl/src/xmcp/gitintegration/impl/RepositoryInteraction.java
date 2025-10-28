@@ -112,6 +112,7 @@ import xmcp.gitintegration.repository.Commit;
 import xmcp.gitintegration.repository.PullOutput;
 import xmcp.gitintegration.repository.RepositoryConnection;
 import xmcp.gitintegration.repository.RepositoryUser;
+import xmcp.gitintegration.repository.PullOutput.Builder;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
 import xmcp.gitintegration.storage.UserManagementStorage;
@@ -430,9 +431,19 @@ public class RepositoryInteraction {
         output.unversionedSetException(e.getMessage());
         logger.error(e);
         return output;
+      } else {
+        PullOutput.Builder output = new PullOutput.Builder();
+        output.exception(e.getMessage());
+        output.executions(Collections.emptyList());
+        output.localChanges(Collections.emptyList());
+        output.remoteChanges(Collections.emptyList());
+        output.openedWorkspaceDiffLists(Collections.emptyList());
+        output.conflicts(Collections.emptyList());
+        output.reverts(Collections.emptyList());
+        output.repository(repository);
+        return output.instance();
       }
     }
-    container.creds = null;
     return createPullOutput(container, dryrun);
   }
 

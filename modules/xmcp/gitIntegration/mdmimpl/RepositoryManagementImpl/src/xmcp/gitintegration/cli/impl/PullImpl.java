@@ -59,6 +59,9 @@ public class PullImpl extends XynaCommandImplementation<Pull> {
     List<String> remoteDiffString = output.getRemoteChanges();
     List<String> diffListIds = output.getOpenedWorkspaceDiffLists();
     sb.append("Data for repository: ").append(output.getRepository()).append("\n");
+    if(output.getException() != null) {
+      sb.append("An exception ocurred: ").append(output.getException()).append("\n");
+    }
     appendField(sb, "Ldif", localDiffString);
     appendField(sb, "Rdif", remoteDiffString);
     appendField(sb, "Exec", execString);
