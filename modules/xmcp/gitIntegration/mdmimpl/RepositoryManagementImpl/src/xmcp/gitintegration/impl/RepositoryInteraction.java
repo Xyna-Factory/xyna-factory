@@ -405,22 +405,16 @@ public class RepositoryInteraction {
 
     try (Git git = new Git(repo)) {
       container = fillGitDataContainer(git, repo, repository, user);
-      if (dryrun) {
-        print(container);
-        container.creds = null;
-        List<String> openDifferenceListIds = findOpenDifferenceListIds(repository);
-        if(!openDifferenceListIds.isEmpty()) {
-          PullOutput output = createPullOutput(container, dryrun);
-          output.unversionedSetException("There are open Differences Lists: " + String.join(", ", openDifferenceListIds));
-          return output;
-        }
-        return createPullOutput(container, dryrun);
-      }
       List<String> openDifferenceListIds = findOpenDifferenceListIds(repository);
       if(!openDifferenceListIds.isEmpty()) {
         PullOutput output = createPullOutput(container, dryrun);
         output.unversionedSetException("There are open Differences Lists: " + String.join(", ", openDifferenceListIds));
         return output;
+      }
+      if (dryrun) {
+        container.creds = null;
+        print(container);
+        return createPullOutput(container, dryrun);
       }
       processConflicts(container);
       processReverts(git, repo, container);
