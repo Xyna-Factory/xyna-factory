@@ -49,64 +49,190 @@
         <Source RefID="22"/>
       </Input>
       <Case ID="6331" Label="" Premise="%0%.type==&quot;container&quot;">
-        <Mappings ID="119" Label="Mapping">
+        <Mappings ID="7419" Label="Mapping">
           <Input>
-            <Data ID="5596" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext5596">
-              <Source RefID="119"/>
+            <Data ID="8061" Label="data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData8061">
+              <Source RefID="7419"/>
             </Data>
-            <Source RefID="5579"/>
+            <Source RefID="22"/>
           </Input>
           <Output>
-            <Data ID="128" Label="Keep - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition128">
+            <Data ID="7799" Label="Close - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent7799">
+              <Source RefID="7419"/>
+            </Data>
+            <Target RefID="7800"/>
+          </Output>
+          <Output>
+            <Data ID="7817" Label="Refresh - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent7817">
+              <Source RefID="7419"/>
+            </Data>
+            <Target RefID="7818"/>
+          </Output>
+          <Mapping>%1%.eventId=concat("yang_assignment_close_", %0%.loadYangAssignmentsData.totalYangPath)</Mapping>
+          <Mapping>%2%.eventId=concat("yang_assignment_refresh_", substring(%0%.loadYangAssignmentsData.totalYangPath, "0", ((length(%0%.loadYangAssignmentsData.totalYangPath)-length(%0%.yangPath))-"1")))</Mapping>
+        </Mappings>
+        <Choice ID="6738" TypeName="BaseChoiceTypeFormula" TypePath="server">
+          <Source RefID="22"/>
+          <Target RefID="6881"/>
+          <Target RefID="6863"/>
+          <Input>
+            <Data ID="6835" Label="Operation Assignment Table Data" ReferenceName="OperationAssignmentTableData" ReferencePath="xmcp.yang" VariableName="operationAssignmentTableData6835">
+              <Source RefID="6738"/>
+            </Data>
+            <Source RefID="22"/>
+          </Input>
+          <Case ID="6739" Label="true" Premise="%0%.retain">
+            <Mappings ID="138" Label="Mapping">
+              <Input>
+                <Data ID="5613" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext5613">
+                  <Source RefID="138"/>
+                </Data>
+                <Source RefID="5579"/>
+              </Input>
+              <Input>
+                <Data ID="7931" Label="Close - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent7931">
+                  <Source RefID="138"/>
+                </Data>
+                <Source RefID="7800">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Input>
+                <Data ID="7948" Label="Refresh - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent7948">
+                  <Source RefID="138"/>
+                </Data>
+                <Source RefID="7818">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Output>
+                <Data ID="147" Label="Delete - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition147">
+                  <Source RefID="138"/>
+                </Data>
+                <Target RefID="6880"/>
+              </Output>
+              <Mapping>%3%.label="Do not retain"</Mapping>
+              <Mapping>%3%.serviceRTC=%0%</Mapping>
+              <Mapping>%3%.serviceFQN="xmcp.yang.fman.DeleteOperationAssignment"</Mapping>
+              <Mapping>%3%.dataPath="%0%"</Mapping>
+              <Mapping>%3%.synchronously="true"</Mapping>
+              <Mapping>%3%.onStartorderResultEvent["0"]=%1%</Mapping>
+              <Mapping>%3%.onStartorderResultEvent["1"]=%2%</Mapping>
+            </Mappings>
+            <Mappings ID="6554" Label="Mapping">
+              <Output>
+                <Data ID="6571" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text6571">
+                  <Source RefID="6554"/>
+                </Data>
+                <Target RefID="6778"/>
+              </Output>
+              <Mapping>%0%.text="Element retained"</Mapping>
+            </Mappings>
+            <Assign ID="6742">
+              <Source RefID="6880"/>
+              <Source RefID="6778"/>
+              <Target RefID="6881"/>
+              <Target RefID="6863"/>
+              <Copy>
+                <Source RefID="6880"/>
+                <Target RefID="6881"/>
+              </Copy>
+              <Copy>
+                <Source RefID="6778"/>
+                <Target RefID="6863"/>
+              </Copy>
+            </Assign>
+            <Data ID="6778" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text6778">
+              <Source RefID="6554"/>
+            </Data>
+            <Data ID="6880" Label="Delete - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition6880">
+              <Source RefID="138"/>
+            </Data>
+          </Case>
+          <Case ID="6740" Label="false">
+            <Mappings ID="119" Label="Mapping">
+              <Input>
+                <Data ID="5596" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext5596">
+                  <Source RefID="119"/>
+                </Data>
+                <Source RefID="5579"/>
+              </Input>
+              <Input>
+                <Data ID="8222" Label="Close - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent8222">
+                  <Source RefID="119"/>
+                </Data>
+                <Source RefID="7800">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Input>
+                <Data ID="8239" Label="Refresh - Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent8239">
+                  <Source RefID="119"/>
+                </Data>
+                <Source RefID="7818">
+                  <Meta>
+                    <LinkType>UserConnected</LinkType>
+                  </Meta>
+                </Source>
+              </Input>
+              <Output>
+                <Data ID="128" Label="Keep - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition128">
+                  <Source RefID="119"/>
+                </Data>
+                <Target RefID="6914"/>
+              </Output>
+              <Mapping>%3%.label="Retain"</Mapping>
+              <Mapping>%3%.serviceRTC=%0%</Mapping>
+              <Mapping>%3%.serviceFQN="xmcp.yang.fman.SaveOperationAssignment"</Mapping>
+              <Mapping>%3%.dataPath="%0%"</Mapping>
+              <Mapping>%3%.synchronously="true"</Mapping>
+              <Mapping>%3%.onStartorderResultEvent["0"]=%1%</Mapping>
+              <Mapping>%3%.onStartorderResultEvent["1"]=%2%</Mapping>
+            </Mappings>
+            <Mappings ID="6815" Label="Mapping">
+              <Output>
+                <Data ID="6816" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text6816"/>
+                <Target RefID="6817"/>
+              </Output>
+              <Mapping>%0%.text="Element not retained"</Mapping>
+            </Mappings>
+            <Assign ID="6744">
+              <Source RefID="6914"/>
+              <Source RefID="6817"/>
+              <Target RefID="6881"/>
+              <Target RefID="6863"/>
+              <Copy>
+                <Source RefID="6914"/>
+                <Target RefID="6881"/>
+              </Copy>
+              <Copy>
+                <Source RefID="6817"/>
+                <Target RefID="6863"/>
+              </Copy>
+            </Assign>
+            <Data ID="6914" Label="Keep - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition6914">
               <Source RefID="119"/>
             </Data>
-            <Target RefID="6387"/>
-          </Output>
-          <Mapping>%1%.label="Keep"</Mapping>
-          <Mapping>%1%.serviceRTC=%0%</Mapping>
-          <Mapping>%1%.serviceFQN="xmcp.yang.fman.SaveOperationAssignment"</Mapping>
-          <Mapping>%1%.dataPath="%0%"</Mapping>
-          <Mapping>%1%.synchronously="true"</Mapping>
-        </Mappings>
-        <Mappings ID="138" Label="Mapping">
-          <Input>
-            <Data ID="5613" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext5613">
-              <Source RefID="138"/>
-            </Data>
-            <Source RefID="5579"/>
-          </Input>
-          <Output>
-            <Data ID="147" Label="Delete - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition147">
-              <Source RefID="138"/>
-            </Data>
-            <Target RefID="6404"/>
-          </Output>
-          <Mapping>%1%.label="Delete"</Mapping>
-          <Mapping>%1%.serviceRTC=%0%</Mapping>
-          <Mapping>%1%.serviceFQN="xmcp.yang.fman.DeleteOperationAssignment"</Mapping>
-          <Mapping>%1%.dataPath="%0%"</Mapping>
-          <Mapping>%1%.synchronously="true"</Mapping>
-        </Mappings>
+          </Case>
+        </Choice>
         <Mappings ID="48" Label="Mapping">
           <Input>
-            <Data ID="67" Label="Keep - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition67">
+            <Data ID="6589" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text6589">
               <Source RefID="48"/>
             </Data>
-            <Source RefID="6387">
-              <Meta>
-                <LinkType>UserConnected</LinkType>
-              </Meta>
-            </Source>
+            <Source RefID="6863"/>
           </Input>
           <Input>
-            <Data ID="77" Label="Delete - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition77">
+            <Data ID="6689" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition6689">
               <Source RefID="48"/>
             </Data>
-            <Source RefID="6404">
-              <Meta>
-                <LinkType>UserConnected</LinkType>
-              </Meta>
-            </Source>
+            <Source RefID="6881"/>
           </Input>
           <Output>
             <Data ID="57" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition57">
@@ -114,8 +240,8 @@
             </Data>
             <Target RefID="6421"/>
           </Output>
-          <Mapping>%2%.header.leftArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%0%</Mapping>
           <Mapping>%2%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%1%</Mapping>
+          <Mapping>%2%.label=%0%.text</Mapping>
         </Mappings>
         <Assign ID="6333">
           <Source RefID="6421"/>
@@ -125,12 +251,6 @@
             <Target RefID="6489"/>
           </Copy>
         </Assign>
-        <Data ID="6387" Label="Keep - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition6387">
-          <Source RefID="119"/>
-        </Data>
-        <Data ID="6404" Label="Delete - Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition6404">
-          <Source RefID="138"/>
-        </Data>
         <Data ID="6421" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition6421">
           <Source RefID="48"/>
         </Data>
@@ -164,6 +284,19 @@
     </Data>
     <Data ID="6489" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition6489">
       <Source RefID="6262"/>
+    </Data>
+    <Data ID="6817" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text6817"/>
+    <Data ID="6863" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text6863">
+      <Source RefID="6738"/>
+    </Data>
+    <Data ID="6881" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition6881">
+      <Source RefID="6738"/>
+    </Data>
+    <Data ID="7800" Label="Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent7800">
+      <Source RefID="7419"/>
+    </Data>
+    <Data ID="7818" Label="Definition Event" ReferenceName="DefinitionEvent" ReferencePath="xmcp.forms.datatypes" VariableName="definitionEvent7818">
+      <Source RefID="7419"/>
     </Data>
     <Assign ID="1">
       <Source RefID="6489"/>

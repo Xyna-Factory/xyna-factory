@@ -182,6 +182,7 @@
       <Mapping>%6%.children["4"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%5%</Mapping>
       <Mapping>%6%.label=%0%.yangPath</Mapping>
       <Mapping>%6%.closable="true"</Mapping>
+      <Mapping>%6%.triggerClose.eventId=concat("yang_assignment_close_", %0%.loadYangAssignmentsData.totalYangPath)</Mapping>
     </Mappings>
     <Choice ID="3836" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="109"/>
