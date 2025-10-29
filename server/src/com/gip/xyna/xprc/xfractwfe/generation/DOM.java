@@ -1484,7 +1484,8 @@ public class DOM extends DomOrExceptionGenerationBase {
    * impl lib wird verwendet
    */
   public boolean libraryExists() {
-    return getAdditionalLibraries().contains(getImplClassName() + ".jar");
+    return getAdditionalLibraries().contains(getImplClassName() + ".jar") &&
+           XynaFactory.isFactoryServer(); // ignore libraries for script access
   }
 
   public DOM getNextSuperTypeWithJavaImpl(boolean onlyCountInstanceMethods, InterfaceVersion versionFilter) {
