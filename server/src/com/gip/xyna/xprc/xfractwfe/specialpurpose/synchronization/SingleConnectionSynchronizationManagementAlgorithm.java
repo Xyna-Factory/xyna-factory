@@ -449,7 +449,7 @@ public class SingleConnectionSynchronizationManagementAlgorithm implements Synch
     }
     PreparedQuery<SynchronizationEntry> preparedQuery = null;
     try {
-      preparedQuery = con.prepareQuery(new Query<SynchronizationEntry>(sql.toString(), new SynchronizationEntry().getReader()));
+      preparedQuery = con.prepareQuery(new Query<SynchronizationEntry>(sql.toString(), new SynchronizationEntry().getReader(), SynchronizationEntry.TABLE_NAME));
       entries = con.query(preparedQuery, new Parameter(suspendedOrderIds.toArray()), -1);
     } catch (PersistenceLayerException e) {
       // PersistenceLayer kann offensichtlich keine PreparedQueries ... also Fallback und alles laden

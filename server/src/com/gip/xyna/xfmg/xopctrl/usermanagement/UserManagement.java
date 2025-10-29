@@ -499,11 +499,11 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
     try {
       Query<User> qUser =
           new Query<>("select name from " + User.TABLENAME + " where " + User.COL_ROLE + "=? ",
-                          new User.DynamicUserReader(Collections.singletonList(UserColumns.name)));
+                          new User.DynamicUserReader(Collections.singletonList(UserColumns.name)), User.TABLENAME);
       getUsersWithSpecifiedRole = con.prepareQuery(qUser, true);
       Query<User> allUsers =
           new Query<>("select * from " + User.TABLENAME + " for update",
-                          User.reader);
+                          User.reader, User.TABLENAME);
       loadAllUsersForUpdateQuery = con.prepareQuery(allUsers, true);
     } finally {
       con.closeConnection();
@@ -515,7 +515,7 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
                       new Query<> ("select * from " + PasswordHistoryStorable.TABLENAME 
                                       + " where " + PasswordHistoryStorable.COL_USERNAME + "=? order by "
                                       + PasswordHistoryStorable.COL_PASSWORD_INDEX + " desc",
-                                      PasswordHistoryStorable.reader);
+                                      PasswordHistoryStorable.reader, PasswordHistoryStorable.TABLENAME);
       getPasswordHistoryForUserQuery = hisCon.prepareQuery(getPasswordHistoryForUser, true);
     } finally {
       hisCon.closeConnection();
@@ -526,7 +526,7 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
       Query<Localization> getLocalization = 
                       new Query<> ("select * from " + Localization.TABLENAME 
                                       + " where " + Localization.COL_TYPE + "=? AND " + Localization.COL_IDENTIFIER + "=? AND " + Localization.COL_LANGUAGE + "=?",
-                                      Localization.reader);
+                                      Localization.reader, Localization.TABLENAME);
       getLocalizationQuery = hisCon.prepareQuery(getLocalization, true);
     } finally {
       hisCon.closeConnection();
@@ -3057,11 +3057,11 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
 
     ODSConnection con = ods.openConnection(ODSConnectionType.DEFAULT);
     try {
-      PreparedQuery<User> query = cache.getQueryFromCache(selectString, con, reader);
+      PreparedQuery<User> query = cache.getQueryFromCache(selectString, con, reader, User.TABLENAME);
       users.addAll(con.query(query, paras, maxRows));
       if (users.size() >= maxRows) {
         PreparedQuery<? extends UserCount> queryCount =
-            cache.getQueryFromCache(selectCountString, con, UserCount.getCountReader());
+            cache.getQueryFromCache(selectCountString, con, UserCount.getCountReader(), User.TABLENAME);
         UserCount count = con.queryOneRow(queryCount, paras);
         countAll = count.getCount();
       } else {
@@ -3566,7 +3566,7 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
 
       // No locking required - if some operation is currently working on this entry, either return old or new value
       PreparedQuery<UserContextEntryStorable> query =
-          cache.getQueryFromCache(GET_ALL_USER_CONTEXT_VALUES, hisCon, UserContextEntryStorable.reader);
+          cache.getQueryFromCache(GET_ALL_USER_CONTEXT_VALUES, hisCon, UserContextEntryStorable.reader, UserContextEntryStorable.TABLENAME);
       result = hisCon.query(query, new Parameter(userName), -1);
 
     } finally {
@@ -3605,7 +3605,7 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
         userContextLocks.writeLock(userName);
         try {
           PreparedQuery<UserContextEntryStorable> query =
-              cache.getQueryFromCache(GET_ALL_USER_CONTEXT_VALUES, hisCon, UserContextEntryStorable.reader);
+              cache.getQueryFromCache(GET_ALL_USER_CONTEXT_VALUES, hisCon, UserContextEntryStorable.reader, UserContextEntryStorable.TABLENAME);
           List<UserContextEntryStorable> existingEntries =
               hisCon.query(query, new Parameter(userName), -1);
           hisCon.delete(existingEntries);
@@ -3648,7 +3648,7 @@ public class UserManagement extends FunctionGroup implements IPropertyChangeList
         userContextLocks.writeLock(userName);
         try {
           PreparedQuery<UserContextEntryStorable> query =
-              cache.getQueryFromCache(GET_USER_CONTEXT_VALUE, hisCon, UserContextEntryStorable.reader);
+              cache.getQueryFromCache(GET_USER_CONTEXT_VALUE, hisCon, UserContextEntryStorable.reader, UserContextEntryStorable.TABLENAME);
           UserContextEntryStorable existingEntry = hisCon.queryOneRow(query, new Parameter(userName, key));
           if (delete) {
             return userContextWrite_Delete(hisCon, existingEntry);

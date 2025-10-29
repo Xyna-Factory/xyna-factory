@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -53,6 +54,8 @@ import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
+import org.eclipse.jgit.errors.RevisionSyntaxException;
+import org.eclipse.jgit.lib.AnyObjectId;
 import org.eclipse.jgit.lib.BranchConfig;
 import org.eclipse.jgit.lib.BranchTrackingStatus;
 import org.eclipse.jgit.lib.ObjectId;
@@ -106,8 +109,10 @@ import xmcp.gitintegration.repository.Branch;
 import xmcp.gitintegration.repository.BranchData;
 import xmcp.gitintegration.repository.ChangeSet;
 import xmcp.gitintegration.repository.Commit;
+import xmcp.gitintegration.repository.PullOutput;
 import xmcp.gitintegration.repository.RepositoryConnection;
 import xmcp.gitintegration.repository.RepositoryUser;
+import xmcp.gitintegration.repository.PullOutput.Builder;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
 import xmcp.gitintegration.storage.UserManagementStorage;
@@ -182,28 +187,34 @@ public class RepositoryInteraction {
       ObjectId id = repo.resolve(remoteBranch);
       try (RevWalk revWalk = new RevWalk(repo)) {
         RevCommit commit = revWalk.parseCommit(id);
-        RevTree tree = commit.getTree();
-        try (TreeWalk treeWalk = new TreeWalk(repo)) {
-          treeWalk.addTree(tree);
-          treeWalk.setRecursive(true);
-          treeWalk.setFilter(PathFilter.create(file));
-          while (treeWalk.next()) {
-            String path = treeWalk.getPathString();
-            if (path.endsWith(".xml")) {
-              ObjectId objectId = treeWalk.getObjectId(0);
-              ObjectLoader loader = repo.open(objectId);
-              Text txt = new Text();
-              txt.setText(new String(loader.getBytes()));
-              ret.add(txt);
-            }
-          }
-        }
+        ret = getFileContentFromCommit(repo, commit, file);
         revWalk.dispose();
       }
     }
     return ret;
   }
 
+
+  private List<Text> getFileContentFromCommit(Repository repo, RevCommit commit, String file) throws Exception {
+    List<Text> ret = new ArrayList<>();
+    RevTree tree = commit.getTree();
+    try (TreeWalk treeWalk = new TreeWalk(repo)) {
+      treeWalk.addTree(tree);
+      treeWalk.setRecursive(true);
+      treeWalk.setFilter(PathFilter.create(file));
+      while (treeWalk.next()) {
+        String path = treeWalk.getPathString();
+        if (path.endsWith(".xml")) {
+          ObjectId objectId = treeWalk.getObjectId(0);
+          ObjectLoader loader = repo.open(objectId);
+          Text txt = new Text();
+          txt.unversionedSetText(new String(loader.getBytes()));
+          ret.add(txt);
+        }
+      }
+    }
+    return ret;
+  }
 
   public BranchData listBranches(String repository) throws Exception {
     BranchData.Builder result = new BranchData.Builder();
@@ -365,24 +376,46 @@ public class RepositoryInteraction {
     container.user = repoUser.getRepositoryUsername();
     container.mail = repoUser.getMail();
     fetch(git, repo, container);
+    container.localCommitBeforePull = getCommitHash(git, repo, repo.getBranch());
+    container.remoteCommit = getCommitHash(git, repo, BranchTrackingStatus.of(repo, repo.getBranch()).getRemoteTrackingBranch());
     loadLocalDiffs(git, container);
     loadRemoteDiffs(git, repo, container);
     processLocalDiffs(container);
     processRemoteDiffs(container);
+
     return container;
   }
 
 
-  public GitDataContainer pull(String repository, boolean dryrun, String user) throws Exception {
-    Repository repo = loadRepo(repository, true);
+  private String getCommitHash(Git git, Repository repo, String branch) {
+    try {
+      Iterable<RevCommit> it = git.log().setMaxCount(1).add(repo.resolve(branch)).call();
+      for(RevCommit commit : it) {
+        return commit.getName();
+      }
+    } catch (RevisionSyntaxException | GitAPIException | IOException e) {
+      return "unknown";
+    }
+
+    return  "unknown";
+  }
+
+  public PullOutput pull(String repository, boolean dryrun, String user) throws Exception {
+    Repository repo = loadRepo(repository, false);
     GitDataContainer container = null;
 
     try (Git git = new Git(repo)) {
       container = fillGitDataContainer(git, repo, repository, user);
+      List<String> openDifferenceListIds = findOpenDifferenceListIds(repository);
+      if(!openDifferenceListIds.isEmpty()) {
+        PullOutput output = createPullOutput(container, dryrun);
+        output.unversionedSetException("There are open Differences Lists: " + String.join(", ", openDifferenceListIds));
+        return output;
+      }
       if (dryrun) {
-        print(container);
         container.creds = null;
-        return container;
+        print(container);
+        return createPullOutput(container, dryrun);
       }
       processConflicts(container);
       processReverts(git, repo, container);
@@ -390,11 +423,97 @@ public class RepositoryInteraction {
       processExecs(container);
       processReferences(container);
       updateSplit(repository, container);
+      processWorkspaceConfig(repo, container);
+    } catch(Exception e) {
+      if(container != null) {
+        container.creds = null;
+        PullOutput output = createPullOutput(container, dryrun);
+        output.unversionedSetException(e.getMessage());
+        logger.error(e);
+        return output;
+      } else {
+        PullOutput.Builder output = new PullOutput.Builder();
+        output.exception(e.getMessage());
+        output.executions(Collections.emptyList());
+        output.localChanges(Collections.emptyList());
+        output.remoteChanges(Collections.emptyList());
+        output.openedWorkspaceDiffLists(Collections.emptyList());
+        output.conflicts(Collections.emptyList());
+        output.reverts(Collections.emptyList());
+        output.repository(repository);
+        return output.instance();
+      }
     }
-    container.creds = null;
-    return container;
+    return createPullOutput(container, dryrun);
   }
 
+  private void processWorkspaceConfig(Repository repo, GitDataContainer container) throws Exception {
+    String fromHash = container.localCommitBeforePull;
+    String toHash = container.remoteCommit;
+
+    Set<String> changedWorkspacePaths = new HashSet<>();
+    Map<String, String> rtcMap = new HashMap<>();
+    List<? extends RepositoryConnectionStorable> connections = RepositoryManagementImpl.loadConnectionsForSingleRepository(container.repository);
+    for (RepositoryConnectionStorable connection : connections) {
+      String filter = "none".equals(connection.getSplittype()) ? "/workspace.xml" : "/config/";
+      String path = connection.getSubpath() + filter;
+      for (String change : container.pull) {
+        if (change.startsWith(path)) {
+          changedWorkspacePaths.add(path);
+          rtcMap.put(path, connection.getWorkspacename());
+        }
+      }
+    }
+
+    for(String changedWorkspacePath : changedWorkspacePaths) {
+      WorkspaceContent before = createWorkspaceContentFromCommit(repo, container, changedWorkspacePath, fromHash);
+      WorkspaceContent after = createWorkspaceContentFromCommit(repo, container, changedWorkspacePath, toHash);
+      
+      WorkspaceContentDifferences cmp = WorkspaceObjectManagement.compareWorkspaceContent(before, after);
+      if(cmp.getListId() != -1l) {
+        container.diffListIds.add(rtcMap.get(changedWorkspacePath) + ": " + cmp.getListId());
+      }
+    }
+  }
+
+  private WorkspaceContent createWorkspaceContentFromCommit(Repository repo, GitDataContainer container, String path, String commitHash) throws Exception {
+    AnyObjectId id = ObjectId.fromString(commitHash);
+    RevCommit commit = repo.parseCommit(id);
+    List<Text> workspaceXmlFiles = getFileContentFromCommit(repo, commit, path);
+    return WorkspaceObjectManagement.createWorkspaceContentFromText(workspaceXmlFiles);
+  }
+
+  private PullOutput createPullOutput(GitDataContainer data, boolean dryrun) {
+
+    List<String> localChanges = data.localDiffs == null ? Collections.emptyList() : data.localDiffs.stream().map(this::convertDiffEntry).collect(Collectors.toList());
+    List<String> remoteChanges = data.remoteDiffs == null ? Collections.emptyList() : data.remoteDiffs.stream().map(this::convertDiffEntry).collect(Collectors.toList());
+    List<String> reverts = new ArrayList<String>();
+    if(data.revert != null) { 
+      reverts.addAll(data.revert);
+    }
+    if(data.lAddrAddReverts != null) {
+      reverts.addAll(data.lAddrAddReverts);
+    }
+    PullOutput.Builder builder = new PullOutput.Builder();
+    builder.conflicts(data.conflicts);
+    builder.dryrun(dryrun);
+    builder.exception(null);
+    builder.executions(data.exec == null ? Collections.emptyList() : data.exec.stream().map(x -> x.execType + " " + x.repoPath).collect(Collectors.toList()));
+    builder.localChanges(localChanges);
+    builder.localCommitBeforePull(data.localCommitBeforePull); 
+    builder.openedWorkspaceDiffLists(data.diffListIds);
+    builder.remoteChanges(remoteChanges);
+    builder.remoteCommit(data.remoteCommit);
+    builder.repository(data.repository);
+    builder.reverts(reverts);
+    builder.warnings(data.warnings);
+    return builder.instance();
+  }
+
+  private String convertDiffEntry(DiffEntry entry) {
+    String path = entry.getChangeType() == ChangeType.DELETE ? entry.getOldPath() : entry.getNewPath();
+    return String.format("%s %s", entry.getChangeType().name(), path);
+  }
 
   private void print(GitDataContainer container) {
     if (logger.isDebugEnabled()) {
@@ -1096,6 +1215,8 @@ public class RepositoryInteraction {
   public static class GitDataContainer {
 
     private String repository;
+    private String localCommitBeforePull;
+    private String remoteCommit;
     private List<DiffEntry> localDiffs = new ArrayList<>();
     private List<DiffEntry> remoteDiffs = new ArrayList<>();
     private List<String> conflicts = new ArrayList<>();
@@ -1105,6 +1226,7 @@ public class RepositoryInteraction {
     private List<String> push = new ArrayList<>();
     private List<PullExec> exec = new ArrayList<>();
     private List<String> warnings = new ArrayList<>();
+    private List<String> diffListIds = new ArrayList<>();
     private XynaRepoCredentials creds; //only used within this class
     private String user;
     private String mail;
@@ -1127,6 +1249,9 @@ public class RepositoryInteraction {
       appendField(sb, "Lrar", lAddrAddReverts);
       if (!warnings.isEmpty()) {
         appendField(sb, "Warn", warnings);
+      }
+      if(!diffListIds.isEmpty()) {
+        appendField(sb, "DiffLists", diffListIds);
       }
       return sb.toString();
     }

@@ -71,26 +71,30 @@ public class CapacityStorableQueries {
   public void init(ODSConnection defCon) throws PersistenceLayerException {
     loadByBindingAndNameForUpdateQuery =
         defCon.prepareQuery(new Query<CapacityStorable>(loadOwnBindingByNameForUpdateQuerySqlString,
-                                                        CapacityStorable.reader), true);
+                                                        CapacityStorable.reader, CapacityStorable.TABLE_NAME), true);
     loadByBindingAndNameQuery =
-        defCon.prepareQuery(new Query<CapacityStorable>(loadOwnBindingByNameQuerySqlString, CapacityStorable.reader),
-                            true);
+        defCon.prepareQuery(new Query<CapacityStorable>(loadOwnBindingByNameQuerySqlString, CapacityStorable.reader,
+                            CapacityStorable.TABLE_NAME), true);
     loadAllBindingsByNameQuery =
-        defCon.prepareQuery(new Query<CapacityStorable>(loadAllBindingsByNameQuerySqlString, CapacityStorable.reader),
-                            true);
+        defCon.prepareQuery(new Query<CapacityStorable>(loadAllBindingsByNameQuerySqlString, CapacityStorable.reader,
+                            CapacityStorable.TABLE_NAME), true);
+
     loadAllBindingsByNameForUpdateQuery =
         defCon.prepareQuery(new Query<CapacityStorable>(loadAllBindingsByNameForUpdateQuerySqlString,
-                                                        CapacityStorable.reader), true);
+                                                        CapacityStorable.reader,
+                                                        CapacityStorable.TABLE_NAME), true);
     loadByBindingForUpdateQuery =
-        defCon
-            .prepareQuery(new Query<CapacityStorable>(loadOwnBindingForUpdateQuerySqlString, CapacityStorable.reader),
-                          true);
+        defCon.prepareQuery(new Query<CapacityStorable>(loadOwnBindingForUpdateQuerySqlString, CapacityStorable.reader,
+                                                        CapacityStorable.TABLE_NAME), true);
     loadByBindingQuery =
-        defCon.prepareQuery(new Query<CapacityStorable>(loadOwnBindingQuerySqlString, CapacityStorable.reader), true);
+        defCon.prepareQuery(new Query<CapacityStorable>(loadOwnBindingQuerySqlString, CapacityStorable.reader,
+                            CapacityStorable.TABLE_NAME), true);
     loadAllQuery =
-        defCon.prepareQuery(new Query<CapacityStorable>(loadAllQuerySqlString, CapacityStorable.reader), true);
+        defCon.prepareQuery(new Query<CapacityStorable>(loadAllQuerySqlString, CapacityStorable.reader,
+                            CapacityStorable.TABLE_NAME), true);
     loadAllForUpdateQuery =
-        defCon.prepareQuery(new Query<CapacityStorable>(loadAllForUpdateQuerySqlString, CapacityStorable.reader), true);
+        defCon.prepareQuery(new Query<CapacityStorable>(loadAllForUpdateQuerySqlString, CapacityStorable.reader, 
+                            CapacityStorable.TABLE_NAME), true);
 
   }
 

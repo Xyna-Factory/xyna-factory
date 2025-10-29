@@ -80,4 +80,9 @@
     </Meta>
   </Data>
   <Data IsList="true" Label="List Key Names" ReferenceName="ListKeyName" ReferencePath="xmcp.yang" VariableName="listKeyNames"/>
+  <Data Label="Is Config" VariableName="isConfig">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
 </DataType>

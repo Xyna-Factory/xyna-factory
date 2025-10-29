@@ -27,7 +27,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.gip.xyna</groupId>
     <artifactId>MySQLPersistenceLayer</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.6</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>ISO8859-15</project.build.sourceEncoding>

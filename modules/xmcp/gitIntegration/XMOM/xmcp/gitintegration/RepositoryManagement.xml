@@ -170,13 +170,13 @@
     </Operation>
     <Operation IsStatic="true" Label="Pull" Name="pull" RequiresXynaOrder="true">
       <Input>
-        <Data ID="45" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository45"/>
+        <Data ID="55" Label="Pull Input" ReferenceName="PullInput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullInput55"/>
       </Input>
       <Output>
-        <Data ID="46" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text46"/>
+        <Data ID="56" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput56"/>
       </Output>
       <SourceCode>
-        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.pull(correlatedXynaOrder, repository45);</CodeSnippet>
+        <CodeSnippet Type="Java">return xmcp.gitintegration.RepositoryManagementImpl.pull(correlatedXynaOrder, pullInput55);</CodeSnippet>
       </SourceCode>
     </Operation>
     <Operation IsStatic="true" Label="Load Change Set" Name="loadChangeSet">

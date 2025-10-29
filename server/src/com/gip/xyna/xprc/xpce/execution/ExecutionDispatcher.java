@@ -181,7 +181,8 @@ public class ExecutionDispatcher extends XynaDispatcher {
               String queryByBinding = "SELECT * FROM " + OrderArchiveStatisticsStorable.TABLE_NAME + 
                                         " WHERE " + ClusteredStorable.COL_BINDING + "=" + getCurrentOwnStorableBinding();
               try {
-                PreparedQuery<OrderArchiveStatisticsStorable> query = con.prepareQuery(new Query<OrderArchiveStatisticsStorable>(queryByBinding, OrderArchiveStatisticsStorable.reader));
+                PreparedQuery<OrderArchiveStatisticsStorable> query = con.prepareQuery(new Query<>(queryByBinding, OrderArchiveStatisticsStorable.reader,  
+                    OrderArchiveStatisticsStorable.TABLE_NAME));
                 return con.query(query, Parameter.EMPTY_PARAMETER, -1);
               } catch (XNWH_UnsupportedPersistenceLayerFeatureException e) {
                 // obviously not clustered
