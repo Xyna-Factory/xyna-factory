@@ -21,51 +21,78 @@
       <Data ID="10" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository10"/>
     </Input>
     <Output>
-      <Data ID="156" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition156"/>
-      <Data ID="23" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text23"/>
+      <Data ID="173" IsList="true" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition173"/>
+      <Data ID="942" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput942"/>
     </Output>
-    <ServiceReference ID="94" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
-      <Source RefID="93"/>
-      <Target RefID="93"/>
+    <ServiceReference ID="719" Label="Repository Management" ReferenceName="RepositoryManagement.RepositoryManagement" ReferencePath="xmcp.gitintegration">
+      <Source RefID="718"/>
+      <Target RefID="718"/>
     </ServiceReference>
-    <Function ID="93" Label="Pull">
-      <Source RefID="94"/>
-      <Source RefID="10"/>
-      <Target RefID="94"/>
-      <Target RefID="96"/>
-      <Invoke Operation="pull" ServiceID="94">
+    <ServiceReference ID="1468" Label="Pull Information Definition" ReferenceName="PullInformationDefinition" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="1467"/>
+      <Target RefID="1467"/>
+    </ServiceReference>
+    <Mappings ID="738" Label="Mapping">
+      <Input>
+        <Data ID="755" Label="Repository" ReferenceName="Repository" ReferencePath="xmcp.gitintegration.repository" VariableName="repository755">
+          <Source RefID="738"/>
+        </Data>
         <Source RefID="10"/>
+      </Input>
+      <Output>
+        <Data ID="772" Label="Pull Input" ReferenceName="PullInput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullInput772">
+          <Source RefID="738"/>
+        </Data>
+        <Target RefID="773"/>
+      </Output>
+      <Mapping>%1%.repository~=%0%</Mapping>
+      <Mapping>%1%.dryrun="false"</Mapping>
+    </Mappings>
+    <Function ID="718" Label="Pull">
+      <Source RefID="719"/>
+      <Source RefID="773"/>
+      <Target RefID="719"/>
+      <Target RefID="721"/>
+      <Invoke Operation="pull" ServiceID="719">
+        <Source RefID="773"/>
       </Invoke>
-      <Receive ServiceID="94">
-        <Target RefID="96"/>
+      <Receive ServiceID="719">
+        <Target RefID="721"/>
       </Receive>
     </Function>
-    <Mappings ID="138" Label="Mapping">
-      <Output>
-        <Data ID="139" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition139"/>
-        <Target RefID="137"/>
-      </Output>
-      <Mapping>%0%.label="Result"</Mapping>
-      <Mapping>%0%.numberOfLines="20"</Mapping>
-      <Mapping>%0%.disabled="true"</Mapping>
-      <Mapping>%0%.dataPath="%0%.text"</Mapping>
-    </Mappings>
-    <Data ID="96" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text96">
-      <Source RefID="93"/>
+    <Function ID="1467" Label="Pull Information Definition">
+      <Source RefID="1468"/>
+      <Source RefID="721"/>
+      <Target RefID="1468"/>
+      <Target RefID="1470"/>
+      <Invoke Operation="PullInformationDefinition" ServiceID="1468">
+        <Source RefID="721"/>
+      </Invoke>
+      <Receive ServiceID="1468">
+        <Target RefID="1470"/>
+      </Receive>
+    </Function>
+    <Data ID="721" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput721">
+      <Source RefID="718"/>
     </Data>
-    <Data ID="137" Label="Text Area Definition" ReferenceName="TextAreaDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textAreaDefinition137"/>
+    <Data ID="773" Label="Pull Input" ReferenceName="PullInput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullInput773">
+      <Source RefID="738"/>
+    </Data>
+    <Data ID="1470" IsList="true" Label="Form Definition" ReferenceName="FormDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formDefinition1470">
+      <Source RefID="1467"/>
+    </Data>
     <Assign ID="1">
-      <Source RefID="137"/>
-      <Source RefID="96"/>
-      <Target RefID="156"/>
-      <Target RefID="23"/>
+      <Source RefID="1470"/>
+      <Source RefID="721"/>
+      <Target RefID="173"/>
+      <Target RefID="942"/>
       <Copy>
-        <Source RefID="137"/>
-        <Target RefID="156"/>
+        <Source RefID="1470"/>
+        <Target RefID="173"/>
       </Copy>
       <Copy>
-        <Source RefID="96"/>
-        <Target RefID="23"/>
+        <Source RefID="721"/>
+        <Target RefID="942"/>
       </Copy>
     </Assign>
   </Operation>
