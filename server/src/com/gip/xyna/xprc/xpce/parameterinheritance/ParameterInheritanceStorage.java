@@ -142,7 +142,8 @@ public class ParameterInheritanceStorage {
     ODSConnection con = ods.openConnection(ODSConnectionType.HISTORY);
     try {
       PreparedQuery<InheritanceRuleStorable> pq =
-                      queryCache.getQueryFromCache(QUERY_GET_INHERITANCE_RULES_FOR_ORDERTYPE, con, InheritanceRuleStorable.reader);
+                      queryCache.getQueryFromCache(QUERY_GET_INHERITANCE_RULES_FOR_ORDERTYPE, con, InheritanceRuleStorable.reader,
+                                                   InheritanceRuleStorable.TABLENAME);
       List<InheritanceRuleStorable> list = con.query(pq, new Parameter(dk.getOrderType(), revision), -1);
       con.delete(list);
       con.commit();
@@ -182,7 +183,7 @@ public class ParameterInheritanceStorage {
 
   private InheritanceRuleStorable getInheritanceRuleForUpdate(ODSConnection con, ParameterType parameterType, String orderType, Long revision, String childFilter) throws PersistenceLayerException {
     String sql = childFilter == null || childFilter.length() == 0 ? QUERY_GET_INHERITANCE_RULE_OWN : QUERY_GET_INHERITANCE_RULE_CHILD;
-    PreparedQuery<InheritanceRuleStorable> pq = queryCache.getQueryFromCache(sql, con, InheritanceRuleStorable.reader);
+    PreparedQuery<InheritanceRuleStorable> pq = queryCache.getQueryFromCache(sql, con, InheritanceRuleStorable.reader, InheritanceRuleStorable.TABLENAME);
     Parameter parameter = new Parameter(parameterType.toString(), orderType, revision);
     if (childFilter != null && childFilter.length() != 0) {
       parameter.add(childFilter);

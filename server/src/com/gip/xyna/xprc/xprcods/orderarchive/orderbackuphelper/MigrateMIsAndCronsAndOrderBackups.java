@@ -102,7 +102,8 @@ public class MigrateMIsAndCronsAndOrderBackups extends OrderBackupHelperProcessA
 
     PreparedQuery<OrderCount> prepareQueryCountOrders =
         con.prepareQuery(new Query<OrderCount>("select count(*) from " + OrderInstanceBackup.TABLE_NAME
-            + " where not (" + OrderInstanceBackup.COL_BINDING + " = ?)", OrderCount.getCountReader()), false);
+            + " where not (" + OrderInstanceBackup.COL_BINDING + " = ?)", OrderCount.getCountReader(),
+            OrderInstanceBackup.TABLE_NAME), false);
 
     OrderCount orderCount = con.queryOneRow(prepareQueryCountOrders, new Parameter(ownBinding));
 
@@ -111,6 +112,7 @@ public class MigrateMIsAndCronsAndOrderBackups extends OrderBackupHelperProcessA
         con.getCursor("select * from " + OrderInstanceBackup.TABLE_NAME + " where not ("
                           + OrderInstanceBackup.COL_BINDING + " = ?) order by " + OrderInstanceBackup.COL_ROOT_ID
                           + " asc",
+                          OrderInstanceBackup.TABLE_NAME,
                       new Parameter(ownBinding), OrderInstanceBackup.getReaderWarnIfNotDeserializable(), BLOCKSIZE);
 
     List<OrderInstanceBackup> incompleteFamily = new ArrayList<OrderInstanceBackup>();
@@ -169,8 +171,8 @@ public class MigrateMIsAndCronsAndOrderBackups extends OrderBackupHelperProcessA
         + " where not (" + CronLikeOrder.COL_BINDING + " = ?)";
     
     OrderCount cloCount =
-        con.queryOneRow(con.prepareQuery(new Query<OrderCount>(selectCLOCountSQL, OrderCount.getCountReader())),
-                        new Parameter(ownBinding));
+        con.queryOneRow(con.prepareQuery(new Query<OrderCount>(selectCLOCountSQL, OrderCount.getCountReader(),
+            CronLikeOrder.TABLE_NAME)), new Parameter(ownBinding));
         
     int cloIndex = 0;
 
@@ -249,11 +251,12 @@ public class MigrateMIsAndCronsAndOrderBackups extends OrderBackupHelperProcessA
         + " where not (" + ManualInteractionEntry.COL_BINDING + " = ?)";
     
     OrderCount miCount =
-        con.queryOneRow(con.prepareQuery(new Query<OrderCount>(selectMICountSQL, OrderCount.getCountReader())),
-                        new Parameter(ownBinding));
+        con.queryOneRow(con.prepareQuery(new Query<OrderCount>(selectMICountSQL, OrderCount.getCountReader(),
+            ManualInteractionEntry.TABLE_NAME)), new Parameter(ownBinding));
     
     FactoryWarehouseCursor<? extends ManualInteractionEntry> miCursor =
-        con.getCursor(selectMISQL, new Parameter(ownBinding), new ManualInteractionEntry().getReader(), BLOCKSIZE);
+        con.getCursor(selectMISQL, ManualInteractionEntry.TABLE_NAME,
+                      new Parameter(ownBinding), new ManualInteractionEntry().getReader(), BLOCKSIZE);
 
     
     int miIndex = 0;
@@ -396,7 +399,7 @@ public class MigrateMIsAndCronsAndOrderBackups extends OrderBackupHelperProcessA
     sql.append(") order by ").append(CronLikeOrder.COL_ASSIGNED_ROOT_ORDER_ID);
     
     PreparedQuery<? extends CronLikeOrder> loadcloEntriesForRootIds =
-        preparedQueryCache.getQueryFromCache(sql.toString(), con, new CronLikeOrder().getReader());
+        preparedQueryCache.getQueryFromCache(sql.toString(), con, new CronLikeOrder().getReader(), CronLikeOrder.TABLE_NAME);
     
     return con.query(loadcloEntriesForRootIds, new Parameter(rootOrderIDList.toArray()), -1);
   }
@@ -421,7 +424,8 @@ public class MigrateMIsAndCronsAndOrderBackups extends OrderBackupHelperProcessA
     sql.append(") order by ").append(ManualInteractionEntry.MI_COL_XYNAORDER_ROOT_ID);
     
     PreparedQuery<? extends ManualInteractionEntry> loadMIEntriesForRootIds =
-        preparedQueryCache.getQueryFromCache(sql.toString(), con, new ManualInteractionEntry().getReader());
+        preparedQueryCache.getQueryFromCache(sql.toString(), con, new ManualInteractionEntry().getReader(), 
+                                             ManualInteractionEntry.TABLE_NAME);
     
     return con.query(loadMIEntriesForRootIds, new Parameter(rootOrderIDList.toArray()), -1);
   }

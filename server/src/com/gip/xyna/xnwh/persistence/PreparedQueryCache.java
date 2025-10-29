@@ -66,18 +66,30 @@ public class PreparedQueryCache {
     this.cachecheck_interval = cacheCheckInterval;
   }
 
-
-  public <E> PreparedQuery<E> getQueryFromCache(final String sqlString, ODSConnection con, ResultSetReader<E> reader)
+  public <E> PreparedQuery<E> getQueryFromCache(final String sqlString, ODSConnection con, ResultSetReader<E> reader, String tableName)
       throws PersistenceLayerException {
-    return getQueryFromCache(sqlString + con.getConnectionType(), new SQLStringGenerator() {
-
-      public String generateSQLString() {
-        return sqlString;
-      }
-
-    }, con, reader);
+    return getQueryFromCache(sqlString + con.getConnectionType(), () -> sqlString, con, reader, tableName);
   }
 
+  @Deprecated
+  public <E> PreparedQuery<E> getQueryFromCache(final String sqlString, ODSConnection con, ResultSetReader<E> reader)
+      throws PersistenceLayerException {
+    return getQueryFromCache(sqlString + con.getConnectionType(), () -> sqlString, con, reader);
+  }
+
+  /**
+   * achtung, diese queries hören nicht auf änderungen an persistencelayers und werden durch änderungen an dem
+   * zugehörigen persistencelayer ungültig. Das ist aber nicht so schlimm, weil man die
+   * {@link XNWH_IncompatiblePreparedObjectException} fangen kann und dann den cache einfach leeren mit {@link #clear()}.
+   */
+   @Deprecated
+  public <E> PreparedQuery<E> getQueryFromCache(Object keyForQueryIdentification,
+                                                SQLStringGenerator sqlStringGenerator, ODSConnection con,
+                                                ResultSetReader<E> reader) throws PersistenceLayerException {
+    String tableName = Query.parseSqlStringFindTable(sqlStringGenerator.generateSQLString());
+    return getQueryFromCache(keyForQueryIdentification, sqlStringGenerator,con, reader, tableName );
+  }
+  
 
   /**
    * achtung, diese queries hören nicht auf änderungen an persistencelayers und werden durch änderungen an dem
@@ -86,14 +98,14 @@ public class PreparedQueryCache {
    */
   public <E> PreparedQuery<E> getQueryFromCache(Object keyForQueryIdentification,
                                                 SQLStringGenerator sqlStringGenerator, ODSConnection con,
-                                                ResultSetReader<E> reader) throws PersistenceLayerException {
+                                                ResultSetReader<E> reader, String tableName) throws PersistenceLayerException {
 
     Search search = cachedSearches.get(keyForQueryIdentification);
     if (search == null) {
       synchronized (cachedSearches) {
         search = cachedSearches.get(keyForQueryIdentification);
         if (search == null) {
-          PreparedQuery<E> query = con.prepareQuery(new Query<E>(sqlStringGenerator.generateSQLString(), reader));
+          PreparedQuery<E> query = con.prepareQuery(new Query<E>(sqlStringGenerator.generateSQLString(), reader, tableName));
           search = new Search();
           search.query = query;
           cachedSearches.put(keyForQueryIdentification, search);

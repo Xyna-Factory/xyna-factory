@@ -64,7 +64,8 @@ public class OrderbackupWillNotResume extends AbandonedOrderDetectionRule<Abando
         readOrderbackupsWithRootOrderId =
             con.prepareQuery(new Query<OrderInstanceBackup>("select * from " + OrderInstanceBackup.TABLE_NAME
                 + " where " + OrderInstanceBackup.COL_ROOT_ID + "=? and " + OrderInstanceBackup.COL_BINDING + "=?",
-                                                            new OrderInstanceBackup().getReader()), true);
+                                                            new OrderInstanceBackup().getReader(),
+                                                            OrderInstanceBackup.TABLE_NAME), true);
       } catch (PersistenceLayerException e) {
         throw new RuntimeException("Failed to prepare query. ", e);
       } finally {
@@ -129,7 +130,7 @@ public class OrderbackupWillNotResume extends AbandonedOrderDetectionRule<Abando
               oib.setRootId(rs.getLong(OrderInstance.COL_ROOT_ID));
               return oib;
             }
-          }));
+          }, OrderInstanceBackup.TABLE_NAME));
 
       List<OrderInstanceBackup> orders = con.query(query, new Parameter(targetBinding), Integer.MAX_VALUE);
 

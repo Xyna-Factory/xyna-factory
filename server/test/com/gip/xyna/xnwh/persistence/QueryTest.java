@@ -39,7 +39,7 @@ public class QueryTest extends TestCase {
   
   public void testSimpleQuery() throws PersistenceLayerException {
     String sqlString = "select bla from mytable";
-    Query<A> q = new Query<A>(sqlString, reader);
+    Query<A> q = new Query<A>(sqlString, reader, "mytable");
     assertEquals("mytable", q.getTable());
     assertEquals(sqlString, q.getSqlString());
     assertEquals(reader, q.getReader());
@@ -47,7 +47,7 @@ public class QueryTest extends TestCase {
   
   public void testQueryWithOrderBy() throws PersistenceLayerException {
     String sqlString = "select bla from mytable order by bla";
-    Query<A> q = new Query<A>(sqlString, reader);
+    Query<A> q = new Query<A>(sqlString, reader, "mytable");
     assertEquals("mytable", q.getTable());
     assertEquals(sqlString, q.getSqlString());
     assertEquals(reader, q.getReader());    
@@ -55,7 +55,7 @@ public class QueryTest extends TestCase {
   
   public void testQueryWithWhere() throws PersistenceLayerException {
     String sqlString = "select bla from mytable where bla = 1";
-    Query<A> q = new Query<A>(sqlString, reader);
+    Query<A> q = new Query<A>(sqlString, reader, "mytable");
     assertEquals("mytable", q.getTable());
     assertEquals(sqlString, q.getSqlString());
     assertEquals(reader, q.getReader()); 
@@ -63,7 +63,7 @@ public class QueryTest extends TestCase {
   
   public void testQueryWithWhereAndOrderBy() throws PersistenceLayerException {
     String sqlString = "select bla from mytable where bla = 1 order by bla";
-    Query<A> q = new Query<A>(sqlString, reader);
+    Query<A> q = new Query<A>(sqlString, reader, "mytable");
     assertEquals("mytable", q.getTable());
     assertEquals(sqlString, q.getSqlString());
     assertEquals(reader, q.getReader()); 

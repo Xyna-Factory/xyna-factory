@@ -26,9 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 
-import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.update.outdatedclasses_7_0_2_13.OrderInstanceBackup;
 import com.gip.xyna.utils.collections.Triple;
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -48,8 +46,6 @@ import com.gip.xyna.xprc.XynaOrderServerExtension;
 
 public class UpdateAddRootRevisionForOrderBackups extends UpdateJustVersion {
 
-
-  private static final Logger logger = CentralFactoryLogging.getLogger(UpdateAddRootRevisionForOrderBackups.class);
 
   private static String selectAllLocalBackupIds = "select "+OrderInstanceBackup.COL_ID +"," + OrderInstanceBackup.COL_ROOT_ID +"," + OrderInstanceBackup.COL_REVISION +  " from " + OrderInstanceBackup.TABLE_NAME;
   private static String selectFamilyBackupIds = "select "+OrderInstanceBackup.COL_ID +" from " + OrderInstanceBackup.TABLE_NAME + " where " + OrderInstanceBackup.COL_ROOT_ID + "=?";
@@ -79,7 +75,8 @@ public class UpdateAddRootRevisionForOrderBackups extends UpdateJustVersion {
           try {
             List<Long> familiyIds = getAllFamilyIds(con, rootOrderId);
             for (Long id : familiyIds) {
-              PreparedQuery<OrderInstanceBackup> pq = con.prepareQuery(new Query<OrderInstanceBackup>(selectOrderBackup, OrderInstanceBackup.reader));
+              PreparedQuery<OrderInstanceBackup> pq = con.prepareQuery(new Query<OrderInstanceBackup>(selectOrderBackup, OrderInstanceBackup.reader,
+                  OrderInstanceBackup.TABLE_NAME));
               try {
                 OrderInstanceBackup oib = con.queryOneRow(pq, new Parameter(id));
                 con.persistObject(oib);
@@ -139,7 +136,7 @@ public class UpdateAddRootRevisionForOrderBackups extends UpdateJustVersion {
           public Triple<Long, Long, Long> read(ResultSet rs) throws SQLException {
             return Triple.<Long, Long, Long>of(rs.getLong(OrderInstanceBackup.COL_ID), rs.getLong(OrderInstanceBackup.COL_ROOT_ID), rs.getLong(OrderInstanceBackup.COL_REVISION));
           }
-        }));
+        }, OrderInstanceBackup.TABLE_NAME));
     Map<Long, Long> map = new HashMap<Long, Long>();
     Collection<Triple<Long, Long, Long>> results =  con.query( query, new Parameter(), -1);
     for (Triple<Long, Long, Long> result : results) {
@@ -156,7 +153,7 @@ public class UpdateAddRootRevisionForOrderBackups extends UpdateJustVersion {
       public Long read(ResultSet rs) throws SQLException {
         return rs.getLong(OrderInstanceBackup.COL_ID);
       }
-    }));
+    }, OrderInstanceBackup.TABLE_NAME));
     return con.query( query, new Parameter(rootId), -1);
   }
 

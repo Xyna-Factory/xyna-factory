@@ -589,8 +589,8 @@ public class OrderArchive extends FunctionGroup
           @SuppressWarnings("unchecked")
           FactoryWarehouseCursor<OrderInstanceDetails> cursor =
               (FactoryWarehouseCursor<OrderInstanceDetails>) defaultConnection
-                  .getCursor(OrderArchiveQueryHelper.allActiveInstancesSQL, new Parameter(),
-                             new OrderInstanceDetails().getReader(), 100, cache);
+                  .getCursor(OrderArchiveQueryHelper.allActiveInstancesSQL, OrderInstanceDetails.TABLE_NAME, 
+                             new Parameter(), new OrderInstanceDetails().getReader(), 100, cache);
           List<OrderInstanceDetails> nextCache = cursor.getRemainingCacheOrNextIfEmpty();
 
           while (nextCache != null && nextCache.size() > 0) {
@@ -950,7 +950,7 @@ public class OrderArchive extends FunctionGroup
     }
     return defaultConnection
         .getCursor(OrderArchiveQueryHelper.getGetAllOwnSuspendedLogWarningIfNotSerializableWithBeginIndex_XynaOrderOnly
-                   + (revision != null ? " AND " + OrderInstanceBackup.COL_REVISION + " = ?" : ""),
+                   + (revision != null ? " AND " + OrderInstanceBackup.COL_REVISION + " = ?" : ""), OrderInstanceBackup.TABLE_NAME,
                    params, OrderInstanceBackup.getReaderWarnIfNotDeserializableNoDetails(), 100, cache);
   }
   
@@ -2043,7 +2043,7 @@ public class OrderArchive extends FunctionGroup
 
   private static void addValuesForSubstringMap(ODSConnection con, String colName, SubstringMapIndex substringMapIndex) throws PersistenceLayerException {
       PreparedQuery<String> pq =
-          con.prepareQuery(new Query<String>("select distinct(" + colName + ") from " + OrderInfoStorable.TABLE_NAME, reader));
+          con.prepareQuery(new Query<String>("select distinct(" + colName + ") from " + OrderInfoStorable.TABLE_NAME, reader, OrderInfoStorable.TABLE_NAME));
       List<String> vals = con.query(pq, new Parameter(), -1, reader);
       substringMapIndex.map.addAll(vals, 5000);
       substringMapIndex.complete = true;
@@ -2841,7 +2841,7 @@ public class OrderArchive extends FunctionGroup
               return rs.getInt(1);
             }
 
-          }));
+          }, OrderInstanceBackup.TABLE_NAME));
       return con.queryOneRow(pq, new Parameter(revision, getOwnBinding()));
     } finally {
       con.closeConnection();
@@ -2864,7 +2864,8 @@ public class OrderArchive extends FunctionGroup
                              + OrderInstanceBackup.COL_ID + ", " + OrderInstanceBackup.COL_REVISION + ", "
                              + OrderInstanceBackup.COL_ROOT_ID + ", " + OrderInstanceBackup.COL_BINDING + " from "
                              + OrderInstanceBackup.TABLE_NAME + " where " + OrderInstanceBackup.COL_REVISION + " = ?"
-                             + (global ? "" : " AND " + OrderInstanceBackup.COL_BINDING + " = ?"), params,
+                             + (global ? "" : " AND " + OrderInstanceBackup.COL_BINDING + " = ?"),
+                             OrderInstanceBackup.TABLE_NAME, params,
                          OrderInstanceBackup.getSelectiveReader(),
                          blocksize);
   }
