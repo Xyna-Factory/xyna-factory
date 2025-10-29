@@ -23,6 +23,10 @@
     <Output>
       <Data ID="230" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition230"/>
     </Output>
+    <ServiceReference ID="5074" Label="Create Set Empty Panel Definition" ReferenceName="CreateSetEmptyPanelDefinition" ReferencePath="xmcp.yang.fman">
+      <Source RefID="5073"/>
+      <Target RefID="5073"/>
+    </ServiceReference>
     <ServiceReference ID="24" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="23"/>
       <Target RefID="23"/>
@@ -48,6 +52,18 @@
       <Mapping>%1%.fQN="xmcp.yang.fman.OperationAssignmentsDefinition"</Mapping>
       <Mapping>%1%.rTC=%0%</Mapping>
     </Mappings>
+    <Function ID="5073" Label="Create Set Empty Panel Definition">
+      <Source RefID="5074"/>
+      <Source RefID="109"/>
+      <Target RefID="5074"/>
+      <Target RefID="5076"/>
+      <Invoke Operation="CreateSetEmptyPanelDefinition" ServiceID="5074">
+        <Source RefID="109"/>
+      </Invoke>
+      <Receive ServiceID="5074">
+        <Target RefID="5076"/>
+      </Receive>
+    </Function>
     <Mappings ID="3416" Label="Mapping">
       <Input>
         <Data ID="3418" Label="Definition Workflow" ReferenceName="DefinitionWorkflow" ReferencePath="xmcp.forms.datatypes" VariableName="definitionWorkflow3418"/>
@@ -104,6 +120,16 @@
         <Source RefID="109"/>
       </Input>
       <Input>
+        <Data ID="5101" Label="Set Empty - Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5101">
+          <Source RefID="3502"/>
+        </Data>
+        <Source RefID="5076">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
         <Data ID="3553" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition3553">
           <Source RefID="3502"/>
         </Data>
@@ -149,12 +175,14 @@
         </Data>
         <Target RefID="3520"/>
       </Output>
-      <Mapping>%5%.children["0"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%1%</Mapping>
-      <Mapping>%5%.children["1"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%2%</Mapping>
-      <Mapping>%5%.children["2"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%3%</Mapping>
-      <Mapping>%5%.children["3"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%4%</Mapping>
-      <Mapping>%5%.label=%0%.yangPath</Mapping>
-      <Mapping>%5%.closable="true"</Mapping>
+      <Mapping>%6%.children["0"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%1%</Mapping>
+      <Mapping>%6%.children["1"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%2%</Mapping>
+      <Mapping>%6%.children["2"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%3%</Mapping>
+      <Mapping>%6%.children["3"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%4%</Mapping>
+      <Mapping>%6%.children["4"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%5%</Mapping>
+      <Mapping>%6%.label=%0%.yangPath</Mapping>
+      <Mapping>%6%.closable="true"</Mapping>
+      <Mapping>%6%.triggerClose.eventId=concat("yang_assignment_close_", %0%.loadYangAssignmentsData.totalYangPath)</Mapping>
     </Mappings>
     <Choice ID="3836" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="109"/>
@@ -248,6 +276,9 @@
     </Data>
     <Data ID="4829" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition4829">
       <Source RefID="3925"/>
+    </Data>
+    <Data ID="5076" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition5076">
+      <Source RefID="5073"/>
     </Data>
     <Assign ID="1">
       <Source RefID="4811"/>

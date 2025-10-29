@@ -77,6 +77,7 @@
           <Mapping>%2%.loadYangAssignmentsData.totalNamespaces=%0%.tagNamespace</Mapping>
           <Mapping>%2%.type=%0%.yangKeyword</Mapping>
           <Mapping>%2%.yangPath=%0%.tagName</Mapping>
+          <Mapping>%2%.retain=%0%.retain</Mapping>
         </Mappings>
         <Assign ID="3149">
           <Source RefID="3278"/>

@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.log4j.Logger;
-
 
 /*
  * adapt yang xml paths to replace list indices with list keys; that means list items will not be identified by

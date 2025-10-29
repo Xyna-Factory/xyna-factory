@@ -69,4 +69,9 @@
       <Type>boolean</Type>
     </Meta>
   </Data>
+  <Data Label="Retain" VariableName="retain">
+    <Meta>
+      <Type>boolean</Type>
+    </Meta>
+  </Data>
 </DataType>
