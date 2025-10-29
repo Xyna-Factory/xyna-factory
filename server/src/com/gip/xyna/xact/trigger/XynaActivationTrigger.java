@@ -1990,6 +1990,7 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
     List<File> allFilesExceptForJars = new ArrayList<File>();
     addSubdirectoryFilesExceptJars(allFilesExceptForJars, savedPathFile, jarFiles);
     copyFilesToTargetFolder(deployedPath, allFilesExceptForJars.toArray(new File[allFilesExceptForJars.size()]));
+    deleteObsoleteJarsInTargetDir(deployedPath, jarFiles);
     return copyFilesToTargetFolder(deployedPath, jarFiles);
   }
 
@@ -3244,6 +3245,40 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
     }
     
     return Pair.of(maxReceives, autoReject);
+  }
+  
+  
+  private static void deleteObsoleteJarsInTargetDir(String targetDirPath, File[] sourceFiles) throws Ex_FileAccessException {
+    Set<File> sourceFileSet = new HashSet<File>();
+    for (File file : sourceFiles) {
+      File adapted = toCanonicalOrAbsoluteFile(file);
+      if (adapted != null) {
+        sourceFileSet.add(adapted);
+      }
+    }
+    File targetDir = new File(targetDirPath);
+    File[] subdirs = targetDir.listFiles( (dir, name) -> new File(dir, name).isDirectory() );
+    for (File subdir : subdirs) {
+      deleteObsoleteJarsInTargetDir(subdir.getAbsolutePath(), sourceFiles);
+    }
+    File[] jarFiles = targetDir.listFiles( (dir, name) -> name.toLowerCase().endsWith(".jar") );
+    for (File file : jarFiles) {
+      File targetDirFile = toCanonicalOrAbsoluteFile(file);
+      if (!sourceFileSet.contains(targetDirFile)) { 
+        targetDirFile.delete();
+      }
+    }
+  }
+  
+  
+  public static File toCanonicalOrAbsoluteFile(File file) {
+    File adapted = null;
+    try {
+      adapted = file.getCanonicalFile();
+    } catch (Exception e) {
+      adapted = file.getAbsoluteFile();
+    }
+    return adapted;
   }
   
   

@@ -131,7 +131,7 @@
             </then>
         </if>
         <!-- copy libraries and licences to xyna server -->
-        <default-scp-to-remote fromdir="${target.dir}" frominclude="**/*" todir="${server.mdm.path}" />
+        <replace-jars-in-remote-dir source.dir="${target.dir}" remote.target.dir="${server.mdm.path}" xyna.server.path="${server.path}" />
 
         <!-- deploy datatype -->
         <custom-ssh-exec host="${server.host}" username="${server.userid}" command="cd ${server.path}; ./xynafactory.sh ${deploy.template}" />
