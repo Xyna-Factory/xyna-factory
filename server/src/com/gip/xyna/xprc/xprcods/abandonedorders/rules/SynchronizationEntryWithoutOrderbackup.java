@@ -51,7 +51,8 @@ public class SynchronizationEntryWithoutOrderbackup extends AbandonedOrderDetect
         readSynchronizationEntryWithOrderId =
             con.prepareQuery(new Query<SynchronizationEntry>("select * from " + SynchronizationEntry.TABLE_NAME
                                  + " where " + SynchronizationEntry.COL_ORDER_ID_2_RESUME + "=?",
-                                                               new SynchronizationEntry().getReader()), true);
+                                                               new SynchronizationEntry().getReader(),
+                                                               SynchronizationEntry.TABLE_NAME), true);
 //        readSynchronizationEntriesWithRootOrderId =
 //            con.prepareQuery(new Query<SynchronizationEntry>("select * from " + SynchronizationEntry.TABLE_NAME
 //                                 + " where " + SynchronizationEntry.COL_ROOT_ORDER_ID_2_RESUME + "=?",

@@ -111,14 +111,16 @@ public final class CronLikeOrderHelpers {
     try {
       PreparedQuery<OrderCount> pq =
         (PreparedQuery<OrderCount>) queryCache.getQueryFromCache(sqlCountCronLikeOrders, con,
-                                                                    OrderCount.getCountReader());
+                                                                    OrderCount.getCountReader(),
+                                                                    CronLikeOrder.TABLE_NAME);
       count = con.queryOneRow(pq, new Parameter());
     } catch (XNWH_IncompatiblePreparedObjectException e) {
       queryCache.clear();
       
       PreparedQuery<OrderCount> pq =
                       (PreparedQuery<OrderCount>) queryCache.getQueryFromCache(sqlCountCronLikeOrders, con,
-                                                                                  OrderCount.getCountReader());
+                                                                                  OrderCount.getCountReader(),
+                                                                                  CronLikeOrder.TABLE_NAME);
       count = con.queryOneRow(pq, new Parameter());
     }
     return count.getCount();
@@ -131,13 +133,15 @@ public final class CronLikeOrderHelpers {
     try {
       PreparedQuery<OrderCount> pq =
         (PreparedQuery<OrderCount>) queryCache.getQueryFromCache(sqlCountCronLikeOrdersForBinding, con,
-                                                                    OrderCount.getCountReader());
+                                                                    OrderCount.getCountReader(),
+                                                                    CronLikeOrder.TABLE_NAME);
       count = con.queryOneRow(pq, new Parameter(binding));
     } catch (XNWH_IncompatiblePreparedObjectException e) {
       queryCache.clear();
       PreparedQuery<OrderCount> pq =
                       (PreparedQuery<OrderCount>) queryCache.getQueryFromCache(sqlCountCronLikeOrdersForBinding, con,
-                                                                                  OrderCount.getCountReader());
+                                                                                  OrderCount.getCountReader(),
+                                                                                  CronLikeOrder.TABLE_NAME);
       count = con.queryOneRow(pq, new Parameter(binding));
     }
 
@@ -284,13 +288,15 @@ public final class CronLikeOrderHelpers {
     try {
       PreparedQuery<CronLikeOrder> pq =
         (PreparedQuery<CronLikeOrder>) queryCache.getQueryFromCache(sqlGetCronLikeOrders, con,
-                                                                    new CronLikeOrder().getReader());
+                                                                    new CronLikeOrder().getReader(),
+                                                                    CronLikeOrder.TABLE_NAME);
       retVal = con.query(pq, new Parameter(), (int) maxRows);
     } catch (XNWH_IncompatiblePreparedObjectException e) {
       queryCache.clear();
       PreparedQuery<CronLikeOrder> pq =
         (PreparedQuery<CronLikeOrder>) queryCache.getQueryFromCache(sqlGetCronLikeOrders, con,
-                                                                    new CronLikeOrder().getReader());
+                                                                    new CronLikeOrder().getReader(),
+                                                                    CronLikeOrder.TABLE_NAME);
       retVal = con.query(pq, new Parameter(), (int) maxRows);
     } finally {
       closeConnectionWithoutException(con);
@@ -315,14 +321,14 @@ public final class CronLikeOrderHelpers {
     try {
       PreparedQuery<CronLikeOrder> pq =
         (PreparedQuery<CronLikeOrder>) queryCache.getQueryFromCache(sqlGetCronLikeOrdersWithOwnBindingAndRootOrderId, con,
-                                                                    new CronLikeOrder().getReader());
+                                                                    new CronLikeOrder().getReader(), CronLikeOrder.TABLE_NAME);
       Parameter sqlParamBinding = new Parameter(binding, rootOrderId);
       retVal = con.query(pq, sqlParamBinding, -1);
     } catch (XNWH_IncompatiblePreparedObjectException e) {
       queryCache.clear();
       PreparedQuery<CronLikeOrder> pq =
         (PreparedQuery<CronLikeOrder>) queryCache.getQueryFromCache(sqlGetCronLikeOrdersWithOwnBindingAndRootOrderId, con,
-                                                                    new CronLikeOrder().getReader());
+                                                                    new CronLikeOrder().getReader(), CronLikeOrder.TABLE_NAME);
       Parameter sqlParamBinding = new Parameter(binding, rootOrderId);
       retVal = con.query(pq, sqlParamBinding, -1);
     } finally {
@@ -426,10 +432,10 @@ public final class CronLikeOrderHelpers {
   private static <R> PreparedQuery<R> prepareQuery(String query, ODSConnection con,
                                                    ResultSetReader<R> reader) throws PersistenceLayerException {
     try {
-      return queryCache.getQueryFromCache(query, con, reader );
+      return queryCache.getQueryFromCache(query, con, reader, CronLikeOrder.TABLE_NAME);
     } catch (XNWH_IncompatiblePreparedObjectException e) {
       queryCache.clear();
-      return queryCache.getQueryFromCache(query, con, reader );
+      return queryCache.getQueryFromCache(query, con, reader, CronLikeOrder.TABLE_NAME);
     }
   }
   

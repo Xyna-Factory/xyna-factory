@@ -150,7 +150,7 @@ public class SessionManagement extends FunctionGroup implements IPropertyChangeL
     try {
       selectTimedoutSessions =
           defaultConnection.prepareQuery(new Query<ManagedSession>("select * from " + ManagedSession.TABLE_NAME + " where "
-              + ManagedSession.COL_ABSOLUTE_SESSION_TIMEOUT + " < ?", new ManagedSession().getReader()), true);
+              + ManagedSession.COL_ABSOLUTE_SESSION_TIMEOUT + " < ?", new ManagedSession().getReader(), ManagedSession.TABLE_NAME), true);
     } finally {
       defaultConnection.closeConnection();
     }

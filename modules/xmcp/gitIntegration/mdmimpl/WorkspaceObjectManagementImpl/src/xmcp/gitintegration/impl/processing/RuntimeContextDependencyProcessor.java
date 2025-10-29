@@ -87,7 +87,7 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
 
     String differencesString = "";
     if (!fromStr.equals(toStr)) {
-      differencesString = fromStr + "=>" + toStr;
+      differencesString = "=>" + toStr;
     }
     return differencesString;
   }

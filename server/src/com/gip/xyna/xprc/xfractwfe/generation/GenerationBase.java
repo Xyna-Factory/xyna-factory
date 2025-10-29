@@ -6493,7 +6493,7 @@ public abstract class GenerationBase {
       if (serviceLibsBackup != null) {
         //TODO nur sinnvoll, wenn es ein deployment ist, bei dem unter server/services keine jars liegen, die alten jars aber erhalten bleiben sollen.
         //ansonsten gibt es eigtl noch den usecase: man will jetzt weniger jars verwenden als vorher.
-        serviceLibsBackup.copy(false);
+        serviceLibsBackup.copy(true);
       }
     }
   }

@@ -530,14 +530,20 @@ public class CentralComponentConnectionCache {
       return innerConnection.prepareQuery(query, listenToPersistenceLayerChanges);
     }
 
-
+    @Deprecated
     public <T extends Storable<?>> FactoryWarehouseCursor<T> getCursor(String sqlQuery, Parameter parameters,
                                                                        ResultSetReader<T> rsr, int cacheSize)
         throws PersistenceLayerException {
-      checkAllowedStorable(Query.parseSqlStringFindTable(sqlQuery));
-      return innerConnection.getCursor(sqlQuery, parameters, rsr, cacheSize);
+      String tableName = Query.parseSqlStringFindTable(sqlQuery);
+      return getCursor(sqlQuery, tableName, parameters, rsr, cacheSize);
     }
 
+    public <T extends Storable<?>> FactoryWarehouseCursor<T> getCursor(String sqlQuery, String tableName, Parameter parameters,
+                                                                       ResultSetReader<T> rsr, int cacheSize)
+        throws PersistenceLayerException {
+      checkAllowedStorable(tableName);
+      return innerConnection.getCursor(sqlQuery, tableName, parameters, rsr, cacheSize);
+    }
 
     public boolean isOpen() {
       return innerConnection.isOpen();
@@ -606,13 +612,21 @@ public class CentralComponentConnectionCache {
       innerConnection.executeAfterClose(runnable, priority); 
     }
 
-
+    @Deprecated
     public <T extends Storable<?>> FactoryWarehouseCursor<T> getCursor(String sqlQuery, Parameter parameters,
                                                                        ResultSetReader<T> rsr, int cacheSize,
                                                                        PreparedQueryCache cache)
                     throws PersistenceLayerException {
-      checkAllowedStorable(Query.parseSqlStringFindTable(sqlQuery));
-      return innerConnection.getCursor(sqlQuery, parameters, rsr, cacheSize, cache);
+      String tableName = Query.parseSqlStringFindTable(sqlQuery);
+      return getCursor(sqlQuery, tableName, parameters, rsr, cacheSize, cache);
+    }
+
+    public <T extends Storable<?>> FactoryWarehouseCursor<T> getCursor(String sqlQuery, String tableName, Parameter parameters,
+                                                                       ResultSetReader<T> rsr, int cacheSize,
+                                                                       PreparedQueryCache cache)
+                    throws PersistenceLayerException {
+      checkAllowedStorable(tableName);
+      return innerConnection.getCursor(sqlQuery, tableName, parameters, rsr, cacheSize, cache);
     }
 
     public void shareConnectionPools(ODSConnection conHistory) {
