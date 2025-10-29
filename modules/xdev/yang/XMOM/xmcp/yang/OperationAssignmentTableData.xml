@@ -35,7 +35,7 @@
     </Meta>
   </Data>
   <Data Label="Load Yang Assignments Data" ReferenceName="LoadYangAssignmentsData" ReferencePath="xmcp.yang" VariableName="loadYangAssignmentsData"/>
-  <Data Label="retain" VariableName="retain">
+  <Data Label="Retain" VariableName="retain">
     <Meta>
       <Type>boolean</Type>
     </Meta>
