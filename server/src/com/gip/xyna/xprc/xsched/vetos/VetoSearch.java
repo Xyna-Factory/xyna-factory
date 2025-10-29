@@ -67,12 +67,13 @@ public class VetoSearch {
 
     ODSConnection con = ODSImpl.getInstance().openConnection(ODSConnectionType.DEFAULT);
     try {
-      PreparedQuery<VetoInformationStorable> query = cache.getQueryFromCache(selectString, con, reader);
+      PreparedQuery<VetoInformationStorable> query = cache.getQueryFromCache(selectString, con, reader, VetoInformationStorable.TABLE_NAME);
 
       viss.addAll(con.query(query, paras, maxRows));
       if (maxRows >= 0 && viss.size() >= maxRows) {
         PreparedQuery<? extends OrderCount> queryCount = cache.getQueryFromCache(selectCountString, con,
-                                                                                 OrderCount.getCountReader());
+                                                                                 OrderCount.getCountReader(),
+                                                                                 VetoInformationStorable.TABLE_NAME);
         OrderCount count = con.queryOneRow(queryCount, paras);
         countAll = count.getCount();
       } else {

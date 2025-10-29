@@ -243,7 +243,7 @@ public class DispatcherDestinationStorable extends Storable<DispatcherDestinatio
        return result;
      }
      result = connection
-                     .prepareQuery(new Query<DispatcherDestinationStorable>(SELECT_ALL_BY_DISP_NAME_AND_DK, reader),
+                     .prepareQuery(new Query<DispatcherDestinationStorable>(SELECT_ALL_BY_DISP_NAME_AND_DK, reader, TABLE_NAME),
                                    true);
      getAllDestinationsWithDestinationKeyForThisDispatcherByConnectionType.put(connectionType, result);
      return result;
@@ -266,7 +266,7 @@ public class DispatcherDestinationStorable extends Storable<DispatcherDestinatio
      if (result != null) {
        return result;
      }
-     result = connection.prepareQuery(new Query<DispatcherDestinationStorable>(SELECT_ALL_BY_DK, reader), true);
+     result = connection.prepareQuery(new Query<DispatcherDestinationStorable>(SELECT_ALL_BY_DK, reader, TABLE_NAME), true);
      getAllDestinationsWithDestinationKeyByConnectionType.put(connectionType, result);
      return result;
    }

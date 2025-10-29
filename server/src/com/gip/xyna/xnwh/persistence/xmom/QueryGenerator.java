@@ -75,15 +75,21 @@ public class QueryGenerator {
   private static final String CAST_MARKER_START = "#" + Functions.CAST_FUNCTION_NAME + "(";
   private static final String CAST_MARKER_END = ")";
   public final Function<String, String> escape;
+  private final Pattern placeForWhere;
   
   
   public QueryGenerator() {
-    this(Function.identity());
+    this(Function.identity(), PLACE_FOR_WHERE);
   }
   
-
+  @Deprecated
   public QueryGenerator(Function<String, String> escape) {
+    this(escape, PLACE_FOR_WHERE);
+  }
+
+  public QueryGenerator(Function<String, String> escape, Pattern placeForWhere) {
     this.escape = escape;
+    this.placeForWhere = placeForWhere;
   }
 
   public QueryPiplineElement<?, ?> parse(XMOMStorableStructureInformation info, List<String> selectedUnresolvedColumns, IFormula condition,
@@ -168,7 +174,7 @@ public class QueryGenerator {
       
       DataQueryPiplineElement dataQuery = new DataQueryPiplineElement(buildDataQuery(queryRoot, selectedColumns, aliasDictionary),
                                                                       buildReaderFromQueryTree(queryRoot, selectedColumns, aliasDictionary),
-                                                                      info.getColInfoByVarType(VarType.PK), escape);
+                                                                      info.getColInfoByVarType(VarType.PK), escape, placeForWhere);
       dataQuery.rootTableName = info.getTableName();
       dataQuery.setAliasDictionary(aliasDictionary);
       dataQuery.setSelectedColumns(selectedColumns);
@@ -1487,25 +1493,25 @@ public class QueryGenerator {
   
 
   private static String PQC /* possibly qualified column - regexp pattern */ = "[a-zA-Z0-9_]+(\\.[a-zA-Z0-9_]+)?";
+  @Deprecated
   public static String PLACE_FOR_WHERE_PATTERN = "\\s+FROM\\s+"+PQC+"(((\\s+(LEFT|RIGHT))?\\s+((INNER|OUTER)\\s+)?)?\\s*JOIN\\s+"+PQC+"(\\s+[a-zA-Z0-9_]+)?\\s+ON\\s+"+PQC+"\\s*=\\s*"+PQC+")*";
+  private static Pattern PLACE_FOR_WHERE = Pattern.compile(PLACE_FOR_WHERE_PATTERN, Pattern.CASE_INSENSITIVE);
   
   static class DataQueryPiplineElement<P, T>  extends QueryPiplineElement<P, T> {
     
     private final Function<String, String> escape;
-
-    private static Pattern placeForWhere = 
-      Pattern.compile(PLACE_FOR_WHERE_PATTERN, Pattern.CASE_INSENSITIVE);
-    
+    private final Pattern placeForWhere;
     private final StorableColumnInformation rootPk;
     
-    DataQueryPiplineElement(String sqlString, ResultSetReader<T> reader, StorableColumnInformation rootPk, Function<String, String> escape) {
-      this(sqlString, reader, new Parameter(), rootPk, escape);
+    DataQueryPiplineElement(String sqlString, ResultSetReader<T> reader, StorableColumnInformation rootPk, Function<String, String> escape, Pattern placeForWhere) {
+      this(sqlString, reader, new Parameter(), rootPk, escape, placeForWhere);
     }
     
-    DataQueryPiplineElement(String sqlString, ResultSetReader<T> reader,  Parameter params, StorableColumnInformation rootPk, Function<String, String> escapeString) {
+    DataQueryPiplineElement(String sqlString, ResultSetReader<T> reader,  Parameter params, StorableColumnInformation rootPk, Function<String, String> escapeString, Pattern placeForWhere) {
       super(sqlString, reader, -1, params);
       this.rootPk = rootPk;
       this.escape = escapeString;
+      this.placeForWhere = placeForWhere;
     }
     
 

@@ -51,7 +51,8 @@ public class OrderbackupWithoutOrderarchiveDefault extends AbandonedOrderDetecti
         readOrderbackupsWithRootOrderId =
           con.prepareQuery(new Query<OrderInstanceBackup>("select * from " + OrderInstanceBackup.TABLE_NAME
               + " where " + OrderInstanceBackup.COL_ROOT_ID + "=? and " + OrderInstanceBackup.COL_BINDING + "=?",
-                                                          new OrderInstanceBackup().getReader()), true);
+                                                          new OrderInstanceBackup().getReader(),
+                                                          OrderInstanceBackup.TABLE_NAME), true);
       } catch (PersistenceLayerException e) {
         throw new RuntimeException("Failed to prepare query. ", e);
       } finally {
@@ -80,7 +81,8 @@ public class OrderbackupWithoutOrderarchiveDefault extends AbandonedOrderDetecti
           con.prepareQuery(new Query<OrderInstanceBackup>("select * from " + OrderInstanceBackup.TABLE_NAME + " where "
               + OrderInstanceBackup.COL_XYNAORDER + " is not null and " + OrderInstanceBackup.COL_BINDING + "=?",
                                                           OrderInstanceBackup
-                                                              .getReaderWarnIfNotDeserializableNoDetails()));
+                                                              .getReaderWarnIfNotDeserializableNoDetails(), 
+                                                              OrderInstanceBackup.TABLE_NAME));
 
       List<OrderInstanceBackup> orders = con.query(query, new Parameter(targetBinding), Integer.MAX_VALUE);
 
