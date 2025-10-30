@@ -64,7 +64,7 @@ public class OpImplTools {
     }
     int firstDot = mappingValue.indexOf(".");
     if (firstDot == -1) {
-      return String.format("String.valueOf(%s)", mappingValue);
+      return mappingValue.length() == 0 ? "\"\"" : String.format("String.valueOf(%s)", mappingValue);
     } else {
       String variable = mappingValue.substring(0, firstDot);
       String path = mappingValue.substring(firstDot + 1);

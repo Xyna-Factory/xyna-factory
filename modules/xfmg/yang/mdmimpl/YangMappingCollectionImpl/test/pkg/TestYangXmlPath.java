@@ -70,7 +70,7 @@ public class TestYangXmlPath {
     }
   }
   
-  private ByteArrayInputStream textAsByteStream(String text) throws IOException {
+  ByteArrayInputStream textAsByteStream(String text) throws IOException {
     java.io.ByteArrayInputStream is = new java.io.ByteArrayInputStream(text.getBytes());
     return is;
   }
@@ -87,7 +87,7 @@ public class TestYangXmlPath {
     return path.toString();
   }
   
-  private String getDataFile(String filename) throws Exception {
+  String getDataFile(String filename) throws Exception {
     String path = getDataFilePath(filename);
     return readFile(path);
   }
