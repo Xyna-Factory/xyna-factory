@@ -344,7 +344,7 @@ public class JavaServiceImplementation {
      */
     OperationInformation[] instanceOperations = dom.collectOperationsOfDOMHierarchy(false);
     boolean hasImplInstanceVar =
-        instanceOperations.length > 0 && dom.libraryExists();
+        instanceOperations.length > 0 && dom.getAdditionalLibraries().contains(dom.getImplClassName() + ".jar");
     if (hasImplInstanceVar && !dom.isAbstract()) {
       cb.addLine("public ", getDelegationImplSimpleClassName(), " clone() {");
       cb.addLine(Method.class.getName(), " cloneMethod = ", DOM.class.getName(), ".getPublicCloneMethodIfPresent(",
