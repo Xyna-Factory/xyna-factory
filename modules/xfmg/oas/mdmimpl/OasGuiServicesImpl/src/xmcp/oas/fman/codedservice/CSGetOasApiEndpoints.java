@@ -100,13 +100,13 @@ public class CSGetOasApiEndpoints {
         builder.implementationRtc(implRtc.toString());
         builder.implementationRtcRevision(implRtc.getRevision());
         builder.status(OasGuiConstants.EndpointStatus.MISSING);
-        candidatesToAdd = List.of(builder.instance());
+        candidatesToAdd.add(builder.instance());
       } else if(accessibleImpls.size() == 1) {
         ImplementedOasApiType implType = accessibleImpls.get(0);
         OasApiDatatypeInfo.Builder builder = createBuilder(genTypeOpGroup);
         setImpl(builder, implType);
         builder.status(getCompletionStatus(context, genTypeOpGroup, implType));
-        candidatesToAdd = List.of(builder.instance());
+        candidatesToAdd.add(builder.instance());
       } else {
         for(ImplementedOasApiType accessibleImpl : accessibleImpls) {
           OasApiDatatypeInfo.Builder builder = createBuilder(genTypeOpGroup);
@@ -115,11 +115,11 @@ public class CSGetOasApiEndpoints {
           candidatesToAdd.add(builder.instance());
         }
       }
-      
-      for(OasApiDatatypeInfo built : candidatesToAdd) {
-        if (matchFilter(filter, built)) {
-          ret.add(built);
-        }
+    }
+
+    for(OasApiDatatypeInfo built : candidatesToAdd) {
+      if (matchFilter(filter, built)) {
+        ret.add(built);
       }
     }
   }
