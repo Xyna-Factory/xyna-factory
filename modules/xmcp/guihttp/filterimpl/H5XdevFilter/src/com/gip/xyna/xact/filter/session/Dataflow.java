@@ -79,6 +79,7 @@ import com.gip.xyna.xprc.xfractwfe.generation.Distinction.BranchInfo;
 import com.gip.xyna.xprc.xfractwfe.generation.DomOrExceptionGenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.ForEachScopeStep;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.SpecialPurposeIdentifier;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.StringXMLSource;
 import com.gip.xyna.xprc.xfractwfe.generation.InputConnections;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.ScopeStep;
@@ -3020,8 +3021,12 @@ public class Dataflow {
       globalConstVar = Utils.getGlobalConstVar(toSatisfy.connectedness.getConnectedVariableId(), gbo.getWFStep());
       constantConnection.setInputVars(createConstConnInputVars(globalConstVar));
       try {
-        GeneralXynaObject constValue = globalConstVar.getXoRepresentation();
-        constantConnection.setConstant(Utils.xoToJson(constValue, globalConstVar.getCreator().getRevision()));
+        if(globalConstVar.getCreator().getRevision() != StringXMLSource.REVISION) {
+          GeneralXynaObject constValue = globalConstVar.getXoRepresentation();
+          constantConnection.setConstant(Utils.xoToJson(constValue, globalConstVar.getCreator().getRevision()));
+        } else {
+          constantConnection.setConstant("");
+        }
       } catch (Exception e) {
         constantConnection.setConstant("");
       }
