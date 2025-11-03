@@ -25,13 +25,13 @@
       <Data ID="758" Label="Endpoint Implementation Creation Data" ReferenceName="EndpointImplementationCreationData" ReferencePath="xmcp.oas.fman.datatypes" VariableName="endpointImplementationCreationData758"/>
       <Data ID="3212" IsList="true" Label="Oas Endpoint Service" ReferenceName="OasEndpointService" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasEndpointService3212"/>
     </Output>
-    <ServiceReference ID="3049" Label="Oas Endpoint Details - Create Service Panels" ReferenceName="OasEndpointDetailsCreateServicePanels" ReferencePath="xmcp.oas.fman">
-      <Source RefID="3048"/>
-      <Target RefID="3048"/>
-    </ServiceReference>
     <ServiceReference ID="2690" Label="Oas Gui Services" ReferenceName="OasGuiServices.OasGuiServices" ReferencePath="xmcp.oas.fman">
       <Source RefID="2689"/>
       <Target RefID="2689"/>
+    </ServiceReference>
+    <ServiceReference ID="3049" Label="Oas Endpoint Details - Create Service Panels" ReferenceName="OasEndpointDetailsCreateServicePanels" ReferencePath="xmcp.oas.fman">
+      <Source RefID="3048"/>
+      <Target RefID="3048"/>
     </ServiceReference>
     <Mappings ID="1082" Label="Mapping">
       <Input>
