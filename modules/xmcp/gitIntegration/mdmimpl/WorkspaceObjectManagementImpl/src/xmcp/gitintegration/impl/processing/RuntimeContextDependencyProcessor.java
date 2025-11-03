@@ -61,12 +61,13 @@ public class RuntimeContextDependencyProcessor implements WorkspaceContentProces
   private static final String TEMPORARY_SESSION_AUTHENTICATION_USERNAME_MODIFY = "RuntimeContextDependencyProcessor.modify";
   private static final String TEMPORARY_SESSION_AUTHENTICATION_USERNAME_DELETE = "RuntimeContextDependencyProcessor.delete";
 
-
-  private static final RevisionManagement revisionManagement =
-      XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
-  private static final RuntimeContextDependencyManagement rtcDependencyManagement =
-      XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRuntimeContextDependencyManagement();
-
+	private static final RevisionManagement revisionManagement = XynaFactory.isFactoryServer()
+			? XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement()
+			: null;
+	private static final RuntimeContextDependencyManagement rtcDependencyManagement = XynaFactory.isFactoryServer()
+			? XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl()
+					.getRuntimeContextDependencyManagement()
+			: null;
 
   @Override
   public String getTagName() {
