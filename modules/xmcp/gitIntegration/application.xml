@@ -199,6 +199,14 @@
       <DestinationKey>xmcp.gitintegration.ui.RefreshDiffListChildElements</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.gitintegration.ui.RepositoryStatusDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.gitintegration.ui.RepositoryStatusDetailsPanelsDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
     <Ordertype implicitDependency="false">
       <DestinationKey>xmcp.gitintegration.ui.WorkspaceDiffDetailsDefinition</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
@@ -505,6 +513,10 @@
       <FqName>xmcp.gitintegration.repository.RepositoryConnectionGroup</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.gitintegration.repository.RepositoryStatus</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.gitintegration.repository.RepositoryUser</FqName>
       <Type>DATATYPE</Type>
@@ -708,6 +720,14 @@
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.gitintegration.ui.RepositoryConnectionGroupGuiData</FqName>
       <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xmcp.gitintegration.ui.RepositoryStatusDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.gitintegration.ui.RepositoryStatusDetailsPanelsDefinition</FqName>
+      <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="true">
       <FqName>xmcp.gitintegration.ui.WorkspaceDiffDetailsDefinition</FqName>
