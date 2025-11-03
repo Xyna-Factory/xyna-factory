@@ -329,7 +329,7 @@ public class ApplicationXMLGenerator {
 		// we could also filter by dom.isInheritedFromStorable, but that doesn't work
 		// properly because we don't parse all dependent XMOMs
 		Set<String> storablesInContent = new HashSet<>(Stream.concat(explicitContent.stream(), implicitContent.stream())
-				.filter(gb -> gb instanceof DOM).map(gb -> gb.getOriginalFqName()).toList());
+				.filter(gb -> gb instanceof DOM).map(gb -> gb.getOriginalFqName()).collect(Collectors.toList()));
 		for (WorkspaceContentItem item : content.getWorkspaceContentItems()) {
 			if (item instanceof OrderType) {
 				// already handled
@@ -445,7 +445,7 @@ public class ApplicationXMLGenerator {
 			Set<String> orderTypesInContent, Set<String> explicitOrderTypes) {
 		Set<String> defaultOrderTypes = new HashSet<>();
 		defaultOrderTypes.addAll(Stream.concat(explicitContent.stream(), implicitContent.stream())
-				.filter(gb -> gb instanceof WF).map(gb -> gb.getOriginalFqName()).toList());
+				.filter(gb -> gb instanceof WF).map(gb -> gb.getOriginalFqName()).collect(Collectors.toList()));
 
 		/*
 		 * add ordertype config to application.xml
@@ -574,8 +574,8 @@ public class ApplicationXMLGenerator {
 				gb.parseGeneration(true, true, false);
 			}
 			addSubtypesOfOutputsOfOperations(gb, implicitContent, subtypeCheckDone, ctx);
-			implicitContent.addAll(
-					gb.getDependenciesRecursively().getDependencies(false).stream().filter(a -> a.exists()).toList());
+			implicitContent.addAll(gb.getDependenciesRecursively().getDependencies(false).stream()
+					.filter(a -> a.exists()).collect(Collectors.toList()));
 		}
 		int lastCount = -1;
 		int newCount = implicitContent.size();
@@ -589,7 +589,7 @@ public class ApplicationXMLGenerator {
 				}
 				addSubtypesOfOutputsOfOperations(gb, implicitContent, subtypeCheckDone, ctx);
 				toAdd.addAll(gb.getDependenciesRecursively().getDependencies(false).stream().filter(a -> a.exists())
-						.toList());
+						.collect(Collectors.toList()));
 
 			}
 			implicitContent.addAll(toAdd);
