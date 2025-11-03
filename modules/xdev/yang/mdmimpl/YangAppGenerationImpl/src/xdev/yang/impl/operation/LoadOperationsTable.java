@@ -76,17 +76,20 @@ public class LoadOperationsTable {
         if (!OperationAssignmentUtils.isYangType(xml, Constants.VAL_OPERATION)) {
           continue;
         }
+        String tagName = OperationAssignmentUtils.readTagName(xml);
+        String tagNamespace = OperationAssignmentUtils.readTagNamespace(xml);
         OperationTableData.Builder data = new OperationTableData.Builder();
         data.operationGroup(dt.getFqn());
         data.rpcName(OperationAssignmentUtils.readRpcName(xml));
         data.rpcNamespace(OperationAssignmentUtils.readRpcNamespace(xml));
-        data.tagName(OperationAssignmentUtils.readTagName(xml));
-        data.tagNamespace(OperationAssignmentUtils.readTagNamespace(xml));
+        data.tagName(tagName);
+        data.tagNamespace(tagNamespace);
         data.yangKeyword(OperationAssignmentUtils.readYangKeyword(xml));
         data.operation(operation.getName());
         data.mappingCount(countMappings(xml));
         data.runtimeContext(datatype.getRuntimeContext().getName());
         data.isConfig(OperationAssignmentUtils.readIsConfig(xml));
+        data.retain(isRetain(xml, tagName, tagNamespace));
         result.add(data.instance());
       }
     } catch (Exception e) {
@@ -94,6 +97,20 @@ public class LoadOperationsTable {
     }
 
     return result;
+  }
+
+
+  private boolean isRetain(Document xml, String tagName, String tagNamespace) {
+    if (tagName == null || tagName.isEmpty()) {
+      return false;
+    }
+    List<OperationMapping> mappings = OperationMapping.loadMappings(xml);
+    for (OperationMapping mapping : mappings) {
+      if (mapping.getValue().equals("") && mapping.getMappingYangPath().equals(tagName) && mapping.getNamespace().equals(tagNamespace)) {
+        return true;
+      }
+    }
+    return false;
   }
 
 
