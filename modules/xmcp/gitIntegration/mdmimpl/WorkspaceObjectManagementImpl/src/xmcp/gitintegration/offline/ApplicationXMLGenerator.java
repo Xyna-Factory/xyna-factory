@@ -31,11 +31,11 @@ import com.gip.xyna.xprc.xfractwfe.generation.ExceptionGeneration;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.FileSystemXMLSource;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase.XMLSourceAbstraction;
-import com.gip.xyna.xprc.xpce.dispatcher.XynaDispatcher;
-import com.gip.xyna.xprc.xpce.parameterinheritance.ParameterInheritanceManagement.ParameterType;
 import com.gip.xyna.xprc.xfractwfe.generation.GenerationBaseCache;
 import com.gip.xyna.xprc.xfractwfe.generation.Operation;
 import com.gip.xyna.xprc.xfractwfe.generation.WF;
+import com.gip.xyna.xprc.xpce.dispatcher.XynaDispatcher;
+import com.gip.xyna.xprc.xpce.parameterinheritance.ParameterInheritanceManagement.ParameterType;
 
 import xmcp.gitintegration.ApplicationDefinition;
 import xmcp.gitintegration.Capacity;
@@ -151,7 +151,7 @@ public class ApplicationXMLGenerator {
 				GenerationBase gb = GenerationBase.getOrCreateInstance(fqXmlName, ctx.cache, ctx.revision, ctx.source);
 				if (gb instanceof DomOrExceptionGenerationBase) {
 					if (!gb.parsingFinished() && !gb.hasError()) {
-						gb.parseGeneration(true, true, false);
+						gb.parseGeneration(true, false, false);
 					}
 
 					DomOrExceptionGenerationBase dex = (DomOrExceptionGenerationBase) gb;
@@ -220,6 +220,7 @@ public class ApplicationXMLGenerator {
 		Map<String, FilterInstance> allFilterInstances = new HashMap<>();
 		Map<String, Trigger> allTriggers = new HashMap<>();
 		Map<String, TriggerInstance> allTriggerInstances = new HashMap<>();
+		System.out.println("Collecting Workspace-XML entries ...");
 		for (WorkspaceContentItem item : content.getWorkspaceContentItems()) {
 			if (item instanceof OrderType) {
 				OrderType ot = (OrderType) item;
@@ -311,7 +312,9 @@ public class ApplicationXMLGenerator {
 			}
 		}
 
+		System.out.println("Calculating implicit XMOM entries ...");
 		calculateImplicitXMOMEntries(explicitContent, implicitContent, ctx);
+		System.out.println("finishing up application.xml ...");
 		setOrderTypeConfig(xml, explicitContent, implicitContent, allOrderTypes, orderTypesInContent,
 				explicitOrderTypes);
 
@@ -392,6 +395,7 @@ public class ApplicationXMLGenerator {
 			}
 		}
 
+		System.out.println("Writing " + outputFile + " ...");
 		xml.createXml(outputFile);
 	}
 
@@ -532,7 +536,7 @@ public class ApplicationXMLGenerator {
 					// FIXME too often!! System.out.println("not found: " +
 					// generator.getOriginalFqName());
 					generator.setDoesntExist();
-					throw e;
+					return null;
 				}
 			}
 
@@ -569,9 +573,10 @@ public class ApplicationXMLGenerator {
 	private static void calculateImplicitXMOMEntries(Set<GenerationBase> explicitContent,
 			Set<GenerationBase> implicitContent, XMOMContext ctx) throws Exception {
 		Set<String> subtypeCheckDone = new HashSet<>();
+		System.out.println("Checking explicit entries for dependencies ...");
 		for (GenerationBase gb : explicitContent) {
 			if (!gb.parsingFinished() && !gb.hasError()) {
-				gb.parseGeneration(true, true, false);
+				gb.parseGeneration(true, false, false);
 			}
 			addSubtypesOfOutputsOfOperations(gb, implicitContent, subtypeCheckDone, ctx);
 			implicitContent.addAll(gb.getDependenciesRecursively().getDependencies(false).stream()
@@ -579,13 +584,13 @@ public class ApplicationXMLGenerator {
 		}
 		int lastCount = -1;
 		int newCount = implicitContent.size();
+		System.out.println("Checking dependencies of implicit entries ...");
 		while (lastCount != newCount) {
-			System.out.println("current implicitcnt = " + newCount);
 			lastCount = newCount;
 			Set<GenerationBase> toAdd = new HashSet<>();
 			for (GenerationBase gb : implicitContent) {
 				if (!gb.parsingFinished() && !gb.hasError()) {
-					gb.parseGeneration(true, true, false);
+					gb.parseGeneration(true, false, false);
 				}
 				addSubtypesOfOutputsOfOperations(gb, implicitContent, subtypeCheckDone, ctx);
 				toAdd.addAll(gb.getDependenciesRecursively().getDependencies(false).stream().filter(a -> a.exists())
