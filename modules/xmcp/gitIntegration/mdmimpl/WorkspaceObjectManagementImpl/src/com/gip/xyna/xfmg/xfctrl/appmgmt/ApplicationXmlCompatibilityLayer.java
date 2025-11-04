@@ -134,6 +134,9 @@ public class ApplicationXmlCompatibilityLayer {
 	}
 
 	public void setRuntimeContextDependencies(List<? extends RuntimeContextDependency> list) {
+		if (list == null) {
+			return;
+		}
 		for (RuntimeContextDependency dep : list) {
 			if ("Workspace".equals(dep.getDepType())) {
 				xml.applicationInfo.getRuntimeContextRequirements()

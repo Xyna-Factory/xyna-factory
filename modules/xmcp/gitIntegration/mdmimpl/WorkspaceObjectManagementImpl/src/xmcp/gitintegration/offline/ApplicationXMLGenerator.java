@@ -606,7 +606,7 @@ public class ApplicationXMLGenerator {
 				if (!gb.parsingFinished() && !gb.hasError()) {
 					gb.parseGeneration(true, false, false);
 				}
-				addSubtypesOfOutputsOfOperations(gb, implicitContent, subtypeCheckDone, ctx);
+				addSubtypesOfOutputsOfOperations(gb, toAdd, subtypeCheckDone, ctx);
 				toAdd.addAll(gb.getDependenciesRecursively().getDependencies(false).stream().filter(a -> a.exists())
 						.collect(Collectors.toList()));
 
