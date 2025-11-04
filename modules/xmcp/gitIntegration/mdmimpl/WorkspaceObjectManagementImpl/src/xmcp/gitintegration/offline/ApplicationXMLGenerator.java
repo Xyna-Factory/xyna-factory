@@ -245,51 +245,53 @@ public class ApplicationXMLGenerator {
 			} else if (item instanceof ApplicationDefinition) {
 				ApplicationDefinition ad = (ApplicationDefinition) item;
 				xml.setRuntimeContextDependencies(ad.getRuntimeContextDependencies());
-				for (ContentEntry ce : ad.getContentEntries()) {
-					ApplicationEntryType type = ApplicationEntryType.valueOf(ce.getType());
-					switch (type) {
-					case DATATYPE:
-						explicitContent
-								.add(DOM.getOrCreateInstance(ce.getFQName(), ctx.cache, ctx.revision, ctx.source));
-						break;
-					case EXCEPTION:
-						explicitContent.add(ExceptionGeneration.getOrCreateInstance(ce.getFQName(), ctx.cache,
-								ctx.revision, ctx.source));
-						break;
-					case WORKFLOW:
-						orderTypesInContent.add(ce.getFQName());
-						explicitContent
-								.add(WF.getOrCreateInstance(ce.getFQName(), ctx.cache, ctx.revision, ctx.source));
-						break;
-					case ORDERTYPE:
-						explicitOrderTypes.add(ce.getFQName());
-						orderTypesInContent.add(ce.getFQName());
-						break;
-					case ORDERINPUTSOURCE:
-						orderInputSourcesInContent.add(ce.getFQName());
-						break;
-					case FILTER:
-						filtersInContent.add(ce.getFQName());
-						break;
-					case FILTERINSTANCE:
-						filterInstancesInContent.add(ce.getFQName());
-						break;
-					case TRIGGER:
-						triggersInContent.add(ce.getFQName());
-						break;
-					case TRIGGERINSTANCE:
-						triggerInstancesInContent.add(ce.getFQName());
-						break;
-					case SHAREDLIB:
-						sharedLibsInContent.add(ce.getFQName());
-						break;
-					case FORMDEFINITION:
-					case CAPACITY:
-					case XYNAPROPERTY:
-						// ntbd
-						break;
-					default:
-						throw new RuntimeException("unexpected type : " + type);
+				if (ad.getContentEntries() != null) {
+					for (ContentEntry ce : ad.getContentEntries()) {
+						ApplicationEntryType type = ApplicationEntryType.valueOf(ce.getType());
+						switch (type) {
+						case DATATYPE:
+							explicitContent
+									.add(DOM.getOrCreateInstance(ce.getFQName(), ctx.cache, ctx.revision, ctx.source));
+							break;
+						case EXCEPTION:
+							explicitContent.add(ExceptionGeneration.getOrCreateInstance(ce.getFQName(), ctx.cache,
+									ctx.revision, ctx.source));
+							break;
+						case WORKFLOW:
+							orderTypesInContent.add(ce.getFQName());
+							explicitContent
+									.add(WF.getOrCreateInstance(ce.getFQName(), ctx.cache, ctx.revision, ctx.source));
+							break;
+						case ORDERTYPE:
+							explicitOrderTypes.add(ce.getFQName());
+							orderTypesInContent.add(ce.getFQName());
+							break;
+						case ORDERINPUTSOURCE:
+							orderInputSourcesInContent.add(ce.getFQName());
+							break;
+						case FILTER:
+							filtersInContent.add(ce.getFQName());
+							break;
+						case FILTERINSTANCE:
+							filterInstancesInContent.add(ce.getFQName());
+							break;
+						case TRIGGER:
+							triggersInContent.add(ce.getFQName());
+							break;
+						case TRIGGERINSTANCE:
+							triggerInstancesInContent.add(ce.getFQName());
+							break;
+						case SHAREDLIB:
+							sharedLibsInContent.add(ce.getFQName());
+							break;
+						case FORMDEFINITION:
+						case CAPACITY:
+						case XYNAPROPERTY:
+							// ntbd
+							break;
+						default:
+							throw new RuntimeException("unexpected type : " + type);
+						}
 					}
 				}
 			} else if (item instanceof Filter) {
