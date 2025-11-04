@@ -1181,12 +1181,12 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
    * garantiert eindeutigkeit, erstellt das verzeichnis
    */
   private synchronized String getTempDir() {
-    String tempDir = "tempdir" + new Random().nextInt(10000);
-    while(new File(tempDir).exists()) {
-      tempDir = "tempdir" + new Random().nextInt(10000);
+    File candidate = new File(XynaProperty.TMP_DIR.get(), "tempdir" + new Random().nextInt(10000));
+    while(candidate.exists()) {
+      candidate = new File(XynaProperty.TMP_DIR.get(), "tempdir" + new Random().nextInt(10000));
     }
-    new File(tempDir).mkdirs();
-    return tempDir;
+    candidate.mkdirs();
+    return candidate.getPath();
   }
 
   private String getDateSuffix() {
