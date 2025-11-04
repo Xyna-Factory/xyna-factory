@@ -35,6 +35,7 @@ import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry.OrderInputSourceXmlE
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry.OrdertypeXmlEntry;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry.PriorityXmlEntry;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry.RuntimeContextRequirementXmlEntry;
+import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry.SharedLibXmlEntry;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry.TriggerInstanceXmlEntry;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry.TriggerXmlEntry;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlEntry.XMOMStorableXmlEntry;
@@ -123,6 +124,10 @@ public class ApplicationXmlCompatibilityLayer {
 
 	public void addMonitoringLevelConfig(String ot, int monitoringlevel) {
 		xml.monitoringLevels.add(new MonitoringLevelXmlEntry(ot, monitoringlevel));
+	}
+	
+	public void addSharedLib(boolean implicit, String sharedLibName) {
+		xml.sharedLibs.add(new SharedLibXmlEntry(implicit, sharedLibName));
 	}
 
 	public void addCapacityRequirement(String ot, String cap, int cardinality) {

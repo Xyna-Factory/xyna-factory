@@ -20,6 +20,7 @@ package xmcp.gitintegration.offline;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,6 +34,7 @@ import org.w3c.dom.Document;
 
 import com.gip.xyna.FileUtils;
 import com.gip.xyna.exceptions.Ex_FileAccessException;
+import com.gip.xyna.utils.collections.lists.StringSerializableList;
 import com.gip.xyna.utils.exceptions.utils.XMLUtils;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationEntryStorable.ApplicationEntryType;
 import com.gip.xyna.xfmg.xfctrl.appmgmt.ApplicationXmlCompatibilityLayer;
@@ -232,7 +234,8 @@ public class ApplicationXMLGenerator {
 		Set<String> filterInstancesInContent = new HashSet<>();
 		Set<String> triggersInContent = new HashSet<>();
 		Set<String> triggerInstancesInContent = new HashSet<>();
-		Set<String> sharedLibsInContent = new HashSet<>();
+		Set<String> explicitSharedLibs = new HashSet<>();
+		Set<String> sharedLibsInWorkspace = new HashSet<>();
 		Map<String, Filter> allFilters = new HashMap<>();
 		Map<String, FilterInstance> allFilterInstances = new HashMap<>();
 		Map<String, Trigger> allTriggers = new HashMap<>();
@@ -282,7 +285,7 @@ public class ApplicationXMLGenerator {
 							triggerInstancesInContent.add(ce.getFQName());
 							break;
 						case SHAREDLIB:
-							sharedLibsInContent.add(ce.getFQName());
+							explicitSharedLibs.add(ce.getFQName());
 							break;
 						case FORMDEFINITION:
 						case CAPACITY:
@@ -307,6 +310,8 @@ public class ApplicationXMLGenerator {
 				TriggerInstance ti = (TriggerInstance) item;
 				allTriggerInstances.put(ti.getTriggerInstanceName(), ti);
 			}
+			// } TODO sharedlibs
+			// sharedLibsInWorkspace.add(sharedLib.getName());
 		}
 
 		// add xmom entries for ordertype destinations
@@ -337,6 +342,7 @@ public class ApplicationXMLGenerator {
 		setOrderTypeConfig(xml, explicitContent, implicitContent, allOrderTypes, orderTypesInContent,
 				explicitOrderTypes);
 
+		Set<String> allUsedSharedLibs = new HashSet<>(explicitSharedLibs);
 		for (GenerationBase gb : explicitContent) {
 			xml.addXMOMEntry(false, gb.getOriginalFqName(), XMOMType.getXMOMTypeByGenerationInstance(gb));
 		}
@@ -365,6 +371,7 @@ public class ApplicationXMLGenerator {
 						filterInstancesInContent, allFilterInstances, f.getFilterName())) {
 					xml.addFilter(!filtersInContent.contains(f.getFilterName()), f.getFilterName(), f.getJarfiles(),
 							f.getFQFilterClassName(), f.getTriggerName(), f.getSharedlibs());
+					allUsedSharedLibs.addAll(separateSerializedList(f.getSharedlibs()));
 				}
 			} else if (item instanceof FilterInstance) {
 				FilterInstance fi = (FilterInstance) item;
@@ -380,6 +387,7 @@ public class ApplicationXMLGenerator {
 								filtersInContent, allTriggerInstances, triggerInstancesInContent)) {
 					xml.addTrigger(!triggersInContent.contains(t.getTriggerName()), t.getTriggerName(), t.getJarfiles(),
 							t.getFQTriggerClassName(), t.getSharedlibs());
+					allUsedSharedLibs.addAll(separateSerializedList(t.getSharedlibs()));
 				}
 			} else if (item instanceof TriggerInstance) {
 				TriggerInstance ti = (TriggerInstance) item;
@@ -413,9 +421,23 @@ public class ApplicationXMLGenerator {
 				throw new RuntimeException("unhandled type of workflow content: " + item.getClass().getName());
 			}
 		}
+		allUsedSharedLibs.addAll(
+				Stream.concat(explicitContent.stream(), implicitContent.stream()).filter(gb -> gb instanceof DOM)
+						.map(gb -> (DOM) gb).map(dom -> new HashSet<>(Arrays.asList(dom.getSharedLibs())))
+						.flatMap(Set::stream).collect(Collectors.toList()));
+		sharedLibsInWorkspace.retainAll(allUsedSharedLibs);
+		for (String lib : sharedLibsInWorkspace) {
+			xml.addSharedLib(!explicitSharedLibs.contains(lib), lib);
+		}
 
 		System.out.println("Writing " + outputFile + " ...");
 		xml.createXml(outputFile);
+	}
+
+	private static Collection<? extends String> separateSerializedList(String list) {
+		StringSerializableList<String> ssl = StringSerializableList.autoSeparator(String.class,
+				":|/;\\@-_.+#=[]?§$%&!", ':');
+		return ssl.deserializeFromString(list);
 	}
 
 	private static boolean triggerInstanceIsUsed(String triggerInstanceName,
