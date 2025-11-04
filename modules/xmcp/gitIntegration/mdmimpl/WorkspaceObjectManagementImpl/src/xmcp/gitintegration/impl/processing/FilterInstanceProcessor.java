@@ -43,6 +43,7 @@ import xmcp.gitintegration.DELETE;
 import xmcp.gitintegration.FilterInstance;
 import xmcp.gitintegration.MODIFY;
 import xmcp.gitintegration.WorkspaceContentDifference;
+import xmcp.gitintegration.WorkspaceContentDifferenceType;
 
 
 
@@ -52,6 +53,8 @@ public class FilterInstanceProcessor implements WorkspaceContentProcessor<Filter
   private static final String TAG_FILTERINSTANCENAME = "filterinstancename";
   private static final String TAG_FILTERNAME = "filtername";
   private static final String TAG_TRIGGERINSTANCENAME = "triggerinstancename";
+  private static final String TAG_CONFIGURATION = "configuration";
+  private static final String TAG_CONFIGURATION_ELEMENT = "configurationelement";
 
   private static final XynaActivationPortal xynaActivationPortal = XynaFactory.getInstance().getActivationPortal();
   private static final XynaActivationBase xynaActivation = XynaFactory.getInstance().getActivation();
@@ -79,7 +82,8 @@ public class FilterInstanceProcessor implements WorkspaceContentProcessor<Filter
         wcd.setExistingItem(fromEntry);
         if (toEntry != null) {
           if (!fromEntry.getFilterName().equals(toEntry.getFilterName())
-              || !fromEntry.getTriggerInstanceName().equals(toEntry.getTriggerInstanceName())) {
+              || !fromEntry.getTriggerInstanceName().equals(toEntry.getTriggerInstanceName())
+              || !createConfigurationDiff(fromEntry.getConfiguration(), toEntry.getConfiguration()).isEmpty()) {
             wcd.setDifferenceType(new MODIFY());
             wcd.setNewItem(toEntry);
             toWorkingList.remove(toEntry); // remove entry from to-list
@@ -106,20 +110,50 @@ public class FilterInstanceProcessor implements WorkspaceContentProcessor<Filter
   }
 
 
+  private List<ConfigurationDifference> createConfigurationDiff(List<String> from, List<String> to) {
+    List<ConfigurationDifference> diffs = new ArrayList<>();
+    int maxSize = Math.max(from.size(), to.size());
+    from = from == null ? Collections.emptyList() : from;
+    to = to == null ? Collections.emptyList() : to;
+    for (int i = 0; i < maxSize; i++) {
+      String fromString = from.size() > i ? from.get(i) : null;
+      String toString = to.size() > i ? to.get(i) : null;
+      if (fromString != null && toString != null && !fromString.equals(toString)) {
+        diffs.add(new ConfigurationDifference(new MODIFY(), fromString, toString));
+      } else if (fromString == null) {
+        diffs.add(new ConfigurationDifference(new CREATE(), fromString, toString));
+      } else if (toString == null) {
+        diffs.add(new ConfigurationDifference(new DELETE(), fromString, toString));
+      }
+    }
+    return diffs;
+  }
+
+
   @Override
   public FilterInstance parseItem(Node node) {
     FilterInstance fi = new FilterInstance();
+    List<String> configuration = new ArrayList<>();
     NodeList childNodes = node.getChildNodes();
     for (int i = 0; i < childNodes.getLength(); i++) {
       Node childNode = childNodes.item(i);
       if (childNode.getNodeName().equals(TAG_FILTERINSTANCENAME)) {
-        fi.setFilterInstanceName(childNode.getTextContent());
+        fi.unversionedSetFilterInstanceName(childNode.getTextContent());
       } else if (childNode.getNodeName().equals(TAG_FILTERNAME)) {
-        fi.setFilterName(childNode.getTextContent());
+        fi.unversionedSetFilterName(childNode.getTextContent());
       } else if (childNode.getNodeName().equals(TAG_TRIGGERINSTANCENAME)) {
-        fi.setTriggerInstanceName(childNode.getTextContent());
+        fi.unversionedSetTriggerInstanceName(childNode.getTextContent());
+      } else if(childNode.getNodeName().equals(TAG_CONFIGURATION)) {
+        NodeList configurationNodes = childNode.getChildNodes();
+        for(int j=0; j< configurationNodes.getLength(); j++) {
+          Node configNode = configurationNodes.item(j);
+          if(configNode.getNodeName().equals(TAG_CONFIGURATION_ELEMENT)) {
+            configuration.add(configNode.getTextContent());
+          }
+        }
       }
     }
+    fi.unversionedSetConfiguration(configuration);
     return fi;
   }
 
@@ -130,6 +164,13 @@ public class FilterInstanceProcessor implements WorkspaceContentProcessor<Filter
     builder.element(TAG_FILTERINSTANCENAME, item.getFilterInstanceName());
     builder.element(TAG_FILTERNAME, item.getFilterName());
     builder.element(TAG_TRIGGERINSTANCENAME, item.getTriggerInstanceName());
+    if (item.getConfiguration() != null && !item.getConfiguration().isEmpty()) {
+      builder.startElement(TAG_CONFIGURATION);
+      for (String config : item.getConfiguration()) {
+        builder.element(TAG_CONFIGURATION_ELEMENT, config);
+      }
+      builder.endElement(TAG_CONFIGURATION);
+    }
     builder.endElement(TAG_FILTERINSTANCE);
   }
 
@@ -159,6 +200,15 @@ public class FilterInstanceProcessor implements WorkspaceContentProcessor<Filter
       ds.append("    " + TAG_TRIGGERINSTANCENAME + " ");
       ds.append(MODIFY.class.getSimpleName() + " \"" + from.getTriggerInstanceName() + "\"=>\"" + to.getTriggerInstanceName() + "\"");
     }
+    List<ConfigurationDifference> configDiffs = createConfigurationDiff(from.getConfiguration(), to.getConfiguration());
+    if (!configDiffs.isEmpty()) {
+      ds.append("\n");
+      for(ConfigurationDifference diff : configDiffs) {
+        ds.append("    ").append(TAG_CONFIGURATION).append(" ");
+        ds.append(diff.toString());
+        ds.append("\n");
+      }
+    }
     return ds.toString();
   }
 
@@ -170,9 +220,10 @@ public class FilterInstanceProcessor implements WorkspaceContentProcessor<Filter
       List<FilterInstanceInformation> fiiList = getFilterInstanceInformationList(revision);
       for (FilterInstanceInformation fii : fiiList) {
         FilterInstance fi = new FilterInstance();
-        fi.setFilterInstanceName(fii.getFilterInstanceName());
-        fi.setFilterName(fii.getFilterName());
-        fi.setTriggerInstanceName(fii.getTriggerInstanceName());
+        fi.unversionedSetFilterInstanceName(fii.getFilterInstanceName());
+        fi.unversionedSetFilterName(fii.getFilterName());
+        fi.unversionedSetTriggerInstanceName(fii.getTriggerInstanceName());
+        fi.unversionedSetConfiguration(fii.getConfiguration());
         fiList.add(fi);
       }
     } catch (Exception e) {
@@ -204,7 +255,7 @@ public class FilterInstanceProcessor implements WorkspaceContentProcessor<Filter
     try {
       DeployFilterParameter deployFilterParameter =
           new DeployFilterParameter.Builder().filterName(item.getFilterName()).instanceName(item.getFilterInstanceName())
-              .triggerInstanceName(item.getTriggerInstanceName()).revision(revision).optional(false).build();
+              .triggerInstanceName(item.getTriggerInstanceName()).revision(revision).optional(false).configuration(item.getConfiguration()).build();
       xynaActivation.getActivationTrigger().deployFilter(deployFilterParameter);
     } catch (Exception e) {
       throw new RuntimeException(e);
@@ -233,5 +284,29 @@ public class FilterInstanceProcessor implements WorkspaceContentProcessor<Filter
     }
   }
 
+  
+  private static class ConfigurationDifference {
+    private final WorkspaceContentDifferenceType type;
+    private final String configurationOld;
+    private final String configurationNew;
+    
+    public ConfigurationDifference(WorkspaceContentDifferenceType type, String configurationOld, String configurationNew) {
+      this.type = type;
+      this.configurationOld = configurationOld;
+      this.configurationNew = configurationNew;
+    }
+
+
+    public String toString() {
+      if(type.getClass().equals(CREATE.class)) {
+        return String.format("%s \"%s\"", CREATE.class.getSimpleName(), configurationNew);
+      } else if(type.getClass().equals(MODIFY.class)) {
+        return String.format("%s \"%s\" => \"%s\"", MODIFY.class.getSimpleName(), configurationOld, configurationNew);
+      } else if(type.getClass().equals(DELETE.class)) {
+        return String.format("%s \"%s\"", CREATE.class.getSimpleName(), configurationOld);
+      }
+      return super.toString();
+    }
+  }
 
 }
