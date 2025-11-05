@@ -28,7 +28,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.gip.xyna.FileUtils;
-import com.gip.xyna.xfmg.xfctrl.classloading.SharedLibDeploymentAlgorithm;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xfmg.xfctrl.versionmgmt.VersionManagement.PathType;
 import com.gip.xyna.xprc.xfractwfe.generation.xml.XmlBuilder;
@@ -161,12 +160,6 @@ public class SharedLibraryProcessor implements WorkspaceContentProcessor<SharedL
     
     ReferenceSupport refSupport = new ReferenceSupport();
     refSupport.triggerReferences(internalReferences, revision);
-    
-    try {
-      SharedLibDeploymentAlgorithm.deploySharedLib(item.getName(), revision);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
   }
 
   @Override
