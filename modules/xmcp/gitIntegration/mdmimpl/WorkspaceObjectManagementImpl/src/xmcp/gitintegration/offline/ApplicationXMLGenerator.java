@@ -68,6 +68,7 @@ import xmcp.gitintegration.InputSourceSpecific;
 import xmcp.gitintegration.OrderInputSource;
 import xmcp.gitintegration.OrderType;
 import xmcp.gitintegration.RuntimeContextDependency;
+import xmcp.gitintegration.SharedLibrary;
 import xmcp.gitintegration.Trigger;
 import xmcp.gitintegration.TriggerInstance;
 import xmcp.gitintegration.WorkspaceContent;
@@ -309,9 +310,10 @@ public class ApplicationXMLGenerator {
 			} else if (item instanceof TriggerInstance) {
 				TriggerInstance ti = (TriggerInstance) item;
 				allTriggerInstances.put(ti.getTriggerInstanceName(), ti);
+			} else if (item instanceof SharedLibrary) {
+				SharedLibrary sl = (SharedLibrary) item;
+				sharedLibsInWorkspace.add(sl.getName());
 			}
-			// } TODO sharedlibs
-			// sharedLibsInWorkspace.add(sharedLib.getName());
 		}
 
 		// add xmom entries for ordertype destinations
