@@ -43,6 +43,7 @@ import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PushCommand;
 import org.eclipse.jgit.api.RmCommand;
+import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
 import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
@@ -111,8 +112,8 @@ import xmcp.gitintegration.repository.ChangeSet;
 import xmcp.gitintegration.repository.Commit;
 import xmcp.gitintegration.repository.PullOutput;
 import xmcp.gitintegration.repository.RepositoryConnection;
+import xmcp.gitintegration.repository.RepositoryStatus;
 import xmcp.gitintegration.repository.RepositoryUser;
-import xmcp.gitintegration.repository.PullOutput.Builder;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
 import xmcp.gitintegration.storage.UserManagementStorage;
@@ -1307,5 +1308,27 @@ public class RepositoryInteraction {
       this.fqn = fqn;
       this.fileName = fileName;
     }
+  }
+
+
+  public RepositoryStatus getStatus(String repository) throws Exception {
+    RepositoryStatus.Builder builder = new RepositoryStatus.Builder();
+    Repository repo = loadRepo(repository, false);
+
+    try (Git git = new Git(repo)) {
+      Status status = git.status().call();
+      List<String> untracked = new ArrayList<>(status.getUntracked());
+      Collections.sort(untracked);
+      List<String> changes = new ArrayList<>(status.getUncommittedChanges());
+      Collections.sort(untracked);
+      List<String> missing = new ArrayList<>(status.getMissing());
+      Collections.sort(untracked);
+      builder.untracked(untracked);
+      builder.changes(changes);
+      builder.missing(missing);
+    }
+    
+    
+    return builder.instance();
   }
 }
