@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -303,7 +303,7 @@ public class FilterInstanceProcessor implements WorkspaceContentProcessor<Filter
       } else if(type.getClass().equals(MODIFY.class)) {
         return String.format("%s \"%s\" => \"%s\"", MODIFY.class.getSimpleName(), configurationOld, configurationNew);
       } else if(type.getClass().equals(DELETE.class)) {
-        return String.format("%s \"%s\"", CREATE.class.getSimpleName(), configurationOld);
+        return String.format("%s \"%s\"", DELETE.class.getSimpleName(), configurationOld);
       }
       return super.toString();
     }
