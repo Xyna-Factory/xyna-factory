@@ -71,6 +71,7 @@ public class WorkspaceContentProcessingPortal implements XynaContentProcessingPo
     addToMap(result, new FilterInstanceProcessor());
     addToMap(result, new XMOMStorableProcessor());
     addToMap(result, new ApplicationDefinitionProcessor());
+    addToMap(result, new SharedLibraryProcessor());
     return result;
   }
 
