@@ -376,9 +376,8 @@ public class ApplicationXMLGenerator {
 			} else if (item instanceof FilterInstance) {
 				FilterInstance fi = (FilterInstance) item;
 				if (filterInstancesInContent.contains(fi.getFilterInstanceName())) {
-					List<String> configParas = new ArrayList<>(); // TODO missing in workspace-xml
 					xml.addFilterInstance(false, fi.getFilterInstanceName(), fi.getFilterName(),
-							fi.getTriggerInstanceName(), configParas, null);
+							fi.getTriggerInstanceName(), fi.getConfiguration(), null);
 				}
 			} else if (item instanceof Trigger) {
 				Trigger t = (Trigger) item;
