@@ -52,16 +52,20 @@ import xmcp.gitintegration.MODIFY;
 import xmcp.gitintegration.Reference;
 import xmcp.gitintegration.ReferenceData;
 import xmcp.gitintegration.ReferenceManagement;
+import xmcp.gitintegration.RepositoryManagement;
 import xmcp.gitintegration.Filter;
 import xmcp.gitintegration.WorkspaceContentDifference;
 import xmcp.gitintegration.impl.ItemDifference;
 import xmcp.gitintegration.impl.ReferenceComparator;
+import xmcp.gitintegration.impl.ReferenceConverter;
 import xmcp.gitintegration.impl.ReferenceUpdater;
 import xmcp.gitintegration.impl.XynaContentDifferenceType;
+import xmcp.gitintegration.impl.references.InternalReference;
 import xmcp.gitintegration.impl.references.ReferenceObjectType;
 import xmcp.gitintegration.impl.xml.ReferenceXmlConverter;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
+import xprc.xpce.Workspace;
 
 
 
@@ -351,6 +355,11 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
 
 
   private void createFilter(Filter item, long revision) {
+    ReferenceSupport refSupport = new ReferenceSupport();
+    ReferenceConverter refConverter = new ReferenceConverter();
+    Workspace workspaceName = new Workspace(ReferenceUpdater.getWorkspaceName(revision));
+    String pathToRepo = RepositoryManagement.getRepositoryConnection(workspaceName).getPath();
+
     StringSerializableList<String> ssl;
     ssl = StringSerializableList.autoSeparator(String.class, ":|/;\\@-_.+#=[]?§$%&!", ':');
     String[] jarFiles = ssl.deserializeFromString(item.getJarfiles()).toArray(new String[] {});
@@ -362,8 +371,17 @@ public class FilterProcessor implements WorkspaceContentProcessor<Filter> {
     File[] jarFilesArray = new File[jarFiles.length];
     int idx = 0;
     List<Reference> references = new ArrayList<>(item.getReferences());
+    List<InternalReference> internalReferences = new ArrayList<>();
+
+    for(Reference reference : references) {
+      InternalReference internalRef = refConverter.convert(reference);
+      internalRef.setPathToRepo(pathToRepo);
+      internalReferences.add(internalRef);
+    }
+
+    List<File> candidateFiles = refSupport.executeReferences(internalReferences);
     for (String jarFile : jarFiles) {
-      base.File file = ReferenceManagement.findReferencedJar(references, new File(jarFile).getName(), revision);
+      base.File file = candidateFiles.stream().filter(x -> x.getName().equals(jarFile)).map(x -> new base.File(x.getAbsolutePath())).findFirst().get();
       jarFilesArray[idx++] = new File(file.getPath());
     }
     try {

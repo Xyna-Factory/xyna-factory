@@ -25,8 +25,6 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 import com.gip.xyna.xfmg.xfctrl.revisionmgmt.RevisionManagement;
 import com.gip.xyna.xnwh.exceptions.XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY;
 
-import base.File;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -133,14 +131,6 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
 
 
   @Override
-  public File findReferencedJar(List<? extends Reference> refs, String jarName, Long revision) {
-    ReferenceSupport impl = new ReferenceSupport();
-    List<InternalReference> references = convert(refs, revision);
-    
-    return new File(impl.findJar(references, jarName, revision).getAbsolutePath());
-  }
-
-  @Override
   public void triggerReferences(List<? extends Reference> refs, List<String> jarNames, Long revision) {
     ReferenceSupport impl = new ReferenceSupport();
     List<InternalReference> references = convert(refs, revision);
@@ -168,5 +158,4 @@ public class ReferenceManagementServiceOperationImpl implements ExtendedDeployme
       throw new RuntimeException(e);
     }
   }
-
 }

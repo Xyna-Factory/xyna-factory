@@ -19,5 +19,5 @@ package xmcp.gitintegration.impl.references;
 
 
 public enum ReferenceObjectType {
-  DATATYPE, TRIGGER, FILTER
+  DATATYPE, TRIGGER, FILTER, SHAREDLIB
 }

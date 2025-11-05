@@ -181,7 +181,8 @@ public class DatatypeProcessor implements WorkspaceContentProcessor<Datatype> {
   @Override
   public List<Datatype> createItems(Long revision) {
     List<Datatype> dtList = new ArrayList<Datatype>();
-    Map<String, List<ReferenceStorable>> rsMap = getReferenceStorableListGroupMyFQName(revision);
+    ReferenceStorage storage = new ReferenceStorage();
+    Map<String, List<ReferenceStorable>> rsMap = storage.getReferenceStorableListGroupByName(revision, ReferenceObjectType.DATATYPE);
     if (rsMap.isEmpty()) {
       return dtList;
     }
@@ -198,20 +199,6 @@ public class DatatypeProcessor implements WorkspaceContentProcessor<Datatype> {
       dtList.add(dd);
     }
     return dtList;
-  }
-
-
-  private static Map<String, List<ReferenceStorable>> getReferenceStorableListGroupMyFQName(Long revision) {
-    Map<String, List<ReferenceStorable>> resultMap = new HashMap<String, List<ReferenceStorable>>();
-    ReferenceStorage storage = new ReferenceStorage();
-    List<ReferenceStorable> refStorablList = storage.getAllReferencesForType(revision, ReferenceObjectType.DATATYPE);
-    if (refStorablList != null) {
-      for (ReferenceStorable refStorable : refStorablList) {
-        resultMap.putIfAbsent(refStorable.getObjectName(), new ArrayList<ReferenceStorable>());
-        resultMap.get(refStorable.getObjectName()).add(refStorable);
-      }
-    }
-    return resultMap;
   }
 
 

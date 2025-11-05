@@ -39,6 +39,7 @@ import xmcp.gitintegration.impl.references.ReferenceObjectTypeMethods;
 import xmcp.gitintegration.impl.references.ReferenceType;
 import xmcp.gitintegration.impl.references.methods.LibFolderMethods;
 import xmcp.gitintegration.impl.references.methods.objecttypes.DatatypeReferenceMethods;
+import xmcp.gitintegration.impl.references.methods.objecttypes.SharedLibraryReferenceMethods;
 import xmcp.gitintegration.storage.ReferenceStorable;
 import xmcp.gitintegration.storage.ReferenceStorage;
 
@@ -60,19 +61,6 @@ public class ReferenceSupport {
   
   private static Logger logger = CentralFactoryLogging.getLogger(ReferenceSupport.class);
 
-  public File findJar(List<InternalReference> references, String jarName, Long revision) {
-    for (InternalReference reference : references) {
-      ReferenceType referenceType = ReferenceType.valueOf(reference.getType());
-      ReferenceMethods methods = dispatch(referenceType);
-      Optional<File> result = methods.findJar(reference, jarName, revision);
-      if (result.isPresent()) {
-        return result.get();
-      }
-    }
-    return null;
-  }
-
-
   private static final HashMap<ReferenceType, ReferenceMethods> implementations = setReferenceMethods();
   private static final HashMap<ReferenceObjectType, ReferenceObjectTypeMethods> objectTypeImplementations = setRefTypeMethods();
 
@@ -92,6 +80,7 @@ public class ReferenceSupport {
 
     //register implementations here
     result.put(ReferenceObjectType.DATATYPE, new DatatypeReferenceMethods());
+    result.put(ReferenceObjectType.SHAREDLIB, new SharedLibraryReferenceMethods());
 
     return result;
   }
@@ -110,7 +99,8 @@ public class ReferenceSupport {
     }
     List<InternalReference> refs = convertList(references, repoPath);
     ReferenceObjectType objectType = ReferenceObjectType.valueOf(references.get(0).getObjecttype());
-    objectTypeImplementations.get(objectType).trigger(refs, objectName, revision);
+    List<File> files = executeReferences(refs);
+    objectTypeImplementations.get(objectType).trigger(files, objectName, revision);
   }
 
 
@@ -130,24 +120,35 @@ public class ReferenceSupport {
       info.references.add(reference);
     }
 
-    //call objectTypeImplementations.get(objectType).trigger8refs, objectName, revision)
+    //call objectTypeImplementations.get(objectType).trigger(refs, objectName, revision)
     for (Entry<String, ObjectReferenceInformation> kvp : grouped.entrySet()) {
       List<InternalReference> refs = kvp.getValue().references;
       String objectName = kvp.getKey();
       if(logger.isDebugEnabled()) {
         logger.debug("triggering reference. revision:" + revision + ", objectName: " + objectName);
       }
+      List<File> files = executeReferences(refs);
       try {
-          objectTypeImplementations.get(kvp.getValue().objectType).trigger(refs, objectName, revision);
+          objectTypeImplementations.get(kvp.getValue().objectType).trigger(files, objectName, revision);
       } catch(Exception e) {
         if(logger.isWarnEnabled()) {
           logger.warn("Exception during reference trigger.", e);
         }
       }
     }
-
   }
 
+  
+  public List<File> executeReferences(List<InternalReference> references) {
+    List<File> result = new ArrayList<File>();
+    for (InternalReference reference : references) {
+      ReferenceType referenceType = ReferenceType.valueOf(reference.getType());
+      ReferenceMethods methods = dispatch(referenceType);
+      List<File> partialResult = methods.execute(reference);
+      result.addAll(partialResult);
+    }
+    return result;
+  }
 
   private boolean matchRevisionAndPath(ReferenceStorable storabe, String path, Long revision) {
     return storabe.getWorkspace().equals(revision) && storabe.getPath().equals(path);
