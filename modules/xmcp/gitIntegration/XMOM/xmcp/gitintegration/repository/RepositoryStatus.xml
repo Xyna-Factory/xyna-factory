@@ -15,26 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="WorkspaceContentItem" BaseTypePath="xmcp.gitintegration" IsAbstract="false" Label="Filter Instance" TypeName="FilterInstance" TypePath="xmcp.gitintegration" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" IsAbstract="false" Label="Repository Status" TypeName="RepositoryStatus" TypePath="xmcp.gitintegration.repository" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Filter Instance Name" VariableName="filterInstanceName">
+  <Data IsList="true" Label="Untracked" VariableName="untracked">
     <Meta>
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Filter Name" VariableName="filterName">
+  <Data IsList="true" Label="Changes" VariableName="changes">
     <Meta>
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Trigger Instance Name" VariableName="triggerInstanceName">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data IsList="true" Label="Configuration" VariableName="configuration">
+  <Data IsList="true" Label="Missing" VariableName="missing">
     <Meta>
       <Type>String</Type>
     </Meta>

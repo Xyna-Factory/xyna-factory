@@ -115,5 +115,27 @@ for(int i=0; i&lt;listInput.size(); i++) {
 return result;</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Create Repository Status Text Item Definitions" Name="createRepositoryStatusTextItemDefinitions">
+      <Input>
+        <Data ID="5334" Label="Repository Status" ReferenceName="RepositoryStatus" ReferencePath="xmcp.gitintegration.repository" VariableName="repositoryStatus5334"/>
+      </Input>
+      <Output>
+        <Data ID="5335" IsList="true" Label="Untracked - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5335"/>
+        <Data ID="5336" IsList="true" Label="Changes - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5336"/>
+        <Data ID="5337" IsList="true" Label="Missing - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5337"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">List&lt;String&gt; untrackedItems = repositoryStatus5334.getUntracked();
+List&lt;? extends TextItemDefinition&gt; untracked = createTextItemDefinitionsFromStringList(untrackedItems, "untracked");
+List&lt;String&gt; changedItems = repositoryStatus5334.getChanges();
+List&lt;? extends TextItemDefinition&gt; changes = createTextItemDefinitionsFromStringList(changedItems, "changes");
+List&lt;String&gt; missingItems = repositoryStatus5334.getMissing();
+List&lt;? extends TextItemDefinition&gt; missing = createTextItemDefinitionsFromStringList(missingItems, "missing");
+return new Container(
+    new XynaObjectList&lt;TextItemDefinition&gt;(untracked, TextItemDefinition.class), 
+    new XynaObjectList&lt;TextItemDefinition&gt;(changes, TextItemDefinition.class), 
+    new XynaObjectList&lt;TextItemDefinition&gt;(missing, TextItemDefinition.class));</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>

@@ -15,28 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="WorkspaceContentItem" BaseTypePath="xmcp.gitintegration" IsAbstract="false" Label="Filter Instance" TypeName="FilterInstance" TypePath="xmcp.gitintegration" Version="1.8">
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="WorkspaceContentItem" BaseTypePath="xmcp.gitintegration" IsAbstract="false" Label="Shared Library" TypeName="SharedLibrary" TypePath="xmcp.gitintegration" Version="1.8">
   <Meta>
     <IsServiceGroupOnly>false</IsServiceGroupOnly>
   </Meta>
-  <Data Label="Filter Instance Name" VariableName="filterInstanceName">
+  <Data Label="Name" VariableName="name">
     <Meta>
       <Type>String</Type>
     </Meta>
   </Data>
-  <Data Label="Filter Name" VariableName="filterName">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data Label="Trigger Instance Name" VariableName="triggerInstanceName">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
-  <Data IsList="true" Label="Configuration" VariableName="configuration">
-    <Meta>
-      <Type>String</Type>
-    </Meta>
-  </Data>
+  <Data IsList="true" Label="References" ReferenceName="Reference" ReferencePath="xmcp.gitintegration" VariableName="references"/>
 </DataType>

@@ -57,6 +57,7 @@ import xmcp.gitintegration.repository.PullOutput;
 import xmcp.gitintegration.repository.Repository;
 import xmcp.gitintegration.repository.RepositoryConnection;
 import xmcp.gitintegration.repository.RepositoryConnectionGroup;
+import xmcp.gitintegration.repository.RepositoryStatus;
 import xmcp.gitintegration.repository.RepositoryUser;
 import xmcp.gitintegration.repository.RepositoryUserCreationData;
 import xmcp.gitintegration.storage.UserManagementStorage;
@@ -287,6 +288,16 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
       return new RepositoryInteraction().getFileContentInCurrentOriginBranch(repository.getPath(), file.getPath());
     }
     catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
+  @Override
+  public RepositoryStatus status(Repository repository) {
+    try {
+      return new RepositoryInteraction().getStatus(repository.getPath());
+    } catch (Exception e) {
       throw new RuntimeException(e);
     }
   }
