@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Set Value For Structure" TypeName="SetValueForStructure" TypePath="xfmg.tmf640" Version="1.8">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Set Value For Structure" TypeName="SetValueForStructure" TypePath="xfmg.tmf640" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Set Value For Structure" Name="SetValueForStructure">
     <Input>
       <Data ID="22" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember22"/>
