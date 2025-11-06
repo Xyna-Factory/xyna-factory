@@ -109,6 +109,7 @@
       <Mapping>%1%.synchronously="true"</Mapping>
       <Mapping>%1%.showResult="true"</Mapping>
       <Mapping>%1%.onStartorderResultEvent["0"].eventId="oas_imp_hist_refresh"</Mapping>
+      <Mapping>%1%.onStartorderResultEvent["1"].eventId="oas_imp_clear_changes"</Mapping>
     </Mappings>
     <Mappings ID="5061" Label="spec file imput">
       <Output>
@@ -215,6 +216,7 @@
       <Mapping>%6%.children["5"]#cast("xmcp.forms.datatypes.TablePanelDefinition")=%5%</Mapping>
       <Mapping>%6%.label="Generate and Import OAS App"</Mapping>
       <Mapping>%6%.closable="true"</Mapping>
+      <Mapping>%6%.triggerClearDataChangeState.eventId="oas_imp_clear_changes"</Mapping>
     </Mappings>
     <Data ID="371" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition371">
       <Source RefID="101"/>
