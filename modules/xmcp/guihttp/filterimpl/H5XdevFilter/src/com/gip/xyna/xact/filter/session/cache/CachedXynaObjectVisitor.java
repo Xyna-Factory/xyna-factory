@@ -50,7 +50,6 @@ public class CachedXynaObjectVisitor extends XynaObjectVisitor {
     if (map == null) {
       map = new ConcurrentHashMap<>();
       cache.insertIntoCache(clazz, map);
-      map = cache.getFromCache(clazz);
     }
 
     return map.computeIfAbsent(label, key -> super.findField(clazz, key));
