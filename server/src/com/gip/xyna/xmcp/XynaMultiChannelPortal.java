@@ -1045,9 +1045,9 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
       XMLUtils.saveDom(xmlFileTarget, doc);
 
       
-      File f = new File(fqXMLNameDOM + "_" + getDateSuffix() + ".zip");
+      File f = new File(tempdir, fqXMLNameDOM + "_" + getDateSuffix() + ".zip");
       while (f.exists()) {
-        f = new File(fqXMLNameDOM + "_" + getDateSuffix() + ".zip");
+        f = new File(tempdir, fqXMLNameDOM + "_" + getDateSuffix() + ".zip");
       }
 
       return XynaFactory.getInstance().getXynaDevelopment().getXynaLibraryDevelopment()
