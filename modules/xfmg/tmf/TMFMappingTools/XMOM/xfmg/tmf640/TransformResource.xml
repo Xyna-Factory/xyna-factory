@@ -30,7 +30,7 @@
     </ServiceReference>
     <Choice ID="235" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="7"/>
-      <Target RefID="853"/>
+      <Target RefID="1329"/>
       <Meta>
         <OuterConditionPart>%0%.tMFResourceSpecAnnotations.property==?</OuterConditionPart>
       </Meta>
@@ -76,17 +76,17 @@
         </Mappings>
         <Assign ID="274">
           <Source RefID="819"/>
-          <Target RefID="853"/>
+          <Target RefID="1329"/>
           <Copy>
             <Source RefID="819"/>
-            <Target RefID="853"/>
+            <Target RefID="1329"/>
           </Copy>
         </Assign>
       </Case>
       <Case ID="236" IsDefault="true" Label="default">
         <Choice ID="330" TypeName="BaseChoiceTypeFormula" TypePath="server">
           <Source RefID="2"/>
-          <Target RefID="784"/>
+          <Target RefID="1328"/>
           <Input>
             <Data ID="345" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember345">
               <Source RefID="330"/>
@@ -109,37 +109,78 @@
               </Output>
               <Mapping>%1%.stringArray=%0%.getMemberListValue()</Mapping>
             </Mappings>
-            <Function ID="539" Label="as wrapped list">
-              <Source RefID="540"/>
+            <Choice ID="1213" TypeName="BaseChoiceTypeFormula" TypePath="server">
               <Source RefID="465"/>
-              <Target RefID="540"/>
-              <Target RefID="542"/>
-              <Invoke Operation="asWrappedList" ServiceID="540">
+              <Target RefID="1349"/>
+              <Input>
+                <Data ID="1255" Label="Array Wrapper" ReferenceName="ArrayWrapper" ReferencePath="base.list" VariableName="arrayWrapper1255">
+                  <Source RefID="1213"/>
+                </Data>
                 <Source RefID="465"/>
-              </Invoke>
-              <Receive ServiceID="540">
-                <Target RefID="542"/>
-              </Receive>
-            </Function>
-            <Foreach ID="615">
-              <Source RefID="542"/>
-              <Target RefID="783"/>
-              <InputList RefID="542">
-                <Data ID="616" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text616"/>
+              </Input>
+              <Case ID="1214" Label="true" Premise="%0%.stringArray==null">
+                <Mappings ID="1346" Label="Mapping">
+                  <Output>
+                    <Data ID="1347" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1347">
+                      <Source RefID="1346"/>
+                    </Data>
+                    <Target RefID="1348"/>
+                  </Output>
+                </Mappings>
+                <Assign ID="1217">
+                  <Source RefID="1348"/>
+                  <Target RefID="1349"/>
+                  <Copy>
+                    <Source RefID="1348"/>
+                    <Target RefID="1349"/>
+                  </Copy>
+                </Assign>
+              </Case>
+              <Case ID="1215" Label="false">
+                <Function ID="539" Label="as wrapped list">
+                  <Source RefID="540"/>
+                  <Source RefID="465"/>
+                  <Target RefID="540"/>
+                  <Target RefID="1236"/>
+                  <Invoke Operation="asWrappedList" ServiceID="540">
+                    <Source RefID="465"/>
+                  </Invoke>
+                  <Receive ServiceID="540">
+                    <Target RefID="1236"/>
+                  </Receive>
+                </Function>
+                <Assign ID="1219">
+                  <Source RefID="1236"/>
+                  <Target RefID="1349"/>
+                  <Copy>
+                    <Source RefID="1236"/>
+                    <Target RefID="1349"/>
+                  </Copy>
+                </Assign>
+                <Data ID="1236" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1236">
+                  <Source RefID="539"/>
+                </Data>
+              </Case>
+            </Choice>
+            <Foreach ID="1350">
+              <Source RefID="1349"/>
+              <Target RefID="1352"/>
+              <InputList RefID="1349">
+                <Data ID="1351" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1351"/>
               </InputList>
-              <OutputList RefID="783">
+              <OutputList RefID="1352">
                 <Data ID="782" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef782">
                   <Source RefID="559"/>
                 </Data>
               </OutputList>
               <Choice ID="559" TypeName="BaseChoiceTypeFormula" TypePath="server">
-                <Source RefID="616"/>
+                <Source RefID="1351"/>
                 <Target RefID="782"/>
                 <Input>
                   <Data ID="582" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text582">
                     <Source RefID="559"/>
                   </Data>
-                  <Source RefID="616"/>
+                  <Source RefID="1351"/>
                 </Input>
                 <Case ID="560" Label="true" Premise="%0%!=null">
                   <Mappings ID="54" Label="Mapping">
@@ -159,7 +200,7 @@
                       <Data ID="682" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text682">
                         <Source RefID="54"/>
                       </Data>
-                      <Source RefID="616">
+                      <Source RefID="1351">
                         <Meta>
                           <LinkType>UserConnected</LinkType>
                         </Meta>
@@ -212,16 +253,13 @@
               </Data>
             </Foreach>
             <Assign ID="334">
-              <Source RefID="783"/>
-              <Target RefID="784"/>
+              <Source RefID="1352"/>
+              <Target RefID="1328"/>
               <Copy>
-                <Source RefID="783"/>
-                <Target RefID="784"/>
+                <Source RefID="1352"/>
+                <Target RefID="1328"/>
               </Copy>
             </Assign>
-            <Data ID="542" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text542">
-              <Source RefID="539"/>
-            </Data>
           </Case>
           <Case ID="332" Label="false">
             <Mappings ID="966" Label="Mapping">
@@ -261,20 +299,20 @@
             </Mappings>
             <Assign ID="336">
               <Source RefID="398"/>
-              <Target RefID="784"/>
+              <Target RefID="1328"/>
               <Copy>
                 <Source RefID="398"/>
-                <Target RefID="784"/>
+                <Target RefID="1328"/>
               </Copy>
             </Assign>
           </Case>
         </Choice>
         <Assign ID="238">
-          <Source RefID="784"/>
-          <Target RefID="853"/>
+          <Source RefID="1328"/>
+          <Target RefID="1329"/>
           <Copy>
-            <Source RefID="784"/>
-            <Target RefID="853"/>
+            <Source RefID="1328"/>
+            <Target RefID="1329"/>
           </Copy>
         </Assign>
       </Case>
@@ -286,25 +324,31 @@
     <Data ID="465" Label="Array Wrapper" ReferenceName="ArrayWrapper" ReferencePath="base.list" VariableName="arrayWrapper465">
       <Source RefID="447"/>
     </Data>
-    <Data ID="783" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef783">
-      <Source RefID="615"/>
-      <Target RefID="783"/>
-    </Data>
-    <Data ID="784" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef784">
-      <Source RefID="330"/>
-    </Data>
     <Data ID="819" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef819">
       <Source RefID="801"/>
     </Data>
-    <Data ID="853" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef853">
+    <Data ID="970" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef970"/>
+    <Data ID="1328" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef1328">
+      <Source RefID="330"/>
+    </Data>
+    <Data ID="1329" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef1329">
       <Source RefID="235"/>
     </Data>
-    <Data ID="970" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef970"/>
+    <Data ID="1348" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1348">
+      <Source RefID="1346"/>
+    </Data>
+    <Data ID="1349" IsList="true" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text1349">
+      <Source RefID="1213"/>
+    </Data>
+    <Data ID="1352" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef1352">
+      <Source RefID="1350"/>
+      <Target RefID="1352"/>
+    </Data>
     <Assign ID="1">
-      <Source RefID="853"/>
+      <Source RefID="1329"/>
       <Target RefID="29"/>
       <Copy>
-        <Source RefID="853"/>
+        <Source RefID="1329"/>
         <Target RefID="29"/>
       </Copy>
     </Assign>
