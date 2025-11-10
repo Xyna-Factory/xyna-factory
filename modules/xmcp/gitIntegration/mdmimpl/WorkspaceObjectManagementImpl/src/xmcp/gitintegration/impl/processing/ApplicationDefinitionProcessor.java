@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,12 +68,13 @@ public class ApplicationDefinitionProcessor implements WorkspaceContentProcessor
   private static final String TAG_CONTENTENTRY_TYPE = "type";
   private static final String TAG_CONTENTENTRY_FQNAME = "fqName";
 
-  private static final String TEMPORARY_SESSION_AUTHENTICATION_USERNAME_CREATE = "ApplicationDefinitionProcessor.create";
+	private static final String TEMPORARY_SESSION_AUTHENTICATION_USERNAME_CREATE = "ApplicationDefinitionProcessor.create";
 
-  private static final RevisionManagement revisionManagement =
-      XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement();
+  private static final RevisionManagement revisionManagement = XynaFactory.isFactoryServer() ? XynaFactory.getInstance()
+      .getFactoryManagement().getXynaFactoryControl().getRevisionManagement() : null;
   private static final ApplicationManagementImpl applicationManagement =
-      (ApplicationManagementImpl) XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getApplicationManagement();
+      XynaFactory.isFactoryServer() ? (ApplicationManagementImpl) XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl()
+          .getApplicationManagement() : null;
 
   private static final Set<ApplicationEntryType> xmomType =
       Set.of(ApplicationEntryType.WORKFLOW, ApplicationEntryType.DATATYPE, ApplicationEntryType.EXCEPTION);
