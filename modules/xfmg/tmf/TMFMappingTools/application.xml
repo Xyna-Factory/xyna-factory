@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="TMF_Mapping_Tools" factoryVersion="10.4.0.2" versionName="1.0.1" xmlVersion="1.1">
+<Application applicationName="TMF_Mapping_Tools" factoryVersion="" versionName="1.0.2" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Tools zum Umgang mit TMF633 und TMF640 API Applicationen, die mit der OASBase-Applikation generiert wurden</Description>
     <Description Lang="EN">Tools to work with TMF633 and TMF640 API applications generated with the OASBase application</Description>
