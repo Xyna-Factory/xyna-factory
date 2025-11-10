@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Dryrun Pull Scalar Information Definition" TypeName="DryrunPullScalarInformationDefinition" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Dryrun Pull Scalar Information Definition" Name="DryrunPullScalarInformationDefinition">
+    <Input>
+      <Data ID="279" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput279"/>
+    </Input>
+    <Output>
+      <Data ID="806" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition806"/>
+    </Output>
+    <ServiceReference ID="897" Label="GitIntegration UI Services" ReferenceName="GitIntegrationUIServices.GitIntegrationUIServices" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="896"/>
+      <Target RefID="896"/>
+    </ServiceReference>
+    <ServiceReference ID="1099" Label="GitIntegration UI Services" ReferenceName="GitIntegrationUIServices.GitIntegrationUIServices" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="1098"/>
+      <Target RefID="1098"/>
+    </ServiceReference>
+    <Mappings ID="35" Label="Mapping">
+      <Output>
+        <Data ID="44" Label="Current Commit - TID" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition44">
+          <Source RefID="35"/>
+        </Data>
+        <Target RefID="45"/>
+      </Output>
+      <Mapping>%0%.label="Current commit"</Mapping>
+      <Mapping>%0%.dataPath="%0%.localCommitBeforePull"</Mapping>
+    </Mappings>
+    <Mappings ID="71" Label="Mapping">
+      <Output>
+        <Data ID="72" Label="Remote Commit - TID" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition72"/>
+        <Target RefID="73"/>
+      </Output>
+      <Mapping>%0%.label="Remote commit"</Mapping>
+      <Mapping>%0%.dataPath="%0%.remoteCommit"</Mapping>
+    </Mappings>
+    <Function ID="896" Label="Create Local Changes Text Item Definitions">
+      <Source RefID="897"/>
+      <Source RefID="279"/>
+      <Target RefID="897"/>
+      <Target RefID="899"/>
+      <Invoke Operation="createLocalChangesTextItemDefinitions" ServiceID="897">
+        <Source RefID="279"/>
+      </Invoke>
+      <Receive ServiceID="897">
+        <Target RefID="899"/>
+      </Receive>
+    </Function>
+    <Mappings ID="847" Label="Mapping">
+      <Input>
+        <Data ID="916" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition916">
+          <Source RefID="847"/>
+        </Data>
+        <Source RefID="899"/>
+      </Input>
+      <Output>
+        <Data ID="856" Label="LocalChanges - Details - FPD" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition856">
+          <Source RefID="847"/>
+        </Data>
+        <Target RefID="857"/>
+      </Output>
+      <Mapping>%1%.label="Local changes"</Mapping>
+      <Mapping>%1%.children=%0%</Mapping>
+      <Mapping>%1%.closable="true"</Mapping>
+    </Mappings>
+    <Mappings ID="320" Label="Mapping">
+      <Input>
+        <Data ID="439" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput439">
+          <Source RefID="320"/>
+        </Data>
+        <Source RefID="279"/>
+      </Input>
+      <Input>
+        <Data ID="874" Label="LocalChanges - Details - FPD" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition874">
+          <Source RefID="320"/>
+        </Data>
+        <Source RefID="857"/>
+      </Input>
+      <Output>
+        <Data ID="372" Label="Local Changes - ODBD" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition372">
+          <Source RefID="320"/>
+        </Data>
+        <Target RefID="373"/>
+      </Output>
+      <Mapping>%2%.label=concat("Show ", length(%0%.localChanges), " local changes...")</Mapping>
+      <Mapping>%2%.detailsDefinitionReference=%1%</Mapping>
+    </Mappings>
+    <Function ID="1098" Label="Create Remote Changes Text Item Definitions">
+      <Source RefID="1099"/>
+      <Source RefID="279"/>
+      <Target RefID="1099"/>
+      <Target RefID="1101"/>
+      <Invoke Operation="createRemoteChangesTextItemDefinitions" ServiceID="1099">
+        <Source RefID="279"/>
+      </Invoke>
+      <Receive ServiceID="1099">
+        <Target RefID="1101"/>
+      </Receive>
+    </Function>
+    <Mappings ID="1061" Label="Mapping">
+      <Input>
+        <Data ID="1062" IsList="true" Label="Remote Changes - Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition1062"/>
+        <Source RefID="1101">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="1063" Label="RemoteChanges - Details - FPD" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1063"/>
+        <Target RefID="1064"/>
+      </Output>
+      <Mapping>%1%.label="Remote changes"</Mapping>
+      <Mapping>%1%.children=%0%</Mapping>
+      <Mapping>%1%.closable="true"</Mapping>
+    </Mappings>
+    <Mappings ID="713" Label="Mapping">
+      <Input>
+        <Data ID="714" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput714"/>
+        <Source RefID="279"/>
+      </Input>
+      <Input>
+        <Data ID="1222" Label="RemoteChanges - Details - FPD" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1222">
+          <Source RefID="713"/>
+        </Data>
+        <Source RefID="1064">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="715" Label="Remote Changes - ODBD" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition715"/>
+        <Target RefID="716"/>
+      </Output>
+      <Mapping>%2%.label=concat("Show ", length(%0%.remoteChanges), " remote changes...")</Mapping>
+      <Mapping>%2%.detailsDefinitionReference=%1%</Mapping>
+    </Mappings>
+    <Mappings ID="211" Label="Mapping">
+      <Input>
+        <Data ID="62" Label="Current Commit - TID" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition62">
+          <Source RefID="16"/>
+        </Data>
+        <Source RefID="45">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="90" Label="Remote Commit - TID" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition90">
+          <Source RefID="16"/>
+        </Data>
+        <Source RefID="73">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="390" Label="Local Changes - ODBD" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition390">
+          <Source RefID="211"/>
+        </Data>
+        <Source RefID="373">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="757" Label="Remote Changes - ODBD" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition757">
+          <Source RefID="211"/>
+        </Data>
+        <Source RefID="716">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Output>
+        <Data ID="220" Label="TIDs - FPD" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition220">
+          <Source RefID="211"/>
+        </Data>
+        <Target RefID="221"/>
+      </Output>
+      <Mapping>%4%.children["0"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%0%</Mapping>
+      <Mapping>%4%.children["1"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%1%</Mapping>
+      <Mapping>%4%.children["2"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%2%</Mapping>
+      <Mapping>%4%.children["3"]#cast("xmcp.forms.datatypes.OpenDetailsButtonDefinition")=%3%</Mapping>
+      <Mapping>%4%.label="Pre-Pull information"</Mapping>
+    </Mappings>
+    <Data ID="45" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition45">
+      <Source RefID="35"/>
+    </Data>
+    <Data ID="73" Label="Current Commit - TID" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition73"/>
+    <Data ID="221" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition221">
+      <Source RefID="211"/>
+    </Data>
+    <Data ID="373" Label="Open Details Button Definition" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition373">
+      <Source RefID="320"/>
+    </Data>
+    <Data ID="716" Label="Local Changes - ODBD" ReferenceName="OpenDetailsButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="openDetailsButtonDefinition716"/>
+    <Data ID="857" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition857">
+      <Source RefID="847"/>
+    </Data>
+    <Data ID="899" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition899">
+      <Source RefID="896"/>
+    </Data>
+    <Data ID="1064" Label="LocalChanges - Details - FPD" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1064"/>
+    <Data ID="1101" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition1101">
+      <Source RefID="1098"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="221"/>
+      <Target RefID="806"/>
+      <Copy>
+        <Source RefID="221">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+        <Target RefID="806"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

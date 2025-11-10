@@ -48,14 +48,16 @@ import xmcp.gitintegration.Flag;
 import xprc.xpce.Workspace;
 import xmcp.gitintegration.RepositoryManagementServiceOperation;
 import xmcp.gitintegration.cli.generated.OverallInformationProvider;
-import xmcp.gitintegration.impl.RepositoryInteraction.GitDataContainer;
 import xmcp.gitintegration.repository.Branch;
 import xmcp.gitintegration.repository.BranchData;
 import xmcp.gitintegration.repository.ChangeSet;
 import xmcp.gitintegration.repository.Commit;
+import xmcp.gitintegration.repository.PullInput;
+import xmcp.gitintegration.repository.PullOutput;
 import xmcp.gitintegration.repository.Repository;
 import xmcp.gitintegration.repository.RepositoryConnection;
 import xmcp.gitintegration.repository.RepositoryConnectionGroup;
+import xmcp.gitintegration.repository.RepositoryStatus;
 import xmcp.gitintegration.repository.RepositoryUser;
 import xmcp.gitintegration.repository.RepositoryUserCreationData;
 import xmcp.gitintegration.storage.UserManagementStorage;
@@ -235,17 +237,20 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
 
 
   @Override
-  public Text pull(XynaOrderServerExtension order, Repository repository) {
+  public PullOutput pull(XynaOrderServerExtension order, PullInput input) {
     String user = getUserFromSession(order.getSessionId());
-    String result;
+    PullOutput result;
+    RepositoryInteraction interaction = new RepositoryInteraction();
     try {
-      GitDataContainer data = new RepositoryInteraction().pull(repository.getPath(), false, user);
-      result = data.toString();
+      String repoPath = input.getRepository().getPath();
+      boolean dryRun = input.getDryrun();
+      result = interaction.pull(repoPath, dryRun, user);
     } catch (Exception e) {
-      return new Text("Exception during pull: " + e.getMessage());
+      PullOutput.Builder builder = new PullOutput.Builder();
+      return builder.exception(e.getMessage()).repository(input.getRepository().getPath()).dryrun(input.getDryrun()).instance();
     }
 
-    return new Text(result);
+    return result;
   }
 
 
@@ -283,6 +288,16 @@ public class RepositoryManagementServiceOperationImpl implements ExtendedDeploym
       return new RepositoryInteraction().getFileContentInCurrentOriginBranch(repository.getPath(), file.getPath());
     }
     catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
+  @Override
+  public RepositoryStatus status(Repository repository) {
+    try {
+      return new RepositoryInteraction().getStatus(repository.getPath());
+    } catch (Exception e) {
       throw new RuntimeException(e);
     }
   }

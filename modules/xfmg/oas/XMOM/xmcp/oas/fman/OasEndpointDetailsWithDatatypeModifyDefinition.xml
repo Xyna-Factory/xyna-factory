@@ -27,13 +27,13 @@
       <Data ID="4560" Label="Oas Endpoint Service" ReferenceName="OasEndpointService" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasEndpointService4560"/>
       <Data ID="4872" IsList="true" Label="Reference Candidates - Key Value" ReferenceName="KeyValue" ReferencePath="base" VariableName="keyValue4872"/>
     </Output>
-    <ServiceReference ID="5087" Label="Oas Gui Services" ReferenceName="OasGuiServices.OasGuiServices" ReferencePath="xmcp.oas.fman">
-      <Source RefID="5086"/>
-      <Target RefID="5086"/>
-    </ServiceReference>
     <ServiceReference ID="2899" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="2898"/>
       <Target RefID="2898"/>
+    </ServiceReference>
+    <ServiceReference ID="5087" Label="Oas Gui Services" ReferenceName="OasGuiServices.OasGuiServices" ReferencePath="xmcp.oas.fman">
+      <Source RefID="5086"/>
+      <Target RefID="5086"/>
     </ServiceReference>
     <Mappings ID="4719" Label="Mapping">
       <Input>
@@ -107,6 +107,7 @@
       <Mapping>%4%.synchronously="true"</Mapping>
       <Mapping>%4%.onStartorderResultEvent["0"].eventId="oas_endpoint_details_setimpl_clear"</Mapping>
       <Mapping>%4%.onStartorderResultEvent["1"].eventId="oas_endpoint_details_setimpl_close"</Mapping>
+      <Mapping>%4%.onStartorderResultEvent["2"].eventId=concat("oas_endpoint_update_impl", %1%.serviceName)</Mapping>
     </Mappings>
     <Mappings ID="1191" Label="Mapping">
       <Input>
@@ -183,6 +184,7 @@
       <Mapping>%3%.synchronously="true"</Mapping>
       <Mapping>%3%.onStartorderResultEvent["0"].eventId="oas_endpoint_details_setimpl_clear"</Mapping>
       <Mapping>%3%.onStartorderResultEvent["1"].eventId="oas_endpoint_details_setimpl_close"</Mapping>
+      <Mapping>%3%.onStartorderResultEvent["2"].eventId=concat("oas_endpoint_update_impl", %1%.serviceName)</Mapping>
     </Mappings>
     <Mappings ID="1243" Label="Mapping">
       <Input>

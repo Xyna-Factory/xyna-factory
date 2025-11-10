@@ -133,6 +133,7 @@ public class DetermineOperationAssignments {
     int subAssignments = 0;
     String elemtype = entryPath.get(entryPath.size() - 1).getKeyword();    
     boolean isChoice = Constants.TYPE_CHOICE.equals(elemtype);
+    boolean retain = false;
     Set<String> caseSet = isChoice ? new HashSet<>() : null;
 
     for (OperationMapping mapping : mappings) {
@@ -142,6 +143,9 @@ public class DetermineOperationAssignments {
         if (isChoice && (mappingPath.size() > entryPath.size())) {
           MappingPathElement childElem = mappingPath.get(entryPath.size());
           caseSet.add(childElem.getYangPath());
+        }
+        if(mapping.getValue().equals("") && MappingPathElement.isMoreSpecificPath(mappingPath, entryPath)) {
+          retain = true;
         }
       }
     }
@@ -154,6 +158,7 @@ public class DetermineOperationAssignments {
       retval = String.format("contains %s assignment%s", subAssignments, subAssignments == 1 ? "" : "s");
     }
     entry.unversionedSetValue(retval);
+    entry.unversionedSetRetain(retain);
   }
 
 }

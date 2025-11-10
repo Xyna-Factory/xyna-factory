@@ -69,6 +69,7 @@ public class RpcImplementationProvider implements ImplementationProvider {
     List<OperationMapping> mappings = OperationMapping.loadMappings(meta);
     List<ListConfiguration> listConfigs = ListConfiguration.loadListConfigurations(meta);
     Collections.sort(mappings);
+    mappings = removeObsoleteEmptyContainers(mappings);
     
     result.append("try {\n");
     
@@ -89,6 +90,25 @@ public class RpcImplementationProvider implements ImplementationProvider {
       .append("}\n");
   }
   
+
+  private List<OperationMapping> removeObsoleteEmptyContainers(List<OperationMapping> mappings) {
+    List<OperationMapping> result = new ArrayList<>(mappings);
+    for (int i = 0; i < mappings.size() - 1; i++) {
+      OperationMapping currentMapping = mappings.get(i);
+      if (currentMapping.getValue().equals("")) {
+        OperationMapping next = mappings.get(i + i);
+        if (next.getMappingYangPath().startsWith(currentMapping.getMappingYangPath())) {
+          result.set(i, null);
+        }
+      }
+    }
+
+    result.removeIf(x -> x == null);
+
+    return result;
+  }
+
+
   private void createMappingImpl(StringBuilder result, OperationMapping mapping, ImplCreationData data) {
     List<MappingPathElement> position = data.position;
     result.append("\n//").append(mapping.getMappingYangPath()).append(" -> ").append(mapping.getValue()).append("\n");
