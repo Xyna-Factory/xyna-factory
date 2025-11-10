@@ -28,9 +28,6 @@
     <property name="server.mdm.xml.filename" value="HTTPForwardingFilter.xml" />
     <property name="mdm.xml.name" value="HTTPForwardingFilter" />
     <property name="mdm.xml.filename" value="HTTPForwardingFilter" />
-    <property name="workspacename" value="HTTP" />
-    <property name="revision.dir" value="../revisions/rev_25" />
-
     <property name="trigger.name" value="Http" />
     <property name="filter.name" value="HTTPForwardingFilter" />
       
