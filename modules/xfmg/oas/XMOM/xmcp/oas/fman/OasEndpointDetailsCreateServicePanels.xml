@@ -24,13 +24,13 @@
     <Output>
       <Data ID="7" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition7"/>
     </Output>
-    <ServiceReference ID="739" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
-      <Source RefID="738"/>
-      <Target RefID="738"/>
-    </ServiceReference>
     <ServiceReference ID="1588" Label="Create Endpoint  Details Entry Children" ReferenceName="CreateEndpointDetailsEntryChildren" ReferencePath="xmcp.oas.fman">
       <Source RefID="1587"/>
       <Target RefID="1587"/>
+    </ServiceReference>
+    <ServiceReference ID="739" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
+      <Source RefID="738"/>
+      <Target RefID="738"/>
     </ServiceReference>
     <Function ID="738" Label="get Own RuntimeContext">
       <Source RefID="739"/>
@@ -55,6 +55,7 @@
         <Target RefID="26"/>
       </Output>
       <Mapping>%1%.label=%0%.serviceName</Mapping>
+      <Mapping>%1%.triggerChangeChildren.eventId=concat("oas_endpoint_update_impl", %0%.serviceName)</Mapping>
     </Mappings>
     <Choice ID="147" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="110"/>
@@ -207,12 +208,18 @@
               </Meta>
             </Source>
           </Input>
+          <Input>
+            <Data ID="1856" Label="Oas Endpoint Service" ReferenceName="OasEndpointService" ReferencePath="xmcp.oas.fman.datatypes" VariableName="oasEndpointService1856">
+              <Source RefID="476"/>
+            </Data>
+            <Source RefID="2"/>
+          </Input>
           <Output>
             <Data ID="478" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition478"/>
             <Target RefID="479"/>
           </Output>
-          <Mapping>%2%~=%0%</Mapping>
-          <Mapping>%2%.children["0"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%1%</Mapping>
+          <Mapping>%3%~=%0%</Mapping>
+          <Mapping>%3%.children["0"]#cast("xmcp.forms.datatypes.FormPanelDefinition")=%1%</Mapping>
         </Mappings>
         <Assign ID="396">
           <Source RefID="479"/>
