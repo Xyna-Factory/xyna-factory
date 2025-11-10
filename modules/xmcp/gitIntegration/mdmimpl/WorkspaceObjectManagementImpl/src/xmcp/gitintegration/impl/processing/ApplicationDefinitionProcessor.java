@@ -70,13 +70,11 @@ public class ApplicationDefinitionProcessor implements WorkspaceContentProcessor
 
 	private static final String TEMPORARY_SESSION_AUTHENTICATION_USERNAME_CREATE = "ApplicationDefinitionProcessor.create";
 
-	private static final RevisionManagement revisionManagement = XynaFactory.isFactoryServer()
-			? XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement()
-			: null;
-	private static final ApplicationManagementImpl applicationManagement = XynaFactory.isFactoryServer()
-			? (ApplicationManagementImpl) XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl()
-					.getApplicationManagement()
-			: null;
+  private static final RevisionManagement revisionManagement = XynaFactory.isFactoryServer() ? XynaFactory.getInstance()
+      .getFactoryManagement().getXynaFactoryControl().getRevisionManagement() : null;
+  private static final ApplicationManagementImpl applicationManagement =
+      XynaFactory.isFactoryServer() ? (ApplicationManagementImpl) XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl()
+          .getApplicationManagement() : null;
 
   private static final Set<ApplicationEntryType> xmomType =
       Set.of(ApplicationEntryType.WORKFLOW, ApplicationEntryType.DATATYPE, ApplicationEntryType.EXCEPTION);
