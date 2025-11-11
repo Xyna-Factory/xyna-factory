@@ -23,13 +23,9 @@
         <path location="${basedir}/../../../../.."/>
     </pathconvert>
     <property name="xmom.dir" value="${basedir}/../../XMOM" />
-    <property name="application.dir" value="${basedir}/../../" />
 
-    <property file="${application.dir}/workspace.properties" />
-
-	<property name="project.name" value="FactoryObjectManagementImpl" />
+    <property name="project.name" value="FactoryObjectManagementImpl" />
     <property name="fqclassname" value="xmcp.gitintegration.FactoryObjectManagement" />
-	
     <property name="mdm.xml.path" value="xmcp/gitintegration" />
     <property name="mdm.xml.filename" value="FactoryObjectManagement.xml" />
     <property name="mdm.service.path" value="xmcp.gitintegration.FactoryObjectManagement" />

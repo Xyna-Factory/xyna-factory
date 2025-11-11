@@ -23,12 +23,9 @@
         <path location="${basedir}/../../../../.."/>
     </pathconvert>
     <property name="xmom.dir" value="${basedir}/../../XMOM" />
-    <property name="application.dir" value="${basedir}/../../" />
 
-    <property file="${application.dir}/workspace.properties" />
-
-	<property name="project.name" value="TraceYangMappingCollectionImpl" />
-	<property name="fqclassname" value="xmcp.yang.TraceYangMappingCollection" />
+    <property name="project.name" value="TraceYangMappingCollectionImpl" />
+    <property name="fqclassname" value="xmcp.yang.TraceYangMappingCollection" />
 
     <property name="mdm.xml.path" value="xmcp/yang" />
     <property name="mdm.xml.filename" value="TraceYangMappingCollection.xml" />

@@ -18,6 +18,7 @@
  -->
 <project name="buildApplication" basedir=".">
     <import file="macros.xml" />
+    <property name="application.dir" value="${basedir}/../.." />
     <property file="${basedir}/server.properties" />
     <property file="${root.dir}/server.properties" />
     <property file="${application.dir}/workspace.properties" />

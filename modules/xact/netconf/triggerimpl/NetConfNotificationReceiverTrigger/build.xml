@@ -23,11 +23,10 @@
         <path location="${basedir}/../../../../.."/>
     </pathconvert>
 
-	<property name="project.name" value="NetConfNotificationReceiverTrigger" />
-	<property name="fqclassname" value="com.gip.xyna.xact.trigger.NetConfNotificationReceiverTrigger" />
-	<property name="server.mdm.xml.filename" value="NetConfNotificationReceiverTrigger.xml" />
+    <property name="project.name" value="NetConfNotificationReceiverTrigger" />
+    <property name="fqclassname" value="com.gip.xyna.xact.trigger.NetConfNotificationReceiverTrigger" />
+    <property name="server.mdm.xml.filename" value="NetConfNotificationReceiverTrigger.xml" />
 
-    <property name="application.dir" value="${basedir}/../.." />
     <property name="deploy.sharedlibs" value="netConfNotificationReceiverLib:sshlibs" />
     <import file="${root.dir}/installation/build/buildTrigger.xml" />
 
