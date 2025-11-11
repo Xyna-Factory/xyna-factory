@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Transform Related Party" TypeName="TransformRelatedParty" TypePath="xfmg.tmf640" Version="1.8">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Transform Related Party" TypeName="TransformRelatedParty" TypePath="xfmg.tmf640" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Transform Related Party" Name="TransformRelatedParty">
     <Input>
       <Data ID="2" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember2"/>

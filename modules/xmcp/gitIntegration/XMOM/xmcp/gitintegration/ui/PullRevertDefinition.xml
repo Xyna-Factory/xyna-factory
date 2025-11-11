@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Pull - Revert Definition" TypeName="PullRevertDefinition" TypePath="xmcp.gitintegration.ui" Version="1.8">
+  <Operation ID="0" IsStatic="false" Label="Pull - Revert Definition" Name="PullRevertDefinition">
+    <Input>
+      <Data ID="55" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput55"/>
+    </Input>
+    <Output>
+      <Data ID="7" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition7"/>
+    </Output>
+    <ServiceReference ID="5320" Label="GitIntegration UI Services" ReferenceName="GitIntegrationUIServices.GitIntegrationUIServices" ReferencePath="xmcp.gitintegration.ui">
+      <Source RefID="5319"/>
+      <Target RefID="5319"/>
+    </ServiceReference>
+    <Choice ID="4989" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="55"/>
+      <Target RefID="5059"/>
+      <Input>
+        <Data ID="5004" Label="Pull Output" ReferenceName="PullOutput" ReferencePath="xmcp.gitintegration.repository" VariableName="pullOutput5004">
+          <Source RefID="4989"/>
+        </Data>
+        <Source RefID="55"/>
+      </Input>
+      <Case ID="4990" Label="true" Premise="%0%.dryrun">
+        <Mappings ID="5029" Label="Mapping">
+          <Output>
+            <Data ID="5047" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text5047">
+              <Source RefID="5029"/>
+            </Data>
+            <Target RefID="5048"/>
+          </Output>
+          <Mapping>%0%.text="Xmom Objects that will be reverted - compare with deployed state after pull"</Mapping>
+        </Mappings>
+        <Assign ID="4993">
+          <Source RefID="5048"/>
+          <Target RefID="5059"/>
+          <Copy>
+            <Source RefID="5048"/>
+            <Target RefID="5059"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="4991" Label="false">
+        <Mappings ID="5038" Label="Mapping">
+          <Output>
+            <Data ID="5057" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text5057">
+              <Source RefID="5038"/>
+            </Data>
+            <Target RefID="5058"/>
+          </Output>
+          <Mapping>%0%.text="Xmom Objects that were reverted - cinoare with deployed state after pull"</Mapping>
+        </Mappings>
+        <Assign ID="4995">
+          <Source RefID="5058"/>
+          <Target RefID="5059"/>
+          <Copy>
+            <Source RefID="5058"/>
+            <Target RefID="5059"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
+    <Function ID="5319" Label="Create Revert Text Item Definitions">
+      <Source RefID="5320"/>
+      <Source RefID="55"/>
+      <Target RefID="5320"/>
+      <Target RefID="5322"/>
+      <Invoke Operation="createRevertTextItemDefinitions" ServiceID="5320">
+        <Source RefID="55"/>
+      </Invoke>
+      <Receive ServiceID="5320">
+        <Target RefID="5322"/>
+      </Receive>
+    </Function>
+    <Mappings ID="16" Label="Mapping">
+      <Input>
+        <Data ID="5068" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text5068">
+          <Source RefID="16"/>
+        </Data>
+        <Source RefID="5059"/>
+      </Input>
+      <Input>
+        <Data ID="5200" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5200">
+          <Source RefID="16"/>
+        </Data>
+        <Source RefID="5322"/>
+      </Input>
+      <Output>
+        <Data ID="25" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition25">
+          <Source RefID="16"/>
+        </Data>
+        <Target RefID="26"/>
+      </Output>
+      <Mapping>%2%.label=%0%.text</Mapping>
+      <Mapping>%2%.hideIfEmpty="true"</Mapping>
+      <Mapping>%2%.children=%1%</Mapping>
+    </Mappings>
+    <Data ID="26" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition26">
+      <Source RefID="16"/>
+    </Data>
+    <Data ID="5048" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text5048">
+      <Source RefID="5029"/>
+    </Data>
+    <Data ID="5058" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text5058">
+      <Source RefID="5038"/>
+    </Data>
+    <Data ID="5059" Label="Text" ReferenceName="Text" ReferencePath="base" VariableName="text5059">
+      <Source RefID="4989"/>
+    </Data>
+    <Data ID="5322" IsList="true" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition5322">
+      <Source RefID="5319"/>
+    </Data>
+    <Assign ID="1">
+      <Source RefID="26"/>
+      <Target RefID="7"/>
+      <Copy>
+        <Source RefID="26"/>
+        <Target RefID="7"/>
+      </Copy>
+    </Assign>
+  </Operation>
+</Service>

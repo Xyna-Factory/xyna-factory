@@ -15,14 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="YangAppGenerator" factoryVersion="" versionName="1.1.12" xmlVersion="1.1">
+--><Application applicationName="YangAppGenerator" factoryVersion="" versionName="1.1.13" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Benutzeroberfläche und Funktionalität zum Einlesen und Arbeiten mit Datenmodellen im YANG Format</Description>
     <Description Lang="EN">Graphic User interface and functionality for parsing and working with datamodels in the YANG format</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>GuiHttp</ApplicationName>
-        <VersionName>1.3.40</VersionName>
+        <VersionName>1.3.42</VersionName>
       </RuntimeContextRequirement>
       <RuntimeContextRequirement>
         <ApplicationName>YangBase</ApplicationName>
@@ -53,6 +53,10 @@
     </Ordertype>
     <Ordertype implicitDependency="true">
       <DestinationKey>xmcp.yang.fman.ConfigureListDialogDefinition</DestinationKey>
+      <OrderContextMapping>false</OrderContextMapping>
+    </Ordertype>
+    <Ordertype implicitDependency="true">
+      <DestinationKey>xmcp.yang.fman.CreateSetEmptyPanelDefinition</DestinationKey>
       <OrderContextMapping>false</OrderContextMapping>
     </Ordertype>
     <Ordertype implicitDependency="true">
@@ -252,6 +256,10 @@
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yang.fman.ConfigureListDialogDefinition</FqName>
+      <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.CreateSetEmptyPanelDefinition</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">

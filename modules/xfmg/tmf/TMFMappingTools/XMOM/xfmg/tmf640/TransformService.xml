@@ -15,8 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Transform Service" TypeName="TransformService" TypePath="xfmg.tmf640" Version="1.8">
+--><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Transform Service" TypeName="TransformService" TypePath="xfmg.tmf640" Version="1.8">
   <Operation ID="0" IsStatic="false" Label="Transform Service" Name="TransformService">
     <Input>
       <Data ID="10" Label="AnyType (Service)" ReferenceName="AnyType" ReferencePath="base" VariableName="anyType10">
@@ -30,11 +29,51 @@
       <Data ID="23" Label="Service" ReferenceName="Service" ReferencePath="tmf640.datamodel" VariableName="service23"/>
     </Output>
     <Throws>
-      <Exception Label="MandatoryCharacteristicNotSet" ReferenceName="MandatoryCharacteristicNotSet" ReferencePath="xfmg.tmf640" VariableName="mandatoryCharacteristicNotSet57184"/>
+      <Exception Label="MandatoryCharacteristicNotSet" ReferenceName="MandatoryCharacteristicNotSet" ReferencePath="xfmg.tmf640" VariableName="mandatoryCharacteristicNotSet61515"/>
     </Throws>
+    <ServiceReference ID="22830" Label="Transform Resource" ReferenceName="TransformResource" ReferencePath="xfmg.tmf640">
+      <Source RefID="22829"/>
+      <Target RefID="22829"/>
+    </ServiceReference>
+    <ServiceReference ID="28312" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+      <Source RefID="28311"/>
+      <Target RefID="28311"/>
+    </ServiceReference>
+    <ServiceReference ID="1300" Label="Transform Characteristic" ReferenceName="TransformCharacteristic" ReferencePath="xfmg.tmf640">
+      <Source RefID="1299"/>
+      <Target RefID="1299"/>
+    </ServiceReference>
+    <ServiceReference ID="41941" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+      <Source RefID="41940"/>
+      <Target RefID="41940"/>
+    </ServiceReference>
     <ServiceReference ID="39850" Label="Get Meta Tags Of Datatype As Map" ReferenceName="GetMetaTagsOfDatatypeAsMap" ReferencePath="xfmg.tmf.inspect">
       <Source RefID="39849"/>
       <Target RefID="39849"/>
+    </ServiceReference>
+    <ServiceReference ID="17047" Label="Transform Structure" ReferenceName="TransformStructure" ReferencePath="xfmg.tmf640">
+      <Source RefID="17046"/>
+      <Target RefID="17046"/>
+    </ServiceReference>
+    <ServiceReference ID="67" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="66"/>
+      <Target RefID="66"/>
+    </ServiceReference>
+    <ServiceReference ID="40023" Label="Get Or Create Service Spec Id" ReferenceName="GetOrCreateServiceSpecId" ReferencePath="xfmg.tmf633.idgen">
+      <Source RefID="40022"/>
+      <Target RefID="40022"/>
+    </ServiceReference>
+    <ServiceReference ID="3175" Label="Set Service Property Value in TMF Service" ReferenceName="SetServicePropertyValueInTMFService" ReferencePath="xfmg.tmf640">
+      <Source RefID="3174"/>
+      <Target RefID="3174"/>
+    </ServiceReference>
+    <ServiceReference ID="1574" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+      <Source RefID="1573"/>
+      <Target RefID="1573"/>
+    </ServiceReference>
+    <ServiceReference ID="53507" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+      <Source RefID="53506"/>
+      <Target RefID="53506"/>
     </ServiceReference>
     <ServiceReference ID="53762" Label="List Utils Ext" ReferenceName="ListUtilsExt.ListUtilsExt" ReferencePath="xprc.base.list">
       <Source RefID="53761"/>
@@ -44,69 +83,29 @@
       <Source RefID="868"/>
       <Target RefID="868"/>
     </ServiceReference>
-    <ServiceReference ID="22830" Label="Transform Resource" ReferenceName="TransformResource" ReferencePath="xfmg.tmf640">
-      <Source RefID="22829"/>
-      <Target RefID="22829"/>
-    </ServiceReference>
-    <ServiceReference ID="1574" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
-      <Source RefID="1573"/>
-      <Target RefID="1573"/>
-    </ServiceReference>
-    <ServiceReference ID="1300" Label="Transform Characteristic" ReferenceName="TransformCharacteristic" ReferencePath="xfmg.tmf640">
-      <Source RefID="1299"/>
-      <Target RefID="1299"/>
-    </ServiceReference>
-    <ServiceReference ID="3175" Label="Set Service Property Value in TMF Service" ReferenceName="SetServicePropertyValueInTMFService" ReferencePath="xfmg.tmf640">
-      <Source RefID="3174"/>
-      <Target RefID="3174"/>
-    </ServiceReference>
-    <ServiceReference ID="40023" Label="Get Or Create Service Spec Id" ReferenceName="GetOrCreateServiceSpecId" ReferencePath="xfmg.tmf633.idgen">
-      <Source RefID="40022"/>
-      <Target RefID="40022"/>
-    </ServiceReference>
-    <ServiceReference ID="4362" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
-      <Source RefID="4361"/>
-      <Target RefID="4361"/>
-    </ServiceReference>
-    <ServiceReference ID="53507" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
-      <Source RefID="53506"/>
-      <Target RefID="53506"/>
-    </ServiceReference>
-    <ServiceReference ID="5748" Label="Transform Service Relationship" ReferenceName="TransformServiceRelationship" ReferencePath="xfmg.tmf640">
-      <Source RefID="5747"/>
-      <Target RefID="5747"/>
-    </ServiceReference>
-    <ServiceReference ID="43935" Label="Transform External Identifier" ReferenceName="TransformExternalIdentifier" ReferencePath="xfmg.tmf640">
-      <Source RefID="43934"/>
-      <Target RefID="43934"/>
-    </ServiceReference>
-    <ServiceReference ID="17047" Label="Transform Structure" ReferenceName="TransformStructure" ReferencePath="xfmg.tmf640">
-      <Source RefID="17046"/>
-      <Target RefID="17046"/>
-    </ServiceReference>
-    <ServiceReference ID="46" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
-      <Source RefID="45"/>
-      <Target RefID="45"/>
-    </ServiceReference>
-    <ServiceReference ID="28312" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
-      <Source RefID="28311"/>
-      <Target RefID="28311"/>
-    </ServiceReference>
-    <ServiceReference ID="67" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
-      <Source RefID="66"/>
-      <Target RefID="66"/>
+    <ServiceReference ID="21831" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+      <Source RefID="21830"/>
+      <Target RefID="21830"/>
     </ServiceReference>
     <ServiceReference ID="34993" Label="Transform Related Party" ReferenceName="TransformRelatedParty" ReferencePath="xfmg.tmf640">
       <Source RefID="34992"/>
       <Target RefID="34992"/>
     </ServiceReference>
-    <ServiceReference ID="41941" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
-      <Source RefID="41940"/>
-      <Target RefID="41940"/>
+    <ServiceReference ID="4362" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
+      <Source RefID="4361"/>
+      <Target RefID="4361"/>
     </ServiceReference>
-    <ServiceReference ID="21831" Label="ListUtils" ReferenceName="ListUtils.ListUtils" ReferencePath="base.list">
-      <Source RefID="21830"/>
-      <Target RefID="21830"/>
+    <ServiceReference ID="43935" Label="Transform External Identifier" ReferenceName="TransformExternalIdentifier" ReferencePath="xfmg.tmf640">
+      <Source RefID="43934"/>
+      <Target RefID="43934"/>
+    </ServiceReference>
+    <ServiceReference ID="46" Label="Datatype Inspector" ReferenceName="DatatypeInspector.DatatypeInspector" ReferencePath="xprc.xpce.datatype">
+      <Source RefID="45"/>
+      <Target RefID="45"/>
+    </ServiceReference>
+    <ServiceReference ID="5748" Label="Transform Service Relationship" ReferenceName="TransformServiceRelationship" ReferencePath="xfmg.tmf640">
+      <Source RefID="5747"/>
+      <Target RefID="5747"/>
     </ServiceReference>
     <Function ID="45" Label="Inspect Datatype">
       <Source RefID="46"/>
@@ -156,9 +155,9 @@
       <Source RefID="69"/>
       <Target RefID="52198"/>
       <Target RefID="52199"/>
-      <Target RefID="52200"/>
       <Target RefID="53021"/>
       <Target RefID="53230"/>
+      <Target RefID="60959"/>
       <InputList RefID="69">
         <Data ID="778" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember778"/>
       </InputList>
@@ -172,11 +171,6 @@
           <Source RefID="697"/>
         </Data>
       </OutputList>
-      <OutputList RefID="52200">
-        <Data ID="52197" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef52197">
-          <Source RefID="697"/>
-        </Data>
-      </OutputList>
       <OutputList RefID="53021">
         <Data ID="53020" IsList="true" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf640.datamodel" VariableName="relatedParty53020">
           <Source RefID="697"/>
@@ -187,13 +181,18 @@
           <Source RefID="697"/>
         </Data>
       </OutputList>
+      <OutputList RefID="60959">
+        <Data ID="60958" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef60958">
+          <Source RefID="697"/>
+        </Data>
+      </OutputList>
       <Choice ID="697" TypeName="BaseChoiceTypeFormula" TypePath="server">
         <Source RefID="778"/>
         <Target RefID="52195"/>
         <Target RefID="52196"/>
-        <Target RefID="52197"/>
         <Target RefID="53020"/>
         <Target RefID="53229"/>
+        <Target RefID="60958"/>
         <Input>
           <Data ID="728" Label="Named Variable Member" ReferenceName="NamedVariableMember" ReferencePath="xprc.xpce.datatype" VariableName="namedVariableMember728">
             <Source RefID="697"/>
@@ -221,9 +220,9 @@
             <Source RefID="871"/>
             <Target RefID="52192"/>
             <Target RefID="52193"/>
-            <Target RefID="52194"/>
             <Target RefID="53019"/>
             <Target RefID="53228"/>
+            <Target RefID="60393"/>
             <Meta>
               <OuterConditionPart>%0%.tMFType==?</OuterConditionPart>
             </Meta>
@@ -275,7 +274,7 @@
                   <Target RefID="20253"/>
                 </Output>
                 <Output>
-                  <Data ID="23530" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef23530">
+                  <Data ID="23530" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef23530">
                     <Source RefID="4922"/>
                   </Data>
                   <Target RefID="23531"/>
@@ -292,20 +291,19 @@
                   </Data>
                   <Target RefID="45848"/>
                 </Output>
-                <Mapping>%1%=null</Mapping>
                 <Mapping>%3%=null</Mapping>
               </Mappings>
               <Assign ID="1035">
                 <Source RefID="13899"/>
                 <Source RefID="20253"/>
-                <Source RefID="23531"/>
                 <Source RefID="32590"/>
                 <Source RefID="45848"/>
+                <Source RefID="23531"/>
                 <Target RefID="52192"/>
                 <Target RefID="52193"/>
-                <Target RefID="52194"/>
                 <Target RefID="53019"/>
                 <Target RefID="53228"/>
+                <Target RefID="60393"/>
                 <Copy>
                   <Source RefID="13899"/>
                   <Target RefID="52192"/>
@@ -315,16 +313,16 @@
                   <Target RefID="52193"/>
                 </Copy>
                 <Copy>
-                  <Source RefID="23531"/>
-                  <Target RefID="52194"/>
-                </Copy>
-                <Copy>
                   <Source RefID="32590"/>
                   <Target RefID="53019"/>
                 </Copy>
                 <Copy>
                   <Source RefID="45848"/>
                   <Target RefID="53228"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="23531"/>
+                  <Target RefID="60393"/>
                 </Copy>
               </Assign>
               <Data ID="1302" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic1302">
@@ -366,7 +364,7 @@
                   <Target RefID="20148"/>
                 </Output>
                 <Output>
-                  <Data ID="23928" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef23928">
+                  <Data ID="23928" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef23928">
                     <Source RefID="3829"/>
                   </Data>
                   <Target RefID="23929"/>
@@ -383,20 +381,19 @@
                   </Data>
                   <Target RefID="47278"/>
                 </Output>
-                <Mapping>%2%=null</Mapping>
                 <Mapping>%4%=null</Mapping>
               </Mappings>
               <Assign ID="1944">
                 <Source RefID="20147"/>
                 <Source RefID="20148"/>
-                <Source RefID="23929"/>
                 <Source RefID="31977"/>
                 <Source RefID="47278"/>
+                <Source RefID="23929"/>
                 <Target RefID="52192"/>
                 <Target RefID="52193"/>
-                <Target RefID="52194"/>
                 <Target RefID="53019"/>
                 <Target RefID="53228"/>
+                <Target RefID="60393"/>
                 <Copy>
                   <Source RefID="20147"/>
                   <Target RefID="52192"/>
@@ -406,16 +403,16 @@
                   <Target RefID="52193"/>
                 </Copy>
                 <Copy>
-                  <Source RefID="23929"/>
-                  <Target RefID="52194"/>
-                </Copy>
-                <Copy>
                   <Source RefID="31977"/>
                   <Target RefID="53019"/>
                 </Copy>
                 <Copy>
                   <Source RefID="47278"/>
                   <Target RefID="53228"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="23929"/>
+                  <Target RefID="60393"/>
                 </Copy>
               </Assign>
               <Data ID="20147" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic20147">
@@ -467,7 +464,7 @@
                   <Target RefID="20041"/>
                 </Output>
                 <Output>
-                  <Data ID="24329" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef24329">
+                  <Data ID="24329" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef24329">
                     <Source RefID="3901"/>
                   </Data>
                   <Target RefID="24330"/>
@@ -484,20 +481,19 @@
                   </Data>
                   <Target RefID="48300"/>
                 </Output>
-                <Mapping>%1%=null</Mapping>
                 <Mapping>%3%=null</Mapping>
               </Mappings>
               <Assign ID="3310">
                 <Source RefID="20041"/>
                 <Source RefID="14674"/>
-                <Source RefID="24330"/>
                 <Source RefID="31063"/>
                 <Source RefID="48300"/>
+                <Source RefID="24330"/>
                 <Target RefID="52192"/>
                 <Target RefID="52193"/>
-                <Target RefID="52194"/>
                 <Target RefID="53019"/>
                 <Target RefID="53228"/>
+                <Target RefID="60393"/>
                 <Copy>
                   <Source RefID="20041"/>
                   <Target RefID="52192"/>
@@ -507,16 +503,16 @@
                   <Target RefID="52193"/>
                 </Copy>
                 <Copy>
-                  <Source RefID="24330"/>
-                  <Target RefID="52194"/>
-                </Copy>
-                <Copy>
                   <Source RefID="31063"/>
                   <Target RefID="53019"/>
                 </Copy>
                 <Copy>
                   <Source RefID="48300"/>
                   <Target RefID="53228"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="24330"/>
+                  <Target RefID="60393"/>
                 </Copy>
               </Assign>
               <Data ID="5750" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="tmf640.datamodel" VariableName="serviceRelationship5750">
@@ -551,7 +547,7 @@
               </Function>
               <Mappings ID="21612" Label="Mapping">
                 <Output>
-                  <Data ID="24727" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef24727">
+                  <Data ID="24727" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef24727">
                     <Source RefID="21612"/>
                   </Data>
                   <Target RefID="24728"/>
@@ -568,20 +564,19 @@
                   </Data>
                   <Target RefID="53227"/>
                 </Output>
-                <Mapping>%0%=null</Mapping>
                 <Mapping>%2%=null</Mapping>
               </Mappings>
               <Assign ID="11130">
                 <Source RefID="17049"/>
                 <Source RefID="17050"/>
-                <Source RefID="24728"/>
                 <Source RefID="30605"/>
                 <Source RefID="53227"/>
+                <Source RefID="24728"/>
                 <Target RefID="52192"/>
                 <Target RefID="52193"/>
-                <Target RefID="52194"/>
                 <Target RefID="53019"/>
                 <Target RefID="53228"/>
+                <Target RefID="60393"/>
                 <Copy>
                   <Source RefID="17049"/>
                   <Target RefID="52192"/>
@@ -591,16 +586,16 @@
                   <Target RefID="52193"/>
                 </Copy>
                 <Copy>
-                  <Source RefID="24728"/>
-                  <Target RefID="52194"/>
-                </Copy>
-                <Copy>
                   <Source RefID="30605"/>
                   <Target RefID="53019"/>
                 </Copy>
                 <Copy>
                   <Source RefID="53227"/>
                   <Target RefID="53228"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="24728"/>
+                  <Target RefID="60393"/>
                 </Copy>
               </Assign>
               <Data ID="17049" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic17049">
@@ -655,14 +650,14 @@
               <Assign ID="17539">
                 <Source RefID="19935"/>
                 <Source RefID="19936"/>
-                <Source RefID="22832"/>
                 <Source RefID="29995"/>
                 <Source RefID="49322"/>
+                <Source RefID="22832"/>
                 <Target RefID="52192"/>
                 <Target RefID="52193"/>
-                <Target RefID="52194"/>
                 <Target RefID="53019"/>
                 <Target RefID="53228"/>
+                <Target RefID="60393"/>
                 <Copy>
                   <Source RefID="19935"/>
                   <Target RefID="52192"/>
@@ -672,10 +667,6 @@
                   <Target RefID="52193"/>
                 </Copy>
                 <Copy>
-                  <Source RefID="22832"/>
-                  <Target RefID="52194"/>
-                </Copy>
-                <Copy>
                   <Source RefID="29995"/>
                   <Target RefID="53019"/>
                 </Copy>
@@ -683,10 +674,14 @@
                   <Source RefID="49322"/>
                   <Target RefID="53228"/>
                 </Copy>
+                <Copy>
+                  <Source RefID="22832"/>
+                  <Target RefID="60393"/>
+                </Copy>
               </Assign>
               <Data ID="19935" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic19935"/>
               <Data ID="19936" IsList="true" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="tmf640.datamodel" VariableName="serviceRelationship19936"/>
-              <Data ID="22832" Label="Resource" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef22832">
+              <Data ID="22832" IsList="true" Label="Resource" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef22832">
                 <Source RefID="22829"/>
               </Data>
             </Case>
@@ -719,7 +714,7 @@
                   <Target RefID="34169"/>
                 </Output>
                 <Output>
-                  <Data ID="34170" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef34170"/>
+                  <Data ID="34170" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef34170"/>
                   <Target RefID="34171"/>
                 </Output>
                 <Output>
@@ -728,20 +723,19 @@
                   </Data>
                   <Target RefID="50344"/>
                 </Output>
-                <Mapping>%2%=null</Mapping>
                 <Mapping>%3%=null</Mapping>
               </Mappings>
               <Assign ID="26821">
                 <Source RefID="34167"/>
                 <Source RefID="34169"/>
-                <Source RefID="34171"/>
                 <Source RefID="34995"/>
                 <Source RefID="50344"/>
+                <Source RefID="34171"/>
                 <Target RefID="52192"/>
                 <Target RefID="52193"/>
-                <Target RefID="52194"/>
                 <Target RefID="53019"/>
                 <Target RefID="53228"/>
+                <Target RefID="60393"/>
                 <Copy>
                   <Source RefID="34167"/>
                   <Target RefID="52192"/>
@@ -751,16 +745,16 @@
                   <Target RefID="52193"/>
                 </Copy>
                 <Copy>
-                  <Source RefID="34171"/>
-                  <Target RefID="52194"/>
-                </Copy>
-                <Copy>
                   <Source RefID="34995"/>
                   <Target RefID="53019"/>
                 </Copy>
                 <Copy>
                   <Source RefID="50344"/>
                   <Target RefID="53228"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="34171"/>
+                  <Target RefID="60393"/>
                 </Copy>
               </Assign>
               <Data ID="34995" IsList="true" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf640.datamodel" VariableName="relatedParty34995">
@@ -796,7 +790,7 @@
                   <Target RefID="52187"/>
                 </Output>
                 <Output>
-                  <Data ID="52188" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef52188"/>
+                  <Data ID="52188" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef52188"/>
                   <Target RefID="52189"/>
                 </Output>
                 <Output>
@@ -805,19 +799,18 @@
                   </Data>
                   <Target RefID="52814"/>
                 </Output>
-                <Mapping>%2%=null</Mapping>
               </Mappings>
               <Assign ID="42551">
                 <Source RefID="52185"/>
                 <Source RefID="52187"/>
-                <Source RefID="52189"/>
                 <Source RefID="52814"/>
                 <Source RefID="43937"/>
+                <Source RefID="52189"/>
                 <Target RefID="52192"/>
                 <Target RefID="52193"/>
-                <Target RefID="52194"/>
                 <Target RefID="53019"/>
                 <Target RefID="53228"/>
+                <Target RefID="60393"/>
                 <Copy>
                   <Source RefID="52185"/>
                   <Target RefID="52192"/>
@@ -827,16 +820,16 @@
                   <Target RefID="52193"/>
                 </Copy>
                 <Copy>
-                  <Source RefID="52189"/>
-                  <Target RefID="52194"/>
-                </Copy>
-                <Copy>
                   <Source RefID="52814"/>
                   <Target RefID="53019"/>
                 </Copy>
                 <Copy>
                   <Source RefID="43937"/>
                   <Target RefID="53228"/>
+                </Copy>
+                <Copy>
+                  <Source RefID="52189"/>
+                  <Target RefID="60393"/>
                 </Copy>
               </Assign>
               <Data ID="43937" Label="ExternalIdentifier" ReferenceName="ExternalIdentifier" ReferencePath="tmf640.datamodel" VariableName="externalIdentifier43937">
@@ -856,7 +849,7 @@
                   <Target RefID="6063"/>
                 </Output>
                 <Output>
-                  <Data ID="25128" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef25128">
+                  <Data ID="25128" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef25128">
                     <Source RefID="1506"/>
                   </Data>
                   <Target RefID="25129"/>
@@ -873,20 +866,19 @@
                   </Data>
                   <Target RefID="51162"/>
                 </Output>
-                <Mapping>%2%=null</Mapping>
                 <Mapping>%4%=null</Mapping>
               </Mappings>
               <Assign ID="830">
                 <Source RefID="1508"/>
                 <Source RefID="6063"/>
-                <Source RefID="25129"/>
                 <Source RefID="28922"/>
                 <Source RefID="51162"/>
+                <Source RefID="25129"/>
                 <Target RefID="52192"/>
                 <Target RefID="52193"/>
-                <Target RefID="52194"/>
                 <Target RefID="53019"/>
                 <Target RefID="53228"/>
+                <Target RefID="60393"/>
                 <Copy>
                   <Source RefID="1508"/>
                   <Target RefID="52192"/>
@@ -896,10 +888,6 @@
                   <Target RefID="52193"/>
                 </Copy>
                 <Copy>
-                  <Source RefID="25129"/>
-                  <Target RefID="52194"/>
-                </Copy>
-                <Copy>
                   <Source RefID="28922"/>
                   <Target RefID="53019"/>
                 </Copy>
@@ -907,20 +895,24 @@
                   <Source RefID="51162"/>
                   <Target RefID="53228"/>
                 </Copy>
+                <Copy>
+                  <Source RefID="25129"/>
+                  <Target RefID="60393"/>
+                </Copy>
               </Assign>
             </Case>
           </Choice>
           <Assign ID="701">
             <Source RefID="52192"/>
             <Source RefID="52193"/>
-            <Source RefID="52194"/>
             <Source RefID="53019"/>
             <Source RefID="53228"/>
+            <Source RefID="60393"/>
             <Target RefID="52195"/>
             <Target RefID="52196"/>
-            <Target RefID="52197"/>
             <Target RefID="53020"/>
             <Target RefID="53229"/>
+            <Target RefID="60958"/>
             <Copy>
               <Source RefID="52192"/>
               <Target RefID="52195"/>
@@ -930,16 +922,16 @@
               <Target RefID="52196"/>
             </Copy>
             <Copy>
-              <Source RefID="52194"/>
-              <Target RefID="52197"/>
-            </Copy>
-            <Copy>
               <Source RefID="53019"/>
               <Target RefID="53020"/>
             </Copy>
             <Copy>
               <Source RefID="53228"/>
               <Target RefID="53229"/>
+            </Copy>
+            <Copy>
+              <Source RefID="60393"/>
+              <Target RefID="60958"/>
             </Copy>
           </Assign>
           <Data ID="871" Label="TMF Annotations Of Xyna Member Variable" ReferenceName="TMFAnnotationsOfXynaMemberVariable" ReferencePath="xfmg.tmf.inspect" VariableName="tMFAnnotationsOfXynaMemberVariable871">
@@ -961,7 +953,7 @@
               <Target RefID="4741"/>
             </Output>
             <Output>
-              <Data ID="23130" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef23130">
+              <Data ID="23130" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef23130">
                 <Source RefID="1423"/>
               </Data>
               <Target RefID="23131"/>
@@ -978,20 +970,19 @@
               </Data>
               <Target RefID="44683"/>
             </Output>
-            <Mapping>%2%=null</Mapping>
             <Mapping>%4%=null</Mapping>
           </Mappings>
           <Assign ID="703">
             <Source RefID="1465"/>
             <Source RefID="4741"/>
-            <Source RefID="23131"/>
             <Source RefID="33202"/>
             <Source RefID="44683"/>
+            <Source RefID="23131"/>
             <Target RefID="52195"/>
             <Target RefID="52196"/>
-            <Target RefID="52197"/>
             <Target RefID="53020"/>
             <Target RefID="53229"/>
+            <Target RefID="60958"/>
             <Copy>
               <Source RefID="1465"/>
               <Target RefID="52195"/>
@@ -1001,16 +992,16 @@
               <Target RefID="52196"/>
             </Copy>
             <Copy>
-              <Source RefID="23131"/>
-              <Target RefID="52197"/>
-            </Copy>
-            <Copy>
               <Source RefID="33202"/>
               <Target RefID="53020"/>
             </Copy>
             <Copy>
               <Source RefID="44683"/>
               <Target RefID="53229"/>
+            </Copy>
+            <Copy>
+              <Source RefID="23131"/>
+              <Target RefID="60958"/>
             </Copy>
           </Assign>
         </Case>
@@ -1031,22 +1022,22 @@
       <Data ID="14674" IsList="true" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="tmf640.datamodel" VariableName="serviceRelationship14674">
         <Source RefID="14576"/>
       </Data>
-      <Data ID="23131" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef23131">
+      <Data ID="23131" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef23131">
         <Source RefID="1423"/>
       </Data>
-      <Data ID="23531" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef23531">
+      <Data ID="23531" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef23531">
         <Source RefID="4922"/>
       </Data>
-      <Data ID="23929" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef23929">
+      <Data ID="23929" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef23929">
         <Source RefID="3829"/>
       </Data>
-      <Data ID="24330" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef24330">
+      <Data ID="24330" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef24330">
         <Source RefID="3901"/>
       </Data>
-      <Data ID="24728" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef24728">
+      <Data ID="24728" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef24728">
         <Source RefID="21612"/>
       </Data>
-      <Data ID="25129" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef25129">
+      <Data ID="25129" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef25129">
         <Source RefID="1506"/>
       </Data>
       <Data ID="28922" IsList="true" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf640.datamodel" VariableName="relatedParty28922">
@@ -1072,7 +1063,7 @@
       </Data>
       <Data ID="34167" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic34167"/>
       <Data ID="34169" IsList="true" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="tmf640.datamodel" VariableName="serviceRelationship34169"/>
-      <Data ID="34171" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef34171"/>
+      <Data ID="34171" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef34171"/>
       <Data ID="44683" Label="ExternalIdentifier" ReferenceName="ExternalIdentifier" ReferencePath="tmf640.datamodel" VariableName="externalIdentifier44683">
         <Source RefID="1423"/>
       </Data>
@@ -1096,14 +1087,11 @@
       </Data>
       <Data ID="52185" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic52185"/>
       <Data ID="52187" IsList="true" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="tmf640.datamodel" VariableName="serviceRelationship52187"/>
-      <Data ID="52189" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef52189"/>
+      <Data ID="52189" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef52189"/>
       <Data ID="52192" IsList="true" Label="Characteristic" ReferenceName="Characteristic" ReferencePath="tmf640.datamodel" VariableName="characteristic52192">
         <Source RefID="827"/>
       </Data>
       <Data ID="52193" IsList="true" Label="ServiceRelationship" ReferenceName="ServiceRelationship" ReferencePath="tmf640.datamodel" VariableName="serviceRelationship52193">
-        <Source RefID="827"/>
-      </Data>
-      <Data ID="52194" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef52194">
         <Source RefID="827"/>
       </Data>
       <Data ID="52814" IsList="true" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf640.datamodel" VariableName="relatedParty52814">
@@ -1116,6 +1104,9 @@
         <Source RefID="21612"/>
       </Data>
       <Data ID="53228" Label="ExternalIdentifier" ReferenceName="ExternalIdentifier" ReferencePath="tmf640.datamodel" VariableName="externalIdentifier53228">
+        <Source RefID="827"/>
+      </Data>
+      <Data ID="60393" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef60393">
         <Source RefID="827"/>
       </Data>
     </Foreach>
@@ -1180,12 +1171,12 @@
       <Serial>
         <Function ID="21830" Label="Filter">
           <Source RefID="21831"/>
-          <Source RefID="52200"/>
+          <Source RefID="60959"/>
           <Source RefID="21834"/>
           <Target RefID="21831"/>
           <Target RefID="21833"/>
           <Invoke Operation="filter" ServiceID="21831">
-            <Source RefID="52200">
+            <Source RefID="60959">
               <Meta>
                 <ExpectedType>tmf640.datamodel.ResourceRef</ExpectedType>
               </Meta>
@@ -1481,10 +1472,6 @@
       <Source RefID="777"/>
       <Target RefID="52199"/>
     </Data>
-    <Data ID="52200" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef52200">
-      <Source RefID="777"/>
-      <Target RefID="52200"/>
-    </Data>
     <Data ID="53021" IsList="true" Label="RelatedParty" ReferenceName="RelatedParty" ReferencePath="tmf640.datamodel" VariableName="relatedParty53021">
       <Source RefID="777"/>
       <Target RefID="53021"/>
@@ -1507,6 +1494,10 @@
           </Data>
         </Value>
       </Data>
+    </Data>
+    <Data ID="60959" IsList="true" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef60959">
+      <Source RefID="777"/>
+      <Target RefID="60959"/>
     </Data>
     <Assign ID="1">
       <Source RefID="120"/>
