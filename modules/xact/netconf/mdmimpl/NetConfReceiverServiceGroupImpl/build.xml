@@ -24,10 +24,8 @@
     </pathconvert>
     <property name="xmom.dir" value="${basedir}/../../XMOM" />
 
-    <property name="application.dir" value="${basedir}/../../" />
-
-	<property name="project.name" value="NotificationReceiverServiceGroupImpl" />
-	<property name="fqclassname" value="xact.netconf.services.NotificationReceiverServiceGroup" />
+    <property name="project.name" value="NotificationReceiverServiceGroupImpl" />
+    <property name="fqclassname" value="xact.netconf.services.NotificationReceiverServiceGroup" />
 
     <property name="mdm.xml.path" value="xact/netconf/services" />
     <property name="mdm.xml.filename" value="NotificationReceiverServiceGroup.xml" />

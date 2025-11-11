@@ -24,8 +24,6 @@
     </pathconvert>
     <property name="xmom.dir" value="${basedir}/../../XMOM" />
 
-    <property name="application.dir" value="${basedir}/../../" />
-
     <property name="project.name" value="OasGuiServicesImpl" />
     <property name="fqclassname" value="xmcp.oas.fman.OasGuiServices" />
     <property name="mdm.xml.path" value="xmcp/oas/fman" />
