@@ -25,8 +25,8 @@
     <import file="./macros.xml" />
     <import file="${root.dir}/installation/build/ant-xyna.xml" />
 
-    <property name="exception.xml.dir" value="${root.dir}/server" />
     <property name="application.dir" value="${basedir}/../.." />
+    <property name="exception.xml.dir" value="${root.dir}/server" />
     <property name="base.lib.dir" value="${basedir}/lib" />
     <property name="mdm.lib.dir" value="${base.lib.dir}" />
     <!--<property name="additional.lib.dir" /> (nur zum Kompilieren nötig) kann gesetzt werden, muss aber nicht -->

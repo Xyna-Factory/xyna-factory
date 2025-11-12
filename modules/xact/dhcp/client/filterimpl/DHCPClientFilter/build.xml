@@ -22,9 +22,6 @@
     <pathconvert property="root.dir">
         <path location="${basedir}/../../../../../.." />
     </pathconvert>
-    <property name="application.dir" value="${basedir}/../../" />
-
-    <property file="${application.dir}/workspace.properties" />
 
     <property name="project.name" value="DHCPClientFilter" />
     <property name="fqclassname" value="com.gip.xyna.xact.filter.DHCPClientFilter" />

@@ -353,7 +353,10 @@
         <sequential>
             <condition property="server.available">
                 <and>
-                    <isset property="server.host" />
+                    <or>
+                        <isset property="server.host" />
+                        <isset property="server.containername" />
+                    </or>
                     <isset property="server.userid" />
                     <isset property="server.path" />
                 </and>

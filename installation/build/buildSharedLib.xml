@@ -21,6 +21,8 @@
 
     <import file="./macros.xml" />
     <import file="./ant-xyna.xml" />
+    
+    <property name="application.dir" value="${basedir}/../.." />
 
     <property name="base.lib.dir" value="${basedir}/lib" />
     <!--<property name="additional.lib.dir" /> (nur zum Kompilieren nötig) kann gesetzt werden, muss aber nicht -->
