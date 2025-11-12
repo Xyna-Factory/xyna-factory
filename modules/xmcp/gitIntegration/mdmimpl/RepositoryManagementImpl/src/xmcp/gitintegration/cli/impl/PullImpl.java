@@ -39,7 +39,7 @@ public class PullImpl extends XynaCommandImplementation<Pull> {
     try {
       PullOutput result = repoInteraction.pull(payload.getRepository(), payload.getDryrun(), UserManagementStorage.CLI_USERNAME);
       writeToCommandLine(statusOutputStream, pullOutputToString(result));
-      if (result.getException() != null || !result.getException().isEmpty()) {
+      if (result.getException() != null && !result.getException().isEmpty()) {
         writeEndToCommandLine(statusOutputStream, ReturnCode.GENERAL_ERROR);
       } else if (result.getWarnings() != null && !result.getWarnings().isEmpty()) {
         writeEndToCommandLine(statusOutputStream, ReturnCode.SUCCESS_WITH_PROBLEM);
