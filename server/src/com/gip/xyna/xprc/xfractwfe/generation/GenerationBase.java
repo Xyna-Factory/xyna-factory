@@ -6245,6 +6245,17 @@ public abstract class GenerationBase {
   }
 
 
+  public static java.util.Optional<String> getXmlNameByReservedServerObjectName(String className) {
+    if (className == null) { return java.util.Optional.empty(); }
+    for (Map.Entry<String, Class<?>> entry : mdmObjectMappingToJavaClasses.entrySet()) {
+      if (className.equals(entry.getValue().getName())) {
+        return java.util.Optional.ofNullable(entry.getKey());
+      }
+    }
+    return java.util.Optional.empty();
+  }
+  
+  
   public static Set<String> getReservedServerObjectXmlNames() {
     return mdmObjectMappingToJavaClasses.keySet();
   }

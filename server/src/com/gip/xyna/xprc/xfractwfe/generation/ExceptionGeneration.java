@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -220,7 +221,14 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
     classes[0].addMemberVar("private static final long serialVersionUID = " + calculateSerialVersionUID() + "L");
     HashSet<String> imports = getImports();
     for (String s : imports) {
-      classes[0].addImport(s);
+      String importReturn = classes[0].addImport(s); // full fqname is only returned if added import was rejected
+      if (s.equals(importReturn)) {
+        Optional<String> opt = GenerationBase.getXmlNameByReservedServerObjectName(s);
+        if (opt.isPresent()) {
+          classes[0].removeImport(opt.get());
+          classes[0].addImport(s);
+        }
+      }
     }
     //imports wurden evtl von den exception utils geaddet
     if (classes[0].removeImport(GenerationBase.CORE_EXCEPTION)) {
