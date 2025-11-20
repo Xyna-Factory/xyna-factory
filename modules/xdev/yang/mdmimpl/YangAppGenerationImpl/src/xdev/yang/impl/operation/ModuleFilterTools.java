@@ -113,7 +113,7 @@ public class ModuleFilterTools {
         newGroup.add(opt.get());  
       }
       else {
-        _logger.warn("Could not find module with id " + ModuleFilterTools.idToString(id));
+        _logger.warn("Could not find module with id " + idToString(id));
       }
     }
     return newGroup;
@@ -134,7 +134,7 @@ public class ModuleFilterTools {
     Set<ModuleId> ret = new HashSet<>();
     Optional<Module> opt = group.getModule(id);
     if (!opt.isPresent()) {
-      _logger.warn("Could not find referenced module: " + ModuleFilterTools.idToString(id));
+      _logger.warn("Could not find referenced module: " + idToString(id));
       return ret;
     }
     Module mod = opt.get();
@@ -159,7 +159,7 @@ public class ModuleFilterTools {
     return ret;
   }
   
-  public static String idToString(ModuleId id) {
+  public String idToString(ModuleId id) {
     return "ModuleId " + id.getModuleName() + " " + (id.getRevision() == null ? "" : id.getRevision());
   }
   
