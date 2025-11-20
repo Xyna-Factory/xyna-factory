@@ -28,6 +28,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.yangcentral.yangkit.base.YangElement;
+import org.yangcentral.yangkit.model.api.schema.ModuleId;
 import org.yangcentral.yangkit.model.api.schema.YangSchemaContext;
 import org.yangcentral.yangkit.model.api.stmt.DataDefinition;
 import org.yangcentral.yangkit.model.api.stmt.Input;
@@ -410,8 +411,8 @@ public class OperationAssignmentUtils {
   }
   
   
-  public static List<ModuleGroup> loadModules(String workspaceName) {
-    List<ModuleGroup> result = new ArrayList<>();
+  public static List<Module> loadModules(String workspaceName, List<YangDeviceCapability> capabilities) {
+    List<Module> result = new ArrayList<>();
     XynaFactoryControl xynaFactoryCtrl = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl();
     XmomDbInteraction interaction = new XmomDbInteraction();
     RevisionManagement revMgmt = xynaFactoryCtrl.getRevisionManagement();
@@ -427,7 +428,10 @@ public class OperationAssignmentUtils {
       try {
         entryRevision = revMgmt.getRevision(entry.getRuntimeContext());
         ModuleGroup group = loadModulesFromDt(entry.getFqName(), entryRevision);
-        result.add(group);
+        List<Module> filtered = new ModuleFilterTools().filterAndReload(group, capabilities);
+        if (filtered.size() > 0) {
+          return filtered;
+        }
       } catch (Exception e) {
         _logger.error(e.getMessage(), e);
         throw new RuntimeException(e.getMessage(), e);
@@ -456,7 +460,7 @@ public class OperationAssignmentUtils {
         ModuleParseData parsed = parseModulesFromTag(module);
         result.add(parsed);
       }
-    }    
+    }
     return result;
   }
 
@@ -465,7 +469,7 @@ public class OperationAssignmentUtils {
     byte[] decoded = Base64.decode(module.getTextContent());
     java.io.ByteArrayInputStream is = new java.io.ByteArrayInputStream(decoded);
     YangSchemaContext context = YangYinParser.parse(is, "module.yang", null);
-    context.validate();    
+    context.validate();
     ModuleParseData parsed = new ModuleParseData(decoded, context.getModules());
     return parsed;
   }
@@ -574,11 +578,7 @@ public class OperationAssignmentUtils {
     return isConfig == null ? true : Boolean.valueOf(isConfig.getTextContent());
   }
 
-  public static YangStatementInfo loadTagInfo(String tag, String deviceFqn, String workspaceName, boolean isRpc) {
-    List<ModuleGroup> modules = OperationAssignmentUtils.loadModules(workspaceName);
-    //filter modules to supported by device
-    List<YangDeviceCapability> capabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
-    List<Module> filtered = YangCapabilityUtils.filterModules(modules, capabilities);
+  public static YangStatementInfo loadTagInfo(String tag, boolean isRpc, List<Module> filtered) {
     YangStatement matched = null;
     if (isRpc) {
       List<Rpc> candidates = OperationAssignmentUtils.findRpcs(filtered, tag);
