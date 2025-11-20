@@ -22,51 +22,25 @@
 	<pathconvert property="root.dir">
 		<path location="../../../.." />
 	</pathconvert>
-
 	<pathconvert property="project.root.dir">
 		<path location="../.." />
 	</pathconvert>
 
 	<property name="target.dir" value="${basedir}/deploy/" />
+    <property name="oas.dir" value="${root.dir}/modules/xfmg/oas" />
+
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
 		<classpath>
 			<pathelement location="${common.xyna.lib.dir}/ant-contrib.jar" />
 		</classpath>
 	</taskdef>
 
+    <import file="${oas.dir}/oasMacros.xml" />
+
 	<target name="build">
-		<!-- create apps from open api schemas and also unzip them for tmf tools to be able to find the xmom files -->
-		<ant antfile="build.xml" dir="${root.dir}/modules/xfmg/oas" target="prepare-mdm-jar-if-missing" />
-		<ant antfile="build.xml" dir="${root.dir}/modules/xfmg/oas" target="replace-appversion" />
-		<ant antfile="build.xml" dir="${root.dir}/modules/xfmg/oas/mdmimpl/ApplicationGenerationImpl/" target="build">
-			<property name="target.dir" value="${root.dir}/modules/xfmg/oas/mdmimpl/ApplicationGenerationImpl/deploy" />
-		</ant>
-		<java classname="xfmg.oas.offline.OASApplicationGeneration" fork="true" failonerror="true">
-			<arg value="tmf633-service-catalog-openapi-1.1.15.yaml" />
-			<arg value="client" />
-			<arg value="." />
-			<classpath>
-				<fileset dir="${root.dir}/modules/xfmg/oas/mdmimpl/ApplicationGenerationImpl/lib/xyna">
-					<include name="*.jar" />
-				</fileset>
-				<fileset dir="${root.dir}/modules/xfmg/oas/mdmimpl/ApplicationGenerationImpl/deploy">
-					<include name="*.jar" />
-				</fileset>
-			</classpath>
-		</java>
-		<java classname="xfmg.oas.offline.OASApplicationGeneration" fork="true" failonerror="true">
-			<arg value="tmf640-service-activation-openapi-1.1.8.yaml" />
-			<arg value="datamodel" />
-			<arg value="." />
-			<classpath>
-				<fileset dir="${root.dir}/modules/xfmg/oas/mdmimpl/ApplicationGenerationImpl/lib/xyna">
-					<include name="*.jar" />
-				</fileset>
-				<fileset dir="${root.dir}/modules/xfmg/oas/mdmimpl/ApplicationGenerationImpl/deploy">
-					<include name="*.jar" />
-				</fileset>
-			</classpath>
-		</java>
+        <xmlproperty file="${oas.dir}/application.xml" />
+        <buildoasapp oas.dir="${oas.dir}" yaml="tmf633-service-catalog-openapi-1.1.15.yaml" type="client" target="." version="${Application(versionName)}" />
+        <buildoasapp oas.dir="${oas.dir}" yaml="tmf640-service-activation-openapi-1.1.8.yaml" type="datamodel" target="." version="${Application(versionName)}" />
 		<antcall target="unzipApps" />
 		<move todir="${target.dir}">
 			<fileset dir="${basedir}" includes="*.zip" />

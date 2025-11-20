@@ -42,9 +42,19 @@ public class OASApplicationGeneration {
       System.exit(4);
     }
     switch (args[1]) {
-      case "client" :
       case "all" :
         new OasAppBuilder().createOasAppOffline("xmom-client", target, yaml);
+        new OasAppBuilder().createOasAppOffline("xmom-server", target, yaml);
+        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml);
+        break;
+      case "provider" :
+        new OasAppBuilder().createOasAppOffline("xmom-server", target, yaml);
+        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml);
+        break;
+      case "client" :
+        new OasAppBuilder().createOasAppOffline("xmom-client", target, yaml);
+        new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml);
+        break;
       case "datamodel" :
         new OasAppBuilder().createOasAppOffline("xmom-data-model", target, yaml);
         break;
