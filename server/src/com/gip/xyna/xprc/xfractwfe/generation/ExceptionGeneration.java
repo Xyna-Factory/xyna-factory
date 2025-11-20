@@ -221,7 +221,7 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
     classes[0].addMemberVar("private static final long serialVersionUID = " + calculateSerialVersionUID() + "L");
     HashSet<String> imports = getImports();
     for (String s : imports) {
-      String importReturn = classes[0].addImport(s); // full fqname is only returned if added import was rejected
+      String importReturn = classes[0].addImport(s); // full fqname is only returned if import to add was rejected
       if (s.equals(importReturn)) {
         Optional<String> opt = GenerationBase.getXmlNameByReservedServerObjectName(s);
         if (opt.isPresent()) {
