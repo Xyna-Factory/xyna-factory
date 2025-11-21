@@ -63,10 +63,11 @@ public class AddOperation {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+    List<YangDeviceCapability> moduleCapabilities = YangCapabilityUtils.loadCapabilities(parameter.getDeviceFqn(), workspace);
+    List<Module> filteredModules = OperationAssignmentUtils.loadModules(workspace, moduleCapabilities);
+    boolean isConfig = parameter.getIsRpc() ? true : getIsConfig(parameter.getYangTagName(), filteredModules);
 
-    boolean isConfig = parameter.getIsRpc() ? true : getIsConfig(parameter.getYangTagName(), workspace, parameter.getDeviceFqn());
-
-    addOperationToDatatype(order, parameter, isConfig);
+    addOperationToDatatype(order, parameter, isConfig, filteredModules);
 
     try (Operation result = Operation.open(order, fqn, workspace, operation)) {
       if (parameter.getIsRpc()) {
@@ -84,10 +85,7 @@ public class AddOperation {
   }
 
 
-  private boolean getIsConfig(String tagName, String workspaceName, String deviceFqn) {
-    List<YangDeviceCapability> moduleCapabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
-    List<ModuleGroup> groups = OperationAssignmentUtils.loadModules(workspaceName);
-    List<Module> filteredModules = new ModuleFilterTools().filterAndReload(groups, moduleCapabilities);
+  private boolean getIsConfig(String tagName, List<Module> filteredModules) {
     List<YangStatement> rootStatements = OperationAssignmentUtils.findRootLevelStatements(filteredModules, tagName);
     YangSubelementContentHelper helper = new YangSubelementContentHelper();
     for(YangStatement candidate : rootStatements) {
@@ -95,7 +93,6 @@ public class AddOperation {
         return helper.getConfigSubelementValueBoolean(candidate);
       }
     }
-
     throw new RuntimeException("Could not find " + tagName + " in root tags.");
   }
 
@@ -164,7 +161,8 @@ public class AddOperation {
     GuiHttpInteraction.executeRunnable(runnable, url, GuiHttpInteraction.METHOD_PUT, payload, "Could not add supertype to datatype.");
   }
   
-  public static void addOperationToDatatype(XynaOrderServerExtension order, OperationCreationParameter parameter, boolean isConfig) {
+  private static void addOperationToDatatype(XynaOrderServerExtension order, OperationCreationParameter parameter,
+                                             boolean isConfig, List<Module> filteredModules) {
     String tagNsp = parameter.getYangTagNamespace();
     String deviceFqn = parameter.getDeviceFqn();
     String tag = parameter.getYangTagName();
@@ -175,7 +173,7 @@ public class AddOperation {
     String operation = parameter.getOperationName();
     boolean isRpc = parameter.getIsRpc();
     
-    YangStatementInfo ysi = OperationAssignmentUtils.loadTagInfo(tag, deviceFqn, workspaceName, isRpc);
+    YangStatementInfo ysi = OperationAssignmentUtils.loadTagInfo(tag, isRpc, filteredModules);
     String loadedNsp = ysi.namespace;
     tagNsp = (tagNsp == null || tagNsp.isBlank()) ? loadedNsp : tagNsp;
 

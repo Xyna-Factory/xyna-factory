@@ -88,8 +88,7 @@ public class DetermineOperationAssignments {
       ret.filteredModules = opt.get();
       ret.fromCache = true;
     } else {
-      List<ModuleGroup> groups = OperationAssignmentUtils.loadModules(workspaceName);
-      ret.filteredModules = new ModuleFilterTools().filterAndReload(groups, capabilities);
+      ret.filteredModules = OperationAssignmentUtils.loadModules(workspaceName, capabilities);
       OperationCache.getInstance().put(id, ret.filteredModules);
     }
     return ret;

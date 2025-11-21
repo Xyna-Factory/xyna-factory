@@ -56,6 +56,11 @@ public class ModuleFilterTools {
   private static Logger _logger = Logger.getLogger(ModuleFilterTools.class);
   
   
+  public List<Module> filterAndReload(ModuleGroup group, List<YangDeviceCapability> capabilities) {
+    return filterAndReload(List.of(group), capabilities);
+  }
+  
+  
   public List<Module> filterAndReload(List<ModuleGroup> grouplist, List<YangDeviceCapability> capabilities) {
     Optional<MatchData> matched = checkCapabilities(grouplist, capabilities);
     if (!matched.isPresent()) {
@@ -109,7 +114,7 @@ public class ModuleFilterTools {
       }
       else {
         _logger.warn("Could not find module with id " + idToString(id));
-      }            
+      }
     }
     return newGroup;
   }
@@ -154,15 +159,15 @@ public class ModuleFilterTools {
     return ret;
   }
   
-  private String idToString(ModuleId id) {
+  public String idToString(ModuleId id) {
     return "ModuleId " + id.getModuleName() + " " + (id.getRevision() == null ? "" : id.getRevision());
   }
   
   private Optional<MatchData> checkCapabilities(List<ModuleGroup> grouplist, List<YangDeviceCapability> capabilities) {
     for (ModuleGroup group: grouplist) {
       MatchData matched = checkCapabilitiesImpl(group, capabilities);
-      if (matched.matchedIds.size() > 0) { 
-        return Optional.ofNullable(matched); 
+      if (matched.matchedIds.size() > 0) {
+        return Optional.ofNullable(matched);
       }
     }
     return Optional.empty();

@@ -60,7 +60,7 @@ public class ModuleGroup {
   }
   
   
-  public Set<ModuleId> getModuleIds() {
+  public Set<ComparableModuleId> getModuleIds() {
     return Collections.unmodifiableSet(_map.keySet());
   }
   

@@ -53,19 +53,6 @@ public class YangCapabilityUtils {
 
   private static final Logger logger = CentralFactoryLogging.getLogger(YangCapabilityUtils.class);
 
-
-  public static List<Module> filterModules(List<ModuleGroup> modules, List<YangDeviceCapability> capabilities) {
-    for (ModuleGroup group : modules) {
-      List<Module> list = new ArrayList<>(group.getModuleList());
-      list.removeIf(x -> !isModuleInCapabilities(capabilities, x));
-      if (list.size() > 0) {
-        return list;
-      }
-    }
-    return new ArrayList<Module>();
-  }
-
-
   public static boolean isModuleInCapabilities(List<YangDeviceCapability> capabilities, Module module) {
     if (module.getMainModule() == null) {
       return false;
