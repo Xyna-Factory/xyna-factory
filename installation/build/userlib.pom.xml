@@ -40,5 +40,17 @@
             <groupId>org.gnu</groupId>
             <artifactId>gnu-crypto</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.jradius</groupId>
+            <artifactId>jradius-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.jradius</groupId>
+            <artifactId>jradius-dictionary</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.jradius</groupId>
+            <artifactId>jradius-extended</artifactId>
+        </dependency>
     </dependencies>
 </project>

@@ -194,11 +194,6 @@
                 <version>0.39.0</version>
             </dependency>
             <dependency>
-                <groupId>com.ibm.mq</groupId>
-                <artifactId>com.ibm.mq.traceControl</artifactId>                <!-- unfree -->
-                <version>9.0.0.13</version>
-            </dependency>
-            <dependency>
                 <groupId>com.jcraft</groupId>
                 <artifactId>jsch</artifactId>
                 <version>0.1.54</version>
@@ -308,11 +303,6 @@
                 <groupId>javax</groupId>
                 <artifactId>javaee-api</artifactId>
                 <version>5.0-2</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.jms</groupId>
-                <artifactId>jms</artifactId>                <!-- unfree -->
-                <version>1.1</version>
             </dependency>
             <dependency>
                 <groupId>javax.sip</groupId>
