@@ -31,8 +31,8 @@ public class OASApplicationGeneration {
   public static void main(String[] args) {
     if (args.length != 3) {
       System.out.println("Generates Xyna Applications representing datamodel & client from Open API yaml schema.");
-      System.out
-          .println("Parameters: <Open API yaml schema file> <Generation Target (\"datamodel\", \"client\")> <Target directory (where generated application files will be placed)>");
+      System.out.println("Parameters: <Open API yaml schema file> <Generation Target (\"datamodel\", \"client\", \"provider\", \"all\")> " + 
+                         "<Target directory (where generated application files will be placed)>");
       System.exit(2);
     }
     String yaml = args[0];
