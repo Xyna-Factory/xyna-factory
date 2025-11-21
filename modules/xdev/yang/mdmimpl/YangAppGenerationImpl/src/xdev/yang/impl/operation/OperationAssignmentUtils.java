@@ -422,6 +422,7 @@ public class OperationAssignmentUtils {
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       throw new RuntimeException(e);
     }
+    ModuleRefValidationData validation = new ModuleRefValidationData();
     List<XMOMDatabaseSearchResultEntry> xmomDbResult = interaction.searchYangDTs(YangModuleCollection.class.getCanonicalName(), List.of(revision));
     for(XMOMDatabaseSearchResultEntry entry : xmomDbResult) {
       Long entryRevision;
@@ -429,14 +430,14 @@ public class OperationAssignmentUtils {
         entryRevision = revMgmt.getRevision(entry.getRuntimeContext());
         ModuleGroup group = loadModulesFromDt(entry.getFqName(), entryRevision);
         List<Module> filtered = new ModuleFilterTools().filterAndReload(group, capabilities);
-        if (filtered.size() > 0) {
-          return filtered;
-        }
+        result.addAll(filtered);
+        validation.register(filtered);
       } catch (Exception e) {
         _logger.error(e.getMessage(), e);
         throw new RuntimeException(e.getMessage(), e);
       }
     }
+    validation.validate();
     return result;
   }
 

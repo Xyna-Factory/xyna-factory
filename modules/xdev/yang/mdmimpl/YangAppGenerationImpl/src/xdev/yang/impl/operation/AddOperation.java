@@ -93,7 +93,6 @@ public class AddOperation {
         return helper.getConfigSubelementValueBoolean(candidate);
       }
     }
-
     throw new RuntimeException("Could not find " + tagName + " in root tags.");
   }
 
