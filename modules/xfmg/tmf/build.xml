@@ -22,9 +22,9 @@
     <import file="../../buildModule.xml" />
     
     <target name="build-all">
-        <buildModule target="build" dir="datamodels"          target.dir="${target.dir}/datamodels" />
-        <buildModule target="build" dir="TMFMappingTools"     target.dir="${target.dir}/TMFMappingTools" />
-        <buildModule target="build" dir="TMFValidationTools"  target.dir="${target.dir}/TMFValidationTools" />
+        <buildModule target="build" dir="datamodels"          target.dir="${target.dir}" />
+        <buildModule target="build" dir="TMFMappingTools"     target.dir="${target.dir}" />
+        <buildModule target="build" dir="TMFValidationTools"  target.dir="${target.dir}" />
      </target>
     
 </project>
