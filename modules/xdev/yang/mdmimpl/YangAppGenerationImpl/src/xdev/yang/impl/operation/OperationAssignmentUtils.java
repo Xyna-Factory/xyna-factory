@@ -412,7 +412,6 @@ public class OperationAssignmentUtils {
   
   
   public static List<Module> loadModules(String workspaceName, List<YangDeviceCapability> capabilities) {
-    List<Module> result = new ArrayList<>();
     XynaFactoryControl xynaFactoryCtrl = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl();
     XmomDbInteraction interaction = new XmomDbInteraction();
     RevisionManagement revMgmt = xynaFactoryCtrl.getRevisionManagement();
@@ -424,19 +423,21 @@ public class OperationAssignmentUtils {
     }
     ModuleRefValidationData validation = new ModuleRefValidationData();
     List<XMOMDatabaseSearchResultEntry> xmomDbResult = interaction.searchYangDTs(YangModuleCollection.class.getCanonicalName(), List.of(revision));
+    
+    List<ModuleGroup> groupList = new ArrayList<>();
     for(XMOMDatabaseSearchResultEntry entry : xmomDbResult) {
       Long entryRevision;
       try {
         entryRevision = revMgmt.getRevision(entry.getRuntimeContext());
         ModuleGroup group = loadModulesFromDt(entry.getFqName(), entryRevision);
-        List<Module> filtered = new ModuleFilterTools().filterAndReload(group, capabilities);
-        result.addAll(filtered);
-        validation.register(filtered);
+        groupList.add(group);
       } catch (Exception e) {
         _logger.error(e.getMessage(), e);
         throw new RuntimeException(e.getMessage(), e);
       }
     }
+    List<Module> result = new ModuleFilterTools().filterAndReload(groupList, capabilities);
+    validation.register(result);
     validation.validate();
     return result;
   }
