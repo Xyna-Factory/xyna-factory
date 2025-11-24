@@ -40,8 +40,7 @@ public class OutputCreator <ITEM, DIFFERENCE, SELECTOR extends XynaObjectDiffere
     "Table limit")
     .setDefaultDocumentation(DocumentationLanguage.DE,
     "Table limit");
-  
-  //private static final int TABLE_LIMIT = 5;
+
   protected XynaObjectDifferenceSelector<ITEM, DIFFERENCE> selector;
   
   public OutputCreator(XynaObjectDifferenceSelector<ITEM, DIFFERENCE> selector) {
