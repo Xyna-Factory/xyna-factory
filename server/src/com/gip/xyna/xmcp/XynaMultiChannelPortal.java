@@ -1032,7 +1032,7 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
     deployDatatype(fqXMLNameDOM, WorkflowProtectionMode.FORCE_DEPLOYMENT, null, revision);
 
     logger.debug("finished deployment, building service implementation template");
-    File tempdir = new File(baseDir);
+    File tempdir = new File(baseDir, "impl");
     try {
       ServiceImplementationTemplate paras = new ServiceImplementationTemplate(fqXMLNameDOM, revision);
       Support4Eclipse.buildProjectTemplate(tempdir, paras);
@@ -1045,9 +1045,9 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
       XMLUtils.saveDom(xmlFileTarget, doc);
 
       
-      File f = new File(fqXMLNameDOM + "_" + getDateSuffix() + ".zip");
+      File f = new File(baseDir, fqXMLNameDOM + "_" + getDateSuffix() + ".zip");
       while (f.exists()) {
-        f = new File(fqXMLNameDOM + "_" + getDateSuffix() + ".zip");
+        f = new File(baseDir, fqXMLNameDOM + "_" + getDateSuffix() + ".zip");
       }
 
       return XynaFactory.getInstance().getXynaDevelopment().getXynaLibraryDevelopment()
@@ -1057,8 +1057,8 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
     } finally {
       if (tempdir.exists()) {
         if (deleteBaseDir) {
-          if (!FileUtils.deleteDirectory(tempdir)) {
-            logger.warn("could not delete directory " + tempdir + ".");
+          if (!FileUtils.deleteDirectory(new File(baseDir))) {
+            logger.warn("could not delete directory " + new File(baseDir) + ".");
           }
         }
       }
@@ -1181,12 +1181,12 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
    * garantiert eindeutigkeit, erstellt das verzeichnis
    */
   private synchronized String getTempDir() {
-    String tempDir = "tempdir" + new Random().nextInt(10000);
-    while(new File(tempDir).exists()) {
-      tempDir = "tempdir" + new Random().nextInt(10000);
+    File candidate = new File(XynaProperty.TMP_DIR.get(), "tempdir" + new Random().nextInt(10000));
+    while(candidate.exists()) {
+      candidate = new File(XynaProperty.TMP_DIR.get(), "tempdir" + new Random().nextInt(10000));
     }
-    new File(tempDir).mkdirs();
-    return tempDir;
+    candidate.mkdirs();
+    return candidate.getPath();
   }
 
   private String getDateSuffix() {
