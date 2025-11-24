@@ -16,10 +16,13 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><Service xmlns="http://www.gip.com/xyna/xdev/xfractmod" Label="Decide Merge Resources" TypeName="DecideMergeResources" TypePath="xfmg.tmf640.transform" Version="1.8">
+  <Meta>
+    <Documentation>Merging should happen, if the internal data model separates id and value of a resource. Merging should not happen if the resource is list valued and thus multiple resources have different values</Documentation>
+  </Meta>
   <Operation ID="0" IsStatic="false" Label="Decide Merge Resources" Name="DecideMergeResources">
     <Input>
-      <Data ID="27" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef27"/>
-      <Data ID="48" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef48"/>
+      <Data ID="27" Label="ResourceRef left" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef27"/>
+      <Data ID="48" Label="ResourceRef right" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef48"/>
     </Input>
     <Output>
       <Data ID="14" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef14"/>
@@ -27,9 +30,9 @@
     <Choice ID="74" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="27"/>
       <Source RefID="48"/>
-      <Target RefID="666"/>
+      <Target RefID="899"/>
       <Input>
-        <Data ID="89" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef89">
+        <Data ID="89" Label="ResourceRef left" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef89">
           <Source RefID="74"/>
         </Data>
         <Source RefID="27">
@@ -39,7 +42,7 @@
         </Source>
       </Input>
       <Input>
-        <Data ID="106" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef106">
+        <Data ID="106" Label="ResourceRef right" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef106">
           <Source RefID="74"/>
         </Data>
         <Source RefID="48">
@@ -48,12 +51,32 @@
           </Meta>
         </Source>
       </Input>
-      <Case ID="75" Label="true" Premise="%0%.name==%1%.name">
+      <Input>
+        <Data ID="854" Label="ResourceRef left" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef854">
+          <Source RefID="74"/>
+        </Data>
+        <Source RefID="27">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="881" Label="ResourceRef right" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef881">
+          <Source RefID="74"/>
+        </Data>
+        <Source RefID="48">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Case ID="75" Label="true" Premise="%0%.name==%1%.name&amp;&amp;(%2%.value==null||%3%.value==null)">
         <Choice ID="208" TypeName="BaseChoiceTypeFormula" TypePath="server">
           <Source RefID="48"/>
           <Target RefID="486"/>
           <Input>
-            <Data ID="223" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef223">
+            <Data ID="223" Label="ResourceRef right" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef223">
               <Source RefID="208"/>
             </Data>
             <Source RefID="48">
@@ -65,7 +88,7 @@
           <Case ID="209" Label="true" Premise="%0%.id!=null&amp;&amp;%0%.id!=&quot;&quot;">
             <Mappings ID="256" Label="Mapping">
               <Input>
-                <Data ID="295" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef295">
+                <Data ID="295" Label="ResourceRef left" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef295">
                   <Source RefID="256"/>
                 </Data>
                 <Source RefID="27">
@@ -75,7 +98,7 @@
                 </Source>
               </Input>
               <Input>
-                <Data ID="551" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef551">
+                <Data ID="551" Label="ResourceRef right" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef551">
                   <Source RefID="256"/>
                 </Data>
                 <Source RefID="48">
@@ -85,7 +108,7 @@
                 </Source>
               </Input>
               <Output>
-                <Data ID="274" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef274">
+                <Data ID="274" Label="ResourceRef left replacement" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef274">
                   <Source RefID="256"/>
                 </Data>
                 <Target RefID="275"/>
@@ -105,7 +128,7 @@
           <Case ID="210" Label="false">
             <Mappings ID="265" Label="Mapping">
               <Input>
-                <Data ID="304" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef304">
+                <Data ID="304" Label="ResourceRef left" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef304">
                   <Source RefID="265"/>
                 </Data>
                 <Source RefID="27">
@@ -136,7 +159,7 @@
           <Source RefID="48"/>
           <Target RefID="610"/>
           <Input>
-            <Data ID="591" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef591"/>
+            <Data ID="591" Label="ResourceRef right" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef591"/>
             <Source RefID="48">
               <Meta>
                 <LinkType>UserConnected</LinkType>
@@ -146,7 +169,7 @@
           <Case ID="585" Label="true" Premise="%0%.value!=null&amp;&amp;%0%.value!=&quot;&quot;">
             <Mappings ID="592" Label="Mapping">
               <Input>
-                <Data ID="593" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef593"/>
+                <Data ID="593" Label="ResourceRef left replacement" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef593"/>
                 <Source RefID="486">
                   <Meta>
                     <LinkType>UserConnected</LinkType>
@@ -154,7 +177,7 @@
                 </Source>
               </Input>
               <Input>
-                <Data ID="594" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef594"/>
+                <Data ID="594" Label="ResourceRef right" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef594"/>
                 <Source RefID="48">
                   <Meta>
                     <LinkType>UserConnected</LinkType>
@@ -162,7 +185,7 @@
                 </Source>
               </Input>
               <Output>
-                <Data ID="595" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef595"/>
+                <Data ID="595" Label="ResourceRef leftreplacement" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef595"/>
                 <Target RefID="596"/>
               </Output>
               <Mapping>%2%=%0%</Mapping>
@@ -180,7 +203,7 @@
           <Case ID="586" Label="false">
             <Mappings ID="597" Label="Mapping">
               <Input>
-                <Data ID="598" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef598"/>
+                <Data ID="598" Label="ResourceRef left replacement" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef598"/>
                 <Source RefID="486">
                   <Meta>
                     <LinkType>UserConnected</LinkType>
@@ -205,10 +228,10 @@
         </Choice>
         <Assign ID="78">
           <Source RefID="610"/>
-          <Target RefID="666"/>
+          <Target RefID="899"/>
           <Copy>
             <Source RefID="610"/>
-            <Target RefID="666"/>
+            <Target RefID="899"/>
           </Copy>
         </Assign>
       </Case>
@@ -224,10 +247,10 @@
         </Mappings>
         <Assign ID="80">
           <Source RefID="676"/>
-          <Target RefID="666"/>
+          <Target RefID="899"/>
           <Copy>
             <Source RefID="676"/>
-            <Target RefID="666"/>
+            <Target RefID="899"/>
           </Copy>
         </Assign>
       </Case>
@@ -246,17 +269,17 @@
     <Data ID="610" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef610">
       <Source RefID="584"/>
     </Data>
-    <Data ID="666" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef666">
-      <Source RefID="74"/>
-    </Data>
     <Data ID="676" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef676">
       <Source RefID="662"/>
     </Data>
+    <Data ID="899" Label="ResourceRef" ReferenceName="ResourceRef" ReferencePath="tmf640.datamodel" VariableName="resourceRef899">
+      <Source RefID="74"/>
+    </Data>
     <Assign ID="1">
-      <Source RefID="666"/>
+      <Source RefID="899"/>
       <Target RefID="14"/>
       <Copy>
-        <Source RefID="666">
+        <Source RefID="899">
           <Meta>
             <LinkType>UserConnected</LinkType>
           </Meta>

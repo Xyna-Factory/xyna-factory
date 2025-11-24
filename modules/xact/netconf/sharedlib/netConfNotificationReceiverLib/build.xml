@@ -26,8 +26,6 @@
     <property name="sharedLib.folder.name" value="netConfNotificationReceiverLib" />
     <property name="sharedLib.name" value="netConfNotificationReceiverLib" />
 
-    <property name="application.dir" value="${basedir}/../.." />
-
     <import file="${root.dir}/installation/build/buildSharedLib.xml" />
 
 </project>
