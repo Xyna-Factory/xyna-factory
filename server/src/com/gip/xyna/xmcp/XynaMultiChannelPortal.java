@@ -1032,7 +1032,7 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
     deployDatatype(fqXMLNameDOM, WorkflowProtectionMode.FORCE_DEPLOYMENT, null, revision);
 
     logger.debug("finished deployment, building service implementation template");
-    File tempdir = new File(baseDir);
+    File tempdir = new File(baseDir, "impl");
     try {
       ServiceImplementationTemplate paras = new ServiceImplementationTemplate(fqXMLNameDOM, revision);
       Support4Eclipse.buildProjectTemplate(tempdir, paras);
@@ -1045,9 +1045,9 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
       XMLUtils.saveDom(xmlFileTarget, doc);
 
       
-      File f = new File(tempdir, fqXMLNameDOM + "_" + getDateSuffix() + ".zip");
+      File f = new File(baseDir, fqXMLNameDOM + "_" + getDateSuffix() + ".zip");
       while (f.exists()) {
-        f = new File(tempdir, fqXMLNameDOM + "_" + getDateSuffix() + ".zip");
+        f = new File(baseDir, fqXMLNameDOM + "_" + getDateSuffix() + ".zip");
       }
 
       return XynaFactory.getInstance().getXynaDevelopment().getXynaLibraryDevelopment()
@@ -1057,8 +1057,8 @@ public class XynaMultiChannelPortal extends XynaMultiChannelPortalBase {
     } finally {
       if (tempdir.exists()) {
         if (deleteBaseDir) {
-          if (!FileUtils.deleteDirectory(tempdir)) {
-            logger.warn("could not delete directory " + tempdir + ".");
+          if (!FileUtils.deleteDirectory(new File(baseDir))) {
+            logger.warn("could not delete directory " + new File(baseDir) + ".");
           }
         }
       }
