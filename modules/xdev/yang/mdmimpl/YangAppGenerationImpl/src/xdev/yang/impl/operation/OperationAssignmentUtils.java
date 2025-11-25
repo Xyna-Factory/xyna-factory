@@ -28,7 +28,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.yangcentral.yangkit.base.YangElement;
-import org.yangcentral.yangkit.model.api.schema.ModuleId;
 import org.yangcentral.yangkit.model.api.schema.YangSchemaContext;
 import org.yangcentral.yangkit.model.api.stmt.DataDefinition;
 import org.yangcentral.yangkit.model.api.stmt.Input;
@@ -55,7 +54,6 @@ import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 import xdev.yang.impl.Constants;
 import xdev.yang.impl.XmomDbInteraction;
-import xdev.yang.impl.YangCapabilityUtils;
 import xdev.yang.impl.YangCapabilityUtils.YangDeviceCapability;
 import xdev.yang.impl.YangStatementTranslator;
 import xdev.yang.impl.YangStatementTranslator.YangStatementTranslation;
