@@ -221,6 +221,8 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
     classes[0].addMemberVar("private static final long serialVersionUID = " + calculateSerialVersionUID() + "L");
     HashSet<String> imports = getImports();
     for (String s : imports) {
+      classes[0].addImport(s);
+      /*
       String importReturn = classes[0].addImport(s); // full fqname is only returned if import to add was rejected
       if (s.equals(importReturn)) {
         Optional<String> opt = GenerationBase.getXmlNameByReservedServerObjectName(s);
@@ -229,6 +231,7 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
           classes[0].addImport(s);
         }
       }
+      */
     }
     //imports wurden evtl von den exception utils geaddet
     if (classes[0].removeImport(GenerationBase.CORE_EXCEPTION)) {
@@ -398,6 +401,9 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
     try {
       parser = ExceptionStorageParserFactory.getParser(rootElement.getOwnerDocument());
       exceptionStorage = parser.parse(false, 0);
+      if (exceptionStorage instanceof ExceptionStorageInstance_1_1) {
+        ((ExceptionStorageInstance_1_1) exceptionStorage).setFqClassNameAdapter(new ExceptionGenFqClassNameAdapter());
+      }
     } catch (XSDNotFoundException e) {
       throw new RuntimeException(e);
     }
@@ -510,9 +516,19 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
     boolean simpleListRequired = false;
     boolean xynaObjectListRequired = false;
     
+    Set<String> importedSimpleClasseNames = new HashSet<String>();
+    importedSimpleClasseNames.add(getSimpleClassName());
+
+
     for (AVariable v : memberVariables) {
       if (!v.isJavaBaseType()) {
-        imports.add(v.getFQClassName());
+        //imports.add(v.getFQClassName());
+        String fqClassName = v.getFQClassName();
+        String currentSimpleClassName = fqClassName.substring(fqClassName.lastIndexOf(".") + 1);
+        if (!importedSimpleClasseNames.contains(currentSimpleClassName)) {
+          imports.add(fqClassName);
+          importedSimpleClasseNames.add(currentSimpleClassName);
+        }
         if(v.isList) {
           xynaObjectListRequired = true;
         }
@@ -704,6 +720,7 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
     setLabel(label);
 
     exceptionStorage = new ExceptionStorageInstance_1_1();
+    ((ExceptionStorageInstance_1_1) exceptionStorage).setFqClassNameAdapter(new ExceptionGenFqClassNameAdapter());
     exceptionEntry = new ExceptionEntry_1_1(new HashMap<String, String>(), getOriginalSimpleName(), getOriginalPath(), null);
     exceptionStorage.addEntry(exceptionEntry);
 
