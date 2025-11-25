@@ -38,6 +38,7 @@ import org.w3c.dom.Document;
 import com.gip.xyna.utils.exceptions.utils.FileUtils;
 import com.gip.xyna.utils.exceptions.utils.InvalidXMLException;
 import com.gip.xyna.utils.exceptions.utils.XMLUtils;
+import com.gip.xyna.utils.exceptions.utils.codegen.FqClassNameAdapter;
 import com.gip.xyna.utils.exceptions.utils.codegen.JavaClass;
 import com.gip.xyna.utils.exceptions.xmlstorage.ExceptionEntry;
 import com.gip.xyna.utils.exceptions.xmlstorage.ExceptionEntryProvider;
@@ -353,6 +354,11 @@ public class ExceptionStorage {
    * @param args
    */
   public static void main(String[] args) {
+    mainImpl(args, new FqClassNameAdapter());
+  }
+  
+  
+  public static void mainImpl(String[] args, FqClassNameAdapter adapter) {
     //  if (0==0) return;
     //   args = new String[]{"test/Reference.1.1.xml", "test", "y"};
     //  args = new String[]{"ExampleExceptionStorage.1.1.xml", "test", "y"};
@@ -380,6 +386,9 @@ public class ExceptionStorage {
         }
       }
       ExceptionStorageInstance esi = parse(xmlFile);
+      if (esi instanceof ExceptionStorageInstance_1_1) {
+        ((ExceptionStorageInstance_1_1) esi).setFqClassNameAdapter(adapter);
+      }
       generateJavaClasses(esi, esi, gendir, loadFromResource, xmlFile);
     } catch (Exception e) {
       e.printStackTrace();
