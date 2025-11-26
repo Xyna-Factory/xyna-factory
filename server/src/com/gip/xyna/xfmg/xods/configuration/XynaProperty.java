@@ -782,4 +782,8 @@ public interface XynaProperty {
   public static final XynaPropertyBoolean QUERY_ESCAPE = new XynaPropertyBoolean("xnwh.queries.escape", true)
       .setDefaultDocumentation(DocumentationLanguage.EN, "Escape table and column names in queries")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Escapen von Tabellen- und Spaltennamen in Querys");
+
+  public static final XynaPropertyString TMP_DIR = new XynaPropertyString("xyna.xdev.temp_dir", ".")
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Directory for temporary files during modelling.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Verzeichnis für temporäre Dateien während der Modellierung.");
 }

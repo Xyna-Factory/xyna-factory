@@ -54,7 +54,6 @@ import com.gip.xyna.xprc.xfractwfe.generation.XMLUtils;
 
 import xdev.yang.impl.Constants;
 import xdev.yang.impl.XmomDbInteraction;
-import xdev.yang.impl.YangCapabilityUtils;
 import xdev.yang.impl.YangCapabilityUtils.YangDeviceCapability;
 import xdev.yang.impl.YangStatementTranslator;
 import xdev.yang.impl.YangStatementTranslator.YangStatementTranslation;
@@ -410,8 +409,7 @@ public class OperationAssignmentUtils {
   }
   
   
-  public static List<ModuleGroup> loadModules(String workspaceName) {
-    List<ModuleGroup> result = new ArrayList<>();
+  public static List<Module> loadModules(String workspaceName, List<YangDeviceCapability> capabilities) {
     XynaFactoryControl xynaFactoryCtrl = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl();
     XmomDbInteraction interaction = new XmomDbInteraction();
     RevisionManagement revMgmt = xynaFactoryCtrl.getRevisionManagement();
@@ -421,18 +419,24 @@ public class OperationAssignmentUtils {
     } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
       throw new RuntimeException(e);
     }
+    ModuleRefValidationData validation = new ModuleRefValidationData();
     List<XMOMDatabaseSearchResultEntry> xmomDbResult = interaction.searchYangDTs(YangModuleCollection.class.getCanonicalName(), List.of(revision));
+    
+    List<ModuleGroup> groupList = new ArrayList<>();
     for(XMOMDatabaseSearchResultEntry entry : xmomDbResult) {
       Long entryRevision;
       try {
         entryRevision = revMgmt.getRevision(entry.getRuntimeContext());
         ModuleGroup group = loadModulesFromDt(entry.getFqName(), entryRevision);
-        result.add(group);
+        groupList.add(group);
       } catch (Exception e) {
         _logger.error(e.getMessage(), e);
         throw new RuntimeException(e.getMessage(), e);
       }
     }
+    List<Module> result = new ModuleFilterTools().filterAndReload(groupList, capabilities);
+    validation.register(result);
+    validation.validate();
     return result;
   }
 
@@ -456,7 +460,7 @@ public class OperationAssignmentUtils {
         ModuleParseData parsed = parseModulesFromTag(module);
         result.add(parsed);
       }
-    }    
+    }
     return result;
   }
 
@@ -465,7 +469,7 @@ public class OperationAssignmentUtils {
     byte[] decoded = Base64.decode(module.getTextContent());
     java.io.ByteArrayInputStream is = new java.io.ByteArrayInputStream(decoded);
     YangSchemaContext context = YangYinParser.parse(is, "module.yang", null);
-    context.validate();    
+    context.validate();
     ModuleParseData parsed = new ModuleParseData(decoded, context.getModules());
     return parsed;
   }
@@ -574,11 +578,7 @@ public class OperationAssignmentUtils {
     return isConfig == null ? true : Boolean.valueOf(isConfig.getTextContent());
   }
 
-  public static YangStatementInfo loadTagInfo(String tag, String deviceFqn, String workspaceName, boolean isRpc) {
-    List<ModuleGroup> modules = OperationAssignmentUtils.loadModules(workspaceName);
-    //filter modules to supported by device
-    List<YangDeviceCapability> capabilities = YangCapabilityUtils.loadCapabilities(deviceFqn, workspaceName);
-    List<Module> filtered = YangCapabilityUtils.filterModules(modules, capabilities);
+  public static YangStatementInfo loadTagInfo(String tag, boolean isRpc, List<Module> filtered) {
     YangStatement matched = null;
     if (isRpc) {
       List<Rpc> candidates = OperationAssignmentUtils.findRpcs(filtered, tag);
