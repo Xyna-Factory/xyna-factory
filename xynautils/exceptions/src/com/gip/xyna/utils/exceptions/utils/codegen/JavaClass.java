@@ -42,6 +42,8 @@ public class JavaClass {
   private List<CodeBuffer> staticInitBlocks;
   private List<CodeBuffer> nestedClasses;
 
+  private FqClassNameAdapter fqClassNameAdapter = new FqClassNameAdapter();
+  
 
   public JavaClass(String path, String name) throws InvalidClassNameException {
     this.fqClassName = JavaGenUtils.transformNameForJava(path + "." + name);
@@ -155,6 +157,9 @@ public class JavaClass {
    */
   public String addImport(String fqClassName) throws InvalidClassNameException {
     fqClassName = JavaGenUtils.transformNameForJava(fqClassName);
+    if (fqClassNameAdapter != null) {
+      fqClassName = fqClassNameAdapter.adaptFqClassName(fqClassName);
+    }
     String simpleName = JavaGenUtils.getSimpleNameFromFQName(fqClassName);
     if (imports.contains(fqClassName)) {
       //bereits importiert
@@ -240,4 +245,9 @@ public class JavaClass {
   public void addNestedClass(CodeBuffer nestedClass) {
     nestedClasses.add(nestedClass);
   }
+
+  public void setFqClassNameAdapter(FqClassNameAdapter fqClassNameAdapter) {
+    this.fqClassNameAdapter = fqClassNameAdapter;
+  }
+
 }

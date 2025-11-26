@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -390,6 +391,9 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
     try {
       parser = ExceptionStorageParserFactory.getParser(rootElement.getOwnerDocument());
       exceptionStorage = parser.parse(false, 0);
+      if (exceptionStorage instanceof ExceptionStorageInstance_1_1) {
+        ((ExceptionStorageInstance_1_1) exceptionStorage).setFqClassNameAdapter(new ExceptionGenFqClassNameAdapter());
+      }
     } catch (XSDNotFoundException e) {
       throw new RuntimeException(e);
     }
@@ -504,7 +508,7 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
     
     Set<String> importedSimpleClasseNames = new HashSet<String>();
     importedSimpleClasseNames.add(getSimpleClassName());
-    
+
     for (AVariable v : memberVariables) {
       if (!v.isJavaBaseType()) {
         String fqClassName = v.getFQClassName();
@@ -704,6 +708,7 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
     setLabel(label);
 
     exceptionStorage = new ExceptionStorageInstance_1_1();
+    ((ExceptionStorageInstance_1_1) exceptionStorage).setFqClassNameAdapter(new ExceptionGenFqClassNameAdapter());
     exceptionEntry = new ExceptionEntry_1_1(new HashMap<String, String>(), getOriginalSimpleName(), getOriginalPath(), null);
     exceptionStorage.addEntry(exceptionEntry);
 
