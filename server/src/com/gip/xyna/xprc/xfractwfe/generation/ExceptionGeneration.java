@@ -222,16 +222,6 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
     HashSet<String> imports = getImports();
     for (String s : imports) {
       classes[0].addImport(s);
-      /*
-      String importReturn = classes[0].addImport(s); // full fqname is only returned if import to add was rejected
-      if (s.equals(importReturn)) {
-        Optional<String> opt = GenerationBase.getXmlNameByReservedServerObjectName(s);
-        if (opt.isPresent()) {
-          classes[0].removeImport(opt.get());
-          classes[0].addImport(s);
-        }
-      }
-      */
     }
     //imports wurden evtl von den exception utils geaddet
     if (classes[0].removeImport(GenerationBase.CORE_EXCEPTION)) {
