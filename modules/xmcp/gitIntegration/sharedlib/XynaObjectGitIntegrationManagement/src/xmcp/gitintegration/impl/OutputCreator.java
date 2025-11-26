@@ -37,9 +37,9 @@ public class OutputCreator <ITEM, DIFFERENCE, SELECTOR extends XynaObjectDiffere
 
   public static final XynaPropertyInt TABLE_LIMIT = new XynaPropertyInt("xmcp.gitintegration.table.limit", 5)
     .setDefaultDocumentation(DocumentationLanguage.EN,
-    "Table limit")
+    "GitIntegration: Number of displayed lines in a text block with differences")
     .setDefaultDocumentation(DocumentationLanguage.DE,
-    "Table limit");
+    "GitIntegration: Anzahl angezeigter Zeilen in einem Textblock mit Differenzen");
 
   protected XynaObjectDifferenceSelector<ITEM, DIFFERENCE> selector;
   
