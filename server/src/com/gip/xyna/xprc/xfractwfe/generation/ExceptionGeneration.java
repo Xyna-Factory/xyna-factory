@@ -519,10 +519,8 @@ public class ExceptionGeneration extends DomOrExceptionGenerationBase {
     Set<String> importedSimpleClasseNames = new HashSet<String>();
     importedSimpleClasseNames.add(getSimpleClassName());
 
-
     for (AVariable v : memberVariables) {
       if (!v.isJavaBaseType()) {
-        //imports.add(v.getFQClassName());
         String fqClassName = v.getFQClassName();
         String currentSimpleClassName = fqClassName.substring(fqClassName.lastIndexOf(".") + 1);
         if (!importedSimpleClasseNames.contains(currentSimpleClassName)) {
