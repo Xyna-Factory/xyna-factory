@@ -244,7 +244,7 @@ public class SSHNETCONFConnectionInstanceOperationImpl extends SSHNETCONFConnect
         }
 
       }, new Command(""));
-      documentType = new NETCONF(hasCapabilityFromString("urn:ietf:params:netconf:base:1.1") ? "1.1" : "1.0");
+      documentType = new NETCONF(capabilities.containsKey("urn:ietf:params:netconf:base:1.1") ? "1.1" : "1.0");
       prepared = true;
     }
   }
@@ -263,6 +263,7 @@ public class SSHNETCONFConnectionInstanceOperationImpl extends SSHNETCONFConnect
     if (cs != null) {
       return new Capability(cs);
     }
+    
     return null;
   }
 
