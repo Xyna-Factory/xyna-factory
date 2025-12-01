@@ -342,7 +342,7 @@ compose_thirdparties() {
   mkdir third_parties
   cd $SCRIPT_DIR/build
   # run license downloads (bom must have name "pom.xml")
-  mvn license:download-licenses -s third_parties.pom.xml -DlicensesOutputDirectory=$SCRIPT_DIR/../release/third_parties -DlicensesOutputFile=$SCRIPT_DIR/../release/third_parties/licenses.xml
+  mvn license:download-licenses -f third_parties.pom.xml -DlicensesOutputDirectory=$SCRIPT_DIR/../release/third_parties -DlicensesOutputFile=$SCRIPT_DIR/../release/third_parties/licenses.xml
   echo "license-download done"
 }
 
