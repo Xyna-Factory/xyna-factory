@@ -297,7 +297,7 @@ public class ApplicationDefinitionProcessor implements WorkspaceContentProcessor
     int tableCount = 0;
     for (WorkspaceContentDifference wcd : wcdList) {
       tableCount++;
-      if (tableCount > OutputCreator.TABLE_LIMIT) {
+      if (tableCount > OutputCreator.TABLE_LIMIT.get()) {
         appendTruncatedList(ds);
         break;
       }
@@ -325,7 +325,7 @@ public class ApplicationDefinitionProcessor implements WorkspaceContentProcessor
     tableCount = 0;
     for (ContentEntry ce : createEntries) {
       tableCount++;
-      if (tableCount > OutputCreator.TABLE_LIMIT) {
+      if (tableCount > OutputCreator.TABLE_LIMIT.get()) {
         appendTruncatedList(ds);
         break;
       }
@@ -335,7 +335,7 @@ public class ApplicationDefinitionProcessor implements WorkspaceContentProcessor
     }
     for (ContentEntry ce : deleteEntries) {
       tableCount++;
-      if (tableCount > OutputCreator.TABLE_LIMIT) {
+      if (tableCount > OutputCreator.TABLE_LIMIT.get()) {
         appendTruncatedList(ds);
         break;
       }
