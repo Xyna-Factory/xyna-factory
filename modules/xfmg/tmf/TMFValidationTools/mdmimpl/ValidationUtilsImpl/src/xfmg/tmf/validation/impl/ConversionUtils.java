@@ -20,11 +20,31 @@ package xfmg.tmf.validation.impl;
 
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
 
 public class ConversionUtils {
+
+  public static List<String> getStringList(Object o) {
+    if (o == null) {
+      return Collections.emptyList();
+    }
+    if (o instanceof List) {
+      List<?> l = (List<?>) o;
+      List<String> result = new ArrayList<>(l.size());
+      for (Object el : l) {
+        result.add(getString(el));
+      }
+      return result;
+    }
+    List<String> result = new ArrayList<>(1);
+    result.add(asString(o));
+    return result;
+  }
+
 
   public static String getString(Object o) {
     if (o == null) {
