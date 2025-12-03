@@ -287,9 +287,11 @@ public class Utils {
       error.setErrorCode(((XynaException)throwable).getCode());
     }
 
-    StringBuilder sb = new StringBuilder();
-    appendException(sb, throwable);
-    error.addToParams(new ErrorKeyValuePair("stackTrace", sb.toString()));
+    if (!H5XdevFilter.SUPPRESS_STACKTRACES.get()) {
+      StringBuilder sb = new StringBuilder();
+      appendException(sb, throwable);
+      error.addToParams(new ErrorKeyValuePair("stackTrace", sb.toString()));
+    }
     return error;
   }
 

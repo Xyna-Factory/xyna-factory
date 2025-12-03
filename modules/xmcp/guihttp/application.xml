@@ -17,7 +17,7 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <!--                                               ################# Version auch in blackedition_lib.sh updaten ########### -->
-<Application applicationName="GuiHttp" comment="" factoryVersion="" versionName="1.3.42" xmlVersion="1.1">
+<Application applicationName="GuiHttp" comment="" factoryVersion="" versionName="1.3.43" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Interne Funktionalität zum Interagieren des Xyna Fractal Modellers mit dem Xyna Factory Server</Description>
     <Description Lang="EN">Internal functionality for interaction of the Xyna Fractal Modeller with the Xyna Factory Server</Description>

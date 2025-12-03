@@ -140,7 +140,9 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
       .setDefaultDocumentation(DocumentationLanguage.EN, "If set, all startorder Requests outside of GuiHttp are first processed by the given Workflow. Inputs are Document and OrderType, output is Document. Format: <fqn>@<rtc>. <rtc> is either workspaceName or applicationName/versionName.")
       .setDefaultDocumentation(DocumentationLanguage.DE, "Falls gesetzt, werden alle startorder-Requests auﬂerhalb von GuiHttp zuerst vom angegebenen Workflow verarbeitet. Inputs sind Document und Ordertype, Output ist Document. Format: <fqn>@<rtc>. <rtc> ist entweder workspaceName oder applicationName/versionName.");
 
-
+  public static final XynaPropertyBoolean SUPPRESS_STACKTRACES = new XynaPropertyBoolean("xmcp.guihttp.suppress_stacktraces", false)
+      .setDefaultDocumentation(DocumentationLanguage.EN, "Remove stacktraces from error responses.")
+      .setDefaultDocumentation(DocumentationLanguage.DE, "Entferne Stacktraces aus Fehlern in Antwortnachrichten.");
 
   private static class WorkspaceRevisionBuilder implements XynaPropertyBuilds.Builder<Long> {
 
@@ -424,6 +426,7 @@ public class H5XdevFilter extends ConnectionFilter<HTTPTriggerConnection> {
     AVARCONSTANTS.registerDependency(UserType.Filter, NAME);
     STRICT_TRANSPORT_SECURITY.registerDependency(UserType.Filter, NAME);
     STRICT_TRANSPORT_SECURITY_MAX_AGE.registerDependency(UserType.Filter, NAME);
+    SUPPRESS_STACKTRACES.registerDependency(UserType.Filter, NAME);
 
     XmomUndoRedoHistory.REDO_LIMIT.registerDependency(UserType.Filter, NAME);
     XmomUndoRedoHistory.UNDO_LIMIT.registerDependency(UserType.Filter, NAME);
