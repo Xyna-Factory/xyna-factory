@@ -20,9 +20,11 @@ package xfmg.tmf.validation.impl;
 
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
@@ -212,5 +214,36 @@ public class ValidationUtilsServiceOperationImpl
 
   private boolean isEmpty(List<? extends ChangeList> l) {
     return l == null || l.isEmpty();
+  }
+
+
+  @Override
+  public Text evaluateExpression(XynaOrderServerExtension xo, Text json, JSONPathExpressionV2 expr) {
+    TMFExpressionParser parser = ParserCache.getParser(xo.getRootOrder().getRevision());
+    RuntimeContext rtc;
+    try {
+      rtc = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getRevisionManagement()
+          .getRuntimeContext(xo.getRootOrder().getRevision());
+    } catch (XNWH_OBJECT_NOT_FOUND_FOR_PRIMARY_KEY e) {
+      throw new RuntimeException(e);
+    }
+    String jsonString = json.getText();
+    TMFExpressionContext ctx = new TMFExpressionContext(jsonString, expr.getJsonPaths(), rtc);
+    SyntaxTreeNode n = parser.parse(expr.getExpression(), 0, true);
+    n.validate();
+    Object result = n.eval(ctx);
+    String resultString = ConversionUtils.getString(result);
+    if (resultString == null) {
+      return null;
+    }
+    return new Text(resultString);
+  }
+
+
+  @Override
+  public List<? extends Text> evaluateJSONPath(Text json, Text jsonPath) {
+    TMFExpressionContext ctx = new TMFExpressionContext(json.getText(), Collections.emptyList(), null);
+    Object result = ctx.eval(jsonPath.getText());
+    return ConversionUtils.getStringList(result).stream().map(s -> new Text(s)).collect(Collectors.toList());
   }
 }
