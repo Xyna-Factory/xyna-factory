@@ -19,6 +19,6 @@
 <ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
   <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="XACT-HTTP-001" Label="Connect Exception" TypeName="ConnectException" TypePath="xact.http.exceptions">
     <MessageText Language="EN">Connection could not be established</MessageText>
-    <MessageText Language="DE">Connection konnet nicht aufgebaut werden</MessageText>
+    <MessageText Language="DE">Connection konnte nicht aufgebaut werden</MessageText>
   </ExceptionType>
 </ExceptionStore>
