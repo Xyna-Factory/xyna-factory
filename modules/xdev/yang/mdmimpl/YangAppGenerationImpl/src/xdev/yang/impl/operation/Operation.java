@@ -189,11 +189,14 @@ public class Operation implements AutoCloseable {
     reloadInputVarNames();
   }
 
-
   public void addInput(String varName, String fqn) {
+    addInput(varName, fqn, -1);
+  }
+
+  public void addInput(String varName, String fqn, int index) {
     String endPoint = baseUrl + "/objects/methodVarArea" + serviceNumber + "_input/insert";
     URLPath url = new URLPath(endPoint, null, null);
-    String payload = "{\"index\":-1,\"content\":{\"type\":\"variable\",\"label\":\""+varName+"\",\"fqn\":\"" + fqn+ "\",\"isList\":false}}";
+    String payload = "{\"index\":"+index+",\"content\":{\"type\":\"variable\",\"label\":\""+varName+"\",\"fqn\":\"" + fqn+ "\",\"isList\":false}}";
     executeRunnable(runnable, url, GuiHttpInteraction.METHOD_POST, payload, "Could not add input variable to service.");
     reloadInputVarNames();
   }
