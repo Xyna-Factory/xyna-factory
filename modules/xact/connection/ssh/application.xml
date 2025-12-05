@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="SSH" comment="" factoryVersion="" versionName="2.0.35" xmlVersion="1.1">
+<Application applicationName="SSH" comment="" factoryVersion="" versionName="2.0.36" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">SSH Connections verwenden (NETCONF, Shell)</Description>
     <Description Lang="EN">Manage SSH connections (NETCONF, Shell)</Description>
