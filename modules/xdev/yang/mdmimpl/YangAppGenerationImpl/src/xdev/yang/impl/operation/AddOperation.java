@@ -72,7 +72,7 @@ public class AddOperation {
     try (Operation result = Operation.open(order, fqn, workspace, operation)) {
       if (parameter.getIsRpc()) {
         result.addInput("MessageId", "xmcp.yang.MessageId");
-        result.addInput(Constants.RPC_NETCONF_INPUT_NAME, "xact.template.NETCONF");
+        result.addInput(Constants.RPC_NETCONF_INPUT_NAME, "xact.templates.NETCONF");
         result.addOutput("Document", "xact.templates.Document");
       } else {
         result.addInput("YangMappingCollection", "xmcp.yang.YangMappingCollection");

@@ -21,6 +21,7 @@ package xdev.yang.impl.operation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.w3c.dom.Document;
 
@@ -34,6 +35,7 @@ import xact.http.URLPath;
 import xact.http.URLPathQuery;
 import xact.http.enums.httpmethods.HTTPMethod;
 import xdev.yang.impl.GuiHttpInteraction;
+import xdev.yang.impl.GuiHttpInteraction.VariableData;
 import xdev.yang.impl.operation.AsyncDeployment.DeployData;
 import xmcp.processmodeller.datatypes.response.GetServiceGroupResponse;
 
@@ -54,6 +56,7 @@ public class Operation implements AutoCloseable {
   private String rpcNamespace;
   private String baseUrl;
   private List<String> inputVarNames;
+  private List<String> inputVarTypes;
   private RunnableForFilterAccess runnable;
 
 
@@ -136,6 +139,11 @@ public class Operation implements AutoCloseable {
   }
 
 
+  public List<String> getInputVarTypes() {
+    return inputVarTypes;
+  }
+
+
   public RunnableForFilterAccess getRunnable() {
     return runnable;
   }
@@ -146,7 +154,7 @@ public class Operation implements AutoCloseable {
 
 
   public static Operation open(XynaOrderServerExtension order, String fqn, String workspace, String operation) {
-    RunnableForFilterAccess runnable = order.getRunnableForFilterAccess("H5XdevFilter");
+    RunnableForFilterAccess runnable = order.getRootOrder().getRunnableForFilterAccess("H5XdevFilter");
     String workspaceNameEscaped = GuiHttpInteraction.urlEncode(workspace);
     String path = fqn.substring(0, fqn.lastIndexOf("."));
     String name = fqn.substring(fqn.lastIndexOf(".") + 1);
@@ -169,7 +177,9 @@ public class Operation implements AutoCloseable {
     result.rpcNamespace = OperationAssignmentUtils.readRpcNamespace(meta.getSecond());
     result.runnable = runnable;
     result.baseUrl = "/runtimeContext/" + result.workspaceNameEscaped + "/xmom/servicegroups/" + result.fqnUrl;
-    result.inputVarNames = GuiHttpInteraction.loadVarNames(obj, Integer.valueOf(result.serviceNumber));
+    List<VariableData> vars = GuiHttpInteraction.loadVarNames(obj, Integer.valueOf(result.serviceNumber));
+    result.inputVarNames = vars.stream().map(x -> x.getName()).collect(Collectors.toList());
+    result.inputVarTypes = vars.stream().map(x -> x.getFqn()).collect(Collectors.toList());
     return result;
   }
 
@@ -177,7 +187,9 @@ public class Operation implements AutoCloseable {
     URLPath url = new URLPath(baseUrl, null, null);
     HTTPMethod method = GuiHttpInteraction.METHOD_GET;
     GetServiceGroupResponse obj = (GetServiceGroupResponse) executeRunnable(runnable, url, method, null, "could not open datatype");
-    inputVarNames = GuiHttpInteraction.loadVarNames(obj, Integer.valueOf(serviceNumber));
+    List<VariableData> vars = GuiHttpInteraction.loadVarNames(obj, Integer.valueOf(serviceNumber));
+    inputVarNames = vars.stream().map(x -> x.getName()).collect(Collectors.toList());
+    inputVarTypes = vars.stream().map(x -> x.getFqn()).collect(Collectors.toList());
   }
 
   
@@ -202,7 +214,7 @@ public class Operation implements AutoCloseable {
   }
   
   public void deleteInput(int indexOfAdditionalInput) {
-    int absoluteIndex = indexOfAdditionalInput + 1;
+    int absoluteIndex = indexOfAdditionalInput + 2;
     String endPoint = baseUrl + "/objects/var" + serviceNumber + "-in" + absoluteIndex + "/delete";
     URLPath url = new URLPath(endPoint, null, null);
     String payload = "{\"force\":false}";
