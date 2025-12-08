@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
---><Application applicationName="YangAppGenerator" factoryVersion="" versionName="1.1.14" xmlVersion="1.1">
+--><Application applicationName="YangAppGenerator" factoryVersion="" versionName="1.2.0" xmlVersion="1.1">
   <ApplicationInfo>
-    <Description Lang="DE">Benutzeroberfl√§che und Funktionalit√§t zum Einlesen und Arbeiten mit Datenmodellen im YANG Format</Description>
+    <Description Lang="DE">Benutzeroberfl‰che und Funktionalit‰t zum Einlesen und Arbeiten mit Datenmodellen im YANG Format</Description>
     <Description Lang="EN">Graphic User interface and functionality for parsing and working with datamodels in the YANG format</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
@@ -373,6 +373,10 @@
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yang.fman.OperationSignatureInputTableInfo</FqName>
       <Type>WORKFLOW</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="true">
+      <FqName>xmcp.yang.fman.OperationSignatureProblem</FqName>
+      <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xmcp.yang.fman.OperationTableInfo</FqName>
