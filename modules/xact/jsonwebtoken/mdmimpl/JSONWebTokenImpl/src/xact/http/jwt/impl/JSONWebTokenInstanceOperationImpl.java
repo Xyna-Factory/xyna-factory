@@ -45,7 +45,6 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtBuilder.BuilderHeader;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Locator;
-import io.jsonwebtoken.SigningKeyResolver;
 import xact.http.Header;
 import xact.http.jwt.JSONWebToken;
 import xact.http.jwt.JSONWebTokenInstanceOperation;
