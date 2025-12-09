@@ -18,7 +18,6 @@
 
 package xact.http.jwt.impl;
 
-
 import java.security.KeyPair;
 import java.util.Base64;
 
@@ -26,8 +25,10 @@ import javax.crypto.SecretKey;
 
 import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.MacAlgorithm;
+import io.jsonwebtoken.security.SecureDigestAlgorithm;
+import io.jsonwebtoken.security.SignatureAlgorithm;
 import xact.http.jwt.Key;
 import xact.http.jwt.KeyGenerator;
 import xact.http.jwt.KeyGeneratorInstanceOperation;
@@ -42,25 +43,35 @@ public class KeyGeneratorInstanceOperationImpl extends KeyGeneratorSuperProxy im
     super(instanceVar);
   }
 
+  
   public Key generateKey() {
     String algorithm = getInstanceVar().getAlgorithm();
     if( algorithm == null ) {
       algorithm = "HS256";
     }
-    SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    SecureDigestAlgorithm<?,?> sda = Jwts.SIG.get().get(algorithm);
+    if (!(sda instanceof MacAlgorithm)) {
+      throw new RuntimeException("Unexpected algorithm: " + algorithm);
+    }
+    SecretKey key = ((MacAlgorithm) sda).key().build();
     return new Key(keyToString(key));
   }
 
+  
   public Container generateKeyPair() {
     String algorithm = getInstanceVar().getAlgorithm();
     if( algorithm == null ) {
       algorithm = "RS256";
     }
-    
-    KeyPair keyPair = Keys.keyPairFor(SignatureAlgorithm.forName(algorithm));
+    SecureDigestAlgorithm<?,?> sda = Jwts.SIG.get().get(algorithm);
+    if (!(sda instanceof SignatureAlgorithm)) {
+      throw new RuntimeException("Unexpected algorithm: " + algorithm);
+    }
+    KeyPair keyPair = ((SignatureAlgorithm) sda).keyPair().build();
     return new Container(new Key(keyToString(keyPair.getPrivate())), new Key(keyToString(keyPair.getPublic())));
   }
 
+  
   private String keyToString(java.security.Key key) {
     return Base64.getEncoder().encodeToString(key.getEncoded());
   }

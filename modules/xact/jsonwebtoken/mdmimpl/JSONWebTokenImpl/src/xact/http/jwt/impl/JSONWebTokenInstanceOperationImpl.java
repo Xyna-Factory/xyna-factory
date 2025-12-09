@@ -33,15 +33,18 @@ import java.util.Set;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gip.xyna.xprc.xsched.xynaobjects.AbsoluteDate;
+import com.gip.xyna.xprc.xsched.xynaobjects.DateFormat;
 
 import base.Text;
 import base.date.CustomDateFormat;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwsHeader;
+import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtBuilder.BuilderHeader;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.Locator;
 import io.jsonwebtoken.SigningKeyResolver;
 import xact.http.Header;
 import xact.http.jwt.JSONWebToken;
@@ -54,15 +57,23 @@ import xact.http.jwt.Key;
 import xact.http.jwt.PrivateClaim;
 
 
-@SuppressWarnings("deprecation")
 public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy implements JSONWebTokenInstanceOperation {
 
+  private DateFormat _defaultDateFormat = new CustomDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+  
   private static final long serialVersionUID = 1L;
 
   public JSONWebTokenInstanceOperationImpl(JSONWebToken instanceVar) {
     super(instanceVar);
   }
 
+  
+  public JSONWebTokenInstanceOperationImpl defaultDateFormat(DateFormat defaultDateFormat) {
+    this._defaultDateFormat = defaultDateFormat;
+    return this;
+  }
+  
+  
   @Override
   public xact.http.jwt.JSONWebToken extractFromHeader(Header header, Text key, Text prefix) {
     String name = key.getText();
@@ -96,14 +107,45 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
   public JSONWebToken parseTokenUnsecured() throws JWTException {
     String token = this.getInstanceVar().getToken();
     UnsecureJWTParser jwt = new UnsecureJWTParser().parseToken(token);
+    JWTClaims claims = extractClaimsFromJwsUnsecured(token);
     return new xact.http.jwt.JSONWebToken.Builder()
         .token(token)
         .jWTHeader(toHeader(jwt.getHeader()))
-        .jWTClaims(toClaims(jwt.getClaims()))
+        .jWTClaims(claims)
         .instance();
   }
-
-
+  
+   
+  // The JJWT library does not allow to parse a Jws without the verification key;
+  // but since the Jws-token is not actually encrypted, the content can be accessed with a workaround.
+  // The incoming Jws-token is a string in the following format:
+  // header + "." + claims + "." + signature
+  // where header and claims are base64-encoded json.
+  // (see https://github.com/jwtk/jjwt?tab=readme-ov-file#jws-example)
+  // The workaround is implemented in this way:
+  // Extract the claims-substring from the token;
+  // then extract the header-substring from a new-built Jwt-token without signature;
+  // then concat those two strings, separated by ".";
+  // this creates a new token without signature that contains the original claims and
+  // can now be parsed by the JJWT library
+  private JWTClaims extractClaimsFromJwsUnsecured(String token) {
+    try {
+      String[] parts = token.split("\\.");
+      String compactClaims = parts[1];
+      JwtBuilder builder = Jwts.builder().subject("tmp");
+      String token2 = builder.compact();
+      String unsignedHeader = token2.split("\\.")[0];
+      Jwt<io.jsonwebtoken.Header, Claims> jwt = Jwts.parser().unsecured().build().parseUnsecuredClaims(token2);
+      String newToken = unsignedHeader + "." + compactClaims + ".";
+      jwt = Jwts.parser().unsecured().build().parseUnsecuredClaims(newToken);
+      Claims claims = jwt.getPayload();
+      return toClaims(claims);
+    } catch (Exception e) {
+      return null;
+    }
+  }
+  
+  
   @Override
   public xact.http.jwt.JSONWebToken validateAndParseJWSToken(Key key) throws JWTException {
     String token = this.getInstanceVar().getToken();
@@ -206,6 +248,7 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
       headerBuilder.add(pc.getName(), pc.getValueAsJSONString() );
     }
   }
+  
   private JWTHeader toHeader(io.jsonwebtoken.Header header) {
     JWTHeader.Builder builder =  new xact.http.jwt.JWTHeader.Builder();
 
@@ -234,24 +277,21 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
       return new Date(absoluteDate.toMillis());
     }
   }
+  
   private AbsoluteDate toAbsoluteDate(Date date) {
     if( date == null ) {
       return null;
     } else {
-      CustomDateFormat cdf = new CustomDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-      AbsoluteDate ad = new AbsoluteDate("", cdf);
+      AbsoluteDate ad = new AbsoluteDate("", _defaultDateFormat);
       ad.fromMillis(date.getTime());
       return ad;
     }
   }
-  
- 
+
 
   private java.security.PublicKey createPublicKey(Key key) throws JWTException {
     try {
       byte[] decodedKey = Base64.getDecoder().decode(key.getKey());
-      //return Keys.hmacShaKeyFor(decodedKey); //symmetric
-      
       KeyFactory kf = KeyFactory.getInstance("RSA");
 
       X509EncodedKeySpec  x509EncodedKeySpec = new X509EncodedKeySpec(decodedKey);
@@ -261,11 +301,10 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
       throw new JWTException(e.getMessage(), "createPublicKey", "", e);
     }
   }
+  
   private java.security.Key createPrivateKey(Key key) throws JWTException {
     try {
       byte[] decodedKey = Base64.getDecoder().decode(key.getKey());
-      //return Keys.hmacShaKeyFor(decodedKey); //symmetric
-      
       KeyFactory kf = KeyFactory.getInstance("RSA");
 
       PKCS8EncodedKeySpec  keySpec = new PKCS8EncodedKeySpec(decodedKey);
@@ -277,38 +316,28 @@ public class JSONWebTokenInstanceOperationImpl extends JSONWebTokenSuperProxy im
   }
 
 
-  @SuppressWarnings("deprecation")
-  static class UnsecureJWTParser implements SigningKeyResolver {
-
+  public static class UnsecureJWTParser implements Locator<java.security.Key> {
     private JwsHeader header;
-    private Claims claims;
     
     public UnsecureJWTParser parseToken(String token) {
       try {
-        Jwts.parser().setSigningKeyResolver(this).build().parseSignedClaims(token);
+        Jwts.parser().keyLocator(this).build().parseSignedClaims(token);
       } catch( Exception e) {
         //intentionally empty
       }
       return this;
     }
-
-    @Override
-    public java.security.Key resolveSigningKey(JwsHeader header, Claims claims) {
-      this.header = header;
-      this.claims = claims;
-      return null;
-    }
-
-    @Override
-    public java.security.Key resolveSigningKey(JwsHeader header, byte[] content) {
-      throw new UnsupportedOperationException("resolveSigningKey with byte-array value not supported");
-    }
-
+    
     public JwsHeader getHeader() {
       return header;
     }
-    public Claims getClaims() {
-      return claims;
+    
+    @Override
+    public java.security.Key locate(io.jsonwebtoken.Header header) {
+      if (header instanceof JwsHeader) {
+        this.header = (JwsHeader) header;
+      }
+      return null;
     }
   }
 

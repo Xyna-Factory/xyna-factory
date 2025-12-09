@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<Application applicationName="JSONWebToken" factoryVersion="10.5.0.0" versionName="1.0.0" xmlVersion="1.1">
+<Application applicationName="JSONWebToken" factoryVersion="" versionName="1.0.0" xmlVersion="1.1">
   <ApplicationInfo>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>

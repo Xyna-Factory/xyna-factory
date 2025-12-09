@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 --><ExceptionStore xmlns="http://www.gip.com/xyna/3.0/utils/message/storage/1.1" Name="ExceptionStore" Version="1.8">
-  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="DEVEL-00800" IsAbstract="false" Label="JWT Exception" TypeName="JWTException" TypePath="xact.http.jwt">
+  <ExceptionType BaseTypeName="XynaExceptionBase" BaseTypePath="core.exception" Code="XACT_JWT-00001" IsAbstract="false" Label="JWT Exception" TypeName="JWTException" TypePath="xact.http.jwt">
     <Data Label="Reason" VariableName="reason">
       <Meta>
         <Type>String</Type>
