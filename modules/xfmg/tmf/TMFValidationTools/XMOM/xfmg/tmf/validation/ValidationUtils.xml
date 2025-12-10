@@ -169,5 +169,29 @@ static {</CodeSnippet>
         <CodeSnippet Type="Java">xfmg.tmf.validation.ValidationUtilsImpl.validateAllowedChanges(allowedChanges8, text9, text10);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="evaluate Expression" Name="evaluateExpression" RequiresXynaOrder="true">
+      <Input>
+        <Data ID="13" Label="JSON" ReferenceName="Text" ReferencePath="base" VariableName="text13"/>
+        <Data ID="14" Label="JSONPathExpressionV2" ReferenceName="JSONPathExpressionV2" ReferencePath="xfmg.tmf.validation" VariableName="jSONPathExpressionV214"/>
+      </Input>
+      <Output>
+        <Data ID="15" Label="Result" ReferenceName="Text" ReferencePath="base" VariableName="text15"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.tmf.validation.ValidationUtilsImpl.evaluateExpression(correlatedXynaOrder, text13, jSONPathExpressionV214);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="evaluate JSON Path" Name="evaluateJSONPath">
+      <Input>
+        <Data ID="16" Label="JSON" ReferenceName="Text" ReferencePath="base" VariableName="text16"/>
+        <Data ID="17" Label="JSON Path" ReferenceName="Text" ReferencePath="base" VariableName="text17"/>
+      </Input>
+      <Output>
+        <Data ID="18" IsList="true" Label="JSON" ReferenceName="Text" ReferencePath="base" VariableName="text18"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xfmg.tmf.validation.ValidationUtilsImpl.evaluateJSONPath(text16, text17);</CodeSnippet>
+      </SourceCode>
+    </Operation>
   </Service>
 </DataType>
