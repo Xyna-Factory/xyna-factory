@@ -254,6 +254,8 @@ compose_networkavailability() {
 
 install_gitintegration_libs() {
   mkdir -p $SCRIPT_DIR/build/lib/gitintegration
+  cd $SCRIPT_DIR/../modules/xmcp/gitIntegration
+  ant prepare-mdm-jar
   cd $SCRIPT_DIR/../modules/xmcp/gitIntegration/mdmimpl/WorkspaceObjectManagementImpl
   ant build
   cp -r deploy/* $SCRIPT_DIR/build/lib/gitintegration
