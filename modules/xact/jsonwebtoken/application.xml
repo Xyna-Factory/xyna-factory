@@ -18,6 +18,8 @@
 -->
 <Application applicationName="JSONWebToken" factoryVersion="" versionName="1.0.0" xmlVersion="1.1">
   <ApplicationInfo>
+    <Description Lang="DE">Tools um Json Web Tokens zu erzeugen, zu parsen und zu bearbeiten</Description>
+    <Description Lang="EN">Tools for creating, parsing and working with JSOn Web Tokens</Description>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Http</ApplicationName>
