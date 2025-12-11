@@ -856,10 +856,13 @@ public class XynaActivationTrigger extends Section implements TriggerManagement 
     }
     File oneJar = jarFiles[0];
     File parent = oneJar.getParentFile();
-    while (!parent.getName().equals(getSimpleClassName(fqClassName))) {
+    String simpleClassName = getSimpleClassName(fqClassName);
+    while (!parent.getName().equals(simpleClassName)) {
       parent = parent.getParentFile();
       if (parent == null) {
-        throw new RuntimeException();
+        String start = oneJar.toPath().toAbsolutePath().normalize().toString();
+        throw new RuntimeException("Could not determine source folder. Started search at " + start + ". No parent directory named '"
+            + simpleClassName + "' found.");
       }
     }
     return parent.getAbsolutePath();
