@@ -21,6 +21,7 @@ package xmcp.yang.codedservice;
 import org.w3c.dom.Element;
 
 import xact.templates.Document;
+import xact.templates.NETCONF;
 import xmcp.yang.MessageId;
 import xmcp.yang.misc.Constants;
 import xmcp.yang.misc.DataStoreHelper;
@@ -33,6 +34,10 @@ import xmcp.yang.netconf.NetConfTarget;
 public class CSCopyConfig {
 
   public Document execute(MessageId messageId, NetConfTarget target, NetConfSource source) {
+    return execute(messageId, null, target, source);
+  }
+
+  public Document execute(MessageId messageId, NETCONF netconf, NetConfTarget target, NetConfSource source) {
     XmlHelper helper = new XmlHelper();
     org.w3c.dom.Document doc = helper.buildDocument();
     Element rpc = helper.createElem(doc).elementName(Constants.Rpc.TAG_NAME).namespace(Constants.NetConf.NETCONF_NSP)
@@ -66,9 +71,7 @@ public class CSCopyConfig {
                               .text(source.getURL()).buildAndAppendAsChild(sourceElem);
       }
     }
-    Document ret = new Document();
-    ret.setText(helper.getDocumentString(doc));
-    return ret;
+    return new Document.Builder().text(helper.getDocumentString(doc)).documentType(netconf).instance();
   }
 
 }

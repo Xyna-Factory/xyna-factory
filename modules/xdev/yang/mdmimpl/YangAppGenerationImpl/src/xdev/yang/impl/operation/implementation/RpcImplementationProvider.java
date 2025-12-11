@@ -57,7 +57,9 @@ public class RpcImplementationProvider implements ImplementationProvider {
     result
         .append("builder.endElement(\"").append(rpcName).append("\");\n")
         .append("builder.endElement(\"rpc\");\n")
-        .append("return new Document.Builder().documentType(new xact.templates.NETCONF()).text(builder.toString()).instance();\n");
+        .append("return new Document.Builder().documentType(")
+        .append(inputVarNames.get(1))
+        .append(").text(builder.toString()).instance();\n");
 
     return result.toString();
   }

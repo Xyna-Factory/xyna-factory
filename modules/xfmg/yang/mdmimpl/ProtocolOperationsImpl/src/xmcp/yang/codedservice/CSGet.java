@@ -21,42 +21,61 @@ package xmcp.yang.codedservice;
 import org.w3c.dom.Element;
 
 import xact.templates.Document;
+import xact.templates.NETCONF;
 import xmcp.yang.MessageId;
 import xmcp.yang.YangMappingCollection;
 import xmcp.yang.misc.Constants;
 import xmcp.yang.misc.XmlHelper;
 import xmcp.yang.netconf.NetConfFilter;
+import static xmcp.yang.misc.Constants.NetConf.OperationNameTag;
+import static xmcp.yang.misc.Constants.NetConf.XmlTag;
+import static xmcp.yang.misc.Constants.NetConf;
 
 
 public class CSGet {
 
+  @Deprecated
   public Document execute(MessageId messageId, NetConfFilter filter) {
     XmlHelper helper = new XmlHelper();
     org.w3c.dom.Document doc = helper.buildDocument();
-    Element rpc = helper.createElem(doc).elementName(Constants.Rpc.TAG_NAME).namespace(Constants.NetConf.NETCONF_NSP)
+    Element rpc = helper.createElem(doc).elementName(Constants.Rpc.TAG_NAME).namespace(NetConf.NETCONF_NSP)
                         .buildAndAppendAsDocumentRoot();
     if ((messageId != null) && (messageId.getId() != null)) {
       rpc.setAttribute(Constants.Rpc.ATTRIBUTE_NAME_MESSAGE_ID, messageId.getId());
     }
-    Element opElem = helper.createElem(doc).elementName(Constants.NetConf.OperationNameTag.GET)
-                               .namespace(Constants.NetConf.NETCONF_NSP).buildAndAppendAsChild(rpc);
+    Element opElem = helper.createElem(doc).elementName(OperationNameTag.GET).namespace(NetConf.NETCONF_NSP).buildAndAppendAsChild(rpc);
     if (filter != null) {
-      Element filterElem = helper.createElem(doc).elementName(Constants.NetConf.XmlTag.FILTER).namespace(Constants.NetConf.NETCONF_NSP)
-                             .buildAndAppendAsChild(opElem);
+      Element filterElem =
+          helper.createElem(doc).elementName(NetConf.XmlTag.FILTER).namespace(NetConf.NETCONF_NSP).buildAndAppendAsChild(opElem);
       if (filter.getTypeAttribute() != null) {
-        filterElem.setAttribute(Constants.NetConf.XmlAttribute.TYPE, filter.getTypeAttribute());
+        filterElem.setAttribute(NetConf.XmlAttribute.TYPE, filter.getTypeAttribute());
       }
       if (filter.getFilterSubtree() != null) {
         YangMappingCollection ymc = filter.getFilterSubtree();
         Document tmp = ymc.createXml();
-        if ((tmp != null) && (tmp.getText() != null)) {
+        if (tmp != null && tmp.getText() != null && !tmp.getText().isBlank()) {
           helper.appendXmlSubtree(doc, filterElem, tmp.getText());
         }
       }
     }
-    Document ret = new Document();
-    ret.setText(helper.getDocumentString(doc));
-    return ret;
+    return new Document.Builder().text(helper.getDocumentString(doc)).instance();
   }
-  
+
+  public Document execute(MessageId messageId, NETCONF netconf, YangMappingCollection mappings) {
+    XmlHelper helper = new XmlHelper();
+    org.w3c.dom.Document doc = helper.buildDocument();
+    Element rpc = helper.createElem(doc).elementName(Constants.Rpc.TAG_NAME).namespace(NetConf.NETCONF_NSP).buildAndAppendAsDocumentRoot();
+    if (messageId != null && messageId.getId() != null) {
+      rpc.setAttribute(Constants.Rpc.ATTRIBUTE_NAME_MESSAGE_ID, messageId.getId());
+    }
+    Element opElem = helper.createElem(doc).elementName(OperationNameTag.GET).namespace(NetConf.NETCONF_NSP).buildAndAppendAsChild(rpc);
+    Element filterElem = helper.createElem(doc).elementName(XmlTag.FILTER).namespace(NetConf.NETCONF_NSP).buildAndAppendAsChild(opElem);
+    filterElem.setAttribute(NetConf.XmlAttribute.TYPE, NetConf.EnumValue.SUBTREE);
+    Document mappingsDoc = mappings.createXml();
+    if (mappingsDoc != null && mappingsDoc.getText() != null && !mappingsDoc.getText().isBlank()) {
+      helper.appendXmlSubtree(doc, filterElem, mappingsDoc.getText());
+    }
+
+    return new Document.Builder().text(helper.getDocumentString(doc)).documentType(netconf).instance();
+  }
 }

@@ -57,12 +57,15 @@ import xdev.yang.impl.tools.LoadApplicationList;
 import xdev.yang.impl.tools.LoadModules;
 import xdev.yang.impl.tools.LoadWorkspaceList;
 import xdev.yang.impl.operation.OperationCache;
+import xdev.yang.impl.operation.OperationSignatureFixer;
+import xdev.yang.impl.operation.OperationSignatureValidation;
 import xmcp.yang.LoadYangAssignmentsData;
 import xmcp.yang.OperationAssignmentTableData;
 import xmcp.yang.OperationTableData;
 import xmcp.yang.fman.AnyXmlSubstatementConfiguration;
 import xmcp.yang.fman.ListConfiguration;
 import xmcp.yang.fman.OperationSignatureEntry;
+import xmcp.yang.fman.OperationSignatureProblem;
 import xprc.xpce.Application;
 import xprc.xpce.RuntimeContext;
 import xprc.xpce.Workspace;
@@ -232,6 +235,18 @@ public class YangAppGenerationServiceOperationImpl implements ExtendedDeployment
   public void configureAnyxmlSubstantement(XynaOrderServerExtension order, LoadYangAssignmentsData data,
                                            AnyXmlSubstatementConfiguration config) {
     new AnyXmlSubstatementConfigManager().configure(order, data, config);
+  }
+
+
+  @Override
+  public void fixOperationSignature(XynaOrderServerExtension order, OperationTableData data) {
+    new OperationSignatureFixer().fixSignature(order, data);
+  }
+
+
+  @Override
+  public List<? extends OperationSignatureProblem> validateSignature(XynaOrderServerExtension order, OperationTableData data) {
+    return new OperationSignatureValidation().validate(order, data);
   }
 
 }
