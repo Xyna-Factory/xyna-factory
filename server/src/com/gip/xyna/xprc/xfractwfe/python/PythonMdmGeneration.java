@@ -189,13 +189,9 @@ public class PythonMdmGeneration {
     Stack<XynaObjectInformation> hierarchy = new Stack<>();
     hierarchy.push(obj);
 
-    //_logger.warn("### Adding: " + obj.fqn);
-    //_logger.warn("### Looking for parent: " + hierarchy.peek().parent + ", found: " + (map.get(hierarchy.peek().parent) != null));
     while (map.get(hierarchy.peek().parent) != null) {
       hierarchy.push(map.get(hierarchy.peek().parent));
-      //_logger.warn("### Looking for parent: " + hierarchy.peek().parent + ", found: " + (map.get(hierarchy.peek().parent) != null));
     }
-
     if (!map.containsKey(hierarchy.peek().parent)) {
       throw new RuntimeException("Unknown Object reference in " + hierarchy.peek().fqn + " to object: " + hierarchy.peek().parent);
     }
@@ -454,18 +450,7 @@ public class PythonMdmGeneration {
     try {
       DomOrExceptionGenerationBase doe =  isException ? ExceptionGeneration.getOrCreateInstance(fqn, cache, revision) : DOM.getOrCreateInstance(fqn, cache, revision);
       doe.parse(false);
-      
-      if (!fqn.equals(doe.getFqClassName())) {
-        result.fqn = doe.getFqClassName();
-      }
-      
-      //_logger.warn("### TYPE: " + fqn + " | " + doe.getFqClassName());
-      if (doe.getSuperClassGenerationObject() != null) {
-        //_logger.warn("### PARENT: " + doe.getSuperClassGenerationObject().getFqClassName() + " | " + doe.getSuperClassGenerationObject().getOriginalFqName());
-      }
-      
-      //result.parent = doe.getSuperClassGenerationObject() != null ? doe.getSuperClassGenerationObject().getOriginalFqName() : null;
-      result.parent = doe.getSuperClassGenerationObject() != null ? doe.getSuperClassGenerationObject().getFqClassName() : null;
+      result.parent = doe.getSuperClassGenerationObject() != null ? doe.getSuperClassGenerationObject().getOriginalFqName() : null;
       result.members = doe.getMemberVars().stream().map(this::toMemberInfo).collect(Collectors.toList());
       if (!isException) {
         result.methods = PythonGeneration.loadOperations(((DOM) doe).getOperations());
