@@ -88,16 +88,16 @@ public class ApplicationXMLGenerator {
       // later: Capacities and XynaProperties can be added through a separate main
       // method call (in FactoryObjectManagement Coded Service)
       System.out.println("Creates application.xml from workspace-xml directory");
-      System.out.println("Args: <Workspace-XML directory> <XMOM directory> <Version> <Factory version> <Subtype exclusion> "
+      System.out.println("Args: <Workspace-XML> <XMOM directory> <Version> <Factory version> <Subtype exclusion> "
           + "[<Output, default ./application.xml>]");
-      System.out.println("Workspace-XML directory: The directory, containing workspace.xml (typically called \"config\")");
+      System.out.println("Workspace-XML: The directory containing workspace.xml (typically called \"config\") or the file itself");
       System.out.println("XMOM directory: The directory containing the XMOM files of the application");
       System.out.println("Subtype exclusion (The same as the corresponding Xyna Property): Comma separated"
           + " list of base types whose subtypes are taken into the application only when they"
           + " are needed directly. * to disallow all subtypes.");
       return;
     }
-    File workspacexmldir = new File(args[0]);
+    File workspacexml = new File(args[0]);
     File xmomdir = new File(args[1]);
     String version = args[2];
     String factoryVersion = args[3];
@@ -108,9 +108,9 @@ public class ApplicationXMLGenerator {
     } else {
       outputFile = new File("application.xml");
     }
-    validateWorkspaceXMLDir(workspacexmldir);
+    workspacexml = validateWorkspaceXML(workspacexml);
 
-    WorkspaceContent content = getWorkspaceContent(workspacexmldir);
+    WorkspaceContent content = getWorkspaceContent(workspacexml);
     buildAppXml(content, xmomdir, version, factoryVersion, subtypeExclusion, outputFile);
   }
 
@@ -681,15 +681,29 @@ public class ApplicationXMLGenerator {
   }
 
 
-  private static void validateWorkspaceXMLDir(File workspacexmldir) {
-    if (!workspacexmldir.exists() || !workspacexmldir.isDirectory()) {
-      System.err.println("Workspace-XML directory does not exist or is not a directory: " + workspacexmldir.getPath());
+  /*
+   * returns either the file workspace.xml or the corresponding config directory
+   */
+  private static File validateWorkspaceXML(File workspacexml) {
+    if (!workspacexml.exists()) {
+      System.err.println("Workspace-XML does not exist: " + workspacexml.getPath());
       System.exit(1);
     }
-    if (!new File(workspacexmldir, "workspace.xml").exists()) {
-      System.err.println("Did not find workspace.xml inside of workspace-XML directory.");
-      System.exit(2);
+    if (workspacexml.isFile()) {
+      return workspacexml;
+    } else if (workspacexml.getName().equals("config")) {
+      return workspacexml;
+    } else {
+      if (new File(workspacexml, "workspace.xml").exists()) {
+        return new File(workspacexml, "workspace.xml");
+      }
+      if (new File(workspacexml, "config").exists()) {
+        return new File(workspacexml, "config");
+      }
     }
+    System.err.println("Could not find workspace.xml or config inside " + workspacexml.getPath());
+    System.exit(2);
+    throw new RuntimeException(); //not reached
   }
 
 }
