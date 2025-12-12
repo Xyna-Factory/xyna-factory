@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Copyright 2024 Xyna GmbH, Germany
+# Copyright 2025 Xyna GmbH, Germany
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,6 +27,9 @@ print_help() {
   echo "Usage: $0 clusterproviders"
   echo "Usage: $0 conpooltypes"
   echo "Usage: $0 install_libs"
+  #creates necessary libs for generating application xmls from workspace-xml (from gitintegration)
+  # (invoked by buildApplication.xml generate-application-xml)
+  echo "Usage: $0 install_gitintegration_libs (depends on build)"
 }
 
 check_dependencies() {
@@ -43,7 +46,7 @@ check_dependencies_frontend() {
 }
 
 checkout_factory() {
-  echo "cheking out factory..."
+  echo "checking out factory..."
   # $1 where to check out
 }
 
@@ -247,6 +250,16 @@ compose_networkavailability() {
   cp -r $SCRIPT_DIR/../components/xact/NetworkAvailability/lib .
   cp $SCRIPT_DIR/../components/xact/NetworkAvailability/*.sh .
   cp $SCRIPT_DIR/../components/xact/NetworkAvailability/log4j.properties .
+}
+
+install_gitintegration_libs() {
+  mkdir -p $SCRIPT_DIR/build/lib/gitintegration
+  cd $SCRIPT_DIR/../modules/xmcp/gitIntegration
+  ant prepare-mdm-jar
+  cd $SCRIPT_DIR/../modules/xmcp/gitIntegration/mdmimpl/WorkspaceObjectManagementImpl
+  ant build
+  cp -r deploy/* $SCRIPT_DIR/build/lib/gitintegration
+  cp -r lib/xyna/* $SCRIPT_DIR/build/lib/gitintegration
 }
 
 build_prerequisites() {
@@ -636,6 +649,9 @@ case $1 in
     ;;
   "cleanup_lib")
     cleanup_lib
+    ;;
+  "install_gitintegration_libs")
+    install_gitintegration_libs
     ;;
   *)
     print_help
