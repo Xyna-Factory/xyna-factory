@@ -20,6 +20,7 @@ package com.gip.xyna.xprc.xfractwfe.python.jep;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,6 +28,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -43,6 +46,7 @@ import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderDispatcher;
 import com.gip.xyna.xfmg.xfctrl.classloading.ClassLoaderType;
 import com.gip.xyna.xprc.xfractwfe.InvalidObjectPathException;
 import com.gip.xyna.xprc.xfractwfe.XynaPythonSnippetManagement;
+import com.gip.xyna.xprc.xfractwfe.generation.GenerationBase;
 import com.gip.xyna.xprc.xfractwfe.python.Context;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreter;
 import com.gip.xyna.xprc.xfractwfe.python.PythonInterpreterFactory;
@@ -148,6 +152,27 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     return resultMap;
   }
 
+  
+  @Override
+  public void overwriteJava(Context context, GeneralXynaObject orig, Object adapted) {
+    if (orig == null) { return; }
+    if (!(adapted instanceof PyObject)) { return; }
+    if (!(orig instanceof XynaObject)) { return; }
+    XynaObject origXo = (XynaObject) orig;
+    PyObject pyObj = (PyObject) adapted;
+    GeneralXynaObject adaptedGxo = convertToJava(context, pyObj);
+    if (!orig.getClass().getName().equals(adaptedGxo.getClass().getName())) { return; }
+    for (String field: origXo.getVariableNames()) {
+      try {
+        Object value = adaptedGxo.get(field);
+        orig.set(field, value);
+      } catch (Exception e) {
+        return;
+      }
+    }
+  }
+  
+  
   @Override
   public GeneralXynaObject convertToJava(Context context, Object obj) {
     PyObject pyObj = (PyObject) obj;
@@ -165,11 +190,48 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     } else {
       throw new UnsupportedOperationException();
     }
-
+    
+    
+    if (fqn.endsWith("IPv4")) {
+      String tmpfq = "com.gip.xyna.XMOM.base.IPv4";
+      //ClassLoaderBase tmp = cld.findClassLoaderByType(tmpfq, context.revision, ClassLoaderType.MDM, true);
+      //logger.warn("### found cl " + tmpfq + " : " + (tmp != null));
+      tmpfq = "base.IPv4";
+      //tmp = cld.findClassLoaderByType(tmpfq, context.revision, ClassLoaderType.MDM, true);
+      //logger.warn("### found cl " + tmpfq + " : " + (tmp != null));
+    }
+    
+    /*
+    boolean isReservedServerObject = false;
+    Class<?> serverClass = null;
+    */
+    
+    Optional<Class<? extends GeneralXynaObject>> serverClass = Optional.empty();
+    if (cl == null) {
+      serverClass = getOptionalServerClass(fqn);
+      /*
+      Optional<String> adaptedFqn = GenerationBase.getXmlNameByReservedServerObjectName(fqn);
+      if (adaptedFqn.isPresent()) {
+        serverClass = GenerationBase.getReservedClass(adaptedFqn.get());
+        if (GeneralXynaObject.class.isAssignableFrom(serverClass)) {
+          isReservedServerObject = true;
+        }
+      }
+      */
+    }
+    
+    
     GeneralXynaObject resultObj = null;
     try {
-      @SuppressWarnings("unchecked")
-      Class<? extends GeneralXynaObject> clazz = (Class<? extends GeneralXynaObject>) cl.loadClass(fqn);
+      //@SuppressWarnings("unchecked")
+      Class<? extends GeneralXynaObject> clazz = null;
+      if (serverClass.isPresent()) {
+        clazz = serverClass.get();
+      } else {
+        @SuppressWarnings("unchecked")
+        Class<? extends GeneralXynaObject> tmpclazz = (Class<? extends GeneralXynaObject>) cl.loadClass(fqn);
+        clazz = tmpclazz;
+      }
       resultObj = clazz.getDeclaredConstructor().newInstance();
 
       List<Field> allFields = new ArrayList<>(); 
@@ -184,7 +246,8 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
         }
       }
       for (Field f : allFields) {
-        if (f.getModifiers() == 2) { // private members
+        //if (f.getModifiers() == 2) { // private members
+        if (Modifier.isPrivate(f.getModifiers())) {
           String fieldName = f.getName();
           String pyFieldName = mgmt.getPythonKeywords().contains(fieldName) ? fieldName + "_" : fieldName;
           Object memberAttr = pyObj.getAttr(pyFieldName);
@@ -201,6 +264,20 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
     return resultObj;
   }
 
+  
+  private Optional<Class<? extends GeneralXynaObject>> getOptionalServerClass(String fqn) {
+    Optional<String> adaptedFqn = GenerationBase.getXmlNameByReservedServerObjectName(fqn);
+    if (adaptedFqn.isPresent()) {
+      Class<?> serverClass = GenerationBase.getReservedClass(adaptedFqn.get());
+      if (GeneralXynaObject.class.isAssignableFrom(serverClass)) {
+        @SuppressWarnings("unchecked")
+        Class<? extends GeneralXynaObject> ret = (Class<? extends GeneralXynaObject>) serverClass;
+        return Optional.ofNullable(ret);
+      }
+    }
+    return Optional.empty();
+  }
+  
   
   private List<Field> getFieldsOfXynaObject(Class<?> clazz) {
     List<Field> ret = new ArrayList<>();
@@ -265,7 +342,16 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
   @Override
   public Object invokeInstanceService(Context context, Object obj, String serviceName, List<Object> args) {
     GeneralXynaObject xo = convertToJava(context, obj);
-    return invokeMethod(context, xo.getClass().getCanonicalName(), xo, serviceName, args);
+    //return invokeMethod(context, xo.getClass().getCanonicalName(), xo, serviceName, args);
+    Object result = invokeMethod(context, xo.getClass().getCanonicalName(), xo, serviceName, args);
+    if (obj instanceof PyObject) {
+      PyObject pyObj = (PyObject) obj;
+      Map<String, Object> map = convertToPython(xo);
+      for (Entry<String, Object> entry: map.entrySet()) {
+        pyObj.setAttr(entry.getKey(), entry.getValue());
+      }
+    }
+    return result;
   }
 
 
@@ -346,9 +432,20 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
 
   private Method findMethod(Context context, String canonicalName, String serviceName) {
     ClassLoaderDispatcher cld = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getClassLoaderDispatcher();
-    ClassLoaderBase cl = cld.getClassLoaderByType(ClassLoaderType.MDM, canonicalName, context.revision);
+    //ClassLoaderBase cl = cld.getClassLoaderByType(ClassLoaderType.MDM, canonicalName, context.revision);
+    ClassLoaderBase cl = cld.findClassLoaderByType(canonicalName, context.revision, ClassLoaderType.MDM, true);
+    
     try {
-      Class<?> c = cl.loadClass(canonicalName);
+      Class<?> c = null;
+      if (cl == null) {
+        Optional<Class<? extends GeneralXynaObject>> opt = getOptionalServerClass(canonicalName);
+        if (!opt.isPresent()) {
+          throw new RuntimeException("Could not load class " + canonicalName);
+        }
+        c = opt.get();
+      } else {
+        c = cl.loadClass(canonicalName);
+      }
       return Arrays.asList(c.getDeclaredMethods()).stream().filter(x -> x.getName().equals(serviceName)).findAny().get();
     } catch (Exception e) {
       throw new RuntimeException(e);

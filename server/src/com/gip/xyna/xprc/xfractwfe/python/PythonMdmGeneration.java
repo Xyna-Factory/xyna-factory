@@ -29,6 +29,8 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
+
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase;
@@ -49,6 +51,7 @@ import com.gip.xyna.xprc.xfractwfe.python.PythonThreadManagement.PythonKeywordsT
 
 public class PythonMdmGeneration {
 
+  private static Logger _logger = Logger.getLogger(PythonMdmGeneration.class);
 
   public static final String LOAD_MODULE_SNIPPET = setupLoadModuleSnippet();
   public final List<String> pythonKeywords = new ArrayList<String>();
@@ -186,8 +189,11 @@ public class PythonMdmGeneration {
     Stack<XynaObjectInformation> hierarchy = new Stack<>();
     hierarchy.push(obj);
 
+    //_logger.warn("### Adding: " + obj.fqn);
+    //_logger.warn("### Looking for parent: " + hierarchy.peek().parent + ", found: " + (map.get(hierarchy.peek().parent) != null));
     while (map.get(hierarchy.peek().parent) != null) {
       hierarchy.push(map.get(hierarchy.peek().parent));
+      //_logger.warn("### Looking for parent: " + hierarchy.peek().parent + ", found: " + (map.get(hierarchy.peek().parent) != null));
     }
 
     if (!map.containsKey(hierarchy.peek().parent)) {
@@ -448,12 +454,24 @@ public class PythonMdmGeneration {
     try {
       DomOrExceptionGenerationBase doe =  isException ? ExceptionGeneration.getOrCreateInstance(fqn, cache, revision) : DOM.getOrCreateInstance(fqn, cache, revision);
       doe.parse(false);
-      result.parent = doe.getSuperClassGenerationObject() != null ? doe.getSuperClassGenerationObject().getOriginalFqName() : null;
+      
+      if (!fqn.equals(doe.getFqClassName())) {
+        result.fqn = doe.getFqClassName();
+      }
+      
+      //_logger.warn("### TYPE: " + fqn + " | " + doe.getFqClassName());
+      if (doe.getSuperClassGenerationObject() != null) {
+        //_logger.warn("### PARENT: " + doe.getSuperClassGenerationObject().getFqClassName() + " | " + doe.getSuperClassGenerationObject().getOriginalFqName());
+      }
+      
+      //result.parent = doe.getSuperClassGenerationObject() != null ? doe.getSuperClassGenerationObject().getOriginalFqName() : null;
+      result.parent = doe.getSuperClassGenerationObject() != null ? doe.getSuperClassGenerationObject().getFqClassName() : null;
       result.members = doe.getMemberVars().stream().map(this::toMemberInfo).collect(Collectors.toList());
       if (!isException) {
         result.methods = PythonGeneration.loadOperations(((DOM) doe).getOperations());
       }
     } catch (Exception e) {
+      _logger.error("Error for " + fqn + " === ", e);
       return null;
     }
 
