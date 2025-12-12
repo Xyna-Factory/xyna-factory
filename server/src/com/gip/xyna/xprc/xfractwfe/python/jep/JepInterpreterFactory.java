@@ -346,7 +346,7 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
 
   private Method findMethod(Context context, String canonicalName, String serviceName) {
     ClassLoaderDispatcher cld = XynaFactory.getInstance().getFactoryManagement().getXynaFactoryControl().getClassLoaderDispatcher();
-    ClassLoaderBase cl = cld.getClassLoaderByType(ClassLoaderType.MDM, canonicalName, context.revision);
+    ClassLoaderBase cl = cld.findClassLoaderByType(canonicalName, context.revision, ClassLoaderType.MDM, true);
     try {
       Class<?> c = cl.loadClass(canonicalName);
       return Arrays.asList(c.getDeclaredMethods()).stream().filter(x -> x.getName().equals(serviceName)).findAny().get();
