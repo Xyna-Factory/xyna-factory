@@ -45,4 +45,7 @@ public abstract class PythonInterpreterFactory {
   public abstract Object invokeService(Context context, String fqn, String serviceName, List<Object> args);
 
   public abstract Object invokeInstanceService(Context context, Object obj, String serviceName, List<Object> args);
+  
+  public abstract void overwriteJava(Context context, GeneralXynaObject orig, Object adapted);
+  
 }

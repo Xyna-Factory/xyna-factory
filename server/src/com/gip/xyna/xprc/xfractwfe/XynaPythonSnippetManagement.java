@@ -25,6 +25,7 @@ import java.util.List;
 import com.gip.xyna.Section;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.exceptions.XynaException;
+import com.gip.xyna.xdev.xfractmod.xmdm.GeneralXynaObject;
 import com.gip.xyna.xprc.xfractwfe.base.DeploymentHandling;
 import com.gip.xyna.xprc.xfractwfe.base.RevisionChangeUnDeploymentHandler;
 import com.gip.xyna.xprc.xfractwfe.python.Context;
@@ -119,4 +120,9 @@ public class XynaPythonSnippetManagement extends Section {
   public List<String> getPythonKeywords() {
     return mdmGeneration.getPythonKeywords();
   }
+  
+  public void overwriteJava(Context context, GeneralXynaObject orig, Object adapted) {
+    factory.overwriteJava(context, orig, adapted);
+  }
+  
 }
