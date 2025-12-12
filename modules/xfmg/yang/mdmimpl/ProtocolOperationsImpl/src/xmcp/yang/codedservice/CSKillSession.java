@@ -21,6 +21,7 @@ package xmcp.yang.codedservice;
 import org.w3c.dom.Element;
 
 import xact.templates.Document;
+import xact.templates.NETCONF;
 import xmcp.yang.MessageId;
 import xmcp.yang.misc.Constants;
 import xmcp.yang.misc.XmlHelper;
@@ -30,6 +31,10 @@ import xmcp.yang.netconf.NetConfSessionId;
 public class CSKillSession {
 
   public Document execute(MessageId messageId, NetConfSessionId sessionId) {
+    return execute(messageId, null, sessionId);
+  }
+
+  public Document execute(MessageId messageId, NETCONF netconf, NetConfSessionId sessionId) {
     XmlHelper helper = new XmlHelper();
     org.w3c.dom.Document doc = helper.buildDocument();
     Element rpc = helper.createElem(doc).elementName(Constants.Rpc.TAG_NAME).namespace(Constants.NetConf.NETCONF_NSP)
@@ -43,9 +48,7 @@ public class CSKillSession {
       helper.createElem(doc).elementName(Constants.NetConf.XmlTag.SESSION_ID).namespace(Constants.NetConf.NETCONF_NSP)
                             .text(sessionId.getSessionId()).buildAndAppendAsChild(opElem);
     }
-    Document ret = new Document();
-    ret.setText(helper.getDocumentString(doc));
-    return ret;
+    return new Document.Builder().text(helper.getDocumentString(doc)).documentType(netconf).instance();
   }
 
 }

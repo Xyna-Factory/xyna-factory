@@ -21,6 +21,7 @@ package xmcp.yang.codedservice;
 import org.w3c.dom.Element;
 
 import xact.templates.Document;
+import xact.templates.NETCONF;
 import xmcp.yang.MessageId;
 import xmcp.yang.YangMappingCollection;
 import xmcp.yang.misc.Constants;
@@ -29,37 +30,42 @@ import xmcp.yang.misc.XmlHelper;
 import xmcp.yang.misc.DataStoreHelper.NetConfOperation;
 import xmcp.yang.netconf.NetConfFilter;
 import xmcp.yang.netconf.NetConfSource;
+import static xmcp.yang.misc.Constants.NetConf.OperationNameTag;
+import static xmcp.yang.misc.Constants.NetConf.XmlTag;
+import static xmcp.yang.misc.Constants.NetConf;
+
 
 
 public class CSGetConfig {
 
+  @Deprecated
   public Document execute(MessageId messageId, NetConfSource source, NetConfFilter filter) {
     XmlHelper helper = new XmlHelper();
     org.w3c.dom.Document doc = helper.buildDocument();
-    Element rpc = helper.createElem(doc).elementName(Constants.Rpc.TAG_NAME).namespace(Constants.NetConf.NETCONF_NSP)
+    Element rpc = helper.createElem(doc).elementName(Constants.Rpc.TAG_NAME).namespace(NetConf.NETCONF_NSP)
                         .buildAndAppendAsDocumentRoot();
     if ((messageId != null) && (messageId.getId() != null)) {
       rpc.setAttribute(Constants.Rpc.ATTRIBUTE_NAME_MESSAGE_ID, messageId.getId());
     }
-    Element opElem = helper.createElem(doc).elementName(Constants.NetConf.OperationNameTag.GET_CONFIG)
-                               .namespace(Constants.NetConf.NETCONF_NSP).buildAndAppendAsChild(rpc);
-    Element sourceElem = helper.createElem(doc).elementName(Constants.NetConf.XmlTag.SOURCE)
-                               .namespace(Constants.NetConf.NETCONF_NSP).buildAndAppendAsChild(opElem);
+    Element opElem = helper.createElem(doc).elementName(OperationNameTag.GET_CONFIG)
+                               .namespace(NetConf.NETCONF_NSP).buildAndAppendAsChild(rpc);
+    Element sourceElem = helper.createElem(doc).elementName(XmlTag.SOURCE)
+                               .namespace(NetConf.NETCONF_NSP).buildAndAppendAsChild(opElem);
     if (source != null) {
       if (source.getDatastoreName() != null) {
         String datastore = new DataStoreHelper().getDataStoreTagName(source.getDatastoreName(), NetConfOperation.OTHER);
-        helper.createElem(doc).elementName(datastore).namespace(Constants.NetConf.NETCONF_NSP)
+        helper.createElem(doc).elementName(datastore).namespace(NetConf.NETCONF_NSP)
                               .buildAndAppendAsChild(sourceElem);
       } else if (source.getURL() != null) {
-        helper.createElem(doc).elementName(Constants.NetConf.XmlTag.URL).namespace(Constants.NetConf.NETCONF_NSP)
+        helper.createElem(doc).elementName(XmlTag.URL).namespace(NetConf.NETCONF_NSP)
                               .text(source.getURL()).buildAndAppendAsChild(sourceElem);
       }
     }
     if (filter != null) {
-      Element filterElem = helper.createElem(doc).elementName(Constants.NetConf.XmlTag.FILTER).namespace(Constants.NetConf.NETCONF_NSP)
+      Element filterElem = helper.createElem(doc).elementName(XmlTag.FILTER).namespace(NetConf.NETCONF_NSP)
                              .buildAndAppendAsChild(opElem);
       if (filter.getTypeAttribute() != null) {
-        filterElem.setAttribute(Constants.NetConf.XmlAttribute.TYPE, filter.getTypeAttribute());
+        filterElem.setAttribute(NetConf.XmlAttribute.TYPE, filter.getTypeAttribute());
       }
       if (filter.getFilterSubtree() != null) {
         YangMappingCollection ymc = filter.getFilterSubtree();
@@ -73,5 +79,33 @@ public class CSGetConfig {
     ret.setText(helper.getDocumentString(doc));
     return ret;
   }
-  
+
+
+  public Document execute(MessageId messageId, NETCONF netconf, NetConfSource source, YangMappingCollection mappings) {
+    XmlHelper helper = new XmlHelper();
+    org.w3c.dom.Document doc = helper.buildDocument();
+    Element rpc = helper.createElem(doc).elementName(Constants.Rpc.TAG_NAME).namespace(NetConf.NETCONF_NSP).buildAndAppendAsDocumentRoot();
+    if (messageId != null && messageId.getId() != null) {
+      rpc.setAttribute(Constants.Rpc.ATTRIBUTE_NAME_MESSAGE_ID, messageId.getId());
+    }
+    Element opElem = helper.createElem(doc).elementName(OperationNameTag.GET_CONFIG).namespace(NetConf.NETCONF_NSP).buildAndAppendAsChild(rpc);
+    Element sourceElem = helper.createElem(doc).elementName(XmlTag.SOURCE).namespace(NetConf.NETCONF_NSP).buildAndAppendAsChild(opElem);
+    if (source != null) {
+      if (source.getDatastoreName() != null) {
+        String datastore = new DataStoreHelper().getDataStoreTagName(source.getDatastoreName(), NetConfOperation.OTHER);
+        helper.createElem(doc).elementName(datastore).namespace(NetConf.NETCONF_NSP).buildAndAppendAsChild(sourceElem);
+      } else if (source.getURL() != null) {
+        helper.createElem(doc).elementName(XmlTag.URL).namespace(NetConf.NETCONF_NSP).text(source.getURL()).buildAndAppendAsChild(sourceElem);
+      }
+    }
+
+    Element filterElem = helper.createElem(doc).elementName(XmlTag.FILTER).namespace(NetConf.NETCONF_NSP).buildAndAppendAsChild(opElem);
+    filterElem.setAttribute(NetConf.XmlAttribute.TYPE, NetConf.EnumValue.SUBTREE);
+    Document mappingsDoc = mappings.createXml();
+    if (mappingsDoc != null && mappingsDoc.getText() != null) {
+      helper.appendXmlSubtree(doc, filterElem, mappingsDoc.getText());
+    }
+
+    return new Document.Builder().text(helper.getDocumentString(doc)).documentType(netconf).instance();
+  } 
 }

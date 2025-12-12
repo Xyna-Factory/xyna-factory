@@ -111,6 +111,8 @@ public class Constants {
   public static final String TYPE_OUTPUT = "output";
   public static final String TYPE_NOTIFICATION = "notification";
 
+  public static final String RPC_NETCONF_INPUT_NAME = "Netconf";
+
   public static final String NS_SEPARATOR = "§";
   public static final String LIST_INDEX_SEPARATOR = ") ";
 
