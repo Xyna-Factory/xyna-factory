@@ -151,6 +151,10 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
 
   @Override
   public GeneralXynaObject convertToJava(Context context, Object obj) {
+    if (!(obj instanceof PyObject)) {
+      throw new RuntimeException("Unexpected error converting python object to java: Wrong type of object, " +
+                                 "expected " + PyObject.class.getName() + ", got " + obj.getClass().getName());
+    }
     PyObject pyObj = (PyObject) obj;
     String fqn = (String) pyObj.getAttr("_fqn");
     String xynatype = (String) pyObj.getAttr("_xynatype");
@@ -363,25 +367,5 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
       throw new RuntimeException(e);
     }
   }
-  
-  
-  @Override
-  public void overwriteJava(Context context, GeneralXynaObject orig, Object adapted) {
-    if (orig == null) { return; }
-    if (!(adapted instanceof PyObject)) { return; }
-    if (!(orig instanceof XynaObject)) { return; }
-    XynaObject origXo = (XynaObject) orig;
-    PyObject pyObj = (PyObject) adapted;
-    GeneralXynaObject adaptedGxo = convertToJava(context, pyObj);
-    if (!orig.getClass().getName().equals(adaptedGxo.getClass().getName())) { return; }
-    for (String field: origXo.getVariableNames()) {
-      try {
-        Object value = adaptedGxo.get(field);
-        orig.set(field, value);
-      } catch (Exception e) {
-        return;
-      }
-    }
-  }
-  
+
 }

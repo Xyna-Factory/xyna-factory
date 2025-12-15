@@ -146,7 +146,7 @@ public class PythonOperation extends CodeOperation {
     addExecuteScript(cb);
 
     if (!isStatic()) {
-      cb.addLine("pyMgmt.overwriteJava(context, this, interpreter.get(\"this\"));");
+      cb.addLine("pyMgmt.updateObject(context, this, interpreter.get(\"this\"));");
     }
     for (AVariable var : getOutputVars()) {
       cb.addLine(var.varName + " = interpreter.get(\"" + escape(var.varName) + "\")");
