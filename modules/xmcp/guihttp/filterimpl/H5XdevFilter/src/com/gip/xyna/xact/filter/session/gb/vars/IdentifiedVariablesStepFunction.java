@@ -321,21 +321,25 @@ public class IdentifiedVariablesStepFunction extends IdentifiedVariablesStepWith
     if(stepSerial.getParentScope() instanceof ForEachScopeStep) {
       StepForeach foreachHoldingVariable = (StepForeach) stepSerial.getParentScope().getParentStep();
       int index = foreachHoldingVariable.getOutputVarsSingle(false).indexOf(oldVariable);
-      
-      //replace single variable
-      AVariable[] vars = foreachHoldingVariable.getOutputVarsSingle();
-      vars[index] = newVariable;
-      
-      //replace list variable
-      try {
-        AVariable listVar = stepSerial.getParentScope().identifyVariable(foreachHoldingVariable.getOutputListRefs()[index]).getVariable();
-        AVariable newListVar =  createVariable(newOutputVarFqn, newVariable.getLabel(), listVar.isList(), listVar instanceof ExceptionVariable);
-        StepSerial foreachSerial = (StepSerial) foreachHoldingVariable.getParentStep();
-        newListVar.setId(listVar.getId());
-        
-        replaceCastedVariable(listVar, newListVar, foreachSerial, newOutputVarFqn);
-      } catch (XPRC_InvalidVariableIdException | XPRC_InvalidPackageNameException e) {
-        throw new RuntimeException(e);
+      if(index != -1) {
+        //replace single variable
+        AVariable[] vars = foreachHoldingVariable.getOutputVarsSingle();
+        vars[index] = newVariable;
+
+        //replace list variable
+        try {
+          AVariable listVar = stepSerial.getParentScope().identifyVariable(foreachHoldingVariable.getOutputListRefs()[index]).getVariable();
+          AVariable newListVar = createVariable(newOutputVarFqn, newVariable.getLabel(), listVar.isList(), listVar instanceof ExceptionVariable);
+          StepSerial foreachSerial = (StepSerial) foreachHoldingVariable.getParentStep();
+          newListVar.setId(listVar.getId());
+
+          replaceCastedVariable(listVar, newListVar, foreachSerial, newOutputVarFqn);
+        } catch (XPRC_InvalidVariableIdException | XPRC_InvalidPackageNameException e) {
+          throw new RuntimeException(e);
+        }
+      } else {
+        //variable does not participate in stepForeach output
+        stepSerial.replaceVar(oldVariable, newVariable);
       }
     } else {
     //regular StepSerial - not inside
