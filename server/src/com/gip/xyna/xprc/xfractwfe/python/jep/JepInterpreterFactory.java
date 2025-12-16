@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -150,6 +151,10 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
 
   @Override
   public GeneralXynaObject convertToJava(Context context, Object obj) {
+    if (!(obj instanceof PyObject)) {
+      throw new RuntimeException("Unexpected error converting python object to java: Wrong type of object, " +
+                                 "expected " + PyObject.class.getName() + ", got " + obj.getClass().getName());
+    }
     PyObject pyObj = (PyObject) obj;
     String fqn = (String) pyObj.getAttr("_fqn");
     String xynatype = (String) pyObj.getAttr("_xynatype");
@@ -265,7 +270,15 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
   @Override
   public Object invokeInstanceService(Context context, Object obj, String serviceName, List<Object> args) {
     GeneralXynaObject xo = convertToJava(context, obj);
-    return invokeMethod(context, xo.getClass().getCanonicalName(), xo, serviceName, args);
+    Object result = invokeMethod(context, xo.getClass().getCanonicalName(), xo, serviceName, args);
+    if (obj instanceof PyObject) {
+      PyObject pyObj = (PyObject) obj;
+      Map<String, Object> map = convertToPython(xo);
+      for (Entry<String, Object> entry: map.entrySet()) {
+        pyObj.setAttr(entry.getKey(), entry.getValue());
+      }
+    }
+    return result;
   }
 
 
@@ -354,4 +367,5 @@ public class JepInterpreterFactory extends PythonInterpreterFactory {
       throw new RuntimeException(e);
     }
   }
+
 }
