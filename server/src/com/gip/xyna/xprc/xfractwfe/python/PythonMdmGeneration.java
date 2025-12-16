@@ -29,8 +29,6 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
-import org.apache.log4j.Logger;
-
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.utils.collections.Pair;
 import com.gip.xyna.xfmg.xfctrl.xmomdatabase.XMOMDatabase;
@@ -51,7 +49,6 @@ import com.gip.xyna.xprc.xfractwfe.python.PythonThreadManagement.PythonKeywordsT
 
 public class PythonMdmGeneration {
 
-  private static Logger _logger = Logger.getLogger(PythonMdmGeneration.class);
 
   public static final String LOAD_MODULE_SNIPPET = setupLoadModuleSnippet();
   public final List<String> pythonKeywords = new ArrayList<String>();
@@ -192,6 +189,7 @@ public class PythonMdmGeneration {
     while (map.get(hierarchy.peek().parent) != null) {
       hierarchy.push(map.get(hierarchy.peek().parent));
     }
+
     if (!map.containsKey(hierarchy.peek().parent)) {
       throw new RuntimeException("Unknown Object reference in " + hierarchy.peek().fqn + " to object: " + hierarchy.peek().parent);
     }
@@ -314,8 +312,6 @@ public class PythonMdmGeneration {
     sb.append("      result.append(convert_to_python_object(value))\n");
     sb.append("    elif type(value) is list:\n");
     sb.append("      result.append(_convert_list(value))\n");
-    sb.append("    elif type(value).__name__ == 'ArrayList':\n");
-    sb.append("      result.append(_convert_list(value))\n");
     sb.append("    else:\n");
     sb.append("      result.append(value)\n\n");
     sb.append("  return result\n\n");
@@ -330,8 +326,6 @@ public class PythonMdmGeneration {
     sb.append("  if type(value).__name__ == \"HashMap\":\n");
     sb.append("    object_to_set.set(fieldName, convert_to_python_object(value))\n");
     sb.append("  elif type(value) is list:\n");
-    sb.append("    object_to_set.set(fieldName, _convert_list(value))\n");
-    sb.append("  elif type(value).__name__ == 'ArrayList':\n");
     sb.append("    object_to_set.set(fieldName, _convert_list(value))\n");
     sb.append("  else:\n");
     sb.append("    object_to_set.set(fieldName, value)\n\n");
@@ -460,7 +454,6 @@ public class PythonMdmGeneration {
         result.methods = PythonGeneration.loadOperations(((DOM) doe).getOperations());
       }
     } catch (Exception e) {
-      _logger.error("Error for " + fqn + " === ", e);
       return null;
     }
 
