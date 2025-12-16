@@ -70,6 +70,7 @@ public class Constants {
       public static final String STOP_ON_ERROR = "stop-on-error";
       public static final String CONTINUE_ON_ERROR = "continue-on-error";
       public static final String ROLLBACK_ON_ERROR = "rollback-on-error";
+      public static final String SUBTREE = "subtree";
     }
   }
   

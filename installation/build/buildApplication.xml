@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2023 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -445,5 +445,31 @@
              <fileset dir="${basedir}" includes="**/*.jar"/>
         </delete>
     </target>
+
+	<target name="generate-application-xml" description="generate application.xml from workspace-xml">
+			<!-- directory or file of workspace-xml config, or its parent directory -->
+			<property name="workspacexml.dir" value="${basedir}/.." />
+			<property name="xmom.dir" value="${basedir}/XMOM" />
+			<property name="application.version" value="1.0" />
+			<property name="xyna.version" value="" />
+			<!-- as described in documentation of xynaproperty xfmg.xfctrl.appmgmt.excludedsubtypesof -->
+			<property name="subtype.exclusions" value="" />
+			<property name="application.xml.output.file" value="${basedir}/application.xml" />
+
+			<java classname="xmcp.gitintegration.offline.ApplicationXMLGenerator" fork="true" failonerror="true">
+				<arg value="${workspacexml.dir}" />
+				<arg value="${xmom.dir}" />
+				<arg value="${application.version}" />
+				<arg value="${xyna.version}" />
+				<arg value="${subtype.exclusions}" />
+				<arg value="${application.xml.output.file}" />
+				<classpath>
+					<!-- jars to be created by installation/build.sh install_gitintegration_libs -->
+					<fileset dir="${antUtils.dir}lib/gitintegration">
+						<include name="*.jar" />
+					</fileset>
+				</classpath>
+			</java>
+		</target>
 
 </project>
