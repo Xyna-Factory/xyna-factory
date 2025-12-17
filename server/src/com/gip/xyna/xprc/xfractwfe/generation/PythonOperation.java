@@ -163,6 +163,8 @@ public class PythonOperation extends CodeOperation {
     cb.append("impl = ").append(fqnPython).append("Impl(");
     if (!isStatic()) {
       cb.append("this");
+    } else {
+      cb.append("None");
     }
     cb.append(")\n");
     if (getOutputVars() != null && !getOutputVars().isEmpty()) {
