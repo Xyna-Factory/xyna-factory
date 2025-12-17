@@ -203,8 +203,7 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
 
 
   public void connect() {
-    logger.warn("### Connecting ssh...");
-    
+
     initClient();
 
     try {
@@ -719,7 +718,6 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
 
   protected void initClient() {
     client = new SSHClient();
-    client.addHostKeyVerifier(new PromiscuousVerifier());
 
     HostKeyCheckingMode checkingMode = HostKeyCheckingMode.getByXynaRepresentation(getSSHConnectionParameter().getHostKeyChecking());
     logger.debug("SSHConnectionInstanceOperationImpl checkingMode: " + checkingMode.getStringRepresentation());
@@ -733,11 +731,8 @@ public abstract class SSHConnectionInstanceOperationImpl extends SSHConnectionSu
     Config config = client.getTransport().getConfig();
 
     List<Named<KeyAlgorithm>> keyAlgs = createKeyAlgsList(getSSHConnectionParameter().getKeyAlgorithms0());
-    //config.setKeyAlgorithms(keyAlgs);
+    config.setKeyAlgorithms(keyAlgs);
 
-      for (Named<KeyAlgorithm> algo : keyAlgs) {
-        logger.warn("### Key algo: " + algo.getName());
-      }
     List<Named<MAC>> macs = createMacList(getSSHConnectionParameter().getMessageAuthenticationCodes());
     config.setMACFactories(macs);
 
