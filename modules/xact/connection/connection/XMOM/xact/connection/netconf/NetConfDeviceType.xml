@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+--><DataType xmlns="http://www.gip.com/xyna/xdev/xfractmod" BaseTypeName="DeviceType" BaseTypePath="xact.connection" IsAbstract="false" Label="NetConf Device Type" TypeName="NetConfDeviceType" TypePath="xact.connection.netconf" Version="1.8">
+  <Meta>
+    <IsServiceGroupOnly>false</IsServiceGroupOnly>
+  </Meta>
+  <Service Label="NetConf Device Type" TypeName="NetConfDeviceType">
+    <Operation IsStatic="false" Label="Check interaction" Name="checkInteraction">
+      <Input>
+        <Data ID="1" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="commandResponseTuple1"/>
+        <Data ID="3" Label="document type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType3"/>
+      </Input>
+      <Output>
+        <Data ID="105" Label="is interaction" VariableName="boolean_obj105">
+          <Meta>
+            <Type>Boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return false;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Cleanup after error" Name="cleanupAfterError">
+      <Input>
+        <Data ID="5" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="commandResponseTuple5"/>
+        <Data ID="7" Label="document type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType7"/>
+        <Data ID="8" Label="managed connection" ReferenceName="ManagedConnection" ReferencePath="xact.connection" VariableName="managedConnection8"/>
+      </Input>
+      <Output/>
+      <SourceCode>
+        <CodeSnippet Type="Java"/>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Detect critical error" Name="detectCriticalError">
+      <Input>
+        <Data ID="11" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="commandResponseTuple11"/>
+        <Data ID="13" Label="document type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType13"/>
+      </Input>
+      <Output/>
+      <Throws>
+        <Exception ID="14" Label="detected error" ReferenceName="DetectedError" ReferencePath="xact.connection" VariableName="detectedError14"/>
+      </Throws>
+      <SourceCode>
+        <CodeSnippet Type="Java"/>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Enrich command" Name="enrichCommand">
+      <Input>
+        <Data ID="18" Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command18"/>
+      </Input>
+      <Output>
+        <Data ID="20" Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command20"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return command18;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Is response complete" Name="isResponseComplete">
+      <Input>
+        <Data ID="120" Label="response" VariableName="string120">
+          <Meta>
+            <Type>String</Type>
+          </Meta>
+        </Data>
+        <Data ID="26" Label="document type" ReferenceName="DocumentType" ReferencePath="xact.templates" VariableName="documentType26"/>
+        <Data ID="27" Label="managed connection" ReferenceName="ManagedConnection" ReferencePath="xact.connection" VariableName="managedConnection27"/>
+        <Data ID="28" Label="command" ReferenceName="Command" ReferencePath="xact.connection" VariableName="command28"/>
+      </Input>
+      <Output>
+        <Data ID="121" Label="is complete" VariableName="boolean_obj121">
+          <Meta>
+            <Type>Boolean</Type>
+          </Meta>
+        </Data>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return documentType26.isResponseComplete(string120);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="false" Label="Remove device specifics" Name="removeDeviceSpecifics">
+      <Input>
+        <Data ID="34" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="commandResponseTuple34"/>
+      </Input>
+      <Output>
+        <Data ID="36" Label="response" ReferenceName="CommandResponseTuple" ReferencePath="xact.connection" VariableName="commandResponseTuple36"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return commandResponseTuple34;</CodeSnippet>
+      </SourceCode>
+    </Operation>
+  </Service>
+</DataType>
