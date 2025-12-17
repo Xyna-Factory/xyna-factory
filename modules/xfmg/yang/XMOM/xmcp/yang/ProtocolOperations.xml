@@ -21,7 +21,7 @@
   </Meta>
   <Libraries>ProtocolOperationsImpl.jar</Libraries>
   <Service Label="Protocol Operations" TypeName="ProtocolOperations">
-    <Operation IsStatic="true" Label="Get Config" Name="getConfig">
+    <Operation IsStatic="true" Label="(Deprecated) Get Config" Name="getConfig">
       <Input>
         <Data ID="29" Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId29"/>
         <Data ID="1" Label="NetConf Source" ReferenceName="NetConfSource" ReferencePath="xmcp.yang.netconf" VariableName="source1"/>
@@ -30,11 +30,14 @@
       <Output>
         <Data ID="20" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document20"/>
       </Output>
+      <Meta>
+        <Documentation>deprecated. Use Get Config via Subtree instead</Documentation>
+      </Meta>
       <SourceCode>
         <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.getConfig(messageId29, source1, filter2);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Edit Config" Name="editConfig">
+    <Operation IsStatic="true" Label="(Deprecated) Edit Config" Name="editConfig">
       <Input>
         <Data ID="27" Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId27"/>
         <Data ID="33" Label="Edit Config Input Data" ReferenceName="EditConfigInputData" ReferencePath="xmcp.yang.netconf" VariableName="editConfigInputData33"/>
@@ -47,7 +50,21 @@
         <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.editConfig(messageId27, editConfigInputData33, yangMappingCollection34);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Copy Config" Name="copyConfig">
+    <Operation IsStatic="true" Label="Edit Config" Name="editConfig0">
+      <Input>
+        <Data Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId27"/>
+        <Data Label="NETCONF" ReferenceName="NETCONF" ReferencePath="xact.templates" VariableName="nETCONF37"/>
+        <Data Label="Edit Config Input Data" ReferenceName="EditConfigInputData" ReferencePath="xmcp.yang.netconf" VariableName="editConfigInputData33"/>
+        <Data Label="Config" ReferenceName="YangMappingCollection" ReferencePath="xmcp.yang" VariableName="yangMappingCollection34"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document18"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.editConfig0(messageId27, nETCONF37, editConfigInputData33, yangMappingCollection34);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="(Deprecated) Copy Config" Name="copyConfig">
       <Input>
         <Data ID="25" Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId25"/>
         <Data ID="8" Label="NetConf Target" ReferenceName="NetConfTarget" ReferencePath="xmcp.yang.netconf" VariableName="netConfTarget8"/>
@@ -60,7 +77,21 @@
         <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.copyConfig(messageId25, netConfTarget8, netConfSource9);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Delete Config" Name="deleteConfig">
+    <Operation IsStatic="true" Label="Copy Config" Name="copyConfig0">
+      <Input>
+        <Data Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId25"/>
+        <Data Label="NETCONF" ReferenceName="NETCONF" ReferencePath="xact.templates" VariableName="nETCONF37"/>
+        <Data Label="NetConf Target" ReferenceName="NetConfTarget" ReferencePath="xmcp.yang.netconf" VariableName="netConfTarget8"/>
+        <Data Label="NetConf Source" ReferenceName="NetConfSource" ReferencePath="xmcp.yang.netconf" VariableName="netConfSource9"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document16"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.copyConfig0(messageId25, nETCONF37, netConfTarget8, netConfSource9);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="(Deprecated) Delete Config" Name="deleteConfig">
       <Input>
         <Data ID="26" Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId26"/>
         <Data ID="10" Label="NetConf Target" ReferenceName="NetConfTarget" ReferencePath="xmcp.yang.netconf" VariableName="netConfTarget10"/>
@@ -72,7 +103,20 @@
         <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.deleteConfig(messageId26, netConfTarget10);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Lock" Name="lock">
+    <Operation IsStatic="true" Label="Delete Config" Name="deleteConfig0">
+      <Input>
+        <Data Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId26"/>
+        <Data Label="NETCONF" ReferenceName="NETCONF" ReferencePath="xact.templates" VariableName="nETCONF37"/>
+        <Data Label="NetConf Target" ReferenceName="NetConfTarget" ReferencePath="xmcp.yang.netconf" VariableName="netConfTarget10"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document17"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.deleteConfig0(messageId26, nETCONF37, netConfTarget10);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="(Deprecated) Lock" Name="lock">
       <Input>
         <Data ID="31" Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId31"/>
         <Data ID="11" Label="NetConf Target" ReferenceName="NetConfTarget" ReferencePath="xmcp.yang.netconf" VariableName="netConfTarget11"/>
@@ -84,7 +128,20 @@
         <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.lock(messageId31, netConfTarget11);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Unlock" Name="unlock">
+    <Operation IsStatic="true" Label="Lock" Name="lock0">
+      <Input>
+        <Data Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId31"/>
+        <Data Label="NETCONF" ReferenceName="NETCONF" ReferencePath="xact.templates" VariableName="nETCONF37"/>
+        <Data Label="NetConf Target" ReferenceName="NetConfTarget" ReferencePath="xmcp.yang.netconf" VariableName="netConfTarget11"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document22"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.lock0(messageId31, nETCONF37, netConfTarget11);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="(Deprecated) Unlock" Name="unlock">
       <Input>
         <Data ID="32" Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId32"/>
         <Data ID="12" Label="NetConf Target" ReferenceName="NetConfTarget" ReferencePath="xmcp.yang.netconf" VariableName="netConfTarget12"/>
@@ -96,7 +153,20 @@
         <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.unlock(messageId32, netConfTarget12);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Get" Name="get">
+    <Operation IsStatic="true" Label="Unlock" Name="unlock0">
+      <Input>
+        <Data Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId32"/>
+        <Data Label="NETCONF" ReferenceName="NETCONF" ReferencePath="xact.templates" VariableName="nETCONF37"/>
+        <Data Label="NetConf Target" ReferenceName="NetConfTarget" ReferencePath="xmcp.yang.netconf" VariableName="netConfTarget12"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document23"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.unlock0(messageId32, nETCONF37, netConfTarget12);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="(Deprecated) Get" Name="get">
       <Input>
         <Data ID="28" Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId28"/>
         <Data ID="13" Label="NetConf Filter" ReferenceName="NetConfFilter" ReferencePath="xmcp.yang.netconf" VariableName="netConfFilter13"/>
@@ -104,11 +174,14 @@
       <Output>
         <Data ID="19" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document19"/>
       </Output>
+      <Meta>
+        <Documentation>deprecated. Use Get via Subtree instead</Documentation>
+      </Meta>
       <SourceCode>
         <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.get(messageId28, netConfFilter13);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Close Session" Name="closeSession">
+    <Operation IsStatic="true" Label="(Deprecated) Close Session" Name="closeSession">
       <Input>
         <Data ID="24" Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId24"/>
       </Input>
@@ -119,7 +192,19 @@
         <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.closeSession(messageId24);</CodeSnippet>
       </SourceCode>
     </Operation>
-    <Operation IsStatic="true" Label="Kill Session" Name="killSession">
+    <Operation IsStatic="true" Label="Close Session" Name="closeSession0">
+      <Input>
+        <Data Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId24"/>
+        <Data Label="NETCONF" ReferenceName="NETCONF" ReferencePath="xact.templates" VariableName="nETCONF37"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document15"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.closeSession0(messageId24, nETCONF37);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="(Deprecated) Kill Session" Name="killSession">
       <Input>
         <Data ID="30" Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId30"/>
         <Data ID="14" Label="NetConf Session Id" ReferenceName="NetConfSessionId" ReferencePath="xmcp.yang.netconf" VariableName="netConfSessionId14"/>
@@ -131,6 +216,19 @@
         <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.killSession(messageId30, netConfSessionId14);</CodeSnippet>
       </SourceCode>
     </Operation>
+    <Operation IsStatic="true" Label="Kill Session" Name="killSession0">
+      <Input>
+        <Data Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId30"/>
+        <Data Label="NETCONF" ReferenceName="NETCONF" ReferencePath="xact.templates" VariableName="nETCONF37"/>
+        <Data Label="NetConf Session Id" ReferenceName="NetConfSessionId" ReferencePath="xmcp.yang.netconf" VariableName="netConfSessionId14"/>
+      </Input>
+      <Output>
+        <Data Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document21"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.killSession0(messageId30, nETCONF37, netConfSessionId14);</CodeSnippet>
+      </SourceCode>
+    </Operation>
     <Operation IsStatic="true" Label="Generate Next Message Id" Name="generateNextMessageId">
       <Input/>
       <Output>
@@ -138,6 +236,33 @@
       </Output>
       <SourceCode>
         <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.generateNextMessageId();</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get via Subtree" Name="getViaSubtree">
+      <Input>
+        <Data ID="36" Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId36"/>
+        <Data ID="37" Label="NETCONF" ReferenceName="NETCONF" ReferencePath="xact.templates" VariableName="nETCONF37"/>
+        <Data ID="40" Label="Yang Mapping Collection" ReferenceName="YangMappingCollection" ReferencePath="xmcp.yang" VariableName="yangMappingCollection40"/>
+      </Input>
+      <Output>
+        <Data ID="39" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document39"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.getViaSubtree(messageId36, nETCONF37, yangMappingCollection40);</CodeSnippet>
+      </SourceCode>
+    </Operation>
+    <Operation IsStatic="true" Label="Get Config via Subtree" Name="getConfigViaSubtree">
+      <Input>
+        <Data ID="41" Label="MessageId" ReferenceName="MessageId" ReferencePath="xmcp.yang" VariableName="messageId41"/>
+        <Data ID="42" Label="NETCONF" ReferenceName="NETCONF" ReferencePath="xact.templates" VariableName="nETCONF42"/>
+        <Data ID="43" Label="NetConf Source" ReferenceName="NetConfSource" ReferencePath="xmcp.yang.netconf" VariableName="netConfSource43"/>
+        <Data ID="44" Label="Yang Mapping Collection" ReferenceName="YangMappingCollection" ReferencePath="xmcp.yang" VariableName="yangMappingCollection44"/>
+      </Input>
+      <Output>
+        <Data ID="45" Label="Document" ReferenceName="Document" ReferencePath="xact.templates" VariableName="document45"/>
+      </Output>
+      <SourceCode>
+        <CodeSnippet Type="Java">return xmcp.yang.ProtocolOperationsImpl.getConfigViaSubtree(messageId41, nETCONF42, netConfSource43, yangMappingCollection44);</CodeSnippet>
       </SourceCode>
     </Operation>
   </Service>

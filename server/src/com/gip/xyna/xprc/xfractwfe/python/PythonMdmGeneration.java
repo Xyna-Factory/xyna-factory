@@ -312,6 +312,8 @@ public class PythonMdmGeneration {
     sb.append("      result.append(convert_to_python_object(value))\n");
     sb.append("    elif type(value) is list:\n");
     sb.append("      result.append(_convert_list(value))\n");
+    sb.append("    elif type(value).__name__ == 'ArrayList':\n");
+    sb.append("      result.append(_convert_list(value))\n");
     sb.append("    else:\n");
     sb.append("      result.append(value)\n\n");
     sb.append("  return result\n\n");
@@ -326,6 +328,8 @@ public class PythonMdmGeneration {
     sb.append("  if type(value).__name__ == \"HashMap\":\n");
     sb.append("    object_to_set.set(fieldName, convert_to_python_object(value))\n");
     sb.append("  elif type(value) is list:\n");
+    sb.append("    object_to_set.set(fieldName, _convert_list(value))\n");
+    sb.append("  elif type(value).__name__ == 'ArrayList':\n");
     sb.append("    object_to_set.set(fieldName, _convert_list(value))\n");
     sb.append("  else:\n");
     sb.append("    object_to_set.set(fieldName, value)\n\n");

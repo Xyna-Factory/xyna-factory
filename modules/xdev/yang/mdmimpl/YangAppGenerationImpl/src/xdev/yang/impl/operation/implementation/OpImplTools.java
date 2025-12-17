@@ -50,7 +50,7 @@ public class OpImplTools {
     List<OperationSignatureVariable> variables = OperationSignatureVariable.loadSignatureEntries(meta, Constants.VAL_LOCATION_INPUT);  
     for (int i = 0; i < variables.size(); i++) {
       OperationSignatureVariable variable = variables.get(i);
-      String serviceInputVarName = inputVarNames.get(i + 1);
+      String serviceInputVarName = inputVarNames.get(i + 2);
       String fqn = variable.getFqn();
       String customVarName = variable.getVarName();
       result.append(fqn).append(" ").append(customVarName).append(" = ").append(serviceInputVarName).append(";\n");

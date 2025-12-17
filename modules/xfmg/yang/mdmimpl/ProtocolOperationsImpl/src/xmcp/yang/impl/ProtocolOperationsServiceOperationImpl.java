@@ -23,6 +23,7 @@ import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTi
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
 
 import xact.templates.Document;
+import xact.templates.NETCONF;
 import xmcp.yang.MessageId;
 import xmcp.yang.ProtocolOperationsServiceOperation;
 import xmcp.yang.YangMappingCollection;
@@ -46,15 +47,9 @@ import xmcp.yang.netconf.NetConfTarget;
 public class ProtocolOperationsServiceOperationImpl implements ExtendedDeploymentTask, ProtocolOperationsServiceOperation {
 
   public void onDeployment() throws XynaException {
-    // TODO do something on deployment, if required
-    // This is executed again on each classloader-reload, that is each
-    // time a dependent object is redeployed, for example a type of an input parameter.
   }
 
   public void onUndeployment() throws XynaException {
-    // TODO do something on undeployment, if required
-    // This is executed again on each classloader-unload, that is each
-    // time a dependent object is redeployed, for example a type of an input parameter.
   }
 
   public Long getOnUnDeploymentTimeout() {
@@ -99,12 +94,14 @@ public class ProtocolOperationsServiceOperationImpl implements ExtendedDeploymen
   }
 
   
+  @SuppressWarnings("deprecation")
   @Override
   public Document get(MessageId messageId, NetConfFilter netConfFilter13) {
     return new CSGet().execute(messageId, netConfFilter13);
   }
 
   
+  @SuppressWarnings("deprecation")
   @Override
   public Document getConfig(MessageId messageId, NetConfSource source1, NetConfFilter filter2) {
     return new CSGetConfig().execute(messageId, source1, filter2);
@@ -131,6 +128,51 @@ public class ProtocolOperationsServiceOperationImpl implements ExtendedDeploymen
   @Override
   public MessageId generateNextMessageId() {
     return new CSGenerateNextMessageId().execute();
+  }
+
+  @Override
+  public Document closeSession0(MessageId messageId, NETCONF netconf) {
+    return new CSCloseSession().execute(messageId, netconf);
+  }
+
+  @Override
+  public Document copyConfig0(MessageId messageId, NETCONF netconf, NetConfTarget target, NetConfSource source) {
+    return new CSCopyConfig().execute(messageId, netconf, target, source);
+  }
+
+  @Override
+  public Document deleteConfig0(MessageId messageId, NETCONF netconf, NetConfTarget target) {
+    return new CSDeleteConfig().execute(messageId, netconf, target);
+  }
+
+  @Override
+  public Document getConfigViaSubtree(MessageId messageId, NETCONF netconf, NetConfSource source, YangMappingCollection mappings) {
+    return new CSGetConfig().execute(messageId, netconf, source, mappings);
+  }
+
+  @Override
+  public Document getViaSubtree(MessageId messageId, NETCONF netconf, YangMappingCollection mappings) {
+    return new CSGet().execute(messageId, netconf, mappings);
+  }
+
+  @Override
+  public Document killSession0(MessageId messageId, NETCONF netconf, NetConfSessionId sessionId) {
+    return new CSKillSession().execute(messageId, netconf, sessionId);
+  }
+
+  @Override
+  public Document lock0(MessageId messageId, NETCONF netconf, NetConfTarget target) {
+    return new CSLock().execute(messageId, netconf, target);
+  }
+
+  @Override
+  public Document unlock0(MessageId messageId, NETCONF netconf, NetConfTarget target) {
+    return new CSUnlock().execute(messageId, netconf, target);
+  }
+
+  @Override
+  public Document editConfig0(MessageId messageId, NETCONF netconf, EditConfigInputData data, YangMappingCollection mappings) {
+    return new CSEditConfig().execute(messageId, netconf, data, mappings);
   }
 
 }

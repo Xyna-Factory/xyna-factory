@@ -21,6 +21,7 @@ package xmcp.yang.codedservice;
 import org.w3c.dom.Element;
 
 import xact.templates.Document;
+import xact.templates.NETCONF;
 import xmcp.yang.MessageId;
 import xmcp.yang.YangMappingCollection;
 import xmcp.yang.misc.Constants;
@@ -46,6 +47,10 @@ import xmcp.yang.netconf.enums.TestOptionTestThenSet;
 public class CSEditConfig {
 
   public Document execute(MessageId messageId, EditConfigInputData data, YangMappingCollection config) {
+    return execute(messageId, null, data, config);
+  }
+
+  public Document execute(MessageId messageId, NETCONF netconf, EditConfigInputData data, YangMappingCollection config) {
     NetConfTarget target = null;
     NetConfDefaultOperation defaultOp = null;
     NetConfTestOption testOption = null;
@@ -88,9 +93,7 @@ public class CSEditConfig {
         helper.appendXmlSubtree(doc, confElem, tmp.getText());
       }
     }
-    Document ret = new Document();
-    ret.setText(helper.getDocumentString(doc));
-    return ret;
+    return new Document.Builder().text(helper.getDocumentString(doc)).documentType(netconf).instance();
   }
 
   

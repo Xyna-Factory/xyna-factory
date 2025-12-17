@@ -1,6 +1,6 @@
 /*
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,8 +49,8 @@ public class GuiHttpInteraction {
   public static PUT METHOD_PUT = new PUT();
   public static DELETE METHOD_DELETE = new DELETE();
   
-  public static List<String> loadVarNames(GetServiceGroupResponse response, Integer operationIndex) {
-    List<String> result = new ArrayList<String>();
+  public static List<VariableData> loadVarNames(GetServiceGroupResponse response, Integer operationIndex) {
+    List<VariableData> result = new ArrayList<VariableData>();
     List<? extends Area> areas = response.getXmomItem().getAreas();
     MemberMethodArea area = ((MemberMethodArea) findAreaByName(areas, "methodsArea"));
     Method method = (Method) area.getItems().get(operationIndex);
@@ -61,7 +61,7 @@ public class GuiHttpInteraction {
     }
     for (Item item : varArea.getItems()) {
       Data inputVarData = (Data) item;
-      result.add(inputVarData.getName());
+      result.add(new VariableData(inputVarData.getFqn(), inputVarData.getName()));
     }
 
     return result;
@@ -168,5 +168,23 @@ public class GuiHttpInteraction {
   
   public static String urlEncode(String in) {
     return URLEncoder.encode(in, Charset.forName("UTF-8"));
+  }
+  
+  public static class VariableData {
+    private final String fqn;
+    private final String name;
+    
+    public VariableData(String fqn, String name) {
+      this.fqn = fqn;
+      this.name = name;
+    }
+    
+    public String getFqn() {
+      return fqn;
+    }
+    
+    public String getName() {
+      return name;
+    }
   }
 }
