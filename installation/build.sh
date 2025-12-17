@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Copyright 2024 Xyna GmbH, Germany
+# Copyright 2025 Xyna GmbH, Germany
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,6 +27,9 @@ print_help() {
   echo "Usage: $0 clusterproviders"
   echo "Usage: $0 conpooltypes"
   echo "Usage: $0 install_libs"
+  #creates necessary libs for generating application xmls from workspace-xml (from gitintegration)
+  # (invoked by buildApplication.xml generate-application-xml)
+  echo "Usage: $0 install_gitintegration_libs (depends on build)"
 }
 
 check_dependencies() {
@@ -43,7 +46,7 @@ check_dependencies_frontend() {
 }
 
 checkout_factory() {
-  echo "cheking out factory..."
+  echo "checking out factory..."
   # $1 where to check out
 }
 
@@ -249,6 +252,16 @@ compose_networkavailability() {
   cp $SCRIPT_DIR/../components/xact/NetworkAvailability/log4j.properties .
 }
 
+install_gitintegration_libs() {
+  mkdir -p $SCRIPT_DIR/build/lib/gitintegration
+  cd $SCRIPT_DIR/../modules/xmcp/gitIntegration
+  ant prepare-mdm-jar
+  cd $SCRIPT_DIR/../modules/xmcp/gitIntegration/mdmimpl/WorkspaceObjectManagementImpl
+  ant build
+  cp -r deploy/* $SCRIPT_DIR/build/lib/gitintegration
+  cp -r lib/xyna/* $SCRIPT_DIR/build/lib/gitintegration
+}
+
 build_prerequisites() {
   echo "building prerequisites..."
   cd $SCRIPT_DIR/../prerequisites/installation/delivery
@@ -341,39 +354,8 @@ compose_thirdparties() {
   cd $SCRIPT_DIR/../release
   mkdir third_parties
   cd $SCRIPT_DIR/build
-  # backup pom.xml
-  cp pom.xml pom.xml-bak
-  # comment "dependencyManagement"-tags
-  sed -i s/\<dependencyManagement\>/\<\!--dependencyManagement--\>/g pom.xml
-  sed -i s:\</dependencyManagement\>:\<\!--/dependencyManagement--\>:g pom.xml
-  # delete unfree or erroneous dependencies
-  sed -i '/<dependency>/{N;N;{/<artifactId>demonlib</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>DHCPClusterStateSharedLib</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>DHCPv6DBStorablesSharedLib</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>DHCPSharedLib</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>OraclePersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>RemoteGenericODSAccess</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>SFTPTrigger</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>XynaContentStorables</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>XynaLocalMemoryPersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>XynaXMLShellPersistenceLayer</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>com.ibm.mq.allclient</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>com.ibm.mq.traceControl</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>tools</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>fscontext</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>providerutil</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>javaee-api</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>jms</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>jradius-core</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>jradius-dictionary</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>jradius-extended</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>ecj</{N;N;d}}}' pom.xml
-  sed -i '/<dependency>/{N;N;{/<artifactId>gnu-crypto</{N;N;d}}}' pom.xml
   # run license downloads (bom must have name "pom.xml")
-  mvn license:download-licenses -DlicensesOutputDirectory=$SCRIPT_DIR/../release/third_parties -DlicensesOutputFile=$SCRIPT_DIR/../release/third_parties/licenses.xml
-  # restore backup
-  rm pom.xml
-  mv pom.xml-bak pom.xml
+  mvn license:download-licenses -f third_parties.pom.xml -DlicensesOutputDirectory=$SCRIPT_DIR/../release/third_parties -DlicensesOutputFile=$SCRIPT_DIR/../release/third_parties/licenses.xml
   echo "license-download done"
 }
 
@@ -667,6 +649,9 @@ case $1 in
     ;;
   "cleanup_lib")
     cleanup_lib
+    ;;
+  "install_gitintegration_libs")
+    install_gitintegration_libs
     ;;
   *)
     print_help

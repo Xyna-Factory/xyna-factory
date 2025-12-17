@@ -27,13 +27,17 @@
       <Data ID="3364" Label="Operation Table Data" ReferenceName="OperationTableData" ReferencePath="xmcp.yang" VariableName="operationTableData3364"/>
       <Data ID="3647" Label="OperationSignatureEntry" ReferenceName="OperationSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="operationSignatureEntry3647"/>
     </Output>
-    <ServiceReference ID="3401" Label="Define Add To Operation Signature Dialog " ReferenceName="DefineAddToOperationSignatureDialog" ReferencePath="xmcp.yang.fman">
-      <Source RefID="3400"/>
-      <Target RefID="3400"/>
-    </ServiceReference>
     <ServiceReference ID="64" Label="RuntimeContextService" ReferenceName="RuntimeContextService.RuntimeContextService" ReferencePath="xfmg.xfctrl.appmgmt">
       <Source RefID="63"/>
       <Target RefID="63"/>
+    </ServiceReference>
+    <ServiceReference ID="4428" Label="Yang App Generation" ReferenceName="YangAppGeneration.YangAppGeneration" ReferencePath="xdev.yang">
+      <Source RefID="4427"/>
+      <Target RefID="4427"/>
+    </ServiceReference>
+    <ServiceReference ID="3401" Label="Define Add To Operation Signature Dialog " ReferenceName="DefineAddToOperationSignatureDialog" ReferencePath="xmcp.yang.fman">
+      <Source RefID="3400"/>
+      <Target RefID="3400"/>
     </ServiceReference>
     <Function ID="63" Label="get Own RuntimeContext">
       <Source RefID="64"/>
@@ -90,6 +94,80 @@
       <Mapping>%3%.label=concat("Add ", %0%.text)</Mapping>
       <Mapping>%3%.dialogDefinitionReference#cast("xmcp.forms.datatypes.FormDefinition")=%2%</Mapping>
     </Mappings>
+    <Function ID="4427" Label="Validate Signature">
+      <Source RefID="4428"/>
+      <Source RefID="3208"/>
+      <Target RefID="4428"/>
+      <Target RefID="4430"/>
+      <Invoke Operation="validateSignature" ServiceID="4428">
+        <Source RefID="3208">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Invoke>
+      <Receive ServiceID="4428">
+        <Target RefID="4430"/>
+      </Receive>
+    </Function>
+    <Choice ID="3672" TypeName="BaseChoiceTypeFormula" TypePath="server">
+      <Source RefID="4430"/>
+      <Target RefID="3971"/>
+      <Input>
+        <Data ID="3772" IsList="true" Label="Operation Signature Problem" ReferenceName="OperationSignatureProblem" ReferencePath="xmcp.yang.fman" VariableName="operationSignatureProblem3772">
+          <Source RefID="3672"/>
+        </Data>
+        <Source RefID="4430"/>
+      </Input>
+      <Case ID="3673" Label="true" Premise="length(%0%)&gt;&quot;0&quot;">
+        <Mappings ID="3869" Label="Mapping">
+          <Input>
+            <Data ID="4623" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext4623">
+              <Source RefID="3869"/>
+            </Data>
+            <Source RefID="62"/>
+          </Input>
+          <Output>
+            <Data ID="3935" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition3935">
+              <Source RefID="3869"/>
+            </Data>
+            <Target RefID="3936"/>
+          </Output>
+          <Mapping>%1%.label="Fix Signature"</Mapping>
+          <Mapping>%1%.dataPath="%1%"</Mapping>
+          <Mapping>%1%.serviceRTC=%0%</Mapping>
+          <Mapping>%1%.serviceFQN="xmcp.yang.fman.FixSignature"</Mapping>
+          <Mapping>%1%.synchronously="true"</Mapping>
+        </Mappings>
+        <Assign ID="3676">
+          <Source RefID="3936"/>
+          <Target RefID="3971"/>
+          <Copy>
+            <Source RefID="3936"/>
+            <Target RefID="3971"/>
+          </Copy>
+        </Assign>
+      </Case>
+      <Case ID="3674" Label="false">
+        <Mappings ID="3902" Label="Mapping">
+          <Output>
+            <Data ID="3969" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition3969">
+              <Source RefID="3902"/>
+            </Data>
+            <Target RefID="3970"/>
+          </Output>
+          <Mapping>%0%.hideIfEmpty="true"</Mapping>
+        </Mappings>
+        <Assign ID="3678">
+          <Source RefID="3970"/>
+          <Target RefID="3971"/>
+          <Copy>
+            <Source RefID="3970"/>
+            <Target RefID="3971"/>
+          </Copy>
+        </Assign>
+      </Case>
+    </Choice>
     <Mappings ID="83" Label="Mapping">
       <Input>
         <Data ID="84" Label="Runtime Context" ReferenceName="RuntimeContext" ReferencePath="xprc.xpce" VariableName="runtimeContext84"/>
@@ -126,17 +204,24 @@
         </Data>
         <Source RefID="2774"/>
       </Input>
+      <Input>
+        <Data ID="4004" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition4004">
+          <Source RefID="103"/>
+        </Data>
+        <Source RefID="3971"/>
+      </Input>
       <Output>
         <Data ID="105" Label="Table Panel Definition" ReferenceName="TablePanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="tablePanelDefinition105"/>
         <Target RefID="102"/>
       </Output>
-      <Mapping>%4%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%0%</Mapping>
-      <Mapping>%4%.tableWorkflowRTC=%1%</Mapping>
-      <Mapping>%4%.label=%2%.text</Mapping>
-      <Mapping>%4%.dataPath="%1%"</Mapping>
-      <Mapping>%4%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.OpenDialogButtonDefinition")=%3%</Mapping>
-      <Mapping>%4%.selectionDataPath="%i%, %1%"</Mapping>
-      <Mapping>%4%.triggerRefresh.eventId="yang_uc_sig_refresh"</Mapping>
+      <Mapping>%5%.detailsDefinitionReference#cast("xmcp.forms.datatypes.DefinitionWorkflow")=%0%</Mapping>
+      <Mapping>%5%.tableWorkflowRTC=%1%</Mapping>
+      <Mapping>%5%.label=%2%.text</Mapping>
+      <Mapping>%5%.dataPath="%1%"</Mapping>
+      <Mapping>%5%.header.rightArea.children["0"]#cast("xmcp.forms.datatypes.StartOrderButtonDefinition")=%4%</Mapping>
+      <Mapping>%5%.header.rightArea.children["1"]#cast("xmcp.forms.datatypes.OpenDialogButtonDefinition")=%3%</Mapping>
+      <Mapping>%5%.selectionDataPath="%i%, %1%"</Mapping>
+      <Mapping>%5%.triggerRefresh.eventId="yang_uc_sig_refresh"</Mapping>
     </Mappings>
     <Choice ID="1931" TypeName="BaseChoiceTypeFormula" TypePath="server">
       <Source RefID="31"/>
@@ -223,6 +308,18 @@
     </Data>
     <Data ID="3405" Label="OperationSignatureEntry" ReferenceName="OperationSignatureEntry" ReferencePath="xmcp.yang.fman" VariableName="operationSignatureEntry3405">
       <Source RefID="3400"/>
+    </Data>
+    <Data ID="3936" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition3936">
+      <Source RefID="3869"/>
+    </Data>
+    <Data ID="3970" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition3970">
+      <Source RefID="3902"/>
+    </Data>
+    <Data ID="3971" Label="Start Order Button Definition" ReferenceName="StartOrderButtonDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="startOrderButtonDefinition3971">
+      <Source RefID="3672"/>
+    </Data>
+    <Data ID="4430" IsList="true" Label="Operation Signature Problem" ReferenceName="OperationSignatureProblem" ReferencePath="xmcp.yang.fman" VariableName="operationSignatureProblem4430">
+      <Source RefID="4427"/>
     </Data>
     <Assign ID="1">
       <Source RefID="2354"/>

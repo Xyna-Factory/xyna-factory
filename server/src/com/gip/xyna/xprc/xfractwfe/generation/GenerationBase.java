@@ -350,7 +350,8 @@ public abstract class GenerationBase {
    *
    * alle andere deployment schritte werden durchgeführt
    */
-  private static final BijectiveMap<String, Class<?>> mdmObjectMappingToJavaClasses = new BijectiveMap<String, Class<?>>();
+  private static final GenerationBaseMdmMapping mdmObjectMappingToJavaClasses = new GenerationBaseMdmMapping();
+  
   static {
     mdmObjectMappingToJavaClasses.put(CORE_EXCEPTION, Exception.class); // Base
     mdmObjectMappingToJavaClasses.put(CORE_XYNAEXCEPTION, XynaException.class); // Base
@@ -456,7 +457,7 @@ public abstract class GenerationBase {
     return fqNamesOfTypesUsedByRemoteCall;
   }
   
-  static void appendMapping( Map<String, Class<?>> map, Class<? extends GeneralXynaObject> clazz)  {
+  static void appendMapping(GenerationBaseMdmMapping map, Class<? extends GeneralXynaObject> clazz)  {
     XynaObjectAnnotation sxo = clazz.getAnnotation(XynaObjectAnnotation.class);
     map.put( sxo.fqXmlName(), clazz);
   }
@@ -6235,24 +6236,15 @@ public abstract class GenerationBase {
     if (overrideReservedServerObjectsForCodeGenUpdates) {
       return false;
     }
-    Iterator<Class<?>> iter = mdmObjectMappingToJavaClasses.values().iterator();
-    while (iter.hasNext()) {
-      if (iter.next().getName().equals(className)) {
-        return true;
-      }
-    }
-    return false;
+    String value = mdmObjectMappingToJavaClasses.getInverseByServerClassName(className);
+    return (value !=null);
   }
 
 
   public static java.util.Optional<String> getXmlNameByReservedServerObjectName(String className) {
     if (className == null) { return java.util.Optional.empty(); }
-    for (Map.Entry<String, Class<?>> entry : mdmObjectMappingToJavaClasses.entrySet()) {
-      if (className.equals(entry.getValue().getName())) {
-        return java.util.Optional.ofNullable(entry.getKey());
-      }
-    }
-    return java.util.Optional.empty();
+    String value = mdmObjectMappingToJavaClasses.getInverseByServerClassName(className);
+    return java.util.Optional.ofNullable(value);
   }
   
   

@@ -38,12 +38,37 @@
       <Mapping>%0%.dataPath="specificationFile"</Mapping>
       <Mapping>%0%.style="pre"</Mapping>
     </Mappings>
+    <Mappings ID="1440" Label="Mapping">
+      <Output>
+        <Data ID="2252" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition2252">
+          <Source RefID="1440"/>
+        </Data>
+        <Target RefID="2253"/>
+      </Output>
+      <Mapping>%0%.dataPath="errorMessage"</Mapping>
+      <Mapping>%0%.label="Error"</Mapping>
+      <Mapping>%0%.hideIfEmpty="true"</Mapping>
+    </Mappings>
     <Mappings ID="1267" Label="Mapping">
       <Input>
         <Data ID="1369" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition1369">
           <Source RefID="1267"/>
         </Data>
-        <Source RefID="1336"/>
+        <Source RefID="1336">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
+      </Input>
+      <Input>
+        <Data ID="2235" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition2235">
+          <Source RefID="1267"/>
+        </Data>
+        <Source RefID="2253">
+          <Meta>
+            <LinkType>UserConnected</LinkType>
+          </Meta>
+        </Source>
       </Input>
       <Output>
         <Data ID="1276" Label="Form Panel Definition" ReferenceName="FormPanelDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="formPanelDefinition1276">
@@ -51,10 +76,11 @@
         </Data>
         <Target RefID="1277"/>
       </Output>
-      <Mapping>%1%.label="Specification File:"</Mapping>
-      <Mapping>%1%.dataPath="%0%"</Mapping>
-      <Mapping>%1%.children["0"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%0%</Mapping>
-      <Mapping>%1%.closable="true"</Mapping>
+      <Mapping>%2%.label="Specification File"</Mapping>
+      <Mapping>%2%.dataPath="%0%"</Mapping>
+      <Mapping>%2%.children["0"]=%1%</Mapping>
+      <Mapping>%2%.children["1"]#cast("xmcp.forms.datatypes.TextItemDefinition")=%0%</Mapping>
+      <Mapping>%2%.closable="true"</Mapping>
     </Mappings>
     <Function ID="1403" Label="Query Oas Import History Details">
       <Source RefID="1404"/>
@@ -76,6 +102,9 @@
     </Data>
     <Data ID="1406" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory1406">
       <Source RefID="1403"/>
+    </Data>
+    <Data ID="2253" Label="Text Item Definition" ReferenceName="TextItemDefinition" ReferencePath="xmcp.forms.datatypes" VariableName="textItemDefinition2253">
+      <Source RefID="1440"/>
     </Data>
     <Assign ID="1">
       <Source RefID="1277"/>

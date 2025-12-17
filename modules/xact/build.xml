@@ -26,6 +26,7 @@
         <buildModule target="build-all" dir="devicetypes" target.dir="${target.dir}/xact" />
         <buildModule target="build-all" dir="dhcp"        target.dir="${target.dir}/xact" />
         <buildModule target="build"     dir="http"        target.dir="${target.dir}/xact" />
+        <buildModule target="build"    dir="jsonwebtoken" target.dir="${target.dir}/xact" />
         <buildModule target="build"     dir="ldap"        target.dir="${target.dir}/xact" />
         <buildModule target="build"     dir="mail"        target.dir="${target.dir}/xact" />
         <buildModule target="build"     dir="netconf"     target.dir="${target.dir}/xact" />
