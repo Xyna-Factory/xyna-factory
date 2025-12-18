@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2022 Xyna GmbH, Germany
+ * Copyright 2025 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
--->
-<Application applicationName="Connection" factoryVersion="" versionName="1.0.14" xmlVersion="1.1">
+--><Application applicationName="Connection" factoryVersion="" versionName="1.0.15" xmlVersion="1.1">
   <ApplicationInfo>
     <Description Lang="DE">Basis für die Connection-Typen SSH und Telnet</Description>
     <Description Lang="EN">Base for connections types SSH and Telnet</Description>
-    <BuildDate>2015.06.25 10:13:00</BuildDate>
     <RuntimeContextRequirements>
       <RuntimeContextRequirement>
         <ApplicationName>Base</ApplicationName>
@@ -96,6 +94,10 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
+      <FqName>xact.connection.SSHException</FqName>
+      <Type>EXCEPTION</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
       <FqName>xact.connection.Send</FqName>
       <Type>WORKFLOW</Type>
     </XMOMEntry>
@@ -120,6 +122,14 @@
       <Type>EXCEPTION</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
+      <FqName>xact.connection.netconf.NetConfDeviceType</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
+      <FqName>xfmg.xfmon.protocolmsg.HistorizationParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
       <FqName>xfmg.xfmon.protocolmsg.ProtocolMessage</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
@@ -132,24 +142,16 @@
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
+      <FqName>xfmg.xfmon.protocolmsg.RemoveParameter</FqName>
+      <Type>DATATYPE</Type>
+    </XMOMEntry>
+    <XMOMEntry implicitDependency="false">
       <FqName>xfmg.xfmon.protocolmsg.RetrieveParameter</FqName>
       <Type>DATATYPE</Type>
     </XMOMEntry>
     <XMOMEntry implicitDependency="false">
       <FqName>xfmg.xfmon.protocolmsg.StoreParameter</FqName>
       <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xfmg.xfmon.protocolmsg.HistorizationParameter</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xfmg.xfmon.protocolmsg.RemoveParameter</FqName>
-      <Type>DATATYPE</Type>
-    </XMOMEntry>
-    <XMOMEntry implicitDependency="false">
-      <FqName>xact.connection.SSHException</FqName>
-      <Type>EXCEPTION</Type>
     </XMOMEntry>
   </XMOMEntries>
 </Application>
