@@ -313,4 +313,25 @@
     <install-maven-artifact artifactFile="${build.dir}/${project.name}CLIGenerator.jar" pomFile="${basedir}/cligenerator.pom.xml" />
   </target>
 
+  <target name="prepareLibsCLIGenerator" description="prepareLibsCLIGenerator">
+    <resolve pomFile="${basedir}/cligenerator.pom.xml" dir="${basedir}/lib" />
+  </target>
+
+  <target name="cleanupLib" description="cleanupLib">
+    <mkdir dir="${basedir}/lib" />
+    <delete>
+      <fileset dir="${basedir}/lib" includes="**/*.jar"/>
+    </delete>
+  </target>
+
+  <target name="prepareLibs" description="prepareLibs">
+    <ant antfile="buildLibs.xml" target="build-all" inheritAll="false" dir="${basedir}/../xynautils" />
+    <antcall target="prepareLibsCLIGenerator" />
+    <antcall target="installMavenArtifactCLIGenerator" />
+  </target>
+
+  <target name="prepareLibsForTest" description="prepareLibsForTest">
+    <resolve pomFile="${basedir}/servertest.pom.xml" dir="${basedir}/lib" />
+  </target>
+
 </project>

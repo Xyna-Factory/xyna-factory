@@ -16,7 +16,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
-<project name="prepareXmomCompile" default="deploy" basedir="." >
+<project name="prepareXmomCompile" default="resolve" basedir="." >
 
     <import file="../ant-xyna.xml" />
     <import file="../macros.xml" />
@@ -24,7 +24,7 @@
     <!-- ================================= 
                target: resolve             
           =================================  -->
-    <target name="resolve">
+    <target name="resolve" description="resolve" >
         <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/factory" />
     </target>
 

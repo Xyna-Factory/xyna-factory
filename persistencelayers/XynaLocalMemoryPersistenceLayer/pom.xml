@@ -52,5 +52,9 @@
             <groupId>com.gip.xyna</groupId>
             <artifactId>xynautils-exceptions</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.gip.xyna</groupId>
+            <artifactId>XynaMemoryPersistenceLayer</artifactId>
+        </dependency>
     </dependencies>
 </project>
