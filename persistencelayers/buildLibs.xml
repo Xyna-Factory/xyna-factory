@@ -17,7 +17,7 @@
 -->
 <project name="xyna-persistence-build-libs" basedir="." default="build-all" >
 
-  <target name="build-all">
+  <target name="build-all" description="Build all persistence layer libs, administered by Maven">
     <ant antfile="build.xml" target="installMavenArtifact" inheritAll="false" dir="${basedir}/MySQLPersistenceLayer" />
     <ant antfile="build.xml" target="installMavenArtifact" inheritAll="false" dir="${basedir}/OraclePersistenceLayer" />
     <ant antfile="build.xml" target="installMavenArtifact" inheritAll="false" dir="${basedir}/XynaDevNullPersistenceLayer" />

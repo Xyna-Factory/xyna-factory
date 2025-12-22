@@ -44,22 +44,6 @@
     </copy>
   </target>
 
-  <!--
-  <target name="build" depends="buildMemoryPersistenceLayer,resolve">
-    <buildJar destfile="${target.dir}/${project.name.local}.jar" />
-    <copy todir="${target.dir}">
-      <fileset dir="${basedir}/lib">
-        <include name="*.jar" />
-      </fileset>
-    </copy>
-  </target>
-
-  <target name="buildMemoryPersistenceLayer">
-    <ant dir="../XynaMemoryPersistenceLayer" target="build">
-      <property name="target.dir" value="${basedir}/lib"></property>
-    </ant>
-  </target>
-  -->
 
   <target name="resolve">
     <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib/xyna" />
