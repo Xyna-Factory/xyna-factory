@@ -326,6 +326,8 @@
 
   <target name="prepareLibs" description="prepareLibs">
     <ant antfile="buildLibs.xml" target="build-all" inheritAll="false" dir="${basedir}/../xynautils" />
+    <ant antfile="build.xml" target="resolve" inheritAll="false" dir="${basedir}/../misc" />
+    <ant antfile="build.xml" target="installMavenArtifact" inheritAll="false" dir="${basedir}/../misc" />
     <antcall target="prepareLibsCLIGenerator" />
     <antcall target="installMavenArtifactCLIGenerator" />
   </target>
