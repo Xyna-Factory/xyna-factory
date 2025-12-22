@@ -20,8 +20,13 @@
   <target name="build-all">
     <ant antfile="build.xml" target="prepareLibs" inheritAll="false" dir="${basedir}/../server" />
     <ant antfile="build.xml" target="installMavenArtifactXynaFactory" inheritAll="false" dir="${basedir}/../server" />
+
+    <ant antfile="build.xml" target="resolve" inheritAll="false" dir="${basedir}/../components/xnwh/pools/DefaultConnectionPoolTypes" />
     <ant antfile="build.xml" target="installMavenArtifact" inheritAll="false" dir="${basedir}/../components/xnwh/pools/DefaultConnectionPoolTypes" />
+
+    <ant antfile="build.xml" target="resolve" inheritAll="false" dir="${basedir}/../components/xnwh/pools/MockConnectionPoolTypes" />
     <ant antfile="build.xml" target="installMavenArtifact" inheritAll="false" dir="${basedir}/../components/xnwh/pools/MockConnectionPoolTypes" />
+
     <ant antfile="buildLibs.xml" target="build-all" inheritAll="false" dir="${basedir}/../persistencelayers" />
     <ant antfile="build.xml" target="prepareLibsForTest" inheritAll="false" dir="${basedir}/../server" />
     <ant antfile="build.xml" target="resolve" inheritAll="false" dir="${basedir}/build/lib" />
