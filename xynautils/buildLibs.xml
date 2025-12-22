@@ -17,7 +17,7 @@
 -->
 <project name="xynautils-build-libs" basedir="." default="build-all" >
 
-    <target name="build-all">
+    <target name="build-all" description="Build all xynautils libs, administered by Maven" >
         <build-utils-lib utils-dir="${basedir}/exceptions" />
         <build-utils-lib utils-dir="${basedir}/logging" />
         <build-utils-lib utils-dir="${basedir}/database" />
