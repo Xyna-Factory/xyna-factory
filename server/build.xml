@@ -272,7 +272,7 @@
   <!-- ================================= 
               target: buildTest (packt nicht alle Tests in das Jar, sondern nur von anderen Projekten benötigte)         
              ================================= -->
- <target name="buildTest" depends="build">
+ <target name="buildTest" depends="build" description="buildTest" >
    <delete dir="${basedir}/classes" />
    <mkdir dir="${basedir}/classes" />
    <javac debug="on"
