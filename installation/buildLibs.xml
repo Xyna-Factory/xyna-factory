@@ -17,7 +17,7 @@
 -->
 <project name="xyna-installation-build-libs" basedir="." default="build-all" xmlns:resolver="antlib:org.apache.maven.resolver.ant">
 
-  <target name="build-all" description="build-all" depends="mvn-install" >
+  <target name="build-all" description="Download or build all libs, administered by Maven, needed for xyna development" depends="mvn-install" >
     <ant antfile="build.xml" target="prepareLibs" inheritAll="false" dir="${basedir}/../server" />
     <ant antfile="build.xml" target="installMavenArtifactXynaFactory" inheritAll="false" dir="${basedir}/../server" />
 

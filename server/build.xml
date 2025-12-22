@@ -317,14 +317,14 @@
     <resolve pomFile="${basedir}/cligenerator.pom.xml" dir="${basedir}/lib" />
   </target>
 
-  <target name="cleanupLib" description="cleanupLib">
+  <target name="cleanupLib" description="Delete jars in lib-directory and subdirs">
     <mkdir dir="${basedir}/lib" />
     <delete>
       <fileset dir="${basedir}/lib" includes="**/*.jar"/>
     </delete>
   </target>
 
-  <target name="prepareLibs" description="prepareLibs">
+  <target name="prepareLibs" description="Download or build all libs, administered by Maven, needed to build the xyna-factory jar">
     <ant antfile="buildLibs.xml" target="build-all" inheritAll="false" dir="${basedir}/../xynautils" />
     <ant antfile="build.xml" target="resolve" inheritAll="false" dir="${basedir}/../misc" />
     <ant antfile="build.xml" target="installMavenArtifact" inheritAll="false" dir="${basedir}/../misc" />
@@ -332,7 +332,7 @@
     <antcall target="installMavenArtifactCLIGenerator" />
   </target>
 
-  <target name="prepareLibsForTest" description="prepareLibsForTest">
+  <target name="prepareLibsForTest" description="Get all libs from Maven needed for tests">
     <resolve pomFile="${basedir}/servertest.pom.xml" dir="${basedir}/lib" />
   </target>
 
