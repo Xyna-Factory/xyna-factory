@@ -46,7 +46,8 @@
 
 
   <target name="resolve">
-    <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib/xyna" />
+    <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib/xyna" scopes="compile" />
+    <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib" scopes="runtime"/>
     <loadLicenses targetDir="${basedir}/lib" />
   </target>
 
