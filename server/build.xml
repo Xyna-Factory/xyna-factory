@@ -35,7 +35,7 @@
   <property name="target.dir" value="${basedir}/lib" />
   
  
-  <target name="resolve">
+  <target name="resolve" description="resolve">
     <resolve pomFile="${basedir}/pom.xml" dir="${target.dir}" />
     <resolve pomFile="${basedir}/pom.xml" dir="${target.dir}/internal_xyna" scopes="runtime" />
     <loadLicenses targetDir="${target.dir}" />
@@ -46,7 +46,7 @@
           target: build              
          ================================= -->
   <target name="build"
-          depends="cleanup, prepare, buildJar, buildTemplate, test, findBugs, copyToCommonLibs" />
+          depends="cleanup, prepare, buildJar, buildTemplate, test, findBugs, copyToCommonLibs" description="Build xynafactory-jar" />
 
   <!-- - - - - - - - - - - - - - - - - - 
           target: prepare                      
