@@ -24,7 +24,7 @@
     </Input>
     <Output/>
     <Throws>
-      <Exception Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException53570">
+      <Exception Label="Server Exception" ReferenceName="XynaException" ReferencePath="core.exception" VariableName="xynaException53973">
         <Meta>
           <Type>XynaException</Type>
         </Meta>
@@ -34,13 +34,13 @@
       <Source RefID="12543"/>
       <Target RefID="12543"/>
     </ServiceReference>
-    <ServiceReference ID="51962" Label="Application Import Impl" ReferenceName="ApplicationImportImpl" ReferencePath="xmcp.oas.fman">
-      <Source RefID="51961"/>
-      <Target RefID="51961"/>
-    </ServiceReference>
     <ServiceReference ID="107" Label="FileManagement" ReferenceName="FileManagement.FileManagement" ReferencePath="xfmg.xfctrl.filemgmt">
       <Source RefID="106"/>
       <Target RefID="106"/>
+    </ServiceReference>
+    <ServiceReference ID="51962" Label="Application Import Impl" ReferenceName="ApplicationImportImpl" ReferencePath="xmcp.oas.fman">
+      <Source RefID="51961"/>
+      <Target RefID="51961"/>
     </ServiceReference>
     <ServiceReference ID="51490" Label="Application Generation" ReferenceName="ApplicationGeneration.ApplicationGeneration" ReferencePath="xfmg.oas.generation">
       <Source RefID="51489"/>
@@ -351,13 +351,20 @@
               </Meta>
             </Source>
           </Input>
+          <Input>
+            <Data ID="53463" Label="File Info" ReferenceName="FileInfo" ReferencePath="xfmg.xfctrl.filemgmt" VariableName="fileInfo53463">
+              <Source RefID="52440"/>
+            </Data>
+            <Source RefID="14144"/>
+          </Input>
           <Output>
             <Data ID="52499" Label="OAS_ImportHistory" ReferenceName="OAS_ImportHistory" ReferencePath="xmcp.oas.fman.storables" VariableName="oAS_ImportHistory52499">
               <Source RefID="52440"/>
             </Data>
             <Target RefID="52500"/>
           </Output>
-          <Mapping>%1%=%0%</Mapping>
+          <Mapping>%2%=%0%</Mapping>
+          <Mapping>%2%.specificationFile=concat(%1%.name, " (", %1%.fileSize.fileSize, " Byte)")</Mapping>
         </Mappings>
         <Assign ID="52146">
           <Source RefID="52500"/>
