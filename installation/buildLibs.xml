@@ -50,4 +50,11 @@
   </target>
 
 
+  <target name="cleanup-lib" description="Delete jars in lib-directory and subdirs">
+    <mkdir dir="${basedir}/build/lib" />
+    <delete>
+      <fileset dir="${basedir}/build/lib" includes="**/*.jar"/>
+    </delete>
+  </target>
+
 </project>
