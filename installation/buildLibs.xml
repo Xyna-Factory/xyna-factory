@@ -17,7 +17,10 @@
 -->
 <project name="xyna-installation-build-libs" basedir="." default="build-all" xmlns:resolver="antlib:org.apache.maven.resolver.ant">
 
-  <target name="build-all" description="Download or build all libs, administered by Maven, needed for xyna development" depends="init-maven, build-factory, build-persistence, build-tests" >
+  <target name="build-all" description="Download or build all libs, administered by Maven, needed for xyna development" depends="init-maven, build-factory, build-persistence, build-tests, refresh-libs-from-maven" />
+
+
+  <target name="refresh-libs-from-maven" description="Refresh libs from Maven repository without rebuilding anything">
     <ant antfile="build.xml" target="resolve" inheritAll="false" dir="${basedir}/build/lib" />
   </target>
 
