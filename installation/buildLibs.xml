@@ -17,10 +17,18 @@
 -->
 <project name="xyna-installation-build-libs" basedir="." default="build-all" xmlns:resolver="antlib:org.apache.maven.resolver.ant">
 
-  <target name="build-all" description="Download or build all libs, administered by Maven, needed for xyna development" depends="mvn-install" >
+  <target name="build-all" description="Download or build all libs, administered by Maven, needed for xyna development" depends="init-maven, build-factory, build-persistence, build-tests" >
+    <ant antfile="build.xml" target="resolve" inheritAll="false" dir="${basedir}/build/lib" />
+  </target>
+
+
+  <target name="build-factory" description="build-factory">
     <ant antfile="build.xml" target="prepareLibs" inheritAll="false" dir="${basedir}/../server" />
     <ant antfile="build.xml" target="installMavenArtifactXynaFactory" inheritAll="false" dir="${basedir}/../server" />
+  </target>
 
+
+  <target name="build-persistence" description="build-persistence">
     <ant antfile="build.xml" target="resolve" inheritAll="false" dir="${basedir}/../components/xnwh/pools/DefaultConnectionPoolTypes" />
     <ant antfile="build.xml" target="installMavenArtifact" inheritAll="false" dir="${basedir}/../components/xnwh/pools/DefaultConnectionPoolTypes" />
 
@@ -28,13 +36,15 @@
     <ant antfile="build.xml" target="installMavenArtifact" inheritAll="false" dir="${basedir}/../components/xnwh/pools/MockConnectionPoolTypes" />
 
     <ant antfile="buildLibs.xml" target="build-all" inheritAll="false" dir="${basedir}/../persistencelayers" />
-    <ant antfile="build.xml" target="prepareLibsForTest" inheritAll="false" dir="${basedir}/../server" />
-
-    <ant antfile="build.xml" target="resolve" inheritAll="false" dir="${basedir}/build/lib" />
   </target>
 
 
-  <target name="mvn-install"  description="mvn-install" >
+  <target name="build-tests" description="build-tests">
+    <ant antfile="build.xml" target="getLibsForTest" inheritAll="false" dir="${basedir}/../server" />
+  </target>
+
+
+  <target name="init-maven"  description="Init Maven handling of new-built xyna jars" >
     <resolver:pom file="${basedir}/build/pom.xml"/>
     <resolver:install/>
   </target>
