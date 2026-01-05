@@ -64,14 +64,14 @@ public class ListworkspacegitdiffsImpl extends XynaCommandImplementation<Listwor
       sb.append("\n");
       writeToCommandLine(statusOutputStream, sb.toString());
       List<? extends WorkspaceContentDifference> differences = entry.getDifferences();
-      differences.sort((x, y) -> (int) (x.getEntryId() - y.getEntryId()));
+      differences.sort((x, y) -> Long.compare(x.getEntryId(), y.getEntryId()));
       OutputCreator<WorkspaceContentItem, WorkspaceContentDifference, WorkspaceContentItemDifferenceSelector> creator = new OutputCreator<WorkspaceContentItem, WorkspaceContentDifference, WorkspaceContentItemDifferenceSelector>(new WorkspaceContentItemDifferenceSelector());
       String output = creator.createOutput(differences, portal);
       writeToCommandLine(statusOutputStream, output);
     } else {
       //all lists
       List<? extends WorkspaceContentDifferences> info = storage.loadAllDifferencesLists();
-      info.sort((x, y) -> (int) (x.getListId() - y.getListId()));
+      info.sort((x, y) -> Long.compare(x.getListId(), y.getListId()));
 
       for (WorkspaceContentDifferences entry : info) {
         sb.append("Id: ");
