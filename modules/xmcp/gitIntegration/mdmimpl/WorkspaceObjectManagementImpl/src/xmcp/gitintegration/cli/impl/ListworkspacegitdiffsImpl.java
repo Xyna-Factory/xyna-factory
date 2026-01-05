@@ -71,7 +71,7 @@ public class ListworkspacegitdiffsImpl extends XynaCommandImplementation<Listwor
     } else {
       //all lists
       List<? extends WorkspaceContentDifferences> info = storage.loadAllDifferencesLists();
-      info.sort((x, y) -> Long.compare(x.getListId(), y.getListId()));
+      info.sort((x, y) -> Long.compare(x.getListId(),y.getListId()));
 
       for (WorkspaceContentDifferences entry : info) {
         sb.append("Id: ");
