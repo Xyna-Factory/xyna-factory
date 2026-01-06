@@ -652,6 +652,7 @@ public class RepositoryManagementImpl {
 
   public static List<? extends RepositoryConnectionGroup> listRepositoryConnectionGroups() {
     List<RepositoryConnection> connections = RepositoryManagementImpl.listRepositoryConnections();
+    connections.sort((a, b) -> a.getWorkspaceName().compareTo(b.getWorkspaceName()));
     List<RepositoryConnectionGroup> result = new ArrayList<>();
     Map<String, List<RepositoryConnection>> groups = new HashMap<>();
     for(RepositoryConnection connection: connections) {
