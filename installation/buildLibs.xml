@@ -17,6 +17,8 @@
 -->
 <project name="xyna-installation-build-libs" basedir="." default="build-all" xmlns:resolver="antlib:org.apache.maven.resolver.ant">
 
+  <property name="ant.lib.dir" value="${user.home}/.ant/lib" />
+
   <target name="build-all" description="Download or build all libs, administered by Maven, needed for xyna development" depends="init-maven, build-factory, build-persistence, build-tests, refresh-libs-from-maven" />
 
 
@@ -60,18 +62,31 @@
     </delete>
   </target>
 
+
   <target name="setup-ant-libs" description="Download jars needed by ant to directory .ant/lib">
-    <mkdir dir="${user.home}/.ant/lib" />
-    <exec executable="mvn">
-      <arg value="-f${basedir}/ant.setup.pom.xml"/>
-      <arg value="dependency:resolve"/>
-    </exec>
-    <exec executable="mvn">
-      <arg value="-f${basedir}/ant.setup.pom.xml"/>
-      <arg value="dependency:copy-dependencies"/>
-      <arg value="-DexcludeTransitive"/>
-      <arg value="-DoutputDirectory=${user.home}/.ant/lib"/>
-    </exec>
+    <mkdir dir="${ant.lib.dir}" />
+    <copy file="${basedir}/build.env" tofile="${basedir}/build.env.tmp" />
+    <replace file="${basedir}/build.env.tmp" token="&quot;" value="" />
+    <property file="${basedir}/build.env.tmp" />
+    <mvn-get artifact="org.apache.maven.resolver:maven-resolver-ant-tasks:${MAVEN_RESOLVER_ANT_TASKS_VERSION}:jar:uber" outdir="${ant.lib.dir}" />
+    <mvn-get artifact="ant-contrib:ant-contrib:${ANT_CONTRIB_TASKS_VERSION}" outdir="${ant.lib.dir}" />
   </target>
+
+
+  <macrodef name="mvn-get">
+    <attribute name="artifact" />
+    <attribute name="outdir" />
+    <sequential>
+      <exec executable="mvn">
+        <arg value="dependency:get"/>
+        <arg value="-Dartifact=@{artifact}"/>
+      </exec>
+      <exec executable="mvn">
+        <arg value="dependency:copy"/>
+        <arg value="-Dartifact=@{artifact}"/>
+        <arg value="-DoutputDirectory=@{outdir}"/>
+      </exec>
+    </sequential>
+  </macrodef>
 
 </project>
