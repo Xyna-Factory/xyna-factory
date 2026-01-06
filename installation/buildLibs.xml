@@ -60,4 +60,18 @@
     </delete>
   </target>
 
+  <target name="setup-ant-libs" description="Download jars needed by ant to directory .ant/lib">
+    <mkdir dir="${user.home}/.ant/lib" />
+    <exec executable="mvn">
+      <arg value="-f${basedir}/ant.setup.pom.xml"/>
+      <arg value="dependency:resolve"/>
+    </exec>
+    <exec executable="mvn">
+      <arg value="-f${basedir}/ant.setup.pom.xml"/>
+      <arg value="dependency:copy-dependencies"/>
+      <arg value="-DexcludeTransitive"/>
+      <arg value="-DoutputDirectory=${user.home}/.ant/lib"/>
+    </exec>
+  </target>
+
 </project>
