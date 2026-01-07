@@ -47,6 +47,7 @@ checkout_factory() {
 }
 
 install_libs() {
+  echo "install_libs - ntbd"
 }
 
 build_xynautils_exceptions() {
