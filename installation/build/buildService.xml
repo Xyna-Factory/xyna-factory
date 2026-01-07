@@ -373,7 +373,7 @@
     <!-- ================================= 
          target: cleanup-lib
          ================================= -->
-    <target name="cleanup-lib">
+    <target name="cleanup-lib" description="cleanup-lib">
         <delete>
             <fileset dir="${base.lib.dir}" includes="**/*.jar"/>
         </delete>

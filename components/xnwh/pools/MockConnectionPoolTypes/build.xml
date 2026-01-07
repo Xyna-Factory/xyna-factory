@@ -38,13 +38,18 @@
     </path>
 
 
-    <target name="build" depends="resolve">
+    <target name="build" depends="resolve" description="build" >
         <buildJar destfile="${target.dir}/${project.name.local2}-${release.number}.jar" />
     </target>
 
-    <target name="resolve">
+    <target name="resolve" description="resolve" >
         <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib/xyna" />
         <loadLicenses targetDir="${basedir}/lib" />
+    </target>
+
+    <target name="installMavenArtifact" description="install artifact to maven repository">
+        <buildJar destfile="${target.dir}/${project.name.local2}.jar" />
+        <install-maven-artifact artifactFile="${target.dir}/${project.name.local2}.jar" pomFile="${basedir}/pom.xml" />
     </target>
 
 </project>
