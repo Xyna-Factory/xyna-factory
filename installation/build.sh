@@ -46,6 +46,9 @@ checkout_factory() {
   # $1 where to check out
 }
 
+install_libs() {
+}
+
 build_xynautils_exceptions() {
   echo "building xynautils-exceptions..."
   cd $SCRIPT_DIR/../xynautils/exceptions
