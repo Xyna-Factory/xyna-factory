@@ -616,6 +616,9 @@ case $1 in
   "conpooltypes")
     build_conpooltypes
     ;;
+  "install_libs")
+    install_libs
+    ;;
   *)
     print_help
     exit 1
