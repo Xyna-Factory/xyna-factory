@@ -1,0 +1,90 @@
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="xyna-installation-build-libs" basedir="." default="build-all" xmlns:resolver="antlib:org.apache.maven.resolver.ant">
+
+  <property name="ant.lib.dir" value="${user.home}/.ant/lib" />
+
+  <target name="build-all" description="Download or build all libs, administered by Maven, needed for xyna development" depends="init-maven, build-factory, build-persistence, build-tests, refresh-libs-from-maven" />
+
+
+  <target name="refresh-libs-from-maven" description="Refresh libs from Maven repository without rebuilding anything">
+    <ant antfile="build.xml" target="resolve" inheritAll="false" dir="${basedir}/build/lib" />
+  </target>
+
+
+  <target name="build-factory" description="build-factory">
+    <ant antfile="build.xml" target="prepareLibs" inheritAll="false" dir="${basedir}/../server" />
+    <ant antfile="build.xml" target="installMavenArtifactXynaFactory" inheritAll="false" dir="${basedir}/../server" />
+  </target>
+
+
+  <target name="build-persistence" description="build-persistence">
+    <ant antfile="build.xml" target="resolve" inheritAll="false" dir="${basedir}/../components/xnwh/pools/DefaultConnectionPoolTypes" />
+    <ant antfile="build.xml" target="installMavenArtifact" inheritAll="false" dir="${basedir}/../components/xnwh/pools/DefaultConnectionPoolTypes" />
+
+    <ant antfile="build.xml" target="resolve" inheritAll="false" dir="${basedir}/../components/xnwh/pools/MockConnectionPoolTypes" />
+    <ant antfile="build.xml" target="installMavenArtifact" inheritAll="false" dir="${basedir}/../components/xnwh/pools/MockConnectionPoolTypes" />
+
+    <ant antfile="buildLibs.xml" target="build-all" inheritAll="false" dir="${basedir}/../persistencelayers" />
+  </target>
+
+
+  <target name="build-tests" description="build-tests">
+    <ant antfile="build.xml" target="getLibsForTest" inheritAll="false" dir="${basedir}/../server" />
+  </target>
+
+
+  <target name="init-maven"  description="Init Maven handling of new-built xyna jars" >
+    <resolver:pom file="${basedir}/build/pom.xml"/>
+    <resolver:install/>
+  </target>
+
+
+  <target name="cleanup-lib" description="Delete jars in lib-directory and subdirs">
+    <mkdir dir="${basedir}/build/lib" />
+    <delete>
+      <fileset dir="${basedir}/build/lib" includes="**/*.jar"/>
+    </delete>
+  </target>
+
+
+  <target name="setup-ant-libs" description="Download jars needed by ant to directory .ant/lib">
+    <mkdir dir="${ant.lib.dir}" />
+    <property file="${basedir}/build.env" />
+    <mvn-get artifact="org.apache.maven.resolver:maven-resolver-ant-tasks:${MAVEN_RESOLVER_ANT_TASKS_VERSION}:jar:uber" outdir="${ant.lib.dir}" />
+    <mvn-get artifact="ant-contrib:ant-contrib:${ANT_CONTRIB_TASKS_VERSION}" outdir="${ant.lib.dir}" />
+  </target>
+
+
+  <macrodef name="mvn-get">
+    <attribute name="artifact" />
+    <attribute name="outdir" />
+    <sequential>
+      <exec executable="mvn">
+        <arg value="dependency:get"/>
+        <arg value="-Dartifact=@{artifact}"/>
+      </exec>
+      <exec executable="mvn">
+        <arg value="dependency:copy"/>
+        <arg value="-Dartifact=@{artifact}"/>
+        <arg value="-DoutputDirectory=@{outdir}"/>
+      </exec>
+    </sequential>
+  </macrodef>
+
+</project>
