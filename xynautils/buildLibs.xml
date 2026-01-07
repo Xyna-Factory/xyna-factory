@@ -33,7 +33,9 @@
         <sequential>
             <ant antfile="build.xml" target="cleanup-lib" inheritAll="false" dir="@{utils-dir}" />
             <ant antfile="build.xml" target="resolve" inheritAll="false" dir="@{utils-dir}" />
-            <ant antfile="build.xml" target="installMavenArtifact" inheritAll="false" dir="@{utils-dir}" />
+            <ant antfile="build.xml" target="installMavenArtifact" inheritAll="false" dir="@{utils-dir}" >
+                <property name="env.ORACLE_HOME" value="/tmp" />
+            </ant>
         </sequential>
     </macrodef>
 
