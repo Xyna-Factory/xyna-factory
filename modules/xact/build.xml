@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- * Copyright 2024 Xyna GmbH, Germany
+ * Copyright 2026 Xyna GmbH, Germany
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 -->
 <project name="build" default="build-all" basedir=".">
-    
+
     <property name="target.dir" value="${basedir}/deploy" />
     <import file="../buildModule.xml" />
-    
+
     <target name="build-all">
         <buildModule target="build-all" dir="connection"  target.dir="${target.dir}/xact" />
         <buildModule target="build-all" dir="devicetypes" target.dir="${target.dir}/xact" />
@@ -31,11 +31,12 @@
         <buildModule target="build"     dir="mail"        target.dir="${target.dir}/xact" />
         <buildModule target="build"     dir="netconf"     target.dir="${target.dir}/xact" />
         <buildModule target="build-all" dir="queue"       target.dir="${target.dir}/xact" />
+        <buildModule target="build"     dir="radius"      target.dir="${target.dir}/xact" />
         <buildModule target="build"     dir="script"      target.dir="${target.dir}/xact" />
         <buildModule target="build"     dir="soap"        target.dir="${target.dir}/xact" />
         <buildModule target="build"     dir="snmp"        target.dir="${target.dir}/xact" />
         <buildModule target="build-all" dir="ssh"         target.dir="${target.dir}/xact" />
         <buildModule target="build"     dir="velocity"    target.dir="${target.dir}/xact" />
     </target>
-    
+
 </project>
