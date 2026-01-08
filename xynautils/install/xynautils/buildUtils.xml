@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ * Copyright 2025 Xyna GmbH, Germany
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+-->
+<project name="xynautils_build" default="build">
+
+  <property name="project.name" value="xynautils-${utils.name}" />
+  <property name="vendor.name" value="Xyna GmbH" />
+
+  <import file="${ant.file.xynautils_masterbuild}/../../../../installation/build/macros.xml" />
+
+  <property name="target.dir" value="${basedir}/deploy" />
+
+
+  <!-- ================================= 
+              target: build              
+       =================================
+-->
+  <target name="build" description="Create build artfact">
+    <mkdir dir="${target.dir}" />
+    <buildJar basedir="${basedir}"
+              destfile="${target.dir}/${project.name}.jar" />
+  </target>
+
+
+  <!-- =================================
+              target: installMavenArtifact
+       =================================
+-->
+  <target name="installMavenArtifact" depends="build" description="install artifact to maven repository">
+     <install-maven-artifact artifactFile="${target.dir}/${project.name}.jar" pomFile="${basedir}/pom.xml" />
+  </target>
+
+
+  <!-- =================================
+              target: resolve
+        =================================  -->
+  <target name="resolve" description="resolve" >
+    <resolve pomFile="${basedir}/pom.xml" dir="${basedir}/lib" />
+  </target>
+
+
+  <!-- =================================
+        target: cleanup-lib
+        ================================= -->
+  <target name="cleanup-lib" description="cleanup-lib">
+    <mkdir dir="${basedir}/lib" />
+    <delete>
+      <fileset dir="${basedir}/lib" includes="**/*.jar"/>
+    </delete>
+  </target>
+
+
+  <!-- =================================
+        target: generateJavaDoc
+        ================================= -->
+  <target name="generateJavaDoc" description="generate JavaDoc" >
+    <property name="lib.dir" value="${basedir}/lib" />
+    <javadoc destdir="${basedir}/javadoc"
+             encoding="ISO-8859-1"
+             version="true"
+             author="true">
+      <classpath>
+        <fileset dir="${lib.dir}">
+          <include name="**/*.jar" />
+        </fileset>
+      </classpath>
+      <packageset dir="${basedir}/src">
+        <exclude name="**/test" />
+      </packageset>
+    </javadoc>
+    <jar destfile="${target.dir}/${project.name}-javadoc.jar">
+      <fileset dir="${basedir}/javadoc" excludes="index-all.html" />
+    </jar>
+  </target>
+
+</project>

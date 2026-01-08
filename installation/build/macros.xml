@@ -172,25 +172,10 @@
                     </path>
                 </else>
             </if>
-            <if>
-                <or>
-                    <available file="${jdev.home}" />
-                    <isset property="env.ORACLE_HOME" />
-                </or>
-                <then>
-                    <echo message="oracle.home is set: ${oracle.home}" />
-                    <path id="classpath.run.nolibs">
-                        <pathelement location="@{classes.dir}" />
-                        <path refid="classpath.oc4j" />
-                    </path>
-                </then>
-                <else>
-                    <echo message="oracle.home is not set" />
-                    <path id="classpath.run.nolibs">
-                        <pathelement location="@{classes.dir}" />
-                    </path>
-                </else>
-            </if>
+            <path id="classpath.run.nolibs">
+                <pathelement location="@{classes.dir}" />
+            </path>
+
             <condition property="classpath.run.@{basedir}" value="classpath.run.libs" else="classpath.run.nolibs">
                 <or>
                     <available file="@{lib.dir}" />
