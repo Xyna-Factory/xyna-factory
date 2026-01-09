@@ -77,11 +77,11 @@ public class SharedResourceManagement extends Section {
   protected void init() throws XynaException {
 
     FutureExecution fExec = XynaFactory.getInstance().getFutureExecution();
-    fExec.addTask(SharedResourceManagement.class, "loadSynchronizers").after(PersistenceLayerInstances.class)
-        .execAsync(this::loadSynchronizers);
-    fExec.addTask(SharedResourceManagement.class, "instantiateSynchronizers").after("loadSynchronizers")
-        .execAsync(this::instantiateSynchronizers);
-    fExec.addTask(SharedResourceManagement.class, "configureSharedResourceTypes").after("instantiateSynchronizers")
+    fExec.addTask("SharedResourceManagement.loadSynchronizers", "SharedResourceManagement.loadSynchronizers")
+        .after(PersistenceLayerInstances.class).execAsync(this::loadSynchronizers);
+    fExec.addTask("SharedResourceManagement.instantiateSynchronizers", "SharedResourceManagement.instantiateSynchronizers")
+        .after("SharedResourceManagement.loadSynchronizers").execAsync(this::instantiateSynchronizers);
+    fExec.addTask(SharedResourceManagement.class, "configureSharedResourceTypes").after("SharedResourceManagement.instantiateSynchronizers")
         .execAsync(this::configureSRTypes);
   }
 
@@ -149,12 +149,12 @@ public class SharedResourceManagement extends Section {
    * resource configuration is deleted.
    */
   public void configureSharedResourceType(String resource, String synchronizerInstanceIdentifier) {
-    if(synchronizerInstanceIdentifier == null) {
+    if (synchronizerInstanceIdentifier == null) {
       sharedResourcePortal.configureSharedResource(resource, null);
       return;
     }
     SharedResourceSynchronizer synchronizer = synchronizerInstances.get(synchronizerInstanceIdentifier);
-    if(synchronizer == null) {
+    if (synchronizer == null) {
       throw new IllegalArgumentException("No SharedResourceSynchronizer '" + synchronizerInstanceIdentifier + "' configured");
     }
     sharedResourcePortal.configureSharedResource(resource, synchronizer);
