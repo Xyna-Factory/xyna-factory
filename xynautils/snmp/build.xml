@@ -24,7 +24,7 @@
 	<property name="utils.name" value="snmp"/>
 	
 	<!--Master build file-->
-	<property name="build.file" value="../install/xynautils/masterbuild.xml"/>
+	<property name="build.file" value="../install/xynautils/buildUtils.xml"/>
 			
 	<!--Import all targets from master build file-->
 	<import file="${build.file}"/>

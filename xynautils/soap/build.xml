@@ -25,7 +25,7 @@
 
 	<!--Master build file-->
 	<property name="build.file"
-	          value="${basedir}/../install/xynautils/masterbuild.xml" />
+	          value="${basedir}/../install/xynautils/buildUtils.xml" />
 
 	<!--Import all targets from master build file-->
 	<import file="${build.file}"/>
