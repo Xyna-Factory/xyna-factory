@@ -672,5 +672,35 @@
             </resolver:resolve>
         </sequential>
     </macrodef>
-  
+
+    <!-- =================================
+        macro: loadLicenses
+        ================================= -->
+    <macrodef name="loadLicenses">
+        <attribute name="targetDir"/>
+        <attribute name="pom" default="${basedir}/pom.xml" />
+        <sequential>
+            <exec osfamily="windows" executable="cmd" outputproperty="exec.output">
+                <arg value="/c"/>
+                <arg value="mvn"/>
+                <arg value="-f" />
+                <arg value="@{pom}" />
+                <arg value="license:download-licenses" />
+                <arg value="-DlicensesOutputDirectory=@{targetDir}" />
+                <arg value="-DlicensesOutputFile=@{targetDir}\licenses.xml" />
+                <arg value="-Dorg.slf4j.simpleLogger.log.org.codehaus.mojo.license=debug" />
+                <!--arg value="-Dlicense.organizeLicensesByDependencies=true" /-->
+            </exec>
+            <exec osfamily="unix" executable="mvn" outputproperty="exec.output">
+                <arg value="-f" />
+                <arg value="@{pom}" />
+                <arg value="license:download-licenses" />
+                <arg value="-DlicensesOutputDirectory=@{targetDir}" />
+                <arg value="-DlicensesOutputFile=@{targetDir}/licenses.xml" />
+                <!--arg value="-Dlicense.organizeLicensesByDependencies=true" /-->
+            </exec>
+            <echo message="${exec.output}" />
+        </sequential>
+    </macrodef>
+
 </project>
