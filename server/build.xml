@@ -35,7 +35,7 @@
   <property name="target.dir" value="${basedir}/lib" />
   
  
-  <target name="resolve">
+  <target name="resolve" description="resolve">
     <resolve pomFile="${basedir}/pom.xml" dir="${target.dir}" />
     <resolve pomFile="${basedir}/pom.xml" dir="${target.dir}/internal_xyna" scopes="runtime" />
     <loadLicenses targetDir="${target.dir}" />
@@ -46,7 +46,7 @@
           target: build              
          ================================= -->
   <target name="build"
-          depends="cleanup, prepare, buildJar, buildTemplate, test, findBugs, copyToCommonLibs" />
+          depends="cleanup, prepare, buildJar, buildTemplate, test, findBugs, copyToCommonLibs" description="Build xynafactory-jar" />
 
   <!-- - - - - - - - - - - - - - - - - - 
           target: prepare                      
@@ -272,7 +272,7 @@
   <!-- ================================= 
               target: buildTest (packt nicht alle Tests in das Jar, sondern nur von anderen Projekten benötigte)         
              ================================= -->
- <target name="buildTest" depends="build">
+ <target name="buildTest" depends="build" description="buildTest" >
    <delete dir="${basedir}/classes" />
    <mkdir dir="${basedir}/classes" />
    <javac debug="on"
@@ -305,12 +305,55 @@
    </jar>
  </target>
 
+
   <target name="installMavenArtifactXynaFactory" depends="build" description="install artifact to maven repository">
     <install-maven-artifact artifactFile="${build.dir}/${project.name}.jar" pomFile="${basedir}/pom.xml" />
   </target>
 
+
   <target name="installMavenArtifactCLIGenerator" depends="buildCliClassGeneratorJar" description="install artifact to maven repository">
     <install-maven-artifact artifactFile="${build.dir}/${project.name}CLIGenerator.jar" pomFile="${basedir}/cligenerator.pom.xml" />
+  </target>
+
+
+  <target name="prepareLibsCLIGenerator" description="prepareLibsCLIGenerator">
+    <resolve pomFile="${basedir}/cligenerator.pom.xml" dir="${basedir}/lib" />
+  </target>
+
+
+  <target name="cleanupLib" description="Delete jars in lib-directory and subdirs">
+    <mkdir dir="${basedir}/lib" />
+    <delete>
+      <fileset dir="${basedir}/lib" includes="**/*.jar"/>
+    </delete>
+  </target>
+
+
+  <target name="prepareLibs" description="Download or build all libs, administered by Maven, needed to build the xyna-factory jar">
+    <ant antfile="buildLibs.xml" target="build-all" inheritAll="false" dir="${basedir}/../xynautils" />
+    <ant antfile="build.xml" target="resolve" inheritAll="false" dir="${basedir}/../misc" />
+    <ant antfile="build.xml" target="installMavenArtifact" inheritAll="false" dir="${basedir}/../misc" />
+    <antcall target="prepareLibsCLIGenerator" />
+    <antcall target="installMavenArtifactCLIGenerator" />
+  </target>
+
+
+  <target name="getLibsForTest" description="Get all libs from Maven needed for tests">
+    <resolve pomFile="${basedir}/servertest.pom.xml" dir="${basedir}/lib" />
+  </target>
+
+
+  <target name="buildLibsForTest" description="Build all additional libs, administered by Maven, needed for tests">
+    <ant antfile="buildLibs.xml" target="build-persistence" inheritAll="false" dir="${basedir}/../installation" />
+  </target>
+
+
+  <target name="initMaven"  description="Init Maven handling of new-built xyna libs" >
+    <ant antfile="buildLibs.xml" target="init-maven" inheritAll="false" dir="${basedir}/../installation" />
+  </target>
+
+
+  <target name="buildAllLibs" description="Build all libs, administered by Maven" depends="initMaven, prepareLibs, installMavenArtifactXynaFactory, buildLibsForTest, getLibsForTest">
   </target>
 
 </project>
