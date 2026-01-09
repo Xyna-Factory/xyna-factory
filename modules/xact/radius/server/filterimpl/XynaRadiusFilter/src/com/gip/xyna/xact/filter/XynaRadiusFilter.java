@@ -66,7 +66,7 @@ public class XynaRadiusFilter extends ConnectionFilter<XynaRadiusTriggerConnecti
   private static XynaRadiusFilter filterInstance;
 
   private static String sharedSecretProp = "xact.radius.sharedSecret";
-  private final static XynaPropertyString sharedSecretXynaProp = new XynaPropertyString(sharedSecretProp, "geheim", false);
+  private final static XynaPropertyString sharedSecretXynaProp = new XynaPropertyString(sharedSecretProp, "sharedSecret", false);
 
 
   public void onDeployment(EventListener trigger) {

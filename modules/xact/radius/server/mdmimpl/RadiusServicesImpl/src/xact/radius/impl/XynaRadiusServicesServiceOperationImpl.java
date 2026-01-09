@@ -15,7 +15,7 @@
  * limitations under the License.
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
  */
-package xact.radius;
+package xact.radius.impl;
 
 
 
@@ -25,9 +25,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import xact.radius.database.RadiusUserStorable;
-import xact.radius.util.ByteUtil;
-
 import com.gip.xyna.CentralFactoryLogging;
 import com.gip.xyna.XynaFactory;
 import com.gip.xyna.XMOM.base.IPv4;
@@ -35,25 +32,31 @@ import com.gip.xyna.utils.exceptions.XynaException;
 import com.gip.xyna.xdev.xfractmod.xmdm.Container;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.BehaviorAfterOnUnDeploymentTimeout;
 import com.gip.xyna.xdev.xfractmod.xmdm.XynaObject.ExtendedDeploymentTask;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyDuration;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyInt;
+import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyString;
+import com.gip.xyna.xnwh.persistence.Command;
 import com.gip.xyna.xnwh.persistence.ODS;
 import com.gip.xyna.xnwh.persistence.ODSConnection;
 import com.gip.xyna.xnwh.persistence.ODSConnectionType;
 import com.gip.xyna.xnwh.persistence.ODSImpl;
 import com.gip.xyna.xnwh.persistence.Parameter;
-import com.gip.xyna.xnwh.persistence.Command;
 import com.gip.xyna.xnwh.persistence.PersistenceLayerException;
 import com.gip.xyna.xnwh.persistence.PreparedQuery;
 import com.gip.xyna.xnwh.persistence.Query;
 
-import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyDuration;
-import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyString;
-import com.gip.xyna.xfmg.xods.configuration.XynaPropertyUtils.XynaPropertyInt;
+import xact.radius.Code;
+import xact.radius.Node;
+import xact.radius.TypeOnlyNode;
+import xact.radius.TypeWithValueNode;
+import xact.radius.impl.database.RadiusUserStorable;
+import xact.radius.impl.util.ByteUtil;
 
 
 
-public class XynaRadiusServicesImpl implements ExtendedDeploymentTask {
+public class XynaRadiusServicesServiceOperationImpl implements ExtendedDeploymentTask {
 
-  private static Logger logger = CentralFactoryLogging.getLogger(XynaRadiusServicesImpl.class);
+  private static Logger logger = CentralFactoryLogging.getLogger(XynaRadiusServicesServiceOperationImpl.class);
 
   private static String REJECT = "3";
   private static String ACCEPT = "2";
@@ -69,14 +72,13 @@ public class XynaRadiusServicesImpl implements ExtendedDeploymentTask {
 
   private final static XynaPropertyDuration timeoutXynaProp = new XynaPropertyDuration(timeoutProp, "900 s");
 
-  private final static XynaPropertyString sharedSecretXynaProp = new XynaPropertyString(sharedSecretProp, "geheim", false);
+  private final static XynaPropertyString sharedSecretXynaProp = new XynaPropertyString(sharedSecretProp, "sharedSecret", false);
 
   private final static XynaPropertyInt ciscoROprivlvl = new XynaPropertyInt("xact.radius.shell-privilege-level.cisco.read-only", 1);
   private final static XynaPropertyInt ciscoRWprivlvl = new XynaPropertyInt("xact.radius.shell-privilege-level.cisco.read-write", 7);
   private final static XynaPropertyInt ciscoSUprivlvl = new XynaPropertyInt("xact.radius.shell-privilege-level.cisco.super-user", 15);
 
-
-  protected XynaRadiusServicesImpl() {
+  public XynaRadiusServicesServiceOperationImpl() {
   }
 
 
@@ -126,13 +128,13 @@ public class XynaRadiusServicesImpl implements ExtendedDeploymentTask {
   }
 
 
-  public static xact.radius.XynaPropertyStringValue getXynaProperty(xact.radius.XynaPropertyKey xynaPropertyKey) {
+  public xact.radius.XynaPropertyStringValue getXynaProperty(xact.radius.XynaPropertyKey xynaPropertyKey) {
     String result = com.gip.xyna.XynaFactory.getInstance().getFactoryManagement().getProperty(xynaPropertyKey.getXynaPropertyKey());
     return new xact.radius.XynaPropertyStringValue(result);
   }
 
 
-  public static xact.radius.PrivilegeLevel getPrivilegeLevel(xact.radius.FunctionalRole role, xact.radius.Vendor vendor) {
+  public xact.radius.PrivilegeLevel getPrivilegeLevel(xact.radius.FunctionalRole role, xact.radius.Vendor vendor) {
     String vendorName = vendor != null ? vendor.getName() : null;
 
     if (vendorName == null)
@@ -218,7 +220,7 @@ public class XynaRadiusServicesImpl implements ExtendedDeploymentTask {
   }
 
 
-  public static xact.radius.RadiusAddUserResult addTemporaryRadiusUser(IPv4 inputip, xact.radius.RadiusUserData userdata) {
+  public xact.radius.RadiusAddUserResult addTemporaryRadiusUser(IPv4 inputip, xact.radius.RadiusUserData userdata) {
     if (logger.isDebugEnabled())
       logger.debug("addTemporaryRadiusUser called for " + userdata.getUsername() + "@" + inputip.getValue());
 
@@ -231,10 +233,11 @@ public class XynaRadiusServicesImpl implements ExtendedDeploymentTask {
     String sharedsecret = "";
     String servicetype = "";
 
-    if (logger.isDebugEnabled())
-      logger.debug("Reading sharedSecret from property " + sharedSecretProp);
-    sharedsecret = sharedSecretXynaProp.get();
-
+    if (sharedsecret == null || sharedsecret.length() == 0) {
+      if (logger.isDebugEnabled())
+        logger.debug("Reading sharedSecret from property " + sharedSecretProp);
+      sharedsecret = sharedSecretXynaProp.get();
+    }
     if (sharedsecret == null || sharedsecret.length() == 0) {
       logger.error("Property " + sharedSecretProp + " not set. Can't create new radius user. Aborting ...");
 
@@ -270,7 +273,7 @@ public class XynaRadiusServicesImpl implements ExtendedDeploymentTask {
 
 
   @Deprecated
-  public static List<? extends Node> addPrivilegeLevel(xact.radius.PrivilegeLevel prvlvl, List<? extends Node> inputnodes) {
+  public List<? extends Node> addPrivilegeLevel(xact.radius.PrivilegeLevel prvlvl, List<? extends Node> inputnodes) {
     if (logger.isDebugEnabled())
       logger.debug("addPriviledgeLevel called ...");
     List<Node> resultlist = new ArrayList<Node>();
@@ -318,7 +321,21 @@ public class XynaRadiusServicesImpl implements ExtendedDeploymentTask {
 
 
   private static long getTimeout() {
-    return timeoutXynaProp.getMillis();
+    if (logger.isDebugEnabled())
+      logger.debug("Reading Password Expiration Time from property ...");
+    String expirationtime = XynaFactory.getPortalInstance().getFactoryManagementPortal().getProperty(timeoutProp);
+    long timeout = 15 * 60000; // 15 Minuten defaultwert
+    if (expirationtime == null || expirationtime.length() == 0) {
+      timeout = timeoutXynaProp.getMillis();
+    } else {
+      try {
+        timeout = Long.parseLong(expirationtime);
+      } catch (Exception e) {
+        logger.warn("Property " + timeoutProp + " not set correctly. Using 15 minutes!");
+      }
+    }
+
+    return timeout;
   }
 
 
@@ -377,8 +394,8 @@ public class XynaRadiusServicesImpl implements ExtendedDeploymentTask {
   }
 
 
-  public static Container authenticateRadiusUser(List<? extends Node> inputnodes, xact.radius.Code xmomcode,
-                                                 xact.radius.RequestAuthenticator xmomauthenticator, xact.radius.SourceIP sourceip) {
+  public Container authenticateRadiusUser(List<? extends Node> inputnodes, xact.radius.Code xmomcode,
+                                          xact.radius.RequestAuthenticator xmomauthenticator, xact.radius.SourceIP sourceip) {
     String code = xmomcode.getValue();
     String requestauthenticator = xmomauthenticator.getValue();
     String radiusUsername = "";
@@ -412,9 +429,8 @@ public class XynaRadiusServicesImpl implements ExtendedDeploymentTask {
 
 
   @Deprecated
-  public static Container processAccessRequest(List<? extends Node> inputnodes, xact.radius.Code xmomcode,
-                                               xact.radius.Identifier xmomidentifier, xact.radius.RequestAuthenticator xmomauthenticator,
-                                               xact.radius.SourceIP sourceip) {
+  public Container processAccessRequest(List<? extends Node> inputnodes, xact.radius.Code xmomcode, xact.radius.Identifier xmomidentifier,
+                                        xact.radius.RequestAuthenticator xmomauthenticator, xact.radius.SourceIP sourceip) {
     if (logger.isDebugEnabled())
       logger.debug("Processing received RequestAccess Message ...");
 
@@ -526,7 +542,7 @@ public class XynaRadiusServicesImpl implements ExtendedDeploymentTask {
     }
 
     byte[] sS = sharedSecret.getBytes();
-    byte[] au = xact.radius.util.ByteUtil.toByteArray(requestAuthenticator);
+    byte[] au = xact.radius.impl.util.ByteUtil.toByteArray(requestAuthenticator);
 
     byte[] sSau = new byte[sS.length + au.length]; // aneinanderhaengen von SharedSecret und Authenticator
     System.arraycopy(sS, 0, sSau, 0, sS.length);
@@ -564,7 +580,7 @@ public class XynaRadiusServicesImpl implements ExtendedDeploymentTask {
   }
 
 
-  public static void cleanUsers() {
+  public void cleanUsers() {
     long timeout = getTimeout();
 
     ODSConnection ods = XynaFactory.getInstance().getProcessing().getXynaProcessingODS().getODS().openConnection(ODSConnectionType.HISTORY);
